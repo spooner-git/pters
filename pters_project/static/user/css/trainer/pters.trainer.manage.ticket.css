@@ -282,7 +282,7 @@ img.substract_addedMember{
 
 
 /*그룹 탭에서 그룹들 나열*/
-.groupWrap{
+.groupWrap, .groupWrap_{
 	/*display: table;*/
 	display: inline-block;
 	width: 100%;
@@ -826,7 +826,7 @@ div._manage{
 	}
 
 
-	.groupWrap{
+	.groupWrap, .groupWrap_{
 		font-weight: 500;
 		font-size: 12px;
 	}
@@ -841,7 +841,7 @@ div._manage{
 	display: none;
 }
 @media(min-width: 600px){
-	.groupWrap{
+	.groupWrap, .groupWrap_{
 		width: 48%;
 		margin: 1%;
 	}
@@ -893,7 +893,7 @@ div._manage{
 	
 }
 @media(min-width: 1000px){
-	.groupWrap{
+	.groupWrap, .groupWrap_{
 		display: table;
 		width: 100%;
 		height: 40px;
@@ -914,7 +914,7 @@ div._manage{
 	.groupWrap:active{
 		background: #cccccc;
 	}
-	.groupWrap > div{
+	.groupWrap > div, .groupWrap_ > div{
 		display: table-cell;
 		line-height: 36px;
 	}

@@ -1847,9 +1847,9 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
 
     if(htmlToJoin.length == 0){
         if(option == "current"){
-            htmlToJoin.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 그룹이 없습니다.</div>');
+            htmlToJoin.push('<div class="groupWrap_" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 그룹이 없습니다.</div>');
         }else if(option == "finished"){
-            htmlToJoin.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 그룹이 없습니다.</div>');
+            htmlToJoin.push('<div class="groupWrap_" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 그룹이 없습니다.</div>');
         }
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_group_num+'</span>');
@@ -2967,7 +2967,7 @@ function package_ListHtml(option, jsondata){ //option : current, finished
         if(option == "current"){
             // htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 수강권이 없습니다.</div>');
         }else if(option == "finished"){
-            htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수강권이 없습니다.</div>');
+            htmlToJoin.push('<div class="groupWrap_" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수강권이 없습니다.</div>');
         }
     }
 
@@ -3099,7 +3099,7 @@ function package_ListHtml_page(option, jsondata){ //option : current, finished
         if(option == "current"){
             // htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 수강권이 없습니다.</div>');
         }else if(option == "finished"){
-            htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수강권이 없습니다.</div>');
+            htmlToJoin.push('<div class="groupWrap_" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수강권이 없습니다.</div>');
         }
     }
 
@@ -3216,7 +3216,7 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
         if(option == "current"){
             // htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 수강권이 없습니다.</div>');
         }else if(option == "finished"){
-            htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수강권이 없습니다.</div>');
+            htmlToJoin.push('<div class="groupWrap_" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수강권이 없습니다.</div>');
         }
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_package_num+'개</span>');
@@ -3234,10 +3234,10 @@ function set_ticket_info_for_mobile_popup(package_id, package_name, package_stat
     if(package_status == "진행중"){
         color = "green";
         selected1 = "mobile_status_selected";
-        selected2 = ""
+        selected2 = "";
     }else{
         color = "red";
-        selected1 = ""
+        selected1 = "";
         selected2 = "mobile_status_selected";
     }
     var status    = `<div class="mobile_status_color_palette" data-groupid=${package_id}>

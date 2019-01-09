@@ -1626,8 +1626,9 @@ $(document).ready(function(){
             $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border', '1px solid #cccccc');
             $(this).attr('data-type', 'modify');
             $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
-            // $('#mygroupnametitle').show();
-            $('.mobile_group_color_palette').show();
+
+            //$('#mygroupnametitle').show();
+            $('.mobile_group_color_palette, .mobile_status_color_palette').show();
             $('#id_mobile_input_capacity').keyup(function(){
                 limit_char_only_number(this);
             });
@@ -1644,7 +1645,10 @@ $(document).ready(function(){
             if(group_name==''){
                 alert('수업명을 입력하세요.');
             }else{
-                modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
+                $('.mobile_status_color_palette').hide();
+                modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "", "callback", function(){
+                    modify_group_status(group_id, $('.mobile_status_selected').attr('data-status'));
+                });
             }
         }
     });
@@ -1655,8 +1659,9 @@ $(document).ready(function(){
                 $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border', '1px solid #cccccc');
                 $(this).attr('data-type', 'modify');
                 $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
+
                 $('#mygroupnametitle').css('display', 'table');
-                $('.mobile_group_color_palette').show();
+                $('.mobile_group_color_palette, .mobile_status_color_palette').show();
                 $('#id_mobile_input_capacity').keyup(function(){
                     limit_char_only_number(this);
                 });
@@ -1669,10 +1674,15 @@ $(document).ready(function(){
                 var group_capacity = $('#mygroupcapacity input').val();
                 var group_memo = $('#mygroupmemo input').val();
                 var group_type = "";
+
                 if(group_name==''){
                     alert('수업명을 입력하세요.');
                 }else{
-                    modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
+                    $('.mobile_status_color_palette').hide();
+                    //modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
+                    modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "", "callback", function(){
+                        modify_group_status(group_id, $('.mobile_status_selected').attr('data-status'));
+                    });
                 }
             }
         }else if($('#popup_ticket_info_mobile').css('display') == "block"){
