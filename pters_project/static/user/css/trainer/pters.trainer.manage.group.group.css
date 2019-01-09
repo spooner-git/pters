@@ -906,11 +906,16 @@ div._fixedmember{
 		}
 }
 
+#mygroupnametitle{
+	display:none;
+}
 @media(min-width: 600px){
 	.list_addByList_padding{
 
 	}
-
+	#mygroupnametitle{
+		display:table;
+	}
 	div.groupmemberline_thead div{
 		width: 12.5%;
 	}

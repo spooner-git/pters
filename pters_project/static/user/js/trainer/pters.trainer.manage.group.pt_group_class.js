@@ -972,7 +972,11 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
 
                 // $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
                 //toggle_lock_unlock_inputfield_grouplist(group_id, true)
-                modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
+                if(group_name==''){
+                    alert('수업명을 입력하세요.');
+                }else{
+                    modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
+                }
                 break;
         }
 
@@ -1350,9 +1354,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
             }else{
                 $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
                 $('#upbutton-modify').attr('data-type', 'view');
-                $('#upbutton-modify > img').attr('src', '/static/user/res/icon-pencil.png');
                 $('#popup_lecture_info_mobile_modify_btn').attr('data-type', 'view');
-                $('#popup_lecture_info_mobile_modify_btn > img').attr('src', '/static/user/res/icon-pencil.png');
 
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
@@ -1370,7 +1372,11 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                         if(bodywidth<600){
                             $('#uptext3').text(group_name);
                             $('#mygroupnametitle').hide();
-                        }else{
+                        }
+                        else if(bodywidth<1000){
+                            $('#popup_lecture_info_mobile_modify_btn > img').attr('src', '/static/user/res/icon-pencil.png');
+                        }
+                        else{
                             $('#lecturedelete').hide();
                             $('#popup_lecture_info_mobile_modify_btn').find('img').attr('src', '/static/user/res/icon-pencil.png');
                         }
@@ -1446,8 +1452,9 @@ function modify_group_status(group_id, option){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
                 scrollToDom($('#page_addmember'));
-                $('#errorMessageBar').show();
-                $('#errorMessageText').text(jsondata.messageArray);
+                alert(jsondata.messageArray);
+                // $('#errorMessageBar').show();
+                // $('#errorMessageText').text(jsondata.messageArray);
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
@@ -2512,7 +2519,7 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_status, g
                         <div class="plancolor_d9c3ab"></div>
                     </div>`;
 
-    var html = `<div class="pters_table" style="display:none;" id="mygroupnametitle"><div class="pters_table_cell">수업명</div><div class="pters_table_cell" id="mygroupname"><input type="text" class="mobile_memo_input" value="${group_name}" disabled></div></div>
+    var html = `<div class="pters_table" id="mygroupnametitle"><div class="pters_table_cell">수업명</div><div class="pters_table_cell" id="mygroupname"><input type="text" class="mobile_memo_input" value="${group_name}" disabled></div></div>
                 <div class="pters_table"><div class="pters_table_cell">색상</div><div class="pters_table_cell"><div id="mygroupcolor" style="background-color:${group_color};"></div>${groupcolor}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${group_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">정원</div><div class="pters_table_cell" id="mygroupcapacity"><input type="text" id="id_mobile_input_capacity" class="mobile_memo_input" style="width:20%;" value="${group_membercapacity}" disabled>명</div></div>
@@ -2837,7 +2844,7 @@ function get_member_group_class_ing_list(use, callback){
     // var endTime = '';
     lecture_page_num = 1;
     lectureListSet_len = 1;
-    lecture_mutex_val = 1;
+    // lecture_mutex_val = 1;
     $.ajax({
         url:'/trainer/get_member_group_class_ing_list/',
         type:'GET',
@@ -2900,7 +2907,7 @@ function get_member_group_class_end_list(use, callback){
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     lecture_page_num = 1;
     lectureListSet_len = 1;
-    lecture_mutex_val = 1;
+    // lecture_mutex_val = 1;
     $.ajax({
         url:'/trainer/get_member_group_class_end_list/',
         type:'GET',

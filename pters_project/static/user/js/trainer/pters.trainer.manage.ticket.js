@@ -784,7 +784,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         var package_membernum = $(this).find('div._groupparticipants_mobile > div:nth-of-type(2)').text();
         var package_memo = $(this).find('div._groupmemo_mobile > div:nth-of-type(2)').text();
         var package_status = $('div.pters_selectbox_btn_selected > span').text();
-        var package_statuscd = $('div.pters_selectbox_btn_selected > span').attr('data-status');
+        var package_statuscd = $('div.pters_selectbox_btn_selected').attr('data-status');
         var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
 
         // var package_statuscd = $('div.pters_selectbox_btn_selected').attr('data-status');
@@ -926,10 +926,14 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
                 if(package_memo.length == 0){
                     package_memo = " ";
                 }
-
-                $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
-                //toggle_lock_unlock_inputfield_grouplist(group_id, true)
-                modify_package_from_list(package_id, package_name, package_memo);
+                if(package_name == ''){
+                    alert('수강권명을 입력하세요.');
+                }
+                else{
+                    // $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
+                    //toggle_lock_unlock_inputfield_grouplist(group_id, true)
+                    modify_package_from_list(package_id, package_name, package_memo);
+                }
                 break;
         }
 
@@ -2542,7 +2546,7 @@ function get_package_ing_list(use, callback){
 
     ticket_page_num = 1;
     ticketListSet_len = 1;
-    ticket_mutex_val = 1;
+    // ticket_mutex_val = 1;
     $.ajax({
         url:'/trainer/get_package_ing_list/',
         type:'GET',
@@ -2605,7 +2609,7 @@ function get_package_end_list(use, callback){
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     ticket_page_num = 1;
     ticketListSet_len = 1;
-    ticket_mutex_val = 1;
+    // ticket_mutex_val = 1;
     $.ajax({
         url:'/trainer/get_package_end_list/',
         type:'GET',
@@ -4013,6 +4017,13 @@ function modify_package_from_list(package_id, package_name, package_note, use, c
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
+
+                $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
+                $('#upbutton-modify').attr('data-type', 'view');
+                $('#popup_ticket_info_mobile_modify_btn').attr('data-type', 'view');
+                $('.mobile_status_color_palette').hide();
+                $('._groupmanage img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
+
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 // if(bodywidth < 600){
@@ -4036,11 +4047,14 @@ function modify_package_from_list(package_id, package_name, package_note, use, c
                             $('#uptext3').text(package_name);
                             $('#ticketnametitle, #ticketdelete').hide();
                             $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');
-                        }else{
+                        }else if(bodywidth<1000){
                             $('#ticketdelete').hide();
                             $('#popup_ticket_info_mobile_modify_btn').find('img').attr('src', '/static/user/res/icon-pencil.png');
                         }
-                       
+                        else{
+                            $('#ticketdelete').hide();
+                        }
+
                     }
                     
                 }
@@ -4115,8 +4129,17 @@ function modify_package_status(package_id, option){
                 if(bodywidth < 600){
                     scrollToDom($('#page_addmember'));
                 }
-                $('#errorMessageBar').show();
-                $('#errorMessageText').text(jsondata.messageArray);
+                var $ticket_status_selected;
+                if(option == 'resume'){
+                    $ticket_status_selected = $('.ticket_finished');
+                }else{
+                    $ticket_status_selected = $('.ticket_ongoing');
+                }
+                $ticket_status_selected.addClass('mobile_status_selected');
+                $ticket_status_selected.siblings('div').removeClass('mobile_status_selected');
+                alert(jsondata.messageArray);
+                // $('#errorMessageBar').show();
+                // $('#errorMessageText').text(jsondata.messageArray);
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
