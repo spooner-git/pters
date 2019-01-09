@@ -786,6 +786,9 @@ $(document).on('click', 'div.groupWrap', function(e){
         current_Scroll_Position = $(document).scrollTop();
         $('#uptext3').text(group_name);
         // $('#page_managemember').css({'height':'0'});
+        var group_status = $('div.pters_selectbox_btn_selected > span').text();
+        var group_statuscd = $('div.pters_selectbox_btn_selected > span').attr('data-status');
+
         $('#page_managemember').css({'display':'none'});
         $('#page-base').css('display', 'none');
         $('#page-base-modifystyle').css('display', 'block');
@@ -800,7 +803,7 @@ $(document).on('click', 'div.groupWrap', function(e){
             $('#popup_lecture_info_mobile_modify_btn').css('display', 'block');
         }
         get_group_repeat_info(group_id, "callback", function(repeat_data){
-            set_lecture_info_for_mobile_popup(group_id, group_name, group_color, group_type, group_typecd, group_membernum, group_membercapacity, group_memo, repeat_data);
+            set_lecture_info_for_mobile_popup(group_id, group_name, group_status, group_statuscd,group_color, group_type, group_typecd, group_membernum, group_membercapacity, group_memo, repeat_data);
         });
         if($(this).attr('data-groupstatecd')=='current'){
             get_groupmember_list(group_id);
@@ -1313,7 +1316,7 @@ function delete_groupmember_from_grouplist(use, callback){
 //그룹원 지우기
 
 //그룹 정보 수정
-function modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, ing_bg_color, end_bg_color, ing_font_color, end_font_color){
+function modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, ing_bg_color, end_bg_color, ing_font_color, end_font_color, use, callback){
     var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/update_group_info/',
@@ -1379,6 +1382,10 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                         $('.mobile_group_color_palette').hide();
                     }
                 }
+
+                if(use == "callback"){
+                    callback(jsondata);
+                }
                 console.log('success');
             }
         },
@@ -1396,11 +1403,16 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
 //그룹 완료/재개 하기
 function modify_group_status(group_id, option){
     var bodywidth = window.innerWidth;
-    var _URL;
+    var text_for_mobile;
+    var color_for_mobile;
     if(option == 'complete'){
         _URL = '/trainer/finish_group_info/';
+        text_for_mobile = "종료";
+        color_for_mobile = "red";
     }else if(option == 'resume'){
         _URL = '/trainer/progress_group_info/';
+        text_for_mobile = "진행중";
+        color_for_mobile = "green";
     }
     $('#shade_caution').hide();
     hide_shadow_responsively();
@@ -1462,6 +1474,7 @@ function modify_group_status(group_id, option){
                 // }
                 
                 smart_refresh_member_group_class_list();
+                $('.mobile_status_color_palette').siblings('div').text(text_for_mobile).css('color', color_for_mobile);
 
                 console.log('success');
             }
@@ -2428,7 +2441,7 @@ function groupMemberListSet_mobile(group_id, jsondata){
 //그룹원 목록을 그룹에 그리기 모바일
 
 //수업 정보 모바일 팝업
-function set_lecture_info_for_mobile_popup(group_id, group_name, group_color, group_type, group_typecd, group_membernum, group_membercapacity, group_memo, jsondata){
+function set_lecture_info_for_mobile_popup(group_id, group_name, group_status, group_statuscd, group_color, group_type, group_typecd, group_membernum, group_membercapacity, group_memo, jsondata){
     var repeat_info_dict= { 'KOR':
         {'DD':'매일', 'WW':'매주', '2W':'격주',
             'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
@@ -2470,6 +2483,24 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_color, gr
     }
     var repeat_info = repeat_array.join("");
 
+    var color;
+    var selected1;
+    var selected2;
+    if(group_status == "진행중"){
+        color = "green";
+        selected1 = "mobile_status_selected";
+        selected2 = "";
+    }else{
+        color = "red";
+        selected1 = "";
+        selected2 = "mobile_status_selected";
+    }
+
+    var status    = `<div class="mobile_status_color_palette" data-groupid=${group_id}>
+                        <div class="lecture_ongoing ${selected1}" data-status="resume" style="margin-right:10px;">진행중</div>
+                        <div class="lecture_finished ${selected2}" data-status="complete">종료</div>
+                    </div>`;
+
     var groupcolor = `<div class="mobile_group_color_palette" data-groupid=${group_id}>
                         <div class="plancolor_fbf3bd"></div>
                         <div class="plancolor_dbe6f7"></div>
@@ -2486,15 +2517,21 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_color, gr
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${group_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">정원</div><div class="pters_table_cell" id="mygroupcapacity"><input type="text" id="id_mobile_input_capacity" class="mobile_memo_input" style="width:20%;" value="${group_membercapacity}" disabled>명</div></div>
                 <div class="pters_table"><div class="pters_table_cell">참여 인원</div><div class="pters_table_cell">${group_membernum}명</div></div>
+                <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div style="color:${color}">${group_status}</div>${status}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">반복 일정</div><div class="pters_table_cell">${repeat_info}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="mygroupmemo"><input type="text" class="mobile_memo_input" value="${group_memo}" disabled></div></div>
 
                 <div style="display:none;" id="mygroupid" data-groupid="${group_id}">그룹 id: ${group_id}</div>
-                <div style="display:none;" id="mygrouptypecd" data-grouptypecd="${group_typecd}">그룹 typecd: ${group_typecd}</div>`;
+                <div style="display:none;" id="mygrouptypecd" data-grouptypecd="${group_typecd}">그룹 typecd: ${group_typecd}</div>
+                <div style="display:none;" id="mygroupstatuscd" data-status="${group_statuscd}"></div>`;
     $('#popup_lecture_info_mobile_basic').html(html);
 }
 //수업 정보 모바일 팝업
 
+$(document).on('click', '.mobile_status_color_palette > div', function(){
+    $(this).addClass('mobile_status_selected');
+    $(this).siblings('div').removeClass('mobile_status_selected');
+});
 //
 
 //그룹 목록에서 그룹원 관리의 x 버튼으로 그룹에서 빼기

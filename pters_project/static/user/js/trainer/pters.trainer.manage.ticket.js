@@ -3230,10 +3230,10 @@ function set_ticket_info_for_mobile_popup(package_id, package_name, package_stat
     if(package_status == "진행중"){
         color = "green";
         selected1 = "mobile_status_selected";
-        selected2 = ""
+        selected2 = "";
     }else{
         color = "red";
-        selected1 = ""
+        selected1 = "";
         selected2 = "mobile_status_selected";
     }
     var status    = `<div class="mobile_status_color_palette" data-groupid=${package_id}>
