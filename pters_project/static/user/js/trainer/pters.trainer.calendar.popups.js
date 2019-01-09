@@ -526,7 +526,7 @@
         $('#planinfo_title_wrap').removeClass('memberNameForInfoView');
         $('#planinfo_plan_color').css('background-color', plancolor);
         $('#planinfo_name_text').text(name);
-        $('#groupplan_participants_status').text('('+current_member_num+'/'+max_member_num+')');
+        $('#groupplan_participants_status').show().text('('+current_member_num+'/'+max_member_num+')');
         if(memo.length == 0){
             memo = "";
             selector_popup_info3_memo.css({"-webkit-text-fill-color":"#cccccc"});
@@ -651,6 +651,41 @@
                             </div>`);
         }else{
             var group_type_name = $(this).attr('data-group-type-cd-name');
+            var group_type = $(this).attr('data-grouptype');
+            var this_schedule_id = $(this).attr('data-scheduleid');
+            
+            var start = schedule_data_cache[group_type][this_schedule_id]["start_date"];
+            var start_date = start.split(' ')[0];
+            var start_time = start.split(' ')[1];
+            var end = schedule_data_cache[group_type][this_schedule_id]["end_date"];
+            var end_date = end.split(' ')[0];
+            var end_time = end.split(' ')[1];
+            var memo = schedule_data_cache[group_type][this_schedule_id]["memo"];
+            var plancolor = "#fbf3bd";
+            var finished = schedule_data_cache[group_type][this_schedule_id]["finished"];
+            var leid = schedule_data_cache[group_type][this_schedule_id]["lecture_id"];
+            // var leid = schedule_data_cache["group"][this_schedule_id]["lecture_id"];
+            var groupid;
+            var name;
+            var dbid;
+            if(group_type == "group"){
+                groupid = schedule_data_cache[group_type][this_schedule_id]["group_id"];
+                name = schedule_data_cache[group_type][this_schedule_id]["group_name"];
+                var current_member_num = schedule_data_cache[group_type][this_schedule_id]["current_member_num"];
+                var max_member_num = schedule_data_cache[group_type][this_schedule_id]["max_member_num"];
+                var type_name = schedule_data_cache[group_type][this_schedule_id]["type_cd_name"];
+                plancolor = schedule_data_cache[group_type][this_schedule_id]["ing_color"];
+            }else{
+                dbid = schedule_data_cache[group_type][this_schedule_id]["member_id"];
+                name = schedule_data_cache[group_type][this_schedule_id]["name"];
+            }
+            
+
+            var selector_cal_popup_planinfo = $('#cal_popup_planinfo');
+            var selector_popup_btn_complete = $('#popup_btn_complete');
+            var selector_popup_info3_memo = $('#popup_info3_memo');
+
+
             var member = " 회원님의 ";
             var yourplan = " 일정";
             var text = group_type_name+" 일정";
@@ -670,42 +705,47 @@
                     break;
             }
             shade_index(150);
-            $('#popup_planinfo_title').text(text);
+            // $('#popup_planinfo_title').text(text);
             var schedule_finish_check = $(this).attr('data-schedule-check');
             var dbid = $(this).attr('data-dbid');
             var name = $(this).attr('data-membername');
-            //var selectedDate = $('.popup_ymdText').text()
-            var selectedTime = $(this).find('.planchecktime').text().split(':')[0];
-            var selectedMinute = $(this).find('.planchecktime').text().split(':')[1].split(' - ')[0];
-            var selectedETime = $(this).find('.planchecktime').text().split('-')[1].split(':')[0];
-            var selectedEMinute = $(this).find('.planchecktime').text().split('-')[1].split(':')[1];
-            var selectedPerson = '<span class="memberNameForInfoView" data-dbid="'+dbid+'" data-name="'+$(this).attr('data-membername')+'">'+$(this).find('.plancheckname').text()+'</span>';
-            var selectedMemo = $(this).attr('data-memo');
-            if($(this).attr('data-memo') == undefined){
-                selectedMemo = "";
+
+            // var selectedPerson = '<span class="memberNameForInfoView" data-dbid="'+dbid+'" data-name="'+$(this).attr('data-membername')+'">'+$(this).find('.plancheckname').text()+'</span>';
+            
+            
+            if(memo.length == 0){
+                memo = "";
+                selector_popup_info3_memo.css({"-webkit-text-fill-color":"#cccccc"});
+            }else{
+                selector_popup_info3_memo.css({"-webkit-text-fill-color":"#282828"});
             }
-            var stime_text = time_format_to_hangul(add_time(selectedTime+':'+selectedMinute, '00:00'));
-            var etime_text = time_format_to_hangul(add_time(selectedETime+':'+selectedEMinute, '00:00'));
+            var dayobj = new Date(start_date);
+            var dayraw = dayobj.getDay();
+            var dayarryKR = ['일', '월', '화', '수', '목', '금', '토'];
+            var day = dayarryKR[dayraw];
+            var infoText = start_date.replace(/-/gi, ". ")+' '+'('+day+')';
+            var stime_text = time_format_add_ampm(start_time);
+            var etime_text = time_format_add_ampm(end_time);
+
             //$("#cal_popup_planinfo").css('display','block').attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')})
             // $('#popup_info3_memo').attr('readonly', true).css({'border':'0'});
             $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png', 'data-type':'view'});
-            $('#popup_info').text(selectedDate);
-
-            $('#popup_info3_memo').text(selectedMemo).val(selectedMemo);
+            $('#popup_info').text(infoText+' '+stime_text+' - '+etime_text);
+            selector_popup_info3_memo.text(memo).val(memo);
 
             $('#canvas').css({'border-color':'#282828'});
             $('#canvasWrap').css({'display':'none'});
-            $('#inner_shade_planinfo').css('display','none');
+            $('#inner_shade_planinfo').css('display', 'none');
 
-            $("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
-            $("#id_schedule_id_finish").val($(this).attr('schedule-id')); // shcedule 정보 저장
+            $("#id_schedule_id").val(this_schedule_id); //shcedule 정보 저장
+            $("#id_schedule_id_finish").val(this_schedule_id); // shcedule 정보 저장
             $("#id_member_name").val(name); //회원 이름 저장
             $("#id_member_name_delete").val(name); //회원 이름 저장
             $('#id_member_dbid_delete').val(dbid);
             $("#id_member_name_finish").val(name); //회원 이름 저장
             $('#id_member_dbid_finish').val(dbid);
-            $('#id_lecture_id_delete').val($(this).attr('data-lectureId'));
-            $("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
+            $('#id_lecture_id_delete').val(leid);
+            $("#id_lecture_id_finish").val(leid); //lecture id 정보 저장
 
 
             if(schedule_finish_check=="0"){
@@ -717,7 +757,7 @@
                 $("#popup_text1").css("display", "none");
                 $("#popup_sign_img").css("display", "block");
                 // $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image//spooner_test/'+$(this).attr('schedule-id')+'.png');
-                $("#id_sign_img").attr('src', 'https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('schedule-id')+'.png');
+                $("#id_sign_img").attr('src', 'https://s3.ap-northeast-2.amazonaws.com/pters-image/'+this_schedule_id+'.png');
                 var myImage = document.getElementById("id_sign_img");
                 myImage.onerror = function() {
                     //this.src="";
@@ -729,15 +769,21 @@
 
             $('#subpopup_addByList_plan').hide();
             if($(this).attr('data-grouptype') == "group"){
-                var group_current_member_num =$(this).attr('data-currentmembernum');
-                var group_max_member_num = $(this).attr('data-membernum');
-                var popuptext = '<span data-name="'+name+'" '+'data-schedule-check="'+schedule_finish_check+'" '+'data-group-type-cd-name="'+group_type_name+'">['+group_type_name+'] '+name+'<span id="groupplan_participants_status"> ('+group_current_member_num+'/'+group_max_member_num+')</span> </span>'+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
-                $('#groupParticipants_number_in_btn').text(group_current_member_num);
-                $('#popup_info2').html(popuptext);
+                $('#planinfo_title_wrap').removeClass('memberNameForInfoView');
+                $('#planinfo_plan_color').css('background-color', plancolor);
+                $('#planinfo_name_text').text(name);
+                $('#groupplan_participants_status').show().text('('+current_member_num+'/'+max_member_num+')');
+
+
+                // var group_current_member_num =$(this).attr('data-currentmembernum');
+                // var group_max_member_num = $(this).attr('data-membernum');
+                // var popuptext = '<span data-name="'+name+'" '+'data-schedule-check="'+schedule_finish_check+'" '+'data-group-type-cd-name="'+group_type_name+'">['+group_type_name+'] '+name+'<span id="groupplan_participants_status"> ('+group_current_member_num+'/'+group_max_member_num+')</span> </span>'+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
+                $('#groupParticipants_number_in_btn').text(current_member_num);
+                // $('#popup_info2').html(popuptext);
                 //$('#popup_info2').html('['+group_type_name+']'+name+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>');
-                $('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'),
-                    'data-groupid': $(this).attr('data-groupid'),
-                    'group-schedule-id':$(this).attr('schedule-id')
+                $('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': max_member_num,
+                                                                    'data-groupid': groupid,
+                                                                    'data-scheduleid':this_schedule_id
                 });
                 //$("#popup_sign_img").css("display","none");
                 //$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
@@ -748,7 +794,13 @@
                 }
                 schedule_on_off = 2;
             }else{
-                $('#popup_info2').html(selectedPerson+' 님'+ '<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>');
+                $('#planinfo_title_wrap').addClass('memberNameForInfoView').attr('data-dbid', dbid);
+                $('#planinfo_type_text, #groupplan_participants_status').hide();
+                $('#planinfo_plan_color').css('background-color', plancolor);
+                console.log("plancolor", plancolor)
+                $('#planinfo_name_text').text(name);
+
+                //$('#popup_info2').html(selectedPerson+' 님'+ '<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>');
                 $('#popup_btn_viewGroupParticipants').hide();
                 toggleGroupParticipantsList('off');
                 schedule_on_off = 1;
@@ -760,20 +812,20 @@
                         'top': (($(window).height() - $("#cal_popup_planinfo").outerHeight()) / 2 + $(window).scrollTop()) - 20,
                         'left': (($(window).width() - $("#cal_popup_planinfo").outerWidth()) / 2 + $(window).scrollLeft())
                     }).attr({
-                        'schedule-id': $(this).attr('schedule-id'),
-                        'data-grouptype': $(this).attr('data-grouptype'),
-                        'group_plan_finish_check': $(this).attr('data-schedule-check')
+                        'data-scheduleid': this_schedule_id,
+                        'data-grouptype': group_type,
+                        'group_plan_finish_check': finished
                     });
                 }else{
                     $("#cal_popup_planinfo").css({
                         'display': 'block',
                         'top': (($(window).height() - $("#cal_popup_planinfo").outerHeight()) / 2 + $(window).scrollTop()),
                         'left': (($(window).width() - $("#cal_popup_planinfo").outerWidth()) / 2 + $(window).scrollLeft())
-                    }).attr({'schedule-id': $(this).attr('schedule-id'),
+                    }).attr({'data-scheduleid': this_schedule_id,
                                           'data-grouptype':'class',
-                                          'data-name':$(this).attr('data-memberName'),
-                                          'data-leid': $(this).attr('data-lectureId'),
-                                          'data-dbid': $(this).attr('data-dbid')
+                                          'data-name':name,
+                                          // 'data-leid': leid,
+                                          'data-dbid': dbid
                     });
                 }
             }else{
@@ -785,9 +837,9 @@
                         'transform': 'translate(-50%, -50%)',
                         'position': 'fixed'
                     }).attr({
-                        'schedule-id': $(this).attr('schedule-id'),
-                        'data-grouptype': $(this).attr('data-grouptype'),
-                        'group_plan_finish_check': $(this).attr('data-schedule-check')
+                        'data-scheduleid': this_schedule_id,
+                        'data-grouptype': group_type,
+                        'group_plan_finish_check': finished
                     });
                 }else{
                     $('#cal_popup_planinfo').css({
@@ -796,11 +848,11 @@
                         'left': '50%',
                         'transform': 'translate(-50%, -50%)',
                         'position': 'fixed'
-                    }).attr({'schedule-id': $(this).attr('schedule-id'),
+                    }).attr({'data-scheduleid': this_schedule_id,
                                           'data-grouptype':'class',
-                                          'data-name':$(this).attr('data-memberName'),
-                                          'data-leid': $(this).attr('data-lectureId'),
-                                          'data-dbid': $(this).attr('data-dbid')
+                                          'data-name': name,
+                                          // 'data-leid': leid,
+                                          'data-dbid': dbid
                     });
                 }
             }
