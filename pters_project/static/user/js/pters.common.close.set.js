@@ -61,6 +61,10 @@ function closePopup_mobile(buttonname){
                 $('#popup_lecture_info_mobile_modify_btn > img').attr('src', '/static/user/res/icon-pencil.png');
                 $('#popup_lecture_info_mobile_modify_btn').attr('data-type', 'view')
             }
+            if(bodywidth <600){
+                $('#upbutton-modify').attr('data-type', 'view');
+                $('#upbutton-modify > img').attr('src', '/static/user/res/icon-pencil.png');
+            }
         }else if(thisAttr == "ticket_info"){
             $('#page_managemember').css('display', 'block');
             $(window).scrollTop(current_Scroll_Position);

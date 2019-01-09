@@ -2763,7 +2763,7 @@ def update_group_info_logic(request):
     end_color_cd = request.POST.get('end_color_cd', '')
     ing_font_color_cd = request.POST.get('ing_font_color_cd', '')
     end_font_color_cd = request.POST.get('end_font_color_cd', '')
-    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
+    next_page = request.POST.get('next_page', '/trainer/get_error_info/')
     group_info = None
     error = None
 
@@ -2848,6 +2848,40 @@ def update_group_info_logic(request):
         messages.error(request, error)
 
     return redirect(next_page)
+
+
+class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/group_info_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetGroupInfoViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        group_id = self.request.GET.get('group_id', '')
+        error = None
+        # start_time = timezone.now()
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
+        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
+        # query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
+        #                          "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
+        #                          " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
+
+        group_data = GroupTb.objects.filter(group_id=group_id, class_tb_id=class_id, state_cd='IP', use=USE
+                                            ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
+                                                       state_cd_nm=RawSQL(query_state_cd, [])
+                                                       # group_member_num=RawSQL(query_group_member_num, [])
+                                                       ).order_by('-group_type_cd', 'name')
+        context['total_group_num'] = len(group_data)
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['group_data'] = group_data
+
+        # end_time = timezone.now()
+        # print(str(end_time-start_time))
+
+        return context
 
 
 def add_group_member_logic(request):
