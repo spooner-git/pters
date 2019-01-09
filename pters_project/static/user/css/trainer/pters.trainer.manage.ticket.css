@@ -409,6 +409,7 @@ img.substract_addedMember{
 		display: table-cell;
 		width: 85%;
 		line-height: 25px;
+		font-size: 15px;
 	}
 
 ._grouplectures_mobile{
@@ -630,6 +631,14 @@ div._manage{
 }
 /*그룹을 클릭해서 나오는 그룹멤버 리스트 테이블*/
 
+
+.mobile_package_color_in_entire_list{
+	padding: 0px 3px 0px 3px;
+	border: 1px solid #cccccc;
+	border-radius: 5px;
+	display: inline-block;
+	margin: 2px;
+}
 
 /*모바일에서 수강권을 클릭하면 나오는 팝업*/
 #popup_ticket_info_mobile{
