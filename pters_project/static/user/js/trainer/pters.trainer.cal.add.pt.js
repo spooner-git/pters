@@ -2694,7 +2694,6 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
 }
 
 function clear_duplicated_date_time(jsondata, selecteddate){
-    console.log(selecteddate);
     //중복 제거 (그룹 일정때문에 중복으로 들어오는 것들)
     var all_start_date_time = jsondata.group_schedule_start_datetime.concat(jsondata.offTimeArray_start_date);
     var all_end_date_time = jsondata.group_schedule_end_datetime.concat(jsondata.offTimeArray_end_date);
@@ -2835,8 +2834,7 @@ function clear_duplicated_date_time(jsondata, selecteddate){
             break;
         }
     }
-    console.log("clear_start_array:"+resultStart_Array);
-    console.log("clear_end_array:"+resultEnd_Array);
+
     return {"clear_start_array":resultStart_Array, "clear_end_array":resultEnd_Array}
 }
 

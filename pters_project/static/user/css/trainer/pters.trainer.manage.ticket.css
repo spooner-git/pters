@@ -842,7 +842,7 @@ div._manage{
 		z-index: 10;
 	}
 	#ticketnametitle{
-		display: block;
+		display: table;
 	}
 	#popup_ticket_info_tablet_upperbar{
 		display: block;

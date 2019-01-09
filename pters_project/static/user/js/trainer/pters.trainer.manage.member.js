@@ -1597,13 +1597,13 @@ $(document).ready(function(){
 
     $('#popup_ticket_info_mobile_modify_btn').click(function(){
         if($(this).attr('data-type') == "view" ){
-            $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("readonly", false).css('border', '1px solid #cccccc');
+            $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border', '1px solid #cccccc');
             $(this).attr('data-type', 'modify');
             $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
             $('#ticketdelete').show();
             $('.mobile_status_color_palette').show();
         }else if($(this).attr('data-type') == "modify" ){
-            $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("readonly", true).css('border-color', 'transparent');
+            $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
             $(this).attr('data-type', 'view');
             var package_id = $('#mypackageid').attr('data-packageid');
             var package_name = $('#ticketname input').val();
