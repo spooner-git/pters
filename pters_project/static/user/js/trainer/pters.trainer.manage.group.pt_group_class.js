@@ -1411,6 +1411,7 @@ function modify_group_status(group_id, option){
     var bodywidth = window.innerWidth;
     var text_for_mobile;
     var color_for_mobile;
+    var _URL;
     if(option == 'complete'){
         _URL = '/trainer/finish_group_info/';
         text_for_mobile = "종료";
@@ -1452,6 +1453,15 @@ function modify_group_status(group_id, option){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
                 scrollToDom($('#page_addmember'));
+
+                var $lecture_status_selected;
+                if(option == 'resume'){
+                    $lecture_status_selected = $('.lecture_finished');
+                }else{
+                    $lecture_status_selected = $('.lecture_ongoing');
+                }
+                $lecture_status_selected.addClass('mobile_status_selected');
+                $lecture_status_selected.siblings('div').removeClass('mobile_status_selected');
                 alert(jsondata.messageArray);
                 // $('#errorMessageBar').show();
                 // $('#errorMessageText').text(jsondata.messageArray);
