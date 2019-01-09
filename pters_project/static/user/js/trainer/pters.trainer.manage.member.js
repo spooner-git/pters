@@ -1618,13 +1618,16 @@ $(document).ready(function(){
     $('#upbutton-modify').click(function(){ //모바일 회원정보창에서 수정 눌렀을때
         if($('#popup_lecture_info_mobile').css('display') == "block"){
             if($(this).attr('data-type') == "view" ){
-                $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("readonly", false).css('border', '1px solid #cccccc');
+                $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border', '1px solid #cccccc');
                 $(this).attr('data-type', 'modify');
                 $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
                 $('#mygroupnametitle').show();
                 $('.mobile_group_color_palette').show();
+                $('#id_mobile_input_capacity').keyup(function(){
+                    limit_char_only_number(this);
+                });
             }else if($(this).attr('data-type') == "modify" ){
-                $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("readonly", true).css('border-color', 'transparent');
+                $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
                 $(this).attr('data-type', 'view');
                 var group_id = $('#mygroupid').attr('data-groupid');
                 var group_name = $('#mygroupname input').val();
@@ -1635,13 +1638,14 @@ $(document).ready(function(){
             }
         }else if($('#popup_ticket_info_mobile').css('display') == "block"){
             if($(this).attr('data-type') == "view" ){
-                $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("readonly", false).css('border', '1px solid #cccccc');
+                $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border', '1px solid #cccccc');
                 $(this).attr('data-type', 'modify');
                 $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
-                $('#ticketnametitle, #ticketdelete').show();
+                $('#ticketnametitle').css('display', 'table');
+                $('#ticketdelete').show();
                 $('.mobile_status_color_palette').show();
             }else if($(this).attr('data-type') == "modify" ){
-                $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("readonly", true).css('border-color', 'transparent');
+                $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
                 $(this).attr('data-type', 'view');
                 var package_id = $('#mypackageid').attr('data-packageid');
                 var package_name = $('#ticketname input').val();
@@ -4023,6 +4027,7 @@ function open_member_info_popup_mobile(dbID, jsondata){
 //회원의 수강정보(등록횟수)를 수정한다.
 function modify_member_lec_info_pc(){
     $(document).on('keyup', '.lec_reg_count',function(){
+        limit_char_only_number(this);
         var this_val = $(this).val();
         var remainCount = $(this).parent('div').siblings('.lec_rem_count').text();
         if(Number(this_val) >= Number(remainCount)){
@@ -4034,7 +4039,9 @@ function modify_member_lec_info_pc(){
         }
     });
     $(document).on('keyup', '#regPrice', function(){
+        limit_char_only_number(this);
         $('#form_price').val($(this).val());
+
     });
 
     $(document).on('keyup', '#lectureNote', function(){

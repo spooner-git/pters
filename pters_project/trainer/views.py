@@ -2799,8 +2799,13 @@ def update_group_info_logic(request):
             end_font_color_cd = group_info.end_font_color_cd
 
     if error is None:
-        if int(member_num) <= 0:
-            error = '정원은 1명 이상이어야 합니다.'
+        try:
+            if int(member_num) <= 0:
+                error = '정원은 1명 이상이어야 합니다.'
+        except ValueError:
+            error = '정원은 숫자만 입력 가능합니다.'
+        except TypeError:
+            error = '정원은 숫자만 입력 가능합니다.'
 
     if error is None:
         member_fix_data = []

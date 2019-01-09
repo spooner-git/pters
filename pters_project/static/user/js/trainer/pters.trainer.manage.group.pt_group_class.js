@@ -923,7 +923,7 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
         var group_id = $(this).attr('data-groupid');
         var status = $(this).attr('data-edit');
 
-
+        console.log(status);
         switch(status){
             case 'view':
                 ori_group_name = $(this).parent('div').siblings('._groupname').find('input').val();
@@ -936,6 +936,11 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
                 $(this).siblings('img._info_download, img._info_delete').hide();
                 $('img._info_modify[data-edit="view"]').addClass('disabled_button');
                 toggle_lock_unlock_inputfield_grouplist(group_id, false);
+
+                $('#id_group_capacity_input').keyup(function(){
+                    limit_char_only_number(this);
+                });
+
                 break;
             case 'edit':
                 var group_name = $(this).parent('div').siblings('._groupname').find('input').val();
@@ -1814,7 +1819,7 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
                 main += '<div class="_grouppartystatus '+"full_group"+' _group_list_pc_style"><span>'+ group_membernum + ' </span> ' +'</div>';
             }
             else{
-                main += '<div class="_grouppartystatus ' + full_group + ' _group_list_pc_style">' + '<div class="group_member_current_num">' + group_membernum + '</div>' + '<span> /</span> ' + '<input style="width:40%;text-align:left;" class="group_listinput input_disabled_true _editable ' + full_group + '" value="' + group_capacity + '" disabled>' + '</div>';
+                main += '<div class="_grouppartystatus ' + full_group + ' _group_list_pc_style">' + '<div class="group_member_current_num">' + group_membernum + '</div>' + '<span> /</span> ' + '<input style="width:40%;text-align:left;" id="id_group_capacity_input" class="group_listinput input_disabled_true _editable ' + full_group + '" value="' + group_capacity + '" disabled>' + '</div>';
             }
             main += '<div class="_groupmemo _group_list_pc_style"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>';
 
@@ -2334,7 +2339,7 @@ function groupMemberListSet_mobile(group_id, jsondata){
         '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
         '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
         '<div class="_regandremaincount" data-name="'+groupmember_regcount+'"><p><span style="margin-right:20px;">등록 횟수</span>'+groupmember_regcount+'</p>'
-                                                                            +'<p>'+'<span style="margin-right:20px;">잔여 횟수</span>'+groupmember_remcount+'</p>'+
+                                                                            +'<p>'+'<span style="margin-right:20px;">남은 횟수</span>'+groupmember_remcount+'</p>'+
                                                                             '</div>';
 
         if(grouptype!='ONE_TO_ONE') {
@@ -2453,13 +2458,13 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_color, gr
                         <div class="plancolor_d9c3ab"></div>
                     </div>`;
 
-    var html = `<div class="pters_table" style="display:none;" id="mygroupnametitle"><div class="pters_table_cell">수업명</div><div class="pters_table_cell" id="mygroupname"><input type="text" class="mobile_memo_input" value="${group_name}" readonly></div></div>
+    var html = `<div class="pters_table" style="display:none;" id="mygroupnametitle"><div class="pters_table_cell">수업명</div><div class="pters_table_cell" id="mygroupname"><input type="text" class="mobile_memo_input" value="${group_name}" disabled></div></div>
                 <div class="pters_table"><div class="pters_table_cell">색상</div><div class="pters_table_cell"><div id="mygroupcolor" style="background-color:${group_color};"></div>${groupcolor}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${group_type}</div></div>
-                <div class="pters_table"><div class="pters_table_cell">정원</div><div class="pters_table_cell" id="mygroupcapacity"><input type="text" class="mobile_memo_input" style="width:20%;" value="${group_membercapacity}" readonly>명</div></div>
+                <div class="pters_table"><div class="pters_table_cell">정원</div><div class="pters_table_cell" id="mygroupcapacity"><input type="text" id="id_mobile_input_capacity" class="mobile_memo_input" style="width:20%;" value="${group_membercapacity}" disabled>명</div></div>
                 <div class="pters_table"><div class="pters_table_cell">참여 인원</div><div class="pters_table_cell">${group_membernum}명</div></div>
                 <div class="pters_table"><div class="pters_table_cell">반복 일정</div><div class="pters_table_cell">${repeat_info}</div></div>
-                <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="mygroupmemo"><input type="text" class="mobile_memo_input" value="${group_memo}" readonly></div></div>
+                <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="mygroupmemo"><input type="text" class="mobile_memo_input" value="${group_memo}" disabled></div></div>
 
                 <div style="display:none;" id="mygroupid" data-groupid="${group_id}">그룹 id: ${group_id}</div>
                 <div style="display:none;" id="mygrouptypecd" data-grouptypecd="${group_typecd}">그룹 typecd: ${group_typecd}</div>`;
@@ -2467,7 +2472,7 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_color, gr
 }
 //수업 정보 모바일 팝업
 
-
+//
 
 //그룹 목록에서 그룹원 관리의 x 버튼으로 그룹에서 빼기
 $(document).on('click', 'img.substract_groupMember', function(e){

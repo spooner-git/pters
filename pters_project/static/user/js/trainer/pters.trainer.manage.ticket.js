@@ -3546,7 +3546,7 @@ function packageMemberListSet_mobile(package_id, jsondata){
         '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
         '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
         '<div class="_regandremaincount" data-name="'+groupmember_regcount+'"><p><span style="margin-right:20px;">등록 횟수</span>'+groupmember_regcount+'</p>'
-                                                                            +'<p>'+'<span style="margin-right:20px;">잔여 횟수</span>'+groupmember_remcount+'</p>'+
+                                                                            +'<p>'+'<span style="margin-right:20px;">남은 횟수</span>'+groupmember_remcount+'</p>'+
                                                                             '</div>';
 
         //if(grouptype!='ONE_TO_ONE') {
