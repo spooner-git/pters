@@ -2991,7 +2991,7 @@ function know_duplicated_plans(jsondata){
     for(var i=0; i<classlen; i++){
         if(jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) == -1 ){
             testArray_start.push(jsondata.classTimeArray_start_date[i]);
-            testArray_end.push(jsondata.classTimeArray_end_date[i]);  
+            testArray_end.push(jsondata.classTimeArray_end_date[i]);
         }
     }
 
