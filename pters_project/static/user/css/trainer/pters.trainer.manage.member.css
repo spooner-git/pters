@@ -1245,7 +1245,7 @@ span.summaryInnerBoxText_Repeatendtext{
 .ymdText-pc-add-member-wrap{
 	display: none;
 	/*display: inline-block;*/
-	width:85%;
+	width:80%;
 }
 #search_member_input, #search_lecture_input, #search_ticket_input{
 	height: 40px;
@@ -1265,8 +1265,8 @@ span.summaryInnerBoxText_Repeatendtext{
 	display:inline-block;
 }
 #id_member_search, #id_lecture_search, #id_ticket_search{
-	right: 17%;
-	bottom: 5px;
+	right: 23%;
+	/*bottom: 5px;*/
 	width: 28px;
 }
 .input_disabled_color{

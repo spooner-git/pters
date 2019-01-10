@@ -851,17 +851,24 @@ div._fixedmember{
 .mobile_status_color_palette{
 	display: none;
 }
-	.mobile_status_color_palette > div{
-		cursor: pointer;
-		display: inline-block;
-		border: 1px solid #cccccc;
-		padding: 0 5px 0 5px;
-		color:#9a9a9a;
-	}
-	.mobile_status_selected{
-		color: #fe4e65 !important;
-	}
 
+.mobile_status_color_palette > div{
+	cursor: pointer;
+	display: inline-block;
+	border: 1px solid #cccccc;
+	padding: 0 5px 0 5px;
+	color:#9a9a9a;
+}
+
+.mobile_status_selected{
+	color: #fe4e65 !important;
+}
+
+#lecturedelete{
+	cursor: pointer;
+	background-color: #efefef;
+	border: 1px solid #cccccc;
+}
 
 @media(min-width: 600px){
 	#popup_lecture_info_mobile{

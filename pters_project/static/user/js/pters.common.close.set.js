@@ -65,6 +65,7 @@ function closePopup_mobile(buttonname){
                 $('#upbutton-modify').attr('data-type', 'view');
                 $('#upbutton-modify > img').attr('src', '/static/user/res/icon-pencil.png');
             }
+            $('#lecturedelete').css({'display':'none'});
         }else if(thisAttr == "ticket_info"){
             $('#page_managemember').css('display', 'block');
             $(window).scrollTop(current_Scroll_Position);
