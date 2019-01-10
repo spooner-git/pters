@@ -881,7 +881,7 @@ $(document).ready(function(){
     });
 
 
-    $(document).on('click', 'div.deleteBtnBin', function(e){
+    $(document).on('click', 'div.deleteBtnBin, div.mobile_repeat_info_delete', function(e){
         e.stopPropagation();
         var id_info = $(this).parents('div.summaryInnerBox').attr('data-id');
         $('#id_repeat_schedule_id_confirm').val(id_info);
@@ -891,7 +891,11 @@ $(document).ready(function(){
 
         if($(this).attr('data-deletetype') == 'grouprepeatinfo'){
             deleteTypeSelect = 'grouprepeatinfodelete';
-            shade_index(100);
+            if($('#popup_lecture_info_mobile').css('display') == "block"){
+                shade_index(200);
+            }else{
+                shade_index(100);
+            }
         }else if($(this).attr('data-deletetype') == 'repeatinfo'){
             deleteTypeSelect = 'repeatinfodelete';
             if($("._calmonth").length ==1 ){
@@ -998,27 +1002,38 @@ $(document).ready(function(){
             delete_group_from_package(package_id, group_id);
             close_info_popup('cal_popup_plandelete');
         }else if(deleteTypeSelect == "grouprepeatinfodelete"){
-            group_id = $(this).parent('#cal_popup_plandelete').attr('data-groupid');
-            repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
+            group_id = $('#cal_popup_plandelete').attr('data-groupid');
+            repeat_schedule_id = $('#cal_popup_plandelete').attr('data-repeatid');
             send_repeat_delete_group(repeat_schedule_id, 'callback', function(){
                 enable_delete_btns_after_ajax();
                 close_info_popup('cal_popup_plandelete');
-                get_group_repeat_info(group_id);
-                if(bodywidth >= 600){
-                    $('#calendar').css('position', 'relative');
-                }else{
-                    get_current_member_list();
-                    get_current_group_list();
-                    get_member_group_class_ing_list("callback", function(jsondata){
-                        // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-                        // var member_Html = memberlist.html;
-                        var group_class_Html = group_class_ListHtml('current', jsondata);
-                        $('#currentGroupList').html(group_class_Html);
-                    });
-                }
-                if($('#calendar').length > 0){
+                
+                if($('#calendar').length != 0){
                     ajaxClassTime();
+                    if(bodywidth >= 600){
+                        $('#calendar').css('position', 'relative');
+                    }else{
+                        get_current_member_list();
+                        get_current_group_list();
+                        // get_member_group_class_ing_list("callback", function(jsondata){
+                        //     // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+                        //     // var member_Html = memberlist.html;
+                        //     var group_class_Html = group_class_ListHtml('current', jsondata);
+                        //     $('#currentGroupList').html(group_class_Html);
+                        // });
+                    }
                 }
+
+                if(bodywidth < 1000){
+                    get_group_repeat_info(group_id, "callback", function(repeat_data){
+                        set_lecture_repeat_info_for_mobile_popup(group_id, repeat_data, "update");
+                        $('.mobile_repeat_info_delete').show();
+                    });
+                }else{
+                    get_group_repeat_info(group_id);
+                }
+
+
             });
             // get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
             //     for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
@@ -1634,11 +1649,11 @@ $(document).ready(function(){
             $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border-bottom', '1px solid #cccccc');
             $(this).attr('data-type', 'modify');
             $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
-            $('#lecturedelete').show();
+
+            $('#lecturedelete, .mobile_repeat_info_delete').show();
             $('#id_lecture_status').hide();
 
             //$('#mygroupnametitle').show();
-            $('#lecturedelete').show();
             $('.mobile_group_color_palette, .mobile_status_color_palette').show();
             $('#id_mobile_input_capacity').keyup(function(){
                 limit_char_only_number(this);
@@ -1672,7 +1687,7 @@ $(document).ready(function(){
                 $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
 
                 $('#mygroupnametitle').css('display', 'table');
-                $('#lecturedelete').show();
+                $('#lecturedelete, .mobile_repeat_info_delete').show();
 
                 $('#id_lecture_status').css('display', 'none');
 

@@ -3065,7 +3065,7 @@ function know_duplicated_plans(jsondata){
         var array_sorted = duplicate_dic[plan_].sort();
 
         for(var t=0; t<array_sorted.length; t++){
-
+            console.log("temp_index", temp_index)
             // 기본값 셋팅
             var ref = array_sorted[t];
             if(t == 0){
@@ -3188,14 +3188,14 @@ $('.popup_inner_month').scroll(function(e){
 
     // 좌측 스크롤 애로우 보이기
     if(popupHeight + scrollLocation < scrollHeight-30){
-        $('.scroll_arrow_bottom').css('visibility','visible')
+        $('.scroll_arrow_bottom').css('visibility', 'visible');
     }else{
-        $('.scroll_arrow_bottom').css('visibility','hidden')
+        $('.scroll_arrow_bottom').css('visibility', 'hidden');
     }
     if(scrollLocation > 30){
-        $('.scroll_arrow_top').css('visibility','visible')
+        $('.scroll_arrow_top').css('visibility', 'visible');
     }else{
-        $('.scroll_arrow_top').css('visibility','hidden')
+        $('.scroll_arrow_top').css('visibility', 'hidden');
     }
     //좌측 스크롤 애로우 보이기
 });

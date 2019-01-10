@@ -833,6 +833,25 @@ div._fixedmember{
 		margin-bottom: 10px;
 		cursor: pointer;
 	}
+#popup_lecture_info_mobile_basic .mobile_repeat_info_wrap{
+	display: table;
+	width: 100%;
+}
+#popup_lecture_info_mobile_basic .mobile_repeat_info{
+	display: table-cell;
+	width: 95%;
+}
+#popup_lecture_info_mobile_basic .mobile_repeat_info_delete{
+	display: none;
+	/*display: table-cell;*/
+	width: 5%;
+	cursor: pointer;
+}
+	#popup_lecture_info_mobile_basic .mobile_repeat_info_delete img{
+		width: 22px;
+		padding: 5px;
+		margin-bottom: 3px;
+	}
 #popup_lecture_info_mobile_basic .mobile_repeat_info_wrap p:nth-of-type(1){
 	margin: 0;
 }
