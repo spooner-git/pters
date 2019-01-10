@@ -2582,8 +2582,7 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_status, g
                         <div class="plancolor_d9c3ab"></div>
                     </div>`;
 
-    var html = `<div class="pters_table" style="display:none;" id="lecturedelete" data-groupid="${group_id}"><img src="/static/user/res/member/icon-delete-black.png" style="cursor:pointer;width:20px;margin:10px;"></div>
-                <div class="pters_table" id="mygroupnametitle"><div class="pters_table_cell">수업명</div><div class="pters_table_cell" id="mygroupname"><input type="text" class="mobile_memo_input" value="${group_name}" disabled></div></div>
+    var html = `<div class="pters_table" id="mygroupnametitle"><div class="pters_table_cell">수업명</div><div class="pters_table_cell" id="mygroupname"><input type="text" class="mobile_memo_input" value="${group_name}" disabled></div></div>
                 <div class="pters_table"><div class="pters_table_cell">색상</div><div class="pters_table_cell"><div id="mygroupcolor" style="background-color:${group_color};"></div>${groupcolor}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${group_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">정원</div><div class="pters_table_cell" id="mygroupcapacity"><input type="text" id="id_mobile_input_capacity" class="mobile_memo_input" style="width:20%;" value="${group_membercapacity}" disabled>명</div></div>
