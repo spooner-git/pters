@@ -525,6 +525,7 @@
 {#            </table>#}
 {#        </div>#}
 
+        <div id="currentMemberList" style="display:none"></div>
         <div id="currentPackageList" class="centeralign">
             <table id="currentPackage" class="table table-bordered">
 
@@ -1418,30 +1419,30 @@
 
         $(window).resize(function(){
             bodywidth = window.innerWidth;
-            var selector_currentMemberList = $('#currentPackageList');
-            var selector_finishedMemberList = $('#finishedPackageList');
+            var selector_currentPackageList = $('#currentPackageList');
+            var selector_finishedPackageList = $('#finishedPackageList');
             if(bodywidth < 1000 && $('._ticket_list_mobile_style').length == 0){
-                if(selector_currentMemberList.css('display') == "block"){
+                if(selector_currentPackageList.css('display') == "block"){
                     get_package_ing_list("callback", function(jsondata){
-                        var group_class_Html = package_ListHtml_mobile('current', jsondata);
-                        $('#currentPackageList').html(group_class_Html);
+                        var package_Html = package_ListHtml_mobile('current', jsondata);
+                        $('#currentPackageList').html(package_Html);
                     });
-                }else if(selector_finishedMemberList.css('display') == "block"){
+                }else if(selector_finishedPackageList.css('display') == "block"){
                     get_package_ing_list("callback", function(jsondata){
-                        var group_class_Html = package_ListHtml_mobile('finished', jsondata);
-                        $('#finishedPackageList').html(group_class_Html);
+                        var package_Html = package_ListHtml_mobile('finished', jsondata);
+                        $('#finishedPackageList').html(package_Html);
                     });
                 }
             }else if(bodywidth >= 1000 && $('._ticket_list_pc_style').length == 0 ){
-                if(selector_currentMemberList.css('display') == "block"){
+                if(selector_currentPackageList.css('display') == "block"){
                     get_package_ing_list("callback", function(jsondata){
-                        var group_class_Html = package_ListHtml('current', jsondata);
-                        $('#currentPackageList').html(group_class_Html);
+                        var package_Html = package_ListHtml('current', jsondata);
+                        $('#currentPackageList').html(package_Html);
                     });
-                }else if(selector_finishedMemberList.css('display') == "block"){
+                }else if(selector_finishedPackageList.css('display') == "block"){
                     get_package_ing_list("callback", function(jsondata){
-                        var group_class_Html = package_ListHtml('finished', jsondata);
-                        $('#finishedPackageList').html(group_class_Html);
+                        var package_Html = package_ListHtml('finished', jsondata);
+                        $('#finishedPackageList').html(package_Html);
                     });
                 }
             }

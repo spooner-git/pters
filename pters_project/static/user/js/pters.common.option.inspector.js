@@ -142,7 +142,7 @@ function pters_option_inspector(option_type, xhr, option_element){
             }else{
                 var current_member_num = option_element;
                 if(current_member_num >= limit_num){
-                    show_caution_popup(function_lock_message("create", limit_num, "회원 등록", limit_type));
+                    show_caution_popup(function_lock_message("create", limit_num, "진행중 회원", limit_type));
                     if(xhr != ""){
                         xhr.abort(); // ajax중지
                         completeSend(); // ajax 로딩 이미지 숨기기
@@ -245,7 +245,7 @@ function pters_option_inspector(option_type, xhr, option_element){
             else{
                 var current_group_num = option_element;
                 if(current_group_num >= limit_num){
-                    show_caution_popup(function_lock_message("create", limit_num, "그룹 추가", limit_type));
+                    show_caution_popup(function_lock_message("create", limit_num, "진행중 그룹", limit_type));
                     if(xhr != ""){
                         xhr.abort(); // ajax중지
                         completeSend(); // ajax 로딩 이미지 숨기기
@@ -338,7 +338,7 @@ function pters_option_inspector(option_type, xhr, option_element){
         }else if(option_type == "package_update"){
             var current_package_num = option_element;
             if(current_package_num >= limit_num){
-                show_caution_popup(function_lock_message("create", limit_num, "수강권 변경", limit_type));
+                show_caution_popup(function_lock_message("create", limit_num, "진행중 수강권", limit_type));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                     completeSend(); // ajax 로딩 이미지 숨기기

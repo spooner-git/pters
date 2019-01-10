@@ -1084,7 +1084,7 @@ $(document).ready(function(){
 
     $(document).on('click', '#starttimes li a', function(){
         $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
-        $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
+        $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text()).attr('data-trainingtime', $(this).attr('data-trainingtime'));
         /*$(this).parents('ul')
                .siblings('button')
                .addClass("dropdown_selected")
@@ -1151,7 +1151,7 @@ $(document).ready(function(){
 
             dropdownlist_auto_scroll_to_middle($('#starttimesSelected button'));
             add_scroll_arrow_to_dropdown_list($(this));
-        }; 
+        };
     });
     $(document).on('click', '.pters_dropdown_custom_list li a', function(){
         $('#page-base-addstyle').css({'z-index':400});
@@ -2782,7 +2782,6 @@ function clear_duplicated_date_time(jsondata, selecteddate){
                     if(!check_equal_time){
                         resultStart_Array.push(start_time_temp);
                         resultEnd_Array.push(end_time_temp);
-
                     }
                 }
             }
@@ -3198,15 +3197,11 @@ function addGraphIndicator(durmin){
     }else{
 
     }
-
-    var starttext = $('#starttimesSelected button').val().split(' ');  //오후 11:30
-    var daymorning = starttext[0];
-    var planHour = Number(starttext[1].split(':')[0]);
-    // hkkim 2019-01-07
-    if(daymorning == '오후'){
-        planHour += 12;
-    }
-    var planMinute = Number(starttext[1].split(':')[1]);
+    var starttext =  $('#starttimesSelected button').attr('data-trainingtime');
+    // var starttext = $('#starttimesSelected button').val().split(' ');  //오후 11:30
+    // var daymorning = starttext[0];
+    var planHour = Number(starttext.split(':')[0]);
+    var planMinute = Number(starttext.split(':')[1]);
     var planend = add_time(planHour+':'+planMinute, '00:'+durmin);
     var planEndHour = Number(planend.split(':')[0]);
     var planEndMin  = Number(planend.split(':')[1]);

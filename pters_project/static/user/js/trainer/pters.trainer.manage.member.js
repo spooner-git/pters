@@ -763,7 +763,12 @@ $(document).ready(function(){
                 var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
                 var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
                 var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
-                resume_member_reg_data_pc(lectureID, dbID);
+
+                get_member_ing_list("callback", function(jsondata) {
+                    $('#currentMemberList').attr('total_member_num', jsondata.total_member_num);
+                    resume_member_reg_data_pc(lectureID, dbID);
+                });
+
                 selectore_lectureStateChangeSelectPopup.css('display','none');
                 $('#shade_caution').hide();
             }else{
@@ -1599,7 +1604,7 @@ $(document).ready(function(){
 
     $('#popup_ticket_info_mobile_modify_btn').click(function(){
         if($(this).attr('data-type') == "view" ){
-            $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border', '1px solid #cccccc');
+            $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border-bottom', '1px solid #cccccc');
             $(this).attr('data-type', 'modify');
             $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
             $('#ticketdelete').show();
@@ -1626,7 +1631,7 @@ $(document).ready(function(){
     $('#popup_lecture_info_mobile_modify_btn').click(function(){
 
         if($(this).attr('data-type') == "view" ){
-            $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border', '1px solid #cccccc');
+            $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border-bottom', '1px solid #cccccc');
             $(this).attr('data-type', 'modify');
             $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
             $('#lecturedelete').show();
@@ -1662,7 +1667,7 @@ $(document).ready(function(){
     $('#upbutton-modify').click(function(){ //모바일 회원정보창에서 수정 눌렀을때
         if($('#popup_lecture_info_mobile').css('display') == "block"){
             if($(this).attr('data-type') == "view" ){
-                $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border', '1px solid #cccccc');
+                $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border-bottom', '1px solid #cccccc');
                 $(this).attr('data-type', 'modify');
                 $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
 
@@ -1698,7 +1703,7 @@ $(document).ready(function(){
             }
         }else if($('#popup_ticket_info_mobile').css('display') == "block"){
             if($(this).attr('data-type') == "view" ){
-                $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border', '1px solid #cccccc');
+                $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border-bottom', '1px solid #cccccc');
                 $(this).attr('data-type', 'modify');
                 $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
                 $('#ticketnametitle').css('display', 'table');
@@ -4346,7 +4351,7 @@ function resume_member_reg_data_pc(lectureID, dbID){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
-            if(member_tab==TAB_END){
+            if(member_tab==TAB_END || lecture_tab==TAB_END || ticket_tab == TAB_END){
                 pters_option_inspector("member_update", xhr, $('#currentMemberList').attr('total_member_num'));
             }
         },
