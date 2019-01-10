@@ -3110,6 +3110,7 @@ function package_ListHtml_page(option, jsondata){ //option : current, finished
 
 function package_ListHtml_mobile(option, jsondata){ //option : current, finished
     $('#uptext').html("수강권 <span style='color:#ff4d63;'>"+jsondata.total_package_num+"</span>");
+    console.log(jsondata);
     switch(option){
         case 'current':
             $membernum = $('#memberNumber_current_ticket');

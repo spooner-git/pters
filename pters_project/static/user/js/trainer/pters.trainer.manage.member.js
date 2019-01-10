@@ -1618,6 +1618,7 @@ $(document).ready(function(){
             $(this).attr('data-type', 'modify');
             $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
             $('#ticketdelete').show();
+            $('#id_ticket_status').hide();
             $('.mobile_status_color_palette').show();
         }else if($(this).attr('data-type') == "modify" ){
             var package_name = $('#ticketname input').val();
@@ -1643,7 +1644,9 @@ $(document).ready(function(){
             $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border', '1px solid #cccccc');
             $(this).attr('data-type', 'modify');
             $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
+
             $('#lecturedelete, .mobile_repeat_info_delete').show();
+            $('#id_lecture_status').hide();
 
             //$('#mygroupnametitle').show();
             $('.mobile_group_color_palette, .mobile_status_color_palette').show();
