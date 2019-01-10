@@ -742,7 +742,6 @@ $(document).on('click', 'div.groupWrap', function(e){
     var memo_list =  $(this).siblings('div[data-groupid="'+group_id+'"].groupMemoWrap');
     var repeat_list = $(this).siblings('div[data-groupid="'+group_id+'"].groupRepeatWrap');
     var memberlist = $(this).siblings('div[data-groupid="'+group_id+'"].groupMembersWrap');
-    console.log(bodywidth);
     if(bodywidth >= 1000){
         if(memberlist.css('display')=='none'){
             // if(group_id != "1:1") {
@@ -803,7 +802,7 @@ $(document).on('click', 'div.groupWrap', function(e){
             $('#popup_lecture_info_mobile_modify_btn').css('display', 'block');
         }
         get_group_repeat_info(group_id, "callback", function(repeat_data){
-            set_lecture_info_for_mobile_popup(group_id, group_name, group_status, group_statuscd,group_color, group_type, group_typecd, group_membernum, group_membercapacity, group_memo, repeat_data);
+            set_lecture_info_for_mobile_popup(group_id, group_name, group_status, group_statuscd, group_color, group_type, group_typecd, group_membernum, group_membercapacity, group_memo, repeat_data);
         });
         if($(this).attr('data-groupstatecd')=='current'){
             get_groupmember_list(group_id);
@@ -1393,13 +1392,13 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                     if(group_name.length != 0){
                         if(bodywidth<600){
                             $('#uptext3').text(group_name);
-                            $('#mygroupnametitle, #lecturedelete').hide();
+                            $('#mygroupnametitle, #lecturedelete, .mobile_repeat_info_delete').hide();
                         }
                         else if(bodywidth<1000){
                             $('#popup_lecture_info_mobile_modify_btn > img').attr('src', '/static/user/res/icon-pencil.png');
                         }
                         else{
-                            $('#lecturedelete').hide();
+                            $('#lecturedelete, .mobile_repeat_info_delete').hide();
                             $('#popup_lecture_info_mobile_modify_btn').find('img').attr('src', '/static/user/res/icon-pencil.png');
                         }
                     }
@@ -2512,46 +2511,52 @@ $(document).on('click', '#lecturedelete', function(e){
 });
 //수업 정보 모바일 팝업
 function set_lecture_info_for_mobile_popup(group_id, group_name, group_status, group_statuscd, group_color, group_type, group_typecd, group_membernum, group_membercapacity, group_memo, jsondata){
-    var repeat_info_dict= { 'KOR':
-        {'DD':'매일', 'WW':'매주', '2W':'격주',
-            'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
-        'JPN':
-            {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
-                'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
-        'JAP':
-            {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
-                'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
-    };
+    // var repeat_info_dict= { 'KOR':
+    //     {'DD':'매일', 'WW':'매주', '2W':'격주',
+    //         'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
+    //     'JPN':
+    //         {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+    //             'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
+    //     'JAP':
+    //         {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+    //             'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
+    // };
 
-    var repeat_day_info_raw_array = jsondata.repeatScheduleWeekInfoArray;
+    // var repeat_day_info_raw_array = jsondata.repeatScheduleWeekInfoArray;
 
-    var repeat_day =  function(){
-            var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/');
-            var repeat_day_info = "";
-            if(repeat_day_info_raw.length>1){
-                for(var j=0; j<repeat_day_info_raw.length; j++){
-                    repeat_day_info = repeat_day_info + '/' + repeat_info_dict[setting_info.lt_lan_01][repeat_day_info_raw[j]].substr(0,1);
-                }
-            }else if(repeat_day_info_raw.length == 1){
-                repeat_day_info = repeat_info_dict[setting_info.lt_lan_01][repeat_day_info_raw[0]];
-            }
-            if(repeat_day_info.substr(0, 1) == '/'){
-                repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length);
-            }
-            return repeat_day_info;
-        };
+    // var repeat_day =  function(){
+    //         var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/');
+    //         var repeat_day_info = "";
+    //         if(repeat_day_info_raw.length>1){
+    //             for(var j=0; j<repeat_day_info_raw.length; j++){
+    //                 repeat_day_info = repeat_day_info + '/' + repeat_info_dict[setting_info.lt_lan_01][repeat_day_info_raw[j]].substr(0,1);
+    //             }
+    //         }else if(repeat_day_info_raw.length == 1){
+    //             repeat_day_info = repeat_info_dict[setting_info.lt_lan_01][repeat_day_info_raw[0]];
+    //         }
+    //         if(repeat_day_info.substr(0, 1) == '/'){
+    //             repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length);
+    //         }
+    //         return repeat_day_info;
+    //     };
     
-    var repeat_array = [];
-    var len = jsondata.repeatScheduleIdArray.length;
-    for(var i=0; i<len; i++){
-        repeat_array.push(
-                         `<div class="mobile_repeat_info_wrap">
-                           <p>${repeat_info_dict[setting_info.lt_lan_01][jsondata.repeatScheduleTypeArray[i]]} ${repeat_day()} ${jsondata.repeatScheduleStartTimeArray}~${jsondata.repeatScheduleEndTimeArray}</p>
-                           <p>${jsondata.repeatScheduleStartDateArray[i]}~${jsondata.repeatScheduleEndDateArray}</p>
-                         </div>`
-                         );
-    }
-    var repeat_info = repeat_array.join("");
+    // var repeat_array = [];
+    // var len = jsondata.repeatScheduleIdArray.length;
+    // for(var i=0; i<len; i++){
+    //     repeat_array.push(
+    //                      `<div class="mobile_repeat_info_wrap">
+    //                         <div class="mobile_repeat_info">
+    //                             <p>${repeat_info_dict[setting_info.lt_lan_01][jsondata.repeatScheduleTypeArray[i]]} ${repeat_day()} ${jsondata.repeatScheduleStartTimeArray}~${jsondata.repeatScheduleEndTimeArray}</p>
+    //                             <p>${jsondata.repeatScheduleStartDateArray[i]}~${jsondata.repeatScheduleEndDateArray}</p>
+    //                         </div>
+    //                         <div class="mobile_repeat_info_delete" data-deletetype="grouprepeatinfo" data-repeatid="${jsondata.repeatScheduleIdArray[i]}" data-groupid="${group_id}">
+    //                             <img src="/static/user/res/ptadd/btn-x.png">
+    //                         </div>
+    //                      </div>`
+    //                      );
+    // }
+    // var repeat_info = repeat_array.join("");
+    var repeat_info = set_lecture_repeat_info_for_mobile_popup(group_id, jsondata);
 
     var color;
     var selected1;
@@ -2588,7 +2593,7 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_status, g
                 <div class="pters_table"><div class="pters_table_cell">정원</div><div class="pters_table_cell" id="mygroupcapacity"><input type="text" id="id_mobile_input_capacity" class="mobile_memo_input" style="width:20%;" value="${group_membercapacity}" disabled>명</div></div>
                 <div class="pters_table"><div class="pters_table_cell">참여 인원</div><div class="pters_table_cell">${group_membernum}명</div></div>
                 <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div id="id_lecture_status" style="color:${color}">${group_status}</div>${status}</div></div>
-                <div class="pters_table"><div class="pters_table_cell">반복 일정</div><div class="pters_table_cell">${repeat_info}</div></div>
+                <div class="pters_table"><div class="pters_table_cell">반복 일정</div><div class="pters_table_cell" id="repeat_info_mobile_wrap">${repeat_info}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="mygroupmemo"><input type="text" class="mobile_memo_input" value="${group_memo}" disabled></div></div>
                 <div class="pters_table" style="display:none;" id="lecturedelete" data-groupid="${group_id}"><img src="/static/user/res/member/icon-delete-black.png" style="cursor:pointer;width:20px;margin:10px;"></div>
 
@@ -2598,6 +2603,59 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_status, g
     $('#popup_lecture_info_mobile_basic').html(html);
 }
 //수업 정보 모바일 팝업
+function set_lecture_repeat_info_for_mobile_popup(group_id, jsondata, use){
+    var repeat_info_dict= { 'KOR':
+        {'DD':'매일', 'WW':'매주', '2W':'격주',
+            'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
+        'JPN':
+            {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+                'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
+        'JAP':
+            {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+                'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
+    };
+
+    var repeat_day_info_raw_array = jsondata.repeatScheduleWeekInfoArray;
+
+    var repeat_day =  function(){
+            var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/');
+            var repeat_day_info = "";
+            if(repeat_day_info_raw.length>1){
+                for(var j=0; j<repeat_day_info_raw.length; j++){
+                    repeat_day_info = repeat_day_info + '/' + repeat_info_dict[setting_info.lt_lan_01][repeat_day_info_raw[j]].substr(0,1);
+                }
+            }else if(repeat_day_info_raw.length == 1){
+                repeat_day_info = repeat_info_dict[setting_info.lt_lan_01][repeat_day_info_raw[0]];
+            }
+            if(repeat_day_info.substr(0, 1) == '/'){
+                repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length);
+            }
+            return repeat_day_info;
+        };
+    
+    var repeat_array = [];
+    var len = jsondata.repeatScheduleIdArray.length;
+    for(var i=0; i<len; i++){
+        repeat_array.push(
+                         `<div class="mobile_repeat_info_wrap">
+                            <div class="mobile_repeat_info">
+                                <p>${repeat_info_dict[setting_info.lt_lan_01][jsondata.repeatScheduleTypeArray[i]]} ${repeat_day()} ${jsondata.repeatScheduleStartTimeArray[i]}~${jsondata.repeatScheduleEndTimeArray[i]}</p>
+                                <p>${jsondata.repeatScheduleStartDateArray[i]}~${jsondata.repeatScheduleEndDateArray[i]}</p>
+                            </div>
+                            <div class="mobile_repeat_info_delete" data-deletetype="grouprepeatinfo" data-repeatid="${jsondata.repeatScheduleIdArray[i]}" data-groupid="${group_id}">
+                                <img src="/static/user/res/ptadd/btn-x.png">
+                            </div>
+                         </div>`
+                         );
+    }
+    var repeat_info = repeat_array.join("");
+    if(use == "update"){
+        $('#repeat_info_mobile_wrap').html(repeat_info);
+    }else{
+        return repeat_info;
+    }
+}
+
 
 $(document).on('click', '.mobile_status_color_palette > div', function(){
     $(this).addClass('mobile_status_selected');
