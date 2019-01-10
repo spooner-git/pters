@@ -1603,6 +1603,7 @@ $(document).ready(function(){
             $(this).attr('data-type', 'modify');
             $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
             $('#ticketdelete').show();
+            $('#id_ticket_status').hide();
             $('.mobile_status_color_palette').show();
         }else if($(this).attr('data-type') == "modify" ){
             var package_name = $('#ticketname input').val();
@@ -1629,6 +1630,7 @@ $(document).ready(function(){
             $(this).attr('data-type', 'modify');
             $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
             $('#lecturedelete').show();
+            $('#id_lecture_status').hide();
 
             //$('#mygroupnametitle').show();
             $('#lecturedelete').show();
