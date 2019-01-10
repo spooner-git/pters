@@ -1628,6 +1628,7 @@ $(document).ready(function(){
             $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border', '1px solid #cccccc');
             $(this).attr('data-type', 'modify');
             $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
+            $('#lecturedelete').show();
 
             //$('#mygroupnametitle').show();
             $('#lecturedelete').show();
@@ -1665,10 +1666,14 @@ $(document).ready(function(){
 
                 $('#mygroupnametitle').css('display', 'table');
                 $('#lecturedelete').show();
+
+                $('#id_lecture_status').css('display', 'none');
+
                 $('.mobile_group_color_palette, .mobile_status_color_palette').show();
                 $('#id_mobile_input_capacity').keyup(function(){
                     limit_char_only_number(this);
                 });
+                $('#uptext3').text('수업 수정');
             }else if($(this).attr('data-type') == "modify" ){
                 // $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
                 // $(this).attr('data-type', 'view');
@@ -1696,7 +1701,9 @@ $(document).ready(function(){
                 $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
                 $('#ticketnametitle').css('display', 'table');
                 $('#ticketdelete').show();
+                $('#id_ticket_status').css('display', 'none');
                 $('.mobile_status_color_palette').show();
+                $('#uptext3').text('수강권 수정');
             }else if($(this).attr('data-type') == "modify" ){
                 var package_name = $('#ticketname input').val();
                 var package_id = $('#mypackageid').attr('data-packageid');
@@ -3387,7 +3394,7 @@ function memberListSet (type, jsondata){
     memberListSet_len = len+1;
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
 
-    $('#uptext').text("회원("+jsondata.total_member_num+"명)");
+    $('#uptext').html("회원 <span style='color:#ff4d63;'>"+jsondata.total_member_num+" </span>");
     var resultToAppend = arrayResult.join("");
     if(type=='current' && len == 0){
         resultToAppend = '<div class="_nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</div>';
@@ -3626,7 +3633,7 @@ function memberListSet_page(type, jsondata){
     memberListSet_len += len;
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
 
-    $('#uptext').text("회원("+jsondata.total_member_num+"명)");
+    $('#uptext').html("회원 <span style='color:#ff4d63;'>"+jsondata.total_member_num+"</span>");
 
     var resultToAppend = arrayResult.join("");
     if(type=='current' && len == 0){

@@ -2846,7 +2846,7 @@ var $targetHTML;
 var text_membernum;
 function package_ListHtml(option, jsondata){ //option : current, finished
     console.log("package_ListHtml", jsondata)
-    $('#uptext').text("수강권("+jsondata.total_package_num+"개)");
+    $('#uptext').html("수강권 <span style='color:#ff4d63;'>"+jsondata.total_package_num+"</span>");
     switch(option){
         case 'current':
             $membernum = $('#memberNumber_current_ticket');
@@ -2978,7 +2978,7 @@ function package_ListHtml(option, jsondata){ //option : current, finished
 
 function package_ListHtml_page(option, jsondata){ //option : current, finished
     console.log("package_ListHtml", jsondata)
-    $('#uptext').text("수강권("+jsondata.total_package_num+"개)");
+    $('#uptext').html("수강권 <span style='color:#ff4d63;'>"+jsondata.total_package_num+"</span>");
     switch(option){
         case 'current':
             $membernum = $('#memberNumber_current_ticket');
@@ -3109,7 +3109,7 @@ function package_ListHtml_page(option, jsondata){ //option : current, finished
 }
 
 function package_ListHtml_mobile(option, jsondata){ //option : current, finished
-    $('#uptext').text("수강권("+jsondata.total_package_num+"개)");
+    $('#uptext').html("수강권 <span style='color:#ff4d63;'>"+jsondata.total_package_num+"</span>");
     switch(option){
         case 'current':
             $membernum = $('#memberNumber_current_ticket');
@@ -3248,7 +3248,7 @@ function set_ticket_info_for_mobile_popup(package_id, package_name, package_stat
     var html = `<div class="pters_table" id="ticketnametitle"><div class="pters_table_cell">수강권명</div><div class="pters_table_cell" id="ticketname"><input type="text" class="mobile_memo_input" value="${package_name}" disabled></div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${package_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">회원수</div><div class="pters_table_cell">${package_membernum}명</div></div>
-                <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div style="color:${color}">${package_status}</div>${status}</div></div>
+                <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div id='id_ticket_status' style="color:${color}">${package_status}</div>${status}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="ticketmemo"><input type="text" class="mobile_memo_input" value="${package_memo}" disabled></div></div>
                 <div class="pters_table" style="display:none;" id="ticketdelete" data-packageid="${package_id}"><img src="/static/user/res/member/icon-delete-black.png" style="cursor:pointer;width:20px;margin:10px;"></div>
                 <div class="pters_table"><div class="pters_table_cell">포함된 수업</div><div class="pters_table_cell"></div></div>
@@ -4023,6 +4023,7 @@ function modify_package_from_list(package_id, package_name, package_note, use, c
                 $('#popup_ticket_info_mobile_modify_btn').attr('data-type', 'view');
                 $('.mobile_status_color_palette').hide();
                 $('._groupmanage img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
+                $('#id_ticket_status').css('display', 'block');
 
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');

@@ -1325,9 +1325,9 @@ function delete_groupmember_from_grouplist(use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                get_group_ing_list("callback", function(json){
-                    group_class_ListHtml('current', json);
-                });
+                // get_group_ing_list("callback", function(json){
+                //     group_class_ListHtml('current', json);
+                // });
                 console.log('success');
                 if(use == "callback"){
                     callback();
@@ -1377,7 +1377,6 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 $('#errorMessageText').text(jsondata.messageArray);
 
             }else{
-                
 
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
@@ -1417,6 +1416,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                         $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
                         $('#upbutton-modify').attr('data-type', 'view');
                         $('#popup_lecture_info_mobile_modify_btn').attr('data-type', 'view');
+                        $('#id_lecture_status').css('display', 'block');
                     }
                 }
 
@@ -1839,7 +1839,7 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             break;
     }
 
-    $('#uptext').text("수업("+jsondata.total_group_num+"개)");
+    $('#uptext').html("수업 <span style='color:#ff4d63;'>"+jsondata.total_group_num+"</span>");
     var htmlToAdd = [];
     var htmlToJoin = [];
     var htmlToJoin2 = [];
@@ -1971,7 +1971,7 @@ function group_class_ListHtml_page(option, jsondata){ //option : current, finish
             break;
     }
 
-    $('#uptext').text("수업("+jsondata.total_group_num+"개)");
+    $('#uptext').html("수업 <span style='color:#ff4d63;'>"+jsondata.total_group_num+"</span>");
 
     var htmlToAdd = [];
     var htmlToJoin = [];
@@ -2488,6 +2488,28 @@ function groupMemberListSet_mobile(group_id, jsondata){
 }
 //그룹원 목록을 그룹에 그리기 모바일
 
+    //모바일
+$(document).on('click', '#lecturedelete', function(e){
+    e.stopPropagation();
+    group_delete_JSON = {"group_id":"", "fullnames":[], "ids":[]};
+    if($(this).css('opacity') == 1){
+        deleteTypeSelect = 'groupdelete';
+        $('#cal_popup_plandelete').show();
+        $('#popup_delete_question').html('정말 삭제하시겠습니까? <br> 삭제하면 복구할 수 없습니다.');
+        //삭제 확인팝업에서 확인할 수 있도록 삭제대상을 JSON 형식으로 만든다.
+        var group_id = $(this).attr('data-groupid');
+        var memberLen = $('div.memberline[data-groupid="'+group_id+'"]').length;
+        for(var k=2; k<=memberLen+1; k++){
+            //group_delete_JSON.lecture_ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-lecid'))
+            group_delete_JSON.ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-dbid'));
+            group_delete_JSON.fullnames.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-name'));
+        }
+        group_delete_JSON.group_id = group_id;
+        shade_index(150);
+    }else{
+        alert('리스트를 펼쳐 확인 후 삭제 해주세요.');
+    }
+});
 //수업 정보 모바일 팝업
 function set_lecture_info_for_mobile_popup(group_id, group_name, group_status, group_statuscd, group_color, group_type, group_typecd, group_membernum, group_membercapacity, group_memo, jsondata){
     var repeat_info_dict= { 'KOR':
@@ -2560,12 +2582,13 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_status, g
                         <div class="plancolor_d9c3ab"></div>
                     </div>`;
 
-    var html = `<div class="pters_table" id="mygroupnametitle"><div class="pters_table_cell">수업명</div><div class="pters_table_cell" id="mygroupname"><input type="text" class="mobile_memo_input" value="${group_name}" disabled></div></div>
+    var html = `<div class="pters_table" style="display:none;" id="lecturedelete" data-groupid="${group_id}"><img src="/static/user/res/member/icon-delete-black.png" style="cursor:pointer;width:20px;margin:10px;"></div>
+                <div class="pters_table" id="mygroupnametitle"><div class="pters_table_cell">수업명</div><div class="pters_table_cell" id="mygroupname"><input type="text" class="mobile_memo_input" value="${group_name}" disabled></div></div>
                 <div class="pters_table"><div class="pters_table_cell">색상</div><div class="pters_table_cell"><div id="mygroupcolor" style="background-color:${group_color};"></div>${groupcolor}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${group_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">정원</div><div class="pters_table_cell" id="mygroupcapacity"><input type="text" id="id_mobile_input_capacity" class="mobile_memo_input" style="width:20%;" value="${group_membercapacity}" disabled>명</div></div>
                 <div class="pters_table"><div class="pters_table_cell">참여 인원</div><div class="pters_table_cell">${group_membernum}명</div></div>
-                <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div style="color:${color}">${group_status}</div>${status}</div></div>
+                <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div id="id_lecture_status" style="color:${color}">${group_status}</div>${status}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">반복 일정</div><div class="pters_table_cell">${repeat_info}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="mygroupmemo"><input type="text" class="mobile_memo_input" value="${group_memo}" disabled></div></div>
                 <div class="pters_table" style="display:none;" id="lecturedelete" data-groupid="${group_id}"><img src="/static/user/res/member/icon-delete-black.png" style="cursor:pointer;width:20px;margin:10px;"></div>
