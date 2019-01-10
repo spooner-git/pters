@@ -921,6 +921,30 @@ $(document).on('click', '._groupmanage img._info_delete', function(e){
     }
 
 });
+
+    //모바일
+$(document).on('click', '#lecturedelete', function(e){
+    e.stopPropagation();
+    group_delete_JSON = {"group_id":"", "fullnames":[], "ids":[]};
+    if($(this).css('opacity') == 1){
+        deleteTypeSelect = 'groupdelete';
+        $('#cal_popup_plandelete').show();
+        $('#popup_delete_question').html('정말 삭제하시겠습니까? <br> 삭제하면 복구할 수 없습니다.');
+        //삭제 확인팝업에서 확인할 수 있도록 삭제대상을 JSON 형식으로 만든다.
+        var group_id = $(this).attr('data-groupid');
+        var memberLen = $('#popup_lecture_info_mobile_memberlist div.memberline').length;
+        for(var k=3; k<=memberLen+2; k++){
+            //group_delete_JSON.lecture_ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-lecid'))
+            group_delete_JSON.ids.push($('#popup_lecture_info_mobile_memberlist').find('div.memberline:nth-of-type('+k+')').attr('data-dbid'));
+            group_delete_JSON.fullnames.push($('#popup_lecture_info_mobile_memberlist').find('div.memberline:nth-of-type('+k+')').attr('data-fullname'));
+        }
+        group_delete_JSON.group_id = group_id;
+        console.log("group_delete_JSON",group_delete_JSON)
+        shade_index(150);
+    }else{
+        alert('리스트를 펼쳐 확인 후 삭제 해주세요.');
+    }
+});
 //그룹 리스트에서 그룹 삭제버튼을 누른다.
 
 
@@ -1250,7 +1274,8 @@ function delete_group_from_list(group_id, use, callback){
                 //     });
                 // }
                 smart_refresh_member_group_class_list();
-                if(use == "calback"){
+
+                if(use == "callback"){
                     callback();
                 }
 
@@ -1352,9 +1377,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 $('#errorMessageText').text(jsondata.messageArray);
 
             }else{
-                $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
-                $('#upbutton-modify').attr('data-type', 'view');
-                $('#popup_lecture_info_mobile_modify_btn').attr('data-type', 'view');
+                
 
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
@@ -1371,7 +1394,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                     if(group_name.length != 0){
                         if(bodywidth<600){
                             $('#uptext3').text(group_name);
-                            $('#mygroupnametitle').hide();
+                            $('#mygroupnametitle, #lecturedelete').hide();
                         }
                         else if(bodywidth<1000){
                             $('#popup_lecture_info_mobile_modify_btn > img').attr('src', '/static/user/res/icon-pencil.png');
@@ -1381,11 +1404,19 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                             $('#popup_lecture_info_mobile_modify_btn').find('img').attr('src', '/static/user/res/icon-pencil.png');
                         }
                     }
+
+                    // $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
+                    // $('#upbutton-modify').attr('data-type', 'view');
+                    // $('#popup_lecture_info_mobile_modify_btn').attr('data-type', 'view');
+
                     if(ing_bg_color.length != 0){
                         $('#mygroupcolor').css('background-color', ing_bg_color);
                     }else{
                         $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');
                         $('.mobile_group_color_palette').hide();
+                        $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
+                        $('#upbutton-modify').attr('data-type', 'view');
+                        $('#popup_lecture_info_mobile_modify_btn').attr('data-type', 'view');
                     }
                 }
 
@@ -2527,6 +2558,7 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_status, g
                 <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div style="color:${color}">${group_status}</div>${status}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">반복 일정</div><div class="pters_table_cell">${repeat_info}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="mygroupmemo"><input type="text" class="mobile_memo_input" value="${group_memo}" disabled></div></div>
+                <div class="pters_table" style="display:none;" id="lecturedelete" data-groupid="${group_id}"><img src="/static/user/res/member/icon-delete-black.png" style="cursor:pointer;width:20px;margin:10px;"></div>
 
                 <div style="display:none;" id="mygroupid" data-groupid="${group_id}">그룹 id: ${group_id}</div>
                 <div style="display:none;" id="mygrouptypecd" data-grouptypecd="${group_typecd}">그룹 typecd: ${group_typecd}</div>

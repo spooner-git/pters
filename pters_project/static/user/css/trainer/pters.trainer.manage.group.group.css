@@ -861,6 +861,11 @@ div._fixedmember{
 	.mobile_status_selected{
 		color: #fe4e65 !important;
 	}
+	#lecturedelete{
+		cursor: pointer;
+		background-color: #efefef;
+		border: 1px solid #cccccc;
+	}
 
 
 @media(min-width: 600px){

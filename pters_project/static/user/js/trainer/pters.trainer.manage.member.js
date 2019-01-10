@@ -952,11 +952,13 @@ $(document).ready(function(){
             var groupmember_fullnames = group_delete_JSON.fullnames;
             var groupmember_ids = group_delete_JSON.ids;
             group_id = group_delete_JSON.group_id;
-
             //그룹을 지운다.
             delete_group_from_list(group_delete_JSON.group_id, "callback", function(){
                 //그룹원들에게서 그룹에 대한 수강이력을 지운다.
                 delete_groupmember_from_grouplist();
+                if($('#popup_lecture_info_mobile').css('display') == "block"){
+                    $('#upbutton-x-modify').trigger('click');
+                }
             });
             
             enable_delete_btns_after_ajax();
@@ -1628,6 +1630,7 @@ $(document).ready(function(){
             $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
 
             //$('#mygroupnametitle').show();
+            $('#lecturedelete').show();
             $('.mobile_group_color_palette, .mobile_status_color_palette').show();
             $('#id_mobile_input_capacity').keyup(function(){
                 limit_char_only_number(this);
@@ -1661,6 +1664,7 @@ $(document).ready(function(){
                 $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
 
                 $('#mygroupnametitle').css('display', 'table');
+                $('#lecturedelete').show();
                 $('.mobile_group_color_palette, .mobile_status_color_palette').show();
                 $('#id_mobile_input_capacity').keyup(function(){
                     limit_char_only_number(this);
