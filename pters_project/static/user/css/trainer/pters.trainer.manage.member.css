@@ -1385,6 +1385,13 @@ span.summaryInnerBoxText_Repeatendtext{
 	display: none !important;
 }
 @media(min-width: 600px){
+	#alignBox{
+		position: relative;
+		box-shadow: unset;
+		width: 91.6%;
+		margin-right: auto;
+		margin-left: auto;
+	}
 	#currentMemberList, #finishedMemberList{
 		margin-top: 250px;
 	}
@@ -1879,6 +1886,7 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 
 	#alignBox{
+		width: 91.6%;
 		position: relative;
 		max-width: 1080px;
 		height: 30px;
