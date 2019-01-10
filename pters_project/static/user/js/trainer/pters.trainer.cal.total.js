@@ -3067,7 +3067,7 @@ function know_duplicated_plans(jsondata){
         var array_sorted = duplicate_dic[plan_].sort();
 
         for(var t=0; t<array_sorted.length; t++){
-
+            console.log("temp_index", temp_index)
             // 기본값 셋팅
             var ref = array_sorted[t];
             if(t == 0){
@@ -3098,12 +3098,12 @@ function know_duplicated_plans(jsondata){
 
                 if(duplication_type > 0){ //겹칠때
                     var temp_array = [];
+
                     for(var i=0; i<t; i++){
                         temp_array.push(temp_index[i]);
                     }
 
                     temp_index[t] = Math.max.apply(null, temp_array)+1;
-
                 }else{ //겹치지 않을때
                     //이 인덱스와 같은 값을 갖는 다른 시간대가 있는지 검사
                     var howmany = array_element_count(temp_index, temp_index[r]);
@@ -3163,7 +3163,7 @@ function know_duplicated_plans(jsondata){
 
     // console.log("duplicate_dic",duplicate_dic);
     // console.log("result", result)
-    console.log({"num":duplicate_num, "dic":duplicate_dic, "result":result})
+    console.log({"num":duplicate_num, "dic":duplicate_dic, "result":result});
 
     return {"num":duplicate_num, "dic":duplicate_dic, "result":result};
 }
@@ -3190,14 +3190,14 @@ $('.popup_inner_month').scroll(function(e){
 
     // 좌측 스크롤 애로우 보이기
     if(popupHeight + scrollLocation < scrollHeight-30){
-        $('.scroll_arrow_bottom').css('visibility','visible')
+        $('.scroll_arrow_bottom').css('visibility', 'visible');
     }else{
-        $('.scroll_arrow_bottom').css('visibility','hidden')
+        $('.scroll_arrow_bottom').css('visibility', 'hidden');
     }
     if(scrollLocation > 30){
-        $('.scroll_arrow_top').css('visibility','visible')
+        $('.scroll_arrow_top').css('visibility', 'visible');
     }else{
-        $('.scroll_arrow_top').css('visibility','hidden')
+        $('.scroll_arrow_top').css('visibility', 'hidden');
     }
     //좌측 스크롤 애로우 보이기
 });
