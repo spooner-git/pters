@@ -2667,21 +2667,6 @@ def delete_group_info_logic(request):
         with transaction.atomic():
 
             if error is None:
-                if group_data is not None:
-                    for group_datum in group_data:
-                        group_datum.use = UN_USE
-                        group_datum.save()
-                        if group_datum.lecture_tb.package_tb.package_group_num == 1:
-                            error = func_delete_lecture_info(request.user.id, class_id, group_datum.lecture_tb_id,
-                                                             group_datum.lecture_tb.member_id)
-                            if error is not None:
-                                break
-                            # lecture_info = group_datum.lecture_tb
-                            # lecture_info.lecture_avail_count = 0
-                            # lecture_info.lecture_rem_count = 0
-                            # lecture_info.state_cd = 'PE'
-                            # lecture_info.save()
-            if error is None:
                 schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                           group_tb_id=group_id,
                                                           end_dt__lte=timezone.now(),
@@ -2706,13 +2691,22 @@ def delete_group_info_logic(request):
                     repeat_schedule_data.delete()
                 if len(schedule_data_finish) > 0:
                     schedule_data_finish.update(use=UN_USE)
+
+            if error is None:
+                if group_data is not None:
+                    for group_datum in group_data:
+                        group_datum.use = UN_USE
+                        group_datum.save()
+                        if group_datum.lecture_tb.package_tb.package_group_num == 1:
+                            error = func_delete_lecture_info(request.user.id, class_id, group_datum.lecture_tb_id,
+                                                             group_datum.lecture_tb.member_id)
+                            if error is not None:
+                                break
+
             if error is None:
                 group_info.state_cd = 'PE'
                 group_info.use = UN_USE
                 group_info.save()
-                # package_info.state_cd = 'PE'
-                # package_info.use = 0
-                # package_info.save()
                 for package_data_info in package_data:
                     package_data_info.use = UN_USE
                     package_data_info.save()
@@ -3233,20 +3227,6 @@ def finish_group_info_logic(request):
         if group_data is not None:
             for group_datum in group_data:
                 lecture_info = group_datum.lecture_tb
-                # schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                #                                           end_dt__lte=now,
-                #                                           USE=USE).exclude(state_cd='PE')
-                # schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                #                                                  end_dt__gt=now,
-                #                                                  USE=USE).exclude(state_cd='PE')
-                # repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-                # # func_refresh_lecture_count(lecture_id)
-                # if len(schedule_data) > 0:
-                #     schedule_data.update(state_cd='PE')
-                # if len(schedule_data_delete) > 0:
-                #     schedule_data_delete.delete()
-                # if len(repeat_schedule_data) > 0:
-                # #     repeat_schedule_data.delete()
                 if lecture_info.package_tb.package_group_num == 1:
                     schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
                                                                      lecture_tb_id=lecture_info.lecture_id)
