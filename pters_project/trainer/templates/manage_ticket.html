@@ -894,6 +894,7 @@
             <input type="hidden" name="username" id="id_username_info">
             <input type="hidden" name="search_confirm" id="id_search_confirm" value="0">
             <input type="hidden" name="group_id" id="form_member_groupid" value="">
+            <input type="hidden" name="ing_member_check" id="id_ing_member_check">
 
             <!--그룹추가 관련 Form-->
             <input type="hidden" name="grouptype" id="form_grouptype" value="">
@@ -1375,11 +1376,18 @@
             get_package_ing_list("callback", function(jsondata){
                 var group_class_Html = package_ListHtml_mobile('current', jsondata);
                 $('#currentPackageList').html(group_class_Html);
+
+            });
+            get_member_ing_list("callback", function(jsondata) {
+                $('#currentMemberList').attr('total_member_num', jsondata.total_member_num);
             });
         }else if(bodywidth >= 1000){
             get_package_ing_list("callback", function(jsondata){
                 var group_class_Html = package_ListHtml('current', jsondata);
                 $('#currentPackageList').html(group_class_Html);
+            });
+            get_member_ing_list("callback", function(jsondata) {
+                $('#currentMemberList').attr('total_member_num', jsondata.total_member_num);
             });
         }
 
