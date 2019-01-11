@@ -794,7 +794,6 @@ $(document).on('click', 'div.groupWrap', function(e){
         }else if(package_statuscd == "finished"){
             ticket_data = ticket_end_list_cache;
         }
-        console.log("ticket_data", ticket_data)
         var package_name = ticket_data[package_id].package_name;
         var package_type = ticket_data[package_id].package_type_cd_nm;
         var package_membernum = ticket_data[package_id].package_ing_member_num;
@@ -2576,7 +2575,7 @@ function get_package_ing_list(use, callback){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
-                ticket_ing_list_cache = ticket_jsondata_to_dict(jsondata);         
+                ticket_ing_list_cache = ticket_jsondata_to_dict(jsondata);       
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 // if(bodywidth < 600){

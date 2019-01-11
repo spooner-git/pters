@@ -13,6 +13,8 @@ var lecture_mutex_val = 1;
 var db_id_flag = 0;
 var user_id_flag = 1;
 
+var lecture_ing_list_cache;
+var lecture_end_list_cache;
 /////////////옵션
 if(Options.auth_class == 0){
     $('._groupaddbutton').attr('onclick', "purchase_annai()");
@@ -728,16 +730,6 @@ $(document).on('click', 'div.groupWrap', function(e){
     lecture_mutex_val = 0;
     e.stopPropagation();
     var group_id = $(this).attr('data-groupid');
-    var group_name = $(this).find('._groupname input').val();
-    if(bodywidth<1000){
-        group_name = $(this).find('._groupname_mobile > span').text();
-    }
-    var group_type = $(this).find('._grouptypecd input').val();
-    var group_typecd = $(this).find('._grouptypecd').attr('data-group-type');
-    var group_membernum = $(this).find('._groupparticipants').text();
-    var group_membercapacity = $(this).find('._groupcapacity input').val();
-    var group_memo = $(this).find('._groupmemo input').val();
-    var group_color = $(this).find('._groupname_mobile').css('border-color');
 
     var memo_list =  $(this).siblings('div[data-groupid="'+group_id+'"].groupMemoWrap');
     var repeat_list = $(this).siblings('div[data-groupid="'+group_id+'"].groupRepeatWrap');
@@ -782,11 +774,41 @@ $(document).on('click', 'div.groupWrap', function(e){
             $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
         }
     }else if(bodywidth < 1000){
+
+        var group_statuscd = $('div.pters_selectbox_btn_selected').attr('data-status');
+        var lecture_data;
+        if(group_statuscd == "current"){
+            lecture_data = lecture_ing_list_cache;
+        }else if(group_statuscd == "finished"){
+            lecture_data = lecture_end_list_cache;
+        }
+
+        var group_name = lecture_data[group_id].group_name;
+        var group_type = lecture_data[group_id].group_type_cd_nm;
+        var group_typecd = lecture_data[group_id].group_type_cd;
+        var group_membernum = lecture_data[group_id].group_member_num;
+        var group_membercapacity = lecture_data[group_id].group_member_capacity;
+        var group_memo = lecture_data[group_id].group_note;
+        var group_color = lecture_data[group_id].group_ing_color_cd;
+        var group_status = lecture_data[group_id].group_state_cd_name;
+        var group_statuscd = lecture_data[group_id].group_state_cd;
+        // var $targetlecturelist = $('#popup_lecture_info_mobile_lecturelist');
+
+
+        // var group_name = $(this).find('._groupname_mobile > span').text();
+        // var group_type = $(this).find('._grouptypecd input').val();
+        // var group_typecd = $(this).find('._grouptypecd').attr('data-group-type');
+        // var group_membernum = $(this).find('._groupparticipants').text();
+        // var group_membercapacity = $(this).find('._groupcapacity input').val();
+        // var group_memo = $(this).find('._groupmemo input').val();
+        // var group_color = $(this).find('._groupname_mobile').css('border-color');
+        // var group_status = $('div.pters_selectbox_btn_selected > span').text();
+        // var group_statuscd = $('div.pters_selectbox_btn_selected > span').attr('data-status');
+
         current_Scroll_Position = $(document).scrollTop();
         $('#uptext3').text(group_name);
         // $('#page_managemember').css({'height':'0'});
-        var group_status = $('div.pters_selectbox_btn_selected > span').text();
-        var group_statuscd = $('div.pters_selectbox_btn_selected > span').attr('data-status');
+        
 
         $('#page_managemember').css({'display':'none'});
         $('#page-base').css('display', 'none');
@@ -1127,6 +1149,7 @@ function get_group_ing_list(use, callback){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
+                lecture_ing_list_cache = lecture_jsondata_to_dict(jsondata);
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
@@ -1184,6 +1207,7 @@ function get_group_end_list(use, callback){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
+                lecture_end_list_cache = lecture_jsondata_to_dict(jsondata);
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
@@ -1210,6 +1234,38 @@ function get_group_end_list(use, callback){
     });
 }
 //서버로부터 그룹 목록 가져오기
+
+function lecture_jsondata_to_dict(jsondata){
+    console.log("jsondata11", jsondata);
+    var len = jsondata.group_id.length;
+    var result = {};
+    for(var j=0; j<len; j++){
+        result[jsondata.group_id[j]] = {};
+        result[jsondata.group_id[j]]["group_name"] = jsondata.group_name[j];
+        result[jsondata.group_id[j]]["group_state_cd"] = jsondata.state_cd[j];
+        result[jsondata.group_id[j]]["group_state_cd_name"] = jsondata.state_cd_name[j];
+        result[jsondata.group_id[j]]["group_type_cd"] = jsondata.group_type_cd[j];
+        result[jsondata.group_id[j]]["group_type_cd_nm"] = jsondata.group_type_cd_nm[j];
+        result[jsondata.group_id[j]]["group_note"] = jsondata.group_note[j];
+        result[jsondata.group_id[j]]["group_ing_color_cd"] = jsondata.group_ing_color_cd[j];
+        result[jsondata.group_id[j]]["group_ing_font_color_cd"] = jsondata.group_ing_font_color_cd[j];
+        result[jsondata.group_id[j]]["group_end_color_cd"] = jsondata.group_end_color_cd[j];
+        result[jsondata.group_id[j]]["group_end_font_color_cd"] = jsondata.group_end_font_color_cd[j];
+        result[jsondata.group_id[j]]["group_member_capacity"] = jsondata.member_num[j];
+        result[jsondata.group_id[j]]["group_member_num"] = jsondata.group_member_num[j];
+        result[jsondata.group_id[j]]["end_group_member_num"] = jsondata.end_group_member_num[j];
+        result[jsondata.group_id[j]]["package_reg_dt"] = jsondata.group_reg_dt[j];
+        result[jsondata.group_id[j]]["package_mod_dt"] = jsondata.group_mod_dt[j];
+
+        // result[jsondata.group_id[j]]["package_group_name"] = jsondata.package_group_name[j];
+        // result[jsondata.group_id[j]]["package_group_num"] = jsondata.package_group_num[j];
+        // result[jsondata.group_id[j]]["package_ing_member_num"] = jsondata.package_ing_member_num[j];
+        // result[jsondata.group_id[j]]["package_end_member_num"] = jsondata.package_end_member_num[j];
+        // result[jsondata.group_id[j]]["package_reg_dt"] = jsondata.package_reg_dt[j];
+        // result[jsondata.group_id[j]]["package_mod_dt"] = jsondata.package_mod_dt[j];
+    }
+    return result;
+}
 
 //그룹 지우기
 function delete_group_from_list(group_id, use, callback){
@@ -2998,6 +3054,7 @@ function get_member_group_class_ing_list(use, callback){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
+                lecture_ing_list_cache = lecture_jsondata_to_dict(jsondata);
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
@@ -3057,6 +3114,7 @@ function get_member_group_class_end_list(use, callback){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
+                lecture_end_list_cache = lecture_jsondata_to_dict(jsondata);
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
@@ -3121,6 +3179,7 @@ function get_member_group_class_ing_list_page(use, callback){
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
                 if(jsondata.group_id.length>0) {
+                    lecture_ing_list_cache = Object.assign(lecture_ing_list_cache, lecture_jsondata_to_dict(jsondata));
                     $('#errorMessageBar').hide();
                     $('#errorMessageText').text('');
                     if (bodywidth < 600) {
@@ -3181,6 +3240,7 @@ function get_member_group_class_end_list_page(use, callback){
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
                 if(jsondata.group_id.length>0) {
+                    lecture_end_list_cache = Object.assign(lecture_end_list_cache, lecture_jsondata_to_dict(jsondata));
                     $('#errorMessageBar').hide();
                     $('#errorMessageText').text('');
                     if(bodywidth < 600){
