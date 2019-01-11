@@ -4046,10 +4046,10 @@ function modify_package_from_list(package_id, package_name, package_note, use, c
                     if(package_name.length != 0){
                         if(bodywidth<600){
                             $('#uptext3').text(package_name);
-                            $('#ticketnametitle, #ticketdelete').hide();
+                            $('#ticketnametitle, #ticketdelete, .lecture_bubble_mini img').hide();
                             $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');
                         }else if(bodywidth<1000){
-                            $('#ticketdelete').hide();
+                            $('#ticketdelete, .lecture_bubble_mini img').hide();
                             $('#popup_ticket_info_mobile_modify_btn').find('img').attr('src', '/static/user/res/icon-pencil.png');
                         }
                         else{
@@ -4077,7 +4077,7 @@ function modify_package_from_list(package_id, package_name, package_note, use, c
 //패키지 정보 수정
 
 //패키지 완료, 재개하기
-function modify_package_status(package_id, option){
+function modify_package_status(package_id, option, use, callback){
 
     var bodywidth = window.innerWidth;
     var _URL;
@@ -4152,6 +4152,9 @@ function modify_package_status(package_id, option){
 
                 smart_refresh_member_group_class_list();
                 $('.mobile_status_color_palette').siblings('div').text(text_for_mobile).css('color', color_for_mobile);
+                if(use == "callback"){
+                    callback(jsondata);
+                }
             }
         },
 

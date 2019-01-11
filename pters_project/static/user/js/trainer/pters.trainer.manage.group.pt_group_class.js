@@ -1437,7 +1437,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
 //그룹 정보 수정
 
 //그룹 완료/재개 하기
-function modify_group_status(group_id, option){
+function modify_group_status(group_id, option, use, callback){
     var bodywidth = window.innerWidth;
     var text_for_mobile;
     var color_for_mobile;
@@ -1522,7 +1522,9 @@ function modify_group_status(group_id, option){
                 
                 smart_refresh_member_group_class_list();
                 $('.mobile_status_color_palette').siblings('div').text(text_for_mobile).css('color', color_for_mobile);
-
+                if(use == "callback"){
+                    callback(jsondata);
+                }
                 console.log('success');
             }
         },
