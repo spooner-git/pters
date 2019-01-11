@@ -406,6 +406,7 @@ $(document).on('click', 'img.add_listedMember', function(){
     var selected_dbid = $(this).parents('div.list_addByList').attr('data-dbid');
     var selected_id = $(this).parents('div.list_addByList').attr('data-id');
     var selected_sex = $(this).parents('div.list_addByList').attr('data-sex');
+    var ing_member_check = $(this).parents('div.list_addByList').attr('data-ing_member_check');
 
     //주간, 월간달력 : 그룹레슨에 회원 추가할때.
     if($('#calendar').length != 0 ){
@@ -455,7 +456,8 @@ $(document).on('click', 'img.add_listedMember', function(){
                 var member_list_data = jsondata;
 
                 if(member_list_data.db_id.indexOf(selected_dbid) == -1){
-                    if($this.hasClass("add_by_search")){
+                    // if($this.hasClass("add_by_search")){
+                    if(ing_member_check==ING_MEMBER_FALSE){
                         pters_option_inspector("member_create", "", member_list_data.db_id.length);
                     }
                 }
@@ -469,9 +471,11 @@ $(document).on('click', 'img.add_listedMember', function(){
                     if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
                         alert('고정 그룹 : 이미 정원이 가득 찼습니다.');
                     }else{
-                        if($this.hasClass("add_by_search")){
+                        // if($this.hasClass("add_by_search")){
+                        if(ing_member_check==ING_MEMBER_FALSE){
                             pters_option_inspector("member_create", "", member_list_data.db_id.length + added_New_Member_Num);
                         }
+
                         if($('#caution_popup').css('display') == "none"){
                             var sexInfo;
                             if(selected_sex == "M"){
@@ -553,7 +557,7 @@ function draw_memberlist_for_addByList(targetHTML){
                 for(var i=1; i<=len; i++){
                     if($('#addedMemberListBox div[data-dbid="'+jsondata.dIdArray[i-1]+'"]').length == 0 && $('div.groupMembersWrap[data-groupid="'+$('#form_member_groupid').val()+'"] div.memberline[data-dbid="'+jsondata.dIdArray[i-1]+'"]').length == 0){ //추가될 리스트에 이미 있으면 목록에 보여주지 않는다.
                         sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sexArray[i-1]+'.png">';
-                        htmlToJoin[i] = '<div class="list_addByList_padding list_addByList" data-lastname="'+jsondata.lastNameArray[i-1]+'" data-firstname="'+jsondata.firstNameArray[i-1]+'" data-dbid="'+jsondata.dIdArray[i-1]+'" data-id="'+jsondata.idArray[i-1]+'" data-sex="'+jsondata.sexArray[i-1]+'" data-phone="'+jsondata.phoneArray[i-1]+'">'+
+                        htmlToJoin[i] = '<div class="list_addByList_padding list_addByList" data-lastname="'+jsondata.lastNameArray[i-1]+'" data-firstname="'+jsondata.firstNameArray[i-1]+'" data-dbid="'+jsondata.dIdArray[i-1]+'" data-id="'+jsondata.idArray[i-1]+'" data-sex="'+jsondata.sexArray[i-1]+'" data-phone="'+jsondata.phoneArray[i-1]+'" data-ing_member_check="'+ING_MEMBER_TRUE+'">'+
                                             '<div data-dbid="'+jsondata.dIdArray[i-1]+'">'+sexInfo+jsondata.nameArray[i-1]+' (ID: '+jsondata.idArray[i-1]+')'+'</div>'+
                                             '<div>'+jsondata.phoneArray[i-1]+'</div>'+
                                             '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+
@@ -565,13 +569,14 @@ function draw_memberlist_for_addByList(targetHTML){
                 for(var j=1; j<=len_finish; j++){
                     if($('#addedMemberListBox div[data-dbid="'+jsondata.finishDidArray[j-1]+'"]').length == 0 && $('div.groupMembersWrap[data-groupid="'+$('#form_member_groupid').val()+'"] div.memberline[data-dbid="'+jsondata.finishDidArray[j-1]+'"]').length == 0){ //추가될 리스트에 이미 있으면 목록에 보여주지 않는다.
                         sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.finishsexArray[j-1]+'.png">';
-                        htmlToJoin[i+j-1] = '<div class="list_addByList_padding list_addByList" data-lastname="'+jsondata.finishLastNameArray[j-1]+'" data-firstname="'+jsondata.finishFirstNameArray[j-1]+'" data-dbid="'+jsondata.finishDidArray[j-1]+'" data-id="'+jsondata.finishIdArray[j-1]+'" data-sex="'+jsondata.finishsexArray[j-1]+'" data-phone="'+jsondata.finishphoneArray[j-1]+'">'+
+                        htmlToJoin[i+j-1] = '<div class="list_addByList_padding list_addByList" data-lastname="'+jsondata.finishLastNameArray[j-1]+'" data-firstname="'+jsondata.finishFirstNameArray[j-1]+'" data-dbid="'+jsondata.finishDidArray[j-1]+'" data-id="'+jsondata.finishIdArray[j-1]+'" data-sex="'+jsondata.finishsexArray[j-1]+'" data-phone="'+jsondata.finishphoneArray[j-1]+'" data-ing_member_check="'+ING_MEMBER_FALSE+'">'+
                                                 '<div data-dbid="'+jsondata.finishDidArray[j-1]+'">'+sexInfo+jsondata.finishnameArray[j-1]+' (ID: '+jsondata.finishIdArray[j-1]+')'+'</div>'+
                                                 '<div>'+jsondata.finishphoneArray[j-1]+'</div>'+
                                                 '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+
                                             '</div>';
                         addedNum++;
                     }
+                    console.log('finish:'+jsondata.finishcountArray[j-1]);
                 }
                 if(addedNum == 0){
                     htmlToJoin.push('<div class="list_addByList_padding list_addByList">'+'추가 가능한 회원이 없습니다.'+'</div>');
@@ -660,7 +665,7 @@ function draw_memberlist_for_addBySearch(jsondata){
 
     var table = ['<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>'];
     var sexInfo = '<img src="/static/user/res/member/icon-sex-'+sex+'.png">';
-    var data = '<div class="list_addByList" data-lastname="'+lastname+'" data-firstname="'+firstname+'" data-dbid="'+dbid+'" data-id="'+id+'" data-sex="'+sex+'" data-phone="'+phone+'"><div data-dbid="'+dbid+'">'+sexInfo+lastname+firstname+' (ID: '+id+')'+'</div>'+'<div>'+phone+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember add_by_search"></div>'+'</div>';
+    var data = '<div class="list_addByList" data-lastname="'+lastname+'" data-firstname="'+firstname+'" data-dbid="'+dbid+'" data-id="'+id+'" data-sex="'+sex+'" data-phone="'+phone+'" data-ing_member_check="'+jsondata.ing_member_check+'"><div data-dbid="'+dbid+'">'+sexInfo+lastname+firstname+' (ID: '+id+')'+'</div>'+'<div>'+phone+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember add_by_search"></div>'+'</div>';
     var html = table + data;
 
     $('#searchedMemberListBox').html(html);

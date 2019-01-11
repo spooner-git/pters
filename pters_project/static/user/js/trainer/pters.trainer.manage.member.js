@@ -1144,6 +1144,9 @@ $(document).ready(function(){
     $('#memberSearchButton').click(function(e){
         e.preventDefault();
         var searchID = $('#memberSearch_add').val();
+        mutex_val = 0;
+        lecture_mutex_val = 0;
+        ticket_mutex_val = 0;
         $.ajax({
             url:'/trainer/get_member_info/',
             type:'GET',
@@ -2253,7 +2256,6 @@ function pc_add_member(option){
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json);});
 
     }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
-
         float_btn_managemember(1);
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
         $('#uptext2').text(text2);
@@ -2275,7 +2277,7 @@ function pc_add_member(option){
         check_dropdown_selected();
         /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
 
-        
+
         close_manage_popup('member_info');
         //$('#page_managemember').css({'height':'0'});
         $('#page_managemember').css({'display':'none'});
@@ -3053,7 +3055,7 @@ function get_member_ing_list(use, callback){
     page_num = 1;
     memberListSet_len = 1;
     mutex_val = 1;
-    
+
     // console.log(keyword);
     $.ajax({
         url:'/trainer/get_member_ing_list/',
