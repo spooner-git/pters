@@ -146,13 +146,13 @@ $('.alignSelect_ticket').change(function(){
         if($(this).val()=="수강권명 가나다 순" || $(this).val()=="名前順" || $(this).val()=="Name" ){
             ticket_sort_val = SORT_TICKET_NAME;
             ticket_sort_order_by = SORT_ASC;
-        }else if($(this).val()=="참여중 회원 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
+        }else if($(this).val()=="참여중 회원 많은 순" || $(this).val()=="残余回数が多い" || $(this).val()=="Remain Count(H)"){
             ticket_sort_val = SORT_TICKET_MEMBER_COUNT;
             ticket_sort_order_by = SORT_DESC;
-        }else if($(this).val()=="참여중 회원 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
+        }else if($(this).val()=="참여중 회원 적은 순" || $(this).val()=="残余回数が少ない" || $(this).val()=="Remain Count(L)"){
             ticket_sort_val = SORT_TICKET_MEMBER_COUNT;
             ticket_sort_order_by = SORT_ASC;
-        }else if($(this).val()=="수강권 타입 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
+        }else if($(this).val()=="수강권 타입 순" || $(this).val()=="残余回数が多い" || $(this).val()=="Remain Count(H)"){
             ticket_sort_val = SORT_TICKET_TYPE;
             ticket_sort_order_by = SORT_DESC;
         }else if($(this).val()=="생성 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
@@ -779,28 +779,29 @@ $(document).on('click', 'div.groupWrap', function(e){
             $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
         }
     }else if(bodywidth < 1000){
-        var package_name = $(this).find('div._groupname_mobile').text();
-        var package_type = $(this).find('div._grouptype_mobile').text();
-        var package_membernum = $(this).find('div._groupparticipants_mobile > div:nth-of-type(2)').text();
-        var package_memo = $(this).find('div._groupmemo_mobile > div:nth-of-type(2)').text();
-        var package_status = $('div.pters_selectbox_btn_selected > span').text();
-        var package_statuscd = $('div.pters_selectbox_btn_selected').attr('data-status');
-        var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
-
+        // var package_name = $(this).find('div._groupname_mobile').text();
+        // var package_type = $(this).find('div._grouptype_mobile').text();
+        // var package_membernum = $(this).find('div._groupparticipants_mobile > div:nth-of-type(2)').text();
+        // var package_memo = $(this).find('div._groupmemo_mobile > div:nth-of-type(2)').text();
+        // var package_status = $('div.pters_selectbox_btn_selected > span').text();
         // var package_statuscd = $('div.pters_selectbox_btn_selected').attr('data-status');
-        // var ticket_data;
-        // if(package_statuscd == "current"){
-        //     ticket_data = ticket_ing_list_cache;
-        // }else if(package_statuscd == "finished"){
-        //     ticket_data = ticket_end_list_cache;
-        // }
-        // var package_name = ticket_data[package_id].package_name;
-        // var package_type = ticket_data[package_id].package_type_cd_nm;
-        // var package_membernum = ticket_data[package_id].package_ing_member_num;
-        // var package_memo = ticket_data[package_id].package_note;
-        // var package_status = ticket_data[package_id].package_state_cd_name;
-        // // var package_statuscd = ticket_data[package_id].package_statuscd;
         // var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
+
+        var package_statuscd = $('div.pters_selectbox_btn_selected').attr('data-status');
+        var ticket_data;
+        if(package_statuscd == "current"){
+            ticket_data = ticket_ing_list_cache;
+        }else if(package_statuscd == "finished"){
+            ticket_data = ticket_end_list_cache;
+        }
+        console.log("ticket_data", ticket_data)
+        var package_name = ticket_data[package_id].package_name;
+        var package_type = ticket_data[package_id].package_type_cd_nm;
+        var package_membernum = ticket_data[package_id].package_ing_member_num;
+        var package_memo = ticket_data[package_id].package_note;
+        var package_status = ticket_data[package_id].package_state_cd_name;
+        // var package_statuscd = ticket_data[package_id].package_statuscd;
+        var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
 
         current_Scroll_Position = $(document).scrollTop();
         $('#uptext3').text(package_name);
@@ -2668,6 +2669,7 @@ function get_package_end_list(use, callback){
 
 
 function ticket_jsondata_to_dict(jsondata){
+    console.log("jsondata", jsondata)
     var len = jsondata.package_id.length;
     var result = {};
     for(var j=0; j<len; j++){
