@@ -810,6 +810,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         $('#page-base-modifystyle').css('display', 'block');
         $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'ticket_info');
         $('#popup_ticket_info_mobile_lecturelist').html('').attr("data-packageid", package_id);
+        $('#upbutton-modify').css('display', 'block');
         $('#popup_ticket_info_mobile').css({'display':'block'});
         set_ticket_info_for_mobile_popup(package_id, package_name, package_status, package_statuscd, package_type, package_membernum, package_memo);
         if($(this).attr('data-packagestatecd')=='current'){
