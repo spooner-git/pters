@@ -670,7 +670,12 @@ $(document).ready(function(){
         selector_lectureStateChangeSelectPopup.find('._explain').html('※재개 : 남은 횟수를 다시 가져옵니다.');
 
         //수강자동 완료처리가 ON일떄 재개 버튼을 막는다.
-        var enddate_thislect = $(this).siblings('div').find('.lec_end_date').val().replace(/\./gi,'-')
+        var enddate_thislect;
+        if($('#memberInfoPopup').css('display') == "block"){
+            enddate_thislect = $(this).parents('.wraps').find('.lec_end_date').val().replace(/\./gi,'-');
+        }else{
+            enddate_thislect = $(this).siblings('div').find('.lec_end_date').val().replace(/\./gi,'-');
+        }
         if(Options.lecture_autocomplete == 0){                  //수강 자동완료 기능 OFF
             $('div._resume').removeClass('disabled_button');
         }else if(Options.lecture_autocomplete == 1 ){           //수강 자동완료 기능 ON
