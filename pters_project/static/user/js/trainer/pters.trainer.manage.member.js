@@ -776,12 +776,8 @@ $(document).ready(function(){
                 var ing_member_check = selectore_lectureStateChangeSelectPopup.attr('data-ing_member_check');
 
                 get_member_ing_list("callback", function(jsondata) {
-                    var total_member_num = jsondata.total_member_num;
-                    if(ing_member_check==ING_MEMBER_TRUE){
-                        total_member_num = 0;
-                    }
-                    $('#currentMemberList').attr('total_member_num', total_member_num);
-                    resume_member_reg_data_pc(lectureID, dbID);
+                    $('#currentMemberList').attr('total_member_num', jsondata.total_member_num);
+                    resume_member_reg_data_pc(lectureID, dbID, ing_member_check);
                 });
 
                 selectore_lectureStateChangeSelectPopup.css('display','none');
@@ -1181,6 +1177,7 @@ $(document).ready(function(){
                     id_search_memberSex = jsondata.sexInfo;
                     $('#id_username_info').val(jsondata.idInfo);
                     $('#id_user_id').val(jsondata.dbIdInfo);
+                    $('#id_ing_member_check').val(jsondata.ing_member_check);
                     var selectore_memberSex = $('#memberSex .selectboxopt');
                     selectore_memberSex.removeClass('selectbox_checked');
                     fill_member_info_by_ID_search();
@@ -1544,6 +1541,7 @@ $(document).ready(function(){
         var selector_ADD_GROUP_NEW = $('._ADD_GROUP_NEW');
         var selector_ADD_GROUPMEMBER_NEW = $('._ADD_GROUPMEMBER_NEW');
         var selector_ADD_PACKAGE_NEW = $('._ADD_PACKAGE_NEW');
+        var ing_member_check = $('#id_ing_member_check').val();
         if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUP_NEW.css('display') == "none" && selector_ADD_GROUPMEMBER_NEW.css('display') == "none" && (selector_ADD_PACKAGE_NEW.css('display') == "none"||selector_ADD_PACKAGE_NEW.css('display') == undefined) ){
             var id_search_confirm = $('#id_search_confirm').val();
             check_dropdown_selected();
@@ -1551,7 +1549,7 @@ $(document).ready(function(){
                 if(id_search_confirm==0){ //신규 회원을 직접 정보를 입력했을 때
                     add_member_form_noemail_func();
                 }else{                    //회원을 PTERS에서 검색했을 때
-                    add_member_form_func();
+                    add_member_form_func(ing_member_check);
                 }
             }else{
                 if(bodywidth < 600){
@@ -3888,6 +3886,7 @@ function get_indiv_member_info(dbID){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
+                $('#id_ing_member_check').val(jsondata.ing_member_check);
                 if(bodywidth < 600){
                     open_member_info_popup_mobile(dbID, jsondata);
                 }else{
@@ -4383,7 +4382,7 @@ function complete_member_reg_data_pc(lectureID, dbID){
 }
 
 //회원의 수강정보를 진행중으로 처리한다.
-function resume_member_reg_data_pc(lectureID, dbID){
+function resume_member_reg_data_pc(lectureID, dbID, ing_member_check){
     $.ajax({
         url:'/trainer/progress_lecture_info/',
         type:'POST',
@@ -4395,7 +4394,9 @@ function resume_member_reg_data_pc(lectureID, dbID){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
-            pters_option_inspector("member_update", xhr, $('#currentMemberList').attr('total_member_num'));
+            if(ing_member_check == ING_MEMBER_FALSE){
+                pters_option_inspector("member_update", xhr, $('#currentMemberList').attr('total_member_num'));
+            }
         },
 
         //보내기후 팝업창 닫기
@@ -5156,7 +5157,7 @@ function fill_member_info_by_ID_search(){
 }
 
 //새로운 회원 정보 서버로 보내 등록하기
-function add_member_form_func(){
+function add_member_form_func(ing_member_check){
     var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/add_lecture_info/',
@@ -5166,7 +5167,9 @@ function add_member_form_func(){
 
         beforeSend:function(xhr){
             beforeSend();
-            // pters_option_inspector("member_create", xhr, $('#currentMemberList').attr('total_member_num'));
+            if(ing_member_check == ING_MEMBER_FALSE){
+                pters_option_inspector("member_update", xhr, $('#currentMemberList').attr('total_member_num'));
+            }
             
         },
 
@@ -5273,7 +5276,7 @@ function add_member_form_noemail_func(){
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
                 $('#id_user_id').val(jsondata.user_db_id);
-                add_member_form_func();
+                add_member_form_func(ING_MEMBER_TRUE);
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
             }

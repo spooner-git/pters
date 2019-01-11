@@ -34,7 +34,7 @@ from openpyxl.writer.excel import save_virtual_workbook
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
     MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT, SORT_START_DATE, SORT_ASC, SORT_LECTURE_NAME, \
     SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CREATE_DATE, SORT_LECTURE_CAPACITY_COUNT, SORT_PACKAGE_NAME, \
-    SORT_PACKAGE_MEMBER_COUNT, SORT_PACKAGE_CREATE_DATE, SORT_PACKAGE_TYPE
+    SORT_PACKAGE_MEMBER_COUNT, SORT_PACKAGE_CREATE_DATE, SORT_PACKAGE_TYPE, ING_MEMBER_TRUE, ING_MEMBER_FALSE
 
 from configs.views import AccessTestMixin
 from trainee.views import get_trainee_repeat_schedule_data_func
@@ -1023,7 +1023,7 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         member_id = self.request.GET.get('member_id', '')
         id_flag = self.request.GET.get('id_flag', 0)
         class_id = self.request.session.get('class_id', '')
-
+        ing_member_check = ING_MEMBER_FALSE
         member = ''
         user = ''
         error = None
@@ -1067,22 +1067,16 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                                 "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(user.id) + \
                                 "' and B.USE=1"
 
-            lecture_count = ClassLectureTb.objects.select_related(
+            lecture_list = ClassLectureTb.objects.select_related(
                 'lecture_tb__member').filter(class_tb_id=class_id,
                                              lecture_tb__member_id=user.id,
                                              lecture_tb__use=USE, auth_cd='VIEW',
                                              use=USE).annotate(member_auth=RawSQL(query_member_auth,
-                                                                                  [])).filter(member_auth='VIEW'
-                                                                                              ).count()
+                                                                                  []))
+            lecture_count = lecture_list.filter(member_auth='VIEW').count()
 
-        # if error is None:
-        #     if lecture_list is not None:
-        #         for lecture_info_data in lecture_list:
-        #             member_lecture_count = MemberLectureTb.objects.select_related(
-        #                 'lecture_tb', 'member').filter(member_id=member_id,
-        #                                                lecture_tb=lecture_info_data.lecture_tb_id,
-        #                                                auth_cd='VIEW', lecture_tb__use=USE).count()
-        #             lecture_count += member_lecture_count
+            if lecture_list.filter(lecture_tb__state_cd='IP').count() > 0:
+                ing_member_check = ING_MEMBER_TRUE
 
         if error is None:
             if member.reg_info is None or str(member.reg_info) != str(self.request.user.id):
@@ -1105,6 +1099,7 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             if member.sex is None:
                 member.sex = ''
 
+        context['ing_member_check'] = ing_member_check
         context['member_info'] = member
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name
