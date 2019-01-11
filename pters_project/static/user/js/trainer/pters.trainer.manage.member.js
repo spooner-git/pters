@@ -567,7 +567,7 @@ $(document).ready(function(){
         }else if(bodywidth <600){
             dbID = $('#memberInfoPopup').attr('data-dbid');
         }
-        get_member_history_list(dbID);
+        get_indiv_repeat_info(dbID);
         $('#mobile_lecture_info').hide();
         $('#mobile_repeat_info').show();
         $('#mobile_history_info').hide();

@@ -2485,8 +2485,7 @@ var exist_check_dic = {};
 function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
     //중복일정 ㅇㄷ
     //var duplicate_check = know_duplicated_plans(jsondata).result;
-    //중복일정 ㅇㄷ  
-    console.log("여기", schedule_data_cache)
+    //중복일정 ㅇㄷ
 
     var plan = '';
     var planStartDate = '';
@@ -2741,7 +2740,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         var calc;
         var exist_check;
         if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]] != undefined){
-            if(option == "class" && jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) > 0){
+            if(option == "class" && jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) >= 0){
 
             }else{
                 if(exist_check_dic[planStartDate[i]+' ~ '+planEndDate[i]] == undefined){

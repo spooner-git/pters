@@ -1151,7 +1151,7 @@ $(document).ready(function(){
 
             dropdownlist_auto_scroll_to_middle($('#starttimesSelected button'));
             add_scroll_arrow_to_dropdown_list($(this));
-        };
+        }
     });
     $(document).on('click', '.pters_dropdown_custom_list li a', function(){
         $('#page-base-addstyle').css({'z-index':400});
