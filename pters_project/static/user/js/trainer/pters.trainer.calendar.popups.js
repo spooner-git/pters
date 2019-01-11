@@ -1166,17 +1166,17 @@
             $('#calendar').css('display', 'none');
             //$('#calendar').css('height', '0');
             get_indiv_member_info(dbID);
-            get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
-            get_member_history_list(dbID);
+            // get_indiv_repeat_info(dbID);
+            // get_member_history_list(dbID);
             $('#page-base-addstyle').hide();
             $('#page-base-modifystyle').show();
             shade_index(100);
         }else if(bodywidth >= 600){
             get_indiv_member_info(dbID);
-            get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
-            get_member_history_list(dbID);
+            // get_indiv_repeat_info(dbID);
+            // get_member_history_list(dbID);
             $('.member_info_tool button._info_delete_img').hide();
             $('#info_shift_base, #info_shift_lecture').show();
             $('#info_shift_schedule, #info_shift_history').hide();

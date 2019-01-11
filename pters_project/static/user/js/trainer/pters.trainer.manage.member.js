@@ -567,7 +567,7 @@ $(document).ready(function(){
         }else if(bodywidth <600){
             dbID = $('#memberInfoPopup').attr('data-dbid');
         }
-        get_member_history_list(dbID);
+        get_indiv_repeat_info(dbID);
         $('#mobile_lecture_info').hide();
         $('#mobile_repeat_info').show();
         $('#mobile_history_info').hide();
@@ -1710,9 +1710,16 @@ $(document).ready(function(){
                     alert('수업명을 입력하세요.');
                 }else{
                     $('.mobile_status_color_palette').hide();
+                    var status_to_be = $('.mobile_status_selected').attr('data-status');
                     //modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
                     modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "", "callback", function(){
-                        modify_group_status(group_id, $('.mobile_status_selected').attr('data-status'));
+                        modify_group_status(group_id, status_to_be, "callback", function(){
+                            if(status_to_be =='resume'){
+                                get_groupmember_list(group_id);
+                            }else if(status_to_be == "complete"){
+                                get_end_groupmember_list(group_id);
+                            }
+                        });
                     });
                 }
             }
@@ -1722,7 +1729,7 @@ $(document).ready(function(){
                 $(this).attr('data-type', 'modify');
                 $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
                 $('#ticketnametitle').css('display', 'table');
-                $('#ticketdelete').show();
+                $('#ticketdelete, .lecture_bubble_mini img').show();
                 $('#id_ticket_status').css('display', 'none');
                 $('.mobile_status_color_palette').show();
                 $('#uptext3').text('수강권 수정');
@@ -1736,8 +1743,15 @@ $(document).ready(function(){
                     // $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
                     // $(this).attr('data-type', 'view');
                     // $('.mobile_status_color_palette').hide();
+                    var status_to_be = $('.mobile_status_selected').attr('data-status');
                     modify_package_from_list(package_id, package_name, package_note, "callback", function(){
-                        modify_package_status(package_id, $('.mobile_status_selected').attr('data-status'));
+                        modify_package_status(package_id, status_to_be, "callback", function(){
+                            if(status_to_be == "resume"){
+                                get_package_member_list(package_id);
+                            }else if(status_to_be == "complete"){
+                                get_end_package_member_list(package_id);
+                            }
+                        });
                     });
                 }
             }

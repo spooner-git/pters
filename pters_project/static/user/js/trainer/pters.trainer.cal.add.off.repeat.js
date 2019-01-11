@@ -1,93 +1,93 @@
 $(document).ready(function(){
 
     $('.mode_switch_button').click(function(e){
-        var pageSelector = $(this).attr('data-page')
-        $(this).addClass('mode_active')
-        $(this).siblings('.mode_switch_button').removeClass('mode_active')
+        var pageSelector = $(this).attr('data-page');
+        $(this).addClass('mode_active');
+        $(this).siblings('.mode_switch_button').removeClass('mode_active');
 
         if((addTypeSelect == "ptadd" || addTypeSelect == "groupptadd") && pageSelector == 'repeat'){
             if($('.repeatadd_time_unit').hasClass('checked')){
-                repeatStartTimeSet(5)
+                repeatStartTimeSet(5);
             }else{
-                repeatStartTimeSet(Options.classDur)
+                repeatStartTimeSet(Options.classDur);
             }
             
             /*애니메이션*/
-            $('._NORMAL_ADD_wrap').css('display','none')
-            $('._REPEAT_ADD_wrap').css('display','block')
-            $('._NORMAL_ADD_timegraph').hide()
+            $('._NORMAL_ADD_wrap').css('display','none');
+            $('._REPEAT_ADD_wrap').css('display','block');
+            $('._NORMAL_ADD_timegraph').hide();
             /*애니메이션*/
             if(addTypeSelect == "ptadd"){
-                addTypeSelect = "repeatptadd"
-                deleteTypeSelect = "repeatptdelete"
+                addTypeSelect = "repeatptadd";
+                deleteTypeSelect = "repeatptdelete";
             }else if(addTypeSelect == "groupptadd"){
-                addTypeSelect = "repeatgroupptadd"
-                deleteTypeSelect = "repeatgroupptdelete"
+                addTypeSelect = "repeatgroupptadd";
+                deleteTypeSelect = "repeatgroupptdelete";
             }
             $("#id_repeat_member_id").val($('#id_member_id').val());
             $("#id_repeat_lecture_id").val($('#id_lecture_id').val());
             $("#id_repeat_member_name").val($('#id_member_name').val());
-            check_dropdown_selected_addplan()
+            check_dropdown_selected_addplan();
             //console.log("$('#membersSelected button').val().length",$('#membersSelected button').val().length, $('#membersSelected button').val())
             if($('#membersSelected button').val().length == 0){
-                $('#offRepeatSummary').html('').hide()
+                $('#offRepeatSummary').html('').hide();
             }
         }else if(addTypeSelect == "offadd" && pageSelector == 'repeat'){
             if($('.repeatadd_time_unit').hasClass('checked')){
-                repeatStartTimeSet(5)
+                repeatStartTimeSet(5);
             }else{
-                repeatStartTimeSet(Options.classDur)
+                repeatStartTimeSet(Options.classDur);
             }
             /*애니메이션*/
-            $('._NORMAL_ADD_wrap').css('display','none')
-            $('._REPEAT_ADD_wrap').css('display','block')
-            $('._NORMAL_ADD_timegraph').hide()
+            $('._NORMAL_ADD_wrap').css('display','none');
+            $('._REPEAT_ADD_wrap').css('display','block');
+            $('._NORMAL_ADD_timegraph').hide();
             /*애니메이션*/
-            addTypeSelect = "repeatoffadd"
-            deleteTypeSelect = "repeatoffdelete"
-            check_dropdown_selected_addplan()
+            addTypeSelect = "repeatoffadd";
+            deleteTypeSelect = "repeatoffdelete";
+            check_dropdown_selected_addplan();
         }else if((addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd") && pageSelector == ''){
             /*애니메이션*/
-            $('._NORMAL_ADD_wrap').css('display','block')
-            $('._REPEAT_ADD_wrap').css('display','none')
+            $('._NORMAL_ADD_wrap').css('display','block');
+            $('._REPEAT_ADD_wrap').css('display','none');
 
             if($('#datepicker').val().length>0){
-                $('._NORMAL_ADD_timegraph').css('display','block')
+                $('._NORMAL_ADD_timegraph').css('display','block');
             }
             /*애니메이션*/
             if(addTypeSelect == "repeatptadd"){
-                addTypeSelect = "ptadd"
+                addTypeSelect = "ptadd";
             }else if(addTypeSelect == "repeatgroupptadd"){
-                addTypeSelect = "groupptadd"
+                addTypeSelect = "groupptadd";
             }
 
-            check_dropdown_selected_addplan()
+            check_dropdown_selected_addplan();
         }else if(addTypeSelect == "repeatoffadd" && pageSelector == ''){
             /*애니메이션*/
-            $('._NORMAL_ADD_wrap').css('display','block')
-            $('._REPEAT_ADD_wrap').css('display','none')
+            $('._NORMAL_ADD_wrap').css('display','block');
+            $('._REPEAT_ADD_wrap').css('display','none');
             if($('#datepicker').val().length>0){
-                $('._NORMAL_ADD_timegraph').css('display','block')
+                $('._NORMAL_ADD_timegraph').css('display','block');
             }
             /*애니메이션*/
-            addTypeSelect = "offadd"
-            check_dropdown_selected_addplan()
+            addTypeSelect = "offadd";
+            check_dropdown_selected_addplan();
         }
 
         else if(pageSelector == "thisgroup"){
-            $('#subpopup_addByList_thisgroup').show()
-            $('#subpopup_addByList_whole').hide()
+            $('#subpopup_addByList_thisgroup').show();
+            $('#subpopup_addByList_whole').hide();
         }else if(pageSelector == "whole"){
-            $('#subpopup_addByList_whole').show()
-            $('#subpopup_addByList_thisgroup').hide()
+            $('#subpopup_addByList_whole').show();
+            $('#subpopup_addByList_thisgroup').hide();
         }
     })
 
 
     $(document).on('click','.summaryInnerBoxText, .summaryInnerBoxText2',function(){ //반복일정 텍스트 누르면 휴지통 닫힘
-        var $btn = $('.deleteBtnBin')
-        $btn.animate({'width':'0px'},230)
-        $btn.find('img').css({'display':'none'})
+        var $btn = $('.deleteBtnBin');
+        $btn.animate({'width':'0px'},230);
+        $btn.find('img').css({'display':'none'});
     })
 
 
