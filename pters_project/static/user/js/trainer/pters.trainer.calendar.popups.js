@@ -1080,7 +1080,7 @@
                             enable_delete_btns_after_ajax();
                             get_member_lecture_list(dbid, "callback", function(jsondata){
                                 var index = jsondata.lectureIdArray.indexOf(lecture_id);
-                                if(jsondata.remCountArray[index] == "1" && data_prev == "0"){
+                                if(jsondata.remCountArray[index] == "1" && data_prev == "0" && jsondata.lectureStateArray[index] == "IP"){
                                     notice_lecture_status_changed_to_inprogress(jsondata.groupNameArray[index], member_name);
                                 }
                             });

@@ -68,7 +68,6 @@ def add_schedule_logic(request):
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
-
     error = None
     schedule_start_datetime = None
     schedule_end_datetime = None
@@ -80,6 +79,9 @@ def add_schedule_logic(request):
     push_title = []
     push_message = []
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+
+    if duplication_enable_flag is None or duplication_enable_flag == '':
+        duplication_enable_flag = SCHEDULE_DUPLICATION_DISABLE
     if en_dis_type == ON_SCHEDULE_TYPE:
         if member_id == '':
             error = '회원을 선택해 주세요.'
@@ -160,7 +162,6 @@ def add_schedule_logic(request):
                                                         permission_state_cd,
                                                         state_cd)
                     error = schedule_result['error']
-
                 if error is None:
                     if lecture_id is not None and lecture_id != '':
                         error = func_refresh_lecture_count(class_id, lecture_id)
@@ -657,6 +658,8 @@ def add_repeat_schedule_logic(request):
     repeat_duplication_date_data = []
     repeat_success_date_data = []
 
+    if duplication_enable_flag is None or duplication_enable_flag == '':
+        duplication_enable_flag = SCHEDULE_DUPLICATION_DISABLE
     if repeat_type == '':
         error = '매주/격주를 선택해주세요.'
 
@@ -1215,6 +1218,8 @@ def add_group_schedule_logic(request):
     class_info = None
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
+    if duplication_enable_flag is None or duplication_enable_flag == '':
+        duplication_enable_flag = SCHEDULE_DUPLICATION_DISABLE
     if group_id == '':
         error = '오류가 발생했습니다.'
     elif schedule_date == '':
@@ -2167,6 +2172,8 @@ def add_group_repeat_schedule_logic(request):
     repeat_duplication_date_data = []
     repeat_success_date_data = []
 
+    if duplication_enable_flag is None or duplication_enable_flag == '':
+        duplication_enable_flag = SCHEDULE_DUPLICATION_DISABLE
     if repeat_type == '':
         error = '빈도를 선택해주세요.'
 

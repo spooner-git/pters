@@ -3053,6 +3053,7 @@ function know_duplicated_plans(jsondata){
         }
         duplicate_num.push(duplicated);
     }
+    console.log(duplicate_dic);
     var result = {};
 
     //겹치지 않는 합쳐진 일정
@@ -3064,7 +3065,7 @@ function know_duplicated_plans(jsondata){
         var array_sorted = duplicate_dic[plan_].sort();
 
         for(var t=0; t<array_sorted.length; t++){
-            console.log("temp_index", temp_index)
+            // console.log("temp_index", temp_index)
             // 기본값 셋팅
             var ref = array_sorted[t];
             if(t == 0){
