@@ -1385,8 +1385,12 @@ function modify_group_status(group_id, option){
     var _URL;
     if(option == 'complete'){
         _URL = '/trainer/finish_group_info/';
+        text_for_mobile = "종료";
+        color_for_mobile = "red";
     }else if(option == 'resume'){
         _URL = '/trainer/progress_group_info/';
+        text_for_mobile = "진행중";
+        color_for_mobile = "green";
     }
 
     $.ajax({
@@ -1400,6 +1404,9 @@ function modify_group_status(group_id, option){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
+            if(option=='resume'){
+                pters_option_inspector("group_update", xhr, $('#currentGroupList').attr('total_group_num'));
+            }
         },
 
         //보내기후 팝업창 닫기
