@@ -5,6 +5,8 @@ const SORT_ASC = 0;
 const SORT_DESC = 1;
 const TAB_ING = 'current';
 const TAB_END = 'finished';
+const ING_MEMBER_FALSE = 0;
+const ING_MEMBER_TRUE = 1;
 
 var member_sort_val = SORT_MEMBER_NAME;
 var member_sort_order_by = SORT_ASC;
@@ -635,6 +637,7 @@ $(document).ready(function(){
         $('#shade_caution').show();
         selector_lectureStateChangeSelectPopup.show().attr({'data-leid':$(this).attr('data-leid'),
                                                             'data-dbid':$(this).attr('data-dbid'),
+                                                            'data-ing_member_check':$(this).attr('data-ing_member_check'),
                                                             'data-username':$(this).parents('._member_info_popup').attr('data-username'),
                                                             'data-userid':$(this).parents('._member_info_popup').attr('data-userid'),
                                                             'data-grouptype': ''
@@ -657,6 +660,7 @@ $(document).ready(function(){
         $('#shade_caution').show();
         selector_lectureStateChangeSelectPopup.show().attr({'data-leid':$(this).attr('data-leid'),
                                                             'data-dbid':$(this).attr('data-dbid'),
+                                                            'data-ing_member_check':$(this).attr('data-ing_member_check'),
                                                             'data-username':$(this).parents('._member_info_popup').attr('data-username'),
                                                             'data-userid':$(this).parents('._member_info_popup').attr('data-userid'),
                                                             'data-grouptype': ''
@@ -697,6 +701,7 @@ $(document).ready(function(){
         $('#shade_caution').show();
         selector_lectureStateChangeSelectPopup.show().attr({'data-leid':$(this).attr('data-leid'),
                                                             'data-dbid':$(this).attr('data-dbid'),
+                                                            'data-ing_member_check':$(this).attr('data-ing_member_check'),
                                                             'data-username':$(this).parents('._member_info_popup').attr('data-username'),
                                                             'data-userid':$(this).parents('._member_info_popup').attr('data-userid'),
                                                             'data-grouptype': ''
@@ -768,9 +773,14 @@ $(document).ready(function(){
                 var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
                 var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
                 var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
+                var ing_member_check = selectore_lectureStateChangeSelectPopup.attr('data-ing_member_check');
 
                 get_member_ing_list("callback", function(jsondata) {
-                    $('#currentMemberList').attr('total_member_num', jsondata.total_member_num);
+                    var total_member_num = jsondata.total_member_num;
+                    if(ing_member_check==ING_MEMBER_TRUE){
+                        total_member_num = 0;
+                    }
+                    $('#currentMemberList').attr('total_member_num', total_member_num);
                     resume_member_reg_data_pc(lectureID, dbID);
                 });
 
@@ -4385,9 +4395,7 @@ function resume_member_reg_data_pc(lectureID, dbID){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
-            // if(member_tab==TAB_END || lecture_tab==TAB_END || ticket_tab == TAB_END){
-                pters_option_inspector("member_update", xhr, $('#currentMemberList').attr('total_member_num'));
-            // }
+            pters_option_inspector("member_update", xhr, $('#currentMemberList').attr('total_member_num'));
         },
 
         //보내기후 팝업창 닫기
@@ -4733,6 +4741,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
     var remCount_group_personal = [];
     var availCount_group_personal = [];
     var finishCount_group_personal = [];
+    var ing_member_check = ING_MEMBER_FALSE;
     if(PCorMobile == "pc"){
         regCount_group_personal = [];
         remCount_group_personal = [];
@@ -4811,6 +4820,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             
 
             if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
+                ing_member_check = ING_MEMBER_TRUE;
                 lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
             }else if(jsondata.lectureStateArray[i] == "PE"){
                 lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
@@ -4933,6 +4943,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             }
 
             if(jsondata_lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
+                ing_member_check = ING_MEMBER_TRUE;
                 lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
             }else if(jsondata_lectureStateArray[i] == "PE"){
                 lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
@@ -4960,6 +4971,10 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
         var result_history = result_history_html.join('');
         $regHistory.html(result_history);
     }
+
+    $('.lecConnectType_IP').attr('data-ing_member_check', ing_member_check);
+    $('.lecConnectType_PE').attr('data-ing_member_check', ing_member_check);
+    $('.lecConnectType_RF').attr('data-ing_member_check', ing_member_check);
 
     function sumCount(numberarray){
         var count = 0;
@@ -5151,7 +5166,7 @@ function add_member_form_func(){
 
         beforeSend:function(xhr){
             beforeSend();
-            pters_option_inspector("member_create", xhr, $('#currentMemberList').attr('total_member_num'));
+            // pters_option_inspector("member_create", xhr, $('#currentMemberList').attr('total_member_num'));
             
         },
 

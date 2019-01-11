@@ -1036,7 +1036,8 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
         display_type = "inline-block";
     }
     if($(this).attr('data-groupstatus') == "IP"){
-        var change_explain_text = '1) 수강권에서 해당 그룹이 제외됩니다.<br/>2) 소속된 회원의 수강권이 종료됩니다.';
+        // var change_explain_text = '1) 수강권에서 해당 그룹이 제외됩니다.<br/>2) 소속된 회원의 수강권이 종료됩니다.';
+        var change_explain_text = '1) 수강권에서 해당 그룹이 제외됩니다.<br/>';
         $('._explain').html(change_explain_text);
         $('._complete').css('display', display_type);
         $('._resume, ._refund, ._delete').css('display', 'none');
@@ -1046,13 +1047,14 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
             }else{
                 var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
                 var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
-                complete_member_reg_data_pc(lectureID, dbID);
+                // complete_member_reg_data_pc(lectureID, dbID);
                 $('.lectureStateChangeSelectPopup').css('display', 'none');
             }
             // $('.lectureStateChangeSelectPopup').attr('data-grouptype','');
         });
     }else if($(this).attr('data-groupstatus') == "PE"){
-        var change_explain_text = '1) 해당 그룹이 포함되었던 수강권에 다시 추가됩니다.<br/>2) 남은 횟수가 있는 소속된 회원의 수강권이 재개됩니다.';
+        // var change_explain_text = '1) 해당 그룹이 포함되었던 수강권에 다시 추가됩니다.<br/>2) 남은 횟수가 있는 소속된 회원의 수강권이 재개됩니다.';
+        var change_explain_text = '1) 해당 그룹이 포함되었던 수강권에 다시 추가됩니다.<br/>';
         $('._explain').html(change_explain_text);
         $('._resume').css('display', display_type);
         $('._complete, ._refund, ._delete').css('display', 'none');
@@ -1062,7 +1064,7 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
             }else{
                 var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
                 var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
-                resume_member_reg_data_pc(lectureID, dbID);
+                // resume_member_reg_data_pc(lectureID, dbID);
                 $('.lectureStateChangeSelectPopup').css('display', 'none');
             }
             // $('.lectureStateChangeSelectPopup').attr('data-grouptype', '');
