@@ -428,7 +428,7 @@ def func_check_group_available_member_after(class_id, group_id, group_schedule_i
 # 일정 중복 체크
 def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_end_dt, duplication_enable_flag):
     error = None
-    if duplication_enable_flag == SCHEDULE_DUPLICATION_DISABLE:
+    if int(duplication_enable_flag) == SCHEDULE_DUPLICATION_DISABLE:
         seven_days_ago = add_start_dt - datetime.timedelta(days=2)
         seven_days_after = add_end_dt + datetime.timedelta(days=2)
 
