@@ -4385,9 +4385,9 @@ function resume_member_reg_data_pc(lectureID, dbID){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
-            if(member_tab==TAB_END || lecture_tab==TAB_END || ticket_tab == TAB_END){
+            // if(member_tab==TAB_END || lecture_tab==TAB_END || ticket_tab == TAB_END){
                 pters_option_inspector("member_update", xhr, $('#currentMemberList').attr('total_member_num'));
-            }
+            // }
         },
 
         //보내기후 팝업창 닫기

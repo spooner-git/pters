@@ -2457,20 +2457,21 @@ def progress_lecture_info_logic(request):
             if lecture_info.package_tb.state_cd != 'IP':
                 error = '해당 수강권은 진행중 상태가 아닙니다.'
 
-    if error is None:
-        group_data = GroupLectureTb.objects.select_related('group_tb').filter(lecture_tb_id=lecture_id, use=USE)
-        error_count = 0
-        for group_info in group_data:
-            if group_info.group_tb.state_cd != 'IP':
-                if group_info.group_tb.group_type_cd == 'NORMAL':
-                    error = group_info.group_tb.name + ' 그룹이 진행중 상태가 아닙니다.'
-                    error_count += 1
-                elif group_info.group_tb.group_type_cd == 'EMPTY':
-                    error = group_info.group_tb.name + ' 클래스가 진행중 상태가 아닙니다.'
-                    error_count += 1
+    # if error is None:
+        # group_data = GroupLectureTb.objects.select_related('group_tb').filter(lecture_tb_id=lecture_id, use=USE)
+        # error_count = 0
+        # if len(group_data) == 1:
+        #     for group_info in group_data:
+        #         if group_info.group_tb.state_cd != 'IP':
+        #             if group_info.group_tb.group_type_cd == 'NORMAL':
+        #                 error = group_info.group_tb.name + ' 그룹이 진행중 상태가 아닙니다.'
+        #                 error_count += 1
+        #             elif group_info.group_tb.group_type_cd == 'EMPTY':
+        #                 error = group_info.group_tb.name + ' 클래스가 진행중 상태가 아닙니다.'
+        #                 error_count += 1
 
-        if error_count > 1:
-            error = str(error_count)+'개의 그룹이 진행중 상태가 아닙니다.'
+        # if error_count > 1:
+        #     error = str(error_count)+'개의 그룹이 진행중 상태가 아닙니다.'
 
     # if error is None:
     #     error_count = 0
