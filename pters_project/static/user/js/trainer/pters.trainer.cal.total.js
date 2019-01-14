@@ -2779,6 +2779,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         var planLeft;
         var calc;
         var exist_check;
+        var time_hide = "";
         if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]] != undefined){
             if(option == "class" && jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) >= 0){
 
@@ -2794,8 +2795,10 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
 
                     if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][exist_check][1] > 1){
                         groupstatus="";
+                        time_hide = "style=visibility:hidden;";
                     }
                     exist_check_dic[planStartDate[i]+' ~ '+planEndDate[i]]++;
+
                 }
             }
         }
@@ -2809,7 +2812,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         if(option == 'class' && jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) == -1){
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
-                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
+                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'" '+time_hide+'>'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
                 planhtml = '<div'+
                             ' data-scheduleid="'+planScheduleIdArray[i]+
                             '" style="position:absolute;z-index:150;height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+schedule_user_color+
@@ -2824,7 +2827,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         }else if(option == 'group'){
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
-                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+groupstatus+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
+                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+groupstatus+' </span>'+'<span class="memberTime '+memberTimeHide+'" '+time_hide+'>'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
                 planhtml = '<div'+
                             ' data-scheduleid="'+planScheduleIdArray[i]+
                             '" style="position:absolute;z-index:150;height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+schedule_user_color+
@@ -2839,7 +2842,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         }else if(option == 'off'){
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
-                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
+                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'" '+time_hide+'>'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
                 planhtml = '<div'+
                             ' data-scheduleid="'+planScheduleIdArray[i]+
                             '" style="position:absolute;z-index:150;height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+schedule_user_color+
