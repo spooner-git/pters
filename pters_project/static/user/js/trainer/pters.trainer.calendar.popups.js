@@ -1176,6 +1176,12 @@
             $('#uptext3').text(member_name);
             $('#page-base-addstyle').hide();
             $('#page-base-modifystyle').show();
+
+            $('#mobile_basic_info, #mobile_lecture_info').show();
+            $('#mobile_repeat_info, #mobile_history_info').hide();
+            $('#select_info_shift_lecture_mobile').addClass('button_active');
+            $('#select_info_shift_schedule_mobile, #select_info_shift_history_mobile').removeClass('button_active');
+
             shade_index(100);
         }else if(bodywidth >= 600){
             get_indiv_member_info(dbID);
