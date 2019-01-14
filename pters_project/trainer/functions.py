@@ -1470,7 +1470,7 @@ def func_get_ing_group_member_list(class_id, group_id, user_id):
                                      use=USE).annotate(class_count=RawSQL(query_class_count, []),
                                                        # fix_state_cd_nm=RawSQL(query_fix_state_cd_nm, []),
                                                        member_auth=RawSQL(query_member_auth,
-                                                                          [])).filter(class_count__gte=1)
+                                                                          [])).filter(class_count__gte=1).order_by('lecture_tb__member__name')
 
     for lecture_info in lecture_list:
         # member_info = lecture_info.lecture_tb
@@ -1609,7 +1609,7 @@ def func_get_end_group_member_list(class_id, group_id, user_id):
                                                       ).annotate(class_count=RawSQL(query_class_count, []),
                                                                  # fix_state_cd_nm=RawSQL(query_fix_state_cd_nm, []),
                                                                  member_auth=RawSQL(query_member_auth,
-                                                                                    [])).filter(class_count__gte=1)
+                                                                                    [])).filter(class_count__gte=1).order_by('lecture_tb__member__name')
 
     for lecture_info in lecture_list:
         # member_info = lecture_info.lecture_tb
@@ -1791,7 +1791,7 @@ def func_get_ing_package_in_member_list(class_id, package_id, user_id):
         'lecture_tb__member').filter(class_tb_id=class_id, auth_cd='VIEW',
                                      lecture_tb__package_tb_id=package_id,
                                      lecture_tb__state_cd='IP', lecture_tb__use=USE,
-                                     use=USE).annotate(member_auth=RawSQL(query_member_auth, []))
+                                     use=USE).annotate(member_auth=RawSQL(query_member_auth, [])).order_by('lecture_tb__member__name')
 
     for lecture_info in lecture_list:
         error = None
@@ -1892,7 +1892,7 @@ def func_get_end_package_in_member_list(class_id, package_id, user_id):
         'lecture_tb__member').filter(class_tb_id=class_id, auth_cd='VIEW',
                                      lecture_tb__package_tb_id=package_id, lecture_tb__use=USE,
                                      use=USE).exclude(lecture_tb__state_cd='IP'
-                                                      ).annotate(member_auth=RawSQL(query_member_auth, []))
+                                                      ).annotate(member_auth=RawSQL(query_member_auth, [])).order_by('lecture_tb__member__name')
 
     for lecture_info in lecture_list:
         # member_info = lecture_info.lecture_tb
