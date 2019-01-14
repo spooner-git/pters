@@ -37,7 +37,7 @@ from .functions import func_get_lecture_id, func_add_schedule, func_refresh_lect
     func_check_group_available_member_before, func_check_group_available_member_after, \
     func_send_push_trainer, func_get_not_available_group_member_list, func_send_push_trainee, func_delete_schedule, \
     func_delete_repeat_schedule, func_update_repeat_schedule, func_get_repeat_schedule_date_list, \
-    func_add_repeat_schedule, func_refresh_group_status
+    func_add_repeat_schedule, func_refresh_group_status, func_refresh_lecture_count_for_delete
 
 logger = logging.getLogger(__name__)
 
@@ -244,9 +244,9 @@ def delete_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
+    auth_member_num = request.POST.get('auth_member_num', 20)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
-
     push_lecture_id = []
     push_title = []
     push_message = []
@@ -1472,6 +1472,7 @@ def delete_group_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
+    auth_member_num = request.POST.get('auth_member_num', 20)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
@@ -1527,6 +1528,7 @@ def delete_group_schedule_logic(request):
                         schedule_result = func_delete_schedule(schedule_id, request.user.id)
                         temp_error = schedule_result['error']
                         if temp_error is None:
+                            # temp_error = func_refresh_lecture_count_for_delete(class_id, lecture_id, auth_member_num)
                             temp_error = func_refresh_lecture_count(class_id, lecture_id)
                         if temp_error is None:
                             if repeat_schedule_id is not None and repeat_schedule_id != '':

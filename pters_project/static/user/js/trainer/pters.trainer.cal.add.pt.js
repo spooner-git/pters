@@ -3774,6 +3774,9 @@ function send_plan_delete(option, callbackoption, callback){
     var sendData;
     var url_;
     var selected_date;
+
+    $('#id_auth_member_num').val(auth_type_cd['auth_member_update'].limit_num);
+
     if(option == "pt"){
         $form = $('#daily-pt-delete-form');
         serializeArray = $form.serializeArray();
@@ -3790,6 +3793,7 @@ function send_plan_delete(option, callbackoption, callback){
         url_ = '/schedule/delete_group_schedule/';
         selected_date = $('#id_date_info').val();
     }
+    console.log(auth_type_cd['auth_member_update'].limit_num);
     //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(url_)
     $.ajax({
         url: url_,

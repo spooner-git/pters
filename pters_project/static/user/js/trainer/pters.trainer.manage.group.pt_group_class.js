@@ -2430,15 +2430,19 @@ function groupMemberListSet_mobile(group_id, jsondata){
     var htmlToJoin = [];
     var len = jsondata.db_id.length;
     if(bodywidth < 1000){
-        htmlToJoin.push(`
-                            <div id="mobile_comment_1">
+        if(lecture_tab == TAB_ING) {
+            htmlToJoin.push(`<div id="mobile_comment_1">
                                 <span>참여중 회원</span><span>${len}</span><div style="display:none;">+</div>
                             </div>
                             <div id="mobile_comment_2">
                                 <p>회원을 체크하면 일정 등록시 함께 추가합니다.</p>
-                            </div>
-                        `
-                        )
+                            </div>`);
+        }else{
+            htmlToJoin.push(`<div id="mobile_comment_1">
+                                <span>참여 회원</span><span>${len}</span><div style="display:none;">+</div>
+                            </div>`);
+
+        }
     }else if(bodywidth >= 1000){
         htmlToJoin.push('<div class="groupmemberline_thead">'+
                         '<div class="_tdname">회원명</div>'+
@@ -2485,7 +2489,7 @@ function groupMemberListSet_mobile(group_id, jsondata){
                                                                             +'<p>'+'<span style="margin-right:20px;">남은 횟수</span>'+groupmember_remcount+'</p>'+
                                                                             '</div>';
 
-        if(grouptype!='ONE_TO_ONE') {
+        if(grouptype!='ONE_TO_ONE' && lecture_tab == TAB_ING) {
             memberRow += '<div class="_fixedmember" data-dbid="' + groupmember_dbid + '" data-groupid="' + group_id + '">' + '<div></div>' + '<input type="checkbox" ' + groupmember_fixed + '>' + '</div>';
         }else{
             memberRow += '<div class="" style="width:10%"></div>';
@@ -2496,28 +2500,28 @@ function groupMemberListSet_mobile(group_id, jsondata){
         htmlToJoin.push(memberRow);
     }
 
-    var EMPTY_EXPLAIN;
-    if(grouptype == 'EMPTY'){
-        //var group_type = group_capacity+"인 공개"
-        EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 클래스 소속인원은 이 클래스명으로 개설된 레슨에 예약 가능하며, 클래스 소속인원수는 제한이 없습니다. 수업당 정원은 "+groupcapacity+" 명입니다.</p>";
-    }else if(grouptype == "NORMAL"){
-        //var group_type = group_capacity+"인 비공개"
-        EMPTY_EXPLAIN = "";
-    }else{
-        EMPTY_EXPLAIN = "";
-    }
+    // var EMPTY_EXPLAIN;
+    // if(grouptype == 'EMPTY'){
+    //     //var group_type = group_capacity+"인 공개"
+    //     EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 클래스 소속인원은 이 클래스명으로 개설된 레슨에 예약 가능하며, 클래스 소속인원수는 제한이 없습니다. 수업당 정원은 "+groupcapacity+" 명입니다.</p>";
+    // }else if(grouptype == "NORMAL"){
+    //     //var group_type = group_capacity+"인 비공개"
+    //     EMPTY_EXPLAIN = "";
+    // }else{
+    //     EMPTY_EXPLAIN = "";
+    // }
 
-    var addButton = '';
+    // var addButton = '';
 
-    if(groupcapacity <= len && grouptype =='NORMAL'){
-        addButton = '';
-    }else{
-        addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>';
-    }
-
-    if(grouptype=='ONE_TO_ONE' || $('#finishedGroupList').css('display') == "block"){
-        addButton = '';
-    }
+    // if(groupcapacity <= len && grouptype =='NORMAL'){
+    //     addButton = '';
+    // }else{
+    //     addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>';
+    // }
+    //
+    // if(grouptype=='ONE_TO_ONE' || $('#finishedGroupList').css('display') == "block"){
+    //     addButton = '';
+    // }
 
     // var html = htmlToJoin.join('') + addButton;
     // if(jsondata.db_id.length == 0){
@@ -2534,7 +2538,7 @@ function groupMemberListSet_mobile(group_id, jsondata){
     //수업관리에서 수업에 회원을 넣고 빼는건 이제 금지. 수강권에서 한다.
     var html = htmlToJoin.join('');
     if(jsondata.db_id.length == 0){
-        if($('#currentGroupList').css('display') == "block"){
+        if(lecture_tab == TAB_ING){
             if(grouptype == 'EMPTY') {
                 html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div>';
             }else if(grouptype == 'NORMAL'){
