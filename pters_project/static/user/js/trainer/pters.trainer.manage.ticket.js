@@ -146,10 +146,10 @@ $('.alignSelect_ticket').change(function(){
         if($(this).val()=="수강권명 가나다 순" || $(this).val()=="名前順" || $(this).val()=="Name" ){
             ticket_sort_val = SORT_TICKET_NAME;
             ticket_sort_order_by = SORT_ASC;
-        }else if($(this).val()=="참여중 회원 많은 순" || $(this).val()=="残余回数が多い" || $(this).val()=="Remain Count(H)"){
+        }else if($(this).val()=="소속 회원 많은 순" || $(this).val()=="残余回数が多い" || $(this).val()=="Remain Count(H)"){
             ticket_sort_val = SORT_TICKET_MEMBER_COUNT;
             ticket_sort_order_by = SORT_DESC;
-        }else if($(this).val()=="참여중 회원 적은 순" || $(this).val()=="残余回数が少ない" || $(this).val()=="Remain Count(L)"){
+        }else if($(this).val()=="소속 회원 적은 순" || $(this).val()=="残余回数が少ない" || $(this).val()=="Remain Count(L)"){
             ticket_sort_val = SORT_TICKET_MEMBER_COUNT;
             ticket_sort_order_by = SORT_ASC;
         }else if($(this).val()=="수강권 타입 순" || $(this).val()=="残余回数が多い" || $(this).val()=="Remain Count(H)"){
@@ -3555,12 +3555,18 @@ function packageMemberListSet_mobile(package_id, jsondata){
     var htmlToJoin = [];
     var len = jsondata.db_id.length;
 
+    // htmlToJoin.push(`
+    //                     <div id="mobile_comment_1">
+    //                         <span>소속 회원</span><span>${len}</span><div style="display:inline-block;cursor:pointer" class="btn_add_member_to_ticket_mobile" data-packageid=${package_id}>+</div>
+    //                     </div>
+    //                     <div id="mobile_comment_2">
+    //                         <p style="margin:0;">회원을 체크하면 일정 등록시 함께 추가합니다.</p>
+    //                     </div>
+    //                 `
+    //                 );
     htmlToJoin.push(`
                         <div id="mobile_comment_1">
-                            <span>참여중 회원</span><span>${len}</span><div style="display:inline-block;cursor:pointer" class="btn_add_member_to_ticket_mobile" data-packageid=${package_id}>+</div>
-                        </div>
-                        <div id="mobile_comment_2">
-                            <p style="margin:0;">회원을 체크하면 일정 등록시 함께 추가합니다.</p>
+                            <span>소속 회원</span><span>${len}</span><div style="display:inline-block;cursor:pointer" class="btn_add_member_to_ticket_mobile" data-packageid=${package_id}>+</div>
                         </div>
                     `
                     );

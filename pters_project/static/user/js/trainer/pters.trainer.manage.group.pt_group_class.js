@@ -170,10 +170,10 @@ $('.alignSelect_lecture').change(function(){
         if($(this).val()=="수업명 가나다 순" || $(this).val()=="名前順" || $(this).val()=="Name" ){
             lecture_sort_val = SORT_LECTURE_NAME;
             lecture_sort_order_by = SORT_ASC;
-        }else if($(this).val()=="참여중 회원 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
+        }else if($(this).val()=="소속 회원 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
             lecture_sort_val = SORT_LECTURE_MEMBER_COUNT;
             lecture_sort_order_by = SORT_DESC;
-        }else if($(this).val()=="참여중 회원 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
+        }else if($(this).val()=="소속 회원 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
             lecture_sort_val = SORT_LECTURE_MEMBER_COUNT;
             lecture_sort_order_by = SORT_ASC;
         }else if($(this).val()=="정원 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
@@ -2435,14 +2435,14 @@ function groupMemberListSet_mobile(group_id, jsondata){
     if(bodywidth < 1000){
         if(lecture_tab == TAB_ING) {
             htmlToJoin.push(`<div id="mobile_comment_1">
-                                <span>참여중 회원</span><span>${len}</span><div style="display:none;">+</div>
+                                <span>소속 회원</span><span>${len}</span><div style="display:none;">+</div>
                             </div>
                             <div id="mobile_comment_2">
                                 <p>회원을 체크하면 일정 등록시 함께 추가합니다.</p>
                             </div>`);
         }else{
             htmlToJoin.push(`<div id="mobile_comment_1">
-                                <span>참여 회원</span><span>${len}</span><div style="display:none;">+</div>
+                                <span>소속 회원</span><span>${len}</span><div style="display:none;">+</div>
                             </div>`);
 
         }
