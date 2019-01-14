@@ -3039,6 +3039,7 @@ function know_duplicated_plans(jsondata){
 
     //중복일정을 큰 덩어리로 가져오기
     var clear_result = clear_duplicated_date_time(jsondata, "");
+    schedule_data_cleared_duplicates_cache = clear_result;
 
     var clear_start_date = clear_result.clear_start_array;
     var clear_end_date = clear_result.clear_end_array;
