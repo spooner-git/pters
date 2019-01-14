@@ -734,6 +734,7 @@ $(document).on('click', 'div.groupWrap', function(e){
     var memo_list =  $(this).siblings('div[data-groupid="'+group_id+'"].groupMemoWrap');
     var repeat_list = $(this).siblings('div[data-groupid="'+group_id+'"].groupRepeatWrap');
     var memberlist = $(this).siblings('div[data-groupid="'+group_id+'"].groupMembersWrap');
+    $('#id_selected_group_id').val(group_id);
     if(bodywidth >= 1000){
         if(memberlist.css('display')=='none'){
             // if(group_id != "1:1") {

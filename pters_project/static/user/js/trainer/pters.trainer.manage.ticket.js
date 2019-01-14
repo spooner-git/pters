@@ -750,6 +750,7 @@ $(document).on('click', 'div.groupWrap', function(e){
     var repeat_list = $(this).siblings('div[data-packageid="'+package_id+'"].groupRepeatWrap');
     var memberlist = $(this).siblings('div[data-packageid="'+package_id+'"].groupMembersWrap');
     var grouplist = $(this).siblings('div[data-packageid="'+package_id+'"].groupPackageWrap');
+    $('#id_selected_ticket_id').val(package_id);
     if(bodywidth >= 1000){
         if(memberlist.css('display')=='none'){
             //if(package_id != "1:1"){

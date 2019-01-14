@@ -4205,7 +4205,10 @@ function send_member_modified_data(dbID){
                 // get_member_list();
                 get_member_lecture_list(dbID);
                 smart_refresh_member_group_class_list();
-                // console.log('success');
+                if(bodywidth<1000){
+                    update_lecture_ticket_popup();
+                }
+
             }
         },
 
@@ -4372,6 +4375,9 @@ function complete_member_reg_data_pc(lectureID, dbID){
                     ajaxClassTime();
                 }
                 get_member_lecture_list(dbID);
+                if(bodywidth<1000){
+                    update_lecture_ticket_popup();
+                }
                 // console.log('success');
             }
         },
@@ -4420,6 +4426,10 @@ function resume_member_reg_data_pc(lectureID, dbID, ing_member_check){
                 smart_refresh_member_group_class_list();
 
                 get_member_lecture_list(dbID);
+
+                if(bodywidth<1000){
+                    update_lecture_ticket_popup();
+                }
                 // console.log('success');
             }
         },
@@ -5229,6 +5239,9 @@ function add_member_form_func(ing_member_check){
                         $('#currentGroupList').html(group_class_Html);
                     });
                 }
+                if(bodywidth<1000){
+                    update_lecture_ticket_popup();
+                }
                 
                 smart_refresh_member_group_class_list();
                 close_manage_popup('member_add');
@@ -5237,6 +5250,7 @@ function add_member_form_func(ing_member_check){
                 }else if($('#memberInfoPopup').css('display') == "block"){
                     close_manage_popup('member_info');
                 }
+
                 // console.log('success');
             }
         },
@@ -5247,6 +5261,26 @@ function add_member_form_func(ing_member_check){
             $('#errorMessageText').text('통신 에러: 관리자 문의');
         }
     })
+}
+function update_lecture_ticket_popup(){
+    var selected_group_id = $('#id_selected_group_id').val();
+    var selected_ticket_id = $('#id_selected_ticket_id').val();
+    if(selected_group_id!=undefined){
+        if(lecture_tab == TAB_ING){
+            get_groupmember_list(selected_group_id);
+        }
+        else {
+            get_end_groupmember_list(selected_group_id);
+        }
+
+    }
+    if(selected_ticket_id!=undefined){
+        if(ticket_tab == TAB_ING){
+            get_package_member_list(selected_ticket_id);
+        }else{
+            get_end_package_member_list(selected_ticket_id);
+        }
+    }
 }
 
 function add_member_form_noemail_func(){
