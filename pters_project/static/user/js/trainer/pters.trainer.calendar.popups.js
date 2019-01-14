@@ -7,6 +7,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////(주간)일정 클릭 이벤트
 
     var schedule_data_cache;
+    var schedule_data_cleared_duplicates_cache;
 
 
     var eventstart = 'mouseenter';
