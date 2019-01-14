@@ -1269,11 +1269,13 @@
 
         var calendarSize = 1;
         var calendar_select ="week";
+        var calendar_device_type;
         if(bodywidth > 600){
             if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                 if($.cookie('calendar_selected_last') == "week"){
                     calendar_select ="week";
                     week_calendar_mobile(today_YY_MM_DD);
+                    calendar_device_type = "mobile";
                 }else if($.cookie('calendar_selected_last') == "month"){
                     calendar_select ="month";
                     $('#calendar').removeClass('_calweek').addClass('_calmonth');
@@ -1281,6 +1283,7 @@
                     $('div.timeindex, #timeIndicatorBar').css('display', 'none');
                     $('#date').css('display', 'block');
                     month_calendar(today_YY_MM_DD);
+                    calendar_device_type = "pc";
                     $('.swiper-slide-active').css('width', $('#calendar').width());
                     $('#ymdText_monthcal').css('display', 'inline-block');
                     $('#ymdText_weekcal').css('display', 'none');
@@ -1290,11 +1293,13 @@
                 }else{
                     calendar_select ="week";
                     week_calendar_mobile(today_YY_MM_DD);
+                    calendar_device_type = "mobile";
                 }
             }else{
                  if($.cookie('calendar_selected_last') == "week"){
                     calendar_select ="week";
                     week_calendar(today_YY_MM_DD);
+                    calendar_device_type = "pc";
                  }else if($.cookie('calendar_selected_last') == "month"){
                     calendar_select ="month";
                     $('#calendar').removeClass('_calweek').addClass('_calmonth');
@@ -1302,6 +1307,7 @@
                     $('div.timeindex, #timeIndicatorBar').css('display', 'none');
                     $('#date').css('display', 'block');
                     month_calendar(today_YY_MM_DD);
+                    calendar_device_type = "pc";
                     $('.swiper-slide-active').css('width', $('#calendar').width());
                     $('#ymdText_monthcal').css('display', 'inline-block');
                     $('#ymdText_weekcal').css('display', 'none');
@@ -1311,12 +1317,14 @@
                  }else{
                     calendar_select ="week";
                     week_calendar(today_YY_MM_DD);
+                    calendar_device_type = "pc";
                  }
             }
         }else if(bodywidth<=600){
             if($.cookie('calendar_selected_last') == "week"){
                 calendar_select ="week";
                 week_calendar_mobile(today_YY_MM_DD);
+                calendar_device_type = "mobile";
             }else if($.cookie('calendar_selected_last') == "month"){
                 calendar_select ="month";
                 $('#calendar').removeClass('_calweek').addClass('_calmonth');
@@ -1324,6 +1332,7 @@
                 $('div.timeindex, #timeIndicatorBar').css('display', 'none');
                 $('#date').css('display', 'block');
                 month_calendar(today_YY_MM_DD);
+                calendar_device_type = "pc";
                 $('.swiper-slide-active').css('width', $('#calendar').width());
                 $('#ymdText_monthcal').css('display', 'inline-block');
                 $('#ymdText_weekcal').css('display', 'none');
@@ -1333,6 +1342,7 @@
             }else{
                 calendar_select ="week";
                 week_calendar_mobile(today_YY_MM_DD);
+                calendar_device_type = "mobile";
             }
         }
 
@@ -1418,12 +1428,21 @@
         var count1 = 0;
         $('#ymdText-pc-prev-btn, #leftArrowButton').click(function(e){
             e.stopPropagation();
-            left_page();
+            if(calendar_mobile_zoom > 0){
+                calendar_zoom("#week ._zoomed", "unzoom");
+            }else{
+                left_page(); 
+            }
+            
         });
 
         $('#ymdText-pc-next-btn, #rightArrowButton').click(function(e){
             e.stopPropagation();
-            right_page();
+            if(calendar_mobile_zoom > 0){
+                calendar_zoom("#week ._zoomed", "unzoom");
+            }else{
+                right_page(); 
+            }
         });
 
         function left_page(){

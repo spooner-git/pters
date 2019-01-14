@@ -10,9 +10,47 @@
 
  */
 
+//테스트 코드 (모바일 달력 확대)
+var calendar_mobile_zoom = 0;
+$('#week .weekNum').click(function(){
+    if(calendar_device_type == "mobile"){
+        if(calendar_mobile_zoom == 0){
+            calendar_zoom(this, "zoom");
+        }else{
+            calendar_zoom(this, "unzoom");
+        }
+    }
+});
+
+function calendar_zoom(selector, zoom){
+    if(zoom == "zoom"){
+        var index = Number($(selector).attr("id").split('_')[1])+1;
+        var $visible_row = $(`div.swiper-slide-active .td00:nth-of-type(${index})`);
+        
+        $visible_row.siblings('.td00').css('display', 'none');
+        $(selector).siblings('.weekNum').css('display', 'none');
+        $visible_row.css('width', `90%`).addClass('_zoomed');
+        $(selector).css('width', `90%`).addClass('_zoomed');
+        calendar_mobile_zoom = 1;
+    }else if(zoom == "unzoom"){
+        var index = Number($(selector).attr("id").split('_')[1])+1;
+        var $visible_row = $(`div.swiper-slide-active .td00:nth-of-type(${index})`);
+        
+        $visible_row.siblings('.td00').css('display', 'table-cell');
+        $(selector).siblings('.weekNum').css('display', 'table-cell');
+        $visible_row.css('width', `12.5%`).removeClass('_zoomed');
+        $(selector).css('width', `12.5%`).removeClass('_zoomed');
+        calendar_mobile_zoom = 0;
+    }
+}
+
+//테스트 코드 (모바일 달력 확대)
+
+
+
 /////////////////////////////////////달력 공통//////////////////////////////////
 $('#ymdText').click(function(e){
-    if(bodywidth < 600){
+    if(bodywidth < 600 && calendar_mobile_zoom == 0){
         e.stopPropagation();
         var $calendar = $('#calendar');
         var current_calendar_type;
@@ -99,6 +137,8 @@ $('#ymdText').click(function(e){
                 $('#ymdText_weekcal').css('display', 'none');
             }
         }
+    }else if(bodywidth < 600 && calendar_mobile_zoom > 0){
+        calendar_zoom("#week ._zoomed", "unzoom");
     }
 });
 
