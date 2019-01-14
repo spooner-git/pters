@@ -310,7 +310,7 @@
         //                     '<div id="planinfo_plan_color" style="background-color:'+plancolor+'"></div>'+
         //                     '<span id="planinfo_name_text">'+name+'</span>'+
         //                 '</span>';
-        $('#planinfo_title_wrap').addClass('memberNameForInfoView').attr('data-dbid', dbid);
+        $('#planinfo_title_wrap').addClass('memberNameForInfoView').attr({'data-dbid': dbid, 'data-name':name});
         $('#planinfo_type_text, #groupplan_participants_status').hide();
         $('#planinfo_plan_color').css('background-color', plancolor);
         $('#planinfo_name_text').text(name);
@@ -794,7 +794,7 @@
                 }
                 schedule_on_off = 2;
             }else{
-                $('#planinfo_title_wrap').addClass('memberNameForInfoView').attr('data-dbid', dbid);
+                $('#planinfo_title_wrap').addClass('memberNameForInfoView').attr({'data-dbid': dbid, 'data-name':name});
                 $('#planinfo_type_text, #groupplan_participants_status').hide();
                 $('#planinfo_plan_color').css('background-color', plancolor);
                 console.log("plancolor", plancolor)
@@ -1161,6 +1161,7 @@
         //body_position_fixed_unset();
         var bodywidth = window.innerWidth;
         var dbID = $(this).attr('data-dbid');
+        var member_name = $(this).attr('data-name');
         $('.popups').hide();
         if(bodywidth < 600){
             current_Scroll_Position = $(document).scrollTop();
@@ -1171,6 +1172,7 @@
             get_member_lecture_list(dbID);
             // get_indiv_repeat_info(dbID);
             // get_member_history_list(dbID);
+            $('#uptext3').text(member_name);
             $('#page-base-addstyle').hide();
             $('#page-base-modifystyle').show();
             shade_index(100);

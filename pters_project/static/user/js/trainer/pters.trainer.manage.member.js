@@ -236,6 +236,7 @@ $(document).ready(function(){
             get_member_lecture_list(dbID);
             // get_indiv_repeat_info(dbID);
             // get_member_history_list(dbID);
+            // $('#uptext3').text('회원 - '+member_name);
             $('#uptext3').text(member_name);
             if($('#popup_lecture_info_mobile').length > 0 || $('#popup_ticket_info_mobile').length > 0){
                 // closePopup_mobile('upbutton-x-modify');

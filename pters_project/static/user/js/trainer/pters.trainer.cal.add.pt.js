@@ -3376,7 +3376,7 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
         }
         var htmlstart = '<div class="groupParticipantsRow '+typeclass+'" data-dbid="'+jsondata_db_id[i]+'" schedule-id="'+jsondata_scheduleIdArray[i]+'" data-leid="'+jsondata_classArray_lecture_id[i]+'">';
         var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata_sexArray[i]+'.png">';
-        var name = '<span class="go_member_info_window" data-dbid="'+jsondata_db_id[i]+'">'+jsondata.name[i]+finish+'</span>';
+        var name = '<span class="go_member_info_window" data-dbid="'+jsondata_db_id[i]+'" data-name="'+jsondata.name[i]+'">'+jsondata.name[i]+finish+'</span>';
         var absence = '<span class="group_member_absence" data-leid="'+jsondata.classArray_lecture_id[i]+'" data-scheduleid="'+jsondata.scheduleIdArray[i]+'" data-name="'+jsondata.name[i]+'" data-dbid="'+jsondata_db_id[i]+'">결석</span>';
         var complete = '<span class="group_member_complete" data-leid="'+jsondata.classArray_lecture_id[i]+'" data-scheduleid="'+jsondata.scheduleIdArray[i]+'" data-name="'+jsondata.name[i]+'" data-dbid="'+jsondata_db_id[i]+'">완료</span>';
         var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel" data-dbid="'+jsondata_db_id[i]+'" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-max="'+max+'" schedule-id="'+jsondata_scheduleIdArray[i]+'">';
