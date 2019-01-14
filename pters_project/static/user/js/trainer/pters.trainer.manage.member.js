@@ -1919,7 +1919,7 @@ function send_modified_member_base_data(dbID){
                 smart_refresh_member_group_class_list();
 
 
-                $('#startR').attr('selected', 'selected');
+                // $('#startR').attr('selected', 'selected');
                 // console.log('success');
 
                 if($('._calmonth').length == 1 || $('._calweek').length == 1){
@@ -4200,7 +4200,7 @@ function send_member_modified_data(dbID){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                $('#startR').attr('selected','selected');
+                // $('#startR').attr('selected','selected');
                 $('#memberRegHistory_info_PC img').attr('src', '/static/user/res/icon-pencil.png').show();
                 // get_member_list();
                 get_member_lecture_list(dbID);
@@ -4368,7 +4368,7 @@ function complete_member_reg_data_pc(lectureID, dbID){
             else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                $('#startR').attr('selected', 'selected');
+                // $('#startR').attr('selected', 'selected');
                 smart_refresh_member_group_class_list();
 
                 if($('#calendar').length > 0){
@@ -4422,7 +4422,7 @@ function resume_member_reg_data_pc(lectureID, dbID, ing_member_check){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                $('#startR').attr('selected', 'selected');
+                // $('#startR').attr('selected', 'selected');
                 smart_refresh_member_group_class_list();
 
                 get_member_lecture_list(dbID);
@@ -4483,7 +4483,7 @@ function refund_member_lecture_data(lectureID, dbID, refund_price, refund_date){
                 else{
                     $('#errorMessageBar').hide();
                     $('#errorMessageText').text('');
-                    $('#startR').attr('selected', 'selected');
+                    // $('#startR').attr('selected', 'selected');
                     smart_refresh_member_group_class_list();
 
                     if($('#calendar').length > 0){
@@ -4665,7 +4665,7 @@ function disconnect_member_lecture_data(stateCode, lectureID, dbID){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
 
-                $('#startR').attr('selected','selected');
+                // $('#startR').attr('selected','selected');
                 // get_member_list();
                 get_member_lecture_list(dbID);
 
@@ -5219,7 +5219,7 @@ function add_member_form_func(ing_member_check){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 
-                $('#startR').attr('selected','selected');
+                // $('#startR').attr('selected','selected');
                 if(member_tab==TAB_ING){
                     get_member_ing_list("callback",function(json){
                         var member_html = memberListSet(member_tab, json);
@@ -5470,7 +5470,7 @@ function add_groupmember_form_func(){
                 }
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
                 smart_refresh_member_group_class_list();
-                $('#startR').attr('selected','selected');
+                // $('#startR').attr('selected','selected');
                 close_manage_popup('member_add');
                 // console.log('success');
             }
@@ -5523,7 +5523,7 @@ function deleteMemberAjax(){
                 // $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png');
 
-                $('#startR').attr('selected','selected');
+                // $('#startR').attr('selected','selected');
                 if(member_tab == TAB_ING){
                     get_member_ing_list('callback',function(json){
                         var member_html = memberListSet(member_tab, json);
