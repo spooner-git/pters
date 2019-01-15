@@ -2782,6 +2782,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         var planLeft;
         var calc;
         var exist_check;
+        var time_hide = "";
         if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]] != undefined){
             if(option == "class" && jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) >= 0){
 
@@ -2797,8 +2798,10 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
 
                     if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][exist_check][1] > 1){
                         groupstatus="";
+                        time_hide = "style=visibility:hidden;";
                     }
                     exist_check_dic[planStartDate[i]+' ~ '+planEndDate[i]]++;
+
                 }
             }
         }
@@ -2812,7 +2815,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         if(option == 'class' && jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) == -1){
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
-                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
+                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'" '+time_hide+'>'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
                 planhtml = '<div'+
                             ' data-scheduleid="'+planScheduleIdArray[i]+
                             '" style="position:absolute;z-index:150;height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+schedule_user_color+
@@ -2827,7 +2830,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         }else if(option == 'group'){
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
-                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+groupstatus+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
+                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+groupstatus+' </span>'+'<span class="memberTime '+memberTimeHide+'" '+time_hide+'>'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
                 planhtml = '<div'+
                             ' data-scheduleid="'+planScheduleIdArray[i]+
                             '" style="position:absolute;z-index:150;height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+schedule_user_color+
@@ -2842,7 +2845,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         }else if(option == 'off'){
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
-                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
+                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'" '+time_hide+'>'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
                 planhtml = '<div'+
                             ' data-scheduleid="'+planScheduleIdArray[i]+
                             '" style="position:absolute;z-index:150;height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+schedule_user_color+
@@ -2924,7 +2927,7 @@ function schedule_jsondata_to_dict(jsondata){
         result["off"][jsondata.offScheduleIdArray[f]]["memo"] = jsondata.offScheduleNoteArray[f];
     }
 
-    console.log("result", result)
+    // console.log("result", result);
     return result;
 }
 
@@ -3097,7 +3100,6 @@ function know_duplicated_plans(jsondata){
         }
         duplicate_num.push(duplicated);
     }
-    console.log(duplicate_dic);
     var result = {};
 
     //겹치지 않는 합쳐진 일정
@@ -3205,7 +3207,7 @@ function know_duplicated_plans(jsondata){
 
     // console.log("duplicate_dic",duplicate_dic);
     // console.log("result", result)
-    console.log({"num":duplicate_num, "dic":duplicate_dic, "result":result});
+    // console.log({"num":duplicate_num, "dic":duplicate_dic, "result":result});
 
     return {"num":duplicate_num, "dic":duplicate_dic, "result":result};
 }
@@ -3627,7 +3629,7 @@ function monthText(){
     //currentYMD 형식  ex : week120177
     var textYear = currentYMD.split('_')[1];
     var textMonth = currentYMD.split('_')[2]; //7
-    $('#yearText, #ymdText-pc-year').text(textYear).attr({'data-year':textYear, 'data-month':textMonth});
+    $('#yearText, #ymdText-pc-year').text(textYear+'년').attr({'data-year':textYear, 'data-month':textMonth});
     $('#monthText, #ymdText-pc-month').text(textMonth+'월');
     todayFinderArrow_month(textYear, textMonth);
 };

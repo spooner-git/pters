@@ -750,6 +750,7 @@ $(document).on('click', 'div.groupWrap', function(e){
     var repeat_list = $(this).siblings('div[data-packageid="'+package_id+'"].groupRepeatWrap');
     var memberlist = $(this).siblings('div[data-packageid="'+package_id+'"].groupMembersWrap');
     var grouplist = $(this).siblings('div[data-packageid="'+package_id+'"].groupPackageWrap');
+    $('#id_selected_ticket_id').val(package_id);
     if(bodywidth >= 1000){
         if(memberlist.css('display')=='none'){
             //if(package_id != "1:1"){
@@ -808,6 +809,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
 
         current_Scroll_Position = $(document).scrollTop();
+        // $('#uptext3').text('수강권 - '+package_name);
         $('#uptext3').text(package_name);
         // $('#page_managemember').css({'height':'0'});
         $('#page_managemember').css({'display':'none'});
@@ -2136,7 +2138,7 @@ $(document).on('click', 'img.substract_groupMember, div.substract_groupMember_mo
     group_delete_JSON.package_id = member_packageid;
 
     $('#cal_popup_plandelete').css('display','block');
-    $('#popup_delete_question').text(`${name}에서 ${member_name}님을 제외 하시겠습니까?`);
+    $('#popup_delete_question').html(`${name} 수강권 에서 ${member_name}님을 제외 하시겠습니까? <br/> (관련 수강정보 일괄 삭제 및 복구 불가) <br/>`);
     deleteTypeSelect = "ticketMember_Substract_From_Group";
     shade_index(150);
 });
@@ -3553,12 +3555,18 @@ function packageMemberListSet_mobile(package_id, jsondata){
     var htmlToJoin = [];
     var len = jsondata.db_id.length;
 
+    // htmlToJoin.push(`
+    //                     <div id="mobile_comment_1">
+    //                         <span>참여중 회원</span><span>${len}</span><div style="display:inline-block;cursor:pointer" class="btn_add_member_to_ticket_mobile" data-packageid=${package_id}>+</div>
+    //                     </div>
+    //                     <div id="mobile_comment_2">
+    //                         <p style="margin:0;">회원을 체크하면 일정 등록시 함께 추가합니다.</p>
+    //                     </div>
+    //                 `
+    //                 );
     htmlToJoin.push(`
                         <div id="mobile_comment_1">
                             <span>참여중 회원</span><span>${len}</span><div style="display:inline-block;cursor:pointer" class="btn_add_member_to_ticket_mobile" data-packageid=${package_id}>+</div>
-                        </div>
-                        <div id="mobile_comment_2">
-                            <p style="margin:0;">회원을 체크하면 일정 등록시 함께 추가합니다.</p>
                         </div>
                     `
                     );
@@ -4077,6 +4085,7 @@ function modify_package_from_list(package_id, package_name, package_note, use, c
                 if($('#popup_ticket_info_mobile').css('display') == "block"){
                     if(package_name.length != 0){
                         if(bodywidth<600){
+                            // $('#uptext3').text('수강권 - '+package_name);
                             $('#uptext3').text(package_name);
                             $('#ticketnametitle, #ticketdelete, .lecture_bubble_mini img').hide();
                             $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');

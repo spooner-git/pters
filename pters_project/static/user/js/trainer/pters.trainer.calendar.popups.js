@@ -311,7 +311,7 @@
         //                     '<div id="planinfo_plan_color" style="background-color:'+plancolor+'"></div>'+
         //                     '<span id="planinfo_name_text">'+name+'</span>'+
         //                 '</span>';
-        $('#planinfo_title_wrap').addClass('memberNameForInfoView').attr('data-dbid', dbid);
+        $('#planinfo_title_wrap').addClass('memberNameForInfoView').attr({'data-dbid': dbid, 'data-name':name});
         $('#planinfo_type_text, #groupplan_participants_status').hide();
         $('#planinfo_plan_color').css('background-color', plancolor);
         $('#planinfo_name_text').text(name);
@@ -795,7 +795,7 @@
                 }
                 schedule_on_off = 2;
             }else{
-                $('#planinfo_title_wrap').addClass('memberNameForInfoView').attr('data-dbid', dbid);
+                $('#planinfo_title_wrap').addClass('memberNameForInfoView').attr({'data-dbid': dbid, 'data-name':name});
                 $('#planinfo_type_text, #groupplan_participants_status').hide();
                 $('#planinfo_plan_color').css('background-color', plancolor);
                 console.log("plancolor", plancolor)
@@ -1162,6 +1162,7 @@
         //body_position_fixed_unset();
         var bodywidth = window.innerWidth;
         var dbID = $(this).attr('data-dbid');
+        var member_name = $(this).attr('data-name');
         $('.popups').hide();
         if(bodywidth < 600){
             current_Scroll_Position = $(document).scrollTop();
@@ -1172,8 +1173,15 @@
             get_member_lecture_list(dbID);
             // get_indiv_repeat_info(dbID);
             // get_member_history_list(dbID);
+            $('#uptext3').text(member_name);
             $('#page-base-addstyle').hide();
             $('#page-base-modifystyle').show();
+
+            $('#mobile_basic_info, #mobile_lecture_info').show();
+            $('#mobile_repeat_info, #mobile_history_info').hide();
+            $('#select_info_shift_lecture_mobile').addClass('button_active');
+            $('#select_info_shift_schedule_mobile, #select_info_shift_history_mobile').removeClass('button_active');
+
             shade_index(100);
         }else if(bodywidth >= 600){
             get_indiv_member_info(dbID);
@@ -1303,8 +1311,8 @@
             today_form = $weekNum4.substr(0, 4)+'-'+$weekNum4.substr(4, 2)+'-'+$weekNum4.substr(6, 2);
             searchdate = 18;
         }else if(calendar == "month"){
-            var yyyy = $('#yearText').text();
-            var mm = $('#monthText').text().replace(/월/gi, "");
+            var yyyy = $('#yearText').attr('data-year');
+            var mm = $('#yearText').attr('data-month');
             if(mm.length<2){
                 mm = '0' + mm;
             }

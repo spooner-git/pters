@@ -734,6 +734,7 @@ $(document).on('click', 'div.groupWrap', function(e){
     var memo_list =  $(this).siblings('div[data-groupid="'+group_id+'"].groupMemoWrap');
     var repeat_list = $(this).siblings('div[data-groupid="'+group_id+'"].groupRepeatWrap');
     var memberlist = $(this).siblings('div[data-groupid="'+group_id+'"].groupMembersWrap');
+    $('#id_selected_group_id').val(group_id);
     if(bodywidth >= 1000){
         if(memberlist.css('display')=='none'){
             // if(group_id != "1:1") {
@@ -806,6 +807,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         // var group_statuscd = $('div.pters_selectbox_btn_selected > span').attr('data-status');
 
         current_Scroll_Position = $(document).scrollTop();
+        // $('#uptext3').text('수업 - '+group_name);
         $('#uptext3').text(group_name);
         // $('#page_managemember').css({'height':'0'});
         
@@ -1449,6 +1451,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 if($('#popup_lecture_info_mobile').css('display') == "block"){
                     if(group_name.length != 0){
                         if(bodywidth<600){
+                            // $('#uptext3').text('수업 - '+group_name);
                             $('#uptext3').text(group_name);
                             $('#mygroupnametitle, #lecturedelete, .mobile_repeat_info_delete').hide();
                         }
@@ -2439,7 +2442,7 @@ function groupMemberListSet_mobile(group_id, jsondata){
                             </div>`);
         }else{
             htmlToJoin.push(`<div id="mobile_comment_1">
-                                <span>참여 회원</span><span>${len}</span><div style="display:none;">+</div>
+                                <span>참여중 회원</span><span>${len}</span><div style="display:none;">+</div>
                             </div>`);
 
         }
@@ -2741,7 +2744,7 @@ $(document).on('click', 'img.substract_groupMember', function(e){
     group_delete_JSON.group_id = groupmember_groupid;
 
     $('#cal_popup_plandelete').css('display', 'block');
-    $('#popup_delete_question').text(`${groupname}에서 ${groupmember_name}님을 제외 하시겠습니까?`);
+    $('#popup_delete_question').html(`${groupname} 수업 에서 ${groupmember_name}님을 제외 하시겠습니까? <br/> (관련 수강정보 일괄 삭제 및 복구 불가) <br/>`);
     deleteTypeSelect = "groupMember_Substract_From_Group";
     shade_index(150);
 });

@@ -236,6 +236,7 @@ $(document).ready(function(){
             get_member_lecture_list(dbID);
             // get_indiv_repeat_info(dbID);
             // get_member_history_list(dbID);
+            // $('#uptext3').text('회원 - '+member_name);
             $('#uptext3').text(member_name);
             if($('#popup_lecture_info_mobile').length > 0 || $('#popup_ticket_info_mobile').length > 0){
                 // closePopup_mobile('upbutton-x-modify');
@@ -1918,7 +1919,7 @@ function send_modified_member_base_data(dbID){
                 smart_refresh_member_group_class_list();
 
 
-                $('#startR').attr('selected', 'selected');
+                // $('#startR').attr('selected', 'selected');
                 // console.log('success');
 
                 if($('._calmonth').length == 1 || $('._calweek').length == 1){
@@ -2162,8 +2163,8 @@ function pc_add_member(option){
     var selector_page_addmember = $('#page_addmember');
     var selector_memberSearchButton = $('#memberSearchButton');
     var selector_page_addmember_input_wrap = $('#page_addmember_input_wrap');
-    var title_height = 47//$('#addpopup_pc_label_new').height();
-    var buttonwrap_height = 55//$('#page_addmember .member_info_PC_buttons_wrap').height();
+    var title_height = 47; //$('#addpopup_pc_label_new').height();
+    var buttonwrap_height = 55; //$('#page_addmember .member_info_PC_buttons_wrap').height();
 
     var userID;
     if(option == 0){ //PC버전에서 회원추가 버튼 누름
@@ -2295,6 +2296,7 @@ function pc_add_member(option){
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
         selector_memberSearchButton.trigger('click');
+        $('body').css('overflow-y','hidden');
 
     }else if(option == 'group'){
         initialize_add_member_sheet();
@@ -4199,12 +4201,15 @@ function send_member_modified_data(dbID){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                $('#startR').attr('selected','selected');
+                // $('#startR').attr('selected','selected');
                 $('#memberRegHistory_info_PC img').attr('src', '/static/user/res/icon-pencil.png').show();
                 // get_member_list();
                 get_member_lecture_list(dbID);
                 smart_refresh_member_group_class_list();
-                // console.log('success');
+                if(bodywidth<1000){
+                    update_lecture_ticket_popup();
+                }
+
             }
         },
 
@@ -4364,13 +4369,16 @@ function complete_member_reg_data_pc(lectureID, dbID){
             else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                $('#startR').attr('selected', 'selected');
+                // $('#startR').attr('selected', 'selected');
                 smart_refresh_member_group_class_list();
 
                 if($('#calendar').length > 0){
                     ajaxClassTime();
                 }
                 get_member_lecture_list(dbID);
+                if(bodywidth<1000){
+                    update_lecture_ticket_popup();
+                }
                 // console.log('success');
             }
         },
@@ -4415,10 +4423,14 @@ function resume_member_reg_data_pc(lectureID, dbID, ing_member_check){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                $('#startR').attr('selected', 'selected');
+                // $('#startR').attr('selected', 'selected');
                 smart_refresh_member_group_class_list();
 
                 get_member_lecture_list(dbID);
+
+                if(bodywidth<1000){
+                    update_lecture_ticket_popup();
+                }
                 // console.log('success');
             }
         },
@@ -4472,7 +4484,7 @@ function refund_member_lecture_data(lectureID, dbID, refund_price, refund_date){
                 else{
                     $('#errorMessageBar').hide();
                     $('#errorMessageText').text('');
-                    $('#startR').attr('selected', 'selected');
+                    // $('#startR').attr('selected', 'selected');
                     smart_refresh_member_group_class_list();
 
                     if($('#calendar').length > 0){
@@ -4654,7 +4666,7 @@ function disconnect_member_lecture_data(stateCode, lectureID, dbID){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
 
-                $('#startR').attr('selected','selected');
+                // $('#startR').attr('selected','selected');
                 // get_member_list();
                 get_member_lecture_list(dbID);
 
@@ -5208,7 +5220,7 @@ function add_member_form_func(ing_member_check){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 
-                $('#startR').attr('selected','selected');
+                // $('#startR').attr('selected','selected');
                 if(member_tab==TAB_ING){
                     get_member_ing_list("callback",function(json){
                         var member_html = memberListSet(member_tab, json);
@@ -5228,6 +5240,9 @@ function add_member_form_func(ing_member_check){
                         $('#currentGroupList').html(group_class_Html);
                     });
                 }
+                if(bodywidth<1000){
+                    update_lecture_ticket_popup();
+                }
                 
                 smart_refresh_member_group_class_list();
                 close_manage_popup('member_add');
@@ -5236,6 +5251,7 @@ function add_member_form_func(ing_member_check){
                 }else if($('#memberInfoPopup').css('display') == "block"){
                     close_manage_popup('member_info');
                 }
+
                 // console.log('success');
             }
         },
@@ -5246,6 +5262,26 @@ function add_member_form_func(ing_member_check){
             $('#errorMessageText').text('통신 에러: 관리자 문의');
         }
     })
+}
+function update_lecture_ticket_popup(){
+    var selected_group_id = $('#id_selected_group_id').val();
+    var selected_ticket_id = $('#id_selected_ticket_id').val();
+    if(selected_group_id!=undefined){
+        if(lecture_tab == TAB_ING){
+            get_groupmember_list(selected_group_id);
+        }
+        else {
+            get_end_groupmember_list(selected_group_id);
+        }
+
+    }
+    if(selected_ticket_id!=undefined){
+        if(ticket_tab == TAB_ING){
+            get_package_member_list(selected_ticket_id);
+        }else{
+            get_end_package_member_list(selected_ticket_id);
+        }
+    }
 }
 
 function add_member_form_noemail_func(){
@@ -5435,7 +5471,7 @@ function add_groupmember_form_func(){
                 }
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
                 smart_refresh_member_group_class_list();
-                $('#startR').attr('selected','selected');
+                // $('#startR').attr('selected','selected');
                 close_manage_popup('member_add');
                 // console.log('success');
             }
@@ -5488,7 +5524,7 @@ function deleteMemberAjax(){
                 // $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png');
 
-                $('#startR').attr('selected','selected');
+                // $('#startR').attr('selected','selected');
                 if(member_tab == TAB_ING){
                     get_member_ing_list('callback',function(json){
                         var member_html = memberListSet(member_tab, json);
