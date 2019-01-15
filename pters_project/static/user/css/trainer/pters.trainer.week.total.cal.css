@@ -292,6 +292,7 @@ img,a,div,span,p{
 	height: 50px;
 	z-index: 5;
 	width: 100%;
+	top: 50px;
 }
 
 #ymdText-pc{
@@ -873,6 +874,7 @@ img,a,div,span,p{
 
 	#ymdText{
 		height: 65px;
+		top: 65px;
 	}
 
 	#week{

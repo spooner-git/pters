@@ -1426,6 +1426,9 @@ span.summaryInnerBoxText_Repeatendtext{
 		border-top: 2px solid #cccccc;
 		border-bottom: 2px solid #cccccc;
 	}
+	.upper_fixed_parts{
+		top: 65px;
+	}
 
 
 	/*.memberline{
