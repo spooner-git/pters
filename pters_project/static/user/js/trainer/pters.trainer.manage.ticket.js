@@ -4261,7 +4261,8 @@ function add_ticketmember_form_func(){
                     //$('#page_managemember').show();
                     //$('#page_managemember').css({'height':'100%'});
                 }else{
-                    $('body').css('overflow-y', 'auto');
+                    // $('body').css('overflow-y','auto');
+                    enable_window_scroll();
                     close_manage_popup('member_add');
                 }
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');

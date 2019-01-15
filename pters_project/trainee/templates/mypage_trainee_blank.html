@@ -380,13 +380,15 @@
             height_this_fit_to_display('#popup_how_to_disconnect_sns_login', 60);
             locate_this_to_center('#popup_how_to_disconnect_sns_login');
 
-            $('body').css('overflow-y', 'hidden');
+            //$('body').css('overflow-y', 'hidden');
+            disable_window_scroll();
             $('#shade_caution').show();
         });
 
         $('#btn_close_how_to_disconnect_sns_login').click(function(){
             $('#popup_how_to_disconnect_sns_login').hide();
-            $('body').css('overflow-y', 'unset');
+            //$('body').css('overflow-y', 'unset');
+            enable_window_scroll();
             $('#shade_caution').hide();
         });
 

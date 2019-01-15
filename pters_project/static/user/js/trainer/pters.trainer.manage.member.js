@@ -177,9 +177,11 @@ $(document).ready(function(){
     $('li').click(function(){
         if($('#calendar').length==0){
             if($('.dropdown').hasClass('open')){
-                $('html, body').css('overflow-y','auto');
+                // $('html, body').css('overflow-y','auto');
+                enable_window_scroll();
             }else{
-                $('html, body').css('overflow-y','hidden');
+                // $('html, body').css('overflow-y','hidden');
+                disable_window_scroll();
             }
         }
     });
@@ -247,7 +249,7 @@ $(document).ready(function(){
             $('#select_info_shift_lecture_mobile').addClass('button_active');
             $('#select_info_shift_schedule_mobile, #select_info_shift_history_mobile').removeClass('button_active');
         }else if(bodywidth >= 600){
-            $('body').css('overflow-y', 'hidden');
+
             get_indiv_member_info(dbID);
             get_member_lecture_list(dbID);
             // get_indiv_repeat_info(dbID);
@@ -256,6 +258,8 @@ $(document).ready(function(){
             $('#info_shift_schedule, #info_shift_history').hide();
             $('#select_info_shift_lecture').addClass('button_active');
             $('#select_info_shift_schedule, #select_info_shift_history').removeClass('button_active');
+            // $('body').css('overflow-y','hidden');
+            disable_window_scroll();
         }
         // shade_index(100);
     });
@@ -2184,7 +2188,6 @@ function pc_add_member(option){
             $('#how_to_add_member').css('display','none');
         }
 
-        $('body').css('overflow-y', 'hidden');
         selector_page_addmember_input_wrap.css('height', window_height - 100 - title_height - buttonwrap_height);
         var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
         selector_page_addmember.show().css({'top':centerLoc,
@@ -2192,6 +2195,10 @@ function pc_add_member(option){
                                             });
 
         get_package_ing_list_all('callback', function(json){package_type_dropdown_set(json);});
+
+        // $('body').css('overflow-y','hidden');
+        disable_window_scroll();
+
     }else if(option == 1){ //PC버전에서 연장추가 버튼 누름
         initialize_add_member_sheet();
         $('#uptext2, #uptext2_PC').text(text2);
@@ -2204,13 +2211,15 @@ function pc_add_member(option){
         selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
-        $('body').css('overflow-y','hidden');
         selector_page_addmember_input_wrap.css('height',window_height - 100 - title_height - buttonwrap_height);
         var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
         selector_page_addmember.show().css({'top':centerLoc,
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
         get_package_ing_list_all('callback', function(json){package_type_dropdown_set(json);});
+
+        // $('body').css('overflow-y','hidden');
+        disable_window_scroll();
     }else if(option == 2){ //PC 회원정보창에서 연장추가 버튼 누름
         initialize_add_member_sheet();
         $('#uptext2, #uptext2_PC').text(text2);
@@ -2245,7 +2254,6 @@ function pc_add_member(option){
 
         selector_memberSearchButton.trigger('click');
 
-        $('body').css('overflow-y','hidden');
         selector_page_addmember_input_wrap.css('height', window_height - 100 - title_height - buttonwrap_height);
         var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
         selector_page_addmember.show().css({'top':centerLoc,
@@ -2256,6 +2264,8 @@ function pc_add_member(option){
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json);});
 
+        // $('body').css('overflow-y','hidden');
+        disable_window_scroll();
     }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
         float_btn_managemember(1);
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
@@ -2296,7 +2306,6 @@ function pc_add_member(option){
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
         selector_memberSearchButton.trigger('click');
-        $('body').css('overflow-y','hidden');
 
     }else if(option == 'group'){
         initialize_add_member_sheet();
@@ -2313,10 +2322,11 @@ function pc_add_member(option){
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
 
-        $('body').css('overflow-y','hidden');
         $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
 
+        // $('body').css('overflow-y','hidden');
+        disable_window_scroll();
     }else if(option == 'openlesson'){
         initialize_add_member_sheet();
         selector_page_addmember_input_wrap.css({'height':260+'px'});
@@ -2333,21 +2343,23 @@ function pc_add_member(option){
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
 
-        $('body').css('overflow-y', 'hidden');
         $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
 
+        // $('body').css('overflow-y','hidden');
+        disable_window_scroll();
     }else if(option == 'groupmember'){
         initialize_add_member_sheet();
 
         $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();
 
-        $('body').css('overflow-y','hidden');
         selector_page_addmember_input_wrap.css('height',window_height - 100 - title_height - buttonwrap_height);
         $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
 
+        // $('body').css('overflow-y','hidden');
+        disable_window_scroll();
     }else if(option == "solo_ticket"){
         initialize_add_member_sheet();
         selector_page_addmember_input_wrap.css({'height':260+'px'});
@@ -2360,9 +2372,11 @@ function pc_add_member(option){
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._ADD_GROUP_NEW').show();
 
-        $('body').css('overflow-y','hidden');
         $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
+
+        // $('body').css('overflow-y','hidden');
+        disable_window_scroll();
     }else if(option == "package_ticket"){
         initialize_add_member_sheet();
         grouptype = "PACKAGE";
@@ -2378,9 +2392,10 @@ function pc_add_member(option){
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_GROUP_NEW').hide();
         $('._ADD_PACKAGE_NEW').show();
 
-        $('body').css('overflow-y', 'hidden');
         $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
+        // $('body').css('overflow-y','hidden');
+        disable_window_scroll();
     }
 
 
@@ -3943,7 +3958,7 @@ function open_member_info_popup_pc(dbID, jsondata){
         var selector_memberInfoPopup_PC = $('#memberInfoPopup_PC');
         selector_memberInfoPopup_PC.attr({'data-username':userName, 'data-userid': userID, 'data-dbid': dbID});
         //$('#memberInfoPopup_PC').show()
-        selector_memberInfoPopup_PC.css({"height":$(window).height()-40, "max-height":540+"px"})
+        selector_memberInfoPopup_PC.css({"height":$(window).height()-40, "max-height":540+"px"});
         selector_memberInfoPopup_PC.addClass('display_block')
                                     .css({'top':(($(window).height()-selector_memberInfoPopup_PC.outerHeight())/2+$(window).scrollTop()),
                                           'left':(($(window).width()-selector_memberInfoPopup_PC.outerWidth())/2+$(window).scrollLeft()),
@@ -5210,7 +5225,8 @@ function add_member_form_func(ing_member_check){
                     //$('#page_managemember').css({'height':'100%'});
                     $('#page_managemember').css({'display':'block'});
                 }else{
-                    $('body').css('overflow-y','auto');
+                    // $('body').css('overflow-y','auto');
+                    enable_window_scroll();
                 }
                 /*
                  if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
@@ -5386,7 +5402,8 @@ function add_group_form_func(){
                     //$('#page_managemember').css({'height':'100%'});
                     $('#page_managemember').css({'display':'block'});
                 }else{
-                    $('body').css('overflow-y','auto');
+                    // $('body').css('overflow-y','auto');
+                    enable_window_scroll();
                 }
                 /*
                  if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
@@ -5467,7 +5484,8 @@ function add_groupmember_form_func(){
                     //$('#page_managemember').css({'height':'100%'});
                     $('#page_managemember').css({'display':'block'});
                 }else{
-                    $('body').css('overflow-y','auto');
+                    // $('body').css('overflow-y','auto');
+                    enable_window_scroll();
                 }
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
                 smart_refresh_member_group_class_list();

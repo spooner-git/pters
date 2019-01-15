@@ -204,14 +204,14 @@
                                 ${jsondata.contents[i]}
                             </div>`;
                 htmlToJoin.push(table+content);
-            };
+            }
             if(len == 0){
                 htmlToJoin.push(`<div class="myquestion_history_table">
                                         문의 내역이 없습니다.
                                 </div>`);
             }
             targetHtml.html(htmlToJoin.join(''));
-        };
+        }
 
         $(document).on('click','div.myquestion_history_table',function(){
             var qid = $(this).attr('data-qid');
@@ -221,7 +221,7 @@
             }else{
                 $myContent.hide();
             }
-        })
+        });
 
 
         var varUA = navigator.userAgent.toLowerCase();

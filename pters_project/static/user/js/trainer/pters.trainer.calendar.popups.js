@@ -276,7 +276,6 @@
         var leid = schedule_data_cache["class"][this_schedule_id]["lecture_id"];
         var finished = schedule_data_cache["class"][this_schedule_id]["finished"];
         var plancolor = "#fbf3bd";
-
         var selector_cal_popup_planinfo = $('#cal_popup_planinfo');
         var selector_popup_btn_complete = $('#popup_btn_complete');
         var selector_popup_info3_memo = $('#popup_info3_memo');
@@ -289,7 +288,7 @@
         $('#subpopup_addByList_plan, #popup_btn_viewGroupParticipants').hide();
         deleteTypeSelect = '';
         addTypeSelect ='ptadd';
-        
+
         var dayobj = new Date(start_date);
         var dayraw = dayobj.getDay();
         var dayarryKR = ['일', '월', '화', '수', '목', '금', '토'];
@@ -344,6 +343,7 @@
         $("#id_repeat_lecture_id").val(leid); //lecture id 정보 저장
         $("#id_lecture_id_modify").val(leid); //lecture id 정보 저장
         $("#id_lecture_id_finish").val(leid); //lecture id 정보 저장
+
         if(finished=="0"){
             selector_popup_btn_complete.show();
             $("#popup_text1").css("display", "block");
@@ -363,6 +363,7 @@
 
             };
         }
+
         schedule_on_off = 1;
         if(bodywidth >= 600){
             selector_cal_popup_planinfo.css({'display':'block', 'top':(($(window).height()-selector_cal_popup_planinfo.outerHeight())/2+$(window).scrollTop()), 'left':(($(window).width()-selector_cal_popup_planinfo.outerWidth())/2+$(window).scrollLeft())});

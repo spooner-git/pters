@@ -449,19 +449,21 @@
     function openNav(){
         $("#outer_Sidenav").animate({"width":"100%"},1);
         $("#inner_Sidenav").css("width","80%");
-        $(".sidebar_text").css({'font-size':"15px",'opacity':"1"})
-        $("#user_name,#welcome").css({'font-size':"14px",'opacity':"1"})
-        $(".sidebar_icon,.sidebar_upper img").css('opacity','1')
-        $('body').css('overflow-y','hidden')
+        $(".sidebar_text").css({'font-size':"15px",'opacity':"1"});
+        $("#user_name,#welcome").css({'font-size':"14px",'opacity':"1"});
+        $(".sidebar_icon,.sidebar_upper img").css('opacity','1');
+        //$('body').css('overflow-y','hidden');
+        disable_window_scroll();
         $('#shade').css({'background-color':'black','z-index':'50'});
     }
 
     function closeNav(){
-        $(".sidebar_icon,.sidebar_upper img").css('opacity','0')
+        $(".sidebar_icon,.sidebar_upper img").css('opacity','0');
         $("#outer_Sidenav").css("width","0");
         $("#inner_Sidenav").css("width","0");
-        $(".sidebar_text,#user_name,#welcome").css({'font-size':"0px",'opacity':"0"})
-        $('body').css('overflow-y','')
+        $(".sidebar_text,#user_name,#welcome").css({'font-size':"0px",'opacity':"0"});
+        //$('body').css('overflow-y','');
+        enable_window_scroll();
         $('#shade').css({'background-color':'transparent','z-index':'-1'});
     };
 
