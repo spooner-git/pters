@@ -906,7 +906,7 @@ div.substract_groupMember_mobile > img{
 			filter: invert(100);
 		}
 	#packagename, #packagememo, #lecture_list_to_package{
-		width: 60%;
+		width: 100%;
 	}
 	
 }
