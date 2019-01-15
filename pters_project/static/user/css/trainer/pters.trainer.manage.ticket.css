@@ -44,9 +44,22 @@
 	width: 20%;
 	height: 35px;
 }
+#packaggSelector{
+	position: relative;
+}
 #lecture_list_to_package{
 	height: 35px;
 	width: 100%;
+
+	-webkit-appearance:none;
+	border: 1px solid #cccccc;
+	border-radius: 0;
+	background-color: #ffffff;
+	text-align-last:center;
+}
+#lecture_select_dropdown_arrow{
+	bottom: 12px;
+	right: 15px;
 }
 	.lecture_bubble{
 		display: inline-block;

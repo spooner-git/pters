@@ -17,6 +17,7 @@
 }
 
 #groupNameInput{
+	position: relative;
 	width: 100%;
 	padding-top: 3px;
 }
@@ -36,6 +37,15 @@
 	width: 100%;
 	height: 35px;
 	margin-top: 20px;
+	-webkit-appearance:none;
+	border: 1px solid #cccccc;
+	border-radius: 0;
+	background-color: #ffffff;
+	text-align-last:center;
+}
+#lecture_capacity_dropdown_arrow{
+	right: 15px;
+	bottom: 13px;
 }
 
 

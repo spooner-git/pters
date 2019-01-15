@@ -202,7 +202,9 @@ body{
 }
 #align_select_dropdown_arrow{
 	right: 25%;
+	bottom: 25px;
 }
+
 
 select:focus > option:checked {
 	color: #fe4e65 !important;
@@ -223,9 +225,7 @@ select:focus > option:checked {
 	background-color: #ffffff;
 	box-shadow: 1px 1px 1px 1px #cccccc;
 }
-#align_select_dropdown_arrow{
-	bottom: 25px;
-}
+
 #align_type_text{
 	display: none;
 	/*
