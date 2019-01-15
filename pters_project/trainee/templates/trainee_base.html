@@ -470,10 +470,10 @@
     }
 
     function open_lecture_select_popup(){
-        disable_window_scroll();
         shade_index(100);
         $('#popup_lecture_select').show();
         ajax_read_lecture_info_from_db();
+        disable_window_scroll();
     }
 
     function fill_lecture_select_popup(){
