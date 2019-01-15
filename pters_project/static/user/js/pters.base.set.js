@@ -34,7 +34,8 @@ var multiLanguage = { 'KOR':
 
 var varUA = navigator.userAgent.toLowerCase();
 var ios_check = false;
-if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
+console.log(varUA);
+if (varUA.match('macintosh') != null || varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
     ios_check = true;
 } else {
     ios_check = false;
@@ -460,6 +461,24 @@ function date_format_yyyy_mm_dd_to_yyyy_m_d(yyyy_mm_dd, resultSplit){
     return yyyy+resultSplit+mm+resultSplit+dd;
 }
 
+//2018-05-11 을 18-5-11
+function date_format_yyyy_mm_dd_to_yy_m_d(yyyy_mm_dd, resultSplit){
+    var splitChar = yyyy_mm_dd.substr(4, 1);
+    var yyyy = String(yyyy_mm_dd.split(splitChar)[0].substr(2,2));
+    var mm = Number(yyyy_mm_dd.split(splitChar)[1]);
+    var dd = Number(yyyy_mm_dd.split(splitChar)[2]);
+
+    return yyyy+resultSplit+mm+resultSplit+dd;
+}
+
+//2018-05-11 을 18-5-11
+function date_format_yyyy_mm_dd_to_m_d(yyyy_mm_dd, resultSplit){
+    var splitChar = yyyy_mm_dd.substr(4, 1);
+    var mm = Number(yyyy_mm_dd.split(splitChar)[1]);
+    var dd = Number(yyyy_mm_dd.split(splitChar)[2]);
+
+    return mm+resultSplit+dd;
+}
 
 function date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_m_d, resultSplit){
     var yyyy = '';
@@ -781,6 +800,7 @@ function scrollToDom_custom(parentselector, dom){
     }
 }
 
+
 function disable_window_scroll(){
     // if(bodywidth < 600){
     //    //$('#calendar').css('position', 'fixed');
@@ -816,7 +836,13 @@ function enable_window_scroll(){
     //     $('body').css('overflow-y','unset');
     // }
     $('body').css({'position':'', 'top':'', 'overflow-y':'unset'});
-    $(window).scrollTop(current_Scroll_Position);
+    try {
+        $(window).scrollTop(current_Scroll_Position);
+    } catch (e) {
+        if (e instanceof ReferenceError) {
+            // Handle error as necessary
+        }
+    }
     //$('body, #calendar').off('scroll touchmove mousewheel');
 }
 

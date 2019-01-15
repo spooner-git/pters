@@ -1178,7 +1178,7 @@ function playSound() {
     }
 
     function open_lecture_select_popup_pc(){
-        disable_window_scroll();
+        //disable_window_scroll();
         $('.popups').hide();
         ajax_read_lecture_info_from_db($('#subject-selector'), 'callback', function(){
             append_dropdown_scroll_arrow('#subject-selector', '#myInfo', 50, -60)

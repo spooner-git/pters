@@ -677,23 +677,25 @@
         var htmlToJoin = [];
         var profit_sum = 0;
         for(var i=len-1; i>=0; i--){
-            var monthstart = month_date[i].split('-')[0]+' . '+Number(month_date[i].split('-')[1]) + '.1'
-            var monthend = Number(month_date[i].split('-')[1]) +'.'+ Number(lastDay[Number(month_date[i].split('-')[1])-1]);
+            var monthstart = month_date[i].split('-')[0]+'-'+Number(month_date[i].split('-')[1]) + '-1';
+            var monthend = month_date[i].split('-')[0]+'-'+Number(month_date[i].split('-')[1]) +'-'+ Number(lastDay[Number(month_date[i].split('-')[1])-1]);
+            var monthstart_end = date_format_yyyy_mm_dd_to_yy_m_d(monthstart,'.')+ '~'+ date_format_yyyy_mm_dd_to_m_d(monthend,'.');
+
             var profit = numberWithCommas(Number(price[i]) - Number(refund_price[i]) );
-            htmlToJoin.push('<div class="table_row" data-date="'+month_date[i].split('-')[0]+'-'+month_date[i].split('-')[1] + '-01'+'"><div>'+monthstart+' ~ '+monthend+'</div>'+
+            htmlToJoin.push('<div class="table_row" data-date="'+monthstart+'"><div>'+monthstart_end+'</div>'+
                             '<div>'+profit+' 원</div>'+
-                            '<div class="sales_detail_view_btn" data-date="'+month_date[i].split('-')[0]+'-'+month_date[i].split('-')[1] + '-01'+'" data-power="off"><span>상세<img src="/static/user/res/icon-down-grey.png"></span></div>'+
+                            '<div class="sales_detail_view_btn" data-date="'+monthstart+'" data-power="off"><span>상세<img src="/static/user/res/icon-down-grey.png"></span></div>'+
                             '</div>'+
-                            '<div class="table_row_monthly" data-date="'+month_date[i].split('-')[0]+'-'+month_date[i].split('-')[1] + '-01'+'"></div>')
+                            '<div class="table_row_monthly" data-date="'+monthstart+'"></div>');
             profit_sum = profit_sum + Number(Number(price[i]-Number(refund_price[i])));
         }
         var endDate = month_date[month_date.length-1].split('-')[0]+'-'+
                       month_date[month_date.length-1].split('-')[1]+'-'+
                       lastDay[Number(month_date[month_date.length-1].split('-')[1]-1)];
         htmlToJoin.push('<div class="table_row table_row_sum"><div>기간 합계<br>('+
-                            date_format_yyyy_mm_dd_to_yyyy_m_d(month_date[0],'.')+
-                            ' ~ '+
-                            date_format_yyyy_mm_dd_to_yyyy_m_d(endDate,'.')+
+                            date_format_yyyy_mm_dd_to_yy_m_d(month_date[0],'.')+
+                            '~'+
+                            date_format_yyyy_mm_dd_to_yy_m_d(endDate,'.')+
                             ')</div>'+
                             '<div>'+numberWithCommas(profit_sum)+' 원</div>'+
                             '<div class=""></div>'+
@@ -706,7 +708,7 @@
         var htmlTarget = $('div.table_row_monthly[data-date="'+selecteddate+'"]');
         var htmlToJoin = ['<div class="sales_detail_monthly_row_title sales_detail_monthly_row">'+
                                 '<div>거래 일자</div>'+
-                                '<div>거래 구분</div>'+
+                                '<div>구분</div>'+
                                 '<div>회원명</div>'+
                                 '<div>수강권명</div>'+
                                 '<div>거래 금액</div>'+
@@ -714,23 +716,46 @@
                         '<div class="sales_detail_monthly_row">'+
                             '총 '+len +'건' +
                         '</div>'
-                        ]
-
-        
-        for(var i=0; i<len; i++){
-            if(trade_type[i] >=2){
-                var pricetag = '-'+numberWithCommas(price[i])
-            }else{
-                var pricetag = numberWithCommas(price[i])
-            }
-            htmlToJoin.push('<div class="sales_detail_monthly_row">'+
-                                '<div>'+date[i]+'</div>'+
-                                '<div>'+trade_info[i]+'</div>'+
-                                '<div><p>'+member_name[i]+'</p></div>'+
-                                '<div><p>'+ticket_name[i]+'</p></div>'+
-                                '<div>'+pricetag+' 원</div>'+
-                            '</div>')
+                        ];
+        if(bodywidth<600){
+            htmlToJoin = ['<div class="sales_detail_monthly_row_title sales_detail_monthly_row">'+
+                                '<div>거래 구분</div>'+
+                                '<div>회원명</div>'+
+                                '<div>거래 금액</div>'+
+                        '</div>'+
+                        '<div class="sales_detail_monthly_row">'+
+                            '총 '+len +'건' +
+                        '</div>'
+                        ];
         }
+        htmlToJoin.push('<br/>');
+        for(var i=0; i<len; i++){
+            var pricetag = numberWithCommas(price[i]);
+            if(trade_type[i] >=2){
+                pricetag = '-'+numberWithCommas(price[i]);
+            }else{
+                pricetag = numberWithCommas(price[i]);
+            }
+            if(bodywidth<600){
+                var date_split = date[i].split('-');
+                var date_dot_format = date_split[0].substr(2,2) + '.' + date_split[1] + '.'+date_split[2];
+                htmlToJoin.push('<div class="sales_detail_monthly_row">'+
+                                    '<div>'+date_dot_format+'('+trade_info[i]+')</div>'+
+                                    '<div><p>'+member_name[i]+'<br/>('+ticket_name[i]+')</p></div>'+
+                                    '<div>'+pricetag+'원</div>'+
+                                '</div>');
+{#                                '<div>'+member_name[i]+'/'+ticket_name[i]+'</div>');#}
+            }else{
+                htmlToJoin.push('<div class="sales_detail_monthly_row">'+
+                                    '<div>'+date[i]+'</div>'+
+                                    '<div>'+trade_info[i]+'</div>'+
+                                    '<div><p>'+member_name[i]+'</p></div>'+
+                                    '<div><p>'+ticket_name[i]+'</p></div>'+
+                                    '<div>'+pricetag+'원</div>'+
+                                '</div>');
+            }
+        }
+
         if(len == 0){
             htmlToJoin.push('<div class="sales_detail_monthly_row">내역이 없습니다.</div>')
         }

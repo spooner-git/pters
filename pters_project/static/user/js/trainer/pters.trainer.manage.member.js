@@ -1,6 +1,7 @@
 const SORT_MEMBER_NAME = 0;
 const SORT_REMAIN_COUNT = 1;
 const SORT_START_DATE = 2;
+const SORT_MOD_DATETIME = 3;
 const SORT_ASC = 0;
 const SORT_DESC = 1;
 const TAB_ING = 'current';
@@ -208,6 +209,12 @@ $(document).ready(function(){
             member_sort_order_by = SORT_ASC;
         }else if($(this).val()=="시작 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
             member_sort_val = SORT_START_DATE;
+            member_sort_order_by = SORT_DESC;
+        }else if($(this).val()=="수정 일시 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Mod Date(P)"){
+            member_sort_val = SORT_MOD_DATETIME;
+            member_sort_order_by = SORT_ASC;
+        }else if($(this).val()=="수정 일시 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Mod Date(R)"){
+            member_sort_val = SORT_MOD_DATETIME;
             member_sort_order_by = SORT_DESC;
         }
         if(member_tab == TAB_ING){

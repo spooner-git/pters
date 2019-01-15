@@ -2,6 +2,7 @@ const SORT_TICKET_TYPE = 0;
 const SORT_TICKET_NAME = 1;
 const SORT_TICKET_MEMBER_COUNT = 2;
 const SORT_TICKET_CREATE_DATE = 3;
+const SORT_TICKET_MOD_DATETIME = 4;
 var ticket_sort_val = SORT_TICKET_TYPE;
 var ticket_sort_order_by = SORT_ASC;
 var ticket_tab = TAB_ING;
@@ -166,6 +167,12 @@ $('.alignSelect_ticket').change(function(){
             ticket_sort_order_by = SORT_ASC;
         }else if($(this).val()=="생성 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
             ticket_sort_val = SORT_TICKET_CREATE_DATE;
+            ticket_sort_order_by = SORT_DESC;
+        }else if($(this).val()=="수정 일시 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Mod Date(P)"){
+            ticket_sort_val = SORT_TICKET_MOD_DATETIME;
+            ticket_sort_order_by = SORT_ASC;
+        }else if($(this).val()=="수정 일시 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Mod Date(R)"){
+            ticket_sort_val = SORT_TICKET_MOD_DATETIME;
             ticket_sort_order_by = SORT_DESC;
         }
         if(ticket_tab == TAB_ING) {
