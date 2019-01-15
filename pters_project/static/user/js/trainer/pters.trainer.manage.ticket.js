@@ -152,6 +152,12 @@ $('.alignSelect_ticket').change(function(){
         }else if($(this).val()=="참여중 회원 적은 순" || $(this).val()=="残余回数が少ない" || $(this).val()=="Remain Count(L)"){
             ticket_sort_val = SORT_TICKET_MEMBER_COUNT;
             ticket_sort_order_by = SORT_ASC;
+        }else if($(this).val()=="종료된 회원 많은 순" || $(this).val()=="残余回数が多い" || $(this).val()=="Remain Count(H)"){
+            ticket_sort_val = SORT_TICKET_MEMBER_COUNT;
+            ticket_sort_order_by = SORT_DESC;
+        }else if($(this).val()=="종료된 회원 적은 순" || $(this).val()=="残余回数が少ない" || $(this).val()=="Remain Count(L)"){
+            ticket_sort_val = SORT_TICKET_MEMBER_COUNT;
+            ticket_sort_order_by = SORT_ASC;
         }else if($(this).val()=="수강권 타입 순" || $(this).val()=="残余回数が多い" || $(this).val()=="Remain Count(H)"){
             ticket_sort_val = SORT_TICKET_TYPE;
             ticket_sort_order_by = SORT_DESC;
@@ -224,6 +230,8 @@ function shiftPackageList(type){
                     $('#currentPackageList').html(group_class_Html);
                 });
             }
+            $('#ticket_member_many').text('참여중 회원 많은 순');
+            $('#ticket_member_few').text('참여중 회원 적은 순');
             break;
         case "finished":
             ticket_tab = TAB_END;
@@ -254,6 +262,8 @@ function shiftPackageList(type){
                     $('#finishedPackageList').html(group_class_Html);
                 });
             }
+            $('#ticket_member_many').text('종료된 회원 많은 순');
+            $('#ticket_member_few').text('종료된 회원 적은 순');
             break;
     }
 }
@@ -3144,17 +3154,20 @@ function package_ListHtml_page(option, jsondata){ //option : current, finished
 
 function package_ListHtml_mobile(option, jsondata){ //option : current, finished
     $('#uptext').html("수강권 <span style='color:#ff4d63;'>"+jsondata.total_package_num+"</span>");
+    var member_status_title = '참여중';
     switch(option){
         case 'current':
             $membernum = $('#memberNumber_current_ticket');
             $targetHTML = $('#currentPackageList');
             text_membernum = "진행중인 수강권 ";
+            member_status_title = '참여중';
             $targetHTML.attr('total_package_num', jsondata.total_package_num);
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_ticket');
             $targetHTML = $('#finishedPackageList');
             text_membernum = "종료된 수강권 ";
+            member_status_title = '종료';
             break;
     }
     var htmlToAdd = [];
@@ -3229,7 +3242,7 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
         var main = 
             `<div class="_grouptype_mobile">${package_type_nm}</div>
              <div class="_groupname_mobile">${package_name}</div>
-             <div class="_groupparticipants_mobile"><div>회원수</div><div>${package_membernum}</div></div>
+             <div class="_groupparticipants_mobile"><div>${member_status_title}</div><div>${package_membernum}</div></div>
              <div class="_grouplectures_mobile"><div>수업</div><div>${lecture_list.join('')}</div></div>
              <div class="_groupmemo_mobile"><div>메모</div><div>${package_memo}</div></div>
             `;
@@ -3554,7 +3567,12 @@ function packageMemberListSet(package_id, jsondata){
 function packageMemberListSet_mobile(package_id, jsondata){
     var htmlToJoin = [];
     var len = jsondata.db_id.length;
-
+    var member_status_title = '참여중';
+    if(ticket_tab == TAB_ING){
+        member_status_title = '참여중';
+    }else{
+        member_status_title = '종료된';
+    }
     // htmlToJoin.push(`
     //                     <div id="mobile_comment_1">
     //                         <span>참여중 회원</span><span>${len}</span><div style="display:inline-block;cursor:pointer" class="btn_add_member_to_ticket_mobile" data-packageid=${package_id}>+</div>
@@ -3566,7 +3584,7 @@ function packageMemberListSet_mobile(package_id, jsondata){
     //                 );
     htmlToJoin.push(`
                         <div id="mobile_comment_1">
-                            <span>참여중 회원</span><span>${len}</span><div style="display:inline-block;cursor:pointer" class="btn_add_member_to_ticket_mobile" data-packageid=${package_id}>+</div>
+                            <span>${member_status_title} 회원</span><span>${len}</span><div style="display:inline-block;cursor:pointer" class="btn_add_member_to_ticket_mobile" data-packageid=${package_id}>+</div>
                         </div>
                     `
                     );
