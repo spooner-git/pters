@@ -259,7 +259,7 @@ $(document).ready(function(){
             $('#select_info_shift_lecture').addClass('button_active');
             $('#select_info_shift_schedule, #select_info_shift_history').removeClass('button_active');
             // $('body').css('overflow-y','hidden');
-            disable_window_scroll();
+            // disable_window_scroll();
         }
         // shade_index(100);
     });
@@ -3910,6 +3910,7 @@ function get_indiv_member_info(dbID){
                     open_member_info_popup_mobile(dbID, jsondata);
                 }else{
                     open_member_info_popup_pc(dbID, jsondata);
+                     disable_window_scroll();
                 }
 
             }

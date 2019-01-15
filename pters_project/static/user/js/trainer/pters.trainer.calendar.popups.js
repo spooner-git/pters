@@ -262,7 +262,7 @@
     // });
     $(document).on('click', 'div._class', function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
-        disable_window_scroll();
+        // disable_window_scroll();
         var this_schedule_id = $(this).attr('data-scheduleid');
         var dbid = schedule_data_cache["class"][this_schedule_id]["member_id"];
         var name = schedule_data_cache["class"][this_schedule_id]["member_name"];
@@ -370,13 +370,13 @@
         }else{
             selector_cal_popup_planinfo.css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'});
         }
-        //disable_window_scroll();
+        disable_window_scroll();
     });
 
     //Off 일정 클릭시 팝업 Start
     $(document).on('click', 'div._off', function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
-        disable_window_scroll();
+        // disable_window_scroll();
         var this_schedule_id = $(this).attr('data-scheduleid');
         var start = schedule_data_cache["off"][this_schedule_id]["start_date"];
         var start_date = start.split(' ')[0];
@@ -455,14 +455,14 @@
         }else{
             selector_cal_popup_plan_info.css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'});
         }
-        //disable_window_scroll();
+        disable_window_scroll();
 
     });
 
     //스케쥴 클릭시 팝업 Start
     $(document).on('click', 'div._group', function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
-        disable_window_scroll();
+        // disable_window_scroll();
 
         var this_schedule_id = $(this).attr('data-scheduleid');
         var groupid = schedule_data_cache["group"][this_schedule_id]["group_id"];
@@ -577,6 +577,7 @@
                                              })
                                         .css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'});
         }
+        disable_window_scroll();
         //disable_window_scroll();
     });
 /////////////////////////////////////////////////////////////////////////////////////////////(주간)일정 클릭 이벤트
