@@ -32,6 +32,13 @@ var multiLanguage = { 'KOR':
         }
 };
 
+var varUA = navigator.userAgent.toLowerCase();
+var ios_check = false;
+if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
+    ios_check = true;
+} else {
+    ios_check = false;
+}
 
 //플로팅 버튼 스크롤시 숨기기 Start
 var ts;
@@ -775,15 +782,22 @@ function scrollToDom_custom(parentselector, dom){
 }
 
 function disable_window_scroll(){
-    if(bodywidth < 600){
-       //$('#calendar').css('position', 'fixed');
-       $('html, body').css({
-                            "position": "relative"
-                            });
-    }else{
+    // if(bodywidth < 600){
+    //    //$('#calendar').css('position', 'fixed');
+    //    $('html, body').css({
+    //                         "position": "relative"
+    //                         });
+    // }else{
+    //     $('body').css('overflow-y', 'hidden');
+    //
+    // }
+
+    if(ios_check == true){
+        $('body').css({'position':'fixed', 'top': -window.pageYOffset,  'overflow-y':'hidden'});
+    }
+    else{
         $('body').css('overflow-y', 'hidden');
     }
-
     // $('body, #calendar').on('scroll touchmove mousewheel', function(e){
     //     e.preventDefault();
     //     e.stopPropagation();
@@ -792,15 +806,16 @@ function disable_window_scroll(){
 }
 
 function enable_window_scroll(){
-    if(bodywidth < 600){
+    // if(bodywidth < 600){
        //$('#calendar').css('position','relative');
-       $('html, body').css({
-                            "position": "unset"
-                            });
-    }else{
-        $('body').css('overflow-y', 'unset');
-    }
+       // $('html, body').css({
+       //                      "position": "unset"
+       //                      });
+    // }else{
+    //     $('body').css('overflow-y','unset');
+    // }
 
+    $('body').css({'position':'', 'top':'', 'overflow-y':'unset'});
     //$('body, #calendar').off('scroll touchmove mousewheel');
 }
 
