@@ -2924,7 +2924,7 @@ function schedule_jsondata_to_dict(jsondata){
         result["off"][jsondata.offScheduleIdArray[f]]["memo"] = jsondata.offScheduleNoteArray[f];
     }
 
-    console.log("result", result)
+    // console.log("result", result);
     return result;
 }
 
@@ -3097,7 +3097,6 @@ function know_duplicated_plans(jsondata){
         }
         duplicate_num.push(duplicated);
     }
-    console.log(duplicate_dic);
     var result = {};
 
     //겹치지 않는 합쳐진 일정
@@ -3205,7 +3204,7 @@ function know_duplicated_plans(jsondata){
 
     // console.log("duplicate_dic",duplicate_dic);
     // console.log("result", result)
-    console.log({"num":duplicate_num, "dic":duplicate_dic, "result":result});
+    // console.log({"num":duplicate_num, "dic":duplicate_dic, "result":result});
 
     return {"num":duplicate_num, "dic":duplicate_dic, "result":result};
 }
@@ -3627,7 +3626,7 @@ function monthText(){
     //currentYMD 형식  ex : week120177
     var textYear = currentYMD.split('_')[1];
     var textMonth = currentYMD.split('_')[2]; //7
-    $('#yearText, #ymdText-pc-year').text(textYear).attr({'data-year':textYear, 'data-month':textMonth});
+    $('#yearText, #ymdText-pc-year').text(textYear+'년').attr({'data-year':textYear, 'data-month':textMonth});
     $('#monthText, #ymdText-pc-month').text(textMonth+'월');
     todayFinderArrow_month(textYear, textMonth);
 };

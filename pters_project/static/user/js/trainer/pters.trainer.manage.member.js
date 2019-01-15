@@ -2163,8 +2163,8 @@ function pc_add_member(option){
     var selector_page_addmember = $('#page_addmember');
     var selector_memberSearchButton = $('#memberSearchButton');
     var selector_page_addmember_input_wrap = $('#page_addmember_input_wrap');
-    var title_height = 47//$('#addpopup_pc_label_new').height();
-    var buttonwrap_height = 55//$('#page_addmember .member_info_PC_buttons_wrap').height();
+    var title_height = 47; //$('#addpopup_pc_label_new').height();
+    var buttonwrap_height = 55; //$('#page_addmember .member_info_PC_buttons_wrap').height();
 
     var userID;
     if(option == 0){ //PC버전에서 회원추가 버튼 누름
@@ -2296,6 +2296,7 @@ function pc_add_member(option){
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
         selector_memberSearchButton.trigger('click');
+        $('body').css('overflow-y','hidden');
 
     }else if(option == 'group'){
         initialize_add_member_sheet();

@@ -1311,8 +1311,8 @@
             today_form = $weekNum4.substr(0, 4)+'-'+$weekNum4.substr(4, 2)+'-'+$weekNum4.substr(6, 2);
             searchdate = 18;
         }else if(calendar == "month"){
-            var yyyy = $('#yearText').text();
-            var mm = $('#monthText').text().replace(/월/gi, "");
+            var yyyy = $('#yearText').attr('data-year');
+            var mm = $('#yearText').attr('data-month');
             if(mm.length<2){
                 mm = '0' + mm;
             }
