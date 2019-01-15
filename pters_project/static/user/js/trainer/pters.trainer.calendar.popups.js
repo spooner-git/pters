@@ -584,6 +584,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////(월간)일정 클릭 이벤트
     $(document).on('click', '#calendar td', function(){
+        disable_window_scroll();
         closeAlarm('pc');
         var thisDate = $(this).attr('data-date');
         var planDate_ = thisDate.replace(/_/gi, "-");
@@ -1370,7 +1371,7 @@
         if(calendar == "week"){
             $('._class, ._off, ._group').remove();
             $('._on').removeClass('_on');
-            initialJSON = jsondata;
+            var initialJSON = jsondata;
             var duplicate_check;
             if(bodywidth >= 600){
                 if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
@@ -1394,7 +1395,7 @@
                 scheduleTime_Mobile('group', jsondata, calendarSize, duplicate_check);
             }
         }else if(calendar == "month"){
-            initialJSON = jsondata;
+            var initialJSON = jsondata;
             classDatesTrainer(jsondata);
             plancheck(clicked_td_date_info, jsondata);
         }

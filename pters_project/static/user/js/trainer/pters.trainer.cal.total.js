@@ -43,7 +43,7 @@ function calendar_zoom(selector, zoom){
             $(selector).css('width', `12.5%`).removeClass('_zoomed');
             calendar_mobile_zoom = 0;
         }
-    };
+    }
 }
 
 //테스트 코드 (모바일 달력 확대)
@@ -77,25 +77,13 @@ $('#ymdText').click(function(e){
             }
 
             $calendar.removeClass('_calmonth');
-            // if(bodywidth >= 600){
-            //     if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
-            //         week_calendar_mobile(yyyy_mm_dd);
-            //         $('#week').css('display', 'table');
-            //         $('div.timeindex, #timeIndicatorBar').css('display', 'block');
-            //         $('#date').css('display', 'none');
-            //         $('#ymdText_weekcal').css('display', 'inline-block');
-            //         $('#ymdText_monthcal').css('display', 'none');
-            //     }else{
-            //         //week_calendar(yyyy_mm_dd);
-            //     }
-
-            // }else if(bodywidth<600){
-                week_calendar_mobile(yyyy_mm_dd);
-                $('#week').css('display', 'table');
-                $('div.timeindex, #timeIndicatorBar').css('display', 'block');
-                $('#date').css('display', 'none');
+            week_calendar_mobile(yyyy_mm_dd);
+            $('#week').css('display', 'table');
+            $('div.timeindex, #timeIndicatorBar').css('display', 'block');
+            $('#date').css('display', 'none');
             //}
         }else if(current_calendar_type == "week"){
+            // $(window).scrollTop(0);
             $.cookie('calendar_selected_last', 'month', {expires : 30});
             $('#hidetoggle').hide();
             var $ymdText_start = $('#ymdText-pc-month-start');
@@ -117,27 +105,13 @@ $('#ymdText').click(function(e){
                 yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(`${yyyy_2}-${mm2}-${dd2}`, '-');
             }
             $calendar.removeClass('_calweek');
-            // if(bodywidth >= 600){
-            //     if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
-            //         month_calendar(yyyy_mm_dd);
-            //         $('#week').css('display', 'none');
-            //         $('div.timeindex, #timeIndicatorBar').css('display', 'none');
-            //         $('#date').css('display', 'block');
-            //         $('.swiper-slide-active').css('width', $('#calendar').width());
-            //         $('#ymdText_monthcal').css('display', 'inline-block');
-            //         $('#ymdText_weekcal').css('display', 'none');
-            //     }else{
-            //         //week_calendar(yyyy_mm_dd);
-            //     }
-            // }else if(bodywidth < 600){
-                month_calendar(yyyy_mm_dd);
-                $('#week').css('display', 'none');
-                $('div.timeindex, #timeIndicatorBar').css('display', 'none');
-                $('#date').css('display', 'block');
-                $('.swiper-slide-active').css('width', $('#calendar').width());
-                $('#ymdText_monthcal').css('display', 'inline-block');
-                $('#ymdText_weekcal').css('display', 'none');
-            //}
+            month_calendar(yyyy_mm_dd);
+            $('#week').css('display', 'none');
+            $('div.timeindex, #timeIndicatorBar').css('display', 'none');
+            $('#date').css('display', 'block');
+            $('.swiper-slide-active').css('width', $('#calendar').width());
+            $('#ymdText_monthcal').css('display', 'inline-block');
+            $('#ymdText_weekcal').css('display', 'none');
         }
     }else if(bodywidth < 600 && calendar_mobile_zoom > 0){
         calendar_zoom("#week ._zoomed", "unzoom");

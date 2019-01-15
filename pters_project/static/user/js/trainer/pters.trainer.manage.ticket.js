@@ -152,10 +152,10 @@ $('.alignSelect_ticket').change(function(){
         }else if($(this).val()=="참여중 회원 적은 순" || $(this).val()=="残余回数が少ない" || $(this).val()=="Remain Count(L)"){
             ticket_sort_val = SORT_TICKET_MEMBER_COUNT;
             ticket_sort_order_by = SORT_ASC;
-        }else if($(this).val()=="종료된 회원 많은 순" || $(this).val()=="残余回数が多い" || $(this).val()=="Remain Count(H)"){
+        }else if($(this).val()=="종료 회원 많은 순" || $(this).val()=="残余回数が多い" || $(this).val()=="Remain Count(H)"){
             ticket_sort_val = SORT_TICKET_MEMBER_COUNT;
             ticket_sort_order_by = SORT_DESC;
-        }else if($(this).val()=="종료된 회원 적은 순" || $(this).val()=="残余回数が少ない" || $(this).val()=="Remain Count(L)"){
+        }else if($(this).val()=="종료 회원 적은 순" || $(this).val()=="残余回数が少ない" || $(this).val()=="Remain Count(L)"){
             ticket_sort_val = SORT_TICKET_MEMBER_COUNT;
             ticket_sort_order_by = SORT_ASC;
         }else if($(this).val()=="수강권 타입 순" || $(this).val()=="残余回数が多い" || $(this).val()=="Remain Count(H)"){
@@ -262,8 +262,8 @@ function shiftPackageList(type){
                     $('#finishedPackageList').html(group_class_Html);
                 });
             }
-            $('#ticket_member_many').text('종료된 회원 많은 순');
-            $('#ticket_member_few').text('종료된 회원 적은 순');
+            $('#ticket_member_many').text('종료 회원 많은 순');
+            $('#ticket_member_few').text('종료 회원 적은 순');
             break;
     }
 }
@@ -1514,7 +1514,7 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
             $table = $('#currentMember');
             $tabletbody = $('#currentMember tbody');
             $membernum = $('#memberNumber_current_member');
-            text_membernum = "진행중인 회원 ";
+            text_membernum = "진행중 회원 ";
             break;
         case 'finished':
             data = DataFormatting(jsondata);
@@ -1524,7 +1524,7 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
             $table = $('#finishedMember');
             $tabletbody = $('#finishedMember tbody');
             $membernum = $('#memberNumber_finish_member');
-            text_membernum = "종료된 회원 ";
+            text_membernum = "종료 회원 ";
             break;
     }
 
@@ -1775,12 +1775,12 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         case 'current':
             $membernum = $('#memberNumber_current_group');
             $targetHTML = $('#currentGroupList');
-            text_membernum = "진행중인 그룹 ";
+            text_membernum = "진행중 그룹 ";
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_group');
             $targetHTML = $('#finishedGroupList');
-            text_membernum = "종료된 그룹 ";
+            text_membernum = "종료 그룹 ";
             break;
     }
     var htmlToAdd = [];
@@ -2901,7 +2901,7 @@ function package_ListHtml(option, jsondata){ //option : current, finished
         case 'finished':
             $membernum = $('#memberNumber_finish_ticket');
             $targetHTML = $('#finishedPackageList');
-            text_membernum = "종료된 수강권 ";
+            text_membernum = "종료 수강권 ";
             break;
     }
     var htmlToAdd = [];
@@ -3027,13 +3027,13 @@ function package_ListHtml_page(option, jsondata){ //option : current, finished
         case 'current':
             $membernum = $('#memberNumber_current_ticket');
             $targetHTML = $('#currentPackageList');
-            text_membernum = "진행중인 수강권 ";
+            text_membernum = "진행중 수강권 ";
             $targetHTML.attr('total_package_num', jsondata.total_package_num);
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_ticket');
             $targetHTML = $('#finishedPackageList');
-            text_membernum = "종료된 수강권 ";
+            text_membernum = "종료 수강권 ";
             break;
     }
     var htmlToAdd = [];
@@ -3159,14 +3159,14 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
         case 'current':
             $membernum = $('#memberNumber_current_ticket');
             $targetHTML = $('#currentPackageList');
-            text_membernum = "진행중인 수강권 ";
+            text_membernum = "진행중 수강권 ";
             member_status_title = '참여중';
             $targetHTML.attr('total_package_num', jsondata.total_package_num);
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_ticket');
             $targetHTML = $('#finishedPackageList');
-            text_membernum = "종료된 수강권 ";
+            text_membernum = "종료 수강권 ";
             member_status_title = '종료';
             break;
     }
@@ -3571,7 +3571,7 @@ function packageMemberListSet_mobile(package_id, jsondata){
     if(ticket_tab == TAB_ING){
         member_status_title = '참여중';
     }else{
-        member_status_title = '종료된';
+        member_status_title = '종료';
     }
     // htmlToJoin.push(`
     //                     <div id="mobile_comment_1">

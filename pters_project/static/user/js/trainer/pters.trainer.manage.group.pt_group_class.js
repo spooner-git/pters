@@ -163,8 +163,8 @@ function shiftPtGroupClassList(type){
                 $('#memberNumber_finish_group').css('display', 'block');
                 $('#memberNumber_current_group').css('display', 'none');
             }
-            $('#lecture_member_many').text('종료된 회원 많은 순');
-            $('#lecture_member_few').text('종료된 회원 적은 순');
+            $('#lecture_member_many').text('종료 회원 많은 순');
+            $('#lecture_member_few').text('종료 회원 적은 순');
             break;
     }
 }
@@ -180,10 +180,10 @@ $('.alignSelect_lecture').change(function(){
         }else if($(this).val()=="참여중 회원 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
             lecture_sort_val = SORT_LECTURE_MEMBER_COUNT;
             lecture_sort_order_by = SORT_ASC;
-        }else if($(this).val()=="종료된 회원 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
+        }else if($(this).val()=="종료 회원 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
             lecture_sort_val = SORT_LECTURE_MEMBER_COUNT;
             lecture_sort_order_by = SORT_DESC;
-        }else if($(this).val()=="종료된 회원 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
+        }else if($(this).val()=="종료 회원 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
             lecture_sort_val = SORT_LECTURE_MEMBER_COUNT;
             lecture_sort_order_by = SORT_ASC;
         }else if($(this).val()=="정원 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
@@ -1646,7 +1646,7 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
             $table = $('#currentMember');
             $tabletbody = $('#currentMember tbody');
             $membernum = $('#memberNumber_current_member');
-            text_membernum = "진행중인 회원 ";
+            text_membernum = "진행중 회원 ";
             break;
         case 'finished':
             data = DataFormatting(jsondata);
@@ -1656,7 +1656,7 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
             $table = $('#finishedMember');
             $tabletbody = $('#finishedMember tbody');
             $membernum = $('#memberNumber_finish_member');
-            text_membernum = "종료된 회원 ";
+            text_membernum = "종료 회원 ";
             break;
     }
 
@@ -1901,13 +1901,13 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         case 'current':
             $membernum = $('#memberNumber_current_group');
             $targetHTML = $('#currentGroupList');
-            text_membernum = "진행중인 수업 ";
+            text_membernum = "진행중 수업 ";
             $targetHTML.attr('total_group_num', jsondata.total_group_num);
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_group');
             $targetHTML = $('#finishedGroupList');
-            text_membernum = "종료된 수업 ";
+            text_membernum = "종료 수업 ";
             member_status_title = '종료';
             break;
     }
@@ -2040,7 +2040,7 @@ function group_class_ListHtml_page(option, jsondata){ //option : current, finish
         case 'finished':
             $membernum = $('#memberNumber_finish_group');
             $targetHTML = $('#finishedGroupList');
-            text_membernum = "종료된 수업 ";
+            text_membernum = "종료 수업 ";
             break;
     }
 
@@ -2453,7 +2453,7 @@ function groupMemberListSet_mobile(group_id, jsondata){
                             </div>`);
         }else{
             htmlToJoin.push(`<div id="mobile_comment_1">
-                                <span>종료된 회원</span><span>${len}</span><div style="display:none;">+</div>
+                                <span>종료 회원</span><span>${len}</span><div style="display:none;">+</div>
                             </div>`);
 
         }

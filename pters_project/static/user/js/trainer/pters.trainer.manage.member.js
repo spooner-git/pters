@@ -325,9 +325,9 @@ $(document).ready(function(){
                 alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.');
                 location.href = "/trainer/export_excel_member_list/?finish_flag=1&keyword="+keyword+"&sort_val="+member_sort_val+"&sort_order_by="+member_sort_order_by;
             }else if($('#currentGroupList').css('display') == "block"){ //진행중인 그룹 전체 목록
-                alert('진행중 그룹 전체 목록 다운로드!!');
+                alert('진행중 그룹 전체 목록 다운로드!');
             }else if($('#finishedGroupList').css('display') == "block"){ //종료된 그룹 전체 목록
-                alert('종료된 그룹 전체 목록 다운로드!!');
+                alert('종료 그룹 전체 목록 다운로드!');
             }
         }
     });
@@ -3284,7 +3284,7 @@ function memberListSet (type, jsondata){
             $table = $('#currentMember');
             $tabletbody = $('#currentMember > div');
             $membernum = $('#memberNumber_current_member');
-            text_membernum = "진행중인 회원 ";
+            text_membernum = "진행중 회원 ";
             $('#currentMemberList').attr('total_member_num', jsondata.total_member_num);
             break;
         case 'finished':
@@ -3295,7 +3295,7 @@ function memberListSet (type, jsondata){
             $table = $('#finishedMember');
             $tabletbody = $('#finishedMember > div');
             $membernum = $('#memberNumber_finish_member');
-            text_membernum = "종료된 회원 ";
+            text_membernum = "종료 회원 ";
             break;
     }
 
@@ -3513,7 +3513,7 @@ function memberListSet_page(type, jsondata){
             $table = $('#currentMember');
             $tabletbody = $('#currentMember > div');
             $membernum = $('#memberNumber_current_member');
-            text_membernum = "진행중인 회원 ";
+            text_membernum = "진행중 회원 ";
             $('#currentMemberList').attr('total_member_num', jsondata.total_member_num);
             break;
         case 'finished':
@@ -3524,7 +3524,7 @@ function memberListSet_page(type, jsondata){
             $table = $('#finishedMember');
             $tabletbody = $('#finishedMember > div');
             $membernum = $('#memberNumber_finish_member');
-            text_membernum = "종료된 회원 ";
+            text_membernum = "종료 회원 ";
             break;
     }
 
