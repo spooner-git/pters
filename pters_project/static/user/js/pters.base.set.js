@@ -791,6 +791,7 @@ function disable_window_scroll(){
     //     $('body').css('overflow-y', 'hidden');
     //
     // }
+    current_Scroll_Position = $(document).scrollTop();
 
     if(ios_check == true){
         $('body').css({'position':'fixed', 'top': -window.pageYOffset,  'overflow-y':'hidden'});
@@ -814,8 +815,8 @@ function enable_window_scroll(){
     // }else{
     //     $('body').css('overflow-y','unset');
     // }
-
     $('body').css({'position':'', 'top':'', 'overflow-y':'unset'});
+    $(window).scrollTop(current_Scroll_Position);
     //$('body, #calendar').off('scroll touchmove mousewheel');
 }
 
