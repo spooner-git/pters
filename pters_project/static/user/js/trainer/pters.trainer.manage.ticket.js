@@ -3370,7 +3370,6 @@ function get_package_member_list(package_id, use, callback){
                     }else if(bodywidth < 1000){
                         packageMemberListSet_mobile(package_id, jsondata);
                     }
-                    
                 }
 
                 console.log('success');
@@ -3383,8 +3382,8 @@ function get_package_member_list(package_id, use, callback){
         error:function(){
             $('#errorMessageBar').show();
             $('#errorMessageText').text('통신 에러: 관리자 문의');
-        },
-    })
+        }
+    });
 }
 
 //패키지 소속 회원 목록을 그룹에 뿌리기
@@ -4129,10 +4128,9 @@ function modify_package_from_list(package_id, package_name, package_note, use, c
                         else{
                             $('#ticketdelete').hide();
                         }
-
                     }
-                    
                 }
+
                 console.log('success');
 
                 if(use == "callback"){

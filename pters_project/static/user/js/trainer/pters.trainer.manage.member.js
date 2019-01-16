@@ -1712,6 +1712,7 @@ $(document).ready(function(){
     });
 
     $('#upbutton-modify').click(function(){ //모바일 회원정보창에서 수정 눌렀을때
+        var $this = $(this);
         if($('#popup_lecture_info_mobile').css('display') == "block"){
             if($(this).attr('data-type') == "view" ){
                 $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border-bottom', '1px solid #cccccc');
@@ -1756,16 +1757,16 @@ $(document).ready(function(){
                 }
             }
         }else if($('#popup_ticket_info_mobile').css('display') == "block"){
-            if($(this).attr('data-type') == "view" ){
+            if($this.attr('data-type') == "view" ){
                 $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border-bottom', '1px solid #cccccc');
-                $(this).attr('data-type', 'modify');
-                $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
+                $this.attr('data-type', 'modify');
+                $this.find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
                 $('#ticketnametitle').css('display', 'table');
                 $('#ticketdelete, .lecture_bubble_mini img').show();
                 $('#id_ticket_status').css('display', 'none');
                 $('.mobile_status_color_palette').show();
                 $('#uptext3').text('수강권 수정');
-            }else if($(this).attr('data-type') == "modify" ){
+            }else if($this.attr('data-type') == "modify" ){
                 var package_name = $('#ticketname input').val();
                 var package_id = $('#mypackageid').attr('data-packageid');
                 var package_note = $('#ticketmemo input').val();
@@ -1775,6 +1776,8 @@ $(document).ready(function(){
                     // $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
                     // $(this).attr('data-type', 'view');
                     // $('.mobile_status_color_palette').hide();
+                        
+                    $('#upbutton-x-modify').addClass('disabled_button');
                     var status_to_be = $('.mobile_status_selected').attr('data-status');
                     modify_package_from_list(package_id, package_name, package_note, "callback", function(){
                         modify_package_status(package_id, status_to_be, "callback", function(){
@@ -1783,6 +1786,7 @@ $(document).ready(function(){
                             }else if(status_to_be == "complete"){
                                 get_end_package_member_list(package_id);
                             }
+                            $('#upbutton-x-modify').removeClass('disabled_button');
                         });
                     });
                 }
@@ -1832,7 +1836,6 @@ $(document).ready(function(){
                  */
             }
         }
-        
     });
 
     $('#mshade_popup').click(function(){
