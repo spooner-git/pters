@@ -826,7 +826,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
 
         current_Scroll_Position = $(document).scrollTop();
-        console.log(current_Scroll_Position,'999');
+
         // $('#uptext3').text('수강권 - '+package_name);
         $('#uptext3').text(package_name);
         // $('#page_managemember').css({'height':'0'});

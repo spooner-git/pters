@@ -137,7 +137,7 @@ function shade_index(option){
         var selector_page_addmember = $('#page_addmember');
         var selector_float_btn_wrap = $('#float_btn_wrap');
         var selector_memberInfoPopup = $('#memberInfoPopup');
-        var selector_lectureInfoPopup = $('#popup_lecture_info_mobile');
+        // var selector_lectureInfoPopup = $('#popup_lecture_info_mobile');
         if(option<0){
             if(selector_page_addplan.css('display') == 'block'){
                 $('#mshade_popup').css({'display':'none', 'z-index':selector_page_addplan.css('z-index')});
@@ -160,9 +160,9 @@ function shade_index(option){
             if(selector_memberInfoPopup.css('display')=='block'){
                 $('#mshade_popup').css({'z-index':selector_memberInfoPopup.css('z-index'), 'display':'block'});
             }
-            if(selector_lectureInfoPopup.css('display')=='block'){
-                $('#mshade_popup').css({'z-index':selector_lectureInfoPopup.css('z-index'), 'display':'block'});
-            }
+            // if(selector_lectureInfoPopup.css('display')=='block'){
+            //     $('#mshade_popup').css({'z-index':selector_lectureInfoPopup.css('z-index'), 'display':'block'});
+            // }
             if($('#cal_popup_planinfo').css('display')=="block"){
                 $('#mshade_popup').css({'display':'none'});
             }

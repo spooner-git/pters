@@ -851,10 +851,10 @@ $(document).on('click', 'div.groupWrap', function(e){
         else{
             get_end_groupmember_list(group_id);
         }
-        // if(bodywidth<600){
-        //     shade_index(100);
-        //     $('#mshade').css('display', 'none');
-        // }
+        if(bodywidth<600){
+            shade_index(100);
+            $('#mshade').css('display', 'none');
+        }
     }
 });
 
