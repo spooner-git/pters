@@ -207,6 +207,7 @@ function close_info_popup(option){
         $('#'+option).css('display', 'none');
         shade_index(-100);
         enable_window_scroll();
+        $('#float_btn_wrap').show();
     }
 }
 //기본 정보 팝업 닫기

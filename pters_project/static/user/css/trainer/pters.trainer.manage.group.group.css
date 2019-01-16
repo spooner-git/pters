@@ -261,7 +261,7 @@ img.substract_addedMember{
 		.groupinfo_mobile_upper > div{
 			display: table-cell;
 			
-			font-size: 16px;
+			font-size: 14px;
 		}
 		.groupinfo_mobile_upper > div:nth-of-type(1){
 			width: 20%;
