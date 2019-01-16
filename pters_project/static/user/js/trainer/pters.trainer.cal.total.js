@@ -24,7 +24,26 @@ $('#week .weekNum').click(function(){
 
 function calendar_zoom(selector, zoom){
     if(calendar_device_type == "mobile"){
-        if(zoom == "zoom" && calendar_mobile_zoom == 0){
+        // if(zoom == "zoom" && calendar_mobile_zoom == 0){
+        //     var index = Number($(selector).attr("id").split('_')[1])+1;
+        //     var $visible_row = $(`div.swiper-slide-active .td00:nth-of-type(${index})`);
+
+        //     $visible_row.siblings('.td00').css('display', 'none');
+        //     $(selector).siblings('.weekNum').css('display', 'none');
+        //     $visible_row.css('width', `90%`).addClass('_zoomed');
+        //     $(selector).css('width', `90%`).addClass('_zoomed');
+        //     calendar_mobile_zoom = 1;
+        // }else if(zoom == "unzoom" && calendar_mobile_zoom == 1){
+        //     var index = Number($(selector).attr("id").split('_')[1])+1;
+        //     var $visible_row = $(`div.swiper-slide-active .td00:nth-of-type(${index})`);
+
+        //     $visible_row.siblings('.td00').css('display', 'table-cell');
+        //     $(selector).siblings('.weekNum').css('display', 'table-cell');
+        //     $visible_row.css('width', `12.5%`).removeClass('_zoomed');
+        //     $(selector).css('width', `12.5%`).removeClass('_zoomed');
+        //     calendar_mobile_zoom = 0;
+        // }
+        if(zoom == "zoom"){
             var index = Number($(selector).attr("id").split('_')[1])+1;
             var $visible_row = $(`div.swiper-slide-active .td00:nth-of-type(${index})`);
 
@@ -33,7 +52,7 @@ function calendar_zoom(selector, zoom){
             $visible_row.css('width', `90%`).addClass('_zoomed');
             $(selector).css('width', `90%`).addClass('_zoomed');
             calendar_mobile_zoom = 1;
-        }else if(zoom == "unzoom" && calendar_mobile_zoom == 1){
+        }else if(zoom == "unzoom"){
             var index = Number($(selector).attr("id").split('_')[1])+1;
             var $visible_row = $(`div.swiper-slide-active .td00:nth-of-type(${index})`);
 
@@ -77,10 +96,20 @@ $('#ymdText').click(function(e){
             }
 
             $calendar.removeClass('_calmonth');
+            $('div.timeindex').css('display', 'block');
             week_calendar_mobile(yyyy_mm_dd);
+            $('#timeIndicatorBar').css('display', 'block');
             $('#week').css('display', 'table');
-            $('div.timeindex, #timeIndicatorBar').css('display', 'block');
             $('#date').css('display', 'none');
+            if(calendarSize == 3){
+                $('.td00, .td30').css({'background':'unset',
+                                              'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                              'background-size':'60px '+ ($('.hour').height()+1)+'px'});
+            }else if(calendarSize == 1){
+                $('.td00, .td30').css({'background':'#f7f7f7',
+                                           'background-image':'url("/static/user/res/calendar_hour.png")',
+                                            'background-size':'60px 60px'});
+            }
             //}
         }else if(current_calendar_type == "week"){
             // $(window).scrollTop(0);
@@ -1083,9 +1112,10 @@ function calTable_Set_Week_Mobile(Index, Year, Month, Dates, Week, append){ //ì„
                     time_disable_end = endtime;
                 }
 
-
                 hour_firstcell = $('.timeindex div.hour:first-child');
                 hour_lastcell = $('.timeindex div.hour:last-child');
+
+
 
                 workstart_disabling = `<div style="position:absolute;
                                                       top:${hour_firstcell.position().top}px;
@@ -1101,6 +1131,7 @@ function calTable_Set_Week_Mobile(Index, Year, Month, Dates, Week, append){ //ì„
                                                       opacity:0.8;" 
                                                       class="worktime_disable">
                                           </div>`;
+
 
                 if(currentDates+z>lastDay[MonthforLastDay] && Month+1>12){
                     td1[z+3]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[MonthforLastDay])+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
