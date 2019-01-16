@@ -41,60 +41,75 @@ function closePopup_mobile(buttonname){
             $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'lecture_info');
         }
     }else if(buttonname == "upbutton-x-modify"){
-        var selector_calendar = $('#calendar');
-        $('#uptext3').text('회원 정보');
-        $('#uptext-pc-modify').text('회원 정보');
-        close_manage_popup('member_info');
-        if(bodywidth < 600 && selector_calendar.length != 0){
-            selector_calendar.css('display', 'block');
-            //selector_calendar.css('height', '100%');
-        }
-        var thisAttr = $("#upbutton-x-modify").attr('data-page');
-        if(thisAttr == "lecture_info"){
-            // $('#page_managemember').css('height', '100%');
-            // $('#popup_lecture_info_mobile').css({'display':'none'});
-            $('#page_managemember').css('display', 'block');
-            $(window).scrollTop(current_Scroll_Position);
-            console.log(current_Scroll_Position, "설정333")
-            $('#popup_lecture_info_mobile').css({'display':'none'});
+        if(!$('#'+buttonname).hasClass('disabled_button')){
 
-            $('#page-base').css('display', 'block');
-            $('#page-base-modifystyle').css('display', 'none');
-            if(bodywidth <1000 & bodywidth >=600){
-                $('#popup_lecture_info_mobile_modify_btn > img').attr('src', '/static/user/res/icon-pencil.png');
-                $('#popup_lecture_info_mobile_modify_btn').attr('data-type', 'view')
-            }
-            if(bodywidth <600){
-                $('#upbutton-modify').attr('data-type', 'view');
-                $('#upbutton-modify > img').attr('src', '/static/user/res/icon-pencil.png');
-            }
-            $('#lecturedelete').css({'display':'none'});
-        }else if(thisAttr == "ticket_info"){
-            $('#page_managemember').css('display', 'block');
-            $(window).scrollTop(current_Scroll_Position);
-            console.log(current_Scroll_Position, "설정444")
-            $('#popup_ticket_info_mobile').css({'display':'none'});
-            $('#page-base').css('display', 'block');
-            $('#page-base-modifystyle').css('display', 'none');
-            if(bodywidth <1000 & bodywidth >=600){
-                $('#popup_ticket_info_mobile_modify_btn > img').attr('src', '/static/user/res/icon-pencil.png');
-                $('#popup_ticket_info_mobile_modify_btn').attr('data-type', 'view')
-            }
-        }else if(thisAttr == "memberinfo"){
-            // $('#page_managemember').css('height', '100%');
-            // $('#popup_lecture_info_mobile').css({'display':'none'});
-            $('#page_managemember').css('display', 'block');
-            $(window).scrollTop(current_Scroll_Position);
-            console.log(current_Scroll_Position, "설정555")
-            $('#popup_lecture_info_mobile').css({'display':'none'});
 
-            $('#uptext2').text('수업 정보');
-            close_manage_popup('member_info');
-            $('#upbutton-x, #upbutton-x-modify').attr('data-page', '');
+            // var selector_calendar = $('#calendar');
+            // $('#uptext3').text('회원 정보');
+            // $('#uptext-pc-modify').text('회원 정보');
+            // close_manage_popup('member_info');
+            // if(bodywidth < 600 && selector_calendar.length != 0){
+            //     selector_calendar.css('display', 'block');
+            //     //selector_calendar.css('height', '100%');
+            // }
+
+            var thisAttr = $("#upbutton-x-modify").attr('data-page');
+            if(thisAttr == "lecture_info"){
+                // $('#page_managemember').css('height', '100%');
+                // $('#popup_lecture_info_mobile').css({'display':'none'});
+                $('#page_managemember').css('display', 'block');
+                $(window).scrollTop(current_Scroll_Position);
+                console.log(current_Scroll_Position, "설정333")
+                $('#popup_lecture_info_mobile').css({'display':'none'});
+
+                $('#page-base').css('display', 'block');
+                $('#page-base-modifystyle').css('display', 'none');
+                if(bodywidth <1000 & bodywidth >=600){
+                    $('#popup_lecture_info_mobile_modify_btn > img').attr('src', '/static/user/res/icon-pencil.png');
+                    $('#popup_lecture_info_mobile_modify_btn').attr('data-type', 'view');
+                }
+                if(bodywidth <600){
+                    $('#upbutton-modify').attr('data-type', 'view');
+                    $('#upbutton-modify > img').attr('src', '/static/user/res/icon-pencil.png');
+                }
+                $('#lecturedelete').css({'display':'none'});
+            }else if(thisAttr == "ticket_info"){
+                $('#page_managemember').css('display', 'block');
+                $(window).scrollTop(current_Scroll_Position);
+                console.log(current_Scroll_Position, "설정444")
+                $('#popup_ticket_info_mobile').css({'display':'none'});
+                $('#page-base').css('display', 'block');
+                $('#page-base-modifystyle').css('display', 'none');
+                if(bodywidth <1000 & bodywidth >=600){
+                    $('#popup_ticket_info_mobile_modify_btn > img').attr('src', '/static/user/res/icon-pencil.png');
+                    $('#popup_ticket_info_mobile_modify_btn').attr('data-type', 'view');
+                }
+            }else if(thisAttr == "memberinfo"){
+                // $('#page_managemember').css('height', '100%');
+                // $('#popup_lecture_info_mobile').css({'display':'none'});
+                var selector_calendar = $('#calendar');
+                $('#uptext3').text('회원 정보');
+                $('#uptext-pc-modify').text('회원 정보');
+                if(bodywidth < 600 && selector_calendar.length != 0){
+                    selector_calendar.css('display', 'block');
+                    //selector_calendar.css('height', '100%');
+                }
+
+                $('#page_managemember').css('display', 'block');
+                $(window).scrollTop(current_Scroll_Position);
+                console.log(current_Scroll_Position, "설정555");
+                $('#popup_lecture_info_mobile').css({'display':'none'});
+
+                $('#uptext2').text('수업 정보');
+                close_manage_popup('member_info');
+                $('#upbutton-x, #upbutton-x-modify').attr('data-page', '');
+            }
+            enable_window_scroll();
+
         }
-        enable_window_scroll();
     }
     mutex_val = 1;
+    ticket_mutex_val = 1;
 }
 
 function close_planadd_popup_mini(){
