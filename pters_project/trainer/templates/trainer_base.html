@@ -850,7 +850,7 @@ function playSound() {
 
 
     function openNav(){
-        disable_window_scroll();
+        disable_window_scroll("remember_scroll");
         $("#outer_Sidenav").show();
         $("#inner_Sidenav").css({'width':'250px'});
         $('#float_btn').hide('fast');
@@ -860,7 +860,7 @@ function playSound() {
     }
 
     function closeNav(){
-        enable_window_scroll();
+        enable_window_scroll("goto_scroll");
         $("#outer_Sidenav").hide();
         $("#inner_Sidenav").css({'width':'0'});
         $('#float_btn').show('fast');
@@ -1174,7 +1174,7 @@ function playSound() {
             append_dropdown_scroll_arrow('.lecture_select_table_list', '#popup_lecture_select_title', 35, 0);
             set_list_overflow_scrolling('.lecture_select_table_list', '#popup_lecture_select_title');
         });
-        disable_window_scroll();
+        disable_window_scroll("remember_scroll");
     }
 
     function open_lecture_select_popup_pc(){
@@ -1280,7 +1280,7 @@ function playSound() {
     $('#popup_lecture_select .button_close_popup').click(function(){
         $(this).parents('div.popups').fadeOut('fast');
         shade_index(-100);
-        enable_window_scroll();
+        enable_window_scroll("goto_scroll");
     });
 
 

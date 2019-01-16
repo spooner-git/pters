@@ -1169,14 +1169,15 @@
     //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
     $(document).on('click', '.memberNameForInfoView, .groupParticipantsRow span.go_member_info_window', function(e){
         e.stopPropagation();
+        enable_window_scroll("goto_scroll");
         //body_position_fixed_unset();
         var bodywidth = window.innerWidth;
         var dbID = $(this).attr('data-dbid');
         var member_name = $(this).attr('data-name');
         $('.popups').hide();
         if(bodywidth < 600){
-            current_Scroll_Position = $(document).scrollTop();
-            console.log(current_Scroll_Position, 'qqqqq')
+            // current_Scroll_Position = $(document).scrollTop();
+            // console.log(current_Scroll_Position, 'qqqqq')
             beforeSend();
             $('#calendar').css('display', 'none');
             //$('#calendar').css('height', '0');
