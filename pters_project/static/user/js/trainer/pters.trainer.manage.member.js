@@ -1679,11 +1679,11 @@ $(document).ready(function(){
                 // var old_package_memo = $('#ticketmemo').attr('data-ticket_memo');
                 var old_package_state_cd = $('#id_ticket_status').attr('data-ticket_status');
                 var status_change_check = true;
+                var status_to_be = $('.mobile_status_selected').attr('data-status');
                 // $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
                 // $(this).attr('data-type', 'view');
                 // $('.mobile_status_color_palette').hide();
 
-                var status_to_be = $('.mobile_status_selected').attr('data-status');
                 if((status_to_be=="resume" && old_package_state_cd == "IP")||(status_to_be=="complete" && old_package_state_cd == "PE") ){
                     status_change_check = false;
                 }
@@ -1730,6 +1730,28 @@ $(document).ready(function(){
             if(group_name==''){
                 alert('수업명을 입력하세요.');
             }else{
+
+                var old_lecture_state_cd = $('#id_lecture_status').attr('data-lecture_status');
+                var status_change_check = true;
+                var status_to_be = $('.mobile_status_selected').attr('data-status');
+
+                if((status_to_be=="resume" && old_lecture_state_cd == "IP")||(status_to_be=="complete" && old_lecture_state_cd == "PE") ){
+                    status_change_check = false;
+                }
+                $('.mobile_status_color_palette').hide();
+                //modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
+                modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "", "callback", function(){
+                    modify_group_status(group_id, status_to_be, "callback", function(){
+                        if(status_change_check==true) {
+                            if (status_to_be == "resume") {
+                                get_groupmember_list(group_id);
+                            } else if (status_to_be == "complete") {
+                                get_end_groupmember_list(group_id);
+                            }
+                        }
+                    });
+                });
+
                 $('.mobile_status_color_palette').hide();
                 modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "", "callback", function(){
                     modify_group_status(group_id, $('.mobile_status_selected').attr('data-status'));
@@ -1769,15 +1791,23 @@ $(document).ready(function(){
                 if(group_name==''){
                     alert('수업명을 입력하세요.');
                 }else{
+                    var old_lecture_state_cd = $('#id_lecture_status').attr('data-lecture_status');
+                    var status_change_check = true;
+
+                    if((status_to_be=="resume" && old_lecture_state_cd == "IP")||(status_to_be=="complete" && old_lecture_state_cd == "PE") ){
+                        status_change_check = false;
+                    }
                     $('.mobile_status_color_palette').hide();
                     var status_to_be = $('.mobile_status_selected').attr('data-status');
                     //modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
                     modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "", "callback", function(){
                         modify_group_status(group_id, status_to_be, "callback", function(){
-                            if(status_to_be =="resume"){
-                                get_groupmember_list(group_id);
-                            }else if(status_to_be == "complete"){
-                                get_end_groupmember_list(group_id);
+                            if(status_change_check==true) {
+                                if (status_to_be == "resume") {
+                                    get_groupmember_list(group_id);
+                                } else if (status_to_be == "complete") {
+                                    get_end_groupmember_list(group_id);
+                                }
                             }
                         });
                     });

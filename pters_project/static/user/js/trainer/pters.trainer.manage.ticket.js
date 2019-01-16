@@ -3586,7 +3586,6 @@ function packageMemberListSet_mobile(package_id, ticket_status, jsondata){
         member_status_title = '참여중';
     }else{
         member_status_title = '종료';
-    console.log("ticket_status::"+member_status_title)
     }
     // htmlToJoin.push(`
     //                     <div id="mobile_comment_1">
