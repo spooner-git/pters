@@ -822,6 +822,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         var package_membernum = ticket_data[package_id].package_ing_member_num;
         var package_memo = ticket_data[package_id].package_note;
         var package_status = ticket_data[package_id].package_state_cd_name;
+        var package_status_cd = ticket_data[package_id].package_state_cd;
         // var package_statuscd = ticket_data[package_id].package_statuscd;
         var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
 
@@ -837,7 +838,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         $targetlecturelist.html('').attr("data-packageid", package_id);
         $('#upbutton-modify').css('display', 'block');
         $('#popup_ticket_info_mobile').css({'display':'block'});
-        set_ticket_info_for_mobile_popup(package_id, package_name, package_status, package_statuscd, package_type, package_membernum, package_memo);
+        set_ticket_info_for_mobile_popup(package_id, package_name, package_status, package_statuscd, package_type, package_membernum, package_memo, package_status_cd);
         if($(this).attr('data-packagestatecd')=='current'){
             get_package_member_list(package_id);
             get_grouplist_in_package(package_id, package_statuscd, "callback", function(jsondata){
@@ -944,13 +945,15 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
             case 'edit':
                 var package_name = $(this).parent('div').siblings('._groupname').find('input').val();
                 var package_memo;
+
                 if(bodywidth < 600){
                     package_memo = $('div.groupMemoWrap[data-packageid="'+package_id+'"] input').val();
                 }else{
                     package_memo = $(this).parent('div').siblings('._groupmemo').find('input').val();
                 }
+
                 if(package_memo.length == 0){
-                    package_memo = " ";
+                    package_memo = "";
                 }
                 if(package_name == ''){
                     alert('수강권명을 입력하세요.');
@@ -959,6 +962,7 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
                     // $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
                     //toggle_lock_unlock_inputfield_grouplist(group_id, true)
                     modify_package_from_list(package_id, package_name, package_memo);
+                    smart_refresh_member_group_class_list();
                 }
                 break;
         }
@@ -1470,7 +1474,7 @@ function modify_group_status(group_id, option){
                 //         $('#finishedGroupList').html(group_class_Html);
                 //     });
                 // }
-                
+                console.log('test1');
                 smart_refresh_member_group_class_list();
                 $('.lectureStateChangeSelectPopup').css('display', 'none');
 
@@ -3284,7 +3288,7 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
 
 
 //수강권 정보 모바일 팝업
-function set_ticket_info_for_mobile_popup(package_id, package_name, package_status, package_statuscd, package_type, package_membernum, package_memo){
+function set_ticket_info_for_mobile_popup(package_id, package_name, package_status, package_statuscd, package_type, package_membernum, package_memo, package_status_cd){
     var color;
     var selected1;
     var selected2;
@@ -3302,11 +3306,11 @@ function set_ticket_info_for_mobile_popup(package_id, package_name, package_stat
                         <div class="ticket_finished ${selected2}" data-status="complete">종료</div>
                     </div>`;
 
-    var html = `<div class="pters_table" id="ticketnametitle"><div class="pters_table_cell">수강권명</div><div class="pters_table_cell" id="ticketname"><input type="text" class="mobile_memo_input" value="${package_name}" disabled></div></div>
+    var html = `<div class="pters_table" id="ticketnametitle" data-ticket_name="${package_name}"><div class="pters_table_cell">수강권명</div><div class="pters_table_cell" id="ticketname"><input type="text" class="mobile_memo_input" value="${package_name}" disabled></div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${package_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">회원수</div><div class="pters_table_cell">${package_membernum}명</div></div>
-                <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div id='id_ticket_status' style="color:${color}">${package_status}</div>${status}</div></div>
-                <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="ticketmemo"><input type="text" class="mobile_memo_input" value="${package_memo}" disabled></div></div>
+                <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div id='id_ticket_status' data-ticket_status="${package_status_cd}" style="color:${color}">${package_status}</div>${status}</div></div>
+                <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="ticketmemo" data-ticket_memo="${package_memo}"><input type="text" class="mobile_memo_input" value="${package_memo}" disabled></div></div>
                 <div class="pters_table"><div class="pters_table_cell">포함된 수업</div><div class="pters_table_cell"></div></div>
                 <div id="ticketlectures"></div>
 
@@ -3348,7 +3352,6 @@ function get_package_member_list(package_id, use, callback){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log("get_package_member", jsondata);
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
@@ -3368,7 +3371,7 @@ function get_package_member_list(package_id, use, callback){
                         packageMemberListSet(package_id, jsondata);
                         $('div._groupmanage img._info_delete[data-packageid="'+package_id+'"]').css('opacity', 1);
                     }else if(bodywidth < 1000){
-                        packageMemberListSet_mobile(package_id, jsondata);
+                        packageMemberListSet_mobile(package_id, TAB_ING, jsondata);
                     }
                 }
 
@@ -3434,7 +3437,7 @@ function get_end_package_member_list(package_id, use, callback){
                         packageMemberListSet(package_id, jsondata);
                         $('div._groupmanage img._info_delete[data-packageid="'+package_id+'"]').css('opacity', 1);
                     }else if(bodywidth < 1000){
-                        packageMemberListSet_mobile(package_id, jsondata);
+                        packageMemberListSet_mobile(package_id, TAB_END, jsondata);
                     }
                 }
 
@@ -3575,14 +3578,15 @@ function packageMemberListSet(package_id, jsondata){
 //패키지 소속 회원 목록을 그룹에 그리기
 
 //패키지 소속 회원 목록을 그룹에 그리기 모바일
-function packageMemberListSet_mobile(package_id, jsondata){
+function packageMemberListSet_mobile(package_id, ticket_status, jsondata){
     var htmlToJoin = [];
     var len = jsondata.db_id.length;
     var member_status_title = '참여중';
-    if(ticket_tab == TAB_ING){
+    if(ticket_status == TAB_ING){
         member_status_title = '참여중';
     }else{
         member_status_title = '종료';
+    console.log("ticket_status::"+member_status_title)
     }
     // htmlToJoin.push(`
     //                     <div id="mobile_comment_1">
@@ -4103,8 +4107,6 @@ function modify_package_from_list(package_id, package_name, package_note, use, c
                 //     $('#page_managemember').show();
                 // }
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-
-                smart_refresh_member_group_class_list();
 
                 $('img._info_cancel').hide();
                 if(bodywidth >= 1000){

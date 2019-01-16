@@ -1667,7 +1667,7 @@ $(document).ready(function(){
         }else if($(this).attr('data-type') == "modify" ){
             var package_name = $('#ticketname input').val();
             var package_id = $('#mypackageid').attr('data-packageid');
-            var package_note = $('#ticketmemo input').val();
+            var package_memo = $('#ticketmemo input').val();
             if(package_name == ''){
                     alert('수강권명을 입력하세요.');
             }else {
@@ -1675,8 +1675,28 @@ $(document).ready(function(){
                 // $(this).attr('data-type', 'view');
                 // $('.mobile_status_color_palette').hide();
 
-                modify_package_from_list(package_id, package_name, package_note, "callback", function () {
-                    modify_package_status(package_id, $('.mobile_status_selected').attr('data-status'));
+                // var old_package_name = $('#ticketname').attr('data-ticket_name');
+                // var old_package_memo = $('#ticketmemo').attr('data-ticket_memo');
+                var old_package_state_cd = $('#id_ticket_status').attr('data-ticket_status');
+                var status_change_check = true;
+                // $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
+                // $(this).attr('data-type', 'view');
+                // $('.mobile_status_color_palette').hide();
+
+                var status_to_be = $('.mobile_status_selected').attr('data-status');
+                if((status_to_be=="resume" && old_package_state_cd == "IP")||(status_to_be=="complete" && old_package_state_cd == "PE") ){
+                    status_change_check = false;
+                }
+                modify_package_from_list(package_id, package_name, package_memo, "callback", function(){
+                    if(status_change_check==true){
+                        modify_package_status(package_id, status_to_be, "callback", function(){
+                                if(status_to_be == "resume"){
+                                    get_package_member_list(package_id);
+                                }else if(status_to_be == "complete"){
+                                    get_end_package_member_list(package_id);
+                                }
+                        });
+                    }
                 });
             }
         }
@@ -1754,7 +1774,7 @@ $(document).ready(function(){
                     //modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
                     modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "", "callback", function(){
                         modify_group_status(group_id, status_to_be, "callback", function(){
-                            if(status_to_be =='resume'){
+                            if(status_to_be =="resume"){
                                 get_groupmember_list(group_id);
                             }else if(status_to_be == "complete"){
                                 get_end_groupmember_list(group_id);
@@ -1776,25 +1796,35 @@ $(document).ready(function(){
             }else if($this.attr('data-type') == "modify" ){
                 var package_name = $('#ticketname input').val();
                 var package_id = $('#mypackageid').attr('data-packageid');
-                var package_note = $('#ticketmemo input').val();
+                var package_memo = $('#ticketmemo input').val();
                 if(package_name == ''){
                     alert('수강권명을 입력하세요.');
                 }else{
+                    // var old_package_name = $('#ticketname').attr('data-ticket_name');
+                    // var old_package_memo = $('#ticketmemo').attr('data-ticket_memo');
+                    var old_package_state_cd = $('#id_ticket_status').attr('data-ticket_status');
+                    var status_change_check = true;
                     // $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
                     // $(this).attr('data-type', 'view');
                     // $('.mobile_status_color_palette').hide();
                         
                     $('#upbutton-x-modify').addClass('disabled_button');
                     var status_to_be = $('.mobile_status_selected').attr('data-status');
-                    modify_package_from_list(package_id, package_name, package_note, "callback", function(){
-                        modify_package_status(package_id, status_to_be, "callback", function(){
-                            if(status_to_be == "resume"){
-                                get_package_member_list(package_id);
-                            }else if(status_to_be == "complete"){
-                                get_end_package_member_list(package_id);
-                            }
-                            $('#upbutton-x-modify').removeClass('disabled_button');
-                        });
+                    if((status_to_be=="resume" && old_package_state_cd == "IP")||(status_to_be=="complete" && old_package_state_cd == "PE") ){
+                        status_change_check = false;
+                    }
+                    modify_package_from_list(package_id, package_name, package_memo, "callback", function(){
+                        if(status_change_check==true){
+                            modify_package_status(package_id, status_to_be, "callback", function(){
+                                    if(status_to_be == "resume"){
+                                        get_package_member_list(package_id);
+                                    }else if(status_to_be == "complete"){
+                                        get_end_package_member_list(package_id);
+                                    }
+                                    // $('#upbutton-x-modify').removeClass('disabled_button');
+                            });
+                        }
+                        $('#upbutton-x-modify').removeClass('disabled_button');
                     });
                 }
             }
