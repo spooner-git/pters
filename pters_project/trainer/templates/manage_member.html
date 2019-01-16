@@ -1193,7 +1193,7 @@
         var _origin = $(window).scrollTop();
         $(window).scroll(function() {
             var _change = $(window).scrollTop();
-            
+
             var scrollHeight = $(document).height();
             var scrollPosition = $(window).height() + $(window).scrollTop();
             if (((scrollHeight - scrollPosition) < 100) && (mutex_val==1)) {
@@ -1211,6 +1211,9 @@
             }
             if(_change > _origin){
                 downTouchEvent();
+                if(_change < 100){
+                    upTouchEvent();
+                }
             }else{
                 upTouchEvent();
             }

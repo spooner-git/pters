@@ -1432,6 +1432,9 @@
             }
             if(_change > _origin){
                 downTouchEvent();
+                if(_change < 100){
+                    upTouchEvent();
+                }
             }else{
                 upTouchEvent();
             }
