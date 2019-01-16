@@ -109,6 +109,7 @@ function closePopup_mobile(buttonname){
         }
     }
     mutex_val = 1;
+    lecture_mutex_val = 1;
     ticket_mutex_val = 1;
 }
 
