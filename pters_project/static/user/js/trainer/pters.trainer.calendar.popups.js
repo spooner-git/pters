@@ -372,7 +372,7 @@
         }else{
             selector_cal_popup_planinfo.css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'});
         }
-        // disable_window_scroll();
+        disable_window_scroll("remember_scroll");
     });
 
     //Off 일정 클릭시 팝업 Start
@@ -457,7 +457,7 @@
         }else{
             selector_cal_popup_plan_info.css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'});
         }
-        // disable_window_scroll();
+        disable_window_scroll("remember_scroll");
 
     });
 
@@ -579,7 +579,7 @@
                                              })
                                         .css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'});
         }
-        // disable_window_scroll();
+        disable_window_scroll("remember_scroll");
     });
 /////////////////////////////////////////////////////////////////////////////////////////////(주간)일정 클릭 이벤트
 
@@ -1175,7 +1175,8 @@
         var member_name = $(this).attr('data-name');
         $('.popups').hide();
         if(bodywidth < 600){
-            current_Scroll_Position = $(document).scrollTop();
+            // current_Scroll_Position = $(document).scrollTop();
+            // console.log(current_Scroll_Position, 'qqqqq');
             beforeSend();
             $('#calendar').css('display', 'none');
             //$('#calendar').css('height', '0');

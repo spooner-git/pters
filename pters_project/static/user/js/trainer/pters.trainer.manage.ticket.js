@@ -826,6 +826,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
 
         current_Scroll_Position = $(document).scrollTop();
+        console.log(current_Scroll_Position,'999')
         // $('#uptext3').text('수강권 - '+package_name);
         $('#uptext3').text(package_name);
         // $('#page_managemember').css({'height':'0'});
@@ -1042,6 +1043,7 @@ $(document).on('click', '.groupWrap input', function(e){
 //그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
 $(document).on('click', 'img.btn_add_member_to_group, div.btn_add_member_to_ticket_mobile', function(){
     current_Scroll_Position = $(document).scrollTop();
+    console.log(current_Scroll_Position,'888')
     var bodywidth = window.innerWidth;
     // var package_id = $(this).parents('.groupMembersWrap').attr('data-packageid');
     // var package_name = $(this).parents('.groupMembersWrap').attr('data-packagename');
@@ -2460,6 +2462,7 @@ $(document).on("click", "#selected_lectures_to_package_wrap div.lecture_bubble i
 //이미 만들어진 패키지에서, 그룹을 빼는 이벤트
 // $(document).on("click", "div.groupPackageWrap div.lecture_bubble_mini img", function(e){
 $(document).on("click", "div.lecture_bubble_mini img", function(e){
+    // current_Scroll_Position = $(document).scrollTop();
     e.stopPropagation();
     var package_id = $(this).parents("div.groupPackageWrap").attr("data-packageid");
     var package_number = $(this).parents("div.groupPackageWrap").find(".lecture_bubble_mini").length;
@@ -3312,6 +3315,7 @@ function set_ticket_info_for_mobile_popup(package_id, package_name, package_stat
                 <div style="display:none;" id="mypackageid" data-packageid="${package_id}"></div>
                 <div style="display:none;" id="mypackagestatuscd" data-status="${package_statuscd}"></div>`;
     $('#popup_ticket_info_mobile_basic').html(html);
+    $(window).scrollTop(0);
 }
 //수강권 정보 모바일 팝업
 
@@ -3969,6 +3973,9 @@ function delete_group_from_package(package_id, group_id, use, callback){
                     var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
                     get_grouplist_in_package(package_id, package_statuscd, "callback", function(jsondata){
                         draw_grouplist_in_package($targetlecturelist, jsondata);
+                        if($('#upbutton-modify').attr('data-type') == "modify"){
+                            $('.lecture_bubble_mini img').show();
+                        }
                     });
                 }
                 if(use == "callback"){

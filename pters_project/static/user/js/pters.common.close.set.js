@@ -22,6 +22,7 @@ function closePopup_mobile(buttonname){
             // $('#popup_lecture_info_mobile').css({'display':'none'});
             $('#page_managemember').css('display', 'block');
             $(window).scrollTop(current_Scroll_Position);
+            console.log(current_Scroll_Position, "설정222")
             $('#popup_lecture_info_mobile').css({'display':'none'});
 
             $('#page-base').css('display', 'block');
@@ -29,6 +30,7 @@ function closePopup_mobile(buttonname){
         }else if(thisAttr == "ticket_info"){
             $('#page_managemember').css('display', 'block');
             $(window).scrollTop(current_Scroll_Position);
+            console.log(current_Scroll_Position, "설정111")
             $('#popup_ticket_info_mobile').css({'display':'none'});
 
             $('#page-base').css('display', 'block');
@@ -53,6 +55,7 @@ function closePopup_mobile(buttonname){
             // $('#popup_lecture_info_mobile').css({'display':'none'});
             $('#page_managemember').css('display', 'block');
             $(window).scrollTop(current_Scroll_Position);
+            console.log(current_Scroll_Position, "설정333")
             $('#popup_lecture_info_mobile').css({'display':'none'});
 
             $('#page-base').css('display', 'block');
@@ -69,6 +72,7 @@ function closePopup_mobile(buttonname){
         }else if(thisAttr == "ticket_info"){
             $('#page_managemember').css('display', 'block');
             $(window).scrollTop(current_Scroll_Position);
+            console.log(current_Scroll_Position, "설정444")
             $('#popup_ticket_info_mobile').css({'display':'none'});
             $('#page-base').css('display', 'block');
             $('#page-base-modifystyle').css('display', 'none');
@@ -81,6 +85,7 @@ function closePopup_mobile(buttonname){
             // $('#popup_lecture_info_mobile').css({'display':'none'});
             $('#page_managemember').css('display', 'block');
             $(window).scrollTop(current_Scroll_Position);
+            console.log(current_Scroll_Position, "설정555")
             $('#popup_lecture_info_mobile').css({'display':'none'});
 
             $('#uptext2').text('수업 정보');
@@ -137,7 +142,7 @@ function close_info_popup(option){
             shade_index(-100);
         }
         if($('._calweek').length != 0){
-            enable_window_scroll();
+            enable_window_scroll("goto_scroll");
         }
         //$('body').css('overflow-y','overlay');
     }else if(option =="cal_popup_plandelete"){
@@ -158,7 +163,11 @@ function close_info_popup(option){
         if($('#cal_popup_planinfo').css('display') == "block"){
 
         }else{
-            enable_window_scroll();
+            if($('#calendar').length > 0){
+                enable_window_scroll("goto_scroll");
+            }else{
+                enable_window_scroll();    
+            }
         }
         //$('body').css('overflow-y','overlay');
     }else if(option =="cal_popup_repeatconfirm"){
@@ -285,6 +294,7 @@ function close_manage_popup(option){
             // $('#page_managemember').css({'height':'100%'});
             $('#page_managemember').css({'display':'block'});
             $(window).scrollTop(current_Scroll_Position);
+            console.log(current_Scroll_Position, "설정6661")
             base_show();
             base_modify_hide();
         }
@@ -354,6 +364,7 @@ function close_manage_popup(option){
             //$('#page_managemember').css({'height':'100%'});
             $('#page_managemember').css({'display':'block'});
             $(window).scrollTop(current_Scroll_Position);
+            console.log(current_Scroll_Position, "설정777")
             $('#page-base').css('display','block');
             $('#page-base-addstyle').css('display','none');
             $('#float_btn_wrap').show();
@@ -382,6 +393,7 @@ function close_manage_popup(option){
             //$('#page_managemember').css({'height':'100%'});
             $('#page_managemember').css({'display':'block'});
             $(window).scrollTop(current_Scroll_Position);
+            console.log(current_Scroll_Position, "설정888")
             $('#page-base').css('display', 'block');
             $('#page-base-addstyle').css('display','none');
             $('#float_btn_wrap').show();
