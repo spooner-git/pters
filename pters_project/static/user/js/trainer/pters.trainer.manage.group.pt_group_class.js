@@ -2556,17 +2556,17 @@ function groupMemberListSet_mobile(group_id, lecture_status, jsondata){
     // }
     //$('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html);
 
-    //수업관리에서 수업에 회원을 넣고 빼는건 이제 금지. 수강권에서 한다.
+    // 수업관리에서 수업에 회원을 넣고 빼는건 이제 금지. 수강권에서 한다.
     var html = htmlToJoin.join('');
-    if(jsondata.db_id.length == 0){
-        if(lecture_tab == TAB_ING){
-            if(grouptype == 'EMPTY') {
-                html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div>';
-            }else if(grouptype == 'NORMAL'){
-                html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div>';
-            }
-        }
-    }
+    // if(jsondata.db_id.length == 0){
+    //     if(lecture_tab == TAB_ING){
+    //         if(grouptype == 'EMPTY') {
+    //             html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div>';
+    //         }else if(grouptype == 'NORMAL'){
+    //             html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div>';
+    //         }
+    //     }
+    // }
 
     $('#popup_lecture_info_mobile_memberlist').html(html);
 }
