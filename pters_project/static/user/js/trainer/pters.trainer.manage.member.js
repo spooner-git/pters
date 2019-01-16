@@ -4586,14 +4586,21 @@ function smart_refresh_member_group_class_list(){
             // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
             var group_class_Html = group_class_ListHtml('current', jsondata);
             $('#currentGroupList').html(group_class_Html);
-            var opened_group_length = opened_group.length;
-            for(var i=0; i<opened_group_length; i++){
-               $(`#currentGroupList div.groupWrap[data-groupid="${opened_group[i]}"]`).trigger('click');
+            
+            if($('#popup_lecture_info_mobile').css('display') != "block"){
+                var opened_group_length = opened_group.length;
+                for(var i=0; i<opened_group_length; i++){
+                   $(`#currentGroupList div.groupWrap[data-groupid="${opened_group[i]}"]`).trigger('click');
+                }
             }
-            if($('#popup_lecture_info_mobile').css('display') == "block"){
-                //$('#page_managemember').css('height',0);
-                $('#page_managemember').css({'display':'none'});
-            }
+
+            // for(var i=0; i<opened_group_length; i++){
+            //    $(`#currentGroupList div.groupWrap[data-groupid="${opened_group[i]}"]`).trigger('click');
+            // }
+            // if($('#popup_lecture_info_mobile').css('display') == "block"){
+            //     //$('#page_managemember').css('height',0);
+            //     $('#page_managemember').css({'display':'none'});
+            // }
         });
     }else if($('#finishedGroupList').css('display') == "block"){
         var opened_group = [];
