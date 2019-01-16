@@ -34,7 +34,8 @@ from openpyxl.writer.excel import save_virtual_workbook
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
     MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT, SORT_START_DATE, SORT_ASC, SORT_LECTURE_NAME, \
     SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CREATE_DATE, SORT_LECTURE_CAPACITY_COUNT, SORT_PACKAGE_NAME, \
-    SORT_PACKAGE_MEMBER_COUNT, SORT_PACKAGE_CREATE_DATE, SORT_PACKAGE_TYPE, ING_MEMBER_TRUE, ING_MEMBER_FALSE
+    SORT_PACKAGE_MEMBER_COUNT, SORT_PACKAGE_CREATE_DATE, SORT_PACKAGE_TYPE, ING_MEMBER_TRUE, ING_MEMBER_FALSE, \
+    SORT_REG_COUNT
 
 from configs.views import AccessTestMixin
 from trainee.views import get_trainee_repeat_schedule_data_func
@@ -1146,6 +1147,8 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
             member_data = sorted(member_data, key=attrgetter('lecture_rem_count'), reverse=int(sort_order_by))
         elif sort_info == SORT_START_DATE:
             member_data = sorted(member_data, key=attrgetter('start_date'), reverse=int(sort_order_by))
+        elif sort_info == SORT_REG_COUNT:
+            member_data = sorted(member_data, key=attrgetter('lecture_reg_count'), reverse=int(sort_order_by))
 
         context['total_member_num'] = len(member_data)
         if page != 0:
@@ -1184,6 +1187,8 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
             member_data = sorted(member_data, key=attrgetter('lecture_rem_count'), reverse=int(sort_order_by))
         elif sort_info == SORT_START_DATE:
             member_data = sorted(member_data, key=attrgetter('start_date'), reverse=int(sort_order_by))
+        elif sort_info == SORT_REG_COUNT:
+            member_data = sorted(member_data, key=attrgetter('lecture_reg_count'), reverse=int(sort_order_by))
 
         context['total_member_num'] = len(member_data)
         if page != 0:

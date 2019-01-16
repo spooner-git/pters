@@ -1,7 +1,8 @@
 const SORT_MEMBER_NAME = 0;
 const SORT_REMAIN_COUNT = 1;
 const SORT_START_DATE = 2;
-const SORT_MOD_DATETIME = 3;
+const SORT_REG_COUNT = 3;
+const SORT_MOD_DATETIME = 4;
 const SORT_ASC = 0;
 const SORT_DESC = 1;
 const TAB_ING = 'current';
@@ -203,6 +204,12 @@ $(document).ready(function(){
             member_sort_order_by = SORT_DESC;
         }else if($(this).val()=="남은 횟수 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
             member_sort_val = SORT_REMAIN_COUNT;
+            member_sort_order_by = SORT_ASC;
+        }else if($(this).val()=="등록 횟수 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Registration Count(H)"){
+            member_sort_val = SORT_REG_COUNT;
+            member_sort_order_by = SORT_DESC;
+        }else if($(this).val()=="등록 횟수 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Registration Count(L)"){
+            member_sort_val = SORT_REG_COUNT;
             member_sort_order_by = SORT_ASC;
         }else if($(this).val()=="시작 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
             member_sort_val = SORT_START_DATE;
