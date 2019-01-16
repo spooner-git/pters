@@ -785,6 +785,11 @@ div.substract_groupMember_mobile > img{
 #popup_ticket_info_mobile_lecturelist{
 	padding: 0 20px 20px 20px;
 }
+
+#popup_ticket_info_mobile_ticket_delete{
+	padding: 0 20px 20px 20px;
+}
+
 .mobile_status_color_palette{
 	display: none;
 }

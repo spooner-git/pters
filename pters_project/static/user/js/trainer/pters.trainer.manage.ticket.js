@@ -826,7 +826,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
 
         current_Scroll_Position = $(document).scrollTop();
-        console.log(current_Scroll_Position,'999')
+        console.log(current_Scroll_Position,'999');
         // $('#uptext3').text('수강권 - '+package_name);
         $('#uptext3').text(package_name);
         // $('#page_managemember').css({'height':'0'});
@@ -834,7 +834,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         $('#page-base').css('display', 'none');
         $('#page-base-modifystyle').css('display', 'block');
         $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'ticket_info');
-        $('#popup_ticket_info_mobile_lecturelist').html('').attr("data-packageid", package_id);
+        $targetlecturelist.html('').attr("data-packageid", package_id);
         $('#upbutton-modify').css('display', 'block');
         $('#popup_ticket_info_mobile').css({'display':'block'});
         set_ticket_info_for_mobile_popup(package_id, package_name, package_status, package_statuscd, package_type, package_membernum, package_memo);
@@ -3307,13 +3307,14 @@ function set_ticket_info_for_mobile_popup(package_id, package_name, package_stat
                 <div class="pters_table"><div class="pters_table_cell">회원수</div><div class="pters_table_cell">${package_membernum}명</div></div>
                 <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div id='id_ticket_status' style="color:${color}">${package_status}</div>${status}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="ticketmemo"><input type="text" class="mobile_memo_input" value="${package_memo}" disabled></div></div>
-                <div class="pters_table" style="display:none;" id="ticketdelete" data-packageid="${package_id}"><img src="/static/user/res/member/icon-delete-black.png" style="cursor:pointer;width:20px;margin:10px;"></div>
                 <div class="pters_table"><div class="pters_table_cell">포함된 수업</div><div class="pters_table_cell"></div></div>
                 <div id="ticketlectures"></div>
 
 
                 <div style="display:none;" id="mypackageid" data-packageid="${package_id}"></div>
                 <div style="display:none;" id="mypackagestatuscd" data-status="${package_statuscd}"></div>`;
+    var ticket_delete_html = `<div class="pters_table" style="display:none;" id="ticketdelete" data-packageid="${package_id}"><img src="/static/user/res/member/icon-delete-black.png" style="cursor:pointer;width:20px;margin:10px;"></div>`;
+    $('#popup_ticket_info_mobile_ticket_delete').html(ticket_delete_html);
     $('#popup_ticket_info_mobile_basic').html(html);
     $(window).scrollTop(0);
 }
@@ -3855,7 +3856,7 @@ function draw_grouplist_in_package($targetHTML, jsondata){
     var group_add_button = `<img src="/static/user/res/member/icon-x-red.png" data-packageid="${$targetHTML.attr("data-packageid")}" class="btn_add_lecture_bubble_mini" title="패키지에 수강권 추가하기">`;
     //var html = htmlToJoin.join("");
     //if(jsondata.group_type_cd != "ONE_TO_ONE"){
-        html = htmlToJoin.join("")+group_add_button;
+     var   html = htmlToJoin.join("")+group_add_button;
     //
     $targetHTML.html(html);
 }
