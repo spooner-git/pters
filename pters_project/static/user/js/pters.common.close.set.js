@@ -221,7 +221,7 @@ function close_planadd_popup(){
     $('.repeatadd_time_unit, .repeatadd_allow_all_time').removeClass('checked');
     $('.repeatadd_time_unit div,  .repeatadd_allow_all_time div').removeClass('ptersCheckboxInner_sm');
     shade_index(-100);
-    enable_window_scroll();
+    enable_window_scroll("goto_scroll");
     if(bodywidth<=820){
         $('#float_btn_wrap').show();
         $('#float_btn').removeClass('rotate_btn');
@@ -364,7 +364,7 @@ function close_manage_popup(option){
         }
     }else if(option == 'member_info_PC'){
         // $('body').css('overflow-y','auto');
-        enable_window_scroll();
+        enable_window_scroll("goto_scroll");
         $('#memberRegHistory_info_PC, #memberRepeat_info_PC, #memberLectureHistory_info_PC').html('');
         $('#memberInfoPopup_PC').removeClass('display_block');
         if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
@@ -375,7 +375,7 @@ function close_manage_popup(option){
         $('span.mobile_title_popup').remove();
     }else if(option == 'member_add'){
         // $('body').css('overflow-y','auto');
-        enable_window_scroll();
+        enable_window_scroll("goto_scroll");
         var selector_float_btn_member_add = $('#float_btn');
         if(bodywidth < 600){
             //$('#page_managemember').show();

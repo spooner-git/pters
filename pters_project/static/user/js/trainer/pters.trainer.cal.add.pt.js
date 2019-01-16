@@ -1963,8 +1963,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         selector_page_addplan.show().css({'top':centerLoc,
                                             'left':(($(window).width()-selector_page_addplan.outerWidth())/2+$(window).scrollLeft())
                                             });
-        disable_window_scroll();
-
+        disable_window_scroll("remember_scroll");
         /*selector_page_addplan.css({'display':'block','top':(($(window).height()-selector_page_addplan.outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-selector_page_addplan.outerWidth())/2+$(window).scrollLeft())});*/
     }
