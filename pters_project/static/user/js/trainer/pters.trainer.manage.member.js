@@ -3927,7 +3927,7 @@ function get_indiv_member_info(dbID){
                     open_member_info_popup_mobile(dbID, jsondata);
                 }else{
                     open_member_info_popup_pc(dbID, jsondata);
-                    disable_window_scroll();
+                     disable_window_scroll();
                 }
 
             }

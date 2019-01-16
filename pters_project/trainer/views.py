@@ -3614,10 +3614,17 @@ def add_package_group_info_logic(request):
                 package_group_info = PackageGroupTb(class_tb_id=class_id, package_tb_id=package_id,
                                                     group_tb_id=group_id, use=USE)
                 package_group_info.save()
-                package_group_info.package_tb.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
-                                                                                                group_tb__state_cd='IP',
-                                                                                                package_tb_id=package_id,
-                                                                                                use=USE).count()
+                if package_group_info.package_tb.state_cd == 'IP':
+                    package_group_info.package_tb.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                                                                                                    group_tb__state_cd='IP',
+                                                                                                    package_tb_id=package_id,
+                                                                                                    use=USE).count()
+                else:
+                    package_group_info.package_tb.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                                                                                                    group_tb__use=USE,
+                                                                                                    package_tb_id=package_id,
+                                                                                                    use=USE).count()
+
                 package_group_info.package_tb.package_type_cd = 'PACKAGE'
                 package_group_info.package_tb.save()
                 package_group_lecture_data = ClassLectureTb.objects.select_related(
@@ -3693,10 +3700,17 @@ def delete_package_group_info_logic(request):
                 except ObjectDoesNotExist:
                     package_info = None
                 if package_info is not None:
-                    package_info.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
-                                                                                   group_tb__use=USE,
-                                                                                   package_tb_id=package_id,
-                                                                                   use=USE).count()
+
+                    if package_info.state_cd == 'IP':
+                        package_info.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                                                                                       group_tb__state_cd='IP',
+                                                                                       package_tb_id=package_id,
+                                                                                       use=USE).count()
+                    else:
+                        package_info.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                                                                                       group_tb__use=USE,
+                                                                                       package_tb_id=package_id,
+                                                                                       use=USE).count()
                     if package_info.package_group_num == 1:
                         try:
                             package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
@@ -3920,10 +3934,17 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
 
         if package_data is not None:
             for package_info in package_data:
-                package_info.package_group_data = PackageGroupTb.objects.select_related(
-                    'group_tb').filter(class_tb_id=class_id,
-                                       package_tb_id=package_info.package_id, group_tb__use=USE,
-                                       use=USE).order_by('-group_tb__group_type_cd', '-group_tb__name')
+                if package_info.state_cd == 'IP':
+                    package_info.package_group_data = PackageGroupTb.objects.select_related(
+                        'group_tb').filter(class_tb_id=class_id,
+                                           package_tb_id=package_info.package_id, group_tb__state_cd='IP',
+                                           use=USE).order_by('-group_tb__group_type_cd', '-group_tb__name')
+
+                else:
+                    package_info.package_group_data = PackageGroupTb.objects.select_related(
+                        'group_tb').filter(class_tb_id=class_id,
+                                           package_tb_id=package_info.package_id, group_tb__use=USE,
+                                           use=USE).order_by('-group_tb__group_type_cd', '-group_tb__name')
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -4171,11 +4192,23 @@ class GetEndPackageGroupListViewAjax(LoginRequiredMixin, AccessTestMixin, Templa
         class_id = self.request.session.get('class_id', '')
         package_id = self.request.GET.get('package_id', '')
         error = None
-        # print('test')
-        package_group_data = PackageGroupTb.objects.select_related(
-            'group_tb').filter(class_tb_id=class_id,
-                               package_tb_id=package_id, group_tb__use=USE,
-                               use=USE).order_by('-group_tb__group_type_cd', '-group_tb_id')
+        try:
+            package_info = PackageTb.objects.get(package_id=package_id)
+        except ObjectDoesNotExist:
+            error = '수강권 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            if package_info.state_cd == 'IP':
+                package_group_data = PackageGroupTb.objects.select_related(
+                    'group_tb').filter(class_tb_id=class_id,
+                                       package_tb_id=package_id, group_tb__state_cd='IP',
+                                       use=USE).order_by('-group_tb__group_type_cd', '-group_tb_id')
+
+            else:
+                package_group_data = PackageGroupTb.objects.select_related(
+                    'group_tb').filter(class_tb_id=class_id,
+                                       package_tb_id=package_id, group_tb__use=USE,
+                                       use=USE).order_by('-group_tb__group_type_cd', '-group_tb_id')
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
