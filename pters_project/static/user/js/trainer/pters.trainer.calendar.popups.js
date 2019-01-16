@@ -311,8 +311,10 @@
         //                     '<span id="planinfo_name_text">'+name+'</span>'+
         //                 '</span>';
         $('#planinfo_title_wrap').addClass('memberNameForInfoView').attr({'data-dbid': dbid, 'data-name':name});
-        $('#planinfo_type_text, #groupplan_participants_status').hide();
+        // $('#planinfo_type_text, #groupplan_participants_status').hide();
+        $('#groupplan_participants_status').hide();
         $('#planinfo_plan_color').css('background-color', plancolor);
+        $('#planinfo_type_text').text('1:1.');
         $('#planinfo_name_text').text(name);
         if(memo.length == 0){
             memo = "";
@@ -480,11 +482,10 @@
         var finished = schedule_data_cache["group"][this_schedule_id]["finished"];
         var type_name = schedule_data_cache["group"][this_schedule_id]["type_cd_name"];
         var plancolor = schedule_data_cache["group"][this_schedule_id]["ing_color"];
-
+        var group_type_cd_name = schedule_data_cache["group"][this_schedule_id]["type_cd_name"];
         var selector_cal_popup_planinfo = $('#cal_popup_planinfo');
         var selector_popup_btn_complete = $('#popup_btn_complete');
         var selector_popup_info3_memo = $('#popup_info3_memo');
-
 
         e.stopPropagation();
         $('#float_btn_wrap').hide();
@@ -527,6 +528,7 @@
         //                 '</span>';
         $('#planinfo_title_wrap').removeClass('memberNameForInfoView');
         $('#planinfo_plan_color').css('background-color', plancolor);
+        $('#planinfo_type_text').text(group_type_cd_name+'.');
         $('#planinfo_name_text').text(name);
         $('#groupplan_participants_status').show().text('('+current_member_num+'/'+max_member_num+')');
         if(memo.length == 0){
@@ -578,7 +580,6 @@
                                         .css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'});
         }
         disable_window_scroll("remember_scroll");
-        //disable_window_scroll();
     });
 /////////////////////////////////////////////////////////////////////////////////////////////(주간)일정 클릭 이벤트
 
@@ -696,6 +697,7 @@
             var text = group_type_name+" 일정";
             if(group_type_name == ''){
                 text = "1:1 레슨 일정";
+                group_type_name = '1:1';
             }
             switch(Options.language){
                 case "JPN" :
@@ -776,6 +778,7 @@
             if($(this).attr('data-grouptype') == "group"){
                 $('#planinfo_title_wrap').removeClass('memberNameForInfoView');
                 $('#planinfo_plan_color').css('background-color', plancolor);
+                $('#planinfo_type_text').text(group_type_name+'.');
                 $('#planinfo_name_text').text(name);
                 $('#groupplan_participants_status').show().text('('+current_member_num+'/'+max_member_num+')');
 
@@ -800,7 +803,9 @@
                 schedule_on_off = 2;
             }else{
                 $('#planinfo_title_wrap').addClass('memberNameForInfoView').attr({'data-dbid': dbid, 'data-name':name});
-                $('#planinfo_type_text, #groupplan_participants_status').hide();
+                $('#planinfo_type_text').text(group_type_name+'.');
+                // $('#planinfo_type_text, #groupplan_participants_status').hide();
+                $('#groupplan_participants_status').hide();
                 $('#planinfo_plan_color').css('background-color', plancolor);
                 console.log("plancolor", plancolor)
                 $('#planinfo_name_text').text(name);
@@ -1170,8 +1175,8 @@
         var member_name = $(this).attr('data-name');
         $('.popups').hide();
         if(bodywidth < 600){
-            current_Scroll_Position = $(document).scrollTop();
-            console.log(current_Scroll_Position, 'qqqqq')
+            // current_Scroll_Position = $(document).scrollTop();
+            // console.log(current_Scroll_Position, 'qqqqq');
             beforeSend();
             $('#calendar').css('display', 'none');
             //$('#calendar').css('height', '0');
