@@ -1576,9 +1576,9 @@ function modify_group_status(group_id, option, use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').css('display', 'block');
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').css('display', 'block');
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
@@ -3084,9 +3084,9 @@ function get_member_group_class_ing_list(use, callback){
                 lecture_ing_list_cache = lecture_jsondata_to_dict(jsondata);
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').css('display', 'block');
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').css('display', 'block');
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
@@ -3144,9 +3144,9 @@ function get_member_group_class_end_list(use, callback){
                 lecture_end_list_cache = lecture_jsondata_to_dict(jsondata);
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').css('display', 'block');
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').css('display', 'block');
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
