@@ -1383,12 +1383,16 @@
                                             'background-size':'60px '+$('.td00').height()+'px'});
                     }
                 }else if(bodywidth<=600){
+                    var zoomed_selector = $("#week ._zoomed").attr('id');
                     $("#hidetoggle").attr('data-type','1');
                     $("#hidetoggle").find('img').css('-webkit-transform','rotate(-90deg)');
                     week_calendar_mobile(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'));
                     $('.td00, .td30').css({'background':'unset',
                                           'background-image':'url("/static/user/res/calendar_hour_day2.png")',
                                           'background-size':'60px '+ ($('.hour').height()+1)+'px'});
+                    if(calendar_mobile_zoom == 1){
+                        calendar_zoom('#'+zoomed_selector, "zoom");
+                    }
                 }
             }else if(onoff == "off"){
                 calendarSize = 1;
@@ -1414,12 +1418,16 @@
                                             'background-size':'unset'});
                     }
                 }else if(bodywidth<=600){
+                    var zoomed_selector = $("#week ._zoomed").attr('id');
                     $("#hidetoggle").attr('data-type','0');
                     $("#hidetoggle").find('img').css('-webkit-transform','rotate(90deg)');
                     week_calendar_mobile(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'));
                     $('.td00, .td30').css({'background':'#f7f7f7',
                                        'background-image':'url("/static/user/res/calendar_hour.png")',
                                         'background-size':'60px 60px'});
+                    if(calendar_mobile_zoom == 1){
+                        calendar_zoom('#'+zoomed_selector, "zoom");
+                    }
                 }
             }
         }
