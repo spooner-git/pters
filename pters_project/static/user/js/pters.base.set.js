@@ -781,7 +781,7 @@ function scrollToDom_custom(parentselector, dom){
     }
 }
 
-function disable_window_scroll(){
+function disable_window_scroll(remember_scroll){
     // if(bodywidth < 600){
     //    //$('#calendar').css('position', 'fixed');
     //    $('html, body').css({
@@ -791,7 +791,9 @@ function disable_window_scroll(){
     //     $('body').css('overflow-y', 'hidden');
     //
     // }
-    current_Scroll_Position = $(document).scrollTop();
+    if(remember_scroll == "remember_scroll"){
+       current_Scroll_Position = $(document).scrollTop();
+    }
 
     if(ios_check == true){
         $('body').css({'position':'fixed', 'top': -window.pageYOffset,  'overflow-y':'hidden'});
@@ -806,7 +808,7 @@ function disable_window_scroll(){
     // });
 }
 
-function enable_window_scroll(){
+function enable_window_scroll(goto_scroll){
     // if(bodywidth < 600){
        //$('#calendar').css('position','relative');
        // $('html, body').css({
@@ -815,8 +817,10 @@ function enable_window_scroll(){
     // }else{
     //     $('body').css('overflow-y','unset');
     // }
-    $('body').css({'position':'', 'top':'', 'overflow-y':'unset'});
-    $(window).scrollTop(current_Scroll_Position);
+    $('body').css({'position':'relative', 'top':'', 'overflow-y':'unset'});
+    if(goto_scroll == "goto_scroll"){
+        $(window).scrollTop(current_Scroll_Position);
+    }
     //$('body, #calendar').off('scroll touchmove mousewheel');
 }
 

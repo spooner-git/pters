@@ -234,6 +234,7 @@ $(document).ready(function(){
         shade_index(100);
         if(bodywidth < 600){
             current_Scroll_Position = $(document).scrollTop();
+            console.log(current_Scroll_Position,'777')
             get_indiv_member_info(dbID);
             get_member_lecture_list(dbID);
             // get_indiv_repeat_info(dbID);
@@ -942,6 +943,7 @@ $(document).ready(function(){
 
     $('#popup_delete_btn_yes').click(function(){
         var bodywidth = window.innerWidth;
+        // $(window).scrollTop(current_Scroll_Position);
         //if($('#calendar').length==0){
         var repeat_schedule_id;
         var group_id;
@@ -1012,11 +1014,13 @@ $(document).ready(function(){
             group_delete_JSON.fullnames = [];
             group_delete_JSON.ids = [];
             close_info_popup('cal_popup_plandelete');
+
         }else if(deleteTypeSelect == "package_group_delete"){
             var package_id = $("#cal_popup_plandelete").attr('data-packageid');
             var group_id = $("#cal_popup_plandelete").attr('data-groupid');
             delete_group_from_package(package_id, group_id);
             close_info_popup('cal_popup_plandelete');
+
         }else if(deleteTypeSelect == "grouprepeatinfodelete"){
             group_id = $('#cal_popup_plandelete').attr('data-groupid');
             repeat_schedule_id = $('#cal_popup_plandelete').attr('data-repeatid');
@@ -1979,6 +1983,7 @@ function float_btn_managemember(option){
         if(bodywidth < 600){
             // $('#page_managemember').css({'height':'0'});
             current_Scroll_Position = $(document).scrollTop();
+            console.log(current_Scroll_Position,'111')
             $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display', 'none');
             $('#page-base-addstyle').css('display', 'block');
@@ -2008,6 +2013,7 @@ function float_btn_managemember(option){
         if(bodywidth < 600){
             //$('#page_managemember').css({'height':'0'});
             current_Scroll_Position = $(document).scrollTop();
+            console.log(current_Scroll_Position,'222')
             $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
@@ -2041,6 +2047,7 @@ function float_btn_managemember(option){
         if(bodywidth < 600){
             // $('#page_managemember').css({'height':'0'});
             current_Scroll_Position = $(document).scrollTop();
+            console.log(current_Scroll_Position,'333')
             $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
@@ -2070,6 +2077,7 @@ function float_btn_managemember(option){
         if(bodywidth < 600){
             // $('#page_managemember').css({'height':'0'});
             current_Scroll_Position = $(document).scrollTop();
+            console.log(current_Scroll_Position,'444')
             $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
@@ -2089,6 +2097,7 @@ function float_btn_managemember(option){
         if(bodywidth < 600){
             //$('#page_managemember').css({'height':'0'});
             current_Scroll_Position = $(document).scrollTop();
+            console.log(current_Scroll_Position,'555')
             $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
@@ -2125,6 +2134,7 @@ function float_btn_managemember(option){
         if(bodywidth < 600){
             //$('#page_managemember').css({'height':'0'});
             current_Scroll_Position = $(document).scrollTop();
+            console.log(current_Scroll_Position,'666')
             $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
