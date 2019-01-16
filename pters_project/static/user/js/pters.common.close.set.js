@@ -85,6 +85,7 @@ function closePopup_mobile(buttonname){
                     $('#upbutton-modify').attr('data-type', 'view');
                     $('#upbutton-modify > img').attr('src', '/static/user/res/icon-pencil.png');
                     shade_index(-100);
+                    $('#popup_ticket_info_mobile_memberlist').html('');
                 }
             }else if(thisAttr == "memberinfo"){
                 // $('#page_managemember').css('height', '100%');
