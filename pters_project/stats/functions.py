@@ -155,17 +155,17 @@ def get_sales_info(class_id, month_first_day):
                                                  lecture_tb__start_date__lte=price_info.lecture_tb.start_date,
                                                  lecture_tb__use=USE, auth_cd='VIEW', use=USE).latest('reg_dt')
                 if price_lecture_info.lecture_tb.start_date < price_info.lecture_tb.start_date:
-                    trade_info = '연장 결제'
+                    trade_info = '추가'
                     trade_type = STATS_RE_REG
                 else:
                     if price_lecture_info.lecture_tb.reg_dt > price_info.lecture_tb.reg_dt:
-                        trade_info = '연장 결제'
+                        trade_info = '추가'
                         trade_type = STATS_RE_REG
                     else:
-                        trade_info = '신규 결제'
+                        trade_info = '신규'
                         trade_type = STATS_NEW_REG
             except ObjectDoesNotExist:
-                trade_info = '신규 결제'
+                trade_info = '신규'
                 trade_type = STATS_NEW_REG
 
             price_info = {'date': str(price_info.lecture_tb.start_date),

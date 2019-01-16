@@ -224,11 +224,16 @@ body{
 }
 	.sales_detail_monthly_row div{
 		display: table-cell;
-		width: 33.33%;
+		vertical-align: middle;
+		width: 33.3%;
 	}
-	.sales_detail_monthly_row div:nth-child(3), .sales_detail_monthly_row div:nth-child(4){
-		display: none;
-	}
+	/*.sales_detail_monthly_row div:nth-child(2){*/
+		/*display: table-cell;*/
+		/*width:8%*/
+	/*}*/
+	/*.sales_detail_monthly_row div:nth-child(3), .sales_detail_monthly_row div:nth-child(4){*/
+		/*display: none;*/
+	/*}*/
 	@media(min-width:600px){
 		.sales_detail_monthly_row div{
 			width: 20%;

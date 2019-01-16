@@ -1,6 +1,7 @@
 const SORT_MEMBER_NAME = 0;
 const SORT_REMAIN_COUNT = 1;
 const SORT_START_DATE = 2;
+const SORT_MOD_DATETIME = 3;
 const SORT_ASC = 0;
 const SORT_DESC = 1;
 const TAB_ING = 'current';
@@ -208,6 +209,12 @@ $(document).ready(function(){
             member_sort_order_by = SORT_ASC;
         }else if($(this).val()=="시작 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
             member_sort_val = SORT_START_DATE;
+            member_sort_order_by = SORT_DESC;
+        }else if($(this).val()=="수정 일시 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Mod Date(P)"){
+            member_sort_val = SORT_MOD_DATETIME;
+            member_sort_order_by = SORT_ASC;
+        }else if($(this).val()=="수정 일시 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Mod Date(R)"){
+            member_sort_val = SORT_MOD_DATETIME;
             member_sort_order_by = SORT_DESC;
         }
         if(member_tab == TAB_ING){
@@ -3681,18 +3688,18 @@ function memberListSet_page(type, jsondata){
             mobile_sms_img = `<a href="sms:'${phone}'"><img src="/static/user/res/memberadd/sms.png" class=""  style="width:25px;"></a>`;
         }
         var mobile_html = `<div class="_member_list_mobile_style">
-                                <div style="display:table-cell;width:70%;">
-                                    <div style="width:100%;height:35px;line-height:40px;font-size:22px;font-weight:500;padding-left:10px;">${name}</div>
-                                    <div style="width:100%;height:35px;line-height:32px;padding-left:13px;">
-                                        <div style="display:inline-block;"><span style="margin-right:10px;font-size:14px;color:#777777">등록</span><span style="font-size:16px;color:#282828;">${regcount}</span></div>
-                                        <div style="display:inline-block;width:1px;height:12px;background-color:#cccccc;margin-right:10px;margin-left:12px;"></div>
-                                        <div style="display:inline-block;"><span style="margin-right:10px;font-size:14px;color:#777777">남은횟수</span><span style="font-size:16px;color:#282828;">${count}</span></div>
+                                <div class="_member_list_mobile_style_upperwrap">
+                                    <div class="_member_list_mobile_style_upperwrap_name">${name}</div>
+                                    <div class="_member_list_mobile_style_upperwrap_count">
+                                        <div class="_member_list_mobile_style_upperwrap_regcount"><span>등록</span><span>${regcount}</span></div>
+                                        <div class="_member_list_mobile_style_upperwrap_dividebar"></div>
+                                        <div class="_member_list_mobile_style_upperwrap_remaincount"><span>남은횟수</span><span>${count}</span></div>
                                     </div>
                                 </div>
-                                <div style="display:table-cell;width:30%;vertical-align:middle;opacity:0.7;text-align:center;padding-right:10px;">
-                                    <div style="display:inline-block;">${mobile_phone_img}</div>
+                                <div class="_member_list_mobile_style_lowerwrap">
+                                    <div class="_member_list_mobile_style_lowerwrap_phone">${mobile_phone_img}</div>
                                     <div class="phone_sms_gap"></div>
-                                    <div style="display:inline-block;">${mobile_sms_img}</div>
+                                    <div class="_member_list_mobile_style_lowerwrap_sms">${mobile_sms_img}</div>
                                 </div>
                            </div>`;
         // var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';

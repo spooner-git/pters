@@ -585,7 +585,6 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////(월간)일정 클릭 이벤트
     $(document).on('click', '#calendar td', function(){
-        disable_window_scroll();
         closeAlarm('pc');
         var thisDate = $(this).attr('data-date');
         var planDate_ = thisDate.replace(/_/gi, "-");
@@ -640,10 +639,12 @@
                     $('.scroll_arrow_top').css('visibility', 'hidden');
                 }
             }
+            disable_window_scroll();
         }
     });
 
     $(document).on('click', '.plan_raw', function(){
+        enable_window_scroll();
         var selectedDate = $('.popup_ymdText').text();
         var thisDate = date_format_to_yyyymmdd(selectedDate, '-');
         if( (compare_date2(thisDate, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), thisDate)) && Options.auth_limit == 0 ){
@@ -860,6 +861,7 @@
                     });
                 }
             }
+            disable_window_scroll();
         }
     });
 
@@ -1373,7 +1375,7 @@
         if(calendar == "week"){
             $('._class, ._off, ._group').remove();
             $('._on').removeClass('_on');
-            var initialJSON = jsondata;
+            initialJSON = jsondata;
             var duplicate_check;
             if(bodywidth >= 600){
                 if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
@@ -1397,7 +1399,7 @@
                 scheduleTime_Mobile('group', jsondata, calendarSize, duplicate_check);
             }
         }else if(calendar == "month"){
-            var initialJSON = jsondata;
+            initialJSON = jsondata;
             classDatesTrainer(jsondata);
             plancheck(clicked_td_date_info, jsondata);
         }

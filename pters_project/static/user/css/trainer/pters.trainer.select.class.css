@@ -101,7 +101,7 @@ button.classAdd{
 }
 .table_lecture_name{
 	position: relative;
-	width: 50%;
+	width: 45%;
 	display: inline-block;
 	text-align: left;
 	padding-left: 10%;
@@ -125,7 +125,7 @@ button.classAdd{
 }
 .table_trainee_num{
 	display: inline-block;
-	width: 15%;
+	width: 20%;
 }
 .lecture_delete{
 	width: 10%;

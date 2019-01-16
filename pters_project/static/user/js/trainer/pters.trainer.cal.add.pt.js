@@ -1958,7 +1958,6 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         $('#upbutton-x').attr('data-page', 'addplan');
         scrollToDom(selector_page_addplan);
     }else{
-        
         $('#page_addplan_input_wrap').css('height', window_height - 100 - title_height - buttonwrap_height);
         var centerLoc = (($(window).height()-selector_page_addplan.outerHeight())/2+$(window).scrollTop());
         selector_page_addplan.show().css({'top':centerLoc,
@@ -1968,7 +1967,6 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
 
         /*selector_page_addplan.css({'display':'block','top':(($(window).height()-selector_page_addplan.outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-selector_page_addplan.outerWidth())/2+$(window).scrollLeft())});*/
-        //disable_window_scroll();
     }
 
     $('#page-addplan #timeGraph').show();
