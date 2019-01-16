@@ -4669,12 +4669,12 @@ function smart_refresh_member_group_class_list(){
         $('#members_mobile, #members_pc').html('');
         get_current_member_list();
         get_current_group_list();
-        get_member_group_class_ing_list("callback", function(jsondata){
-            // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-            // var member_Html = memberlist.html;
-            var group_class_Html = group_class_ListHtml('current', jsondata);
-            $('#currentGroupList').html(group_class_Html);
-        });
+        // get_member_group_class_ing_list("callback", function(jsondata){
+        //     // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+        //     // var member_Html = memberlist.html;
+        //     var group_class_Html = group_class_ListHtml('current', jsondata);
+        //     $('#currentGroupList').html(group_class_Html);
+        // });
     }
 }
 
