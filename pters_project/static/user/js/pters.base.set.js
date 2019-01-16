@@ -42,20 +42,20 @@ if (varUA.match('macintosh') != null || varUA.match('iphone') != null || varUA.m
 }
 
 //플로팅 버튼 스크롤시 숨기기 Start
-var ts;
-var selector_body = $("body");
-selector_body.bind("touchstart", function(e){
-    ts = e.originalEvent.touches[0].clientY;
-});
+    var ts;
+    var selector_body = $("body");
+    // selector_body.bind("touchstart", function(e){
+    //     ts = e.originalEvent.touches[0].clientY;
+    // });
 
-$(document).on("touchend", 'html', function(e){
-    var te = e.originalEvent.changedTouches[0].clientY;
-    if(ts>te+5 && $('#mshade').css('z-index')<0){
-        downTouchEvent();
-    }else if(ts<te-2){
-        upTouchEvent();
-    }
-});
+    // $(document).on("touchend", 'html', function(e){
+    //     var te = e.originalEvent.changedTouches[0].clientY;
+    //     if(ts>te+5 && $('#mshade').css('z-index')<0){
+    //         downTouchEvent();
+    //     }else if(ts<te-2){
+    //         upTouchEvent();
+    //     }
+    // });
 //플로팅 버튼 스크롤시 숨기기 End
 
 

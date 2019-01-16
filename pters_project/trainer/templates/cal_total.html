@@ -1465,6 +1465,17 @@
             }
         }
 
+        var _origin = $(window).scrollTop();
+        $(window).scroll(function() {
+            var _change = $(window).scrollTop();
+            if(_change > _origin){
+                downTouchEvent();
+            }else{
+                upTouchEvent();
+            }
+            _origin = _change;
+        });
+
 
         $('footer').css('display', 'none');
 
