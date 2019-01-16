@@ -811,16 +811,16 @@ function disable_window_scroll(remember_scroll){
     //     $('body').css('overflow-y', 'hidden');
     //
     // }
-    if(remember_scroll == "remember_scroll"){
-       current_Scroll_Position = $(document).scrollTop();
-    }
-
-    if(ios_check == true){
-        $('body').css({'position':'fixed', 'top': -window.pageYOffset,  'overflow-y':'hidden'});
-    }
-    else{
+    // if(remember_scroll == "remember_scroll"){
+    //    current_Scroll_Position = $(document).scrollTop();
+    // }
+    //
+    // if(ios_check == true){
+    //     $('body').css({'position':'fixed', 'top': -window.pageYOffset,  'overflow-y':'hidden'});
+    // }
+    // else{
         $('body').css('overflow-y', 'hidden');
-    }
+    // }
     // $('body, #calendar').on('scroll touchmove mousewheel', function(e){
     //     e.preventDefault();
     //     e.stopPropagation();
@@ -839,15 +839,15 @@ function enable_window_scroll(goto_scroll){
     // }
 
     $('body').css({'position':'relative', 'top':'', 'overflow-y':'unset'});
-    try {
-        if(goto_scroll == "goto_scroll"){
-            $(window).scrollTop(current_Scroll_Position);
-        }
-    }catch (e) {
-        if (e instanceof ReferenceError) {
-            // Handle error as necessary
-        }
-    }
+    // try {
+    //     if(goto_scroll == "goto_scroll"){
+    //         $(window).scrollTop(current_Scroll_Position);
+    //     }
+    // }catch (e) {
+    //     if (e instanceof ReferenceError) {
+    //         // Handle error as necessary
+    //     }
+    // }
     //$('body, #calendar').off('scroll touchmove mousewheel');
 }
 
