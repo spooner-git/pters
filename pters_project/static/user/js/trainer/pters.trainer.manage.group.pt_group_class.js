@@ -200,11 +200,11 @@ $('.alignSelect_lecture').change(function(){
             lecture_sort_val = SORT_LECTURE_CREATE_DATE;
             lecture_sort_order_by = SORT_DESC;
         }else if($(this).val()=="수정 일시 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Mod Date(P)"){
-            lecture_sort_val = SORT_LECTURE_MOD_DATETIME;
-            lecture_sort_order_by = SORT_ASC;
+            member_sort_val = SORT_LECTURE_MOD_DATETIME;
+            member_sort_order_by = SORT_ASC;
         }else if($(this).val()=="수정 일시 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Mod Date(R)"){
-            lecture_sort_val = SORT_LECTURE_MOD_DATETIME;
-            lecture_sort_order_by = SORT_DESC;
+            member_sort_val = SORT_LECTURE_MOD_DATETIME;
+            member_sort_order_by = SORT_DESC;
         }
         if(lecture_tab == TAB_ING) {
             get_member_group_class_ing_list("callback", function(jsondata){
