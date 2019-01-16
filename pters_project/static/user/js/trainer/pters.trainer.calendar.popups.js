@@ -1175,8 +1175,8 @@
         var member_name = $(this).attr('data-name');
         $('.popups').hide();
         if(bodywidth < 600){
-            // current_Scroll_Position = $(document).scrollTop();
-            // console.log(current_Scroll_Position, 'qqqqq');
+            current_Scroll_Position = $(document).scrollTop();
+            console.log(current_Scroll_Position, 'qqqqq')
             beforeSend();
             $('#calendar').css('display', 'none');
             //$('#calendar').css('height', '0');
