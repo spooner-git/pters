@@ -2209,7 +2209,7 @@ function get_groupmember_list(group_id, use, callback){
                     callback(jsondata);
                 }else{
                     if(bodywidth < 1000){
-                        groupMemberListSet_mobile(group_id, jsondata);
+                        groupMemberListSet_mobile(group_id, TAB_ING, jsondata);
                     }else{
                         groupMemberListSet(group_id, jsondata); 
                     }
@@ -2271,7 +2271,7 @@ function get_end_groupmember_list(group_id, use, callback){
                     callback(jsondata)
                 }else{
                     if(bodywidth < 1000){
-                        groupMemberListSet_mobile(group_id, jsondata);
+                        groupMemberListSet_mobile(group_id, TAB_END, jsondata);
                     }else{
                         groupMemberListSet(group_id, jsondata); 
                     }
@@ -2447,11 +2447,11 @@ function groupMemberListSet(group_id, jsondata){
 //그룹원 목록을 그룹에 그리기
 
 //그룹원 목록을 그룹에 그리기 모바일
-function groupMemberListSet_mobile(group_id, jsondata){
+function groupMemberListSet_mobile(group_id, lecture_status, jsondata){
     var htmlToJoin = [];
     var len = jsondata.db_id.length;
     if(bodywidth < 1000){
-        if(lecture_tab == TAB_ING) {
+        if(lecture_status == TAB_ING) {
             htmlToJoin.push(`<div id="mobile_comment_1">
                                 <span>참여중 회원</span><span>${len}</span><div style="display:none;">+</div>
                             </div>
