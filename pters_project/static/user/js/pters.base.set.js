@@ -118,10 +118,72 @@ function sideGoPage(page, menu_name_class){
 }
 
 
+// function shade_index(option){
+//     console.log("shade", option)
+//     var initialbodywidth = window.innerWidth;
+//     var initialbodyheight = document.documentElement.clientHeight + 100;
+//     if(initialbodywidth >= 600){
+//         $('#pshade').css({'width':'100%', 'height':'100%'});
+//     }else{
+//         $('#mshade').css({'width':'100%', 'height':initialbodyheight});
+//     }
+//     var bodywidth = window.innerWidth;
+//     if(bodywidth >= 600){
+//         if(option<0){
+//             if($('#memberInfoPopup_PC').css('display')=="block" && $('._calmonth').css('display')=="block"){
+//                 $('#pshade').css({'z-index':150, 'display':'block'});
+//             }else{
+//                 $('#pshade').css({'z-index':option, 'display':'none'});
+//             }
+
+//         }else{
+//             $('#pshade').css({'z-index':option, 'display':'block'});
+//         }
+
+//     }else if(bodywidth < 600){
+//         var selector_page_addplan = $('#page-addplan');
+//         var selector_page_addmember = $('#page_addmember');
+//         var selector_float_btn_wrap = $('#float_btn_wrap');
+//         var selector_memberInfoPopup = $('#memberInfoPopup');
+//         // var selector_lectureInfoPopup = $('#popup_lecture_info_mobile');
+//         if(option<0){
+//             if(selector_page_addplan.css('display') == 'block'){
+//                 $('#mshade_popup').css({'display':'none', 'z-index':selector_page_addplan.css('z-index')});
+//             }else if(selector_page_addmember.css('display') == 'block'){
+//                 $('#mshade_popup').css({'display':'none', 'z-index':selector_page_addmember.css('z-index')});
+//             }else{
+//                 $('#mshade_popup').css({'display':'none', 'z-index':option});
+//             }
+//             $('#mshade').css({'display':'none', 'z-index':option});
+//         }else{
+//             if(selector_page_addplan.css('display') == 'block'){
+//                 $('#mshade_popup').css({'z-index':selector_page_addplan.css('z-index'), 'display':'block'});
+//             }
+//             if(selector_page_addmember.css('display') == 'block'){
+//                 $('#mshade_popup').css({'z-index':selector_page_addmember.css('z-index'), 'display':'block'});
+//             }
+//             if(selector_float_btn_wrap.css('display')=='block' && !$('#float_btn').hasClass('rotate_btn')){
+//                 selector_float_btn_wrap.hide();
+//             }
+//             if(selector_memberInfoPopup.css('display')=='block'){
+//                 $('#mshade_popup').css({'z-index':selector_memberInfoPopup.css('z-index'), 'display':'block'});
+//             }
+//             // if(selector_lectureInfoPopup.css('display')=='block'){
+//             //     $('#mshade_popup').css({'z-index':selector_lectureInfoPopup.css('z-index'), 'display':'block'});
+//             // }
+//             if($('#cal_popup_planinfo').css('display')=="block"){
+//                 $('#mshade_popup').css({'display':'none'});
+//             }
+//             $('#mshade').css({'z-index':option, 'display':'block'});
+//         }
+//     }
+// }
 function shade_index(option){
     console.log("shade", option)
     var initialbodywidth = window.innerWidth;
-    var initialbodyheight = document.documentElement.clientHeight + 100;
+    // var initialbodyheight = document.documentElement.clientHeight + 100;
+    var initialbodyheight = $(document).height();
+    // var initialbodyheight = window.outerHeight;
     if(initialbodywidth >= 600){
         $('#pshade').css({'width':'100%', 'height':'100%'});
     }else{
@@ -157,16 +219,16 @@ function shade_index(option){
             $('#mshade').css({'display':'none', 'z-index':option});
         }else{
             if(selector_page_addplan.css('display') == 'block'){
-                $('#mshade_popup').css({'z-index':selector_page_addplan.css('z-index'), 'display':'block'});
+                $('#mshade_popup').css({'z-index':selector_page_addplan.css('z-index'), 'display':'block', 'height':initialbodyheight});
             }
             if(selector_page_addmember.css('display') == 'block'){
-                $('#mshade_popup').css({'z-index':selector_page_addmember.css('z-index'), 'display':'block'});
+                $('#mshade_popup').css({'z-index':selector_page_addmember.css('z-index'), 'display':'block', 'height':initialbodyheight});
             }
             if(selector_float_btn_wrap.css('display')=='block' && !$('#float_btn').hasClass('rotate_btn')){
                 selector_float_btn_wrap.hide();
             }
             if(selector_memberInfoPopup.css('display')=='block'){
-                $('#mshade_popup').css({'z-index':selector_memberInfoPopup.css('z-index'), 'display':'block'});
+                $('#mshade_popup').css({'z-index':selector_memberInfoPopup.css('z-index'), 'display':'block', 'height':initialbodyheight});
             }
             // if(selector_lectureInfoPopup.css('display')=='block'){
             //     $('#mshade_popup').css({'z-index':selector_lectureInfoPopup.css('z-index'), 'display':'block'});
