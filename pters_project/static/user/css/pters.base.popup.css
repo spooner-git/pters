@@ -338,17 +338,20 @@
 	padding-left: 33px;
 	font-weight: 400;
 }
-
+#popup_delete_question{
+	padding: 0 10px 15px 10px;
+}
 #popup_img{
+/*	display: none;*/
 	position: relative;
 	background: #ffffff;
 	height: 56px;
-	padding-top: 15px;
+	padding-top: 10px;
 	padding-bottom: 10px;
 }
 
-#img_cal{
-	display: none;
+.img_cal{
+/*	display: none;*/
 	position: absolute;
 	top: 41%;
 	left:41.5%;
@@ -894,7 +897,7 @@
 		position: relative;
 		margin :0 auto;
 		background: #ffffff;
-		height: 42px;
+		height: auto;
 		padding:13px 15px 13px 15px;
 		width: 100%;
 		max-width: 330px;
@@ -908,7 +911,7 @@
 	}
 
 
-	#img_cal{
+	.img_cal{
 		display: none;
 		/*
 		position: absolute;

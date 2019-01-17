@@ -1391,8 +1391,8 @@ span.summaryInnerBoxText_Repeatendtext{
 		box-shadow: unset;
 		border-top: 0;
 		width: 91.6%;
-		left: 50%;
-		transform: translateX(-50%);
+		/*left: 50%;
+		transform: translateX(-50%);*/
 	}
 	#currentMemberList, #finishedMemberList{
 		margin-top: 250px;

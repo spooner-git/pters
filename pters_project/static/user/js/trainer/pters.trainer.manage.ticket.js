@@ -2161,9 +2161,13 @@ $(document).on('click', 'img.substract_groupMember, div.substract_groupMember_mo
     group_delete_JSON.package_id = member_packageid;
 
     $('#cal_popup_plandelete').css('display','block');
-    $('#popup_delete_question').html(`${name} 수강권 에서 ${member_name}님을 제외 하시겠습니까? <br/> (관련 수강정보 일괄 삭제 및 복구 불가) <br/>`);
+    $('#popup_delete_question').html(`<span style="color:#fe4e65">${name}</span> 수강권 에서 <br/> ${member_name}님을 <span style="color:#fe4e65">제외</span> 하시겠습니까? <br/> <span style="font-weight:400;font-size:12px;">(관련 수강정보 일괄 삭제 및 복구 불가)</span> <br/>`);
     deleteTypeSelect = "ticketMember_Substract_From_Group";
-    shade_index(150);
+    if(bodywidth < 600){
+        shade_index(152);
+    }else{
+        shade_index(150);
+    }
 });
 
 $('#popup_delete_btn_yes').click(function(){
