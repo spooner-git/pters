@@ -87,15 +87,22 @@ function upTouchEvent(){
     if($('#mshade').css('z-index')<0){
         $("#float_btn_wrap").show();
     }
-    if($('#alignBox').length != -1 && bodywidth < 600){
-        $('#alignBox').css('transform', 'translateY(0)');
-        
+    if($('#alignBox').length != -1){
+        if(bodywidth < 600){
+            $('#alignBox').css('transform', 'translateY(0)');
+        }else if(bodywidth < 1000 && bodywidth >= 600){
+            //$('#alignBox').css('transform', 'translate(-50%, 0)');
+        }
     }
 }
 function downTouchEvent(){
     $("#float_btn_wrap").hide();
-    if($('#alignBox').length != -1 && bodywidth < 600){
-        $('#alignBox').css('transform', 'translateY(-60px)');
+    if($('#alignBox').length != -1){
+        if(bodywidth < 600){
+            $('#alignBox').css('transform', 'translateY(-60px)');
+        }else if(bodywidth < 1000 && bodywidth >= 600){
+            //$('#alignBox').css('transform', 'translate(-50%, -100px)');
+        }
         // $('#alignBox').hide();
     }
 }

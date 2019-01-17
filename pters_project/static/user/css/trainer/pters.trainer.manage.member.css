@@ -1387,10 +1387,12 @@ span.summaryInnerBoxText_Repeatendtext{
 @media(min-width: 600px){
 	#alignBox{
 		position: relative;
+/*		position: absolute;*/
 		box-shadow: unset;
+		border-top: 0;
 		width: 91.6%;
-		margin-right: auto;
-		margin-left: auto;
+		left: 50%;
+		transform: translateX(-50%);
 	}
 	#currentMemberList, #finishedMemberList{
 		margin-top: 250px;
@@ -1682,6 +1684,9 @@ span.summaryInnerBoxText_Repeatendtext{
 @media(min-width: 1000px){
 	html, body{
 		background-color: #ffffff !important;
+	}
+	#alignBox{
+		position: relative;
 	}
 	#page_managemember #tableThead{
 		display: table;
