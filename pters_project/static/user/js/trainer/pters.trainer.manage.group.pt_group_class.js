@@ -768,20 +768,6 @@ $(document).on('click', 'div.groupWrap', function(e){
                     get_end_groupmember_list(group_id);
                 }
                 get_group_repeat_info(group_id);
-            // }
-            // }else if(group_id == "1:1"){
-            //     $(this).addClass('groupWrap_selected');
-            //     memberlist.addClass('groupMembersWrap_selected').show();
-            //     if( $('#btnCallCurrent').hasClass('pters_selectbox_btn_selected') ){
-            //         get_member_one_to_one_ing_list("callback", function(jsondata){
-            //             memberlist.html('<div style="width:100%;">'+ptmember_ListHtml('current', 'name', 'no', jsondata).html+'</div>');
-            //         });
-            //     }else if( $('#btnCallFinished').hasClass('pters_selectbox_btn_selected') ){
-            //         get_member_one_to_one_end_list("callback", function(jsondata){
-            //             memberlist.html('<div style="width:100%;">'+ptmember_ListHtml('finished', 'name', 'no', jsondata).html+'</div>');
-            //         });
-            //     }
-            // }
         }else{
             $(this).removeClass('groupWrap_selected');
             memberlist.removeClass('groupMembersWrap_selected').hide();
@@ -811,17 +797,6 @@ $(document).on('click', 'div.groupWrap', function(e){
         var group_color = lecture_data[group_id].group_ing_color_cd;
         var group_status = lecture_data[group_id].group_state_cd_name;
         var group_statuscd = lecture_data[group_id].group_state_cd;
-        // var $targetlecturelist = $('#popup_lecture_info_mobile_lecturelist');
-
-        // var group_name = $(this).find('._groupname_mobile > span').text();
-        // var group_type = $(this).find('._grouptypecd input').val();
-        // var group_typecd = $(this).find('._grouptypecd').attr('data-group-type');
-        // var group_membernum = $(this).find('._groupparticipants').text();
-        // var group_membercapacity = $(this).find('._groupcapacity input').val();
-        // var group_memo = $(this).find('._groupmemo input').val();
-        // var group_color = $(this).find('._groupname_mobile').css('border-color');
-        // var group_status = $('div.pters_selectbox_btn_selected > span').text();
-        // var group_statuscd = $('div.pters_selectbox_btn_selected > span').attr('data-status');
 
         if(group_statuscd == "IP"){
             group_membernum = lecture_data[group_id].group_member_num;
@@ -1488,10 +1463,6 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                         }
                     }
 
-                    // $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
-                    // $('#upbutton-modify').attr('data-type', 'view');
-                    // $('#popup_lecture_info_mobile_modify_btn').attr('data-type', 'view');
-
                     if(ing_bg_color.length != 0){
                         $('#mygroupcolor').css('background-color', ing_bg_color);
                     }else{
@@ -1588,22 +1559,6 @@ function modify_group_status(group_id, option, use, callback){
                 // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-
-                // if($('#currentGroupList').css('display') == "block"){
-                //     get_member_group_class_ing_list("callback", function(jsondata){
-                //         var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-                //         var member_Html = memberlist.html;
-                //         var group_class_Html = group_class_ListHtml('current', jsondata);
-                //         $('#currentGroupList').html(group_class_Html);
-                //     });
-                // }else if($('#finishedGroupList').css('display') == "block"){
-                //     get_member_group_class_end_list("callback", function(jsondata){
-                //         var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
-                //         var member_Html = memberlist.html;
-                //         var group_class_Html = group_class_ListHtml('finished', jsondata);
-                //         $('#finishedGroupList').html(group_class_Html);
-                //     });
-                // }
                 
                 smart_refresh_member_group_class_list();
                 $('.mobile_status_color_palette').siblings('div').text(text_for_mobile).css('color', color_for_mobile);
@@ -2620,7 +2575,6 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_status, g
                 <div class="pters_table"><div class="pters_table_cell">색상</div><div class="pters_table_cell"><div id="mygroupcolor" style="background-color:${group_color};"></div>${groupcolor}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${group_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">정원</div><div class="pters_table_cell" id="mygroupcapacity"><input type="text" id="id_mobile_input_capacity" class="mobile_memo_input" style="width:20%;" value="${group_membercapacity}" disabled>명</div></div>
-                <div class="pters_table"><div class="pters_table_cell">${group_status_text} 인원</div><div class="pters_table_cell">${group_membernum}명</div></div>
                 <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div id="id_lecture_status" style="color:${color}" data-lecture_status="${group_statuscd}">${group_status}</div>${status}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">반복 일정</div><div class="pters_table_cell" id="repeat_info_mobile_wrap">${repeat_info}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="mygroupmemo"><input type="text" class="mobile_memo_input" value="${group_memo}" disabled></div></div>
