@@ -831,8 +831,6 @@ $(document).on('click', 'div.groupWrap', function(e){
         }else if(package_status_cd == "PE"){
             package_membernum = ticket_data[package_id].package_end_member_num;
         }
-        console.log(package_statuscd);
-        console.log(package_membernum);
         current_Scroll_Position = $(document).scrollTop();
 
         // $('#uptext3').text('수강권 - '+package_name);
