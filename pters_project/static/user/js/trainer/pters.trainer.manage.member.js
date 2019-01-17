@@ -1691,8 +1691,10 @@ $(document).ready(function(){
                     if(status_change_check==true){
                         modify_package_status(package_id, status_to_be, "callback", function(){
                                 if(status_to_be == "resume"){
+                                    $('id_ticket_member_num_text').text('참여중 인원');
                                     get_package_member_list(package_id);
                                 }else if(status_to_be == "complete"){
+                                    $('id_ticket_member_num_text').text('종료 인원');
                                     get_end_package_member_list(package_id);
                                 }
                         });
@@ -1739,7 +1741,6 @@ $(document).ready(function(){
                     status_change_check = false;
                 }
                 $('.mobile_status_color_palette').hide();
-                //modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
                 modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "", "callback", function(){
                     modify_group_status(group_id, status_to_be, "callback", function(){
                         if(status_change_check==true) {
@@ -1752,10 +1753,6 @@ $(document).ready(function(){
                     });
                 });
 
-                $('.mobile_status_color_palette').hide();
-                modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "", "callback", function(){
-                    modify_group_status(group_id, $('.mobile_status_selected').attr('data-status'));
-                });
             }
         }
     });
