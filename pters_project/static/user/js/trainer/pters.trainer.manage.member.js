@@ -1894,6 +1894,7 @@ $(document).ready(function(){
                 send_modified_member_base_data(dbID);
                 $('#memberName_info').show().val($('#memberName_info_firstName').val());
                 $('#memberName_info_firstName').hide();
+                $('#memberInfoPopup button._info_delete').show();
                 /*
                  }else{
                  scrollToDom($('#memberInfoPopup'));
@@ -5638,20 +5639,19 @@ function deleteMemberAjax(){
                 // $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png');
 
-                // $('#startR').attr('selected','selected');
-                if(member_tab == TAB_ING){
-                    get_member_ing_list('callback',function(json){
-                        var member_html = memberListSet(member_tab, json);
-                        $('#currentMember').html(member_html);
-                        $('#name').attr('selected','selected');
-                    });
-                }else if(member_tab == TAB_END){
-                    get_member_end_list('callback',function(json){
-                        var member_html = memberListSet(member_tab, json);
-                        $('#finishedMember').html(member_html);
-                        $('#name').attr('selected','selected');
-                    });
-                }
+                // if(member_tab == TAB_ING){
+                //     get_member_ing_list('callback',function(json){
+                //         var member_html = memberListSet(member_tab, json);
+                //         $('#currentMember').html(member_html);
+                //         $('#name').attr('selected','selected');
+                //     });
+                // }else if(member_tab == TAB_END){
+                //     get_member_end_list('callback',function(json){
+                //         var member_html = memberListSet(member_tab, json);
+                //         $('#finishedMember').html(member_html);
+                //         $('#name').attr('selected','selected');
+                //     });
+                // }
                 smart_refresh_member_group_class_list();
                 // console.log('success');
             }

@@ -805,13 +805,13 @@ $(document).on('click', 'div.groupWrap', function(e){
         var group_type = lecture_data[group_id].group_type_cd_nm;
         var group_typecd = lecture_data[group_id].group_type_cd;
         var group_membernum = lecture_data[group_id].group_member_num;
+        // var group_end_membernum = lecture_data[group_id].end_group_member_num;
         var group_membercapacity = lecture_data[group_id].group_member_capacity;
         var group_memo = lecture_data[group_id].group_note;
         var group_color = lecture_data[group_id].group_ing_color_cd;
         var group_status = lecture_data[group_id].group_state_cd_name;
         var group_statuscd = lecture_data[group_id].group_state_cd;
         // var $targetlecturelist = $('#popup_lecture_info_mobile_lecturelist');
-
 
         // var group_name = $(this).find('._groupname_mobile > span').text();
         // var group_type = $(this).find('._grouptypecd input').val();
@@ -823,11 +823,15 @@ $(document).on('click', 'div.groupWrap', function(e){
         // var group_status = $('div.pters_selectbox_btn_selected > span').text();
         // var group_statuscd = $('div.pters_selectbox_btn_selected > span').attr('data-status');
 
+        if(group_statuscd == "IP"){
+            group_membernum = lecture_data[group_id].group_member_num;
+        }else if(group_statuscd == "PE"){
+            group_membernum = lecture_data[group_id].end_group_member_num;
+        }
         current_Scroll_Position = $(document).scrollTop();
         // $('#uptext3').text('수업 - '+group_name);
         $('#uptext3').text(group_name);
         // $('#page_managemember').css({'height':'0'});
-        
 
         $('#page_managemember').css({'display':'none'});
         $('#page-base').css('display', 'none');
@@ -2596,64 +2600,22 @@ $(document).on('click', '#lecturedelete', function(e){
 });
 //수업 정보 모바일 팝업
 function set_lecture_info_for_mobile_popup(group_id, group_name, group_status, group_statuscd, group_color, group_type, group_typecd, group_membernum, group_membercapacity, group_memo, jsondata){
-    // var repeat_info_dict= { 'KOR':
-    //     {'DD':'매일', 'WW':'매주', '2W':'격주',
-    //         'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
-    //     'JPN':
-    //         {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
-    //             'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
-    //     'JAP':
-    //         {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
-    //             'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
-    // };
 
-    // var repeat_day_info_raw_array = jsondata.repeatScheduleWeekInfoArray;
-
-    // var repeat_day =  function(){
-    //         var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/');
-    //         var repeat_day_info = "";
-    //         if(repeat_day_info_raw.length>1){
-    //             for(var j=0; j<repeat_day_info_raw.length; j++){
-    //                 repeat_day_info = repeat_day_info + '/' + repeat_info_dict[setting_info.lt_lan_01][repeat_day_info_raw[j]].substr(0,1);
-    //             }
-    //         }else if(repeat_day_info_raw.length == 1){
-    //             repeat_day_info = repeat_info_dict[setting_info.lt_lan_01][repeat_day_info_raw[0]];
-    //         }
-    //         if(repeat_day_info.substr(0, 1) == '/'){
-    //             repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length);
-    //         }
-    //         return repeat_day_info;
-    //     };
-    
-    // var repeat_array = [];
-    // var len = jsondata.repeatScheduleIdArray.length;
-    // for(var i=0; i<len; i++){
-    //     repeat_array.push(
-    //                      `<div class="mobile_repeat_info_wrap">
-    //                         <div class="mobile_repeat_info">
-    //                             <p>${repeat_info_dict[setting_info.lt_lan_01][jsondata.repeatScheduleTypeArray[i]]} ${repeat_day()} ${jsondata.repeatScheduleStartTimeArray}~${jsondata.repeatScheduleEndTimeArray}</p>
-    //                             <p>${jsondata.repeatScheduleStartDateArray[i]}~${jsondata.repeatScheduleEndDateArray}</p>
-    //                         </div>
-    //                         <div class="mobile_repeat_info_delete" data-deletetype="grouprepeatinfo" data-repeatid="${jsondata.repeatScheduleIdArray[i]}" data-groupid="${group_id}">
-    //                             <img src="/static/user/res/ptadd/btn-x.png">
-    //                         </div>
-    //                      </div>`
-    //                      );
-    // }
-    // var repeat_info = repeat_array.join("");
     var repeat_info = set_lecture_repeat_info_for_mobile_popup(group_id, jsondata);
-
     var color;
     var selected1;
     var selected2;
+    var group_status_text;
     if(group_status == "진행중"){
         color = "green";
         selected1 = "mobile_status_selected";
         selected2 = "";
+        group_status_text = '참여중'
     }else{
         color = "red";
         selected1 = "";
         selected2 = "mobile_status_selected";
+        group_status_text = '종료'
     }
 
     var status    = `<div class="mobile_status_color_palette" data-groupid=${group_id}>
@@ -2676,7 +2638,7 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_status, g
                 <div class="pters_table"><div class="pters_table_cell">색상</div><div class="pters_table_cell"><div id="mygroupcolor" style="background-color:${group_color};"></div>${groupcolor}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${group_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">정원</div><div class="pters_table_cell" id="mygroupcapacity"><input type="text" id="id_mobile_input_capacity" class="mobile_memo_input" style="width:20%;" value="${group_membercapacity}" disabled>명</div></div>
-                <div class="pters_table"><div class="pters_table_cell">참여 인원</div><div class="pters_table_cell">${group_membernum}명</div></div>
+                <div class="pters_table"><div class="pters_table_cell">${group_status_text} 인원</div><div class="pters_table_cell">${group_membernum}명</div></div>
                 <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div id="id_lecture_status" style="color:${color}" data-lecture_status="${group_statuscd}">${group_status}</div>${status}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">반복 일정</div><div class="pters_table_cell" id="repeat_info_mobile_wrap">${repeat_info}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="mygroupmemo"><input type="text" class="mobile_memo_input" value="${group_memo}" disabled></div></div>
