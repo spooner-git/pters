@@ -3976,7 +3976,7 @@ function delete_group_from_package(package_id, group_id, use, callback){
                     var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
                     get_grouplist_in_package(package_id, package_statuscd, "callback", function(jsondata){
                         draw_grouplist_in_package($targetlecturelist, jsondata);
-                        if($('#upbutton-modify').attr('data-type') == "modify"){
+                        if($('#upbutton-modify').attr('data-type') == "modify" || $('#popup_ticket_info_mobile_modify_btn').attr('data-type') == "modify"){
                             $('.lecture_bubble_mini img').show();
                         }
                     });

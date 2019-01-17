@@ -1661,7 +1661,7 @@ $(document).ready(function(){
             $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border-bottom', '1px solid #cccccc');
             $(this).attr('data-type', 'modify');
             $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
-            $('#ticketdelete').show();
+            $('#ticketdelete, .lecture_bubble_mini img').show();
             $('#id_ticket_status').hide();
             $('.mobile_status_color_palette').show();
         }else if($(this).attr('data-type') == "modify" ){
@@ -1834,24 +1834,25 @@ $(document).ready(function(){
                     // var old_package_memo = $('#ticketmemo').attr('data-ticket_memo');
                     var old_package_state_cd = $('#id_ticket_status').attr('data-ticket_status');
                     var status_change_check = true;
+                    var status_to_be = $('.mobile_status_selected').attr('data-status');
                     // $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
                     // $(this).attr('data-type', 'view');
                     // $('.mobile_status_color_palette').hide();
                         
                     $('#upbutton-x-modify').addClass('disabled_button');
-                    var status_to_be = $('.mobile_status_selected').attr('data-status');
+                    
                     if((status_to_be=="resume" && old_package_state_cd == "IP")||(status_to_be=="complete" && old_package_state_cd == "PE") ){
                         status_change_check = false;
                     }
                     modify_package_from_list(package_id, package_name, package_memo, "callback", function(){
                         if(status_change_check==true){
                             modify_package_status(package_id, status_to_be, "callback", function(){
-                                    if(status_to_be == "resume"){
-                                        get_package_member_list(package_id);
-                                    }else if(status_to_be == "complete"){
-                                        get_end_package_member_list(package_id);
-                                    }
-                                    // $('#upbutton-x-modify').removeClass('disabled_button');
+                                if(status_to_be == "resume"){
+                                    get_package_member_list(package_id);
+                                }else if(status_to_be == "complete"){
+                                    get_end_package_member_list(package_id);
+                                }
+                                // $('#upbutton-x-modify').removeClass('disabled_button');
                             });
                         }
                         $('#upbutton-x-modify').removeClass('disabled_button');
