@@ -196,8 +196,13 @@
 	border-top: 1px solid #cccccc;
 }
 .popup_btn_wrap{
-
+	/*display: table;
+	width: 100%;*/
 }
+	/*.popup_btn_wrap > div{
+		display: table-cell;
+		border-collapse: collapse;
+	}*/
 #popup_btn_complete{
 	color: #282828;
 }
