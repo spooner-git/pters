@@ -1894,6 +1894,7 @@ $(document).ready(function(){
                 send_modified_member_base_data(dbID);
                 $('#memberName_info').show().val($('#memberName_info_firstName').val());
                 $('#memberName_info_firstName').hide();
+                $('#memberInfoPopup button._info_delete').show();
                 /*
                  }else{
                  scrollToDom($('#memberInfoPopup'));
