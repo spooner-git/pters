@@ -913,7 +913,11 @@ $(document).on('click', '#ticketdelete', function(e){
             group_delete_JSON.fullnames.push($('#popup_ticket_info_mobile_memberlist').find('div.memberline:nth-of-type('+k+')').attr('data-name'));
         }
         group_delete_JSON.package_id = package_id;
-        shade_index(150);
+        if(bodywidth < 600){
+            shade_index(152);
+        }else{
+            shade_index(150);
+        }
     }else{
         alert('리스트를 펼쳐 확인 후 삭제 해주세요.');
     }

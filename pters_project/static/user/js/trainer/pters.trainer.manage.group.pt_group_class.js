@@ -983,8 +983,11 @@ $(document).on('click', '#lecturedelete', function(e){
             group_delete_JSON.fullnames.push($('#popup_lecture_info_mobile_memberlist').find('div.memberline:nth-of-type('+k+')').attr('data-fullname'));
         }
         group_delete_JSON.group_id = group_id;
-        console.log("group_delete_JSON",group_delete_JSON)
-        shade_index(150);
+        if(bodywidth < 600){
+            shade_index(152);
+        }else{
+            shade_index(150);
+        }
     }else{
         alert('리스트를 펼쳐 확인 후 삭제 해주세요.');
     }
@@ -2576,28 +2579,7 @@ function groupMemberListSet_mobile(group_id, lecture_status, jsondata){
 }
 //그룹원 목록을 그룹에 그리기 모바일
 
-    //모바일
-$(document).on('click', '#lecturedelete', function(e){
-    e.stopPropagation();
-    group_delete_JSON = {"group_id":"", "fullnames":[], "ids":[]};
-    if($(this).css('opacity') == 1){
-        deleteTypeSelect = 'groupdelete';
-        $('#cal_popup_plandelete').show();
-        $('#popup_delete_question').html('정말 삭제하시겠습니까? <br> 삭제하면 복구할 수 없습니다.');
-        //삭제 확인팝업에서 확인할 수 있도록 삭제대상을 JSON 형식으로 만든다.
-        var group_id = $(this).attr('data-groupid');
-        var memberLen = $('div.memberline[data-groupid="'+group_id+'"]').length;
-        for(var k=2; k<=memberLen+1; k++){
-            //group_delete_JSON.lecture_ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-lecid'))
-            group_delete_JSON.ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-dbid'));
-            group_delete_JSON.fullnames.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-name'));
-        }
-        group_delete_JSON.group_id = group_id;
-        shade_index(150);
-    }else{
-        alert('리스트를 펼쳐 확인 후 삭제 해주세요.');
-    }
-});
+
 //수업 정보 모바일 팝업
 function set_lecture_info_for_mobile_popup(group_id, group_name, group_status, group_statuscd, group_color, group_type, group_typecd, group_membernum, group_membercapacity, group_memo, jsondata){
 
