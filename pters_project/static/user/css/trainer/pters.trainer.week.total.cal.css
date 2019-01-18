@@ -498,8 +498,9 @@ img,a,div,span,p{
 }*/
 
 ._class, ._group, ._off{
-	border-left: 1px solid #ffffff;
-	border-right: 1px solid #ffffff;
+	border-left: 1px solid;
+	border-right: 1px solid;
+	border-color: #ffffff;
 }
 ._class:hover{
 	/*background: #635e3b !important;*/
