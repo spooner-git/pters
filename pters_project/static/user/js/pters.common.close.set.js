@@ -216,6 +216,8 @@ function close_info_popup(option){
 
 //일정추가 팝업 닫기 (pc)
 function close_planadd_popup(){
+    clear_pt_off_add_popup();
+
     $('#page-addplan').css('display', 'none');
     $('#calendar').css('position', 'relative');
     $('.add_time_unit, .allow_all_time').removeClass('checked');

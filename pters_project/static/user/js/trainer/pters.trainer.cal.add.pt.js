@@ -832,7 +832,7 @@ $(document).ready(function(){
     $('#go_to_detail_plan_reg').click(function(){
         var type = $('#typeSelector .typeSelected').attr('id').split('_')[1];
         var thisDate = $('#datetext_mini').attr("data-date");
-        clear_pt_off_add_popup();
+        // clear_pt_off_add_popup();
         open_pt_off_add_popup(type, thisDate);
         set_member_group_dropdown_list();
         ajaxTimeGraphSet(thisDate);
@@ -1870,7 +1870,7 @@ function float_btn_addplan(option){
         // }
 
     }else if(option == 1){
-        clear_pt_off_add_popup();
+        // clear_pt_off_add_popup();
         open_pt_off_add_popup('ptadd');
         //set_member_group_dropdown_list();
         ajaxTimeGraphSet(today_YY_MM_DD);
@@ -1879,7 +1879,7 @@ function float_btn_addplan(option){
         //scrollToDom($('#calendar'))
 
     }else if(option == 2){
-        clear_pt_off_add_popup();
+        // clear_pt_off_add_popup();
         open_pt_off_add_popup('offadd');
         //addTypeSelect = "offadd"
         get_repeat_info("");

@@ -13,6 +13,7 @@
 //테스트 코드 (모바일 달력 확대)
 var calendar_mobile_zoom = 0;
 $('#week .weekNum').click(function(){
+    console.log("calendar_device_type", calendar_device_type,"calendar_mobile_zoom", calendar_mobile_zoom)
     if(calendar_device_type == "mobile"){
         if(calendar_mobile_zoom == 0){
             calendar_zoom(this, "zoom");
@@ -98,6 +99,7 @@ $('#ymdText').click(function(e){
             $calendar.removeClass('_calmonth');
             $('div.timeindex').css('display', 'block');
             week_calendar_mobile(yyyy_mm_dd);
+            calendar_device_type = "mobile";
             $('#timeIndicatorBar').css('display', 'block');
             $('#week').css('display', 'table');
             $('#date').css('display', 'none');
@@ -135,6 +137,7 @@ $('#ymdText').click(function(e){
             }
             $calendar.removeClass('_calweek');
             month_calendar(yyyy_mm_dd);
+            calendar_device_type = "mobile";
             $('#week').css('display', 'none');
             $('div.timeindex, #timeIndicatorBar').css('display', 'none');
             $('#date').css('display', 'block');
