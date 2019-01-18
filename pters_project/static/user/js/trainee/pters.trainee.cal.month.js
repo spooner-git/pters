@@ -2299,23 +2299,28 @@ function availableDateIndicator(availableStartTime, Endtime){
     // 요소설명
     // availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 시작시간'
     // availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 마감시간'
+    console.log('test')
+    console.log(availableStartTime);
+    console.log(Endtime);
+    console.log(currentHour);
     if(Options.reserve == 1){
         $('td:not([schedule-id])').addClass('option_notavailable');
         $('.blackballoon').parent('td').addClass('option_notavailable');
         $('#menuDescription').hide();
     }else{
+        var availability = 'notavailable';
         if(Endtime >= availableStartTime){
-            if(currentHour<Endtime && currentHour>=availableStartTime){
-                var availability = 'available';
+            if(currentHour < Endtime && currentHour >=availableStartTime){
+                availability = 'available';
             }else{
-                var availability = 'notavailable';
+                availability = 'notavailable';
             }
         }
         else{
-            if(currentHour>Endtime && currentHour <availableStartTime){
-                var availability = 'available';
+            if(currentHour < availableStartTime && currentHour > Endtime){
+                availability = 'notavailable';
             }else{
-                var availability = 'notavailable';
+                availability = 'available';
             }
         }
         for(i=currentDate; i<currentDate+Options.availDate; i++){
