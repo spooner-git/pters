@@ -319,6 +319,9 @@ $(document).ready(function(){
         timeIndexY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height()+0.5);
         timeIndexhour.push(time_h_format_to_hh(Options.workEndTime)+'_00');
         timePlanY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height()+0.5);
+        console.log("timeIndexY", timeIndexY);
+        console.log("timeIndexhour", timeIndexhour);
+        console.log("timePlanY", timePlanY)
 
     }
 
@@ -458,11 +461,20 @@ $(document).ready(function(){
                 var duplication_type = 0;
                 var ref_start_time = timeHour[thisIndex-1].replace(/_/gi, ":")+':00';
                 var ref_end_time = timeHour[thisIndex].replace(/_/gi, ":")+':00';
+                if(Options.classDur == 60){ //클래스 단위가 1시간일때
+                    if(timeHour[thisIndex+1] != undefined){
+                        ref_end_time = timeHour[thisIndex+1].replace(/_/gi, ":")+':00';
+                    }else{//23:30을 찍었을때 24:30이 없기때문에 에러가 난다.
+                        ref_end_time = timeHour[thisIndex].replace(/_/gi, ":")+':00';
+                    }
+                }
                 var len = schedule_data_cleared_duplicates_cache["clear_end_array"].length;
+                //onsole.log("ref:",ref_start_time+'~'+ref_end_time)
                 for(var i=0; i<len; i++){
                     var comp_date = schedule_data_cleared_duplicates_cache["clear_start_array"][i].split(' ')[0];
                     var comp_start_time = schedule_data_cleared_duplicates_cache["clear_start_array"][i].split(' ')[1];
                     var comp_end_time = schedule_data_cleared_duplicates_cache["clear_end_array"][i].split(' ')[1];
+                    //console.log("comp:",comp_start_time+'~'+comp_end_time)
                     if(comp_date == thisIDDate){
                         var duplication_type_check = know_whether_plans_has_duplicates(ref_start_time, ref_end_time,
                                                                                     comp_start_time, comp_end_time);
