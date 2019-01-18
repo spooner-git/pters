@@ -24,7 +24,7 @@ $('#week .weekNum').click(function(){
 });
 
 function calendar_zoom(selector, zoom){
-    if(calendar_device_type == "mobile"){
+    if(calendar_device_type == "mobile" && $(selector).length > 0){
         // if(zoom == "zoom" && calendar_mobile_zoom == 0){
         //     var index = Number($(selector).attr("id").split('_')[1])+1;
         //     var $visible_row = $(`div.swiper-slide-active .td00:nth-of-type(${index})`);
