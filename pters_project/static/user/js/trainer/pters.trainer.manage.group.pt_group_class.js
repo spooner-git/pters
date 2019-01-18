@@ -744,7 +744,6 @@ function added_member_info_to_jsonformat(){
 $(document).on('click', 'div.groupWrap', function(e){
     // var bodywidth = $(window).width();
     var bodywidth = window.innerWidth;
-    lecture_mutex_val = 0;
     e.stopPropagation();
     var group_id = $(this).attr('data-groupid');
 
@@ -778,6 +777,7 @@ $(document).on('click', 'div.groupWrap', function(e){
             $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
         }
     }else if(bodywidth < 1000){
+        lecture_mutex_val = 0;
 
         var group_statuscd = $('div.pters_selectbox_btn_selected').attr('data-status');
         var lecture_data;
