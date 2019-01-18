@@ -1794,13 +1794,16 @@ $(document).ready(function(){
                 }else{
                     var $id_lecture_status = $('#id_lecture_status');
                     var old_lecture_state_cd = $id_lecture_status.attr('data-lecture_status');
+                    var status_to_be = $('.mobile_status_selected').attr('data-status');
                     var status_change_check = true;
 
                     if((status_to_be=="resume" && old_lecture_state_cd == "IP")||(status_to_be=="complete" && old_lecture_state_cd == "PE") ){
                         status_change_check = false;
                     }
                     $('.mobile_status_color_palette').hide();
-                    var status_to_be = $('.mobile_status_selected').attr('data-status');
+                    console.log(status_to_be)
+                    console.log(old_lecture_state_cd)
+                    console.log(status_change_check)
                     //modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
                     modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "", "callback", function(){
                         if(status_change_check==true) {
