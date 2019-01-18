@@ -1586,7 +1586,7 @@ $(document).ready(function(){
                 //$('#errorMessageText').text('모든 필수 정보를 입력해주세요')
                 //입력값 확인 메시지 출력 가능
             }
-            //그룹 추가
+        //그룹 추가
         }else if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUP_NEW.css('display') == "block"){
             check_dropdown_selected();
             if(select_all_check == true){
@@ -5494,7 +5494,7 @@ function add_group_form_func(){
         number_has = $('#currentGroupList').attr('total_group_num');
         // number_has = $(`div._grouptypecd[data-group-type="${grouptype}"]`).length;
     }
-    console.log(number_has);
+    // console.log(number_has);
     $.ajax({
         url:'/trainer/add_group_info/',
         type:'POST',
@@ -5524,7 +5524,7 @@ function add_group_form_func(){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
-                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
                 if(bodywidth < 600){
                     scrollToDom($('#page_addmember'));
                 }
@@ -5576,7 +5576,7 @@ function add_group_form_func(){
             $('#errorMessageBar').show();
             $('#errorMessageText').text('통신 에러: 관리자 문의');
         }
-    })
+    });
 }
 
 //새로운 그룹멤버 정보 서버로 보내 등록하기
