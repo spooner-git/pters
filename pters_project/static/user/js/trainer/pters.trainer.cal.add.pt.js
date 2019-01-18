@@ -319,9 +319,9 @@ $(document).ready(function(){
         timeIndexY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height()+0.5);
         timeIndexhour.push(time_h_format_to_hh(Options.workEndTime)+'_00');
         timePlanY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height()+0.5);
-        console.log("timeIndexY", timeIndexY);
-        console.log("timeIndexhour", timeIndexhour);
-        console.log("timePlanY", timePlanY)
+        // console.log("timeIndexY", timeIndexY);
+        // console.log("timeIndexhour", timeIndexhour);
+        // console.log("timePlanY", timePlanY);
 
     }
 
