@@ -1828,3 +1828,35 @@ function know_whether_plans_has_duplicates(starttime, endtime, starttime_compare
        return 0;
     }
 }
+
+//"2018-12-03 00:00:00", "2018-12-03 05:30:00"
+//"2018-12-03 01:30:00", "2018-12-03 12:00:00"
+
+function compare_times_to_merge_min_max(s_date, e_date, s_date2, e_date2){
+    var s_date_split = s_date.split(' ');
+    var s_date2_split = s_date2.split(' ');
+    var e_date_split = e_date.split(' ');
+    var e_date2_split = e_date2.split(' ');
+    var sdate1 = s_date_split[0];
+    var sdate2 = s_date2_split[0];
+    var edate1 = e_date_split[0];
+    var edate2 = e_date2_split[0];
+    var stime1 = (s_date_split[1]);
+    var stime2 = (s_date2_split[1]);
+    var etime1 = (e_date_split[1]);
+    var etime2 = (e_date2_split[1]);
+    var timearray = [stime1, stime2, etime1, etime2];
+    var stime_new;
+    var etime_new;
+    timearray.sort();
+    if(sdate1 == sdate2 && edate1 == edate2){
+        stime_new = timearray[0];
+        etime_new = timearray[3];
+
+        return {"start":`${sdate1} ${stime_new}`, "end":`${edate1} ${etime_new}`}
+    }else{
+        console.log("날짜 값이 다릅니다.");
+        return false
+    }
+
+}
