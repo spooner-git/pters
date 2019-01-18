@@ -1691,10 +1691,10 @@ $(document).ready(function(){
                     if(status_change_check==true){
                         modify_package_status(package_id, status_to_be, "callback", function(){
                                 if(status_to_be == "resume"){
-                                    $('id_ticket_member_num_text').text('참여중 인원');
+                                    old_package_state_cd.val('IP');
                                     get_package_member_list(package_id);
                                 }else if(status_to_be == "complete"){
-                                    $('id_ticket_member_num_text').text('종료 인원');
+                                    old_package_state_cd.val('PE');
                                     get_end_package_member_list(package_id);
                                 }
                         });
@@ -1745,8 +1745,10 @@ $(document).ready(function(){
                     modify_group_status(group_id, status_to_be, "callback", function(){
                         if(status_change_check==true) {
                             if (status_to_be == "resume") {
+                                old_lecture_state_cd.val('IP');
                                 get_groupmember_list(group_id);
                             } else if (status_to_be == "complete") {
+                                old_lecture_state_cd.val('PE');
                                 get_end_groupmember_list(group_id);
                             }
                         }
@@ -1801,8 +1803,10 @@ $(document).ready(function(){
                         modify_group_status(group_id, status_to_be, "callback", function(){
                             if(status_change_check==true) {
                                 if (status_to_be == "resume") {
+                                    old_lecture_state_cd.val('IP');
                                     get_groupmember_list(group_id);
                                 } else if (status_to_be == "complete") {
+                                    old_lecture_state_cd.val('PE');
                                     get_end_groupmember_list(group_id);
                                 }
                             }
@@ -1845,8 +1849,10 @@ $(document).ready(function(){
                         if(status_change_check==true){
                             modify_package_status(package_id, status_to_be, "callback", function(){
                                 if(status_to_be == "resume"){
+                                    old_package_state_cd.val('IP');
                                     get_package_member_list(package_id);
                                 }else if(status_to_be == "complete"){
+                                    old_package_state_cd.val('PE');
                                     get_end_package_member_list(package_id);
                                 }
                                 // $('#upbutton-x-modify').removeClass('disabled_button');
