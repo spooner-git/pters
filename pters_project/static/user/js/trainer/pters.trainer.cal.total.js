@@ -13,7 +13,7 @@
 //테스트 코드 (모바일 달력 확대)
 var calendar_mobile_zoom = 0;
 $('#week .weekNum').click(function(){
-    console.log("calendar_device_type", calendar_device_type,"calendar_mobile_zoom", calendar_mobile_zoom)
+    console.log("calendar_device_type", calendar_device_type,"calendar_mobile_zoom", calendar_mobile_zoom);
     if(calendar_device_type == "mobile"){
         if(calendar_mobile_zoom == 0){
             calendar_zoom(this, "zoom");
@@ -45,6 +45,8 @@ function calendar_zoom(selector, zoom){
         //     calendar_mobile_zoom = 0;
         // }
         if(zoom == "zoom"){
+
+            // 주간일정 순서 구분 split 문제 없음 - hkkim.190118
             var index = Number($(selector).attr("id").split('_')[1])+1;
             var $visible_row = $(`div.swiper-slide-active .td00:nth-of-type(${index})`);
 
@@ -54,6 +56,7 @@ function calendar_zoom(selector, zoom){
             $(selector).css('width', `90%`).addClass('_zoomed');
             calendar_mobile_zoom = 1;
         }else if(zoom == "unzoom"){
+            // 주간일정 순서 구분 split 문제 없음 - hkkim.190118
             var index = Number($(selector).attr("id").split('_')[1])+1;
             var $visible_row = $(`div.swiper-slide-active .td00:nth-of-type(${index})`);
 
@@ -264,6 +267,8 @@ myswiper.on('onSlidePrevEnd', function(){
 var slideControl = {'week':{
                         'append' : function(){ //다음페이지로 넘겼을때
                             var selector_swiper_slide_last_child = $('.swiper-slide:last-child');
+
+                            // 날짜 split 문제 없음 - hkkim.190118
                             var lastdateinfo = selector_swiper_slide_last_child.find('.td00').attr('id').split('_');
                             var last = Number(selector_swiper_slide_last_child.attr('id').replace(/slide/gi, ""));
                             var lastYY = Number(lastdateinfo[0]);
@@ -299,6 +304,7 @@ var slideControl = {'week':{
                         },
                         'prepend' : function(){
                             var selector_swiper_slide_first_child = $('.swiper-slide:first-child');
+                            // 날짜 split 문제 없음 - hkkim.190118
                             var firstdateinfo = selector_swiper_slide_first_child.find('.td00').attr('id').split('_');
                             var first = Number(selector_swiper_slide_first_child.attr('id').replace(/slide/gi, ""));
                             var firstYY = Number(firstdateinfo[0]);
@@ -338,6 +344,7 @@ var slideControl = {'week':{
                     'month':{
                         'append' : function(){ //다음페이지로 넘겼을때
                             var selector_swiper_slide_last_child = $('.swiper-slide:last-child');
+                            // 날짜 split 문제 없음 - hkkim.190118
                             var lastdateinfo = selector_swiper_slide_last_child.find('.container-fluid').attr('id').split('_');
                             var last = Number(selector_swiper_slide_last_child.attr('id').replace(/slide/gi, ""));
                             var lastYY = Number(lastdateinfo[1]);
@@ -357,6 +364,7 @@ var slideControl = {'week':{
                         },
                         'prepend' : function(){
                             var selector_swiper_slide_first_child = $('.swiper-slide:first-child');
+                            // 날짜 split 문제 없음 - hkkim.190118
                             var firstdateinfo = selector_swiper_slide_first_child.find('.container-fluid').attr('id').split('_');
                             var first = Number(selector_swiper_slide_first_child.attr('id').replace(/slide/gi, ""));
                             var firstYY = Number(firstdateinfo[1]);
@@ -1432,6 +1440,7 @@ function dateText(){
             $('#ymdText-pc-month-end').text(mm2+'월').attr({'data-year': yy2, 'data-month':mm2});
         }
     }else{
+        // 날짜 split 문제 없음 - hkkim.190118
         yymm = yymmarry[0].split('_');
         $('#yearText').text(yymm[0]+'년');
         $('#monthText').text(yymm[1]+'월');
@@ -1477,6 +1486,8 @@ function weekNum_Set(Index){
     var swiperPage = $('#slide'+Index+' div:nth-child(1)');
 
     for(var i=2; i<=8; i++){
+
+        // 날짜 split 문제 없음 - hkkim.190118
         var dateID = swiperPage.find('.td00:nth-child('+i+')').attr('id').split('_');
         var yy = dateID[0];
         var mm = dateID[1];
@@ -1522,6 +1533,7 @@ function weekNum_Set_fixed(){
 
     var selectorArry = [$sunday, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday];
 
+    // 날짜 split 문제 없음 - hkkim.190118
     var Sunday_date = $sunday.attr('id').split('_')[2];
     var Monday_date = $monday.attr('id').split('_')[2];
     var Tuesday_date = $tuesday.attr('id').split('_')[2];
@@ -1534,6 +1546,8 @@ function weekNum_Set_fixed(){
     var i;
     for (i=0; i<=6; i++){
         var selector_swiper_slide_active_div = selectorArry[i];
+
+        // 날짜 split 문제 없음 - hkkim.190118
         var yy = selector_swiper_slide_active_div.attr('id').split('_')[0];
         var mm = selector_swiper_slide_active_div.attr('id').split('_')[1];
         var dd = selector_swiper_slide_active_div.attr('id').split('_')[2];
@@ -1797,17 +1811,23 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
     var duplicated_samedate_sametime = 0;
     for(var i=0; i<len; i++){
         //2018-05-11 10:00:00
-        var planDate_   = planStartDate[i].split(' ')[0];
-        var planYear    = Number(planStartDate[i].split(' ')[0].split('-')[0]);
-        var planMonth   = Number(planStartDate[i].split(' ')[0].split('-')[1]);
-        var planDate    = Number(planStartDate[i].split(' ')[0].split('-')[2]);
-        var planHour    = Number(planStartDate[i].split(' ')[1].split(':')[0]);
+        var plan_start_date_time_split = planStartDate[i].split(' ');
+        var plan_start_date_split = plan_start_date_time_split[0].split('-');
+        var plan_start_time_split = plan_start_date_time_split[1].split(':');
+        var plan_end_date_time_split = planEndDate[i].split(' ');
+        var plan_end_time_split = plan_end_date_time_split[1].split(':');
+
+        var planDate_   = plan_start_date_time_split[0];
+        var planYear    = Number(plan_start_date_split[0]);
+        var planMonth   = Number(plan_start_date_split[1]);
+        var planDate    = Number(plan_start_date_split[2]);
+        var planHour    = Number(plan_start_time_split[0]);
         var planOriHour = planHour;
-        var planMinute  = planStartDate[i].split(' ')[1].split(':')[1];
+        var planMinute  = plan_start_time_split[1];
         var planOriMinute = planMinute;
-        var planEDate   = Number(planEndDate[i].split(' ')[0].split('-')[2]);
-        var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
-        var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
+        var planEDate   = Number(plan_end_date_time_split[0].split('-')[2]);
+        var planEndHour = Number(plan_end_time_split[0]);
+        var planEndMin  = plan_end_time_split[1];
         var memberName = 'OFF';
         var hourType = '오전';
         if(plan == 'off'){
@@ -1821,7 +1841,7 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
         }
 
         //24:00일경우 다음날 00:00 으로 들어오기 때문에
-        if(planEndDate[i].split(' ')[1] == "00:00:00"){
+        if(plan_end_date_time_split[1] == "00:00:00"){
             planEndHour = '24';
             planEndMin = '00';
         }
@@ -1846,7 +1866,7 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
         }
         //일정시작시간이 업무시작시간보다 작고, 종료시간은 업무 종료시간보다 큰 경우//
 
-        var planDuraMin = calc_duration_by_start_end_2(planYear+'-'+planMonth+'-'+planDate, planHour+':'+planMinute, planEndDate[i].split(' ')[0], planEndHour+':'+planEndMin );
+        var planDuraMin = calc_duration_by_start_end_2(planYear+'-'+planMonth+'-'+planDate, planHour+':'+planMinute, plan_end_date_time_split[0], planEndHour+':'+planEndMin );
         var planDura = planDuraMin/60;
 
         if(planHour < 12){
@@ -2628,25 +2648,33 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
     var date_sorted = {};
 
     for(var j=0; j<len; j++){
-        var planYYYY    = Number(planStartDate[j].split(' ')[0].split('-')[0]);
-        var planMM   = Number(planStartDate[j].split(' ')[0].split('-')[1]);
-        var planDD    = Number(planStartDate[j].split(' ')[0].split('-')[2]);
+        var plan_start_date_split = planStartDate[j].split(' ')[0].split('-');
+        var planYYYY    = Number(plan_start_date_split[0]);
+        var planMM   = Number(plan_start_date_split[1]);
+        var planDD    = Number(plan_start_date_split[2]);
         date_sorted[planYYYY+'_'+planMM+'_'+planDD] = [];
     }
 
     for(var i=0; i<len; i++){
         //2018-05-11 10:00:00
-        var planDate_ = planStartDate[i].split(' ')[0];
-        var planYear    = Number(planStartDate[i].split(' ')[0].split('-')[0]);
-        var planMonth   = Number(planStartDate[i].split(' ')[0].split('-')[1]);
-        var planDate    = Number(planStartDate[i].split(' ')[0].split('-')[2]);
-        var planHour    = Number(planStartDate[i].split(' ')[1].split(':')[0]);
+
+        var plan_start_date_time_split = planStartDate[i].split(' ');
+        var plan_start_date_split = plan_start_date_time_split[0].split('-');
+        var plan_start_time_split = plan_start_date_time_split[1].split(':');
+        var plan_end_date_time_split = planEndDate[i].split(' ');
+        var plan_end_time_split = plan_end_date_time_split[1].split(':');
+        var planDate_   = plan_start_date_time_split[0];
+        var planYear    = Number(plan_start_date_split[0]);
+        var planMonth   = Number(plan_start_date_split[1]);
+        var planDate    = Number(plan_start_date_split[2]);
+        var planHour    = Number(plan_start_time_split[0]);
         var planOriHour = planHour;
-        var planMinute  = planStartDate[i].split(' ')[1].split(':')[1];
+        var planMinute  = plan_start_time_split[1];
         var planOriMinute = planMinute;
-        var planEDate   = Number(planEndDate[i].split(' ')[0].split('-')[2]);
-        var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
-        var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
+        var planEDate   = Number(plan_end_date_time_split[0].split('-')[2]);
+        var planEndHour = Number(plan_end_time_split[0]);
+        var planEndMin  = plan_end_time_split[1];
+
         var memberName = 'OFF';
         var planDura = "0.5";
         var hourType = '오전';
@@ -2661,7 +2689,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         }
 
         //24:00일경우 다음날 00:00 으로 들어오기 때문에
-        if(planEndDate[i].split(' ')[1] == "00:00:00"){
+        if(plan_end_date_time_split[1] == "00:00:00"){
             planEndHour = '24';
             planEndMin = '00';
         }
@@ -2673,7 +2701,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
             planMinute = '00';
         }
 
-        var planDuraMin = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], add_time(planHour+':'+planMinute,'00:00'), planEndDate[i].split(' ')[0], add_time(planEndHour+':'+planEndMin,'00:00') );
+        var planDuraMin = calc_duration_by_start_end_2(plan_start_date_time_split[0], add_time(planHour+':'+planMinute,'00:00'), plan_end_date_time_split[0], add_time(planEndHour+':'+planEndMin,'00:00') );
         planDura = planDuraMin/60;
 
 
@@ -3133,11 +3161,12 @@ function know_duplicated_plans(jsondata){
                 if(t == r){
                     break;
                 }
-
-                var ref_start_time = ref.split(' ~ ')[0].split(' ')[1];
-                var ref_end_time = ref.split(' ~ ')[1].split(' ')[1];
-                var comp_start_time = comp.split(' ~ ')[0].split(' ')[1];
-                var comp_end_time = comp.split(' ~ ')[1].split(' ')[1];
+                var ref_split = ref.split(' ~ ');
+                var ref_start_time = ref_split[0].split(' ')[1];
+                var ref_end_time = ref_split[1].split(' ')[1];
+                var comp_split = comp.split(' ~ ');
+                var comp_start_time = comp_split[0].split(' ')[1];
+                var comp_end_time = comp_split[1].split(' ')[1];
 
                 if(ref_end_time == "00:00:00"){
                     ref_end_time = "24:00:00";
@@ -3163,10 +3192,13 @@ function know_duplicated_plans(jsondata){
 
                         if(t != index_loc){
 
-                            var ref_start_time = array_sorted[t].split(' ~ ')[0].split(' ')[1];
-                            var ref_end_time = array_sorted[t].split(' ~ ')[1].split(' ')[1];
-                            var comp_start_time = array_sorted[index_loc].split(' ~ ')[0].split(' ')[1];
-                            var comp_end_time = array_sorted[index_loc].split(' ~ ')[1].split(' ')[1];
+                            var ref_split = array_sorted[t].split(' ~ ');
+                            var ref_start_time = ref_split[0].split(' ')[1];
+                            var ref_end_time = ref_split[1].split(' ')[1];
+
+                            var comp_split = array_sorted[index_loc].split(' ~ ');
+                            var comp_start_time = comp_split[0].split(' ')[1];
+                            var comp_end_time = comp_split[1].split(' ')[1];
 
                             if(ref_end_time == "00:00:00"){
                                 ref_end_time = "24:00:00";
@@ -3332,9 +3364,11 @@ function classInfoProcessed(jsondata){
 
     var datasum = [];
     for(var i=0; i<len; i++){ //개인일정 객체화로 중복 제거
-        summaryArray[jsondata.classTimeArray_start_date[i].split(' ')[0]] = jsondata.classTimeArray_start_date[i].split(' ')[0];
+        var class_time_start_date_split = jsondata.classTimeArray_start_date[i].split(' ');
+
+        summaryArray[class_time_start_date_split[0]] = class_time_start_date_split[0];
         if(jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
-            datasum.push(jsondata.classTimeArray_start_date[i].split(' ')[0]);
+            datasum.push(class_time_start_date_split[0]);
         }else{
 
         }
@@ -3345,8 +3379,9 @@ function classInfoProcessed(jsondata){
 
 
     for(var i=0; i<len2; i++){ //그룹 객체화로 중복 제거
-        summaryArray_group[jsondata.group_schedule_start_datetime[i].split(' ')[0]] = jsondata.group_schedule_start_datetime[i].split(' ')[0]
-        datasum.push(jsondata.group_schedule_start_datetime[i].split(' ')[0]);
+        var group_start_datetime_split = jsondata.group_schedule_start_datetime[i].split(' ');
+        summaryArray_group[group_start_datetime_split[0]] = group_start_datetime_split[0];
+        datasum.push(group_start_datetime_split[0]);
     }
     for(var i in summaryArray_group){ //그룹 중복 제거된 배열
         summaryArrayResult.push(i);
@@ -3384,13 +3419,18 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
         var classLectureID = '';
         var scheduleFinish = jsondata.group_schedule_finish_check[i];
         var memoArray = jsondata.group_schedule_note[i];
-        var yy = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[0];
-        var mm = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[1];
-        var dd = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[2];
-        var stime1 = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[0];
-        var etime1 = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[0];
-        var sminute = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[1];
-        var eminute = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[1];
+        var group_schedule_start_datetime_split = jsondata.group_schedule_start_datetime[i].split(' ');
+        var group_schedule_start_date_split = group_schedule_start_datetime_split[0].split('-');
+        var group_schedule_start_time_split = group_schedule_start_datetime_split[1].split(':');
+        var group_schedule_end_time_split = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':');
+
+        var yy = group_schedule_start_date_split[0];
+        var mm = group_schedule_start_date_split[1];
+        var dd = group_schedule_start_date_split[2];
+        var stime1 = group_schedule_start_time_split[0];
+        var etime1 = group_schedule_end_time_split[0];
+        var sminute = group_schedule_start_time_split[1];
+        var eminute = group_schedule_end_time_split[1];
         var groupmax = jsondata.group_schedule_max_member_num[i];
         var groupcurrent = jsondata.group_schedule_current_member_num[i];
         var groupParticipants = '(' + groupcurrent + '/' + groupmax + ')';
@@ -3420,13 +3460,20 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
         var classLectureID = jsondata.classArray_lecture_id[i];
         var scheduleFinish = jsondata.scheduleFinishArray[i];
         var memoArray = jsondata.scheduleNoteArray[i];
-        var yy = jsondata.classTimeArray_start_date[i].split(' ')[0].split('-')[0];
-        var mm = jsondata.classTimeArray_start_date[i].split(' ')[0].split('-')[1];
-        var dd = jsondata.classTimeArray_start_date[i].split(' ')[0].split('-')[2];
-        var stime1 = jsondata.classTimeArray_start_date[i].split(' ')[1].split(':')[0];
-        var etime1 = jsondata.classTimeArray_end_date[i].split(' ')[1].split(':')[0];
-        var sminute = jsondata.classTimeArray_start_date[i].split(' ')[1].split(':')[1];
-        var eminute = jsondata.classTimeArray_end_date[i].split(' ')[1].split(':')[1];
+
+        var classTime_start_date_time_split = jsondata.classTimeArray_start_date[i].split(' ');
+        var classTime_start_date_split = classTime_start_date_time_split[0].split('-');
+        var classTime_start_time_split = classTime_start_date_time_split[1].split(':');
+        var classTime_end_time_split = jsondata.classTimeArray_end_date[i].split(' ')[1].split(':');
+
+        var yy = classTime_start_date_split[0];
+        var mm = classTime_start_date_split[1];
+        var dd = classTime_start_date_split[2];
+        var stime1 = classTime_start_time_split[0];
+        var etime1 = classTime_end_time_split[0];
+        var sminute = classTime_start_time_split[1];
+        var eminute = classTime_end_time_split[1];
+
         var group_type_cd_name = '1:1';
         if(stime1.length<2){
             var stime1 = '0'+stime1;
@@ -3452,6 +3499,8 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
     var htmltojoin = [];
     if(dateplans.length>0){
         for(var i=1; i<=dateplans.length; i++){
+
+            // 이름/메모 제외 split 문제 없음 - hkkim.190118
             var splited = dateplans[i-1].split('_');
             var stime = Number(splited[0]);
             var sminute = splited[1];
@@ -3476,16 +3525,17 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
 
             var morningday = "";
             if(stime==0 & dateplans[i-2]==undefined){
-                var morningday = "오전";
+                morningday = "오전";
             }else if(stime<12 & dateplans[i-2]==undefined){
-                var morningday = "오전";
+                morningday = "오전";
             }else if(stime>=12 && dateplans[i-2]!=undefined){
+                // 이름/메모 제외 split 문제 없음 - hkkim.190118
                 var splitedprev = dateplans[i-2].split('_');
                 if(splitedprev[0]<12){
-                    var morningday = "오후";
+                    morningday = "오후";
                 }
             }else if(stime>=12 && dateplans[i-2]==undefined){
-                var morningday = "오후";
+                morningday = "오후";
             }
             if(splited[9]==1){
                 htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-group-type-cd-name="'+splited[13]+'" data-currentmembernum="'+groupcurrent+'" data-membernum="'+groupmaxnum+'" data-dbid="'+splited[10]+'" data-scheduleid="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[i-1]+'" data-memo="'+schedule_memo[i-1]+'">'+
@@ -3521,9 +3571,9 @@ function month_calendar(referencedate){
     page1.html('');
     page2.html('');
     page3.html('');
-
-    var year = Number(referencedate.split('-')[0]);
-    var month = Number(referencedate.split('-')[1]);
+    var referencedate_split = referencedate.split('-');
+    var year = Number(referencedate_split[0]);
+    var month = Number(referencedate_split[1]);
     calTable_Set_Month(1, year, month-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기
     calTable_Set_Month(2, year, month);  //2번 슬라이드에 현재년도, 현재달 달력 채우기
     calTable_Set_Month(3, year, month+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
@@ -3642,6 +3692,7 @@ function krHoliday_month(){ //대한민국 공휴일 날짜를 빨간색으로 �
 function monthText(){
     var currentYMD = $('.swiper-slide:nth-child(2) div:nth-child(1)').attr('id');
     //currentYMD 형식  ex : week120177
+    // 날짜 split 문제 없음 - hkkim.190118
     var textYear = currentYMD.split('_')[1];
     var textMonth = currentYMD.split('_')[2]; //7
     $('#yearText, #ymdText-pc-year').text(textYear+'년').attr({'data-year':textYear, 'data-month':textMonth});

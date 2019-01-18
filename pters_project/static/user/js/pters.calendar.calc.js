@@ -162,12 +162,14 @@ function compare_date(date1, date2){
 }
 
 function compare_date2(date1, date2){
-	var yy1 = date1.split('-')[0];
-	var mm1  = date1.split('-')[1];
-	var dd1 = date1.split('-')[2];
-	var yy2 = date2.split('-')[0];
-	var mm2  = date2.split('-')[1];
-	var dd2 = date2.split('-')[2];
+	var date1_split =  date1.split('-');
+	var date2_split =  date2.split('-');
+	var yy1 = date1_split[0];
+	var mm1  = date1_split[1];
+	var dd1 = date1_split[2];
+	var yy2 = date2_split[0];
+	var mm2  = date2_split[1];
+	var dd2 = date2_split[2];
 
 	if(yy1.length<2){yy1 = '0'+ yy1;}
 	if(mm1.length<2){mm1 = '0'+ mm1;}

@@ -5238,16 +5238,17 @@ function draw_member_history_list_table(jsondata, PCorMobile){
     var stateCodeDict = {"PE":text5,"NP":text6,"IP":text7, "PC":text11};
     var pt_schedule_start_dt_array_length = jsondata.ptScheduleStartDtArray.length;
     for(var i=0; i<pt_schedule_start_dt_array_length; i++){
-        var day = new Date(jsondata.ptScheduleStartDtArray[i].split(' ')[0]).getDay();
-        var startDate = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[0].split('-')[2]);
-        var endDate = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[0].split('-')[2]);
-        var startTime = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[1])/60;
-        var endTime = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1])/60;
-
-        var dur = calc_duration_by_start_end_2(jsondata.ptScheduleStartDtArray[i].split(' ')[0], jsondata.ptScheduleStartDtArray[i].split(' ')[1], jsondata.ptScheduleEndDtArray[i].split(' ')[0], jsondata.ptScheduleEndDtArray[i].split(' ')[1]);
+        var schedule_start_dt_split = jsondata.ptScheduleStartDtArray[i].split(' ');
+        var schedule_end_dt_split = jsondata.ptScheduleEndDtArray[i].split(' ');
+        var day = new Date(schedule_start_dt_split[0]).getDay();
+        // var startDate = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[0].split('-')[2]);
+        // var endDate = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[0].split('-')[2]);
+        // var startTime = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[1])/60;
+        // var endTime = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1])/60;
+        var dur = calc_duration_by_start_end_2(schedule_start_dt_split[0], schedule_start_dt_split[1], schedule_end_dt_split[0], schedule_end_dt_split[1]);
 
         var ptScheduleNo = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleIdxArray[i]+'</div>';
-        var ptScheduleStartDt =  '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.ptScheduleStartDtArray[i].split(' ')[0],'.')+' ('+multiLanguage[Options.language]['WeekSmpl'][day]+') <br/>'+time_format_add_ampm(jsondata.ptScheduleStartDtArray[i].split(' ')[1].substr(0,5))+'</div>';
+        var ptScheduleStartDt =  '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+date_format_yyyymmdd_to_yyyymmdd_split(schedule_start_dt_split[0],'.')+' ('+multiLanguage[Options.language]['WeekSmpl'][day]+') <br/>'+time_format_add_ampm(schedule_start_dt_split[1].substr(0,5))+'</div>';
         var ptScheduleStateCd =   '<div class="historyState_'+jsondata.ptScheduleStateCdArray[i]+'" data-id="'+jsondata.ptScheduleIdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>';
         var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+duration_number_to_hangul_minute(dur)+'</div>';
         var ptScheduleNote =   '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleNoteArray[i]+'</div>';

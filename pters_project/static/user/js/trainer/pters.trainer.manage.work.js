@@ -5,6 +5,7 @@ $('#selectBox .btn').click(function(){
     $('#'+$(this).attr('id').replace(/_selector/gi, '_page')).show();
     $('#'+$(this).attr('id').replace(/_selector/gi, '_page')).siblings('.pages').hide();
 
+    // 통계 구분 split 문제 없음 - hkkim.190118
     if($(this).attr('id').split('_')[0] == 'member'){
         ajax_call_member_analytics_data(class_id, month_date[0], month_date[month_date.length-1]);
         ajax_call_member_monthly_data(class_id, month_date[0], month_date[month_date.length-1]);

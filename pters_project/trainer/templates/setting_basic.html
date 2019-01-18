@@ -580,8 +580,8 @@
         }
 
         var switches_weekly_dayoff = ['#switch_worktime_sun','#switch_worktime_mon','#switch_worktime_tue','#switch_worktime_wed','#switch_worktime_thu','#switch_worktime_fri','#switch_worktime_sat'];
-        var wrapper_weekly_dayoff = ['#worktimeset_seekbar_sun','#worktimeset_seekbar_mon','#worktimeset_seekbar_tue','#worktimeset_seekbar_wed','#worktimeset_seekbar_thu','#worktimeset_seekbar_fr','#worktimeset_seekbar_sat']
-        var len_worktimeOffDay = Options.worktimeOffDay.length
+        var wrapper_weekly_dayoff = ['#worktimeset_seekbar_sun','#worktimeset_seekbar_mon','#worktimeset_seekbar_tue','#worktimeset_seekbar_wed','#worktimeset_seekbar_thu','#worktimeset_seekbar_fr','#worktimeset_seekbar_sat'];
+        var len_worktimeOffDay = Options.worktimeOffDay.length;
         for(var i=0; i<len_worktimeOffDay; i++){
             if(Options.worktimeOffDay[i] == 1){
                 $(wrapper_weekly_dayoff[i]).css('display','none');
@@ -824,10 +824,10 @@
 
         $(switches_weekly_dayoff[0]).click(function(){
             var dayname = $(this).attr('id').split('_')[2];
-            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`;
             if($(this).find('.switchball').hasClass('switchoff')){
                 $(this).parent('div').siblings(target).show();
-                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();});
                 $(worktime_week_form_Array[0]).val(Options.worktimeWeekly[0]);
             }else{
                 $(worktime_week_form_Array[0]).val('0:00-0:00');
@@ -850,23 +850,23 @@
         })
         $(switches_weekly_dayoff[2]).click(function(){
             var dayname = $(this).attr('id').split('_')[2];
-            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`;
             if($(this).find('.switchball').hasClass('switchoff')){
                 $(this).parent('div').siblings(target).show();
-                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();});
                 $(worktime_week_form_Array[2]).val(Options.worktimeWeekly[2]);
             }else{
-                $(worktime_week_form_Array[2]).val('0:00-0:00')
+                $(worktime_week_form_Array[2]).val('0:00-0:00');
                 $(this).parent('div').siblings(target).hide();
             }
             check_dropdown_selected();
         })
         $(switches_weekly_dayoff[3]).click(function(){
             var dayname = $(this).attr('id').split('_')[2];
-            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`;
             if($(this).find('.switchball').hasClass('switchoff')){
                 $(this).parent('div').siblings(target).show();
-                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();});
                 $(worktime_week_form_Array[3]).val(Options.worktimeWeekly[3]);
             }else{
                 $(worktime_week_form_Array[3]).val('0:00-0:00')
@@ -876,39 +876,39 @@
         })
         $(switches_weekly_dayoff[4]).click(function(){
             var dayname = $(this).attr('id').split('_')[2];
-            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`;
             if($(this).find('.switchball').hasClass('switchoff')){
                 $(this).parent('div').siblings(target).show();
-                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();});
                 $(worktime_week_form_Array[4]).val(Options.worktimeWeekly[4]);
             }else{
-                $(worktime_week_form_Array[4]).val('0:00-0:00')
+                $(worktime_week_form_Array[4]).val('0:00-0:00');
                 $(this).parent('div').siblings(target).hide();
             }
             check_dropdown_selected();
         })
         $(switches_weekly_dayoff[5]).click(function(){
             var dayname = $(this).attr('id').split('_')[2];
-            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`;
             if($(this).find('.switchball').hasClass('switchoff')){
                 $(this).parent('div').siblings(target).show();
-                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();});
                 $(worktime_week_form_Array[5]).val(Options.worktimeWeekly[5]);
             }else{
-                $(worktime_week_form_Array[5]).val('0:00-0:00')
+                $(worktime_week_form_Array[5]).val('0:00-0:00');
                 $(this).parent('div').siblings(target).hide();
             }
             check_dropdown_selected();
         })
         $(switches_weekly_dayoff[6]).click(function(){
             var dayname = $(this).attr('id').split('_')[2];
-            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`;
             if($(this).find('.switchball').hasClass('switchoff')){
                 $(this).parent('div').siblings(target).show();
-                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();});
                 $(worktime_week_form_Array[6]).val(Options.worktimeWeekly[6]);
             }else{
-                $(worktime_week_form_Array[6]).val('0:00-0:00')
+                $(worktime_week_form_Array[6]).val('0:00-0:00');
                 $(this).parent('div').siblings(target).hide();
             }
             check_dropdown_selected();
@@ -927,13 +927,13 @@
 
         function initialize_worktime_weekly(){
             $('#trainerWorkTimeSetting_').show();
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_sun'),sun_Worktime["start"], sun_Worktime["end"],600,function(){worktime_seekbar_values_to_form();})
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_mon'),mon_Worktime["start"], mon_Worktime["end"],600,function(){worktime_seekbar_values_to_form();})
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_tue'),tue_Worktime["start"], tue_Worktime["end"],600,function(){worktime_seekbar_values_to_form();})
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_wed'),wed_Worktime["start"], wed_Worktime["end"],600,function(){worktime_seekbar_values_to_form();})
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_thu'),thu_Worktime["start"], thu_Worktime["end"],600,function(){worktime_seekbar_values_to_form();})
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_fri'),fri_Worktime["start"], fri_Worktime["end"],600,function(){worktime_seekbar_values_to_form();})
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_sat'),sat_Worktime["start"], sat_Worktime["end"],600,function(){worktime_seekbar_values_to_form();})
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_sun'),sun_Worktime["start"], sun_Worktime["end"],600,function(){worktime_seekbar_values_to_form();});
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_mon'),mon_Worktime["start"], mon_Worktime["end"],600,function(){worktime_seekbar_values_to_form();});
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_tue'),tue_Worktime["start"], tue_Worktime["end"],600,function(){worktime_seekbar_values_to_form();});
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_wed'),wed_Worktime["start"], wed_Worktime["end"],600,function(){worktime_seekbar_values_to_form();});
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_thu'),thu_Worktime["start"], thu_Worktime["end"],600,function(){worktime_seekbar_values_to_form();});
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_fri'),fri_Worktime["start"], fri_Worktime["end"],600,function(){worktime_seekbar_values_to_form();});
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_sat'),sat_Worktime["start"], sat_Worktime["end"],600,function(){worktime_seekbar_values_to_form();});
         };
 
         function disable_worktime_dropdown(){

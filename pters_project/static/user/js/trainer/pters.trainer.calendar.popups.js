@@ -267,11 +267,15 @@
         var dbid = schedule_data_cache["class"][this_schedule_id]["member_id"];
         var name = schedule_data_cache["class"][this_schedule_id]["member_name"];
         var start = schedule_data_cache["class"][this_schedule_id]["start_date"];
-        var start_date = start.split(' ')[0];
-        var start_time = start.split(' ')[1];
+        var start_date_time_split = start.split(' ');
+        var start_date = start_date_time_split[0];
+        var start_time = start_date_time_split[1];
+
         var end = schedule_data_cache["class"][this_schedule_id]["end_date"];
-        var end_date = end.split(' ')[0];
-        var end_time = end.split(' ')[1];
+        var end_date_time_split = end.split(' ');
+        var end_date = end_date_time_split[0];
+        var end_time = end_date_time_split[1];
+
         var memo = schedule_data_cache["class"][this_schedule_id]["memo"];
         var leid = schedule_data_cache["class"][this_schedule_id]["lecture_id"];
         var finished = schedule_data_cache["class"][this_schedule_id]["finished"];
@@ -381,11 +385,14 @@
         // disable_window_scroll();
         var this_schedule_id = $(this).attr('data-scheduleid');
         var start = schedule_data_cache["off"][this_schedule_id]["start_date"];
-        var start_date = start.split(' ')[0];
-        var start_time = start.split(' ')[1];
+
+        var start_date_time_split = start.split(' ');
+        var start_date = start_date_time_split[0];
+        var start_time = start_date_time_split[1];
         var end = schedule_data_cache["off"][this_schedule_id]["end_date"];
-        var end_date = end.split(' ')[0];
-        var end_time = end.split(' ')[1];
+        var end_date_time_split = end.split(' ');
+        var end_date = end_date_time_split[0];
+        var end_time = end_date_time_split[1];
         var memo = schedule_data_cache["off"][this_schedule_id]["memo"];
         var plancolor = "#eeeeee";
         var selector_cal_popup_plan_info = $("#cal_popup_planinfo");
@@ -470,11 +477,13 @@
         var groupid = schedule_data_cache["group"][this_schedule_id]["group_id"];
         var name = schedule_data_cache["group"][this_schedule_id]["group_name"];
         var start = schedule_data_cache["group"][this_schedule_id]["start_date"];
-        var start_date = start.split(' ')[0];
-        var start_time = start.split(' ')[1];
+        var start_date_time_split = start.split(' ');
+        var start_date = start_date_time_split[0];
+        var start_time = start_date_time_split[1];
         var end = schedule_data_cache["group"][this_schedule_id]["end_date"];
-        var end_date = end.split(' ')[0];
-        var end_time = end.split(' ')[1];
+        var end_date_time_split = end.split(' ');
+        var end_date = end_date_time_split[0];
+        var end_time = end_date_time_split[1];
         var memo = schedule_data_cache["group"][this_schedule_id]["memo"];
         // var leid = schedule_data_cache["group"][this_schedule_id]["lecture_id"];
         var current_member_num = schedule_data_cache["group"][this_schedule_id]["current_member_num"];
@@ -590,6 +599,7 @@
         var thisDate = $(this).attr('data-date');
         var planDate_ = thisDate.replace(/_/gi, "-");
         $('#id_date_info').val(planDate_);
+        // 날짜 split 문제 없음 - hkkim.190118
         var info = thisDate.split('_');
         if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             show_caution_popup(`<div style="margin-bottom:10px;">
@@ -661,11 +671,13 @@
             var this_schedule_id = $(this).attr('data-scheduleid');
             
             var start = schedule_data_cache[group_type][this_schedule_id]["start_date"];
-            var start_date = start.split(' ')[0];
-            var start_time = start.split(' ')[1];
+            var start_date_time_split = start.split(' ');
+            var start_date = start_date_time_split[0];
+            var start_time = start_date_time_split[1];
             var end = schedule_data_cache[group_type][this_schedule_id]["end_date"];
-            var end_date = end.split(' ')[0];
-            var end_time = end.split(' ')[1];
+            var end_date_time_split = end.split(' ');
+            var end_date = end_date_time_split[0];
+            var end_time = end_date_time_split[1];
             var memo = schedule_data_cache[group_type][this_schedule_id]["memo"];
             var plancolor = "#fbf3bd";
             var finished = schedule_data_cache[group_type][this_schedule_id]["finished"];
@@ -679,7 +691,7 @@
                 name = schedule_data_cache[group_type][this_schedule_id]["group_name"];
                 var current_member_num = schedule_data_cache[group_type][this_schedule_id]["current_member_num"];
                 var max_member_num = schedule_data_cache[group_type][this_schedule_id]["max_member_num"];
-                var type_name = schedule_data_cache[group_type][this_schedule_id]["type_cd_name"];
+                // var type_name = schedule_data_cache[group_type][this_schedule_id]["type_cd_name"];
                 plancolor = schedule_data_cache[group_type][this_schedule_id]["ing_color"];
             }else{
                 dbid = schedule_data_cache[group_type][this_schedule_id]["member_id"];

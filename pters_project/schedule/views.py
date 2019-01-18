@@ -744,22 +744,23 @@ def add_repeat_schedule_logic(request):
             if repeat_end_time == '24:00':
                 repeat_end_time = '23:59'
                 end_time_check = 1
+            repeat_schedule_info_date = str(repeat_schedule_date_info).split(' ')[0]
             try:
-                schedule_start_datetime = datetime.datetime.strptime(str(repeat_schedule_date_info).split(' ')[0]
+                schedule_start_datetime = datetime.datetime.strptime(repeat_schedule_info_date
                                                                      + ' ' + repeat_start_time,
                                                                      '%Y-%m-%d %H:%M')
-                schedule_end_datetime = datetime.datetime.strptime(str(repeat_schedule_date_info).split(' ')[0]
+                schedule_end_datetime = datetime.datetime.strptime(repeat_schedule_info_date
                                                                    + ' ' + repeat_end_time,
                                                                    '%Y-%m-%d %H:%M')
 
             except ValueError:
-                error_date = str(repeat_schedule_date_info).split(' ')[0] \
+                error_date = repeat_schedule_info_date \
                              + week_info[int(repeat_schedule_date_info.strftime('%w'))]
             except IntegrityError:
-                error_date = str(repeat_schedule_date_info).split(' ')[0] \
+                error_date = repeat_schedule_info_date \
                              + week_info[int(repeat_schedule_date_info.strftime('%w'))]
             except TypeError:
-                error_date = str(repeat_schedule_date_info).split(' ')[0] \
+                error_date = repeat_schedule_info_date \
                              + week_info[int(repeat_schedule_date_info.strftime('%w'))]
             if end_time_check == 1:
                 schedule_end_datetime = schedule_end_datetime + datetime.timedelta(minutes=1)

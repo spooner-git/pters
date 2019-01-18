@@ -779,8 +779,9 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
                 # log_info.time_ago = str(log_info.time_ago).split('.')[0]
 
                 if log_info.log_detail is not None and log_info.log_detail != '':
-                    before_day = str(log_info.log_detail).split('/')[0]
-                    after_day = str(log_info.log_detail).split('/')[1]
+                    log_detail_split = str(log_info.log_detail).split('/')
+                    before_day = log_detail_split[0]
+                    after_day = log_detail_split[1]
 
                     if '반복 일정' in log_info.log_info:
                         log_info.log_detail = before_day + '~' + after_day
@@ -2499,7 +2500,7 @@ def add_group_info_logic(request):
     member_num = request.POST.get('member_num', '')
     name = request.POST.get('name', '')
     note = request.POST.get('note', '')
-    ing_color_cd = request.POST.get('ing_color_cd', '#ffacb7')
+    ing_color_cd = request.POST.get('ing_color_cd', '#ffd3d9')
     end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
     ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
     end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')

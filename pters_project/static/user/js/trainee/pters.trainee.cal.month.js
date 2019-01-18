@@ -145,6 +145,7 @@ $(document).ready(function(){
 
 
     $(document).on('click', 'td', function(){
+        // 날짜 split 문제 없음 - hkkim.190118
         var info = $(this).attr('data-date').split('_');
         var yy=info[0];
         var mm=info[1];
@@ -317,6 +318,7 @@ $(document).ready(function(){
         clear_pt_add_logic_form();
         $('#addpopup').show();
         //$('#shade2').css({'display':'block'});
+        // 날짜 split 문제 없음 - hkkim.190118
         var info3 = $(this).attr('data-date').split('_');
         var yy=info3[0];
         var mm=info3[1];
@@ -746,6 +748,7 @@ $(document).ready(function(){
     var slideControl = {
         'append' : function(){ //다음페이지로 넘겼을때
             var selector_swiper_slide_last_child = $('.swiper-slide:last-child');
+            // 날짜 split 문제 없음 - hkkim.190118
             var lastdateinfo = selector_swiper_slide_last_child.find('.container-fluid').attr('id').split('_');
             var lastYY = Number(lastdateinfo[1]);
             var lastMM = Number(lastdateinfo[2]);
@@ -765,6 +768,7 @@ $(document).ready(function(){
 
         'prepend' : function(){
             var selector_swiper_slide_first_child = $('.swiper-slide:first-child');
+            // 날짜 split 문제 없음 - hkkim.190118
             var firstdateinfo = selector_swiper_slide_first_child.find('.container-fluid').attr('id').split('_');
             var firstYY = Number(firstdateinfo[1]);
             var firstMM = Number(firstdateinfo[2]);
@@ -894,29 +898,40 @@ $(document).ready(function(){
         for(var i=0; i<len; i++){
             if(date_format_yyyy_mm_dd_to_yyyy_m_d(jsondata.group_schedule_start_datetime[i].split(' ')[0],'_') == dateinfo){
                 //if(jsondata.group_schedule_current_member_num[i] != jsondata.group_schedule_max_member_num[i]){
-                    var planYear    = Number(jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[0])
-                    var planMonth   = Number(jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[1])
-                    var planDate    = Number(jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[2])
-                    var planHour    = Number(jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[0])
-                    var planMinute  = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[1]
-                    var planEDate   = Number(jsondata.group_schedule_end_datetime[i].split(' ')[0].split('-')[2])
-                    var planEndHour = Number(jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[0])
-                    var planEndMin  = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[1]
-                    var planDura = calc_duration_by_start_end(jsondata.group_schedule_start_datetime[i].split(' ')[0], jsondata.group_schedule_start_datetime[i].split(' ')[1], jsondata.group_schedule_end_datetime[i].split(' ')[0], jsondata.group_schedule_end_datetime[i].split(' ')[1])
+                    var group_schedule_start_datetime_split = jsondata.group_schedule_start_datetime[i].split(' ');
+                    var group_schedule_start_date_split = group_schedule_start_datetime_split[0].split('-');
+                    var group_schedule_start_time_split = group_schedule_start_datetime_split[1].split(':');
+                    var group_schedule_end_datetime_split = jsondata.group_schedule_end_datetime[i].split(' ');
+                    var group_schedule_end_date_split = group_schedule_end_datetime_split[0].split('-');
+                    var group_schedule_end_time_split = group_schedule_end_datetime_split[1].split(':');
+
+                    var planYear    = Number(group_schedule_start_date_split[0]);
+                    var planMonth   = Number(group_schedule_start_date_split[1]);
+                    var planDate    = Number(group_schedule_start_date_split[2]);
+
+                    var planHour    = Number(group_schedule_start_time_split[0]);
+                    var planMinute  = group_schedule_start_time_split[1];
+
+                    var planEDate   = Number(group_schedule_end_date_split[2]);
+
+                    var planEndHour = Number(group_schedule_end_time_split[0]);
+                    var planEndMin  = group_schedule_end_time_split[1];
+
+                    var planDura = calc_duration_by_start_end(group_schedule_start_datetime_split[0], group_schedule_start_datetime_split[1], group_schedule_end_datetime_split[0], group_schedule_end_datetime_split[1]);
                     var grouptypecd = jsondata.group_schedule_type_cd[i];
     
                     //그룹 일정중 지난시간 일정은 선택 불가능 하도록, 근접예약 방지 옵션 값 적용
-                    var disable = ""
-                    var myreserve = ""
-                    var myreservecheckbox1 = ""
-                    var myreservecheckbox2 = ""
+                    var disable = "";
+                    var myreserve = "";
+                    var myreservecheckbox1 = "";
+                    var myreservecheckbox2 = "";
     
-                    var selecteddate = date_format_yyyymmdd_to_yyyymmdd_split(jsondata.group_schedule_start_datetime[i].split(' ')[0],'')
+                    var selecteddate = date_format_yyyymmdd_to_yyyymmdd_split(group_schedule_start_datetime_split[0],'');
                     var today = date_format_yyyy_m_d_to_yyyy_mm_dd(oriYear+'_'+oriMonth+'_'+oriDate,'');
     
                     var todayandlimitSum = Number(today)+parseInt(Options.limit/24);
                     if(Number(oriDate)+parseInt(Options.limit/24) > lastDay[Number(oriMonth)-1]){
-                        todayandlimitSum = date_format_yyyy_m_d_to_yyyy_mm_dd(oriYear+'-'+(Number(oriMonth)+1)+'-'+parseInt(Options.limit/24),'')
+                        todayandlimitSum = date_format_yyyy_m_d_to_yyyy_mm_dd(oriYear+'-'+(Number(oriMonth)+1)+'-'+parseInt(Options.limit/24),'');
                     }
     
     
@@ -964,18 +979,18 @@ $(document).ready(function(){
                     }
 
                     ///////////////////////////////////////////////////////////////////그룹 일정 막기 여러가지 경우////////////////////////////////////
-                    var starttime = jsondata.group_schedule_start_datetime[i].split(' ')[1];
-                    var endtime = jsondata.group_schedule_end_datetime[i].split(' ')[1];
+                    var starttime = group_schedule_start_datetime_split[1];
+                    var endtime = group_schedule_end_datetime_split[1];
     
                     if(targetSelected == grouptypecd){
                         if(planHour >= work_start && planHour < work_end){
-                            htmlTojoin.push('<div style="line-height:18px;margin-bottom:7px;"><div class="ptersCheckbox '+myreservecheckbox1+disable+'" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
+                            htmlTojoin.push('<div style="line-height:18px;margin-bottom:7px;"><div class="ptersCheckbox '+myreservecheckbox1+disable+'" data-date="'+group_schedule_start_datetime_split[0]+
                                 '" data-time="'+starttime+'.000000'+
                                 '"data-endtime ="'+endtime+'.000000'+
                                 '" data-dur="'+planDura+
                                 '" group-schedule-id="'+jsondata.group_schedule_id[i]+'"><div class="'+myreservecheckbox1+myreservecheckbox2+'"></div></div><p class="plan_list_row">'+
-                                jsondata.group_schedule_start_datetime[i].split(' ')[1].substr(0,5)+' ~ '+
-                                jsondata.group_schedule_end_datetime[i].split(' ')[1].substr(0,5) +' : '+
+                                starttime.substr(0,5)+' ~ '+
+                                endtime.substr(0,5) +' : '+
                                 jsondata.group_schedule_group_name[i]+' ('+
                                 jsondata.group_schedule_current_member_num[i]+'/'+
                                 jsondata.group_schedule_max_member_num[i]+
@@ -1008,45 +1023,8 @@ $(document).ready(function(){
         var len1 = jsondata.scheduleIdArray.length;
         var len2 = jsondata.group_schedule_id.length;
         var dateplans = [];
-
-
-        // for(var i=0; i<len2; i++){  //시간순 정렬을 위해 'group' 정보를 가공하여 dateplans에 넣는다.
-        //     var grouptype = "group"
-        //     var dbID = ''
-        //     var group_id = jsondata.group_schedule_group_id[i]
-        //     var scheduleID = jsondata.group_schedule_id[i]
-        //     var index = jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i])
-        //     if(index != -1){
-        //         var scheduleID = jsondata.scheduleIdArray[index]
-        //     }else{
-        //         var scheduleID = ''
-        //     }
-        //     var classLectureID = ''
-        //     var scheduleFinish = jsondata.group_schedule_finish_check[i]
-        //     var memoArray = jsondata.group_schedule_note[i]
-        //     var yy = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[0]
-        //     var mm = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[1]
-        //     var dd = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[2]
-        //     var stime1 = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[0]
-        //     var etime1 = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[0]
-        //     var sminute = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[1]
-        //     var eminute = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[1]
-        //     var groupmax = jsondata.group_schedule_max_member_num[i]
-        //     var groupcurrent = jsondata.group_schedule_current_member_num[i]
-        //     var groupParticipants = '(' + groupcurrent + '/' + groupmax + ')'
-        //     var name = '['+jsondata.group_schedule_group_type_cd_name[i]+'] '+jsondata.group_schedule_group_name[i]+groupParticipants
-        //     if(stime1.length<2){
-        //         var stime1 = '0'+stime1
-        //     }else if(stime1 == '24'){
-        //         var stime1 = '00'
-        //     }
-        //     var stime = stime1+'_'+sminute
-        //     var etime = etime1+'_'+eminute
-        //     var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
-        //     if(ymd == dateinfo && jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i]) != -1){
-        //         dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
-        //     }
-        // }
+        var schedule_names = [];
+        var schedule_memo = [];
 
         for(var i=0; i<len1; i++){  //시간순 정렬을 위해 'class' 정보를 가공하여 dateplans에 넣는다.
             var grouptype = "class";
@@ -1058,17 +1036,21 @@ $(document).ready(function(){
             var classLectureID = '';
             var scheduleFinish = jsondata.scheduleFinishArray[i];
             var memoArray = jsondata.scheduleNoteArray[i];
-            var yy = jsondata.classTimeArray_start_date[i].split(' ')[0].split('-')[0];
-            var mm = jsondata.classTimeArray_start_date[i].split(' ')[0].split('-')[1];
-            var dd = jsondata.classTimeArray_start_date[i].split(' ')[0].split('-')[2];
-            var stime1 = jsondata.classTimeArray_start_date[i].split(' ')[1].split(':')[0];
-            var etime1 = jsondata.classTimeArray_end_date[i].split(' ')[1].split(':')[0];
-            var sminute = jsondata.classTimeArray_start_date[i].split(' ')[1].split(':')[1];
-            var eminute = jsondata.classTimeArray_end_date[i].split(' ')[1].split(':')[1];
+            var classTime_start_date_time_split = jsondata.classTimeArray_start_date[i].split(' ');
+            var classTime_start_date_split = classTime_start_date_time_split[0].split('-');
+            var classTime_start_time_split = classTime_start_date_time_split[1].split(':');
+            var classTime_end_time_split = jsondata.classTimeArray_end_date[i].split(' ')[1].split(':');
+            var yy = classTime_start_date_split[0];
+            var mm = classTime_start_date_split[1];
+            var dd = classTime_start_date_split[2];
+            var stime1 = classTime_start_time_split[0];
+            var etime1 = classTime_end_time_split[0];
+            var sminute = classTime_start_time_split[1];
+            var eminute = classTime_end_time_split[1];
             if(stime1.length<2){
-                var stime1 = '0'+stime1;
+                stime1 = '0'+stime1;
             }else if(stime1 == '24'){
-                var stime1 = '00';
+                stime1 = '00';
             }
             var stime = stime1+'_'+sminute;
             var etime = etime1+'_'+eminute;
@@ -1080,7 +1062,9 @@ $(document).ready(function(){
             var ymd = yy+'_'+Number(mm)+'_'+Number(dd);
             // if(ymd == dateinfo && jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
             if(ymd == dateinfo ){
-                dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray);
+                dateplans.push(stime+'_'+etime+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id);
+                schedule_names.push(name);
+                schedule_memo.push(memoArray);
             }
         }
 
@@ -1090,12 +1074,13 @@ $(document).ready(function(){
         reg_check = dateplans.length;
         if(dateplans.length>0){
             for(var i=1; i<=dateplans.length; i++){
+                    // 이름/메모 제외 split 문제 없음 - hkkim.190118
                 var splited = dateplans[i-1].split('_');
                 var stime = Number(splited[0]);
                 var sminute = splited[1];
                 var etime = Number(splited[2]);
                 var eminute = splited[3];
-                var name = splited[4];
+                var name = schedule_names[i-1];
                 var textsize = "";
 
                 if(name.length > 12 ){
@@ -1107,51 +1092,34 @@ $(document).ready(function(){
 
                 var morningday = "";
                 if(stime==0 & dateplans[i-2]==undefined){
-                    var morningday = "오전";
+                    morningday = "오전";
                 }else if(stime<12 & dateplans[i-2]==undefined){
-                    var morningday = "오전";
+                    morningday = "오전";
                 }else if(stime>=12 && dateplans[i-2]!=undefined){
+                    // 이름/메모 제외 split 문제 없음 - hkkim.190118
                     var splitedprev = dateplans[i-2].split('_');
                     if(splitedprev[0]<12){
-                        var morningday = "오후";
+                        morningday = "오후";
                     }
                 }else if(stime>=12 && dateplans[i-2]==undefined){
-                    var morningday = "오후";
+                    morningday = "오후";
                 }
-                if(splited[10]==1){
-                    /*
-                    htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-membernum="'+groupmax+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
-                                        '<span class="plancheckmorningday">'+morningday+'</span>'+
-                                        '<span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span>'+
-                                        '<span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span>'+
-                                    '</div>')*/
-                    htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-membernum="'+splited[15]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
+                if(splited[9]==1){
+                    htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-group-type-cd-name="'+splited[13]+'" data-membernum="'+splited[14]+'" data-dbid="'+splited[10]+'" schedule-id="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[i-1]+'" data-memo="'+schedule_memo[i-1]+'">'+
                                         '<div class="plancheckmorningday">'+morningday+'</div>'+
                                         '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
                                         '<div class="plancheckname"><img src="/static/user/res/btn-pt-complete.png">'+'<p '+textsize+'>'+name+'</p></div>'+
                                     '</div>');
 
-                }else if(splited[10]==2){
-                    /*
-                    htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-membernum="'+groupmax+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
-                                        '<span class="plancheckmorningday">'+morningday+'</span>'+
-                                        '<span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span>'+
-                                        '<span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span>'+
-                                    '</div>')*/
-                    htmltojoin.push('<div class="plan_raw" title="결석 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-membernum="'+splited[15]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
+                }else if(splited[9]==2){
+                    htmltojoin.push('<div class="plan_raw" title="결석 일정" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-group-type-cd-name="'+splited[13]+'" data-membernum="'+splited[14]+'" data-dbid="'+splited[10]+'" schedule-id="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[i-1]+'" data-memo="'+schedule_memo[i-1]+'">'+
                                         '<div class="plancheckmorningday">'+morningday+'</div>'+
                                         '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
                                         '<div class="plancheckname"><img src="/static/user/res/btn-absence.png" style="margin-top:16px;">'+'<p '+textsize+'>'+name+'</p></div>'+
                                     '</div>');
 
-                }else if(splited[10] == 0){
-                    /*
-                    htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-membernum="'+groupmax+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
-                                        '<span class="plancheckmorningday">'+morningday+'</span>'+
-                                        '<span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span>'+
-                                        '<span class="plancheckname">'+name+'</span>'+
-                                    '</div>')*/
-                    htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-membernum="'+splited[15]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
+                }else if(splited[9] == 0){
+                    htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-group-type-cd-name="'+splited[13]+'" data-membernum="'+splited[14]+'" data-dbid="'+splited[10]+'" schedule-id="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[i-1]+'" data-memo="'+schedule_memo[i-1]+'">'+
                                         '<div class="plancheckmorningday">'+morningday+'</div>'+
                                         '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
                                         '<div class="plancheckname"><p '+textsize+'>'+name+'</p></div>'+
@@ -1311,18 +1279,25 @@ $(document).ready(function(){
         var date = date_format_to_yyyymmdd($('#popup_info4').text(), '-');
         if(date != today_YY_MM_DD){  // 선택한 날짜가 오늘이 아닐 경우 일정을 뿌려준다.
             for(var i=0; i<Arraylength; i++){
-                var planYear    = Number(planStartDate[i].split(' ')[0].split('-')[0]);
-                var planMonth   = Number(planStartDate[i].split(' ')[0].split('-')[1]);
-                var planDate    = Number(planStartDate[i].split(' ')[0].split('-')[2]);
-                var planHour    = Number(planStartDate[i].split(' ')[1].split(':')[0]);
-                var planMinute  = Number(planStartDate[i].split(' ')[1].split(':')[1]);
-                var planEDate   = Number(planEndDate[i].split(' ')[0].split('-')[2]);
-                var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
-                var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
+                var plan_start_datetime_split = planStartDate[i].split(' ');
+                var plan_start_date_split = plan_start_datetime_split[0].split('-');
+                var plan_start_time_split = plan_start_datetime_split[1].split(':');
+                var plan_end_datetime_split = planEndDate[i].split(' ');
+                var plan_end_date_split = plan_end_datetime_split[0].split('-');
+                var plan_end_time_split = plan_end_datetime_split[1].split(':');
+
+                var planYear    = Number(plan_start_date_split[0]);
+                var planMonth   = Number(plan_start_date_split[1]);
+                var planDate    = Number(plan_start_date_split[2]);
+                var planHour    = Number(plan_start_time_split[0]);
+                var planMinute  = Number(plan_start_time_split[1]);
+                var planEDate   = Number(plan_end_date_split[2]);
+                var planEndHour = Number(plan_end_time_split[0]);
+                var planEndMin  = plan_end_time_split[1];
 
                 //종료 시간이 24:00일경우 서버에서 다음날 00:00으로 보내오기 때문에 포맷을 오늘 24:00로 수정
-                if(add_date(planEndDate[i].split(' ')[0],0) == add_date(planStartDate[i].split(' ')[0], 1)
-                    && planEndDate[i].split(' ')[1] == "00:00:00" ){
+                if(add_date(plan_end_datetime_split[0],0) == add_date(plan_start_datetime_split[0], 1)
+                    && plan_end_datetime_split[1] == "00:00:00" ){
                     var planEndHour = "24";
                     var planEndMin = '00';
                 }
@@ -1419,17 +1394,26 @@ $(document).ready(function(){
             var planLoc     = timegraph_houroffset;
 
                 for(var i=0; i<Arraylength; i++){
-                    var planYear    = Number(planStartDate[i].split(' ')[0].split('-')[0]);
-                    var planMonth   = Number(planStartDate[i].split(' ')[0].split('-')[1]);
-                    var planDate    = Number(planStartDate[i].split(' ')[0].split('-')[2]);
-                    var planHour    = Number(planStartDate[i].split(' ')[1].split(':')[0]);
-                    var planMinute  = Number(planStartDate[i].split(' ')[1].split(':')[1]);
-                    var planEDate   = Number(planEndDate[i].split(' ')[0].split('-')[2]);
-                    var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
-                    var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
+                    var plan_start_datetime_split = planStartDate[i].split(' ');
+                    var plan_start_date_split = plan_start_datetime_split[0].split('-');
+                    var plan_start_time_split = plan_start_datetime_split[1].split(':');
+                    var plan_end_datetime_split = planEndDate[i].split(' ');
+                    var plan_end_date_split = plan_end_datetime_split[0].split('-');
+                    var plan_end_time_split = plan_end_datetime_split[1].split(':');
+
+                    var planYear    = Number(plan_start_date_split[0]);
+                    var planMonth   = Number(plan_start_date_split[1]);
+                    var planDate    = Number(plan_start_date_split[2]);
+
+                    var planHour    = Number(plan_start_time_split[0]);
+                    var planMinute  = Number(plan_start_time_split[1]);
+
+                    var planEDate   = Number(plan_end_date_split[2]);
+                    var planEndHour = Number(plan_end_time_split[0]);
+                    var planEndMin  = plan_end_time_split[1];
 
                     //24:00일경우 다음날 00:00 으로 들어오기 때문에
-                    if(planEndDate[i].split(' ')[1] == "00:00:00"){
+                    if(plan_end_datetime_split[1] == "00:00:00"){
                         var planEndHour = '24';
                         var planEndMin = '00';
                     }
@@ -1642,10 +1626,15 @@ $(document).ready(function(){
         var disable_time_array_start_date = remove_duplicate_in_list(all_start_date_time);
         var disable_time_array_end_date = remove_duplicate_in_list(all_end_date_time);
         for(var i=0; i<disable_time_array_start_date.length; i++){
-            var plan_start_date = disable_time_array_start_date[i].split(' ')[0];
-            var plan_start_time = disable_time_array_start_date[i].split(' ')[1].split(':')[0]+':'+disable_time_array_start_date[i].split(' ')[1].split(':')[1];
-            var plan_end_date = disable_time_array_end_date[i].split(' ')[0];
-            var plan_end_time = disable_time_array_end_date[i].split(' ')[1].split(':')[0]+':'+disable_time_array_end_date[i].split(' ')[1].split(':')[1];
+            var plan_start_datetime_split = disable_time_array_start_date[i].split(' ');
+            var plan_start_time_split = plan_start_datetime_split[1].split(':');
+            var plan_end_datetime_split = disable_time_array_end_date[i].split(' ');
+            var plan_end_time_split = plan_end_datetime_split[1].split(':');
+
+            var plan_start_date = plan_start_datetime_split[0];
+            var plan_start_time = plan_start_time_split[0]+':'+plan_start_time_split[1];
+            var plan_end_date = plan_end_datetime_split[0];
+            var plan_end_time = plan_end_time_split[0]+':'+plan_end_time_split[1];
             if(plan_start_date == selecteddate){
                 plan_time.push(plan_start_time);
             }
@@ -1721,13 +1710,13 @@ $(document).ready(function(){
                 if(compare_time(semiresult[t], add_time(workEndTime_, '00:00')) == false
                     && compare_time(add_time(workStartTime_, '00:00'), semiresult[t]) == false
                     && workStartTime_ != workEndTime_){        //업무시간
-
-                    if(starttimeOption.split('-')[0] == "A"){
-                        if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
+                    var starttimeOption_split = starttimeOption.split('-');
+                    if(starttimeOption_split[0] == "A"){
+                        if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption_split[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
                             addOkArrayList.push(semiresult[t]);
                         }
-                    }else if(starttimeOption.split('-')[0] == "E"){
-                        if(Number(semiresult[t].split(':')[1])%Number(starttimeOption.split('-')[1]) == 0){   //몇분 간격으로 시작시간을 보여줄 것인지?
+                    }else if(starttimeOption_split[0] == "E"){
+                        if(Number(semiresult[t].split(':')[1])%Number(starttimeOption_split[1]) == 0){   //몇분 간격으로 시작시간을 보여줄 것인지?
                             addOkArrayList.push(semiresult[t]);
                         }
                     }
@@ -1818,11 +1807,13 @@ $(document).ready(function(){
         }
         var starttext = $('#starttimesSelected button').val().split(' ');  //오후 11:30
         var daymorning = starttext[0];
-        var planHour = Number(starttext[1].split(':')[0]);
-        var planMinute = Number(starttext[1].split(':')[1]);
+        var starttext_time = starttext[1].split(':');
+        var planHour = Number(starttext_time[0]);
+        var planMinute = Number(starttext_time[1]);
         var planend = add_time(planHour+':'+planMinute, '00:'+durmin);
-        var planEndHour = Number(planend.split(':')[0]);
-        var planEndMin  = Number(planend.split(':')[1]);
+        var planend_split = planend.split(':');
+        var planEndHour = Number(planend_split[0]);
+        var planEndMin  = Number(planend_split[1]);
         var planDura = durmin;
         var workstart = Options.workStartTime;
 
@@ -1997,7 +1988,11 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
     for(var i=0; i<len; i++){
         var finish = jsondata.scheduleFinishArray[i];
         var memo = jsondata.scheduleNoteArray[i];
-        var classDate = date_format_yyyy_mm_dd_to_yyyy_m_d(startdate_dataArray[i].split(' ')[0], '_');
+        // 날짜 split 문제 없음 - hkkim.190118
+        var startdate_data_split = startdate_dataArray[i].split(' ');
+        var classDate = date_format_yyyy_mm_dd_to_yyyy_m_d(startdate_data_split[0], '_');
+
+        // 날짜 split 문제 없음 - hkkim.190118
         var arr = classDate.split('_');
         var yy = arr[0];
         var mm = arr[1];
@@ -2017,7 +2012,7 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
             var odd='0'+oriDate;
         }
 
-        var classTime = jsondata.classTimeArray_start_date[i].split(' ')[1].substr(0, 5);
+        var classTime = startdate_data_split[1].substr(0, 5);
         if(classTime == "24:00"){
             var classTime = "00:00";
         }
@@ -2034,7 +2029,7 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
         //     var groupname = " - ["+jsondata.group_schedule_group_name[index]+"]"
         // }
 
-        var index = count_date_info.dateResult.indexOf(jsondata.classTimeArray_start_date[i].split(' ')[0]);
+        var index = count_date_info.dateResult.indexOf(startdate_data_split[0]);
         var count = count_date_info.countResult[index];
 
         // 완료
@@ -2050,11 +2045,11 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
             var mobile = '<div class="monthplans_count"><img src="/static/user/res/icon-cal-mini.png">'+count+'</div>';
             var finishImg = '<div class="monthplans"><img src="/static/user/res/btn-absence.png" style="width:10px;"><span>'+classTime+groupname+'</span></div>';
         }
-
+        var month_daily_planview;
         if(already_added.indexOf(classDate) != -1){ //날짜 밑에 일정 카운트가 여러개 출력되는 것을 방지
-            var month_daily_planview = finishImg;
+            month_daily_planview = finishImg;
         }else{
-            var month_daily_planview = finishImg + mobile;
+            month_daily_planview = finishImg + mobile;
         }
         already_added.push(classDate);
 
@@ -2083,14 +2078,20 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 function groupDates(jsondata){	//그룹 PT가 있는 날짜에 표기
     var len = jsondata.group_schedule_id.length;
     for(var i=0; i<len; i++){
-        var classDate = date_format_yyyy_mm_dd_to_yyyy_m_d(jsondata.group_schedule_start_datetime[i].split(' ')[0], '_');
-        var classDateSplit = date_format_yyyy_mm_dd_to_yyyy_m_d(jsondata.group_schedule_start_datetime[i].split(' ')[0], '_').split('_');
-        var classTime = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':');
+        var group_schedule_start_datetime_split = jsondata.group_schedule_start_datetime[i].split(' ');
+        var classDate = date_format_yyyy_mm_dd_to_yyyy_m_d(group_schedule_start_datetime_split[0], '_');
+        // 날짜 split 문제 없음 - hkkim.190118
+        var classDateSplit = date_format_yyyy_mm_dd_to_yyyy_m_d(group_schedule_start_datetime_split[0], '_').split('_');
+
+        // 날짜 split 문제 없음 - hkkim.190118
+        var classTime = group_schedule_start_datetime_split[1].split(':');
         var yy = classDateSplit[0];
         var mm = classDateSplit[1];
         var dd = classDateSplit[2];
+
         var hh = Number(classTime[0]);
         var min = Number(classTime[1]);
+
         var omm = String(oriMonth);
         var odd = String(oriDate);
 
@@ -2139,8 +2140,9 @@ function classInfoProcessed(jsondata){ //일정 갯수 세기
 
     var datasum = [];
     for(var i=0; i<len; i++){ //개인일정 객체화로 중복 제거
-        summaryArray[jsondata.classTimeArray_start_date[i].split(' ')[0]] = jsondata.classTimeArray_start_date[i].split(' ')[0];
-        datasum.push(jsondata.classTimeArray_start_date[i].split(' ')[0]);
+        var class_time_start_date_split = jsondata.classTimeArray_start_date[i].split(' ');
+        summaryArray[class_time_start_date_split[0]] = class_time_start_date_split[0];
+        datasum.push(class_time_start_date_split[0]);
     }
 
     for(var i in summaryArray){ //개인일정 중복 제거된 배열
@@ -2284,8 +2286,10 @@ function krHoliday(){ //대한민국 공휴일 날짜를 빨간색으로 표시
 function monthText(){
     var currentYMD = $('.swiper-slide:nth-child(2) div:nth-child(1)').attr('id');
     //currentYMD 형식  ex : week120177
-    var textYear = currentYMD.split('_')[1];
-    var textMonth = currentYMD.split('_')[2];
+    // 날짜 split 문제 없음 - hkkim.190118
+    var currentYMD_split = currentYMD.split('_');
+    var textYear = currentYMD_split[1];
+    var textMonth = currentYMD_split[2];
     $('#yearText, #ymdText-pc-year').text(textYear);
     $('#monthText, #ymdText-pc-month').text(textMonth+'월');
 }
