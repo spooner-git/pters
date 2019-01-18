@@ -108,7 +108,10 @@
             else if($('#id_inquire_title').val().length == 0){
                 error_message = '제목을 입력해주세요.';
             }
-            else if($('#id_inquire_body').val().length == 0){
+            // else if($('#id_inquire_body').val().length == 0){
+            //     error_message = '내용을 입력해주세요.';
+            // }
+            else if($('textarea[name="textarea_body"]').val().length == 0){
                 error_message = '내용을 입력해주세요.';
             }
             if(error_message==''){
@@ -164,7 +167,7 @@
                     },
 
                     complete:function(){
-                        completeSend()
+                        completeSend();
                     },
 
                     error:function(){
@@ -177,7 +180,7 @@
         function draw_myquestion_list(jsondata, targetSelector){
             var targetHtml = targetSelector;
             var email = "{{ request.user.email }}";
-{#            var htmlToJoin = [`<div>답변은 <span style="font-weight:bold;color:#fe4e65">${jsondata.email_address[0]}</span> 로 발송 드립니다.</div>#}
+{#            var htmlToJoin = [`<div>답변은 <span style="font-weight:bold;color:#fe4e65">${jsondata.email_address[0]}</span> 로 발송 드립니다.</div>`]#}
 
             var htmlToJoin = [`<div>답변은 <span style="font-weight:bold;color:#fe4e65">${email}</span> 로 발송 드립니다.</div>
                               <div class="myquestion_history_table_title">
