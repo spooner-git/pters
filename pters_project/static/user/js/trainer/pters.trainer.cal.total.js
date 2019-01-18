@@ -45,7 +45,6 @@ function calendar_zoom(selector, zoom){
         //     calendar_mobile_zoom = 0;
         // }
         if(zoom == "zoom"){
-
             // 주간일정 순서 구분 split 문제 없음 - hkkim.190118
             var index = Number($(selector).attr("id").split('_')[1])+1;
             var $visible_row = $(`div.swiper-slide-active .td00:nth-of-type(${index})`);
@@ -177,6 +176,7 @@ $('#change_to_weekcal').click(function(e){
         if(bodywidth >= 600){
             if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                 week_calendar_mobile(yyyy_mm_dd);
+                calendar_device_type = "mobile";
             }else{
                 week_calendar(yyyy_mm_dd);
             }
