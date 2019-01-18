@@ -2287,21 +2287,21 @@ function pc_add_member(option){
             $('#how_to_add_member').css('display','none');
         }
 
-        // selector_page_addmember_input_wrap.css('height', window_height - 100 - title_height - buttonwrap_height);
-        // var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
-        // selector_page_addmember.css({'top':centerLoc,
-        //                              'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft()),
-        //                              'display':'block'
-        //                                     });
-
         selector_page_addmember_input_wrap.css('height', window_height - 100 - title_height - buttonwrap_height);
-        var centerLoc = 50+window_scrollHeight;
+        var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
         selector_page_addmember.css({'top':centerLoc,
-                                     // 'left':((window_width-selector_page_addmember.outerWidth())/2+window_scrollWidth),
-                                     'left':'50%',
-                                     'transform':'translateX(-50%)',
+                                     'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft()),
                                      'display':'block'
-                                     });
+                                            });
+
+        // selector_page_addmember_input_wrap.css('height', window_height - 100 - title_height - buttonwrap_height);
+        // var centerLoc = 50+window_scrollHeight;
+        // selector_page_addmember.css({'top':centerLoc,
+        //                              // 'left':((window_width-selector_page_addmember.outerWidth())/2+window_scrollWidth),
+        //                              'left':'50%',
+        //                              'transform':'translateX(-50%)',
+        //                              'display':'block'
+        //                              });
 
         get_package_ing_list_all('callback', function(json){package_type_dropdown_set(json);});
 
@@ -2320,18 +2320,19 @@ function pc_add_member(option){
         selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
-        // selector_page_addmember_input_wrap.css('height',window_height - 100 - title_height - buttonwrap_height);
-        // var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
-        // selector_page_addmember.show().css({'top':centerLoc,
-        //     'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
-        selector_page_addmember_input_wrap.css('height', window_height - 100 - title_height - buttonwrap_height);
-        var centerLoc = 50+window_scrollHeight;
-        selector_page_addmember.css({'top':centerLoc,
-                                     // 'left':((window_width-selector_page_addmember.outerWidth())/2+window_scrollWidth),
-                                     'left':'50%',
-                                     'transform':'translateX(-50%)',
-                                     'display':'block'
-                                     });
+        selector_page_addmember_input_wrap.css('height',window_height - 100 - title_height - buttonwrap_height);
+        var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
+        selector_page_addmember.show().css({'top':centerLoc,
+            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
+        
+        // selector_page_addmember_input_wrap.css('height', window_height - 100 - title_height - buttonwrap_height);
+        // var centerLoc = 50+window_scrollHeight;
+        // selector_page_addmember.css({'top':centerLoc,
+        //                              // 'left':((window_width-selector_page_addmember.outerWidth())/2+window_scrollWidth),
+        //                              'left':'50%',
+        //                              'transform':'translateX(-50%)',
+        //                              'display':'block'
+        //                              });
 
         get_package_ing_list_all('callback', function(json){package_type_dropdown_set(json);});
 
@@ -2371,19 +2372,19 @@ function pc_add_member(option){
 
         selector_memberSearchButton.trigger('click');
 
-        // selector_page_addmember_input_wrap.css('height', window_height - 100 - title_height - buttonwrap_height);
-        // var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
-        // selector_page_addmember.show().css({'top':centerLoc,
-        //     'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
-
         selector_page_addmember_input_wrap.css('height', window_height - 100 - title_height - buttonwrap_height);
-        var centerLoc = 50+window_scrollHeight;
-        selector_page_addmember.css({'top':centerLoc,
-                                     // 'left':((window_width-selector_page_addmember.outerWidth())/2+window_scrollWidth),
-                                     'left':'50%',
-                                     'transform':'translateX(-50%)',
-                                     'display':'block'
-                                     });
+        var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
+        selector_page_addmember.show().css({'top':centerLoc,
+            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
+
+        // selector_page_addmember_input_wrap.css('height', window_height - 100 - title_height - buttonwrap_height);
+        // var centerLoc = 50+window_scrollHeight;
+        // selector_page_addmember.css({'top':centerLoc,
+        //                              // 'left':((window_width-selector_page_addmember.outerWidth())/2+window_scrollWidth),
+        //                              'left':'50%',
+        //                              'transform':'translateX(-50%)',
+        //                              'display':'block'
+        //                              });
 
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
             get_package_ing_list_all('callback', function(json){package_type_dropdown_set(json);});
