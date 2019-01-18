@@ -253,7 +253,7 @@ $(document).ready(function(){
         var selectedPerson = '<span class="memberNameForInfoView" data-dbid="'+$(this).attr('data-dbid')+'" data-name="'+$(this).attr('data-membername')+'">'+$(this).find('.plancheckname').text()+'</span>';
         var selectedMemo = $(this).attr('data-memo');
         if($(this).attr('data-memo') == undefined){
-            var selectedMemo = "";
+            selectedMemo = "";
         }
         $("#cal_popup").show().attr({'schedule_id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype')});
         $('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
@@ -278,13 +278,19 @@ $(document).ready(function(){
         // var availableEndTime = Options.stoptimeEnd; //강사가 설정한 예약마감 시간 (종료)
         // currentHour
         // if(currentHour>Endtime || currentHour<availableStartTime){
-
         if(schedule_finish_check=="0"){
             $("#popup_btn_complete").show();
             $("#popup_text1").css("display", "block");
             $("#popup_sign_img").css("display", "none");
-            if((selectedDateyyyymmdd < todayYYYYMMDD) || (selectedDateyyyymmdd >= limitdate) || (currentHour>availableEndTime || currentHour<availableStartTime)){
-                $("#popup_text1").css("display", "none");
+            if(availableEndTime >= availableStartTime){
+                if((selectedDateyyyymmdd < todayYYYYMMDD) || (selectedDateyyyymmdd >= limitdate) || (currentHour>availableEndTime || currentHour<availableStartTime)){
+                    $("#popup_text1").css("display", "none");
+                }
+            }
+            else{
+                if((selectedDateyyyymmdd < todayYYYYMMDD) || (selectedDateyyyymmdd >= limitdate) || ((currentHour>availableEndTime && currentHour<availableStartTime))){
+                    $("#popup_text1").css("display", "none");
+                }
             }
         }else{
             $("#popup_btn_complete").hide();
@@ -1025,7 +1031,7 @@ $(document).ready(function(){
         var dateplans = [];
         var schedule_names = [];
         var schedule_memo = [];
-
+        var count_date_plans = 0;
         for(var i=0; i<len1; i++){  //시간순 정렬을 위해 'class' 정보를 가공하여 dateplans에 넣는다.
             var grouptype = "class";
             //var dbID = jsondata.classTimeArray_member_id[i]
@@ -1062,9 +1068,10 @@ $(document).ready(function(){
             var ymd = yy+'_'+Number(mm)+'_'+Number(dd);
             // if(ymd == dateinfo && jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
             if(ymd == dateinfo ){
-                dateplans.push(stime+'_'+etime+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id);
+                dateplans.push(stime+'_'+etime+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_'+count_date_plans);
                 schedule_names.push(name);
                 schedule_memo.push(memoArray);
+                count_date_plans++;
             }
         }
 
@@ -1076,11 +1083,13 @@ $(document).ready(function(){
             for(var i=1; i<=dateplans.length; i++){
                     // 이름/메모 제외 split 문제 없음 - hkkim.190118
                 var splited = dateplans[i-1].split('_');
+                console.log(splited);
+                var seq_name_memo = Number(splited[13]);
                 var stime = Number(splited[0]);
                 var sminute = splited[1];
                 var etime = Number(splited[2]);
                 var eminute = splited[3];
-                var name = schedule_names[i-1];
+                var name = schedule_names[seq_name_memo];
                 var textsize = "";
 
                 if(name.length > 12 ){
@@ -1105,21 +1114,21 @@ $(document).ready(function(){
                     morningday = "오후";
                 }
                 if(splited[9]==1){
-                    htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-group-type-cd-name="'+splited[13]+'" data-membernum="'+splited[14]+'" data-dbid="'+splited[10]+'" schedule-id="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[i-1]+'" data-memo="'+schedule_memo[i-1]+'">'+
+                    htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-dbid="'+splited[10]+'" schedule-id="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[seq_name_memo]+'" data-memo="'+schedule_memo[seq_name_memo]+'">'+
                                         '<div class="plancheckmorningday">'+morningday+'</div>'+
                                         '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
                                         '<div class="plancheckname"><img src="/static/user/res/btn-pt-complete.png">'+'<p '+textsize+'>'+name+'</p></div>'+
                                     '</div>');
 
                 }else if(splited[9]==2){
-                    htmltojoin.push('<div class="plan_raw" title="결석 일정" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-group-type-cd-name="'+splited[13]+'" data-membernum="'+splited[14]+'" data-dbid="'+splited[10]+'" schedule-id="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[i-1]+'" data-memo="'+schedule_memo[i-1]+'">'+
+                    htmltojoin.push('<div class="plan_raw" title="결석 일정" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-dbid="'+splited[10]+'" schedule-id="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[seq_name_memo]+'" data-memo="'+schedule_memo[seq_name_memo]+'">'+
                                         '<div class="plancheckmorningday">'+morningday+'</div>'+
                                         '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
                                         '<div class="plancheckname"><img src="/static/user/res/btn-absence.png" style="margin-top:16px;">'+'<p '+textsize+'>'+name+'</p></div>'+
                                     '</div>');
 
                 }else if(splited[9] == 0){
-                    htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-group-type-cd-name="'+splited[13]+'" data-membernum="'+splited[14]+'" data-dbid="'+splited[10]+'" schedule-id="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[i-1]+'" data-memo="'+schedule_memo[i-1]+'">'+
+                    htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-dbid="'+splited[10]+'" schedule-id="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[seq_name_memo]+'" data-memo="'+schedule_memo[seq_name_memo]+'">'+
                                         '<div class="plancheckmorningday">'+morningday+'</div>'+
                                         '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
                                         '<div class="plancheckname"><p '+textsize+'>'+name+'</p></div>'+
