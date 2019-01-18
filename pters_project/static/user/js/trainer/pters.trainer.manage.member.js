@@ -1744,17 +1744,17 @@ $(document).ready(function(){
                 }
                 $('.mobile_status_color_palette').hide();
                 modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "", "callback", function(){
-                    modify_group_status(group_id, status_to_be, "callback", function(){
-                        if(status_change_check==true) {
-                            if (status_to_be == "resume") {
-                                $id_lecture_status.attr('data-lecture_status', 'IP');
-                                get_groupmember_list(group_id);
-                            } else if (status_to_be == "complete") {
-                                $id_lecture_status.attr('data-lecture_status', 'PE');
-                                get_end_groupmember_list(group_id);
-                            }
-                        }
-                    });
+                    if(status_change_check==true) {
+                        modify_group_status(group_id, status_to_be, "callback", function(){
+                                if (status_to_be == "resume") {
+                                    $id_lecture_status.attr('data-lecture_status', 'IP');
+                                    get_groupmember_list(group_id);
+                                } else if (status_to_be == "complete") {
+                                    $id_lecture_status.attr('data-lecture_status', 'PE');
+                                    get_end_groupmember_list(group_id);
+                                }
+                        });
+                    }
                 });
 
             }
@@ -1803,17 +1803,17 @@ $(document).ready(function(){
                     var status_to_be = $('.mobile_status_selected').attr('data-status');
                     //modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
                     modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "", "callback", function(){
-                        modify_group_status(group_id, status_to_be, "callback", function(){
-                            if(status_change_check==true) {
-                                if (status_to_be == "resume") {
-                                    $id_lecture_status.attr('data-lecture_status', 'IP');
-                                    get_groupmember_list(group_id);
-                                } else if (status_to_be == "complete") {
-                                    $id_lecture_status.attr('data-lecture_status', 'PE');
-                                    get_end_groupmember_list(group_id);
-                                }
-                            }
-                        });
+                        if(status_change_check==true) {
+                            modify_group_status(group_id, status_to_be, "callback", function(){
+                                    if (status_to_be == "resume") {
+                                        $id_lecture_status.attr('data-lecture_status', 'IP');
+                                        get_groupmember_list(group_id);
+                                    } else if (status_to_be == "complete") {
+                                        $id_lecture_status.attr('data-lecture_status', 'PE');
+                                        get_end_groupmember_list(group_id);
+                                    }
+                            });
+                        }
                     });
                 }
             }
