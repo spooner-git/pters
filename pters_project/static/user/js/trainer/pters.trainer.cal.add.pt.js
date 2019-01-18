@@ -2801,23 +2801,6 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
 }
 
 
-function know_whether_plans_has_duplicates(starttime, endtime, starttime_compare, endtime_compare){
-    if( compare_time(starttime_compare, starttime) && compare_time(endtime, endtime_compare)  ){  //비교대상 시간이 비교시간안에 쏙 들어갈때
-        return 1;
-    }else if( compare_time(starttime, starttime_compare) == false  && compare_time(endtime, starttime_compare) && compare_time(endtime, endtime_compare) == false){ //비교 대상 시간의 시작시간이 비교시간안에 들어가 있을때
-        return 2;
-    }else if( compare_time(starttime_compare, starttime) == false && compare_time(endtime_compare, starttime) && compare_time(endtime_compare, endtime) == false){ //비교 대상 시간의 종료시간이 비교 시간 안에 들어가 있을때
-        return 3;
-    }else if( compare_time(starttime, starttime_compare) && compare_time(endtime_compare, endtime) ){ //비교 대상 시간이 비교시간을 완전히 감쌀때
-        return 4;
-    }else if(starttime == starttime_compare && endtime == endtime_compare){
-        return 5;
-    }else{
-       return 0;
-    }
-}
-
-
 var allplans = [];
 
 function startTimeSet(option, jsondata, selecteddate, Timeunit, filter){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21]
