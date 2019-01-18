@@ -1437,39 +1437,51 @@
         var count1 = 0;
         $('#ymdText-pc-prev-btn, #leftArrowButton').click(function(e){
             e.stopPropagation();
-            if(calendar_mobile_zoom > 0){
-                calendar_zoom("#week ._zoomed", "unzoom");
-            }else{
+            //if(calendar_mobile_zoom > 0){
+            //    calendar_zoom("#week ._zoomed", "unzoom");
+            //}else{
                 left_page(); 
-            }
+            //}
             
         });
 
         $('#ymdText-pc-next-btn, #rightArrowButton').click(function(e){
             e.stopPropagation();
-            if(calendar_mobile_zoom > 0){
-                calendar_zoom("#week ._zoomed", "unzoom");
-            }else{
+            //if(calendar_mobile_zoom > 0){
+            //    calendar_zoom("#week ._zoomed", "unzoom");
+            //}else{
                 right_page(); 
-            }
+            //}
         });
 
         function left_page(){
-            if(count==0){
-                myswiper.slidePrev(300);
-                count++;
-                setTimeout(function(){count=0},400);
-            }else if(count>0){
-                console.log('wait!');
+            if(calendar_mobile_zoom > 0){
+                calendar_zoom("#week ._zoomed", "unzoom");
+            }else {
+                if (count == 0) {
+                    myswiper.slidePrev(300);
+                    count++;
+                    setTimeout(function () {
+                        count = 0
+                    }, 400);
+                } else if (count > 0) {
+                    console.log('wait!');
+                }
             }
         }
         function right_page(){
-            if(count1==0){
-                myswiper.slideNext(300);
-                count1++;
-                setTimeout(function(){count1=0},400);
-            }else if(count>0){
-                console.log('wait!');
+            if(calendar_mobile_zoom > 0){
+                calendar_zoom("#week ._zoomed", "unzoom");
+            }else {
+                if (count1 == 0) {
+                    myswiper.slideNext(300);
+                    count1++;
+                    setTimeout(function () {
+                        count1 = 0
+                    }, 400);
+                } else if (count > 0) {
+                    console.log('wait!');
+                }
             }
         }
 
