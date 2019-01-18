@@ -640,7 +640,7 @@
             $("#hourSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
             var availableTime = make_available_date_format($('#hourSelect'),$('#hourSelect2'));
             $('#id_setting_member_reserve_available_time').val(availableTime);
-            fill_dropdown_reserve_endtime(0, $('#ulTimes2'));
+            //fill_dropdown_reserve_endtime(0, $('#ulTimes2'));
             check_dropdown_selected();
         });
         $(document).on('click', "#ulTimes2 li a", function(){
