@@ -2131,6 +2131,7 @@ function group_class_ListHtml_page(option, jsondata){ //option : current, finish
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_group_num+'개</span>');
     //$targetHTML.html(htmlToJoin2.join('') + htmlToJoin.join(''))
+    lecture_mutex_val = 1;
     return htmlToAdd+ htmlToJoin2.join('') + htmlToJoin.join('');
 }
 //그룹 목록을 화면에 뿌리기
