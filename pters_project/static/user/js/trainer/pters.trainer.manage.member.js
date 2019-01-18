@@ -1677,7 +1677,8 @@ $(document).ready(function(){
 
                 // var old_package_name = $('#ticketname').attr('data-ticket_name');
                 // var old_package_memo = $('#ticketmemo').attr('data-ticket_memo');
-                var old_package_state_cd = $('#id_ticket_status').attr('data-ticket_status');
+                var $id_ticket_status = $('#id_ticket_status');
+                var old_package_state_cd = $id_ticket_status.attr('data-ticket_status');
                 var status_change_check = true;
                 var status_to_be = $('.mobile_status_selected').attr('data-status');
                 // $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
@@ -1691,10 +1692,10 @@ $(document).ready(function(){
                     if(status_change_check==true){
                         modify_package_status(package_id, status_to_be, "callback", function(){
                                 if(status_to_be == "resume"){
-                                    $('id_ticket_member_num_text').text('참여중 인원');
+                                    $id_ticket_status.attr('data-ticket_status','IP');
                                     get_package_member_list(package_id);
                                 }else if(status_to_be == "complete"){
-                                    $('id_ticket_member_num_text').text('종료 인원');
+                                    $id_ticket_status.attr('data-ticket_status','PE');
                                     get_end_package_member_list(package_id);
                                 }
                         });
@@ -1733,7 +1734,8 @@ $(document).ready(function(){
                 alert('수업명을 입력하세요.');
             }else{
 
-                var old_lecture_state_cd = $('#id_lecture_status').attr('data-lecture_status');
+                var $id_lecture_status = $('#id_lecture_status');
+                var old_lecture_state_cd = $id_lecture_status.attr('data-lecture_status');
                 var status_change_check = true;
                 var status_to_be = $('.mobile_status_selected').attr('data-status');
 
@@ -1745,8 +1747,10 @@ $(document).ready(function(){
                     modify_group_status(group_id, status_to_be, "callback", function(){
                         if(status_change_check==true) {
                             if (status_to_be == "resume") {
+                                $id_lecture_status.attr('data-lecture_status', 'IP');
                                 get_groupmember_list(group_id);
                             } else if (status_to_be == "complete") {
+                                $id_lecture_status.attr('data-lecture_status', 'PE');
                                 get_end_groupmember_list(group_id);
                             }
                         }
@@ -1788,7 +1792,8 @@ $(document).ready(function(){
                 if(group_name==''){
                     alert('수업명을 입력하세요.');
                 }else{
-                    var old_lecture_state_cd = $('#id_lecture_status').attr('data-lecture_status');
+                    var $id_lecture_status = $('#id_lecture_status');
+                    var old_lecture_state_cd = $id_lecture_status.attr('data-lecture_status');
                     var status_change_check = true;
 
                     if((status_to_be=="resume" && old_lecture_state_cd == "IP")||(status_to_be=="complete" && old_lecture_state_cd == "PE") ){
@@ -1801,8 +1806,10 @@ $(document).ready(function(){
                         modify_group_status(group_id, status_to_be, "callback", function(){
                             if(status_change_check==true) {
                                 if (status_to_be == "resume") {
+                                    $id_lecture_status.attr('data-lecture_status', 'IP');
                                     get_groupmember_list(group_id);
                                 } else if (status_to_be == "complete") {
+                                    $id_lecture_status.attr('data-lecture_status', 'PE');
                                     get_end_groupmember_list(group_id);
                                 }
                             }
@@ -1829,7 +1836,8 @@ $(document).ready(function(){
                 }else{
                     // var old_package_name = $('#ticketname').attr('data-ticket_name');
                     // var old_package_memo = $('#ticketmemo').attr('data-ticket_memo');
-                    var old_package_state_cd = $('#id_ticket_status').attr('data-ticket_status');
+                    var $id_ticket_status = $('#id_ticket_status');
+                    var old_package_state_cd = $id_ticket_status.attr('data-ticket_status');
                     var status_change_check = true;
                     var status_to_be = $('.mobile_status_selected').attr('data-status');
                     // $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
@@ -1845,8 +1853,10 @@ $(document).ready(function(){
                         if(status_change_check==true){
                             modify_package_status(package_id, status_to_be, "callback", function(){
                                 if(status_to_be == "resume"){
+                                    $id_ticket_status.attr('data-ticket_status', 'IP');
                                     get_package_member_list(package_id);
                                 }else if(status_to_be == "complete"){
+                                    $id_ticket_status.attr('data-ticket_status', 'PE');
                                     get_end_package_member_list(package_id);
                                 }
                                 // $('#upbutton-x-modify').removeClass('disabled_button');
