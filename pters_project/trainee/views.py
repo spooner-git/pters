@@ -1072,8 +1072,9 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
                 log_info.reg_dt = str(log_info.reg_dt).split('.')[0]
 
                 if log_info.log_detail != '' and log_info.log_detail is not None:
-                    before_day = str(log_info.log_detail).split('/')[0]
-                    after_day = str(log_info.log_detail).split('/')[1]
+                    log_detail_split = str(log_info.log_detail).split('/')
+                    before_day = log_detail_split[0]
+                    after_day = log_detail_split[1]
 
                     if '반복 일정' in log_info.log_info:
                         log_info.log_detail = before_day + '~' + after_day

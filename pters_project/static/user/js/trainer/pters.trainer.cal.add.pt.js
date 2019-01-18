@@ -177,9 +177,11 @@ $(document).ready(function(){
             close_planadd_popup_mini();
             $(document).off('mouseup');
             var thisID     = $(this).attr('id');
-            var thisIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
-            var thisIDHour = $(this).attr('id').split('_')[3];
-            var thisIDMin  = $(this).attr('id').split('_')[4];
+            // 날짜 split 문제 없음 - hkkim.190118
+            var thisID_split = thisID.split('_');
+            var thisIDDate = thisID_split[0]+'_'+thisID_split[1]+'_'+thisID_split[2];
+            var thisIDHour = thisID_split[3];
+            var thisIDMin  = thisID_split[4];
 
             var thisIdDate_ = thisIDDate.replace(/_/gi, '-');
             if( (compare_date2(thisIdDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), thisIdDate_)) && Options.auth_limit == 0 ){
@@ -195,9 +197,11 @@ $(document).ready(function(){
                         $('.blankSelected30').removeClass('blankSelected30');
                         $(this).find('div').addClass('blankSelected30');
                         $(document).on('mouseover','.td00, .td30', function(){
-                            var overIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
-                            var overIDHour = $(this).attr('id').split('_')[3];
-                            var overIDMin  = $(this).attr('id').split('_')[4];
+                            // 날짜 split 문제 없음 - hkkim.190118
+                            var overID_split = $(this).attr('id').split('_');
+                            var overIDDate = overID_split[0]+'_'+overID_split[1]+'_'+overID_split[2];
+                            var overIDHour = overID_split[3];
+                            var overIDMin  = overID_split[4];
                             var prevIDHour = overIDHour;
                             var prevIDMin  = '00';
                             var selector_blankSelected30 = $('.blankSelected30');
@@ -249,9 +253,11 @@ $(document).ready(function(){
                         $(this).find('div').addClass('blankSelected');
 
                         $(document).on('mouseover', '.td00, .td30', function(){
-                            var overIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
-                            var overIDHour = $(this).attr('id').split('_')[3];
-                            var overIDMin  = $(this).attr('id').split('_')[4];
+                            // 날짜 split 문제 없음 - hkkim.190118
+                            var overID_split = $(this).attr('id').split('_');
+                            var overIDDate = overID_split[0]+'_'+overID_split[1]+'_'+overID_split[2];
+                            var overIDHour = overID_split[3];
+                            var overIDMin  = overID_split[4];
                             var prevIDHour = Number(overIDHour)-1;
                             var prevIDMin  = '30';
                             var nextIDHour = Number(overIDHour)+1;
@@ -471,8 +477,9 @@ $(document).ready(function(){
                 var len = schedule_data_cleared_duplicates_cache["clear_end_array"].length;
                 //onsole.log("ref:",ref_start_time+'~'+ref_end_time)
                 for(var i=0; i<len; i++){
-                    var comp_date = schedule_data_cleared_duplicates_cache["clear_start_array"][i].split(' ')[0];
-                    var comp_start_time = schedule_data_cleared_duplicates_cache["clear_start_array"][i].split(' ')[1];
+                    var clear_start_array_split = schedule_data_cleared_duplicates_cache["clear_start_array"][i].split(' ');
+                    var comp_date = clear_start_array_split[0];
+                    var comp_start_time = clear_start_array_split[1];
                     var comp_end_time = schedule_data_cleared_duplicates_cache["clear_end_array"][i].split(' ')[1];
                     //console.log("comp:",comp_start_time+'~'+comp_end_time)
                     if(comp_date == thisIDDate){
@@ -510,8 +517,10 @@ $(document).ready(function(){
     }
     function show_mini_plan_add_popup_tablet(thisID, dur){
         var durMin = dur*Options.classDur;
-        var starttime = time_h_format_to_hh(thisID.split('_')[3])+':'+thisID.split('_')[4];
-        $("#id_training_date, #id_training_date_off, #id_training_end_date, #id_training_end_date_off").val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
+        // 날짜 split 문제 없음 - hkkim.190118
+        var thisID_split = thisID.split('_');
+        var starttime = time_h_format_to_hh(thisID_split[3])+':'+thisID_split[4];
+        $("#id_training_date, #id_training_date_off, #id_training_end_date, #id_training_end_date_off").val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID_split[0]+'-'+thisID_split[1]+'-'+thisID_split[2], '-'));
         $("#id_training_time, #id_training_time_off").val(starttime);
         $('#id_memo_mini, #id_memo_mini_off').val('');
 
@@ -529,7 +538,7 @@ $(document).ready(function(){
         //$("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(((Options.classDur*Number(dur))/60)+'시간').val(dur);
         $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(duration_number_to_hangul((Options.classDur*Number(dur))/60)).val(dur);
 
-        var endTime = (Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60));
+        var endTime = (Number(thisID_split[3])+parseInt((Options.classDur*Number(dur))/60));
         if(endTime == Options.workEndTime){
             endTime = Options.workEndTime-1;
         }
@@ -537,30 +546,30 @@ $(document).ready(function(){
         var endMin;
         var endHour;
         if((Options.classDur*Number(dur))/60 - parseInt((Options.classDur*Number(dur))/60) == 0.5){
-            if(thisID.split('_')[4] == "00"){
+            if(thisID_split[4] == "00"){
                 endMin = "30";
-                endHour = Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60);
+                endHour = Number(thisID_split[3])+parseInt((Options.classDur*Number(dur))/60);
             }else{
                 endMin = "00";
-                endHour = Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60)+1;
+                endHour = Number(thisID_split[3])+parseInt((Options.classDur*Number(dur))/60)+1;
             }
         }else{
-            endMin = thisID.split('_')[4];
-            endHour = Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60);
+            endMin = thisID_split[4];
+            endHour = Number(thisID_split[3])+parseInt((Options.classDur*Number(dur))/60);
         }
 
-        var endID = thisID.split('_')[0]+'_'+thisID.split('_')[1]+'_'+thisID.split('_')[2]+'_'+endTime+'_'+thisID.split('_')[4];
+        var endID = thisID_split[0]+'_'+thisID_split[1]+'_'+thisID_split[2]+'_'+endTime+'_'+thisID_split[4];
 
-        $('#datetext_mini').html(thisID.split('_')[0]+'년 '+
-            thisID.split('_')[1]+'월 '+
-            thisID.split('_')[2]+'일 '+'<br>'+
-            time_format_add_ampm(thisID.split('_')[3]+':'+thisID.split('_')[4])+
+        $('#datetext_mini').html(thisID_split[0]+'년 '+
+            thisID_split[1]+'월 '+
+            thisID_split[2]+'일 '+'<br>'+
+            time_format_add_ampm(thisID_split[3]+':'+thisID_split[4])+
             ' ~ '+
             time_format_add_ampm(endHour+':'+endMin)
             //' ('+
             //duration_number_to_hangul((Options.classDur*Number(dur))/60)+')'
-        ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'))
-        .attr('data-date',date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
+        ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID_split[0]+'-'+thisID_split[1]+'-'+thisID_split[2], '-'))
+        .attr('data-date',date_format_yyyy_m_d_to_yyyy_mm_dd(thisID_split[0]+'-'+thisID_split[1]+'-'+thisID_split[2], '-'));
 
         $('.typeSelected').removeClass('typeSelected');
         $('#typeSelector_'+addTypeSelect).addClass('typeSelected');
@@ -645,18 +654,18 @@ $(document).ready(function(){
         }
         //미니 팝업 위치 보정
 
-        ajaxTimeGraphSet(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'), "callback", function(jsondata){
+        ajaxTimeGraphSet(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID_split[0]+'-'+thisID_split[1]+'-'+thisID_split[2], '-'), "callback", function(jsondata){
             if($('.add_time_unit').hasClass('checked')){
                 if($('.allow_all_time').hasClass('checked')){
-                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", 5, "allow_all_time");
+                    durTimeSet(thisID_split[3], thisID_split[4], "mini", 5, "allow_all_time");
                 }else{
-                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", 5);
+                    durTimeSet(thisID_split[3], thisID_split[4], "mini", 5);
                 }
             }else{
                 if($('.allow_all_time').hasClass('checked')){
-                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", Options.classDur, "allow_all_time");
+                    durTimeSet(thisID_split[3], thisID_split[4], "mini", Options.classDur, "allow_all_time");
                 }else{
-                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", Options.classDur);
+                    durTimeSet(thisID_split[3], thisID_split[4], "mini", Options.classDur);
                 }
                 
             }
@@ -671,8 +680,10 @@ $(document).ready(function(){
 
     function show_mini_plan_add_popup(thisID, dur){
         var durMin = dur*Options.classDur;
-        var starttime = time_h_format_to_hh(thisID.split('_')[3])+':'+thisID.split('_')[4];
-        $("#id_training_date, #id_training_date_off, #id_training_end_date, #id_training_end_date_off").val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
+        // 날짜 split 문제 없음 - hkkim.190118
+        var thisID_split = thisID.split('_');
+        var starttime = time_h_format_to_hh(thisID_split[3])+':'+thisID_split[4];
+        $("#id_training_date, #id_training_date_off, #id_training_end_date, #id_training_end_date_off").val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID_split[0]+'-'+thisID_split[1]+'-'+thisID_split[2], '-'));
         $("#id_training_time, #id_training_time_off").val(starttime);
         $('#id_memo_mini, #id_memo_mini_off').val('');
 
@@ -690,7 +701,7 @@ $(document).ready(function(){
         //$("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(((Options.classDur*Number(dur))/60)+'시간').val(dur);
         $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(duration_number_to_hangul((Options.classDur*Number(dur))/60)).val(dur);
 
-        var endTime = (Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60));
+        var endTime = (Number(thisID_split[3])+parseInt((Options.classDur*Number(dur))/60));
         if(endTime == Options.workEndTime){
             endTime = Options.workEndTime-1;
         }
@@ -698,30 +709,30 @@ $(document).ready(function(){
         var endMin;
         var endHour;
         if((Options.classDur*Number(dur))/60 - parseInt((Options.classDur*Number(dur))/60) == 0.5){
-            if(thisID.split('_')[4] == "00"){
+            if(thisID_split[4] == "00"){
                 endMin = "30";
-                endHour = Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60);
+                endHour = Number(thisID_split[3])+parseInt((Options.classDur*Number(dur))/60);
             }else{
                 endMin = "00";
-                endHour = Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60)+1;
+                endHour = Number(thisID_split[3])+parseInt((Options.classDur*Number(dur))/60)+1;
             }
         }else{
-            endMin = thisID.split('_')[4];
-            endHour = Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60);
+            endMin = thisID_split[4];
+            endHour = Number(thisID_split[3])+parseInt((Options.classDur*Number(dur))/60);
         }
 
-        var endID = thisID.split('_')[0]+'_'+thisID.split('_')[1]+'_'+thisID.split('_')[2]+'_'+endTime+'_'+thisID.split('_')[4];
+        var endID = thisID_split[0]+'_'+thisID_split[1]+'_'+thisID_split[2]+'_'+endTime+'_'+thisID_split[4];
 
-        $('#datetext_mini').html(thisID.split('_')[0]+'년 '+
+        $('#datetext_mini').html(thisID_split[0]+'년 '+
             thisID.split('_')[1]+'월 '+
             thisID.split('_')[2]+'일 '+'<br>'+
-            time_format_add_ampm(thisID.split('_')[3]+':'+thisID.split('_')[4])+
+            time_format_add_ampm(thisID_split[3]+':'+thisID_split[4])+
             ' ~ '+
             time_format_add_ampm(endHour+':'+endMin)
             //' ('+
             //duration_number_to_hangul((Options.classDur*Number(dur))/60)+')'
-        ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'))
-        .attr('data-date',date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));;
+        ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID_split[0]+'-'+thisID_split[1]+'-'+thisID_split[2], '-'))
+        .attr('data-date',date_format_yyyy_m_d_to_yyyy_mm_dd(thisID_split[0]+'-'+thisID_split[1]+'-'+thisID_split[2], '-'));
 
         $('.typeSelected').removeClass('typeSelected');
         $('#typeSelector_'+addTypeSelect).addClass('typeSelected');
@@ -783,18 +794,18 @@ $(document).ready(function(){
         }
         //미니 팝업 위치 보정
 
-        ajaxTimeGraphSet(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'), "callback", function(jsondata){
+        ajaxTimeGraphSet(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID_split[0]+'-'+thisID_split[1]+'-'+thisID_split[2], '-'), "callback", function(jsondata){
             if($('.add_time_unit').hasClass('checked')){
                 if($('.allow_all_time').hasClass('checked')){
-                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", 5, "allow_all_time");
+                    durTimeSet(thisID_split[3], thisID_split[4], "mini", 5, "allow_all_time");
                 }else{
-                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", 5);
+                    durTimeSet(thisID_split[3], thisID_split[4], "mini", 5);
                 }
             }else{
                 if($('.allow_all_time').hasClass('checked')){
-                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", Options.classDur, "allow_all_time");
+                    durTimeSet(thisID_split[3], thisID_split[4], "mini", Options.classDur, "allow_all_time");
                 }else{
-                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", Options.classDur);
+                    durTimeSet(thisID_split[3], thisID_split[4], "mini", Options.classDur);
                 }
                 
             }
@@ -818,7 +829,8 @@ $(document).ready(function(){
         $('.blankSelected_addview').removeClass('blankSelected blankSelected30 blankSelected_addview');
         $(this).addClass('typeSelected');
         $(this).siblings('.toggleBtnWrap').removeClass('typeSelected');
-        if($(this).attr('id').split('_')[1]=="ptadd"){
+        var this_id_split = $(this).attr('id').split('_');
+        if(this_id_split[1]=="ptadd"){
             $('#memberName_mini').css('display', 'block');
             $('.pt_memo_guide_mini').css('visibility', 'unset');
             if($('#membersSelected_mini button').val().length > 0){
@@ -833,7 +845,7 @@ $(document).ready(function(){
             }else{
                 addTypeSelect = "ptadd";
             }
-        }else if($(this).attr('id').split('_')[1]=="offadd"){
+        }else if(this_id_split[1]=="offadd"){
             $('#memberName_mini, #remainCount_mini, #groupInfo_mini').css('display', 'none');
             $('.pt_memo_guide_mini').css('visibility', 'hidden');
             addTypeSelect = "offadd";
@@ -911,14 +923,14 @@ $(document).ready(function(){
 
 
     function planAddView(duration){ //미니팝업으로 진행시간 표기 미리 보기
-        /*
-        var mi = selectedTime[4];
-        var yy = Number(selectedTime[0]);
-        var mm = Number(selectedTime[1]);
-        var dd = Number(selectedTime[2]);
-        var hh = Number(selectedTime[3]);
-        var hh_ = Number(selectedTime[3]);
-        */
+
+        var mi;
+        var yy;
+        var mm;
+        var dd;
+        var hh;
+        var hh_;
+
         if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null)){
             var blankbox;
             if(Options.classDur == 60){
@@ -942,11 +954,6 @@ $(document).ready(function(){
                 selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
                 selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
 
-
-                selectedDuration = Number(duration);
-                blankSelected = 'blankSelected';
-                selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
-                selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
                 mi = selectedTime[4];
                 yy = Number(selectedTime[0]);
                 mm = Number(selectedTime[1]);
@@ -959,18 +966,18 @@ $(document).ready(function(){
                     $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi).find('div').addClass(blankSelected);
                 }
             }else if(Options.classDur == 30){
-                selectedDuration = Number(duration)/2;
+                // selectedDuration = Number(duration)/2;
                 blankSelected = 'blankSelected30';
                 selector_blankSelected = $('.'+blankSelected);
                 selector_blankSelected_first_child = $('.'+blankSelected+':first-child');
-                selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
-                selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
+                var selector_blankSelected_first_child_div_id = selector_blankSelected_first_child.parent('div').attr('id');
+                // selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
+                // selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
 
 
                 selectedDuration = Number(duration.replace(/시간/gi, ''));
-                blankSelected = 'blankSelected30';
-                selectedTime = selector_blankSelected_first_child.parent('div').attr('id').split('_');
-                selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
+                selectedTime = selector_blankSelected_first_child_div_id.split('_');
+                selectedTimeID = selector_blankSelected_first_child_div_id;
                 if(selectedTime[4] == "00"){
                     mi = "30";
                     hh = Number(selectedTime[3]);
@@ -2706,10 +2713,18 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
 
 
     for(var i=0; i<disable_time_array_start_date.length; i++){
-        var plan_start_date = disable_time_array_start_date[i].split(' ')[0];
-        var plan_start_time = disable_time_array_start_date[i].split(' ')[1].split(':')[0]+':'+disable_time_array_start_date[i].split(' ')[1].split(':')[1];
-        var plan_end_date = disable_time_array_end_date[i].split(' ')[0];
-        var plan_end_time = disable_time_array_end_date[i].split(' ')[1].split(':')[0]+':'+disable_time_array_end_date[i].split(' ')[1].split(':')[1];
+        var plan_start_date_time_split = disable_time_array_start_date[i].split(' ');
+        var plan_start_time_split = plan_start_date_time_split[1].split(':');
+
+        var plan_start_date = plan_start_date_time_split[0];
+        var plan_start_time = plan_start_time_split[0]+':'+plan_start_time_split[1];
+
+        var plan_end_date_time_split = disable_time_array_end_date[i].split(' ');
+        var plan_end_time_split = plan_end_date_time_split[1].split(':');
+
+        var plan_end_date = plan_end_date_time_split[0];
+        var plan_end_time = plan_end_time_split[0]+':'+plan_end_time_split[1];
+
         if(plan_start_date == selecteddate){
             plan_time.push(plan_start_time);
         }
@@ -3131,16 +3146,25 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
 
     date = $('#datepicker').val();
     for(var i=0; i<Arraylength; i++){
-        var planYear    = Number(planStartDate[i].split(' ')[0].split('-')[0]);
-        var planMonth   = Number(planStartDate[i].split(' ')[0].split('-')[1]);
-        var planDate    = Number(planStartDate[i].split(' ')[0].split('-')[2]);
-        var planHour    = Number(planStartDate[i].split(' ')[1].split(':')[0]);
-        var planMinute  = Number(planStartDate[i].split(' ')[1].split(':')[1]);
-        var planEDate   = Number(planEndDate[i].split(' ')[0].split('-')[2]);
-        var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
-        var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
+        var plan_start_date_time_split = planStartDate[i].split(' ');
+        var plan_start_date_split = plan_start_date_time_split[0].split('-');
+        var plan_start_time_split = plan_start_date_time_split[1].split(':');
+        var plan_end_date_time_split = planEndDate[i].split(' ');
+        var plan_end_date_split = plan_end_date_time_split[0].split('-');
+        var plan_end_time_split = plan_end_date_time_split[1].split(':');
 
-        if(add_date(planEndDate[i].split(' ')[0], 0) == add_date(planStartDate[i].split(' ')[0], 1) && planEndDate[i].split(' ')[1] == "00:00:00" ){
+        var planYear    = Number(plan_start_date_split[0]);
+        var planMonth   = Number(plan_start_date_split[1]);
+        var planDate    = Number(plan_start_date_split[2]);
+
+        var planHour    = Number(plan_start_time_split[0]);
+        var planMinute  = Number(plan_start_time_split[1]);
+
+        var planEDate   = Number(plan_end_date_split[2]);
+        var planEndHour = Number(plan_end_time_split[0]);
+        var planEndMin  = plan_end_time_split[1];
+
+        if(add_date(plan_end_date_time_split[0], 0) == add_date(plan_start_date_time_split[0], 1) && plan_end_date_time_split[1] == "00:00:00" ){
             planEndHour = "24";
             planEndMin = '00';
         }
@@ -3979,14 +4003,18 @@ function position_absolute_addplan_if_mobile(scrolltoDom){
 //"2018-12-03 01:30:00", "2018-12-03 12:00:00"
 
 function compare_times_to_merge_min_max(s_date, e_date, s_date2, e_date2){
-    var sdate1 = s_date.split(' ')[0];
-    var sdate2 = s_date2.split(' ')[0];
-    var edate1 = e_date.split(' ')[0];
-    var edate2 = e_date2.split(' ')[0];
-    var stime1 = (s_date.split(' ')[1]);
-    var stime2 = (s_date2.split(' ')[1]);
-    var etime1 = (e_date.split(' ')[1]);
-    var etime2 = (e_date2.split(' ')[1]);
+    var s_date_split = s_date.split(' ');
+    var s_date2_split = s_date2.split(' ');
+    var e_date_split = e_date.split(' ');
+    var e_date2_split = e_date2.split(' ');
+    var sdate1 = s_date_split[0];
+    var sdate2 = s_date2_split[0];
+    var edate1 = e_date_split[0];
+    var edate2 = e_date2_split[0];
+    var stime1 = (s_date_split[1]);
+    var stime2 = (s_date2_split[1]);
+    var etime1 = (e_date_split[1]);
+    var etime2 = (e_date2_split[1]);
     var timearray = [stime1, stime2, etime1, etime2];
     var stime_new;
     var etime_new;

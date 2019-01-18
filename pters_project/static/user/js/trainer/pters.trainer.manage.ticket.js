@@ -1815,7 +1815,8 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         var group_id = jsondata.group_id[i];
         var group_type = jsondata.group_type_cd[i];
         var group_type_nm = jsondata.group_type_cd_nm[i];
-        var group_createdate = date_format_to_yyyymmdd(jsondata.group_reg_dt[i].split(' ')[0]+' '+jsondata.group_reg_dt[i].split(' ')[1]+' '+jsondata.group_reg_dt[i].split(' ')[2], '-');
+        var group_reg_dt_split = jsondata.group_reg_dt[i].split(' ');
+        var group_createdate = date_format_to_yyyymmdd(group_reg_dt_split[0]+' '+group_reg_dt_split[1]+' '+group_reg_dt_split[2], '-');
         var group_memo = jsondata.group_note[i];
         var group_memberlist = [];
         var group_capacity = jsondata.member_num[i];
@@ -2947,7 +2948,8 @@ function package_ListHtml(option, jsondata){ //option : current, finished
         var package_id = jsondata.package_id[i];
         var package_type = jsondata.package_type_cd[i];
         var package_type_nm = jsondata.package_type_cd_nm[i];
-        var package_createdate = date_format_to_yyyymmdd(jsondata.package_reg_dt[i].split(' ')[0]+' '+jsondata.package_reg_dt[i].split(' ')[1]+' '+jsondata.package_reg_dt[i].split(' ')[2], '-');
+        var package_reg_dt_split = jsondata.package_reg_dt[i].split(' ');
+        var package_createdate = date_format_to_yyyymmdd(package_reg_dt_split[0]+' '+package_reg_dt_split[1]+' '+package_reg_dt_split[2], '-');
         var package_memo = jsondata.package_note[i];
         var package_memberlist = [];
         var package_capacity = jsondata.package_group_num[i];
@@ -3079,7 +3081,8 @@ function package_ListHtml_page(option, jsondata){ //option : current, finished
         var package_id = jsondata.package_id[i];
         var package_type = jsondata.package_type_cd[i];
         var package_type_nm = jsondata.package_type_cd_nm[i];
-        var package_createdate = date_format_to_yyyymmdd(jsondata.package_reg_dt[i].split(' ')[0]+' '+jsondata.package_reg_dt[i].split(' ')[1]+' '+jsondata.package_reg_dt[i].split(' ')[2], '-');
+        var package_reg_dt_split = jsondata.package_reg_dt[i].split(' ');
+        var package_createdate = date_format_to_yyyymmdd(package_reg_dt_split[0]+' '+package_reg_dt_split[1]+' '+package_reg_dt_split[2], '-');
         var package_memo = jsondata.package_note[i];
         var package_memberlist = [];
         var package_capacity = jsondata.package_group_num[i];
@@ -3209,7 +3212,8 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
         var package_id = jsondata.package_id[i];
         var package_type = jsondata.package_type_cd[i];
         var package_type_nm = jsondata.package_type_cd_nm[i];
-        var package_createdate = date_format_to_yyyymmdd(jsondata.package_reg_dt[i].split(' ')[0]+' '+jsondata.package_reg_dt[i].split(' ')[1]+' '+jsondata.package_reg_dt[i].split(' ')[2], '-');
+        var package_reg_dt_split = jsondata.package_reg_dt[i].split(' ');
+        var package_createdate = date_format_to_yyyymmdd(package_reg_dt_split[0]+' '+package_reg_dt_split[1]+' '+package_reg_dt_split[2], '-');
         var package_memo = jsondata.package_note[i];
         var package_memberlist = [];
         var package_capacity = jsondata.package_group_num[i];

@@ -449,14 +449,16 @@ function date_format_to_user_hangul(yyyy_mm_dd, minimize){
     var dates = '';
     var day = '';
     var time = '';
+    var yyyy_mm_dd_split = yyyy_mm_dd.split(' ');
+    var yyyy_mm_dd_date_split = yyyy_mm_dd_split[0].split('-');
     if(minimize!=undefined){
-        dates = yyyy_mm_dd.split(' ')[0].split('-')[0]+'-'+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'-'+Number(yyyy_mm_dd.split(' ')[0].split('-')[2]);
-        day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd.split(' ')[0]).getDay()]+') ';
-        time = yyyy_mm_dd.split(' ')[1].substr(0, 5);
+        dates = yyyy_mm_dd_date_split[0]+'-'+Number(yyyy_mm_dd_date_split[1])+'-'+Number(yyyy_mm_dd_date_split[2]);
+        day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd_split[0]).getDay()]+') ';
+        time = yyyy_mm_dd_split[1].substr(0, 5);
     }else{
-        dates = yyyy_mm_dd.split(' ')[0].split('-')[0]+'년 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'월 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[2])+'일';
-        day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd.split(' ')[0]).getDay()]+') ';
-        time = yyyy_mm_dd.split(' ')[1].substr(0, 5);
+        dates = yyyy_mm_dd_date_split[0]+'년 '+Number(yyyy_mm_dd_date_split[1])+'월 '+Number(yyyy_mm_dd_date_split[2])+'일';
+        day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd_split[0]).getDay()]+') ';
+        time = yyyy_mm_dd_split[1].substr(0, 5);
     }
 
     return dates+day+time;
@@ -931,12 +933,15 @@ function sumarray(array){
 
 //알림창에 얼마전에 뜬 알람인지 계산
 function date_calculator(yyyy_mm_dd_hh_mm_ss){
-    var yyyymmdd = Number(date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_mm_dd_hh_mm_ss.split(' ')[0], ''));
-    var yyyy = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[0].split('-')[0]);
-    var mm = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[0].split('-')[1]);
-    var dd = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[0].split('-')[2]);
-    var hh = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[1].split(':')[0]);
-    var mms = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[1].split(':')[1]);
+    var yyyy_mm_dd_hh_mm_ss_split = yyyy_mm_dd_hh_mm_ss.split(' ');
+    var yyyy_mm_dd_hh_mm_ss_date_split = yyyy_mm_dd_hh_mm_ss_split[0].split('-');
+    var yyyy_mm_dd_hh_mm_ss_time_split = yyyy_mm_dd_hh_mm_ss_split[1].split(':');
+    var yyyymmdd = Number(date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_mm_dd_hh_mm_ss_split[0], ''));
+    var yyyy = Number(yyyy_mm_dd_hh_mm_ss_date_split[0]);
+    var mm = Number(yyyy_mm_dd_hh_mm_ss_date_split[1]);
+    var dd = Number(yyyy_mm_dd_hh_mm_ss_date_split[2]);
+    var hh = Number(yyyy_mm_dd_hh_mm_ss_time_split[0]);
+    var mms = Number(yyyy_mm_dd_hh_mm_ss_time_split[1]);
     var today = Number(todayYYYYMMDD);
     var lastDay = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];      //각 달의 일수
     var message = '';
@@ -970,11 +975,12 @@ function date_calculator(yyyy_mm_dd_hh_mm_ss){
 
 //알림창에 변동된 일정 정보를 알아보기 쉽게
 function alarm_change_easy_read(data){ // data : 2018-04-11 02:00:00/2018-04-11 03:00:00
-    var dateInfo = data.split(' ')[0];
-    var startTime = Number(data.split(' ')[1].split(':')[0]);
-    var endTime = Number(data.split(' ')[2].split(':')[0]);
+    var data_split =data.split(' ');
+    var dateInfo = data_split[0];
+    var startTime = Number(data_split[1].split(':')[0]);
+    var endTime = Number(data_split[2].split(':')[0]);
     var timeDiff = endTime - startTime;
-    return date_format_to_user_hangul(data.split('/')[0]) + ' ~ ' + data.split(' ')[2].substr(0, 5) + ' (' + timeDiff + ' 시간)';
+    return date_format_to_user_hangul(data.split('/')[0]) + ' ~ ' + data_split[2].substr(0, 5) + ' (' + timeDiff + ' 시간)';
 }
 
 
