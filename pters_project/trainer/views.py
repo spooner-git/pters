@@ -1561,6 +1561,8 @@ def export_excel_member_list_logic(request):
             member_list = sorted(member_list, key=attrgetter('lecture_rem_count'), reverse=int(sort_order_by))
         elif sort_info == SORT_START_DATE:
             member_list = sorted(member_list, key=attrgetter('start_date'), reverse=int(sort_order_by))
+        elif sort_info == SORT_REG_COUNT:
+            member_list = sorted(member_list, key=attrgetter('lecture_reg_count'), reverse=int(sort_order_by))
 
         filename_temp += '진행중_회원목록'
         ws1.title = "진행중 회원"
