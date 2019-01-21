@@ -11,6 +11,7 @@ from configs import settings
 from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, \
     SCHEDULE_DUPLICATION_ENABLE, SCHEDULE_DUPLICATION_DISABLE, ING_MEMBER_FALSE, ING_MEMBER_TRUE
 
+
 from login.models import LogTb, PushInfoTb
 from trainer.models import MemberClassTb, GroupLectureTb, ClassLectureTb, GroupTb, PackageGroupTb
 from trainee.models import LectureTb, MemberLectureTb

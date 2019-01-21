@@ -170,7 +170,6 @@ def add_schedule_logic(request):
                     error = func_date_check(class_id, schedule_result['schedule_id'],
                                             schedule_date, schedule_start_datetime, schedule_end_datetime,
                                             duplication_enable_flag)
-
                     if error is not None:
                         error += ' 일정이 중복되었습니다.'
                 if error is not None:

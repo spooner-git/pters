@@ -2487,7 +2487,7 @@ function groupMemberListSet_mobile(group_id, lecture_status, jsondata){
                                                                             +'<p>'+'<span style="margin-right:20px;">남은 횟수</span>'+groupmember_remcount+'</p>'+
                                                                             '</div>';
 
-        if(grouptype!='ONE_TO_ONE' && lecture_tab == TAB_ING) {
+        if(grouptype!='ONE_TO_ONE' && lecture_status == TAB_ING) {
             memberRow += '<div class="_fixedmember" data-dbid="' + groupmember_dbid + '" data-groupid="' + group_id + '">' + '<div></div>' + '<input type="checkbox" ' + groupmember_fixed + '>' + '</div>';
         }else{
             memberRow += '<div class="" style="width:10%"></div>';

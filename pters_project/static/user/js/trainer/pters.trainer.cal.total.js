@@ -535,7 +535,7 @@ function calTable_Set_Week(Index, Year, Month, Dates, Week, append){ //선택한
     var slideIndex = $('#slide'+Index);
     var currentDates = Number(Dates)+W;
     var currentMonth = Month-1;
-    var dateinfo = new Date(Year, Month-1, currentDates);
+    var dateinfo = new Date(Year, currentMonth, currentDates);
     var currentDay_ = dateinfo.getDay();
 
     var text1 = "등록된 일정이 없습니다.";
@@ -887,12 +887,11 @@ function calTable_Set_Week_Mobile(Index, Year, Month, Dates, Week, append){ //�
     var W = Week;
     var slideIndex = $('#slide'+Index);
     var currentDates = Number(Dates)+W;
-    var dateinfo = new Date(Year, Month-1, currentDates);
+    var currentMonth = Month-1;
+    var dateinfo = new Date(Year, currentMonth, currentDates);
     var currentDay_ = dateinfo.getDay();
     // var monthdata = currentMonth;
     var MonthforLastDay = Month - 1;
-
-    // if(append==0){
 
     //     currentDay = 0;
     //     //var dataforappend = $('.swiper-slide-prev').find('.td00').attr('id').split('_')
@@ -979,12 +978,14 @@ function calTable_Set_Week_Mobile(Index, Year, Month, Dates, Week, append){ //�
                 }else if(currentDates+z>lastDay[MonthforLastDay]){
                     td1[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[MonthforLastDay])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=lastDay[MonthforLastDay] && currentDates+z>0){
+
                     td1[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0){
                     if(Month-1<1){
                         td1[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                     }else{
                         td1[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[MonthforLastDay-1])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
+
                     }
                 }
             }
