@@ -3596,16 +3596,22 @@ function memberListSet (type, jsondata){
     var resultToAppend = arrayResult.join("");
     if(type=='current' && len == 0){
         if(keyword==''){
-            resultToAppend = '<div class="_nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</div>';
+            resultToAppend = '<div class="_nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">진행중인 회원이 없습니다.</div>';
             if(bodywidth >= 600){
                 $('#please_add_member_pc').show();
             }else{
                 $('#please_add_member').show();
             }
         }
+        else{
+            resultToAppend = '<div class="_nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">검색된 회원이 없습니다.</div>';
+        }
     }else if(type=="finished" && len ==0){
         if(keyword=='') {
-            resultToAppend = '<div class="" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</div>';
+            resultToAppend = '<div class="" rowspan="9" style="height:50px;padding-top: 17px !important;">종료된 회원이 없습니다.</div>';
+        }
+        else{
+            resultToAppend = '<div class="" rowspan="9" style="height:50px;padding-top: 17px !important;">검색된 회원이 없습니다.</div>';
         }
     }
     var result = tbodyStart + resultToAppend + tbodyEnd;
@@ -3840,16 +3846,22 @@ function memberListSet_page(type, jsondata){
     var resultToAppend = arrayResult.join("");
     if(type=='current' && len == 0){
         if(keyword==''){
-            resultToAppend = '<div class="_nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</div>';
+            resultToAppend = '<div class="_nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">진행중인 회원이 없습니다.</div>';
             if(bodywidth >= 600){
                 $('#please_add_member_pc').show();
             }else{
                 $('#please_add_member').show();
             }
         }
+        else{
+            resultToAppend = '<div class="_nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">검색된 회원이 없습니다.</div>';
+        }
     }else if(type=="finished" && len ==0){
         if(keyword=='') {
-            resultToAppend = '<div class="" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</div>';
+            resultToAppend = '<div class="" rowspan="9" style="height:50px;padding-top: 17px !important;">종료된 회원이 없습니다.</div>';
+        }
+        else{
+            resultToAppend = '<div class="" rowspan="9" style="height:50px;padding-top: 17px !important;">검색된 회원이 없습니다.</div>';
         }
     }
     var result = tbodyStart + resultToAppend + tbodyEnd;
