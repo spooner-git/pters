@@ -24,8 +24,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("PTERS_DJANGO_SECRET", '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-
-DEBUG = True 
+s
+DEBUG = True
 
 #ALLOWED_HOSTS = ['pters.co.kr','www.pters.co.kr','kr.pters.co.kr','jp.pters.co.kr','us.pters.co.kr','13.125.37.117']
 ALLOWED_HOSTS = ['*']

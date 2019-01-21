@@ -1509,7 +1509,6 @@ def delete_member_info_logic(request):
             error = '등록 값에 문제가 있습니다.'
 
     if error is None:
-
         return redirect(next_page)
     else:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -2423,7 +2422,6 @@ def progress_lecture_info_logic(request):
             func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     if error is None:
-
         return redirect(next_page)
     else:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)

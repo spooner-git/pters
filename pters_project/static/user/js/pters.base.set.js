@@ -1364,6 +1364,7 @@ function body_position_fixed_unset(){
 function limit_char(e){
     //var limit =  /[\[\]~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\＠§※☆★○●◎◇◆□■△▲▽▼→←↑↓↔〓◁◀▷▶♤♠♡♥♧♣⊙◈▣◐◑▒▤▥▨▧▦▩♨☏☎☜☞¶†‡↕↗↙↖↘♭♩♪♬㉿㈜№㏇™㏂㏘℡]/gi;
     var limit =  /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]/gi; //\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55
+
     var temp = $(e).val();
     if(limit.test(temp)){
         $(e).val(temp.replace(limit, ""));
