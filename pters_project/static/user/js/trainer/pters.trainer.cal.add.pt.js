@@ -3265,7 +3265,8 @@ $(document).on('click', 'img.add_groupmember_plan', function(){
     $('#form_add_member_group_plan_max').val($(this).attr('data-membernum'));
     $('#subpopup_addByList_plan').show();
     var parentPopupHeight = $('#cal_popup_planinfo').height();
-    $('#subpopup_addByList_plan').show().css({'top': (parentPopupHeight-$('#subpopup_addByList_plan').height())/2});
+    // $('#subpopup_addByList_plan').show().css({'top': (parentPopupHeight-$('#subpopup_addByList_plan').height())/2});
+    $('#subpopup_addByList_plan').show().css({'top': '50%', 'transform':'translateY(-50%)'});
     get_current_member_list('callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))});//전체회원 조회
     get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'));                                                                        
                                                                                         set_pters_scrolling_to_groupmember_add();});//특정그룹회원 목록 조회

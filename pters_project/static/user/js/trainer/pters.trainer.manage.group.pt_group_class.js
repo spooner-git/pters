@@ -378,7 +378,6 @@ $(document).on('click', 'img.add_listedMember', function(){
                     var group_schedule_id = $('#cal_popup_planinfo').attr('data-scheduleid');
                     var group_id = selector_popup_btn_viewGroupParticipants.attr('data-groupid');
                     var max = selector_popup_btn_viewGroupParticipants.attr('data-membernum');
-                    console.log("group_schedule_id", group_schedule_id)
                     get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
                         ajaxClassTime();
                         draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
