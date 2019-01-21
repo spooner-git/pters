@@ -962,8 +962,9 @@ $(document).ready(function(){
         var repeat_schedule_id;
         var group_id;
         if(deleteTypeSelect == "repeatinfodelete"){
-            var dbID = $(this).parent('#cal_popup_plandelete').attr('data-dbid');
-            repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
+            var dbID = $('#cal_popup_plandelete').attr('data-dbid');
+            repeat_schedule_id = $('#cal_popup_plandelete').attr('data-repeatid');
+            console.log("dbID", dbID, "repeat_schedule_id", repeat_schedule_id)
             send_repeat_delete_personal(repeat_schedule_id, 'callback', function(jsondata){
                 get_indiv_repeat_info(dbID);
                 get_member_lecture_list(dbID);
