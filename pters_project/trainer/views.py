@@ -1597,7 +1597,7 @@ def export_excel_member_list_logic(request):
         elif sort_info == SORT_START_DATE:
             member_finish_list = sorted(member_finish_list, key=attrgetter('start_date'), reverse=int(sort_order_by))
         elif sort_info == SORT_REG_COUNT:
-            member_list = sorted(member_list, key=attrgetter('lecture_reg_count'), reverse=int(sort_order_by))
+            member_finish_list = sorted(member_list, key=attrgetter('lecture_reg_count'), reverse=int(sort_order_by))
 
         ws1.title = "종료된 회원"
         filename_temp += '종료된_회원목록'
