@@ -13,7 +13,6 @@
 //테스트 코드 (모바일 달력 확대)
 var calendar_mobile_zoom = 0;
 $('#week .weekNum').click(function(){
-    console.log("calendar_device_type", calendar_device_type,"calendar_mobile_zoom", calendar_mobile_zoom);
     if(calendar_device_type == "mobile"){
         if(calendar_mobile_zoom == 0){
             calendar_zoom(this, "zoom");
@@ -110,7 +109,7 @@ $('#ymdText').click(function(e){
                                               'background-image':'url("/static/user/res/calendar_hour_day2.png")',
                                               'background-size':'60px '+ ($('.hour').height()+1)+'px'});
             }else if(calendarSize == 1){
-                $('.td00, .td30').css({'background':'#f7f7f7',
+                $('.td00, .td30').css({'background':'#ffffff',
                                            'background-image':'url("/static/user/res/calendar_hour.png")',
                                             'background-size':'60px 60px'});
             }
