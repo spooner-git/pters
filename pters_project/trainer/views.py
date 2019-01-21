@@ -2417,8 +2417,6 @@ def progress_lecture_info_logic(request):
         lecture_info.save()
         lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
         lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-        # print(str(lecture_info.package_tb.ing_package_member_num))
-        # print(str(lecture_info.package_tb.end_package_member_num))
         lecture_info.package_tb.save()
         package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
         for package_group_info in package_group_data:
@@ -2773,10 +2771,6 @@ class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         # start_time = timezone.now()
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
-        # query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
-        #                          "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
-        #                          " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
-
         group_data = GroupTb.objects.filter(group_id=group_id, class_tb_id=class_id, state_cd='IP', use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, [])
@@ -3009,44 +3003,11 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
 
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
-        # query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
-        #                          "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
-        #                          " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
 
         group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, [])
                                                        ).order_by('-group_type_cd', 'name')
-        # group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE)
-        # for group_info in group_data:
-        #     member_data = []
-        #     try:
-        #         type_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_type_cd)
-        #         group_info.group_type_cd_nm = type_cd_nm.common_cd_nm
-        #     except ObjectDoesNotExist:
-        #         error = '오류가 발생했습니다.'
-        #     try:
-        #         state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.state_cd)
-        #         group_info.state_cd_nm = state_cd_nm.common_cd_nm
-        #     except ObjectDoesNotExist:
-        #         error = '오류가 발생했습니다.'
-        #
-        #     lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id, use=USE)
-        #     for lecture_info in lecture_list:
-        #         try:
-        #             member_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=USE)
-        #         except ObjectDoesNotExist:
-        #             error = '회원 정보를 불러오지 못했습니다.'
-        #         check_add_flag = 0
-        #         for member_test in member_data:
-        #             if member_test.user.id == member_info.member.user.id:
-        #                 check_add_flag = 1
-        #
-        #         if check_add_flag == 0:
-        #             member_data.append(member_info.member)
-        #
-        #     group_info.group_member_num = len(member_data)
-
         context['total_group_num'] = len(group_data)
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -4480,7 +4441,6 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
             elif sort_info == SORT_LECTURE_CREATE_DATE:
                 group_data = sorted(group_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
 
-
         if page != 0:
             paginator = Paginator(group_data, 20)  # Show 20 contacts per page
             try:
@@ -4546,7 +4506,6 @@ class GetMemberGroupClassEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
                                                       reverse=int(sort_order_by))
             elif sort_info == SORT_LECTURE_CREATE_DATE:
                 group_data = sorted(group_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
-
 
         if page != 0:
             paginator = Paginator(group_data, 20)  # Show 20 contacts per page
