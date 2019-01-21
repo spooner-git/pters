@@ -1989,10 +1989,15 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
     }
     lectureListSet_len = groupNum + 1;
     if(htmlToJoin2.length == 0 && htmlToAdd.length == 0){
-        if(option == "current"){
-            htmlToJoin2.push('<div class="groupWrap_" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 수업이 없습니다.</div>');
-        }else if(option == "finished"){
-            htmlToJoin2.push('<div class="groupWrap_" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수업이 없습니다.</div>');
+        if(lecture_keyword == ''){
+            if(option == "current"){
+                htmlToJoin2.push('<div class="groupWrap_" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">진행중인 수업이 없습니다.</div>');
+            }else if(option == "finished"){
+                htmlToJoin2.push('<div class="groupWrap_" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">종료된 수업이 없습니다.</div>');
+            }
+        }
+        else{
+            htmlToJoin2.push('<div class="groupWrap_" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">검색된 수업이 없습니다.</div>');
         }
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_group_num+'개</span>');
@@ -2124,10 +2129,15 @@ function group_class_ListHtml_page(option, jsondata){ //option : current, finish
 
     lectureListSet_len += groupNum;
     if(htmlToJoin2.length == 0 && htmlToAdd.length == 0){
-        if(option == "current"){
-            htmlToJoin2.push('<div class="groupWrap_" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 수업이 없습니다.</div>');
-        }else if(option == "finished"){
-            htmlToJoin2.push('<div class="groupWrap_" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수업이 없습니다.</div>');
+        if(lecture_keyword == '') {
+            if (option == "current") {
+                htmlToJoin2.push('<div class="groupWrap_" data-groupstatecd="' + option + '" style="height:50px;padding-top:17px !important">진행중인 수업이 없습니다.</div>');
+            } else if (option == "finished") {
+                htmlToJoin2.push('<div class="groupWrap_" data-groupstatecd="' + option + '" style="height:50px;padding-top:17px !important">종료된 수업이 없습니다.</div>');
+            }
+        }
+        else{
+            htmlToJoin2.push('<div class="groupWrap_" data-groupstatecd="' + option + '" style="height:50px;padding-top:17px !important">검색된 수업이 없습니다.</div>');
         }
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_group_num+'개</span>');
