@@ -243,51 +243,72 @@ function close_planadd_popup(){
 //일정추가 팝업 닫기 (pc)
 
 //일정추가 팝업 닫기 (mobile)
+// function close_planadd_popup_mobile(){
+//     $('#page-addplan').css('display', 'none');
+//     if(bodywidth < 600){
+//         //$('#calendar').css('display','block');
+//         $('#calendar').css('height', '100%');
+//     }
+//     $('#float_btn_wrap').show().removeClass('rotate_btn');
+//     $('#page-base').css('display', 'block');
+//     $('#page-base-addstyle').css('display', 'none');
+
+//     var text1 = '회원/그룹 선택';
+//     var text2 = '선택';
+//     if(Options.language == "KOR"){
+//         text1 = '회원/그룹 선택';
+//         text2 = '선택';
+//     }else if(Options.language == "JPN"){
+//         text1 = '「会員選択」';
+//         text2 = '「選択」';
+//     }else if(Options.language == "ENG"){
+//         text1 = 'Choose member';
+//         text2 = 'Choose';
+//     }
+//     $('.add_time_unit, .allow_all_time').removeClass('checked');
+//     $('.add_time_unit div, .allow_all_time div').removeClass('ptersCheckboxInner_sm');
+//     $('.repeatadd_time_unit, .repeatadd_allow_all_time').removeClass('checked');
+//     $('.repeatadd_time_unit div,  .repeatadd_allow_all_time div').removeClass('ptersCheckboxInner_sm');
+//     $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text1+"</span>").val("");
+//     $("#countsSelected,.countsSelected").text("");
+//     //$("#dateSelector p").removeClass("dropdown_selected");
+//     $("#starttimesSelected button").html("<span style='color:#cccccc;'>"+text2+"</span>").val("");
+//     $("#durationsSelected button").html("<span style='color:#cccccc;'>"+text2+"</span>").val("");
+//     $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+//     $("#starttimes, #durations").empty();
+//     $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
+
+//     $('#page-addplan .dropdown_selected').removeClass('dropdown_selected');
+//     $('.dateButton').removeClass('dateButton_selected');
+//     $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate', null);
+//     $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>"+text2+"</span>");
+//     //$('#page-addplan form input').val('');
+//     selectedDayGroup = [];
+
+//     $('._NORMAL_ADD_wrap').css('display', 'block');
+//     $('._REPEAT_ADD_wrap').css('display', 'none');
+//     $('#timeGraph').css('display', 'none');
+//     $('#id_duplication_enable_flag').val(0);
+//     $('#id_off_duplication_enable_flag').val(0);
+//     $('#id_repeat_duplication_enable_flag').val(0);
+//     $('#id_off_repeat_duplication_enable_flag').val(0);
+//     shade_index(-100);
+// }
+
 function close_planadd_popup_mobile(){
+    clear_pt_off_add_popup();
     $('#page-addplan').css('display', 'none');
-    if(bodywidth < 600){
-        //$('#calendar').css('display','block');
-        $('#calendar').css('height', '100%');
-    }
+
+    $('#calendar').css('height', '100%');
     $('#float_btn_wrap').show().removeClass('rotate_btn');
     $('#page-base').css('display', 'block');
     $('#page-base-addstyle').css('display', 'none');
 
-    var text1 = '회원/그룹 선택';
-    var text2 = '선택';
-    if(Options.language == "KOR"){
-        text1 = '회원/그룹 선택';
-        text2 = '선택';
-    }else if(Options.language == "JPN"){
-        text1 = '「会員選択」';
-        text2 = '「選択」';
-    }else if(Options.language == "ENG"){
-        text1 = 'Choose member';
-        text2 = 'Choose';
-    }
     $('.add_time_unit, .allow_all_time').removeClass('checked');
     $('.add_time_unit div, .allow_all_time div').removeClass('ptersCheckboxInner_sm');
     $('.repeatadd_time_unit, .repeatadd_allow_all_time').removeClass('checked');
     $('.repeatadd_time_unit div,  .repeatadd_allow_all_time div').removeClass('ptersCheckboxInner_sm');
-    $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text1+"</span>").val("");
-    $("#countsSelected,.countsSelected").text("");
-    //$("#dateSelector p").removeClass("dropdown_selected");
-    $("#starttimesSelected button").html("<span style='color:#cccccc;'>"+text2+"</span>").val("");
-    $("#durationsSelected button").html("<span style='color:#cccccc;'>"+text2+"</span>").val("");
-    $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-    $("#starttimes, #durations").empty();
-    $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
 
-    $('#page-addplan .dropdown_selected').removeClass('dropdown_selected');
-    $('.dateButton').removeClass('dateButton_selected');
-    $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate', null);
-    $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>"+text2+"</span>");
-    //$('#page-addplan form input').val('');
-    selectedDayGroup = [];
-
-    $('._NORMAL_ADD_wrap').css('display', 'block');
-    $('._REPEAT_ADD_wrap').css('display', 'none');
-    $('#timeGraph').css('display', 'none');
     $('#id_duplication_enable_flag').val(0);
     $('#id_off_duplication_enable_flag').val(0);
     $('#id_repeat_duplication_enable_flag').val(0);
