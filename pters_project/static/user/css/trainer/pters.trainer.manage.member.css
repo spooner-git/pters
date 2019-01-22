@@ -1391,6 +1391,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		box-shadow: unset;
 		border-top: 0;
 		width: 91.6%;
+		margin: 0 auto;
 		/*left: 50%;
 		transform: translateX(-50%);*/
 	}
