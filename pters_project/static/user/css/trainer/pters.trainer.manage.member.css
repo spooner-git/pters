@@ -1054,9 +1054,9 @@ span.summaryInnerBoxText_Repeatendtext{
 	font-size: 11px;
 }
 
-._delete{
+/*._delete{
 	width: 100%;
-}
+}*/
 @media(min-width:600px){
 	._delete{
 		width:50px;
