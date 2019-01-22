@@ -272,14 +272,14 @@
     <div id="shade3">
     </div>
     <!--플로팅 버튼-->
-
+    <!--
     <div id="please_add_member">
         <p style="color: #fe4e65;font-size:16px;margin-bottom: 5px;margin-top:5px;"><img src="/static/user/res/PTERS_logo_pure.png"> Tip!</p>
         <p>먼저 여기를 눌러서</p>
         <p>새로운 회원을 등록하고</p>
         <p>피터스의 기능들을 사용해보세요.</p>
     </div>
-
+    -->
 
     <div id="page_managemember">
         <div id="ymdText">
@@ -309,12 +309,14 @@
             </div>
            -->
             <div class="ymdText-pc-add-member-wrap">
+                <!--
                 <div id="please_add_member_pc">
                     <p style="color: #fe4e65;font-size:16px;margin-bottom: 5px;"><img src="/static/user/res/PTERS_logo_pure.png"> Tip!</p>
                     <p>먼저 여기를 눌러서</p>
                     <p>새로운 회원을 등록하고</p>
                     <p>피터스의 기능들을 사용해보세요.</p>
                 </div>
+                -->
                 <!--
                 <div class="ymdText-pc-add-member _groupaddbutton" onclick="pc_add_member('group')" style="margin-left: 2px;">
                     <span class="KRtext">고정 그룹 추가</span>
@@ -1181,26 +1183,26 @@
 
 
 
-        $('html,body').click(function(){
+        /*$('html,body').click(function(){
             $('#please_add_member_pc').fadeOut('fast')
-        })
+        });
 
         $('#float_btn, .navbar').click(function(){
             $('#please_add_member').fadeOut('fast')
-        })
+        });*/
 
         $('#_close_how_to_add_member, #page_addmember').click(function(){
             $('#how_to_add_member').fadeOut()
-        })
+        });
 
         $('#notice_popup').click(function(){
             $(this).css('display','none')
-        })
+        });
 
         $('#notice_popup_close_temp').click(function(e){
             e.stopPropagation()
             $('#notice_popup').css('display','none')
-        })
+        });
 
         $('#notice_popup_close').click(function(e){
             e.stopPropagation()

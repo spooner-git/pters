@@ -23,6 +23,8 @@
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_current_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "schedule_group_max_member_num":
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_tb.member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "class_group_schedule_id":
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "offTimeArray_start_date" :
       [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
