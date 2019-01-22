@@ -158,11 +158,13 @@
         <div id="canvasWrap">
             <p class="text-pleasesign"></p>
             <canvas id="canvas"></canvas>
-            <div id="popup_btn_sign_complete" class="popup_inner popup_inner_finish popup_inner_x3">
-                <span class="text-ok"></span>
-            </div>
-            <div id="popup_btn_sign_close" class="popup_inner popup_inner_delete  popup_inner_x3">
-                <span class="text-close"></span>
+            <div class="popup_btn_wrap">
+                <div id="popup_btn_sign_complete" class="popup_inner popup_inner_finish popup_inner_x3">
+                    <span class="text-ok"></span>
+                </div>
+                <div id="popup_btn_sign_close" class="popup_inner popup_inner_delete  popup_inner_x3">
+                    <span class="text-close"></span>
+                </div>
             </div>
         </div>
         
@@ -226,11 +228,13 @@
         </div>
         <div id="callbtn_repeat_reg_list" style="height:30px;cursor: pointer;font-size:12px;">등록 리스트 보기<img src="/static/user/res/icon-down-grey.png" style="width: 13px;margin-left: 5px;margin-bottom: 3px;"></div>
         <div id="repeat_reg_list"></div>
-        <div id="popup_btn_repeatconfirm_yes" class="popup_inner popup_inner_delete">
-            <span style="color:#282828;" class="text-yes"></span>
-        </div>
-        <div id="popup_btn_repeatconfirm_no" class="popup_inner popup_inner_delete">
-            <span class="text-no"></span>
+        <div class="popup_btn_wrap">
+            <div id="popup_btn_repeatconfirm_yes" class="popup_inner popup_inner_delete">
+                <span style="color:#282828;" class="text-yes"></span>
+            </div>
+            <div id="popup_btn_repeatconfirm_no" class="popup_inner popup_inner_delete">
+                <span class="text-no"></span>
+            </div>
         </div>
     </div>
     <!--반복일정 등록 확인 팝업메뉴-->
@@ -264,8 +268,10 @@
         <div class="caution_message">
 
         </div>
-        <div id="popup_btn_check_finished_member_yes" class="popup_inner" onclick="close_caution_popup()">
-            <span style="color:#282828;" class="text-close"></span>
+        <div class="popup_btn_wrap">
+            <div id="popup_btn_check_finished_member_yes" class="popup_inner" onclick="close_caution_popup()">
+                <span style="color:#282828;" class="text-close"></span>
+            </div>
         </div>
         <!--
         <div id="popup_btn_check_finished_member_no" class="popup_inner popup_inner_delete">
@@ -276,19 +282,20 @@
         -->
     </div>
 
-    <div id="caution_popup_yes_or_no" class="popups">
+    <div id="caution_popup_yes_or_no">
         <div class="caution_img"><img src="/static/user/res/stopmark.png"></div>
         <div class="caution_message">
 
         </div>
-        <div id="caution_popup_yes" class="popup_inner popup_inner_delete">
-            <span style="color:#fe4e65;" class="text-yes"></span>
-        </div>
+        <div class="popup_btn_wrap">
+            <div id="caution_popup_yes" class="popup_inner popup_inner_delete">
+                <span style="color:#fe4e65;" class="text-yes"></span>
+            </div>
 
-        <div id="caution_popup_no" class="popup_inner" onclick="close_caution_popup()">
-            <span style="color:#282828;" class="text-no"></span>
+            <div id="caution_popup_no" class="popup_inner" onclick="close_caution_popup()">
+                <span style="color:#282828;" class="text-no"></span>
+            </div>
         </div>
-        
     </div>
 
 

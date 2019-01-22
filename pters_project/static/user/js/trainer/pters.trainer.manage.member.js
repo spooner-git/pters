@@ -662,11 +662,13 @@ $(document).ready(function(){
                                                             'data-userid':$(this).parents('._member_info_popup').attr('data-userid'),
                                                             'data-grouptype': ''
                                                         });
-        $('._resume, ._delete').css('display', 'none');
+        // $('._resume, ._delete').css('display', 'none');
+        $('._resume, ._delete').hide();
         if(bodywidth >= 600){
+            // $('._complete, ._refund').css('display', 'inline-block');
             $('._complete, ._refund').css('display', 'inline-block');
         }else{
-            $('._complete, ._refund').css('display', 'block');
+            $('._complete, ._refund').show();
         }
         selector_lectureStateChangeSelectPopup.find('._explain').html('※종료 : 남은 횟수를 0으로 만들고 종료 처리<br>※환불 : 환불 금액을 입력하고 종료 처리');
         show_shadow_reponsively();
