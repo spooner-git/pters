@@ -2551,6 +2551,9 @@ $(document).on("click", "#add_group_to_package_selector li a", function(){
                 else{
                     $("#id_ticket_type").text('그룹');
                 }
+                if($('#upbutton-modify').attr('data-type') == "modify" || $('#popup_ticket_info_mobile_modify_btn').attr('data-type') == "modify"){
+                    $('.lecture_bubble_mini img').show();
+                }
             });
             $('.add_group_to_package_dropdown_title img').trigger('click');
         }
@@ -3888,7 +3891,7 @@ function get_grouplist_in_package(package_id, state, use, callback){
 
 function draw_grouplist_in_package($targetHTML, jsondata){
     var htmlToJoin = [];
-    var group_index = 0;
+    // var group_index = 0;
     for(var i=0; i<jsondata.group_id.length; i++){
         htmlToJoin.push(
                             `<div class="lecture_bubble lecture_bubble_mini" style="background-color:${jsondata.group_ing_color_cd[i]}" data-groupid=${jsondata.group_id[i]} data-groupname='${jsondata.group_name[i]}'>
