@@ -624,8 +624,8 @@
                 var dayarry = ['일', '월', '화', '수', '목', '금', '토'];
                 var day = dayarry[dayraw];
                 var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')';
-                var countNum = $(this).find('._classTime').text();
-                $('#countNum').text(countNum);
+                // var countNum = $(this).find('._classTime').text();
+                // $('#countNum').text(countNum);
                 $('.popup_ymdText').html(infoText);
                 plancheck(yy+'_'+mm+'_'+dd, initialJSON);
                 if(bodywidth >= 600){
@@ -1096,24 +1096,24 @@
                     var lecture_id = $("#id_lecture_id_delete").val();
                     var member_name = $('#id_member_name_delete').val();
                     var data_prev;
-                    get_member_lecture_list(dbid, "callback", function(jsondata){
-                        var index = jsondata.lectureIdArray.indexOf(lecture_id);
-                        data_prev = jsondata.remCountArray[index];
+                    // get_member_lecture_list(dbid, "callback", function(jsondata){
+                        // var index = jsondata.lectureIdArray.indexOf(lecture_id);
+                        // data_prev = jsondata.remCountArray[index];
                         send_plan_delete('pt', 'callback', function(){
                             enable_delete_btns_after_ajax();
-                            get_member_lecture_list(dbid, "callback", function(jsondata){
-                                var index = jsondata.lectureIdArray.indexOf(lecture_id);
-                                if(jsondata.remCountArray[index] == "1" && data_prev == "0"){
-                                    if(jsondata.lectureStateArray[index] == "IP") {
-                                        notice_lecture_status_changed_to_inprogress(jsondata.groupNameArray[index], member_name);
-                                    }
-                                }
-                            });
+                            // get_member_lecture_list(dbid, "callback", function(jsondata){
+                                // var index = jsondata.lectureIdArray.indexOf(lecture_id);
+                                // if(jsondata.remCountArray[index] == "1" && data_prev == "0"){
+                                //     if(jsondata.lectureStateArray[index] == "IP") {
+                                //         notice_lecture_status_changed_to_inprogress(jsondata.groupNameArray[index], member_name);
+                                //     }
+                                // }
+                            // });
                             $('#members_mobile, #members_pc').html('');
                             get_current_member_list();
                             get_current_group_list();
                         });
-                    });
+                    // });
                 }else{
                     //OFF 일정 삭제
                     send_plan_delete('off', 'callback', function(){

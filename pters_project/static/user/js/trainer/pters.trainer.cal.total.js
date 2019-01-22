@@ -3330,10 +3330,10 @@ function classDatesTrainer(jsondata){
         var omm = String(oriMonth);
         var odd = String(oriDate);
         if(omm.length==1){
-            var omm = '0'+oriMonth;
+            omm = '0'+oriMonth;
         }
         if(odd.length==1){
-            var odd='0'+oriDate;
+            odd='0'+oriDate;
         }
         var dateTarget = yy+'_'+Number(mm)+'_'+Number(dd);
         if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
@@ -3556,7 +3556,9 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
                                 '</div>');
             }
         }
+        $('#countNum').text(dateplans.length);
     }else{
+        $('#countNum').text('0');
         htmltojoin.push('<div class="plan_raw_blank">등록된 일정이 없습니다.</div>');
 
     }

@@ -179,7 +179,7 @@ function sideGoPage(page, menu_name_class){
 //     }
 // }
 function shade_index(option){
-    console.log("shade", option)
+    console.log("shade", option);
     var initialbodywidth = window.innerWidth;
     // var initialbodyheight = document.documentElement.clientHeight + 100;
     var initialbodyheight = $(document).height();
