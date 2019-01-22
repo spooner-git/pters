@@ -42,12 +42,42 @@
     {% csrf_token %}
         <input type="hidden" name="next_page" value="{% url 'trainer:help_setting' %}">
         <input type="hidden" name="inquire_type" id="id_inquire_type">
-        <div id="help_label" class="settingMenu wrap800">
+        <div id="help_label" class="settingMenu wrap800" style="border-top: 1px solid #f7f7f7">
             <p class="settingText">PTERS 공지사항</p>
             <p class="settingText2">PTERS의 공지와 업데이트 내용을 확인 해보세요. </p>
         </div>
         <div id="help_setting" class="settingBox wrap800">
             <div id="go_to_faq">
+
+                <div class="label_explain">
+                    <p style="font-weight: 500;text-decoration: underline;">2019.01.22 Update (2019.01.22)</p>
+                    <p class="subtitle">서비스 업데이트</p>
+                        <p class="subsubtitle">1. 디자인 개선</p>
+                            <p class="contents"><span style="font-weight: 600">-모바일 전용 디자인이 적용되었습니다.</span>
+                                                <br><br>모바일에서 더 편리해진 <br>회원, 수업, 수강권 관리의 새로운 디자인을 경험해보세요.
+
+                            </p>
+                            <br>
+                            <p class="contents"><span style="font-weight: 600">-모바일기기에서 주간일정 확대기능</span>
+                                                <br><br>주간일정에서 날짜를 터치하면<br>그날의 일정만 자세히 살펴 볼 수 있습니다.
+
+                            </p>
+                        <p class="subsubtitle">2. 중복일정 입력</p>
+                            <p class="contents">동일한 시간에 일정을 입력할 수 있습니다.
+                                                <br>일정입력시 "중복일정"을 체크하면 겹치는 일정을 등록할 수 있습니다.
+
+                            </p>
+                        <p class="subsubtitle">3. 버그수정</p>
+                            <p class="contents">회원, 수업, 수강권등에 일부 특수문자가 입력된 경우 오류가 발생하는 현상 수정
+                            </p>
+                   <!--  <p class="subtitle">11월말에 업데이트가 예정된 현재 작업중인 내용</p>
+                        <p class="subsubtitle">1. 대기 예약</p>
+                            <p class="contents">그룹일정에 대기예약 기능이 추가 될 예정입니다. 많은 기대 부탁드립니다.</p> -->
+                </div>
+                <br>
+
+
+                <div style="border-top: 3px solid #ffffff;padding:10px 0 20px 0;"><span style="font-size: 16px;font-weight: bold;">지난 공지</span></div>
 
                 <div class="label_explain">
                     <p style="font-weight: 500;text-decoration: underline;">2018.11.20 Update (2018.11.20)</p>
@@ -65,9 +95,9 @@
                         <p class="subsubtitle">4. 버그수정</p>
                             <p class="contents">반복일정 삭제시 오류, 일정완료시 오류등 버그 수정
                             </p>
-                    <p class="subtitle">11월말에 업데이트가 예정된 현재 작업중인 내용</p>
+                    <!-- <p class="subtitle">11월말에 업데이트가 예정된 현재 작업중인 내용</p>
                         <p class="subsubtitle">1. 대기 예약</p>
-                            <p class="contents">그룹일정에 대기예약 기능이 추가 될 예정입니다. 많은 기대 부탁드립니다.</p>
+                            <p class="contents">그룹일정에 대기예약 기능이 추가 될 예정입니다. 많은 기대 부탁드립니다.</p> -->
                 </div>
                 <br>
 
