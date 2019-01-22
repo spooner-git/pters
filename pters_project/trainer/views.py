@@ -3110,17 +3110,6 @@ def finish_group_info_logic(request):
 
         package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id, group_tb_id=group_id, use=USE)
         for package_group_info in package_group_data:
-            # package_group_info.use = UN_USE
-            # package_group_info.save()
-
-            # package_lecture_data = ClassLectureTb.objects.select_related(
-            #     'lecture_tb__package_tb').filter(auth_cd='VIEW',
-            #                                      lecture_tb__package_tb_id=package_group_info.package_tb_id, use=USE)
-            # package_ing_lecture_count = package_lecture_data.filter(lecture_tb__state_cd='IP').count()
-            # package_end_lecture_count = package_lecture_data.count() - package_ing_lecture_count
-            # package_group_info.package_tb.ing_package_member_num = package_ing_lecture_count
-            # package_group_info.package_tb.end_package_member_num = package_end_lecture_count
-
             package_group_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id,
                                                                                                         package_group_info.package_tb_id))
             package_group_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id,
@@ -3546,8 +3535,8 @@ def add_package_group_info_logic(request):
                 package_group_info.package_tb.save()
                 package_group_lecture_data = ClassLectureTb.objects.select_related(
                     'lecture_tb__member').filter(class_tb_id=class_id, auth_cd='VIEW',
-                                                    lecture_tb__package_tb_id=package_id,
-                                                    lecture_tb__use=USE, use=USE)
+                                                 lecture_tb__package_tb_id=package_id,
+                                                 lecture_tb__use=USE, use=USE)
 
                 query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
                                     "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
@@ -3616,6 +3605,7 @@ def delete_package_group_info_logic(request):
                     package_info = PackageTb.objects.get(package_id=package_id)
                 except ObjectDoesNotExist:
                     package_info = None
+
                 if package_info is not None:
 
                     if package_info.state_cd == 'IP':
@@ -3630,8 +3620,13 @@ def delete_package_group_info_logic(request):
                                                                                        use=USE).count()
                     if package_info.package_group_num == 1:
                         try:
-                            package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
-                                                                            package_tb_id=package_id, use=USE)
+                            if package_info.state_cd == 'IP':
+                                package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
+                                                                                group_tb__state_cd='IP',
+                                                                                package_tb_id=package_id, use=USE)
+                            else:
+                                package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
+                                                                                package_tb_id=package_id, use=USE)
                             package_info.package_type_cd = package_group_info.group_tb.group_type_cd
                         except MultipleObjectsReturned:
                             package_info.package_type_cd = 'PACKAGE'
