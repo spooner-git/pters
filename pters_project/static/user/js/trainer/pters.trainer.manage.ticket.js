@@ -2911,9 +2911,14 @@ function fill_single_package_list_to_dropdown_to_make_new_package(targetHTML, ty
         html = ['<div class="add_group_to_package_dropdown_title" style="display:block;"><a disabled="">추가할 수업 선택<img src="/static/user/res/member/icon-x-grey.png"></a></div>'];
         var package_id = $('#add_group_to_package_selector_popup').attr('data-packageid');
         for(var i=0; i<jsondata.group_id.length; i++){
-            if($(`div.groupPackageWrap[data-packageid="${package_id}"]`).find(`div.lecture_bubble_mini[data-groupid="${jsondata.group_id[i]}"]`).length ==0){
-                html.push(`<li><a data-groupid="${jsondata.group_id[i]}">[${jsondata.group_type_cd_nm[i]}] ${jsondata.group_name[i]}</a></option>`);
+            if(bodywidth >=1000){
+                if($(`div.groupPackageWrap[data-packageid="${package_id}"]`).find(`div.lecture_bubble_mini[data-groupid="${jsondata.group_id[i]}"]`).length ==0){
+                    html.push(`<li><a data-groupid="${jsondata.group_id[i]}">[${jsondata.group_type_cd_nm[i]}] ${jsondata.group_name[i]}</a></option>`);
+                }
             }else{
+                if($('#popup_ticket_info_mobile_lecturelist').find(`div.lecture_bubble_mini[data-groupid="${jsondata.group_id[i]}"]`).length ==0){
+                    html.push(`<li><a data-groupid="${jsondata.group_id[i]}">[${jsondata.group_type_cd_nm[i]}] ${jsondata.group_name[i]}</a></option>`);
+                }
 
             }
         }
