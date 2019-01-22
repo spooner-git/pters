@@ -9,8 +9,12 @@
     <style type="text/css">
 
         #ymdText{
+            display: none;
             top: 50px;
             margin-bottom: 0;
+        }
+        .pters_selectbox_wrapper{
+            margin-top: 0;
         }
         #selectBox{
             margin-top: 50px;
@@ -24,12 +28,17 @@
                 overflow-y: overlay;
             }
             #ymdText{
+                display: block;
                 position: relative;
                 margin-bottom: 0px;
                 top: unset;
             }
             #selectBox{
                 margin-top: 0;
+            }
+            .pters_selectbox_wrapper{
+                margin-top: 20px;
+                margin-bottom: 10px;
             }
             #float_btn{
                 display: none !important;
@@ -66,10 +75,10 @@
 
     <!--플로팅 버튼-->
     <div id="float_btn_wrap">
-        <div id="float_btn" onclick="float_btn_managemember(0)" style="background-image:url('/static/user/res/memberadd/float_plus_member.png')">
+        <div id="float_btn" onclick="float_btn_managemember(0)" style="background-image:url('/static/user/res/floatbtn/btn-plus.png')">
         </div>
         
-        
+
         <div id="float_inner1" class="float_inner" onclick="float_btn_managemember('package_ticket')">
             <a class="">수강권<br/>추가</a>
         </div>
@@ -204,7 +213,7 @@
             <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
         </div>
         <div class="KRtext confirmText">회원 수강 환불<br>환불 금액을 입력해 주세요.</div>
-        <div class="KRtext confirmText" style="font-size: 12px;height: 55px;color:#fe4e65;font-weight: normal">※환불시 종료된 회원탭으로 회원이 이동됩니다.<br>환불 금액은 추후 매출통계 기능 추가시 반영됩니다.</div>
+        <div class="KRtext confirmText" style="font-size: 12px;height: 55px;color:#fe4e65;font-weight: normal">※환불시 종료 회원탭으로 회원이 이동됩니다.<br>환불 금액은 추후 매출통계 기능 추가시 반영됩니다.</div>
         <div class="JPtext confirmText">会員登録を取り消ししますか<br>払戻金額を入力してください</div>
         <div class="ENtext confirmText">Are you sure to delete this member from the list?<br>Please enter a refund</div>
         <div style="text-align: center;margin-bottom: 10px;">
@@ -285,144 +294,252 @@
         <p>피터스의 기능들을 사용해보세요.</p>
     </div> -->
 
+    <div id="popup_ticket_info_mobile">
+        <div id="popup_ticket_info_tablet_upperbar">
+            <div id="popup_ticket_info_mobile_close_btn" onclick="closePopup_mobile('upbutton-x-modify')">
+                <img src="/static/user/res/btn_next.png">
+                <span>리스트로 돌아가기</span>
+            </div>
+            <div id="popup_ticket_info_mobile_modify_btn" data-type="view">
+                <img src="/static/user/res/icon-pencil.png">
+            </div>
+
+        </div>
+        <div id="popup_ticket_info_mobile_basic"></div>
+        <div id="popup_ticket_info_mobile_lecturelist"></div>
+        <div id="popup_ticket_info_mobile_ticket_delete"></div>
+        <div id="popup_ticket_info_mobile_memberlist"></div>
+    </div>
+    <div id="popup_ticket_info_mobile_lecture_add_popup"></div>
+
 
     <div id="page_managemember">
-        <div id="ymdText">
-            <div id="ymdTextWrap">
-                <div id="menuName" class="text-ticketmanage">
-                </div>
-                <div id="menuDescription">전체 수강권을 관리합니다.
+
+        <div class="upper_fixed_parts">
+            <div id="ymdText">
+                <div id="ymdTextWrap">
+                    <div id="menuName" class="text-ticketmanage">
+                    </div>
+                    <div id="menuDescription">전체 수강권을 관리합니다.
+                    </div>
                 </div>
             </div>
+
+            <div id="" class="pters_selectbox_wrapper">
+                <div id="btnCallCurrent" onclick="shiftPackageList('current')" class="pters_selectbox_btn pters_selectbox_btn_selected" data-status="current">
+                    <span class="text-inprogress">진행중</span>
+                </div>
+                <div id="btnCallFinished" onclick="shiftPackageList('finished')" class="pters_selectbox_btn" data-status="finished">
+                    <span class="text-finish">종료</span>
+                </div>
+            </div>
+
+            <div id="alignBox">
+                <span id="memberNumber_current_ticket" class="memberNum"></span>
+                <span id="memberNumber_finish_ticket" class="memberNum"></span>
+                <!--<div id="align_type_text">
+                    <span class="memberAlign text-sort _ALIGN_DROPDOWN">정렬 기준</span>
+                </div>-->
+                <div class="ymdText-pc-add-member-wrap">
+                    <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('package_ticket')" style="margin-left: 2px;">
+                        <span class="">수강권 추가</span>
+                    </div>
+                    <!--
+                    <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('group')" style="display: none; margin-left: 2px;">
+                        <span class="KRtext">그룹 추가</span>
+                        <span class="JPtext">再登録</span>
+                        <span class="ENtext">Re-Contract</span>
+                    </div>
+                    -->
+                    <input id="search_ticket_input" type="text" name="search_ticket_input" placeholder="검색">
+{#                    <img src="/static/user/res/ptadd/btn-x.png" alt="" id="id_search_x_button" class="icondown" style="right:20%;">#}
+                    <img src="/static/user/res/icon-search-black.png" alt="" id="id_ticket_search" class="icondown">
+                </div>
+
+                <select class="alignSelect_ticket _ALIGN_DROPDOWN">
+
+                    <option id="ticket_type_seq" class="KRtext">수강권 타입 순</option>
+
+                    <option id="ticket_name" class="KRtext">수강권명 가나다 순</option>
+
+                    <option id="ticket_member_many" class="KRtext">참여중 회원 많은 순</option>
+
+                    <option id="ticket_member_few" class="KRtext">참여중 회원 적은 순</option>
+
+                    <option id="ticket_create_new" class="KRtext">생성 일자 최근 순</option>
+
+                    <option id="ticket_create_old" class="KRtext">생성 일자 과거 순</option>
+                    <!--
+                    <option id="ticket_modR" class="KRtext">수정 일시 최근 순</option>
+
+                    <option id="ticket_modP" class="KRtext">수정 일시 과거 순</option>-->
+
+                </select>
+                <img src="/static/user/res/memberadd/icon-down.png" alt="" id="align_select_dropdown_arrow" class="icondown _ALIGN_DROPDOWN">
+                <div id="search_ticket_box">
+                    <img src="/static/user/res/icon-search-black.png" alt="" style="width:25px;" id="id_search_x_button">
+                </div>
+                <!--
+                <div class="ymdText-pc-add-member-again _info_download" style="position: absolute;right: 0;">
+                    <span class="KRtext">전체 목록 <img src="/static/user/res/member/pters-download.png" class="pcmanageicon" style="height: 15px;margin-bottom: 3px;margin-right: 0;"></span>
+                </div>
+                -->
+            </div>
+
+            <table id="tableThead" class="tableThead table table-bordered centeralign _GROUP_THEAD">
+                <thead>
+                <tr style="border-bottom:0;">
+                    <th class="_groupnum">
+                        <span class="KRtext">순번</span>
+                    </th>
+                    <th class="_grouptypecd" style="display: none;">
+                        <span class="KRtext">유형</span>
+                    </th>
+                    <th class="_groupname">
+                        <span class="KRtext">명칭</span>
+                    </th>
+                    <th class="_grouppartystatus">
+                        <span class="KRtext">회원수</span>
+                    </th>
+                    <th class="_groupparticipants">
+                        <span class="KRtext">현재 참여</span>
+                    </th>
+                    <th class="_groupcapacity">
+                        <span class="KRtext">정원(명)</span>
+                    </th>
+                    <th class="_groupmemo">
+                        <span class="KRtext">메모</span>
+                    </th>
+                    <th class="_groupcreatedate">
+                        <span class="KRtext">생성일</span>
+                    </th>
+                    <th class="_groupstatus">
+                        <span class="KRtext">상태</span>
+                    </th>
+                    <th class="_groupmanage">
+                        <span class="KRtext">관리</span>
+                    </th>
+                </tr>
+                </thead>
+            </table>
         </div>
 
-         <div id="" class="pters_selectbox_wrapper">
-            <div id="btnCallCurrent" onclick="shiftPackageList('current')" class="pters_selectbox_btn pters_selectbox_btn_selected">
-                <span class="KRtext">진행중</span>
-            </div>
-            <div id="btnCallFinished" onclick="shiftPackageList('finished')" class="pters_selectbox_btn">
-                <span class="KRtext">종료</span>
-            </div>
-        </div>
+{#        <div class="upper_fixed_parts">#}
+{#            <div id="ymdText">#}
+{#                <div id="ymdTextWrap">#}
+{#                    <div id="menuName" class="text-ticketmanage">#}
+{#                    </div>#}
+{#                    <div id="menuDescription">전체 수강권을 관리합니다.#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#             <div id="" class="pters_selectbox_wrapper">#}
+{#                <div id="btnCallCurrent" onclick="shiftPackageList('current')" class="pters_selectbox_btn pters_selectbox_btn_selected">#}
+{#                    <span class="KRtext">진행중</span>#}
+{#                </div>#}
+{#                <div id="btnCallFinished" onclick="shiftPackageList('finished')" class="pters_selectbox_btn">#}
+{#                    <span class="KRtext">종료</span>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <div id="alignBox">#}
+{#                <span id="memberNumber_current_group" class="memberNum"></span>#}
+{#                <span id="memberNumber_finish_group" class="memberNum"></span>#}
+{#                <!--#}
+{#                <div id="align_type_text">#}
+{#                  <span class="memberAlign KRtext _ALIGN_DROPDOWN">정렬 기준</span>#}
+{#                  <span class="memberAlign JPtext">並べ替え</span>#}
+{#                  <span class="memberAlign ENtext">Sort by</span>#}
+{#                </div>#}
+{#               -->#}
+{#                <div class="ymdText-pc-add-member-wrap">#}
+{##}
+{#                    <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('package_ticket')" style="margin-left: 2px;">#}
+{#                        <span class="">새 수강권</span>#}
+{#                    </div>#}
+{#                    <input id="search_lecture_input" type="text" name="search_lecture_input" placeholder="검색">#}
+{#                </div>#}
+{##}
+{#                <select class="alignSelect _ALIGN_DROPDOWN" style="display: none;">#}
+{##}
+{#                    <option id="name" class="KRtext">회원명 가나다 순</option>#}
+{#                    <option id="name" class="JPtext">名前順</option>#}
+{#                    <option id="name" class="ENtext">Name</option>#}
+{##}
+{#                    <option id="countH" class="KRtext">남은 횟수 많은 순</option>#}
+{#                    <option id="countH" class="JPtext">残り回数が多い</option>#}
+{#                    <option id="countH" class="ENtext">Remain Count(H)</option>#}
+{##}
+{#                    <option id="countL" class="KRtext">남은 횟수 적은 순</option>#}
+{#                    <option id="countL" class="JPtext">残り回数が少ない</option>#}
+{#                    <option id="countL" class="ENtext">Remain Count(L)</option>#}
+{##}
+{#                    <option id="startP" class="KRtext">시작 일자 과거 순</option>#}
+{#                    <option id="startP" class="JPtext">開始が過去</option>#}
+{#                    <option id="startP" class="ENtext">Start Date(P)</option>#}
+{##}
+{#                    <option id="startR" class="KRtext">시작 일자 최근 순</option>#}
+{#                    <option id="startR" class="JPtext">開始が最近</option>#}
+{#                    <option id="startR" class="ENtext">Start Date(R)</option>#}
+{#                </select>#}
+{#                <img src="/static/user/res/memberadd/icon-down.png" alt="" id="align_select_dropdown_arrow" class="icondown _ALIGN_DROPDOWN"  style="display: none;">#}
+{##}
+{#                <!--#}
+{#                <div class="ymdText-pc-add-member-again _info_download" style="position: absolute;right: 0;">#}
+{#                      <span class="KRtext">전체 목록 <img src="/static/user/res/member/pters-download.png" class="pcmanageicon" style="height: 15px;margin-bottom: 3px;margin-right: 0;"></span>#}
+{#                </div>#}
+{#            -->#}
+{#            </div>#}
+{##}
+{##}
+{#            <table id="tableThead" class="tableThead table table-bordered centeralign _GROUP_THEAD">#}
+{#                <thead>#}
+{#                <tr style="border-bottom:0;">#}
+{#                    <th class="_groupnum">#}
+{#                        <span class="KRtext">순번</span>#}
+{#                    </th>#}
+{#                    <th class="_grouptypecd" style="display: none;">#}
+{#                        <span class="KRtext">유형</span>#}
+{#                    </th>#}
+{#                    <th class="_groupname">#}
+{#                        <span class="KRtext">명칭</span>#}
+{#                    </th>#}
+{#                    <th class="_grouppartystatus">#}
+{#                        <span class="KRtext">회원수</span>#}
+{#                    </th>#}
+{#                    <th class="_groupparticipants">#}
+{#                        <span class="KRtext">현재 참여</span>#}
+{#                    </th>#}
+{#                    <th class="_groupcapacity">#}
+{#                        <span class="KRtext">정원(명)</span>#}
+{#                    </th>#}
+{#                    <th class="_groupmemo">#}
+{#                        <span class="KRtext">메모</span>#}
+{#                    </th>#}
+{#                    <th class="_groupcreatedate">#}
+{#                        <span class="KRtext">생성일</span>#}
+{#                    </th>#}
+{#                    <th class="_groupstatus">#}
+{#                        <span class="KRtext">상태</span>#}
+{#                    </th>#}
+{#                    <th class="_groupmanage">#}
+{#                        <span class="KRtext">관리</span>#}
+{#                    </th>#}
+{#                </tr>#}
+{#                </thead>#}
+{#            </table>#}
+{#        </div>#}
 
-        <div id="alignBox">
-            <span id="memberNumber_current_group" class="memberNum"></span>
-            <span id="memberNumber_finish_group" class="memberNum"></span>
-            <!--
-            <div id="align_type_text">
-              <span class="memberAlign KRtext _ALIGN_DROPDOWN">정렬 기준</span>
-              <span class="memberAlign JPtext">並べ替え</span>
-              <span class="memberAlign ENtext">Sort by</span>
-            </div>
-           -->
-            <div class="ymdText-pc-add-member-wrap">
-                <!-- <div id="please_add_member_pc">
-                    <p style="color: #fe4e65;font-size:16px;margin-bottom: 5px;"><img src="/static/user/res/PTERS_logo_pure.png"> Tip!</p>
-                    <p>여기를 눌러서</p>
-                    <p>새로운 그룹 혹은 클래스를 등록하고</p>
-                    <p>피터스의 기능들을 사용해보세요.</p>
-                </div> -->
-
-                <!-- <div class="ymdText-pc-add-member _groupaddbutton" onclick="pc_add_member('group')" style="margin-left: 2px;">
-                    <span class="KRtext">그룹 추가</span>
-                    <span class="JPtext"></span>
-                    <span class="ENtext"></span>
-                </div>
-                
-                <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('openlesson')" style="margin-left: 2px;">
-                    <span class="KRtext">클래스 추가</span>
-                    <span class="JPtext"></span>
-                    <span class="ENtext"></span>
-                </div> -->
-
-                <!-- <div class="ymdText-pc-add-member _groupaddbutton" onclick="pc_add_member('solo_ticket')" style="margin-left: 2px;">
-                    <span class="">단일 수강권</span>
-                </div> -->
-
-                <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('package_ticket')" style="margin-left: 2px;">
-                    <span class="">새 수강권</span>
-                </div>
-                <input id="search_lecture_input" type="text" name="search_lecture_input" placeholder="검색">
-            </div>
-
-            <select class="alignSelect _ALIGN_DROPDOWN" style="display: none;">
-
-                <option id="name" class="KRtext">회원명 가나다 순</option>
-                <option id="name" class="JPtext">名前順</option>
-                <option id="name" class="ENtext">Name</option>
-
-                <option id="countH" class="KRtext">남은 횟수 많은 순</option>
-                <option id="countH" class="JPtext">残り回数が多い</option>
-                <option id="countH" class="ENtext">Remain Count(H)</option>
-
-                <option id="countL" class="KRtext">남은 횟수 적은 순</option>
-                <option id="countL" class="JPtext">残り回数が少ない</option>
-                <option id="countL" class="ENtext">Remain Count(L)</option>
-
-                <option id="startP" class="KRtext">시작 일자 과거 순</option>
-                <option id="startP" class="JPtext">開始が過去</option>
-                <option id="startP" class="ENtext">Start Date(P)</option>
-
-                <option id="startR" class="KRtext">시작 일자 최근 순</option>
-                <option id="startR" class="JPtext">開始が最近</option>
-                <option id="startR" class="ENtext">Start Date(R)</option>
-            </select>
-            <img src="/static/user/res/memberadd/icon-down.png" alt="" id="align_select_dropdown_arrow" class="icondown _ALIGN_DROPDOWN"  style="display: none;">
-
-            <!--
-            <div class="ymdText-pc-add-member-again _info_download" style="position: absolute;right: 0;">
-                  <span class="KRtext">전체 목록 <img src="/static/user/res/member/pters-download.png" class="pcmanageicon" style="height: 15px;margin-bottom: 3px;margin-right: 0;"></span>
-            </div>
-        -->
-        </div>
-
-
-        <table id="tableThead" class="tableThead table table-bordered centeralign _GROUP_THEAD">
-            <thead>
-            <tr style="border-bottom:0;">
-                <th class="_groupnum">
-                    <span class="KRtext">순번</span>
-                </th>
-                <th class="_grouptypecd" style="display: none;">
-                    <span class="KRtext">유형</span>
-                </th>
-                <th class="_groupname">
-                    <span class="KRtext">명칭</span>
-                </th>
-                <th class="_grouppartystatus">
-                    <span class="KRtext">회원수</span>
-                </th>
-                <th class="_groupparticipants">
-                    <span class="KRtext">현재 참여</span>
-                </th>
-                <th class="_groupcapacity">
-                    <span class="KRtext">정원(명)</span>
-                </th>
-                <th class="_groupmemo">
-                    <span class="KRtext">메모</span>
-                </th>
-                <th class="_groupcreatedate">
-                    <span class="KRtext">생성일</span>
-                </th>
-                <th class="_groupstatus">
-                    <span class="KRtext">상태</span>
-                </th>
-                <th class="_groupmanage">
-                    <span class="KRtext">관리</span>
-                </th>
-            </tr>
-            </thead>
-        </table>
-
-
+        <div id="currentMemberList" style="display:none"></div>
         <div id="currentPackageList" class="centeralign">
-            <table id="currentGroup" class="table table-bordered">
+            <table id="currentPackage" class="table table-bordered">
 
             </table>
         </div>
 
         <div id="finishedPackageList" class="centeralign">
-            <table id="finishedGroup" class="table table-bordered">
+            <table id="finishedPackage" class="table table-bordered">
 
             </table>
         </div>
@@ -783,6 +900,7 @@
             <input type="hidden" name="username" id="id_username_info">
             <input type="hidden" name="search_confirm" id="id_search_confirm" value="0">
             <input type="hidden" name="group_id" id="form_member_groupid" value="">
+            <input type="hidden" name="ing_member_check" id="id_ing_member_check">
 
             <!--그룹추가 관련 Form-->
             <input type="hidden" name="grouptype" id="form_grouptype" value="">
@@ -969,8 +1087,8 @@
 
                 <div class="ptaddbox _ADD_PACKAGE_NEW">
                     <label class="ptaddboxtext">
-                        <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}>
-                        <span>새 수강권 이름</span>
+                        <!-- <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> -->
+                        <span>신규 수강권 이름</span>
                         <span style="color: #fe4e65;">*</span>
                     </label>
                     <div id="packageNameInput">
@@ -978,19 +1096,20 @@
                     </div>
                     <br>
                     <label class="ptaddboxtext">
-                        <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}>
-                        <span id="addpackagename"></span>
+                        <!-- <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> -->
+                        <span id="addpackagename">수업선택</span>
                         <span style="color: #fe4e65;">*</span>
                     </label>
                     <div id="packaggSelector">
                         <select id="lecture_list_to_package">
 
                         </select>
+                        <img src="/static/user/res/memberadd/icon-down.png" alt="" id="lecture_select_dropdown_arrow" class="icondown">
                     </div>
                     <br>
                     <label class="ptaddboxtext">
-                        <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}>
-                        <span >수강권에 추가될 수업 (1개 이상 선택)</span>
+                        <!-- <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> -->
+                        <span >수강권에 추가될 수업 (1개 이상)</span>
                         <span id="selected_lectures_to_package_num" style="color: #fe4e65;">*</span>
                     </label>
                     <div id="selected_lectures_to_package_wrap">
@@ -998,7 +1117,7 @@
                     </div>
                     <br>
                     <label class="ptaddboxtext">
-                        <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}>
+                        <!-- <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> -->
                         <span >수강권 메모</span><!-- 
                         <span id="selected_lectures_to_package_num" style="color: #fe4e65;">*</span> -->
                     </label>
@@ -1232,8 +1351,7 @@
         </form>
     </div>
 
-
-
+<input type="hidden" id="id_selected_ticket_id">
 
 {% endblock %}
 
@@ -1243,6 +1361,10 @@
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.ticket.js" %}></script>
     <script>
+        var current_Scroll_Position;
+
+{#        var $search_box = $('.ymdText-pc-add-member-wrap');#}
+{#        $search_box.css('display', 'inline-block');#}
         $('a.text-ticketmanage').css('color','#fe4e65;');
 {#        $('#uptext').html("수강권<img src='/static/user/res/beta_tag.png' class='beta_tag'>")#}
         $('#uptext').html("수강권");
@@ -1255,42 +1377,103 @@
         var deleteTypeSelect;
         var alignType = "name";
         var select_all_check = false;
-        // get_member_group_class_ing_list("callback", function(jsondata){
-        //     // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-        //     // var member_Html = memberlist.html;
-        //     var group_class_Html = group_class_ListHtml('current', jsondata);
-        //     $('#currentGroupList').html(group_class_Html);
-        //     console.log("get_membeR_group_class_ing_list", jsondata)
-        // });
 
-        get_package_ing_list("callback", function(jsondata){
-            var group_class_Html = package_ListHtml('current', jsondata);
-            $('#currentPackageList').html(group_class_Html);
-            console.log('get_package_ing_list', jsondata);
+        if(bodywidth < 1000){
+            get_package_ing_list("callback", function(jsondata){
+                var group_class_Html = package_ListHtml_mobile('current', jsondata);
+                $('#currentPackageList').html(group_class_Html);
+
+            });
+            get_member_ing_list("callback", function(jsondata) {
+                $('#currentMemberList').attr('total_member_num', jsondata.total_member_num);
+            });
+        }else if(bodywidth >= 1000){
+            get_package_ing_list("callback", function(jsondata){
+                var group_class_Html = package_ListHtml('current', jsondata);
+                $('#currentPackageList').html(group_class_Html);
+            });
+            get_member_ing_list("callback", function(jsondata) {
+                $('#currentMemberList').attr('total_member_num', jsondata.total_member_num);
+            });
+        }
+
+        var _origin = $(window).scrollTop();
+        $(window).scroll(function(){
+            var _change = $(window).scrollTop();
+
+            var scrollHeight = $(document).height();
+            var scrollPosition = $(window).height() + $(window).scrollTop();
+            if (((scrollHeight - scrollPosition) < 100) && (ticket_mutex_val==1)) {
+                ticket_mutex_val = 0;
+                if(ticket_tab == TAB_ING) {
+                    get_package_ing_list_page("callback", function(jsondata){
+                        var group_class_Html = '';
+                        if(bodywidth < 1000) {
+                            group_class_Html = package_ListHtml_mobile('current', jsondata);
+                        }
+                        else if(bodywidth >= 1000){
+                            group_class_Html = package_ListHtml_page('current', jsondata);
+                        }
+                        $('#currentPackageList').append(group_class_Html);
+                    });
+                }
+                else if(ticket_tab == TAB_END) {
+                    get_package_end_list_page("callback", function(jsondata){
+                        // console.log("get_package_end_list", jsondata)
+                        var group_class_Html = '';
+                        if(bodywidth < 1000) {
+                            group_class_Html = package_ListHtml_mobile('finished', jsondata);
+                        }
+                        else if(bodywidth >= 1000){
+                            group_class_Html = package_ListHtml_page('finished', jsondata);
+                        }
+                        $('#finishedPackageList').append(group_class_Html);
+                    });
+                }
+            }
+            if(_change > _origin){
+                downTouchEvent();
+                if(_change < 100){
+                    upTouchEvent();
+                }
+            }else{
+                upTouchEvent();
+            }
+            _origin = _change;
+
         });
 
-        // get_member_ing_list("callback", function(jsondata){
-        //     var start_time = new Date().getTime();
-        //     var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-        //     var member_Html = memberlist.html;
-        //     var group_class_Html;
 
-        //     get_group_ing_list("callback", function(jsondata){
-        //         group_class_Html = group_class_ListHtml('current', jsondata);
-        //         $('#currentGroupList').html(group_class_Html);
-        //         var end_time = new Date().getTime();
-        //     }); //그룹 + 클래스#}
-        // });
-
-        
-
-        // $('html,body').click(function(){
-        //     $('#please_add_member_pc').fadeOut('fast')
-        // })
-
-        // $('#float_btn, .navbar').click(function(){
-        //     $('#please_add_member').fadeOut('fast')
-        // })
+        $(window).resize(function(){
+            bodywidth = window.innerWidth;
+            var selector_currentPackageList = $('#currentPackageList');
+            var selector_finishedPackageList = $('#finishedPackageList');
+            if(bodywidth < 1000 && $('._ticket_list_mobile_style').length == 0){
+                if(selector_currentPackageList.css('display') == "block"){
+                    get_package_ing_list("callback", function(jsondata){
+                        var package_Html = package_ListHtml_mobile('current', jsondata);
+                        $('#currentPackageList').html(package_Html);
+                    });
+                }else if(selector_finishedPackageList.css('display') == "block"){
+                    get_package_ing_list("callback", function(jsondata){
+                        var package_Html = package_ListHtml_mobile('finished', jsondata);
+                        $('#finishedPackageList').html(package_Html);
+                    });
+                }
+            }else if(bodywidth >= 1000 && $('._ticket_list_pc_style').length == 0 ){
+                if(selector_currentPackageList.css('display') == "block"){
+                    get_package_ing_list("callback", function(jsondata){
+                        var package_Html = package_ListHtml('current', jsondata);
+                        $('#currentPackageList').html(package_Html);
+                    });
+                }else if(selector_finishedPackageList.css('display') == "block"){
+                    get_package_ing_list("callback", function(jsondata){
+                        var package_Html = package_ListHtml('finished', jsondata);
+                        $('#finishedPackageList').html(package_Html);
+                    });
+                }
+            }
+        });
 
         $('#_close_how_to_add_member, #page_addmember').click(function(){
             $('#how_to_add_member').fadeOut();

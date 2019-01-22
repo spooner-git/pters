@@ -5,6 +5,7 @@ $('#selectBox .btn').click(function(){
     $('#'+$(this).attr('id').replace(/_selector/gi, '_page')).show();
     $('#'+$(this).attr('id').replace(/_selector/gi, '_page')).siblings('.pages').hide();
 
+    // 통계 구분 split 문제 없음 - hkkim.190118
     if($(this).attr('id').split('_')[0] == 'member'){
         ajax_call_member_analytics_data(class_id, month_date[0], month_date[month_date.length-1]);
         ajax_call_member_monthly_data(class_id, month_date[0], month_date[month_date.length-1]);
@@ -35,9 +36,9 @@ $('.month_sel_btn').click(function(){
 $('#call_sales_data_btn').click(function(){
     if(Options.auth_limit == 0){
         show_caution_popup(`<div style="margin-bottom:10px;">
-                                베이직 기능 이용자께서는 <br>
+                                무료 기능 이용자께서는 <br>
                                 통계조회를 <span style="font-weight:500;">이번달만 가능</span>합니다. <br><br>
-                                <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                <span style="color:#fe4e65;">추가 이용권</span>으로<br>
                                 <span style="color:#fe4e65;">조회기간 제한 없이 이용</span>해보세요!
                             </div>`);
     }else{
@@ -71,9 +72,9 @@ $('#call_sales_data_btn').click(function(){
 $('#call_member_data_btn').click(function(){
     if(Options.auth_limit == 0){
         show_caution_popup(`<div style="margin-bottom:10px;">
-                                    베이직 기능 이용자께서는 <br>
+                                    무료 기능 이용자께서는 <br>
                                     통계조회를 <span style="font-weight:500;">이번달만 가능</span>합니다. <br><br>
-                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                    <span style="color:#fe4e65;">추가 이용권</span>으로<br>
                                     <span style="color:#fe4e65;">조회기간 제한 없이 이용</span>해보세요!
                                 </div>`);
     }else{

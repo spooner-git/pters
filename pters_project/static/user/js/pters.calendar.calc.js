@@ -18,15 +18,15 @@ function add_date(startdate, addvalue){
 	var month = Number(startdate.split('-')[1]);
 	var date = Number(startdate.split('-')[2]);
 	var sumdate = date + addvalue;
-	var currentLastday = lastDay[month-1]
+	var currentLastday = lastDay[month-1];
 	var index = month - 1;
 	var newdate = sumdate;
-	var newmonth = month
-	var newyear = year
+	var newmonth = month;
+	var newyear = year;
 	while(newdate > lastDay[index]){
 		newdate = newdate - lastDay[index];
-		newmonth++
-		index++
+		newmonth++;
+		index++;
 		if(index == 12){
 			index = 0;
 			newyear++;
@@ -38,32 +38,33 @@ function add_date(startdate, addvalue){
 	return result;
 }
 
+
 //날짜 빼기 계산 : 2018-7-5에서 10일 전은 언제?
 function substract_date(startdate, subvalue){ //subvalue는 음수값 입력
 	var year = Number(startdate.split('-')[0]);
 	var month = Number(startdate.split('-')[1]);
 	var date = Number(startdate.split('-')[2]);
 	var subsdate = date + subvalue;
-	var monthindex = month - 2
+	var monthindex = month - 2;
 	// if(month-2 == 0){
-	// 	monthindex = 11
+	// 	monthindex = 11;
 	// }else if(month - 2 == -1){
-	// 	monthindex = 10
+	// 	monthindex = 10;
 	// }
 	var index = monthindex;
 	var newdate = subsdate;
-	var newmonth = month
-	var newyear = year
+	var newmonth = month;
+	var newyear = year;
 	while(newdate <= 0){
-		newmonth--
-		if(index == -1){
+		newmonth--;
+		if(index == -1 ){
 			index = 11;
 			newyear--;
 			newmonth = 12;
 		}
-		newdate = newdate + lastDay[index]
-		
-		index--
+		newdate = newdate + lastDay[index];
+
+		index--;
 		
 	}
 	var result = newyear + '-' + newmonth + '-' + newdate;
@@ -72,9 +73,9 @@ function substract_date(startdate, subvalue){ //subvalue는 음수값 입력
 }
 
 function diff_month(startdate, enddate){ //2018-07-01 ~ 2018-09-31
-	var zz =0 
+	var zz =0;
 	while(add_month(startdate, zz).split('-')[1] != Number(enddate.split('-')[1]) ){
-		zz++
+		zz++;
 		if(zz > 20000){
 			break;
 			alert('오류 발생 : 기능이 현재 사용 불가합니다.\n 관리자 점검이 필요합니다.')
@@ -85,11 +86,11 @@ function diff_month(startdate, enddate){ //2018-07-01 ~ 2018-09-31
 
 //날짜 차이 계산 : 2018-7-5 ~ 2018-9-25 일 사이는 몇일이 있는가?
 function diff_date(startdate, enddate){
-	var enddate_ = Number(enddate.split('-')[0]) + '-' + Number(enddate.split('-')[1]) + '-' + Number(enddate.split('-')[2])
+	var enddate_ = Number(enddate.split('-')[0]) + '-' + Number(enddate.split('-')[1]) + '-' + Number(enddate.split('-')[2]);
 	var datesum = startdate;
 	var diff = 0;
 	while(datesum != enddate_){
-		diff++
+		diff++;
 		datesum = add_date(startdate, diff)
 	}
 	return diff
@@ -100,20 +101,20 @@ function add_month(startdate, addvalue){
 	var year = Number(startdate.split('-')[0]);
 	var month = Number(startdate.split('-')[1]);
 	var date = Number(startdate.split('-')[2]);
-	var summonth = month + addvalue
+	var summonth = month + addvalue;
 	var newmonth = summonth;
 	var newyear  = year;
 	var newdate  = date;
 	while(newmonth > 12){
-		newmonth = newmonth - 12
+		newmonth = newmonth - 12;
 		newyear++
 	}
 	if(date == lastDay[month-1]){
-		var newdate = lastDay[newmonth-1]
+		var newdate = lastDay[newmonth-1];
 	}
 
 
-	var result = newyear + '-' + newmonth + '-' + newdate
+	var result = newyear + '-' + newmonth + '-' + newdate;
 	return result
 }
 
@@ -122,20 +123,20 @@ function substract_month(startdate, addvalue){
 	var year = Number(startdate.split('-')[0]);
 	var month = Number(startdate.split('-')[1]);
 	var date = Number(startdate.split('-')[2]);
-	var summonth = month + addvalue
+	var summonth = month + addvalue;
 	var newmonth = summonth;
 	var newyear  = year;
 	var newdate  = date;
 	while(newmonth <= 0){
-		newmonth = newmonth + 12
+		newmonth = newmonth + 12;
 		newyear--
 	}
 	if(date == lastDay[month-1]){
-		var newdate = lastDay[newmonth-1]
+		var newdate = lastDay[newmonth-1];
 	}
 
 
-	var result = newyear + '-' + newmonth + '-' + newdate
+	var result = newyear + '-' + newmonth + '-' + newdate;
 	return result
 }
 
@@ -145,10 +146,10 @@ function compare_date(date1, date2){
 	var year2 = date2.split('-')[0];
 	var month2  = date2.split('-')[1];
 
-	if(year1.length<2){year1 = '0'+ year1;};
-	if(month1.length<2){month1 = '0'+ month1;};
-	if(year2.length<2){year2 = '0'+ year2;};
-	if(month2.length<2){month2 = '0'+ month2;};
+	if(year1.length<2){year1 = '0'+ year1;}
+	if(month1.length<2){month1 = '0'+ month1;}
+	if(year2.length<2){year2 = '0'+ year2;}
+	if(month2.length<2){month2 = '0'+ month2;}
 
 	var date1_num = year1+month1;
 	var date2_num = year2+month2;
@@ -161,18 +162,20 @@ function compare_date(date1, date2){
 }
 
 function compare_date2(date1, date2){
-	var yy1 = date1.split('-')[0];
-	var mm1  = date1.split('-')[1];
-	var dd1 = date1.split('-')[2];
-	var yy2 = date2.split('-')[0];
-	var mm2  = date2.split('-')[1];
-	var dd2 = date2.split('-')[2];
+	var date1_split =  date1.split('-');
+	var date2_split =  date2.split('-');
+	var yy1 = date1_split[0];
+	var mm1  = date1_split[1];
+	var dd1 = date1_split[2];
+	var yy2 = date2_split[0];
+	var mm2  = date2_split[1];
+	var dd2 = date2_split[2];
 
-	if(yy1.length<2){yy1 = '0'+ yy1;};
-	if(mm1.length<2){mm1 = '0'+ mm1;};
-	if(dd1.length<2){dd1 = '0'+ dd1;};
-	if(yy2.length<2){yy2 = '0'+ yy2;};
-	if(mm2.length<2){mm2 = '0'+ mm2;};
+	if(yy1.length<2){yy1 = '0'+ yy1;}
+	if(mm1.length<2){mm1 = '0'+ mm1;}
+	if(dd1.length<2){dd1 = '0'+ dd1;}
+	if(yy2.length<2){yy2 = '0'+ yy2;}
+	if(mm2.length<2){mm2 = '0'+ mm2;}
 	if(dd2.length<2){dd2 = '0' + dd2}
 
 
@@ -191,11 +194,11 @@ function find_max_date(dateArray){ //어레이 안에서 가장 최근 날짜를
 	var dates = [];
 
 	for(var i=0; i<len; i++){
-		var date = dateArray[i]
+		var date = dateArray[i];
 		if(date == '9999-12-31' || date == '소진시까지'){
 
 		}else{
-			dates.push(date)
+			dates.push(date);
 		}
 	}
 	var sorted = dates.sort();

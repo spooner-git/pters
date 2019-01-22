@@ -9,11 +9,15 @@
     <style type="text/css">
 
         #ymdText{
+            display: none;
             top: 50px;
             margin-bottom: 0;
         }
         #selectBox{
             margin-top: 50px;
+        }
+        .pters_selectbox_wrapper{
+            margin-top: 0;
         }
 
         @media(min-width: 600px){
@@ -25,11 +29,16 @@
             }
             #ymdText{
                 position: relative;
+                display: block;
                 margin-bottom: 0px;
                 top: unset;
             }
             #selectBox{
                 margin-top: 0;
+            }
+            .pters_selectbox_wrapper{
+                margin-top: 20px;
+                margin-bottom: 10px;
             }
             #float_btn{
                 display: none !important;
@@ -66,10 +75,10 @@
 
     <!--플로팅 버튼-->
     <div id="float_btn_wrap">
-        <div id="float_btn" onclick="float_btn_managemember(0)" style="background-image:url('/static/user/res/memberadd/float_plus_member.png')">
+        <div id="float_btn" onclick="float_btn_managemember(0)" style="background-image:url('/static/user/res/floatbtn/btn-plus.png')">
         </div>
         <div id="float_inner1" class="float_inner" onclick="float_btn_managemember('group')">
-            <a class="KRtext">그룹<br/>추가</a><a class="JPtext">Group<br/>Lesson</a><a class="ENtext">Group<br/>Lesson</a>
+            <a class="KRtext">수업<br/>추가</a><a class="JPtext">Group<br/>Lesson</a><a class="ENtext">Group<br/>Lesson</a>
         </div>
         
         <!-- <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('openlesson')">
@@ -81,16 +90,16 @@
     <!--플로팅 버튼-->
 
     <div id="notice_popup">
-        <p style="font-size:16px;color:#fe4e65;font-weight: bold;">그룹 기능 오픈 안내</p>
+        <p style="font-size:16px;color:#fe4e65;font-weight: bold;">수업 기능 오픈 안내</p>
         <br>
-        <p>2018.6.27(수)부터 2주간, 그룹 기능 베타서비스가 모든 이용자님들께 오픈됩니다.</p>
-        <p>베타 기간중 사용하시는 이용자님들께는 향후 그룹 기능 유료화 전환 이후에도 </p>
+        <p>2018.6.27(수)부터 2주간, 수업 기능 베타서비스가 모든 이용자님들께 오픈됩니다.</p>
+        <p>베타 기간중 사용하시는 이용자님들께는 향후 수업 기능 유료화 전환 이후에도 </p>
         <p><span style="color:#fe4e65;">지속 무료로 서비스를 제공</span>하여 드리오니(1인 1ID)</p>
         <p>많은 이용과 서비스 피드백을 부탁드립니다.</p>
         <br>
         <p>-피터스팀 드림</p>
         <p style="text-align: right;margin-bottom: 0;font-size: 11px;">
-            <span id="notice_popup_close_temp" style="margin-right: 10px;"><img src="/static/user/res/member/icon-x-grey.png" style="width: 8px;margin-right"> 닫기</span>
+            <span id="notice_popup_close_temp" style="margin-right: 10px;"><img src="/static/user/res/member/icon-x-grey.png" style="width: 8px;"> 닫기</span>
             <span id="notice_popup_close"><img src="/static/user/res/member/icon-x-grey.png" style="width: 8px;"> 오늘 더 보지 않기</span>
         </p>
     </div>
@@ -204,7 +213,7 @@
             <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
         </div>
         <div class="KRtext confirmText">회원 수강 환불<br>환불 금액을 입력해 주세요.</div>
-        <div class="KRtext confirmText" style="font-size: 12px;height: 55px;color:#fe4e65;font-weight: normal">※환불시 종료된 회원탭으로 회원이 이동됩니다.<br>환불 금액은 추후 매출통계 기능 추가시 반영됩니다.</div>
+        <div class="KRtext confirmText" style="font-size: 12px;height: 55px;color:#fe4e65;font-weight: normal">※환불시 종료 회원탭으로 회원이 이동됩니다.<br>환불 금액은 추후 매출통계 기능 추가시 반영됩니다.</div>
         <div class="JPtext confirmText">会員登録を取り消ししますか<br>払戻金額を入力してください</div>
         <div class="ENtext confirmText">Are you sure to delete this member from the list?<br>Please enter a refund</div>
         <div style="text-align: center;margin-bottom: 10px;">
@@ -285,130 +294,262 @@
         <p>피터스의 기능들을 사용해보세요.</p>
     </div> -->
 
+    <div id="popup_lecture_info_mobile">
+        <div id="popup_lecture_info_tablet_upperbar">
+            <div id="popup_lecture_info_mobile_close_btn" onclick="closePopup_mobile('upbutton-x-modify')">
+                <img src="/static/user/res/btn_next.png">
+                <span>리스트로 돌아가기</span>
+            </div>
+            <div id="popup_lecture_info_mobile_modify_btn" data-type="view">
+                <img src="/static/user/res/icon-pencil.png">
+            </div>
+        </div>
+        <div id="popup_lecture_info_mobile_basic"></div>
+        <div id="popup_lecture_info_mobile_memberlist"></div>
+    </div>
 
     <div id="page_managemember">
-        <div id="ymdText">
-            <div id="ymdTextWrap">
-                <div id="menuName">수업
-                </div>
-                <div id="menuDescription">그룹 수업을 추가하고 관리합니다.
+
+        <div class="upper_fixed_parts">
+            <div id="ymdText">
+                <div id="ymdTextWrap">
+                    <div id="menuName">수업
+                    </div>
+                    <div id="menuDescription">수업을 추가하고 관리합니다.
+                    </div>
                 </div>
             </div>
+
+            <div id="" class="pters_selectbox_wrapper">
+                <div id="btnCallCurrent" onclick="shiftPtGroupClassList('current')" class="pters_selectbox_btn pters_selectbox_btn_selected" data-status="current">
+                    <span class="text-inprogress">진행중</span>
+                </div>
+                <div id="btnCallFinished" onclick="shiftPtGroupClassList('finished')" class="pters_selectbox_btn" data-status="finished">
+                    <span class="text-finish">종료</span>
+                </div>
+            </div>
+
+            <div id="alignBox">
+                <span id="memberNumber_current_member" class="memberNum"></span>
+                <span id="memberNumber_finish_member" class="memberNum"></span>
+                <span id="memberNumber_current_group" class="memberNum"></span>
+                <span id="memberNumber_finish_group" class="memberNum"></span>
+                <!--<div id="align_type_text">
+                    <span class="memberAlign text-sort _ALIGN_DROPDOWN">정렬 기준</span>
+                </div>-->
+                <div class="ymdText-pc-add-member-wrap">
+                    <div class="ymdText-pc-add-member _groupaddbutton" onclick="pc_add_member('group')" style="margin-left: 2px;">
+                        <span class="KRtext">수업 추가</span>
+                        <span class="JPtext"></span>
+                        <span class="ENtext"></span>
+                    </div>
+                    <!--
+                    <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('group')" style="display: none; margin-left: 2px;">
+                        <span class="KRtext">그룹 추가</span>
+                        <span class="JPtext">再登録</span>
+                        <span class="ENtext">Re-Contract</span>
+                    </div>
+                    -->
+                    <input id="search_lecture_input" type="text" name="search_lecture_input" placeholder="검색">
+{#                    <img src="/static/user/res/ptadd/btn-x.png" alt="" id="id_search_x_button" class="icondown" style="right:20%;">#}
+                    <img src="/static/user/res/icon-search-black.png" alt="" id="id_lecture_search" class="icondown">
+                </div>
+
+                <select class="alignSelect_lecture _ALIGN_DROPDOWN">
+
+                    <option id="lecture_name" class="KRtext">수업명 가나다 순</option>
+
+                    <option id="lecture_member_many" class="KRtext">참여중 회원 많은 순</option>
+
+                    <option id="lecture_member_few" class="KRtext">참여중 회원 적은 순</option>
+
+                    <option id="lecture_capacity_many" class="KRtext">정원 많은 순</option>
+
+                    <option id="lecture_capacity_few" class="KRtext">정원 적은 순</option>
+
+                    <option id="lecture_create_new" class="KRtext">생성 일자 최근 순</option>
+
+                    <option id="lecture_create_old" class="KRtext">생성 일자 과거 순</option>
+                    <!--
+                    <option id="lecture_modR" class="KRtext">수정 일시 최근 순</option>
+
+                    <option id="lecture_modP" class="KRtext">수정 일시 과거 순</option>-->
+
+                </select>
+                <img src="/static/user/res/memberadd/icon-down.png" alt="" id="align_select_dropdown_arrow" class="icondown _ALIGN_DROPDOWN">
+                <div id="search_lecture_box">
+                    <img src="/static/user/res/icon-search-black.png" alt="" style="width:25px;" id="id_search_x_button">
+                </div>
+                <!--
+                <div class="ymdText-pc-add-member-again _info_download" style="position: absolute;right: 0;">
+                    <span class="KRtext">전체 목록 <img src="/static/user/res/member/pters-download.png" class="pcmanageicon" style="height: 15px;margin-bottom: 3px;margin-right: 0;"></span>
+                </div>
+                -->
+            </div>
+
+            <table id="tableThead" class="tableThead table table-bordered centeralign _GROUP_THEAD">
+                <thead>
+                <tr style="border-bottom:0;">
+                    <th class="_groupnum">
+                        <span class="">순번</span>
+                    </th>
+                    <th class="_groupplancolor">
+                        <span class="">색상</span>
+                    </th>
+                    <th class="_grouptypecd" style="display: none;">
+                        <span class="">유형</span>
+                    </th>
+                    <th class="_groupname">
+                        <span class="">명칭</span>
+                    </th>
+                    <th class="_grouppartystatus">
+                        <span class="">소속/정원(명)</span>
+                    </th>
+                    <th class="_groupparticipants">
+                        <span class="">현재 참여</span>
+                    </th>
+                    <th class="_groupcapacity">
+                        <span class="">정원(명)</span>
+                    </th>
+                    <th class="_groupmemo">
+                        <span class="">메모</span>
+                    </th>
+                    <th class="_groupcreatedate">
+                        <span class="">생성일</span>
+                    </th>
+                    <th class="_groupstatus">
+                        <span class="">상태</span>
+                    </th>
+                    <th class="_groupmanage">
+                        <span class="">관리</span>
+                    </th>
+                </tr>
+                </thead>
+            </table>
         </div>
 
-         <div id="" class="pters_selectbox_wrapper">
-            <div id="btnCallCurrent" onclick="shiftPtGroupClassList('current')" class="pters_selectbox_btn pters_selectbox_btn_selected">
-                <span class="KRtext">진행중</span>
-            </div>
-            <div id="btnCallFinished" onclick="shiftPtGroupClassList('finished')" class="pters_selectbox_btn">
-                <span class="KRtext">종료</span>
-            </div>
-        </div>
-
-        <div id="alignBox">
-            <span id="memberNumber_current_group" class="memberNum"></span>
-            <span id="memberNumber_finish_group" class="memberNum"></span>
-            <!--
-            <div id="align_type_text">
-              <span class="memberAlign KRtext _ALIGN_DROPDOWN">정렬 기준</span>
-              <span class="memberAlign JPtext">並べ替え</span>
-              <span class="memberAlign ENtext">Sort by</span>
-            </div>
-           -->
-            <div class="ymdText-pc-add-member-wrap">
-                <!-- <div id="please_add_member_pc">
-                    <p style="color: #fe4e65;font-size:16px;margin-bottom: 5px;"><img src="/static/user/res/PTERS_logo_pure.png"> Tip!</p>
-                    <p>여기를 눌러서</p>
-                    <p>새로운 그룹 혹은 클래스를 등록하고</p>
-                    <p>피터스의 기능들을 사용해보세요.</p>
-                </div> -->
-                <div class="ymdText-pc-add-member _groupaddbutton" onclick="pc_add_member('group')" style="margin-left: 2px;">
-                    <span class="KRtext">그룹 추가</span>
-                    <span class="JPtext"></span>
-                    <span class="ENtext"></span>
-                </div>
-                
-                <!-- <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('openlesson')" style="margin-left: 2px;">
-                    <span class="KRtext">클래스 추가</span>
-                    <span class="JPtext"></span>
-                    <span class="ENtext"></span>
-                </div> -->
-                <input id="search_lecture_input" type="text" name="search_lecture_input" placeholder="검색">
-            </div>
-
-            <select class="alignSelect _ALIGN_DROPDOWN" style="display: none;">
-
-                <option id="name" class="KRtext">회원명 가나다 순</option>
-                <option id="name" class="JPtext">名前順</option>
-                <option id="name" class="ENtext">Name</option>
-
-                <option id="countH" class="KRtext">남은 횟수 많은 순</option>
-                <option id="countH" class="JPtext">残り回数が多い</option>
-                <option id="countH" class="ENtext">Remain Count(H)</option>
-
-                <option id="countL" class="KRtext">남은 횟수 적은 순</option>
-                <option id="countL" class="JPtext">残り回数が少ない</option>
-                <option id="countL" class="ENtext">Remain Count(L)</option>
-
-                <option id="startP" class="KRtext">시작 일자 과거 순</option>
-                <option id="startP" class="JPtext">開始が過去</option>
-                <option id="startP" class="ENtext">Start Date(P)</option>
-
-                <option id="startR" class="KRtext">시작 일자 최근 순</option>
-                <option id="startR" class="JPtext">開始が最近</option>
-                <option id="startR" class="ENtext">Start Date(R)</option>
-            </select>
-            <img src="/static/user/res/memberadd/icon-down.png" alt="" id="align_select_dropdown_arrow" class="icondown _ALIGN_DROPDOWN"  style="display: none;">
-
-            <!--
-            <div class="ymdText-pc-add-member-again _info_download" style="position: absolute;right: 0;">
-                  <span class="KRtext">전체 목록 <img src="/static/user/res/member/pters-download.png" class="pcmanageicon" style="height: 15px;margin-bottom: 3px;margin-right: 0;"></span>
-            </div>
-        -->
-        </div>
-
-
-        <table id="tableThead" class="tableThead table table-bordered centeralign _GROUP_THEAD">
-            <thead>
-            <tr style="border-bottom:0;">
-                <th class="_groupnum">
-                    <span class="">순번</span>
-                </th>
-                <th class="_groupplancolor">
-                    <span class="">색상</span>
-                </th>
-                <th class="_grouptypecd" style="display: none;">
-                    <span class="">유형</span>
-                </th>
-                <th class="_groupname">
-                    <span class="">명칭</span>
-                </th>
-                <th class="_grouppartystatus">
-                    <span class="">소속/정원(명)</span>
-                </th>
-                <th class="_groupparticipants">
-                    <span class="">현재 참여</span>
-                </th>
-                <th class="_groupcapacity">
-                    <span class="">정원(명)</span>
-                </th>
-                <th class="_groupmemo">
-                    <span class="">메모</span>
-                </th>
-                <th class="_groupcreatedate">
-                    <span class="">생성일</span>
-                </th>
-                <th class="_groupstatus">
-                    <span class="">상태</span>
-                </th>
-                <th class="_groupmanage">
-                    <span class="">관리</span>
-                </th>
-            </tr>
-            </thead>
-        </table>
-
-
+{#        <div class="upper_fixed_parts">#}
+{#            <div id="ymdText">#}
+{#                <div id="ymdTextWrap">#}
+{#                    <div id="menuName">수업#}
+{#                    </div>#}
+{#                    <div id="menuDescription">그룹 수업을 추가하고 관리합니다.#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <div id="" class="pters_selectbox_wrapper">#}
+{#                <div id="btnCallCurrent" onclick="shiftPtGroupClassList('current')" class="pters_selectbox_btn pters_selectbox_btn_selected">#}
+{#                    <span class="KRtext">진행중</span>#}
+{#                </div>#}
+{#                <div id="btnCallFinished" onclick="shiftPtGroupClassList('finished')" class="pters_selectbox_btn">#}
+{#                    <span class="KRtext">종료</span>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <div id="alignBox">#}
+{#                <span id="memberNumber_current_group" class="memberNum"></span>#}
+{#                <span id="memberNumber_finish_group" class="memberNum"></span>#}
+{#                <!--#}
+{#                <div id="align_type_text">#}
+{#                  <span class="memberAlign KRtext _ALIGN_DROPDOWN">정렬 기준</span>#}
+{#                  <span class="memberAlign JPtext">並べ替え</span>#}
+{#                  <span class="memberAlign ENtext">Sort by</span>#}
+{#                </div>#}
+{#               -->#}
+{#                <div class="ymdText-pc-add-member-wrap">#}
+{#                    <!-- <div id="please_add_member_pc">#}
+{#                        <p style="color: #fe4e65;font-size:16px;margin-bottom: 5px;"><img src="/static/user/res/PTERS_logo_pure.png"> Tip!</p>#}
+{#                        <p>여기를 눌러서</p>#}
+{#                        <p>새로운 그룹 혹은 클래스를 등록하고</p>#}
+{#                        <p>피터스의 기능들을 사용해보세요.</p>#}
+{#                    </div> -->#}
+{#                    <div class="ymdText-pc-add-member _groupaddbutton" onclick="pc_add_member('group')" style="margin-left: 2px;">#}
+{#                        <span class="KRtext">그룹 추가</span>#}
+{#                        <span class="JPtext"></span>#}
+{#                        <span class="ENtext"></span>#}
+{#                    </div>#}
+{#                    #}
+{#                    <!-- <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('openlesson')" style="margin-left: 2px;">#}
+{#                        <span class="KRtext">클래스 추가</span>#}
+{#                        <span class="JPtext"></span>#}
+{#                        <span class="ENtext"></span>#}
+{#                    </div> -->#}
+{#                    <input id="search_lecture_input" type="text" name="search_lecture_input" placeholder="검색">#}
+{#                </div>#}
+{##}
+{#                <select class="alignSelect _ALIGN_DROPDOWN" style="display: none;">#}
+{##}
+{#                    <option id="name" class="KRtext">회원명 가나다 순</option>#}
+{#                    <option id="name" class="JPtext">名前順</option>#}
+{#                    <option id="name" class="ENtext">Name</option>#}
+{##}
+{#                    <option id="countH" class="KRtext">남은 횟수 많은 순</option>#}
+{#                    <option id="countH" class="JPtext">残り回数が多い</option>#}
+{#                    <option id="countH" class="ENtext">Remain Count(H)</option>#}
+{##}
+{#                    <option id="countL" class="KRtext">남은 횟수 적은 순</option>#}
+{#                    <option id="countL" class="JPtext">残り回数が少ない</option>#}
+{#                    <option id="countL" class="ENtext">Remain Count(L)</option>#}
+{##}
+{#                    <option id="startP" class="KRtext">시작 일자 과거 순</option>#}
+{#                    <option id="startP" class="JPtext">開始が過去</option>#}
+{#                    <option id="startP" class="ENtext">Start Date(P)</option>#}
+{##}
+{#                    <option id="startR" class="KRtext">시작 일자 최근 순</option>#}
+{#                    <option id="startR" class="JPtext">開始が最近</option>#}
+{#                    <option id="startR" class="ENtext">Start Date(R)</option>#}
+{#                </select>#}
+{#                <img src="/static/user/res/memberadd/icon-down.png" alt="" id="align_select_dropdown_arrow" class="icondown _ALIGN_DROPDOWN"  style="display: none;">#}
+{##}
+{#                <!--#}
+{#                <div class="ymdText-pc-add-member-again _info_download" style="position: absolute;right: 0;">#}
+{#                      <span class="KRtext">전체 목록 <img src="/static/user/res/member/pters-download.png" class="pcmanageicon" style="height: 15px;margin-bottom: 3px;margin-right: 0;"></span>#}
+{#                </div>#}
+{#            -->#}
+{#            </div>#}
+{##}
+{#            <table id="tableThead" class="tableThead table table-bordered centeralign _GROUP_THEAD">#}
+{#                <thead>#}
+{#                <tr style="border-bottom:0;">#}
+{#                    <th class="_groupnum">#}
+{#                        <span class="">순번</span>#}
+{#                    </th>#}
+{#                    <th class="_groupplancolor">#}
+{#                        <span class="">색상</span>#}
+{#                    </th>#}
+{#                    <th class="_grouptypecd" style="display: none;">#}
+{#                        <span class="">유형</span>#}
+{#                    </th>#}
+{#                    <th class="_groupname">#}
+{#                        <span class="">명칭</span>#}
+{#                    </th>#}
+{#                    <th class="_grouppartystatus">#}
+{#                        <span class="">소속/정원(명)</span>#}
+{#                    </th>#}
+{#                    <th class="_groupparticipants">#}
+{#                        <span class="">현재 참여</span>#}
+{#                    </th>#}
+{#                    <th class="_groupcapacity">#}
+{#                        <span class="">정원(명)</span>#}
+{#                    </th>#}
+{#                    <th class="_groupmemo">#}
+{#                        <span class="">메모</span>#}
+{#                    </th>#}
+{#                    <th class="_groupcreatedate">#}
+{#                        <span class="">생성일</span>#}
+{#                    </th>#}
+{#                    <th class="_groupstatus">#}
+{#                        <span class="">상태</span>#}
+{#                    </th>#}
+{#                    <th class="_groupmanage">#}
+{#                        <span class="">관리</span>#}
+{#                    </th>#}
+{#                </tr>#}
+{#                </thead>#}
+{#            </table>#}
+{#        </div>#}
+        <div id="currentMemberList" style="display:none"></div>
         <div id="currentGroupList" class="centeralign">
             <table id="currentGroup" class="table table-bordered">
 
@@ -777,6 +918,7 @@
             <input type="hidden" name="username" id="id_username_info">
             <input type="hidden" name="search_confirm" id="id_search_confirm" value="0">
             <input type="hidden" name="group_id" id="form_member_groupid" value="">
+            <input type="hidden" name="ing_member_check" id="id_ing_member_check">
 
             <!--그룹추가 관련 Form-->
 
@@ -895,12 +1037,13 @@
 
                 <div class="ptaddbox _ADD_GROUP_NEW">
                     <label class="ptaddboxtext">
-                        <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}><span id="addgrouptypename">신규 그룹</span><span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
+                        <!-- <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> -->
+                        <span id="addgrouptypename">신규 수업</span><span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                     </label>
                     <div id="groupNameInput">
-                        <input type="text" class="pters_input_namefield" id="groupname" name="groupname" placeholder="그룹명을 입력해주세요." maxlength="10">
+                        <input type="text" class="pters_input_namefield" id="groupname" name="groupname" placeholder="수업명을 입력해주세요." maxlength="10">
                         <select id="grouptype">
-                            <option selected disabled>그룹 타입</option>
+                            <option selected disabled>수업 타입</option>
                             <option value="NORMAL">정해진 멤버만</option>
                             <option value="EMPTY">모든 회원</option>
                         </select>
@@ -937,6 +1080,7 @@
                             <option value="29">29명</option>
                             <option value="30">30명</option>
                         </select>
+                        <img src="/static/user/res/memberadd/icon-down.png" alt="" id="lecture_capacity_dropdown_arrow" class="icondown">
                     </div>
                 </div>
 
@@ -1180,7 +1324,7 @@
         </form>
     </div>
 
-
+<input type="hidden" id="id_selected_group_id">
 
 
 {% endblock %}
@@ -1191,7 +1335,11 @@
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.group.pt_group_class.js" %}></script>
     <script>
-        $('a.text-lecturemanage').css('color','#fe4e65;')
+        var current_Scroll_Position;
+
+{#        var $search_box = $('.ymdText-pc-add-member-wrap');#}
+{#        $search_box.css('display', 'inline-block');#}
+        $('a.text-lecturemanage').css('color','#fe4e65;');
 {#        $('#uptext').html("수업 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>")#}
         $('#uptext').html("수업");
         $('footer').hide();
@@ -1204,11 +1352,74 @@
         var alignType = "name";
         var select_all_check = false;
         get_member_group_class_ing_list("callback", function(jsondata){
-            var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-            var member_Html = memberlist.html;
+{#          var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);#}
+{#          var member_Html = memberlist.html;#}
             var group_class_Html = group_class_ListHtml('current', jsondata);
             $('#currentGroupList').html(group_class_Html);
         });
+
+        get_member_ing_list("callback", function(jsondata) {
+            $('#currentMemberList').attr('total_member_num', jsondata.total_member_num);
+        });
+
+        var _origin = $(window).scrollTop();
+        $(window).scroll(function() {
+            var _change = $(window).scrollTop();
+
+            var scrollHeight = $(document).height();
+            var scrollPosition = $(window).height() + $(window).scrollTop();
+            if (((scrollHeight - scrollPosition) < 100) && (lecture_mutex_val==1)) {
+                lecture_mutex_val = 0;
+                if(lecture_tab == TAB_ING) {
+                    get_member_group_class_ing_list_page("callback", function(jsondata){
+                        var group_class_Html = group_class_ListHtml_page('current', jsondata);
+                        $('#currentGroupList').append(group_class_Html);
+                    });
+                }
+                else if(lecture_tab == TAB_END) {
+                    get_member_group_class_end_list_page("callback", function(jsondata){
+                        var group_class_Html = group_class_ListHtml_page('finished', jsondata);
+                        $('#finishedGroupList').append(group_class_Html);
+                    });
+                }
+            }
+            if(_change > _origin){
+                downTouchEvent();
+                if(_change < 100){
+                    upTouchEvent();
+                }
+            }else{
+                upTouchEvent();
+            }
+            _origin = _change;
+        });
+
+        // $(window).resize(function(){
+        //     //bodywidth = window.innerWidth;
+        //     var selector_currentMemberList = $('#currentMemberList');
+        //     var selector_finishedMemberList = $('#finishedMemberList');
+        //     if(bodywidth <= 1000 && $('._ticket_list_mobile_style').length == 0){
+        //         if(selector_currentMemberList.css('display') == "block"){
+        //             get_member_ing_list('callback',function(json){
+        //                 memberListSet ('current', json);
+        //             });
+        //         }else if(selector_finishedMemberList.css('display') == "block"){
+        //             get_member_end_list('callback',function(json){
+        //                 memberListSet('finished', json);
+        //             });
+        //         }
+        //     }else if(bodywidth > 1000 && $('._member_list_pc_style').length == 0 ){
+        //         if(selector_currentMemberList.css('display') == "block"){
+        //             get_member_ing_list('callback',function(json){
+        //                 memberListSet ('current', json);
+        //             });
+        //         }else if(selector_finishedMemberList.css('display') == "block"){
+        //             get_member_end_list('callback',function(json){
+        //                 memberListSet('finished',json);
+        //             });
+        //         }
+        //     }
+        // });
 
         // get_member_ing_list("callback", function(jsondata){
         //     var start_time = new Date().getTime();

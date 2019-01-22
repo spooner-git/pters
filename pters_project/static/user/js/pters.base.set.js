@@ -32,22 +32,30 @@ var multiLanguage = { 'KOR':
         }
 };
 
+var varUA = navigator.userAgent.toLowerCase();
+var ios_check = false;
+console.log(varUA);
+if (varUA.match('macintosh') != null || varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
+    ios_check = true;
+} else {
+    ios_check = false;
+}
 
 //플로팅 버튼 스크롤시 숨기기 Start
-var ts;
-var selector_body = $("body");
-selector_body.bind("touchstart", function(e){
-    ts = e.originalEvent.touches[0].clientY;
-});
+    var ts;
+    var selector_body = $("body");
+    // selector_body.bind("touchstart", function(e){
+    //     ts = e.originalEvent.touches[0].clientY;
+    // });
 
-$(document).on("touchend", 'html', function(e){
-    var te = e.originalEvent.changedTouches[0].clientY;
-    if(ts>te+5 && $('#mshade').css('z-index')<0){
-        downTouchEvent();
-    }else if(ts<te-5){
-        upTouchEvent();
-    }
-});
+    // $(document).on("touchend", 'html', function(e){
+    //     var te = e.originalEvent.changedTouches[0].clientY;
+    //     if(ts>te+5 && $('#mshade').css('z-index')<0){
+    //         downTouchEvent();
+    //     }else if(ts<te-2){
+    //         upTouchEvent();
+    //     }
+    // });
 //플로팅 버튼 스크롤시 숨기기 End
 
 
@@ -79,29 +87,110 @@ function upTouchEvent(){
     if($('#mshade').css('z-index')<0){
         $("#float_btn_wrap").show();
     }
-
+    if($('#alignBox').length != -1){
+        if(bodywidth < 600){
+            $('#alignBox').css('transform', 'translateY(0)');
+        }else if(bodywidth < 1000 && bodywidth >= 600){
+            //$('#alignBox').css('transform', 'translate(-50%, 0)');
+        }
+    }
 }
 function downTouchEvent(){
     $("#float_btn_wrap").hide();
-
+    if($('#alignBox').length != -1){
+        if(bodywidth < 600){
+            $('#alignBox').css('transform', 'translateY(-60px)');
+        }else if(bodywidth < 1000 && bodywidth >= 600){
+            //$('#alignBox').css('transform', 'translate(-50%, -100px)');
+        }
+        // $('#alignBox').hide();
+    }
 }
 
-function sideGoPage(page){
-    //$('.ajaxloadingPC').show()
+function sideGoPage(page, menu_name_class){
+    // $('.ajaxloadingPC').show();
+    // $('#uptext, #uptext2, #uptext3').text(multi_language_set["KOR"][menu_name_class]);
+    // closeNav();
+    // // $('#shade_caution').show();
+    // $('#mobile_page_interaction').css({'transform':'translateX(-100%)'});
+    // setTimeout(function(){location.href="/trainer/"+page+'/';}, 180);
     location.href="/trainer/"+page+'/';
 }
 
 
+// function shade_index(option){
+//     console.log("shade", option)
+//     var initialbodywidth = window.innerWidth;
+//     var initialbodyheight = document.documentElement.clientHeight + 100;
+//     if(initialbodywidth >= 600){
+//         $('#pshade').css({'width':'100%', 'height':'100%'});
+//     }else{
+//         $('#mshade').css({'width':'100%', 'height':initialbodyheight});
+//     }
+//     var bodywidth = window.innerWidth;
+//     if(bodywidth >= 600){
+//         if(option<0){
+//             if($('#memberInfoPopup_PC').css('display')=="block" && $('._calmonth').css('display')=="block"){
+//                 $('#pshade').css({'z-index':150, 'display':'block'});
+//             }else{
+//                 $('#pshade').css({'z-index':option, 'display':'none'});
+//             }
+
+//         }else{
+//             $('#pshade').css({'z-index':option, 'display':'block'});
+//         }
+
+//     }else if(bodywidth < 600){
+//         var selector_page_addplan = $('#page-addplan');
+//         var selector_page_addmember = $('#page_addmember');
+//         var selector_float_btn_wrap = $('#float_btn_wrap');
+//         var selector_memberInfoPopup = $('#memberInfoPopup');
+//         // var selector_lectureInfoPopup = $('#popup_lecture_info_mobile');
+//         if(option<0){
+//             if(selector_page_addplan.css('display') == 'block'){
+//                 $('#mshade_popup').css({'display':'none', 'z-index':selector_page_addplan.css('z-index')});
+//             }else if(selector_page_addmember.css('display') == 'block'){
+//                 $('#mshade_popup').css({'display':'none', 'z-index':selector_page_addmember.css('z-index')});
+//             }else{
+//                 $('#mshade_popup').css({'display':'none', 'z-index':option});
+//             }
+//             $('#mshade').css({'display':'none', 'z-index':option});
+//         }else{
+//             if(selector_page_addplan.css('display') == 'block'){
+//                 $('#mshade_popup').css({'z-index':selector_page_addplan.css('z-index'), 'display':'block'});
+//             }
+//             if(selector_page_addmember.css('display') == 'block'){
+//                 $('#mshade_popup').css({'z-index':selector_page_addmember.css('z-index'), 'display':'block'});
+//             }
+//             if(selector_float_btn_wrap.css('display')=='block' && !$('#float_btn').hasClass('rotate_btn')){
+//                 selector_float_btn_wrap.hide();
+//             }
+//             if(selector_memberInfoPopup.css('display')=='block'){
+//                 $('#mshade_popup').css({'z-index':selector_memberInfoPopup.css('z-index'), 'display':'block'});
+//             }
+//             // if(selector_lectureInfoPopup.css('display')=='block'){
+//             //     $('#mshade_popup').css({'z-index':selector_lectureInfoPopup.css('z-index'), 'display':'block'});
+//             // }
+//             if($('#cal_popup_planinfo').css('display')=="block"){
+//                 $('#mshade_popup').css({'display':'none'});
+//             }
+//             $('#mshade').css({'z-index':option, 'display':'block'});
+//         }
+//     }
+// }
 function shade_index(option){
+    console.log("shade", option)
     var initialbodywidth = window.innerWidth;
-    var initialbodyheight = document.documentElement.clientHeight + 100;
-    if(initialbodywidth > 600){
+    // var initialbodyheight = document.documentElement.clientHeight + 100;
+    var initialbodyheight = $(document).height();
+    // var initialbodyheight = window.outerHeight;
+    if(initialbodywidth >= 600){
         $('#pshade').css({'width':'100%', 'height':'100%'});
     }else{
         $('#mshade').css({'width':'100%', 'height':initialbodyheight});
     }
     var bodywidth = window.innerWidth;
-    if(bodywidth > 600){
+    if(bodywidth >= 600){
         if(option<0){
             if($('#memberInfoPopup_PC').css('display')=="block" && $('._calmonth').css('display')=="block"){
                 $('#pshade').css({'z-index':150, 'display':'block'});
@@ -113,11 +202,12 @@ function shade_index(option){
             $('#pshade').css({'z-index':option, 'display':'block'});
         }
 
-    }else if(bodywidth <= 600){
+    }else if(bodywidth < 600){
         var selector_page_addplan = $('#page-addplan');
         var selector_page_addmember = $('#page_addmember');
         var selector_float_btn_wrap = $('#float_btn_wrap');
         var selector_memberInfoPopup = $('#memberInfoPopup');
+        // var selector_lectureInfoPopup = $('#popup_lecture_info_mobile');
         if(option<0){
             if(selector_page_addplan.css('display') == 'block'){
                 $('#mshade_popup').css({'display':'none', 'z-index':selector_page_addplan.css('z-index')});
@@ -129,17 +219,20 @@ function shade_index(option){
             $('#mshade').css({'display':'none', 'z-index':option});
         }else{
             if(selector_page_addplan.css('display') == 'block'){
-                $('#mshade_popup').css({'z-index':selector_page_addplan.css('z-index'), 'display':'block'});
+                $('#mshade_popup').css({'z-index':selector_page_addplan.css('z-index'), 'display':'block', 'height':initialbodyheight});
             }
             if(selector_page_addmember.css('display') == 'block'){
-                $('#mshade_popup').css({'z-index':selector_page_addmember.css('z-index'), 'display':'block'});
+                $('#mshade_popup').css({'z-index':selector_page_addmember.css('z-index'), 'display':'block', 'height':initialbodyheight});
             }
             if(selector_float_btn_wrap.css('display')=='block' && !$('#float_btn').hasClass('rotate_btn')){
                 selector_float_btn_wrap.hide();
             }
             if(selector_memberInfoPopup.css('display')=='block'){
-                $('#mshade_popup').css({'z-index':selector_memberInfoPopup.css('z-index'), 'display':'block'});
+                $('#mshade_popup').css({'z-index':selector_memberInfoPopup.css('z-index'), 'display':'block', 'height':initialbodyheight});
             }
+            // if(selector_lectureInfoPopup.css('display')=='block'){
+            //     $('#mshade_popup').css({'z-index':selector_lectureInfoPopup.css('z-index'), 'display':'block'});
+            // }
             if($('#cal_popup_planinfo').css('display')=="block"){
                 $('#mshade_popup').css({'display':'none'});
             }
@@ -182,7 +275,7 @@ function toggleGroupParticipantsList(onoff){
             selector_popup_btn_viewGroupParticipants_img.css('transform', 'rotate(180deg)');
             var group_id = selector_popup_btn_viewGroupParticipants.attr('data-groupid');
             var max = selector_popup_btn_viewGroupParticipants.attr('data-membernum');
-            var group_schedule_id = selector_popup_btn_viewGroupParticipants.attr('group-schedule-id');
+            var group_schedule_id = selector_popup_btn_viewGroupParticipants.attr('data-scheduleid');
             $('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button');
             get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
                 $('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button');
@@ -193,13 +286,14 @@ function toggleGroupParticipantsList(onoff){
                                                         '/'+
                                                         max+')'
                                                     );
-                selector_grouopParticipants.css({'height':'auto'});
+                // selector_grouopParticipants.css({'height':'auto'});
+                selector_grouopParticipants.css({'display':'block', 'height':'auto'});
                 completeSend();
             });
             break;
         case 'off':
             toggleGroupParticipants = 'off';
-            selector_grouopParticipants.css({'height':0}).html('');
+            selector_grouopParticipants.css({'display':'none'}).html('');
             selector_popup_btn_viewGroupParticipants_img.css('transform', 'rotate(0deg)');
             break;
     }
@@ -225,7 +319,7 @@ $(document).ready(function(){
         var bodywidth = window.innerWidth;
         /*$('#alarm').css('transform','translate(-50%,-200%)');*/
         $('#alarm').css('height', '0');
-        if(bodywidth>600){
+        if(bodywidth>=600){
             shade_index(-100);
         }else{
             shade_index(-100);
@@ -272,6 +366,35 @@ function remove_duplicate_compared_to(targetArray, compareArray){
         }
     }
     return resultArray;
+}
+
+//시간에 AM, PM붙이기
+function time_format_add_ampm(time, noAMPM){ // time: 00:00
+    var timesplit = time.split(':');
+    var hour = Number(timesplit[0]);
+    var min = timesplit[1];
+
+    var text;
+    var morning_text = "오전";
+    var afternoon_text = "오후";
+    // if(noAMPM=="kor"){
+    //     morning_text = "오전";
+    //     afternoon_text = "오후";
+    // }
+    hour = hour % 24;
+    if(hour < 12){
+        text = morning_text;
+    }else if(hour > 12){
+        hour = hour - 12;
+        text = afternoon_text;
+    }else if(hour == 12){
+        text = afternoon_text;
+    }
+    if(noAMPM == "none"){
+        return hour+':'+min;
+    }else{
+        return text+" "+hour+':'+min;
+    }
 }
 
 //데이트가 2018-08-23 혹은 20180823 혹은 2018_08_23 혹은 2018-8-23 으로 들어왔을때 2018년 8월 23일 로 출력
@@ -326,14 +449,16 @@ function date_format_to_user_hangul(yyyy_mm_dd, minimize){
     var dates = '';
     var day = '';
     var time = '';
+    var yyyy_mm_dd_split = yyyy_mm_dd.split(' ');
+    var yyyy_mm_dd_date_split = yyyy_mm_dd_split[0].split('-');
     if(minimize!=undefined){
-        dates = yyyy_mm_dd.split(' ')[0].split('-')[0]+'-'+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'-'+Number(yyyy_mm_dd.split(' ')[0].split('-')[2]);
-        day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd.split(' ')[0]).getDay()]+') ';
-        time = yyyy_mm_dd.split(' ')[1].substr(0, 5);
+        dates = yyyy_mm_dd_date_split[0]+'-'+Number(yyyy_mm_dd_date_split[1])+'-'+Number(yyyy_mm_dd_date_split[2]);
+        day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd_split[0]).getDay()]+') ';
+        time = yyyy_mm_dd_split[1].substr(0, 5);
     }else{
-        dates = yyyy_mm_dd.split(' ')[0].split('-')[0]+'년 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'월 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[2])+'일';
-        day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd.split(' ')[0]).getDay()]+') ';
-        time = yyyy_mm_dd.split(' ')[1].substr(0, 5);
+        dates = yyyy_mm_dd_date_split[0]+'년 '+Number(yyyy_mm_dd_date_split[1])+'월 '+Number(yyyy_mm_dd_date_split[2])+'일';
+        day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd_split[0]).getDay()]+') ';
+        time = yyyy_mm_dd_split[1].substr(0, 5);
     }
 
     return dates+day+time;
@@ -408,6 +533,24 @@ function date_format_yyyy_mm_dd_to_yyyy_m_d(yyyy_mm_dd, resultSplit){
     return yyyy+resultSplit+mm+resultSplit+dd;
 }
 
+//2018-05-11 을 18-5-11
+function date_format_yyyy_mm_dd_to_yy_m_d(yyyy_mm_dd, resultSplit){
+    var splitChar = yyyy_mm_dd.substr(4, 1);
+    var yyyy = String(yyyy_mm_dd.split(splitChar)[0].substr(2,2));
+    var mm = Number(yyyy_mm_dd.split(splitChar)[1]);
+    var dd = Number(yyyy_mm_dd.split(splitChar)[2]);
+
+    return yyyy+resultSplit+mm+resultSplit+dd;
+}
+
+//2018-05-11 을 18-5-11
+function date_format_yyyy_mm_dd_to_m_d(yyyy_mm_dd, resultSplit){
+    var splitChar = yyyy_mm_dd.substr(4, 1);
+    var mm = Number(yyyy_mm_dd.split(splitChar)[1]);
+    var dd = Number(yyyy_mm_dd.split(splitChar)[2]);
+
+    return mm+resultSplit+dd;
+}
 
 function date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_m_d, resultSplit){
     var yyyy = '';
@@ -729,16 +872,27 @@ function scrollToDom_custom(parentselector, dom){
     }
 }
 
-function disable_window_scroll(){
-    if(bodywidth < 600){
-       //$('#calendar').css('position', 'fixed');
-       $('html, body').css({
-                            "position": "relative"
-                            });
-    }else{
-        $('body').css('overflow-y', 'hidden');
-    }
 
+function disable_window_scroll(remember_scroll){
+    // if(bodywidth < 600){
+    //    //$('#calendar').css('position', 'fixed');
+    //    $('html, body').css({
+    //                         "position": "relative"
+    //                         });
+    // }else{
+    //     $('body').css('overflow-y', 'hidden');
+    //
+    // }
+    // if(remember_scroll == "remember_scroll"){
+    //    current_Scroll_Position = $(document).scrollTop();
+    // }
+    //
+    // if(ios_check == true){
+    //     $('body').css({'position':'fixed', 'top': -window.pageYOffset,  'overflow-y':'hidden'});
+    // }
+    // else{
+        $('body').css('overflow-y', 'hidden');
+    // }
     // $('body, #calendar').on('scroll touchmove mousewheel', function(e){
     //     e.preventDefault();
     //     e.stopPropagation();
@@ -746,16 +900,26 @@ function disable_window_scroll(){
     // });
 }
 
-function enable_window_scroll(){
-    if(bodywidth < 600){
+function enable_window_scroll(goto_scroll){
+    // if(bodywidth < 600){
        //$('#calendar').css('position','relative');
-       $('html, body').css({
-                            "position": "unset"
-                            });
-    }else{
-        $('body').css('overflow-y', 'unset');
-    }
+       // $('html, body').css({
+       //                      "position": "unset"
+       //                      });
+    // }else{
+    //     $('body').css('overflow-y','unset');
+    // }
 
+    $('body').css({'position':'relative', 'top':'', 'overflow-y':'unset'});
+    // try {
+    //     if(goto_scroll == "goto_scroll"){
+    //         $(window).scrollTop(current_Scroll_Position);
+    //     }
+    // }catch (e) {
+    //     if (e instanceof ReferenceError) {
+    //         // Handle error as necessary
+    //     }
+    // }
     //$('body, #calendar').off('scroll touchmove mousewheel');
 }
 
@@ -769,12 +933,15 @@ function sumarray(array){
 
 //알림창에 얼마전에 뜬 알람인지 계산
 function date_calculator(yyyy_mm_dd_hh_mm_ss){
-    var yyyymmdd = Number(date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_mm_dd_hh_mm_ss.split(' ')[0], ''));
-    var yyyy = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[0].split('-')[0]);
-    var mm = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[0].split('-')[1]);
-    var dd = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[0].split('-')[2]);
-    var hh = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[1].split(':')[0]);
-    var mms = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[1].split(':')[1]);
+    var yyyy_mm_dd_hh_mm_ss_split = yyyy_mm_dd_hh_mm_ss.split(' ');
+    var yyyy_mm_dd_hh_mm_ss_date_split = yyyy_mm_dd_hh_mm_ss_split[0].split('-');
+    var yyyy_mm_dd_hh_mm_ss_time_split = yyyy_mm_dd_hh_mm_ss_split[1].split(':');
+    var yyyymmdd = Number(date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_mm_dd_hh_mm_ss_split[0], ''));
+    var yyyy = Number(yyyy_mm_dd_hh_mm_ss_date_split[0]);
+    var mm = Number(yyyy_mm_dd_hh_mm_ss_date_split[1]);
+    var dd = Number(yyyy_mm_dd_hh_mm_ss_date_split[2]);
+    var hh = Number(yyyy_mm_dd_hh_mm_ss_time_split[0]);
+    var mms = Number(yyyy_mm_dd_hh_mm_ss_time_split[1]);
     var today = Number(todayYYYYMMDD);
     var lastDay = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];      //각 달의 일수
     var message = '';
@@ -808,11 +975,12 @@ function date_calculator(yyyy_mm_dd_hh_mm_ss){
 
 //알림창에 변동된 일정 정보를 알아보기 쉽게
 function alarm_change_easy_read(data){ // data : 2018-04-11 02:00:00/2018-04-11 03:00:00
-    var dateInfo = data.split(' ')[0];
-    var startTime = Number(data.split(' ')[1].split(':')[0]);
-    var endTime = Number(data.split(' ')[2].split(':')[0]);
+    var data_split =data.split(' ');
+    var dateInfo = data_split[0];
+    var startTime = Number(data_split[1].split(':')[0]);
+    var endTime = Number(data_split[2].split(':')[0]);
     var timeDiff = endTime - startTime;
-    return date_format_to_user_hangul(data.split('/')[0]) + ' ~ ' + data.split(' ')[2].substr(0, 5) + ' (' + timeDiff + ' 시간)';
+    return date_format_to_user_hangul(data.split('/')[0]) + ' ~ ' + data_split[2].substr(0, 5) + ' (' + timeDiff + ' 시간)';
 }
 
 
@@ -886,9 +1054,9 @@ $(window).resize(function(){
 */
 
 if(class_background_img_url.length == 0){
-    $('#ymdText, #upperImg').css('background-image',"url(/static/user/res/main/bg-image-basic-ymdText.png)")
+    $('#ymdText, #upperImg').css('background-image',"url(/static/user/res/main/bg-image-basic-ymdText.png)");
 }else{
-    $('#ymdText, #upperImg').css('background-image',"url('"+class_background_img_url[2].replace(/\)/gi,"")+"')")
+    $('#ymdText, #upperImg').css('background-image',"url('"+class_background_img_url[2].replace(/\)/gi,"")+"')");
 }
 
 function numberWithCommas(x) { //천단위 콤마 찍기
@@ -904,7 +1072,7 @@ set_drag_drop_action_to_DOM('#memberInfoPopup_PC');
 
 function set_drag_drop_action_to_DOM(targetSelector){
     //if(bodywidth > 600 && (varUA.match('iphone') !=null && varUA.match('ipad')!=null && varUA.match('ipod')!=null && varUA.match('android') != null ) ){
-    if(bodywidth > 600 ){
+    if(bodywidth >= 600 ){
         var click_state = 0;
         $(targetSelector).mousedown(function(event){
             //event.stopPropagation();
@@ -1025,7 +1193,7 @@ function set_drag_drop_action_to_DOM_partial(targetSelector, options){
         }
     }
 
-    if(bodywidth > 600){
+    if(bodywidth >= 600){
         $(targetSelector).append('<div class="drag_drop_target" ' +
             'style="position:${options.grabPosition}; width:${options.grabWidth}; height:${options.grabHeight}; top:${options.grabTop}; left:${options.grabLeft}; z-index:${options.grabZindex}"> ' +
             '</div>');
@@ -1132,6 +1300,7 @@ function update_push_token(token, device_id) {
 
         //통신성공시 처리
         success:function(){
+            $('a.text-payment').parent('div').css('display', 'inline-block');
             if(device_id != 'pc') {
                 // $('a.text-payment').parent('div').css('display', 'none');
                 $('.ads_wrap').css('display', 'none');
@@ -1194,7 +1363,8 @@ function body_position_fixed_unset(){
 //특수문자 입력 제한
 function limit_char(e){
     //var limit =  /[\[\]~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\＠§※☆★○●◎◇◆□■△▲▽▼→←↑↓↔〓◁◀▷▶♤♠♡♥♧♣⊙◈▣◐◑▒▤▥▨▧▦▩♨☏☎☜☞¶†‡↕↗↙↖↘♭♩♪♬㉿㈜№㏇™㏂㏘℡]/gi;
-    var limit =  /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]/gi;
+    var limit =  /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]/gi; //\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55
+
     var temp = $(e).val();
     if(limit.test(temp)){
         $(e).val(temp.replace(limit, ""));
@@ -1211,3 +1381,7 @@ function limit_char_only_number(e){
         alert("숫자만 입력하실 수 있습니다.");
     }
 }
+
+Array.prototype.insert = function(index, item){
+    this.splice(index, 0, item);
+};

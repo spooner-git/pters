@@ -13,10 +13,12 @@ storageBucket: "pters-b9c4f.appspot.com",
 messagingSenderId: "751903262384",
 // serviceWorkerLocation: './',
 };
+var messaging = '';
+window.addEventListener('load', function () {
+    firebase.initializeApp(config);
 
-firebase.initializeApp(config);
-
-const messaging = firebase.messaging();
+    messaging = firebase.messaging();
+});
 
 function registrationServiceWorker(token_info){
         messaging.requestPermission()

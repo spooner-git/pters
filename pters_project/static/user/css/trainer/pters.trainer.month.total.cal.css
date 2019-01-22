@@ -15,16 +15,17 @@ img,a,div,span,p{
 #date{
 	padding-top: 5px;
 	padding-bottom: 5px;
-	padding-right: 15px;
-	padding-left: 15px;
+/*	padding-right: 15px;
+	padding-left: 15px;*/
 	height: 60px;
-	z-index: 5;
+	z-index: 4;
 	background-color: #ffffff;
 	max-width: 1200px;
 	margin:0 auto;
 
 	position: fixed;
 	top: 100px;
+	box-shadow: 0px 0px 10px 0px #cccccc;
 }
 	#date .calendar-style{
 		background-color: #ffffff;
@@ -129,6 +130,8 @@ img,a,div,span,p{
 	border-bottom: 1px solid #cccccc;
 	font-size: 14.4px;
 	height: 70px;
+	padding-left: 0;
+	padding-right: 0;
 }
 
 
@@ -137,12 +140,15 @@ img,a,div,span,p{
 	text-align: center;
 	height: 100%;
 	background-color: #ffffff;
+	font-size: 15px;
+	font-weight: 500;
 }
 
-.calendar-day-style{  /*왈화수목금토일 스타일 */
+/*왈화수목금토일 스타일 */
+/*.calendar-day-style{  
 	font-size: 12px;
 	line-height: 31px;
-}
+}*/
 
 
 .calendar_image{
@@ -150,10 +156,10 @@ img,a,div,span,p{
 	margin: auto;
 }
 
-.weekday_style{
+/*.weekday_style{
 	font-weight: 600;
 	font-size: 1em;
-}
+}*/
 
 
 /*#calendar{
@@ -179,6 +185,8 @@ img,a,div,span,p{
 	position: relative;
 	width: 14.3%;
 	/*color : #282828;*/
+	font-size: 15px;
+	font-weight: 500;
 }
 
 .dateNum{
@@ -355,7 +363,7 @@ img,a,div,span,p{
 	cursor: pointer;
 }
 
-.img_cal{
+.img_cal_month{
 	position: relative;
 	width: 25px;
 	margin-top: 10px;
@@ -443,12 +451,12 @@ img,a,div,span,p{
 
 
 .tdsaturday{
-	border-right-color:#f7f7f7 !important;
+	border-right-color:#cccccc !important;
 	color: #115a8e;
 }
 
 .tdsunday{
-	border-left-color: #f7f7f7 !important;
+	border-left-color: #cccccc !important;
 	color: #d21245;
 }
 
@@ -502,10 +510,6 @@ img,a,div,span,p{
 		margin-bottom: 0px;
 	}
 
-	#calendar td{
-		border-left:0.5px solid #cccccc;
-		border-right: 0.5px solid #cccccc;
-	}
 
 	.arrowButtonPC{
 		display: block;
@@ -671,7 +675,7 @@ img,a,div,span,p{
 		position: fixed;
 		padding: 0;
 		top: 0;
-		height: 60px;
+		height: 73px;
 		background-color: #ffffff;
 		margin-top: 179px;
 		z-index: 5;
@@ -688,11 +692,11 @@ img,a,div,span,p{
 	}
 
 	#sunday{
-		border-left-color: #f7f7f7 !important;
+		border-left-color: #cccccc !important;
 	}
 
 	#saturday{
-		border-right-color: #f7f7f7 !important;
+		border-right-color: #cccccc !important;
 	}
 
 	.blackballoon_trainer, .balloon_trainer{
@@ -718,6 +722,9 @@ img,a,div,span,p{
 	}
 
 	#calendar td{
+		font-size: 18px;
+		border-left:0.5px solid #cccccc;
+		border-right: 0.5px solid #cccccc;
 		vertical-align: unset;
 		padding-top: 3px;
 		padding-right: 10px;

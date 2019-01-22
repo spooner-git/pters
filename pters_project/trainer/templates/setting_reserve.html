@@ -246,7 +246,30 @@
             <div id="hourSelect2" class="dropdown">
                 <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
                 <ul id="ulTimes2" class="dropdown-menu pters_dropdown_custom ulTimes">
-
+                    <li><a data-time="0">오전 0시</a></li>
+                    <li><a data-time="1">오전 1시</a></li>
+                    <li><a data-time="2">오전 2시</a></li>
+                    <li><a data-time="3">오전 3시</a></li>
+                    <li><a data-time="4">오전 4시</a></li>
+                    <li><a data-time="5">오전 5시</a></li>
+                    <li><a data-time="6">오전 6시</a></li>
+                    <li><a data-time="7">오전 7시</a></li>
+                    <li><a data-time="8">오전 8시</a></li>
+                    <li><a data-time="9">오전 9시</a></li>
+                    <li><a data-time="10">오전 10시</a></li>
+                    <li><a data-time="11">오전 11시</a></li>
+                    <li><a data-time="12">오후 12시</a></li>
+                    <li><a data-time="13">오후 1시</a></li>
+                    <li><a data-time="14">오후 2시</a></li>
+                    <li><a data-time="15">오후 3시</a></li>
+                    <li><a data-time="16">오후 4시</a></li>
+                    <li><a data-time="17">오후 5시</a></li>
+                    <li><a data-time="18">오후 6시</a></li>
+                    <li><a data-time="19">오후 7시</a></li>
+                    <li><a data-time="20">오후 8시</a></li>
+                    <li><a data-time="21">오후 9시</a></li>
+                    <li><a data-time="22">오후 10시</a></li>
+                    <li><a data-time="23">오후 11시</a></li>
                 </ul>
             </div>
         </div>
@@ -349,7 +372,7 @@
         $('#id_setting_member_reserve_time_prohibition').val(Options.limit);
         $('#id_setting_member_cancel_time_prohibition').val(Options.cancellimit);
         $('#id_setting_member_reserve_prohibition').val(Options.reserve);
-        $('#id_setting_schedule_auto_finish').val(Options.autocomplete)
+        $('#id_setting_schedule_auto_finish').val(Options.autocomplete);
 
         if(Options.limit>0){ //근접시간 예약 금지 설정
             $('#switch1').find('.switchball').removeClass('switchoff').addClass('switchon');
@@ -389,80 +412,80 @@
 
 
         /*업무 시간 설정 DB저장값으로 초기셋팅*/
-        $('#id_setting_trainer_work_time').val(worktime)
+        $('#id_setting_trainer_work_time').val(worktime);
         if(Options.workStartTime>12){
-            var worktimestart = Number(Options.workStartTime)-12
+            var worktimestart = Number(Options.workStartTime)-12;
             var scale = "오후";
             if(Options.workStartTime == 24){
-                var scale = '오전'
-                var worktimestart = 12
+                scale = '오전';
+                worktimestart = 12;
             }
             $("#workTimehourSelect button").addClass("dropdown_selected").text(scale+worktimestart+"시").val(Options.workStartTime);
-            fill_dropdown_reserve_endtime($('#workTimehourSelect button').val(),$('#ulWorkTimes2'))
+            fill_dropdown_reserve_endtime($('#workTimehourSelect button').val(),$('#ulWorkTimes2'));
         }else{
-            var scale = "오전"
+            var scale = "오전";
             if(Options.workStartTime == 12){
-                var scale = "오후"
+                scale = "오후";
             }
             $("#workTimehourSelect button").addClass("dropdown_selected").text(scale+Options.workStartTime+"시").val(Options.workStartTime);
-            fill_dropdown_reserve_endtime($('#workTimehourSelect button').val(),$('#ulWorkTimes2'))
+            fill_dropdown_reserve_endtime($('#workTimehourSelect button').val(),$('#ulWorkTimes2'));
         }
 
         if(Options.workEndTime>12){
-            var worktimeend = Number(Options.workEndTime)-12
-            var scale = "오후"
+            var worktimeend = Number(Options.workEndTime)-12;
+            var scale = "오후";
             if(Options.workEndTime == 24){
-                var scale = '오전'
-                var worktimeend = 12
+                scale = '오전';
+                worktimeend = 12;
             }
             $("#workTimehourSelect2 button").addClass("dropdown_selected").text(scale+worktimeend+"시").val(Options.workEndTime);
         }else{
-            var scale = "오전"
+            var scale = "오전";
             if(Options.workEndTime == 12){
-                var scale = "오후"
+                scale = "오후";
             }
             $("#workTimehourSelect2 button").addClass("dropdown_selected").text(scale+Options.workEndTime+"시").val(Options.workEndTime);
         }
         /*업무 시간 설정 DB저장값으로 초기셋팅*/
 
         /*회원 예약 허용 날짜 설정 DB저장값으로 초기셋팅*/
-        $('#id_setting_member_reserve_available_date').val(Options.availDate)
+        $('#id_setting_member_reserve_available_date').val(Options.availDate);
         $("#dateSelect button").addClass("dropdown_selected").text("+"+Options.availDate+"일").val(Options.limit);
         /*회원 예약 허용 날짜 설정 DB저장값으로 초기셋팅*/
 
 
         /*회원 예약 허용 시간대 설정 DB저장값으로 초기셋팅*/
-        $('#id_setting_member_reserve_available_time').val(stoptime)
+        $('#id_setting_member_reserve_available_time').val(stoptime);
         if(Options.stoptimeStart>12){
-            var stoptimestart = Number(Options.stoptimeStart)-12
-            var scale = "오후"
+            var stoptimestart = Number(Options.stoptimeStart)-12;
+            var scale = "오후";
             if(Options.stoptimeStart == 24){
-                var scale = '오전'
-                var stoptimestart = 12
+                scale = "오전";
+                stoptimestart = 12;
             }
             $("#hourSelect button").addClass("dropdown_selected").text(scale+stoptimestart+"시").val(Options.stoptimeStart);
-            fill_dropdown_reserve_endtime($('#hourSelect button').val(),$('#ulTimes2'))
+            //fill_dropdown_reserve_endtime($('#hourSelect button').val(),$('#ulTimes2'));
         }else{
-            var scale = "오전"
+            var scale = "오전";
             if(Options.stoptimeEnd == 12){
-                var scale = "오후"
+                scale = "오후";
             }
             $("#hourSelect button").addClass("dropdown_selected").text(scale+Options.stoptimeStart+"시").val(Options.stoptimeStart);
-            fill_dropdown_reserve_endtime($('#hourSelect button').val(),$('#ulTimes2'))
+            //fill_dropdown_reserve_endtime($('#hourSelect button').val(),$('#ulTimes2'));
         }
 
         if(Options.stoptimeEnd>12){
-            var stoptimeend = Number(Options.stoptimeEnd)-12
-            var scale = "오후"
+            var stoptimeend = Number(Options.stoptimeEnd)-12;
+            var scale = "오후";
             if(Options.stoptimeEnd == 24){
-                var scale = '오전'
-                var stoptimeend = 12
+                scale = '오전';
+                stoptimeend = 12;
             }
             $("#hourSelect2 button").addClass("dropdown_selected").text(scale+stoptimeend+"시").val(Options.stoptimeEnd);
         }else{
-            var scale = "오전"
+            var scale = "오전";
             if(Options.stoptimeEnd == 12){
-                var scale = "오후"
+                scale = "오후";
             }
             $("#hourSelect2 button").addClass("dropdown_selected").text(scale+Options.stoptimeEnd+"시").val(Options.stoptimeEnd);
         }
@@ -495,14 +518,14 @@
                                   '<li><a data-time="7">3시간 30분</a></li>'+
                                   '<li><a data-time="8">4시간</a></li>'+
                                   '<li><a data-time="9">4시간 30분</a></li>'+
-                                  '<li><a data-time="10">5시간</a></li>')
+                                  '<li><a data-time="10">5시간</a></li>');
             
         }else if(Options.classDur == 60){
             $ulTimes_rsvHour.html('<li><a data-time="1">1시간</a></li>'+
                                   '<li><a data-time="2">2시간</a></li>'+
                                   '<li><a data-time="3">3시간</a></li>'+
                                   '<li><a data-time="4">4시간</a></li>'+
-                                  '<li><a data-time="5">5시간</a></li>')
+                                  '<li><a data-time="5">5시간</a></li>');
         }
 
         if(Options.timeDur != ""){
@@ -510,7 +533,7 @@
             $('#rsvHourSelect button').val(Options.timeDur).text($set_value.text()).addClass('dropdown_selected');
             $('#id_setting_member_reserve_time_duration').val(Options.timeDur);
         }else{
-            var $set_value = $('#ulTimes_rsvHour li a[data-time='+1+']')
+            var $set_value = $('#ulTimes_rsvHour li a[data-time='+1+']');
             $('#rsvHourSelect button').val(1).text($set_value.text()).addClass('dropdown_selected');
             $('#id_setting_member_reserve_time_duration').val(1);
 
@@ -530,43 +553,43 @@
 
         $('#switch1').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
-                $('#memberDisableSetting').hide('fast','swing')
-                $('#id_setting_member_reserve_time_prohibition').val(0)
+                $('#memberDisableSetting').hide('fast','swing');
+                $('#id_setting_member_reserve_time_prohibition').val(0);
 
             }else{
-                $('#memberDisableSetting').show('fast','swing')
-                $('#id_setting_member_reserve_time_prohibition').val($('#timeSelect button').val())
+                $('#memberDisableSetting').show('fast','swing');
+                $('#id_setting_member_reserve_time_prohibition').val($('#timeSelect button').val());
             }
             check_dropdown_selected();
         });
 
         $('#switch2').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
-                $('#id_setting_member_reserve_prohibition').val(0)
+                $('#id_setting_member_reserve_prohibition').val(0);
             }else{
-                $('#id_setting_member_reserve_prohibition').val(1)
+                $('#id_setting_member_reserve_prohibition').val(1);
             }
             check_dropdown_selected();
         });
 
         $('#switch_cancel_limit').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
-                $('#memberCancelDisableSetting').hide('fast','swing')
-                $('#id_setting_member_cancel_time_prohibition').val(0)
+                $('#memberCancelDisableSetting').hide('fast','swing');
+                $('#id_setting_member_cancel_time_prohibition').val(0);
 
             }else{
-                $('#memberCancelDisableSetting').show('fast','swing')
-                $('#id_setting_member_cancel_time_prohibition').val($('#timeSelect2 button').val())
+                $('#memberCancelDisableSetting').show('fast','swing');
+                $('#id_setting_member_cancel_time_prohibition').val($('#timeSelect2 button').val());
             }
             check_dropdown_selected();
         });
 
         $('#switch_autocomplete').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
-                $('#id_setting_schedule_auto_finish').val(0)
+                $('#id_setting_schedule_auto_finish').val(0);
 
             }else{
-                $('#id_setting_schedule_auto_finish').val(1)
+                $('#id_setting_schedule_auto_finish').val(1);
             }
             check_dropdown_selected();
         })
@@ -575,21 +598,21 @@
 
 
         function make_available_date_format(hourselect, hourselect2){
-            var $hourselect = hourselect
-            var $hourselect2 = hourselect2
-            var starthour = $hourselect.find('button').val()
-            var endhour = $hourselect2.find('button').val()
+            var $hourselect = hourselect;
+            var $hourselect2 = hourselect2;
+            var starthour = $hourselect.find('button').val();
+            var endhour = $hourselect2.find('button').val();
             if(starthour == "24"){
-                var starthour = "23:59"
+                var starthour = "23:59";
             }else{
-                var starthour = $hourselect.find('button').val() + ':00'
+                var starthour = $hourselect.find('button').val() + ':00';
             }
             if(endhour == "24"){
-                var endhour = "23:59"
+                var endhour = "23:59";
             }else{
-                var endhour = $hourselect2.find('button').val() + ':00'
+                var endhour = $hourselect2.find('button').val() + ':00';
             }
-            var availableTime = starthour+'-'+endhour
+            var availableTime = starthour+'-'+endhour;
             return availableTime
         }
 
@@ -598,16 +621,16 @@
         /*업무 시간 설정*/
         $("#ulWorkTimes li a").click(function(){
             $("#workTimehourSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
-            var availableTime = make_available_date_format($('#workTimehourSelect'),$('#workTimehourSelect2'))
-            $('#id_setting_trainer_work_time').val(availableTime)
-            fill_dropdown_reserve_endtime($(this).attr('data-time'),$('#ulWorkTimes2'))
+            var availableTime = make_available_date_format($('#workTimehourSelect'),$('#workTimehourSelect2'));
+            $('#id_setting_trainer_work_time').val(availableTime);
+            fill_dropdown_reserve_endtime($(this).attr('data-time'),$('#ulWorkTimes2'));
 
             check_dropdown_selected();
         });
         $(document).on('click',"#ulWorkTimes2 li a",function(){
             $("#workTimehourSelect2 button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
-            var availableTime = make_available_date_format($('#workTimehourSelect'),$('#workTimehourSelect2'))
-            $('#id_setting_trainer_work_time').val(availableTime)
+            var availableTime = make_available_date_format($('#workTimehourSelect'),$('#workTimehourSelect2'));
+            $('#id_setting_trainer_work_time').val(availableTime);
             check_dropdown_selected();
         });
         /*업무 시간 설정*/
@@ -615,36 +638,35 @@
         /*회원 예약 허용 시간대 설정*/
         $("#ulTimes li a").click(function(){
             $("#hourSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
-            var availableTime = make_available_date_format($('#hourSelect'),$('#hourSelect2'))
-            $('#id_setting_member_reserve_available_time').val(availableTime)
-            fill_dropdown_reserve_endtime($(this).attr('data-time'),$('#ulTimes2'))
-
+            var availableTime = make_available_date_format($('#hourSelect'),$('#hourSelect2'));
+            $('#id_setting_member_reserve_available_time').val(availableTime);
+            //fill_dropdown_reserve_endtime(0, $('#ulTimes2'));
             check_dropdown_selected();
         });
         $(document).on('click', "#ulTimes2 li a", function(){
             $("#hourSelect2 button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
-            var availableTime = make_available_date_format($('#hourSelect'),$('#hourSelect2'))
-            $('#id_setting_member_reserve_available_time').val(availableTime)
+            var availableTime = make_available_date_format($('#hourSelect'),$('#hourSelect2'));
+            $('#id_setting_member_reserve_available_time').val(availableTime);
             check_dropdown_selected();
         });
         /*회원 예약 허용 시간대 설정*/
 
         $("#ulTimes3 li a").click(function(){
             $("#timeSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time')*60);
-            $('#id_setting_member_reserve_time_prohibition').val($('#timeSelect button').val())
+            $('#id_setting_member_reserve_time_prohibition').val($('#timeSelect button').val());
             check_dropdown_selected();
         });
 
         $("#ulTimes4 li a").click(function(){
             $("#timeSelect2 button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time')*60);
-            $('#id_setting_member_cancel_time_prohibition').val($('#timeSelect2 button').val())
+            $('#id_setting_member_cancel_time_prohibition').val($('#timeSelect2 button').val());
             check_dropdown_selected();
         });
 
         $('#ulTimes_availDate li a').click(function(){
             $("#dateSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
-            $('#id_setting_member_reserve_available_date').val($(this).attr('data-time'))
-            check_dropdown_selected()
+            $('#id_setting_member_reserve_available_date').val($(this).attr('data-time'));
+            check_dropdown_selected();
         });
 
         function fill_dropdown_reserve_endtime(starttime, target){
@@ -660,8 +682,10 @@
                     array.push('<li><a data-time="'+i+'">오후 '+(i-12)+'시</a></li>');
                 }
             }
-            target.siblings('button').val('').text('')
-            target.html(array.join(''))
+            if(starttime!=0){
+                target.siblings('button').val('').text('');
+            }
+            target.html(array.join(''));
         }
 
 
@@ -675,38 +699,39 @@
             }
         });
         $('#upbutton-x, ._button_Prev').click(function(){
-            location.href="/trainer/trainer_setting/"
+            location.href="/trainer/trainer_setting/";
         });
 
         $('._button_Preview').click(function(){
             $('#preview_iframe_popup > iframe').attr('src','/trainer/iframe_preview');
 
 
-            $('#set_value_workTime').text( $('#id_setting_trainer_work_time').val() )
-            $('#set_value_timeDur').text( duration_number_to_hangul($('#id_setting_member_reserve_time_duration').val()*Options.classDur/60) )
-            $('#set_value_startTime').text( startTime_to_hangul($('#id_setting_member_start_time').val()) )
-            $('#set_value_availDate').text( '+'+$('#id_setting_member_reserve_available_date').val()+'일' )
-            $('#set_value_availTime').text( $('#id_setting_member_reserve_available_time').val() )
-            $('#set_value_reserveLimitTime').text( duration_number_to_hangul($('#id_setting_member_reserve_time_prohibition').val()/60) )
-            $('#set_value_cancelLimitTime').text( duration_number_to_hangul($('#id_setting_member_cancel_time_prohibition').val()/60) )
-            $('#set_value_reserveProhibit').text( function(){
-                                                                if($('#id_setting_member_reserve_prohibition').val() == '1'){
-                                                                    return '예약 불가'
-                                                                }else if($('#id_setting_member_reserve_prohibition').val() == '0'){
-                                                                    return '예약 가능'
-                                                                }
-                                                            } )
+            $('#set_value_workTime').text( $('#id_setting_trainer_work_time').val() );
+            $('#set_value_timeDur').text( duration_number_to_hangul($('#id_setting_member_reserve_time_duration').val()*Options.classDur/60) );
+            $('#set_value_startTime').text( startTime_to_hangul($('#id_setting_member_start_time').val()) );
+            $('#set_value_availDate').text( '+'+$('#id_setting_member_reserve_available_date').val()+'일' );
+            $('#set_value_availTime').text( $('#id_setting_member_reserve_available_time').val() );
+            $('#set_value_reserveLimitTime').text( duration_number_to_hangul($('#id_setting_member_reserve_time_prohibition').val()/60) );
+            $('#set_value_cancelLimitTime').text( duration_number_to_hangul($('#id_setting_member_cancel_time_prohibition').val()/60) );
+            $('#set_value_reserveProhibit').text(
+                function(){
+                    if($('#id_setting_member_reserve_prohibition').val() == '1'){
+                        return '예약 불가'
+                    }else if($('#id_setting_member_reserve_prohibition').val() == '0'){
+                        return '예약 가능'
+                    }
+                } );
 
             $('#preview_iframe_popup, #shade_for_preview').show();
 
             var popupwidth = $('#preview_iframe_popup').width();
             if(bodywidth > 600){
                 var popupheight = $('#preview_iframe_popup').height() -$('#preview_option_values').height() - $('#preview_iframe_popup > p').height()-22;
-                console.log($('#preview_iframe_popup').height(), $('#preview_option_values').height() , $('#preview_iframe_popup > p').height())
+                console.log($('#preview_iframe_popup').height(), $('#preview_option_values').height() , $('#preview_iframe_popup > p').height());
             }else{
                 var popupheight = $('#preview_iframe_popup').height() - $('#preview_iframe_popup > p').height()-20;
             }
-            $('#preview_iframe_popup > iframe').css({'width':popupwidth,'height':popupheight})
+            $('#preview_iframe_popup > iframe').css({'width':popupwidth,'height':popupheight});
         })
 
         $('#close_preview_iframe_popup').click(function(){
@@ -738,11 +763,11 @@
                 ){
                     $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
                     select_all_check=false;
-                    console.log('false')
+                    console.log('false');
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                 select_all_check=true;
-                console.log('true')
+                console.log('true');
             }
         }
         $('.fixfooter').css({"z-index":0});

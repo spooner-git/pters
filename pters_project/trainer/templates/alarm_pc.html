@@ -112,11 +112,14 @@
         var newalarm_count = selector_alarm_iframe.find("div.new_alarm").length;
         var count;
         if(newalarm_count >= 20){
-            $('#new_alarm_count div', parent.document).text('+20')
-            $('#new_alarm_count_text', parent.document).text('새로운 알림이 '+newalarm_count+'건 이상 있습니다.')
+            $('#new_alarm_count div', parent.document).text('+20');
+            $('#new_alarm_count_text', parent.document).text('새로운 알림이 '+newalarm_count+'건 이상 있습니다.');
         }else{
-            $('#new_alarm_count div', parent.document).text(newalarm_count)
-            $('#new_alarm_count_text', parent.document).text('새로운 알림이 '+newalarm_count+'건 있습니다.')
+            $('#new_alarm_count div', parent.document).text(newalarm_count);
+            $('#new_alarm_count_text', parent.document).text('새로운 알림이 '+newalarm_count+'건 있습니다.');
+            if(newalarm_count == 0){
+                $('.alarm_delete_pc',parent.document).hide();
+            }
         }
 
         /*
@@ -127,19 +130,17 @@
         }
         */
 
-        
 
         $('.alarm_delete_pc',parent.document).click(function(){
-            
             var alarm_size = selector_alarm_iframe.find(".log_id_array").length;
-            alert(alarm_size+'건의 알림을 삭제합니다.');
+            // alert(alarm_size+'건의 알림을 삭제합니다.');
             selector_alarm_iframe.find("#log_id_size").val(alarm_size);
             selector_alarm_iframe.submit();
-        })
+        });
 
         function clearAlarmList(){
             var alarm_size = selector_alarm_iframe.find(".log_id_array").length;
-            alert(alarm_size+'건의 알림을 삭제합니다.');
+            // alert(alarm_size+'건의 알림을 삭제합니다.');
             selector_alarm_iframe.find("#log_id_size").val(alarm_size);
             selector_alarm_iframe.submit();
         }

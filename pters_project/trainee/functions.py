@@ -460,11 +460,11 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                     lecture_info_data.group_member_num = 'x'
                 lecture_info_data.group_note = lecture_info.lecture_tb.package_tb.note
                 lecture_info_data.group_state_cd = lecture_info.lecture_tb.package_tb.state_cd
-                try:
-                    lecture_info_data.group_state_cd_name = \
-                        CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.package_tb.state_cd).common_cd_nm
-                except ObjectDoesNotExist:
-                    lecture_info_data.group_state_cd_name = ''
+                # try:
+                #     lecture_info_data.group_state_cd_name = \
+                #         CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.package_tb.state_cd).common_cd_nm
+                # except ObjectDoesNotExist:
+                #     lecture_info_data.group_state_cd_name = ''
 
                 output_lecture_list.append(lecture_info_data)
 
@@ -710,16 +710,23 @@ def func_check_schedule_setting(class_id, start_date, end_date, add_del_type):
                 error = '현재 예약 취소 정지 상태입니다.'
 
         if error is None:
-            if now_time < reserve_avail_start_time:
-                if add_del_type == ADD_SCHEDULE:
-                    error = '현재 예약 등록 가능 시간이 아닙니다.'
-                else:
-                    error = '현재 예약 취소 가능 시간이 아닙니다.'
-            if now_time > reserve_avail_end_time:
-                if add_del_type == ADD_SCHEDULE:
-                    error = '현재 예약 취소 가능 시간이 아닙니다.'
-                else:
-                    error = '현재 예약 취소 가능 시간이 아닙니다.'
+            if reserve_avail_start_time <= reserve_avail_end_time:
+                if now_time < reserve_avail_start_time:
+                    if add_del_type == ADD_SCHEDULE:
+                        error = '현재 예약 등록 가능 시간이 아닙니다.'
+                    else:
+                        error = '현재 예약 취소 가능 시간이 아닙니다.'
+                if now_time > reserve_avail_end_time:
+                    if add_del_type == ADD_SCHEDULE:
+                        error = '현재 예약 등록 가능 시간이 아닙니다.'
+                    else:
+                        error = '현재 예약 취소 가능 시간이 아닙니다.'
+            else:
+                if reserve_avail_start_time > now_time > reserve_avail_end_time:
+                    if add_del_type == ADD_SCHEDULE:
+                        error = '현재 예약 등록 가능 시간이 아닙니다.'
+                    else:
+                        error = '현재 예약 취소 가능 시간이 아닙니다.'
 
         if error is None:
             if add_del_start_time < work_avail_start_time:

@@ -128,7 +128,7 @@
         $(document).on('click','.bg_select_button' , function(){
             if(!$(this).hasClass('disabled_button')){
                 $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
-                $('.ajaxloadingPC').css('display','block')
+                $('.ajaxloadingPC').css('display','block');
                 $('#form_class_id').val(class_id);
                 var url = $(this).parents('.background_wrap').css('background-image');
                 var urlsplit = url.split('/');
@@ -141,16 +141,16 @@
                 var imageurl = '/'+imageurlarray.join("/");
                 //$('#form_bg_url').val(imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg"));
                 //$('#form_bg_url_mobile').val(imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg"));
-                var url_pc = imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg").replace(/"\)/gi,"")
-                var url_mobile = imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg").replace(/"\)/gi,"")
-                var url_ymdText = imageurl.replace(/-pc\.jpg/gi,"-ymdText.png").replace(/-mobile\.jpg/gi,"-ymdText.png").replace(/"\)/gi,"")
-                
-                console.log(url_pc, url_mobile, url_ymdText);
+                var url_pc = imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg").replace(/"\)/gi,"");
+                var url_mobile = imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg").replace(/"\)/gi,"");
+                var url_ymdText = imageurl.replace(/-pc\.jpg/gi,"-ymdText.png").replace(/-mobile\.jpg/gi,"-ymdText.png").replace(/"\)/gi,"");
+                var url_ymdText_mobile = imageurl.replace(/-pc\.jpg/gi,"-ymdText-mobile.jpg").replace(/-mobile\.jpg/gi,"-ymdText-mobile.jpg").replace(/"\)/gi,"");
 
-                
                 send_user_bg_set(class_id, url_pc, background_img_type_code[0]);
                 send_user_bg_set(class_id, url_mobile, background_img_type_code[1]);
                 send_user_bg_set(class_id, url_ymdText, background_img_type_code[2]);
+                send_user_bg_set(class_id, url_ymdText_mobile, background_img_type_code[3]);
+                // send_user_bg_set(class_id, url_ymdText_mobile, background_img_type_code[3]); ymdText 모바일 버전
 
             }
             
@@ -190,23 +190,23 @@
                 error:function(){
                     console.log('server error');
                 }
-            })
+            });
 
         }
 
         var len = $('.bg_wrapper').length;
         for(var i=1; i<len; i++){
-            var $loc = $('#background_contents_wrap .background_wrap:nth-of-type('+i+')').find('.bg_wrapper')
-            var wrapperimgurl = $loc.css('background-image').split('/')
-            var staticindex = wrapperimgurl.indexOf('static')
-            var myimgurlarray = []
+            var $loc = $('#background_contents_wrap .background_wrap:nth-of-type('+i+')').find('.bg_wrapper');
+            var wrapperimgurl = $loc.css('background-image').split('/');
+            var staticindex = wrapperimgurl.indexOf('static');
+            var myimgurlarray = [];
             for(var j=staticindex; j<wrapperimgurl.length; j++){
-                myimgurlarray.push(wrapperimgurl[j])
+                myimgurlarray.push(wrapperimgurl[j]);
             }
-            var myimgurl = "/" + myimgurlarray.join("/")
+            var myimgurl = "/" + myimgurlarray.join("/");
             if(class_background_img_url.indexOf(myimgurl.replace(/"\)/gi,"")) != -1){
-                $loc.siblings('div.bg_select_button').find('span').text('현재 배경')
-                $loc.siblings('div.bg_select_button').addClass('disabled_button')
+                $loc.siblings('div.bg_select_button').find('span').text('현재 배경');
+                $loc.siblings('div.bg_select_button').addClass('disabled_button');
             }
         }
 

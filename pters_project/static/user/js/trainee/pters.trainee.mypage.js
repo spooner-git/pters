@@ -221,15 +221,16 @@ $(document).ready(function(){
         var html = [];
         for(var i=jsondata.ptScheduleStateCdArray.length-1; i>=0; i--){
             var number 	     = '<div class="cell1">'+jsondata.ptScheduleIdxArray[i]+'</div>';
-            if($('body').width()>600){
+            if(bodywidth>=600){
                 var dateFormat = date_format_to_user_hangul(jsondata.ptScheduleStartDtArray[i]);
-            }else if($('body').width()<=600){
+            }else if(bodywidth<600){
                 var dateFormat = date_format_to_user_hangul(jsondata.ptScheduleStartDtArray[i],'minimize');
             }
 
             var date         = '<div class="cell2">'+dateFormat+'</div>';
-
-            var dur = calc_duration_by_start_end_2(jsondata.ptScheduleStartDtArray[i].split(' ')[0], jsondata.ptScheduleStartDtArray[i].split(' ')[1], jsondata.ptScheduleEndDtArray[i].split(' ')[0], jsondata.ptScheduleEndDtArray[i].split(' ')[1]);
+            var schedule_start_dt_split = jsondata.ptScheduleStartDtArray[i].split(' ');
+            var schedule_end_dt_split = jsondata.ptScheduleEndDtArray[i].split(' ');
+            var dur = calc_duration_by_start_end_2(schedule_start_dt_split[0], schedule_start_dt_split[1], schedule_end_dt_split[0], schedule_end_dt_split[1]);
 
             var duration     = '<div class="cell3">'+duration_number_to_hangul_minute(dur)+'</div>';
             var state        = '<div class="cell4 state_'+jsondata.ptScheduleStateCdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>';
@@ -304,10 +305,10 @@ $(document).ready(function(){
         var html = [];
         for(var i=0; i<jsondata.countArray.length; i++){
             var number 	     = '<div class="cell1">'+(jsondata.countArray.length-i)+'</div>';
-            if($('body').width()>600){
+            if(bodywidth>=600){
                 var sdateFormat = date_format_to_hangul(jsondata.startArray[i]);
                 var edateFormat = date_format_to_hangul(jsondata.endArray[i]);
-            }else if($('body').width()<=600){
+            }else if(bodywidth<600){
                 var sdateFormat = jsondata.startArray[i];
                 var edateFormat =jsondata.endArray[i];
             }
@@ -318,9 +319,10 @@ $(document).ready(function(){
                 var typename = '['+jsondata.groupTypeCdNameArray[i]+'] ' + jsondata.groupNameArray[i];
                 var maxnumber = jsondata.groupMemberNumArray[i];
             }
+
             var stateColor = "";
-            if(jsondata.lectureStateNameArray[i] == "진행중"){
-                var stateColor = "state_PE";
+            if(jsondata.lectureStateArray[i] == "IP"){
+                stateColor = "state_PE";
             }
 
             var type         = '<div class="cell2">'+typename+'</div>';

@@ -21,12 +21,18 @@
       [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "state_cd_name":
       [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.state_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "group_member_num":
-      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.group_member_num }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+      "ing_group_member_num":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.ing_group_member_num }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+      "end_group_member_num":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.end_group_member_num }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
       "group_ing_color_cd":
-      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.group_ing_color_cd }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.ing_color_cd }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
       "group_end_color_cd":
-      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.group_end_color_cd }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.end_color_cd }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+      "group_ing_font_color_cd":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.ing_font_color_cd }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+      "group_end_font_color_cd":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.end_font_color_cd }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
 
 
       "messageArray" :

@@ -832,11 +832,11 @@ class GetTraineeInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 error = '수강정보를 불러오지 못했습니다.'
 
         if error is None:
-            if class_id != '' and class_id is not None:
-                try:
-                    member_info = MemberTb.objects.get(member_id=request.user.id)
-                except ObjectDoesNotExist:
-                    error = '회원 정보를 불러오지 못했습니다.'
+            # if class_id != '' and class_id is not None:
+            try:
+                member_info = MemberTb.objects.get(member_id=request.user.id)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
             if class_id != '' and class_id is not None:
@@ -860,10 +860,11 @@ class GetTraineeInfoView(LoginRequiredMixin, AccessTestMixin, View):
             # request.session['setting_language'] = context['lt_lan_01']
 
         if error is None:
-            if member_info.phone is None:
-                member_info.phone = ''
-            if member_info.birthday_dt is None:
-                member_info.birthday_dt = ''
+            if member_info is not None:
+                if member_info.phone is None:
+                    member_info.phone = ''
+                if member_info.birthday_dt is None:
+                    member_info.birthday_dt = ''
             context['member_info'] = member_info
 
         return render(request, self.template_name, context)
@@ -1100,8 +1101,9 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
                 log_info.reg_dt = str(log_info.reg_dt).split('.')[0]
 
                 if log_info.log_detail != '' and log_info.log_detail is not None:
-                    before_day = str(log_info.log_detail).split('/')[0]
-                    after_day = str(log_info.log_detail).split('/')[1]
+                    log_detail_split = str(log_info.log_detail).split('/')
+                    before_day = log_detail_split[0]
+                    after_day = log_detail_split[1]
 
                     if '반복 일정' in log_info.log_info:
                         log_info.log_detail = before_day + '~' + after_day

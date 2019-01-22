@@ -563,7 +563,7 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
             $(this).hide()
             $(this).siblings('img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
             $('img._info_modify').removeClass('disabled_button')
-            if(bodywidth > 600){
+            if(bodywidth >= 600){
                 $('img._info_download, img._info_delete').show()
             }else{
                 $('img._info_delete').show()
@@ -935,8 +935,8 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                     groupListSet('finished',jsondata)
                 }
                 toggle_lock_unlock_inputfield_grouplist(group_id, true)
-                $('img._info_cancel').hide()
-                if(bodywidth > 600){
+                $('img._info_cancel').hide();
+                if(bodywidth >= 600){
                     $('img._info_download, img._info_delete').show()
                 }else{
                     $('img._info_delete').show()
@@ -1045,7 +1045,8 @@ function groupListSet(option, jsondata){ //option : current, finished
         var group_id = jsondata.group_id[i];
         var group_type = jsondata.group_type_cd[i];
         var group_type_nm = jsondata.group_type_cd_nm[i];
-        var group_createdate = date_format_to_yyyymmdd(jsondata.group_reg_dt[i].split(' ')[0]+' '+jsondata.group_reg_dt[i].split(' ')[1]+' '+jsondata.group_reg_dt[i].split(' ')[2], '-');
+        var group_reg_dt_split = jsondata.group_reg_dt[i].split(' ');
+        var group_createdate = date_format_to_yyyymmdd(group_reg_dt_split[0]+' '+group_reg_dt_split[1]+' '+group_reg_dt_split[2], '-');
         var group_memo = jsondata.group_note[i];
         var group_memberlist = [];
         var group_membernum = jsondata.group_member_num[i];

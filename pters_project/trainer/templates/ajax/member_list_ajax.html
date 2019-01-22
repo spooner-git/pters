@@ -1,3 +1,5 @@
+{#{% load el_pagination_tags %}#}
+{#{% paginate 20 member_data %}#}
     {
     "db_id" :
     [{% for member_info in member_data %}"{{ member_info.user.id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
@@ -73,9 +75,12 @@
     "lecture_id" :
     [{% for member_info in member_data %}"{{ member_info.lecture_available_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+    "total_member_num" :
+    ["{{ total_member_num }}"],
       "messageArray" :
       [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
-    
+
+
     }
 
 

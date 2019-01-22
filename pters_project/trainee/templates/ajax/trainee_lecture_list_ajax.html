@@ -30,8 +30,8 @@
       [{% for lecture_info in lecture_data %}"{{ lecture_info.group_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "groupStateCdArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.group_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "groupStateCdNmArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.group_state_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+{#      "groupStateCdNmArray":#}
+{#      [{% for lecture_info in lecture_data %}"{{ lecture_info.group_state_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],#}
       "groupNoteArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.group_note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 

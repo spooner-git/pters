@@ -269,11 +269,7 @@
                             <p>- App Store 결제는 현재 사용하고 있는 App Store계정을 통해 결제됩니다.</p>
                             <p>- 결제 금액에 대한 확인 및 환불은 Apple을 틍해 가능합니다. 결제내역 및 환불 관련 문의는 Apple 고객센터(080-333-4000)으로 부탁드립니다.</p>
                         </div>
-
-                        <div id="view_appointment_btn_ios" style="display: none; color:#ffffff;">유료 서비스 약관 보기</div>
-{#                        <div class="ticket_right pay_product_function ticket_disable">#}
-{##}
-{#                        </div>#}
+                        <div id="view_appointment_btn_ios" style="display:none; color:#ffffff;">유료 서비스 약관 보기</div>
                     </div>
 
                 </div>
@@ -539,7 +535,7 @@
             }
             $('#purchase_popup').fadeIn('fast')
                                 .css({'top':(($(window).height()-$('#purchase_popup').outerHeight())/2),
-                                      'left':(($(window).width()-$('#purchase_popup').outerWidth())/2+$(window).scrollLeft())})
+                                      'left':((window.innerWidth-$('#purchase_popup').outerWidth())/2+$(window).scrollLeft())})
                                 .attr({'data-product':product,
                                         'data-type':type,
                                         'data-product-id':product_id,
@@ -1008,8 +1004,10 @@
 
             success: function (data) {
                 var jsondata = JSON.parse(data);
+                var msg = "결제에 실패했습니다.";
+                var url_move = "/payment/";
                 if (jsondata.messageArray.length > 0) {
-                    msg = '결제에 실패하였습니다.';
+                    msg = '결제에 실패했습니다.';
                     msg += ' : ' + jsondata.messageArray;
                     url_move = "/payment/";
                     alert(msg);

@@ -44,7 +44,7 @@ body{
 }
 
 .navbar-default{
-	background-color: transparent;
+	background-color: transparent !important;
 	border-color: transparent;
 }
 
@@ -61,7 +61,7 @@ body{
 	width: 66.67%;
 	height: 48.39%;
 	background-color: rgba(254, 78, 101, 0.72);
-	position: absolute;
+	position: fixed;
 	top: 15.8%;
 	left: 16.67%;
 	right: 16.67%;

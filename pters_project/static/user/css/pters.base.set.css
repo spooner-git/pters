@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
+@import url(/static/common/fonts/notosanskr.css);
 
 html,body{
     font-family: 'Noto Sans KR',sans-serif !important;
@@ -11,11 +11,16 @@ input{
     -webkit-text-fill-color:#cccccc;
     -webkit-opacity:1;
 }
+textarea:disabled, input:disabled{
+    background-color: unset;
+}
 
 button:focus{
     outline: unset;
 }
-
+.form-control{
+    border-radius: 0;
+}
 #free_member_use_guide{
     position: fixed;
     display: none;
@@ -41,6 +46,13 @@ button:focus{
         font-weight: 400;
         z-index: 10;
     }
+}
+
+.pters_table{
+    display: table;
+}
+.pters_table_cell{
+    display: table-cell;
 }
 
 .bodyfixed{
@@ -608,6 +620,7 @@ a:focus, a:hover{
 #page-base{
     display: block;
     z-index: 400;
+    background-color: #ffffff;
 }
 
 #page-base-addstyle{

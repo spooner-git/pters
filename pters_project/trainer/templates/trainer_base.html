@@ -3,26 +3,35 @@
 <head>
 
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    <script>
+
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script', 'dataLayer', 'GTM-WG2KK6D');</script>
+    })(window,document,'script', 'dataLayer', 'GTM-WG2KK6D');
+
+    </script>
     <!-- End Google Tag Manager -->
     <!--Google Adsense-->
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({
-        google_ad_client: "ca-pub-4554121851965192",
-        enable_page_level_ads: true
-      });
-    </script>
+
+{#    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>#}
+{#    <script>#}
+{##}
+{#    (adsbygoogle = window.adsbygoogle || []).push({#}
+{#        google_ad_client: "ca-pub-4554121851965192",#}
+{#        enable_page_level_ads: true#}
+{#    });#}
+{#    </script>#}
     <!--Google Adsense-->
 
     {% load static_url %}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
+    <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
+    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <title>{% block title %}PTERS{% endblock %}</title>
@@ -31,20 +40,22 @@
     <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
     <link rel="shortcut icon" href="/static/common/favicon-48.png">
 
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href={% static_url "common/css/bootstrap.min.css" %}>
+<!--    <link rel="stylesheet" href="/static/common/css/jquery-ui.1.12.1.css">
+    <link rel="stylesheet" href="//fonts.googleapis.com/earlyaccess/notosanskr.css">-->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="/static/common/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/common/css/swiper.min.css">
     <link rel="stylesheet" href={% static_url "user/css/pters.base.set.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/pters.common.module.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/pters.base.popup.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.select.class.css" %}>
-    <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
     {% block local_css %}
     {% endblock %}
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
+<noscript><iframe async src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 {% block navbar %}
@@ -54,6 +65,9 @@
     <div id="mshade" class="mshade _shade"></div>
     <div id="mshade_popup" class="mshade_popup _shade"></div>
     <div id="shade_caution"></div>
+    <div id="mobile_page_interaction" style="width:100%;height:100vh;z-index:15;background-color: #505050;opacity: 1;position: fixed;top: 0;left: 100%;transition:0.3s">
+        <img src="/static/user/res/PTERS_logo_pure.png" style="position:absolute;width:100px;left:50%;top:50%;transform: translate(-50%,-50%);">
+    </div>
 
     <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
 
@@ -102,26 +116,44 @@
     <div id="cal_popup_planinfo" class="popups">
         <div id="inner_shade_planinfo"></div>
         <div id="popup_img">
-            <span id="popup_planinfo_title" class="popup_title"></span>
-            <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
+            <span id="popup_planinfo_title" class="popup_title">
+                <span id="planinfo_title_wrap" class="memberNameForInfoView" data-dbid="">
+                    <div id="planinfo_plan_color"></div>
+                    <span id="planinfo_type_text"></span>
+                    <span id="planinfo_name_text"></span>
+                    <span id="groupplan_participants_status"></span>
+                </span>
+            </span>
+            <!-- <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"> -->
         </div>
         <div class="popup_info_text" style="padding-bottom: 5px;">
             <p id="popup_info"></p>
             <p id="popup_info2"></p>
-            <form style="width:200px;height:30px;display:inline-block;">
-                <input id="popup_info3_memo" type="text" maxlength="15" title="메모" readonly>
+            <form style="width:80%;height:30px;display:inline-block;">
+                <input id="popup_info3_memo" type="text" maxlength="20" title="메모" placeholder="기록된 메모가 없습니다.">
             </form>
-            <img src="/static/user/res/icon-pencil.png" style="width: 17px;cursor:pointer;margin-left: 5px;margin-bottom:5px;" title="Edit" id="popup_info3_memo_modify" data-type="view">
-            <p style="font-size:10px;color:#282828;opacity:0.6;text-align: center;" class="pt_memo_guide_popup text-memocaution"></p>
+            <img src="/static/user/res/icon-pencil.png" title="Edit" id="popup_info3_memo_modify" data-type="view">
+            <p class="pt_memo_guide_popup text-memocaution"></p>
         </div>
-        <div id="popup_btn_complete" class="popup_inner popup_inner_finish popup_inner_x3">
-            <span class="text-plancomplete"></span>
+        <div id="popup_btn_viewGroupParticipants">
+            <span class="text-participants"></span>
+            <div id="groupParticipants_number_in_btn"></div>
+            <img src="/static/user/res/icon-down-grey.png"></div>
+        <div id="groupParticipants"></div>
+        <div id="popup_sign_img">
+            <span class="text-completesign"></span>
+            <img src="" id="id_sign_img">
         </div>
-        <div id="popup_btn_delete" class="popup_inner popup_inner_delete  popup_inner_x3">
-            <span class="text-plancancel"></span>
-        </div>
-        <div class="popup_inner  popup_inner_x3" onclick="close_info_popup('cal_popup_planinfo')">
-            <span class="text-close"></span>
+        <div class="popup_btn_wrap">
+            <div id="popup_btn_complete" class="popup_inner popup_inner_finish popup_inner_x3">
+                <span class="text-plancomplete"></span>
+            </div>
+            <div id="popup_btn_delete" class="popup_inner popup_inner_delete  popup_inner_x3">
+                <span class="text-plancancel"></span>
+            </div>
+            <div class="popup_inner  popup_inner_x3" onclick="close_info_popup('cal_popup_planinfo')">
+                <span class="text-close"></span>
+            </div>
         </div>
         <div id="canvasWrap">
             <p class="text-pleasesign"></p>
@@ -133,14 +165,7 @@
                 <span class="text-close"></span>
             </div>
         </div>
-        <div id="popup_btn_viewGroupParticipants"><span class="text-participants"></span><img src="/static/user/res/icon-down-grey.png"></div>
-        <div id="groupParticipants">
-
-        </div>
-        <div id="popup_sign_img">
-            <span class="text-completesign"></span>
-            <img src="" id="id_sign_img">
-        </div>
+        
 
         <div id="subpopup_addByList_plan" class="subpopup_addGroup" style="top:50%;width: 100%;">
             <div class="mode_switch_button_wrap_cal" style="margin:unset;margin-top:5px;display:table;">
@@ -175,14 +200,16 @@
     <div id="cal_popup_plandelete" class="popups">
         <div id="popup_img">
             <span id="popup_delete_title" class="popup_title"></span>
-            <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
+            <img src="/static/user/res/stopmark.png" class="img_cal">
         </div>
         <div id="popup_delete_question" class="popup_info_text text-deletequestion-plan"></div>
-        <div id="popup_delete_btn_yes" class="popup_inner popup_inner_delete">
-            <span class="text-yes"></span>
-        </div>
-        <div id="popup_delete_btn_no" class="popup_inner popup_inner_delete" onclick="close_info_popup('cal_popup_plandelete')">
-            <span class="text-no"></span>
+        <div class="popup_btn_wrap">
+            <div id="popup_delete_btn_yes" class="popup_inner popup_inner_delete">
+                <span class="text-yes"></span>
+            </div>
+            <div id="popup_delete_btn_no" class="popup_inner popup_inner_delete" onclick="close_info_popup('cal_popup_plandelete')">
+                <span class="text-no"></span>
+            </div>
         </div>
     </div>
     <!--삭제 확인 팝업메뉴-->
@@ -190,7 +217,7 @@
     <!--반복일정 등록 확인 팝업메뉴-->
     <div id="cal_popup_repeatconfirm" class="popups">
         <div id="popup_img">
-            <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
+            <img src="/static/user/res/ptadd/icon-cal.png" class="img_cal">
         </div>
         <div class="popup_info_text">
             <p class="_repeatconfirmQuestion"></p>
@@ -212,7 +239,7 @@
     <div id="cal_popup_plancheck" class="popups">
         <div style="position: relative;z-index: 10">
             <div>
-                <img src="/static/user/res/ptadd/icon-cal.png" alt="" class="img_cal">
+                <img src="/static/user/res/ptadd/icon-cal.png" alt="" class="img_cal_month">
                 <span id="countNum"></span>
             </div>
             <img src="/static/user/res/ptadd/btn-x.png" alt="" id="btn_close5" class="btn_close_popup" onclick="close_info_popup('cal_popup_plancheck')">
@@ -306,7 +333,7 @@
                             <a class="sidebar_text text-todayplan">
                             </a>
                         </div>
-                        <div class="sidebar_div" onclick="sideGoPage('cal_total')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
+                        <div class="sidebar_div" onclick="sideGoPage('cal_total', 'text-plan')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-plan">
                             </a>
                         </div>
@@ -319,17 +346,17 @@
                             <a class="sidebar_text text-monthplan">
                             </a>
                         </div> -->
-                        <div class="sidebar_div" onclick="sideGoPage('member_manage')"><img src="{% static_url "user/res/icon-user-setting.png" %}" class="sidebar_icon" alt="#">
+                        <div class="sidebar_div" onclick="sideGoPage('member_manage', 'text-membermanage')"><img src="{% static_url "user/res/icon-user-setting.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-membermanage">
                             </a>
                         </div>
                         
-                        <div class="sidebar_div" onclick="sideGoPage('lecture_manage')"><img src="{% static_url "user/res/icon-lesson.png" %}" class="sidebar_icon" alt="#">
+                        <div class="sidebar_div" onclick="sideGoPage('lecture_manage', 'text-lecturemanage')"><img src="{% static_url "user/res/icon-lesson.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-lecturemanage">
                             </a>
                         </div>
 
-                        <div class="sidebar_div" onclick="sideGoPage('ticket_manage')"><img src="{% static_url "user/res/icon-lessonpass.png" %}" class="sidebar_icon" alt="#">
+                        <div class="sidebar_div" onclick="sideGoPage('ticket_manage', 'text-ticketmanage')"><img src="{% static_url "user/res/icon-lessonpass.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-ticketmanage">
                             </a>
                         </div>
@@ -351,13 +378,13 @@
                             </a>
                         </div> -->
                         
-                            <div class="sidebar_div"><img src={% static_url "user/res/icon-statistic.png" %} class="sidebar_icon" alt="#">
-                                <a href="{% url 'trainer:work_manage' %}" class="sidebar_text text-workmanage">
+                            <div class="sidebar_div" onclick="sideGoPage('work_manage', 'text-workmanage')"><img class="sidebar_icon" alt="#" src={% static_url "user/res/icon-statistic.png" %}>
+                                <a class="sidebar_text text-workmanage">
                                 </a>
                             </div>
                             
-                        <div class="sidebar_div"><img src={% static_url "user/res/alarm/alarm_on.png" %} class="sidebar_icon" alt="#">
-                            <a href="{% url 'trainer:alarm' %}" class="sidebar_text text-alarm">
+                        <div class="sidebar_div"  onclick="sideGoPage('alarm', 'text-alarm')"><img class="sidebar_icon" alt="#" src={% static_url "user/res/alarm/alarm_on.png" %}>
+                            <a class="sidebar_text text-alarm">
                             </a>
                         </div>
                         <!--
@@ -366,8 +393,8 @@
                             </a>
                         </div>
                         -->
-                        <div class="sidebar_div"><img src="{% static_url "user/res/icon-info.png" %}" class="sidebar_icon" alt="#">
-                            <a href="{% url 'trainer:help_setting' %}" class="sidebar_text text-help"></a>
+                        <div class="sidebar_div" onclick="sideGoPage('help_setting', 'text-help')"><img src="{% static_url "user/res/icon-info.png" %}" class="sidebar_icon" alt="#">
+                            <a class="sidebar_text text-help"></a>
                         </div>
                         <!--<div class="sidebar_div">
 {#                        <img src="{% static_url "user/res/icon-card@3x.png" %}" class="sidebar_icon" alt="#">#}
@@ -382,7 +409,7 @@
                             </a>
                         </div>
                         <div class="sidebar_div_last2">
-                            <a href="https://blog.naver.com/ppkyum" target="_blank">
+                            <a rel="noopener" href="https://blog.naver.com/ppkyum" target="_blank">
                             <img src="{% static_url "user/res/icon-info.png" %}" alt="#" class="sidebar_icon_info sidebar_icon">
                             </a>
                         </div> 
@@ -576,7 +603,7 @@
         <span class="_promisefooter" style="margin-left:10px;margin-right: 10px;">|</span>
         <a class="_privacyfooter text-privacy" href='{% url 'privacy' %}'></a>
         <span class="_privacyfooter" style="margin-left:10px;margin-right: 10px;">|</span>
-        <a class="_manualfooter text-manual" href="https://blog.naver.com/ppkyum" target="_blank"></a>
+        <a class="_manualfooter text-manual" rel="noopener" href="https://blog.naver.com/ppkyum" target="_blank"></a>
     </div>
     <div class="bottomfooter3 text-footerdisplay">
         <p><span>대표</span><span class="footercontent">김선겸</span><span>개인정보담당자</span><span class="footercontent">김선겸</span><span>사업자등록번호</span><span class="footercontent">463-56-00284</span><span>대표번호</span><span class="footercontent">02-3474-3508</span></p>
@@ -602,11 +629,11 @@
 <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
 
-<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<script async src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
 <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
 <link rel="manifest" href={% static_url "manifest.json" %}>
 <script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>
-<audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>
+<audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3"></audio>
 <script>
 function playSound() {
       var sound = document.getElementById("audio");
@@ -703,7 +730,6 @@ function playSound() {
                 registrations.forEach(function (v) {
                         send_message_to_sw(v.active, "hello cal week").then(function (m) {
                         playSound();
-                        console.log(window.location.pathname);
                         if((window.location.pathname=='/trainer/cal_week/')|| (window.location.pathname=='/trainer/cal_month/')|| (window.location.pathname=='/trainer/cal_total/')){
                             ajaxClassTime();
                         }
@@ -824,7 +850,7 @@ function playSound() {
 
 
     function openNav(){
-
+        disable_window_scroll("remember_scroll");
         $("#outer_Sidenav").show();
         $("#inner_Sidenav").css({'width':'250px'});
         $('#float_btn').hide('fast');
@@ -834,11 +860,10 @@ function playSound() {
     }
 
     function closeNav(){
-
+        enable_window_scroll("goto_scroll");
         $("#outer_Sidenav").hide();
         $("#inner_Sidenav").css({'width':'0'});
         $('#float_btn').show('fast');
-
 
         //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeOut('fast')
     }
@@ -847,11 +872,11 @@ function playSound() {
 
     function open_slide_menu_pc(option){ // pc or mobile
         var bodywidth = window.innerWidth;
-        var selector_alarm_iframe = $('#alarm-iframe')
+        var selector_alarm_iframe = $('#alarm-iframe');
         if(option == 'class'){
             $('.pcver-slide-menu_alarm').css('display','none')
             $('.pcver-slide-menu_class').css('display','block')
-            open_lecture_select_popup_pc()
+            open_lecture_select_popup_pc();
 
 
             if(bodywidth > 974){
@@ -1146,15 +1171,19 @@ function playSound() {
         closeNav();
         shade_index(100);
         ajax_read_lecture_info_from_db($('.lecture_select_table_list'),'callback',function(){
-            append_dropdown_scroll_arrow('.lecture_select_table_list', '#popup_lecture_select_title', 35, 0)
+            append_dropdown_scroll_arrow('.lecture_select_table_list', '#popup_lecture_select_title', 35, 0);
             set_list_overflow_scrolling('.lecture_select_table_list', '#popup_lecture_select_title');
         });
+
+        disable_window_scroll("remember_scroll");
+        $('body').css('position','relative');
     }
 
     function open_lecture_select_popup_pc(){
+        //disable_window_scroll();
         $('.popups').hide();
         ajax_read_lecture_info_from_db($('#subject-selector'), 'callback', function(){
-            append_dropdown_scroll_arrow('#subject-selector', '#myInfo', 50, -60)
+            append_dropdown_scroll_arrow('#subject-selector', '#myInfo', 50, -60);
             set_list_overflow_scrolling('#subject-selector', '#myInfo');
         });
     }
@@ -1246,7 +1275,6 @@ function playSound() {
             center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['modDate'] = jsondata.modDtArray[k];
             center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['regDate'] = jsondata.regDtArray[k];
         }
-        console.log(center_subject)
         return center_subject
     }
 
@@ -1254,6 +1282,7 @@ function playSound() {
     $('#popup_lecture_select .button_close_popup').click(function(){
         $(this).parents('div.popups').fadeOut('fast');
         shade_index(-100);
+        enable_window_scroll("goto_scroll");
     });
 
 

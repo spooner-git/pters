@@ -1,4 +1,8 @@
 
+
+
+
+
 .pshade,.mshade{
 	position: fixed;
 	display: none;
@@ -17,7 +21,7 @@
 	display: none;
 	background: #f4f4f4;
 	width: 100%;
-	height: 100%;
+/*	height: 100%;*/
 	top: 0;
 }
 
@@ -110,12 +114,6 @@
 	border:1px solid #cccccc;
 	width: 	100%;
 	max-width: 	330px;
-	/*
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	transform:translate(-50%,-50%);
-	*/
 	z-index: 150;
 	text-align: center;
 }
@@ -131,29 +129,82 @@
 		left: -1px;
 	}
 
+#groupplan_participants_status{
+	color: #fe4e65;
+	font-size: 14px;
+	font-weight: 400;
+}
+#planinfo_plan_color{
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	vertical-align: top;
+	margin-top: 3px;
+	margin-right: 3px;
+}
+#planinfo_name_text{
+
+}
+#planinfo_type_text{
+	font-size: 16px;
+	font-weight: 400;
+}
+
 #popup_btn_viewGroupParticipants{
 	display: none;
 	text-align: left;
-	height: 25px;
+	height: 45px;
 	margin-top: 0px;
 	cursor: pointer;
-	background: #f4f4f4;
+	padding:0 20px 0 20px;
+	border-top: 1px solid #cccccc;
 }
 #popup_btn_viewGroupParticipants:hover{
 	background: #f1f1f1;
 }
+#popup_btn_viewGroupParticipants > span{
+	line-height: 45px;
+}
 #popup_btn_viewGroupParticipants img{
 	width: 12px;
-	float: left;
-	margin: 9px 5px 0px 20px;
+	float: right;
+	margin-top: 20px;
+}
+#groupParticipants_number_in_btn{
+	display: inline-block;
+	text-align: center;
+	width: 17px;
+	height: 17px;
+	border-radius: 50%;
+	background-color: #fe4e65;
+	color: #ffffff;
+	font-size: 11px;
+	font-weight: 400;
+	vertical-align: middle;
+	padding-right: 0px;
+	padding-top: 1px;
 }
 #groupParticipants{
-	height: 0px;
+	/*height: 0px;*/
+	display: none;
 	max-height: 128px;
 	width: 100%;
 	background: #ffffff;
 	overflow-y:auto;
 	transition: 0.2s;
+	border-top: 1px solid #cccccc;
+}
+.popup_btn_wrap{
+	/*display: table;
+	width: 100%;*/
+}
+	/*.popup_btn_wrap > div{
+		display: table-cell;
+		border-collapse: collapse;
+	}*/
+#popup_btn_complete{
+	color: #282828;
 }
 
 
@@ -254,6 +305,14 @@
 	font-weight: bold;
 }
 
+#popup_info{
+	text-align: left;
+	padding-left: 25px;
+	font-size: 15px;
+	font-weight: 500;
+}
+
+
 .popuptimetext{
 	font-size: 13px;
 	color: #565656;
@@ -263,21 +322,41 @@
 	color:#fe4e65;
 	font-size:13px;
 	margin-bottom: 3px;
-	width: 200px;
+	width: 100%;
 	height:30px;
-	border:0;
-	-webkit-text-fill-color: #282828;
+	border:1px solid #cccccc;
+	font-weight: 400;
+/*	-webkit-text-fill-color: #cccccc;*/
+	text-align: left;
 }
-
+#popup_info3_memo_modify{
+	display: none;
+	width: 17px;
+	cursor:pointer;
+	margin-left: 5px;
+	margin-bottom:5px;
+}
+.pt_memo_guide_popup{
+	font-size:11px;
+	color:#7d7d7d;
+	text-align: left;
+	padding-left: 33px;
+	font-weight: 400;
+}
+#popup_delete_question{
+	padding: 0 10px 15px 10px;
+}
 #popup_img{
+/*	display: none;*/
 	position: relative;
 	background: #ffffff;
 	height: 56px;
-	padding-top: 22.5px;
-	padding-bottom: 22.5px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
-#img_cal{
+.img_cal{
+/*	display: none;*/
 	position: absolute;
 	top: 41%;
 	left:41.5%;
@@ -288,15 +367,16 @@
 
 #popup_sign_img{
 	display: none;
-	height: 50px;
-	position: relative;
-	background: #ffffff;
+	height: 45px;
+	position: relative;/*
+	background-color: #ffffff;*/
+	border-top: 1px solid #cccccc;
 }
 #popup_sign_img span{
 	position: absolute;
 	left: 0;
 	margin-left: 20px;
-	margin-top: 17px;
+	line-height: 45px;
 	color: #282828;
 	font-size: 13px;
 	font-weight: 400;
@@ -381,10 +461,13 @@
 .popup_inner_x3{
 
 }
-
+.popup_inner:hover{
+	box-shadow: 1px 1px 1px 1px #eaeaea;
+}
 .popup_inner:active{
-	background: #f4f4f4 !important;
-	-webkit-background:#f4f4f4 !important;
+	/*background: #f4f4f4 !important;
+	-webkit-background:#f4f4f4 !important;*/
+	box-shadow: 1px 1px 1px 1px #cccccc;
 }
 
 .popup_inner span{
@@ -621,12 +704,35 @@
 
 /*plandelete 팝업 PC버전*/
 .popup_title{
-	display: none;
+	display: inline;
+	font-size: 19px;
+	font-weight: 500;
+	color: #282828;
 }
 /**/
 
 
 @media(min-width:600px){
+	.popup_btn_wrap{
+		margin-top: 10px;
+	}
+	#popup_btn_complete{
+		background-color: #282828;
+		border-color: #282828;
+		color: #ffffff;
+	}
+	#popup_btn_viewGroupParticipants{
+		border-top: 0;
+		border-bottom: 1px solid #cccccc;
+	}
+	#groupParticipants{
+		border-top: 0;
+		border-bottom: 1px solid #cccccc;
+	}
+	#popup_sign_img{
+		border-top: 0;
+		border-bottom: 1px solid #cccccc;
+	}
 	#alarm{
 		/*height: 370px;*/
 		height: 0px;
@@ -796,8 +902,8 @@
 		position: relative;
 		margin :0 auto;
 		background: #ffffff;
-		height: 50px;
-		padding:13px 13px 13px 24px;
+		height: auto;
+		padding:13px 15px 13px 15px;
 		width: 100%;
 		max-width: 330px;
 		text-align: left;
@@ -807,11 +913,10 @@
 		height: auto;
 		min-height: 62px;
 		border-bottom: 1px solid #cccccc;
-		margin-bottom: 10px;
 	}
 
 
-	#img_cal{
+	.img_cal{
 		display: none;
 		/*
 		position: absolute;
@@ -853,7 +958,7 @@
 		left: unset;
 		transform: unset;
 		top: unset;
-		font-size: 13px;
+		font-size: 12px;
 		font-weight: 400;
 		line-height: 30px;
 	}
@@ -880,7 +985,7 @@
 		border-top: 1px solid #a2a2a2;
 	}
 
-	.popup_inner:hover{
+	/*.popup_inner:hover{
 		background: #f4f4f4 !important;
 		-webkit-background:#f4f4f4 !important;
 	}
@@ -890,7 +995,7 @@
 
 	#popup_delete_btn_no:hover, #popup_delete_btn_no:active{
 		background: #3c3c3c !important;
-	}
+	}*/
 
 
 	/*월간 달력 팝업*/
@@ -921,14 +1026,7 @@
 
 
 
-	/*plandelete 팝업 PC버전*/
-	.popup_title{
-		display: inline;
-		font-size: 19px;
-		font-weight: 500;
-		color: #282828;
-	}
-	/**/
+	
 
 	/*일정창내 그룹원 리스트*/
 	#groupParticipants{

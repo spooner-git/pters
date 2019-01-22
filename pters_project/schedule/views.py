@@ -37,7 +37,7 @@ from .functions import func_get_lecture_id, func_add_schedule, func_refresh_lect
     func_check_group_available_member_before, func_check_group_available_member_after, \
     func_send_push_trainer, func_get_not_available_group_member_list, func_send_push_trainee, func_delete_schedule, \
     func_delete_repeat_schedule, func_update_repeat_schedule, func_get_repeat_schedule_date_list, \
-    func_add_repeat_schedule, func_refresh_group_status
+    func_add_repeat_schedule, func_refresh_group_status, func_refresh_lecture_count_for_delete
 
 logger = logging.getLogger(__name__)
 
@@ -63,11 +63,11 @@ def add_schedule_logic(request):
     note = request.POST.get('add_memo', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
+    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
     next_page = request.POST.get('next_page')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
-
     error = None
     schedule_start_datetime = None
     schedule_end_datetime = None
@@ -79,6 +79,9 @@ def add_schedule_logic(request):
     push_title = []
     push_message = []
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+
+    if duplication_enable_flag is None or duplication_enable_flag == '':
+        duplication_enable_flag = SCHEDULE_DUPLICATION_DISABLE
     if en_dis_type == ON_SCHEDULE_TYPE:
         if member_id == '':
             error = '회원을 선택해 주세요.'
@@ -159,7 +162,6 @@ def add_schedule_logic(request):
                                                         permission_state_cd,
                                                         state_cd)
                     error = schedule_result['error']
-
                 if error is None:
                     if lecture_id is not None and lecture_id != '':
                         error = func_refresh_lecture_count(class_id, lecture_id)
@@ -167,8 +169,7 @@ def add_schedule_logic(request):
                 if error is None:
                     error = func_date_check(class_id, schedule_result['schedule_id'],
                                             schedule_date, schedule_start_datetime, schedule_end_datetime,
-                                            SCHEDULE_DUPLICATION_ENABLE)
-
+                                            duplication_enable_flag)
                     if error is not None:
                         error += ' 일정이 중복되었습니다.'
                 if error is not None:
@@ -242,9 +243,9 @@ def delete_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
+    auth_member_num = request.POST.get('auth_member_num', 20)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
-
     push_lecture_id = []
     push_title = []
     push_message = []
@@ -637,6 +638,8 @@ def add_repeat_schedule_logic(request):
     en_dis_type = request.POST.get('en_dis_type', ON_SCHEDULE_TYPE)
     class_id = request.session.get('class_id', '')
     # next_page = request.POST.get('next_page')
+
+    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
 
     week_info = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)']
@@ -654,6 +657,8 @@ def add_repeat_schedule_logic(request):
     repeat_duplication_date_data = []
     repeat_success_date_data = []
 
+    if duplication_enable_flag is None or duplication_enable_flag == '':
+        duplication_enable_flag = SCHEDULE_DUPLICATION_DISABLE
     if repeat_type == '':
         error = '매주/격주를 선택해주세요.'
 
@@ -738,22 +743,23 @@ def add_repeat_schedule_logic(request):
             if repeat_end_time == '24:00':
                 repeat_end_time = '23:59'
                 end_time_check = 1
+            repeat_schedule_info_date = str(repeat_schedule_date_info).split(' ')[0]
             try:
-                schedule_start_datetime = datetime.datetime.strptime(str(repeat_schedule_date_info).split(' ')[0]
+                schedule_start_datetime = datetime.datetime.strptime(repeat_schedule_info_date
                                                                      + ' ' + repeat_start_time,
                                                                      '%Y-%m-%d %H:%M')
-                schedule_end_datetime = datetime.datetime.strptime(str(repeat_schedule_date_info).split(' ')[0]
+                schedule_end_datetime = datetime.datetime.strptime(repeat_schedule_info_date
                                                                    + ' ' + repeat_end_time,
                                                                    '%Y-%m-%d %H:%M')
 
             except ValueError:
-                error_date = str(repeat_schedule_date_info).split(' ')[0] \
+                error_date = repeat_schedule_info_date \
                              + week_info[int(repeat_schedule_date_info.strftime('%w'))]
             except IntegrityError:
-                error_date = str(repeat_schedule_date_info).split(' ')[0] \
+                error_date = repeat_schedule_info_date \
                              + week_info[int(repeat_schedule_date_info.strftime('%w'))]
             except TypeError:
-                error_date = str(repeat_schedule_date_info).split(' ')[0] \
+                error_date = repeat_schedule_info_date \
                              + week_info[int(repeat_schedule_date_info.strftime('%w'))]
             if end_time_check == 1:
                 schedule_end_datetime = schedule_end_datetime + datetime.timedelta(minutes=1)
@@ -803,7 +809,7 @@ def add_repeat_schedule_logic(request):
                                 error_date = func_date_check(class_id, schedule_result['schedule_id'],
                                                              str(repeat_schedule_date_info).split(' ')[0],
                                                              schedule_start_datetime, schedule_end_datetime,
-                                                             SCHEDULE_DUPLICATION_ENABLE)
+                                                             duplication_enable_flag)
 
                         if error_date is not None:
                             raise ValidationError(str(error_date))
@@ -1191,6 +1197,7 @@ def add_group_schedule_logic(request):
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
+    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
     group_member_ids = request.POST.get('group_member_ids', '')
 
     if group_member_ids is not None and group_member_ids != '':
@@ -1211,6 +1218,8 @@ def add_group_schedule_logic(request):
     class_info = None
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
+    if duplication_enable_flag is None or duplication_enable_flag == '':
+        duplication_enable_flag = SCHEDULE_DUPLICATION_DISABLE
     if group_id == '':
         error = '오류가 발생했습니다.'
     elif schedule_date == '':
@@ -1287,7 +1296,7 @@ def add_group_schedule_logic(request):
                     group_schedule_id = schedule_result['schedule_id']
                     error = func_date_check(class_id, schedule_result['schedule_id'],
                                             schedule_date, schedule_start_datetime, schedule_end_datetime,
-                                            SCHEDULE_DUPLICATION_ENABLE)
+                                            duplication_enable_flag)
 
                     if error is not None:
                         error += ' 일정이 중복되었습니다.'
@@ -1463,6 +1472,7 @@ def delete_group_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
+    auth_member_num = request.POST.get('auth_member_num', 20)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
@@ -1518,6 +1528,7 @@ def delete_group_schedule_logic(request):
                         schedule_result = func_delete_schedule(schedule_id, request.user.id)
                         temp_error = schedule_result['error']
                         if temp_error is None:
+                            # temp_error = func_refresh_lecture_count_for_delete(class_id, lecture_id, auth_member_num)
                             temp_error = func_refresh_lecture_count(class_id, lecture_id)
                         if temp_error is None:
                             if repeat_schedule_id is not None and repeat_schedule_id != '':
@@ -2138,6 +2149,8 @@ def add_group_repeat_schedule_logic(request):
     repeat_schedule_time_duration = request.POST.get('repeat_dur', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
+
+    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     group_member_ids = request.POST.get('group_member_ids', '')
     if group_member_ids is not None and group_member_ids != '':
@@ -2161,6 +2174,8 @@ def add_group_repeat_schedule_logic(request):
     repeat_duplication_date_data = []
     repeat_success_date_data = []
 
+    if duplication_enable_flag is None or duplication_enable_flag == '':
+        duplication_enable_flag = SCHEDULE_DUPLICATION_DISABLE
     if repeat_type == '':
         error = '빈도를 선택해주세요.'
 
@@ -2319,7 +2334,7 @@ def add_group_repeat_schedule_logic(request):
                             error_date = func_date_check(class_id, schedule_result['schedule_id'],
                                                          str(repeat_schedule_date_info).split(' ')[0],
                                                          schedule_start_datetime, schedule_end_datetime,
-                                                         SCHEDULE_DUPLICATION_ENABLE)
+                                                         duplication_enable_flag)
 
                         if error_date is not None:
                             raise ValidationError(str(error_date))
@@ -2558,13 +2573,11 @@ def add_group_repeat_schedule_confirm(request):
                 context['push_message'] = ''
 
             messages.info(request, information)
-            logger.info(request.user.last_name + ' ' + request.user.first_name + '['
-                        + str(request.user.id) + '] ' + str(error_message))
             return render(request, 'ajax/schedule_error_info.html', context)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
-        return redirect(next_page)
+        return render(request, 'ajax/schedule_error_info.html', context)
 
 
 # 그룹 반복 일정 취소

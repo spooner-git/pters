@@ -95,6 +95,7 @@ def get_setting_info(request):
         request.session['setting_trainer_work_mon_time_avail'] = context['lt_work_mon_time_avail']
         request.session['setting_trainer_work_tue_time_avail'] = context['lt_work_tue_time_avail']
         request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
+        request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
         request.session['setting_trainer_work_ths_time_avail'] = context['lt_work_ths_time_avail']
         request.session['setting_trainer_work_fri_time_avail'] = context['lt_work_fri_time_avail']
         request.session['setting_trainer_work_sat_time_avail'] = context['lt_work_sat_time_avail']
@@ -111,9 +112,9 @@ def get_setting_info(request):
         request.session['setting_language'] = context['lt_lan_01']
 
         if context['lt_schedule_auto_finish'] == AUTO_FINISH_ON:
-            not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                 end_dt__lte=now, state_cd='NP',
-                                                                 en_dis_type=ON_SCHEDULE_TYPE, use=USE)
+            not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, state_cd='NP',
+                                                                 en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now,
+                                                                 use=USE)
             for not_finish_schedule_info in not_finish_schedule_data:
                 not_finish_schedule_info.state_cd = 'PE'
                 not_finish_schedule_info.save()
@@ -179,11 +180,16 @@ def get_function_auth_type_cd(request):
     payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
                                                 start_date__lte=today, end_date__gte=today,
                                                 use=USE).order_by('product_tb_id', '-end_date')
+    if len(payment_data) == 0:
+        payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id, status='reserve',
+                                                    start_date__lte=today, end_date__gte=today,
+                                                    use=USE).order_by('product_tb_id', '-end_date')
 
-    for billing_info in billing_data:
-        billing_info.state_cd = 'END'
-        # billing_info.use = UN_USE
-        billing_info.save()
+    if len(payment_data) == 0:
+        for billing_info in billing_data:
+            billing_info.state_cd = 'END'
+            # billing_info.use = UN_USE
+            billing_info.save()
 
     request.session['product_type_name'] = ''
     request.session['product_id'] = ''

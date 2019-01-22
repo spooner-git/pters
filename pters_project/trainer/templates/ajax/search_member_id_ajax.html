@@ -24,6 +24,8 @@
 
     "emailActiveInfo" :
     ["{{ member_info.user.is_active }}"],
+    "ing_member_check" :
+    ["{{ ing_member_check }}"],
 
     "messageArray" :
     [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]

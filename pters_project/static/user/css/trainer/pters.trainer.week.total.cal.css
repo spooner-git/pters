@@ -76,6 +76,8 @@ body{
 
 	background-image: url('/static/user/res/calendar_hour.png');
 	background-size: 60px 60px;
+
+	border-right: 1px solid #cccccc;
 }
 
 .slidegap{
@@ -116,6 +118,7 @@ body{
 	max-width: 1080px;
 
 	border-bottom:1px solid #eaeaea;
+	box-shadow: 1px 1px 10px 1px #cccccc;
 	display: table;
 	table-layout: fixed;
 	width: 100%;
@@ -124,7 +127,8 @@ body{
 
 .weekNum{
 	display: table-cell;
-	background:#f7f7f7;
+/*	background:#f7f7f7;*/
+	background-color: rgba(40, 40, 40, 0.06);
 	position: relative;
 	text-align: center;
 	width: 12.5%;
@@ -178,10 +182,10 @@ body{
 	top: 110px;
 	margin: 0 auto;
 	background-color: transparent;
-	height: 90%;
 	z-index: 3;
 	max-width: 1080px;
-	height: 100%;
+	/*height: 100%;*/
+	height: auto;
 	table-layout: fixed;
 	overflow-y: hidden;
 	overflow-x: hidden;
@@ -190,12 +194,18 @@ body{
 }
 
 
+
+
 .swiper-container{
 	overflow-y: hidden;
 	/*height: 100%;*/
 	padding-bottom:0px;
 	height: auto;
 	background:#ffffff;
+}
+
+.swiper-slide{
+	padding-bottom: 5px;
 }
 
 
@@ -282,6 +292,7 @@ img,a,div,span,p{
 	height: 50px;
 	z-index: 5;
 	width: 100%;
+	top: 50px;
 }
 
 #ymdText-pc{
@@ -311,6 +322,8 @@ img,a,div,span,p{
 	color: #444444;
 	font-size: 12px;
 	cursor: pointer;
+	padding-top: 15px;
+	padding-bottom: 15px;
 }
 	#hidetoggle img{
 		margin-right: 7px;
@@ -393,10 +406,6 @@ img,a,div,span,p{
 
 
 
-
-
-
-
 .morningtext{
 	display:none;
 }
@@ -413,10 +422,7 @@ img,a,div,span,p{
 
 
 
-
-
-
-.classTime{
+/*.classTime{
 	position: absolute;
 	top: 0px;
 	width: 99%;
@@ -431,18 +437,17 @@ img,a,div,span,p{
 }
 
 .classTime_checked:hover{
-	/*background: #635e3b !important;*/
 	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
 	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
 }
 
-.classTime_re{ /*반복 일정*/
+
+.classTime_re{ 
 	background: #e3ffd9;
 
 }
 
 .classTime:active,.classTime:hover{
-	/*background: #ffe466;*/
 	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
 	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
 }
@@ -452,49 +457,65 @@ img,a,div,span,p{
 	top: 0px;
 	width: 99%;
 	background: #eeeeee;
-	opacity: 0.9;
+	opacity: 0.8;
 	z-index: 100;
 	cursor: pointer;
 }
 
-.offTime_re{ /*반복 일정*/
+.offTime_re{ 
 	background: black;
 }
 
 .offTime:active,.offTime:hover{
 	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
 	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
-	/*
-	background: #a2a2a2;
-	opacity: 1;
-	-webkit-background: #a2a2a2;
-	*/
+
 }
 
 .groupTime{
 	position: absolute;
 	top: 0px;
 	width: 99%;
-	/*background: #ffacb7;*/
+
 	z-index: 100;
+
 	cursor: pointer;
 	font-size: 12px;
 }
 .groupTime:active,.groupTime:hover{
-	/*background: #ff6c7f;*/
+
 	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
 	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
 }
 
 .groupTime_checked{
-	/*background: #af757c !important;*/
+
 }
 
 .groupTime_checked:hover{
-	/*background: #946369 !important;*/
+	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
+	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
+}*/
+
+._class, ._group, ._off{
+	border-left: 1px solid;
+	border-right: 1px solid;
+	border-color: #ffffff;
+}
+._class:hover{
+	/*background: #635e3b !important;*/
 	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
 	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
 }
+._off:active, ._off:hover{
+	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
+	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
+}
+._group:active, ._group:hover{
+	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
+	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
+}
+
 
 
 .classTimeIndicator{
@@ -576,6 +597,13 @@ img,a,div,span,p{
 	height: 18px;
 	font-size: 13px;
 }
+.week_fixed_box_1{
+	height: 3px;
+}
+.week_fixed_box_2{
+	font-size: 25px;
+	height: 32px;
+}
 
 .today-Number{
 	font-weight: bold;
@@ -615,6 +643,7 @@ img,a,div,span,p{
 @media(min-width: 400px){
 	.timeindex_time{
 		font-size: 13.5px;
+		display:block;
 	}
 }
 
@@ -624,7 +653,7 @@ img,a,div,span,p{
 		position: relative;
 /*		background:#ffffff;*/
 		background: transparent;
-		padding-top: 64px;
+		padding-top: 78px;
 		margin-bottom: 60px;
 		padding-bottom: 0;
 	}
@@ -652,6 +681,7 @@ img,a,div,span,p{
 		transform: translateX(-50%);
 		width: 100%;
 		max-width: 1080px;
+		padding: 0;
 	}
 		#hidetoggle img{
 			width: 7px;
@@ -722,7 +752,7 @@ img,a,div,span,p{
 	.hour{
 		/*height: 46px;*/
 		height: 60px;
-		background:#ffffff;
+		background:#f4f4f4;
 	}
 
 	.weekNum{
@@ -767,11 +797,11 @@ img,a,div,span,p{
 
 	.classTime, .groupTime{
 		/*top: 0.5px;*/
-		left: 1px;
+		/*left: 1px;*/
 	}
 
 	.offTime{
-		left: 1px;
+		/*left: 1px;*/
 	}
 
 	.classTime,.offTime,.classTime_checked{
@@ -811,6 +841,7 @@ img,a,div,span,p{
 		background: #ffffff;
 		background-image: unset;
 		background-size: unset;
+		border-right: 1px solid #eaeaea;
 	}
 
 
@@ -818,6 +849,14 @@ img,a,div,span,p{
 		height: 18px;
 		font-size: 13px;
 		font-weight: 400;
+	}
+
+	.week_fixed_box_1{
+		/*height: 3px;*/
+	}
+	.week_fixed_box_2{
+		font-size: 25px;
+		height: 32px;
 	}
 
 	.time-style{
@@ -836,6 +875,7 @@ img,a,div,span,p{
 
 	#ymdText{
 		height: 65px;
+		top: 65px;
 	}
 
 	#week{
@@ -1021,7 +1061,7 @@ img,a,div,span,p{
 		display:inline;
 		position: absolute;
 		left: 15px;
-		color: #444444;
+		/*color: #444444;*/
 		font-size: 15px;
 		font-weight: bold;
 	}
@@ -1036,7 +1076,8 @@ img,a,div,span,p{
 	position: relative;
 	/*min-height: 330px;
 	max-height: 400px;*/
-	height: 398px;
+	/*height: 398px;*/
+	max-height: 360px;
 	overflow-y: auto;
 	-webkit-overflow-scrolling:touch;
 }

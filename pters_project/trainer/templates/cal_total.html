@@ -23,6 +23,7 @@
         <input type="hidden" name="member_id"   id="id_member_dbid_delete">
         <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
         <input type="hidden" name="lecture_id" id="id_lecture_id_delete"> <!-- -->
+        <input type="hidden" name="auth_member_num" id="id_auth_member_num"> <!-- -->
         <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
     </form>
 
@@ -177,46 +178,52 @@
     <div id="week" class="">
         <div class="slidegap"><span></span><span></span></div>
         <div id="weekNum_1" class="weekNum sunDate">
-            <span class="weekToday-style"></span><span id="sunDate" class="weekToday-style"></span>
+            <span class="weekToday-style week_fixed_box_1"></span><span id="sunDate" class="weekToday-style  week_fixed_box_2"></span>
             <span class="weekToday-style text-sundaymin"></span>
             <span class="holidayName"></span>
         </div>
-        <div id="weekNum_2" class="weekNum"><span class="weekToday-style"></span><span id="monDate" class="weekToday-style"></span>
+        <div id="weekNum_2" class="weekNum">
+            <span class="weekToday-style  week_fixed_box_1"></span><span id="monDate" class="weekToday-style week_fixed_box_2"></span>
             <span class="weekToday-style text-mondaymin"></span>
             <span class="holidayName"></span>
         </div>
-        <div id="weekNum_3" class="weekNum"><span class="weekToday-style"></span><span id="tueDate" class="weekToday-style"></span>
+        <div id="weekNum_3" class="weekNum">
+            <span class="weekToday-style  week_fixed_box_1"></span><span id="tueDate" class="weekToday-style week_fixed_box_2"></span>
             <span class="weekToday-style text-tuesdaymin"></span>
             <span class="holidayName"></span>
         </div>
-        <div id="weekNum_4" class="weekNum"><span class="weekToday-style"></span><span id="wedDate" class="weekToday-style"></span>
+        <div id="weekNum_4" class="weekNum">
+            <span class="weekToday-style  week_fixed_box_1"></span><span id="wedDate" class="weekToday-style week_fixed_box_2"></span>
             <span class="weekToday-style text-wednesdaymin"></span>
             <span class="holidayName"></span>
         </div>
-        <div id="weekNum_5" class="weekNum"><span class="weekToday-style"></span><span id="thrDate" class="weekToday-style"></span>
+        <div id="weekNum_5" class="weekNum">
+            <span class="weekToday-style  week_fixed_box_1"></span><span id="thrDate" class="weekToday-style week_fixed_box_2"></span>
             <span class="weekToday-style text-thursdaymin"></span>
             <span class="holidayName"></span>
         </div>
-        <div id="weekNum_6" class="weekNum"><span class="weekToday-style"></span><span id="friDate" class="weekToday-style"></span>
+        <div id="weekNum_6" class="weekNum">
+            <span class="weekToday-style  week_fixed_box_1"></span><span id="friDate" class="weekToday-style week_fixed_box_2"></span>
             <span class="weekToday-style text-fridaymin"></span>
             <span class="holidayName"></span>
         </div>
-        <div id="weekNum_7" class="weekNum satDate"><span class="weekToday-style"></span><span id="satDate" class="weekToday-style"></span>
+        <div id="weekNum_7" class="weekNum satDate">
+            <span class="weekToday-style  week_fixed_box_1"></span><span id="satDate" class="weekToday-style week_fixed_box_2"></span>
             <span class="weekToday-style text-saturdaymin"></span>
             <span class="holidayName"></span>
         </div>
     </div>
 
     <div id="date" class="week-style wrap" style="display: none;"> <!--월화수목금토일-->
-        <table class="calendar-style calendar-day-style">
+        <table class="calendar-style">
             <tr>
-                <td id="sunday"><p class="calendar_image weekday_style sunday">일</p></td>
-                <td id="monday"><p class="calendar_image weekday_style weekdays">월</p></td>
-                <td id="tuesday"><p class="calendar_image weekday_style weekdays">화</p></td>
-                <td id="wednesday"><p class="calendar_image weekday_style weekdays">수</p></td>
-                <td id="thursday"><p class="calendar_image weekday_style weekdays">목</p></td>
-                <td id="friday"><p class="calendar_image weekday_style weekdays">금</p></td>
-                <td id="saturday"><p class="calendar_image weekday_style saturday">토</p></td>
+                <td id="sunday"><p class="calendar_image sunday">일</p></td>
+                <td id="monday"><p class="calendar_image weekdays">월</p></td>
+                <td id="tuesday"><p class="calendar_image weekdays">화</p></td>
+                <td id="wednesday"><p class="calendar_image weekdays">수</p></td>
+                <td id="thursday"><p class="calendar_image weekdays">목</p></td>
+                <td id="friday"><p class="calendar_image weekdays">금</p></td>
+                <td id="saturday"><p class="calendar_image saturday">토</p></td>
             </tr>
         </table>
     </div> <!--월화수목금토일-->
@@ -287,6 +294,7 @@
             <input type="hidden" name="add_memo"          id="id_memo_mini">
             <input type="hidden" name="group_id"          id="id_group_id">
             <input type="hidden" name="group_member_ids"  id="id_group_member_ids">
+            <input type="hidden" name="duplication_enable_flag" id="id_duplication_enable_flag">
         </form>
 
         <form action="{% url 'schedule:add_schedule' %}" id="off-add-form" method="post">
@@ -299,6 +307,7 @@
             <input type="hidden" name="en_dis_type"       id="en_dis_type" value ='0'>
             <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
             <input type="hidden" name="add_memo"          id="id_memo_mini_off">
+            <input type="hidden" name="duplication_enable_flag" id="id_off_duplication_enable_flag">
         </form>
 
         <form action="{% url 'schedule:add_repeat_schedule' %}" id="add-repeat-schedule-form" method="post">
@@ -317,6 +326,7 @@
             <!--<input type="hidden" name="repeat_dur"        id="id_repeat_dur">-->
             <input type="hidden" name="en_dis_type" value="1">
             <input type="hidden" name="group_member_ids" id="id_repeat_group_member_ids">
+            <input type="hidden" name="duplication_enable_flag" id="id_repeat_duplication_enable_flag">
             <input type="hidden" name="next_page" value="{% url 'trainer:get_trainer_schedule' %}">
         </form>
 
@@ -330,6 +340,7 @@
             <input type="hidden" name="repeat_day"          id="id_repeat_day_off">
             <!--<input type="hidden" name="repeat_dur"      id="id_repeat_dur_off">-->
             <input type="hidden" name="en_dis_type" value="0">
+            <input type="hidden" name="duplication_enable_flag" id="id_off_repeat_duplication_enable_flag">
             <input type="hidden" name="next_page" value="{% url 'trainer:get_trainer_schedule' %}">
         </form>
 
@@ -405,6 +416,10 @@
                 </div>
 
                 <div class="ptersCheckbox_wrapper" style="margin-top: 10px;">
+                    <div class="ptersCheckbox_sm allow_all_time">
+                        <div></div>
+                    </div>
+                    <p>중복일정 허용</p>
                     <div class="ptersCheckbox_sm add_time_unit">
                         <div></div>
                     </div>
@@ -558,6 +573,10 @@
                 </div>
 
                 <div class="ptersCheckbox_wrapper">
+                    <div class="ptersCheckbox_sm repeatadd_allow_all_time">
+                        <div></div>
+                    </div>
+                    <p>중복일정 허용</p>
                     <div class="ptersCheckbox_sm repeatadd_time_unit">
                         <div></div>
                     </div>
@@ -1090,7 +1109,7 @@
             <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
         </div>
         <div class="KRtext confirmText">회원 수강 환불<br>환불 금액을 입력해 주세요.</div>
-        <div class="KRtext confirmText" style="font-size: 12px;height: 55px;color:#fe4e65;font-weight: normal">※환불시 종료된 회원탭으로 회원이 이동됩니다.<br>환불 금액은 추후 매출통계 기능 추가시 반영됩니다.</div>
+        <div class="KRtext confirmText" style="font-size: 12px;height: 55px;color:#fe4e65;font-weight: normal">※환불시 종료 회원탭으로 회원이 이동됩니다.<br>환불 금액은 추후 매출통계 기능 추가시 반영됩니다.</div>
         <div class="JPtext confirmText">会員登録を取り消ししますか<br>払戻金額を入力してください</div>
         <div class="ENtext confirmText">Are you sure to delete this member from the list?<br>Please enter a refund</div>
         <div style="text-align: center;margin-bottom: 10px;">
@@ -1194,6 +1213,9 @@
     <!-- Placed at the end of the document so the pages load faster -->
 
     <script>
+        var current_Scroll_Position;
+{#        page_num = 0;#}
+        
         $('a.text-plan').css('color','#fe4e65;');
         var myswiper = new Swiper('.swiper-container', {
             initialSlide : 1,
@@ -1248,11 +1270,13 @@
 
         var calendarSize = 1;
         var calendar_select ="week";
+        var calendar_device_type;
         if(bodywidth > 600){
             if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                 if($.cookie('calendar_selected_last') == "week"){
                     calendar_select ="week";
                     week_calendar_mobile(today_YY_MM_DD);
+                    calendar_device_type = "mobile";
                 }else if($.cookie('calendar_selected_last') == "month"){
                     calendar_select ="month";
                     $('#calendar').removeClass('_calweek').addClass('_calmonth');
@@ -1260,19 +1284,23 @@
                     $('div.timeindex, #timeIndicatorBar').css('display', 'none');
                     $('#date').css('display', 'block');
                     month_calendar(today_YY_MM_DD);
+                    calendar_device_type = "pc";
                     $('.swiper-slide-active').css('width', $('#calendar').width());
                     $('#ymdText_monthcal').css('display', 'inline-block');
                     $('#ymdText_weekcal').css('display', 'none');
                     $('#change_to_weekcal').removeClass('pters_selectbox_btn_selected');
                     $('#change_to_monthcal').addClass('pters_selectbox_btn_selected');
+                    $('#hidetoggle').hide();
                 }else{
                     calendar_select ="week";
                     week_calendar_mobile(today_YY_MM_DD);
+                    calendar_device_type = "mobile";
                 }
             }else{
                  if($.cookie('calendar_selected_last') == "week"){
                     calendar_select ="week";
                     week_calendar(today_YY_MM_DD);
+                    calendar_device_type = "pc";
                  }else if($.cookie('calendar_selected_last') == "month"){
                     calendar_select ="month";
                     $('#calendar').removeClass('_calweek').addClass('_calmonth');
@@ -1280,21 +1308,24 @@
                     $('div.timeindex, #timeIndicatorBar').css('display', 'none');
                     $('#date').css('display', 'block');
                     month_calendar(today_YY_MM_DD);
+                    calendar_device_type = "pc";
                     $('.swiper-slide-active').css('width', $('#calendar').width());
                     $('#ymdText_monthcal').css('display', 'inline-block');
                     $('#ymdText_weekcal').css('display', 'none');
                     $('#change_to_weekcal').removeClass('pters_selectbox_btn_selected');
                     $('#change_to_monthcal').addClass('pters_selectbox_btn_selected');
+                    $('#hidetoggle').hide();
                  }else{
                     calendar_select ="week";
                     week_calendar(today_YY_MM_DD);
-                 } 
+                    calendar_device_type = "pc";
+                 }
             }
         }else if(bodywidth<=600){
-            
             if($.cookie('calendar_selected_last') == "week"){
                 calendar_select ="week";
                 week_calendar_mobile(today_YY_MM_DD);
+                calendar_device_type = "mobile";
             }else if($.cookie('calendar_selected_last') == "month"){
                 calendar_select ="month";
                 $('#calendar').removeClass('_calweek').addClass('_calmonth');
@@ -1302,14 +1333,17 @@
                 $('div.timeindex, #timeIndicatorBar').css('display', 'none');
                 $('#date').css('display', 'block');
                 month_calendar(today_YY_MM_DD);
+                calendar_device_type = "pc";
                 $('.swiper-slide-active').css('width', $('#calendar').width());
                 $('#ymdText_monthcal').css('display', 'inline-block');
                 $('#ymdText_weekcal').css('display', 'none');
                 $('#change_to_weekcal').removeClass('pters_selectbox_btn_selected');
                 $('#change_to_monthcal').addClass('pters_selectbox_btn_selected');
+                $('#hidetoggle').hide();
             }else{
                 calendar_select ="week";
                 week_calendar_mobile(today_YY_MM_DD);
+                calendar_device_type = "mobile";
             }
         }
 
@@ -1341,7 +1375,7 @@
                         $("#hidetoggle").find('img').css('-webkit-transform','rotate(-90deg)');
                         $('#ymdText-pc').css({'margin-top':'17px'});
                         $('#week').css({'padding-top':'32px'});
-                        $('#calendar').css('padding-top','16px');
+                        $('#calendar').css('padding-top','30px');
                         $('#ymdText').css('display','none');
                         week_calendar(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'));
                         $('.td00, .td30').css({'background':'unset',
@@ -1349,12 +1383,16 @@
                                             'background-size':'60px '+$('.td00').height()+'px'});
                     }
                 }else if(bodywidth<=600){
+                    var zoomed_selector = $("#week ._zoomed").attr('id');
                     $("#hidetoggle").attr('data-type','1');
                     $("#hidetoggle").find('img').css('-webkit-transform','rotate(-90deg)');
                     week_calendar_mobile(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'));
                     $('.td00, .td30').css({'background':'unset',
                                           'background-image':'url("/static/user/res/calendar_hour_day2.png")',
                                           'background-size':'60px '+ ($('.hour').height()+1)+'px'});
+                    if(calendar_mobile_zoom == 1){
+                        calendar_zoom('#'+zoomed_selector, "zoom");
+                    }
                 }
             }else if(onoff == "off"){
                 calendarSize = 1;
@@ -1372,7 +1410,7 @@
                         $("#hidetoggle").find('img').css('-webkit-transform','rotate(90deg)');
                         $('#ymdText-pc').css({'margin-top':'65px'});
                         $('#week').css({'padding-top':'80px'});
-                        $('#calendar').css('padding-top','64px');
+                        $('#calendar').css('padding-top','78px');
                         $('#ymdText').css('display','block');
                         week_calendar(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'));
                         $('.td00, .td30').css({'background':'#ffffff',
@@ -1380,12 +1418,16 @@
                                             'background-size':'unset'});
                     }
                 }else if(bodywidth<=600){
+                    var zoomed_selector = $("#week ._zoomed").attr('id');
                     $("#hidetoggle").attr('data-type','0');
                     $("#hidetoggle").find('img').css('-webkit-transform','rotate(90deg)');
                     week_calendar_mobile(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'));
                     $('.td00, .td30').css({'background':'#f7f7f7',
                                        'background-image':'url("/static/user/res/calendar_hour.png")',
                                         'background-size':'60px 60px'});
+                    if(calendar_mobile_zoom == 1){
+                        calendar_zoom('#'+zoomed_selector, "zoom");
+                    }
                 }
             }
         }
@@ -1395,32 +1437,67 @@
         var count1 = 0;
         $('#ymdText-pc-prev-btn, #leftArrowButton').click(function(e){
             e.stopPropagation();
-            left_page();
+            //if(calendar_mobile_zoom > 0){
+            //    calendar_zoom("#week ._zoomed", "unzoom");
+            //}else{
+                left_page(); 
+            //}
+            
         });
 
         $('#ymdText-pc-next-btn, #rightArrowButton').click(function(e){
             e.stopPropagation();
-            right_page();
+            //if(calendar_mobile_zoom > 0){
+            //    calendar_zoom("#week ._zoomed", "unzoom");
+            //}else{
+                right_page(); 
+            //}
         });
 
         function left_page(){
-            if(count==0){
-                myswiper.slidePrev(300);
-                count++;
-                setTimeout(function(){count=0},400);
-            }else if(count>0){
-                console.log('wait!');
+            if(calendar_mobile_zoom > 0){
+                calendar_zoom("#week ._zoomed", "unzoom");
+            }else {
+                if (count == 0) {
+                    myswiper.slidePrev(300);
+                    count++;
+                    setTimeout(function () {
+                        count = 0
+                    }, 400);
+                } else if (count > 0) {
+                    console.log('wait!');
+                }
             }
         }
         function right_page(){
-            if(count1==0){
-                myswiper.slideNext(300);
-                count1++;
-                setTimeout(function(){count1=0},400);
-            }else if(count>0){
-                console.log('wait!');
+            if(calendar_mobile_zoom > 0){
+                calendar_zoom("#week ._zoomed", "unzoom");
+            }else {
+                if (count1 == 0) {
+                    myswiper.slideNext(300);
+                    count1++;
+                    setTimeout(function () {
+                        count1 = 0
+                    }, 400);
+                } else if (count > 0) {
+                    console.log('wait!');
+                }
             }
         }
+
+        var _origin = $(window).scrollTop();
+        $(window).scroll(function() {
+            var _change = $(window).scrollTop();
+            if(_change > _origin){
+                downTouchEvent();
+                if(_change < 100){
+                    upTouchEvent();
+                }
+            }else{
+                upTouchEvent();
+            }
+            _origin = _change;
+        });
 
 
         $('footer').css('display', 'none');

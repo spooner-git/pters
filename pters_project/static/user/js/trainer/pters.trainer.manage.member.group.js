@@ -231,7 +231,7 @@ function draw_memberlist_for_addByList(targetHTML){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if($('body').width()<600){
+                if(bodywidth<600){
                     //$('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto");
@@ -514,7 +514,7 @@ $(document).on('click','img.btn_add_member_to_group',function(){
     var group_id = $(this).parents('.groupMembersWrap').attr('data-groupid');
     var group_name = $(this).parents('.groupMembersWrap').attr('data-groupname');
     var group_capacity = $(this).parents('.groupMembersWrap').attr('data-groupcapacity');
-    if($('body').width()<600){
+    if(bodywidth<600){
         float_btn_managemember("groupmember");
     }else{
         pc_add_member('groupmember');
@@ -555,7 +555,7 @@ function get_group_ing_list(use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if($('body').width()<600){
+                if(bodywidth<600){
                     $('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto");
@@ -610,7 +610,7 @@ function get_group_end_list(use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if($('body').width()<600){
+                if(bodywidth<600){
                     $('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto");
@@ -673,7 +673,7 @@ function delete_group_from_list(group_id){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if($('body').width()<600){
+                if(bodywidth<600){
                     $('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto");
@@ -779,7 +779,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if($('body').width()<600){
+                if(bodywidth<600){
                     $('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto");
@@ -822,7 +822,8 @@ function groupListSet(option, jsondata){ //option : current, finished
         var group_name = jsondata.group_name[i];
         var group_id = jsondata.group_id[i];
         var group_type = jsondata.group_type_cd[i];
-        var group_createdate = date_format_to_yyyymmdd(jsondata.group_reg_dt[i].split(' ')[0]+' '+jsondata.group_reg_dt[i].split(' ')[1]+' '+jsondata.group_reg_dt[i].split(' ')[2], '-');
+        var group_reg_dt_split = jsondata.group_reg_dt[i].split(' ');
+        var group_createdate = date_format_to_yyyymmdd(group_reg_dt_split[0]+' '+group_reg_dt_split[1]+' '+group_reg_dt_split[2], '-');
         var group_memo = jsondata.group_note[i];
         var group_memberlist = [];
         var group_membernum = jsondata.group_member_num[i];
@@ -895,7 +896,7 @@ function get_groupmember_list(group_id, use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if($('body').width()<600){
+                if(bodywidth<600){
                     $('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto");
@@ -1045,7 +1046,7 @@ $('#popup_delete_btn_yes').click(function(){
             disable_delete_btns_during_ajax();
             delete_groupmember_from_grouplist('callback',function(){
                 close_info_popup('cal_popup_plandelete');
-            })
+            });
         }
     }
 });

@@ -328,12 +328,12 @@ $(document).ready(function(){
         $('.classTime, .offTime, .groupTime').parent().html('<div></div>');
         $('._on').removeClass('_on');
         initialJSON = jsondata;
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             scheduleTime_day('class', jsondata);
             scheduleTime_day('group', jsondata);
             scheduleTime_day('off', jsondata);
             //fake_show();
-        }else if(bodywidth <= 600){
+        }else if(bodywidth < 600){
             scheduleTime_day_Mobile('class', jsondata);
             scheduleTime_day_Mobile('group', jsondata);
             scheduleTime_day_Mobile('off', jsondata);
@@ -899,23 +899,23 @@ $(document).ready(function(){
     };
 
     function todayFinderArrow_day(){
-        var todayInfo1 = date_format_yyyy_mm_dd_to_yyyy_m_d(today_YY_MM_DD,'_')
+        var todayInfo1 = date_format_yyyy_mm_dd_to_yyyy_m_d(today_YY_MM_DD,'_');
         if($('#yearText').attr('data-ymd')==todayInfo1){
-            $("#ymdText").addClass('todayindi').removeClass('nottodayindi')
+            $("#ymdText").addClass('todayindi').removeClass('nottodayindi');
         }else{
-            $("#ymdText").removeClass('todayindi').addClass('nottodayindi')
+            $("#ymdText").removeClass('todayindi').addClass('nottodayindi');
         }
 
-        var todayInfo = today_YY_MM_DD
-        var viewdayInfo = date_format_yyyy_m_d_to_yyyy_mm_dd($('#yearText').attr('data-ymd'),'-')
+        var todayInfo = today_YY_MM_DD;
+        var viewdayInfo = date_format_yyyy_m_d_to_yyyy_mm_dd($('#yearText').attr('data-ymd'),'-');
         if(viewdayInfo>todayInfo){
-            $('._pinkarrowbefore').removeClass('setunVisible')
+            $('._pinkarrowbefore').removeClass('setunVisible');
             $('._pinkarrowafter').addClass('setunVisible')
         }else if(viewdayInfo<todayInfo){
-            $('._pinkarrowafter').removeClass('setunVisible')
-            $('._pinkarrowbefore').addClass('setunVisible')
+            $('._pinkarrowafter').removeClass('setunVisible');
+            $('._pinkarrowbefore').addClass('setunVisible');
         }else{
-            $('._pinkarrowafter, ._pinkarrowbefore').addClass('setunVisible')
+            $('._pinkarrowafter, ._pinkarrowbefore').addClass('setunVisible');
         }
     }
 

@@ -1,5 +1,6 @@
 
 function closePopup_mobile(buttonname){
+    var bodywidth = window.innerWidth;
     if(buttonname == "upbutton-x"){
         var thisAttr = $("#upbutton-x").attr('data-page');
         if(thisAttr == "addplan"){
@@ -10,19 +11,109 @@ function closePopup_mobile(buttonname){
                 //$('#calendar').css('display','block')
                 $('#calendar').css('height', '100%');
             }
+            if($('#popup_ticket_info_mobile').css('display') == "block"){
+                $('#page_managemember').css('display', 'none');
+                $("#upbutton-x-modify").attr('data-page', 'ticket_info');
+                $('#page-base-modifystyle').css('display', 'block');
+                $('#page-base').css('display', 'none');
+            }
+        }else if(thisAttr == "lecture_info"){
+            // $('#page_managemember').css('height', '100%');
+            // $('#popup_lecture_info_mobile').css({'display':'none'});
+            $('#page_managemember').css('display', 'block');
+            $(window).scrollTop(current_Scroll_Position);
+            console.log(current_Scroll_Position, "설정222")
+            $('#popup_lecture_info_mobile').css({'display':'none'});
+
+            $('#page-base').css('display', 'block');
+            $('#page-base-modifystyle').css('display', 'none');
+        }else if(thisAttr == "ticket_info"){
+            $('#page_managemember').css('display', 'block');
+            $(window).scrollTop(current_Scroll_Position);
+            console.log(current_Scroll_Position, "설정111")
+            $('#popup_ticket_info_mobile').css({'display':'none'});
+
+            $('#page-base').css('display', 'block');
+            $('#page-base-modifystyle').css('display', 'none');
+        }else if(thisAttr == "memberinfo"){
+            $('#uptext2').text('수업 정보');
+            close_manage_popup('member_info');
+            $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'lecture_info');
         }
     }else if(buttonname == "upbutton-x-modify"){
-        var bodywidth = window.innerWidth;
-        var selector_calendar = $('#calendar');
-        $('#uptext3').text('회원 정보');
-        $('#uptext-pc-modify').text('회원 정보');
-        close_manage_popup('member_info');
-        if(bodywidth<600 && selector_calendar.length != 0){
-            //$('#calendar').css('display','block')
-            selector_calendar.css('height', '100%');
+        if(!$('#'+buttonname).hasClass('disabled_button')){
+
+
+            // var selector_calendar = $('#calendar');
+            // $('#uptext3').text('회원 정보');
+            // $('#uptext-pc-modify').text('회원 정보');
+            // close_manage_popup('member_info');
+            // if(bodywidth < 600 && selector_calendar.length != 0){
+            //     selector_calendar.css('display', 'block');
+            //     //selector_calendar.css('height', '100%');
+            // }
+
+            var thisAttr = $("#upbutton-x-modify").attr('data-page');
+            if(thisAttr == "lecture_info"){
+                $('#page_managemember').css('display', 'block');
+                $(window).scrollTop(current_Scroll_Position);
+
+                $('#popup_lecture_info_mobile').css({'display':'none'});
+                $('#page-base').css('display', 'block');
+                $('#page-base-modifystyle').css('display', 'none');
+                if(bodywidth <1000 & bodywidth >=600){
+                    $('#popup_lecture_info_mobile_modify_btn > img').attr('src', '/static/user/res/icon-pencil.png');
+                    $('#popup_lecture_info_mobile_modify_btn').attr('data-type', 'view');
+                }
+                if(bodywidth <600){
+                    $('#upbutton-modify').attr('data-type', 'view');
+                    $('#upbutton-modify > img').attr('src', '/static/user/res/icon-pencil.png');
+                    shade_index(-100);
+                }
+                $('#lecturedelete').css({'display':'none'});
+            }else if(thisAttr == "ticket_info"){
+                $('#page_managemember').css('display', 'block');
+                $(window).scrollTop(current_Scroll_Position);
+
+                $('#popup_ticket_info_mobile').css({'display':'none'});
+                $('#page-base').css('display', 'block');
+                $('#page-base-modifystyle').css('display', 'none');
+                if(bodywidth <1000 & bodywidth >=600){
+                    $('#popup_ticket_info_mobile_modify_btn > img').attr('src', '/static/user/res/icon-pencil.png');
+                    $('#popup_ticket_info_mobile_modify_btn').attr('data-type', 'view');
+                }else if(bodywidth < 600){
+                    $('#upbutton-modify').attr('data-type', 'view');
+                    $('#upbutton-modify > img').attr('src', '/static/user/res/icon-pencil.png');
+                    shade_index(-100);
+                    $('#popup_ticket_info_mobile_memberlist').html('');
+                }
+            }else if(thisAttr == "memberinfo"){
+                // $('#page_managemember').css('height', '100%');
+                // $('#popup_lecture_info_mobile').css({'display':'none'});
+                var selector_calendar = $('#calendar');
+                $('#uptext3').text('회원 정보');
+                $('#uptext-pc-modify').text('회원 정보');
+                if(bodywidth < 600 && selector_calendar.length != 0){
+                    selector_calendar.css('display', 'block');
+                    //selector_calendar.css('height', '100%');
+                }
+
+                $('#page_managemember').css('display', 'block');
+                $(window).scrollTop(current_Scroll_Position);
+
+                $('#popup_lecture_info_mobile').css({'display':'none'});
+
+                $('#uptext2').text('수업 정보');
+                close_manage_popup('member_info');
+                $('#upbutton-x, #upbutton-x-modify').attr('data-page', '');
+            }
+            enable_window_scroll();
+
         }
-        enable_window_scroll();
     }
+    mutex_val = 1;
+    lecture_mutex_val = 1;
+    ticket_mutex_val = 1;
 }
 
 function close_planadd_popup_mini(){
@@ -59,7 +150,7 @@ function clear_pt_off_add_popup_mini(){
 //cal_popup_plancheck
 function close_info_popup(option){
     var bodywidth = window.innerWidth;
-    body_position_fixed_unset();
+    // body_position_fixed_unset();
     if(option=="cal_popup_planinfo"){
         $("#"+option).css({'display':'none'});
         $('#groupParticipants').html("");
@@ -70,7 +161,7 @@ function close_info_popup(option){
             shade_index(-100);
         }
         if($('._calweek').length != 0){
-            enable_window_scroll();
+            enable_window_scroll("goto_scroll");
         }
         //$('body').css('overflow-y','overlay');
     }else if(option =="cal_popup_plandelete"){
@@ -91,7 +182,11 @@ function close_info_popup(option){
         if($('#cal_popup_planinfo').css('display') == "block"){
 
         }else{
-            enable_window_scroll();
+            if($('#calendar').length > 0){
+                enable_window_scroll("goto_scroll");
+            }else{
+                enable_window_scroll();    
+            }
         }
         //$('body').css('overflow-y','overlay');
     }else if(option =="cal_popup_repeatconfirm"){
@@ -113,6 +208,7 @@ function close_info_popup(option){
         $('#'+option).css('display', 'none');
         shade_index(-100);
         enable_window_scroll();
+        $('#float_btn_wrap').show();
     }
 }
 //기본 정보 팝업 닫기
@@ -120,12 +216,16 @@ function close_info_popup(option){
 
 //일정추가 팝업 닫기 (pc)
 function close_planadd_popup(){
+    clear_pt_off_add_popup();
+
     $('#page-addplan').css('display', 'none');
     $('#calendar').css('position', 'relative');
-    $('.add_time_unit').removeClass('checked');
-    $('.add_time_unit div').removeClass('ptersCheckboxInner_sm');
+    $('.add_time_unit, .allow_all_time').removeClass('checked');
+    $('.add_time_unit div,  .allow_all_time div').removeClass('ptersCheckboxInner_sm');
+    $('.repeatadd_time_unit, .repeatadd_allow_all_time').removeClass('checked');
+    $('.repeatadd_time_unit div,  .repeatadd_allow_all_time div').removeClass('ptersCheckboxInner_sm');
     shade_index(-100);
-    enable_window_scroll();
+    enable_window_scroll("goto_scroll");
     if(bodywidth<=820){
         $('#float_btn_wrap').show();
         $('#float_btn').removeClass('rotate_btn');
@@ -135,53 +235,84 @@ function close_planadd_popup(){
         $('#page-base').css('display', 'block');
         $('#page-base-addstyle').css('display', 'none');
     }
+    $('#id_duplication_enable_flag').val(0);
+    $('#id_off_duplication_enable_flag').val(0);
+    $('#id_repeat_duplication_enable_flag').val(0);
+    $('#id_off_repeat_duplication_enable_flag').val(0);
 }
 //일정추가 팝업 닫기 (pc)
 
 //일정추가 팝업 닫기 (mobile)
+// function close_planadd_popup_mobile(){
+//     $('#page-addplan').css('display', 'none');
+//     if(bodywidth < 600){
+//         //$('#calendar').css('display','block');
+//         $('#calendar').css('height', '100%');
+//     }
+//     $('#float_btn_wrap').show().removeClass('rotate_btn');
+//     $('#page-base').css('display', 'block');
+//     $('#page-base-addstyle').css('display', 'none');
+
+//     var text1 = '회원/그룹 선택';
+//     var text2 = '선택';
+//     if(Options.language == "KOR"){
+//         text1 = '회원/그룹 선택';
+//         text2 = '선택';
+//     }else if(Options.language == "JPN"){
+//         text1 = '「会員選択」';
+//         text2 = '「選択」';
+//     }else if(Options.language == "ENG"){
+//         text1 = 'Choose member';
+//         text2 = 'Choose';
+//     }
+//     $('.add_time_unit, .allow_all_time').removeClass('checked');
+//     $('.add_time_unit div, .allow_all_time div').removeClass('ptersCheckboxInner_sm');
+//     $('.repeatadd_time_unit, .repeatadd_allow_all_time').removeClass('checked');
+//     $('.repeatadd_time_unit div,  .repeatadd_allow_all_time div').removeClass('ptersCheckboxInner_sm');
+//     $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text1+"</span>").val("");
+//     $("#countsSelected,.countsSelected").text("");
+//     //$("#dateSelector p").removeClass("dropdown_selected");
+//     $("#starttimesSelected button").html("<span style='color:#cccccc;'>"+text2+"</span>").val("");
+//     $("#durationsSelected button").html("<span style='color:#cccccc;'>"+text2+"</span>").val("");
+//     $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+//     $("#starttimes, #durations").empty();
+//     $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
+
+//     $('#page-addplan .dropdown_selected').removeClass('dropdown_selected');
+//     $('.dateButton').removeClass('dateButton_selected');
+//     $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate', null);
+//     $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>"+text2+"</span>");
+//     //$('#page-addplan form input').val('');
+//     selectedDayGroup = [];
+
+//     $('._NORMAL_ADD_wrap').css('display', 'block');
+//     $('._REPEAT_ADD_wrap').css('display', 'none');
+//     $('#timeGraph').css('display', 'none');
+//     $('#id_duplication_enable_flag').val(0);
+//     $('#id_off_duplication_enable_flag').val(0);
+//     $('#id_repeat_duplication_enable_flag').val(0);
+//     $('#id_off_repeat_duplication_enable_flag').val(0);
+//     shade_index(-100);
+// }
+
 function close_planadd_popup_mobile(){
+    clear_pt_off_add_popup();
     $('#page-addplan').css('display', 'none');
-    if(bodywidth < 600){
-        //$('#calendar').css('display','block');
-        $('#calendar').css('height', '100%');
-    }
+
+    $('#calendar').css('height', '100%');
     $('#float_btn_wrap').show().removeClass('rotate_btn');
     $('#page-base').css('display', 'block');
     $('#page-base-addstyle').css('display', 'none');
 
-    var text1 = '회원/그룹 선택';
-    var text2 = '선택';
-    if(Options.language == "KOR"){
-        text1 = '회원/그룹 선택';
-        text2 = '선택';
-    }else if(Options.language == "JPN"){
-        text1 = '「会員選択」';
-        text2 = '「選択」';
-    }else if(Options.language == "ENG"){
-        text1 = 'Choose member';
-        text2 = 'Choose';
-    }
-    $('.add_time_unit').removeClass('checked');
-    $('.add_time_unit div').removeClass('ptersCheckboxInner_sm');
-    $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text1+"</span>").val("");
-    $("#countsSelected,.countsSelected").text("");
-    //$("#dateSelector p").removeClass("dropdown_selected");
-    $("#starttimesSelected button").html("<span style='color:#cccccc;'>"+text2+"</span>").val("");
-    $("#durationsSelected button").html("<span style='color:#cccccc;'>"+text2+"</span>").val("");
-    $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-    $("#starttimes, #durations").empty();
-    $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
+    $('.add_time_unit, .allow_all_time').removeClass('checked');
+    $('.add_time_unit div, .allow_all_time div').removeClass('ptersCheckboxInner_sm');
+    $('.repeatadd_time_unit, .repeatadd_allow_all_time').removeClass('checked');
+    $('.repeatadd_time_unit div,  .repeatadd_allow_all_time div').removeClass('ptersCheckboxInner_sm');
 
-    $('#page-addplan .dropdown_selected').removeClass('dropdown_selected');
-    $('.dateButton').removeClass('dateButton_selected');
-    $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate', null);
-    $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>"+text2+"</span>");
-    //$('#page-addplan form input').val('');
-    selectedDayGroup = [];
-
-    $('._NORMAL_ADD_wrap').css('display', 'block');
-    $('._REPEAT_ADD_wrap').css('display', 'none');
-    $('#timeGraph').css('display', 'none');
+    $('#id_duplication_enable_flag').val(0);
+    $('#id_off_duplication_enable_flag').val(0);
+    $('#id_repeat_duplication_enable_flag').val(0);
+    $('#id_off_repeat_duplication_enable_flag').val(0);
     shade_index(-100);
 }
 //일정추가 팝업 닫기 (mobile)
@@ -189,6 +320,9 @@ function close_planadd_popup_mobile(){
 
 //회원 정보 관련(회원정보, 회원정보pc, 회원추가, 그룹/클래스추가) 팝업 닫기
 function close_manage_popup(option){
+    mutex_val = 1;
+    lecture_mutex_val = 1;
+    ticket_mutex_val = 1;
     var bodywidth = window.innerWidth;
     var text = '회원 정보 조회';
     if(Options.language == "JPN"){
@@ -200,7 +334,10 @@ function close_manage_popup(option){
         $('#memberRegHistory_info_PC, #memberRepeat_info_PC, #memberLectureHistory_info_PC').html('');
         hide_this();
         if(bodywidth < 600){
-            $('#page_managemember').css({'height':'100%'});
+            // $('#page_managemember').css({'height':'100%'});
+            $('#page_managemember').css({'display':'block'});
+            $(window).scrollTop(current_Scroll_Position);
+            console.log(current_Scroll_Position, "설정6661")
             base_show();
             base_modify_hide();
         }
@@ -212,11 +349,11 @@ function close_manage_popup(option){
         }
 
         function base_show(){
-            $('#page-base').css('display','block');
+            $('#page-base').css('display', 'block');
         }
 
         function base_modify_hide(){
-            $('#page-base-modifystyle').css('display','none');
+            $('#page-base-modifystyle').css('display', 'none');
         }
         var selector_upbutton_modify = $('#upbutton-modify');
         selector_upbutton_modify.find('img').attr({'src':'/static/user/res/icon-pencil.png'});
@@ -251,7 +388,8 @@ function close_manage_popup(option){
             $('span.mobile_title_popup').remove();
         }
     }else if(option == 'member_info_PC'){
-        $('body').css('overflow-y','auto');
+        // $('body').css('overflow-y','auto');
+        enable_window_scroll("goto_scroll");
         $('#memberRegHistory_info_PC, #memberRepeat_info_PC, #memberLectureHistory_info_PC').html('');
         $('#memberInfoPopup_PC').removeClass('display_block');
         if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
@@ -261,13 +399,17 @@ function close_manage_popup(option){
         }
         $('span.mobile_title_popup').remove();
     }else if(option == 'member_add'){
-        $('body').css('overflow-y', 'auto');
+        // $('body').css('overflow-y','auto');
+        enable_window_scroll("goto_scroll");
         var selector_float_btn_member_add = $('#float_btn');
         if(bodywidth < 600){
             //$('#page_managemember').show();
+            //$('#page_managemember').css({'height':'100%'});
+            $('#page_managemember').css({'display':'block'});
+            $(window).scrollTop(current_Scroll_Position);
+            console.log(current_Scroll_Position, "설정777")
             $('#page-base').css('display','block');
             $('#page-base-addstyle').css('display','none');
-            $('#page_managemember').css({'height':'100%'});
             $('#float_btn_wrap').show();
             selector_float_btn_member_add.removeClass('rotate_btn');
         }
@@ -291,9 +433,12 @@ function close_manage_popup(option){
         var selector_float_btn_group_add = $('#float_btn');
         if(bodywidth<600){
             //$('#page_managemember').show();
+            //$('#page_managemember').css({'height':'100%'});
+            $('#page_managemember').css({'display':'block'});
+            $(window).scrollTop(current_Scroll_Position);
+            console.log(current_Scroll_Position, "설정888")
             $('#page-base').css('display', 'block');
-                $('#page-base-addstyle').css('display','none');
-            $('#page_managemember').css({'height':'100%'});
+            $('#page-base-addstyle').css('display','none');
             $('#float_btn_wrap').show();
             selector_float_btn_group_add.removeClass('rotate_btn');
         }

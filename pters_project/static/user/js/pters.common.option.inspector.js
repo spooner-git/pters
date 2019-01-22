@@ -1,4 +1,3 @@
-console.log(auth_type_cd)
 function pters_option_inspector(option_type, xhr, option_element){
     //option_element는 date나, 회원숫자 등
     //옵션 값 auth_option_limit == 1 일경우, 다양한 옵션을 건다.
@@ -140,6 +139,67 @@ function pters_option_inspector(option_type, xhr, option_element){
                     get_member_lecture_list(dbID);
                     get_member_history_list(dbID);
                 }
+            }else{
+                var current_member_num = option_element;
+                if(current_member_num >= limit_num){
+                    show_caution_popup(function_lock_message("create", limit_num, "진행중 회원", limit_type));
+                    if(xhr != ""){
+                        xhr.abort(); // ajax중지
+                        completeSend(); // ajax 로딩 이미지 숨기기
+                    }
+                }
+            }
+        }
+
+        //회원 연동
+        else if(option_type == "member_connection_create"){
+            var current_member_num = option_element;
+            if(current_member_num >= limit_num){
+                show_caution_popup(function_lock_message("create", limit_num, "회원 등록", limit_type));
+                if(xhr != ""){
+                    xhr.abort(); // ajax중지
+                    completeSend(); // ajax 로딩 이미지 숨기기
+                }
+            }
+        }else if(option_type == "member_connection_delete" ){
+            if(limit_num == 0){
+                show_caution_popup(function_lock_message("delete", 1, "회원 삭제", limit_type));
+                if(xhr != ""){
+                    xhr.abort(); // ajax중지
+                    completeSend(); // ajax 로딩 이미지 숨기기
+                }
+            }
+        }else if(option_type == "member_connection_read"){
+            if(limit_num == 0){
+                show_caution_popup(function_lock_message("read", 1, "상세 정보 조회", limit_type));
+                if(xhr != ""){
+                    xhr.abort(); // ajax중지
+                    completeSend(); // ajax 로딩 이미지 숨기기
+                    close_manage_popup('member_info_PC');
+                    close_manage_popup('member_info');
+                }
+            }
+        }else if(option_type == "member_connection_update"){
+            if(limit_num == 0){
+                var dbID = option_element;
+                show_caution_popup(function_lock_message("read", 1, "회원 정보 수정", limit_type));
+                if(xhr != ""){
+                    xhr.abort(); // ajax중지
+                    completeSend(); // ajax 로딩 이미지 숨기기
+                    get_indiv_member_info(dbID);
+                    get_indiv_repeat_info(dbID);
+                    get_member_lecture_list(dbID);
+                    get_member_history_list(dbID);
+                }
+            }else{
+                var current_member_num = option_element;
+                if(current_member_num >= limit_num){
+                    show_caution_popup(function_lock_message("create", limit_num, "회원 등록", limit_type));
+                    if(xhr != ""){
+                        xhr.abort(); // ajax중지
+                        completeSend(); // ajax 로딩 이미지 숨기기
+                    }
+                }
             }
         }
 
@@ -180,6 +240,16 @@ function pters_option_inspector(option_type, xhr, option_element){
                     xhr.abort(); // ajax중지
                     completeSend(); // ajax 로딩 이미지 숨기기
                     smart_refresh_member_group_class_list();
+                }
+            }
+            else{
+                var current_group_num = option_element;
+                if(current_group_num >= limit_num){
+                    show_caution_popup(function_lock_message("create", limit_num, "진행중 그룹", limit_type));
+                    if(xhr != ""){
+                        xhr.abort(); // ajax중지
+                        completeSend(); // ajax 로딩 이미지 숨기기
+                    }
                 }
             }
         }
@@ -266,6 +336,14 @@ function pters_option_inspector(option_type, xhr, option_element){
             }
         }else if(option_type == "package_read"){
         }else if(option_type == "package_update"){
+            var current_package_num = option_element;
+            if(current_package_num >= limit_num){
+                show_caution_popup(function_lock_message("create", limit_num, "진행중 수강권", limit_type));
+                if(xhr != ""){
+                    xhr.abort(); // ajax중지
+                    completeSend(); // ajax 로딩 이미지 숨기기
+                }
+            }
         }
         
         //통계
