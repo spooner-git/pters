@@ -687,11 +687,13 @@ $(document).ready(function(){
                                                             'data-userid':$(this).parents('._member_info_popup').attr('data-userid'),
                                                             'data-grouptype': ''
                                                         });
-        $('._complete, ._refund').css('display', 'none');
+        // $('._complete, ._refund').css('display', 'none');
+        $('._complete, ._refund').hide();
         if(bodywidth >= 600){
             $('._resume, ._delete').css('display', 'inline-block');
         }else{
-            $('._resume, ._delete').css('display', 'block');
+            // $('._resume, ._delete').css('display', 'block');
+            $('._resume, ._delete').show();
         }
         selector_lectureStateChangeSelectPopup.find('._explain').html('※재개 : 남은 횟수를 다시 가져옵니다.');
 
@@ -728,11 +730,13 @@ $(document).ready(function(){
                                                             'data-userid':$(this).parents('._member_info_popup').attr('data-userid'),
                                                             'data-grouptype': ''
                                                         });
-        $('._complete, ._refund').css('display','none');
+        // $('._complete, ._refund').css('display','none');
+        $('._complete, ._refund').hide();
         if(bodywidth >= 600){
             $('._resume, ._delete').css('display','inline-block');
         }else{
-            $('._resume, ._delete').css('display','block');
+            // $('._resume, ._delete').css('display','block');
+            $('._resume, ._delete').show();
         }
         selector_lectureStateChangeSelectPopup.find('._explain').html('※재개 : 남은 횟수를 다시 가져옵니다.');
 
