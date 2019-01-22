@@ -2443,7 +2443,7 @@ $(document).on("change", '#lecture_list_to_package', function(e){
     add_lecture_bubble_to_make_package("#selected_lectures_to_package_wrap", selected_groupid, selected_groupname);
     $(this).find(".disabled_option").trigger("click");
     $('#lecture_list_to_package option:eq(0)').prop('selected', 'selected');
-    $(this).find("option[value='"+selected_groupid+"']").css({"background":"#cccccc"});
+    $(this).find("option[value='"+selected_groupid+"']").css({"display":"none", "background":"#cccccc"});
     check_dropdown_selected();
 });
 
@@ -2474,7 +2474,7 @@ $(document).on("click", "#selected_lectures_to_package_wrap div.lecture_bubble i
         lecture_bubbles_groupid_array.push($(this).attr("data-groupid"));
     });
     $('#form_package_groupids').val(lecture_bubbles_groupid_array);
-    $("#packaggSelector option[value='"+$(this).parents("div.lecture_bubble").attr('data-groupid')+"']").css({"background":"#ffffff"});
+    $("#packaggSelector option[value='"+$(this).parents("div.lecture_bubble").attr('data-groupid')+"']").css({"display":"block","background":"#ffffff"});
     update_selected_package_num();
     check_dropdown_selected();
 });
@@ -4280,6 +4280,7 @@ function modify_package_status(package_id, option, use, callback){
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
                 smart_refresh_member_group_class_list();
+
                 $('.mobile_status_color_palette').siblings('div').text(text_for_mobile).css('color', color_for_mobile);
                 if(use == "callback"){
                     callback(jsondata);
