@@ -1063,11 +1063,11 @@ function numberWithCommas(x) { //천단위 콤마 찍기
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-set_drag_drop_action_to_DOM('#page-addplan');
-set_drag_drop_action_to_DOM('#cal_popup_planinfo');
-set_drag_drop_action_to_DOM('#cal_popup_plancheck');
-set_drag_drop_action_to_DOM('#page_addmember');
-set_drag_drop_action_to_DOM('#memberInfoPopup_PC');
+// set_drag_drop_action_to_DOM('#page-addplan');
+// set_drag_drop_action_to_DOM('#cal_popup_planinfo');
+// set_drag_drop_action_to_DOM('#cal_popup_plancheck');
+// set_drag_drop_action_to_DOM('#page_addmember');
+// set_drag_drop_action_to_DOM('#memberInfoPopup_PC');
 ///////////////skkim test//////////////////드래그앤 드랍 함수
 
 function set_drag_drop_action_to_DOM(targetSelector){
