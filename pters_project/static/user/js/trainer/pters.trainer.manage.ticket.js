@@ -2539,17 +2539,24 @@ $(document).on("click", "#add_group_to_package_selector li a", function(){
     var group_id = $(this).attr("data-groupid");
     var group_name = $(this).text();
     add_group_from_package(package_id, group_id, "callback", function(){
-        alert(`${group_name}이 패키지에 추가 되었습니다.`);
+        alert(`${group_name}이 수강권에 추가 되었습니다.`);
         if($("#popup_ticket_info_mobile").css('display') == "block"){
             var package_statuscd = $('#mypackagestatuscd').attr('data-status');
             var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
             get_grouplist_in_package(package_id, package_statuscd, "callback", function(jsondata){
                 draw_grouplist_in_package($targetlecturelist, jsondata);
+                if(jsondata.group_id.length > 1){
+                    $("#id_ticket_type").text('패키지');
+                }
+                else{
+                    $("#id_ticket_type").text('그룹');
+                }
             });
             $('.add_group_to_package_dropdown_title img').trigger('click');
         }
         shade_index(-100);
     });
+
 });
 
 
@@ -3344,7 +3351,7 @@ function set_ticket_info_for_mobile_popup(package_id, package_name, package_stat
                     </div>`;
 
     var html = `<div class="pters_table" id="ticketnametitle" data-ticket_name="${package_name}"><div class="pters_table_cell">수강권명</div><div class="pters_table_cell" id="ticketname"><input type="text" class="mobile_memo_input" value="${package_name}" disabled></div></div>
-                <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${package_type}</div></div>
+                <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell" id="id_ticket_type">${package_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div id='id_ticket_status' data-ticket_status="${package_status_cd}" style="color:${color}">${package_status}</div>${status}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="ticketmemo" data-ticket_memo="${package_memo}"><input type="text" class="mobile_memo_input" value="${package_memo}" disabled></div></div>
                 <div class="pters_table"><div class="pters_table_cell">포함된 수업</div><div class="pters_table_cell"></div></div>
@@ -4013,6 +4020,13 @@ function delete_group_from_package(package_id, group_id, use, callback){
                         if($('#upbutton-modify').attr('data-type') == "modify" || $('#popup_ticket_info_mobile_modify_btn').attr('data-type') == "modify"){
                             $('.lecture_bubble_mini img').show();
                         }
+                        if(jsondata.group_id.length > 1){
+                            $("#id_ticket_type").text('패키지');
+                        }
+                        else{
+                            $("#id_ticket_type").text('그룹');
+                        }
+
                     });
                 }
                 if(use == "callback"){
