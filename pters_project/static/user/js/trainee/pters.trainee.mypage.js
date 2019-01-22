@@ -319,9 +319,10 @@ $(document).ready(function(){
                 var typename = '['+jsondata.groupTypeCdNameArray[i]+'] ' + jsondata.groupNameArray[i];
                 var maxnumber = jsondata.groupMemberNumArray[i];
             }
+
             var stateColor = "";
-            if(jsondata.lectureStateNameArray[i] == "진행중"){
-                var stateColor = "state_PE";
+            if(jsondata.lectureStateArray[i] == "IP"){
+                stateColor = "state_PE";
             }
 
             var type         = '<div class="cell2">'+typename+'</div>';
