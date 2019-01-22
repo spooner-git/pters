@@ -117,12 +117,16 @@ function closePopup_mobile(buttonname){
 }
 
 function close_planadd_popup_mini(){
-    $('#page-addplan-pc').hide();
-    clear_pt_off_add_popup_mini();
+    if($('#page-addplan-pc').css('display') == "block"){
+        $('#page-addplan-pc').hide();
+        clear_pt_off_add_popup_mini();
+    }
 }
 
 function clear_pt_off_add_popup_mini(){
     //핑크 버튼 활성화 초기화
+    $('.blankSelected').removeClass('blankSelected');
+
     $('#submitBtn_mini').css('background', '#282828');
 
     //진행시간 선택 핑크 하단선 초기화

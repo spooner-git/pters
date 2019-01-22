@@ -16,6 +16,7 @@ $('#week .weekNum').click(function(){
     if(calendar_device_type == "mobile"){
         if(calendar_mobile_zoom == 0){
             calendar_zoom(this, "zoom");
+            close_planadd_popup_mini();
         }else{
             calendar_zoom(this, "unzoom");
         }
@@ -146,10 +147,11 @@ $('#ymdText').click(function(e){
             $('#ymdText_monthcal').css('display', 'inline-block');
             $('#ymdText_weekcal').css('display', 'none');
 
-            close_planadd_popup_mini()
+            close_planadd_popup_mini();
         }
     }else if(bodywidth < 600 && calendar_mobile_zoom > 0){
         calendar_zoom("#week ._zoomed", "unzoom");
+
     }
 });
 
@@ -192,6 +194,7 @@ $('#change_to_weekcal').click(function(e){
 $('#change_to_monthcal').click(function(e){
     if(calendar_select == "week"){
         calendar_zoom("#week ._zoomed", "unzoom");
+        close_planadd_popup_mini();
         $.cookie('calendar_selected_last', 'month', {expires : 30});
         hidetoggle_on_off("off");
         $('#hidetoggle').hide();
