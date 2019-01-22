@@ -248,7 +248,7 @@ $(document).ready(function(){
         shade_index(100);
         if(bodywidth < 600){
             current_Scroll_Position = $(document).scrollTop();
-            console.log(current_Scroll_Position,'777')
+            console.log(current_Scroll_Position,'777');
             get_indiv_member_info(dbID);
             get_member_lecture_list(dbID);
             // get_indiv_repeat_info(dbID);
