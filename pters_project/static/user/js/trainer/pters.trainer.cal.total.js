@@ -145,6 +145,8 @@ $('#ymdText').click(function(e){
             $('.swiper-slide-active').css('width', $('#calendar').width());
             $('#ymdText_monthcal').css('display', 'inline-block');
             $('#ymdText_weekcal').css('display', 'none');
+
+            close_planadd_popup_mini()
         }
     }else if(bodywidth < 600 && calendar_mobile_zoom > 0){
         calendar_zoom("#week ._zoomed", "unzoom");
