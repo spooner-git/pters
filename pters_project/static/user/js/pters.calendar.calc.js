@@ -72,16 +72,28 @@ function substract_date(startdate, subvalue){ //subvalue는 음수값 입력
 	return result;
 }
 
+// function diff_month(startdate, enddate){ //2018-07-01 ~ 2018-09-31
+// 	var zz =0;
+// 	while(add_month(startdate, zz).split('-')[1] != Number(enddate.split('-')[1]) ){
+// 		zz++;
+// 		if(zz > 20000){
+// 			break;
+// 			alert('오류 발생 : 기능이 현재 사용 불가합니다.\n 관리자 점검이 필요합니다.')
+// 		}
+// 	}
+// 	return zz;
+// }
+
 function diff_month(startdate, enddate){ //2018-07-01 ~ 2018-09-31
 	var zz =0;
-	while(add_month(startdate, zz).split('-')[1] != Number(enddate.split('-')[1]) ){
+	while(add_month(startdate, zz) != add_month(enddate, 0) ){
 		zz++;
 		if(zz > 20000){
 			break;
 			alert('오류 발생 : 기능이 현재 사용 불가합니다.\n 관리자 점검이 필요합니다.')
 		}
 	}
-	return zz
+	return zz;
 }
 
 //날짜 차이 계산 : 2018-7-5 ~ 2018-9-25 일 사이는 몇일이 있는가?
@@ -107,7 +119,7 @@ function add_month(startdate, addvalue){
 	var newdate  = date;
 	while(newmonth > 12){
 		newmonth = newmonth - 12;
-		newyear++
+		newyear++;
 	}
 	if(date == lastDay[month-1]){
 		var newdate = lastDay[newmonth-1];
@@ -115,7 +127,7 @@ function add_month(startdate, addvalue){
 
 
 	var result = newyear + '-' + newmonth + '-' + newdate;
-	return result
+	return result;
 }
 
 
