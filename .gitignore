@@ -30,3 +30,8 @@ pters_project/board/__pycache__/
 pters_project/board/migrations/__pycache__/
 pters_project/trainee/templatetags/__pycache__/
 pters_project/configs/middleware/__pycache__/
+pters_project/.DS_Store
+pters_project/static/.DS_Store
+pters_project/static/user/.DS_Store
+pters_project/static/user/css/.DS_Store
+pters_project/static/user/res/.DS_Store
