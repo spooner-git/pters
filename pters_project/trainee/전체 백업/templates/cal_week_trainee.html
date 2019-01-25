@@ -1,0 +1,133 @@
+{% extends "trainee_base_add_pt.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.pt.add.weekly.css" %}>
+{% endblock %}
+
+{% block content %}
+
+    <form action="{% url 'trainee:add_trainee_schedule' %}" id="pt-add-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next_page" value="{% url 'trainee:cal_month'%}">
+        <input type="hidden" name="add_pt_size" id="add-pt-count" value="0">
+    </form>
+
+
+    <!--팝업메뉴-->
+    <div id="cal_popup">
+        <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div>
+        <div id="popup_text1" class="popup_inner popup_inner_change"  onclick="location.href='/trainee/add_pt_logic/'"><span>일정 변경</span></div>
+        <div id="popup_text2" class="popup_inner popup_inner_delete"><span>일정 취소</span></div>
+    </div>
+    <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
+    <!--팝업메뉴-->
+
+
+
+    <div id="ymdText" class="wrap">
+        <div class='arrowButton'>
+            <a style="left: 6%;cursor: pointer;"><img src={% static_url "user/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
+            <a style="right: 6%;cursor: pointer;"><img src={% static_url "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
+        </div>
+
+        <div id="yearText">
+        </div>
+        <div id="countRemain" style="position: absolute;top: 2px;right: 2px;color: #ffffff;font-size: 13.5px;font-weight: 300;">예약가능횟수: <span id="countRemainData"> {{lecture_reg_count}}회</span></div>
+        <div id="monthText">
+        </div>
+    </div>
+
+    <div id="week" class="time-style wrap">
+        <table class="calendar-style">
+            <tbody>
+            <tr id="weekText">
+                <td class="hour" style="background: #ffffff;"><img src="/static/user/res/PTERS_logo.jpg" alt=""></td>
+                <td id="weekNum_1"><span class="weekDay-style _day1date"></span><span class="weekDate-style _day1"></span></td>
+                <td id="weekNum_2"><span class="weekDay-style _day2date"></span><span class="weekDate-style _day2"></span></td>
+                <td id="weekNum_3"><span class="weekDay-style _day3date"></span><span class="weekDate-style _day3"></span></td>
+                <td id="weekNum_4"><span class="weekDay-style _day4date"></span><span class="weekDate-style _day4"></span></td>
+                <td id="weekNum_5"><span class="weekDay-style _day5date"></span><span class="weekDate-style _day5"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div id="calendar" class="wrap" > <!-- Calendar container-->
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" id="slide1"></div> <!--Index1 2주전-->
+                <div class="swiper-slide" id="slide2"></div> <!--Index2 1주전-->
+                <div class="swiper-slide" id="slide3"></div> <!--Index3 이번주-->
+            </div> <!--마지막 페이지 안내-->
+        </div>  <!--Swiper-wrapper-->
+    </div> <!--Swiper-container-->
+
+    <!--Swiper-->
+    <!-- <div class="swiper-pagination"></div> -->
+    <div id="cal_box" class="cal_box"></div>
+
+{% endblock %}
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <script>
+        var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+        var krHolidayNameList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+
+        //front-end에서 다뤄야하는 데이터
+        var classTimeArray_start_date = [{% for daily_data_start_date in daily_lecture_data_start_date %}'{{ daily_data_start_date }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var classTimeArray_end_date = [{% for daily_data_end_date in daily_lecture_data_end_date %}'{{ daily_data_end_date }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var classTimeArray_member_name = [{% for member_name in daily_lecture_data_member %}'{{ member_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var scheduleFinishArray =  [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}'{{ pt_schedule_finish_check_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+
+        var scheduleNoteArray =  [{% for pt_schedule_note_info in pt_schedule_note %}'{{ pt_schedule_note_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var scheduleIdxArray =  [{% for pt_schedule_idx_info in pt_schedule_idx %}'{{ pt_schedule_idx_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+
+        var offTimeArray_start_date = [{% for daily_off_start_date in daily_off_data_start_date %}'{{ daily_off_start_date }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offTimeArray_end_date = [{% for daily_off_end_date in daily_off_data_end_date %}'{{ daily_off_end_date }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var classTimeArray = [];
+        var offTimeArray = [];
+        var lt_res_01 =  ['{{ lt_res_01 }}'];
+        var lt_res_02 =  ['{{ lt_res_02 }}'];
+        var lt_res_03 =  ['{{ lt_res_03 }}'];
+
+        ///********************* 회원 월간 달력 옵션*************************************///
+        ///********************* 회원 월간 달력 옵션*************************************///
+        var Options = {
+            "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
+            "reserve":"enable", //회원 일정 기능을 enable/disable
+            "stoptimeStart":21, //강사가 설정한 예약불가 시간 (시작)
+            "stoptimeEnd":8,    //강사가 설정한 예약불가 시간 (종료)
+            "limit":1,          //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅 (ex: 1일경우, 15시 일정을 14시 이후에 추가 불가)
+            "cancellimit":1,    //현재시간부터 몇시간 앞 일정 캔슬 가능하게 할지 셋팅 (ex: 3일경우, 18시 일정을 15시 이후에 삭제 불가)
+        }
+        ///********************* 회원 월간 달력 옵션*************************************///
+        ///********************* 회원 월간 달력 옵션*************************************///
+
+
+    </script>
+    <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.cal.week.js" %}></script>
+    <script>
+        var myswiper = new Swiper('.swiper-container',{
+            initialSlide : 0,
+            speed : 300,
+            preventClicks : true,
+            keyboardControl : true,
+            pagination : '.swiper-pagination'
+        });
+
+        $('#ymdText .arrowButton a:nth-child(1)').click(function(){
+            myswiper.slidePrev(100)
+            console.log('123')
+        })
+
+        $('.arrowButton a:nth-child(2)').click(function(){
+            myswiper.slideNext(100)
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,92 @@
+    {
+    "lecture_reg_count":
+    ["{{lecture_reg_count}} "],
+    "lecture_finish_count":
+    ["{{lecture_finish_count}}"],
+    "lecture_rem_count":
+    ["{{ lecture_rem_count }}"],
+    "lecture_avail_count":
+    ["{{ lecture_avail_count }}"],
+    "pt_start_date":
+    ["{{ pt_start_date }}"],
+    "pt_end_date":
+    ["{{ pt_end_date }}"],
+    "id":
+    ["{{ request.user.username }}"],
+    "name":
+    ["{{ member_info.name }}"],
+    "last_name":
+    ["{{ request.user.last_name }}"],
+    "first_name":
+    ["{{ request.user.first_name }}"],
+    "phone":
+    ["{{ member_info.phone }}"],
+    "birthday_dt":
+    ["{{ member_info.birthday_dt }}"],
+    "country":
+    ["{{ member_info.country }}"],
+    "address":
+    ["{{ member_info.address }}"],
+    "reg_dt":
+    ["{{ member_info.reg_dt }}"],
+    "email":
+    ["{{ request.user.email }}"],
+
+    "classTimeArray_start_date":
+    [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "classTimeArray_end_date":
+    [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "scheduleIdArray":
+    [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "scheduleFinishArray":
+    [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.finish_check }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "schedulePermissionStateArray":
+    [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.permission_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "classTimeArray_member_name":
+    [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.member_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "scheduleNoteArray":
+    [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "scheduleIdxArray":
+    [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.idx }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+    "offTimeArray_start_date":
+    [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "offTimeArray_end_date":
+    [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+    "ptRepeatScheduleIdArray":
+    [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.repeat_schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "ptRepeatScheduleTypeArray":
+    [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.repeat_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "ptRepeatScheduleWeekInfoArray":
+    [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.week_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "ptRepeatScheduleStartDateArray":
+    [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "ptRepeatScheduleEndDateArray":
+    [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "ptRepeatScheduleStartTimeArray":
+    [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.start_time }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "ptRepeatScheduleEndTimeArray":
+    [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.end_time }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "ptRepeatScheduleTimeDurationArray":
+    [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.time_duration }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+    "trainee_next_schedule":
+    ["{{ next_schedule }}"],
+    "lt_res_01":
+    ["{{ lt_res_01 }}"],
+    "lt_res_02":
+    ["{{ lt_res_02 }}"],
+    "lt_res_03":
+    ["{{ lt_res_03 }}"],
+    "lt_res_04":
+    ["{{ lt_res_04 }}"],
+    "class_id":
+    ["{{ request.session.class_id }}"],
+
+      "messageArray" :
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+
+
+
+    }

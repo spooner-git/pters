@@ -32,171 +32,109 @@
 
     <title>{% block title %}PTERS{% endblock %}</title>
 
+    <!-- Bootstrap core CSS -->
+    <link href={% static_url "common/css/bootstrap.min.css" %} rel="stylesheet">
     <link rel="icon" href="/static/common/favicon.ico">
     <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
     <link rel="shortcut icon" href="/static/common/favicon-152.png">
+    <link rel="stylesheet" href={% static_url "user/css/pters.base.set.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.select.teacher.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.base.css" %}>
     <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
     {% block local_css %}
     {% endblock %}
     <style>
-        /*Fundamental CSS*/
-        /*Fundamental CSS는 수정되어서는 안되는 기본 값*/
-        @import url(/static/common/fonts/notosanskr.css);
-
-        html{
-            font-family: 'Noto Sans KR',sans-serif !important;
-            background-color: #f7f5f6;
+        .bottomfooter2 a{
+            color:  #7d7d7d;
         }
-        body{
-            padding-top: 50px;
-            margin: 0;
+        .bottomfooter3 a{
+            color:  #7d7d7d;
         }
-        nav{
-            /*Nav바 스타일*/
-            position:fixed; 
+        #shade_caution{
+            position: fixed;
+            display: none;
             width: 100%;
-            height: 50px;
-            top: 0; 
-            left: 0px; 
-            background-color: #ffffff;
-            box-shadow: 0 0 10px 0 rgba(130, 130, 130, 0.2);
-
-            /*Nav바 폰트스타일*/
-            font-size: 13px;
-            font-weight: bold;
-        }
-            nav > div{
-                line-height: 37px;
-                margin-top: 10px;
-            }
-                nav > div > div{
-                    display: inline-block;
-                    padding: 0 5px 0 5px;
-                    border-bottom: 3px solid transparent;
-                }
-                .nav_trainee_menubox_l{
-                    position: absolute;
-                    left: 20px;
-                }
-                .nav_trainee_menubox_r{
-                    position: absolute;
-                    right: 20px;
-                }
-
-        .nav_selected{
-            border-bottom-color: #fe4e65;
-        }
-        /*Fundamental CSS*/
-
-
-
-        /*(공통) 모든 페이지에서 사용할 수 있는 오브젝트, 폰트스타일*/
-        .textbox_title{ 
-            height: 35px;
-            margin-top: 30px;
-            margin-bottom: 30px;
-            padding: 0 20px 0 20px;
-        }
-            .fontstyle_title{
-                font-size: 20px;
-                letter-spacing: -0.5px;
-                font-weight: bold;
-            }
-
-        .textbox_subtitle{
-            height: 20px;
-            padding: 0 20px 0 20px;
-        }
-            .fontstyle_subtitle{
-                font-size:11px;
-                color: #808080;
-                font-weight: bold;
-            }
-
-        .fullbox_mb{
-            height: 270px;
-            background-color: #ffffff;
-            padding: 20px;
+            height: 100%;
+            z-index: 400;
+            background: black;
+            opacity: 0.5;
+            top: 0;
         }
 
-        .shadowbox_mb{
-            height: 158px;
-            background-color: #ffffff;
-            box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.14);
-            border-radius: 3px;
-            margin-left: 20px;
-            margin-right: 20px;
-            padding: 20px;
-        }
-        /*(공통) 모든 페이지에서 사용할 수 있는 오브젝트, 폰트스타일*/
-
-
-
-        /*(현재 페이지 한해) 현재 페이지에서만 사용하는 커스텀 css*/
-        .trainee_main .fullbox_mb{
-            margin-top: 10px;
-            margin-bottom: 30px;
-        }
-        .trainee_main .shadowbox_mb{
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-        /*(현재 페이지 한해) 현재 페이지에서만 사용하는 커스텀 css*/
     </style>
 
 </head>
-<body class="trainee_main">
+<body>
 
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 {% block navbar %}
-    <!--회원 상단 [홈/일정/프로그램선택/알림/메뉴버튼] 영역  -->
-    <nav>
-        <div class="nav_trainee_menubox_l">
-            <div class="nav_selected">홈</div>
-            <div>일정</div>
-            <div>프로그램 선택</div>
-        </div>
 
-        <div class="nav_trainee_menubox_r">
-            <div>알림</div>
-            <div>메뉴</div>
+    <div id="pshade" class="pshade _shade"></div>
+    <div id="mshade" class="mshade _shade"></div>
+    <div id="shade_caution"></div>
+
+    <div id="errorMessageBar">
+        <span id="errorMessageText"></span><span>닫기</span>
+    </div>
+
+    <nav class="navbar navbar-fixed-top navbar-default wrap" id="mobilever">
+        <div class="">
+            <div class="navbar-header">
+                <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'trainee:mypage_trainee' %}'">
+                    <a><img src={% static_url "user/res/icon-user-setting.png" %} style="width:25px;"></a>
+                </button>
+                {% block nav_center_img %}
+                    <span id="uptext" class="uptext" style="cursor: default;" onclick="location.href='{% url 'trainee:cal_month' %}'">{{ user.first_name }}님 일정 - {{ request.session.class_type_name }} </span>
+                {% endblock %}
+{#                <!--#}
+{#                 <button id="upbutton-right" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'login:logout' %}'">#}
+{#                    <a><img src={% static_url "user/res/icon-calendar-week.png" %} style="width:20px;"></a>#}
+{#                 </button> #}
+{#                  -->#}
+                <button id="upbutton-right" class="navbar-toggle" aria-controls="navbar" onclick="open_lecture_select_popup()">
+                    <a><img src={% static_url "user/res/icon-calendar-week.png" %} style="width:20px;"></a>
+                </button>
+            </div>
+        </div><!-- /.container -->
+    </nav><!-- /.navbar -->
+
+    <nav class="navbar navbar-fixed-top" id="pcver">
+        <div class="centermenu">
+            <img src="/static/user/res/PTERS_logo_pure.png?v2" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'trainee:cal_month'%}'" style="cursor: pointer;">
+            <div class="centermenu_box" style="margin-left: 97px;text-align: left;">
+                <div class="centermenu_div">
+                    <a href="{% url 'trainee:mypage_trainee' %}" class="centermenu_text"></a>
+                </div>
+                <div class="centermenu_div">
+                    <a class="centermenu_text"   onclick="location.href='{% url 'trainee:cal_month'%}'">달력</a>
+                </div>
+                <div class="centermenu_div">
+                    <a class="centermenu_text" onclick="open_lecture_select_popup()">프로그램 선택</a>
+                </div>
+                <div class="centermenu_div">
+                    <a class="centermenu_text" onclick="location.href='{% url 'trainee:mypage_trainee' %}'">마이페이지</a>
+                </div>
+                <div class="centermenu_div">
+                    <a href="#" class="centermenu_text"></a>
+                </div>
+                <div class="centermenu_div">
+                    <a href="#" class="centermenu_text"></a>
+                </div>
+            </div>
+            <div id="loginInfo" class="centermenu_div" style="float:right;cursor:pointer;"　
+                 onclick="location.href='{% url 'trainee:mypage_trainee' %}'">
+                <span class="pcwhere"></span>
+                <span class="pcwho">{{ request.session.class_type_name }} - {{user.first_name}}님<span></span></span>
+            </div>
+            <span class="pclogout text-logout" onclick="location.href='{% url 'login:logout' %}'">로그아웃</span>
+{#            <span id="pters-version" style="position: absolute;top:55px;right:0%;color:#a2a2a2;font-size:10px;"> {{ request.session.class_center_name }} {{ request.session.class_type_name }}</span>#}
         </div>
     </nav>
 
-    <div class="textbox_title">
-        <span class="fontstyle_title">웨이트 트레이닝</span>
-    </div>
-
-
-    <div class="textbox_subtitle">
-        <span class="fontstyle_subtitle">다음 일정</span>
-    </div>
-
-    <div class="fullbox_mb">
-        다음 일정 내용
-    </div>
-
-
-    <div class="textbox_subtitle">
-        <span class="fontstyle_subtitle">수강권 정보</span>
-    </div>
-
-    <div class="shadowbox_mb">
-        수강권 내용        
-    </div>
-
-
-
-
-
-
-
-
-
-    <!-- <div id="popup_lecture_select" class="_popup">
+    <div id="popup_lecture_select" class="_popup">
         <form action="{% url 'trainee:lecture_processing' %}" id="lecture-check-form" method="post">
             {% csrf_token %}
             <input type="hidden" name="lecture_id" id="id_check_lecture_id">
@@ -209,33 +147,103 @@
         <div class="pters_table">
             <div class="pters_table_cell_head table_lecture_name">프로그램명</div>
             <div class="pters_table_cell_head table_trainer_name">강사</div>
+            <!--<div class="pters_table_cell">연락처</div>-->
             <div class="pters_table_cell_head table_selection">선택</div>
         </div>
         <div class="lecture_select_table_list">
 
         </div>
-    </div> -->
+    </div>
 
 {% endblock %}
 
 {% block content %}
-    
-
 {% endblock %}
 
 {% block footer %}
+    <footer class="fixfooter bottomzero">
+        <div class="bottomfooter2">
+            <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
+            <a href="http://www.spooner.co.kr" class="_company">회사소개</a>
+<!--        <a class="JPtext _company">会社紹介</a>
+            <a class="ENtext _company">About us</a> -->
+            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
+            <a class="KRtext" href="{% url 'policy' %}">이용약관</a>
+            <!-- <a class="JPtext">利用案内</a>
+            <a class="ENtext">Help</a> -->
+            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
+            <a class="KRtext" href="{% url 'privacy' %}">개인정보처리방침</a>
+            <!-- <a class="JPtext">個人情報処理方針</a>
+            <a class="ENtext">Privacy Policy</a> -->
+        </div>
+
+        <div class="bottomfooter3">
+            <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
+            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
+            <a class="KRtext" href="{% url 'policy' %}">이용약관</a>
+            <!-- <a class="JPtext">利用案内</a>
+            <a class="ENtext">Help</a> -->
+            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
+            <a class="KRtext" href="{% url 'privacy' %}">개인정보처리방침</a>
+            <!-- <a class="JPtext">個人情報処理方針</a>
+            <a class="ENtext">Privacy Policy</a> -->
+        </div>
+
+    </footer>
+
 
 
 {% endblock %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
-
-<script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.common.module.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.common.close.set.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/pters.common.option.inspector.js" %}></script>
-<script type="text/javascript">pters_option_inspector("ads","","");</script>
-
+<script src={% static_url "common/js/bootstrap.min.js" %}></script>
+<script type="text/javascript" src={% static_url "common/js/jquery.swipe.js" %}></script>
+<script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
+<script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
+{#<script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
+{#<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>#}
+{#<script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
+{#<link rel="manifest" href={% static_url "manifest.json" %}>#}
+{#<!--<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>#}
+{#<audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>#}
+{#    <script>#}
+{#    function playSound() {#}
+{#          var sound = document.getElementById("audio");#}
+{#          sound.loop = false;#}
+{#          sound.play();#}
+{#      }#}
+{#    </script>-->#}
+{#<!-- <script type="text/javascript">#}
+{#// var requestButton = document.querySelector(".request-btn");#}
+{##}
+{# //});#}
+{# //const messageChannel = new MessageChannel();#}
+{# //messageChannel.port1.onmessage = function(event){ console.log('msg from SW', event); }#}
+{# //navigator.serviceWorker.controller.postMessage({'hello':'test'});#}
+{#     function messageCommunicationWithWorker(){#}
+{#         navigator.serviceWorker.getRegistrations().then(function(registrations) {#}
+{#             registrations.forEach(function (v) {#}
+{#                 send_message_to_sw(v.active, "data").then(function (m) {#}
+{#                     playSound();#}
+{#                     ajaxClassTime();#}
+{#                     messageCommunicationWithWorker();#}
+{#                 });#}
+{#             });#}
+{#         });#}
+{#     }#}
+{#     messageCommunicationWithWorker();#}
+{# </script>-->#}
 <script>
+
+    $('#errorMessageBar span:nth-child(2)').click(function(){
+        $('#errorMessageBar').fadeOut();
+        $('.ajaxloadingPC').hide();
+    });
+
+    ///********************* 회원 월간 달력 옵션*************************************///
+    ///********************* 회원 월간 달력 옵션*************************************///
 
     {% load background_trainee_data %}
     {% autoescape off %}
@@ -329,7 +337,16 @@
     var lt_res_enable_time = ['{{ request.session.setting_member_reserve_enable_time }}'];
     var lt_res_cancel_time = ['{{ request.session.setting_member_reserve_cancel_time }}'];
 
-
+    if(Options.language=="JPN"){
+        $(".KRtext, .ENtext").remove();
+        $(".JPtext").show();
+    }else if(Options.language=="ENG"){
+        $(".KRtext, .JPtext").remove();
+        $(".ENtext").show();
+    }else if(Options.language=="KOR"){
+        $(".ENtext, .JPtext").remove();
+        $(".KRtext").show();
+    }
     var varUA = navigator.userAgent.toLowerCase();
     if(varUA.match('android') != null){
         $('._company').css('display','none');
@@ -344,6 +361,10 @@
     }else{
         platform_check = 'pc';
     }
+
+
+    ///********************* 회원 월간 달력 옵션*************************************///
+    ///********************* 회원 월간 달력 옵션*************************************///
 
 
     ///********************* 강의 선택*************************************///
@@ -572,7 +593,10 @@
     };
 
 </script>
-
+<script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.common.option.inspector.js" %}></script>
+<script type="text/javascript">pters_option_inspector("ads","","");</script>
 
 
 
@@ -581,3 +605,21 @@
 
 </body>
 </html>
+
+<!--
+
+2017.8.3업데이트 내역
+
+1.Navigation Bar의 Bell ,메뉴 버튼 크기 및 위치 조정
+2.Navigation Bar의 Bell 이미지 변경
+
+3.파일명 변경 및 코드 분리
+    skstyle.css ->> pters.month.cal.css 월간 달력 css
+    skcalendar.js ->> pters.month.cal.js 월간 달력 js
+    sidebar.css ->> pters.base.set.css 상단바,사이드바 css
+    skstyle.js ->> pters.base.set.js 상단바, 사이드바 js
+
+-->
+
+
+

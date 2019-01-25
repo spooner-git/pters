@@ -1,0 +1,19 @@
+    {
+      "lectureIdArray":
+      [{% for class_info in class_data %}"{{ class_info.lecture_tb.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "trainerNameArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.member.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "classInfoArray":
+      [{% for class_info in class_data %}"{{ class_info.class_type_name}}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "classIdArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.class_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "lectureCountsArray":
+      [{% for class_info in class_data %}"{{ class_info.lecture_counts }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "npLectureCountsArray":
+      [{% for class_info in class_data %}"{{ class_info.np_lecture_counts }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "classHourArray":
+      [{% for class_info in class_data %}"{{ class_info.class_hour }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "messageArray" :
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }

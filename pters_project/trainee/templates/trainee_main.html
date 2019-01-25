@@ -1,0 +1,23 @@
+{% extends "trainee_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.month.cal.css" %}>
+{% endblock %}
+
+{% block content %}
+    <div>
+        
+
+    </div>
+{% endblock %}
+
+{% block local_js_footer %}
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.cal.month.js" %}></script> <!--달력에 대한 JS-->
+    <script>
+        
+
+    </script>
+
+{% endblock %}
