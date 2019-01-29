@@ -131,7 +131,7 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'trainee_main.html'
 
     def get_context_data(self, **kwargs):
-        context = super(CalMonthBlankView, self).get_context_data(**kwargs)
+        context = super(TraineeMainView, self).get_context_data(**kwargs)
         return context
 
 
