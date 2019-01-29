@@ -36,7 +36,7 @@
     <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
     <link rel="shortcut icon" href="/static/common/favicon-152.png">
     <!-- <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}> -->
-    <link rel="stylesheet" href={% static_url "user/css/pters.trainee.fundamental.css"%}>
+    <!-- <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.fundamental.css"%}> -->
     {% block local_css %}
     {% endblock %}
 </head>
@@ -51,16 +51,35 @@
     <!--회원 상단 [홈/일정/프로그램선택/알림/메뉴버튼] 영역  -->
     <nav>
         <div class="nav_trainee_menubox_l">
-            <div class="nav_selected">홈</div>
-            <div>일정</div>
-            <div>프로그램 선택</div>
+            <a href=""><div class="nav_selected" id="nav_btn_home">홈</div></a>
+            <a href=""><div id="nav_btn_plan">일정</div></a>
+            <a href=""><div id="nav_btn_programselect">프로그램 선택</div></a>
         </div>
 
         <div class="nav_trainee_menubox_r">
-            <div>알림</div>
-            <div>메뉴</div>
+            <a><div id="nav_btn_alarm">알림</div></a>
+            <a><div id="nav_btn_menu" onclick="sideMenu('open')">메뉴</div></a>
         </div>
     </nav>
+
+    <div id="pters_mobile_menu">
+        <div class="wrapper_top">
+            <img src="/static/user/res/PTERS_logo_pure.png" class="logo_pters">
+            <img src="/static/user/res/ptadd/btn-x.png" onclick="sideMenu('close')" class="button_x">
+        </div>
+
+        <div class="wrapper_sidemenu_items">
+            <div class="textbox_menu_items">마이페이지</div>
+            <div class="textbox_menu_items">설정</div>
+
+            <div class="textbox_menu_items textbox_menu_inquiry">피터스에게 문의하기</div>
+
+            <div class="textbox_menu_subitems">서비스 소개</div>
+            <div class="textbox_menu_subitems">이용약관</div>
+            <div class="textbox_menu_subitems">개인정보처리방침</div>
+            <div class="textbox_menu_logout">로그아웃</div>
+        </div>
+    </div>
 {% endblock %}
 
 
@@ -70,6 +89,34 @@
 {% block footer %}
 {% endblock %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript">
+
+    //content 높이와 스크롤 셋팅
+    var $content = $('.content_page');
+    $content.css("height", $(window).height()-50+"px");
+    $content.scrollTop(1);
+    $content.scroll(function(){
+        var scrollHeight = $(this).prop('scrollHeight');
+        var popupHeight = $(this).height();
+        var scrollLocation = $(this).scrollTop();
+        if(popupHeight + scrollLocation == scrollHeight){
+            $(this).animate({scrollTop : scrollLocation-1}, 10);
+        }else if(popupHeight + scrollLocation == popupHeight){
+            $(this).animate({scrollTop : scrollLocation+1}, 10);
+        }
+    });
+
+    function sideMenu(option){
+        switch(option){
+            case "open":
+                $('#pters_mobile_menu').css({"transform":"translateX(0)", "transition":"0.5s"});
+            break;
+            case "close":
+                $('#pters_mobile_menu').css({"transform":"translateX(100%)"});
+            break;
+        }
+    }
+</script>
 {% block local_js_footer %}
 {% endblock %}
 
