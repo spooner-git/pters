@@ -51,7 +51,8 @@ class GetTraineeErrorInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView)
 
 
 class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
-    url = '/trainee/cal_month/'
+    # url = '/trainee/cal_month/'
+    url = '/trainee/trainee_main/'
 
     def get(self, request, **kwargs):
 
@@ -66,7 +67,8 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
             use=USE).annotate(auth_type_cd=RawSQL(query_auth_type_cd,
                                                   [])).exclude(auth_type_cd='DELETE').order_by('-lecture_tb__start_date')
         if lecture_data is None or len(lecture_data) == 0:
-            self.url = '/trainee/cal_month_blank/'
+            # self.url = '/trainee/cal_month_blank/'
+            self.url = '/trainee/trainee_main/'
 
         elif len(lecture_data) == 1:
             for lecture_info in lecture_data:
@@ -74,9 +76,11 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 request.session['lecture_id'] = lecture_info.lecture_tb_id
                 request.session['trainer_id'] = lecture_info.class_tb.member_id
                 if lecture_info.auth_type_cd == 'WAIT':
-                    self.url = '/trainee/lecture_select/'
+                    # self.url = '/trainee/lecture_select/'
+                    self.url = '/trainee/trainee_main/'
                 elif lecture_info.auth_type_cd == 'DELETE':
-                    self.url = '/trainee/cal_month_blank/'
+                    # self.url = '/trainee/cal_month_blank/'
+                    self.url = '/trainee/trainee_main/'
                 else:
                     request.session['class_hour'] = lecture_info.class_tb.class_hour
                     request.session['class_type_code'] = lecture_info.class_tb.subject_cd
@@ -104,9 +108,11 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     class_counter += 1
 
             if class_counter > 1 or lecture_np_counter > 0:
-                self.url = '/trainee/lecture_select/'
+                # self.url = '/trainee/lecture_select/'
+                self.url = '/trainee/trainee_main/'
             else:
-                self.url = '/trainee/cal_month/'
+                # self.url = '/trainee/cal_month/'
+                self.url = '/trainee/trainee_main/'
                 request.session['trainer_id'] = class_tb_comp.member_id
                 request.session['class_id'] = class_tb_comp.class_id
                 request.session['lecture_id'] = lecture_id_select
@@ -119,6 +125,14 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         return super(IndexView, self).get_redirect_url(*args, **kwargs)
+
+
+class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'trainee_main.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CalMonthBlankView, self).get_context_data(**kwargs)
+        return context
 
 
 class CalMonthBlankView(LoginRequiredMixin, AccessTestMixin, View):
