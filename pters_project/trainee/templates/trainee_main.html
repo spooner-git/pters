@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-	<div class="content_page">
+	
 	    <div class="textbox_title">
 	        웨이트 트레이닝
 	    </div>
@@ -63,10 +63,10 @@
 	        
 	    	<div class="wrapper_card_content">
 	    		<div class="textbox_card_type">개인/그룹</div>
-	    		<img src="/static/user/res/icon-down-grey.png" class="icon_arrow">
+	    		<img src="/static/user/res/icon-down-grey.png" class="icon_arrow" data-open="close">
 	    	</div>
 
-	    	<div class="textbox_card_title">
+	    	<div class="textbox_boxtitle">
 	    		냉혈한 김선생의 다가오는 여름 준비
 	    	</div>
 
@@ -75,18 +75,85 @@
 	    		<div class="textbox_notice">수업이 <span>12번</span> 남았습니다.</div>
 	    	</div>
 
-	    </div>
-	</div>
+	    	<div class="wrapper_card_detail2">
+	    		<div>
+	    			<div class="textbox_article">시작일</div>
+	    			<div class="textbox_article">종료일</div>
+	    		</div>
+	    		<div>
+	    			<div class="textbox_data">2019.01.01(화)</div>
+	    			<div class="textbox_data">2019.02.01(금)</div>
+	    		</div>
+	    	</div>
 
+	    	<div class="wrapper_card_detail_pocket">
+	    		<div class="wrapper_card_detail_row">
+	    			<div class="textbox_article">총 등록 횟수</div>
+	    			<div class="textbox_data">30 회</div>
+	    		</div>
+	    		<div class="wrapper_card_detail_row">
+	    			<div class="textbox_article">잔여 횟수</div>
+	    			<div class="textbox_data">12 회</div>
+	    		</div>
+	    		<div class="wrapper_card_detail_row">
+	    			<div class="textbox_article">결석 횟수</div>
+	    			<div class="textbox_data">3 회</div>
+	    		</div>
+	    		<div class="wrapper_card_detail_row">
+	    			<div class="textbox_article">예약 가능 횟수</div>
+	    			<div class="textbox_data">12 회</div>
+	    		</div>
+	    	</div>
+
+	    	<div class="wrapper_card_detail_teacher">
+	    		<div class="photobox"></div>
+	    		<div class="wrapper_teacher_name">
+	    			<div class="textbox_data">홍길동</div>
+	    			<div class="textbox_article">강사</div>
+	    		</div>
+	    		<div class="textbox_phone">000-0000-8888</div>
+	    	</div>
+
+	    </div>
 
 {% endblock %}
 
 {% block local_js_footer %}
     <!-- Placed at the end of the document so the pages load faster -->
     <!-- <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.cal.month.js" %}></script>  -->
-    <!--달력에 대한 JS-->
     <script>
-        
+
+    	/*수강권 정보 열고 닫기*/
+        $(document).on("click", '.wrapper_card_content .icon_arrow', function(){
+        	var viewCheck = $(this).attr("data-open");
+        	switch(viewCheck){
+        		case "open":
+        			viewTicketDetail("close", this);
+        		break;
+
+        		case "close":
+        			viewTicketDetail("open", this);
+        		break;
+        	}
+        });
+
+        function viewTicketDetail(option, thisSelector){
+        	var $parentBox = $(thisSelector).parents('.box_card');
+        	switch(option){
+        		case "open":
+        			$(thisSelector).attr("data-open", "open");
+        			$parentBox.find('.wrapper_card_detail').hide();
+        			$parentBox.find('.wrapper_card_detail2, .wrapper_card_detail_pocket, .wrapper_card_detail_teacher').show();
+        		break;
+
+        		case "close":
+        			$(thisSelector).attr("data-open", "close");
+        			$parentBox.find('.wrapper_card_detail').show();
+        			$parentBox.find('.wrapper_card_detail2, .wrapper_card_detail_pocket, .wrapper_card_detail_teacher').hide();
+        		break;
+        	}
+        }
+        /*수강권 정보 열고 닫기*/
 
     </script>
 

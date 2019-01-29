@@ -105,20 +105,11 @@
         #pters_mobile_menu .wrapper_sidemenu_items{
             padding: 0 20px;
         }
-        .textbox_menu_items{
-            height: 35px;
-            line-height: 35px;
-            font-size: 19px;
-            font-weight: bold;
-            color: #000000;
+        #pters_mobile_menu .wrapper_sidemenu_items .textbox_title{
             margin-bottom: 15px;
         }
-        .textbox_menu_subitems{
-            height: 30px;
-            line-height: 30px;
-            font-size: 15px;
-            font-weight: bold;
-            color: #000000;
+        #pters_mobile_menu .wrapper_sidemenu_items .textbox_boxtitle{
+            text-align: left;
             margin-bottom: 10px;
         }
         .textbox_menu_inquiry{
@@ -128,13 +119,6 @@
             border-bottom: 1px solid #e6e6e6;
             margin-top: 20px;
             margin-bottom: 20px;
-        }
-        .textbox_menu_logout{
-            height: 30px;
-            line-height: 30px;
-            font-size: 15px;
-            font-weight: bold;
-            color: #999999;
         }
 
 
@@ -179,8 +163,6 @@
 .textbox_title{
     height: 35px;
     line-height: 35px;
-    padding: 0 20px 0 20px;
-
     font-size: 20px;
     letter-spacing: -0.5px;
     font-weight: bold;
@@ -201,7 +183,6 @@
     height: 30px;
     line-height: 30px;
     text-align: center;
-
     font-size: 16px;
     font-weight: bold;
     letter-spacing: -0.5px;
@@ -271,15 +252,6 @@
     }
 
 
-.textbox_card_title{
-    height: 30px;
-    line-height: 30px;
-    color: #000000;
-    font-size: 16px;
-    font-weight: bold;
-    letter-spacing: -0.5px;
-}
-
 .textbox_card_type{
     height: 24px;
     line-height: 24px;
@@ -287,6 +259,24 @@
     font-size: 12px;
     font-weight: 500;
     letter-spacing: -0.5px;
+}
+
+.textbox_phone{
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fe4e65;
+    text-align: center;
+}
+
+.photobox{
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    border: 2px solid #fe4e65;
+    border-radius: 50%;
 }
 
 
