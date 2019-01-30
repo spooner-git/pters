@@ -1,6 +1,8 @@
 /*기본 html, body스타일*/
+/*폰트 임포트*/
+@import url(/static/common/fonts/notosanskr.css);
 html{
-    font-family: 'Noto Sans KR',sans-serif !important;
+    font-family: 'Noto Sans KR', sans-serif !important;
     background-color: #f7f5f6;
 }
 body{
@@ -17,8 +19,6 @@ a{
         color: unset;
     }
 
-/*폰트 임포트*/
-@import url(/static/common/fonts/notosanskr.css);
 
 /*Nav bar 관련 CSS*/
 nav{
