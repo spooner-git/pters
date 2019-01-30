@@ -1,10 +1,4 @@
-/*Fundamental CSS*/
-/*Fundamental CSS는 수정되어서는 안되는 기본 값*/
-
-    /*폰트 스타일*/
-        @import url(/static/common/fonts/notosanskr.css);
-
-    /*기본 html, body스타일*/
+/*기본 html, body스타일*/
         html{
             font-family: 'Noto Sans KR',sans-serif !important;
             background-color: #f7f5f6;
@@ -12,7 +6,13 @@
         body{
             padding-top: 50px;
             margin: 0;
+            /*height: 100%;*/
         }
+
+/*Navbar 관련 CSS*/
+
+    /*폰트 임포트*/
+        @import url(/static/common/fonts/notosanskr.css);
 
     /*NavBar 스타일*/
         nav{
@@ -24,6 +24,7 @@
             left: 0px; 
             background-color: #ffffff;
             box-shadow: 0 0 10px 0 rgba(130, 130, 130, 0.2);
+            z-index: 1;
 
             /*Nav바 폰트스타일*/
             font-size: 13px;
@@ -43,33 +44,115 @@
             }
                 nav > div > a >  div{
                     display: inline-block;
-                    padding: 0 5px 0 5px;
+                    /*padding: 0 5px 0 5px;*/
                     border-bottom: 3px solid transparent;
                     text-align: center;
                     /*cursor: pointer;*/
                 }
                 #nav_btn_home{
-                    width: 20px;
-                    margin-right: 10px;
-                }
-                #nav_btn_plan{
                     width: 30px;
                     margin-right: 10px;
                 }
+                #nav_btn_plan{
+                    width: 40px;
+                    margin-right: 10px;
+                }
                 #nav_btn_programselect{
-                    width: 80px;
+                    width: 90px;
                 }
                 #nav_btn_alarm{
 
                 }
                 #nav_btn_menu{
 
-                }
+                }   
+                    .nav_btn_img{
+                        width: 18px;
+                        vertical-align: middle;
+                    }
+                    #nav_btn_alarm > img{
+                        padding: 11px;
+                    }
+                    #nav_btn_menu > img{
+                        padding: 11px 0 11px 11px;
+                    }
                 
-
         .nav_selected{
             border-bottom-color: #fe4e65;
+            color: #fe4e65;
         }
+        .nav_disabled{
+            color: #999999;
+        }
+
+    /*모바일 사이드 메뉴*/
+    #pters_mobile_menu{
+        background-color: #ffffff;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        transform: translateX(100%);
+        top: 0;
+        z-index: 1500;
+    }
+        #pters_mobile_menu .wrapper_top{
+            margin-top: 38px;
+            margin-bottom:  47px;
+            padding: 0 20px;
+        }
+            #pters_mobile_menu .wrapper_top .logo_pters{
+                width: 80px;
+                vertical-align: top;
+            }
+            #pters_mobile_menu .wrapper_top .button_x{
+                width: 15px;
+                padding: 4px;
+                float: right;
+            }
+        #pters_mobile_menu .wrapper_sidemenu_items{
+            padding: 0 20px;
+        }
+        #pters_mobile_menu .wrapper_sidemenu_items .textbox_title{
+            margin-bottom: 15px;
+        }
+        #pters_mobile_menu .wrapper_sidemenu_items .textbox_boxtitle{
+            text-align: left;
+            margin-bottom: 10px;
+        }
+        .textbox_menu_inquiry{
+            padding: 20px 0;
+            color: #fe4e65;
+            border-top: 1px solid #e6e6e6;
+            border-bottom: 1px solid #e6e6e6;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+    /*모바일 팝업 페이지 기본 요소*/
+    .popup_mobile{
+        background-color: #ffffff;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        transform: translateX(100%);
+        top: 0;
+        z-index: 1500;
+    }
+    .popup_mobile .wrapper_top{
+            margin-top: 38px;
+            /*margin-bottom:  47px;*/
+            padding: 0 20px;
+        }
+            .popup_mobile .wrapper_top .logo_pters{
+                width: 80px;
+                vertical-align: top;
+            }
+            .popup_mobile .wrapper_top .button_x{
+                width: 15px;
+                padding: 4px;
+                float: right;
+            }
+
 
     /*OS 기본요소 편집*/
         a{
@@ -78,4 +161,35 @@
             a:-webkit-any-link{
                 color: unset;
             }
-/*Fundamental CSS
+/*Navbar 관련 CSS*/
+
+
+
+
+/*일정 개요 조립*/
+    .trainee .wrapper_planinfo{
+        padding: 15px 0;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        border-top: 1px solid #f5f5f5;
+        border-bottom: 1px solid #f5f5f5;
+    }
+        .trainee .wrapper_planinfo_article{
+            display: table;
+            width: 100%;
+        }
+        .trainee .wrapper_planinfo_data{
+            display: table;
+            width: 100%;
+        }
+
+    .trainee .wrapper_cancelnotice{
+        margin-top: 15px;
+    }
+        .trainee .wrapper_cancelnotice .textbox_notice{
+            display: inline-block;
+        }
+        .trainee .wrapper_cancelnotice .button_gen{
+            float: right;
+        }
+/*일정 개요 조립*/

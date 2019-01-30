@@ -178,7 +178,7 @@ class MyPageBlankView(LoginRequiredMixin, AccessTestMixin, View):
 
 
 class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'cal_month_trainee.html'
+    template_name = 'trainee_calendar.html'
 
     def get(self, request):
         context = {}

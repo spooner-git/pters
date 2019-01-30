@@ -1,0 +1,93 @@
+{% extends "trainee_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.object.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/page/pters.trainee.page.calendar.css" %}>
+{% endblock %}
+
+{% block content %}
+    <div>달력 페이지</div>
+    <div class="button_gen fontbg_white_grey" onclick="layer_popup('open', 'popup_calendar_planview')">일정팝업</div>
+    <div class="button_gen fontbg_white_pink" onclick="layer_popup('open', 'popup_calendar_planreserve')">예약팝업</div>
+{% endblock %}
+
+{% block popup %}
+	<!-- pters.trainee.popup.planview.css -->
+	<div id="popup_calendar_planview" class="popup_mobile">
+		<div class="popup_mobile_content">
+			<div class="wrapper_top">
+				<img src="/static/user/res/PTERS_logo_pure.png" class="logo_pters"  style="visibility: hidden;">
+	            <img src="/static/user/res/ptadd/btn-x.png" onclick="layer_popup('close', 'popup_calendar_planview')" class="button_x">
+	        </div>
+
+	        <div class="textbox_title">2019년 1월 30일 (수)</div>
+	        <div class="textbox_data"><span>1개</span>의 일정이 있습니다.</div>
+
+	        <div class="box_full">
+		   		<div class="tag_wrapper">
+		    		<div class="tag fontstyle_tag fontbg_white_pink">예약완료</div>
+		    	</div>
+
+		    	<div class="textbox_boxtitle">
+		    		(개인) 탄탄가슴 만들기
+		    	</div>
+
+		    	<div class="wrapper_planinfo">
+		    		<div class="wrapper_planinfo_article">
+		    			<div class="textbox_article tablecell_x3">일자</div>
+		    			<div class="textbox_article tablecell_x3">요일</div>
+		    			<div class="textbox_article tablecell_x3">진행시간</div>
+		    		</div>
+
+		    		<div class="wrapper_planinfo_data">
+		    			<div class="textbox_data tablecell_x3">2019.01.16</div>
+		    			<div class="textbox_data tablecell_x3">수요일</div>
+		    			<div class="textbox_data tablecell_x3">14:00 ~ 16:00</div>
+		    		</div>
+
+		    	</div>
+
+		    	<div class="textbox_plancomment">
+		    		<span>"제발 지각하지 말아주세요."</span>
+		    	</div>
+		    	
+		    	<div class="wrapper_cancelnotice">
+		    		<div class="textbox_notice">
+		    			취소 가능 시간까지 <span>3시간 26분</span> 남았습니다.
+		    		</div>
+		    		<div class="button_gen fontbg_white_grey">취소하기</div>
+		    	</div>
+		    </div>
+		</div>
+
+	    <div class="button_big fontbg_white_pink">예약하기</div>
+	</div>
+
+
+	<!-- pters.trainee.popup.planreserve.css -->
+	<div id="popup_calendar_planreserve" class="popup_mobile">
+		<div class="popup_mobile_content">
+			<div class="wrapper_top">
+				<img src="/static/user/res/PTERS_logo_pure.png" class="logo_pters" style="visibility: hidden;">
+	            <img src="/static/user/res/ptadd/btn-x.png" onclick="layer_popup('close', 'popup_calendar_planreserve')" class="button_x">
+	        </div>
+
+	        <div class="textbox_title">일정 예약</div>
+		    <div class="textbox_data">2019년 1월 17일 (목)</div>
+		</div>
+
+		<div class="button_big fontbg_white_pink">예약하기</div>
+	</div>
+{% endblock %}
+
+{% block local_js_footer %}
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.popup.behavior.js" %}></script> 
+    <script>
+		//Nav바에 현재 페이지에 밑줄 표기
+    	$('#nav_btn_plan').addClass("nav_selected");
+
+    </script>
+
+{% endblock %}

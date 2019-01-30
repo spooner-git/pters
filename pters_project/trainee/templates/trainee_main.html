@@ -56,7 +56,7 @@
 
 
 	    <div class="textbox_subtitle fontstyle_subtitle">
-	        수강권 정보
+	        내 수강권
 	    </div>
 
 	    <div class="box_card">
@@ -122,6 +122,9 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <!-- <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.cal.month.js" %}></script>  -->
     <script>
+    	//Nav바에 현재 페이지에 밑줄 표기
+    	$('#nav_btn_home').addClass("nav_selected");
+
 
     	/*수강권 정보 열고 닫기*/
         $(document).on("click", '.wrapper_card_content .icon_arrow', function(){

@@ -36,12 +36,13 @@
     <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
     <link rel="shortcut icon" href="/static/common/favicon-152.png">
     <!-- <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}> -->
-    <!-- <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.fundamental.css"%}> -->
+    <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.fundamental.css"%}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan.css"%}>
     {% block local_css %}
     {% endblock %}
 </head>
 
-<body class="trainee_main">
+<body class="trainee">
 
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
@@ -51,14 +52,14 @@
     <!--회원 상단 [홈/일정/프로그램선택/알림/메뉴버튼] 영역  -->
     <nav>
         <div class="nav_trainee_menubox_l">
-            <a href=""><div class="nav_selected" id="nav_btn_home">홈</div></a>
-            <a href=""><div id="nav_btn_plan">일정</div></a>
+            <a href="{% url 'trainee:trainee_main' %}"><div id="nav_btn_home">홈</div></a>
+            <a href="{% url 'trainee:trainee_calendar' %}"><div id="nav_btn_plan">일정</div></a>
             <a href=""><div id="nav_btn_programselect">프로그램 선택</div></a>
         </div>
 
         <div class="nav_trainee_menubox_r">
-            <a><div id="nav_btn_alarm">알림</div></a>
-            <a><div id="nav_btn_menu" onclick="sideMenu('open')">메뉴</div></a>
+            <a><div id="nav_btn_alarm"><img src="/static/user/res/alarm/alarm_on.png" class="nav_btn_img"></div></a>
+            <a><div id="nav_btn_menu" onclick="sideMenu('open')"><img src="/static/user/res/menu.jpg" class="nav_btn_img"></div></a>
         </div>
     </nav>
 
@@ -77,7 +78,7 @@
             <div class="textbox_boxtitle">서비스 소개</div>
             <div class="textbox_boxtitle">이용약관</div>
             <div class="textbox_boxtitle">개인정보처리방침</div>
-            <div class="textbox_boxtitle" style="color: #999999;">로그아웃</div>
+            <div class="textbox_boxtitle" style="color: #999999;" onclick="location.href='{% url 'login:logout' %}'">로그아웃</div>
         </div>
     </div>
 {% endblock %}
@@ -87,14 +88,18 @@
 {% endblock %}
 </div>
 
+{% block popup %}
+{% endblock %}
+
 {% block footer %}
 {% endblock %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script type="text/javascript">
 
     //content 높이와 스크롤 셋팅
+    var windowHeight = $(window).height();
     var $content = $('.content_page');
-    $content.css("height", $(window).height()-50+"px");
+    $content.css("height", windowHeight-50+"px");
     $content.scrollTop(1);
     $content.scroll(function(){
         var scrollHeight = $(this).prop('scrollHeight');
@@ -110,7 +115,8 @@
     function sideMenu(option){
         switch(option){
             case "open":
-                $('#pters_mobile_menu').css({"transform":"translateX(0)", "transition":"0.5s"});
+                $('#pters_mobile_menu').css({"transform":"translateX(0)", "transition":"transform 0.3s ease-in-out"});
+                // $('#pters_mobile_menu').css({"transform":"translateX(0)", "transition":"0.5s"});
             break;
             case "close":
                 $('#pters_mobile_menu').css({"transform":"translateX(100%)"});

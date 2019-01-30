@@ -71,7 +71,7 @@ urlpatterns = [
     # 회원 빈 Mypage 페이지
     url(r'^mypage_trainee_blank/$', views.MyPageBlankView.as_view(), name='mypage_trainee_blank'),
     # 월간 일정 페이지
-    url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
+    url(r'^trainee_calendar/$', views.CalMonthView.as_view(), name='trainee_calendar'),
     # Mypage 페이지
     url(r'^mypage_trainee/$', views.MyPageView.as_view(), name='mypage_trainee'),
     # 강좌 선택 페이지

@@ -1,92 +1,66 @@
 /*(현재 페이지 한해) 현재 페이지에서만 사용하는 커스텀 css*/
-.trainee_main > .content_page > .textbox_title{
+.trainee > .content_page > .textbox_title{
 	margin-top: 35px;
     margin-bottom: 35px;
     padding: 0 20px;
 }
 
-.trainee_main .box_full{
+.trainee .box_full{
     margin-top: 10px;
     margin-bottom: 30px;
-}	
-	.trainee_main .wrapper_planinfo{
-		padding: 15px 0;
-		margin-top: 15px;
-		margin-bottom: 15px;
-		border-top: 1px solid #f5f5f5;
-		border-bottom: 1px solid #f5f5f5;
-	}
-    .trainee_main .wrapper_planinfo_article{
-    	display: table;
-    	width: 100%;
-    }
-    .trainee_main .wrapper_planinfo_data{
-    	display: table;
-    	width: 100%;
-    }
+}
 
-    .trainee_main .wrapper_cancelnotice{
-    	margin-top: 15px;
-    }
-    .trainee_main .textbox_notice{
-    	display: inline-block;
-    }
-    .trainee_main .button_gen{
-    	float: right;
-    }
-
-
-.trainee_main .box_card{
+.trainee .box_card{
     margin-top: 10px;
     margin-bottom: 10px;
 }	
-	.trainee_main .box_card .textbox_boxtitle{
+	.trainee .box_card .textbox_boxtitle{
 		text-align: left;
 		margin-bottom: 15px;
 	}
-	.trainee_main .box_card .wrapper_card_content .textbox_card_type{
+	.trainee .box_card .wrapper_card_content .textbox_card_type{
 		display: inline-block;
 	}
-	.trainee_main .box_card .wrapper_card_content .icon_arrow{
+	.trainee .box_card .wrapper_card_content .icon_arrow{
 		transform: rotate(180deg);
 		float: right;
 	}
-	.trainee_main .box_card .textbox_card_title{
+	.trainee .box_card .textbox_card_title{
 		margin-bottom: 15px;
 	}
 
 
-	.trainee_main .box_card .wrapper_card_detail2, 
-	.trainee_main .box_card .wrapper_card_detail_pocket,
-	.trainee_main .box_card .wrapper_card_detail_teacher{
+	.trainee .box_card .wrapper_card_detail2, 
+	.trainee .box_card .wrapper_card_detail_pocket,
+	.trainee .box_card .wrapper_card_detail_teacher{
 		display: none;
 	}
 
 
-	.trainee_main .box_card .wrapper_card_detail{
+	.trainee .box_card .wrapper_card_detail{
 		padding-top: 10px;
 		border-top: 1px solid #f5f5f5;
 	}
-	.trainee_main .box_card .wrapper_card_detail .textbox_data{
+	.trainee .box_card .wrapper_card_detail .textbox_data{
 		text-align: left;
 	}
-	.trainee_main .box_card .wrapper_card_detail .textbox_notice{
+	.trainee .box_card .wrapper_card_detail .textbox_notice{
 		display: block;
 		height: 20px;
 		line-height: 20px;
 	}
 
-	.trainee_main .box_card .wrapper_card_detail2{
+	.trainee .box_card .wrapper_card_detail2{
 		padding: 15px 0;
 		border-top: 1px solid #f5f5f5;
 	}
-	.trainee_main .box_card .wrapper_card_detail2 .textbox_article{
+	.trainee .box_card .wrapper_card_detail2 .textbox_article{
 		display: inline-block;
 		width: 48%;
 		max-width: 147px;
 		text-align: left;
 	}
-	.trainee_main .box_card .wrapper_card_detail2 .textbox_data{
+	.trainee .box_card .wrapper_card_detail2 .textbox_data{
 		display: inline-block;
 		width: 48%;
 		max-width: 147px;
@@ -94,23 +68,23 @@
 	}
 
 
-	.trainee_main .wrapper_card_detail_pocket{
+	.trainee .wrapper_card_detail_pocket{
 		padding: 15px 0;
 		border-top: 1px solid #f5f5f5;
 	}
-	.trainee_main .wrapper_card_detail_pocket .wrapper_card_detail_row{
+	.trainee .wrapper_card_detail_pocket .wrapper_card_detail_row{
 		width: 100%;
 		height: 30px;
 		
 	}
-	.trainee_main .wrapper_card_detail_pocket .wrapper_card_detail_row .textbox_article{
+	.trainee .wrapper_card_detail_pocket .wrapper_card_detail_row .textbox_article{
 		display: inline-block;
 		width: 80px;
 		text-align: left;
 		height: 30px;
 		line-height: 30px;
 	}
-	.trainee_main .wrapper_card_detail_pocket .wrapper_card_detail_row .textbox_data{
+	.trainee .wrapper_card_detail_pocket .wrapper_card_detail_row .textbox_data{
 		display: inline-block;
 		width: 60px;
 		text-align: right;
@@ -118,26 +92,26 @@
 		line-height: 30px;
 	}
 
-	.trainee_main .wrapper_card_detail_teacher{
+	.trainee .wrapper_card_detail_teacher{
 		border-top:  1px solid #efefef;
 		padding-top: 15px;
 	}
-	.trainee_main .wrapper_card_detail_teacher .wrapper_teacher_name{
+	.trainee .wrapper_card_detail_teacher .wrapper_teacher_name{
 		display: inline-block;
 		height: 40px;
 		vertical-align: top;
 	}
-	.trainee_main .wrapper_card_detail_teacher .wrapper_teacher_name .textbox_data, 
-	.trainee_main .wrapper_card_detail_teacher .wrapper_teacher_name .textbox_article{
+	.trainee .wrapper_card_detail_teacher .wrapper_teacher_name .textbox_data, 
+	.trainee .wrapper_card_detail_teacher .wrapper_teacher_name .textbox_article{
 		text-align: left;
 	} 
-	.trainee_main .wrapper_card_detail_teacher .textbox_phone{
+	.trainee .wrapper_card_detail_teacher .textbox_phone{
 		display: inline-block;
 		height: 40px;
 		vertical-align: top;
 		float: right;
 	}
-	.trainee_main .wrapper_card_detail_teacher .photobox{
+	.trainee .wrapper_card_detail_teacher .photobox{
 		vertical-align: top;
 		margin-right: 10px;
 	}
