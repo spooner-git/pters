@@ -1,4 +1,18 @@
+nav{
+    /*Nav바 스타일*/
+    position:fixed; 
+    width: 100%;
+    height: 50px;
+    top: 0; 
+    left: 0px; 
+    background-color: #ffffff;
+    box-shadow: 0 0 10px 0 rgba(130, 130, 130, 0.2);
+    z-index: 1;
 
+    /*Nav바 폰트스타일*/
+    font-size: 13px;
+    font-weight: bold;
+}
 
 
 /*(공통) 모든 페이지에서 사용할 수 있는 오브젝트, 폰트스타일*/
@@ -41,7 +55,6 @@
 .textbox_subtitle{
     height: 20px;
     line-height: 20px;
-    padding: 0 20px 0 20px;
 
     font-size:11px;
     color: #808080;
@@ -51,7 +64,6 @@
 .textbox_boxtitle{
     height: 30px;
     line-height: 30px;
-    text-align: center;
     font-size: 16px;
     font-weight: bold;
     letter-spacing: -0.5px;
@@ -59,31 +71,9 @@
 }
     
 
-
-
-.tag_wrapper{
-    text-align: center;
-    height: 21px;
-}
-    .tag{
-        display: inline-block;
-        width: 58px;
-        height: 21px;
-        line-height: 21px;
-        border-radius: 11px;
-        text-align: center;
-        vertical-align: top;
-
-        font-size: 12px;
-        font-weight: 500;
-        letter-spacing: -0.5px;
-    }
-
-
 .textbox_article{
     height: 20px;
     line-height: 20px;
-    text-align: center;
     font-size: 11px;
     color: #b3b3b3;
 }
@@ -91,7 +81,6 @@
 .textbox_data{
     height: 25px;
     line-height: 25px;
-    text-align: center;
     font-size: 14px;
     color: #000000;
     font-weight: 500;
@@ -102,7 +91,6 @@
 .textbox_plancomment{
     height: 40px;
     line-height: 40px;
-    text-align: center;
 
     font-size: 12px;
     letter-spacing: -0.5px;
@@ -137,7 +125,6 @@
     font-size: 13px;
     font-weight: 500;
     color: #fe4e65;
-    text-align: center;
 }
 
 .photobox{
@@ -147,6 +134,27 @@
     border: 2px solid #fe4e65;
     border-radius: 50%;
 }
+
+
+
+.tag_wrapper{
+    text-align: center;
+    height: 21px;
+}
+    .tag{
+        display: inline-block;
+        width: 58px;
+        height: 21px;
+        line-height: 21px;
+        border-radius: 11px;
+        text-align: center;
+        vertical-align: top;
+
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: -0.5px;
+    }
+
 
 
 .button_gen{

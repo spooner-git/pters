@@ -1,10 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+	{% load static_url %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>Title</title>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.design.guide.css"%}>
+    <style type="text/css">
+    	body{
+    		background-color: #f7f5f6;
+    		padding-top: 100px;
+    		margin: 0;
+    	}
+
+    	.divider{
+    		margin-bottom: 40px;
+    	}
+
+    </style>
+
 </head>
 <body>
+
+
+	<nav class="box_navbar divider">box_navbar</nav>
+
+	<div class="box_full divider">box_full</div>
+
+	<div class="box_card divider">box_card</div>
+
+	<div class="textbox_title">textbox_title</div>
+	<div class="textbox_title divider">웨이트 트레이닝</div>
+
+	<div class="textbox_subtitle">textbox_subtitle</div>
+	<div class="textbox_subtitle divider">다음 일정</div>
+
+	<div class="textbox_boxtitle">textbox_boxtitle</div>
+	<div class="textbox_boxtitle divider">(개인) 탄탄가슴 만들기</div>
+
+	<div class="textbox_article">textbox_article</div>
+	<div class="textbox_article divider">일자</div>
+
+	<div class="textbox_data">textbox_data</div>
+	<div class="textbox_data divider">2019.01.16</div>
+
+	<div class="textbox_plancomment">textbox_plancomment</div>
+	<div class="textbox_plancomment divider">지각하지 말아주세요.</div>
+
+	<div class="textbox_notice">-textbox_notice- <span> textbox_notice > span </span> -textbox_notice-</div>
+	<div class="textbox_notice divider">취소가능 시간까지 <span> 3시간 26분 </span> 남았습니다.</div>
+
+	<div class="textbox_card_type">textbox_card_type</div>
+	<div class="textbox_card_type divider">개인/그룹</div>
+
+	<div class="textbox_phone">textbox_phone</div>
+	<div class="textbox_phone divider">010-0000-1111</div>
+
+	<div class="photobox divider"></div>
+
+
+	<div class="tag_wrapper divider">
+		<div class="tag">blank</div>
+		<div class="tag fontbg_white_pink">w/p</div>
+		<div class="tag fontbg_black_white">b/w</div>
+		<div class="tag fontbg_white_grey">w/g</div>
+	</div>
+
+
+	<div class="button_gen  divider">blank</div>
+	<div class="button_gen fontbg_white_pink divider">w/p</div>
+	<div class="button_gen fontbg_black_white divider">b/w</div>
+	<div class="button_gen fontbg_white_grey divider">w/g</div>
+
+
+	<div class="button_big divider">blank</div>
+	<div class="button_big fontbg_white_pink divider">w/p</div>
+	<div class="button_big fontbg_black_white divider">b/w</div>
+	<div class="button_big fontbg_white_grey divider">w/g</div>
+
+	<img src="/static/user/res/icon-down-grey.png" class="icon_arrow">
+	<span>icon_arrow</span>
+
 
 </body>
 </html>
