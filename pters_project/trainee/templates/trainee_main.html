@@ -7,128 +7,116 @@
 {% endblock %}
 
 {% block content %}
-	
-	    <div class="textbox_title">
-	        웨이트 트레이닝
-	    </div>
+	<div class="textbox_title">웨이트 트레이닝</div>
 
-	    <div class="textbox_subtitle">
-	        다음 일정
-	    </div>
+    <div class="textbox_subtitle">다음 일정</div>
+    <div class="box_full">
+        <div class="tag_wrapper">
+            <div class="tag fontstyle_tag font_bg_white_pink">예약완료</div>
+        </div>
+        <div class="textbox_box_title">(개인) 탄탄가슴 만들기</div>
+        <div class="wrapper_plan_info">
+            <div class="wrapper_plan_info_article">
+                <div class="textbox_article table_cell_x3">일자</div>
+                <div class="textbox_article table_cell_x3">요일</div>
+                <div class="textbox_article table_cell_x3">진행시간</div>
+            </div>
+            <div class="wrapper_plan_info_data">
+                <div class="textbox_data table_cell_x3">2019.01.16</div>
+                <div class="textbox_data table_cell_x3">수요일</div>
+                <div class="textbox_data table_cell_x3">14:00 ~ 16:00</div>
+            </div>
+        </div>
+        <div class="textbox_plan_comment"><span>"제발 지각하지 말아주세요."</span></div>
+        <div class="wrapper_cancel_notice">
+            <div class="textbox_notice">취소 가능 시간까지 <span>3시간 26분</span> 남았습니다.</div>
+            <div class="button_gen font_bg_white_grey">취소하기</div>
+        </div>
+    </div>
 
-	    <div class="box_full">
-	    	
-	   		<div class="tag_wrapper">
-	    		<div class="tag fontstyle_tag fontbg_white_pink">예약완료</div>
-	    	</div>
+    <div class="textbox_subtitle fontstyle_subtitle">내 수강권</div>
+    <div class="box_card">
+        <div class="wrapper_card_content">
+            <div class="textbox_card_type">개인/그룹</div>
+            <img src="/static/user/res/icon-down-grey.png" class="icon_arrow" data-open="close">
+        </div>
+        <div class="textbox_box_title">냉혈한 김선생의 다가오는 여름 준비</div>
 
-	    	<div class="textbox_boxtitle">
-	    		(개인) 탄탄가슴 만들기
-	    	</div>
+        <div id="main_wrapper_card_detail_close">
+            <div class="wrapper_card_detail">
+                <div class="textbox_data">2019.01.01 (화) ~ 2019.02.01 (금)</div>
+                <div class="textbox_notice">수업이 <span>12번</span> 남았습니다.</div>
+            </div>
+        </div>
 
-	    	<div class="wrapper_planinfo">
-	    		<div class="wrapper_planinfo_article">
-	    			<div class="textbox_article tablecell_x3">일자</div>
-	    			<div class="textbox_article tablecell_x3">요일</div>
-	    			<div class="textbox_article tablecell_x3">진행시간</div>
-	    		</div>
-
-	    		<div class="wrapper_planinfo_data">
-	    			<div class="textbox_data tablecell_x3">2019.01.16</div>
-	    			<div class="textbox_data tablecell_x3">수요일</div>
-	    			<div class="textbox_data tablecell_x3">14:00 ~ 16:00</div>
-	    		</div>
-
-	    	</div>
-
-	    	<div class="textbox_plancomment">
-	    		<span>"제발 지각하지 말아주세요."</span>
-	    	</div>
-	    	
-	    	<div class="wrapper_cancelnotice">
-	    		<div class="textbox_notice">
-	    			취소 가능 시간까지 <span>3시간 26분</span> 남았습니다.
-	    		</div>
-	    		<div class="button_gen fontbg_white_grey">취소하기</div>
-	    	</div>
-
-	    </div>
-
-
-	    <div class="textbox_subtitle fontstyle_subtitle">
-	        내 수강권
-	    </div>
-
-	    <div class="box_card">
-	        
-	    	<div class="wrapper_card_content">
-	    		<div class="textbox_card_type">개인/그룹</div>
-	    		<img src="/static/user/res/icon-down-grey.png" class="icon_arrow" data-open="close">
-	    	</div>
-
-	    	<div class="textbox_boxtitle">
-	    		냉혈한 김선생의 다가오는 여름 준비
-	    	</div>
-
-	    	<div class="wrapper_card_detail">
-	    		<div class="textbox_data">2019.01.01 (화) ~ 2019.02.01 (금)</div>
-	    		<div class="textbox_notice">수업이 <span>12번</span> 남았습니다.</div>
-	    	</div>
-
-	    	<div class="wrapper_card_detail2">
-	    		<div>
-	    			<div class="textbox_article">시작일</div>
-	    			<div class="textbox_article">종료일</div>
-	    		</div>
-	    		<div>
-	    			<div class="textbox_data">2019.01.01(화)</div>
-	    			<div class="textbox_data">2019.02.01(금)</div>
-	    		</div>
-	    	</div>
-
-	    	<div class="wrapper_card_detail_pocket">
-	    		<div class="wrapper_card_detail_row">
-	    			<div class="textbox_article">총 등록 횟수</div>
-	    			<div class="textbox_data">30 회</div>
-	    		</div>
-	    		<div class="wrapper_card_detail_row">
-	    			<div class="textbox_article">잔여 횟수</div>
-	    			<div class="textbox_data">12 회</div>
-	    		</div>
-	    		<div class="wrapper_card_detail_row">
-	    			<div class="textbox_article">결석 횟수</div>
-	    			<div class="textbox_data">3 회</div>
-	    		</div>
-	    		<div class="wrapper_card_detail_row">
-	    			<div class="textbox_article">예약 가능 횟수</div>
-	    			<div class="textbox_data">12 회</div>
-	    		</div>
-	    	</div>
-
-	    	<div class="wrapper_card_detail_teacher">
-	    		<div class="photobox"></div>
-	    		<div class="wrapper_teacher_name">
-	    			<div class="textbox_data">홍길동</div>
-	    			<div class="textbox_article">강사</div>
-	    		</div>
-	    		<div class="textbox_phone">000-0000-8888</div>
-	    	</div>
-
-	    </div>
+        <div id="main_wrapper_card_detail_open" style="display:none;">
+            <div class="wrapper_card_detail2">
+                <div>
+                    <div class="textbox_article">시작일</div>
+                    <div class="textbox_article">종료일</div>
+                </div>
+                <div>
+                    <div class="textbox_data">2019.01.01(화)</div>
+                    <div class="textbox_data">2019.02.01(금)</div>
+                </div>
+            </div>
+            <div class="wrapper_card_detail_pocket">
+                <div class="wrapper_card_detail_row">
+                    <div class="textbox_article">총 등록 횟수</div>
+                    <div class="textbox_data">30 회</div>
+                </div>
+                <div class="wrapper_card_detail_row">
+                    <div class="textbox_article">잔여 횟수</div>
+                    <div class="textbox_data">12 회</div>
+                </div>
+                <div class="wrapper_card_detail_row">
+                    <div class="textbox_article">결석 횟수</div>
+                    <div class="textbox_data">3 회</div>
+                </div>
+                <div class="wrapper_card_detail_row">
+                    <div class="textbox_article">예약 가능 횟수</div>
+                    <div class="textbox_data">12 회</div>
+                </div>
+            </div>
+            <div class="wrapper_card_detail_teacher">
+                <div class="photo_box"></div>
+                <div class="wrapper_teacher_name">
+                    <div class="textbox_data">홍길동</div>
+                    <div class="textbox_article">강사</div>
+                </div>
+                <div class="textbox_phone">000-0000-8888</div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 
 {% block local_js_footer %}
-    <!-- Placed at the end of the document so the pages load faster -->
-    <!-- <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.cal.month.js" %}></script>  -->
     <script>
     	//Nav바에 현재 페이지에 밑줄 표기
     	$('#nav_btn_home').addClass("nav_selected");
 
-
     	/*수강권 정보 열고 닫기*/
         $(document).on("click", '.wrapper_card_content .icon_arrow', function(){
-        	var viewCheck = $(this).attr("data-open");
+        	var $this = $(this);
+        	var option = $this.attr("data-open");
+            var main_wrapper_card_detail_close = $('#main_wrapper_card_detail_close');
+            var main_wrapper_card_detail_open = $('#main_wrapper_card_detail_open');
+
+        	switch(option){
+        		case "open":
+        			$this.attr("data-open", "close");
+                    main_wrapper_card_detail_close.show();
+                    main_wrapper_card_detail_open.hide();
+        		break;
+
+        		case "close":
+        			$this.attr("data-open", "open");
+                    main_wrapper_card_detail_close.hide();
+                    main_wrapper_card_detail_open.show();
+        		break;
+        	}
+            /*
         	switch(viewCheck){
         		case "open":
         			viewTicketDetail("close", this);
@@ -137,26 +125,28 @@
         		case "close":
         			viewTicketDetail("open", this);
         		break;
-        	}
+        	}*/
         });
 
+        /*수강권 정보 열고 닫기*/
+        /*
         function viewTicketDetail(option, thisSelector){
         	var $parentBox = $(thisSelector).parents('.box_card');
         	switch(option){
         		case "open":
-        			$(thisSelector).attr("data-open", "open");
+        			$(thisSelector).attr("data-open", "close");
         			$parentBox.find('.wrapper_card_detail').hide();
         			$parentBox.find('.wrapper_card_detail2, .wrapper_card_detail_pocket, .wrapper_card_detail_teacher').show();
         		break;
 
         		case "close":
-        			$(thisSelector).attr("data-open", "close");
+        			$(thisSelector).attr("data-open", "open");
         			$parentBox.find('.wrapper_card_detail').show();
         			$parentBox.find('.wrapper_card_detail2, .wrapper_card_detail_pocket, .wrapper_card_detail_teacher').hide();
         		break;
         	}
         }
-        /*수강권 정보 열고 닫기*/
+        */
 
     </script>
 

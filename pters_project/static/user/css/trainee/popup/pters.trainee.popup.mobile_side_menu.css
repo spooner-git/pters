@@ -1,0 +1,43 @@
+/*모바일 사이드 메뉴*/
+#pters_mobile_side_menu{
+    background-color: #ffffff;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    transform: translateX(100%);
+    top: 0;
+    z-index: 1500;
+}
+    #pters_mobile_side_menu .wrapper_top{
+        margin-top: 38px;
+        margin-bottom:  47px;
+        padding: 0 20px;
+    }
+    #pters_mobile_side_menu .wrapper_top .logo_pters{
+        width: 80px;
+        vertical-align: top;
+    }
+    #pters_mobile_side_menu .wrapper_top .button_x{
+        width: 15px;
+        padding: 4px;
+        float: right;
+    }
+    #pters_mobile_side_menu .wrapper_side_menu_items{
+        padding: 0 20px;
+    }
+    #pters_mobile_side_menu .wrapper_side_menu_items .textbox_title{
+        margin-bottom: 15px;
+    }
+    #pters_mobile_side_menu .wrapper_side_menu_items .textbox_box_title{
+        text-align: left;
+        margin-bottom: 10px;
+    }
+
+.textbox_menu_inquiry{
+    padding: 20px 0;
+    color: #fe4e65;
+    border-top: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

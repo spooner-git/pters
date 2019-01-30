@@ -1,0 +1,32 @@
+{% load static_url %}
+<link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.mobile_side_menu.css" %}>
+<div id="pters_mobile_side_menu">
+    <div class="wrapper_top">
+        <img src="/static/user/res/PTERS_logo_pure.png" class="logo_pters">
+        <img src="/static/user/res/ptadd/btn-x.png" onclick="side_menu('close')" class="button_x">
+    </div>
+
+    <div class="wrapper_side_menu_items">
+        <div class="textbox_title">마이페이지</div>
+        <div class="textbox_title">설정</div>
+        <div class="textbox_title textbox_menu_inquiry">피터스에게 문의하기</div>
+        <div class="textbox_box_title">서비스 소개</div>
+        <div class="textbox_box_title">이용약관</div>
+        <div class="textbox_box_title">개인정보처리방침</div>
+        <div class="textbox_box_title" style="color: #999999;" onclick="location.href='{% url 'login:logout' %}'">로그아웃</div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function side_menu(option){
+        switch(option){
+            case "open":
+                $('#pters_mobile_side_menu').css({"transform":"translateX(0)", "transition":"transform 0.3s ease-in-out"});
+                // $('#pters_mobile_side_menu').css({"transform":"translateX(0)", "transition":"0.5s"});
+            break;
+            case "close":
+                $('#pters_mobile_side_menu').css({"transform":"translateX(100%)"});
+            break;
+        }
+    }
+</script>

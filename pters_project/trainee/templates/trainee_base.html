@@ -1,131 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WG2KK6D');</script>
-    <!-- End Google Tag Manager -->
+    <head>
+        {% load static_url %}
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-WG2KK6D');</script>
+        <!-- End Google Tag Manager -->
+        <!--Google Adsense-->
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-4554121851965192",
+            enable_page_level_ads: true
+          });
+        </script>
+        <!--Google Adsense-->
 
-    <!--Google Adsense-->
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({
-        google_ad_client: "ca-pub-4554121851965192",
-        enable_page_level_ads: true
-      });
-    </script>
-    <!--Google Adsense-->
+        <title>
+            {% block title %}
+                PTERS
+            {% endblock %}
+        </title>
 
-    {% load static_url %}
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
-    <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
-    <meta name="description" content="PTERS 피터스 레슨 회원과 일정 관리툴">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
+        <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
+        <meta name="description" content="PTERS 피터스 레슨 회원과 일정 관리툴">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="author" content="">
 
-    <title>{% block title %}PTERS{% endblock %}</title>
+        <link rel="icon" href="/static/common/favicon.ico">
+        <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
+        <link rel="shortcut icon" href="/static/common/favicon-152.png">
+        <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.fundamental.css"%}>
+        <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan.css"%}>
+        {% block local_css %}
+        {% endblock %}
+    </head>
 
-    <link rel="icon" href="/static/common/favicon.ico">
-    <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
-    <link rel="shortcut icon" href="/static/common/favicon-152.png">
-    <!-- <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}> -->
-    <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.fundamental.css"%}>
-    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan.css"%}>
-    {% block local_css %}
-    {% endblock %}
-</head>
+    <body class="trainee">
+        <!-- Google Tag Manager (noscript) -->
+        <noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
 
-<body class="trainee">
+        {% block navbar %}
+            <!--회원 상단 [홈/일정/프로그램선택/알림/메뉴버튼] 영역  -->
+            <nav>
+                <div class="nav_trainee_menu_box_l">
+                    <a href="{% url 'trainee:trainee_main' %}"><div id="nav_btn_home">홈</div></a>
+                    <a href="{% url 'trainee:trainee_calendar' %}"><div id="nav_btn_plan">일정</div></a>
+                    <a href=""><div id="nav_btn_program_select">프로그램 선택</div></a>
+                </div>
+                <div class="nav_trainee_menu_box_r">
+                    <a href="{% url 'trainee:trainee_design_template' %}"><div id="nav_btn_alarm"><img src="/static/user/res/alarm/alarm_on.png" class="nav_btn_img"></div></a>
+                    <a><div id="nav_btn_menu" onclick="side_menu('open')"><img src="/static/user/res/menu.jpg" class="nav_btn_img"></div></a>
+                </div>
+            </nav>
+            <!-- 회원 mobile menu 팝업 include -->
+            {% include 'popup/trainee_mobile_side_menu.html' %}
+        {% endblock %}
 
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
-                      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-{% block navbar %}
-    <!--회원 상단 [홈/일정/프로그램선택/알림/메뉴버튼] 영역  -->
-    <nav>
-        <div class="nav_trainee_menubox_l">
-            <a href="{% url 'trainee:trainee_main' %}"><div id="nav_btn_home">홈</div></a>
-            <a href="{% url 'trainee:trainee_calendar' %}"><div id="nav_btn_plan">일정</div></a>
-            <a href=""><div id="nav_btn_programselect">프로그램 선택</div></a>
+        <div class="content_page">
+            {% block content %}
+            {% endblock %}
         </div>
 
-        <div class="nav_trainee_menubox_r">
-            <a href="{% url 'trainee:trainee_design_template' %}"><div id="nav_btn_alarm"><img src="/static/user/res/alarm/alarm_on.png" class="nav_btn_img"></div></a>
-            <a><div id="nav_btn_menu" onclick="sideMenu('open')"><img src="/static/user/res/menu.jpg" class="nav_btn_img"></div></a>
-        </div>
-    </nav>
+        {% block popup %}
+        {% endblock %}
 
-    <div id="pters_mobile_menu">
-        <div class="wrapper_top">
-            <img src="/static/user/res/PTERS_logo_pure.png" class="logo_pters">
-            <img src="/static/user/res/ptadd/btn-x.png" onclick="sideMenu('close')" class="button_x">
-        </div>
+        {% block footer %}
+        {% endblock %}
 
-        <div class="wrapper_sidemenu_items">
-            <div class="textbox_title">마이페이지</div>
-            <div class="textbox_title">설정</div>
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script type="text/javascript">
+            //content 높이와 스크롤 셋팅
+            var windowHeight = $(window).height();
+            var $content = $('.content_page');
+            $content.css("height", windowHeight-50+"px");
+            $content.scrollTop(1);
+            $content.scroll(function(){
+                var $this = $(this);
+                var scrollHeight = $this.prop('scrollHeight');
+                var popupHeight = $this.height();
+                var scrollLocation = $this.scrollTop();
+                if(popupHeight + scrollLocation == scrollHeight){
+                    $this.animate({scrollTop : scrollLocation-1}, 10);
+                }else if(popupHeight + scrollLocation == popupHeight){
+                    $this.animate({scrollTop : scrollLocation+1}, 10);
+                }
+            });
+        </script>
+        {% block local_js_footer %}
+        {% endblock %}
 
-            <div class="textbox_title textbox_menu_inquiry">피터스에게 문의하기</div>
-
-            <div class="textbox_boxtitle">서비스 소개</div>
-            <div class="textbox_boxtitle">이용약관</div>
-            <div class="textbox_boxtitle">개인정보처리방침</div>
-            <div class="textbox_boxtitle" style="color: #999999;" onclick="location.href='{% url 'login:logout' %}'">로그아웃</div>
-        </div>
-    </div>
-{% endblock %}
-
-<div class="content_page">
-{% block content %}
-{% endblock %}
-</div>
-
-{% block popup %}
-{% endblock %}
-
-{% block footer %}
-{% endblock %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script type="text/javascript">
-
-    //content 높이와 스크롤 셋팅
-    var windowHeight = $(window).height();
-    var $content = $('.content_page');
-    $content.css("height", windowHeight-50+"px");
-    $content.scrollTop(1);
-    $content.scroll(function(){
-        var scrollHeight = $(this).prop('scrollHeight');
-        var popupHeight = $(this).height();
-        var scrollLocation = $(this).scrollTop();
-        if(popupHeight + scrollLocation == scrollHeight){
-            $(this).animate({scrollTop : scrollLocation-1}, 10);
-        }else if(popupHeight + scrollLocation == popupHeight){
-            $(this).animate({scrollTop : scrollLocation+1}, 10);
-        }
-    });
-
-    function sideMenu(option){
-        switch(option){
-            case "open":
-                $('#pters_mobile_menu').css({"transform":"translateX(0)", "transition":"transform 0.3s ease-in-out"});
-                // $('#pters_mobile_menu').css({"transform":"translateX(0)", "transition":"0.5s"});
-            break;
-            case "close":
-                $('#pters_mobile_menu').css({"transform":"translateX(100%)"});
-            break;
-        }
-    }
-</script>
-{% block local_js_footer %}
-{% endblock %}
-
-</body>
+    </body>
 </html>

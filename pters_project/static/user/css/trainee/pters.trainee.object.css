@@ -1,6 +1,3 @@
-
-
-
 /*(공통) 모든 페이지에서 사용할 수 있는 오브젝트, 폰트스타일*/
 .content_page{
     position: fixed;
@@ -11,6 +8,8 @@
     z-index: 0;
     /*height: 100%;*/
 }
+
+/* 박스 */
 .box_full{
     height: auto;
     background-color: #ffffff;
@@ -18,7 +17,6 @@
     border-top: 1px solid #e6e6e6;
     border-bottom: 1px solid #e6e6e6;
 }
-
 .box_card{
     height: auto;
     background-color: #ffffff;
@@ -29,6 +27,7 @@
     padding: 20px;
 }
 
+/* 텍스트 박스 */
 .textbox_title{
     height: 35px;
     line-height: 35px;
@@ -36,8 +35,6 @@
     letter-spacing: -0.5px;
     font-weight: bold;
 }
-    
-
 .textbox_subtitle{
     height: 20px;
     line-height: 20px;
@@ -47,8 +44,7 @@
     color: #808080;
     font-weight: bold;
 }
-    
-.textbox_boxtitle{
+.textbox_box_title{
     height: 30px;
     line-height: 30px;
     font-size: 16px;
@@ -56,36 +52,12 @@
     letter-spacing: -0.5px;
     color: #000000;
 }
-    
-
-
-
-.tag_wrapper{
-    text-align: center;
-    height: 21px;
-}
-    .tag{
-        display: inline-block;
-        width: 58px;
-        height: 21px;
-        line-height: 21px;
-        border-radius: 11px;
-        text-align: center;
-        vertical-align: top;
-
-        font-size: 12px;
-        font-weight: 500;
-        letter-spacing: -0.5px;
-    }
-
-
 .textbox_article{
     height: 20px;
     line-height: 20px;
     font-size: 11px;
     color: #b3b3b3;
 }
-
 .textbox_data{
     height: 25px;
     line-height: 25px;
@@ -94,9 +66,7 @@
     font-weight: 500;
     letter-spacing: -0.5px;
 }
-
-
-.textbox_plancomment{
+.textbox_plan_comment{
     height: 40px;
     line-height: 40px;
 
@@ -104,8 +74,6 @@
     letter-spacing: -0.5px;
     color: #000000;
 }
-
-
 .textbox_notice{
     height: 30px;
     line-height: 30px;
@@ -115,8 +83,6 @@
     .textbox_notice > span{
         color: #fe4e65;
     }
-
-
 .textbox_card_type{
     height: 24px;
     line-height: 24px;
@@ -125,7 +91,6 @@
     font-weight: 500;
     letter-spacing: -0.5px;
 }
-
 .textbox_phone{
     width: 100px;
     height: 40px;
@@ -134,16 +99,32 @@
     font-weight: 500;
     color: #fe4e65;
 }
+.tag_wrapper{
+    text-align: center;
+    height: 21px;
+}
+.tag{
+    display: inline-block;
+    width: 58px;
+    height: 21px;
+    line-height: 21px;
+    border-radius: 11px;
+    text-align: center;
+    vertical-align: top;
 
-.photobox{
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+}
+
+/* 버튼 */
+.photo_box{
     display: inline-block;
     height: 40px;
     width: 40px;
     border: 2px solid #fe4e65;
     border-radius: 50%;
 }
-
-
 .button_gen{
     display: inline-block;
     width: 90px;
@@ -155,7 +136,6 @@
     border-radius: 2px;
     cursor: pointer;
 }
-
 .button_big{
     width: 100%;
     height: 55px;
@@ -168,53 +148,48 @@
     font-weight: bold;
     cursor: pointer;
 }
-
 .button_x{
 
 }
-
 .icon_arrow{
     height: 6px;
     padding: 9px;
 }
 
-.fontbg_white_pink{
+/* 버튼 글자, 배경 색상 */
+.font_bg_white_pink{
     color: #ffffff;
     background-color: #fe4e65;
 }
-.fontbg_white_black{
+.font_bg_white_black{
     color: #ffffff;
     background-color: #282828;
 }
-.fontbg_black_white{
+.font_bg_black_white{
     color: #282828;
     background-color: #ffffff;
 }
-.fontbg_white_grey{
+.font_bg_white_grey{
     color: #ffffff;
     background-color: #656565;
 }
 
-
-
-
-.tablecell_x2{
+/* table cell */
+.table_cell_x2{
     display: table-cell;
     width: 50%;
 }
-.tablecell_x3{
+.table_cell_x3{
     display: table-cell;
     width: 33.33%;
 }
-.tablecell_x4{
+.table_cell_x4{
     display: table-cell;
     width: 25%;
 }
-.tablecell_x5{
+.table_cell_x5{
     display: table-cell;
     width: 20%;
 }
-
-
 
 /*(공통) 모든 페이지에서 사용할 수 있는 오브젝트, 폰트스타일*/
