@@ -569,14 +569,17 @@ def upload_sign_image_logic(request):
     exists = True
     error_code = 0
     try:
+<<<<<<< HEAD
         s3.meta.client.head_bucket(Bucket=bucket)
+=======
+        s3.meta.client.head_bucket(Bucket=getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", ''))
+>>>>>>> develop
     except ClientError as e:
         # If a client error is thrown, then check that it was a 404 error.
         # If it was a 404 error, then the bucket does not exist.
         error_code = int(e.response['Error']['Code'])
         if error_code == 404:
             exists = False
-
     if exists is True:
         image_format, image_str = image_test.split(';base64,')
         ext = image_format.split('/')[-1]
