@@ -127,6 +127,14 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         return super(IndexView, self).get_redirect_url(*args, **kwargs)
 
 
+class TraineeDesignTemplateView(TemplateView):
+    template_name = 'trainee_design_template.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TraineeDesignTemplateView, self).get_context_data(**kwargs)
+        return context
+
+
 class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'trainee_main.html'
 

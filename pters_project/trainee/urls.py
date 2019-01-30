@@ -64,6 +64,9 @@ urlpatterns = [
 
 
     # 페이지 #####################################################################################################
+    # 회원 design template 페이지
+    url(r'^trainee_design_template/$', views.TraineeDesignTemplateView.as_view(), name='trainee_design_template'),
+
     # 회원 빈 월간 일정 페이지
     url(r'^trainee_main/$', views.TraineeMainView.as_view(), name='trainee_main'),
     # 회원 빈 월간 일정 페이지
