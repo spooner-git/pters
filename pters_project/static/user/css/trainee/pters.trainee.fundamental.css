@@ -167,6 +167,9 @@
 
 
 /*일정 개요 조립*/
+    .box_full .textbox_boxtitle{
+        text-align: center;
+    }
     .trainee .wrapper_planinfo{
         padding: 15px 0;
         margin-top: 15px;
@@ -178,10 +181,17 @@
             display: table;
             width: 100%;
         }
+        .trainee .wrapper_planinfo_article .textbox_article{
+            text-align: center;
+        }
         .trainee .wrapper_planinfo_data{
             display: table;
             width: 100%;
         }
+        .trainee .wrapper_planinfo_data .textbox_data{
+            text-align: center;
+        }
+
 
     .trainee .wrapper_cancelnotice{
         margin-top: 15px;
@@ -192,4 +202,7 @@
         .trainee .wrapper_cancelnotice .button_gen{
             float: right;
         }
+    .box_full .textbox_plancomment{
+        text-align: center;
+    }
 /*일정 개요 조립*/
