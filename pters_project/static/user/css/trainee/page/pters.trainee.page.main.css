@@ -31,14 +31,6 @@
 	.trainee .box_card .textbox_card_title{
 		margin-bottom: 15px;
 	}
-
-	/* 확인 필요 */
-	/*.trainee .box_card .wrapper_card_detail2, */
-	/*.trainee .box_card .wrapper_card_detail_pocket,*/
-	/*.trainee .box_card .wrapper_card_detail_teacher{*/
-		/*display: none;*/
-	/*}*/
-
 	.trainee .box_card .wrapper_card_detail{
 		padding-top: 10px;
 		border-top: 1px solid #f5f5f5;
@@ -55,13 +47,7 @@
 		padding: 15px 0;
 		border-top: 1px solid #f5f5f5;
 	}
-	.trainee .box_card .wrapper_card_detail2 .textbox_size_11_weight_normal{
-		display: inline-block;
-		width: 48%;
-		max-width: 147px;
-		text-align: left;
-	}
-	.trainee .box_card .wrapper_card_detail2 .textbox_size_14_weight_500{
+	.trainee .box_card .wrapper_card_detail2 .wrapper_card_detail2_date{
 		display: inline-block;
 		width: 48%;
 		max-width: 147px;
@@ -70,15 +56,10 @@
 
 .trainee .textbox_size_11_weight_bold{
     padding: 0 20px 0 20px;
-    color: #808080;
 	height: 20px;
 	line-height: 20px;
 	letter-spacing: normal;
 }
-.trainee .textbox_size_11_weight_normal{
-    color: #b3b3b3;
-}
-
 
 /* wrapper */
 .trainee .wrapper_card_detail_pocket{

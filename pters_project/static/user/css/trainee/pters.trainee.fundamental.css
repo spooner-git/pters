@@ -136,14 +136,14 @@
         display: table;
         width: 100%;
     }
-        .trainee .wrapper_plan_info_article .textbox_size_11_weight_normal{
+        .trainee .wrapper_plan_info_article .table_cell_x3{
             text-align: center;
         }
     .trainee .wrapper_plan_info_data{
         display: table;
         width: 100%;
     }
-        .trainee .wrapper_plan_info_data .textbox_size_14_weight_500{
+        .trainee .wrapper_plan_info_data .table_cell_x3{
             text-align: center;
         }
     .trainee .wrapper_cancel_notice{
