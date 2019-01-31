@@ -64,7 +64,6 @@
     font-size: 16px;
     font-weight: bold;
     letter-spacing: -0.5px;
-    color: #000000;
 }
 .textbox_article{
     height: 20px;
@@ -76,7 +75,6 @@
     height: 25px;
     line-height: 25px;
     font-size: 14px;
-    color: #000000;
     font-weight: 500;
     letter-spacing: -0.5px;
 }
@@ -85,7 +83,6 @@
     line-height: 40px;
     font-size: 12px;
     letter-spacing: -0.5px;
-    color: #000000;
 }
 .textbox_notice{
     height: 30px;
@@ -116,13 +113,11 @@
     font-size: 16px;
     font-weight: 500;
     letter-spacing: -0.5px;
-    color: #000000;
 }
 .textbox_alarm_data{
     height: 35px;
     font-size: 14px;
     letter-spacing: -0.5px;
-    color: #000000;
 }
 .textbox_nav_bar{
     height: 35px;
