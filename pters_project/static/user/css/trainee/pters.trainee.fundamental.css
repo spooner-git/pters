@@ -1,156 +1,156 @@
 /*폰트 임포트*/
-@import url(/static/common/fonts/notosanskr.css);
+    @import url(/static/common/fonts/notosanskr.css);
 
 /*기본 html, body스타일*/
-html{
-    font-family: 'Noto Sans KR', sans-serif !important;
-    background-color: #f7f5f6;
-}
-body{
-    padding-top: 50px;
-    margin: 0;
-    /*height: 100%;*/
-}
+    html{
+        font-family: 'Noto Sans KR', sans-serif !important;
+        background-color: #f7f5f6;
+    }
+    body{
+        padding-top: 50px;
+        margin: 0;
+        /*height: 100%;*/
+    }
 
 /*OS 기본요소 편집*/
-a{
-    text-decoration: none;
-}
-    a:-webkit-any-link{
-        color: unset;
+    a{
+        text-decoration: none;
     }
+        a:-webkit-any-link{
+            color: unset;
+        }
 
 
 /*Nav bar 관련 CSS*/
-nav{
-    position:fixed;
-    width: 100%;
-    height: 50px;
-    top: 0;
-    left: 0px;
-    background-color: #ffffff;
-    box-shadow: 0 0 10px 0 rgba(130, 130, 130, 0.2);
-    z-index: 1;
+    nav{
+        position:fixed;
+        width: 100%;
+        height: 50px;
+        top: 0;
+        left: 0px;
+        background-color: #ffffff;
+        box-shadow: 0 0 10px 0 rgba(130, 130, 130, 0.2);
+        z-index: 1;
 
-    /*Nav바 폰트스타일*/
-    font-size: 13px;
-    font-weight: bold;
-}
-    nav > div{
-        line-height: 37px;
-        margin-top: 10px;
+        /*Nav바 폰트스타일*/
+        font-size: 13px;
+        font-weight: bold;
     }
-        nav > div > a >  div{
-            display: inline-block;
-            /*padding: 0 5px 0 5px;*/
-            border-bottom: 3px solid transparent;
-            text-align: center;
-            /*cursor: pointer;*/
+        nav > div{
+            line-height: 37px;
+            margin-top: 10px;
         }
-.nav_trainee_menu_box_l{
-    position: absolute;
-    left: 20px;
-}
-.nav_trainee_menu_box_r{
-    position: absolute;
-    right: 20px;
-}
-.nav_selected{
-    border-bottom-color: #fe4e65;
-    color: #fe4e65;
-}
-.nav_disabled{
-    color: #999999;
-}
-/* nav 버튼 */
-#nav_btn_home{
-    width: 30px;
-    margin-right: 10px;
-}
-#nav_btn_plan{
-    width: 40px;
-    margin-right: 10px;
-}
-#nav_btn_program_select{
-    width: 90px;
-}
-.nav_btn_img{
-    width: 18px;
-    vertical-align: middle;
-}
-#nav_btn_alarm{
-
-}
-    #nav_btn_alarm > img{
-        padding: 11px;
+            nav > div > a >  div{
+                display: inline-block;
+                /*padding: 0 5px 0 5px;*/
+                border-bottom: 3px solid transparent;
+                text-align: center;
+                /*cursor: pointer;*/
+            }
+    .nav_trainee_menu_box_l{
+        position: absolute;
+        left: 20px;
     }
-#nav_btn_menu{
-
-}
-    #nav_btn_menu > img{
-        padding: 11px 0 11px 11px;
+    .nav_trainee_menu_box_r{
+        position: absolute;
+        right: 20px;
     }
+    .nav_selected{
+        border-bottom-color: #fe4e65;
+        color: #fe4e65;
+    }
+    .nav_disabled{
+        color: #999999;
+    }
+    /* nav 버튼 */
+    #nav_btn_home{
+        width: 30px;
+        margin-right: 10px;
+    }
+    #nav_btn_plan{
+        width: 40px;
+        margin-right: 10px;
+    }
+    #nav_btn_program_select{
+        width: 90px;
+    }
+    .nav_btn_img{
+        width: 18px;
+        vertical-align: middle;
+    }
+    #nav_btn_alarm{
+
+    }
+        #nav_btn_alarm > img{
+            padding: 11px;
+        }
+    #nav_btn_menu{
+
+    }
+        #nav_btn_menu > img{
+            padding: 11px 0 11px 11px;
+        }
 
 /*모바일 팝업 페이지 기본 요소*/
-.popup_mobile{
-    background-color: #ffffff;
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    transform: translateX(100%);
-    top: 0;
-    z-index: 1500;
-}
-.popup_mobile .wrapper_top{
-    margin-top: 38px;
-    /*margin-bottom:  47px;*/
-    padding: 0 20px;
-}
-.popup_mobile .wrapper_top .logo_pters{
-    width: 80px;
-    vertical-align: top;
-}
-.popup_mobile .wrapper_top .button_x{
-    width: 15px;
-    padding: 4px;
-    float: right;
-}
+    .popup_mobile{
+        background-color: #ffffff;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        transform: translateX(100%);
+        top: 0;
+        z-index: 1500;
+    }
+        .popup_mobile .wrapper_top{
+            margin-top: 38px;
+            /*margin-bottom:  47px;*/
+            padding: 0 20px;
+        }
+            .popup_mobile .wrapper_top .logo_pters{
+                width: 80px;
+                vertical-align: top;
+            }
+            .popup_mobile .wrapper_top .button_x{
+                width: 15px;
+                padding: 4px;
+                float: right;
+            }
 
 /*일정 개요 조립*/
-.box_full .textbox_box_title{
-    text-align: center;
-}
-.box_full .textbox_plan_comment{
-    text-align: center;
-}
-.trainee .wrapper_plan_info{
-    padding: 15px 0;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    border-top: 1px solid #f5f5f5;
-    border-bottom: 1px solid #f5f5f5;
-}
-.trainee .wrapper_plan_info_article{
-    display: table;
-    width: 100%;
-}
-.trainee .wrapper_plan_info_article .textbox_article{
-    text-align: center;
-}
-.trainee .wrapper_plan_info_data{
-    display: table;
-    width: 100%;
-}
-.trainee .wrapper_plan_info_data .textbox_data{
-    text-align: center;
-}
-.trainee .wrapper_cancel_notice{
-    margin-top: 15px;
-}
-.trainee .wrapper_cancel_notice .textbox_notice{
-    display: inline-block;
-}
-.trainee .wrapper_cancel_notice .button_gen{
-    float: right;
-}
+    .box_full .textbox_box_title{
+        text-align: center;
+    }
+    .box_full .textbox_plan_comment{
+        text-align: center;
+    }
+    .trainee .wrapper_plan_info{
+        padding: 15px 0;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        border-top: 1px solid #f5f5f5;
+        border-bottom: 1px solid #f5f5f5;
+    }
+    .trainee .wrapper_plan_info_article{
+        display: table;
+        width: 100%;
+    }
+        .trainee .wrapper_plan_info_article .textbox_article{
+            text-align: center;
+        }
+    .trainee .wrapper_plan_info_data{
+        display: table;
+        width: 100%;
+    }
+        .trainee .wrapper_plan_info_data .textbox_data{
+            text-align: center;
+        }
+    .trainee .wrapper_cancel_notice{
+        margin-top: 15px;
+    }
+        .trainee .wrapper_cancel_notice .textbox_notice{
+            display: inline-block;
+        }
+        .trainee .wrapper_cancel_notice .button_gen{
+            float: right;
+        }
 /*일정 개요 조립*/
