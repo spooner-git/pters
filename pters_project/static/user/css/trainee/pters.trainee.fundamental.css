@@ -135,6 +135,8 @@
     .trainee .wrapper_plan_info_article{
         display: table;
         width: 100%;
+        height: 20px;
+        line-height: 20px;
     }
         .trainee .wrapper_plan_info_article .table_cell_x3{
             text-align: center;
