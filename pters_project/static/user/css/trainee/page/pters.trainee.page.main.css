@@ -1,5 +1,5 @@
 /*(현재 페이지 한해) 현재 페이지에서만 사용하는 커스텀 css*/
-.trainee > .content_page > .textbox_title{
+.trainee > .content_page > .textbox_size_20_weight_bold{
 	margin-top: 35px;
     margin-bottom: 35px;
     padding: 0 20px;
@@ -14,12 +14,15 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
-	.trainee .box_card .textbox_box_title{
+	.trainee .box_card .textbox_size_16_weight_bold{
 		text-align: left;
 		margin-bottom: 15px;
 	}
-	.trainee .box_card .wrapper_card_content .textbox_card_type{
+	.trainee .box_card .wrapper_card_content .textbox_size_12_weight_500{
 		display: inline-block;
+    	color: #fe4e65;
+		height:24px;
+		line-height:24px;
 	}
 	.trainee .box_card .wrapper_card_content .icon_arrow{
 		transform: rotate(180deg);
@@ -28,22 +31,14 @@
 	.trainee .box_card .textbox_card_title{
 		margin-bottom: 15px;
 	}
-
-	/* 확인 필요 */
-	/*.trainee .box_card .wrapper_card_detail2, */
-	/*.trainee .box_card .wrapper_card_detail_pocket,*/
-	/*.trainee .box_card .wrapper_card_detail_teacher{*/
-		/*display: none;*/
-	/*}*/
-
 	.trainee .box_card .wrapper_card_detail{
 		padding-top: 10px;
 		border-top: 1px solid #f5f5f5;
 	}
-	.trainee .box_card .wrapper_card_detail .textbox_data{
+	.trainee .box_card .wrapper_card_detail .textbox_size_14_weight_500{
 		text-align: left;
 	}
-	.trainee .box_card .wrapper_card_detail .textbox_notice{
+	.trainee .box_card .wrapper_card_detail .textbox_size_11_weight_normal{
 		display: block;
 		height: 20px;
 		line-height: 20px;
@@ -52,18 +47,19 @@
 		padding: 15px 0;
 		border-top: 1px solid #f5f5f5;
 	}
-	.trainee .box_card .wrapper_card_detail2 .textbox_article{
+	.trainee .box_card .wrapper_card_detail2 .wrapper_card_detail2_date{
 		display: inline-block;
 		width: 48%;
 		max-width: 147px;
 		text-align: left;
 	}
-	.trainee .box_card .wrapper_card_detail2 .textbox_data{
-		display: inline-block;
-		width: 48%;
-		max-width: 147px;
-		text-align: left;
-	}
+
+.trainee .textbox_size_11_weight_bold{
+    padding: 0 20px 0 20px;
+	height: 20px;
+	line-height: 20px;
+	letter-spacing: normal;
+}
 
 /* wrapper */
 .trainee .wrapper_card_detail_pocket{
@@ -74,14 +70,14 @@
 		width: 100%;
 		height: 30px;
 	}
-	.trainee .wrapper_card_detail_pocket .wrapper_card_detail_row .textbox_article{
+	.trainee .wrapper_card_detail_pocket .wrapper_card_detail_row .textbox_size_11_weight_normal{
 		display: inline-block;
 		width: 80px;
 		text-align: left;
 		height: 30px;
 		line-height: 30px;
 	}
-	.trainee .wrapper_card_detail_pocket .wrapper_card_detail_row .textbox_data{
+	.trainee .wrapper_card_detail_pocket .wrapper_card_detail_row .textbox_size_14_weight_500{
 		display: inline-block;
 		width: 60px;
 		text-align: right;
@@ -98,18 +94,20 @@
 		height: 40px;
 		vertical-align: top;
 	}
-	.trainee .wrapper_card_detail_teacher .wrapper_teacher_name .textbox_data, 
-	.trainee .wrapper_card_detail_teacher .wrapper_teacher_name .textbox_article{
+	.trainee .wrapper_card_detail_teacher .wrapper_teacher_name .textbox_size_14_weight_500,
+	.trainee .wrapper_card_detail_teacher .wrapper_teacher_name .textbox_size_11_weight_normal{
 		text-align: left;
 	} 
-	.trainee .wrapper_card_detail_teacher .textbox_phone{
+	.trainee .wrapper_card_detail_teacher .textbox_size_13_weight_500{
 		display: inline-block;
 		height: 40px;
 		vertical-align: top;
 		float: right;
 	}
-	.trainee .wrapper_card_detail_teacher .photo_box{
+	.trainee .wrapper_card_detail_teacher .box_photo{
 		vertical-align: top;
 		margin-right: 10px;
 	}
+
+
 /*(현재 페이지 한해) 현재 페이지에서만 사용하는 커스텀 css*/

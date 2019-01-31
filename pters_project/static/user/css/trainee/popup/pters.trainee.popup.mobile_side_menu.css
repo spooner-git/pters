@@ -25,10 +25,10 @@
     #pters_mobile_side_menu .wrapper_side_menu_items{
         padding: 0 20px;
     }
-    #pters_mobile_side_menu .wrapper_side_menu_items .textbox_title{
+    #pters_mobile_side_menu .wrapper_side_menu_items .textbox_size_20_weight_bold{
         margin-bottom: 15px;
     }
-    #pters_mobile_side_menu .wrapper_side_menu_items .textbox_box_title{
+    #pters_mobile_side_menu .wrapper_side_menu_items .textbox_size_16_weight_bold{
         text-align: left;
         margin-bottom: 10px;
     }
