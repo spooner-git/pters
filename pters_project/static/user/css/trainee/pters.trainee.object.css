@@ -10,6 +10,16 @@
 }
 
 /* 박스 */
+.box_nav_bar{
+    width: 100%;
+    height: 50px;
+    top: 0;
+    left: 0px;
+    background-color: #ffffff;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.03);
+    z-index: 1;
+}
+
 .box_full{
     height: auto;
     background-color: #ffffff;
@@ -20,8 +30,15 @@
 .box_card{
     height: auto;
     background-color: #ffffff;
-    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.14);
-    border-radius: 3px;
+    border-radius: 4px;
+    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.1);
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 20px;
+}
+.box_schedule{
+    height: auto;
+    background-color: #ffffff;
     margin-left: 20px;
     margin-right: 20px;
     padding: 20px;
@@ -38,10 +55,7 @@
 .textbox_subtitle{
     height: 20px;
     line-height: 20px;
-    padding: 0 20px 0 20px;
-
     font-size:11px;
-    color: #808080;
     font-weight: bold;
 }
 .textbox_box_title{
@@ -56,7 +70,7 @@
     height: 20px;
     line-height: 20px;
     font-size: 11px;
-    color: #b3b3b3;
+    letter-spacing: -0.3px;
 }
 .textbox_data{
     height: 25px;
@@ -69,7 +83,6 @@
 .textbox_plan_comment{
     height: 40px;
     line-height: 40px;
-
     font-size: 12px;
     letter-spacing: -0.5px;
     color: #000000;
@@ -86,7 +99,6 @@
 .textbox_card_type{
     height: 24px;
     line-height: 24px;
-    color: #fe4e65;
     font-size: 12px;
     font-weight: 500;
     letter-spacing: -0.5px;
@@ -99,6 +111,45 @@
     font-weight: 500;
     color: #fe4e65;
 }
+.textbox_alarm_title{
+    height: 30px;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    color: #000000;
+}
+.textbox_alarm_data{
+    height: 35px;
+    font-size: 14px;
+    letter-spacing: -0.5px;
+    color: #000000;
+}
+.textbox_nav_bar{
+    height: 35px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: -0.3px;
+}
+.textbox_nav_bar{
+    height: 35px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: -0.3px;
+}
+.textbox_plan_enable_title{
+    height: 35px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+}
+.textbox_plan_reserve_comment{
+    height: 35px;
+    line-height: 35px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: -0.3px;
+}
+
 .tag_wrapper{
     text-align: center;
     height: 21px;
@@ -190,6 +241,35 @@
 .table_cell_x5{
     display: table-cell;
     width: 20%;
+}
+
+/* text_color */
+.text_color_black{
+    color: #000000;
+}
+.text_color_light_black{
+    color: #333333;
+}
+.text_color_dark_grey{
+    color: #737373;
+}
+.text_color_grey{
+    color: #999999;
+}
+.text_color_light_grey{
+    color: #b3b3b3;
+}
+.text_color_white{
+    color: #ffffff;
+}
+.text_color_pters_red{
+    color: #fe4e65;
+}
+.text_color_light_blue{
+    color: #509cf2;
+}
+.text_color_pters_dark_red{
+    color: #f25050;
 }
 
 /*(공통) 모든 페이지에서 사용할 수 있는 오브젝트, 폰트스타일*/

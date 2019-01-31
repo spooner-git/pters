@@ -20,6 +20,7 @@
 	}
 	.trainee .box_card .wrapper_card_content .textbox_card_type{
 		display: inline-block;
+    	color: #fe4e65;
 	}
 	.trainee .box_card .wrapper_card_content .icon_arrow{
 		transform: rotate(180deg);
@@ -64,6 +65,15 @@
 		max-width: 147px;
 		text-align: left;
 	}
+
+.trainee .textbox_subtitle{
+    padding: 0 20px 0 20px;
+    color: #808080;
+}
+.trainee .textbox_article{
+    color: #b3b3b3;
+}
+
 
 /* wrapper */
 .trainee .wrapper_card_detail_pocket{
@@ -112,4 +122,6 @@
 		vertical-align: top;
 		margin-right: 10px;
 	}
+
+
 /*(현재 페이지 한해) 현재 페이지에서만 사용하는 커스텀 css*/

@@ -20,7 +20,6 @@
             color: unset;
         }
 
-
 /*Nav bar 관련 CSS*/
     nav{
         position:fixed;
@@ -29,12 +28,13 @@
         top: 0;
         left: 0px;
         background-color: #ffffff;
-        box-shadow: 0 0 10px 0 rgba(130, 130, 130, 0.2);
+        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.03);
         z-index: 1;
 
         /*Nav바 폰트스타일*/
         font-size: 13px;
         font-weight: bold;
+        letter-spacing: -0.3px;
     }
         nav > div{
             line-height: 37px;

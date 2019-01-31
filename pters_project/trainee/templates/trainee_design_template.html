@@ -8,76 +8,161 @@
         <title>PTERS</title>
         <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.object.css" %}>
         <style type="text/css">
-            body{
+            /*폰트 임포트*/
+                @import url(/static/common/fonts/notosanskr.css);
+
+            /*기본 html, body스타일*/
+            html{
+                font-family: 'Noto Sans KR', sans-serif !important;
                 background-color: #f7f5f6;
-                padding-top: 100px;
+            }
+            body{
+                padding-top: 50px;
                 margin: 0;
             }
-            div{
-                background-color: white;
+            .object_type_name{
+              margin-top: 40px;
+              margin-bottom: 10px;
+              font-size: 20px;
+              font-weight: 800;
+              border-top : 2px solid #e6e6e6;
+
             }
-            .divider{
-                margin-bottom: 40px;
+            .object_name {
+              margin-top: 30px;
+              font-size: 12px;
+              font-weight: 800;
             }
+            .text_color_box_white{
+                width: 80px;
+                border: 1px solid #e6e6e6;
+                background-color: #ffffff;
+            }
+            .text_color_box_black{
+                width: 80px;
+                border: 1px solid #e6e6e6;
+                background-color: #000000;
+            }
+
         </style>
     </head>
 
     <body>
-        <nav class="box_navbar divider">box_navbar
-            <a href="{% url 'trainee:trainee_main' %}"><div class="button_gen font_bg_white_grey" style="float:right;">돌아가기</div></a>
-        </nav>
-
-        <div class="box_full divider">box_full</div>
-        <div class="box_card divider">box_card</div>
-
-        <div class="textbox_title">textbox_title</div>
-        <div class="textbox_title divider">웨이트 트레이닝</div>
-
-        <div class="textbox_subtitle">textbox_subtitle</div>
-        <div class="textbox_subtitle divider">다음 일정</div>
-
-        <div class="textbox_box_title">textbox_box_title</div>
-        <div class="textbox_box_title divider">(개인) 탄탄가슴 만들기</div>
-
-        <div class="textbox_article">textbox_article</div>
-        <div class="textbox_article divider">일자</div>
-
-        <div class="textbox_data">textbox_data</div>
-        <div class="textbox_data divider">2019.01.16</div>
-
-        <div class="textbox_plan_comment">textbox_plan_comment</div>
-        <div class="textbox_plan_comment divider">지각하지 말아주세요.</div>
-
-        <div class="textbox_notice">-textbox_notice- <span> textbox_notice > span </span> -textbox_notice-</div>
-        <div class="textbox_notice divider">취소가능 시간까지 <span> 3시간 26분 </span> 남았습니다.</div>
-
-        <div class="textbox_card_type">textbox_card_type</div>
-        <div class="textbox_card_type divider">개인/그룹</div>
-
-        <div class="textbox_phone">textbox_phone</div>
-        <div class="textbox_phone divider">010-0000-1111</div>
-
-        <div class="photo_box divider"></div>
-
-        <div class="tag_wrapper divider">
-            <div class="tag">blank</div>
-            <div class="tag font_bg_white_pink">w/p</div>
-            <div class="tag font_bg_black_white">b/w</div>
-            <div class="tag font_bg_white_grey">w/g</div>
-        </div>
-
-        <div class="button_gen  divider">blank</div>
-        <div class="button_gen font_bg_white_pink divider">w/p</div>
-        <div class="button_gen font_bg_black_white divider">b/w</div>
-        <div class="button_gen font_bg_white_grey divider">w/g</div>
+        <a href="{% url 'trainee:trainee_main' %}"><div class="button_gen font_bg_white_grey" style="float:right;">돌아가기</div></a>
 
 
-        <div class="button_big divider">blank</div>
+        <div class="object_type_name">box</div>
+
+        <div class="object_name">1) box_nav_bar</div>
+        <div class="box_nav_bar"></div>
+
+        <div class="object_name">2) box_full</div>
+        <div class="box_full"></div>
+
+        <div class="object_name">3) box_card</div>
+        <div class="box_card"></div>
+
+        <div class="object_name">4) box_schedule</div>
+        <div class="box_schedule"></div>
+
+
+        <div class="object_type_name">text</div>
+
+        <div class="object_name">1) textbox_title</div>
+        <div class="textbox_title">가나다라마바사아자차카타파하0123456789</div>
+
+        <div class="object_name">2) textbox_box_title</div>
+        <div class="textbox_box_title">가나다라마바사아자차카타파하0123456789</div>
+
+        <div class="object_name">3) textbox_alarm_title</div>
+        <div class="textbox_alarm_title">가나다라마바사아자차카타파하0123456789</div>
+
+        <div class="object_name">4) textbox_data</div>
+        <div class="textbox_data ">가나다라마바사아자차카타파하0123456789</div>
+
+        <div class="object_name">5) textbox_alarm_data</div>
+        <div class="textbox_alarm_data">가나다라마바사아자차카타파하0123456789</div>
+
+        <div class="object_name">6) textbox_nav_bar</div>
+        <div class="textbox_nav_bar">가나다라마바사아자차카타파하0123456789</div>
+
+        <div class="object_name">7) textbox_plan_enable_title</div>
+        <div class="textbox_plan_enable_title">가나다라마바사아자차카타파하0123456789</div>
+
+        <div class="object_name">8) textbox_card_type</div>
+        <div class="textbox_card_type">가나다라마바사아자차카타파하0123456789</div>
+
+        <div class="object_name">9) textbox_plan_comment</div>
+        <div class="textbox_plan_comment">가나다라마바사아자차카타파하0123456789</div>
+
+        <div class="object_name">10) textbox_subtitle</div>
+        <div class="textbox_subtitle">가나다라마바사아자차카타파하0123456789</div>
+
+        <div class="object_name">11) textbox_plan_reserve_comment</div>
+        <div class="textbox_plan_reserve_comment">가나다라마바사아자차카타파하0123456789</div>
+
+        <div class="object_name">12) textbox_article</div>
+        <div class="textbox_article">가나다라마바사아자차카타파하0123456789</div>
+
+
+        <div class="object_type_name">text color</div>
+
+        <div class="object_name">1) text_color_black</div>
+        <div class="text_color_black">#000000</div>
+
+        <div class="object_name">2) text_color_light_black</div>
+        <div class="text_color_light_black">#333333</div>
+
+        <div class="object_name">3) text_color_dark_grey</div>
+        <div class="text_color_dark_grey">#737373</div>
+
+        <div class="object_name">4) text_color_grey</div>
+        <div class="text_color_grey">#999999</div>
+
+        <div class="object_name">5) text_color_light_grey</div>
+        <div class="text_color_light_grey">#b3b3b3</div>
+
+        <div class="object_name">6) text_color_white</div>
+        <div class="text_color_white">#ffffff</div>
+
+        <div class="object_name">7) text_color_pters_red</div>
+        <div class="text_color_pters_red">#fe4e65</div>
+
+        <div class="object_name">8) text_color_light_blue</div>
+        <div class="text_color_light_blue">#509cf2</div>
+
+        <div class="object_name">9) text_color_pters_dark_red</div>
+        <div class="text_color_pters_dark_red">#f25050</div>
+
+
+        <div class="object_type_name">button</div>
+
+        <div class="object_name">1) icon button</div>
+        <img src="/static/user/res/icon-down-grey.png" class="icon_arrow">
+
+        <div class="object_name">2) box button</div>
+        <div class="button_gen">basic</div>
+        <div class="button_gen font_bg_white_pink">w/p</div>
+        <div class="button_gen font_bg_black_white">b/w</div>
+        <div class="button_gen font_bg_white_grey">w/g</div>
+        <div class="button_big divider">basic</div>
         <div class="button_big font_bg_white_pink divider">w/p</div>
         <div class="button_big font_bg_black_white divider">b/w</div>
         <div class="button_big font_bg_white_grey divider">w/g</div>
 
-        <img src="/static/user/res/icon-down-grey.png" class="icon_arrow">
-        <span>icon_arrow</span>
+        <div class="object_name">2) round button</div>
+        <div class="tag">basic</div>
+        <div class="tag font_bg_white_pink">w/p</div>
+        <div class="tag font_bg_black_white">b/w</div>
+        <div class="tag font_bg_white_grey">w/g</div>
+
+        <div class="object_name">3) circle button</div>
+        <div class="photo_box">basic</div>
+        <div class="photo_box font_bg_white_pink">w/p</div>
+        <div class="photo_box font_bg_black_white">b/w</div>
+        <div class="photo_box font_bg_white_grey">w/g</div>
+
+        <br/>
+        <br/>
     </body>
 </html>
