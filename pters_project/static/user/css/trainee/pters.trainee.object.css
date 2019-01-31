@@ -52,12 +52,6 @@
     letter-spacing: -0.5px;
     font-weight: bold;
 }
-.textbox_subtitle{
-    height: 20px;
-    line-height: 20px;
-    font-size:11px;
-    font-weight: bold;
-}
 .textbox_box_title{
     height: 30px;
     line-height: 30px;
@@ -65,11 +59,11 @@
     font-weight: bold;
     letter-spacing: -0.5px;
 }
-.textbox_article{
-    height: 20px;
-    line-height: 20px;
-    font-size: 11px;
-    letter-spacing: -0.3px;
+.textbox_alarm_title{
+    height: 30px;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
 }
 .textbox_data{
     height: 25px;
@@ -77,6 +71,24 @@
     font-size: 14px;
     font-weight: 500;
     letter-spacing: -0.5px;
+}
+.textbox_alarm_data{
+    height: 35px;
+    font-size: 14px;
+    letter-spacing: -0.5px;
+}
+
+.textbox_subtitle{
+    height: 20px;
+    line-height: 20px;
+    font-size:11px;
+    font-weight: bold;
+}
+.textbox_article{
+    height: 20px;
+    line-height: 20px;
+    font-size: 11px;
+    letter-spacing: -0.3px;
 }
 .textbox_plan_comment{
     height: 40px;
@@ -107,17 +119,6 @@
     font-size: 13px;
     font-weight: 500;
     color: #fe4e65;
-}
-.textbox_alarm_title{
-    height: 30px;
-    font-size: 16px;
-    font-weight: 500;
-    letter-spacing: -0.5px;
-}
-.textbox_alarm_data{
-    height: 35px;
-    font-size: 14px;
-    letter-spacing: -0.5px;
 }
 .textbox_nav_bar{
     height: 35px;
@@ -218,6 +219,10 @@
 .font_bg_white_grey{
     color: #ffffff;
     background-color: #656565;
+}
+.font_bg_white_dark_grey{
+    color: #ffffff;
+    background-color: #464646;
 }
 
 /* table cell */
