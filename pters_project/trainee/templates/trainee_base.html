@@ -81,8 +81,23 @@
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script type="text/javascript">
-            //content 높이와 스크롤 셋팅
+
+            //기기 사이즈, 창사이즈 계산
+            var windowWidth = $(window).width();
             var windowHeight = $(window).height();
+
+            //기기종류 판단
+            var device;
+            var varUA = navigator.userAgent.toLowerCase();
+            if (varUA.match('android') != null) {
+                device = 'android';
+            } else if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
+                device = 'iphone';
+            } else {
+                device = 'pc';
+            }
+
+            //content 높이와 스크롤 셋팅
             var $content = $('.content_page');
             $content.css("height", windowHeight-50+"px");
             $content.scrollTop(1);
