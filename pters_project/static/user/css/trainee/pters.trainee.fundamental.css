@@ -117,11 +117,13 @@
             }
 
 /*일정 개요 조립*/
-    .box_full .textbox_box_title{
+    .box_full .textbox_size_16_weight_bold{
         text-align: center;
     }
-    .box_full .textbox_plan_comment{
+    .box_full .textbox_size_12_weight_normal{
         text-align: center;
+        height: 40px;
+        line-height: 40px;
     }
     .trainee .wrapper_plan_info{
         padding: 15px 0;
@@ -134,23 +136,30 @@
         display: table;
         width: 100%;
     }
-        .trainee .wrapper_plan_info_article .textbox_article{
+        .trainee .wrapper_plan_info_article .textbox_size_11_weight_normal{
             text-align: center;
         }
     .trainee .wrapper_plan_info_data{
         display: table;
         width: 100%;
     }
-        .trainee .wrapper_plan_info_data .textbox_data{
+        .trainee .wrapper_plan_info_data .textbox_size_14_weight_500{
             text-align: center;
         }
     .trainee .wrapper_cancel_notice{
         margin-top: 15px;
     }
-        .trainee .wrapper_cancel_notice .textbox_notice{
+        .trainee .wrapper_cancel_notice .textbox_size_11_weight_normal{
             display: inline-block;
         }
         .trainee .wrapper_cancel_notice .button_gen{
             float: right;
         }
-/*일정 개요 조립*/
+
+
+
+/* tag wrapper*/
+    .tag_wrapper{
+        text-align: center;
+        height: 21px;
+    }
