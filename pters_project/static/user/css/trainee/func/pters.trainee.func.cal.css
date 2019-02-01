@@ -1,0 +1,40 @@
+
+#calendar{
+
+}
+	#calendar > .box_full{
+		padding: 0;
+	}
+#pters_month_cal_upper_tool_box{
+	height: 70px;
+	padding-top: 35px;
+}
+
+
+
+#pters_month_cal_content_wrapper{
+	top: 155px;
+	width: 100%;
+	max-height: 450px;
+	padding-top: 0;
+
+	overflow-y: auto;
+	-webkit-overflow-scrolling:auto;
+}
+::-webkit-scrollbar{
+	width: 0;
+}
+	#pters_month_cal_day_name_box{
+		height: 40px;
+		line-height: 40px;
+		background-color: #ffffff;
+		border-bottom: 1px solid #f5f5f5;
+	}
+	#pters_month_cal_content_box{
+		height: auto;
+	}
+
+.week_row{
+	height: 90px;
+	border-bottom: 1px solid #f5f5f5;
+}
