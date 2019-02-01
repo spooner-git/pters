@@ -2,7 +2,7 @@
 #calendar{
 	overflow-y: hidden;
 }
-	#calendar > .box_full{
+	#calendar > .obj_box_full{
 		padding: 0;
 	}
 #pters_month_cal_upper_tool_box{

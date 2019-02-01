@@ -1,21 +1,21 @@
 /*(현재 페이지 한해) 현재 페이지에서만 사용하는 커스텀 css*/
-	.trainee_main .textbox_size_20_weight_bold{
+	.trainee_main .obj_font_size_20_weight_bold{
 		height: 35px;
 		line-height: 35px;
 	}
-	.trainee_main .textbox_size_11_weight_bold{
+	.trainee_main .obj_font_size_11_weight_bold{
 		height: 20px;
 		line-height: 20px;
 	}
-	.trainee_main .textbox_size_12_weight_500{
+	.trainee_main .obj_font_size_12_weight_500{
 		height: 24px;
 		line-height: 24px;
 	}
-	.trainee_main .textbox_size_14_weight_500{
+	.trainee_main .obj_font_size_14_weight_500{
 		height: 25px;
 		line-height: 25px;
 	}
-	.trainee_main .textbox_size_11_weight_normal{
+	.trainee_main .obj_font_size_11_weight_normal{
 		height: 20px;
 		line-height: 20px;
 	}
@@ -28,11 +28,11 @@
 	}
 
 /* box */
-	.trainee_main .box_full{
+	.trainee_main .obj_box_full{
 		margin-top: 10px;
 		margin-bottom: 30px;
 	}
-	.trainee_main .box_card{
+	.trainee_main .obj_box_card{
 		margin-top: 10px;
 		margin-bottom: 10px;
 	}
@@ -42,10 +42,10 @@
 		height: 24px;
 		line-height: 24px;
 	}
-		.trainee_main .wrapper_my_ticket_type .table_cell_x2{
+		.trainee_main .wrapper_my_ticket_type .obj_table_cell_x2{
 			width: auto;
 		}
-		.trainee_main .wrapper_my_ticket_type .icon_arrow{
+		.trainee_main .wrapper_my_ticket_type .obj_icon_arrow{
 			transform: rotate(180deg);
 			float: right;
 		}
@@ -68,7 +68,7 @@
 		padding: 15px 0;
 		width: 140px;
 	}
-		.trainee_main .wrapper_my_ticket_detail_count .table_raw{
+		.trainee_main .wrapper_my_ticket_detail_count .obj_table_raw{
 			height: 30px;
 			line-height: 30px;
 		}
@@ -77,10 +77,10 @@
 		padding-top: 15px;
 
 	}
-		.trainee_main .wrapper_my_ticket_detail_teacher .table_cell_x3{
+		.trainee_main .wrapper_my_ticket_detail_teacher .obj_table_cell_x3{
 			width: auto;
 		}
-		.trainee_main .wrapper_my_ticket_detail_teacher .box_photo{
+		.trainee_main .wrapper_my_ticket_detail_teacher .obj_box_photo{
 			width: 40px;
 		}
 		.trainee_main .wrapper_my_ticket_detail_teacher .wrapper_teacher_name{

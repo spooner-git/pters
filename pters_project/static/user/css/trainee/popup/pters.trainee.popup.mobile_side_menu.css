@@ -8,11 +8,11 @@
     top: 0;
     z-index: 1500;
 }
-    #pters_mobile_side_menu .textbox_size_20_weight_bold{
+    #pters_mobile_side_menu .obj_font_size_20_weight_bold{
         height: 35px;
         line-height: 35px;
     }
-    #pters_mobile_side_menu .textbox_size_16_weight_bold{
+    #pters_mobile_side_menu .obj_font_size_16_weight_bold{
         height: 30px;
         line-height: 30px;
     }

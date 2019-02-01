@@ -24,7 +24,7 @@
     nav{
         position:fixed;
         width: 100%;
-        height: 50px;
+        height: 40px;
         top: 0;
         left: 0px;
         background-color: #ffffff;
@@ -35,10 +35,10 @@
         font-size: 13px;
         font-weight: bold;
         letter-spacing: -0.3px;
+        padding-top: 10px;
     }
         nav > div{
             line-height: 37px;
-            margin-top: 10px;
         }
             nav > div > a >  div{
                 display: inline-block;
@@ -116,21 +116,21 @@
             }
 
 /*일정 박스 조립*/
-    .box_full .textbox_size_16_weight_bold{
+    .obj_box_full .obj_font_size_16_weight_bold{
         text-align: center;
         height: 30px;
         line-height: 30px;
     }
-    .box_full .textbox_size_12_weight_normal{
+    .obj_box_full .obj_font_size_12_weight_normal{
         text-align: center;
         height: 40px;
         line-height: 40px;
     }
-    .box_full .textbox_size_11_weight_normal{
+    .obj_box_full .obj_font_size_11_weight_normal{
         height: 20px;
         line-height: 20px;
     }
-    .box_full .textbox_size_14_weight_500{
+    .obj_box_full .obj_font_size_14_weight_500{
         height: 25px;
         line-height: 25px;
     }
@@ -141,7 +141,7 @@
         border-top: 1px solid #f5f5f5;
         border-bottom: 1px solid #f5f5f5;
     }
-        .wrapper_plan_info .table_raw{
+        .wrapper_plan_info .obj_table_raw{
             text-align: center;
         }
 
@@ -150,10 +150,10 @@
         line-height: 30px;
         margin-top: 15px;
     }
-        .wrapper_cancel_notice .table_cell_x2{
+        .wrapper_cancel_notice .obj_table_cell_x2{
             width: auto;
         }
-        .wrapper_cancel_notice .button_gen{
+        .wrapper_cancel_notice .obj_button_gen{
             width: 90px;
             float: right;
         }

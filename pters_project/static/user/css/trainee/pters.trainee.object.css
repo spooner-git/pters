@@ -10,7 +10,7 @@
     }
 
 /* 박스 */
-    .box_nav_bar{
+    .obj_box_nav_bar{
         width: 100%;
         height: 50px;
         top: 0;
@@ -20,14 +20,14 @@
         z-index: 1;
     }
 
-    .box_full{
+    .obj_box_full{
         height: auto;
         background-color: #ffffff;
         padding: 20px;
         border-top: 1px solid #e6e6e6;
         border-bottom: 1px solid #e6e6e6;
     }
-    .box_card{
+    .obj_box_card{
         height: auto;
         background-color: #ffffff;
         border-radius: 4px;
@@ -36,14 +36,14 @@
         margin-right: 20px;
         padding: 20px;
     }
-    .box_schedule{
+    .obj_box_schedule{
         height: auto;
         background-color: #ffffff;
         margin-left: 20px;
         margin-right: 20px;
         padding: 20px;
     }
-    .box_photo{
+    .obj_box_photo{
         display: inline-block;
         height: 40px;
         width: 40px;
@@ -52,103 +52,103 @@
     }
 
 /* 텍스트 박스 */
-    .textbox_size_20_weight_bold{
+    .obj_font_size_20_weight_bold{
         font-size: 20px;
         font-weight: bold;
         letter-spacing: -0.5px;
     }
-    .textbox_size_16_weight_bold{
+    .obj_font_size_16_weight_bold{
         font-size: 16px;
         font-weight: bold;
         letter-spacing: -0.5px;
     }
-    .textbox_size_16_weight_500{
+    .obj_font_size_16_weight_500{
         font-size: 16px;
         font-weight: 500;
         letter-spacing: -0.5px;
     }
-    .textbox_size_14_weight_500{
+    .obj_font_size_14_weight_500{
         font-size: 14px;
         font-weight: 500;
         letter-spacing: -0.5px;
     }
-    .textbox_size_14_weight_normal{
+    .obj_font_size_14_weight_normal{
         font-size: 14px;
         letter-spacing: -0.5px;
     }
-    .textbox_size_13_weight_bold{
+    .obj_font_size_13_weight_bold{
         font-size: 13px;
         font-weight: bold;
         letter-spacing: -0.5px;
     }
-    .textbox_size_13_weight_500{
+    .obj_font_size_13_weight_500{
         font-size: 13px;
         font-weight: 500;
         letter-spacing: -0.5px;
     }
-    .textbox_size_12_weight_500{
+    .obj_font_size_12_weight_500{
         font-size: 12px;
         font-weight: 500;
         letter-spacing: -0.5px;
     }
-    .textbox_size_12_weight_normal{
+    .obj_font_size_12_weight_normal{
         font-size: 12px;
         letter-spacing: -0.5px;
     }
-    .textbox_size_11_weight_bold{
+    .obj_font_size_11_weight_bold{
         font-size:11px;
         font-weight: bold;
         letter-spacing: -0.3px;
     }
-    .textbox_size_11_weight_500{
+    .obj_font_size_11_weight_500{
         font-size:11px;
         font-weight: 500;
         letter-spacing: -0.3px;
     }
-    .textbox_size_11_weight_normal{
+    .obj_font_size_11_weight_normal{
         font-size: 11px;
         letter-spacing: -0.3px;
     }
 
 /* 글자 색상 */
-    .font_color_black{
+    .obj_font_color_black{
         color: #000000;
     }
-    .font_color_light_black{
+    .obj_font_color_light_black{
         color: #333333;
     }
-    .font_color_dark_grey{
+    .obj_font_color_dark_grey{
         color: #737373;
     }
-    .font_color_grey{
+    .obj_font_color_grey{
         color: #999999;
     }
-    .font_color_light_grey{
+    .obj_font_color_light_grey{
         color: #b3b3b3;
     }
-    .font_color_white{
+    .obj_font_color_white{
         color: #ffffff;
     }
-    .font_color_pters_red{
+    .obj_font_color_pters_red{
         color: #fe4e65;
     }
-    .font_color_light_blue{
+    .obj_font_color_light_blue{
         color: #509cf2;
     }
-    .font_color_pters_dark_red{
+    .obj_font_color_pters_dark_red{
         color: #f25050;
     }
 
 /* 버튼 */
-    .button_x{
+    .obj_button_x{
 
     }
-    .icon_arrow{
+    .obj_icon_arrow{
         height: 6px;
         padding: 9px;
     }
 
-    .button_gen{
+    .obj_button_gen{
         display: inline-block;
         width: 90px;
         height: 30px;
@@ -159,7 +159,7 @@
         border-radius: 2px;
         cursor: pointer;
     }
-    .button_big{
+    .obj_button_big{
         width: 100%;
         height: 55px;
         line-height: 45px;
@@ -172,7 +172,7 @@
         cursor: pointer;
     }
 
-    .tag{
+    .obj_tag{
         display: inline-block;
         width: 58px;
         height: 21px;
@@ -187,49 +187,49 @@
 
 
 /* 버튼 글자, 배경 색상 */
-    .font_bg_white_pink{
+    .obj_font_bg_white_pink{
         color: #ffffff;
         background-color: #fe4e65;
     }
-    .font_bg_white_black{
+    .obj_font_bg_white_black{
         color: #ffffff;
         background-color: #282828;
     }
-    .font_bg_black_white{
+    .obj_font_bg_black_white{
         color: #282828;
         background-color: #ffffff;
     }
-    .font_bg_white_grey{
+    .obj_font_bg_white_grey{
         color: #ffffff;
         background-color: #656565;
     }
-    .font_bg_white_dark_grey{
+    .obj_font_bg_white_dark_grey{
         color: #ffffff;
         background-color: #464646;
     }
 
 /* table */
-    .table_raw{
+    .obj_table_raw{
         display: table;
         width: 100%;
         vertical-align: middle;
     }
-    .table_cell_x2{
+    .obj_table_cell_x2{
         display: table-cell;
         width: 50%;
         vertical-align: middle;
     }
-    .table_cell_x3{
+    .obj_table_cell_x3{
         display: table-cell;
         width: 33.33%;
         vertical-align: middle;
     }
-    .table_cell_x4{
+    .obj_table_cell_x4{
         display: table-cell;
         width: 25%;
         vertical-align: middle;
     }
-    .table_cell_x5{
+    .obj_table_cell_x5{
         display: table-cell;
         width: 20%;
         vertical-align: middle;
