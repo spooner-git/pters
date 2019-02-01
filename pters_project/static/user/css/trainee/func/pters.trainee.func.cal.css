@@ -1,6 +1,6 @@
 
 #calendar{
-
+	overflow-y: hidden;
 }
 	#calendar > .box_full{
 		padding: 0;
@@ -9,13 +9,35 @@
 	height: 70px;
 	padding-top: 35px;
 }
+	#pters_month_cal_tool_year_text{
+		line-height: 20px;
+		height: 20px;
+		width: 80px;
+	}
+	#pters_month_cal_tool_month_text{
+		line-height: 30px;
+		height: 30px;
+		width: 80px;
+	}
+	#go_prev_month, #go_next_month{
+		display:inline-block;
+		vertical-align:middle;
+		padding: 13px 20px 13px 20px;
 
+	}
+		#go_prev_month > img{
+			transform: rotate(180deg);
+			height: 12px;
 
+		}
+		#go_next_month > img{
+			height: 12px;
+
+		}
 
 #pters_month_cal_content_wrapper{
 	top: 155px;
 	width: 100%;
-	max-height: 450px;
 	padding-top: 0;
 
 	overflow-y: auto;
@@ -35,6 +57,9 @@
 	}
 
 .week_row{
-	height: 90px;
+	/*height: 90px;*/
+	display:table;
+	width:100%;
+	background-color:#ffffff;
 	border-bottom: 1px solid #f5f5f5;
 }
