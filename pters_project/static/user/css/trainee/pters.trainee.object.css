@@ -208,22 +208,31 @@
         background-color: #464646;
     }
 
-/* table cell */
+/* table */
+    .table_raw{
+        display: table;
+        width: 100%;
+        vertical-align: middle;
+    }
     .table_cell_x2{
         display: table-cell;
         width: 50%;
+        vertical-align: middle;
     }
     .table_cell_x3{
         display: table-cell;
         width: 33.33%;
+        vertical-align: middle;
     }
     .table_cell_x4{
         display: table-cell;
         width: 25%;
+        vertical-align: middle;
     }
     .table_cell_x5{
         display: table-cell;
         width: 20%;
+        vertical-align: middle;
     }
 
 /*(공통) 모든 페이지에서 사용할 수 있는 오브젝트, 폰트스타일*/

@@ -8,84 +8,78 @@
 
 {% block content %}
     <div class="trainee_main">
-        <div class="textbox_size_20_weight_bold">웨이트 트레이닝</div>
+        <div class="wrapper_program_title textbox_size_20_weight_bold">웨이트 트레이닝</div>
 
-        <div class="textbox_size_11_weight_bold font_color_dark_grey">다음 일정</div>
+        <div class="wrapper_sub_title textbox_size_11_weight_bold font_color_dark_grey">다음 일정</div>
         <div class="box_full">
-            <div class="tag_wrapper">
+            <div class="wrapper_tag">
                 <div class="tag font_bg_white_pink">예약완료</div>
             </div>
             <div class="textbox_size_16_weight_bold">(개인) 탄탄가슴 만들기</div>
             <div class="wrapper_plan_info">
-                <div class="wrapper_plan_info_article textbox_size_11_weight_normal font_color_light_grey">
+                <div class="table_raw textbox_size_11_weight_normal font_color_light_grey">
                     <div class="table_cell_x3">일자</div>
                     <div class="table_cell_x3">요일</div>
                     <div class="table_cell_x3">진행시간</div>
                 </div>
-                <div class="wrapper_plan_info_data textbox_size_14_weight_500">
+                <div class="table_raw textbox_size_14_weight_500">
                     <div class="table_cell_x3">2019.01.16</div>
                     <div class="table_cell_x3">수요일</div>
                     <div class="table_cell_x3">14:00 ~ 16:00</div>
                 </div>
             </div>
             <div class="textbox_size_12_weight_normal"><span>"제발 지각하지 말아주세요."</span></div>
-            <div class="wrapper_cancel_notice">
-                <div class="textbox_size_11_weight_normal font_color_dark_grey">취소 가능 시간까지 <span class="font_color_pters_red">3시간 26분</span> 남았습니다.</div>
-                <div class="button_gen font_bg_white_grey">취소하기</div>
+            <div class="table_raw wrapper_cancel_notice">
+                <div class="table_cell_x2 textbox_size_11_weight_normal font_color_dark_grey">취소 가능 시간까지 <span class="font_color_pters_red">3시간 26분</span> 남았습니다.</div>
+                <div class="table_cell_x2 button_gen font_bg_white_grey">취소하기</div>
             </div>
         </div>
 
-        <div class="textbox_size_11_weight_bold font_color_dark_grey">내 수강권</div>
+        <div class="wrapper_sub_title textbox_size_11_weight_bold font_color_dark_grey">내 수강권</div>
         <div class="box_card">
-            <div class="wrapper_card_content">
-                <div class="textbox_size_12_weight_500">개인/그룹</div>
-                <img src="/static/user/res/icon-down-grey.png" class="icon_arrow" data-open="close">
+            <div class="table_raw wrapper_my_ticket_type">
+                <div class="table_cell_x2 textbox_size_12_weight_500 font_color_pters_red">개인/그룹</div>
+                <img class="table_cell_x2 icon_arrow" src="/static/user/res/icon-down-grey.png" data-open="close">
             </div>
-            <div class="textbox_size_16_weight_bold">냉혈한 김선생의 다가오는 여름 준비</div>
+            <div class="wrapper_my_ticket_title textbox_size_16_weight_bold">냉혈한 김선생의 다가오는 여름 준비</div>
 
-            <div id="main_wrapper_card_detail_close">
-                <div class="wrapper_card_detail">
-                    <div class="textbox_size_14_weight_500">2019.01.01 (화) ~ 2019.02.01 (금)</div>
-                    <div class="textbox_size_11_weight_normal font_color_dark_grey">수업이 <span class="font_color_pters_red">12번</span> 남았습니다.</div>
-                </div>
+            <div id="wrapper_my_ticket_detail_close">
+                <div class="textbox_size_14_weight_500">2019.01.01 (화) ~ 2019.02.01 (금)</div>
+                <div class="textbox_size_11_weight_normal font_color_dark_grey">수업이 <span class="font_color_pters_red">12번</span> 남았습니다.</div>
             </div>
 
-            <div id="main_wrapper_card_detail_open" style="display:none;">
-                <div class="wrapper_card_detail2">
-                    <div class="textbox_size_11_weight_normal font_color_light_grey">
-                        <div class="wrapper_card_detail2_date">시작일</div>
-                        <div class="wrapper_card_detail2_date">종료일</div>
+            <div id="wrapper_my_ticket_detail_open" style="display:none;">
+                <div class="wrapper_my_ticket_detail_date">
+                    <div class="table_raw textbox_size_11_weight_normal font_color_light_grey">
+                        <div class="table_cell_x2">시작일</div>
+                        <div class="table_cell_x2">종료일</div>
                     </div>
-                    <div class="textbox_size_14_weight_500">
-                        <div class="wrapper_card_detail2_date">2019.01.01(화)</div>
-                        <div class="wrapper_card_detail2_date">2019.02.01(금)</div>
-                    </div>
-                </div>
-                <div class="wrapper_card_detail_pocket">
-                    <div class="wrapper_card_detail_row">
-                        <div class="textbox_size_11_weight_normal font_color_light_grey">총 등록 횟수</div>
-                        <div class="textbox_size_14_weight_500">30 회</div>
-                    </div>
-                    <div class="wrapper_card_detail_row">
-                        <div class="textbox_size_11_weight_normal font_color_light_grey">잔여 횟수</div>
-                        <div class="textbox_size_14_weight_500">12 회</div>
-                    </div>
-                    <div class="wrapper_card_detail_row">
-                        <div class="textbox_size_11_weight_normal font_color_light_grey">결석 횟수</div>
-                        <div class="textbox_size_14_weight_500">3 회</div>
-                    </div>
-                    <div class="wrapper_card_detail_row">
-                        <div class="textbox_size_11_weight_normal font_color_light_grey">예약 가능 횟수</div>
-                        <div class="textbox_size_14_weight_500">12 회</div>
+                    <div class="table_raw textbox_size_14_weight_500">
+                        <div class="table_cell_x2">2019.01.01(화)</div>
+                        <div class="table_cell_x2">2019.02.01(금)</div>
                     </div>
                 </div>
-                <div class="wrapper_card_detail_teacher">
-                    <div class="box_photo"></div>
-                    <div class="wrapper_teacher_name">
+                <div class="table_raw wrapper_my_ticket_detail_count">
+                    <div class="table_cell_x2 textbox_size_11_weight_normal font_color_light_grey">
+                        <div class="table_raw">총 등록 횟수</div>
+                        <div class="table_raw">잔여 횟수</div>
+                        <div class="table_raw">결석 횟수</div>
+                        <div class="table_raw">예약 가능 횟수</div>
+                    </div>
+                    <div class="table_cell_x2 textbox_size_14_weight_500" style="text-align: right;">
+                        <div class="table_raw">30 회</div>
+                        <div class="table_raw">12 회</div>
+                        <div class="table_raw">3 회</div>
+                        <div class="table_raw">12 회</div>
+                    </div>
+                </div>
+                <div class="table_raw wrapper_my_ticket_detail_teacher">
+                    <div class="table_cell_x3 box_photo"></div>
+                    <div class="table_cell_x3 wrapper_teacher_name">
                         <div class="textbox_size_14_weight_500">홍길동</div>
                         <div class="textbox_size_11_weight_normal font_color_light_grey">강사</div>
                     </div>
-                    <div class="textbox_size_13_weight_500 font_color_pters_red">000-0000-8888</div>
+                    <div class="table_cell_x3 text_button_phone textbox_size_13_weight_500 font_color_pters_red">000-0000-8888</div>
                 </div>
             </div>
         </div>
@@ -98,23 +92,23 @@
     	$('#nav_btn_home').addClass("nav_selected");
 
     	/*수강권 정보 열고 닫기*/
-        $(document).on("click", '.wrapper_card_content .icon_arrow', function(){
+        $(document).on("click", '.wrapper_my_ticket_type .icon_arrow', function(){
         	var $this = $(this);
         	var option = $this.attr("data-open");
-            var main_wrapper_card_detail_close = $('#main_wrapper_card_detail_close');
-            var main_wrapper_card_detail_open = $('#main_wrapper_card_detail_open');
+            var wrapper_my_ticket_detail_close = $('#wrapper_my_ticket_detail_close');
+            var wrapper_my_ticket_detail_open = $('#wrapper_my_ticket_detail_open');
 
         	switch(option){
         		case "open":
         			$this.attr("data-open", "close");
-                    main_wrapper_card_detail_close.show();
-                    main_wrapper_card_detail_open.hide();
+                    wrapper_my_ticket_detail_close.show();
+                    wrapper_my_ticket_detail_open.hide();
         		break;
 
         		case "close":
         			$this.attr("data-open", "open");
-                    main_wrapper_card_detail_close.hide();
-                    main_wrapper_card_detail_open.show();
+                    wrapper_my_ticket_detail_close.hide();
+                    wrapper_my_ticket_detail_open.show();
         		break;
         	}
         });
