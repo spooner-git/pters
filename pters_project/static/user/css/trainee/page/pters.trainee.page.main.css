@@ -19,13 +19,6 @@
 		height: 20px;
 		line-height: 20px;
 	}
-	.trainee_main .wrapper_program_title{
-		margin: 35px 0;
-		padding: 0 20px;
-	}
-	.trainee_main .wrapper_sub_title{
-		padding: 0 20px;
-	}
 
 /* box */
 	.trainee_main .obj_box_full{
@@ -38,6 +31,13 @@
 	}
 
 /* wrapper */
+	.trainee_main .wrapper_program_title{
+		margin: 35px 0;
+		padding: 0 20px;
+	}
+	.trainee_main .wrapper_sub_title{
+		padding: 0 20px;
+	}
 	.trainee_main .wrapper_my_ticket_type{
 		height: 24px;
 		line-height: 24px;

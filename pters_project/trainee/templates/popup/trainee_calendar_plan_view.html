@@ -1,12 +1,11 @@
+{% extends "popup/trainee_base_popup.html" %}
 {% load static_url %}
-<link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan_view.css" %}>
-<!-- pters.trainee.popup.plan_view.css -->
-<div id="popup_calendar_plan_view" class="popup_mobile">
-    <div class="popup_mobile_content">
-        <div class="wrapper_top">
-            <img src="/static/user/res/PTERS_logo_pure.png" class="logo_pters"  style="visibility: hidden;">
-            <img src="/static/user/res/ptadd/btn-x.png" onclick="layer_popup('close', 'popup_calendar_plan_view')" class="obj_button_x">
-        </div>
+{% block popup_base_css %}
+    <!-- pters.trainee.popup.plan_view.css -->
+    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan_view.css" %}>
+{% endblock %}
+{% block popup_base_contents %}
+    <div class="popup_calendar_plan_view">
         <div class="obj_font_size_20_weight_bold">2019년 1월 30일 (수)</div>
         <div class="obj_font_size_14_weight_500"><span class="obj_font_color_pters_red">1개</span>의 일정이 있습니다.</div>
         <div class="obj_box_full">
@@ -33,5 +32,13 @@
             </div>
         </div>
     </div>
-    <div class="obj_button_big obj_font_bg_white_pink" onclick="layer_popup('open', 'popup_calendar_plan_reserve')">예약하기</div>
-</div>
+    <div class="obj_button_big obj_font_bg_white_pink" onclick="layer_popup('open', 'popup_calendar_plan_reserve')">예약 추가하기</div>
+{% endblock %}
+
+{% block popup_base_js %}
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            $('.popup_calendar_plan_view').parents('.popup_mobile').attr('id', 'popup_calendar_plan_view');
+        });
+    </script>
+{% endblock %}

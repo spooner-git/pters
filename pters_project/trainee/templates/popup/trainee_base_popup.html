@@ -1,1 +1,11 @@
-<
+{% block popup_base_css %}
+{% endblock %}
+<div class="popup_mobile">
+        <div class="wrapper_top">
+            <img src="/static/user/res/ptadd/btn-x.png" onclick="layer_popup('close')" class="obj_button_x">
+        </div>
+        {% block popup_base_contents %}
+        {% endblock %}
+</div>
+{% block popup_base_js %}
+{% endblock %}
