@@ -75,6 +75,7 @@
 	.trainee_main .wrapper_my_ticket_detail_teacher{
 		border-top:  1px solid #efefef;
 		padding-top: 15px;
+		height: 40px;
 
 	}
 		.trainee_main .wrapper_my_ticket_detail_teacher .obj_table_cell_x3{
@@ -84,11 +85,9 @@
 			width: 40px;
 		}
 		.trainee_main .wrapper_my_ticket_detail_teacher .wrapper_teacher_name{
-			height: 40px;
 			padding-left: 10px;
 		}
 		.trainee_main .wrapper_my_ticket_detail_teacher .text_button_phone{
-			height: 40px;
 			text-align: right;
 		}
 /*(현재 페이지 한해) 현재 페이지에서만 사용하는 커스텀 css*/
