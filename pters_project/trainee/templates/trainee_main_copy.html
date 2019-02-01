@@ -3,14 +3,14 @@
 
 {% block local_css %}
     <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.object.css" %}>
-    <link rel="stylesheet" href={% static_url "user/css/trainee/page/pters.trainee.page.main.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/page/pters.trainee.page.main_copy.css" %}>
 {% endblock %}
 
 {% block content %}
     <div class="trainee_main">
-        <div class="textbox_size_20_weight_bold">웨이트 트레이닝</div>
+        <div class="textbox_program_title textbox_size_20_weight_bold">웨이트 트레이닝</div>
 
-        <div class="textbox_size_11_weight_bold font_color_dark_grey">다음 일정</div>
+        <div class="textbox_sub_title textbox_size_11_weight_bold font_color_dark_grey">다음 일정</div>
         <div class="box_full">
             <div class="tag_wrapper">
                 <div class="tag font_bg_white_pink">예약완료</div>
@@ -30,12 +30,12 @@
             </div>
             <div class="textbox_size_12_weight_normal"><span>"제발 지각하지 말아주세요."</span></div>
             <div class="wrapper_cancel_notice">
-                <div class="textbox_size_11_weight_normal font_color_dark_grey">취소 가능 시간까지 <span class="font_color_pters_red">3시간 26분</span> 남았습니다.</div>
-                <div class="button_gen font_bg_white_grey">취소하기</div>
+                <div class="table_cell_x2 textbox_size_11_weight_normal font_color_dark_grey">취소 가능 시간까지 <span class="font_color_pters_red">3시간 26분</span> 남았습니다.</div>
+                <div class="table_cell_x2 button_gen font_bg_white_grey">취소하기</div>
             </div>
         </div>
 
-        <div class="textbox_size_11_weight_bold font_color_dark_grey">내 수강권</div>
+        <div class="textbox_sub_title textbox_size_11_weight_bold font_color_dark_grey">내 수강권</div>
         <div class="box_card">
             <div class="wrapper_card_content">
                 <div class="textbox_size_12_weight_500">개인/그룹</div>
@@ -43,40 +43,38 @@
             </div>
             <div class="textbox_size_16_weight_bold">냉혈한 김선생의 다가오는 여름 준비</div>
 
-            <div id="main_wrapper_card_detail_close">
-                <div class="wrapper_card_detail">
-                    <div class="textbox_size_14_weight_500">2019.01.01 (화) ~ 2019.02.01 (금)</div>
-                    <div class="textbox_size_11_weight_normal font_color_dark_grey">수업이 <span class="font_color_pters_red">12번</span> 남았습니다.</div>
-                </div>
+            <div id="wrapper_card_detail_close">
+                <div class="textbox_ticket_date_title textbox_size_14_weight_500">2019.01.01 (화) ~ 2019.02.01 (금)</div>
+                <div class="textbox_ticket_date_info textbox_size_11_weight_normal font_color_dark_grey">수업이 <span class="font_color_pters_red">12번</span> 남았습니다.</div>
             </div>
 
-            <div id="main_wrapper_card_detail_open" style="display:none;">
+            <div id="wrapper_card_detail_open" style="display:none;">
                 <div class="wrapper_card_detail2">
-                    <div class="textbox_size_11_weight_normal font_color_light_grey">
-                        <div class="wrapper_card_detail2_date">시작일</div>
-                        <div class="wrapper_card_detail2_date">종료일</div>
+                    <div class="wrapper_card_detail2_date_title textbox_size_11_weight_normal font_color_light_grey ">
+                        <div class="textbox_card_detail2_date">시작일</div>
+                        <div class="textbox_card_detail2_date">종료일</div>
                     </div>
-                    <div class="textbox_size_14_weight_500">
-                        <div class="wrapper_card_detail2_date">2019.01.01(화)</div>
-                        <div class="wrapper_card_detail2_date">2019.02.01(금)</div>
+                    <div class="wrapper_card_detail2_date_info textbox_size_14_weight_500">
+                        <div class="textbox_card_detail2_date">2019.01.01(화)</div>
+                        <div class="textbox_card_detail2_date">2019.02.01(금)</div>
                     </div>
                 </div>
-                <div class="wrapper_card_detail_pocket">
+                <div class="wrapper_card_detail_pocket textbox_size_11_weight_normal">
                     <div class="wrapper_card_detail_row">
-                        <div class="textbox_size_11_weight_normal font_color_light_grey">총 등록 횟수</div>
-                        <div class="textbox_size_14_weight_500">30 회</div>
+                        <div class="textbox_card_detail_row_title font_color_light_grey">총 등록 횟수</div>
+                        <div class="textbox_card_detail_row_info textbox_size_14_weight_500">30 회</div>
                     </div>
                     <div class="wrapper_card_detail_row">
-                        <div class="textbox_size_11_weight_normal font_color_light_grey">잔여 횟수</div>
-                        <div class="textbox_size_14_weight_500">12 회</div>
+                        <div class="textbox_card_detail_row_title font_color_light_grey">잔여 횟수</div>
+                        <div class="textbox_card_detail_row_info textbox_size_14_weight_500">12 회</div>
                     </div>
                     <div class="wrapper_card_detail_row">
-                        <div class="textbox_size_11_weight_normal font_color_light_grey">결석 횟수</div>
-                        <div class="textbox_size_14_weight_500">3 회</div>
+                        <div class="textbox_card_detail_row_title font_color_light_grey">결석 횟수</div>
+                        <div class="textbox_card_detail_row_info textbox_size_14_weight_500">3 회</div>
                     </div>
                     <div class="wrapper_card_detail_row">
-                        <div class="textbox_size_11_weight_normal font_color_light_grey">예약 가능 횟수</div>
-                        <div class="textbox_size_14_weight_500">12 회</div>
+                        <div class="textbox_card_detail_row_title font_color_light_grey">예약 가능 횟수</div>
+                        <div class="textbox_card_detail_row_info textbox_size_14_weight_500">12 회</div>
                     </div>
                 </div>
                 <div class="wrapper_card_detail_teacher">
@@ -101,20 +99,20 @@
         $(document).on("click", '.wrapper_card_content .icon_arrow', function(){
         	var $this = $(this);
         	var option = $this.attr("data-open");
-            var main_wrapper_card_detail_close = $('#main_wrapper_card_detail_close');
-            var main_wrapper_card_detail_open = $('#main_wrapper_card_detail_open');
+            var wrapper_card_detail_close = $('#wrapper_card_detail_close');
+            var wrapper_card_detail_open = $('#wrapper_card_detail_open');
 
         	switch(option){
         		case "open":
         			$this.attr("data-open", "close");
-                    main_wrapper_card_detail_close.show();
-                    main_wrapper_card_detail_open.hide();
+                    wrapper_card_detail_close.show();
+                    wrapper_card_detail_open.hide();
         		break;
 
         		case "close":
         			$this.attr("data-open", "open");
-                    main_wrapper_card_detail_close.hide();
-                    main_wrapper_card_detail_open.show();
+                    wrapper_card_detail_close.hide();
+                    wrapper_card_detail_open.show();
         		break;
         	}
         });

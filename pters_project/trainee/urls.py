@@ -67,8 +67,9 @@ urlpatterns = [
     # 회원 design template 페이지
     url(r'^trainee_design_template/$', views.TraineeDesignTemplateView.as_view(), name='trainee_design_template'),
 
-    # 회원 빈 월간 일정 페이지
+    # 회원 메인 페이지
     url(r'^trainee_main/$', views.TraineeMainView.as_view(), name='trainee_main'),
+    url(r'^trainee_main_copy/$', views.TraineeMainCopyView.as_view(), name='trainee_main_copy'),
     # 회원 빈 월간 일정 페이지
     url(r'^cal_month_blank/$', views.CalMonthBlankView.as_view(), name='cal_month_blank'),
     # 회원 빈 Mypage 페이지
