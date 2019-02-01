@@ -99,7 +99,7 @@
 
             //content 높이와 스크롤 셋팅
             var $content = $('.content_page');
-            $content.css("height", windowHeight-50+"px");
+            $content.css("height", windowHeight-Number($('body').css("padding-top").replace(/px/gi,""))+"px");
             $content.scrollTop(1);
             $content.scroll(function(){
                 var $this = $(this);
@@ -112,6 +112,7 @@
                     $this.animate({scrollTop : scrollLocation+1}, 10);
                 }
             });
+
         </script>
         {% block local_js_footer %}
         {% endblock %}

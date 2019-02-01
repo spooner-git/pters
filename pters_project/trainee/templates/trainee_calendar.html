@@ -4,18 +4,14 @@
 {% block local_css %}
     <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.object.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainee/page/pters.trainee.page.plan.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/func/pters.trainee.func.cal.css" %}>
 {% endblock %}
 
 {% block content %}
-    <div>달력 페이지</div>
-    <div class="button_gen font_bg_white_grey" onclick="layer_popup('open', 'popup_calendar_plan_view')">일정팝업</div>
-    <div class="button_gen font_bg_white_pink" onclick="layer_popup('open', 'popup_calendar_plan_reserve')">예약팝업</div>
-
-    <div style="border-bottom: 1px solid">이상 테스트 코드</div>
-    <div>이하 달력 코드</div>
-
     <div id="calendar"></div>
 
+    <!-- <div class="button_gen font_bg_white_grey" onclick="layer_popup('open', 'popup_calendar_plan_view')">일정팝업</div>
+    <div class="button_gen font_bg_white_pink" onclick="layer_popup('open', 'popup_calendar_plan_reserve')">예약팝업</div> -->
 {% endblock %}
 
 {% block popup %}
@@ -26,6 +22,7 @@
 {% block local_js_footer %}
     <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.popup.behavior.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.page.plan.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainee/func/pters.trainee.func.cal.js" %}></script>
     <script>
         // Nav 바에 현재 페이지에 밑줄 표기
         $('#nav_btn_plan').addClass("nav_selected");
