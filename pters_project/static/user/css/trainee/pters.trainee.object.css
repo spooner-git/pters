@@ -53,83 +53,59 @@
 
 /* 텍스트 박스 */
     .textbox_size_20_weight_bold{
-        height: 35px;
-        line-height: 35px;
         font-size: 20px;
         font-weight: bold;
         letter-spacing: -0.5px;
     }
     .textbox_size_16_weight_bold{
-        height: 30px;
-        line-height: 30px;
         font-size: 16px;
         font-weight: bold;
         letter-spacing: -0.5px;
     }
     .textbox_size_16_weight_500{
-        height: 30px;
-        line-height: 30px;
         font-size: 16px;
         font-weight: 500;
         letter-spacing: -0.5px;
     }
     .textbox_size_14_weight_500{
-        height: 25px;
-        line-height: 25px;
         font-size: 14px;
         font-weight: 500;
         letter-spacing: -0.5px;
     }
     .textbox_size_14_weight_normal{
-        height: 35px;
-        line-height: 35px;
         font-size: 14px;
         letter-spacing: -0.5px;
     }
     .textbox_size_13_weight_bold{
-        height: 35px;
-        line-height: 35px;
         font-size: 13px;
         font-weight: bold;
         letter-spacing: -0.5px;
     }
     .textbox_size_13_weight_500{
-        height: 35px;
-        line-height: 35px;
         font-size: 13px;
         font-weight: 500;
         letter-spacing: -0.5px;
     }
     .textbox_size_12_weight_500{
-        height: 35px;
-        line-height: 35px;
         font-size: 12px;
         font-weight: 500;
         letter-spacing: -0.5px;
     }
     .textbox_size_12_weight_normal{
-        height: 35px;
-        line-height: 35px;
         font-size: 12px;
         letter-spacing: -0.5px;
     }
     .textbox_size_11_weight_bold{
-        height: 35px;
-        line-height: 35px;
         font-size:11px;
         font-weight: bold;
         letter-spacing: -0.3px;
     }
     .textbox_size_11_weight_500{
-        height: 35px;
-        line-height: 35px;
         font-size:11px;
         font-weight: 500;
         letter-spacing: -0.3px;
     }
     .textbox_size_11_weight_normal{
-        height: 35px;
-        line-height: 35px;
         font-size: 11px;
         letter-spacing: -0.3px;
     }
