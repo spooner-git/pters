@@ -16,13 +16,13 @@ if( (current_year % 4 == 0 && current_year % 100 != 0) || current_year % 400 == 
 init_month_calendar(today_yyyy_mm_dd);
 
 /*입력된 날짜를 기준으로 월간 달력을 그린다. */
-function init_month_calendar(referencedate){
+function init_month_calendar(reference_date){
     //referencedate의 형식 yyyy-mm-dd
-    draw_month_calendar_table(referencedate, '#calendar');  //2번 슬라이드에 현재년도, 현재달 달력 채우기
+    draw_month_calendar_table(reference_date, '#calendar');  //2번 슬라이드에 현재년도, 현재달 달력 채우기
     set_touch_move_to_month_calendar('#calendar');
 
     //달력을 감싸는 wrapper의 높이를 창크기에 맞춘다. (스크롤링 영역을 달력 안쪽으로만 잡기 위해서)
-    var calendar_height = windowHeight - Number($('body').css('padding-top').replace(/px/gi,""));
+    var calendar_height = windowHeight - Number($('body').css('padding-top').replace(/px/gi,"")) - 20;
     var calendar_toolbox_height = 105;
     var calendar_month_day_name_text_height = 40;
     $('.content_page').css("overflow-y","hidden");
@@ -31,10 +31,10 @@ function init_month_calendar(referencedate){
 }
 
 //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기
-function draw_month_calendar_table(referencedate, targetHTML){
+function draw_month_calendar_table(reference_date, targetHTML){
     
     var $targetHTML = $(targetHTML);
-    var referencedate_split_array = referencedate.split('/');
+    var referencedate_split_array = reference_date.split('/');
     var referencedate_year = referencedate_split_array[0];
     var referencedate_month = referencedate_split_array[1];
     var referencedate_date = referencedate_split_array[2];
@@ -119,7 +119,6 @@ function set_touch_move_to_month_calendar(){
                 move_month("prev");
             } 
         }
-        
     });
 }
 
