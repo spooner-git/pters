@@ -1,13 +1,14 @@
-{% extends "popup/trainee_base_popup.html" %}
+{% extends 'popup/trainee_base_popup.html' %}
 {% load static_url %}
 {% block popup_base_css %}
-    <!-- pters.trainee.popup.plan_view.css -->
-    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan_view.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan_reserve.complete.css" %}>
 {% endblock %}
+<!-- pters.trainee.popup.plan_reserve.complete.css -->
 {% block popup_base_contents %}
-    <div class="popup_calendar_plan_view">
-        <div class="obj_font_size_20_weight_bold">2019년 1월 30일 (수)</div>
-        <div class="obj_font_size_14_weight_500"><span class="obj_font_color_pters_red">1개</span>의 일정이 있습니다.</div>
+
+    <div class="popup_calendar_plan_reserve_complete">
+        <div class="obj_font_size_20_weight_bold obj_font_color_pters_red">예약 신청 완료</div>
+        <div class="obj_font_size_14_weight_500">김현기 강사님의 수업에 예약 신청되었습니다.</div>
         <div class="obj_box_full">
             <div class="wrapper_tag">
                 <div class="obj_tag obj_font_bg_white_pink">예약완료</div>
@@ -32,13 +33,14 @@
             </div>
         </div>
     </div>
-    <div class="obj_button_big obj_font_bg_white_pink" onclick="layer_popup('open', 'popup_calendar_plan_reserve')">예약 추가하기</div>
+
+    <div class="obj_button_big obj_font_bg_pink_white" onclick="layer_popup('all_close')">확인</div>
 {% endblock %}
 
 {% block popup_base_js %}
     <script type="text/javascript">
         window.addEventListener('load', function() {
-            $('.popup_calendar_plan_view').parents('.popup_mobile').attr('id', 'popup_calendar_plan_view');
+            $('.popup_calendar_plan_reserve_complete').parents('.popup_mobile').attr('id', 'popup_calendar_plan_reserve_complete');
         });
     </script>
 {% endblock %}
