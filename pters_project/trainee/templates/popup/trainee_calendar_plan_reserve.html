@@ -5,7 +5,7 @@
 {% endblock %}
 <!-- pters.trainee.popup.plan_reserve.css -->
 {% block popup_base_contents %}
-    <div class="popup_calendar_plan_reserve">
+    <div class="popup_calendar_plan_reserve popup_mobile_content">
         <div class="obj_font_size_20_weight_bold">일정 예약</div>
         <div class="obj_font_size_14_weight_500">2019년 1월 17일 (목)</div>
     </div>
@@ -14,7 +14,7 @@
 
 {% block popup_base_js %}
     <script type="text/javascript">
-        window.addEventListener('load', function () {
+        window.addEventListener('load', function() {
             $('.popup_calendar_plan_reserve').parents('.popup_mobile').attr('id', 'popup_calendar_plan_reserve');
         });
     </script>

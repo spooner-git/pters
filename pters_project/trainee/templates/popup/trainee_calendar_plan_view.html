@@ -5,39 +5,39 @@
     <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan_view.css" %}>
 {% endblock %}
 {% block popup_base_contents %}
-    <div class="popup_calendar_plan_view">
-        <div class="obj_font_size_20_weight_bold">2019년 1월 30일 (수)</div>
-        <div class="obj_font_size_14_weight_500"><span class="obj_font_color_pters_red">1개</span>의 일정이 있습니다.</div>
-        <div class="obj_box_full">
-            <div class="wrapper_tag">
-                <div class="obj_tag obj_font_bg_white_pink">예약완료</div>
-            </div>
-            <div class="obj_font_size_16_weight_bold">(개인) 탄탄가슴 만들기</div>
-            <div class="wrapper_plan_info">
-                <div class="obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
-                    <div class="obj_table_cell_x3">일자</div>
-                    <div class="obj_table_cell_x3">요일</div>
-                    <div class="obj_table_cell_x3">진행시간</div>
+    <div class="popup_calendar_plan_view popup_mobile_content">
+            <div class="obj_font_size_20_weight_bold">2019년 1월 30일 (수)</div>
+            <div class="obj_font_size_14_weight_500"><span class="obj_font_color_pters_red">1개</span>의 일정이 있습니다.</div>
+            <div class="obj_box_full">
+                <div class="wrapper_tag">
+                    <div class="obj_tag obj_font_bg_white_pink">예약완료</div>
                 </div>
-                <div class="obj_table_raw obj_font_size_14_weight_500">
-                    <div class="obj_table_cell_x3">2019.01.16</div>
-                    <div class="obj_table_cell_x3">수요일</div>
-                    <div class="obj_table_cell_x3">14:00 ~ 16:00</div>
+                <div class="obj_font_size_16_weight_bold">(개인) 탄탄가슴 만들기</div>
+                <div class="wrapper_plan_info">
+                    <div class="obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
+                        <div class="obj_table_cell_x3">일자</div>
+                        <div class="obj_table_cell_x3">요일</div>
+                        <div class="obj_table_cell_x3">진행시간</div>
+                    </div>
+                    <div class="obj_table_raw obj_font_size_14_weight_500">
+                        <div class="obj_table_cell_x3">2019.01.16</div>
+                        <div class="obj_table_cell_x3">수요일</div>
+                        <div class="obj_table_cell_x3">14:00 ~ 16:00</div>
+                    </div>
+                </div>
+                <div class="obj_font_size_12_weight_normal"><span>"제발 지각하지 말아주세요."</span></div>
+                <div class="obj_table_raw wrapper_cancel_notice">
+                    <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_dark_grey">취소 가능 시간까지 <span class="obj_font_color_pters_red">3시간 26분</span> 남았습니다.</div>
+                    <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey">취소하기</div>
                 </div>
             </div>
-            <div class="obj_font_size_12_weight_normal"><span>"제발 지각하지 말아주세요."</span></div>
-            <div class="obj_table_raw wrapper_cancel_notice">
-                <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_dark_grey">취소 가능 시간까지 <span class="obj_font_color_pters_red">3시간 26분</span> 남았습니다.</div>
-                <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey">취소하기</div>
-            </div>
-        </div>
     </div>
     <div class="obj_button_big obj_font_bg_white_pink" onclick="layer_popup('open', 'popup_calendar_plan_reserve')">예약 추가하기</div>
 {% endblock %}
 
 {% block popup_base_js %}
     <script type="text/javascript">
-        window.addEventListener('load', function () {
+        window.addEventListener('load', function() {
             $('.popup_calendar_plan_view').parents('.popup_mobile').attr('id', 'popup_calendar_plan_view');
         });
     </script>

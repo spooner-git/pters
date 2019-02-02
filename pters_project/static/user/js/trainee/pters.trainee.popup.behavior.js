@@ -8,7 +8,7 @@ function layer_popup(option, popup_name){
             }
             popup_array.push(popup_name);
             $popup.css({"transform":"translateX(0)", "transition":"transform 0.3s ease-in-out", "z-index":100*popup_array.length});
-            // $popup.find('.popup_mobile_content').css({"height":windowHeight - 55 + 'px'});
+            $popup.find('.popup_mobile_content').css({"height":windowHeight - 55 + 'px', "overflow-y":"auto"});
         break;
         case "close":
             if(popup_array.length == 1){
