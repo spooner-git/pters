@@ -1,1 +1,5 @@
 /* 예/아니오 등 기본 팝업 CSS */
+.popup_mobile > .obj_button_big{
+	position: absolute;
+	bottom: 0;
+}
