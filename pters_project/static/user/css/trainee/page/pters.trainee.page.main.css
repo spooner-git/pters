@@ -46,7 +46,7 @@
 			width: auto;
 		}
 		.trainee_main .wrapper_my_ticket_type .obj_icon_arrow{
-			transform: rotate(180deg);
+			/*transform: rotate(180deg);*/
 			float: right;
 		}
 	.trainee_main .wrapper_my_ticket_title{

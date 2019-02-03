@@ -141,11 +141,12 @@
 
 /* 버튼 */
     .obj_button_x{
-
+        width: 24px;
+        height: 24px;
     }
     .obj_icon_arrow{
-        height: 6px;
-        padding: 9px;
+        width: 24px;
+        height: 24px;
     }
 
     .obj_button_gen{
