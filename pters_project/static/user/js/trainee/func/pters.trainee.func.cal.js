@@ -85,7 +85,7 @@ function draw_month_calendar_table(reference_date, targetHTML, design_options){
     //달력의 상단의 연월 표기
     var month_calendar_upper_tool = `<div id="pters_month_cal_upper_tool_box" style="width:100%;text-align:center;">
                                         <div id="go_prev_month" onclick="draw_month_calendar_table('${prev_page}', '${targetHTML}', '${design_options_stringify}')"> <img src="/static/user/res/icon-setting-arrow.png"> </div>
-                                        <div style="display:inline-block;vertical-align:middle;"><div id="pters_month_cal_tool_year_text" class="textbox_size_12_weight_500">${Number(referencedate_year)}년</div><div id="pters_month_cal_tool_month_text" class="textbox_size_20_weight_bold">${Number(referencedate_month)}월</div></div>
+                                        <div style="display:inline-block;vertical-align:middle;"><div id="pters_month_cal_tool_year_text" class="obj_font_size_12_weight_500">${Number(referencedate_year)}년</div><div id="pters_month_cal_tool_month_text" class="obj_font_size_20_weight_bold">${Number(referencedate_month)}월</div></div>
                                         <div id="go_next_month" onclick="draw_month_calendar_table('${next_page}', '${targetHTML}', '${design_options_stringify}')"> <img src="/static/user/res/icon-setting-arrow.png"> </div>
                                     </div>`;
     
@@ -135,7 +135,7 @@ function draw_month_calendar_table(reference_date, targetHTML, design_options){
     var inner_max_height = calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height - 3 +'px';
 
     //상단의 연월 표기, 일월화수목 표기, 달력숫자를 합쳐서 화면에 그린다.
-    $targetHTML.html(month_calendar_upper_tool+'<div class="box_full">'+month_day_name_text+'<div id="pters_month_cal_content_wrapper" style="height:'+inner_height+'; max-height:'+inner_max_height+';">'+calendar_assembled+'</div></div>');
+    $targetHTML.html(month_calendar_upper_tool+'<div class="obj_box_full">'+month_day_name_text+'<div id="pters_month_cal_content_wrapper" style="height:'+inner_height+'; max-height:'+inner_max_height+';">'+calendar_assembled+'</div></div>');
 }
 
 function get_prev_next_month(reference_date_year, referece_date_month){
