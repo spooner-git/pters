@@ -140,11 +140,11 @@
     }
 
 /* 버튼 */
-    .obj_button_x{
+    .obj_icon_x{
         width: 24px;
         height: 24px;
     }
-    .obj_icon_arrow{
+    .obj_icon_expand{
         width: 24px;
         height: 24px;
     }
@@ -167,6 +167,7 @@
         text-align: center;
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
         border: 5px solid #f0f0f0;
+        border-radius: 2px;
         box-sizing: border-box;
         font-size: 15px;
         font-weight: bold;

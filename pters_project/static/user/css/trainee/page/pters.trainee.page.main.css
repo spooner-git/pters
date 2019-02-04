@@ -45,7 +45,7 @@
 		.trainee_main .wrapper_my_ticket_type .obj_table_cell_x2{
 			width: auto;
 		}
-		.trainee_main .wrapper_my_ticket_type .obj_icon_arrow{
+		.trainee_main .wrapper_my_ticket_type .obj_icon_expand{
 			/*transform: rotate(180deg);*/
 			float: right;
 		}
@@ -86,6 +86,10 @@
 		}
 		.trainee_main .wrapper_my_ticket_detail_teacher .wrapper_teacher_name{
 			padding-left: 10px;
+		}
+		.trainee_main .wrapper_my_ticket_detail_teacher .wrapper_teacher_name .obj_font_size_14_weight_500{
+			height: 20px;
+			line-height: 20px;
 		}
 		.trainee_main .wrapper_my_ticket_detail_teacher .text_button_phone{
 			text-align: right;

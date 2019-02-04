@@ -39,7 +39,7 @@
         <div class="obj_box_card">
             <div class="obj_table_raw wrapper_my_ticket_type">
                 <div class="obj_table_cell_x2 obj_font_size_12_weight_500 obj_font_color_pters_red">개인/그룹</div>
-                <img class="obj_table_cell_x2 obj_icon_arrow" src="/static/common/icon/expand_more_black.png" data-open="close">
+                <img class="obj_table_cell_x2 obj_icon_expand" src="/static/common/icon/expand_more_black.png" data-open="close">
             </div>
             <div class="wrapper_my_ticket_title obj_font_size_16_weight_bold">냉혈한 김선생의 다가오는 여름 준비</div>
 
@@ -92,7 +92,7 @@
     	$('#nav_btn_home').addClass("nav_selected");
 
     	/*수강권 정보 열고 닫기*/
-        $(document).on("click", '.wrapper_my_ticket_type .obj_icon_arrow', function(){
+        $(document).on("click", '.wrapper_my_ticket_type .obj_icon_expand', function(){
         	var $this = $(this);
         	var option = $this.attr("data-open");
             var wrapper_my_ticket_detail_close = $('#wrapper_my_ticket_detail_close');
