@@ -71,7 +71,7 @@ function draw_month_calendar_table(reference_date, targetHTML){
         lastday_array[1] = 28;
     }
 
-    var current_month_firstdate_day = new Date(`${referencedate_year}`,`${referencedate_month}`,`${'1'}`).getDay();
+    var current_month_firstdate_day = new Date(`${referencedate_year}`,`${referencedate_month-1}`,`${'1'}`).getDay();
 
     var prev_next_month = get_prev_next_month(referencedate_year, referencedate_month);
     var prev_page = prev_next_month["prev"];
@@ -137,15 +137,16 @@ function draw_month_calendar_table(reference_date, targetHTML){
 
 function get_prev_next_month(reference_date_year, reference_date_month){
     //입력받은 년월을 기준으로, (연도/다음달/다음달의 마지막일), (연도/전달/전달의 1일) 를 구해서 출력해준다.
-    var prev_month = new Date(`${reference_date_year}`,`${reference_date_month}`,`${'01'}`);
-    var next_month = new Date(`${reference_date_year}`,`${reference_date_month}`,`${lastday_array[reference_date_month-1]}`);
+    var prev_month = new Date(`${reference_date_year}`,`${reference_date_month-1}`,`${'01'}`);
+    var next_month = new Date(`${reference_date_year}`,`${reference_date_month-1}`,`${lastday_array[reference_date_month-1]}`);
 
     prev_month.setDate(0);
     next_month.setDate(next_month.getDate()+1);
-
     var prev_page = `${prev_month.getFullYear()}-${prev_month.getMonth()+1}-${prev_month.getDate()}`;
     var next_page = `${next_month.getFullYear()}-${next_month.getMonth()+1}-${next_month.getDate()}`;
 
+    console.log(prev_page);
+    console.log(next_page);
     return {"next":next_page, "prev":prev_page};
 }
 
