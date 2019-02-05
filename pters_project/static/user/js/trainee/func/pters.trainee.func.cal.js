@@ -136,8 +136,8 @@ function draw_month_calendar_table(reference_date, targetHTML){
 
 function get_prev_next_month(reference_date_year, referece_date_month){
     //입력받은 년월을 기준으로, (연도/다음달/다음달의 1일), (연도/전달/전달의 마지막일자) 를 구해서 출력해준다.
-    var prev_month = new Date(`${reference_date_year}-${referece_date_month}-${'1'}`);
-    var next_month = new Date(`${reference_date_year}-${referece_date_month}-${lastday_array[referece_date_month-1]}`);
+    var prev_month = new Date(`${reference_date_year}/${referece_date_month}/${'1'}`);
+    var next_month = new Date(`${reference_date_year}/${referece_date_month}/${lastday_array[referece_date_month-1]}`);
 
     prev_month.setDate(0);
     next_month.setDate(next_month.getDate()+1);
