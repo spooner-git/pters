@@ -100,18 +100,17 @@
 
             //content 높이와 스크롤 셋팅
             var $content = $('.content_page');
+            const popupHeight = $content.height();
             // $content.css("height", windowHeight-Number($('body').css("padding-top").replace(/px/gi,""))+"px");
             $content.css("height", windowHeight-parseInt($('body').css("padding-top"), 10));
             $content.scrollTop(1);
             $content.scroll(function(){
-                var $this = $(this);
-                var scrollHeight = $this.prop('scrollHeight');
-                var popupHeight = $this.height();
-                var scrollLocation = $this.scrollTop();
+                const scrollHeight = $content.prop('scrollHeight');
+                const scrollLocation = $content.scrollTop();
                 if(popupHeight + scrollLocation == scrollHeight){
-                    $this.animate({scrollTop : scrollLocation-1}, 10);
+                    $content.animate({scrollTop : scrollLocation-1}, 10);
                 }else if(popupHeight + scrollLocation == popupHeight){
-                    $this.animate({scrollTop : scrollLocation+1}, 10);
+                    $content.animate({scrollTop : scrollLocation+1}, 10);
                 }
             });
 
