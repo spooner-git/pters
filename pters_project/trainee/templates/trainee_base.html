@@ -35,8 +35,8 @@
         <meta name="author" content="">
 
         <link rel="icon" href="/static/common/favicon.ico">
-        <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
-        <link rel="shortcut icon" href="/static/common/favicon-152.png">
+        <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
+        <link rel="shortcut icon" href="/static/common/favicon-48.png">
         <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.fundamental.css"%}>
         <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan.css"%}>
         <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.base.css" %}>
@@ -85,23 +85,23 @@
         <script type="text/javascript">
 
             //기기 사이즈, 창사이즈 계산
-            var windowWidth = $(window).width();
-            var windowHeight = $(window).height();
+            const windowWidth = $(window).width();
+            const windowHeight = $(window).height();
+            const varUA = navigator.userAgent.toLowerCase();
 
             //기기종류 판단
-            var device;
-            var varUA = navigator.userAgent.toLowerCase();
-            if (varUA.match('android') != null) {
+            var device = 'pc';
+
+            if (varUA.match(/android/) != null) {
                 device = 'android';
-            } else if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
+            } else if (varUA.match(/iphone/) != null || varUA.match(/ipad/) != null || varUA.match(/ipod/) != null) {
                 device = 'iphone';
-            } else {
-                device = 'pc';
             }
 
             //content 높이와 스크롤 셋팅
             var $content = $('.content_page');
-            $content.css("height", windowHeight-Number($('body').css("padding-top").replace(/px/gi,""))+"px");
+            // $content.css("height", windowHeight-Number($('body').css("padding-top").replace(/px/gi,""))+"px");
+            $content.css("height", windowHeight-parseInt($('body').css("padding-top"), 10));
             $content.scrollTop(1);
             $content.scroll(function(){
                 var $this = $(this);
