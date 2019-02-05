@@ -103,7 +103,6 @@
             // $content.css("height", windowHeight-Number($('body').css("padding-top").replace(/px/gi,""))+"px");
             $content.css("height", windowHeight-parseInt($('body').css("padding-top"), 10));
             $content.scrollTop(1);
-            /*
             $content.scroll(function(){
                 const popupHeight = $content.height();
                 const scrollHeight = $content.prop('scrollHeight');
@@ -114,7 +113,7 @@
                     $content.animate({scrollTop : scrollLocation+1}, 10);
                 }
             });
-            */
+
         </script>
         {% block local_js_footer %}
         {% endblock %}
