@@ -70,8 +70,7 @@ function draw_month_calendar_table(reference_date, targetHTML){
     }else{
         lastday_array[1] = 28;
     }
-    var current_month_firstdate_day = new Date(`${referencedate_year}-${referencedate_month}-${'1'}`).getDay();
-
+    var current_month_firstdate_day = new Date(`${referencedate_year}`,`${referencedate_month}`,`${'1'}`).getDay();
     var prev_next_month = get_prev_next_month(referencedate_year, referencedate_month);
     var prev_page = prev_next_month["prev"];
     var next_page = prev_next_month["next"];
@@ -134,10 +133,10 @@ function draw_month_calendar_table(reference_date, targetHTML){
     $targetHTML.html(month_calendar_upper_tool+'<div class="obj_box_full">'+month_day_name_text+'<div id="pters_month_cal_content_wrapper" style="height:'+inner_height+'; max-height:'+inner_max_height+';">'+calendar_assembled+'</div></div>');
 }
 
-function get_prev_next_month(reference_date_year, referece_date_month){
-    //입력받은 년월을 기준으로, (연도/다음달/다음달의 1일), (연도/전달/전달의 마지막일자) 를 구해서 출력해준다.
-    var prev_month = new Date(`${reference_date_year}-${referece_date_month}-${'1'}`);
-    var next_month = new Date(`${reference_date_year}-${referece_date_month}-${lastday_array[referece_date_month-1]}`);
+function get_prev_next_month(reference_date_year, reference_date_month){
+    //입력받은 년월을 기준으로, (연도/다음달/다음달의 마지막일), (연도/전달/전달의 1일) 를 구해서 출력해준다.
+    var prev_month = new Date(`${reference_date_year}`,`${reference_date_month}`,`${'01'}`);
+    var next_month = new Date(`${reference_date_year}`,`${reference_date_month}`,`${lastday_array[reference_date_month-1]}`);
 
     prev_month.setDate(0);
     next_month.setDate(next_month.getDate()+1);
