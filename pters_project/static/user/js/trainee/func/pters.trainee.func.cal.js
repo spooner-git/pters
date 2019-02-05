@@ -70,7 +70,9 @@ function draw_month_calendar_table(reference_date, targetHTML){
     }else{
         lastday_array[1] = 28;
     }
+
     var current_month_firstdate_day = new Date(`${referencedate_year}`,`${referencedate_month}`,`${'1'}`).getDay();
+
     var prev_next_month = get_prev_next_month(referencedate_year, referencedate_month);
     var prev_page = prev_next_month["prev"];
     var next_page = prev_next_month["next"];
