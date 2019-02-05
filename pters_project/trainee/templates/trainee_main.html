@@ -39,7 +39,7 @@
         <div class="obj_box_card">
             <div class="obj_table_raw wrapper_my_ticket_type">
                 <div class="obj_table_cell_x2 obj_font_size_12_weight_500 obj_font_color_pters_red">개인/그룹</div>
-                <img class="obj_table_cell_x2 obj_icon_arrow" src="/static/user/res/icon-down-grey.png" data-open="close">
+                <img class="obj_table_cell_x2 obj_icon_expand" src="/static/common/icon/expand_more_black.png" data-open="close">
             </div>
             <div class="wrapper_my_ticket_title obj_font_size_16_weight_bold">냉혈한 김선생의 다가오는 여름 준비</div>
 
@@ -73,7 +73,7 @@
                         <div class="obj_table_raw">12 회</div>
                     </div>
                 </div>
-                <div class="obj_obj_table_raw wrapper_my_ticket_detail_teacher">
+                <div class="obj_table_raw wrapper_my_ticket_detail_teacher">
                     <div class="obj_table_cell_x3 obj_box_photo"></div>
                     <div class="obj_table_cell_x3 wrapper_teacher_name">
                         <div class="obj_font_size_14_weight_500">홍길동</div>
@@ -92,7 +92,7 @@
     	$('#nav_btn_home').addClass("nav_selected");
 
     	/*수강권 정보 열고 닫기*/
-        $(document).on("click", '.wrapper_my_ticket_type .obj_icon_arrow', function(){
+        $(document).on("click", '.wrapper_my_ticket_type .obj_icon_expand', function(){
         	var $this = $(this);
         	var option = $this.attr("data-open");
             var wrapper_my_ticket_detail_close = $('#wrapper_my_ticket_detail_close');
@@ -100,13 +100,15 @@
 
         	switch(option){
         		case "open":
-        			$this.attr("data-open", "close");
+        			$this.attr({"data-open": "close",
+                                "src": "/static/common/icon/expand_more_black.png"});
                     wrapper_my_ticket_detail_close.show();
                     wrapper_my_ticket_detail_open.hide();
         		break;
 
         		case "close":
-        			$this.attr("data-open", "open");
+        			$this.attr({"data-open": "open",
+                                "src": "/static/common/icon/expand_less_black.png"});
                     wrapper_my_ticket_detail_close.hide();
                     wrapper_my_ticket_detail_open.show();
         		break;

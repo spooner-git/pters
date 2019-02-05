@@ -1,17 +1,32 @@
-
 #calendar{
 	overflow-y: hidden;
 }
+
+	#calendar .obj_font_size_12_weight_500{
+		line-height: 20px;
+		height: 20px;
+	}
 	#calendar > .obj_box_full{
 		padding: 0;
 	}
+	#calendar .obj_table_cell_x7{
+		text-align: center;
+		vertical-align: top;
+		border-bottom: 1px solid #f5f5f5;
+	}
+
+#pters_month_cal_day_name_box{
+	height: 40px;
+	line-height: 40px;
+}
+
 #pters_month_cal_upper_tool_box{
 	height: 70px;
 	padding-top: 35px;
+	width: 100%;
+	text-align: center;
 }
 	#pters_month_cal_tool_year_text{
-		line-height: 20px;
-		height: 20px;
 		width: 80px;
 	}
 	#pters_month_cal_tool_month_text{
@@ -37,29 +52,22 @@
 
 #pters_month_cal_content_wrapper{
 	top: 155px;
-	width: 100%;
-	padding-top: 0;
-
+	/*width: 100%;*/
+	/*padding-top: 0;*/
 	overflow-y: auto;
 	-webkit-overflow-scrolling:auto;
 }
-::-webkit-scrollbar{
-	width: 0;
-}
-	#pters_month_cal_day_name_box{
-		height: 40px;
-		line-height: 40px;
-		background-color: #ffffff;
-		border-bottom: 1px solid #f5f5f5;
+
+	#pters_month_cal_content_wrapper .obj_table_raw{
+		height: 90px;
+		text-align: center;
+		vertical-align: top;
 	}
+
 	#pters_month_cal_content_box{
 		height: auto;
 	}
 
-.week_row{
-	/*height: 90px;*/
-	display:table;
-	width:100%;
-	background-color:#ffffff;
-	border-bottom: 1px solid #f5f5f5;
+::-webkit-scrollbar{
+	width: 0;
 }
