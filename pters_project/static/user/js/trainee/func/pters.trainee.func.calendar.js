@@ -209,8 +209,6 @@ function pters_month_calendar(calendar_name, calendar_options){
         // });
     }
 
-
-
     return {
         "calendar_name": calendar_name,
         "init_month_calendar_table":function(){
