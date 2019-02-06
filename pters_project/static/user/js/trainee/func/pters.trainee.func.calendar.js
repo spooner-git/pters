@@ -1,34 +1,31 @@
 // 달력 initialize
-let month_function = func_init_month_day();
-let month_calendar = func_init_month_calendar();
+const default_design_options = {"font_color_sunday":["obj_font_color_pters_dark_red"],
+                              "font_color_saturday":["obj_font_color_light_blue"],
+                              "font_date_basic":["obj_font_size_12_weight_500"],
+                              "font_day_names":["obj_font_size_11_weight_normal"],
+                              "height_week_row":[90]};
 
-function func_init_month_calendar(){
-    const default_design_options = {"font_color_sunday":["obj_font_color_pters_dark_red"],
-                                  "font_color_saturday":["obj_font_color_light_blue"],
-                                  "font_date_basic":["obj_font_size_12_weight_500"],
-                                  "font_day_names":["obj_font_size_11_weight_normal"],
-                                  "height_week_row":[90]};
+const default_targetHTML = '#calendar';
 
-    const custom_design_options = {"font_color_sunday":"obj_font_color_light_blue",
-                                 "font_color_saturday":"obj_font_color_pters_red",
-                                 "font_date_basic":"obj_font_size_14_weight_normal",
-                                 "font_day_names":"obj_font_size_16_weight_bold",
-                                 "height_week_row":50};
-
-    let design_options = default_design_options;
+function func_init_month_calendar(design_options, targetHTML){
+    if(design_options==undefined){
+        design_options = default_design_options;
+    }
+    if(targetHTML==undefined){
+        targetHTML = default_targetHTML;
+    }
     const calendar_height = windowHeight - parseInt($('body').css('padding-top'), 10) - 20;
     const calendar_toolbox_height = 105;
     const calendar_month_day_name_text_height = 40;
 
     let date = new Date();
-    let current_year = date.getFullYear(); //현재 년도
-    let current_month = date.getMonth(); //달은 0부터 출력해줌 0~11
+    var current_year = date.getFullYear(); //현재 년도
+    var current_month = date.getMonth(); //달은 0부터 출력해줌 0~11
     let current_date = date.getDate();
     let current_day = date.getDay(); // 0,1,2,3,4,5,6,7
     let current_hour = date.getHours();
     let current_minute = date.getMinutes();
     let today_yyyy_mm_dd = current_year+'-'+(current_month+1)+'-'+current_date;
-    let targetHTML = '#calendar';
 
     return {
         "init_month_calendar_table":(function(){
@@ -37,47 +34,35 @@ function func_init_month_calendar(){
             func_month_calendar_basic_size(calendar_height);
             set_touch_move_to_month_calendar(targetHTML);
         }()),
+        "reference_date":(function(){
+            return today_yyyy_mm_dd;
+        }()),
         "draw_month_calendar_table":function (reference_date, targetHTML) {
+            if(reference_date==undefined){
+                reference_date = today_yyyy_mm_dd;
+            }
+            if(targetHTML==undefined){
+                targetHTML = default_targetHTML;
+            }
             func_draw_month_calendar_table(reference_date, targetHTML, design_options);
             func_draw_month_calendar_size(calendar_height, calendar_toolbox_height, calendar_month_day_name_text_height);
+            this.reference_date = reference_date;
+            set_prev_next_month_button(this);
         }
     };
 }
 
-function func_init_month_day(){
-    let last_day_array = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];      //각 달의 일수
-
-    function func_get_month_end_day (input_year, input_month){
-        if( (input_year % 4 == 0 && input_year % 100 != 0) || input_year % 400 == 0 ){  //윤년
-            last_day_array[1] = 29;
-        }else{
-            last_day_array[1] = 28;
-        }
-        return last_day_array[input_month-1];
-    }
-
-    return {
-        "get_month_end_day": function(input_year, input_month) {
-            return func_get_month_end_day(input_year, input_month)
-        },
-        "get_prev_month" :function(reference_date_year, reference_date_month){
-            //입력받은 년월을 기준으로 (연도/전달/전달의 1일) 를 구해서 출력해준다.
-            let prev_month = new Date(`${reference_date_year}`,`${reference_date_month-1}`,`${'01'}`);
-            prev_month.setDate(0);
-
-            return `${prev_month.getFullYear()}-${prev_month.getMonth()+1}-${prev_month.getDate()}`;
-        },
-        "get_next_month" :function(reference_date_year, reference_date_month){
-            //입력받은 년월을 기준으로 (연도/다음달/다음달의 마지막일) 를 구해서 출력해준다.
-            let reference_month_last_day = func_get_month_end_day(reference_date_year, reference_date_month);
-            let next_month = new Date(`${reference_date_year}`,`${reference_date_month-1}`,`${reference_month_last_day}`);
-
-            next_month.setDate(next_month.getDate()+1);
-
-            return `${next_month.getFullYear()}-${next_month.getMonth()+1}-${next_month.getDate()}`;
-
-        }
-    }
+function set_prev_next_month_button(calendar_variable){
+    let reference_date = calendar_variable.reference_date;
+    let reference_date_split_array = reference_date.split('-');
+    let reference_year = reference_date_split_array[0];
+    let reference_month = reference_date_split_array[1];
+    $('#go_prev_month').click(function(){
+        calendar_variable.draw_month_calendar_table(func_get_prev_month(reference_year, reference_month));
+    });
+    $('#go_next_month').click(function(){
+        calendar_variable.draw_month_calendar_table(func_get_next_month(reference_year, reference_month));
+    });
 }
 
 function func_month_calendar_basic_size(calendar_height){
@@ -90,7 +75,6 @@ function func_draw_month_calendar_size(calendar_height, calendar_toolbox_height,
     $('#pters_month_cal_content_box').css({"height":calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height,
                                            "max-height":calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height - 3});
 }
-
 //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기
 function func_draw_month_calendar_table(reference_date, targetHTML, design_options){
     let $targetHTML = $(targetHTML);
@@ -98,16 +82,13 @@ function func_draw_month_calendar_table(reference_date, targetHTML, design_optio
     let reference_date_year = reference_date_split_array[0];
     let reference_date_month = reference_date_split_array[1];
     let reference_date_date = reference_date_split_array[2];
-    let reference_date_month_last_day = month_function.get_month_end_day(reference_date_year, reference_date_month);
+    let reference_date_month_last_day = func_get_month_end_day(reference_date_year, reference_date_month);
 
     let current_month_first_date_day = new Date(`${reference_date_year}`,`${reference_date_month-1}`,`${'1'}`).getDay();
 
-    let prev_page = month_function.get_prev_month(reference_date_year, reference_date_month);
-    let next_page = month_function.get_next_month(reference_date_year, reference_date_month);
-
     //달력의 상단의 연월 표기
     let month_calendar_upper_tool = `<div id="pters_month_cal_upper_tool_box">
-                                        <div id="go_prev_month" onclick="month_calendar.draw_month_calendar_table('${prev_page}', '${targetHTML}')">
+                                        <div id="go_prev_month">
                                             <img src="/static/user/res/icon-setting-arrow.png"> 
                                         </div>
                                         <div style="display:inline-block;vertical-align:middle;">
@@ -118,11 +99,11 @@ function func_draw_month_calendar_table(reference_date, targetHTML, design_optio
                                                 ${Number(reference_date_month)}월
                                             </div>
                                         </div>
-                                        <div id="go_next_month" onclick="month_calendar.draw_month_calendar_table('${next_page}', '${targetHTML}')">
+                                        <div id="go_next_month">
                                             <img src="/static/user/res/icon-setting-arrow.png">
                                         </div>
                                     </div>`;
-    
+
     //달력의 월화수목금 표기를 만드는 부분
     let month_day_name_text = `<div id="pters_month_cal_day_name_box" class="obj_table_raw ${design_options["font_day_names"]}"> 
                                 <div class="obj_table_cell_x7 ${design_options["font_color_sunday"]}">일</div>
@@ -177,6 +158,7 @@ function func_draw_month_calendar_table(reference_date, targetHTML, design_optio
 
     //상단의 연월 표기, 일월화수목 표기, 달력숫자를 합쳐서 화면에 그린다.
     $targetHTML.html(month_calendar_upper_tool+'<div class="obj_box_full">'+month_day_name_text+calendar_assembled+'</div>');
+
 }
 
 
@@ -216,4 +198,33 @@ function set_touch_move_to_month_calendar(){
     //         }
     //     }
     // });
+}
+
+function func_get_month_end_day (input_year, input_month){
+    let last_day_array = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];      //각 달의 일수
+
+    if( (input_year % 4 == 0 && input_year % 100 != 0) || input_year % 400 == 0 ){  //윤년
+        last_day_array[1] = 29;
+    }else{
+        last_day_array[1] = 28;
+    }
+    return last_day_array[input_month-1];
+}
+
+function func_get_prev_month(reference_date_year, reference_date_month){
+    //입력받은 년월을 기준으로 (연도/전달/전달의 1일) 를 구해서 출력해준다.
+    let prev_month = new Date(`${reference_date_year}`,`${reference_date_month-1}`,`${'01'}`);
+    prev_month.setDate(0);
+
+    return `${prev_month.getFullYear()}-${prev_month.getMonth()+1}-${prev_month.getDate()}`;
+}
+
+function func_get_next_month(reference_date_year, reference_date_month){
+    //입력받은 년월을 기준으로 (연도/다음달/다음달의 마지막일) 를 구해서 출력해준다.
+    let reference_month_last_day = func_get_month_end_day(reference_date_year, reference_date_month);
+    let next_month = new Date(`${reference_date_year}`,`${reference_date_month-1}`,`${reference_month_last_day}`);
+
+    next_month.setDate(next_month.getDate()+1);
+
+    return `${next_month.getFullYear()}-${next_month.getMonth()+1}-${next_month.getDate()}`;
 }

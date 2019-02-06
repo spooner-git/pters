@@ -25,6 +25,16 @@
     <script type="text/javascript">
         // Nav 바에 현재 페이지에 밑줄 표기
         $('#nav_btn_plan').addClass("nav_selected");
+
+        const custom_design_options = {"font_color_sunday":"font_color_light_blue",
+                                      "font_color_saturday":"font_color_pters_red",
+                                      "font_date_basic":"textbox_size_14_weight_normal",
+                                      "font_day_names":"textbox_size_16_weight_bold",
+                                      "height_week_row":50};
+        const custom_targetHTML = '#calendar';
+        var month_calendar = func_init_month_calendar();
+        set_prev_next_month_button(month_calendar);
+
     </script>
 
 {% endblock %}
