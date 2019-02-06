@@ -153,6 +153,10 @@
         width: 24px;
         height: 24px;
     }
+    .obj_icon_arrow{
+        width: 24px;
+        height: 24px;
+    }
 
     .obj_button_gen{
         display: inline-block;

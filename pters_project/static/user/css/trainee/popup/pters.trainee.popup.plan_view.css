@@ -1,3 +1,7 @@
+.popup_calendar_plan_view{
+	min-height: 100%;
+    margin: 0px;
+}
 	.popup_calendar_plan_view > .obj_font_size_20_weight_bold{
 		padding: 0 20px;
 		height: 35px;

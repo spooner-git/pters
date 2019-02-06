@@ -91,11 +91,21 @@
 
             //기기종류 판단
             var device = 'pc';
-
+            var browser = 'chrome';
             if (varUA.match(/android/) != null) {
                 device = 'android';
             } else if (varUA.match(/iphone/) != null || varUA.match(/ipad/) != null || varUA.match(/ipod/) != null) {
                 device = 'iphone';
+            }
+
+            if (varUA.match(/firefox/) != null) {
+                browser = 'firefox';
+            } else if (varUA.match(/chrome/) != null || varUA.match(/chromium/) != null) {
+                browser = 'chrome';
+            } else if (varUA.match(/safari/) != null) {
+                browser = 'safari';
+            } else if (varUA.match(/edge/) != null) {
+                browser = 'edge';
             }
 
             //content 높이와 스크롤 셋팅

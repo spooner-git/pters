@@ -11,63 +11,57 @@
         <div class="obj_box_full obj_font_bg_white_dark_grey">
             <div class="obj_table_raw">
                 <div class="obj_table_cell_x2 obj_font_size_13_weight_500">나의 예약 가능 횟수 보기</div>
-                <div class="obj_table_cell_x2"><img src="/static/common/icon/expand_more_black.png" class="obj_icon_arrow"></div>
+                <div class="obj_table_cell_x2"><img src="/static/common/icon/expand_more_black.png" class="obj_icon_expand"></div>
             </div>
             <div class="wrapper_ticket_info">
                 <div class="obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
-                    <div class="obj_table_cell_x2">수강권명</div>
-                    <div class="obj_table_cell_x2">예약 가능 횟수</div>
+                    <div class="wrapper_ticket_name obj_table_cell_x2">수강권명</div>
+                    <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x2">예약 가능 횟수</div>
                 </div>
                 <div class="obj_table_raw">
-                    <div id="ticket_name_info" class="obj_table_cell_x2 obj_font_size_12_weight_500 obj_font_color_white">냉혈한 김선생의 다가오는 여름준비</div>
-                    <div id="ticket_count_info" class="obj_table_cell_x2 obj_font_size_12_weight_bold obj_font_color_pters_red">12 회</div>
+                    <div class="wrapper_ticket_name obj_table_cell_x2 obj_font_size_12_weight_500 obj_font_color_white">냉혈한 김선생의 다가오는 여름준비</div>
+                    <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x2 obj_font_size_12_weight_bold obj_font_color_pters_red">12 회</div>
                 </div>
             </div>    
         </div>
         <div class="wrapper_reserve_form">
             <div class="obj_table_raw">
-                <div class="obj_table_cell_x2 obj_font_size_14_weight_normal">수업 종류:</div>
-                <div class="obj_table_cell_x2">
-                    <select class="obj_font_size_14_weight_500 obj_font_color_light_grey">
-                        <option disabled selected>수업명</option>
-                        <option>수업 종류1</option>
-                        <option>수업 종류2</option>
-                    </select>
-                    <img src="/static/common/icon/expand_more_black.png" class="obj_icon_arrow">
+                <div class="wrapper_reserve_form_title obj_table_cell_x2 obj_font_size_14_weight_normal">
+                    <div class="obj_table_raw">수업 종류:</div>
+                    <div class="obj_table_raw">예약 시간:</div>
+                    <div class="obj_table_raw">메모:</div>
                 </div>
-            </div>
-            <div class="obj_table_raw">
-                <div class="obj_table_cell_x2 obj_font_size_14_weight_normal">예약 시간:</div>
-                <div class="obj_table_cell_x2">
-                    <select class="obj_font_size_14_weight_500 obj_font_color_light_grey">
-                        <option disabled selected>예약 시간 선택</option>
-                        <option>예약 시간1</option>
-                        <option>예약 시간2</option>
-                    </select>
-                    <img src="/static/common/icon/expand_more_black.png" class="obj_icon_arrow">
-                </div>
-            </div>
-            <div class="obj_table_raw">
-                <div class="obj_table_cell_x2 obj_font_size_14_weight_normal">메모:</div>
-                <div class="obj_table_cell_x2">
-                    <input class="obj_font_size_14_weight_500" type="text" name="memo_to_teacher" placeholder="강사님에게 메모 남기기">
+                <div class="wrapper_reserve_form_data obj_table_cell_x2">
+                    <div class="obj_table_raw">
+                        <select class="obj_font_size_14_weight_500 obj_font_color_light_grey">
+                            <option disabled selected>수업명</option>
+                            <option>수업 종류1</option>
+                            <option>수업 종류2</option>
+                        </select>
+                        <img src="/static/common/icon/expand_more_black.png" class="obj_icon_arrow">
+                    </div>
+                    <div class="obj_table_raw">
+                        <select class="obj_font_size_14_weight_500 obj_font_color_light_grey">
+                            <option disabled selected>예약 시간 선택</option>
+                            <option>예약 시간1</option>
+                            <option>예약 시간2</option>
+                        </select>
+                        <img src="/static/common/icon/expand_more_black.png" class="obj_icon_arrow">
+                    </div>
+                    <div class="obj_table_raw">
+                        <input class="obj_font_size_14_weight_500" type="text" name="memo_to_teacher" placeholder="강사님에게 메모 남기기">
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="wrapper_reserve_caution obj_font_color_grey obj_font_size_11_weight_500">
+        <div class="wrapper_reserve_caution obj_font_size_11_weight_500 obj_font_color_grey">
             <p><span class="obj_font_color_pters_red">2시간 단위로 예약</span> 할 수 있습니다.</p>
             <p><span class="obj_font_color_pters_red">수업 시작 12시간 전까지 예약</span> 할 수 있습니다.</p>
             <p><span class="obj_font_color_pters_red">수업 시작 3시간 전까지 취소</span> 할 수 있습니다.</p>
         </div>
-
     </div>
     <div class="obj_button_big obj_font_bg_white_pink" onclick="layer_popup('open', 'popup_calendar_plan_reserve_complete')">예약하기</div>
 {% endblock %}
 
 {% block popup_base_js %}
-    <script type="text/javascript">
-        window.addEventListener('load', function() {
-            $('.popup_calendar_plan_reserve').parents('.popup_mobile').attr('id', 'popup_calendar_plan_reserve');
-        });
-    </script>
 {% endblock %}

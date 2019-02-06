@@ -1,4 +1,7 @@
-
+.popup_calendar_plan_reserve_complete{
+	min-height: 100%;
+    margin: 0px;
+}
     .popup_calendar_plan_reserve_complete > .obj_font_size_20_weight_bold{
         padding: 0 20px;
         height: 35px;
