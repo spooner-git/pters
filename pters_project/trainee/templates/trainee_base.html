@@ -45,6 +45,8 @@
     </head>
 
     <body>
+        <script src={% static_url "user/js/trainee/pters.trainee.const.js" %}></script>
+        <script src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
         <!-- Google Tag Manager (noscript) -->
         <noscript>
             <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D" height="0" width="0" style="display:none;visibility:hidden"></iframe>
@@ -80,7 +82,6 @@
         {% endblock %}
 
         <!-- Placed at the end of the document so the pages load faster -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.popup.behavior.js" %}></script>
         <script type="text/javascript">
 
@@ -91,20 +92,29 @@
 
             //기기종류 판단
             var device = 'pc';
+            var os = 'ios';
             var browser = 'chrome';
             if (varUA.match(/android/) != null) {
-                device = 'android';
-            } else if (varUA.match(/iphone/) != null || varUA.match(/ipad/) != null || varUA.match(/ipod/) != null) {
-                device = 'iphone';
+                device = 'phone';
+                os = 'android';
+            }else if (varUA.match(/iphone/) != null || varUA.match(/ipad/) != null || varUA.match(/ipod/) != null) {
+                device = 'phone';
+                os = 'ios';
+            }else if (varUA.match(/macintosh/) != null){
+                device = 'pc';
+                os = 'ios';
+            }else{
+                device = 'pc';
+                os = 'window';
             }
 
             if (varUA.match(/firefox/) != null) {
                 browser = 'firefox';
-            } else if (varUA.match(/chrome/) != null || varUA.match(/chromium/) != null) {
+            }else if (varUA.match(/chrome/) != null || varUA.match(/chromium/) != null) {
                 browser = 'chrome';
-            } else if (varUA.match(/safari/) != null) {
+            }else if (varUA.match(/safari/) != null) {
                 browser = 'safari';
-            } else if (varUA.match(/edge/) != null) {
+            }else if (varUA.match(/edge/) != null) {
                 browser = 'edge';
             }
 

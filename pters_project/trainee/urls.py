@@ -69,18 +69,19 @@ urlpatterns = [
 
     # 회원 메인 페이지
     url(r'^trainee_main/$', views.TraineeMainView.as_view(), name='trainee_main'),
+    # 월간 일정 페이지
+    url(r'^trainee_calendar/$', views.CalMonthView.as_view(), name='trainee_calendar'),
+    # 프로그램 선택 페이지
+    url(r'^trainee_program/$', views.ProgramSelectView.as_view(), name='trainee_program'),
+
     # 회원 빈 월간 일정 페이지
     url(r'^cal_month_blank/$', views.CalMonthBlankView.as_view(), name='cal_month_blank'),
     # 회원 빈 Mypage 페이지
     url(r'^mypage_trainee_blank/$', views.MyPageBlankView.as_view(), name='mypage_trainee_blank'),
-    # 월간 일정 페이지
-    url(r'^trainee_calendar/$', views.CalMonthView.as_view(), name='trainee_calendar'),
     # Mypage 페이지
     url(r'^mypage_trainee/$', views.MyPageView.as_view(), name='mypage_trainee'),
     # 강좌 선택 페이지
     url(r'^lecture_select/$', views.LectureSelectView.as_view(), name='lecture_select'),
-    # 프로그램 선택 페이지
-    url(r'^trainee_program/$', views.ProgramSelectView.as_view(), name='trainee_program'),
     # 회원 탈퇴 페이지
     url(r'^delete_trainee_account/$', views.DeleteTraineeAccountView.as_view(), name='delete_trainee_account'),
 ]

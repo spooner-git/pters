@@ -7,7 +7,7 @@ let layer_popup = (function(){
 
 function func_layer_popup(option, popup_name, popup_array){
     switch(option){
-        case "open":
+        case OPEN:
             //첫 팝업의 경우 옆으로 밀려나도록 보이는 효과
             if(popup_array.length == 0 && popup_name != "pters_mobile_side_menu"){
                 $('nav, .content_page').css({
@@ -21,16 +21,11 @@ function func_layer_popup(option, popup_name, popup_array){
                 $(`.${popup_name}`).parents('.popup_mobile').css({
                     "transform":"translateX(0)",
                     "transition":"transform 0.3s ease-in-out",
-                    "z-index":100*popup_array.length,
-                    "overflow-y":"auto"
+                    "z-index":100*popup_array.length
                 });
             }
-            console.log(windowHeight);
-            // if(windowHeight > ){
-
-            // }
         break;
-        case "close":
+        case CLOSE:
             //혹시 있을 pop 에러 방지
             if(popup_array.length > 0){
                 popup_name = popup_array.pop();
@@ -44,7 +39,7 @@ function func_layer_popup(option, popup_name, popup_array){
                 $(`.${popup_name}`).parents('.popup_mobile').css({"transform":"translateX(100%)"});
             }
         break;
-        case "all_close":
+        case ALL_CLOSE:
             let popup_len = popup_array.length;
             for(let i=0; i<popup_len; i++){
                 popup_name = popup_array.pop();

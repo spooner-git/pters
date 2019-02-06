@@ -4,7 +4,7 @@
 {% block local_css %}
     <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.object.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainee/page/pters.trainee.page.plan.css" %}>
-    <link rel="stylesheet" href={% static_url "user/css/trainee/func/pters.trainee.func.cal.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/func/pters.trainee.func.calendar.css" %}>
 {% endblock %}
 
 {% block content %}
@@ -21,8 +21,8 @@
 
 {% block local_js_footer %}
     <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.page.plan.js" %}></script>
-    <script type="text/javascript" src={% static_url "user/js/trainee/func/pters.trainee.func.cal.js" %}></script>
-    <script>
+    <script type="text/javascript" src={% static_url "user/js/trainee/func/pters.trainee.func.calendar.js" %}></script>
+    <script type="text/javascript">
         // Nav 바에 현재 페이지에 밑줄 표기
         $('#nav_btn_plan').addClass("nav_selected");
     </script>

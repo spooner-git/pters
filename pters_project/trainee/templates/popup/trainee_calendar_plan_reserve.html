@@ -11,7 +11,7 @@
         <div class="obj_box_full obj_font_bg_white_dark_grey">
             <div class="obj_table_raw">
                 <div class="obj_table_cell_x2 obj_font_size_13_weight_500">나의 예약 가능 횟수 보기</div>
-                <div class="obj_table_cell_x2"><img src="/static/common/icon/expand_more_black.png" class="obj_icon_expand" id="id_ticket_detail_expand_in_reserve" data-open="close"></div>
+                <div class="obj_table_cell_x2"><img src="/static/common/icon/expand_more_black.png" class="obj_icon_expand" id="id_ticket_detail_expand_in_reserve" data-open></div>
             </div>
             <div id="wrapper_ticket_info" class="wrapper_ticket_info">
                 <div class="obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
@@ -66,26 +66,24 @@
 {% block popup_base_js %}
     <script type="text/javascript">
         /*수강권 정보 열고 닫기*/
+        $('#id_ticket_detail_expand_in_reserve').attr("data-open", CLOSE);
         $(document).on("click", '#id_ticket_detail_expand_in_reserve', function(){
             let $this = $(this);
             let option = $this.attr("data-open");
             let wrapper_my_ticket_detail_in_reserve = $('#wrapper_ticket_info');
-
             switch(option){
-                case "open":
-                    $this.attr({"data-open": "close",
+                case OPEN:
+                    $this.attr({"data-open": CLOSE,
                                 "src": "/static/common/icon/expand_more_black.png"});
                     wrapper_my_ticket_detail_in_reserve.hide();
                 break;
 
-                case "close":
-                    $this.attr({"data-open": "open",
+                case CLOSE:
+                    $this.attr({"data-open": OPEN,
                                 "src": "/static/common/icon/expand_less_black.png"});
                     wrapper_my_ticket_detail_in_reserve.show();
                 break;
             }
         });
-
-
     </script>
 {% endblock %}
