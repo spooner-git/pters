@@ -1,6 +1,6 @@
 // 달력 initialize
-var month_function = func_init_month_day();
-var month_calendar = func_init_month_calendar();
+let month_function = func_init_month_day();
+let month_calendar = func_init_month_calendar();
 
 function func_init_month_calendar(){
     const default_design_options = {"font_color_sunday":["obj_font_color_pters_dark_red"],

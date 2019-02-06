@@ -6,8 +6,10 @@
 <!-- pters.trainee.popup.plan_reserve.css -->
 {% block popup_base_contents %}
     <div class="popup_calendar_plan_reserve">
-        <div class="obj_font_size_20_weight_bold">일정 예약</div>
-        <div class="obj_font_size_14_weight_500">2019년 1월 17일 (목)</div>
+        <div class="wrapper_calendar_plan_reserve_title">
+            <div class="obj_font_size_20_weight_bold">일정 예약</div>
+            <div class="obj_font_size_14_weight_500">2019년 1월 17일 (목)</div>
+        </div>
         <div class="obj_box_full obj_font_bg_white_dark_grey">
             <div class="obj_table_raw">
                 <div class="obj_table_cell_x2 obj_font_size_13_weight_500">나의 예약 가능 횟수 보기</div>
@@ -33,7 +35,7 @@
                 </div>
                 <div class="wrapper_reserve_form_data obj_table_cell_x2">
                     <div class="obj_table_raw">
-                        <select class="obj_font_size_14_weight_500 obj_font_color_light_grey">
+                        <select class="obj_font_size_14_weight_500 obj_font_color_light_grey" title="lecture_select">
                             <option disabled selected>수업명</option>
                             <option>수업 종류1</option>
                             <option>수업 종류2</option>
@@ -41,7 +43,7 @@
                         <img src="/static/common/icon/expand_more_black.png" class="obj_icon_arrow">
                     </div>
                     <div class="obj_table_raw">
-                        <select class="obj_font_size_14_weight_500 obj_font_color_light_grey">
+                        <select class="obj_font_size_14_weight_500 obj_font_color_light_grey" title="time_select">
                             <option disabled selected>예약 시간 선택</option>
                             <option>예약 시간1</option>
                             <option>예약 시간2</option>

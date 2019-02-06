@@ -2,28 +2,28 @@
     .pters_mobile_side_menu{
         padding: 0 20px;
     }
+        .pters_mobile_side_menu .obj_font_size_20_weight_bold{
+            height: 35px;
+            line-height: 35px;
+        }
+        .pters_mobile_side_menu .obj_font_size_16_weight_bold{
+            height: 30px;
+            line-height: 30px;
+        }
+        .pters_mobile_side_menu .wrapper_side_menu_main{
+            padding-top: 15px;
+        }
+        .pters_mobile_side_menu .wrapper_side_menu_sub{
+            padding-bottom: 10px;
+        }
+        .pters_mobile_side_menu .wrapper_menu_inquiry{
+            padding: 20px 0;
+            margin: 20px 0;
+            border-top: 1px solid #e6e6e6;
+            border-bottom: 1px solid #e6e6e6;
+        }
 
-    .pters_mobile_side_menu .obj_font_size_20_weight_bold{
-        height: 35px;
-        line-height: 35px;
-    }
-    .pters_mobile_side_menu .obj_font_size_16_weight_bold{
-        height: 30px;
-        line-height: 30px;
-    }
-    .pters_mobile_side_menu .wrapper_side_menu_main{
-        padding-top: 15px;
-    }
-    .pters_mobile_side_menu .wrapper_side_menu_sub{
-        padding-bottom: 10px;
-    }
-    .pters_mobile_side_menu .wrapper_menu_inquiry{
-        padding: 20px 0;
-        margin: 20px 0;
-        border-top: 1px solid #e6e6e6;
-        border-bottom: 1px solid #e6e6e6;
-    }
-    .pters_mobile_side_menu .wrapper_top .logo_pters{
-        width: 80px;
-        vertical-align: top;
-    }
+        .pters_mobile_side_menu .wrapper_top .logo_pters{
+            width: 80px;
+            vertical-align: top;
+        }
