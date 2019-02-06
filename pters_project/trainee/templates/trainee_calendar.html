@@ -8,7 +8,8 @@
 {% endblock %}
 
 {% block content %}
-    <div id="calendar"></div>
+    <div id="calendar" class="pters_calendar"></div>
+    <div id="calendar2" class="pters_calendar"></div>
 
     <!-- <div class="button_gen font_bg_white_grey" onclick="layer_popup('open', 'popup_calendar_plan_view')">일정팝업</div>
     <div class="button_gen font_bg_white_pink" onclick="layer_popup('open', 'popup_calendar_plan_reserve')">예약팝업</div> -->
@@ -31,9 +32,11 @@
                                       "font_date_basic":"textbox_size_14_weight_normal",
                                       "font_day_names":"textbox_size_16_weight_bold",
                                       "height_week_row":50};
-        const custom_targetHTML = '#calendar';
-        var month_calendar = func_init_month_calendar();
-        set_prev_next_month_button(month_calendar);
+        const custom_targetHTML = '#calendar2';
+        var month_calendar = pters_month_calendar('pters1',{"target_html":'#calendar', "design_option":undefined});
+        var month_calendar2 = pters_month_calendar('pters2',{"target_html":custom_targetHTML, "design_option":custom_design_options});
+        month_calendar.init_month_calendar_table();
+        month_calendar2.init_month_calendar_table();
 
     </script>
 
