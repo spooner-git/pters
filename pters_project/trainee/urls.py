@@ -79,6 +79,8 @@ urlpatterns = [
     url(r'^mypage_trainee/$', views.MyPageView.as_view(), name='mypage_trainee'),
     # 강좌 선택 페이지
     url(r'^lecture_select/$', views.LectureSelectView.as_view(), name='lecture_select'),
+    # 프로그램 선택 페이지
+    url(r'^trainee_program/$', views.ProgramSelectView.as_view(), name='trainee_program'),
     # 회원 탈퇴 페이지
     url(r'^delete_trainee_account/$', views.DeleteTraineeAccountView.as_view(), name='delete_trainee_account'),
 ]

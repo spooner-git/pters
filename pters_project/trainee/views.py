@@ -309,6 +309,14 @@ class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(LectureSelectView, self).get_context_data(**kwargs)
         return context
 
+#sk가 추가 (회원 신규 디자인, 프로그램 선택)
+class ProgramSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'trainee_program.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ProgramSelectView, self).get_context_data(**kwargs)
+        return context
+
 
 class DeleteTraineeAccountView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'delete_trainee_account_form.html'
