@@ -41,6 +41,7 @@
 	}
 
 	.wrapper_ticket_info{
+		display: none;
 		border-top: 1px solid #b6b6b6;
 		margin-top: 10px;
 	}
