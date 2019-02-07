@@ -31,11 +31,11 @@ function pters_month_calendar(calendar_name, calendar_options){
     function func_month_calendar_basic_size(calendar_height){
         //달력을 감싸는 wrapper의 높이를 창크기에 맞춘다. (스크롤링 영역을 달력 안쪽으로만 잡기 위해서)
         // $('.content_page').css("overflow-y", "hidden");
-        $('#calendar').css({"height":calendar_height});
+        $('.pters_calendar').css({"height":calendar_height});
     }
 
     function func_draw_month_calendar_size(calendar_height, calendar_toolbox_height, calendar_month_day_name_text_height){
-        $('#pters_month_cal_content_box').css({"height":calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height,
+        $('.pters_month_cal_content_box').css({"height":calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height,
                                                "max-height":calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height - 3});
     }
 
@@ -108,7 +108,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         //달력의 날짜를 만드는 부분
         let htmlToJoin = [];
         let date_cache = 1;
-        for(let i=0; i<7; i++){
+        for(let i=0; i<6; i++){
             let dateCellsToJoin = [];
 
             for(let j=0; j<7; j++){
@@ -239,7 +239,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         "get_reference_date": function(){
             return reference_date;
         },
-        "draw_month_calendar_table":function (input_reference_date, design_options) {
+        "draw_month_calendar_table":function(input_reference_date, design_options) {
             if(input_reference_date==undefined){
                 input_reference_date = today_yyyy_mm_dd;
             }
