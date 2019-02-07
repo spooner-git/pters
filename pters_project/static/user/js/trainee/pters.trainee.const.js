@@ -7,4 +7,9 @@ const ALL_CLOSE = "all_close";
 const STATE_IN_PROGRESS = "IP";
 const STATE_END_PROGRESS = "PE";
 
+const PROGRAM_SELECT = 0;
+const PROGRAM_LECTURE_CONNECT_ACCEPT = 1;
+const PROGRAM_LECTURE_CONNECT_DELETE = 2;
+
+
 /**/

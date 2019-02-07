@@ -34,6 +34,11 @@ urlpatterns = [
     # 수강 정보 기능 #####################################################################################################
     # 강좌 정보 list 조회
     url(r'^get_trainee_class_list/$', views.GetTraineeClassListView.as_view(), name='get_trainee_class_list'),
+    # 수강정보 선택/연동 기능
+    url(r'^program_select/$', views.program_select_logic, name='program_select'),
+
+
+
     # 수강 정보 list 조회 - auth_cd(연결상태) 종류별
     url(r'^get_trainee_lecture_list/$', views.GetTraineeLectureListView.as_view(), name='get_trainee_lecture_list'),
     # 수강 정보 연결 안된 정보 조회
@@ -41,8 +46,6 @@ urlpatterns = [
         name='get_trainee_lecture_connection_list'),
     # 수강 횟수 정보 가져오기
     url(r'^get_trainee_count/$', views.GetTraineeCountView.as_view(), name='get_trainee_count'),
-    # 수강정보 선택/연동 기능
-    url(r'^lecture_processing/$', views.lecture_processing, name='lecture_processing'),
 
     # Mypage 기능 #####################################################################################################
     # 회원 정보 조회
@@ -70,7 +73,7 @@ urlpatterns = [
     # 회원 메인 페이지
     url(r'^trainee_main/$', views.TraineeMainView.as_view(), name='trainee_main'),
     # 월간 일정 페이지
-    url(r'^trainee_calendar/$', views.CalMonthView.as_view(), name='trainee_calendar'),
+    url(r'^trainee_calendar/$', views.TraineeCalendarView.as_view(), name='trainee_calendar'),
     # 프로그램 선택 페이지
     url(r'^trainee_program/$', views.ProgramSelectView.as_view(), name='trainee_program'),
 
