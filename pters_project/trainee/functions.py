@@ -572,38 +572,32 @@ def func_get_class_list(context, member_id):
                                                            class_type_name=RawSQL(query_type_cd, [])
                                                            ).exclude(member_auth_cd='DELETE').order_by('class_tb_id')
 
-    # class_lecture_data = class_lecture_data.values('class_tb')
     class_list = []
     if len(class_lecture_data) > 0:
-        input_class_info = None
-        index = 0
         for class_lecture_info in class_lecture_data:
+            class_id = class_lecture_info.class_tb_id
+            input_class_info = None
+
+            for class_info in class_list:
+                if str(class_info.class_tb_id) == str(class_id):
+                    input_class_info = class_info
+                    break
+
             if input_class_info is None:
                 input_class_info = class_lecture_info
                 input_class_info.np_lecture_counts = 0
                 input_class_info.lecture_counts = 0
                 input_class_info.lecture_rem_count = 0
+                if class_lecture_info.class_tb.subject_detail_nm is not None\
+                        and class_lecture_info.class_tb.subject_detail_nm != '':
+                    input_class_info.class_type_name = class_lecture_info.class_tb.subject_detail_nm
                 class_list.append(input_class_info)
-            else:
-                if input_class_info.class_tb_id != class_lecture_info.class_tb_id:
-                    input_class_info = class_lecture_info
-                    input_class_info.np_lecture_counts = 0
-                    input_class_info.lecture_counts = 0
-                    input_class_info.lecture_rem_count = 0
-                    index += 1
-                    class_list.append(input_class_info)
 
-            if class_lecture_info.member_auth_cd == 'WAIT':
+            if input_class_info.member_auth_cd == 'WAIT':
                 input_class_info.np_lecture_counts += 1
-            if class_lecture_info.member_auth_cd == 'VIEW':
+            if input_class_info.member_auth_cd == 'VIEW':
                 input_class_info.lecture_counts += 1
                 input_class_info.lecture_rem_count += class_lecture_info.lecture_tb.lecture_rem_count
-
-            if class_lecture_info.class_tb.subject_detail_nm is not None\
-                    and class_lecture_info.class_tb.subject_detail_nm != '':
-                input_class_info.class_type_name = class_lecture_info.class_tb.subject_detail_nm
-
-            class_list[index] = input_class_info
 
     context['class_data'] = class_list
 
