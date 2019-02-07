@@ -159,10 +159,16 @@ function pters_month_calendar(calendar_name, calendar_options){
         $('#'+prev_id).click(function(){
             calendar_variable.draw_month_calendar_table(func_get_prev_month(reference_year, reference_month),
                                                         design_options);
+            func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
+                func_draw_schedule_data(jsondata);
+            });
         });
         $('#'+next_id).click(function(){
             calendar_variable.draw_month_calendar_table(func_get_next_month(reference_year, reference_month),
                                                         design_options);
+            func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
+                func_draw_schedule_data(jsondata);
+            });
         });
     }
 
@@ -192,6 +198,74 @@ function pters_month_calendar(calendar_name, calendar_options){
             }
         });
     }
+
+
+    //일정 표기 관련
+    function func_get_ajax_schedule_data(input_reference_date, use, callback){
+        $.ajax({
+            url: '/trainee/get_trainee_schedule/',
+            type : 'GET',
+            data : {"date": input_reference_date, "day":31},
+            dataType : 'html',
+
+            beforeSend:function(){
+                //beforeSend();
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    console.log(jsondata);
+                    if(use == "callback"){
+                        callback(jsondata);
+                    }
+                }
+
+            },
+
+            complete:function(){
+                //completeSend();
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        });
+
+    }
+    function func_draw_schedule_data(jsondata){
+        let schedule_number_dic = {};
+        let date_cache = [];
+        let len = jsondata.classTimeArray_start_date.length;
+        for(let i=0; i<len; i++){
+            let date = jsondata.classTimeArray_start_date[i].split(' ')[0];
+            date_cache.push(date);
+            schedule_number_dic[date] = 0;
+        }
+
+        let count;
+        for(date in schedule_number_dic){
+            // schedule_number_dic[date] = array_element_count(date_cache, date);
+            count = array_element_count(date_cache, date);
+            $(`#calendar_plan_cell_${date}`).text(`${count}개`);
+        }
+
+        function array_element_count(array, wanted){
+            var counts = {};
+            var len = array.length;
+            for(var i=0; i<len; i++){
+                counts[array[i]] = 0;
+            }
+            for(var j=0; j<len; j++){
+                counts[array[j]] = counts[array[j]] +1;
+            }
+            return counts[wanted];
+        }
+    }
+    //일정 표기 관련
 
 
     return {
@@ -234,6 +308,14 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_draw_month_calendar_table(input_reference_date);
             func_draw_month_calendar_size(calendar_height, calendar_toolbox_height, calendar_month_day_name_text_height);
             func_set_prev_next_month_button(this);
+        },
+        "draw_month_calendar_schedule":function (input_reference_date){
+            if(input_reference_date==undefined){
+                input_reference_date = current_year+'-'+(current_month+1)+'-'+1;
+            }
+            func_get_ajax_schedule_data(input_reference_date, "callback", function(jsondata){
+                func_draw_schedule_data(jsondata);
+            });
         }
     };
 }
