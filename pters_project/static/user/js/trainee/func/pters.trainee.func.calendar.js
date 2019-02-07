@@ -224,6 +224,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             return reference_date;
         },
         "draw_month_calendar_table":function (input_reference_date) {
+
             if(input_reference_date==undefined){
                 input_reference_date = today_yyyy_mm_dd;
             }

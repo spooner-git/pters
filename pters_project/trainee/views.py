@@ -317,7 +317,7 @@ class ProgramSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(ProgramSelectView, self).get_context_data(**kwargs)
         context['error'] = None
         context = func_get_class_list(context, self.request.user.id)
-        context['total_class_num_even_check'] = len(context['class_data'])
+        context['total_class_num'] = len(context['class_data'])
 
         if context['error'] is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['

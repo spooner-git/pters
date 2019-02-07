@@ -1,5 +1,6 @@
 #trainee_program{
 	margin-top: 24px;
+	margin-bottom: 24px;
 	padding: 0 5px 0 5px;
 	text-align: center;
 }
@@ -35,6 +36,7 @@
 		#trainee_program .obj_box_card .obj_table_raw .wrapper_teacher_name{
 			width: auto;
 			padding-left: 10px;
+			text-align: left;
 		}
 		#trainee_program .obj_box_card .obj_table_raw .obj_box_photo{
 			width: 30px;
