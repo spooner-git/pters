@@ -582,12 +582,14 @@ def func_get_class_list(context, member_id):
                 input_class_info = class_lecture_info
                 input_class_info.np_lecture_counts = 0
                 input_class_info.lecture_counts = 0
+                input_class_info.lecture_rem_count = 0
                 class_list.append(input_class_info)
             else:
                 if input_class_info.class_tb_id != class_lecture_info.class_tb_id:
                     input_class_info = class_lecture_info
                     input_class_info.np_lecture_counts = 0
                     input_class_info.lecture_counts = 0
+                    input_class_info.lecture_rem_count = 0
                     index += 1
                     class_list.append(input_class_info)
 
@@ -595,6 +597,7 @@ def func_get_class_list(context, member_id):
                 input_class_info.np_lecture_counts += 1
             if class_lecture_info.member_auth_cd == 'VIEW':
                 input_class_info.lecture_counts += 1
+                input_class_info.lecture_rem_count += class_lecture_info.lecture_tb.lecture_rem_count
 
             if class_lecture_info.class_tb.subject_detail_nm is not None\
                     and class_lecture_info.class_tb.subject_detail_nm != '':

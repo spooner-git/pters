@@ -309,12 +309,21 @@ class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(LectureSelectView, self).get_context_data(**kwargs)
         return context
 
-#sk가 추가 (회원 신규 디자인, 프로그램 선택)
+
 class ProgramSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'trainee_program.html'
 
     def get_context_data(self, **kwargs):
         context = super(ProgramSelectView, self).get_context_data(**kwargs)
+        context['error'] = None
+        context = func_get_class_list(context, self.request.user.id)
+        context['total_class_num_even_check'] = len(context['class_data'])
+
+        if context['error'] is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
+                         + str(self.request.user.id) + ']' + context['error'])
+            messages.error(self.request, context['error'])
+
         return context
 
 

@@ -7,87 +7,32 @@
 
 {% block content %}
     <div id="trainee_program">
+    {% for class_info in class_data %}
         <div class="obj_box_card">
-            <div class="wrapper_program_name obj_font_size_16_weight_bold">웨이트 트레이닝</div>
+            <div class="wrapper_program_name obj_font_size_16_weight_bold">{{ class_info.class_type_name }}</div>
             <div class="wrapper_ticket_count_info obj_font_size_11_weight_normal obj_font_color_grey">
-                수업이 <span class="obj_font_color_pters_red">12번</span> 남았습니다.
+                수업이 <span class="obj_font_color_pters_red">{{ class_info.lecture_rem_count }}번</span> 남았습니다.
             </div>
             <div class="wrapper_teacher_info obj_table_raw">
                 <div class="obj_box_photo obj_table_cell_x2"></div>
-                <div class="wrapper_teacher_name obj_table_cell_x2 obj_font_size_12_weight_500">김현기 강사</div>
+                <div class="wrapper_teacher_name obj_table_cell_x2 obj_font_size_12_weight_500">{{ class_info.class_tb.member.name }} 강사</div>
             </div>
         </div>
+    {% endfor %}
+    {% if total_class_num_even_check|divisibleby:2 %}
         <div class="obj_box_card">
-            <div class="wrapper_program_name obj_font_size_16_weight_bold">필라테스</div>
+            <div class="wrapper_program_name obj_font_size_16_weight_bold">test</div>
             <div class="wrapper_ticket_count_info obj_font_size_11_weight_normal obj_font_color_grey">
-                수업이 <span class="obj_font_color_pters_red">999번</span> 남았습니다.
+                수업이 <span class="obj_font_color_pters_red">test번</span> 남았습니다.
             </div>
             <div class="wrapper_teacher_info obj_table_raw">
                 <div class="obj_box_photo obj_table_cell_x2"></div>
-                <div class="wrapper_teacher_name obj_table_cell_x2 obj_font_size_12_weight_500">김현기 강사</div>
+                <div class="wrapper_teacher_name obj_table_cell_x2 obj_font_size_12_weight_500">test 강사</div>
             </div>
         </div>
-        <div class="obj_box_card">
-            <div class="wrapper_program_name obj_font_size_16_weight_bold">필라테스</div>
-            <div class="wrapper_ticket_count_info obj_font_size_11_weight_normal obj_font_color_grey">
-                수업이 <span class="obj_font_color_pters_red">999번</span> 남았습니다.
-            </div>
-            <div class="wrapper_teacher_info obj_table_raw">
-                <div class="obj_box_photo obj_table_cell_x2"></div>
-                <div class="wrapper_teacher_name obj_table_cell_x2 obj_font_size_12_weight_500">김현기 강사</div>
-            </div>
-        </div>
-        <div class="obj_box_card">
-            <div class="wrapper_program_name obj_font_size_16_weight_bold">필라테스</div>
-            <div class="wrapper_ticket_count_info obj_font_size_11_weight_normal obj_font_color_grey">
-                수업이 <span class="obj_font_color_pters_red">999번</span> 남았습니다.
-            </div>
-            <div class="wrapper_teacher_info obj_table_raw">
-                <div class="obj_box_photo obj_table_cell_x2"></div>
-                <div class="wrapper_teacher_name obj_table_cell_x2 obj_font_size_12_weight_500">김현기 강사</div>
-            </div>
-        </div>
-        <div class="obj_box_card">
-            <div class="wrapper_program_name obj_font_size_16_weight_bold">필라테스</div>
-            <div class="wrapper_ticket_count_info obj_font_size_11_weight_normal obj_font_color_grey">
-                수업이 <span class="obj_font_color_pters_red">999번</span> 남았습니다.
-            </div>
-            <div class="wrapper_teacher_info obj_table_raw">
-                <div class="obj_box_photo obj_table_cell_x2"></div>
-                <div class="wrapper_teacher_name obj_table_cell_x2 obj_font_size_12_weight_500">김현기 강사</div>
-            </div>
-        </div>
-        <div class="obj_box_card">
-            <div class="wrapper_program_name obj_font_size_16_weight_bold">필라테스</div>
-            <div class="wrapper_ticket_count_info obj_font_size_11_weight_normal obj_font_color_grey">
-                수업이 <span class="obj_font_color_pters_red">999번</span> 남았습니다.
-            </div>
-            <div class="wrapper_teacher_info obj_table_raw">
-                <div class="obj_box_photo obj_table_cell_x2"></div>
-                <div class="wrapper_teacher_name obj_table_cell_x2 obj_font_size_12_weight_500">김현기 강사</div>
-            </div>
-        </div>
-        <div class="obj_box_card">
-            <div class="wrapper_program_name obj_font_size_16_weight_bold">필라테스</div>
-            <div class="wrapper_ticket_count_info obj_font_size_11_weight_normal obj_font_color_grey">
-                수업이 <span class="obj_font_color_pters_red">999번</span> 남았습니다.
-            </div>
-            <div class="wrapper_teacher_info obj_table_raw">
-                <div class="obj_box_photo obj_table_cell_x2"></div>
-                <div class="wrapper_teacher_name obj_table_cell_x2 obj_font_size_12_weight_500">김현기 강사</div>
-            </div>
-        </div>
-        <div class="obj_box_card">
-            <div class="wrapper_program_name obj_font_size_16_weight_bold">필라테스</div>
-            <div class="wrapper_ticket_count_info obj_font_size_11_weight_normal obj_font_color_grey">
-                수업이 <span class="obj_font_color_pters_red">999번</span> 남았습니다.
-            </div>
-            <div class="wrapper_teacher_info obj_table_raw">
-                <div class="obj_box_photo obj_table_cell_x2"></div>
-                <div class="wrapper_teacher_name obj_table_cell_x2 obj_font_size_12_weight_500">김현기 강사</div>
-            </div>
-        </div>
+    {% endif %}
     </div>
+
 {% endblock %}
 
 {% block popup %}
