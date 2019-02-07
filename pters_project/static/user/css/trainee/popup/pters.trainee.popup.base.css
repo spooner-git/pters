@@ -8,7 +8,7 @@
         position: fixed;
         transform: translateX(100%);
         top: 0;
-	    overflow-y: auto;
+	    /*overflow-y: auto;*/
         /*-webkit-overflow-scrolling: touch;*/
         /*z-index: 1500;*/
     }
