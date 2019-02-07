@@ -8,7 +8,7 @@
 {% block content %}
     <div id="trainee_program">
     {% for class_info in class_data %}
-        <div class="obj_box_card">
+        <div class="obj_box_card" onclick="func_program_select({{ class_info.class_tb.class_id }});">
             <div class="wrapper_program_name obj_font_size_16_weight_bold">{{ class_info.class_type_name }}</div>
 
             <div class="wrapper_ticket_count_info obj_font_size_11_weight_normal obj_font_color_grey">
@@ -23,10 +23,16 @@
     {% if not total_class_num|divisibleby:2 %}
         <div class="obj_box_card" style="height:137px;vertical-align:top;">
             <img src="/static/user/res/PTERS_logo_pure.png" style="width: 50%;">
-
         </div>
     {% endif %}
     </div>
+
+    <form id="form_program_select" action="{% url 'trainee:program_select' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="class_id" id="form_program_select_class_id">
+        <input type="hidden" name="lecture_connection_check" id="form_program_select_lecture_connection_check">
+        <input type="hidden" name="next_page" value="{% url 'trainee:trainee_main' %}">
+    </form>
 
 {% endblock %}
 
@@ -38,10 +44,11 @@
     <script type="text/javascript">
         // Nav 바에 현재 페이지에 밑줄 표기
         $('#nav_btn_program_select').addClass("nav_selected");
-
-        var program = pters_trainee_program('#trainee_program');
-        var program_list = program.draw_program_list();
-
+        function func_program_select(class_id){
+            $('#form_program_select_class_id').val(class_id);
+            $('#form_program_select_lecture_connection_check').val(PROGRAM_SELECT);
+            $('#form_program_select').submit();
+        }
 
     </script>
 {% endblock %}

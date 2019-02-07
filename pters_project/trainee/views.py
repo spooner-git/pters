@@ -21,7 +21,7 @@ from el_pagination.views import AjaxListView
 # Create your views here.
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
-    SCHEDULE_DUPLICATION_DISABLE
+    SCHEDULE_DUPLICATION_DISABLE, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, PROGRAM_LECTURE_CONNECT_ACCEPT
 
 from configs.views import AccessTestMixin
 
@@ -56,70 +56,75 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
     def get(self, request, **kwargs):
 
-        query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
-                             " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = "+str(request.user.id)+" and" \
-                             " B.USE=1"
+        class_id = request.session.get('class_id', '')
 
-        lecture_data = ClassLectureTb.objects.select_related(
-            'class_tb',
-            'lecture_tb__member').filter(
-            lecture_tb__member_id=request.user.id,
-            use=USE).annotate(auth_type_cd=RawSQL(query_auth_type_cd,
-                                                  [])).exclude(auth_type_cd='DELETE').order_by('-lecture_tb__start_date')
-        if lecture_data is None or len(lecture_data) == 0:
-            # self.url = '/trainee/cal_month_blank/'
-            self.url = '/trainee/trainee_main/'
-
-        elif len(lecture_data) == 1:
-            for lecture_info in lecture_data:
-                request.session['class_id'] = lecture_info.class_tb_id
-                request.session['lecture_id'] = lecture_info.lecture_tb_id
-                request.session['trainer_id'] = lecture_info.class_tb.member_id
-                if lecture_info.auth_type_cd == 'WAIT':
-                    # self.url = '/trainee/lecture_select/'
-                    self.url = '/trainee/trainee_main/'
-                elif lecture_info.auth_type_cd == 'DELETE':
-                    # self.url = '/trainee/cal_month_blank/'
-                    self.url = '/trainee/trainee_main/'
-                else:
-                    request.session['class_hour'] = lecture_info.class_tb.class_hour
-                    request.session['class_type_code'] = lecture_info.class_tb.subject_cd
-                    request.session['class_type_name'] = lecture_info.class_tb.get_class_type_cd_name()
-                    request.session['class_center_name'] = lecture_info.class_tb.get_center_name()
-
+        if class_id is None or class_id == '':
+            self.url = '/trainee/trainee_program/'
         else:
-            class_tb_comp = None
-            class_counter = 0
-            lecture_np_counter = 0
-            lecture_id_select = ''
-            for lecture_info in lecture_data:
-                if lecture_info.auth_type_cd == 'WAIT':
-                    lecture_np_counter += 1
-                if class_tb_comp is not None:
-                    if str(class_tb_comp.class_id) != str(lecture_info.class_tb_id):
+            query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
+                                 " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = "+str(request.user.id)+" and" \
+                                 " B.USE=1"
+
+            lecture_data = ClassLectureTb.objects.select_related(
+                'class_tb',
+                'lecture_tb__member').filter(
+                lecture_tb__member_id=request.user.id,
+                use=USE).annotate(auth_type_cd=RawSQL(query_auth_type_cd,
+                                                      [])).exclude(auth_type_cd='DELETE').order_by('-lecture_tb__start_date')
+            if lecture_data is None or len(lecture_data) == 0:
+                # self.url = '/trainee/cal_month_blank/'
+                self.url = '/trainee/trainee_main/'
+
+            elif len(lecture_data) == 1:
+                for lecture_info in lecture_data:
+                    request.session['class_id'] = lecture_info.class_tb_id
+                    request.session['lecture_id'] = lecture_info.lecture_tb_id
+                    request.session['trainer_id'] = lecture_info.class_tb.member_id
+                    if lecture_info.auth_type_cd == 'WAIT':
+                        # self.url = '/trainee/lecture_select/'
+                        self.url = '/trainee/trainee_main/'
+                    elif lecture_info.auth_type_cd == 'DELETE':
+                        # self.url = '/trainee/cal_month_blank/'
+                        self.url = '/trainee/trainee_main/'
+                    else:
+                        request.session['class_hour'] = lecture_info.class_tb.class_hour
+                        request.session['class_type_code'] = lecture_info.class_tb.subject_cd
+                        request.session['program_title'] = lecture_info.class_tb.get_class_type_cd_name()
+                        request.session['class_center_name'] = lecture_info.class_tb.get_center_name()
+
+            else:
+                class_tb_comp = None
+                class_counter = 0
+                lecture_np_counter = 0
+                lecture_id_select = ''
+                for lecture_info in lecture_data:
+                    if lecture_info.auth_type_cd == 'WAIT':
+                        lecture_np_counter += 1
+                    if class_tb_comp is not None:
+                        if str(class_tb_comp.class_id) != str(lecture_info.class_tb_id):
+                            class_tb_comp = lecture_info.class_tb
+                            if lecture_info.lecture_tb.lecture_avail_count > 0:
+                                lecture_id_select = lecture_info.lecture_tb_id
+                            class_counter += 1
+                    else:
                         class_tb_comp = lecture_info.class_tb
                         if lecture_info.lecture_tb.lecture_avail_count > 0:
                             lecture_id_select = lecture_info.lecture_tb_id
                         class_counter += 1
-                else:
-                    class_tb_comp = lecture_info.class_tb
-                    if lecture_info.lecture_tb.lecture_avail_count > 0:
-                        lecture_id_select = lecture_info.lecture_tb_id
-                    class_counter += 1
 
-            if class_counter > 1 or lecture_np_counter > 0:
-                # self.url = '/trainee/lecture_select/'
-                self.url = '/trainee/trainee_main/'
-            else:
-                # self.url = '/trainee/cal_month/'
-                self.url = '/trainee/trainee_main/'
-                request.session['trainer_id'] = class_tb_comp.member_id
-                request.session['class_id'] = class_tb_comp.class_id
-                request.session['lecture_id'] = lecture_id_select
-                request.session['class_hour'] = class_tb_comp.class_hour
-                request.session['class_type_code'] = class_tb_comp.subject_cd
-                request.session['class_type_name'] = class_tb_comp.get_class_type_cd_name()
-                request.session['class_center_name'] = class_tb_comp.get_center_name()
+                if class_counter > 1 or lecture_np_counter > 0:
+                    # self.url = '/trainee/lecture_select/'
+                    self.url = '/trainee/trainee_main/'
+                else:
+                    # self.url = '/trainee/cal_month/'
+                    self.url = '/trainee/trainee_main/'
+                    request.session['trainer_id'] = class_tb_comp.member_id
+                    request.session['class_id'] = class_tb_comp.class_id
+                    request.session['lecture_id'] = lecture_id_select
+                    request.session['class_hour'] = class_tb_comp.class_hour
+                    request.session['class_type_code'] = class_tb_comp.subject_cd
+                    request.session['program_title'] = class_tb_comp.get_class_type_cd_name()
+                    request.session['class_center_name'] = class_tb_comp.get_center_name()
 
         return super(IndexView, self).get(request, **kwargs)
 
@@ -185,22 +190,16 @@ class MyPageBlankView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
+class TraineeCalendarView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'trainee_calendar.html'
 
-    def get(self, request):
-        context = {}
-        # context = super(CalMonthView, self).get_context_data(**kwargs)
-        error = None
-        class_id = request.session.get('class_id', '')
-        class_info = None
-        date = request.GET.get('date', '')
-        day = request.GET.get('day', '')
+    def get_context_data(self, **kwargs):
+        context = super(TraineeCalendarView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+
+        date = self.request.GET.get('date', '')
+        day = self.request.GET.get('day', '')
         today = datetime.date.today()
-        # try:
-        #     class_info = ClassTb.objects.get(class_id=class_id)
-        # except ObjectDoesNotExist:
-        #     error = '수강 정보를 불러오지 못했습니다.'
         if date != '':
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
         if day == '':
@@ -208,37 +207,11 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
 
-        if class_id != '':
-            context = func_get_class_lecture_count(context, class_id, request.user.id)
+        context = func_get_class_lecture_count(context, class_id, self.request.user.id)
 
         context = func_get_holiday_schedule(context, start_date, end_date)
-        # get_setting_info(request)
 
-        # context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
-        #
-        # request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-        # request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-        # request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-        # # request.session['setting_trainer_work_time_available'] = context['lt_res_04']
-        #
-        # request.session['setting_trainer_work_sun_time_avail'] = context['lt_work_sun_time_avail']
-        # request.session['setting_trainer_work_mon_time_avail'] = context['lt_work_mon_time_avail']
-        # request.session['setting_trainer_work_tue_time_avail'] = context['lt_work_tue_time_avail']
-        # request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
-        # request.session['setting_trainer_work_ths_time_avail'] = context['lt_work_ths_time_avail']
-        # request.session['setting_trainer_work_fri_time_avail'] = context['lt_work_fri_time_avail']
-        # request.session['setting_trainer_work_sat_time_avail'] = context['lt_work_sat_time_avail']
-        #
-        # request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-        # request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-        # request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-        # request.session['setting_member_time_duration'] = context['lt_res_member_time_duration']
-        # request.session['setting_member_start_time'] = context['lt_res_member_start_time']
-        # request.session['setting_schedule_auto_finish'] = context['lt_schedule_auto_finish']
-        # request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
-        # request.session['setting_to_trainee_lesson_alarm'] = context['lt_pus_to_trainee_lesson_alarm']
-        # request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
-        return render(request, self.template_name, context)
+        return context
 
 
 class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
@@ -753,47 +726,42 @@ class GetTraineeCountView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-def lecture_processing(request):
+def program_select_logic(request):
 
-    lecture_id = request.POST.get('lecture_id', '')
     class_id = request.POST.get('class_id', '')
-    check = request.POST.get('check', '')
-    next_page = request.POST.get('next_page')
-    context = {}
+    lecture_id = request.POST.get('lecture_id', '')
+    lecture_connection_check = request.POST.get('lecture_connection_check', PROGRAM_SELECT)
+    next_page = request.POST.get('next_page', '/trainee/trainee_main/')
     error = None
 
-    if lecture_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
-
-    if check == '':
-        error = '수강정보를 불러오지 못했습니다.'
-
-    if error is None:
-
-        query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
-                             " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = "+str(request.user.id)+" and" \
-                             " B.USE=1"
-
-        lecture_data = ClassLectureTb.objects.select_related(
-            'class_tb',
-            'lecture_tb__member').filter(
-            class_tb_id=class_id,
-            lecture_tb__member_id=request.user.id,
-            use=USE).annotate(auth_type_cd=RawSQL(query_auth_type_cd,
-                                                  [])).order_by('-lecture_tb__start_date')
+    if lecture_connection_check == PROGRAM_LECTURE_CONNECT_DELETE:
+        if lecture_id == '':
+            error = '수강정보를 불러오지 못했습니다.'
+    else:
+        if class_id == '':
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        if check == '1':
-            for lecture_info in lecture_data:
-                try:
-                    member_lecture = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id,
-                                                                 member_id=request.user.id)
-                    member_lecture.auth_cd = 'DELETE'
-                    member_lecture.save()
-                except ObjectDoesNotExist:
-                    error = None
+        if lecture_connection_check == PROGRAM_LECTURE_CONNECT_DELETE:
+            # 선택한 수강권 삭제
+            try:
+                member_lecture = MemberLectureTb.objects.get(lecture_tb_id=lecture_id,
+                                                             member_id=request.user.id)
+                member_lecture.auth_cd = 'DELETE'
+                member_lecture.save()
+            except ObjectDoesNotExist:
+                error = None
+        elif lecture_connection_check == PROGRAM_LECTURE_CONNECT_ACCEPT:
+            # 선택한 프로그램의 연결 대기중인 수강권 전부 연결
+            query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
+                                 " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = " + str(request.user.id) \
+                                 + " and B.USE=1"
 
-        elif check == '0':
+            lecture_data = ClassLectureTb.objects.select_related('class_tb', 'lecture_tb__member').filter(
+                class_tb_id=class_id, lecture_tb__member_id=request.user.id,
+                use=USE).annotate(auth_type_cd=RawSQL(query_auth_type_cd,
+                                                      [])).filter(auth_type_cd='WAIT').order_by('-lecture_tb__start_date')
+
             for lecture_info in lecture_data:
                 try:
                     member_lecture = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id,
@@ -803,11 +771,9 @@ def lecture_processing(request):
                 except ObjectDoesNotExist:
                     error = None
 
-        if check != 1:
+        if lecture_connection_check != PROGRAM_LECTURE_CONNECT_DELETE:
+            # 선택한 프로그램 연결
             request.session['class_id'] = class_id
-            request.session['lecture_id'] = lecture_id
-            class_info = None
-
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
@@ -815,31 +781,8 @@ def lecture_processing(request):
 
             if error is None:
                 request.session['class_hour'] = class_info.class_hour
-                request.session['class_type_name'] = class_info.get_class_type_cd_name()
+                request.session['program_title'] = class_info.get_class_type_cd_name()
                 request.session['class_center_name'] = class_info.get_center_name()
-
-            context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
-            request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-            request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-            request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-            request.session['setting_trainer_work_sun_time_avail'] = context['lt_work_sun_time_avail']
-            request.session['setting_trainer_work_mon_time_avail'] = context['lt_work_mon_time_avail']
-            request.session['setting_trainer_work_tue_time_avail'] = context['lt_work_tue_time_avail']
-            request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
-            request.session['setting_trainer_work_ths_time_avail'] = context['lt_work_ths_time_avail']
-            request.session['setting_trainer_work_fri_time_avail'] = context['lt_work_fri_time_avail']
-            request.session['setting_trainer_work_sat_time_avail'] = context['lt_work_sat_time_avail']
-            request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-            request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-            request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-            request.session['setting_member_time_duration'] = context['lt_res_member_time_duration']
-            request.session['setting_member_start_time'] = context['lt_res_member_start_time']
-            request.session['setting_schedule_auto_finish'] = context['lt_schedule_auto_finish']
-            request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
-            request.session['setting_to_trainee_lesson_alarm'] = context['lt_pus_to_trainee_lesson_alarm']
-            request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
-            context = get_trainee_setting_data(context, request.user.id)
-            request.session['setting_language'] = context['lt_lan_01']
 
     if error is None:
 

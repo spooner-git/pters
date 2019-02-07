@@ -7,7 +7,7 @@
 
 {% block content %}
     <div class="trainee_main">
-        <div class="wrapper_program_title obj_font_size_20_weight_bold">웨이트 트레이닝</div>
+        <div class="wrapper_program_title obj_font_size_20_weight_bold">{{ request.session.program_title }}</div>
 
         <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">다음 일정</div>
         <div class="wrapper_box_next_plan obj_box_full">
