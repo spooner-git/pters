@@ -111,7 +111,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             let dateCellsToJoin = [];
 
             for(let j=0; j<7; j++){
-                let data_date = `${reference_date_year}-${reference_date_month}-${date_cache}`;
+                let data_date = date_format(`${reference_date_year}-${reference_date_month}-${date_cache}`)["yyyy-mm-dd"];
                 let font_color = "";
                 if(j == 0){
                     font_color = design_options["font_color_sunday"];
@@ -127,6 +127,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
                                                onclick="layer_popup('open', 'popup_calendar_plan_view')">
                                                <div class="${font_color}">${date_cache}</div>
+                                               <div id="calendar_plan_cell_${data_date}"></div>
                                           </div>`);
                     date_cache++;
                 }
@@ -192,6 +193,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         });
     }
 
+
     return {
         "set_calendar_name": function(input_calendar_name){
             //특수 문자 제외 필요
@@ -236,3 +238,33 @@ function pters_month_calendar(calendar_name, calendar_options){
     };
 }
 
+
+function date_format(date){
+    let date_raw = date.replace(/[-_\., ]/gi,"-").split('-');
+    let yyyy = date_raw[0];
+    let m = Number(date_raw[1]);
+    let d = Number(date_raw[2]);
+    let mm = date_raw[1];
+    let dd = date_raw[2];
+
+    if(m<10){
+        mm = '0'+m
+    }
+    if(d<10){
+        dd = '0'+d
+    }
+
+    return{
+            "yyyy-mm-dd":`${yyyy}-${mm}-${dd}`,
+            "yyyy-m-d":`${yyyy}-${m}-${d}`,
+
+            "yyyy.mm.dd":`${yyyy}.${mm}.${dd}`,
+            "yyyy.m.d":`${yyyy}.${m}.${d}`,
+
+            "yyyy_mm_dd":`${yyyy}_${mm}_${dd}`,
+            "yyyy_m_d":`${yyyy}_${m}_${d}`,
+
+            "yyyy/mm/dd":`${yyyy}/${mm}/${dd}`,
+            "yyyy/m/d":`${yyyy}/${m}/${d}`
+    };
+}
