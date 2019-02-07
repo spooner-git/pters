@@ -8,7 +8,7 @@
 
 {% block content %}
     <div id="calendar" class="pters_calendar"></div>
-    <div id="calendar2" class="pters_calendar"></div>
+    <!-- <div id="calendar2" class="pters_calendar"></div> -->
 
     <!-- <div class="button_gen font_bg_white_grey" onclick="layer_popup('open', 'popup_calendar_plan_view')">일정팝업</div>
     <div class="button_gen font_bg_white_pink" onclick="layer_popup('open', 'popup_calendar_plan_reserve')">예약팝업</div> -->
@@ -38,9 +38,9 @@
         //혹은 initialize할때 변경해야한다고 출력해도 될듯
         //혹은 console만 안내하고 사용자는 모르도록해도 될듯
         var month_calendar = pters_month_calendar('pters1',{"target_html":'#calendar'});
-        var month_calendar2 = pters_month_calendar('pters2',{"target_html":custom_targetHTML, "design_options":custom_design_options});
+        // var month_calendar2 = pters_month_calendar('pters2',{"target_html":custom_targetHTML, "design_options":custom_design_options});
         month_calendar.init_month_calendar_table();
-        month_calendar2.init_month_calendar_table();
+        // month_calendar2.init_month_calendar_table();
 
     </script>
 

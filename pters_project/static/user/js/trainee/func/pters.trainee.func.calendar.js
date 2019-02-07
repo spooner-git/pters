@@ -112,7 +112,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             let dateCellsToJoin = [];
 
             for(let j=0; j<7; j++){
-                let data_date = `${reference_date_year}-${reference_date_month}-${date_cache}`;
+                let data_date = date_format(`${reference_date_year}-${reference_date_month}-${date_cache}`)["yyyy-mm-dd"];
                 let font_color = "";
                 if(j == 0){
                     font_color = design_options["font_color_sunday"];
@@ -128,6 +128,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
                                                onclick="layer_popup('open', 'popup_calendar_plan_view')">
                                                <div class="${font_color}">${date_cache}</div>
+                                               <div id="calendar_plan_cell_${data_date}"></div>
                                           </div>`);
                     date_cache++;
                 }
@@ -159,10 +160,16 @@ function pters_month_calendar(calendar_name, calendar_options){
         $('#'+prev_id).click(function(){
             calendar_variable.draw_month_calendar_table(func_get_prev_month(reference_year, reference_month),
                                                         design_options);
+            func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
+                func_draw_schedule_data(jsondata);
+            });
         });
         $('#'+next_id).click(function(){
             calendar_variable.draw_month_calendar_table(func_get_next_month(reference_year, reference_month),
                                                         design_options);
+            func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
+                func_draw_schedule_data(jsondata);
+            });
         });
     }
 
@@ -192,6 +199,75 @@ function pters_month_calendar(calendar_name, calendar_options){
             }
         });
     }
+
+
+    //일정 표기 관련
+    function func_get_ajax_schedule_data(input_reference_date, use, callback){
+        $.ajax({
+            url: '/trainee/get_trainee_schedule/',
+            type : 'GET',
+            data : {"date": input_reference_date, "day":31},
+            dataType : 'html',
+
+            beforeSend:function(){
+                //beforeSend();
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    console.log(jsondata);
+                    if(use == "callback"){
+                        callback(jsondata);
+                    }
+                }
+
+            },
+
+            complete:function(){
+                //completeSend();
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        });
+
+    }
+    function func_draw_schedule_data(jsondata){
+        let schedule_number_dic = {};
+        let date_cache = [];
+        let len = jsondata.classTimeArray_start_date.length;
+        for(let i=0; i<len; i++){
+            let date = jsondata.classTimeArray_start_date[i].split(' ')[0];
+            date_cache.push(date);
+            schedule_number_dic[date] = 0;
+        }
+
+        let count;
+        for(date in schedule_number_dic){
+            // schedule_number_dic[date] = array_element_count(date_cache, date);
+            count = array_element_count(date_cache, date);
+            $(`#calendar_plan_cell_${date}`).text(`${count}개`);
+        }
+
+        function array_element_count(array, wanted){
+            var counts = {};
+            var len = array.length;
+            for(var i=0; i<len; i++){
+                counts[array[i]] = 0;
+            }
+            for(var j=0; j<len; j++){
+                counts[array[j]] = counts[array[j]] +1;
+            }
+            return counts[wanted];
+        }
+    }
+    //일정 표기 관련
+
 
     return {
         "set_calendar_name": function(input_calendar_name){
@@ -233,7 +309,45 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_draw_month_calendar_table(input_reference_date);
             func_draw_month_calendar_size(calendar_height, calendar_toolbox_height, calendar_month_day_name_text_height);
             func_set_prev_next_month_button(this);
+        },
+        "draw_month_calendar_schedule":function (input_reference_date){
+            if(input_reference_date==undefined){
+                input_reference_date = current_year+'-'+(current_month+1)+'-'+1;
+            }
+            func_get_ajax_schedule_data(input_reference_date, "callback", function(jsondata){
+                func_draw_schedule_data(jsondata);
+            });
         }
     };
 }
 
+
+function date_format(date){
+    let date_raw = date.replace(/[-_\., ]/gi,"-").split('-');
+    let yyyy = date_raw[0];
+    let m = Number(date_raw[1]);
+    let d = Number(date_raw[2]);
+    let mm = date_raw[1];
+    let dd = date_raw[2];
+
+    if(m<10){
+        mm = '0'+m
+    }
+    if(d<10){
+        dd = '0'+d
+    }
+
+    return{
+            "yyyy-mm-dd":`${yyyy}-${mm}-${dd}`,
+            "yyyy-m-d":`${yyyy}-${m}-${d}`,
+
+            "yyyy.mm.dd":`${yyyy}.${mm}.${dd}`,
+            "yyyy.m.d":`${yyyy}.${m}.${d}`,
+
+            "yyyy_mm_dd":`${yyyy}_${mm}_${dd}`,
+            "yyyy_m_d":`${yyyy}_${m}_${d}`,
+
+            "yyyy/mm/dd":`${yyyy}/${mm}/${dd}`,
+            "yyyy/m/d":`${yyyy}/${m}/${d}`
+    };
+}
