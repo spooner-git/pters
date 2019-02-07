@@ -7,6 +7,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                                   "height_week_row":[90]};
 
     const default_targetHTML = '#calendar';
+    console.log(calendar_options.design_options);
 
     if(calendar_options.target_html == undefined){
         calendar_options.target_html = default_targetHTML;
@@ -16,7 +17,7 @@ function pters_month_calendar(calendar_name, calendar_options){
     }
     let design_options = calendar_options.design_options;
 
-    const calendar_height = windowHeight - parseInt($('body').css('padding-top'), 10) - 20;
+    const calendar_height = $(window).height() - parseInt($('body').css('padding-top'), 10) - 20;
     const calendar_toolbox_height = 105;
     const calendar_month_day_name_text_height = 40;
 

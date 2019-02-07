@@ -757,3 +757,4 @@ def func_check_schedule_setting(class_id, start_date, end_date, add_del_type):
                 error = '예약 취소가 불가능합니다.'
 
     return error
+
