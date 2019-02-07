@@ -37,7 +37,7 @@ from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
 from .functions import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_schedule_setting, \
-    func_get_lecture_connection_list
+    func_get_lecture_connection_list, func_get_trainee_next_schedule_by_class_id
 
 logger = logging.getLogger(__name__)
 
@@ -145,6 +145,11 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TraineeMainView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        context['error'] = None
+        if class_id is not None and class_id != '':
+            context = func_get_trainee_next_schedule_by_class_id(context, class_id, self.request.user.id)
+
         return context
 
 

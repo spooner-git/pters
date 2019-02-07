@@ -754,3 +754,32 @@ def func_check_schedule_setting(class_id, start_date, end_date, add_del_type):
                 error = '예약 취소가 불가능합니다.'
 
     return error
+
+
+def func_get_trainee_next_schedule_by_class_id(context, class_id, user_id):
+
+    now = timezone.now()
+    week_info = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일']
+    next_schedule_info = ''
+    next_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
+                                                   lecture_tb__member_id=user_id,
+                                                   en_dis_type=ON_SCHEDULE_TYPE,
+                                                   start_dt__gte=now, use=USE).order_by('start_dt')
+
+    if len(next_schedule_data) > 0:
+        next_schedule_info = next_schedule_data[0]
+        try:
+            group_type_name = CommonCdTb.objects.get(common_cd=next_schedule_info.group_tb.group_type_cd)
+            group_name = next_schedule_info.group_tb.name
+        except ObjectDoesNotExist:
+            group_type_name = '개인'
+            group_name = '1:1 레슨'
+        except AttributeError:
+            group_type_name = '개인'
+            group_name = '1:1 레슨'
+        next_schedule_info.group_name = group_name
+        next_schedule_info.group_type_name = group_type_name
+
+    context['next_schedule_info'] = next_schedule_info
+
+    return context

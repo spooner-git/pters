@@ -1564,3 +1564,4 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
     context['pt_end_date'] = str(pt_end_date)
 
     return context
+
