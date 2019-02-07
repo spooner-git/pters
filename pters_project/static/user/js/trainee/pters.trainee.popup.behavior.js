@@ -9,7 +9,7 @@ function func_layer_popup(option, popup_name, popup_array){
     switch(option){
         case OPEN:
             //첫 팝업의 경우 옆으로 밀려나도록 보이는 효과
-            if(popup_array.length == 0 && popup_name != "pters_mobile_side_menu"){
+            if(popup_array.length == 0){
                 $('nav, .content_page').css({
                     "transform":"translateX(-100%)",
                     "transition":"transform 0.3s ease-in-out"
@@ -23,6 +23,7 @@ function func_layer_popup(option, popup_name, popup_array){
                     "transition":"transform 0.3s ease-in-out",
                     "z-index":100*popup_array.length
                 });
+                $(`.${popup_name}`).css({"height":windowHeight - 95 + 'px', "overflow-y":"auto"});
             }
         break;
         case CLOSE:
@@ -30,7 +31,7 @@ function func_layer_popup(option, popup_name, popup_array){
             if(popup_array.length > 0){
                 popup_name = popup_array.pop();
                 //첫 팝업의 경우 옆에서 다시 당겨오도록 보이는 효과 , side 제외
-                if(popup_array.length == 0 && popup_name != "pters_mobile_side_menu"){
+                if(popup_array.length == 0){
                     $('nav, .content_page').css({
                         "transform":"translateX(0%)",
                         "transition":"transform 0.3s ease-in-out"
@@ -46,12 +47,10 @@ function func_layer_popup(option, popup_name, popup_array){
                 $(`.${popup_name}`).parents('.popup_mobile').css({"transform":"translateX(100%)"});
             }
             //팝업 전부 닫고 옆에서 다시 당겨오도록 보이는 효과 , side 제외
-            if(popup_name != "pters_mobile_side_menu") {
-                $('nav, .content_page').css({
-                    "transform": "translateX(0%)",
-                    "transition": "transform 0.3s ease-in-out"
-                });
-            }
+            $('nav, .content_page').css({
+                "transform": "translateX(0%)",
+                "transition": "transform 0.3s ease-in-out"
+            });
         break;
     }
 }

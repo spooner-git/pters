@@ -40,6 +40,7 @@
         <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.fundamental.css"%}>
         <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan.css"%}>
         <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.base.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.object.css" %}>
         {% block local_css %}
         {% endblock %}
     </head>
@@ -95,10 +96,10 @@
             var os = 'ios';
             var browser = 'chrome';
             if (varUA.match(/android/) != null) {
-                device = 'phone';
+                device = 'mobile';
                 os = 'android';
             }else if (varUA.match(/iphone/) != null || varUA.match(/ipad/) != null || varUA.match(/ipod/) != null) {
-                device = 'phone';
+                device = 'mobile';
                 os = 'ios';
             }else if (varUA.match(/macintosh/) != null){
                 device = 'pc';
@@ -120,7 +121,6 @@
 
             //content 높이와 스크롤 셋팅
             var $content = $('.content_page');
-            // $content.css("height", windowHeight-Number($('body').css("padding-top").replace(/px/gi,""))+"px");
             $content.css("height", windowHeight-parseInt($('body').css("padding-top"), 10));
             $content.scrollTop(1);
             $content.scroll(function(){
