@@ -786,28 +786,24 @@ def func_get_trainee_next_schedule_by_class_id(context, class_id, user_id):
 
 def func_get_trainee_select_schedule(context, class_id, user_id, date):
 
-    now = timezone.now()
-    next_schedule_info = ''
-    query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as C where C.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
-
-    date_schedule_data = ScheduleTb.objects.filter(
+    # query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as C where C.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
+    schedule_data = ScheduleTb.objects.filter(
         class_tb=class_id, lecture_tb__member_id=user_id, en_dis_type=ON_SCHEDULE_TYPE,
-        start_dt__gte=now, use=USE).annotate(group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
+        start_dt__gte=date, end_dt__lte=date, use=USE).order_by('start_dt')
 
-    if len(date_schedule_data) > 0:
-        next_schedule_info = next_schedule_data[0]
+    for schedule_info in schedule_data:
         try:
-            group_type_name = CommonCdTb.objects.get(common_cd=next_schedule_info.group_tb.group_type_cd)
-            group_name = next_schedule_info.group_tb.name
+            group_type_name = CommonCdTb.objects.get(common_cd=schedule_info.group_tb.group_type_cd)
+            group_name = schedule_info.group_tb.name
         except ObjectDoesNotExist:
             group_type_name = '개인'
             group_name = '1:1 레슨'
         except AttributeError:
             group_type_name = '개인'
             group_name = '1:1 레슨'
-        next_schedule_info.group_name = group_name
-        next_schedule_info.group_type_name = group_type_name
+        schedule_info.group_name = group_name
+        schedule_info.group_type_name = group_type_name
 
-    context['next_schedule_info'] = next_schedule_info
+    context['schedule_data'] = schedule_data
 
     return context

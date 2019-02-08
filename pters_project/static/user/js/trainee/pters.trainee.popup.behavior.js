@@ -2,7 +2,7 @@ let layer_popup = (function(){
     let popup_array = [];
     return function (option, popup_name, call_method){
         if(call_method == AJAX_CALL){
-            func_get_layer_popup_html(popup_name)
+            func_get_layer_popup_html(popup_name);
         }
         setTimeout(function(){
             func_layer_popup(option, popup_name, popup_array);
@@ -25,7 +25,6 @@ function func_get_layer_popup_html(popup_name){
 
         success:function(data){
             $('body').append(`<div id="${popup_name}">${data}</div>`);
-            console.log('test3.5');
         },
 
         complete:function(){
@@ -36,6 +35,7 @@ function func_get_layer_popup_html(popup_name){
             console.log('server error');
         }
     });
+
 }
 
 

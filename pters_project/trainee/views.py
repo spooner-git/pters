@@ -37,7 +37,7 @@ from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
 from .functions import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_schedule_setting, \
-    func_get_lecture_connection_list, func_get_trainee_next_schedule_by_class_id
+    func_get_lecture_connection_list, func_get_trainee_next_schedule_by_class_id, func_get_trainee_select_schedule
 
 logger = logging.getLogger(__name__)
 
@@ -1560,9 +1560,9 @@ class PopupCalendarPlanView(TemplateView):
         context = super(PopupCalendarPlanView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
         date = self.request.GET.get('date')
-        # context['error'] = None
-        # if class_id is not None and class_id != '':
-        #     context = func_get_trainee_select_schedule(context, class_id, self.request.user.id, date)
+        context['error'] = None
+        if class_id is not None and class_id != '':
+            context = func_get_trainee_select_schedule(context, class_id, self.request.user.id, date)
         return context
 
 
