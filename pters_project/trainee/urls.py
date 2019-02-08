@@ -87,4 +87,15 @@ urlpatterns = [
     url(r'^lecture_select/$', views.LectureSelectView.as_view(), name='lecture_select'),
     # 회원 탈퇴 페이지
     url(r'^delete_trainee_account/$', views.DeleteTraineeAccountView.as_view(), name='delete_trainee_account'),
+
+
+    # 팝업 #########################################################################################################
+    # 회원 일정 팝업 페이지
+    url(r'^trainee_popup_calendar_plan_view/$', views.TraineePopupCalendarPlanView.as_view(),
+        name='trainee_popup_calendar_plan_view'),
+    # 회원 일정 팝업 예약 페이지
+    url(r'^trainee_popup_calendar_plan_reserve/$', views.TraineePopupCalendarPlanReserveView.as_view(),
+        name='trainee_popup_calendar_plan_reserve'),
+
+
 ]
