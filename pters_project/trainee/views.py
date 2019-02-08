@@ -1554,7 +1554,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
 
 
 class PopupCalendarPlanView(TemplateView):
-    template_name = 'trainee_popup_calendar_plan_view.html'
+    template_name = 'popup/trainee_popup_calendar_plan_view.html'
 
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanView, self).get_context_data(**kwargs)
@@ -1562,7 +1562,7 @@ class PopupCalendarPlanView(TemplateView):
 
 
 class PopupCalendarPlanReserveView(TemplateView):
-    template_name = 'trainee_popup_calendar_plan_reserve.html'
+    template_name = 'popup/trainee_popup_calendar_plan_reserve.html'
 
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanReserveView, self).get_context_data(**kwargs)
