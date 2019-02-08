@@ -12,7 +12,6 @@ function func_get_layer_popup_html(popup_name, use, callback){
     $.ajax({
             url: `/trainee/${popup_name}/`,
             type : 'GET',
-            async:false,
             // data : {"date": input_reference_date, "day":31},
             dataType : 'html',
 
@@ -23,7 +22,7 @@ function func_get_layer_popup_html(popup_name, use, callback){
             success:function(data){
                 func_draw_layer_popup_html(data);
                 if(use == "callback"){
-                    setTimeout(function(){callback()},0);
+                    setTimeout(function(){callback()}, 0);
                 }
                 
             },
