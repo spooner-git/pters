@@ -8,7 +8,6 @@ let layer_popup = (function(){
 
 //Ajax로 팝업 html을 통째로 들고온다.
 function func_get_layer_popup_html(popup_name, use, callback){
-    ajax_load_image('show');
     $.ajax({
             url: `/trainee/${popup_name}/`,
             type : 'GET',
@@ -16,7 +15,7 @@ function func_get_layer_popup_html(popup_name, use, callback){
             dataType : 'html',
 
             beforeSend:function(){
-                
+                ajax_load_image('show');
             },
 
             success:function(data){
