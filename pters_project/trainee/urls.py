@@ -91,11 +91,11 @@ urlpatterns = [
 
     # 팝업 #########################################################################################################
     # 회원 일정 팝업 페이지
-    url(r'^trainee_popup_calendar_plan_view/$', views.TraineePopupCalendarPlanView.as_view(),
-        name='trainee_popup_calendar_plan_view'),
+    url(r'^popup_calendar_plan_view/$', views.PopupCalendarPlanView.as_view(),
+        name='popup_calendar_plan_view'),
     # 회원 일정 팝업 예약 페이지
-    url(r'^trainee_popup_calendar_plan_reserve/$', views.TraineePopupCalendarPlanReserveView.as_view(),
-        name='trainee_popup_calendar_plan_reserve'),
+    url(r'^popup_calendar_plan_reserve/$', views.PopupCalendarPlanReserveView.as_view(),
+        name='popup_calendar_plan_reserve'),
 
 
 ]
