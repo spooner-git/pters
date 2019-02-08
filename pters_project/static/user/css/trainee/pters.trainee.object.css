@@ -30,25 +30,26 @@
     .obj_box_card{
         height: auto;
         background-color: #ffffff;
-        border-radius: 4px;
+        border-radius: 7px;
         box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.1);
         margin-left: 20px;
         margin-right: 20px;
         padding: 20px;
     }
-    .obj_box_schedule{
-        height: auto;
-        background-color: #ffffff;
-        margin-left: 20px;
-        margin-right: 20px;
-        padding: 20px;
-    }
+
+    /*.obj_box_schedule{*/
+        /*height: auto;*/
+        /*background-color: #ffffff;*/
+        /*margin-left: 20px;*/
+        /*margin-right: 20px;*/
+        /*padding: 20px;*/
+    /*}*/
     .obj_box_photo{
-        display: inline-block;
         height: 40px;
         width: 40px;
         border: 2px solid #fe4e65;
         border-radius: 50%;
+        background-color: #ffffff;
     }
 
 /* 텍스트 박스 */
@@ -64,6 +65,16 @@
     }
     .obj_font_size_16_weight_500{
         font-size: 16px;
+        font-weight: 500;
+        letter-spacing: -0.5px;
+    }
+    .obj_font_size_15_weight_bold{
+        font-size: 15px;
+        font-weight: bold;
+        letter-spacing: -0.5px;
+    }
+    .obj_font_size_15_weight_500{
+        font-size: 15px;
         font-weight: 500;
         letter-spacing: -0.5px;
     }
@@ -84,11 +95,6 @@
     .obj_font_size_13_weight_500{
         font-size: 13px;
         font-weight: 500;
-        letter-spacing: -0.5px;
-    }
-    .obj_font_size_12_weight_bold{
-        font-size: 12px;
-        font-weight: bold;
         letter-spacing: -0.5px;
     }
     .obj_font_size_12_weight_500{
@@ -159,7 +165,6 @@
     }
 
     .obj_button_gen{
-        display: inline-block;
         width: 90px;
         height: 30px;
         line-height: 30px;
@@ -184,7 +189,6 @@
     }
 
     .obj_tag{
-        display: inline-block;
         width: 58px;
         height: 21px;
         line-height: 21px;
@@ -194,6 +198,7 @@
         font-size: 12px;
         font-weight: 500;
         letter-spacing: -0.5px;
+        display: inline-block;
     }
 
 
@@ -202,9 +207,9 @@
         color: #ffffff;
         background-color: #fe4e65;
     }
-    .obj_font_bg_white_black{
-        color: #ffffff;
-        background-color: #282828;
+    .obj_font_bg_pink_white{
+        color: #fe4e65;
+        background-color: #ffffff;
     }
     .obj_font_bg_black_white{
         color: #282828;
@@ -214,11 +219,19 @@
         color: #ffffff;
         background-color: #656565;
     }
+    .obj_font_bg_white_black{
+        color: #ffffff;
+        background-color: #282828;
+    }
     .obj_font_bg_white_dark_grey{
         color: #ffffff;
         background-color: #464646;
     }
-
+    .obj_font_bg_trans_pink{
+        color: #fe4e65;
+        background-color: transparent;
+        border: 1px solid #fe4e65;
+    }
 /* table */
     .obj_table_raw{
         display: table;
