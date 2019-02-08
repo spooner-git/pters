@@ -10,7 +10,7 @@ let layer_popup = (function(){
 //Ajax로 팝업 html을 통째로 들고온다.
 function func_get_layer_popup_html(popup_name, use, callback){
     $.ajax({
-            url: `/trainee/popup/trainee_${popup_name}/`,
+            url: `/trainee/trainee_${popup_name}/`,
             type : 'GET',
             // data : {"date": input_reference_date, "day":31},
             dataType : 'html',
