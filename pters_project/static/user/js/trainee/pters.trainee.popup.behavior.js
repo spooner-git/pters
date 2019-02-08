@@ -1,8 +1,8 @@
 let layer_popup = (function(){
     let popup_array = [];
-    return function (option, popup_name, call_method){
+    return function (option, popup_name, call_method, data_date){
         if(call_method == AJAX_CALL){
-            func_get_layer_popup_html(popup_name)
+            func_get_layer_popup_html(popup_name, data_date)
         }
         setTimeout(function(){
             func_layer_popup(option, popup_name, popup_array);
@@ -12,10 +12,11 @@ let layer_popup = (function(){
 }());
 
 //Ajax로 팝업 html을 통째로 들고온다.
-function func_get_layer_popup_html(popup_name){
+function func_get_layer_popup_html(popup_name, data_date){
     $.ajax({
         url: `/trainee/${popup_name}/`,
         type : 'GET',
+        data: {"data_date": data_date},
         dataType : 'html',
         async : false,
 
