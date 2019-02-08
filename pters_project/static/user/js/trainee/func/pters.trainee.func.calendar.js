@@ -125,8 +125,9 @@ function pters_month_calendar(calendar_name, calendar_options){
                 }else if(date_cache > reference_date_month_last_day){ // 마지막 날짜가 끝난 이후 처리
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7"></div>`);
                 }else{
+
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
-                                               onclick="layer_popup('open', 'popup_calendar_plan_view', AJAX_CALL)">
+                                               onclick="layer_popup('open', 'popup_calendar_plan_view', AJAX_CALL, {'select_date':'${data_date}'})">
                                                <div class="${font_color}">${date_cache}</div>
                                                <div id="calendar_plan_cell_${data_date}"></div>
                                           </div>`);

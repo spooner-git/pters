@@ -1,6 +1,7 @@
 import datetime
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.db import IntegrityError
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.db.models.functions import Coalesce
@@ -768,7 +769,7 @@ def func_get_trainee_next_schedule_by_class_id(context, class_id, user_id):
     if len(next_schedule_data) > 0:
         next_schedule_info = next_schedule_data[0]
         try:
-            group_type_name = CommonCdTb.objects.get(common_cd=next_schedule_info.group_tb.group_type_cd)
+            group_type_name = CommonCdTb.objects.get(common_cd=next_schedule_info.group_tb.group_type_cd).common_cd_nm
             group_name = next_schedule_info.group_tb.name
         except ObjectDoesNotExist:
             group_type_name = '개인'
@@ -784,16 +785,29 @@ def func_get_trainee_next_schedule_by_class_id(context, class_id, user_id):
     return context
 
 
-def func_get_trainee_select_schedule(context, class_id, user_id, date):
+def func_get_trainee_select_schedule(context, class_id, user_id, select_date):
 
     # query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as C where C.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
+    error = None
+    try:
+        start_dt = datetime.datetime.strptime(select_date + ' 00:00', '%Y-%m-%d %H:%M')
+    except ValueError:
+        error = '등록 값에 문제가 있습니다.'
+    except IntegrityError:
+        error = '등록 값에 문제가 있습니다.'
+    except TypeError:
+        error = '등록 값의 형태에 문제가 있습니다.'
+
+    if error is None:
+        end_dt = start_dt + datetime.timedelta(hours=23, minutes=59)
+
     schedule_data = ScheduleTb.objects.filter(
         class_tb=class_id, lecture_tb__member_id=user_id, en_dis_type=ON_SCHEDULE_TYPE,
-        start_dt__gte=date, end_dt__lte=date, use=USE).order_by('start_dt')
+        start_dt__gte=start_dt, end_dt__lte=end_dt, use=USE).order_by('start_dt')
 
     for schedule_info in schedule_data:
         try:
-            group_type_name = CommonCdTb.objects.get(common_cd=schedule_info.group_tb.group_type_cd)
+            group_type_name = CommonCdTb.objects.get(common_cd=schedule_info.group_tb.group_type_cd).common_cd_nm
             group_name = schedule_info.group_tb.name
         except ObjectDoesNotExist:
             group_type_name = '개인'

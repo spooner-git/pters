@@ -1559,10 +1559,15 @@ class PopupCalendarPlanView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
-        date = self.request.GET.get('date')
+        select_date = self.request.GET.get('select_date')
+
         context['error'] = None
+        context['select_date'] = select_date
+
+        context['date_format'] = datetime.datetime.strptime(select_date, '%Y-%m-%d')
         if class_id is not None and class_id != '':
-            context = func_get_trainee_select_schedule(context, class_id, self.request.user.id, date)
+            context = func_get_trainee_select_schedule(context, class_id, self.request.user.id, select_date)
+
         return context
 
 

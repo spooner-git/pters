@@ -37,9 +37,9 @@
             </div>
         {% else %}
             <div class="wrapper_tag">
-                <div class="obj_tag obj_font_bg_white_pink">예약없음</div>
+                <div class="obj_tag obj_font_bg_white_pink">예약완료</div>
             </div>
-            <div class="wrapper_lecture_title obj_font_size_16_weight_bold">(없음) 수업명 없음</div>
+            <div class="wrapper_lecture_title obj_font_size_16_weight_bold">({{ next_schedule_info.group_type_name }}) {{ next_schedule_info.group_name }}</div>
             <div class="wrapper_plan_info">
                 <div class="obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
                     <div class="obj_table_cell_x3">일자</div>
@@ -47,20 +47,19 @@
                     <div class="obj_table_cell_x3">진행시간</div>
                 </div>
                 <div class="obj_table_raw obj_font_size_14_weight_500">
-                    <div class="obj_table_cell_x3">없음</div>
-                    <div class="obj_table_cell_x3">없음</div>
-                    <div class="obj_table_cell_x3">없음</div>
-                    </div>
+                    <div class="obj_table_cell_x3">{{ next_schedule_info.start_dt | date:'Y.m.d' }}</div>
+                    <div class="obj_table_cell_x3">{{ next_schedule_info.start_dt | date:"l" }}</div>
+                    <div class="obj_table_cell_x3">{{ next_schedule_info.start_dt | date:'H:i' }} ~ {{ next_schedule_info.end_dt | date:'H:i' }}</div>
                 </div>
             </div>
-            <div class="wrapper_teacher_memo_text obj_font_size_12_weight_normal"><span>"메모 없음"</span></div>
+            <div class="wrapper_teacher_memo_text obj_font_size_12_weight_normal"><span>"{{ next_schedule_info.note }}"</span></div>
             <div class="obj_table_raw wrapper_cancel_notice">
                 <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_dark_grey">취소 가능 시간까지 <span class="obj_font_color_pters_red">3시간 26분</span> 남았습니다.</div>
                 <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey">취소하기</div>
             </div>
         {% endif %}
-
         </div>
+
         <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">내 수강권</div>
         <div class="obj_box_card">
             <div class="obj_table_raw wrapper_my_ticket_type">
