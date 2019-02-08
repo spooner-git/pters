@@ -1558,6 +1558,11 @@ class PopupCalendarPlanView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        date = self.request.GET.get('date')
+        # context['error'] = None
+        # if class_id is not None and class_id != '':
+        #     context = func_get_trainee_select_schedule(context, class_id, self.request.user.id, date)
         return context
 
 
@@ -1567,6 +1572,7 @@ class PopupCalendarPlanReserveView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanReserveView, self).get_context_data(**kwargs)
         return context
+
 
 class PopupCalendarPlanReserveCompleteView(TemplateView):
     template_name = 'popup/trainee_popup_calendar_plan_reserve_complete.html'

@@ -41,6 +41,7 @@
         <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan.css"%}>
         <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.base.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.object.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.mobile_side_menu.css" %}>
         {% block local_css %}
         {% endblock %}
     </head>
@@ -139,5 +140,7 @@
         {% block local_js_footer %}
         {% endblock %}
 
+        {% block popup_js_footer %}
+        {% endblock %}
     </body>
 </html>

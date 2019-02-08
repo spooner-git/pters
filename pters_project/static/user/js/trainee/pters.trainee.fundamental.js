@@ -4,11 +4,11 @@ $('select').change(function(){
 
 function ajax_load_image(option){
 	switch(option){
-		case 'show':
+		case SHOW:
 			$('img.ajax_load_image').show();
 		break;
 
-		case 'hide':
+		case HIDE:
 			$('img.ajax_load_image').hide();
 		break;
 	}
