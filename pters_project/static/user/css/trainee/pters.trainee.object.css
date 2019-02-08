@@ -151,6 +151,10 @@
     }
 
 /* 버튼 */
+    .obj_icon_basic{
+        width: 24px;
+        height: 24px;
+    }
     .obj_icon_x{
         width: 24px;
         height: 24px;

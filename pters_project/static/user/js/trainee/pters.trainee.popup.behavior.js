@@ -2,7 +2,7 @@ let layer_popup = (function(){
     let popup_array = [];
     return function (option, popup_name){
         func_layer_popup(option, popup_name, popup_array);
-        
+
     }
 }());
 
