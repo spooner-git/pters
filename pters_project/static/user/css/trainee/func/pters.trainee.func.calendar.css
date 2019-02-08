@@ -56,14 +56,14 @@
 		/*padding-top: 0;*/
 		overflow-y: auto;
 		/*-webkit-overflow-scrolling: touch;*/
-		/*-webkit-overflow-scrolling:auto;*/
+		-webkit-overflow-scrolling:auto;
 	}
 	.pters_calendar .pters_month_cal_content_box{
 		top: 155px;
 		height: auto;
 		overflow-y: auto;
 		/*-webkit-overflow-scrolling: touch;*/
-		/*-webkit-overflow-scrolling:auto;*/
+		-webkit-overflow-scrolling:auto;
 	}
 		.pters_calendar .pters_month_cal_content_wrapper .obj_table_raw{
 			height: 90px;
