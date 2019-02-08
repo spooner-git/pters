@@ -2,11 +2,16 @@
 	.pters_calendar{
 		overflow-y: hidden;
 	}
+		.pters_calendar .obj_font_size_20_weight_bold{
+			line-height: 30px;
+			height: 30px;
+		}
 		.pters_calendar .obj_font_size_12_weight_500{
 			line-height: 20px;
 			height: 20px;
 		}
-		.pters_calendar > .obj_box_full{
+		.pters_calendar .obj_box_full{
+			margin-top: 20px;
 			padding: 0;
 		}
 		.pters_calendar .obj_table_cell_x7{
@@ -20,47 +25,29 @@
 		line-height: 40px;
 	}
 	.pters_calendar .pters_month_cal_upper_tool_box{
-		height: 70px;
-		padding-top: 35px;
+		padding-top: 40px;
 		width: 100%;
+		height: 50px;
 		text-align: center;
 	}
-	.pters_calendar .pters_month_cal_tool_year_text{
-		width: 80px;
-	}
-	.pters_calendar .pters_month_cal_tool_month_text{
-		line-height: 30px;
-		height: 30px;
-		width: 80px;
+	.pters_calendar .pters_month_cal_tool_date_text{
+		display:inline-block;
+		width: 120px;
+		vertical-align:middle;
 	}
 
-	.go_prev_month, .go_next_month{
+	.pters_calendar .next_prev_month{
 		display:inline-block;
 		vertical-align:middle;
-		padding: 13px 20px 13px 20px;
-
+		height:50px;
 	}
-		.go_prev_month > img{
-			transform: rotate(180deg);
-			height: 12px;
 
-		}
-		.go_next_month > img{
-			height: 12px;
-
-		}
+	.pters_calendar .obj_icon_basic{
+		margin-top:13px;
+	}
 
 	.pters_calendar .pters_month_cal_content_wrapper{
 		top: 155px;
-		/*width: 100%;*/
-		/*padding-top: 0;*/
-		overflow-y: auto;
-		/*-webkit-overflow-scrolling: touch;*/
-		-webkit-overflow-scrolling:auto;
-	}
-	.pters_calendar .pters_month_cal_content_box{
-		top: 155px;
-		height: auto;
 		overflow-y: auto;
 		/*-webkit-overflow-scrolling: touch;*/
 		-webkit-overflow-scrolling:auto;
@@ -69,6 +56,16 @@
 			height: 90px;
 			text-align: center;
 			vertical-align: top;
+		}
+	.pters_calendar .pters_month_cal_content_box{
+		top: 155px;
+		height: auto;
+		overflow-y: auto;
+		/*-webkit-overflow-scrolling: touch;*/
+		-webkit-overflow-scrolling:auto;
+	}
+		.pters_calendar .pters_month_cal_content_box .obj_table_cell_x7{
+			padding-top: 20px;
 		}
 
 	::-webkit-scrollbar{

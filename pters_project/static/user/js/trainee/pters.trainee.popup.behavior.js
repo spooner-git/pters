@@ -1,9 +1,9 @@
 let layer_popup = (function(){
     let popup_array = [];
     return function (option, popup_name){
-        func_get_layer_popup_html(popup_name, "callback", function(){
+        // func_get_layer_popup_html(popup_name, "callback", function(){
             func_layer_popup(option, popup_name, popup_array);
-        })
+        // })
     }
 }());
 

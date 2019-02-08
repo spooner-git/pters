@@ -78,19 +78,19 @@ function pters_month_calendar(calendar_name, calendar_options){
 
         //달력의 상단의 연월 표기
         let month_calendar_upper_tool = `<div class="pters_month_cal_upper_tool_box">
-                                            <div id="${calendar_name}_go_prev_month" class="go_prev_month">
-                                                <img src="/static/user/res/icon-setting-arrow.png"> 
+                                            <div id="${calendar_name}_go_prev_month" class="next_prev_month">
+                                                <img src="/static/common/icon/navigate_before_black.png" class="obj_icon_basic"> 
                                             </div>
-                                            <div style="display:inline-block;vertical-align:middle;">
-                                                <div class="pters_month_cal_tool_year_text obj_font_size_12_weight_500">
+                                            <div class="pters_month_cal_tool_date_text">
+                                                <div class="obj_font_size_12_weight_500">
                                                     ${Number(reference_date_year)}년
                                                 </div>
-                                                <div class="pters_month_cal_tool_month_text obj_font_size_20_weight_bold">
+                                                <div class="obj_font_size_20_weight_bold">
                                                     ${Number(reference_date_month)}월
                                                 </div>
                                             </div>
-                                            <div id="${calendar_name}_go_next_month" class="go_next_month">
-                                                <img src="/static/user/res/icon-setting-arrow.png">
+                                            <div id="${calendar_name}_go_next_month" class="next_prev_month">
+                                                <img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic">
                                             </div>
                                         </div>`;
 
