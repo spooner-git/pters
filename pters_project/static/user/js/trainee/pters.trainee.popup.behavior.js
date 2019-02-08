@@ -11,7 +11,6 @@ function func_get_layer_popup_html(popup_name, use, callback){
     $.ajax({
             url: `/trainee/${popup_name}/`,
             type : 'GET',
-            // data : {"date": input_reference_date, "day":31},
             dataType : 'html',
 
             beforeSend:function(){

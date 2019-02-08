@@ -1567,3 +1567,10 @@ class PopupCalendarPlanReserveView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanReserveView, self).get_context_data(**kwargs)
         return context
+
+class PopupCalendarPlanReserveCompleteView(TemplateView):
+    template_name = 'popup/trainee_popup_calendar_plan_reserve_complete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupCalendarPlanReserveCompleteView, self).get_context_data(**kwargs)
+        return context
