@@ -13,16 +13,22 @@ function func_get_layer_popup_html(popup_name, use, callback){
             type : 'GET',
             dataType : 'html',
 
-            beforeSend:function(){
-                ajax_load_image('show');
+            beforeSend:function(xhr){
+                if($(`.${popup_name}`).length > 0){
+                    xhr.abort();
+                    callback();
+                }else{
+                    ajax_load_image('show');
+                }
             },
 
             success:function(data){
                 func_draw_layer_popup_html(data);
                 if(use == "callback"){
-                    setTimeout(function(){callback()}, 0);
+                    setTimeout(function(){
+                        callback();
+                    }, 0);
                 }
-                
             },
 
             complete:function(){
@@ -61,7 +67,7 @@ function func_layer_popup(option, popup_name, popup_array){
                     });
                     $(`.${popup_name}`).css({"height":windowHeight - 95 + 'px', "overflow-y":"auto"});
                 }
-            })
+            });
 
 
         break;
@@ -96,6 +102,10 @@ function func_layer_popup(option, popup_name, popup_array){
                 "transform": "translateX(0%)",
                 "transition": "transform 0.3s ease-in-out"
             });
+            //팝업이 옆으로 닫히는 애니메이션이 종료된후 해당 팝업의 html을 지운다.
+            setTimeout(function(){
+                $('.popup_mobile').remove();
+            }, 300);
         break;
     }
 }
