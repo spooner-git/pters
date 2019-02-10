@@ -100,15 +100,18 @@
         });
 
         $(document).on("change", "select[title='lecture_select']", function(){
-            let selected_lecture_id = $(this).attr('data-lecture-id');
-            $('form_content_lecture_id').val();
+            let $selected_option = $(this).find('option:selected');
+            let selected_lecture_id = $selected_option.attr('data-lecture-id');
+            $('#form_content_lecture_id').val(selected_lecture_id);
         });
 
         $(document).on("change", "select[title='time_select']", function(){
-            let start_time = $(this).attr('data-start-time');
-            let end_time = $(this).attr('data-end-time');
-            $('form_content_training_time').val(start_time);
-            $('form_content_training_end_time').val(end_time);
+            let $selected_option = $(this).find('option:selected');
+
+            let start_time = $selected_option.attr('data-start-time');
+            let end_time = $selected_option.attr('data-end-time');
+            $('#form_content_training_time').val(start_time);
+            $('#form_content_training_end_time').val(end_time);
         });
 
 
