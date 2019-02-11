@@ -20,7 +20,7 @@
             </div>
         </div>
     {% endfor %}
-    {% if not total_class_num|divisibleby:2 %}
+    {% if not class_data|length|divisibleby:2 %}
         <div class="obj_box_card" style="height:137px;vertical-align:top;">
             <img src="/static/user/res/PTERS_logo_pure.png" style="width: 50%;">
         </div>

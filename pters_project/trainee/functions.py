@@ -764,7 +764,8 @@ def func_get_trainee_next_schedule_by_class_id(context, class_id, user_id):
     next_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
                                                    lecture_tb__member_id=user_id,
                                                    en_dis_type=ON_SCHEDULE_TYPE,
-                                                   start_dt__gte=now, use=USE).order_by('start_dt')
+                                                   start_dt__gte=now,
+                                                   use=USE).exclude(state_cd='PE').order_by('start_dt')
 
     if len(next_schedule_data) > 0:
         next_schedule_info = next_schedule_data[0]
@@ -803,7 +804,7 @@ def func_get_trainee_select_schedule(context, class_id, user_id, select_date):
 
     schedule_data = ScheduleTb.objects.filter(
         class_tb=class_id, lecture_tb__member_id=user_id, en_dis_type=ON_SCHEDULE_TYPE,
-        start_dt__gte=start_dt, end_dt__lte=end_dt, use=USE).order_by('start_dt')
+        start_dt__gte=start_dt, start_dt__lte=end_dt).order_by('start_dt')
 
     for schedule_info in schedule_data:
         try:
