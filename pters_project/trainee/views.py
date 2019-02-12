@@ -470,8 +470,8 @@ def add_trainee_schedule_logic(request):
 def delete_trainee_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     class_id = request.session.get('class_id', '')
-    next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
+    next_page = request.POST.get('next_page')
     error = None
     lecture_info = None
     class_info = None

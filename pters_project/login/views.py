@@ -1458,7 +1458,7 @@ def clear_badge_counter_logic(request):
     if push_token is None or push_token == '':
         error = 'Push 정보를 가져올 수 없습니다'
 
-    logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+push_token)
+    logger.info(request.user.first_name+'['+str(request.user.id)+']'+push_token)
     if error is None:
         try:
             token_data = PushInfoTb.objects.get(token=push_token, use=USE)
@@ -1472,7 +1472,7 @@ def clear_badge_counter_logic(request):
     if error is None:
         return render(request, 'ajax/token_check_ajax.html', {'token_check': token_data.token})
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         # messages.error(request, error)
 
         return render(request, 'ajax/token_check_ajax.html', {'token_check': ''})
