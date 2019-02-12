@@ -1,18 +1,17 @@
-
 {% load static_url %}
 
-    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.basic.css" %}>
+<link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.basic.css" %}>
 
-
+<div class="popup_mobile popup_mobile_basic">
     <div class="popup_basic_user_select">
         <div class="wrapper_popup_basic_comment">안뇽~</div>
         <div class="wrapper_popup_basic_buttons obj_table_raw">
-            <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup_basic('close', 'popup_basic_user_select')">취소</div>
+            <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup('close')">취소</div>
             <div class="popup_basic_confirm obj_table_cell_x2">확인</div>
         </div>
     </div>
+</div>
 
+<script type="text/javascript">
 
-    <script type="text/javascript">
-
-    </script>
+</script>

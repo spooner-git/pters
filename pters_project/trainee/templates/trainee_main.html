@@ -34,7 +34,7 @@
             {% endif %}
             <div class="obj_table_raw wrapper_cancel_notice">
                 <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_dark_grey">취소 가능 시간까지 <span class="obj_font_color_pters_red">3시간 26분</span> 남았습니다.</div>
-                <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey" onclick="func_layer_popup_basic('open', 'popup_basic_user_select', '취소팝업 코멘트1', `func_cancel_schedule('', 0)`)">취소하기</div>
+                <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey" onclick="layer_popup('open', POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, {'popup_title':'', 'popup_comment':'취소팝업 코멘트2', 'onclick_function':`func_cancel_schedule('', 0)`})">취소하기</div>
             </div>
         {% else %}
             <div class="wrapper_tag">
@@ -56,7 +56,7 @@
             <div class="wrapper_teacher_memo_text obj_font_size_12_weight_normal"><span>"{{ next_schedule_info.note }}"</span></div>
             <div class="obj_table_raw wrapper_cancel_notice">
                 <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_dark_grey">취소 가능 시간까지 <span class="obj_font_color_pters_red">3시간 26분</span> 남았습니다.</div>
-                <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey" onclick="func_layer_popup_basic('open', 'popup_basic_user_select', '취소팝업 코멘트2', `func_cancel_schedule('', 0)`)">취소하기</div>
+                <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey" onclick="">취소하기</div>
             </div>
         {% endif %}
         </div>

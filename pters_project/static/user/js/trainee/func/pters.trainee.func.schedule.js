@@ -13,7 +13,7 @@
 // }
 
 function func_cancel_schedule(data, call_method){
-    if(call_method==AJAX_CALL){
+    if(call_method==POPUP_AJAX_CALL){
         $.ajax({
             url: '/trainee/delete_trainee_schedule/',
             data: data,
@@ -35,7 +35,7 @@ function func_cancel_schedule(data, call_method){
                 console.log('server error');
             }
         });
-    }else if(call_method==INNER_HTML_CALL){
+    }else if(call_method==POPUP_INNER_HTML){
 	    $('#form_plan_delete').submit();
     }
 }

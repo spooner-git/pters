@@ -1,12 +1,15 @@
 /* 예/아니오 등 기본 팝업 CSS */
+.popup_mobile_basic{
+    background-color:transparent;
+}
 .popup_basic_user_select{
-    display: none;
+    /*display: none;*/
     position: fixed;
     top: 50%;
     left: 50%;
     transform:translate(-50%, -50%);
+    /*transform:translateX(100%);*/
     background-color: #ffffff;
-    z-index: 1500;
 
     width: 300px;
     border: 1px solid #cccccc;
