@@ -1,14 +1,12 @@
 let layer_popup = (function(){
     let popup_array = [];
     return function (option, popup_name, call_method, data){
-        console.log(data);
         if(call_method == AJAX_CALL){
             func_get_layer_popup_html(popup_name, data)
         }
         setTimeout(function(){
             func_layer_popup(option, popup_name, popup_array);
         }, 0);
-
     }
 }());
 
