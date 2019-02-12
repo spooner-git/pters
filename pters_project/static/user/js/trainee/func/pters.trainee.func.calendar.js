@@ -311,7 +311,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_draw_month_calendar_size(calendar_height, calendar_toolbox_height, calendar_month_day_name_text_height);
             func_set_prev_next_month_button(this);
         },
-        "draw_month_calendar_schedule":function (input_reference_date){
+        "draw_month_calendar_schedule":function(input_reference_date){
             if(input_reference_date==undefined){
                 input_reference_date = current_year+'-'+(current_month+1)+'-'+1;
             }
