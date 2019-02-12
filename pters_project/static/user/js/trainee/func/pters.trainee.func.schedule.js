@@ -13,8 +13,6 @@ function planning_function(){
 }
 
 
-
-
 function func_cancel_schedule(){
 	// $('#form_plan_delete').submit();
 	$.ajax({
@@ -28,7 +26,7 @@ function func_cancel_schedule(){
             },
 
             success:function(data){
-            	
+
             },
 
             complete:function(){
