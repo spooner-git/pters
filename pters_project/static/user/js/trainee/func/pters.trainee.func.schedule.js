@@ -32,7 +32,7 @@ function func_cancel_schedule(){
             },
 
             complete:function(){
-            	// window.location.reload();
+            	window.location.reload();
             },
 
             error:function(){
