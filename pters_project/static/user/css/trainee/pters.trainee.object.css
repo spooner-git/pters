@@ -97,6 +97,11 @@
         font-weight: 500;
         letter-spacing: -0.5px;
     }
+    .obj_font_size_12_weight_bold{
+        font-size: 12px;
+        font-weight: bold;
+        letter-spacing: -0.5px;
+    }
     .obj_font_size_12_weight_500{
         font-size: 12px;
         font-weight: 500;

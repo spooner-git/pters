@@ -1,0 +1,160 @@
+{% extends 'popup/trainee_base_popup.html' %}
+{% load static_url %}
+{% block popup_base_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan_reserve.css" %}>
+{% endblock %}
+<!-- pters.trainee.popup.plan_reserve.css -->
+{% block popup_base_contents %}
+    <div class="popup_calendar_plan_reserve">
+        <div class="wrapper_calendar_plan_reserve_title">
+            <div class="obj_font_size_20_weight_bold">일정 예약</div>
+            <div class="obj_font_size_14_weight_500">2019년 1월 17일 (목)</div>
+        </div>
+        <div class="obj_box_full obj_font_bg_white_dark_grey">
+            <div class="obj_table_raw">
+                <div class="obj_table_cell_x2 obj_font_size_13_weight_500">나의 예약 가능 횟수 보기</div>
+                <div class="obj_table_cell_x2"><img src="/static/common/icon/expand_more_black.png" class="obj_icon_expand" id="id_ticket_detail_expand_in_reserve" data-open></div>
+            </div>
+            <div id="wrapper_ticket_info" class="wrapper_ticket_info">
+                <div class="obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
+                    <div class="wrapper_ticket_name obj_table_cell_x2">수강권명</div>
+                    <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x2">예약 가능 횟수</div>
+                </div>
+                <div class="obj_table_raw">
+                    <div class="wrapper_ticket_name obj_table_cell_x2 obj_font_size_12_weight_500 obj_font_color_white">냉혈한 김선생의 다가오는 여름준비</div>
+                    <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x2 obj_font_size_12_weight_bold obj_font_color_pters_red">12 회</div>
+                </div>
+            </div>    
+        </div>
+        <div class="wrapper_reserve_form">
+            <div class="obj_table_raw">
+                <div class="wrapper_reserve_form_title obj_table_cell_x2 obj_font_size_14_weight_normal">
+                    <div class="obj_table_raw">수업 종류:</div>
+                    <div class="obj_table_raw">예약 시간:</div>
+                    <div class="obj_table_raw">메모:</div>
+                </div>
+                <div class="wrapper_reserve_form_data obj_table_cell_x2">
+                    <div class="obj_table_raw">
+                        <select class="obj_font_size_14_weight_500 obj_font_color_light_grey" title="lecture_select">
+                            <option selected disabled>수업명</option>
+                            <option data-lecture-id="수업1">수업 종류1</option>
+                            <option data-lecture-id="수업2">수업 종류2</option>
+                        </select>
+                        <img src="/static/common/icon/expand_more_black.png" class="obj_icon_arrow">
+                    </div>
+                    <div class="obj_table_raw">
+                        <select class="obj_font_size_14_weight_500 obj_font_color_light_grey" title="time_select">
+                            <option selected disabled>예약 시간 선택</option>
+                            <option data-start-time="예약시간1 시작" data-end-time="예약시간1 종료">예약 시간1</option>
+                            <option data-start-time="예약시간2 시작" data-end-time="예약시간2 종료">예약 시간2</option>
+                        </select>
+                        <img src="/static/common/icon/expand_more_black.png" class="obj_icon_arrow">
+                    </div>
+                    <div class="obj_table_raw">
+                        <input class="obj_font_size_14_weight_500" type="text" name="memo_to_teacher" placeholder="강사님에게 메모 남기기">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper_reserve_caution obj_font_size_11_weight_500 obj_font_color_grey">
+            <p><span class="obj_font_color_pters_red">2시간 단위로 예약</span> 할 수 있습니다.</p>
+            <p><span class="obj_font_color_pters_red">수업 시작 12시간 전까지 예약</span> 할 수 있습니다.</p>
+            <p><span class="obj_font_color_pters_red">수업 시작 3시간 전까지 취소</span> 할 수 있습니다.</p>
+        </div>
+    </div>
+    <div class="obj_button_big obj_font_bg_white_pink" onclick="layer_popup('open', 'popup_calendar_plan_reserve_complete', AJAX_CALL)">예약하기</div>
+
+    <form action="/trainee/add_trainee_schedule" id="form_plan_add" method="post">
+        <input type="hidden" name="class_id" id="form_content_class_id">
+        <input type="hidden" name="lecture_id" id="form_content_lecture_id">
+        <input type="hidden" name="group_schedule_id" id="form_content_group_schedule_id">
+        <input type="hidden" name="time_duration" id="form_content_time_duration">
+        <input type="hidden" name="training_date" id="form_content_training_date">
+        <input type="hidden" name="training_time" id="form_content_training_time">
+        <input type="hidden" name="training_end_date" id="form_content_training_end_date">
+        <input type="hidden" name="training_end_time" id="form_content_training_end_time">
+    </form>
+{% endblock %}
+
+{% block popup_base_js %}
+    <script type="text/javascript">
+        /*수강권 정보 열고 닫기*/
+        $('#id_ticket_detail_expand_in_reserve').attr("data-open", CLOSE);
+        $(document).on("click", '#id_ticket_detail_expand_in_reserve', function(){
+            let $this = $(this);
+            let option = $this.attr("data-open");
+            let wrapper_my_ticket_detail_in_reserve = $('#wrapper_ticket_info');
+            switch(option){
+                case OPEN:
+                    $this.attr({"data-open": CLOSE,
+                                "src": "/static/common/icon/expand_more_black.png"});
+                    wrapper_my_ticket_detail_in_reserve.hide();
+                break;
+
+                case CLOSE:
+                    $this.attr({"data-open": OPEN,
+                                "src": "/static/common/icon/expand_less_black.png"});
+                    wrapper_my_ticket_detail_in_reserve.show();
+                break;
+            }
+        });
+
+        $(document).on("change", "select[title='lecture_select']", function(){
+            let $selected_option = $(this).find('option:selected');
+            let selected_lecture_id = $selected_option.attr('data-lecture-id');
+            $('#form_content_lecture_id').val(selected_lecture_id);
+        });
+
+        $(document).on("change", "select[title='time_select']", function(){
+            let $selected_option = $(this).find('option:selected');
+
+            let start_time = $selected_option.attr('data-start-time');
+            let end_time = $selected_option.attr('data-end-time');
+            $('#form_content_training_time').val(start_time);
+            $('#form_content_training_end_time').val(end_time);
+        });
+
+
+        function func_send_reservation(){
+            $.ajax({
+                url: '/trainee/add_trainee_schedule/',
+                data: $('#form_plan_add').serialize(),
+                // data: {"class_id": , 
+                //        "lecture_id": , 
+                //        "group_schedule_id": , 
+                //        "training_date": , 
+                //        "training_time": , 
+                //        "training_end_date":, 
+                //        "training_end_time":, 
+                //        "next_page":"/trainee/get_trainee_error_info/"}
+                dataType : 'html',
+                type:'POST',
+
+                beforeSend:function(xhr){
+                    
+                },
+
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+
+                    if(jsondata.messageArray.length>0){
+                        $('#errorMessageBar').show();
+                        $('#errorMessageText').text(jsondata.messageArray);
+                    }else{
+
+                    }
+                },
+
+                complete:function(){
+
+                },
+
+                error:function(){
+                    console.log('server error');
+                }
+            });
+        }
+
+
+    </script>
+{% endblock %}
