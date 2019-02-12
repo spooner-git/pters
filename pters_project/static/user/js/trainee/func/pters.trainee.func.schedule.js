@@ -12,14 +12,11 @@ function planning_function(){
 			};
 }
 
-
-
-
-function func_cancel_schedule(){
-	// $('#form_plan_delete').submit();
-	$.ajax({
+function func_cancel_schedule(data, call_method){
+    if(call_method==AJAX_CALL){
+        $.ajax({
             url: '/trainee/delete_trainee_schedule/',
-            data: $('#form_plan_delete').serialize(),
+            data: data,
             dataType : 'html',
             type:'POST',
 
@@ -28,16 +25,45 @@ function func_cancel_schedule(){
             },
 
             success:function(data){
-            	
+
             },
 
             complete:function(){
-            	window.location.reload();
             },
 
             error:function(){
                 console.log('server error');
             }
         });
+    }else if(call_method==INNER_HTML_CALL){
+	    $('#form_plan_delete').submit();
+    }
+}
+
+
+function func_cancel_schedule(){
+	$('#form_plan_delete').submit();
+	// $.ajax({
+     //        url: '/trainee/delete_trainee_schedule/',
+     //        data: $('#form_plan_delete').serialize(),
+     //        dataType : 'html',
+     //        type:'POST',
+    //
+     //        beforeSend:function(){
+    //
+     //        },
+    //
+     //        success:function(data){
+     //
+     //        },
+    //
+     //        complete:function(){
+     //        	window.location.reload();
+     //        },
+    //
+     //        error:function(){
+     //            console.log('server error');
+     //        }
+     //    });
 
 }

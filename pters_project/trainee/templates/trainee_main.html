@@ -12,14 +12,6 @@
         <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">다음 일정</div>
         <div class="wrapper_box_next_plan obj_box_full">
 
-
-        <form action="/trainee/delete_trainee_schedule/" id="form_plan_delete" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="schedule_id" value="{{ next_schedule_info.schedule_id }}">
-            <input type="hidden" name="next_page" value="{% url 'trainee:trainee_main' %}">
-        </form>
-
-
         {% if next_schedule_info %}
             <div class="wrapper_tag">
                 <div class="obj_tag obj_font_bg_white_pink">예약완료</div>
@@ -118,6 +110,13 @@
             </div>
         </div>
     </div>
+
+    <form action="{% url "trainee:delete_trainee_schedule" %}" id="form_plan_delete" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="schedule_id" value="{{ next_schedule_info.schedule_id }}">
+        <input type="hidden" name="next_page" value="{% url 'trainee:trainee_main' %}">
+    </form>
+
 {% endblock %}
 
 {% block local_js_footer %}

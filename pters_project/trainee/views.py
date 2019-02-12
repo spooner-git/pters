@@ -560,7 +560,7 @@ def delete_trainee_schedule_logic(request):
             error = '삭제된 일정입니다.'
         except ValidationError:
             error = '예약 가능한 횟수를 확인해주세요.'
-
+    print(error)
     if error is None:
         # func_update_member_schedule_alarm(class_id)
         # class_info.schedule_check = 1
@@ -601,6 +601,7 @@ def delete_trainee_schedule_logic(request):
 
         return render(request, 'ajax/trainee_error_info.html', context)
     else:
+        print(error)
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
         return redirect(next_page)
