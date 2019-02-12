@@ -1,0 +1,35 @@
+/* 예/아니오 등 기본 팝업 CSS */
+.popup_basic_user_select{
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform:translate(-50%, -50%);
+    background-color: #ffffff;
+    z-index: 1500;
+
+    width: 300px;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+}
+
+.wrapper_popup_basic_comment{
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+
+.wrapper_popup_basic_buttons{
+    text-align: center;
+    border-top: 1px solid #cccccc;
+    height: 35px;
+}
+
+    .wrapper_popup_basic_buttons .popup_basic_cancel{
+        cursor: pointer;
+        border-right: 1px solid #cccccc;
+    }
+
+    .wrapper_popup_basic_buttons .popup_basic_confirm{
+        cursor: pointer;
+    }
