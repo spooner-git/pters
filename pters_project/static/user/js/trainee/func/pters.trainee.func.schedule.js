@@ -13,30 +13,39 @@
 // }
 
 function func_cancel_schedule(data, call_method){
-    if(call_method==POPUP_AJAX_CALL){
+
+    if(call_method==CALL_AJAX){
         $.ajax({
             url: '/trainee/delete_trainee_schedule/',
             data: data,
             dataType : 'html',
             type:'POST',
 
-            beforeSend:function(){
-
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
             },
-
-            success:function(data){
-
+            success:function(result_data){
+                let jsondata = JSON.parse(result_data);
+                if(jsondata.messageArray.length>0){
+                    alert(jsondata.messageArray);
+                    layer_popup.close_layer_popup();
+                }else{
+                    //성공
+                }
             },
-
             complete:function(){
+
             },
 
             error:function(){
                 console.log('server error');
             }
         });
-    }else if(call_method==POPUP_INNER_HTML){
-	    $('#form_plan_delete').submit();
+
+    }else if(call_method==CALL_PAGE_MOVE){
+	    $(`#${data}`).submit();
     }
 }
 

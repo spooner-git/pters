@@ -59,6 +59,9 @@ let layer_popup = (function(){
             }else if(call_method==POPUP_INNER_HTML){
                 // 확인 용도
             }
+            console.log(call_method);
+            console.log(popup_name);
+            console.log(popup_size);
 
             let func_animation_set = this.animation_set;
             setTimeout(function(){
@@ -85,7 +88,7 @@ let layer_popup = (function(){
                 let animation_flag = func_get_animation_flag(popup_data.popup_size);
                 let $popup_selector = $(`.${popup_data.popup_name}`).parents('.popup_mobile');
                 func_set_popup_animation(option, $popup_selector, popup_array.length, animation_flag);
-                if(popup_data.popup_size==POPUP_SIZE_WINDOW){
+                if(option==CLOSE || popup_data.popup_size==POPUP_SIZE_WINDOW){
                     func_set_shade(popup_array.length);
                 }
             }
@@ -104,7 +107,10 @@ function func_get_popup_ajax(popup_name, data){
         dataType : 'html',
         async : false,
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings){
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             ajax_load_image(SHOW);
         },
 

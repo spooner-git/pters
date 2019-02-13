@@ -24,5 +24,7 @@ const POPUP_SIZE_WINDOW = 1;
 const SHOW = 'show';
 const HIDE = 'hide';
 
+const CALL_AJAX = 0;
+const CALL_PAGE_MOVE = 1;
 
 /**/

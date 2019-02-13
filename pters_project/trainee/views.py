@@ -471,7 +471,7 @@ def delete_trainee_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
-    next_page = request.POST.get('next_page')
+    next_page = request.POST.get('next_page', '/trainee/get_trainee_error_info/')
     error = None
     lecture_info = None
     class_info = None
@@ -599,7 +599,7 @@ def delete_trainee_schedule_logic(request):
             context['push_title'] = ''
             context['push_message'] = ''
 
-        return render(request, 'ajax/trainee_error_info.html', context)
+        return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)

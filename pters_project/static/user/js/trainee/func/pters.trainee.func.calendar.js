@@ -7,7 +7,6 @@ function pters_month_calendar(calendar_name, calendar_options){
                                   "height_week_row":[90]};
 
     const default_targetHTML = '#calendar';
-    console.log(calendar_options.design_options);
 
     if(calendar_options.target_html == undefined){
         calendar_options.target_html = default_targetHTML;
@@ -210,7 +209,10 @@ function pters_month_calendar(calendar_name, calendar_options){
             data : {"date": input_reference_date, "day":31},
             dataType : 'html',
 
-            beforeSend:function(){
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
                 //beforeSend();
             },
 
@@ -220,7 +222,6 @@ function pters_month_calendar(calendar_name, calendar_options){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray);
                 }else{
-                    console.log(jsondata);
                     if(use == "callback"){
                         callback(jsondata);
                     }
