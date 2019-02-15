@@ -17,7 +17,7 @@ function func_cancel_schedule(data, call_method){
     if(call_method==CALL_AJAX){
         $.ajax({
             url: '/trainee/delete_trainee_schedule/',
-            data: data,
+            data: $(`#${data}`).serialize(),
             dataType : 'html',
             type:'POST',
 
@@ -46,6 +46,43 @@ function func_cancel_schedule(data, call_method){
 
     }else if(call_method==CALL_PAGE_MOVE){
 	    $(`#${data}`).submit();
+    }
+}
+
+function func_add_schedule(data, call_method){
+    if(call_method==CALL_AJAX){
+        $.ajax({
+            url: '/trainee/add_trainee_schedule/',
+            data: $(`#${data}`).serialize(),
+            dataType : 'html',
+            type:'POST',
+
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success:function(result_data){
+                let jsondata = JSON.parse(result_data);
+                if(jsondata.messageArray.length>0){
+                    alert(jsondata.messageArray);
+                    
+                }else{
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve_complete', POPUP_SIZE_FULL);
+                    //성공
+                }
+            },
+            complete:function(){
+
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        });
+
+    }else if(call_method==CALL_PAGE_MOVE){
+        $(`#${data}`).submit();
     }
 }
 

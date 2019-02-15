@@ -45,8 +45,8 @@
                     <div class="obj_table_raw">
                         <select class="obj_font_size_14_weight_500 obj_font_color_light_grey" title="time_select">
                             <option selected disabled>예약 시간 선택</option>
-                            <option data-start-time="예약시간1 시작" data-end-time="예약시간1 종료">예약 시간1</option>
-                            <option data-start-time="예약시간2 시작" data-end-time="예약시간2 종료">예약 시간2</option>
+                            <option data-start="2019-02-18 08:00" data-end="2019-02-18 09:00">08:00 ~ 09:00</option>
+                            <option data-start="2019-02-18 11:00" data-end="2019-02-18 13:00">11:00 ~ 13:00</option>
                         </select>
                         <img src="/static/common/icon/expand_more_black.png" class="obj_icon_arrow">
                     </div>
@@ -62,18 +62,7 @@
             <p><span class="obj_font_color_pters_red">수업 시작 3시간 전까지 취소</span> 할 수 있습니다.</p>
         </div>
     </div>
-    <div class="obj_button_big obj_font_bg_white_pink" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve_complete', POPUP_SIZE_FULL)">예약하기</div>
-
-    <form action="/trainee/add_trainee_schedule" id="form_plan_add" method="post">
-        <input type="hidden" name="class_id" id="form_content_class_id">
-        <input type="hidden" name="lecture_id" id="form_content_lecture_id">
-        <input type="hidden" name="group_schedule_id" id="form_content_group_schedule_id">
-        <input type="hidden" name="time_duration" id="form_content_time_duration">
-        <input type="hidden" name="training_date" id="form_content_training_date">
-        <input type="hidden" name="training_time" id="form_content_training_time">
-        <input type="hidden" name="training_end_date" id="form_content_training_end_date">
-        <input type="hidden" name="training_end_time" id="form_content_training_end_time">
-    </form>
+    <div class="obj_button_big obj_font_bg_white_pink" onclick="func_add_schedule('form_plan_add', CALL_AJAX)">예약하기</div>
 {% endblock %}
 
 {% block popup_base_js %}
@@ -108,52 +97,21 @@
         $(document).on("change", "select[title='time_select']", function(){
             let $selected_option = $(this).find('option:selected');
 
-            let start_time = $selected_option.attr('data-start-time');
-            let end_time = $selected_option.attr('data-end-time');
+            let start = $selected_option.attr('data-start').split(' ');
+            let end = $selected_option.attr('data-end').split(' ');
+
+            let start_date = start[0];
+            let start_time = start[1];
+            let end_date = end[0];
+            let end_time = end[1];
+            
+            $('#form_content_training_date').val(start_date);
+            $('#form_content_training_end_date').val(end_date);
             $('#form_content_training_time').val(start_time);
             $('#form_content_training_end_time').val(end_time);
         });
 
 
-        function func_send_reservation(){
-            $.ajax({
-                url: '/trainee/add_trainee_schedule/',
-                data: $('#form_plan_add').serialize(),
-                // data: {"class_id": , 
-                //        "lecture_id": , 
-                //        "group_schedule_id": , 
-                //        "training_date": , 
-                //        "training_time": , 
-                //        "training_end_date":, 
-                //        "training_end_time":, 
-                //        "next_page":"/trainee/get_trainee_error_info/"}
-                dataType : 'html',
-                type:'POST',
-
-                beforeSend:function(xhr){
-                    
-                },
-
-                success:function(data){
-                    var jsondata = JSON.parse(data);
-
-                    if(jsondata.messageArray.length>0){
-                        $('#errorMessageBar').show();
-                        $('#errorMessageText').text(jsondata.messageArray);
-                    }else{
-
-                    }
-                },
-
-                complete:function(){
-
-                },
-
-                error:function(){
-                    console.log('server error');
-                }
-            });
-        }
 
 
     </script>
