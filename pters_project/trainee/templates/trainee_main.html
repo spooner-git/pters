@@ -122,12 +122,6 @@
         </div>
     </div>
 
-    <form action="{% url "trainee:delete_trainee_schedule" %}" id="form_plan_delete" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="schedule_id" value="{{ next_schedule_info.schedule_id }}">
-        <input type="hidden" name="next_page" value="{% url 'trainee:trainee_main' %}">
-    </form>
-
 {% endblock %}
 
 {% block local_js_footer %}
