@@ -147,6 +147,8 @@ function func_set_popup_animation(option, $popup_selector, animation_type, popup
     }
     let translate_x = 0;
     let translate_y = 0;
+    let width = $popup_selector.css("width");
+    let height = $popup_selector.css("height");
     if(option==CLOSE){
         popup_size = 0;
     }
@@ -155,18 +157,22 @@ function func_set_popup_animation(option, $popup_selector, animation_type, popup
         case POPUP_FROM_LEFT:
             translate_x = popup_size - 100;
             translate_y = 0;
+            width = popup_size;
             break;
         case POPUP_FROM_RIGHT:
             translate_x = 100 - popup_size;
             translate_y = 0;
+            width = popup_size;
             break;
         case POPUP_FROM_BOTTOM:
             translate_x = 0;
             translate_y = 100 - popup_size;
+            height = popup_size;
             break;
         case POPUP_FROM_TOP:
             translate_x = 0;
             translate_y = popup_size - 100;
+            height = popup_size;
             break;
         case POPUP_FROM_PAGE:
             translate_x = 0;
@@ -178,9 +184,16 @@ function func_set_popup_animation(option, $popup_selector, animation_type, popup
             break;
     }
 
+    if(option==CLOSE){
+        width = $popup_selector.css("width");
+        height = $popup_selector.css("height");
+    }
+
     $popup_selector.css({
         "transform": `translate(${translate_x}%, ${translate_y}%)`,
-        "transition": `${animation_info}`
+        "transition": `${animation_info}`,
+        "width": `${width}%`,
+        "height": `${height}%`
     });
 
 }
