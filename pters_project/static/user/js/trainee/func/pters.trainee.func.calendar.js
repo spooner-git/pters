@@ -244,7 +244,6 @@ function pters_month_calendar(calendar_name, calendar_options){
                 console.log('server error');
             }
         });
-
     }
 
     /**
@@ -331,6 +330,9 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_get_ajax_schedule_data(input_reference_date, "callback", function(jsondata){
                 func_draw_schedule_data(jsondata);
             });
+        },
+        "get_current_month":function(){
+            return reference_date;
         }
     };
 }
