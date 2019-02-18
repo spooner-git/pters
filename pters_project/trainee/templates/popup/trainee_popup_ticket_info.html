@@ -1,0 +1,104 @@
+{% extends "popup/trainee_base_popup.html" %}
+{% load static_url %}
+{% block popup_base_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.ticket_info.css" %}>
+{% endblock %}
+{% block popup_base_wrapper_top %}
+{% endblock %}
+    <!-- pters.trainee.popup.plan_view.css -->
+
+{% block popup_base_contents %}
+    <div class="popup_ticket_info">
+        <div class="obj_box_popup_topper">
+            <div class="obj_font_size_12_weight_500 obj_font_color_white">개인/그룹</div>
+            <div class="wrapper_my_ticket_title">
+                <div class="obj_font_size_18_weight_bold obj_font_color_white">냉혈한 김선생의 다가오는 여름 준비</div>
+            </div>
+
+            <div class="wrapper_my_ticket_tab obj_font_color_light_grey">
+                <div id="ticket_basic_info" class="wrapper_my_ticket_basic_info obj_font_size_13_weight_bold" onclick="ticket_basic_info();">기본 정보</div>
+                <div id="ticket_lesson_history" class="wrapper_my_ticket_lesson_history obj_font_size_13_weight_500" onclick="ticket_lesson_history();">레슨 내역</div>
+            </div>
+        </div>
+        <div class="obj_box_full">
+            <div id="wrapper_my_ticket_detail">
+                <div class="wrapper_my_ticket_detail_date">
+                    <div class="wrapper_my_ticket_detail_date_title obj_font_size_11_weight_normal obj_font_color_light_grey">
+                        <div class="obj_table_raw">시작일</div>
+                        <div class="obj_table_raw">종료일</div>
+                    </div>
+                    <div class="wrapper_my_ticket_detail_date_info obj_font_size_14_weight_500" style="text-align: right;">
+                        <div class="obj_table_raw">2019.01.01(화)</div>
+                        <div class="obj_table_raw">2019.02.01(금)</div>
+                    </div>
+                </div>
+                <div class="wrapper_my_ticket_detail_count">
+                    <div class="wrapper_my_ticket_detail_count_title obj_font_size_11_weight_normal obj_font_color_light_grey">
+                        <div class="obj_table_raw">총 등록 횟수</div>
+                        <div class="obj_table_raw">잔여 횟수</div>
+                        <div class="obj_table_raw">결석 횟수</div>
+                        <div class="obj_table_raw">예약 가능 횟수</div>
+                    </div>
+                    <div class="wrapper_my_ticket_detail_count_info obj_font_size_14_weight_500" style="text-align: right;">
+                        <div class="obj_table_raw">30 회</div>
+                        <div class="obj_table_raw">12 회</div>
+                        <div class="obj_table_raw">3 회</div>
+                        <div class="obj_table_raw">12 회</div>
+                    </div>
+                </div>
+                <div class="obj_table_raw wrapper_my_ticket_detail_teacher">
+                    <div class="obj_table_cell_x3 obj_box_photo"></div>
+                    <div class="obj_table_cell_x3 wrapper_teacher_name">
+                        <div class="obj_font_size_12_weight_500">홍길동</div>
+                        <div class="obj_font_size_11_weight_normal obj_font_color_light_grey">강사</div>
+                    </div>
+                    <div class="obj_table_cell_x3 text_button_phone obj_font_size_13_weight_500 obj_font_color_pters_red">000-0000-8888</div>
+                </div>
+            </div>
+
+            <div id="wrapper_my_history_detail" style="display:none;">
+                <div class="wrapper_my_history_detail_title obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
+                    <div class="wrapper_my_history_detail_lecture_count obj_table_cell_x5">회차</div>
+                    <div class="wrapper_my_history_detail_lecture_name obj_table_cell_x5">수업명</div>
+                    <div class="wrapper_my_history_detail_lecture_date obj_table_cell_x5">진행일</div>
+                    <div class="wrapper_my_history_detail_lecture_time obj_table_cell_x5">진행시간</div>
+                    <div class="wrapper_my_history_detail_lecture_status obj_table_cell_x5">상태</div>
+                </div>
+                <div class="wrapper_my_history_detail_info obj_table_raw obj_font_size_11_weight_500">
+                    <div class="wrapper_my_history_detail_lecture_count obj_table_cell_x5">2</div>
+                    <div class="wrapper_my_history_detail_lecture_name obj_table_cell_x5">(개인) 탄탄가슴 만들기</div>
+                    <div class="wrapper_my_history_detail_lecture_date obj_table_cell_x5">2019.01.16 (수)</div>
+                    <div class="wrapper_my_history_detail_lecture_time obj_table_cell_x5">14:00 ~ 16:00</div>
+                    <div class="wrapper_my_history_detail_lecture_status obj_table_cell_x5">결석</div>
+                </div>
+                <div class="wrapper_my_history_detail_info obj_table_raw obj_font_size_11_weight_500">
+                    <div class="wrapper_my_history_detail_lecture_count obj_table_cell_x5">1</div>
+                    <div class="wrapper_my_history_detail_lecture_name obj_table_cell_x5">(그룹) 탄탄가슴 만들기</div>
+                    <div class="wrapper_my_history_detail_lecture_date obj_table_cell_x5">2019.01.15 (화)</div>
+                    <div class="wrapper_my_history_detail_lecture_time obj_table_cell_x5">14:00 ~ 16:00</div>
+                    <div class="wrapper_my_history_detail_lecture_status obj_table_cell_x5">완료</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="obj_button_big obj_font_bg_black_white" onclick="layer_popup.close_layer_popup()">확인</div>
+{% endblock %}
+{% block popup_base_js %}
+<script type="text/javascript">
+    $('#ticket_basic_info').addClass('ticket_info_selected');
+    function ticket_basic_info(){
+        $('#ticket_basic_info').addClass('ticket_info_selected');
+        $('#ticket_lesson_history').removeClass('ticket_info_selected');
+        $('#wrapper_my_ticket_detail').show();
+        $('#wrapper_my_history_detail').hide();
+    }
+    function ticket_lesson_history(){
+        $('#ticket_basic_info').removeClass('ticket_info_selected');
+        $('#ticket_lesson_history').addClass('ticket_info_selected');
+        $('#wrapper_my_ticket_detail').hide();
+        $('#wrapper_my_history_detail').show();
+
+    }
+</script>
+{% endblock %}

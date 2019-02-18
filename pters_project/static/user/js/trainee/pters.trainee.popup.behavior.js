@@ -13,8 +13,14 @@ let layer_popup = (function(){
             popup_array.push(popup_data);
             let $popup_name_selector = $(`.${popup_name}`);
             $popup_selector = $popup_name_selector.parents('.popup_mobile');
-            if(popup_size==100) {
-                $popup_name_selector.css({"height": windowHeight - 95 + 'px', "overflow-y": "auto"});
+
+            let popup_height = popup_size * windowHeight / 100 - 55;
+            let $popup_wrapper_top_selector = $popup_name_selector.siblings('.wrapper_top');
+            if($popup_wrapper_top_selector.length > 0){
+                popup_height = popup_height - ($popup_wrapper_top_selector[0].offsetTop + $popup_wrapper_top_selector[0].offsetHeight);
+            }
+            if(popup_size!=POPUP_SIZE_WINDOW) {
+                $popup_name_selector.css({"height": popup_height + 'px', "overflow-y": "auto"});
             }
             $popup_selector.css({"z-index":100*popup_array.length});
         }

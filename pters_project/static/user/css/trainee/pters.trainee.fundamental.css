@@ -38,13 +38,14 @@
         height: 40px;
         top: 0;
         left: 0px;
-        background-color: #ffffff;
-        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.03);
+        background-color: #000000;
+        box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.25);
         z-index: 1;
 
         /*Nav바 폰트스타일*/
-        font-size: 13px;
-        font-weight: bold;
+        font-size: 15px;
+        font-weight: 500;
+        color : #b3b3b3;
         letter-spacing: -0.3px;
         padding-top: 10px;
     }
@@ -67,8 +68,8 @@
         right: 20px;
     }
     .nav_selected{
-        border-bottom-color: #fe4e65;
-        color: #fe4e65;
+        border-bottom-color: #ffffff;
+        color: #ffffff;
     }
     .nav_disabled{
         color: #999999;
@@ -76,11 +77,14 @@
     /* nav 버튼 */
     #nav_btn_home{
         width: 30px;
-        margin-right: 10px;
+        margin-right: 15px;
     }
     #nav_btn_plan{
-        width: 40px;
-        margin-right: 10px;
+        width: 30px;
+        margin-right: 15px;
+    }
+    #nav_btn_alarm{
+        width: 30px;
     }
     #nav_btn_program_select{
         width: 90px;
@@ -99,7 +103,7 @@
 
     }
         #nav_btn_menu > img{
-            padding: 11px 0 11px 11px;
+            padding: 8px 0;
         }
 
 /*일정 박스 조립*/
@@ -107,18 +111,40 @@
         height: 30px;
         line-height: 30px;
     }
-    .wrapper_box_next_plan .obj_font_size_12_weight_normal{
-        height: 40px;
-        line-height: 40px;
-    }
-    .wrapper_box_next_plan .obj_font_size_11_weight_normal{
-        height: 20px;
-        line-height: 20px;
-    }
+	.wrapper_box_next_plan .obj_font_size_15_weight_500{
+		height: 28px;
+		line-height: 28px;
+	}
     .wrapper_box_next_plan .obj_font_size_14_weight_500{
-        height: 25px;
-        line-height: 25px;
+        height: 26px;
+        line-height: 26px;
     }
+    .wrapper_box_next_plan .obj_font_size_12_weight_normal{
+        height: 35px;
+        line-height: 35px;
+    }
+	.wrapper_box_next_plan .obj_font_size_11_weight_bold{
+		height: 20px;
+		line-height: 20px;
+	}
+    .wrapper_box_next_plan .obj_font_size_10_weight_500{
+        height: 16px;
+        line-height: 16px;
+    }
+
+    .wrapper_box_next_plan .obj_box_full{
+		margin-top: 10px;
+		margin-left: 5px;
+		margin-right: 5px;
+		padding: 15px;
+    }
+
+    .wrapper_box_next_plan .obj_box_full_grey{
+        margin-top : 10px;
+        margin-bottom: 15px;
+        padding : 15px;
+    }
+
     .wrapper_box_next_plan .wrapper_lecture_title{
         text-align: center;
     }
@@ -128,9 +154,9 @@
 
     .wrapper_box_next_plan .wrapper_plan_info{
         padding: 15px 0;
-        margin: 15px 0;
-        border-top: 1px solid #f5f5f5;
-        border-bottom: 1px solid #f5f5f5;
+        margin: 10px 0;
+        border-top: 1px solid #eeeeee;
+        border-bottom: 1px solid #eeeeee;
     }
         .wrapper_box_next_plan .wrapper_plan_info .obj_table_raw{
             text-align: center;
@@ -151,7 +177,7 @@
 
     .wrapper_box_next_plan .wrapper_tag{
         text-align: center;
-        height: 21px;
+        height: 18px;
     }
 
 

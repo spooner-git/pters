@@ -6,117 +6,106 @@
 {% endblock %}
 
 {% block content %}
+    {% now "Y.m.d (l)" as today %}
     <div class="trainee_main">
-        <div class="wrapper_program_title obj_font_size_20_weight_bold">
-            {% if request.session.program_title %}
-                {{ request.session.program_title }}
-            {% else %}
-                선택 안됨
-            {% endif %}
+        <div class="wrapper_title ">
+            <div class="obj_font_size_12_weight_500">
+            {{ today |cut:"요일" }}
+            </div>
+            <div class="obj_table_raw">
+                <div class="wrapper_program_title obj_table_cell_x2 obj_font_size_18_weight_bold">
+                    {% if request.session.program_title %}
+                        {{ request.session.program_title }}
+                    {% else %}
+                        선택 안됨
+                    {% endif %}
+                </div>
+                <div class="wrapper_program_select obj_table_cell_x2 obj_font_size_13_weight_500">
+                    프로그램 선택
+                </div>
+            </div>
         </div>
 
-        <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">다음 일정</div>
-        <div class="wrapper_box_next_plan obj_box_full">
+        <div class="wrapper_box_next_plan">
+            <div class="obj_box_full">
+                <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">다음 일정</div>
 
-        {% if next_schedule_info %}
-            <div class="wrapper_tag">
-                <div class="obj_tag obj_font_bg_white_pink">예약완료</div>
+                {% if next_schedule_info %}
+                    <div class="obj_box_full_grey">
+                        <div class="wrapper_tag">
+                            <div class="obj_tag obj_font_bg_white_black">예약완료</div>
+                        </div>
+                        <div class="wrapper_lecture_title obj_font_size_15_weight_500">
+                            ({{ next_schedule_info.group_type_name }}) {{ next_schedule_info.group_name }}
+                        </div>
+                        <div class="wrapper_plan_info">
+                            <div class="obj_table_raw obj_font_size_10_weight_500 obj_font_color_light_grey">
+                                <div class="obj_table_cell_x3">일자</div>
+                                <div class="obj_table_cell_x3">요일</div>
+                                <div class="obj_table_cell_x3">진행시간</div>
+                            </div>
+                            <div class="obj_table_raw obj_font_size_14_weight_500">
+                                <div class="obj_table_cell_x3">{{ next_schedule_info.start_dt | date:'Y.m.d' }}</div>
+                                <div class="obj_table_cell_x3">{{ next_schedule_info.start_dt | date:"l" }}</div>
+                                <div class="obj_table_cell_x3">{{ next_schedule_info.start_dt | time:'H:i' }} ~ {{ next_schedule_info.end_dt | time:'H:i' }}</div>
+                            </div>
+                        </div>
+                        {% if next_schedule_info.note %}
+                        <div class="wrapper_teacher_memo_text obj_font_size_12_weight_normal"><span>"{{ next_schedule_info.note }}"</span></div>
+                        {% endif %}
+                    </div>
+                    <div class="obj_table_raw wrapper_cancel_notice">
+                        <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">취소 가능 시간까지 <span class="obj_font_size_11_weight_500 obj_font_color_black">3시간 26분</span> 남았습니다.</div>
+                        <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey"
+                             onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
+                                                                   {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
+                                                                   'onclick_function':`func_schedule('form_plan_delete', ${CALL_PAGE_MOVE}, '${DELETE}')`})">취소하기</div>
+                    </div>
+                {% else %}
+                    <div class="obj_box_full_grey">
+                        <div class="wrapper_tag">
+                            <div class="obj_tag obj_font_bg_white_black">예약완료</div>
+                        </div>
+                        <div class="wrapper_lecture_title obj_font_size_15_weight_500">
+                            ({{ next_schedule_info.group_type_name }}) {{ next_schedule_info.group_name }}
+                        </div>
+                        <div class="wrapper_plan_info">
+                            <div class="obj_table_raw obj_font_size_10_weight_500 obj_font_color_light_grey">
+                                <div class="obj_table_cell_x3">일자</div>
+                                <div class="obj_table_cell_x3">요일</div>
+                                <div class="obj_table_cell_x3">진행시간</div>
+                            </div>
+                            <div class="obj_table_raw obj_font_size_14_weight_500">
+                                <div class="obj_table_cell_x3">{{ next_schedule_info.start_dt | date:'Y.m.d' }}</div>
+                                <div class="obj_table_cell_x3">{{ next_schedule_info.start_dt | date:"l" }}</div>
+                                <div class="obj_table_cell_x3">{{ next_schedule_info.start_dt | time:'H:i' }} ~ {{ next_schedule_info.end_dt | time:'H:i' }}</div>
+                            </div>
+                        </div>
+                        {% if next_schedule_info.note %}
+                        <div class="wrapper_teacher_memo_text obj_font_size_12_weight_normal"><span>"{{ next_schedule_info.note }}"</span></div>
+                        {% endif %}
+                    </div>
+                    <div class="obj_table_raw wrapper_cancel_notice">
+                        <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">취소 가능 시간까지 <span class="obj_font_color_black">3시간 26분</span> 남았습니다.</div>
+                        <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey" onclick="">취소하기</div>
+                    </div>
+                {% endif %}
             </div>
-            <div class="wrapper_lecture_title obj_font_size_16_weight_bold">
-                ({{ next_schedule_info.group_type_name }}) {{ next_schedule_info.group_name }}
-            </div>
-            <div class="wrapper_plan_info">
-                <div class="obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
-                    <div class="obj_table_cell_x3">일자</div>
-                    <div class="obj_table_cell_x3">요일</div>
-                    <div class="obj_table_cell_x3">진행시간</div>
-                </div>
-                <div class="obj_table_raw obj_font_size_14_weight_500">
-                    <div class="obj_table_cell_x3">{{ next_schedule_info.start_dt | date:'Y.m.d' }}</div>
-                    <div class="obj_table_cell_x3">{{ next_schedule_info.start_dt | date:"l" }}</div>
-                    <div class="obj_table_cell_x3">{{ next_schedule_info.start_dt | time:'H:i' }} ~ {{ next_schedule_info.end_dt | time:'H:i' }}</div>
-                </div>
-            </div>
-            {% if next_schedule_info.note %}
-            <div class="wrapper_teacher_memo_text obj_font_size_12_weight_normal"><span>"{{ next_schedule_info.note }}"</span></div>
-            {% endif %}
-            <div class="obj_table_raw wrapper_cancel_notice">
-                <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_dark_grey">취소 가능 시간까지 <span class="obj_font_color_pters_red">3시간 26분</span> 남았습니다.</div>
-                <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey"
-                     onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-                                                           {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
-                                                           'onclick_function':`func_schedule('form_plan_delete', ${CALL_PAGE_MOVE}, '${DELETE}')`})">취소하기</div>
-            </div>
-        {% else %}
-            <div class="wrapper_tag">
-                <div class="obj_tag obj_font_bg_white_pink">예약완료</div>
-            </div>
-            <div class="wrapper_lecture_title obj_font_size_16_weight_bold">({{ next_schedule_info.group_type_name }}) {{ next_schedule_info.group_name }}</div>
-            <div class="wrapper_plan_info">
-                <div class="obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
-                    <div class="obj_table_cell_x3">일자</div>
-                    <div class="obj_table_cell_x3">요일</div>
-                    <div class="obj_table_cell_x3">진행시간</div>
-                </div>
-                <div class="obj_table_raw obj_font_size_14_weight_500">
-                    <div class="obj_table_cell_x3">{{ next_schedule_info.start_dt | date:'Y.m.d' }}</div>
-                    <div class="obj_table_cell_x3">{{ next_schedule_info.start_dt | date:"l" }}</div>
-                    <div class="obj_table_cell_x3">{{ next_schedule_info.start_dt | time:'H:i' }} ~ {{ next_schedule_info.end_dt | time:'H:i' }}</div>
-                </div>
-            </div>
-            <div class="wrapper_teacher_memo_text obj_font_size_12_weight_normal"><span>"{{ next_schedule_info.note }}"</span></div>
-            <div class="obj_table_raw wrapper_cancel_notice">
-                <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_dark_grey">취소 가능 시간까지 <span class="obj_font_color_pters_red">3시간 26분</span> 남았습니다.</div>
-                <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey" onclick="">취소하기</div>
-            </div>
-        {% endif %}
         </div>
+        <div class="wrapper_current_ticket">
+            <div class="obj_box_full">
+                <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">진행중인 수강권</div>
+                <div class="obj_box_card" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_ticket_info', 90, POPUP_FROM_BOTTOM)">
+                    <div class="wrapper_my_ticket_type">
+                        <div class="obj_font_size_12_weight_bold obj_font_color_white">개인/그룹</div>
+                    </div>
+                    <div class="wrapper_my_ticket_title">
+                        <div class="obj_font_size_15_weight_bold obj_font_color_white">냉혈한 김선생의 다가오는 여름 준비</div>
+                    </div>
 
-        <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">내 수강권</div>
-        <div class="obj_box_card">
-            <div class="obj_table_raw wrapper_my_ticket_type">
-                <div class="obj_table_cell_x2 obj_font_size_12_weight_500 obj_font_color_pters_red">개인/그룹</div>
-                <img id="id_ticket_detail_expand" class="obj_table_cell_x2 obj_icon_expand" src="/static/common/icon/expand_more_black.png" data-open>
-            </div>
-            <div class="wrapper_my_ticket_title obj_font_size_16_weight_bold">냉혈한 김선생의 다가오는 여름 준비</div>
-
-            <div id="wrapper_my_ticket_detail_close">
-                <div class="obj_font_size_14_weight_500">2019.01.01 (화) ~ 2019.02.01 (금)</div>
-                <div class="obj_font_size_11_weight_normal obj_font_color_dark_grey">수업이 <span class="obj_font_color_pters_red">12번</span> 남았습니다.</div>
-            </div>
-
-            <div id="wrapper_my_ticket_detail_open" style="display:none;">
-                <div class="wrapper_my_ticket_detail_date">
-                    <div class="obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
-                        <div class="obj_table_cell_x2">시작일</div>
-                        <div class="obj_table_cell_x2">종료일</div>
+                    <div class="wrapper_my_ticket_detail">
+                        <div class="obj_font_size_11_weight_bold obj_font_color_white">2019.02.01(금)<span class="obj_font_size_11_weight_normal">까지</span> 12번 <span class="obj_font_size_11_weight_normal">남았습니다.</span></div>
                     </div>
-                    <div class="obj_table_raw obj_font_size_14_weight_500">
-                        <div class="obj_table_cell_x2">2019.01.01(화)</div>
-                        <div class="obj_table_cell_x2">2019.02.01(금)</div>
-                    </div>
-                </div>
-                <div class="obj_table_raw wrapper_my_ticket_detail_count">
-                    <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_grey">
-                        <div class="obj_table_raw">총 등록 횟수</div>
-                        <div class="obj_table_raw">잔여 횟수</div>
-                        <div class="obj_table_raw">결석 횟수</div>
-                        <div class="obj_table_raw">예약 가능 횟수</div>
-                    </div>
-                    <div class="obj_table_cell_x2 obj_font_size_14_weight_500" style="text-align: right;">
-                        <div class="obj_table_raw">30 회</div>
-                        <div class="obj_table_raw">12 회</div>
-                        <div class="obj_table_raw">3 회</div>
-                        <div class="obj_table_raw">12 회</div>
-                    </div>
-                </div>
-                <div class="obj_table_raw wrapper_my_ticket_detail_teacher">
-                    <div class="obj_table_cell_x3 obj_box_photo"></div>
-                    <div class="obj_table_cell_x3 wrapper_teacher_name">
-                        <div class="obj_font_size_14_weight_500">홍길동</div>
-                        <div class="obj_font_size_11_weight_normal obj_font_color_light_grey">강사</div>
-                    </div>
-                    <div class="obj_table_cell_x3 text_button_phone obj_font_size_13_weight_500 obj_font_color_pters_red">000-0000-8888</div>
                 </div>
             </div>
         </div>
@@ -131,6 +120,8 @@
     	$('#nav_btn_home').addClass("nav_selected");
 
     	/*수강권 정보 열고 닫기*/
+
+    	/*
         $('#id_ticket_detail_expand').attr("data-open", CLOSE);
         $(document).on("click", '#id_ticket_detail_expand', function(){
         	let $this = $(this);
@@ -155,7 +146,7 @@
         	}
         });
 
-        
+        */
 
     </script>
 

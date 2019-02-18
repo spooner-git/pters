@@ -15,23 +15,38 @@
         height: 50px;
         top: 0;
         left: 0px;
-        background-color: #ffffff;
-        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.03);
+        background-color: #000000;
+        box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.25);
         z-index: 1;
     }
 
     .obj_box_full{
         height: auto;
         background-color: #ffffff;
-        padding: 20px;
-        border-top: 1px solid #e6e6e6;
-        border-bottom: 1px solid #e6e6e6;
+        border-radius: 2px;
+        border: 1px solid #e6e6e6;
     }
+    .obj_box_full_grey{
+        height: auto;
+        background-color: #f7f7f7;
+        border-radius: 5px;
+        border: 1px solid #e6e6e6;
+    }
+    .obj_box_popup_topper{
+        height: auto;
+        background-color: #000000;
+        border-radius: 8px 8px 0px 0px;
+        box-shadow: 0 0 15px 0 rgba(131, 131, 131, 0.25);
+        padding-top: 20px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
     .obj_box_card{
         height: auto;
-        background-color: #ffffff;
-        border-radius: 7px;
-        box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.1);
+        background-color: #000000;
+        border-radius: 5px;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
         margin-left: 20px;
         margin-right: 20px;
         padding: 20px;
@@ -45,9 +60,9 @@
         /*padding: 20px;*/
     /*}*/
     .obj_box_photo{
-        height: 40px;
-        width: 40px;
-        border: 2px solid #fe4e65;
+        height: 30px;
+        width: 30px;
+        border: 2px solid #000000;
         border-radius: 50%;
         background-color: #ffffff;
     }
@@ -55,6 +70,11 @@
 /* 텍스트 박스 */
     .obj_font_size_20_weight_bold{
         font-size: 20px;
+        font-weight: bold;
+        letter-spacing: -0.5px;
+    }
+    .obj_font_size_18_weight_bold{
+        font-size: 18px;
         font-weight: bold;
         letter-spacing: -0.5px;
     }
@@ -66,6 +86,11 @@
     .obj_font_size_16_weight_500{
         font-size: 16px;
         font-weight: 500;
+        letter-spacing: -0.5px;
+    }
+    .obj_font_size_15_weight_900{
+        font-size: 15px;
+        font-weight: 900;
         letter-spacing: -0.5px;
     }
     .obj_font_size_15_weight_bold{
@@ -85,6 +110,7 @@
     }
     .obj_font_size_14_weight_normal{
         font-size: 14px;
+        font-weight: normal;
         letter-spacing: -0.5px;
     }
     .obj_font_size_13_weight_bold{
@@ -109,6 +135,7 @@
     }
     .obj_font_size_12_weight_normal{
         font-size: 12px;
+        font-weight: normal;
         letter-spacing: -0.5px;
     }
     .obj_font_size_11_weight_bold{
@@ -123,6 +150,17 @@
     }
     .obj_font_size_11_weight_normal{
         font-size: 11px;
+        font-weight: normal;
+        letter-spacing: -0.3px;
+    }
+    .obj_font_size_10_weight_900{
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: -0.3px;
+    }
+    .obj_font_size_10_weight_500{
+        font-size: 10px;
+        font-weight: 500;
         letter-spacing: -0.3px;
     }
 
@@ -145,14 +183,14 @@
     .obj_font_color_white{
         color: #ffffff;
     }
-    .obj_font_color_pters_red{
-        color: #fe4e65;
-    }
     .obj_font_color_light_blue{
         color: #509cf2;
     }
     .obj_font_color_pters_dark_red{
         color: #f25050;
+    }
+    .obj_font_color_pters_red{
+        color: #fe4e65;
     }
 
 /* 버튼 */
@@ -179,7 +217,7 @@
         line-height: 30px;
         text-align: center;
         font-size: 13px;
-        font-weight: 500;
+        font-weight: normal;
         border-radius: 2px;
         cursor: pointer;
     }
@@ -199,13 +237,13 @@
 
     .obj_tag{
         width: 58px;
-        height: 21px;
-        line-height: 21px;
+        height: 18px;
+        line-height: 18px;
         border-radius: 11px;
         text-align: center;
         vertical-align: top;
-        font-size: 12px;
-        font-weight: 500;
+        font-size: 11px;
+        font-weight: bold;
         letter-spacing: -0.5px;
         display: inline-block;
     }
@@ -221,7 +259,7 @@
         background-color: #ffffff;
     }
     .obj_font_bg_black_white{
-        color: #282828;
+        color: #000000;
         background-color: #ffffff;
     }
     .obj_font_bg_white_grey{
@@ -230,7 +268,7 @@
     }
     .obj_font_bg_white_black{
         color: #ffffff;
-        background-color: #282828;
+        background-color: #000000;
     }
     .obj_font_bg_white_dark_grey{
         color: #ffffff;

@@ -25,9 +25,3 @@
             .popup_mobile .wrapper_top .obj_icon_x{
                 float: right;
             }
-
-		.popup_mobile > .obj_button_big{
-			position: -webkit-sticky;
-			position: sticky;
-			bottom: 0;
-		}

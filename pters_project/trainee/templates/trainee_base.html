@@ -61,11 +61,12 @@
                 <div class="nav_trainee_menu_box_l">
                     <a href="{% url 'trainee:trainee_main' %}"><div id="nav_btn_home">홈</div></a>
                     <a href="{% url 'trainee:trainee_calendar' %}"><div id="nav_btn_plan">일정</div></a>
-                    <a href="{% url 'trainee:trainee_program' %}"><div id="nav_btn_program_select">프로그램 선택</div></a>
+{#                    <a href="{% url 'trainee:trainee_program' %}"><div id="nav_btn_program_select">프로그램 선택</div></a>#}
+                    <a href="{% url 'trainee:trainee_design_template' %}"><div id="nav_btn_alarm">알림</div></a>
                 </div>
                 <div class="nav_trainee_menu_box_r">
-                    <a href="{% url 'trainee:trainee_design_template' %}"><div id="nav_btn_alarm"><img src="/static/user/res/alarm/alarm_on.png" class="nav_btn_img"></div></a>
-                    <a><div id="nav_btn_menu" onclick="layer_popup.open_layer_popup(POPUP_INNER_HTML, 'pters_mobile_side_menu', 100, POPUP_FROM_RIGHT)"><img src="/static/user/res/menu.jpg" class="nav_btn_img"></div></a>
+
+                    <a><div id="nav_btn_menu" onclick="layer_popup.open_layer_popup(POPUP_INNER_HTML, 'pters_mobile_side_menu', 100, POPUP_FROM_RIGHT)"><img src="/static/common/icon/menu_white.png" class="obj_icon_basic"></div></a>
                 </div>
             </nav>
             <!-- 회원 mobile side menu 팝업 include -->
