@@ -58,23 +58,7 @@ let layer_popup = (function(){
             }else if(call_method==POPUP_INNER_HTML){
                 // 확인 용도
             }
-            switch(animation_type){
-                case POPUP_FROM_LEFT:
-                        $(`.${popup_name}`).parents('.popup_mobile').css({"transform": "translate(-100%, 0%)"});
-                    break;
-                case POPUP_FROM_RIGHT:
-                        $(`.${popup_name}`).parents('.popup_mobile').css({"transform": "translate(100%, 0%)"});
-                    break;
-                case POPUP_FROM_BOTTOM:
-                        $(`.${popup_name}`).parents('.popup_mobile').css({"transform": "translate(0%, 100%)"});
-                    break;
-                case POPUP_FROM_TOP:
-                        $(`.${popup_name}`).parents('.popup_mobile').css({"transform": "translate(0%, -100%)"});
-                    break;
-                case POPUP_FROM_PAGE:
-                        $(`.${popup_name}`).parents('.popup_mobile').css({"transform": "translate(0%, 0%)"});
-                    break;
-            }
+            func_set_popup_position($(`.${popup_name}`).parents('.popup_mobile'), animation_type, popup_size);
 
             let func_animation_set = this.animation_set;
             setTimeout(function(){
@@ -100,8 +84,12 @@ let layer_popup = (function(){
             }else{
                 // let animation_flag = func_get_animation_flag(popup_data.popup_size);
                 let $popup_selector = $(`.${popup_data.popup_name}`).parents('.popup_mobile');
-                func_set_popup_animation(option, $popup_selector,
-                                         popup_data.animation_type, popup_data.popup_size);
+                if(option==OPEN){
+                    func_set_open_popup_animation($popup_selector, popup_data.animation_type, popup_data.popup_size);
+                }
+                else if(option==CLOSE){
+                    func_set_close_popup_animation($popup_selector, popup_data.animation_type);
+                }
                 func_set_shade(popup_array.length);
             }
         }
@@ -140,64 +128,103 @@ function func_get_popup_ajax(popup_name, data){
     });
 }
 
-function func_set_popup_animation(option, $popup_selector, animation_type, popup_size){
-    let animation_info = "";
-    if(animation_type != POPUP_FROM_PAGE){
-        animation_info = "transform 0.3s ease-in-out";
-    }
+function func_set_popup_position($popup_selector, animation_type, popup_size){
     let translate_x = 0;
     let translate_y = 0;
-    let width = $popup_selector.css("width");
-    let height = $popup_selector.css("height");
-    if(option==CLOSE){
-        popup_size = 0;
-    }
+    let width = 100;
+    let height = 100;
 
     switch (animation_type) {
         case POPUP_FROM_LEFT:
-            translate_x = popup_size - 100;
-            translate_y = 0;
+            translate_x = -windowWidth;
             width = popup_size;
             break;
         case POPUP_FROM_RIGHT:
-            translate_x = 100 - popup_size;
-            translate_y = 0;
+            translate_x = windowWidth;
             width = popup_size;
             break;
         case POPUP_FROM_BOTTOM:
-            translate_x = 0;
-            translate_y = 100 - popup_size;
+            translate_y = windowHeight;
             height = popup_size;
             break;
         case POPUP_FROM_TOP:
-            translate_x = 0;
-            translate_y = popup_size - 100;
+            translate_y = -windowHeight;
             height = popup_size;
             break;
         case POPUP_FROM_PAGE:
-            translate_x = 0;
-            translate_y = 0;
-            if(option == CLOSE){
-                translate_x = -100;
-                translate_y = -100;
-            }
             break;
     }
 
-    if(option==CLOSE){
-        width = $popup_selector.css("width");
-        height = $popup_selector.css("height");
-    }
-
     $popup_selector.css({
-        "transform": `translate(${translate_x}%, ${translate_y}%)`,
-        "transition": `${animation_info}`,
+        "transform": `translate(${translate_x}px, ${translate_y}px)`,
         "width": `${width}%`,
         "height": `${height}%`
     });
 
 }
 
+function func_set_open_popup_animation($popup_selector, animation_type, popup_size){
+    let animation_info = "";
+    if(animation_type != POPUP_FROM_PAGE){
+        animation_info = "transform 0.3s ease-in-out";
+    }
+    let translate_x = 0;
+    let translate_y = 0;
+    let popup_size_x = popup_size * windowWidth / 100;
+    let popup_size_y = popup_size * windowHeight / 100;
+
+    switch (animation_type) {
+        case POPUP_FROM_LEFT:
+            break;
+        case POPUP_FROM_RIGHT:
+            translate_x = windowWidth - popup_size_x;
+            break;
+        case POPUP_FROM_BOTTOM:
+            translate_y = windowHeight - popup_size_y;
+            break;
+        case POPUP_FROM_TOP:
+            break;
+        case POPUP_FROM_PAGE:
+            break;
+    }
+    $popup_selector.css({
+        "transform": `translate(${translate_x}px, ${translate_y}px)`,
+        "transition": `${animation_info}`
+    });
+
+}
+
+function func_set_close_popup_animation($popup_selector, animation_type){
+    let animation_info = "";
+    if(animation_type != POPUP_FROM_PAGE){
+        animation_info = "transform 0.3s ease-in-out";
+    }
+    let translate_x = 0;
+    let translate_y = 0;
+    switch (animation_type) {
+        case POPUP_FROM_LEFT:
+            translate_x = - windowWidth;
+            break;
+        case POPUP_FROM_RIGHT:
+            translate_x = windowWidth;
+            break;
+        case POPUP_FROM_BOTTOM:
+            translate_y = windowHeight;
+            break;
+        case POPUP_FROM_TOP:
+            translate_y = -windowHeight;
+            break;
+        case POPUP_FROM_PAGE:
+            translate_x = -windowWidth;
+            translate_y = -windowHeight;
+            break;
+    }
+    $popup_selector.css({
+        "transform": `translate(${translate_x}px, ${translate_y}px)`,
+        "transition": `${animation_info}`
+    });
+
+}
 
 function func_set_shade(popup_array_length){
     if(popup_array_length > 0){
