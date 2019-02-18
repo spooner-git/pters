@@ -31,9 +31,16 @@ function func_cancel_schedule(data, call_method){
                 /**
                  * @param jsondata.messageArray
                 **/
-                if(jsondata.messageArray.length>0){
-                    alert(jsondata.messageArray);
-                    layer_popup.close_layer_popup();
+                let error_message = jsondata.messageArray;
+                if(error_message.length>0){
+                    // alert(jsondata.messageArray);
+                    // layer_popup.close_layer_popup();
+                    layer_popup.open_layer_popup(POPUP_BASIC,
+                                         'popup_basic_user_confirm',
+                                         POPUP_SIZE_WINDOW,
+                                         {'popup_title':'',
+                                          'popup_comment':`${error_message}`,
+                                          'onclick_function':`layer_popup.close_layer_popup()`});
                 }else{
                     //성공
                 }
@@ -48,7 +55,7 @@ function func_cancel_schedule(data, call_method){
         });
 
     }else if(call_method==CALL_PAGE_MOVE){
-	    $(`#${data}`).submit();
+        $(`#${data}`).submit();
     }
 }
 
@@ -67,9 +74,14 @@ function func_add_schedule(data, call_method){
             },
             success:function(result_data){
                 let jsondata = JSON.parse(result_data);
-                if(jsondata.messageArray.length>0){
-                    alert(jsondata.messageArray);
-                    
+                let error_message = jsondata.messageArray;
+                if(error_message.length>0){
+                    layer_popup.open_layer_popup(POPUP_BASIC,
+                                         'popup_basic_user_confirm',
+                                         POPUP_SIZE_WINDOW,
+                                         {'popup_title':'',
+                                          'popup_comment':`${error_message}`,
+                                          'onclick_function':`layer_popup.close_layer_popup()`});
                 }else{
                     layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve_complete', 100, POPUP_FROM_RIGHT);
                     //성공
