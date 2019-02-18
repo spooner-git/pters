@@ -45,7 +45,7 @@
                 <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey"
                      onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
                                                            {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
-                                                           'onclick_function':`func_cancel_schedule('form_plan_delete', ${CALL_PAGE_MOVE})`})">취소하기</div>
+                                                           'onclick_function':`func_schedule('form_plan_delete', ${CALL_PAGE_MOVE}, '${DELETE}')`})">취소하기</div>
             </div>
         {% else %}
             <div class="wrapper_tag">

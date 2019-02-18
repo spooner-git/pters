@@ -33,4 +33,10 @@ const POPUP_FROM_BOTTOM = 2;
 const POPUP_FROM_TOP = 3;
 const POPUP_FROM_PAGE = 4;
 
+
+const ADD = 'add';
+const READ = 'read';
+const UPDATE = 'update';
+const DELETE = 'delete';
+
 /**/
