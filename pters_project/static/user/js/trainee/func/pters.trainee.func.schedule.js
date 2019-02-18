@@ -80,7 +80,7 @@ function func_add_schedule(data, call_method){
                                           'popup_comment':`${error_message}`,
                                           'onclick_function':`layer_popup.close_layer_popup()`});
                 }else{
-                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve_complete', POPUP_SIZE_FULL);
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve_complete', 100, POPUP_FROM_RIGHT);
                     //성공
                 }
             },

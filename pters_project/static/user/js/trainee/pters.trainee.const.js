@@ -18,13 +18,19 @@ const POPUP_BASIC = 2;
 const ANIMATION_OFF = 0;
 const ANIMATION_ON = 1;
 
-const POPUP_SIZE_FULL = 0;
-const POPUP_SIZE_WINDOW = 1;
+const POPUP_SIZE_WINDOW = 0;
 
 const SHOW = 'show';
 const HIDE = 'hide';
 
 const CALL_AJAX = 0;
 const CALL_PAGE_MOVE = 1;
+
+
+const POPUP_FROM_LEFT = 0;
+const POPUP_FROM_RIGHT = 1;
+const POPUP_FROM_BOTTOM = 2;
+const POPUP_FROM_TOP = 3;
+const POPUP_FROM_PAGE = 4;
 
 /**/
