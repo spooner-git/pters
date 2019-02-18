@@ -1575,6 +1575,12 @@ class PopupCalendarPlanReserveView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanReserveView, self).get_context_data(**kwargs)
+        # class_id = self.request.session.get('class_id')
+        # select_date = self.request.GET.get('select_date')
+        #
+        # context['error'] = None
+        # context['select_date'] = select_date
+
         return context
 
 

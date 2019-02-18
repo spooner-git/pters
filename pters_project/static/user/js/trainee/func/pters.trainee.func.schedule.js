@@ -28,6 +28,9 @@ function func_cancel_schedule(data, call_method){
             },
             success:function(result_data){
                 let jsondata = JSON.parse(result_data);
+                /**
+                 * @param jsondata.messageArray
+                **/
                 if(jsondata.messageArray.length>0){
                     alert(jsondata.messageArray);
                     layer_popup.close_layer_popup();

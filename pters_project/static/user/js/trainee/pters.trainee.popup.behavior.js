@@ -1,4 +1,5 @@
 /*슬라이드 팝업에 대한 동작*/
+/*global $, windowHeight, windowWidth */
 
 let layer_popup = (function(){
     let popup_array = [];
@@ -10,9 +11,10 @@ let layer_popup = (function(){
         if(popup_array.indexOf(popup_data.popup_name) == -1){
             popup_data = {"popup_name":popup_name, "popup_size":popup_size, "animation_type":animation_type};
             popup_array.push(popup_data);
-            $popup_selector = $(`.${popup_name}`).parents('.popup_mobile');
+            let $popup_name_selector = $(`.${popup_name}`);
+            $popup_selector = $popup_name_selector.parents('.popup_mobile');
             if(popup_size==100) {
-                $(`.${popup_name}`).css({"height": windowHeight - 95 + 'px', "overflow-y": "auto"});
+                $popup_name_selector.css({"height": windowHeight - 95 + 'px', "overflow-y": "auto"});
             }
             $popup_selector.css({"z-index":100*popup_array.length});
         }
@@ -235,6 +237,13 @@ function func_set_shade(popup_array_length){
     }
 }
 
+/**
+ * @param popup_name            basic 팝업 이름
+ * @param data                  basic 팝업에 들어갈 data object.
+ * @param data.popup_title      basic 팝업에 들어갈 제목.
+ * @param data.popup_comment    basic 팝업에 들어갈 내용.
+ * @param data.onclick_function basic 팝업 확인 버튼에 연결되는 onclick 함수.
+ */
 function func_set_popup_basic(popup_name, data){
     let $popup = $(`.${popup_name}`);
     if(data != undefined && data.popup_comment!=undefined){

@@ -187,6 +187,9 @@ function pters_month_calendar(calendar_name, calendar_options){
             tsy = e.originalEvent.touches[0].clientY;
         });
 
+        /**
+         * @param e.originalEvent.changedTouches 터치 변화.
+         */
         selector_body.bind("touchend", function(e){
             let te = e.originalEvent.changedTouches[0].clientX;
             let tey = e.originalEvent.changedTouches[0].clientY;
@@ -216,8 +219,12 @@ function pters_month_calendar(calendar_name, calendar_options){
                 //beforeSend();
             },
 
+
             success:function(data){
-                var jsondata = JSON.parse(data);
+                let jsondata = JSON.parse(data);
+                /**
+                 * @param jsondata.messageArray
+                 **/
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray);
@@ -239,6 +246,11 @@ function pters_month_calendar(calendar_name, calendar_options){
         });
 
     }
+
+    /**
+     * @param jsondata                              schedule json data object.
+     * @param jsondata.classTimeArray_start_date    시작 시각.
+     */
     function func_draw_schedule_data(jsondata){
         let schedule_number_dic = {};
         let date_cache = [];
@@ -257,12 +269,12 @@ function pters_month_calendar(calendar_name, calendar_options){
         }
 
         function array_element_count(array, wanted){
-            var counts = {};
-            var len = array.length;
-            for(var i=0; i<len; i++){
+            let counts = {};
+            let len = array.length;
+            for(let i=0; i<len; i++){
                 counts[array[i]] = 0;
             }
-            for(var j=0; j<len; j++){
+            for(let j=0; j<len; j++){
                 counts[array[j]] = counts[array[j]] +1;
             }
             return counts[wanted];
@@ -325,7 +337,7 @@ function pters_month_calendar(calendar_name, calendar_options){
 
 
 function date_format(date){
-    let date_raw = date.replace(/[-_\., ]/gi,"-").split('-');
+    let date_raw = date.replace(/[-_., ]/gi,"-").split('-');
     let yyyy = date_raw[0];
     let m = Number(date_raw[1]);
     let d = Number(date_raw[2]);
