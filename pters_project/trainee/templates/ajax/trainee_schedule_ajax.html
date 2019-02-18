@@ -69,6 +69,9 @@
       "package_lecture_avail_count":
       [{% for package_info in package_data %}"{{ package_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+      "avail_date_data":
+      [{% for avail_date_info in avail_date_data %}"{{ avail_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
       "lecture_flag":
       ["{{ lecture_flag }}"],
       "group_lecture_flag":

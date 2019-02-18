@@ -613,8 +613,8 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(GetTraineeScheduleView, self).get_context_data(**kwargs)
         date = self.request.GET.get('date', '')
         day = self.request.GET.get('day', '')
-
         class_id = self.request.session.get('class_id', '')
+        trainer_id = self.request.session.get('trainer_id', '')
         today = datetime.date.today()
         if date != '':
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
@@ -622,12 +622,24 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             day = 46
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
+
+        if trainer_id == '' or trainer_id is None:
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+                trainer_id = class_info.member_id
+                self.request.session['trainer_id'] = trainer_id
+            except ObjectDoesNotExist:
+                error = '수강정보를 불러오지 못했습니다.'
+
         context['error'] = None
         # context = func_get_holiday_schedule(context, start_date, end_date)
         context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, start_date, end_date)
         context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
         context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
         context = func_get_class_lecture_count(context, class_id, self.request.user.id)
+
+        if trainer_id != '' and trainer_id is not None:
+            context = func_get_trainer_setting_list(context, trainer_id, class_id)
 
         if context['error'] is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
@@ -783,6 +795,7 @@ def program_select_logic(request):
                 error = '수강정보를 불러오지 못했습니다.'
 
             if error is None:
+                request.session['trainer_id'] = class_info.member_id
                 request.session['class_hour'] = class_info.class_hour
                 request.session['program_title'] = class_info.get_class_type_cd_name()
                 request.session['class_center_name'] = class_info.get_center_name()

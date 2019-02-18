@@ -1127,6 +1127,7 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
 
 
 def func_get_trainer_setting_list(context, user_id, class_id):
+    today = datetime.date.today()
     lt_res_01 = '00:00-23:59'
     lt_res_02 = 0
     lt_res_03 = '0'
@@ -1148,6 +1149,7 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     lt_lan_01 = 'KOR'
     lt_pus_to_trainee_lesson_alarm = TO_TRAINEE_LESSON_ALARM_OFF
     lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
+    avail_date_list = []
     setting_data = SettingTb.objects.filter(member_id=user_id, class_tb_id=class_id, use=USE)
 
     for setting_info in setting_data:
@@ -1213,6 +1215,11 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     if lt_work_sat_time_avail == '':
         lt_work_sat_time_avail = lt_res_04
 
+    reserve_date_available = int(lt_res_05)
+    for i in range(0, reserve_date_available):
+        avail_date_list.append(today + datetime.timedelta(days=i))
+
+    context['avail_date_data'] = avail_date_list
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
     context['lt_res_03'] = lt_res_03
