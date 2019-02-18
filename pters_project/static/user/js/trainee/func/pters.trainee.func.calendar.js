@@ -233,7 +233,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                         callback(jsondata);
                     }
                 }
-
+                func_set_avail_date(jsondata.avail_date_data);
             },
 
             complete:function(){
@@ -244,6 +244,15 @@ function pters_month_calendar(calendar_name, calendar_options){
                 console.log('server error');
             }
         });
+    }
+
+    function func_set_avail_date(avail_date_array){
+        let length = avail_date_array.length;
+        let temp_array = [];
+        for(let i=0; i<length; i++){
+            temp_array.push(`#calendar_plan_cell_${avail_date_array[i]}`);
+        }
+        $(`${temp_array.join(', ')}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(254, 78, 101, 0.35)');
     }
 
     /**
