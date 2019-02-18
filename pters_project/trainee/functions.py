@@ -680,9 +680,9 @@ def func_check_schedule_setting(class_id, start_date, end_date, add_del_type):
             lt_work_time_avail[5] = lt_res_04
         if lt_work_time_avail[6] == '':
             lt_work_time_avail[6] = lt_res_04
-
-        reserve_avail_start_time = datetime.datetime.strptime(lt_res_01.split('-')[0], '%H:%M')
-        reserve_avail_end_time = datetime.datetime.strptime(lt_res_01.split('-')[1], '%H:%M')
+        reserve_avail_time_split = lt_res_01.split('-')
+        reserve_avail_start_time = datetime.datetime.strptime(reserve_avail_time_split[0], '%H:%M')
+        reserve_avail_end_time = datetime.datetime.strptime(reserve_avail_time_split[1], '%H:%M')
 
         work_avail_start_time = datetime.datetime.strptime(lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[0],
                                                            '%H:%M')
@@ -711,20 +711,26 @@ def func_check_schedule_setting(class_id, start_date, end_date, add_del_type):
             if reserve_avail_start_time <= reserve_avail_end_time:
                 if now_time < reserve_avail_start_time:
                     if add_del_type == ADD_SCHEDULE:
-                        error = '현재 예약 등록 가능 시간이 아닙니다.'
+                        error = '일정 등록/취소 가능 시간은 ' + reserve_avail_time_split[0] + '~' + reserve_avail_time_split[1] + ' 입니다.'
+                        # error = '현재 예약 등록 가능 시간이 아닙니다.'
                     else:
-                        error = '현재 예약 취소 가능 시간이 아닙니다.'
+                        error = '일정 등록/취소 가능 시간은 ' + reserve_avail_time_split[0] + '~' + reserve_avail_time_split[1] + ' 입니다.'
+                        # error = '현재 예약 취소 가능 시간이 아닙니다.'
                 if now_time > reserve_avail_end_time:
                     if add_del_type == ADD_SCHEDULE:
-                        error = '현재 예약 등록 가능 시간이 아닙니다.'
+                        error = '일정 등록/취소 가능 시간은 ' + reserve_avail_time_split[0] + '~' + reserve_avail_time_split[1] + ' 입니다.'
+                        # error = '현재 예약 등록 가능 시간이 아닙니다.'
                     else:
-                        error = '현재 예약 취소 가능 시간이 아닙니다.'
+                        error = '일정 등록/취소 가능 시간은 ' + reserve_avail_time_split[0] + '~' + reserve_avail_time_split[1] + ' 입니다.'
+                        # error = '현재 예약 취소 가능 시간이 아닙니다.'
             else:
                 if reserve_avail_start_time > now_time > reserve_avail_end_time:
                     if add_del_type == ADD_SCHEDULE:
-                        error = '현재 예약 등록 가능 시간이 아닙니다.'
+                        error = '일정 등록/취소 가능 시간은 ' + reserve_avail_time_split[0] + '~' + reserve_avail_time_split[1] + ' 입니다.'
+                        # error = '현재 예약 등록 가능 시간이 아닙니다.'
                     else:
-                        error = '현재 예약 취소 가능 시간이 아닙니다.'
+                        error = '일정 등록/취소 가능 시간은 ' + reserve_avail_time_split[0] + '~' + reserve_avail_time_split[1] + ' 입니다.'
+                        # error = '현재 예약 취소 가능 시간이 아닙니다.'
 
         if error is None:
             if add_del_start_time < work_avail_start_time:
@@ -744,15 +750,18 @@ def func_check_schedule_setting(class_id, start_date, end_date, add_del_type):
     if error is None:
         if start_date >= avail_end_date:
             if add_del_type == ADD_SCHEDULE:
-                error = '예약 등록이 불가능합니다.'
+                error = '오늘 기준 최대 +'+str(reserve_avail_date)+'일 까지 예약 등록이 가능합니다.'
             else:
-                error = '예약 취소가 불가능합니다.'
+                error = '오늘 기준 최대 +'+str(reserve_avail_date)+'일 까지 예약 취소가 가능합니다.'
     if error is None:
-        if start_date < disable_time:
-            if add_del_type == ADD_SCHEDULE:
-                error = '예약 등록이 불가능합니다.'
-            else:
-                error = '예약 취소가 불가능합니다.'
+        if start_date < timezone.now():
+            error = '이미 지난 일정 입니다.'
+        else:
+            if start_date < disable_time:
+                if add_del_type == ADD_SCHEDULE:
+                    error = '수업 시작 '+str(int(reserve_prohibition_time/60))+'시간 전까지 예약 등록이 가능합니다.'
+                else:
+                    error = '수업 시작 '+str(int(reserve_prohibition_time/60))+'시간 전까지 예약 취소가 가능합니다.'
 
     return error
 
