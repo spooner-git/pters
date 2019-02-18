@@ -87,6 +87,7 @@
 {% block popup_base_js %}
 <script type="text/javascript">
     $('#ticket_basic_info').addClass('ticket_info_selected');
+    popup_ticket_info_swipe_close();
     function ticket_basic_info(){
         $('#ticket_basic_info').addClass('ticket_info_selected');
         $('#ticket_lesson_history').removeClass('ticket_info_selected');
@@ -99,6 +100,30 @@
         $('#wrapper_my_ticket_detail').hide();
         $('#wrapper_my_history_detail').show();
 
+    }
+    function popup_ticket_info_swipe_close(){
+        let ts;
+        let tsy;
+        let selector_body = $('.popup_ticket_info');
+        selector_body.bind("touchstart", function(e){
+            ts = e.originalEvent.touches[0].clientX;
+            tsy = e.originalEvent.touches[0].clientY;
+        });
+
+        /**
+         * @param e.originalEvent.changedTouches 터치 변화.
+         */
+        selector_body.bind("touchend", function(e){
+            let te = e.originalEvent.changedTouches[0].clientX;
+            let tey = e.originalEvent.changedTouches[0].clientY;
+            if(Math.abs(ts - te) < 100){
+               if(tsy>tey+50){
+                    console.log('test1');
+                }else if(tsy<tey-50){
+                    layer_popup.close_layer_popup();
+                }
+            }
+        });
     }
 </script>
 {% endblock %}
