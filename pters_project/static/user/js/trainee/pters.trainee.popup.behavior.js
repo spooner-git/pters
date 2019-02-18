@@ -1,5 +1,5 @@
 /*슬라이드 팝업에 대한 동작*/
-/*global $, windowHeight, windowWidth */
+/* global $, windowHeight, windowWidth */
 
 let layer_popup = (function(){
     let popup_array = [];
@@ -246,6 +246,7 @@ function func_set_shade(popup_array_length){
  */
 function func_set_popup_basic(popup_name, data){
     let $popup = $(`.${popup_name}`);
+    console.log(data);
     if(data != undefined && data.popup_comment!=undefined){
         $popup.find('.wrapper_popup_basic_comment').html(data.popup_comment);
     }

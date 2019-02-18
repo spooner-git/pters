@@ -13,11 +13,10 @@
 // }
 
 function func_cancel_schedule(data, call_method){
-
     if(call_method==CALL_AJAX){
         $.ajax({
             url: '/trainee/delete_trainee_schedule/',
-            data: $(`#${data}`).serialize(),
+            data: data,
             dataType : 'html',
             type:'POST',
 
@@ -34,10 +33,10 @@ function func_cancel_schedule(data, call_method){
                 let error_message = jsondata.messageArray;
                 if(error_message.length>0){
                     // alert(jsondata.messageArray);
-                    // layer_popup.close_layer_popup();
+                    layer_popup.close_layer_popup();
                     layer_popup.open_layer_popup(POPUP_BASIC,
                                          'popup_basic_user_confirm',
-                                         POPUP_SIZE_WINDOW,
+                                         POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
                                          {'popup_title':'',
                                           'popup_comment':`${error_message}`,
                                           'onclick_function':`layer_popup.close_layer_popup()`});
@@ -63,7 +62,7 @@ function func_add_schedule(data, call_method){
     if(call_method==CALL_AJAX){
         $.ajax({
             url: '/trainee/add_trainee_schedule/',
-            data: $(`#${data}`).serialize(),
+            data: data,
             dataType : 'html',
             type:'POST',
 
@@ -78,9 +77,9 @@ function func_add_schedule(data, call_method){
                 if(error_message.length>0){
                     layer_popup.open_layer_popup(POPUP_BASIC,
                                          'popup_basic_user_confirm',
-                                         POPUP_SIZE_WINDOW,
+                                         POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
                                          {'popup_title':'',
-                                          'popup_comment':`${error_message}`,
+                                          'popup_comment':`${error_message[0]}`,
                                           'onclick_function':`layer_popup.close_layer_popup()`});
                 }else{
                     layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve_complete', 100, POPUP_FROM_RIGHT);

@@ -320,9 +320,8 @@ def add_trainee_schedule_logic(request):
     training_date = request.POST.get('training_date', '')
     # time_duration = request.POST.get('time_duration', '')
     training_time = request.POST.get('training_time', '')
-    next_page = request.POST.get('next_page')
+    next_page = request.POST.get('next_page', '/trainee/get_trainee_error_info/')
     class_type_name = request.session.get('class_type_name', '')
-
     error = None
     class_info = None
     start_date = None
