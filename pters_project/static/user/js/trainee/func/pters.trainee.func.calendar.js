@@ -173,10 +173,6 @@ function pters_month_calendar(calendar_name, calendar_options){
         });
     }
 
-    function func_get_current_date(){
-        return reference_date;
-    }
-
 
     function func_move_month(direction){
         $(`#${calendar_name}_go_${direction}_month`).trigger('click');
