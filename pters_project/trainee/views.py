@@ -500,7 +500,7 @@ def delete_trainee_schedule_logic(request):
         group_name = schedule_info.get_group_name()
         group_type_name = schedule_info.get_group_type_cd_name()
         if start_date < timezone.now():  # 강사 설정 시간으로 변경필요
-            error = '지난 일정입니다.'
+            error = '이미 지난 일정입니다.'
 
     if error is None:
         if schedule_info.state_cd == 'PE' or schedule_info.state_cd == 'PC':
