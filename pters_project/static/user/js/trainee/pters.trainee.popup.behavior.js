@@ -23,6 +23,10 @@ let layer_popup = (function(){
                 $popup_name_selector.css({"height": popup_height + 'px', "overflow-y": "auto"});
             }
             $popup_selector.css({"z-index":100*popup_array.length});
+            // $('.obj_button_big').css({
+			// "position": "-webkit-sticky",
+			// "position": "sticky",
+			// "bottom": "0"});
         }
         return popup_data;
     }

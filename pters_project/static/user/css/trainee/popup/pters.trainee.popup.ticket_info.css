@@ -138,9 +138,3 @@
 	.popup_ticket_info .wrapper_my_history_detail_lecture_status{
 		width: 25px;
 	}
-
-	.popup_mobile > .obj_button_big{
-		position: -webkit-sticky;
-		position: sticky;
-		bottom: 0;
-	}
