@@ -1217,7 +1217,7 @@ def func_get_trainer_setting_list(context, user_id, class_id):
 
     reserve_date_available = int(lt_res_05)
     for i in range(0, reserve_date_available):
-        avail_date_list.append(today + datetime.timedelta(days=i))
+        avail_date_list.append(str(today + datetime.timedelta(days=i)))
 
     context['avail_date_data'] = avail_date_list
     context['lt_res_01'] = lt_res_01
