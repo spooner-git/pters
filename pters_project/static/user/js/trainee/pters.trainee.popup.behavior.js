@@ -13,13 +13,20 @@ let layer_popup = (function(){
             popup_array.push(popup_data);
             let $popup_name_selector = $(`.${popup_name}`);
             $popup_selector = $popup_name_selector.parents('.popup_mobile');
-
-            let popup_height = popup_size * windowHeight / 100 - 55;
-            let $popup_wrapper_top_selector = $popup_name_selector.siblings('.wrapper_top');
-            if($popup_wrapper_top_selector.length > 0){
-                popup_height = popup_height - ($popup_wrapper_top_selector[0].offsetTop + $popup_wrapper_top_selector[0].offsetHeight);
+            //왼쪽 오른쪽에서 팝업이 열리는 경우 height 조정을 100%와 동일하도록
+            if(animation_type == POPUP_FROM_LEFT || animation_type == POPUP_FROM_RIGHT){
+                popup_size=100
             }
-            if(popup_size!=POPUP_SIZE_WINDOW) {
+            //height px 값으로 변환 - top 이 있는 경우 해당 길이 제외
+            let popup_height = popup_size * windowHeight / 100 - $popup_name_selector[0].offsetTop;
+            //height px 값으로 변환 - bottom 이 있는 경우 해당 길이 제외
+            let $popup_wrapper_bottom_selector = $popup_name_selector.siblings('.wrapper_bottom');
+            if($popup_wrapper_bottom_selector.length >0){
+                popup_height = popup_height - $popup_wrapper_bottom_selector[0].offsetHeight;
+            }
+
+            //팝업 height 지정
+           if(popup_size!=POPUP_SIZE_WINDOW) {
                 $popup_name_selector.css({"height": popup_height + 'px', "overflow-y": "auto"});
             }
             $popup_selector.css({"z-index":100*popup_array.length});
