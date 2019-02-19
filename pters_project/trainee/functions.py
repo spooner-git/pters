@@ -831,3 +831,32 @@ def func_get_trainee_select_schedule(context, class_id, user_id, select_date):
     context['schedule_data'] = schedule_data
 
     return context
+
+
+def func_get_trainee_ing_lecture_list(context, class_id, user_id):
+
+    query_member_auth_cd \
+        = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
+          " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " + str(user_id)
+    lecture_list = ClassLectureTb.objects.select_related(
+        'lecture_tb__member',
+        'lecture_tb__package_tb').filter(class_tb_id=class_id,
+                                         lecture_tb__member_id=user_id,
+                                         lecture_tb__state_cd='IP',
+                                         lecture_tb__use=USE
+                                         ).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
+                                                    ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date',
+                                                                                             'lecture_tb__reg_dt')
+
+    for lecture_info in lecture_list:
+        lecture_info_package_tb = lecture_info.lecture_tb.package_tb
+        try:
+            lecture_info_package_tb.package_type_cd_nm \
+                = CommonCdTb.objects.get(common_cd=lecture_info_package_tb.package_type_cd).common_cd_nm
+            if lecture_info_package_tb.package_type_cd_nm == '1:1':
+                lecture_info_package_tb.package_type_cd_nm = '개인'
+        except ObjectDoesNotExist:
+            lecture_info_package_tb.package_type_cd_nm = ''
+
+    context['ing_lecture_data'] = lecture_list
+    return context

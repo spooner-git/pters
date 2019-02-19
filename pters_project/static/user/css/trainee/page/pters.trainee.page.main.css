@@ -30,7 +30,8 @@
 
 /* box */
 	.trainee_main .obj_box_card{
-		margin: 0px;
+		/*margin: 0px;*/
+		margin: 10px 0px 0px 0px;
 		padding: 10px 20px 15px;
 	}
 
@@ -46,7 +47,6 @@
 	}
 	.trainee_main .wrapper_sub_title{
 		margin-left: 5px;
-		margin-bottom: 10px;
 	}
 
 	.trainee_main .wrapper_current_ticket .obj_box_full{

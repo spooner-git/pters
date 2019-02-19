@@ -95,18 +95,25 @@
         <div class="wrapper_current_ticket">
             <div class="obj_box_full">
                 <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">진행중인 수강권</div>
-                <div class="obj_box_card" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_ticket_info', 90, POPUP_FROM_BOTTOM)">
+                {% for ing_lecture_info in ing_lecture_data %}
+                <div class="obj_box_card" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_ticket_info', 90, POPUP_FROM_BOTTOM, {'lecture_id':'{{ing_lecture_info.lecture_tb_id}}' } )">
                     <div class="wrapper_my_ticket_type">
-                        <div class="obj_font_size_12_weight_bold obj_font_color_white">개인/그룹</div>
+                        <div class="obj_font_size_12_weight_bold obj_font_color_white">{{ ing_lecture_info.lecture_tb.package_tb.package_type_cd_nm }}</div>
                     </div>
                     <div class="wrapper_my_ticket_title">
-                        <div class="obj_font_size_15_weight_bold obj_font_color_white">냉혈한 김선생의 다가오는 여름 준비</div>
+                        <div class="obj_font_size_15_weight_bold obj_font_color_white">{{ ing_lecture_info.lecture_tb.package_tb.name }}</div>
                     </div>
 
                     <div class="wrapper_my_ticket_detail">
-                        <div class="obj_font_size_11_weight_bold obj_font_color_white">2019.02.01(금)<span class="obj_font_size_11_weight_normal">까지</span> 12번 <span class="obj_font_size_11_weight_normal">남았습니다.</span></div>
+                        <div class="obj_font_size_11_weight_bold obj_font_color_white">
+                            {{ ing_lecture_info.lecture_tb.end_date | date:"Y.m.d(l)"|cut:"요일"  }}
+                            <span class="obj_font_size_11_weight_normal">까지</span>
+                            {{ ing_lecture_info.lecture_tb.lecture_rem_count }}번
+                            <span class="obj_font_size_11_weight_normal">남았습니다.</span>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -118,36 +125,6 @@
     <script type="text/javascript">
     	//Nav바에 현재 페이지에 밑줄 표기
     	$('#nav_btn_home').addClass("nav_selected");
-
-    	/*수강권 정보 열고 닫기*/
-
-    	/*
-        $('#id_ticket_detail_expand').attr("data-open", CLOSE);
-        $(document).on("click", '#id_ticket_detail_expand', function(){
-        	let $this = $(this);
-        	let option = $this.attr("data-open");
-            let wrapper_my_ticket_detail_close = $('#wrapper_my_ticket_detail_close');
-            let wrapper_my_ticket_detail_open = $('#wrapper_my_ticket_detail_open');
-
-        	switch(option){
-        		case OPEN:
-        			$this.attr({"data-open": CLOSE,
-                                "src": "/static/common/icon/expand_more_black.png"});
-                    wrapper_my_ticket_detail_close.show();
-                    wrapper_my_ticket_detail_open.hide();
-        		break;
-
-        		case CLOSE:
-        			$this.attr({"data-open": OPEN,
-                                "src": "/static/common/icon/expand_less_black.png"});
-                    wrapper_my_ticket_detail_close.hide();
-                    wrapper_my_ticket_detail_open.show();
-        		break;
-        	}
-        });
-
-        */
-
     </script>
 
 {% endblock %}

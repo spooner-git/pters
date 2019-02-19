@@ -10,9 +10,9 @@
 {% block popup_base_contents %}
     <div class="popup_ticket_info">
         <div class="obj_box_popup_topper">
-            <div class="obj_font_size_12_weight_500 obj_font_color_white">개인/그룹</div>
+            <div class="obj_font_size_12_weight_500 obj_font_color_white">{{ lecture_info.package_tb.package_type_cd_nm }}</div>
             <div class="wrapper_my_ticket_title">
-                <div class="obj_font_size_18_weight_bold obj_font_color_white">냉혈한 김선생의 다가오는 여름 준비</div>
+                <div class="obj_font_size_18_weight_bold obj_font_color_white">{{ lecture_info.package_tb.name }}</div>
             </div>
 
             <div class="wrapper_my_ticket_tab obj_font_color_light_grey">
@@ -28,8 +28,8 @@
                         <div class="obj_table_raw">종료일</div>
                     </div>
                     <div class="wrapper_my_ticket_detail_date_info obj_font_size_14_weight_500" style="text-align: right;">
-                        <div class="obj_table_raw">2019.01.01(화)</div>
-                        <div class="obj_table_raw">2019.02.01(금)</div>
+                        <div class="obj_table_raw">{{ lecture_info.start_date | date:"Y.m.d(l)"|cut:"요일" }}</div>
+                        <div class="obj_table_raw">{{ lecture_info.end_date | date:"Y.m.d(l)"|cut:"요일" }}</div>
                     </div>
                 </div>
                 <div class="wrapper_my_ticket_detail_count">
@@ -40,20 +40,22 @@
                         <div class="obj_table_raw">예약 가능 횟수</div>
                     </div>
                     <div class="wrapper_my_ticket_detail_count_info obj_font_size_14_weight_500" style="text-align: right;">
-                        <div class="obj_table_raw">30 회</div>
-                        <div class="obj_table_raw">12 회</div>
-                        <div class="obj_table_raw">3 회</div>
-                        <div class="obj_table_raw">12 회</div>
+                        <div class="obj_table_raw">{{ lecture_info.lecture_reg_count }} 회</div>
+                        <div class="obj_table_raw">{{ lecture_info.lecture_rem_count }} 회</div>
+                        <div class="obj_table_raw">test 회</div>
+                        <div class="obj_table_raw">{{ lecture_info.lecture_avail_count }} 회</div>
                     </div>
                 </div>
+                {% for class_info in class_data %}
                 <div class="obj_table_raw wrapper_my_ticket_detail_teacher">
                     <div class="obj_table_cell_x3 obj_box_photo"></div>
                     <div class="obj_table_cell_x3 wrapper_teacher_name">
-                        <div class="obj_font_size_12_weight_500">홍길동</div>
+                        <div class="obj_font_size_12_weight_500">{{ class_info.class_tb.member.name }}</div>
                         <div class="obj_font_size_11_weight_normal obj_font_color_light_grey">강사</div>
                     </div>
-                    <div class="obj_table_cell_x3 text_button_phone obj_font_size_13_weight_500 obj_font_color_pters_red">000-0000-8888</div>
+                    <div class="obj_table_cell_x3 text_button_phone obj_font_size_13_weight_500 obj_font_color_pters_red">{{ class_info.class_tb.member.phone }}</div>
                 </div>
+                {% endfor %}
             </div>
 
             <div id="wrapper_my_history_detail" style="display:none;">

@@ -37,7 +37,8 @@ from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
 from .functions import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_schedule_setting, \
-    func_get_lecture_connection_list, func_get_trainee_next_schedule_by_class_id, func_get_trainee_select_schedule
+    func_get_lecture_connection_list, func_get_trainee_next_schedule_by_class_id, func_get_trainee_select_schedule, \
+    func_get_trainee_ing_lecture_list
 
 logger = logging.getLogger(__name__)
 
@@ -149,6 +150,7 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['error'] = None
         if class_id is not None and class_id != '':
             context = func_get_trainee_next_schedule_by_class_id(context, class_id, self.request.user.id)
+            context = func_get_trainee_ing_lecture_list(context, class_id, self.request.user.id)
 
         return context
 
@@ -1609,4 +1611,32 @@ class PopupTicketInfoView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupTicketInfoView, self).get_context_data(**kwargs)
+        lecture_id = self.request.GET.get('lecture_id')
+        error = None
+
+        class_list = ClassLectureTb.objects.select_related('class_tb__member').filter(lecture_tb_id=lecture_id,
+                                                                                      auth_cd='VIEW', use=USE)
+
+        for class_info in class_list:
+            if class_info.class_tb.member.phone is not None and class_info.class_tb.member.phone != '':
+                class_info.class_tb.member.phone = class_info.class_tb.member.phone[0:3] + '-' + \
+                                                   class_info.class_tb.member.phone[3:7] + '-' +\
+                                                   class_info.class_tb.member.phone[7:11]
+
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = '수강권 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                lecture_info.package_tb.package_type_cd_nm \
+                    = CommonCdTb.objects.get(common_cd=lecture_info.package_tb.package_type_cd).common_cd_nm
+                if lecture_info.package_tb.package_type_cd_nm == '1:1':
+                    lecture_info.package_tb.package_type_cd_nm = '개인'
+            except ObjectDoesNotExist:
+                lecture_info.package_tb.package_type_cd_nm = ''
+
+        context['class_data'] = class_list
+        context['lecture_info'] = lecture_info
         return context
