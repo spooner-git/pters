@@ -4,7 +4,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                                   "font_color_saturday":["obj_font_color_light_blue"],
                                   "font_date_basic":["obj_font_size_12_weight_500"],
                                   "font_day_names":["obj_font_size_11_weight_normal"],
-                                  "height_week_row":[90]};
+                                  "height_week_row":[50]};
 
     const default_targetHTML = '#calendar';
 
@@ -35,8 +35,10 @@ function pters_month_calendar(calendar_name, calendar_options){
     }
 
     function func_draw_month_calendar_size(calendar_height, calendar_toolbox_height, calendar_month_day_name_text_height){
+        // $('.pters_month_cal_content_box').css({"height":calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height,
+        //                                        "max-height":calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height - 3});
         $('.pters_month_cal_content_box').css({"height":calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height,
-                                               "max-height":calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height - 3});
+                                               "max-height":300});
     }
 
     function func_get_month_end_day (input_year, input_month){
@@ -76,20 +78,35 @@ function pters_month_calendar(calendar_name, calendar_options){
         let current_month_first_date_day = new Date(`${reference_date_year}`,`${reference_date_month-1}`,`${'1'}`).getDay();
 
         //달력의 상단의 연월 표기
+        // let month_calendar_upper_tool = `<div class="pters_month_cal_upper_tool_box">
+        //                                     <div id="${calendar_name}_go_prev_month" class="next_prev_month">
+        //                                         <img src="/static/common/icon/navigate_before_black.png" class="obj_icon_basic"> 
+        //                                     </div>
+        //                                     <div class="pters_month_cal_tool_date_text">
+                                                
+        //                                         <div class="obj_font_size_20_weight_bold">
+        //                                             ${Number(reference_date_year)}년 ${Number(reference_date_month)}월
+        //                                         </div>
+        //                                     </div>
+        //                                     <div id="${calendar_name}_go_next_month" class="next_prev_month">
+        //                                         <img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic">
+        //                                     </div>
+        //                                 </div>`;
         let month_calendar_upper_tool = `<div class="pters_month_cal_upper_tool_box">
-                                            <div id="${calendar_name}_go_prev_month" class="next_prev_month">
+                                            <div id="${calendar_name}_go_prev_month" class="next_prev_month" style="display:none;">
                                                 <img src="/static/common/icon/navigate_before_black.png" class="obj_icon_basic"> 
                                             </div>
                                             <div class="pters_month_cal_tool_date_text">
-                                                <div class="obj_font_size_12_weight_500">
-                                                    ${Number(reference_date_year)}년
-                                                </div>
+                                                
                                                 <div class="obj_font_size_20_weight_bold">
-                                                    ${Number(reference_date_month)}월
+                                                    ${Number(reference_date_year)}년 ${Number(reference_date_month)}월
                                                 </div>
                                             </div>
-                                            <div id="${calendar_name}_go_next_month" class="next_prev_month">
+                                            <div id="${calendar_name}_go_next_month" class="next_prev_month" style="display:none;">
                                                 <img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic">
+                                            </div>
+                                            <div class="expland_button">
+                                                <img src="/static/common/icon/expand_more_black.png" class="obj_icon_basic">
                                             </div>
                                         </div>`;
 
@@ -252,7 +269,9 @@ function pters_month_calendar(calendar_name, calendar_options){
         for(let i=0; i<length; i++){
             temp_array.push(`#calendar_plan_cell_${avail_date_array[i]}`);
         }
-        $(`${temp_array.join(', ')}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(254, 78, 101, 0.35)');
+        $(`${temp_array.shift()}`).parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-left-radius':'5px', 'border-bottom-left-radius':'5px'});
+        $(`${temp_array.pop()}`).parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-right-radius':'5px', 'border-bottom-right-radius':'5px'});
+        $(`${temp_array.join(', ')}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(0, 0, 0, 0.1)');
     }
 
     /**
@@ -273,7 +292,8 @@ function pters_month_calendar(calendar_name, calendar_options){
         for(date in schedule_number_dic){
             // schedule_number_dic[date] = array_element_count(date_cache, date);
             count = array_element_count(date_cache, date);
-            $(`#calendar_plan_cell_${date}`).text(`${count}개`);
+            // $(`#calendar_plan_cell_${date}`).text(`${count}개`);
+            $(`#calendar_plan_cell_${date}`).html(`<div class="schedule_marking"></div>`);
         }
 
         function array_element_count(array, wanted){
