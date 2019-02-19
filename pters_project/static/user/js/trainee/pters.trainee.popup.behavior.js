@@ -23,10 +23,6 @@ let layer_popup = (function(){
                 $popup_name_selector.css({"height": popup_height + 'px', "overflow-y": "auto"});
             }
             $popup_selector.css({"z-index":100*popup_array.length});
-            // $('.obj_button_big').css({
-			// "position": "-webkit-sticky",
-			// "position": "sticky",
-			// "bottom": "0"});
         }
         return popup_data;
     }
@@ -256,7 +252,6 @@ function func_set_shade(popup_array_length){
  */
 function func_set_popup_basic(popup_name, data){
     let $popup = $(`.${popup_name}`);
-    console.log(data);
     if(data != undefined && data.popup_comment!=undefined){
         $popup.find('.wrapper_popup_basic_comment').html(data.popup_comment);
     }
