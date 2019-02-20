@@ -106,7 +106,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                                             <div id="${calendar_name}_go_next_month" class="next_prev_month" style="display:none;">
                                                 <img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic">
                                             </div>
-                                            <div class="expland_button">
+                                            <div class="expand_button ${calendar_name}_expand_button">
                                                 <img src="/static/common/icon/expand_more_black.png" class="obj_icon_basic">
                                             </div>
                                         </div>`;
@@ -176,7 +176,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         let time_line_height = calendar_height + 20 - calendar_toolbox_height - calendar_month_day_name_text_height - 300;
         //상단의 연월 표기, 일월화수목 표기, 달력숫자를 합쳐서 화면에 그린다.
         $targetHTML.html(`${month_calendar_upper_tool}
-                         <div class="obj_box_full">
+                         <div class="obj_box_full ${calendar_name}_wrapper_month_cal">
                             ${month_day_name_text}${calendar_assembled}
                          </div>
                          ${timeline_calendar_upper_tool}
@@ -329,6 +329,7 @@ function pters_month_calendar(calendar_name, calendar_options){
     function func_draw_schedule_timeline_data(jsondata){
         let $target_html = $('.wrapper_cal_timeline');
 
+
         let html = `<div class="timeline_element_date">
                         <div class="timeline_date_text obj_font_size_11_weight_bold">2019.01.16 (수)</div>
                         <div class="obj_table_raw">
@@ -362,7 +363,32 @@ function pters_month_calendar(calendar_name, calendar_options){
                             <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
                         </div>
                     </div>`;
-        $target_html.html(html)
+        $target_html.html(html);
+    }
+
+    function func_time_line_wide_view(type){
+        switch(type){
+            case SHOW:
+                $(`.${calendar_name}_expand_button`).attr('data-open', HIDE);
+                $(`.${calendar_name}_wrapper_month_cal`).show();
+                
+            break;
+
+            case HIDE:
+                $(`.${calendar_name}_expand_button`).attr('data-open', SHOW);
+                $(`.${calendar_name}_wrapper_month_cal`).hide();
+            break;
+
+            case undefined:
+                $(`.${calendar_name}_expand_button`).attr('data-open', SHOW);
+                $(`.${calendar_name}_wrapper_month_cal`).hide();
+        }
+    }
+
+    function func_set_expand_function(){
+        $(document).on('click', `.${calendar_name}_expand_button`, function(){
+            func_time_line_wide_view($(this).attr('data-open'));
+        })
     }
 
 
@@ -383,6 +409,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_month_calendar_basic_size(calendar_height);
             func_set_touch_move_to_month_calendar(calendar_options.target_html);
             func_set_prev_next_month_button(this);
+            func_set_expand_function(this);
         },
         "get_design_options": function() {
             return design_options;
