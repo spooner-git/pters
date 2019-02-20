@@ -16,9 +16,10 @@ function pters_month_calendar(calendar_name, calendar_options){
     }
     let design_options = calendar_options.design_options;
 
-    const calendar_height = $(window).height() - parseInt($('body').css('padding-top'), 10) - 20;
+    const calendar_height = $(window).height() - parseInt($('body').css('padding-top'), 10) - 5;
     const calendar_toolbox_height = 105;
     const calendar_month_day_name_text_height = 40;
+    const calendar_timeline_toolbox_height = 35;
 
     let last_day_array = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];      //각 달의 일수
     let date = new Date();
@@ -162,8 +163,25 @@ function pters_month_calendar(calendar_name, calendar_options){
 
         //달력의 하단 숫자부분만 스크롤 되고, 연월일, 월화수목 표기는 스크롤 되지 않도록 사이즈를 조절한다.
 
+
+        let timeline_calendar_upper_tool = `<div class="pters_timeline_cal_upper_tool_box obj_font_size_13_weight_bold">
+                                                <div class="pters_timeline_cal_type_text">전체</div>
+                                                <div class="pters_timeline_cal_type_text">예약 완료</div>
+                                                <div class="pters_timeline_cal_type_text">예약 대기</div>
+                                                <div class="pters_timeline_cal_type_text">반복 일정</div>
+                                                <div></div>
+                                            </div>`;
+
+
+        let time_line_height = calendar_height + 20 - calendar_toolbox_height - calendar_month_day_name_text_height - 300;
         //상단의 연월 표기, 일월화수목 표기, 달력숫자를 합쳐서 화면에 그린다.
-        $targetHTML.html(month_calendar_upper_tool+'<div class="obj_box_full">'+month_day_name_text+calendar_assembled+'</div>');
+        $targetHTML.html(`${month_calendar_upper_tool}
+                         <div class="obj_box_full">
+                            ${month_day_name_text}${calendar_assembled}
+                         </div>
+                         ${timeline_calendar_upper_tool}
+                         <div class="obj_box_full wrapper_cal_timeline" style="height:${time_line_height}px">
+                         </div>`);
 
     }
 
@@ -251,6 +269,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                     }
                 }
                 func_set_avail_date(jsondata.avail_date_data);
+                func_draw_schedule_timeline_data(jsondata);
             },
 
             complete:function(){
@@ -269,7 +288,9 @@ function pters_month_calendar(calendar_name, calendar_options){
         for(let i=0; i<length; i++){
             temp_array.push(`#calendar_plan_cell_${avail_date_array[i]}`);
         }
-        $(`${temp_array.shift()}`).parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-left-radius':'5px', 'border-bottom-left-radius':'5px'});
+        let $first_day = $(`${temp_array.shift()}`);
+        $first_day.siblings('div').css({'height':'20px', 'width':'20px', 'border-radius':'50%', 'background-color':'#000000', 'margin':'0 auto', 'color':'#ffffff'});
+        $first_day.parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-left-radius':'5px', 'border-bottom-left-radius':'5px'});
         $(`${temp_array.pop()}`).parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-right-radius':'5px', 'border-bottom-right-radius':'5px'});
         $(`${temp_array.join(', ')}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(0, 0, 0, 0.1)');
     }
@@ -279,36 +300,70 @@ function pters_month_calendar(calendar_name, calendar_options){
      * @param jsondata.classTimeArray_start_date    시작 시각.
      */
     function func_draw_schedule_data(jsondata){
-        let schedule_number_dic = {};
+        let schedule_number_dic = {"general":{}, "group":{}};
         let date_cache = [];
+        let date_cache_group = [];
         let len = jsondata.classTimeArray_start_date.length;
+        let len2 = jsondata.group_schedule_start_datetime.length;
         for(let i=0; i<len; i++){
             let date = jsondata.classTimeArray_start_date[i].split(' ')[0];
             date_cache.push(date);
-            schedule_number_dic[date] = 0;
+            schedule_number_dic["general"][date] = 0;
+        }
+        for(let j=0; j<len2; j++){
+            let date_group = jsondata.group_schedule_start_datetime[j].split(' ')[0];
+            date_cache_group.push(date_group);
+            schedule_number_dic["group"][date_group] = 0;
         }
 
-        let count;
-        for(date in schedule_number_dic){
-            // schedule_number_dic[date] = array_element_count(date_cache, date);
-            count = array_element_count(date_cache, date);
-            // $(`#calendar_plan_cell_${date}`).text(`${count}개`);
+        for(date in schedule_number_dic["general"]){
             $(`#calendar_plan_cell_${date}`).html(`<div class="schedule_marking"></div>`);
         }
-
-        function array_element_count(array, wanted){
-            let counts = {};
-            let len = array.length;
-            for(let i=0; i<len; i++){
-                counts[array[i]] = 0;
-            }
-            for(let j=0; j<len; j++){
-                counts[array[j]] = counts[array[j]] +1;
-            }
-            return counts[wanted];
+        for(date_group in schedule_number_dic["group"]){
+            $(`#calendar_plan_cell_${date_group}`).html(`<div class="schedule_marking_group"></div>`);
         }
+
     }
     //일정 표기 관련
+
+    function func_draw_schedule_timeline_data(jsondata){
+        let $target_html = $('.wrapper_cal_timeline');
+
+        let html = `<div class="timeline_element_date">
+                        <div class="timeline_date_text obj_font_size_11_weight_bold">2019.01.16 (수)</div>
+                        <div class="obj_table_raw">
+                            <div class="obj_table_cell_x2">
+                                <img src=""><span class="obj_font_size_14_weight_normal">기초 체력 쌓기</span><div class="obj_tag obj_font_bg_white_black">반복 일정</div>
+                            </div>
+                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">07:00~08:00</div>
+                        </div>
+                        
+                        <div class="obj_table_raw">
+                            <div class="obj_table_cell_x2">
+                                <img src=""><span class="obj_font_size_14_weight_normal">탄탄가슴 만들기</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 완료</div>
+                            </div>
+                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline_element_date">
+                        <div class="timeline_date_text obj_font_size_11_weight_bold">2019.01.17 (수)</div>
+                        <div class="obj_table_raw">
+                            <div class="obj_table_cell_x2">
+                                <img src=""><span class="obj_font_size_14_weight_normal">기초 체력 쌓기</span><div class="obj_tag obj_font_bg_white_black">반복 일정</div>
+                            </div>
+                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">07:00~08:00</div>
+                        </div>
+                        
+                        <div class="obj_table_raw">
+                            <div class="obj_table_cell_x2">
+                                <img src=""><span class="obj_font_size_14_weight_normal">탄탄가슴 만들기</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 완료</div>
+                            </div>
+                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
+                        </div>
+                    </div>`;
+        $target_html.html(html)
+    }
 
 
     return {
