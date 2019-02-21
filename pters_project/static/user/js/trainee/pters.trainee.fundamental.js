@@ -38,3 +38,19 @@ function getCookie(name) {
 }
 
 const csrftoken = getCookie('csrftoken');
+
+
+function func_set_webkit_overflow_scrolling(target_selector){
+    let $selector = $(target_selector);
+    $selector.scrollTop(1);
+    $selector.scroll(function(){
+        const popupHeight = $selector.height();
+        const scrollHeight = $selector.prop('scrollHeight');
+        const scrollLocation = $selector.scrollTop();
+        if(popupHeight + scrollLocation == scrollHeight){
+            $selector.animate({scrollTop : scrollLocation-1}, 10);
+        }else if(popupHeight + scrollLocation == popupHeight){
+            $selector.animate({scrollTop : scrollLocation+1}, 10);
+        }
+    });
+}

@@ -152,17 +152,21 @@
             //content 높이와 스크롤 셋팅
             var $content = $('.content_page');
             $content.css("height", windowHeight-parseInt($('body').css("padding-top"), 10));
-            $content.scrollTop(1);
-            $content.scroll(function(){
-                const popupHeight = $content.height();
-                const scrollHeight = $content.prop('scrollHeight');
-                const scrollLocation = $content.scrollTop();
-                if(popupHeight + scrollLocation == scrollHeight){
-                    $content.animate({scrollTop : scrollLocation-1}, 10);
-                }else if(popupHeight + scrollLocation == popupHeight){
-                    $content.animate({scrollTop : scrollLocation+1}, 10);
-                }
-            });
+            // $content.scrollTop(1);
+            // $content.scroll(function(){
+            //     const popupHeight = $content.height();
+            //     const scrollHeight = $content.prop('scrollHeight');
+            //     const scrollLocation = $content.scrollTop();
+            //     if(popupHeight + scrollLocation == scrollHeight){
+            //         $content.animate({scrollTop : scrollLocation-1}, 10);
+            //     }else if(popupHeight + scrollLocation == popupHeight){
+            //         $content.animate({scrollTop : scrollLocation+1}, 10);
+            //     }
+            // });
+
+            func_set_webkit_overflow_scrolling('.content_page');
+
+            
 
         </script>
         {% block local_js_footer %}

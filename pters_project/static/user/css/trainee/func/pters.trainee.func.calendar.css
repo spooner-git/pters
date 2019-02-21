@@ -54,8 +54,13 @@
 		display: inline-block;
 		margin-left: 10px;
 		margin-right: 10px;
-		line-height: 35px;
+		line-height: 33px;
 		cursor: pointer;
+	}
+	.pters_calendar .pters_timeline_cal_upper_tool_box .selected{
+		border-bottom: 2px solid #000000;
+		color: #000000;
+		font-weight: bold;
 	}
 	.pters_calendar .wrapper_cal_timeline{
 		width: 100%;

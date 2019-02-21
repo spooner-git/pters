@@ -17,7 +17,7 @@ function pters_month_calendar(calendar_name, calendar_options){
     let design_options = calendar_options.design_options;
 
     const calendar_height = $(window).height() - parseInt($('body').css('padding-top'), 10) - 5;
-    const calendar_toolbox_height = 105;
+    const calendar_toolbox_height = 61;
     const calendar_month_day_name_text_height = 40;
     const calendar_timeline_toolbox_height = 35;
 
@@ -164,8 +164,8 @@ function pters_month_calendar(calendar_name, calendar_options){
         //달력의 하단 숫자부분만 스크롤 되고, 연월일, 월화수목 표기는 스크롤 되지 않도록 사이즈를 조절한다.
 
 
-        let timeline_calendar_upper_tool = `<div class="pters_timeline_cal_upper_tool_box obj_font_size_13_weight_bold">
-                                                <div class="pters_timeline_cal_type_text">전체</div>
+        let timeline_calendar_upper_tool = `<div class="pters_timeline_cal_upper_tool_box obj_font_size_13_weight_500 obj_font_color_light_grey">
+                                                <div class="pters_timeline_cal_type_text selected">전체</div>
                                                 <div class="pters_timeline_cal_type_text">예약 완료</div>
                                                 <div class="pters_timeline_cal_type_text">예약 대기</div>
                                                 <div class="pters_timeline_cal_type_text">반복 일정</div>
@@ -173,7 +173,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                                             </div>`;
 
 
-        let time_line_height = calendar_height + 20 - calendar_toolbox_height - calendar_month_day_name_text_height - 300;
+        let time_line_height = calendar_height  - calendar_toolbox_height - calendar_month_day_name_text_height - 300 - calendar_timeline_toolbox_height;
         //상단의 연월 표기, 일월화수목 표기, 달력숫자를 합쳐서 화면에 그린다.
         $targetHTML.html(`${month_calendar_upper_tool}
                          <div class="obj_box_full ${calendar_name}_wrapper_month_cal">
@@ -362,8 +362,106 @@ function pters_month_calendar(calendar_name, calendar_options){
                             </div>
                             <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
                         </div>
+                    </div>
+
+                    <div class="timeline_element_date">
+                        <div class="timeline_date_text obj_font_size_11_weight_bold">2019.01.17 (수)</div>
+                        <div class="obj_table_raw">
+                            <div class="obj_table_cell_x2">
+                                <img src=""><span class="obj_font_size_14_weight_normal">기초 체력 쌓기</span><div class="obj_tag obj_font_bg_white_black">반복 일정</div>
+                            </div>
+                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">07:00~08:00</div>
+                        </div>
+                        
+                        <div class="obj_table_raw">
+                            <div class="obj_table_cell_x2">
+                                <img src=""><span class="obj_font_size_14_weight_normal">탄탄가슴 만들기</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 완료</div>
+                            </div>
+                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline_element_date">
+                        <div class="timeline_date_text obj_font_size_11_weight_bold">2019.01.17 (수)</div>
+                        <div class="obj_table_raw">
+                            <div class="obj_table_cell_x2">
+                                <img src=""><span class="obj_font_size_14_weight_normal">기초 체력 쌓기</span><div class="obj_tag obj_font_bg_white_black">반복 일정</div>
+                            </div>
+                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">07:00~08:00</div>
+                        </div>
+                        
+                        <div class="obj_table_raw">
+                            <div class="obj_table_cell_x2">
+                                <img src=""><span class="obj_font_size_14_weight_normal">탄탄가슴 만들기</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 완료</div>
+                            </div>
+                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline_element_date">
+                        <div class="timeline_date_text obj_font_size_11_weight_bold">2019.01.17 (수)</div>
+                        <div class="obj_table_raw">
+                            <div class="obj_table_cell_x2">
+                                <img src=""><span class="obj_font_size_14_weight_normal">기초 체력 쌓기</span><div class="obj_tag obj_font_bg_white_black">반복 일정</div>
+                            </div>
+                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">07:00~08:00</div>
+                        </div>
+                        
+                        <div class="obj_table_raw">
+                            <div class="obj_table_cell_x2">
+                                <img src=""><span class="obj_font_size_14_weight_normal">탄탄가슴 만들기</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 완료</div>
+                            </div>
+                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline_element_date">
+                        <div class="timeline_date_text obj_font_size_11_weight_bold">2019.01.17 (수)</div>
+                        <div class="obj_table_raw">
+                            <div class="obj_table_cell_x2">
+                                <img src=""><span class="obj_font_size_14_weight_normal">기초 체력 쌓기</span><div class="obj_tag obj_font_bg_white_black">반복 일정</div>
+                            </div>
+                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">07:00~08:00</div>
+                        </div>
+                        
+                        <div class="obj_table_raw">
+                            <div class="obj_table_cell_x2">
+                                <img src=""><span class="obj_font_size_14_weight_normal">탄탄가슴 만들기</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 완료</div>
+                            </div>
+                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline_element_date">
+                        <div class="timeline_date_text obj_font_size_11_weight_bold">2019.01.17 (수)</div>
+                        <div class="obj_table_raw">
+                            <div class="obj_table_cell_x2">
+                                <img src=""><span class="obj_font_size_14_weight_normal">기초 체력 쌓기</span><div class="obj_tag obj_font_bg_white_black">반복 일정</div>
+                            </div>
+                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">07:00~08:00</div>
+                        </div>
+                        
+                        <div class="obj_table_raw">
+                            <div class="obj_table_cell_x2">
+                                <img src=""><span class="obj_font_size_14_weight_normal">탄탄가슴 만들기</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 완료</div>
+                            </div>
+                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
+                        </div>
                     </div>`;
         $target_html.html(html);
+        func_set_scrolling_to_timeline('.wrapper_cal_timeline');
+    }
+
+    function func_set_scrolling_to_timeline(target_selector){
+        func_set_webkit_overflow_scrolling(target_selector);
+    }
+
+    function func_set_expand_function(){
+        $(document).on('click', `.${calendar_name}_expand_button`, function(){
+            let original_height;
+            let expand_height;
+            func_time_line_wide_view($(this).attr('data-open'));
+        });
     }
 
     function func_time_line_wide_view(type){
@@ -371,25 +469,26 @@ function pters_month_calendar(calendar_name, calendar_options){
             case SHOW:
                 $(`.${calendar_name}_expand_button`).attr('data-open', HIDE);
                 $(`.${calendar_name}_wrapper_month_cal`).show();
-                
+                $('.wrapper_cal_timeline').css('height', `${original_height}px`);
             break;
 
             case HIDE:
                 $(`.${calendar_name}_expand_button`).attr('data-open', SHOW);
                 $(`.${calendar_name}_wrapper_month_cal`).hide();
+                $('.wrapper_cal_timeline').css('height', `${expand_height}px`);
             break;
 
             case undefined:
+                original_height = parseInt($('.wrapper_cal_timeline').css('height'));
+                expand_height = calendar_height - calendar_toolbox_height - calendar_timeline_toolbox_height;
+                console.log(calendar_height, calendar_toolbox_height, calendar_timeline_toolbox_height)
                 $(`.${calendar_name}_expand_button`).attr('data-open', SHOW);
                 $(`.${calendar_name}_wrapper_month_cal`).hide();
+                $('.wrapper_cal_timeline').css('height', `${expand_height}px`);
         }
     }
 
-    function func_set_expand_function(){
-        $(document).on('click', `.${calendar_name}_expand_button`, function(){
-            func_time_line_wide_view($(this).attr('data-open'));
-        })
-    }
+    
 
 
     return {
