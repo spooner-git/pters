@@ -327,129 +327,70 @@ function pters_month_calendar(calendar_name, calendar_options){
     //일정 표기 관련
 
     function func_draw_schedule_timeline_data(jsondata){
+
+        let data_dic_form = func_make_schedule_data_for_timeline(jsondata);
         let $target_html = $('.wrapper_cal_timeline');
 
+        let html_to_join_array = [];
+        for(date in data_dic_form){
 
-        let html = `<div class="timeline_element_date">
-                        <div class="timeline_date_text obj_font_size_11_weight_bold">2019.01.16 (수)</div>
-                        <div class="obj_table_raw">
-                            <div class="obj_table_cell_x2">
-                                <img src=""><span class="obj_font_size_14_weight_normal">기초 체력 쌓기</span><div class="obj_tag obj_font_bg_white_black">반복 일정</div>
-                            </div>
-                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">07:00~08:00</div>
-                        </div>
-                        
-                        <div class="obj_table_raw">
-                            <div class="obj_table_cell_x2">
-                                <img src=""><span class="obj_font_size_14_weight_normal">탄탄가슴 만들기</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 완료</div>
-                            </div>
-                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
-                        </div>
-                    </div>
+            let temp_array = [];
+            let len = data_dic_form[date].length;
+            for(let i=0; i<len; i++){
+                let split = data_dic_form[date][i].split(' / ');
+                let schedule_name = split[0];
+                let schedule_time_start = split[1].substr(0, 5);
+                let schedule_time_end = split[2].substr(0, 5);
+                let schedule_id = split[3];
 
-                    <div class="timeline_element_date">
-                        <div class="timeline_date_text obj_font_size_11_weight_bold">2019.01.17 (수)</div>
-                        <div class="obj_table_raw">
-                            <div class="obj_table_cell_x2">
-                                <img src=""><span class="obj_font_size_14_weight_normal">기초 체력 쌓기</span><div class="obj_tag obj_font_bg_white_black">반복 일정</div>
-                            </div>
-                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">07:00~08:00</div>
-                        </div>
-                        
-                        <div class="obj_table_raw">
-                            <div class="obj_table_cell_x2">
-                                <img src=""><span class="obj_font_size_14_weight_normal">탄탄가슴 만들기</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 완료</div>
-                            </div>
-                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
-                        </div>
-                    </div>
+                temp_array.push(
+                                `
+                                <div class="obj_table_raw" data-scheduleid=${schedule_id}>
+                                    <div class="obj_table_cell_x2">
+                                        <img src=""><span class="obj_font_size_14_weight_normal">${schedule_name}</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 타입</div>
+                                    </div>
+                                    <div class="obj_table_cell_x2 obj_font_size_14_weight_500">${schedule_time_start}~${schedule_time_end}</div>
+                                </div>
+                                `
+                                );
+            }
+            html_to_join_array.push(
+                                    `
+                                        <div class="timeline_element_date">
+                                            <div class="timeline_date_text obj_font_size_11_weight_bold">${date_format(date)["yyyy.mm.dd"]}</div>
+                                            ${temp_array.join('')}
+                                        </div>
+                                    `
+                                    );
 
-                    <div class="timeline_element_date">
-                        <div class="timeline_date_text obj_font_size_11_weight_bold">2019.01.17 (수)</div>
-                        <div class="obj_table_raw">
-                            <div class="obj_table_cell_x2">
-                                <img src=""><span class="obj_font_size_14_weight_normal">기초 체력 쌓기</span><div class="obj_tag obj_font_bg_white_black">반복 일정</div>
-                            </div>
-                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">07:00~08:00</div>
-                        </div>
-                        
-                        <div class="obj_table_raw">
-                            <div class="obj_table_cell_x2">
-                                <img src=""><span class="obj_font_size_14_weight_normal">탄탄가슴 만들기</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 완료</div>
-                            </div>
-                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
-                        </div>
-                    </div>
+        }
+        let html = html_to_join_array.join('');
 
-                    <div class="timeline_element_date">
-                        <div class="timeline_date_text obj_font_size_11_weight_bold">2019.01.17 (수)</div>
-                        <div class="obj_table_raw">
-                            <div class="obj_table_cell_x2">
-                                <img src=""><span class="obj_font_size_14_weight_normal">기초 체력 쌓기</span><div class="obj_tag obj_font_bg_white_black">반복 일정</div>
-                            </div>
-                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">07:00~08:00</div>
-                        </div>
-                        
-                        <div class="obj_table_raw">
-                            <div class="obj_table_cell_x2">
-                                <img src=""><span class="obj_font_size_14_weight_normal">탄탄가슴 만들기</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 완료</div>
-                            </div>
-                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
-                        </div>
-                    </div>
 
-                    <div class="timeline_element_date">
-                        <div class="timeline_date_text obj_font_size_11_weight_bold">2019.01.17 (수)</div>
-                        <div class="obj_table_raw">
-                            <div class="obj_table_cell_x2">
-                                <img src=""><span class="obj_font_size_14_weight_normal">기초 체력 쌓기</span><div class="obj_tag obj_font_bg_white_black">반복 일정</div>
-                            </div>
-                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">07:00~08:00</div>
-                        </div>
-                        
-                        <div class="obj_table_raw">
-                            <div class="obj_table_cell_x2">
-                                <img src=""><span class="obj_font_size_14_weight_normal">탄탄가슴 만들기</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 완료</div>
-                            </div>
-                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
-                        </div>
-                    </div>
-
-                    <div class="timeline_element_date">
-                        <div class="timeline_date_text obj_font_size_11_weight_bold">2019.01.17 (수)</div>
-                        <div class="obj_table_raw">
-                            <div class="obj_table_cell_x2">
-                                <img src=""><span class="obj_font_size_14_weight_normal">기초 체력 쌓기</span><div class="obj_tag obj_font_bg_white_black">반복 일정</div>
-                            </div>
-                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">07:00~08:00</div>
-                        </div>
-                        
-                        <div class="obj_table_raw">
-                            <div class="obj_table_cell_x2">
-                                <img src=""><span class="obj_font_size_14_weight_normal">탄탄가슴 만들기</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 완료</div>
-                            </div>
-                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
-                        </div>
-                    </div>
-
-                    <div class="timeline_element_date">
-                        <div class="timeline_date_text obj_font_size_11_weight_bold">2019.01.17 (수)</div>
-                        <div class="obj_table_raw">
-                            <div class="obj_table_cell_x2">
-                                <img src=""><span class="obj_font_size_14_weight_normal">기초 체력 쌓기</span><div class="obj_tag obj_font_bg_white_black">반복 일정</div>
-                            </div>
-                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">07:00~08:00</div>
-                        </div>
-                        
-                        <div class="obj_table_raw">
-                            <div class="obj_table_cell_x2">
-                                <img src=""><span class="obj_font_size_14_weight_normal">탄탄가슴 만들기</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 완료</div>
-                            </div>
-                            <div class="obj_table_cell_x2 obj_font_size_14_weight_500">14:00~16:00</div>
-                        </div>
-                    </div>`;
+        
         $target_html.html(html);
         func_set_scrolling_to_timeline('.wrapper_cal_timeline');
+    }
+
+    function func_make_schedule_data_for_timeline(jsondata){
+        console.log(jsondata)
+        let json = jsondata;
+        let len = json.classTimeArray_start_date.length;
+        let dic = {};
+        for(i=0; i<len; i++){
+            dic[json.classTimeArray_start_date[i].split(' ')[0]] = [];
+        }
+        for(j=0; j<len; j++){
+            let schedule_start_time = json.classTimeArray_start_date[j].split(' ')[1];
+            let schedule_end_time = json.classTimeArray_end_date[j].split(' ')[1];
+            let schedule_id = json.scheduleIdArray[j];
+            let schedule_name = json.schedule_group_name[j];
+            if(schedule_name.length == 0){
+                schedule_name = "개인 레슨";
+            }
+            dic[json.classTimeArray_start_date[j].split(' ')[0]].push(schedule_name+' / '+schedule_start_time+' / '+schedule_end_time+' / '+schedule_id);
+        }
+        return dic
     }
 
     function func_set_scrolling_to_timeline(target_selector){
