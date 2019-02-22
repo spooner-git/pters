@@ -72,7 +72,10 @@
 {% block popup_base_js %}
     <script type="text/javascript">
         /*수강권 정보 열고 닫기*/
-        $('#id_ticket_detail_expand_in_reserve').attr("data-open", CLOSE);
+        window.onload(function(){
+            $('#id_ticket_detail_expand_in_reserve').attr("data-open", CLOSE);
+        });
+        
         $(document).on("click", '#id_ticket_detail_expand_in_reserve', function(){
             let $this = $(this);
             let option = $this.attr("data-open");
