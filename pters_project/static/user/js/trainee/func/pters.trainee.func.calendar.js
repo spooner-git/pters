@@ -144,7 +144,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                 }else{
 
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
-                                               onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 100, POPUP_FROM_RIGHT, {'select_date':'${data_date}'})">
+                                               onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':'${data_date}'})">
                                                <div class="${font_color}">${date_cache}</div>
                                                <div id="calendar_plan_cell_${data_date}"></div>
                                           </div>`);
@@ -316,10 +316,10 @@ function pters_month_calendar(calendar_name, calendar_options){
             schedule_number_dic["group"][date_group] = 0;
         }
 
-        for(date in schedule_number_dic["general"]){
+        for(let date in schedule_number_dic["general"]){
             $(`#calendar_plan_cell_${date}`).html(`<div class="schedule_marking"></div>`);
         }
-        for(date_group in schedule_number_dic["group"]){
+        for(let date_group in schedule_number_dic["group"]){
             $(`#calendar_plan_cell_${date_group}`).html(`<div class="schedule_marking_group"></div>`);
         }
 
@@ -332,7 +332,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         let $target_html = $('.wrapper_cal_timeline');
 
         let html_to_join_array = [];
-        for(date in data_dic_form){
+        for(let date in data_dic_form){
 
             let temp_array = [];
             let len = data_dic_form[date].length;
@@ -377,10 +377,10 @@ function pters_month_calendar(calendar_name, calendar_options){
         let json = jsondata;
         let len = json.classTimeArray_start_date.length;
         let dic = {};
-        for(i=0; i<len; i++){
+        for(let i=0; i<len; i++){
             dic[json.classTimeArray_start_date[i].split(' ')[0]] = [];
         }
-        for(j=0; j<len; j++){
+        for(let j=0; j<len; j++){
             let schedule_start_time = json.classTimeArray_start_date[j].split(' ')[1];
             let schedule_end_time = json.classTimeArray_end_date[j].split(' ')[1];
             let schedule_id = json.scheduleIdArray[j];
@@ -390,7 +390,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             }
             dic[json.classTimeArray_start_date[j].split(' ')[0]].push(schedule_name+' / '+schedule_start_time+' / '+schedule_end_time+' / '+schedule_id);
         }
-        return dic
+        return dic;
     }
 
     function func_set_scrolling_to_timeline(target_selector){

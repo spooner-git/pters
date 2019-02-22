@@ -112,8 +112,8 @@
         line-height: 30px;
     }
 	.wrapper_box_next_plan .obj_font_size_15_weight_500{
-		height: 28px;
-		line-height: 28px;
+		height: 22px;
+		line-height: 22px;
 	}
     .wrapper_box_next_plan .obj_font_size_14_weight_500{
         height: 26px;
@@ -133,10 +133,17 @@
     }
 
     .wrapper_box_next_plan .obj_box_full{
-		margin-top: 10px;
-		margin-left: 5px;
-		margin-right: 5px;
+		margin-bottom: 10px;
 		padding: 15px;
+        border: 0;
+    }
+
+    .wrapper_img_lesson_type{
+        text-align: center;
+    }
+    .wrapper_img_lesson_type > img{
+        width: 20px;
+        vertical-align: middle;
     }
 
     .wrapper_box_next_plan .obj_box_full_grey{

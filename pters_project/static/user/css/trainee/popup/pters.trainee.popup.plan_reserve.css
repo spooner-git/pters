@@ -1,3 +1,8 @@
+	.popup_mobile .wrapper_top{
+		height: 50px;
+		margin-bottom: 0;
+	}
+
 	.popup_calendar_plan_reserve{
 		/*min-height: 100%;*/
 	}
@@ -12,6 +17,11 @@
 			height: 20px;
 			line-height: 20px;
 		}
+		.popup_calendar_plan_reserve .wrapper_calendar_plan_reserve_title .obj_font_size_14_weight_500{
+			position: absolute;
+			top: 55px;
+		}
+			
 		.popup_calendar_plan_reserve .obj_font_size_14_weight_normal{
 			height: 35px;
 			line-height: 35px;
@@ -36,9 +46,9 @@
 		}
 
 		.popup_calendar_plan_reserve > .obj_box_full{
-			margin-top: 30px;
-			margin-bottom: 35px;
+			margin-bottom: 10px;
 			padding: 10px 20px;
+			border: 0;
 		}
 		.popup_calendar_plan_reserve > .obj_box_full .obj_icon_expand{
 			filter: invert(100);
@@ -58,9 +68,9 @@
 			width: 70px;
 		}
 
-		.wrapper_reserve_form{
-			margin-right: 20px;
-			margin-left: 20px;
+
+		.popup_calendar_plan_reserve .wrapper_reserve_form{
+			padding-top: 20px;
 			padding-bottom: 20px;
 			border-bottom: 1px solid #b4b4b4;
 		}
@@ -109,9 +119,9 @@
 
 		.wrapper_reserve_caution{
 			margin-top: 15px;
-			margin-right: 20px;
-			margin-left: 20px;
-			padding-bottom: 41px;
+			padding-top: 15px;
+			padding-bottom: 10px;
+			border-top: 1px solid #f2f2f2;
 		}
 		.wrapper_reserve_caution > p{
 			margin: 0;

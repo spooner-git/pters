@@ -6,17 +6,21 @@
 {% endblock %}
 {% block popup_base_contents %}
     <div class="popup_calendar_plan_view">
-        <div class="obj_font_size_20_weight_bold">{{ date_format | date:'Y년 m월 d일' }} ({{ date_format | date:"l" |cut:"요일"}})</div>
-        <div class="obj_font_size_14_weight_500"><span class="obj_font_color_pters_red">{{ schedule_data | length }}개</span>의 일정이 있습니다.</div>
+        <div class="obj_font_size_20_weight_bold">{{ date_format | date:'Y.m.d' }} ({{ date_format | date:"l" |cut:"요일"}})</div>
+        <!-- <div class="obj_font_size_14_weight_500"><span class="obj_font_color_pters_red">{{ schedule_data | length }}개</span>의 일정이 있습니다.</div> -->
 
 
         <div class="wrapper_box_next_plan">
             {% for schedule_info in schedule_data %}
             <div class="obj_box_full">
                 <div class="obj_box_full_grey">
-                    <div class="wrapper_tag">
+                    <!-- <div class="wrapper_tag">
                         <div class="obj_tag obj_font_bg_white_black">예약완료</div>
+                    </div> -->
+                    <div  class="wrapper_img_lesson_type">
+                        <img src="{% static_url "common/icon/people_black.png" %}">
                     </div>
+                    
                     <div class="wrapper_lecture_title obj_font_size_15_weight_500">
                         ({{ schedule_info.group_type_name }}) {{ schedule_info.group_name }}
                     </div>
@@ -81,7 +85,7 @@
 {% endblock %}
 
 {% block popoup_base_wrapper_bottom_inside %}
-    <div class="obj_button_big obj_font_bg_white_pink" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 100, POPUP_FROM_RIGHT)">예약 추가하기</div>
+    <div class="obj_button_big obj_font_bg_white_pink" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM)">예약 추가하기</div>
 {% endblock %}
 
 {% block popup_base_js %}
