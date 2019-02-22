@@ -1,0 +1,100 @@
+{% extends "trainee_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainee/page/pters.trainee.page.alarm.css" %}>
+{% endblock %}
+
+{% block content %}
+    <div class="trainee_alarm">
+
+        <div class="wrapper_alarm_unread obj_box_full">
+            <p class="obj_font_size_11_weight_bold obj_font_color_dark_grey wrapper_alarm_unread_title">새로운 알림</p> 
+
+            <div class="wrapper_alarm_element obj_font_size_16_weight_500">
+                <div class="wrapper_alarm_element_title">
+                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
+                </div>
+                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
+                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="wrapper_alarm_list obj_box_full ">
+            <p class="obj_font_size_11_weight_bold obj_font_color_dark_grey wrapper_alarm_list_title">2019년 1월 16일 (수)</p>
+
+            <div class="wrapper_alarm_element obj_font_size_16_weight_500">
+                <div class="wrapper_alarm_element_title">
+                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
+                </div>
+                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
+                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
+                </div>
+            </div>
+
+            <div class="wrapper_alarm_element obj_font_size_16_weight_500">
+                <div class="wrapper_alarm_element_title">
+                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
+                </div>
+                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
+                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
+                </div>
+            </div>
+
+            <div class="wrapper_alarm_element obj_font_size_16_weight_500">
+                <div class="wrapper_alarm_element_title">
+                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
+                </div>
+                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
+                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
+                </div>
+            </div>
+            <div class="wrapper_alarm_element obj_font_size_16_weight_500">
+                <div class="wrapper_alarm_element_title">
+                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
+                </div>
+                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
+                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
+                </div>
+            </div>
+            <div class="wrapper_alarm_element obj_font_size_16_weight_500">
+                <div class="wrapper_alarm_element_title">
+                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
+                </div>
+                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
+                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
+                </div>
+            </div>
+            <div class="wrapper_alarm_element obj_font_size_16_weight_500">
+                <div class="wrapper_alarm_element_title">
+                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
+                </div>
+                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
+                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
+                </div>
+            </div>
+            <div class="wrapper_alarm_element obj_font_size_16_weight_500">
+                <div class="wrapper_alarm_element_title">
+                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
+                </div>
+                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
+                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
+                </div>
+            </div>
+
+        </div>
+
+        
+    </div>
+{% endblock %}
+
+{% block local_js_footer %}
+   <!--  <script type="text/javascript" src={% static_url "user/js/trainee/func/pters.trainee.func.schedule.js" %}></script> -->
+    <script type="text/javascript">
+    	//Nav바에 현재 페이지에 밑줄 표기
+    	$('#nav_btn_alarm').addClass("nav_selected");
+    </script>
+
+{% endblock %}
