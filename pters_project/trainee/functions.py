@@ -8,7 +8,7 @@ from django.db.models.functions import Coalesce
 from django.utils import timezone
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, TO_TRAINEE_LESSON_ALARM_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
-    AUTO_FINISH_OFF
+    AUTO_FINISH_OFF, MEMBER_RESERVE_PROHIBITION_ON
 
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
@@ -608,164 +608,6 @@ def func_get_class_list(context, member_id):
     return context
 
 
-def func_check_schedule_setting(class_id, start_date, end_date, add_del_type):
-    error = None
-    disable_time = timezone.now()
-    now_time = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
-    add_del_start_time = datetime.datetime.strptime(start_date.strftime('%H:%M'), '%H:%M')
-    add_del_end_time = datetime.datetime.strptime(end_date.strftime('%H:%M'), '%H:%M')
-    today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
-    reserve_avail_date = 0
-    class_info = None
-    try:
-        class_info = ClassTb.objects.get(class_id=class_id)
-    except ObjectDoesNotExist:
-        error = '수강정보를 불러오지 못했습니다.'
-    if error is None:
-
-        lt_res_01 = '00:00-23:59'
-        lt_res_02 = 0
-        lt_res_03 = '0'
-        lt_res_04 = '00:00-23:59'
-        lt_res_05 = 7
-        lt_res_cancel_time = -1
-        lt_res_enable_time = -1
-        lt_work_time_avail = ['', '', '', '', '', '', '']
-        setting_data = SettingTb.objects.filter(member_id=class_info.member_id, class_tb_id=class_id, use=USE)
-
-        for setting_info in setting_data:
-            if setting_info.setting_type_cd == 'LT_RES_01':
-                lt_res_01 = setting_info.setting_info
-            if setting_info.setting_type_cd == 'LT_RES_02':
-                lt_res_02 = int(setting_info.setting_info)
-            if setting_info.setting_type_cd == 'LT_RES_03':
-                lt_res_03 = setting_info.setting_info
-            if setting_info.setting_type_cd == 'LT_RES_04':
-                lt_res_04 = setting_info.setting_info
-            if setting_info.setting_type_cd == 'LT_WORK_SUN_TIME_AVAIL':
-                lt_work_time_avail[0] = setting_info.setting_info
-            if setting_info.setting_type_cd == 'LT_WORK_MON_TIME_AVAIL':
-                lt_work_time_avail[1] = setting_info.setting_info
-            if setting_info.setting_type_cd == 'LT_WORK_TUE_TIME_AVAIL':
-                lt_work_time_avail[2] = setting_info.setting_info
-            if setting_info.setting_type_cd == 'LT_WORK_WED_TIME_AVAIL':
-                lt_work_time_avail[3] = setting_info.setting_info
-            if setting_info.setting_type_cd == 'LT_WORK_THS_TIME_AVAIL':
-                lt_work_time_avail[4] = setting_info.setting_info
-            if setting_info.setting_type_cd == 'LT_WORK_FRI_TIME_AVAIL':
-                lt_work_time_avail[5] = setting_info.setting_info
-            if setting_info.setting_type_cd == 'LT_WORK_SAT_TIME_AVAIL':
-                lt_work_time_avail[6] = setting_info.setting_info
-            if setting_info.setting_type_cd == 'LT_RES_05':
-                lt_res_05 = int(setting_info.setting_info)
-            if setting_info.setting_type_cd == 'LT_RES_CANCEL_TIME':
-                lt_res_cancel_time = int(setting_info.setting_info)
-            if setting_info.setting_type_cd == 'LT_RES_ENABLE_TIME':
-                lt_res_enable_time = int(setting_info.setting_info)
-        if lt_res_cancel_time == -1:
-            lt_res_cancel_time = lt_res_02*60
-        if lt_res_enable_time == -1:
-            lt_res_enable_time = lt_res_02*60
-        if lt_work_time_avail[0] == '':
-            lt_work_time_avail[0] = lt_res_04
-        if lt_work_time_avail[1] == '':
-            lt_work_time_avail[1] = lt_res_04
-        if lt_work_time_avail[2] == '':
-            lt_work_time_avail[2] = lt_res_04
-        if lt_work_time_avail[3] == '':
-            lt_work_time_avail[3] = lt_res_04
-        if lt_work_time_avail[4] == '':
-            lt_work_time_avail[4] = lt_res_04
-        if lt_work_time_avail[5] == '':
-            lt_work_time_avail[5] = lt_res_04
-        if lt_work_time_avail[6] == '':
-            lt_work_time_avail[6] = lt_res_04
-        reserve_avail_time_split = lt_res_01.split('-')
-        reserve_avail_start_time = datetime.datetime.strptime(reserve_avail_time_split[0], '%H:%M')
-        reserve_avail_end_time = datetime.datetime.strptime(reserve_avail_time_split[1], '%H:%M')
-
-        work_avail_start_time = datetime.datetime.strptime(lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[0],
-                                                           '%H:%M')
-        work_avail_end_time = datetime.datetime.strptime(lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[1],
-                                                         '%H:%M')
-        today + datetime.timedelta(hours=reserve_avail_date)
-
-        reserve_stop = lt_res_03
-        reserve_avail_date = lt_res_05
-        if add_del_type == ADD_SCHEDULE:
-            reserve_prohibition_time = lt_res_enable_time
-        else:
-            reserve_prohibition_time = lt_res_cancel_time
-
-        if reserve_prohibition_time >= 24*60:
-            reserve_prohibition_time = 0
-        disable_time = disable_time + datetime.timedelta(minutes=reserve_prohibition_time)
-
-        if reserve_stop == '1':
-            if add_del_type == ADD_SCHEDULE:
-                error = '현재 예약 등록 정지 상태입니다.'
-            else:
-                error = '현재 예약 취소 정지 상태입니다.'
-
-        if error is None:
-            if reserve_avail_start_time <= reserve_avail_end_time:
-                if now_time < reserve_avail_start_time:
-                    if add_del_type == ADD_SCHEDULE:
-                        error = '일정 등록/취소 가능 시간은 ' + reserve_avail_time_split[0] + '~' + reserve_avail_time_split[1] + ' 입니다.'
-                        # error = '현재 예약 등록 가능 시간이 아닙니다.'
-                    else:
-                        error = '일정 등록/취소 가능 시간은 ' + reserve_avail_time_split[0] + '~' + reserve_avail_time_split[1] + ' 입니다.'
-                        # error = '현재 예약 취소 가능 시간이 아닙니다.'
-                if now_time > reserve_avail_end_time:
-                    if add_del_type == ADD_SCHEDULE:
-                        error = '일정 등록/취소 가능 시간은 ' + reserve_avail_time_split[0] + '~' + reserve_avail_time_split[1] + ' 입니다.'
-                        # error = '현재 예약 등록 가능 시간이 아닙니다.'
-                    else:
-                        error = '일정 등록/취소 가능 시간은 ' + reserve_avail_time_split[0] + '~' + reserve_avail_time_split[1] + ' 입니다.'
-                        # error = '현재 예약 취소 가능 시간이 아닙니다.'
-            else:
-                if reserve_avail_start_time > now_time > reserve_avail_end_time:
-                    if add_del_type == ADD_SCHEDULE:
-                        error = '일정 등록/취소 가능 시간은 ' + reserve_avail_time_split[0] + '~' + reserve_avail_time_split[1] + ' 입니다.'
-                        # error = '현재 예약 등록 가능 시간이 아닙니다.'
-                    else:
-                        error = '일정 등록/취소 가능 시간은 ' + reserve_avail_time_split[0] + '~' + reserve_avail_time_split[1] + ' 입니다.'
-                        # error = '현재 예약 취소 가능 시간이 아닙니다.'
-
-        if error is None:
-            if add_del_start_time < work_avail_start_time:
-                if add_del_type == ADD_SCHEDULE:
-                    error = '강사 업무시간이 아닙니다.'
-                # else:
-                #     error = '예약 취소가 불가능합니다.'
-
-            if add_del_end_time > work_avail_end_time:
-                if add_del_type == ADD_SCHEDULE:
-                    error = '강사 업무시간이 아닙니다.'
-                # else:
-                #     error = '예약 취소가 불가능합니다.'
-
-    avail_end_date = today + datetime.timedelta(days=reserve_avail_date)
-
-    if error is None:
-        if start_date >= avail_end_date:
-            if add_del_type == ADD_SCHEDULE:
-                error = '오늘 기준 최대 +'+str(reserve_avail_date)+'일 까지 예약 등록이 가능합니다.'
-            else:
-                error = '오늘 기준 최대 +'+str(reserve_avail_date)+'일 까지 예약 취소가 가능합니다.'
-    if error is None:
-        if start_date < timezone.now():
-            error = '이미 지난 일정 입니다.'
-        else:
-            if start_date < disable_time:
-                if add_del_type == ADD_SCHEDULE:
-                    error = '수업 시작 '+str(int(reserve_prohibition_time/60))+'시간 전까지 예약 등록이 가능합니다.'
-                else:
-                    error = '수업 시작 '+str(int(reserve_prohibition_time/60))+'시간 전까지 예약 취소가 가능합니다.'
-
-    return error
-
-
 def func_get_trainee_next_schedule_by_class_id(context, class_id, user_id):
 
     now = timezone.now()
@@ -860,3 +702,329 @@ def func_get_trainee_ing_lecture_list(context, class_id, user_id):
 
     context['ing_lecture_data'] = lecture_list
     return context
+
+
+# 검사후 괜찮다면 1:1 레슨은  예약 허용 시간대 + 강사 업무시간 + 예약 가능 시간 ~  예약 호용 시간대 + 강사 업무 시간
+# 그룹 레슨의 경우 오픈된 수업중 예약 허용 시간대 + 강사 업무시간 + 예약 가능 시간 ~  예약 호용 시간대 + 강사 업무 시간
+def func_get_trainee_reserve_schedule_list(context, class_id, user_id, group_id, select_date):
+    error = None
+    # 3. 예약 가능 시간 고려
+    # 5. 수업 오픈 고려 (1:1인경우 예약된 시간 전부 안되도록, 그룹인 경우 자신이 속한 시간 제외한 수업)
+    # 6.
+    datetime_now = timezone.now()
+    today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
+    now_time = datetime.datetime.strptime(datetime_now.strftime('%H:%M'), '%H:%M')
+
+    try:
+        class_info = ClassTb.objects.get(class_id=class_id)
+    except ObjectDoesNotExist:
+        error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        error = func_check_select_date_reserve_setting(class_info, select_date)
+
+    if error is None:
+        # 근접 예약 취소/등록 시간 : 구버전 호환 + 시간 단위
+        lt_res_enable_cancel_time_legacy = 0
+        # 강사 업무 시간 : 구버전 호환
+        lt_work_time_legacy = '00:00-23:59'
+        # 근접 예약 등록 시간 : 구버전 호환 위해 default -1 + 분 단위
+        lt_res_enable_time = -1
+        # 강사 업무 시간
+        lt_work_time_avail = ['', '', '', '', '', '', '']
+
+        setting_data = SettingTb.objects.filter(member_id=class_info.member_id,
+                                                class_tb_id=class_info.class_id,
+                                                use=USE).exclude(Q(setting_type='LT_RES_01') |
+                                                                 Q(setting_type='LT_RES_03') |
+                                                                 Q(setting_type='LT_RES_05') |
+                                                                 Q(setting_type='LT_RES_CANCEL_TIME'))
+        for setting_info in setting_data:
+            if setting_info.setting_type_cd == 'LT_RES_02':
+                lt_res_enable_cancel_time_legacy = int(setting_info.setting_info)
+            if setting_info.setting_type_cd == 'LT_RES_04':
+                lt_work_time_legacy = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_SUN_TIME_AVAIL':
+                lt_work_time_avail[0] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_MON_TIME_AVAIL':
+                lt_work_time_avail[1] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_TUE_TIME_AVAIL':
+                lt_work_time_avail[2] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_WED_TIME_AVAIL':
+                lt_work_time_avail[3] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_THS_TIME_AVAIL':
+                lt_work_time_avail[4] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_FRI_TIME_AVAIL':
+                lt_work_time_avail[5] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_SAT_TIME_AVAIL':
+                lt_work_time_avail[6] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_RES_ENABLE_TIME':
+                lt_res_enable_time = int(setting_info.setting_info)
+            if setting_info.setting_type_cd == 'LT_RES_MEMBER_TIME_DURATION':
+                lt_res_member_time_duration = int(setting_info.setting_info)
+            if setting_info.setting_type_cd == 'LT_RES_MEMBER_START_TIME':
+                lt_res_member_start_time = setting_info.setting_info
+
+        # 근접 예약 등록 가능 시간 구버전 호환 + 시간 -> 분
+        if lt_res_enable_time == -1:
+            lt_res_enable_time = lt_res_enable_cancel_time_legacy * 60
+        # 강사 업무 시간 구버전 호환
+        if lt_work_time_avail[0] == '':
+            lt_work_time_avail[0] = lt_work_time_legacy
+        if lt_work_time_avail[1] == '':
+            lt_work_time_avail[1] = lt_work_time_legacy
+        if lt_work_time_avail[2] == '':
+            lt_work_time_avail[2] = lt_work_time_legacy
+        if lt_work_time_avail[3] == '':
+            lt_work_time_avail[3] = lt_work_time_legacy
+        if lt_work_time_avail[4] == '':
+            lt_work_time_avail[4] = lt_work_time_legacy
+        if lt_work_time_avail[5] == '':
+            lt_work_time_avail[5] = lt_work_time_legacy
+        if lt_work_time_avail[6] == '':
+            lt_work_time_avail[6] = lt_work_time_legacy
+
+        # 선택한 일자의 강사 업무 시간 확인
+        work_avail_start_time = datetime.datetime.strptime(lt_work_time_avail[int(select_date.strftime('%w'))].split('-')[0],
+                                                           '%H:%M')
+        work_avail_end_time = datetime.datetime.strptime(lt_work_time_avail[int(select_date.strftime('%w'))].split('-')[1],
+                                                         '%H:%M')
+
+        # 근접 예약 등록 가능 시간 셋팅
+        reserve_prohibition_time = lt_res_enable_time
+
+        # 근접 예약 등록 가능 시간이 일 단위를 넘는 경우
+        if reserve_prohibition_time >= 24*60:
+            reserve_prohibition_date = int(reserve_prohibition_time/60/24)
+
+        # 근접 예약 시간 확인
+        reserve_disable_time = datetime_now + datetime.timedelta(minutes=reserve_prohibition_time)
+
+        # 시작 시각
+        if lt_res_member_start_time == 'A-0':
+            test = '매시각 0분 마다'
+        elif lt_res_member_start_time == 'A-30':
+            test = '매시각 30분 마다'
+        elif lt_res_member_start_time == 'E-30':
+            test = '30분 마다'
+
+        # 진행 시간 (분단위)
+        lt_res_member_time_duration = lt_res_member_time_duration * class_info.class_hour
+
+    try:
+        start_dt = datetime.datetime.strptime(select_date + ' 00:00', '%Y-%m-%d %H:%M')
+        end_dt = start_dt + datetime.timedelta(hours=23, minutes=59)
+    except ValueError:
+        error = '등록 값에 문제가 있습니다.'
+    except IntegrityError:
+        error = '등록 값에 문제가 있습니다.'
+    except TypeError:
+        error = '등록 값의 형태에 문제가 있습니다.'
+
+    # 1:1 수업인 경우
+    if group_id is None or group_id == '':
+        test = 'test'
+        schedule_data = ScheduleTb.objects.filter(class_tb=class_id, en_dis_type=ON_SCHEDULE_TYPE,
+                                                  start_dt__gte=start_dt, start_dt__lte=end_dt).order_by('start_dt')
+
+    # 그룹 수업인 경우
+    else:
+        test = 'test'
+
+    for schedule_info in schedule_data:
+        try:
+            group_type_name = CommonCdTb.objects.get(common_cd=schedule_info.group_tb.group_type_cd).common_cd_nm
+            group_name = schedule_info.group_tb.name
+        except ObjectDoesNotExist:
+            group_type_name = '개인'
+            group_name = '1:1 레슨'
+        except AttributeError:
+            group_type_name = '개인'
+            group_name = '1:1 레슨'
+        schedule_info.group_name = group_name
+        schedule_info.group_type_name = group_type_name
+
+    context['schedule_data'] = schedule_data
+
+    return context
+
+
+def func_check_select_date_reserve_setting(class_info, select_date):
+    error = None
+    datetime_now = timezone.now()
+    today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
+    now_time = datetime.datetime.strptime(datetime_now.strftime('%H:%M'), '%H:%M')
+
+    # default 값
+    # 예약 허용 시간대
+    reserve_avail_time = '00:00-23:59'
+    # 예약 정지 여부
+    reserve_stop = MEMBER_RESERVE_PROHIBITION_ON
+    # 예약 가능 일자
+    reserve_avail_date = 7
+
+    if error is None:
+        setting_data = SettingTb.objects.filter(Q(setting_type='LT_RES_01') |
+                                                Q(setting_type='LT_RES_03') |
+                                                Q(setting_type='LT_RES_05'),
+                                                member_id=class_info.member_id,
+                                                class_tb_id=class_info.class_id, use=USE)
+
+        for setting_info in setting_data:
+            if setting_info.setting_type_cd == 'LT_RES_01':
+                reserve_avail_time = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_RES_03':
+                reserve_stop = int(setting_info.setting_info)
+            if setting_info.setting_type_cd == 'LT_RES_05':
+                reserve_avail_date = int(setting_info.setting_info)
+        # 예약 가능 일자 확인
+        reserve_avail_end_date = today + datetime.timedelta(days=reserve_avail_date)
+
+        # 예약 가능 시간 확인
+        reserve_avail_time_split = reserve_avail_time.split('-')
+        reserve_avail_start_time = datetime.datetime.strptime(reserve_avail_time_split[0], '%H:%M')
+        reserve_avail_end_time = datetime.datetime.strptime(reserve_avail_time_split[1], '%H:%M')
+
+    # 예약 정지 상태 확인
+    if reserve_stop == MEMBER_RESERVE_PROHIBITION_ON:
+        error = '현재 예약 등록/취소 정지 상태입니다.'
+
+    # 예약 가능 일자 확인
+    if error is None:
+        if select_date >= reserve_avail_end_date:
+            error = '오늘 기준 최대 +'+str(reserve_avail_date)+'일 까지 예약 등록/취소가 가능합니다.'
+        elif select_date < today:
+            error = '과거 일정은 예약 등록/취소가 불가능합니다.'
+
+    # 예약 가능 시간대 확인
+    if error is None:
+        if reserve_avail_start_time <= reserve_avail_end_time:
+            if now_time < reserve_avail_start_time:
+                error = '일정 등록/취소 가능 시간은 ' + reserve_avail_time_split[0] + '~' + reserve_avail_time_split[1] + ' 입니다.'
+            if now_time > reserve_avail_end_time:
+                error = '일정 등록/취소 가능 시간은 ' + reserve_avail_time_split[0] + '~' + reserve_avail_time_split[1] + ' 입니다.'
+        else:
+            if reserve_avail_start_time > now_time > reserve_avail_end_time:
+                error = '일정 등록/취소 가능 시간은 ' + reserve_avail_time_split[0] + '~' + reserve_avail_time_split[1] + ' 입니다.'
+
+    return error
+
+
+def func_check_select_time_reserve_setting(class_info, start_date, end_date, add_del_type):
+    error = None
+    datetime_now = timezone.now()
+    add_del_start_time = datetime.datetime.strptime(start_date.strftime('%H:%M'), '%H:%M')
+    add_del_end_time = datetime.datetime.strptime(end_date.strftime('%H:%M'), '%H:%M')
+    reserve_prohibition_date = 0
+    error_comment = ''
+
+    if error is None:
+        # 근접 예약 취소/등록 시간 : 구버전 호환 + 시간 단위
+        lt_res_enable_cancel_time_legacy = 0
+        # 강사 업무 시간 : 구버전 호환
+        lt_work_time_legacy = '00:00-23:59'
+        # 근접 예약 취소 시간 : 구버전 호환 위해 default -1 + 분 단위
+        lt_res_cancel_time = -1
+        # 근접 예약 등록 시간 : 구버전 호환 위해 default -1 + 분 단위
+        lt_res_enable_time = -1
+        # 강사 업무 시간
+        lt_work_time_avail = ['', '', '', '', '', '', '']
+
+        setting_data = SettingTb.objects.filter(member_id=class_info.member_id,
+                                                class_tb_id=class_info.class_id,
+                                                use=USE).exclude(Q(setting_type='LT_RES_01') |
+                                                                 Q(setting_type='LT_RES_03') |
+                                                                 Q(setting_type='LT_RES_05'))
+
+        for setting_info in setting_data:
+            if setting_info.setting_type_cd == 'LT_RES_02':
+                lt_res_enable_cancel_time_legacy = int(setting_info.setting_info)
+            if setting_info.setting_type_cd == 'LT_RES_04':
+                lt_work_time_legacy = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_SUN_TIME_AVAIL':
+                lt_work_time_avail[0] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_MON_TIME_AVAIL':
+                lt_work_time_avail[1] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_TUE_TIME_AVAIL':
+                lt_work_time_avail[2] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_WED_TIME_AVAIL':
+                lt_work_time_avail[3] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_THS_TIME_AVAIL':
+                lt_work_time_avail[4] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_FRI_TIME_AVAIL':
+                lt_work_time_avail[5] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_SAT_TIME_AVAIL':
+                lt_work_time_avail[6] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_RES_CANCEL_TIME':
+                lt_res_cancel_time = int(setting_info.setting_info)
+            if setting_info.setting_type_cd == 'LT_RES_ENABLE_TIME':
+                lt_res_enable_time = int(setting_info.setting_info)
+
+        # 근접 예약 등록 가능 시간 구버전 호환 + 시간 -> 분
+        if lt_res_enable_time == -1:
+            lt_res_enable_time = lt_res_enable_cancel_time_legacy * 60
+        # 근접 예약 취소 가능 시간 구버전 호환 + 시간 -> 분
+        if lt_res_cancel_time == -1:
+            lt_res_cancel_time = lt_res_enable_cancel_time_legacy*60
+
+        # 강사 업무 시간 구버전 호환
+        if lt_work_time_avail[0] == '':
+            lt_work_time_avail[0] = lt_work_time_legacy
+        if lt_work_time_avail[1] == '':
+            lt_work_time_avail[1] = lt_work_time_legacy
+        if lt_work_time_avail[2] == '':
+            lt_work_time_avail[2] = lt_work_time_legacy
+        if lt_work_time_avail[3] == '':
+            lt_work_time_avail[3] = lt_work_time_legacy
+        if lt_work_time_avail[4] == '':
+            lt_work_time_avail[4] = lt_work_time_legacy
+        if lt_work_time_avail[5] == '':
+            lt_work_time_avail[5] = lt_work_time_legacy
+        if lt_work_time_avail[6] == '':
+            lt_work_time_avail[6] = lt_work_time_legacy
+
+        # 선택한 일자의 강사 업무 시간 확인
+        work_avail_start_time = datetime.datetime.strptime(lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[0],
+                                                           '%H:%M')
+        work_avail_end_time = datetime.datetime.strptime(lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[1],
+                                                         '%H:%M')
+
+        # 근접 예약 등록 가능 시간 셋팅
+        if add_del_type == ADD_SCHEDULE:
+            reserve_prohibition_time = lt_res_enable_time
+        else:
+            reserve_prohibition_time = lt_res_cancel_time
+
+        # 근접 예약 등록 가능 시간이 일 단위를 넘는 경우
+        if reserve_prohibition_time >= 24*60:
+            reserve_prohibition_date = int(reserve_prohibition_time/60/24)
+
+        # 근접 예약 시간 확인
+        reserve_disable_time = datetime_now + datetime.timedelta(minutes=reserve_prohibition_time)
+
+        # 근접 예약 시간에 따른 error 코멘트
+        if reserve_prohibition_date > 0:
+            error_comment = '수업 시작 '+str(reserve_prohibition_date)+'일 전까지 예약'
+        else:
+            error_comment = '수업 시작 '+str(int(reserve_prohibition_time/60))+'시간 전까지 예약'
+
+    # 강사 업무 시간 확인
+    if error is None:
+        if add_del_start_time < work_avail_start_time:
+            error = '강사 업무시간이 아닙니다.'
+
+        if add_del_end_time > work_avail_end_time:
+            error = '강사 업무시간이 아닙니다.'
+
+    # 근접 예약 시간 확인
+    if error is None:
+        if start_date < timezone.now():
+            error = '이미 지난 일정 입니다.'
+        else:
+            if start_date < reserve_disable_time:
+                if add_del_type == ADD_SCHEDULE:
+                    error = error_comment+' 등록이 가능합니다.'
+                else:
+                    error = error_comment+' 취소가 가능합니다.'
+
+    return error

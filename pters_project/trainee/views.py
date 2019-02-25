@@ -36,9 +36,9 @@ from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
     func_date_check, func_refresh_lecture_count
 from .functions import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
-    func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_schedule_setting, \
+    func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
     func_get_lecture_connection_list, func_get_trainee_next_schedule_by_class_id, func_get_trainee_select_schedule, \
-    func_get_trainee_ing_lecture_list
+    func_get_trainee_ing_lecture_list, func_check_select_date_reserve_setting
 
 logger = logging.getLogger(__name__)
 
@@ -350,6 +350,10 @@ def add_trainee_schedule_logic(request):
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
             error = '수강 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        error = func_check_select_date_reserve_setting(class_info, training_date)
+
     if error is None:
         try:
             setting_data = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
@@ -377,7 +381,7 @@ def add_trainee_schedule_logic(request):
                     error = '이미 결석 처리된 일정입니다.'
 
     if error is None:
-        error = func_check_schedule_setting(class_id, start_date, end_date, ADD_SCHEDULE)
+        error = func_check_select_time_reserve_setting(class_info, start_date, end_date, ADD_SCHEDULE)
 
     if error is None:
         if group_schedule_id == '' or group_schedule_id is None:
@@ -524,7 +528,7 @@ def delete_trainee_schedule_logic(request):
 
     if error is None:
         if error is None:
-            error = func_check_schedule_setting(class_id, start_date, end_date, DEL_SCHEDULE)
+            error = func_check_select_time_reserve_setting(class_id, start_date, end_date, DEL_SCHEDULE)
 
     if error is None:
         try:
@@ -1580,7 +1584,8 @@ class PopupCalendarPlanView(TemplateView):
         context['date_format'] = datetime.datetime.strptime(select_date, '%Y-%m-%d')
         if class_id is not None and class_id != '':
             context = func_get_trainee_select_schedule(context, class_id, self.request.user.id, select_date)
-
+        # if len(context['schedule_data']) == 0:
+        #     return redirect('/trainee/popup_calendar_plan_reserve/')
         return context
 
 
@@ -1589,11 +1594,13 @@ class PopupCalendarPlanReserveView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanReserveView, self).get_context_data(**kwargs)
-        # class_id = self.request.session.get('class_id')
-        # select_date = self.request.GET.get('select_date')
-        #
-        # context['error'] = None
-        # context['select_date'] = select_date
+        class_id = self.request.session.get('class_id')
+        select_date = self.request.GET.get('select_date')
+
+        context['error'] = None
+        context['select_date'] = datetime.datetime.strptime(select_date, '%Y-%m-%d')
+
+
 
         return context
 

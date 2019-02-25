@@ -110,12 +110,12 @@
         <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.fundamental.js" %}></script>
         <script type="text/javascript">
 
-{#            {% load background_trainee_data %}#}
-{#            {% autoescape off %}#}
-{#            var setting_info = {% get_setting_info request %};#}
-{#            var auth_type_cd = {% get_function_auth_type_cd request %};#}
-{#            var auth_product_type_name = '{{ request.session.product_type_name }}';#}
-{#            {% endautoescape %}#}
+            {% load background_trainee_data %}
+            {% autoescape off %}
+            var setting_info = {% get_setting_info request %};
+            var auth_type_cd = {% get_function_auth_type_cd request %};
+            var auth_product_type_name = '{{ request.session.product_type_name }}';
+            {% endautoescape %}
             //기기 사이즈, 창사이즈 계산
             const windowWidth = $(window).width();
             const windowHeight = $(window).height();

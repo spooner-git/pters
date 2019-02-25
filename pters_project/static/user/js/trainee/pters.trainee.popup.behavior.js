@@ -66,6 +66,7 @@ let layer_popup = (function(){
 
     return {
         "open_layer_popup":function(call_method, popup_name, popup_size, animation_type, data){
+            console.log('test');
             if(call_method == POPUP_AJAX_CALL){
                 func_get_popup_ajax(popup_name, data);
             }else if(call_method==POPUP_BASIC){
