@@ -320,6 +320,59 @@ function show_error_message(message){
         return resultHour + ":" + resultMin;
     }
 
+    function substract_time(starttime, subvalue){
+        var shour = Number(starttime.split(':')[0]);
+        var smin = Number(starttime.split(':')[1]);
+        var subhour = Number(subvalue.split(':')[0]);
+        var submin = Number(subvalue.split(':')[1]);
+        if(submin > 60){
+            subhour = subhour + parseInt(submin/60);
+            submin = submin%60;
+        }
+
+        if(smin - submin >= 0){
+            if(shour - subhour >= 0){
+                var resultHour = shour - subhour;
+                var resultMin = smin - submin;
+            }else if(shour - subhour < 0){
+                var resultHour = 24 + (shour - subhour);
+                var resultMin = smin - submin;
+            }
+
+        }else if(smin - submin < 0){
+            if(shour - subhour > 0){
+                var resultHour = shour - subhour - 1;
+                var resultMin = smin + (60 - submin);
+                // var hourminus = parseInt( (submin + smin)/60 );
+                // var resultHour = shour - subhour - hourminus - 1;
+                // var resultMin = (smin - submin)%60;
+                // if(resultMin < 0){
+                //  resultMin = 60 + resultMin;
+                // }
+
+            }else if(shour - subhour <= 0){
+                var resultHour = 24 + (shour - subhour) - 1;
+                var resultMin = smin + (60 - submin);
+                // var hourminus = parseInt( (smin - submin)/60 );
+                // var resultHour = shour - subhour + hourminus - 1;
+                // var resultMin = (smin - submin)%60;
+                // if(resultMin < 0){
+                //  resultMin = 60 + resultMin;
+                // }
+            }
+        }
+
+        if(resultHour<10){
+            var resultHour = '0' + resultHour;
+        }
+        if(resultMin<10){
+            var resultMin = '0' + resultMin;
+        }
+
+
+        return resultHour + ":" + resultMin;
+    }
+
     function compare_time(time1, time2){
         var hour1 = time1.split(':')[0];
         var min1  = time1.split(':')[1];
@@ -334,6 +387,29 @@ function show_error_message(message){
         }else{
             return false;
         }
+    }
+
+    function date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_m_d, resultSplit){
+        var yyyy = '';
+        var mm = '';
+        var dd = '';
+        if(yyyy_m_d.split('-').length == 3){
+            yyyy = String(yyyy_m_d.split('-')[0]);
+            mm = String(yyyy_m_d.split('-')[1]);
+            dd = String(yyyy_m_d.split('-')[2]);
+        }else if(yyyy_m_d.split('_').length == 3){
+            yyyy = String(yyyy_m_d.split('_')[0]);
+            mm = String(yyyy_m_d.split('_')[1]);
+            dd = String(yyyy_m_d.split('_')[2]);
+        }
+
+        if(mm.length<2){
+            mm = '0' + mm;
+        }
+        if(dd.length<2){
+            dd = '0' + dd;
+        }
+        return yyyy+resultSplit+mm+resultSplit+dd;
     }
 //예약 팝업 드랍다운을 채워주기 위해 들어온 예전 함수들
 
