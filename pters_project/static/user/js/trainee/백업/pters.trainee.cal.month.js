@@ -2554,5 +2554,4 @@ function compare_times_to_merge_min_max(s_date, e_date, s_date2, e_date2){
         console.log("날짜 값이 다릅니다.");
         return false
     }
-
 }
