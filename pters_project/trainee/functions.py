@@ -735,10 +735,10 @@ def func_get_trainee_reserve_schedule_list(context, class_id, user_id, group_id,
 
         setting_data = SettingTb.objects.filter(member_id=class_info.member_id,
                                                 class_tb_id=class_info.class_id,
-                                                use=USE).exclude(Q(setting_type='LT_RES_01') |
-                                                                 Q(setting_type='LT_RES_03') |
-                                                                 Q(setting_type='LT_RES_05') |
-                                                                 Q(setting_type='LT_RES_CANCEL_TIME'))
+                                                use=USE).exclude(Q(setting_type_cd='LT_RES_01') |
+                                                                 Q(setting_type_cd='LT_RES_03') |
+                                                                 Q(setting_type_cd='LT_RES_05') |
+                                                                 Q(setting_type_cd='LT_RES_CANCEL_TIME'))
         for setting_info in setting_data:
             if setting_info.setting_type_cd == 'LT_RES_02':
                 lt_res_enable_cancel_time_legacy = int(setting_info.setting_info)
@@ -864,9 +864,9 @@ def func_check_select_date_reserve_setting(class_info, select_date):
     reserve_avail_date = 7
 
     if error is None:
-        setting_data = SettingTb.objects.filter(Q(setting_type='LT_RES_01') |
-                                                Q(setting_type='LT_RES_03') |
-                                                Q(setting_type='LT_RES_05'),
+        setting_data = SettingTb.objects.filter(Q(setting_type_cd='LT_RES_01') |
+                                                Q(setting_type_cd='LT_RES_03') |
+                                                Q(setting_type_cd='LT_RES_05'),
                                                 member_id=class_info.member_id,
                                                 class_tb_id=class_info.class_id, use=USE)
 
@@ -932,9 +932,9 @@ def func_check_select_time_reserve_setting(class_info, start_date, end_date, add
 
         setting_data = SettingTb.objects.filter(member_id=class_info.member_id,
                                                 class_tb_id=class_info.class_id,
-                                                use=USE).exclude(Q(setting_type='LT_RES_01') |
-                                                                 Q(setting_type='LT_RES_03') |
-                                                                 Q(setting_type='LT_RES_05'))
+                                                use=USE).exclude(Q(setting_type_cd='LT_RES_01') |
+                                                                 Q(setting_type_cd='LT_RES_03') |
+                                                                 Q(setting_type_cd='LT_RES_05'))
 
         for setting_info in setting_data:
             if setting_info.setting_type_cd == 'LT_RES_02':
