@@ -863,6 +863,15 @@ def func_check_select_date_reserve_setting(class_info, select_date):
     # 예약 가능 일자
     reserve_avail_date = 7
 
+    try:
+        select_date = datetime.datetime.strptime(select_date + ' 00:00', '%Y-%m-%d %H:%M')
+    except ValueError:
+        error = '등록 값에 문제가 있습니다.'
+    except IntegrityError:
+        error = '등록 값에 문제가 있습니다.'
+    except TypeError:
+        error = '등록 값의 형태에 문제가 있습니다.'
+
     if error is None:
         setting_data = SettingTb.objects.filter(Q(setting_type_cd='LT_RES_01') |
                                                 Q(setting_type_cd='LT_RES_03') |
