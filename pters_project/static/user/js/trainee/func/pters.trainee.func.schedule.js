@@ -37,7 +37,7 @@ function func_schedule(data, call_method, type){
                 }else{
                     //성공
                     if(type == ADD){
-                        layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve_complete', 100, POPUP_FROM_RIGHT);
+                        layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve_complete', 90, POPUP_FROM_BOTTOM);
                     }else if(type == DELETE){
                         layer_popup.all_close_layer_popup();
                     }
