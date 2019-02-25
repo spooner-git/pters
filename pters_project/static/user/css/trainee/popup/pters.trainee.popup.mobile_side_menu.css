@@ -1,6 +1,6 @@
 /*모바일 사이드 메뉴*/
     .pters_mobile_side_menu{
-        margin-top: 25px;
+        /*margin-top: 25px;*/
         padding: 0 20px;
     }
         .pters_mobile_side_menu .obj_font_size_20_weight_bold{
@@ -28,3 +28,5 @@
             width: 80px;
             vertical-align: top;
         }
+
+        

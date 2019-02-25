@@ -364,6 +364,15 @@ function pters_month_calendar(calendar_name, calendar_options){
                                     );
 
         }
+        if(html_to_join_array.length == 0){
+            html_to_join_array.push(
+                                        `
+                                        <div class="obj_box_full" style="height:70px;text-align:center;margin-top:5px;">
+                                            <div class="obj_font_size_12_weight_500 obj_font_color_dark_grey" style="line-height:70px;">일정이 없습니다.</div>
+                                        </div>
+                                        `
+                                    );
+        }
         let html = html_to_join_array.join('');
 
 

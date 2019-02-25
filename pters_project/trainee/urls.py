@@ -61,7 +61,7 @@ urlpatterns = [
         name='get_trainee_group_end_list'),
 
     # 알람 기능 #####################################################################################################
-    url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
+    url(r'^trainee_alarm/$', views.AlarmView.as_view(), name='trainee_alarm'),
     url(r'^get_alarm_ajax/$', views.AlarmViewAjax.as_view(), name='get_alarm_ajax'),
 
 
