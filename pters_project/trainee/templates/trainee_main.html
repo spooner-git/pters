@@ -164,6 +164,14 @@
             $('#form_program_select').submit();
         }
 
+        window.addEventListener('load', function () {
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                alert('{{ message }}');
+            {% endif %}
+        {% endfor %}
+        });
+
     </script>
 
 {% endblock %}
