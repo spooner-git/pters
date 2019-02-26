@@ -528,8 +528,10 @@ def delete_trainee_schedule_logic(request):
             error = '회원 정보를 불러오지 못했습니다.'
 
     if error is None:
-        if error is None:
-            error = func_check_select_time_reserve_setting(class_id, class_info.member_id, start_date, end_date, DEL_SCHEDULE)
+        error = func_check_select_date_reserve_setting(class_id, class_info.member_id, str(start_date).split(' ')[0])
+
+    if error is None:
+        error = func_check_select_time_reserve_setting(class_id, class_info.member_id, start_date, end_date, DEL_SCHEDULE)
 
     if error is None:
         try:
