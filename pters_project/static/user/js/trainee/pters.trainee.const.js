@@ -39,4 +39,16 @@ const READ = 'read';
 const UPDATE = 'update';
 const DELETE = 'delete';
 
+const IOS = 'ios';
+const ANDROID = 'android';
+const WINDOW = 'window';
+
+const PC = 'pc';
+const MOBILE = 'mobile';
+
+const SAFARI = 'safari';
+const FIREFOX = 'firefox';
+const CHROME = 'chrome';
+const EDGE = 'edge';
+
 /**/

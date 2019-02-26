@@ -144,31 +144,31 @@
             const varUA = navigator.userAgent.toLowerCase();
 
             //기기종류 판단
-            var device = 'pc';
-            var os = 'ios';
-            var browser = 'chrome';
+            var device = PC;
+            var os = IOS;
+            var browser = CHROME;
             if (varUA.match(/android/) != null) {
-                device = 'mobile';
-                os = 'android';
+                device = MOBILE;
+                os = ANDROID;
             }else if (varUA.match(/iphone/) != null || varUA.match(/ipad/) != null || varUA.match(/ipod/) != null) {
-                device = 'mobile';
-                os = 'ios';
+                device = MOBILE;
+                os = IOS;
             }else if (varUA.match(/macintosh/) != null){
-                device = 'pc';
-                os = 'ios';
+                device = PC;
+                os = IOS;
             }else{
-                device = 'pc';
-                os = 'window';
+                device = PC;
+                os = WINDOW;
             }
 
             if (varUA.match(/firefox/) != null) {
-                browser = 'firefox';
+                browser = FIREFOX;
             }else if (varUA.match(/chrome/) != null || varUA.match(/chromium/) != null) {
-                browser = 'chrome';
+                browser = CHROME;
             }else if (varUA.match(/safari/) != null) {
-                browser = 'safari';
+                browser = SAFARI;
             }else if (varUA.match(/edge/) != null) {
-                browser = 'edge';
+                browser = EDGE;
             }
 
             //content 높이와 스크롤 셋팅

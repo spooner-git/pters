@@ -76,9 +76,11 @@
         $(document).off("click", '#id_ticket_detail_expand_in_reserve');
         
         $(document).on("click", '#id_ticket_detail_expand_in_reserve', function(){
+
             let $this = $(this);
             let option = $this.attr("data-open");
             let wrapper_my_ticket_detail_in_reserve = $('#wrapper_ticket_info');
+
             switch(option){
                 case OPEN:
                     $this.attr({"data-open": CLOSE,
