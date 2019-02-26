@@ -149,6 +149,7 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         class_id = self.request.session.get('class_id')
         context['error'] = None
         if class_id is not None and class_id != '':
+            context = func_get_class_list(context, self.request.user.id)
             context = func_get_trainee_next_schedule_by_class_id(context, class_id, self.request.user.id)
             context = func_get_trainee_ing_lecture_list(context, class_id, self.request.user.id)
 
@@ -750,28 +751,38 @@ class GetTraineeCountView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 def program_select_logic(request):
 
     class_id = request.POST.get('class_id', '')
-    lecture_id = request.POST.get('lecture_id', '')
+    # lecture_id = request.POST.get('lecture_id', '')
     lecture_connection_check = request.POST.get('lecture_connection_check', PROGRAM_SELECT)
     next_page = request.POST.get('next_page', '/trainee/trainee_main/')
     error = None
-
-    if lecture_connection_check == PROGRAM_LECTURE_CONNECT_DELETE:
-        if lecture_id == '':
-            error = '수강정보를 불러오지 못했습니다.'
-    else:
-        if class_id == '':
-            error = '수강정보를 불러오지 못했습니다.'
+    # if lecture_connection_check == PROGRAM_LECTURE_CONNECT_DELETE:
+    #     if lecture_id == '':
+    #         error = '수강정보를 불러오지 못했습니다.'
+    # else:
+    lecture_connection_check = int(lecture_connection_check)
+    if class_id == '':
+        error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         if lecture_connection_check == PROGRAM_LECTURE_CONNECT_DELETE:
-            # 선택한 수강권 삭제
-            try:
-                member_lecture = MemberLectureTb.objects.get(lecture_tb_id=lecture_id,
-                                                             member_id=request.user.id)
-                member_lecture.auth_cd = 'DELETE'
-                member_lecture.save()
-            except ObjectDoesNotExist:
-                error = None
+            # 선택한 프로그램의 연결 대기중인 수강권 전부 삭제
+            query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
+                                 " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = " + str(request.user.id) \
+                                 + " and B.USE=1"
+
+            lecture_data = ClassLectureTb.objects.select_related('class_tb', 'lecture_tb__member').filter(
+                class_tb_id=class_id, lecture_tb__member_id=request.user.id,
+                use=USE).annotate(member_auth_cd=RawSQL(query_auth_type_cd,
+                                                        [])).filter(member_auth_cd='WAIT').order_by('-lecture_tb__start_date')
+            for lecture_info in lecture_data:
+                try:
+                    member_lecture = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id,
+                                                                 member_id=request.user.id)
+                    member_lecture.auth_cd = 'DELETE'
+                    member_lecture.save()
+                except ObjectDoesNotExist:
+                    error = None
+
         elif lecture_connection_check == PROGRAM_LECTURE_CONNECT_ACCEPT:
             # 선택한 프로그램의 연결 대기중인 수강권 전부 연결
             query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
@@ -780,8 +791,8 @@ def program_select_logic(request):
 
             lecture_data = ClassLectureTb.objects.select_related('class_tb', 'lecture_tb__member').filter(
                 class_tb_id=class_id, lecture_tb__member_id=request.user.id,
-                use=USE).annotate(auth_type_cd=RawSQL(query_auth_type_cd,
-                                                      [])).filter(auth_type_cd='WAIT').order_by('-lecture_tb__start_date')
+                use=USE).annotate(member_auth_cd=RawSQL(query_auth_type_cd,
+                                                      [])).filter(member_auth_cd='WAIT').order_by('-lecture_tb__start_date')
 
             for lecture_info in lecture_data:
                 try:
@@ -1599,8 +1610,6 @@ class PopupCalendarPlanReserveView(TemplateView):
 
         context['error'] = None
         context['select_date'] = datetime.datetime.strptime(select_date, '%Y-%m-%d')
-
-
 
         return context
 

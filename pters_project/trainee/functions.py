@@ -574,6 +574,7 @@ def func_get_class_list(context, member_id):
                                                            ).exclude(member_auth_cd='DELETE').order_by('class_tb_id')
 
     class_list = []
+    # wait_class_list = []
     if len(class_lecture_data) > 0:
         for class_lecture_info in class_lecture_data:
             class_id = class_lecture_info.class_tb_id

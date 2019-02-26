@@ -716,10 +716,10 @@ class GetTraineeCountView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
 def lecture_processing(request):
 
-    lecture_id = request.POST.get('lecture_id', '')
+    # lecture_id = request.POST.get('lecture_id', '')
     class_id = request.POST.get('class_id', '')
     check = request.POST.get('check', '')
-    next_page = request.POST.get('next_page')
+    next_page = request.POST.get('next_page', '/trainee/main/')
     context = {}
     error = None
 
@@ -766,7 +766,7 @@ def lecture_processing(request):
 
         if check != 1:
             request.session['class_id'] = class_id
-            request.session['lecture_id'] = lecture_id
+            # request.session['lecture_id'] = lecture_id
             class_info = None
 
             try:
