@@ -352,7 +352,7 @@ def add_trainee_schedule_logic(request):
             error = '수강 정보를 불러오지 못했습니다.'
 
     if error is None:
-        error = func_check_select_date_reserve_setting(class_info, training_date)
+        error = func_check_select_date_reserve_setting(class_id, class_info.member_id, training_date)
 
     if error is None:
         try:
@@ -381,7 +381,7 @@ def add_trainee_schedule_logic(request):
                     error = '이미 결석 처리된 일정입니다.'
 
     if error is None:
-        error = func_check_select_time_reserve_setting(class_info, start_date, end_date, ADD_SCHEDULE)
+        error = func_check_select_time_reserve_setting(class_id, class_info.member_id, start_date, end_date, ADD_SCHEDULE)
 
     if error is None:
         if group_schedule_id == '' or group_schedule_id is None:
@@ -528,7 +528,7 @@ def delete_trainee_schedule_logic(request):
 
     if error is None:
         if error is None:
-            error = func_check_select_time_reserve_setting(class_id, start_date, end_date, DEL_SCHEDULE)
+            error = func_check_select_time_reserve_setting(class_id, class_info.member_id, start_date, end_date, DEL_SCHEDULE)
 
     if error is None:
         try:

@@ -721,7 +721,7 @@ def func_get_trainee_reserve_schedule_list(context, class_id, user_id, group_id,
         error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        error = func_check_select_date_reserve_setting(class_info, select_date)
+        error = func_check_select_date_reserve_setting(class_id, class_info.member_id, select_date)
 
     if error is None:
         # 근접 예약 취소/등록 시간 : 구버전 호환 + 시간 단위
@@ -849,7 +849,7 @@ def func_get_trainee_reserve_schedule_list(context, class_id, user_id, group_id,
     return context
 
 
-def func_check_select_date_reserve_setting(class_info, select_date):
+def func_check_select_date_reserve_setting(class_id, trainer_id, select_date):
     error = None
     datetime_now = timezone.now()
     today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -876,8 +876,8 @@ def func_check_select_date_reserve_setting(class_info, select_date):
         setting_data = SettingTb.objects.filter(Q(setting_type_cd='LT_RES_01') |
                                                 Q(setting_type_cd='LT_RES_03') |
                                                 Q(setting_type_cd='LT_RES_05'),
-                                                member_id=class_info.member_id,
-                                                class_tb_id=class_info.class_id, use=USE)
+                                                member_id=trainer_id,
+                                                class_tb_id=class_id, use=USE)
 
         for setting_info in setting_data:
             if setting_info.setting_type_cd == 'LT_RES_01':
@@ -919,7 +919,7 @@ def func_check_select_date_reserve_setting(class_info, select_date):
     return error
 
 
-def func_check_select_time_reserve_setting(class_info, start_date, end_date, add_del_type):
+def func_check_select_time_reserve_setting(class_id, trainer_id, start_date, end_date, add_del_type):
     error = None
     datetime_now = timezone.now()
     add_del_start_time = datetime.datetime.strptime(start_date.strftime('%H:%M'), '%H:%M')
@@ -939,8 +939,8 @@ def func_check_select_time_reserve_setting(class_info, start_date, end_date, add
         # 강사 업무 시간
         lt_work_time_avail = ['', '', '', '', '', '', '']
 
-        setting_data = SettingTb.objects.filter(member_id=class_info.member_id,
-                                                class_tb_id=class_info.class_id,
+        setting_data = SettingTb.objects.filter(member_id=trainer_id,
+                                                class_tb_id=class_id,
                                                 use=USE).exclude(Q(setting_type_cd='LT_RES_01') |
                                                                  Q(setting_type_cd='LT_RES_03') |
                                                                  Q(setting_type_cd='LT_RES_05'))
