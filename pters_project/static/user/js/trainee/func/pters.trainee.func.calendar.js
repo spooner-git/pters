@@ -210,7 +210,10 @@ function pters_month_calendar(calendar_name, calendar_options){
 
 
     function func_move_month(direction){
-        $(`#${calendar_name}_go_${direction}_month`).trigger('click');
+        if( $(`.${calendar_name}_wrapper_month_cal`).css('display') == "block"){
+            $(`#${calendar_name}_go_${direction}_month`).trigger('click');
+        }
+        
     }
 
     function func_set_touch_move_to_month_calendar(input_target_html){
@@ -300,6 +303,7 @@ function pters_month_calendar(calendar_name, calendar_options){
      * @param jsondata.classTimeArray_start_date    시작 시각.
      */
     function func_draw_schedule_data(jsondata){
+        $('.schedule_marking, .schedule_marking_group').remove();
         let schedule_number_dic = {"general":{}, "group":{}};
         let date_cache = [];
         let date_cache_group = [];
@@ -382,7 +386,6 @@ function pters_month_calendar(calendar_name, calendar_options){
     }
 
     function func_make_schedule_data_for_timeline(jsondata){
-        console.log(jsondata)
         let json = jsondata;
         let len = json.classTimeArray_start_date.length;
         let dic = {};
@@ -488,6 +491,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                 input_reference_date = current_year+'-'+(current_month+1)+'-'+1;
             }
             func_get_ajax_schedule_data(input_reference_date, "callback", function(jsondata){
+                console.log('여기', jsondata)
                 func_draw_schedule_data(jsondata);
             });
         },
