@@ -210,7 +210,10 @@ function pters_month_calendar(calendar_name, calendar_options){
 
 
     function func_move_month(direction){
-        $(`#${calendar_name}_go_${direction}_month`).trigger('click');
+        if( $(`.${calendar_name}_wrapper_month_cal`).css('display') == "block"){
+            $(`#${calendar_name}_go_${direction}_month`).trigger('click');
+        }
+        
     }
 
     function func_set_touch_move_to_month_calendar(input_target_html){
