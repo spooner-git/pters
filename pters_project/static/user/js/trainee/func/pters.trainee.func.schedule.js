@@ -14,6 +14,7 @@
 
 function func_schedule(data, call_method, type){
     if(call_method == CALL_AJAX){
+        console.log(data)
         $.ajax({
             url: `/trainee/${type}_trainee_schedule/`,
             data: data,
@@ -26,6 +27,7 @@ function func_schedule(data, call_method, type){
                 }
             },
             success:function(result_data){
+                console.log(result_data)
                 let jsondata = JSON.parse(result_data);
                 /**
                  * @param jsondata.messageArray

@@ -142,8 +142,9 @@
                 let this_year = selected_date_split[0];
                 let this_month = selected_date_split[1];
                 let this_date = selected_date_split[2];
-                let thisDay = new Date(this_year, this_month, this_date).getDay();
+                let thisDay = new Date(this_year, Number(this_month)-1, this_date).getDay();
 
+                console.log(selected_date)
                 console.log('thisDay',thisDay)
 
                 let workStartTime_ = time_h_m_to_hh_mm(setting_info.setting_trainer_work_time_available[thisDay].split('-')[0]);
