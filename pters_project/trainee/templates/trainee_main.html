@@ -48,8 +48,11 @@
 
                 {% if next_schedule_info %}
                     <div class="obj_box_full_grey">
-                        <div class="wrapper_tag">
+                        <!-- <div class="wrapper_tag">
                             <div class="obj_tag obj_font_bg_white_black">예약완료</div>
+                        </div> -->
+                        <div  class="wrapper_img_lesson_type">
+                            <img src="{% static_url "common/icon/people_black.png" %}">
                         </div>
                         <div class="wrapper_lecture_title obj_font_size_15_weight_500">
                             ({{ next_schedule_info.group_type_name }}) {{ next_schedule_info.group_name }}

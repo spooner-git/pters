@@ -48,7 +48,9 @@
                 </div>
                 {% for class_info in class_data %}
                 <div class="obj_table_raw wrapper_my_ticket_detail_teacher">
-                    <div class="obj_table_cell_x3 obj_box_photo"></div>
+                    <div class="obj_table_cell_x3" style="width:30px;">
+                        <div class="obj_box_photo"></div>
+                    </div>
                     <div class="obj_table_cell_x3 wrapper_teacher_name">
                         <div class="obj_font_size_12_weight_500">{{ class_info.class_tb.member.name }}</div>
                         <div class="obj_font_size_11_weight_normal obj_font_color_light_grey">강사</div>
