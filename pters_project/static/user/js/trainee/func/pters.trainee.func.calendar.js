@@ -360,7 +360,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             }
             html_to_join_array.push(
                                     `
-                                        <div class="timeline_element_date">
+                                        <div class="timeline_element_date" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':'${date}'})">
                                             <div class="timeline_date_text obj_font_size_11_weight_bold">${date_format(date)["yyyy.mm.dd"]}</div>
                                             ${temp_array.join('')}
                                         </div>
