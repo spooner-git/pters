@@ -326,7 +326,6 @@ function pters_month_calendar(calendar_name, calendar_options){
         for(let date_group in schedule_number_dic["group"]){
             $(`#calendar_plan_cell_${date_group}`).html(`<div class="schedule_marking_group"></div>`);
         }
-
     }
     //일정 표기 관련
 
