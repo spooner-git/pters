@@ -326,7 +326,6 @@ function pters_month_calendar(calendar_name, calendar_options){
         for(let date_group in schedule_number_dic["group"]){
             $(`#calendar_plan_cell_${date_group}`).html(`<div class="schedule_marking_group"></div>`);
         }
-
     }
     //일정 표기 관련
 
@@ -334,10 +333,15 @@ function pters_month_calendar(calendar_name, calendar_options){
 
         let data_dic_form = func_make_schedule_data_for_timeline(jsondata);
         let $target_html = $('.wrapper_cal_timeline');
-
         let html_to_join_array = [];
-        for(let date in data_dic_form){
 
+        let reference_month = Number(reference_date.split('-')[1]);
+
+        for(let date in data_dic_form){
+            let date_month = Number(date.split('-')[1]);
+            if(date_month != reference_month){
+                continue;
+            }
             let temp_array = [];
             let len = data_dic_form[date].length;
             for(let i=0; i<len; i++){
@@ -348,23 +352,23 @@ function pters_month_calendar(calendar_name, calendar_options){
                 let schedule_id = split[3];
 
                 temp_array.push(
-                                `
-                                <div class="obj_table_raw" data-scheduleid=${schedule_id}>
-                                    <div class="obj_table_cell_x2">
-                                        <img src=""><span class="obj_font_size_14_weight_normal">${schedule_name}</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 타입</div>
+                                    `
+                                    <div class="obj_table_raw" data-scheduleid=${schedule_id}>
+                                        <div class="obj_table_cell_x2">
+                                            <img src=""><span class="obj_font_size_14_weight_normal">${schedule_name}</span><div class="obj_tag obj_font_bg_trans_pink obj_font_size_16_weight_bold">예약 타입</div>
+                                        </div>
+                                        <div class="obj_table_cell_x2 obj_font_size_14_weight_500">${schedule_time_start}~${schedule_time_end}</div>
                                     </div>
-                                    <div class="obj_table_cell_x2 obj_font_size_14_weight_500">${schedule_time_start}~${schedule_time_end}</div>
-                                </div>
-                                `
+                                    `
                                 );
             }
             html_to_join_array.push(
-                                    `
-                                        <div class="timeline_element_date">
+                                        `
+                                        <div class="timeline_element_date" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':'${date}'})">
                                             <div class="timeline_date_text obj_font_size_11_weight_bold">${date_format(date)["yyyy.mm.dd"]}</div>
                                             ${temp_array.join('')}
                                         </div>
-                                    `
+                                        `
                                     );
 
         }
@@ -379,8 +383,6 @@ function pters_month_calendar(calendar_name, calendar_options){
         }
         let html = html_to_join_array.join('');
 
-
-        
         $target_html.html(html);
         func_set_scrolling_to_timeline('.wrapper_cal_timeline');
     }

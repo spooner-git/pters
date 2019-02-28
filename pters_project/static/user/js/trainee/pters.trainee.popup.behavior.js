@@ -56,9 +56,11 @@ let layer_popup = (function(){
             popup_data = popup_array.pop();
             let $popup_selector = $(`.${popup_data.popup_name}`).parents('.popup_mobile');
             //팝업이 옆으로 닫히는 애니메이션이 종료된후 해당 팝업의 html을 지운다.
+            let $popup_selector_wrap = $(`#${popup_data.popup_name}`);
             setTimeout(function(){
                 $popup_selector.css({"transform": "translateX(100%)", "z-index":-10});
-                $(`#${popup_data.popup_name}`).remove();
+                //$(`#${popup_data.popup_name}`).remove();
+                $popup_selector_wrap.remove();
             }, 300);
         }
         return popup_data;
@@ -66,7 +68,8 @@ let layer_popup = (function(){
 
     return {
         "open_layer_popup":function(call_method, popup_name, popup_size, animation_type, data){
-            console.log('test');
+            if(func_prevent_double_click_set()) return;
+
             if(call_method == POPUP_AJAX_CALL){
                 func_get_popup_ajax(popup_name, data);
             }else if(call_method==POPUP_BASIC){
@@ -80,8 +83,8 @@ let layer_popup = (function(){
             setTimeout(function(){
                 let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
                 func_animation_set(OPEN, popup_data);
+                func_prevent_double_click_free();
             }, 0);
-
         },
 
         "close_layer_popup": function() {

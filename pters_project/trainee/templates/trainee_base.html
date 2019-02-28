@@ -37,6 +37,7 @@
         <link rel="icon" href="/static/common/favicon.ico">
         <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
         <link rel="shortcut icon" href="/static/common/favicon-48.png">
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
         <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.fundamental.css"%}>
         <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan.css"%}>
         <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.base.css" %}>
@@ -49,6 +50,7 @@
     <body>
         <script src={% static_url "user/js/trainee/pters.trainee.const.js" %}></script>
         <script src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
+        <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
         <!-- Google Tag Manager (noscript) -->
         <noscript>
             <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D" height="0" width="0" style="display:none;visibility:hidden"></iframe>
@@ -61,8 +63,8 @@
                 <div class="nav_trainee_menu_box_l">
                     <a href="{% url 'trainee:trainee_main' %}"><div id="nav_btn_home">홈</div></a>
                     <a href="{% url 'trainee:trainee_calendar' %}"><div id="nav_btn_plan">일정</div></a>
-{#                  <a href="{% url 'trainee:trainee_program' %}"><div id="nav_btn_program_select">프로그램 선택</div></a>#}
                     <a href="{% url 'trainee:trainee_alarm' %}"><div id="nav_btn_alarm">알림</div></a>
+                    <a href="{% url 'trainee:trainee_program' %}"><div id="nav_btn_program_select">프로그램</div></a>
                     <a href="{% url 'trainee:trainee_design_template' %}"><div id="nav_btn_guide" >가이드</div></a>
                 </div>
                 <div class="nav_trainee_menu_box_r">
@@ -107,8 +109,8 @@
 
         <!-- Placed at the end of the document so the pages load faster -->
         <script type="text/javascript" src={% static_url "user/js/trainee/func/pters.trainee.func.option.inspector.js" %}></script>
-        <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.popup.behavior.js" %}></script>
         <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.fundamental.js" %}></script>
+        <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.popup.behavior.js" %}></script>
         <script type="text/javascript">
 
             {% load background_trainee_data %}
