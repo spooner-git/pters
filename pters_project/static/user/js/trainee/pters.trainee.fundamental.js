@@ -62,8 +62,9 @@ function func_prevent_double_click_set(){
     if(double_click == true){
         setTimeout(function(){
             double_click = false;
+            return true;
         }, 1000);
-        return true;
+        
     }else{
         double_click = true;
         return false;
