@@ -60,11 +60,7 @@ function func_set_webkit_overflow_scrolling(target_selector){
 let double_click = false;
 function func_prevent_double_click_set(){
     if(double_click == true){
-        setTimeout(function(){
-            double_click = false;
-            return true;
-        }, 1000);
-        
+        return true;
     }else{
         double_click = true;
         return false;
