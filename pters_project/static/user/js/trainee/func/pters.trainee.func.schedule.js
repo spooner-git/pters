@@ -14,6 +14,7 @@
 
 function func_schedule(data, call_method, type){
     if(call_method == CALL_AJAX){
+        if(func_prevent_double_click_set()) return;
         $.ajax({
             url: `/trainee/${type}_trainee_schedule/`,
             data: data,
@@ -47,7 +48,7 @@ function func_schedule(data, call_method, type){
                 }
             },
             complete:function(){
-
+                func_prevent_double_click_free();
             },
 
             error:function(){

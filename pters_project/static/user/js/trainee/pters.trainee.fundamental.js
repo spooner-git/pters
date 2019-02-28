@@ -68,8 +68,5 @@ function func_prevent_double_click_set(){
 }
 
 function func_prevent_double_click_free(){
-    if(double_click == true){
-        double_click = false;
-    }
-    
+    double_click = false;
 }
