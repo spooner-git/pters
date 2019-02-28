@@ -83,7 +83,7 @@ let layer_popup = (function(){
             setTimeout(function(){
                 let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
                 func_animation_set(OPEN, popup_data);
-                  func_prevent_double_click_free();
+                  // func_prevent_double_click_free();
             }, 0);
         },
 
