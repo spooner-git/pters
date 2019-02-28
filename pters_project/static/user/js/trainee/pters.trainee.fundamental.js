@@ -68,6 +68,8 @@ function func_prevent_double_click_set(){
 }
 
 function func_prevent_double_click_free(){
-    console.log('2', double_click)
-    double_click = false;
+    if(double_click == true){
+        double_click = false;
+    }
+    
 }
