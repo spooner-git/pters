@@ -16,10 +16,12 @@ function pters_month_calendar(calendar_name, calendar_options){
     }
     let design_options = calendar_options.design_options;
 
-    const calendar_height = $(window).height() - parseInt($('body').css('padding-top'), 10) - 5;
+    const nav_height = parseInt($('body').css('padding-top'), 10);
+    const calendar_height = $(window).height() - nav_height - 5;
     const calendar_toolbox_height = 61;
     const calendar_month_day_name_text_height = 40;
     const calendar_timeline_toolbox_height = 35;
+    const calendar_month_inner_height = 332;
 
     let last_day_array = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];      //각 달의 일수
     let date = new Date();
@@ -143,8 +145,12 @@ function pters_month_calendar(calendar_name, calendar_options){
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7"></div>`);
                 }else{
 
-                    dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
-                                               onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':'${data_date}'})">
+                    // dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
+                    //                            onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':'${data_date}'})">
+                    //                            <div class="${font_color}">${date_cache}</div>
+                    //                            <div id="calendar_plan_cell_${data_date}"></div>
+                    //                       </div>`);
+                    dateCellsToJoin.push(`<div class="obj_table_cell_x7 month_date" data-date="${data_date}">
                                                <div class="${font_color}">${date_cache}</div>
                                                <div id="calendar_plan_cell_${data_date}"></div>
                                           </div>`);
@@ -365,7 +371,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             html_to_join_array.push(
                                         `
                                         <div class="timeline_element_date" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':'${date}'})">
-                                            <div class="timeline_date_text obj_font_size_11_weight_bold">${date_format(date)["yyyy.mm.dd"]}</div>
+                                            <div class="timeline_date_text obj_font_size_11_weight_bold" id="timeline_${date}">${date_format(date)["yyyy.mm.dd"]}</div>
                                             ${temp_array.join('')}
                                         </div>
                                         `
@@ -385,6 +391,7 @@ function pters_month_calendar(calendar_name, calendar_options){
 
         $target_html.html(html);
         func_set_scrolling_to_timeline('.wrapper_cal_timeline');
+        func_set_month_date_button_for_timeline();
     }
 
     function func_make_schedule_data_for_timeline(jsondata){
@@ -405,6 +412,26 @@ function pters_month_calendar(calendar_name, calendar_options){
             dic[json.classTimeArray_start_date[j].split(' ')[0]].push(schedule_name+' / '+schedule_start_time+' / '+schedule_end_time+' / '+schedule_id);
         }
         return dic;
+    }
+
+    function func_set_month_date_button_for_timeline(){
+        let timeline_date_text_loc_array = {};
+        let len = $('.timeline_date_text').length;
+        $('.timeline_date_text').each(function(){
+            let id = $(this).attr('id');
+            let loc = $(this).offset().top - nav_height -calendar_toolbox_height - calendar_month_inner_height - calendar_timeline_toolbox_height;
+            timeline_date_text_loc_array[id] = loc;
+        });
+
+
+        $('.month_date').click(function(){
+
+            let cliked_date = $(this).attr('data-date');
+            let desire_date_position =  timeline_date_text_loc_array[`timeline_${cliked_date}`];
+            $('.wrapper_cal_timeline').animate( { scrollTop : desire_date_position }, function(){
+                $('.wrapper_cal_timeline').animate( { scrollTop : desire_date_position }, 100 );
+            } );
+        });
     }
 
     function func_set_scrolling_to_timeline(target_selector){
@@ -499,7 +526,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         },
         "get_current_month":function(){
             return reference_date;
-        }
+        },
     };
 }
 
