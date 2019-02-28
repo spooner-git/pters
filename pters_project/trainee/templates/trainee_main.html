@@ -33,7 +33,9 @@
                     <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">새로운 프로그램</div>
                     <div class="wrapper_program_title obj_table_cell_x2 obj_font_size_18_weight_bold">{{ class_info.class_type_name }}</div>
                     <div class="obj_box_card obj_font_bg_white_black">
-                        <!--<div class="obj_font_size_15_weight_bold">나의 완벽한 라인을 위해</div>-->
+                        {% for class_lecture_info in class_info.class_lecture_data %}
+                        <div class="obj_font_size_15_weight_bold"> {{ class_lecture_info.package_tb.name }} </div>
+                        {% endfor %}
                         <div class="obj_font_size_12_weight_normal">{{ class_info.class_tb.member.name }} 강사</div>
                     </div>
                     <div class="wrapper_request_select_box">

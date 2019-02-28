@@ -8,7 +8,7 @@ from django.db.models.functions import Coalesce
 from django.utils import timezone
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, TO_TRAINEE_LESSON_ALARM_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
-    AUTO_FINISH_OFF, MEMBER_RESERVE_PROHIBITION_ON
+    AUTO_FINISH_OFF, MEMBER_RESERVE_PROHIBITION_ON, SCHEDULE_ABSENCE
 
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
@@ -593,10 +593,13 @@ def func_get_class_list(context, member_id):
                 if class_lecture_info.class_tb.subject_detail_nm is not None\
                         and class_lecture_info.class_tb.subject_detail_nm != '':
                     input_class_info.class_type_name = class_lecture_info.class_tb.subject_detail_nm
+
+                input_class_info.class_lecture_data = []
                 class_list.append(input_class_info)
 
             if input_class_info.member_auth_cd == 'WAIT':
                 input_class_info.np_lecture_counts += 1
+                input_class_info.class_lecture_data.append(class_lecture_info.lecture_tb)
             if input_class_info.member_auth_cd == 'VIEW':
                 input_class_info.lecture_counts += 1
                 input_class_info.lecture_rem_count += class_lecture_info.lecture_tb.lecture_rem_count

@@ -73,13 +73,18 @@
 		margin-right: 5px;
 		margin-left: 5px;
 		margin-bottom: 20px;
-		padding: 15px 10px;
+		padding: 10px;
+	}
+	.trainee_main .wrapper_new_request .wrapper_program_title{
+		padding-left: 5px;
 	}
 	.trainee_main .wrapper_new_request .obj_box_card{
 		text-align: center;
 	}
 	.trainee_main .wrapper_new_request .wrapper_request_select_box{
 		margin-top: 20px;
+		height: 30px;
+		line-height: 30px;
 	}
 	.trainee_main .wrapper_new_request .wrapper_request_select_box > div{
 		display: inline-block;
