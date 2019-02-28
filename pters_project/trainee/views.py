@@ -21,7 +21,8 @@ from el_pagination.views import AjaxListView
 # Create your views here.
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
-    SCHEDULE_DUPLICATION_DISABLE, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, PROGRAM_LECTURE_CONNECT_ACCEPT
+    SCHEDULE_DUPLICATION_DISABLE, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, PROGRAM_LECTURE_CONNECT_ACCEPT, \
+    SCHEDULE_ABSENCE
 
 from configs.views import AccessTestMixin
 
@@ -1655,6 +1656,8 @@ class PopupTicketInfoView(TemplateView):
             except ObjectDoesNotExist:
                 lecture_info.package_tb.package_type_cd_nm = ''
 
+            lecture_abs_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PC').count()
+            lecture_info.lecture_abs_count = lecture_abs_count
         context['class_data'] = class_list
         context['lecture_info'] = lecture_info
         return context
