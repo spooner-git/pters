@@ -68,7 +68,8 @@ let layer_popup = (function(){
 
     return {
         "open_layer_popup":function(call_method, popup_name, popup_size, animation_type, data){
-            console.log('test');
+            if(func_prevent_double_click_set()) return;
+
             if(call_method == POPUP_AJAX_CALL){
                 func_get_popup_ajax(popup_name, data);
             }else if(call_method==POPUP_BASIC){
@@ -82,8 +83,8 @@ let layer_popup = (function(){
             setTimeout(function(){
                 let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
                 func_animation_set(OPEN, popup_data);
+                func_prevent_double_click_free();
             }, 0);
-
         },
 
         "close_layer_popup": function() {

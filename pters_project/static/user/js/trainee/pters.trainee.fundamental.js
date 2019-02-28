@@ -41,7 +41,6 @@ const csrftoken = getCookie('csrftoken');
 
 
 function func_set_webkit_overflow_scrolling(target_selector){
-    console.log(os)
     if(os == IOS){
         let $selector = $(target_selector);
         $selector.scrollTop(1);
@@ -56,4 +55,19 @@ function func_set_webkit_overflow_scrolling(target_selector){
             }
         });
     }
+}
+
+let double_click = false;
+function func_prevent_double_click_set(){
+    if(double_click == true){
+        return true;
+    }else{
+        double_click = true;
+        return false;
+    }
+}
+
+function func_prevent_double_click_free(){
+    console.log('2', double_click)
+    double_click = false;
 }
