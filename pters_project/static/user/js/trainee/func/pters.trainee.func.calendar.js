@@ -425,12 +425,16 @@ function pters_month_calendar(calendar_name, calendar_options){
 
 
         $('.month_date').click(function(){
-
             let cliked_date = $(this).attr('data-date');
-            let desire_date_position =  timeline_date_text_loc_array[`timeline_${cliked_date}`];
-            $('.wrapper_cal_timeline').animate( { scrollTop : desire_date_position }, function(){
-                $('.wrapper_cal_timeline').animate( { scrollTop : desire_date_position }, 100 );
-            } );
+            let if_this_has_schedule = $(this).find('.schedule_marking').length;
+            if(if_this_has_schedule > 0){
+                let desire_date_position =  timeline_date_text_loc_array[`timeline_${cliked_date}`];
+                $('.wrapper_cal_timeline').animate( { scrollTop : desire_date_position }, function(){
+                    $('.wrapper_cal_timeline').animate( { scrollTop : desire_date_position }, 100 );
+                });
+            }else{
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':`${cliked_date}`});
+            }
         });
     }
 
