@@ -6,10 +6,12 @@ let layer_popup = (function(){
 
     function func_open_layer_popup(popup_name, popup_size, animation_type){
         let $popup_selector;
-        let popup_data = {};
+        let popup_data = {"popup_name":popup_name, "popup_size":popup_size, "animation_type":animation_type};
         //똑같은 팝업 여러개 못뜨도록
-        if(popup_array.indexOf(popup_data.popup_name) == -1){
-            popup_data = {"popup_name":popup_name, "popup_size":popup_size, "animation_type":animation_type};
+        console.log(popup_array);
+        console.log(popup_data);
+        if(popup_array.map(function(e) { return e.popup_name; }).indexOf(popup_name) == -1){
+            console.log('test11');
             popup_array.push(popup_data);
             let $popup_name_selector = $(`.${popup_name}`);
             $popup_selector = $popup_name_selector.parents('.popup_mobile');
@@ -30,6 +32,9 @@ let layer_popup = (function(){
                 $popup_name_selector.css({"height": popup_height + 'px', "overflow-y": "auto"});
             }
             $popup_selector.css({"z-index":100*popup_array.length});
+        }
+        else{
+            popup_data = {};
         }
         return popup_data;
     }
@@ -82,7 +87,9 @@ let layer_popup = (function(){
             let func_animation_set = this.animation_set;
             setTimeout(function(){
                 let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
-                func_animation_set(OPEN, popup_data);
+                if(popup_data!=undefined && Object.keys(popup_data).length > 0){
+                    func_animation_set(OPEN, popup_data);
+                }
                   // func_prevent_double_click_free();
             }, 0);
         },
