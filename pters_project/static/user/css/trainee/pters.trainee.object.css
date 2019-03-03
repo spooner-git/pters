@@ -73,6 +73,11 @@
         font-weight: bold;
         letter-spacing: -0.5px;
     }
+    .obj_font_size_18_weight_900{
+        font-size: 18px;
+        font-weight: 900;
+        letter-spacing: -0.5px;
+    }
     .obj_font_size_18_weight_bold{
         font-size: 18px;
         font-weight: bold;

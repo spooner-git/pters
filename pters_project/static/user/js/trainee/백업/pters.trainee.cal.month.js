@@ -27,8 +27,8 @@ $(document).ready(function(){
             url: '/schedule/check_schedule_update/',
             dataType : 'html',
 
-            beforeSend:function(){
-                //beforeSend();
+            beforeSend:function(xhr, settings){
+                func_ajax_before_send(xhr,settings, "ajaxCheckSchedule");
             },
 
             success:function(data){
@@ -45,7 +45,7 @@ $(document).ready(function(){
             },
 
             complete:function(){
-                //completeSend();
+                func_ajax_after_send("ajaxCheckSchedule");
             },
 
             error:function(){

@@ -184,8 +184,8 @@ $(document).ready(function(){
             dataType : 'html',
             type:'GET',
 
-            beforeSend:function(){
-                //AjaxBeforeSend();
+            beforeSend:function(xhr, settings){
+                func_ajax_before_send(xhr, settings, "get_trainee_schedule_history");
             },
 
             success:function(data){
@@ -199,7 +199,7 @@ $(document).ready(function(){
             },
 
             complete:function(){
-
+                func_ajax_after_send("get_trainee_schedule_history");
             },
 
             error:function(){
@@ -259,8 +259,8 @@ $(document).ready(function(){
             dataType : 'html',
             type:'GET',
 
-            beforeSend:function(){
-                //AjaxBeforeSend();
+            beforeSend:function(xhr, settings){
+                func_ajax_before_send(xhr,settings, "get_trainee_reg_history");
             },
 
             success:function(data){
@@ -279,7 +279,7 @@ $(document).ready(function(){
             },
 
             complete:function(){
-
+                func_ajax_after_send("get_trainee_reg_history");
             },
 
             error:function(){

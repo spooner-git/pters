@@ -115,12 +115,12 @@
 
             {% load background_trainee_data %}
             {% autoescape off %}
-            var get_setting = {% get_setting_info request %};
-            var auth_type_cd = {% get_function_auth_type_cd request %};
-            var auth_product_type_name = '{{ request.session.product_type_name }}';
+            let get_setting = {% get_setting_info request %};
+            let auth_type_cd = {% get_function_auth_type_cd request %};
+            let auth_product_type_name = '{{ request.session.product_type_name }}';
             {% endautoescape %}
 
-            var setting_info = {'class_hour':'{{request.session.class_hour}}',
+            let setting_info = {'class_hour':'{{request.session.class_hour}}',
                                 'class_type_name':'{{ request.session.class_type_name }}',
                                 'class_type_code':'{{ request.session.class_type_code}}',
                                 'class_center_name':'{{ request.session.class_center_name }}',
@@ -146,9 +146,9 @@
             const varUA = navigator.userAgent.toLowerCase();
 
             //기기종류 판단
-            var device = PC;
-            var os = IOS;
-            var browser = CHROME;
+            let device = PC;
+            let os = IOS;
+            let browser = CHROME;
             if (varUA.match(/android/) != null) {
                 device = MOBILE;
                 os = ANDROID;
@@ -174,7 +174,7 @@
             }
 
             //content 높이와 스크롤 셋팅
-            var $content = $('.content_page');
+            let $content = $('.content_page');
             $content.css("height", windowHeight-parseInt($('body').css("padding-top"), 10));
             // $content.scrollTop(1);
             // $content.scroll(function(){

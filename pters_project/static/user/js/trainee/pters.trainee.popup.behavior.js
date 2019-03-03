@@ -8,12 +8,10 @@ let layer_popup = (function(){
         let $popup_selector;
         let popup_data = {"popup_name":popup_name, "popup_size":popup_size, "animation_type":animation_type};
         //똑같은 팝업 여러개 못뜨도록
-        console.log(popup_array);
-        console.log(popup_data);
-        if(popup_array.map(function(e) { return e.popup_name; }).indexOf(popup_name) == -1){
-            console.log('test11');
+        let $popup_name_selector = $(`.${popup_name}`);
+        console.log($popup_name_selector);
+        if($popup_name_selector.length == 1){
             popup_array.push(popup_data);
-            let $popup_name_selector = $(`.${popup_name}`);
             $popup_selector = $popup_name_selector.parents('.popup_mobile');
             //왼쪽 오른쪽에서 팝업이 열리는 경우 height 조정을 100%와 동일하도록
             if(animation_type == POPUP_FROM_LEFT || animation_type == POPUP_FROM_RIGHT){
@@ -34,6 +32,8 @@ let layer_popup = (function(){
             $popup_selector.css({"z-index":100*popup_array.length});
         }
         else{
+            let $popup_name_selector = $(`#${popup_name}`);
+            $popup_name_selector.remove();
             popup_data = {};
         }
         return popup_data;
@@ -134,10 +134,7 @@ function func_get_popup_ajax(popup_name, data){
         async : false,
 
         beforeSend:function(xhr, settings){
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-            ajax_load_image(SHOW);
+            func_ajax_before_send(xhr, settings, popup_name);
         },
 
         success:function(data){
@@ -145,7 +142,7 @@ function func_get_popup_ajax(popup_name, data){
         },
 
         complete:function(){
-            ajax_load_image(HIDE);
+            func_ajax_after_send(popup_name);
         },
 
         error:function(){

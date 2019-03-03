@@ -1,4 +1,5 @@
 // 달력 관련
+/* global $, windowHeight, windowWidth, setting_info */
 function pters_month_calendar(calendar_name, calendar_options){
     const default_design_options = {"font_color_sunday":["obj_font_color_pters_dark_red"],
                                   "font_color_saturday":["obj_font_color_light_blue"],
@@ -30,6 +31,8 @@ function pters_month_calendar(calendar_name, calendar_options){
     let current_date = date.getDate();
     let today_yyyy_mm_dd = current_year+'-'+(current_month+1)+'-'+current_date;
     let reference_date = today_yyyy_mm_dd;
+    let original_height;
+    let expand_height;
 
     function func_month_calendar_basic_size(calendar_height){
         //달력을 감싸는 wrapper의 높이를 창크기에 맞춘다. (스크롤링 영역을 달력 안쪽으로만 잡기 위해서)
@@ -180,13 +183,14 @@ function pters_month_calendar(calendar_name, calendar_options){
 
 
         let time_line_height = calendar_height  - calendar_toolbox_height - calendar_month_day_name_text_height - 300 - calendar_timeline_toolbox_height;
+        time_line_height = time_line_height + "px";
         //상단의 연월 표기, 일월화수목 표기, 달력숫자를 합쳐서 화면에 그린다.
         $targetHTML.html(`${month_calendar_upper_tool}
                          <div class="obj_box_full ${calendar_name}_wrapper_month_cal">
                             ${month_day_name_text}${calendar_assembled}
                          </div>
                          ${timeline_calendar_upper_tool}
-                         <div class="obj_box_full wrapper_cal_timeline" style="height:${time_line_height}px">
+                         <div class="obj_box_full wrapper_cal_timeline" style="height:${time_line_height}">
                          </div>`);
 
     }
@@ -257,17 +261,14 @@ function pters_month_calendar(calendar_name, calendar_options){
             dataType : 'html',
 
             beforeSend:function(xhr, settings){
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-                //beforeSend();
+                func_ajax_before_send(xhr,settings, "func_get_ajax_schedule_data");
             },
-
 
             success:function(data){
                 let jsondata = JSON.parse(data);
                 /**
                  * @param jsondata.messageArray
+                 * @param jsondata.avail_date_data
                  **/
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
@@ -282,7 +283,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             },
 
             complete:function(){
-                //completeSend();
+                func_ajax_after_send("func_get_ajax_schedule_data");
             },
 
             error:function(){
@@ -307,6 +308,7 @@ function pters_month_calendar(calendar_name, calendar_options){
     /**
      * @param jsondata                              schedule json data object.
      * @param jsondata.classTimeArray_start_date    시작 시각.
+     * @param jsondata.group_schedule_start_datetime 그룹 스케쥴 시작 시각
      */
     function func_draw_schedule_data(jsondata){
         $('.schedule_marking, .schedule_marking_group').remove();
@@ -394,6 +396,13 @@ function pters_month_calendar(calendar_name, calendar_options){
         func_set_month_date_button_for_timeline();
     }
 
+    /**
+     * @param jsondata                              schedule json data object.
+     * @param jsondata.classTimeArray_start_date    시작 시각.
+     * @param jsondata.classTimeArray_end_date 종료 시각
+     * @param jsondata.scheduleIdArray 스케쥴 ID
+     * @param jsondata.schedule_group_name 스케쥴 그룹 명
+     */
     function func_make_schedule_data_for_timeline(jsondata){
         let json = jsondata;
         let len = json.classTimeArray_start_date.length;
@@ -416,11 +425,11 @@ function pters_month_calendar(calendar_name, calendar_options){
 
     function func_set_month_date_button_for_timeline(){
         let timeline_date_text_loc_array = {};
-        let len = $('.timeline_date_text').length;
+        // let len = $('.timeline_date_text').length;
+        // each 빼는 방법 고려해보기
         $('.timeline_date_text').each(function(){
             let id = $(this).attr('id');
-            let loc = $(this).offset().top - nav_height -calendar_toolbox_height - calendar_month_inner_height - calendar_timeline_toolbox_height;
-            timeline_date_text_loc_array[id] = loc;
+            timeline_date_text_loc_array[id] = $(this).offset().top - nav_height -calendar_toolbox_height - calendar_month_inner_height - calendar_timeline_toolbox_height;
         });
 
 
@@ -433,6 +442,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                     $('.wrapper_cal_timeline').animate( { scrollTop : desire_date_position }, 100 );
                 });
             }else{
+                console.log('month_date_click_check');
                 layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':`${cliked_date}`});
             }
         });
@@ -444,33 +454,36 @@ function pters_month_calendar(calendar_name, calendar_options){
 
     function func_set_expand_function(){
         $(document).on('click', `.${calendar_name}_expand_button`, function(){
-            let original_height;
-            let expand_height;
+            // let original_height;
+            // let expand_height;
             func_time_line_wide_view($(this).attr('data-open'));
         });
     }
 
     function func_time_line_wide_view(type){
+        let $calendar_name_expand_button = $(`.${calendar_name}_expand_button`);
+        let $calendar_name_wrapper_month_cal = $(`.${calendar_name}_wrapper_month_cal`);
+        let $wrapper_cal_timeline = $('.wrapper_cal_timeline');
         switch(type){
             case SHOW:
-                $(`.${calendar_name}_expand_button`).attr('data-open', HIDE);
-                $(`.${calendar_name}_wrapper_month_cal`).show();
-                $('.wrapper_cal_timeline').css('height', `${original_height}px`);
+                $calendar_name_expand_button.attr('data-open', HIDE);
+                $calendar_name_wrapper_month_cal.show();
+                $wrapper_cal_timeline.css('height', `${original_height}px`);
             break;
 
             case HIDE:
-                $(`.${calendar_name}_expand_button`).attr('data-open', SHOW);
-                $(`.${calendar_name}_wrapper_month_cal`).hide();
-                $('.wrapper_cal_timeline').css('height', `${expand_height}px`);
+                $calendar_name_expand_button.attr('data-open', SHOW);
+                $calendar_name_wrapper_month_cal.hide();
+                $wrapper_cal_timeline.css('height', `${expand_height}px`);
             break;
 
             case undefined:
-                original_height = parseInt($('.wrapper_cal_timeline').css('height'));
+                original_height = parseInt($wrapper_cal_timeline.css('height'));
                 expand_height = calendar_height - calendar_toolbox_height - calendar_timeline_toolbox_height;
-                console.log(calendar_height, calendar_toolbox_height, calendar_timeline_toolbox_height)
-                $(`.${calendar_name}_expand_button`).attr('data-open', SHOW);
-                $(`.${calendar_name}_wrapper_month_cal`).hide();
-                $('.wrapper_cal_timeline').css('height', `${expand_height}px`);
+                console.log(calendar_height, calendar_toolbox_height, calendar_timeline_toolbox_height);
+                $calendar_name_expand_button.attr('data-open', SHOW);
+                $calendar_name_wrapper_month_cal.hide();
+                $wrapper_cal_timeline.css('height', `${expand_height}px`);
         }
     }
 
@@ -524,7 +537,6 @@ function pters_month_calendar(calendar_name, calendar_options){
                 input_reference_date = current_year+'-'+(current_month+1)+'-'+1;
             }
             func_get_ajax_schedule_data(input_reference_date, "callback", function(jsondata){
-                console.log('여기', jsondata)
                 func_draw_schedule_data(jsondata);
             });
         },

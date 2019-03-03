@@ -357,7 +357,7 @@ $(document).ready(function(){
 
     function scrollToIndicator(){
         var offset = $('.currentTimeBox').offset();
-        console.log(offset)
+        console.log(offset);
         if(currentHour>=5){
             $('#slide1').animate({scrollTop : offset.top -180},500)
         }

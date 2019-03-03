@@ -45,9 +45,9 @@
                     <div class="obj_table_raw">
                         <select class="obj_font_size_14_weight_500 obj_font_color_light_grey" title="time_select">
                             <option selected disabled>예약 시간 선택</option>
-                            <option data-start="2019-02-26 08:00" data-end="2019-02-26 09:00">08:00 ~ 09:00</option>
-                            <option data-start="2019-02-26 11:00" data-end="2019-02-26 13:00">11:00 ~ 13:00</option>
-                            <option data-start="2019-02-26 21:00" data-end="2019-02-26 22:00">21:00 ~ 22:00</option>
+                            <option data-start="2019-03-04 08:00" data-end="2019-03-04 09:00">08:00 ~ 09:00</option>
+                            <option data-start="2019-03-04 11:00" data-end="2019-03-04 13:00">11:00 ~ 13:00</option>
+                            <option data-start="2019-03-04 21:00" data-end="2019-03-04 22:00">21:00 ~ 22:00</option>
                         </select>
                         <img src="/static/common/icon/expand_more_black.png" class="obj_icon_arrow">
                     </div>
@@ -70,74 +70,21 @@
 {% endblock %}
 
 {% block popup_base_js %}
+    <script type="text/javascript" src={% static_url "user/js/trainee/popup/pters.trainee.popup.calendar_plan_reserve.js" %}></script>
     <script type="text/javascript">
-        /*수강권 정보 열고 닫기*/
-        $('#id_ticket_detail_expand_in_reserve').attr("data-open", CLOSE);
-        $(document).off("click", '#id_ticket_detail_expand_in_reserve');
-        
-        $(document).on("click", '#id_ticket_detail_expand_in_reserve', function(){
-
-            let $this = $(this);
-            let option = $this.attr("data-open");
-            let wrapper_my_ticket_detail_in_reserve = $('#wrapper_ticket_info');
-
-            switch(option){
-                case OPEN:
-                    $this.attr({"data-open": CLOSE,
-                                "src": "/static/common/icon/expand_more_black.png"});
-                    wrapper_my_ticket_detail_in_reserve.hide();
-                break;
-
-                case CLOSE:
-                    $this.attr({"data-open": OPEN,
-                                "src": "/static/common/icon/expand_less_black.png"});
-                    wrapper_my_ticket_detail_in_reserve.show();
-                break;
-            }
-        });
-
-        $(document).on("change", "select[title='lecture_select']", function(){
-            let $selected_option = $(this).find('option:selected');
-            let selected_lecture_id = $selected_option.attr('data-lecture-id');
-            $('#form_content_lecture_id').val(selected_lecture_id);
-        });
-
-        $(document).on("change", "select[title='time_select']", function(){
-            let $selected_option = $(this).find('option:selected');
-
-            let start = $selected_option.attr('data-start').split(' ');
-            let end = $selected_option.attr('data-end').split(' ');
-
-            let start_date = start[0];
-            let start_time = start[1];
-            let end_date = end[0];
-            let end_time = end[1];
-            
-            $('#form_content_training_date').val(start_date);
-            $('#form_content_training_end_date').val(end_date);
-            $('#form_content_training_time').val(start_time);
-            $('#form_content_training_end_time').val(end_time);
-
-        });
-
-
-
         $(document).ready(function(){
-            console.log(setting_info);
-            console.log(auth_type_cd);
-
             let time_unit;
-            let start_time_option;
+            // let start_time_option;
             let selected_date = `{{ select_date }}`.split(' ')[0];
             let object_time = new Date();
             let currentTime = time_h_m_to_hh_mm(object_time.getHours()+':'+object_time.getMinutes());
             let currentDate = date_format_yyyy_m_d_to_yyyy_mm_dd(`${object_time.getFullYear()}-${object_time.getMonth()+1}-${object_time.getDate()}`, '-');
-            
-            func_get_ajax_schedule_data_temp(selected_date.replace(/\./gi,'-'), function(schedule_json){func_start_time_dom_draw('select[title="time_select"]', selected_date, schedule_json, setting_info)})
+
+            func_get_ajax_schedule_data_temp(selected_date.replace(/\./gi,'-'), function(schedule_json){func_start_time_dom_draw('select[title="time_select"]', selected_date, schedule_json, setting_info)});
 
 
             function func_start_time_calc(selected_date, schedule_json, setting_info){ //offAddOkArray 채우기 : 시작시간 리스트 채우기!!!!
-                let allplans = [];
+                //let allplans = [];
                 let plan_time = [];
 
                 let selected_date_split = selected_date.split('-');
@@ -146,21 +93,22 @@
                 let this_date = selected_date_split[2];
                 let thisDay = new Date(this_year, Number(this_month)-1, this_date).getDay();
 
-                console.log(selected_date)
-                console.log('thisDay',thisDay)
+                console.log(selected_date);
+                console.log('thisDay',thisDay);
 
                 let workStartTime_ = time_h_m_to_hh_mm(setting_info.setting_trainer_work_time_available[thisDay].split('-')[0]);
                 let workEndTime_ = time_h_m_to_hh_mm(setting_info.setting_trainer_work_time_available[thisDay].split('-')[1]);
                 if(workEndTime_ == "23:59"){
                     workEndTime_ = "24:00";
                 }
-                
-                let all_start_date_time;
-                let all_end_date_time;
-                all_start_date_time = schedule_json.classTimeArray_start_date.concat(schedule_json.group_schedule_start_datetime);
-                all_end_date_time = schedule_json.classTimeArray_end_date.concat(schedule_json.group_schedule_end_datetime);
-                all_start_date_time = all_start_date_time.concat(schedule_json.offTimeArray_start_date);
-                all_end_date_time = all_end_date_time.concat(schedule_json.offTimeArray_end_date);
+
+                // 사용 x
+                // let all_start_date_time;
+                // let all_end_date_time;
+                // all_start_date_time = schedule_json.classTimeArray_start_date.concat(schedule_json.group_schedule_start_datetime);
+                // all_end_date_time = schedule_json.classTimeArray_end_date.concat(schedule_json.group_schedule_end_datetime);
+                // all_start_date_time = all_start_date_time.concat(schedule_json.offTimeArray_start_date);
+                // all_end_date_time = all_end_date_time.concat(schedule_json.offTimeArray_end_date);
 
                 let clear_result = clear_duplicated_date_time(schedule_json, selected_date);
 
@@ -232,14 +180,14 @@
 
                 //offAddOkArray = []
                 let addOkArrayList = [];
-                
+
                 let start_option = setting_info.setting_member_start_time;
                 for(let t=0; t<semiresult.length; t++){
                     //if(Number(semiresult[t].split(':')[1])%time_unit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
                     if(selected_date == currentDate){                                                                   //선택한 날짜가 오늘일 경우
                         if(compare_time(semiresult[t], add_time(currentTime, '00:'+(setting_info.setting_member_reserve_time_prohibition*60) ))                      //업무시간
                             && compare_time(semiresult[t], add_time(workEndTime_, '00:00')) == false
-                            && compare_time(add_time(workStartTime_, '00:00'), semiresult[t]) == false 
+                            && compare_time(add_time(workStartTime_, '00:00'), semiresult[t]) == false
                             && workStartTime_ != workEndTime_ ){ //근접예약 금지
 
                             if(start_option.split('-')[0] == "A"){
@@ -284,7 +232,7 @@
                 return {"addOkArray":addOkArrayList};
             }
 
-            
+
             function func_start_time_dom_draw(target_html, selected_date, schedule_json, setting_info){
                 // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) let offAddOkArray = [5,6,8,11,15,19,21]
                 let sArraySet =  func_start_time_calc(selected_date, schedule_json, setting_info); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
@@ -319,55 +267,10 @@
                     let endtime = add_time(addOkArray[i], '00:'+classDur);
                     timeArray[i] ='<option data-start="'+selected_date+' '+addOkArray[i]+'" data-end="'+selected_date+' '+endtime+'">'+offText+offHour+':'+offmin+' ~ '+endtime+'</option>';
                 }
-                timeArray.unshift('<option selected disabled>예약 시간 선택</option>')
+                timeArray.unshift('<option selected disabled>예약 시간 선택</option>');
                 let timeArraySum = timeArray.join('');
                 $target_html.html(timeArraySum);
             }
         });
-
-
-        function func_get_ajax_schedule_data_temp(input_reference_date, callback){
-            $.ajax({
-                url: '/trainee/get_trainee_schedule/',
-                type : 'GET',
-                data : {"date": input_reference_date, "day":1},
-                dataType : 'html',
-
-                beforeSend:function(xhr, settings){
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                    //beforeSend();
-                },
-
-
-                success:function(data){
-                    let jsondata = JSON.parse(data);
-                    /**
-                     * @param jsondata.messageArray
-                     **/
-                    if(jsondata.messageArray.length>0){
-                        $('#errorMessageBar').show();
-                        $('#errorMessageText').text(jsondata.messageArray);
-                    }else{
-                        callback(jsondata);
-                    }
-
-                    return jsondata;
-                },
-
-                complete:function(){
-                    //completeSend();
-                },
-
-                error:function(){
-                    console.log('server error');
-                }
-            });
-        }
-
-        
-
-
     </script>
 {% endblock %}
