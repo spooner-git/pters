@@ -13,19 +13,19 @@
 
     width: 300px;
     border: 1px solid #cccccc;
-    border-radius: 8px;
+    border-radius: 5px;
 }
 
 .wrapper_popup_basic_comment{
-    height: 50px;
-    line-height: 50px;
+    height: 65px;
+    line-height: 65px;
     text-align: center;
 }
 
 .wrapper_popup_basic_buttons{
     text-align: center;
     border-top: 1px solid #cccccc;
-    height: 35px;
+    height: 45px;
 }
 
     .wrapper_popup_basic_buttons .popup_basic_cancel{
