@@ -114,6 +114,10 @@ function pters_month_calendar(calendar_name, calendar_options){
                                             <div class="expand_button ${calendar_name}_expand_button">
                                                 <img src="/static/common/icon/expand_more_black.png" class="obj_icon_basic">
                                             </div>
+                                            <div class="help_calendar_indicator obj_font_size_9_weight_500 ">
+                                                <div style="background-color:#e5e5e5">개인 수업 예약</div>
+                                                <div style="background-color:#cdcdcd">그룹 수업 예약</div>
+                                            </div>
                                         </div>`;
 
         //달력의 월화수목금 표기를 만드는 부분
@@ -154,7 +158,8 @@ function pters_month_calendar(calendar_name, calendar_options){
                     //                            <div id="calendar_plan_cell_${data_date}"></div>
                     //                       </div>`);
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7 month_date" data-date="${data_date}">
-                                               <div class="${font_color}">${date_cache}</div>
+                                               <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
+                                               <div class="calendar_date_number ${font_color}">${date_cache}</div>
                                                <div id="calendar_plan_cell_${data_date}"></div>
                                           </div>`);
                     date_cache++;
@@ -299,9 +304,10 @@ function pters_month_calendar(calendar_name, calendar_options){
             temp_array.push(`#calendar_plan_cell_${avail_date_array[i]}`);
         }
         let $first_day = $(`${temp_array.shift()}`);
-        $first_day.siblings('div').css({'height':'20px', 'width':'20px', 'border-radius':'50%', 'background-color':'#000000', 'margin':'0 auto', 'color':'#ffffff'});
-        $first_day.parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-left-radius':'5px', 'border-bottom-left-radius':'5px'});
-        $(`${temp_array.pop()}`).parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-right-radius':'5px', 'border-bottom-right-radius':'5px'});
+        $first_day.siblings('div.calendar_date_number').css({'height':'20px', 'width':'20px', 'border-radius':'50%', 'background-color':'#000000', 'margin':'0 auto', 'color':'#ffffff'});
+        $first_day.parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)'});
+        // $first_day.parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-left-radius':'5px', 'border-bottom-left-radius':'5px'});
+        // $(`${temp_array.pop()}`).parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-right-radius':'5px', 'border-bottom-right-radius':'5px'});
         $(`${temp_array.join(', ')}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(0, 0, 0, 0.1)');
     }
 
@@ -332,7 +338,8 @@ function pters_month_calendar(calendar_name, calendar_options){
             $(`#calendar_plan_cell_${date}`).html(`<div class="schedule_marking"></div>`);
         }
         for(let date_group in schedule_number_dic["group"]){
-            $(`#calendar_plan_cell_${date_group}`).html(`<div class="schedule_marking_group"></div>`);
+            // $(`#calendar_plan_cell_${date_group}`).html(`<div class="schedule_marking_group"></div>`);
+            $(`#calendar_group_plan_cell_${date_group}`).css('background-color', '#cdcdcd');
         }
     }
     //일정 표기 관련

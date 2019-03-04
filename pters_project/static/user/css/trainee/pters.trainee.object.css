@@ -168,6 +168,11 @@
         font-weight: 500;
         letter-spacing: -0.3px;
     }
+    .obj_font_size_9_weight_500{
+        font-size: 9px;
+        font-weight: 500;
+        letter-spacing: -0.3px;
+    }
 
 /* 글자 색상 */
     .obj_font_color_black{

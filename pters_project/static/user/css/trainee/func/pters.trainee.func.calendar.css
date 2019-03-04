@@ -43,6 +43,18 @@
 		width: 110px;
 		vertical-align:middle;
 	}
+	.pters_calendar .help_calendar_indicator{
+		display: inline-block;
+		position: absolute;
+		right: 0;
+		padding: 10px 20px 10px 0;
+	}
+	.pters_calendar .help_calendar_indicator > div{
+		height: 13px;
+		line-height: 13px;
+		width: 60px;
+		margin-bottom: 5px;
+	}
 
 	.pters_calendar .pters_timeline_cal_upper_tool_box{
 		background-color: #ffffff;
@@ -144,9 +156,9 @@
 			width: 97%;
 			margin: 0 auto;
 		}
-		.pters_calendar .pters_month_cal_content_box .obj_table_cell_x7{
+		/*.pters_calendar .pters_month_cal_content_box .obj_table_cell_x7{
 			padding-top: 9px;
-		}
+		}*/
 
 	::-webkit-scrollbar{
 		width: 0;
@@ -171,4 +183,8 @@
 		border-radius: 50%;
 		background-color: #ffffff;
 		vertical-align: middle;
+	}
+	.group_plan_indicator{
+		height: 5px;
+		margin-bottom: 3px;
 	}
