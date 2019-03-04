@@ -207,6 +207,7 @@
     }
     .func_tab_wrap > div{
         display: inline-block;
+        cursor: pointer;
     }
 
     .func_tab_selected{
