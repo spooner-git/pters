@@ -104,7 +104,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                                             </div>
                                             <div class="pters_month_cal_tool_date_text">
                                                 
-                                                <div class="obj_font_size_20_weight_bold">
+                                                <div class="obj_font_size_15_weight_bold">
                                                     ${Number(reference_date_year)}년 ${Number(reference_date_month)}월
                                                 </div>
                                             </div>
