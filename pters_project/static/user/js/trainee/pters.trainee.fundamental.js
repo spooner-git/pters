@@ -59,7 +59,6 @@ function func_set_webkit_overflow_scrolling(target_selector){
 
 let ajax_name_array = [];
 function func_ajax_before_send(xhr, settings, ajax_name){
-    console.log("func_ajax_before_send:"+ajax_name_array);
     if(ajax_name_array.indexOf(ajax_name)==-1){
         ajax_name_array.push(ajax_name);
         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -72,8 +71,20 @@ function func_ajax_before_send(xhr, settings, ajax_name){
 }
 
 function func_ajax_after_send(ajax_name){
-    console.log("func_ajax_after_send:"+ajax_name_array);
     let ajax_name_index = ajax_name_array.indexOf(ajax_name);
     ajax_name_array.splice(ajax_name_index, 1);
     ajax_load_image(HIDE);
 }
+
+
+/* 피터스 전용 모듈*/
+
+    //pters_func_tab탭
+    $(document).on('click', '.func_tab_element', function(e){
+        e.preventDefault();
+        $(this).siblings('div').removeClass('func_tab_selected');
+        $(this).addClass('func_tab_selected');
+    });
+
+
+/* 피터스 전용 모듈*/

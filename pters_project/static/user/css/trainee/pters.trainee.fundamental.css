@@ -194,3 +194,24 @@
 
 /*일정 예약 박스 조립*/
     
+
+
+
+/* 피터스 전용 모듈*/
+
+    /*pters_func_tab탭*/
+    .func_tab_wrap{
+        display: block;
+        width: 100%;
+        border-bottom: 3px solid transparent;
+    }
+    .func_tab_wrap > div{
+        display: inline-block;
+    }
+
+    .func_tab_selected{
+        border-bottom: 3px solid #000000;
+        color: #000000;
+        font-weight: bold;
+    }
+/* 피터스 전용 모듈*/

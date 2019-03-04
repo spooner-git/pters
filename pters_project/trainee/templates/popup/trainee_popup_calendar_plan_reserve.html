@@ -10,7 +10,12 @@
             <div class="obj_font_size_20_weight_bold">일정 예약</div>
             <div class="obj_font_size_14_weight_500">{{ select_date | date:'Y.m.d(l)'|cut:"요일" }}</div>
         </div>
-        <div class="obj_box_full obj_font_bg_white_dark_grey">
+        <div class="func_tab_wrap obj_font_size_13_weight_500">
+            <div class="func_tab_element func_tab_selected" data-tab="personal">개인 수업</div>
+            <div class="func_tab_element" data-tab="group">그룹 수업</div>
+        </div>
+
+        <div class="obj_box_full obj_font_bg_white_dark_grey" style="display: none;">
             <div class="obj_table_raw">
                 <div class="obj_table_cell_x2 obj_font_size_13_weight_500">나의 예약 가능 횟수 보기</div>
                 <div class="obj_table_cell_x2"><img src="/static/common/icon/expand_more_black.png" class="obj_icon_expand" id="id_ticket_detail_expand_in_reserve" data-open></div>
@@ -26,22 +31,23 @@
                 </div>
             </div>    
         </div>
-        <div class="wrapper_reserve_form obj_box_full">
+
+        <div class="wrapper_reserve_form obj_box_full" id="reserve_form_personal">
             <div class="obj_table_raw">
-                <div class="wrapper_reserve_form_title obj_table_cell_x2 obj_font_size_14_weight_normal">
+                <!-- <div class="wrapper_reserve_form_title obj_table_cell_x2 obj_font_size_14_weight_normal">
                     <div class="obj_table_raw">수업 종류:</div>
                     <div class="obj_table_raw">예약 시간:</div>
                     <div class="obj_table_raw">메모:</div>
-                </div>
+                </div> -->
                 <div class="wrapper_reserve_form_data obj_table_cell_x2">
-                    <div class="obj_table_raw">
+                    <!-- <div class="obj_table_raw">
                         <select class="obj_font_size_14_weight_500 obj_font_color_light_grey" title="lecture_select">
                             <option selected disabled>수업명</option>
                             <option data-lecture-id="수업1">수업 종류1</option>
                             <option data-lecture-id="수업2">수업 종류2</option>
                         </select>
                         <img src="/static/common/icon/expand_more_black.png" class="obj_icon_arrow">
-                    </div>
+                    </div> -->
                     <div class="obj_table_raw">
                         <select class="obj_font_size_14_weight_500 obj_font_color_light_grey" title="time_select">
                             <option selected disabled>예약 시간 선택</option>
@@ -51,9 +57,46 @@
                         </select>
                         <img src="/static/common/icon/expand_more_black.png" class="obj_icon_arrow">
                     </div>
-                    <div class="obj_table_raw">
+                    <!-- <div class="obj_table_raw">
                         <input class="obj_font_size_14_weight_500" type="text" name="memo_to_teacher" placeholder="강사님에게 메모 남기기">
+                    </div> -->
+                </div>
+            </div>
+            <div class="wrapper_reserve_caution obj_font_size_11_weight_500 obj_font_color_grey">
+                <p><span class="obj_font_color_pters_red">2시간 단위로 예약</span> 할 수 있습니다.</p>
+                <p><span class="obj_font_color_pters_red">수업 시작 12시간 전까지 예약</span> 할 수 있습니다.</p>
+                <p><span class="obj_font_color_pters_red">수업 시작 3시간 전까지 취소</span> 할 수 있습니다.</p>
+            </div>
+        </div>
+
+        <div class="wrapper_reserve_form obj_box_full" id="reserve_form_group">
+            <div class="obj_table_raw">
+                <!-- <div class="wrapper_reserve_form_title obj_table_cell_x2 obj_font_size_14_weight_normal">
+                    <div class="obj_table_raw">수업 종류:</div>
+                    <div class="obj_table_raw">예약 시간:</div>
+                    <div class="obj_table_raw">메모:</div>
+                </div> -->
+                <div class="wrapper_reserve_form_data obj_table_cell_x2">
+                    <!-- <div class="obj_table_raw">
+                        <select class="obj_font_size_14_weight_500 obj_font_color_light_grey" title="lecture_select">
+                            <option selected disabled>수업명</option>
+                            <option data-lecture-id="수업1">수업 종류1</option>
+                            <option data-lecture-id="수업2">수업 종류2</option>
+                        </select>
+                        <img src="/static/common/icon/expand_more_black.png" class="obj_icon_arrow">
+                    </div> -->
+                    <div class="obj_table_raw">
+                        <select class="obj_font_size_14_weight_500 obj_font_color_light_grey" title="time_select">
+                            <option selected disabled>예약 시간 선택</option>
+                            <option data-start="2019-03-04 08:00" data-end="2019-03-04 09:00">08:00 ~ 09:00</option>
+                            <option data-start="2019-03-04 11:00" data-end="2019-03-04 13:00">11:00 ~ 13:00</option>
+                            <option data-start="2019-03-04 21:00" data-end="2019-03-04 22:00">21:00 ~ 22:00</option>
+                        </select>
+                        <img src="/static/common/icon/expand_more_black.png" class="obj_icon_arrow">
                     </div>
+                    <!-- <div class="obj_table_raw">
+                        <input class="obj_font_size_14_weight_500" type="text" name="memo_to_teacher" placeholder="강사님에게 메모 남기기">
+                    </div> -->
                 </div>
             </div>
             <div class="wrapper_reserve_caution obj_font_size_11_weight_500 obj_font_color_grey">
