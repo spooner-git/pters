@@ -32,7 +32,7 @@
             </div>    
         </div>
 
-        <div class="wrapper_reserve_form obj_box_full" id="reserve_form_personal">
+        <div class="wrapper_reserve_form obj_box_full _target_link_to_tab" id="reserve_form_personal">
             <!-- <div class="obj_table_raw"> -->
                 <!-- <div class="wrapper_reserve_form_title obj_table_cell_x2 obj_font_size_14_weight_normal">
                     <div class="obj_table_raw">수업 종류:</div>
@@ -76,7 +76,7 @@
             </div>
         </div>
 
-        <div class="wrapper_reserve_form obj_box_full" id="reserve_form_group">
+        <div class="wrapper_reserve_form obj_box_full _target_link_to_tab" id="reserve_form_group">
             <div class="obj_table_raw">
                 <!-- <div class="wrapper_reserve_form_title obj_table_cell_x2 obj_font_size_14_weight_normal">
                     <div class="obj_table_raw">수업 종류:</div>
@@ -322,5 +322,16 @@
                 $target_html.html(timeArraySum);
             }
         });
+
+
+        $(document).on('click', '.func_tab_element', function(){
+            let this_type = $(this).attr('data-tab');
+            $target_to_show = $(`#reserve_form_${this_type}`);
+            $target_to_hide = $target_to_show.siblings('._target_link_to_tab');
+            $target_to_show.show();
+            $target_to_hide.hide();
+            
+        });
+
     </script>
 {% endblock %}

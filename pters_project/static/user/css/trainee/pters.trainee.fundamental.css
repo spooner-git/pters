@@ -202,7 +202,6 @@
     /*pters_func_tab탭*/
     .func_tab_wrap{
         display: block;
-        width: 100%;
         border-bottom: 3px solid transparent;
     }
     .func_tab_wrap > div{
