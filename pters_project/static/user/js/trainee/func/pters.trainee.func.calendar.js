@@ -228,7 +228,6 @@ function pters_month_calendar(calendar_name, calendar_options){
         if( $(`.${calendar_name}_wrapper_month_cal`).css('display') == "block"){
             $(`#${calendar_name}_go_${direction}_month`).trigger('click');
         }
-        
     }
 
     function func_set_touch_move_to_month_calendar(input_target_html){
@@ -266,7 +265,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             dataType : 'html',
 
             beforeSend:function(xhr, settings){
-                func_ajax_before_send(xhr,settings, "func_get_ajax_schedule_data");
+                func_ajax_before_send(xhr, settings, "func_get_ajax_schedule_data");
             },
 
             success:function(data){
@@ -439,7 +438,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             timeline_date_text_loc_array[id] = $(this).offset().top - nav_height -calendar_toolbox_height - calendar_month_inner_height - calendar_timeline_toolbox_height;
         });
 
-
+        $('.month_date').off();
         $('.month_date').click(function(){
             let cliked_date = $(this).attr('data-date');
             let if_this_has_schedule = $(this).find('.schedule_marking').length;
