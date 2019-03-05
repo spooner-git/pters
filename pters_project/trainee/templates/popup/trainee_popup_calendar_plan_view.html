@@ -6,8 +6,10 @@
 {% endblock %}
 {% block popup_base_contents %}
     <div class="popup_calendar_plan_view">
-        <div class="obj_font_size_20_weight_bold">{{ date_format | date:'Y.m.d(l)'|cut:"요일" }} </div>
-        <!-- <div class="obj_font_size_14_weight_500"><span class="obj_font_color_pters_red">{{ schedule_data | length }}개</span>의 일정이 있습니다.</div> -->
+        <div class="wrapper_calendar_plan_view_title">
+            <div class="obj_font_size_20_weight_bold">{{ date_format | date:'Y.m.d(l)'|cut:"요일" }} </div>
+            <div class="obj_font_size_14_weight_500"><span class="obj_font_color_pters_red">{{ schedule_data | length }}개</span>의 수업이 있습니다.</div>
+        </div>
 
 
         <div class="wrapper_box_next_plan">
