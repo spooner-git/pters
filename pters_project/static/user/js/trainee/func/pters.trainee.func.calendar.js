@@ -468,17 +468,20 @@ function pters_month_calendar(calendar_name, calendar_options){
 
     function func_time_line_wide_view(type){
         let $calendar_name_expand_button = $(`.${calendar_name}_expand_button`);
+        let $calendar_name_expand_button_img = $(`.${calendar_name}_expand_button`).find('img');
         let $calendar_name_wrapper_month_cal = $(`.${calendar_name}_wrapper_month_cal`);
         let $wrapper_cal_timeline = $('.wrapper_cal_timeline');
         switch(type){
             case SHOW:
                 $calendar_name_expand_button.attr('data-open', HIDE);
+                $calendar_name_expand_button_img.attr('src', '/static/common/icon/expand_more_black.png');
                 $calendar_name_wrapper_month_cal.show();
                 $wrapper_cal_timeline.css('height', `${original_height}px`);
             break;
 
             case HIDE:
                 $calendar_name_expand_button.attr('data-open', SHOW);
+                $calendar_name_expand_button_img.attr('src', '/static/common/icon/expand_less_black.png');
                 $calendar_name_wrapper_month_cal.hide();
                 $wrapper_cal_timeline.css('height', `${expand_height}px`);
             break;
@@ -488,6 +491,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                 expand_height = calendar_height - calendar_toolbox_height - calendar_timeline_toolbox_height;
                 console.log(calendar_height, calendar_toolbox_height, calendar_timeline_toolbox_height);
                 $calendar_name_expand_button.attr('data-open', SHOW);
+                $calendar_name_expand_button_img.attr('src', '/static/common/icon/expand_less_black.png');
                 $calendar_name_wrapper_month_cal.hide();
                 $wrapper_cal_timeline.css('height', `${expand_height}px`);
         }

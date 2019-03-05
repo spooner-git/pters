@@ -8,7 +8,7 @@
     <div class="popup_calendar_plan_reserve">
         <div class="wrapper_calendar_plan_reserve_title">
             <div class="obj_font_size_20_weight_bold">일정 예약</div>
-            <div class="obj_font_size_14_weight_500">{{ select_date | date:'Y.m.d(l)'|cut:"요일" }}</div>
+            <div class="obj_font_size_14_weight_500">{{ select_date | date:'Y.m.d (l)'|cut:"요일" }}</div>
         </div>
         <div class="func_tab_wrap obj_font_size_13_weight_500">
             <div class="func_tab_element func_tab_selected" data-tab="personal">개인 수업</div>
@@ -85,7 +85,7 @@
                 </div> -->
                 <!-- <div class="wrapper_reserve_form_data obj_table_cell_x2"> -->
                 <div class="obj_table_raw wrapper_ticket_info">
-                    <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/person_black.png"></div>
+                    <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/people_black.png"></div>
                     <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal ">%그룹 수업%</div>
                     <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: % 번)</div>
                 </div>
@@ -115,9 +115,8 @@
                 </div>
             <!-- </div> -->
             <div class="wrapper_reserve_caution obj_font_size_11_weight_500 obj_font_color_grey">
-                <p><span class="obj_font_color_pters_red">2시간 단위로 예약</span> 할 수 있습니다.</p>
-                <p><span class="obj_font_color_pters_red">수업 시작 12시간 전까지 예약</span> 할 수 있습니다.</p>
-                <p><span class="obj_font_color_pters_red">수업 시작 3시간 전까지 취소</span> 할 수 있습니다.</p>
+                <p><span class="obj_font_color_pters_red">수업 시작 0시간 전까지 예약</span> 할 수 있습니다.</p>
+                <p><span class="obj_font_color_pters_red">수업 시작 0시간 전까지 취소</span> 할 수 있습니다.</p>
             </div>
         </div>
         
