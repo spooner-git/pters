@@ -214,4 +214,42 @@
         color: #000000;
         font-weight: bold;
     }
+
+    /*pters_func_radio*/
+    .func_radio_wrap{
+
+    }
+    .func_radio_element{
+        display: table;
+        width: 100%;
+        cursor: pointer;
+    }
+    .func_radio_element_title{
+        display: table-cell;
+    }
+    .func_radio_element_button{
+        display: table-cell;
+        text-align: center;
+    }
+    .func_radio_element_button > div.func_radio_element_button_outer{
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #000000;
+        border-radius: 50%;
+    }
+    .func_radio_element_button > div > div.func_radio_element_button_inner{
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 10px;
+        height: 10px;
+        background-color: #000000;
+        border-radius: 50%;
+    }
+
+
 /* 피터스 전용 모듈*/

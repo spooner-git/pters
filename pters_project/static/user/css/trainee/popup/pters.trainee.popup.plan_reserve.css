@@ -38,7 +38,7 @@
 			height: 30px;
 			line-height: 30px;
 		}
-		.popup_calendar_plan_reserve .wrapper_reserve_form_data .obj_font_size_14_weight_500{
+		.popup_calendar_plan_reserve .wrapper_reserve_form_data .obj_table_raw .obj_font_size_14_weight_500{
 			height: 50px;
 			line-height: 50px;
 			padding-top: 0;
@@ -135,6 +135,22 @@
 			.wrapper_reserve_form .obj_table_raw input::-webkit-input-placeholder{
 				color: #b6b6b6;
 			}
+
+		.wrapper_reserve_form .func_radio_wrap{
+
+		}
+			.wrapper_reserve_form .func_radio_element{
+				height: 50px;
+				line-height: 50px;
+				border: 1px solid #e6e6e6;
+				border-radius: 0;
+				background-color: transparent;
+				margin-bottom: 10px;
+			}
+			.wrapper_reserve_form .func_radio_element_title{
+				padding-left: 20px;
+			}
+
 
 		.wrapper_reserve_caution{
 			margin-top: 15px;
