@@ -9,7 +9,7 @@ let layer_popup = (function(){
         let popup_data = {"popup_name":popup_name, "popup_size":popup_size, "animation_type":animation_type};
         //똑같은 팝업 여러개 못뜨도록
         let $popup_name_selector = $(`.${popup_name}`);
-        console.log($popup_name_selector);
+
         if($popup_name_selector.length == 1){
             popup_array.push(popup_data);
             $popup_selector = $popup_name_selector.parents('.popup_mobile');

@@ -37,9 +37,13 @@
 
 /* wrapper */
 	.trainee_main .wrapper_title{
-		margin-top: 24px;
+		margin-top: 30px;
 		margin-bottom: 20px;
 		padding: 0 20px;
+	}
+	.trainee_main .wrapper_title .obj_font_size_12_weight_normal{
+		height: 25px;
+		line-height: 25px;
 	}
 	.trainee_main .wrapper_program_select{
 		width : 20%;

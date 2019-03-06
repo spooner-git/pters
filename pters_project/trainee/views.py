@@ -149,8 +149,8 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(TraineeMainView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
         context['error'] = None
+        context = func_get_class_list(context, self.request.user.id)
         if class_id is not None and class_id != '':
-            context = func_get_class_list(context, self.request.user.id)
             context = func_get_trainee_next_schedule_by_class_id(context, class_id, self.request.user.id)
             context = func_get_trainee_ing_lecture_list(context, class_id, self.request.user.id)
 

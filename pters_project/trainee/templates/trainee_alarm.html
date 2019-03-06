@@ -20,6 +20,30 @@
                 </div>
             </div>
 
+    {#        {% for class_info in class_data %}#}
+    {#            {% if class_info.np_lecture_counts > 0 %}#}
+    {#            <div class="wrapper_new_request">#}
+    {#                <div class="obj_box_full">#}
+    {#                    <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">새로운 프로그램</div>#}
+    {#                    <div class="wrapper_program_title obj_table_cell_x2 obj_font_size_18_weight_bold">{{ class_info.class_type_name }}</div>#}
+    {#                    <div class="obj_box_card obj_font_bg_white_black">#}
+    {#                        {% for class_lecture_info in class_info.class_lecture_data %}#}
+    {#                        <div class="obj_font_size_15_weight_bold"> {{ class_lecture_info.package_tb.name }} </div>#}
+    {#                        {% endfor %}#}
+    {#                        <div class="obj_font_size_12_weight_normal">{{ class_info.class_tb.member.name }} 강사</div>#}
+    {#                    </div>#}
+    {#                    <div class="wrapper_request_select_box">#}
+    {#                        <div class="obj_font_size_11_weight_normal obj_font_color_light_black">강사님이 연동을 신청했습니다.</div>#}
+    {#                        <div class="obj_button_gen obj_font_bg_white_black" onclick="func_program_select('{{ class_info.class_tb_id }}',`${PROGRAM_LECTURE_CONNECT_ACCEPT}`);">연결하기</div>#}
+    {#                        <div class="obj_button_gen obj_font_bg_white_grey"#}
+    {#                             onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,#}
+    {#                                                                   {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',#}
+    {#                                                                   'onclick_function':`func_program_select('{{ class_info.class_tb_id }}', ${PROGRAM_LECTURE_CONNECT_DELETE})`});">취소하기</div>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#            {% endif %}#}
+    {#        {% endfor %}#}
         </div>
 
         <div class="wrapper_alarm_list obj_box_full ">
@@ -95,6 +119,12 @@
     <script type="text/javascript">
     	//Nav바에 현재 페이지에 밑줄 표기
     	$('#nav_btn_alarm').addClass("nav_selected");
+
+        function func_program_select(class_id, program_select){
+            $('#form_program_select_class_id').val(class_id);
+            $('#form_program_select_lecture_connection_check').val(program_select);
+            $('#form_program_select').submit();
+        }
     </script>
 
 {% endblock %}
