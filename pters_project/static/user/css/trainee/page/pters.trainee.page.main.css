@@ -57,16 +57,29 @@
 	}
 
 	.trainee_main .wrapper_my_ticket_type{
-		text-align: center;
+		width: 25px;
+		padding-left: 20px;
+		text-align: left;
+	}
+	.trainee_main .wrapper_my_ticket_type > img{
+		filter: invert(90);
+		width: 20px;
+		vertical-align: middle;
 	}
 	.trainee_main .wrapper_my_ticket_title{
+		width: auto;
 		margin-bottom: 4px;
-		text-align: center;
+		text-align: left;
 	}
 	.trainee_main .wrapper_my_ticket_detail{
-		text-align:center;
+		text-align: right;
 		height: 18px;
 		line-height: 18px;
+		vertical-align: top;
+		padding-right: 20px;
+	}
+	.trainee_main .wrapper_my_ticket_detail p.obj_font_size_12_weight_bold{
+		margin: 0;
 	}
 
 	.trainee_main .wrapper_new_request .obj_box_full{
@@ -93,5 +106,12 @@
 		width: 90px;
 		margin-left: 5px;
 		float: right;
+	}
+
+	.trainee_main .wrapper_current_ticket .obj_table_raw{
+		padding: 15px 0;
+	}
+	.trainee_main .wrapper_current_ticket .obj_table_cell_x3{
+		height: 40px;
 	}
 /*(현재 페이지 한해) 현재 페이지에서만 사용하는 커스텀 css*/
