@@ -103,5 +103,8 @@ urlpatterns = [
     url(r'^popup_ticket_info/$', views.PopupTicketInfoView.as_view(),
         name='popup_ticket_info'),
 
+    # 회원 마이 정보 수정 팝업 페이지
+    url(r'^popup_my_info_change/$', views.PopupMyInfoChangeView.as_view(),
+        name='popup_my_info_change'),
 
 ]

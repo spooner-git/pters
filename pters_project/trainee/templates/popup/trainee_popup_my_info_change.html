@@ -1,0 +1,45 @@
+{% extends "popup/trainee_base_popup.html" %}
+{% load static_url %}
+{% block popup_base_css %}
+    <!-- pters.trainee.popup.plan_view.css -->
+    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.myinfo_change.css" %}>
+{% endblock %}
+{% block popup_base_contents %}
+    <div class="popup_my_info_change">
+        <div class="wrapper_popup_title">
+            <div class="obj_font_size_20_weight_bold">내 정보 </div>
+        </div>
+
+        <div class="obj_box_full">
+            
+            <article>
+                <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">이름</div>
+                <input type="text" name="input_user_name" class="obj_font_size_14_weight_500" value="손욱">
+            </article>
+            <article>
+                <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">아이디</div>
+                <input type="text" name="input_user_id" class="obj_font_size_14_weight_500" value="sxnwxxk">
+            </article>
+            <article>
+                <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">생년월일</div>
+                <input type="text" name="input_user_birth" class="obj_font_size_14_weight_500" value="1990.01.23">
+            </article>
+            <article>
+                <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">연락처</div>
+                <input type="text" name="input_user_phone" class="obj_font_size_14_weight_500" value="010-4461-6646">
+            </article>
+            <article>
+                <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">이메일</div>
+                <input type="text" name="input_user_email" class="obj_font_size_14_weight_500" value="sxnwxxk@gmail.com">
+            </article>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block popoup_base_wrapper_bottom_inside %}
+    <div class="obj_button_big obj_font_bg_white_pink" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'{{ date_format| date:'Y-m-d' }}'})">저장하기</div>
+{% endblock %}
+
+{% block popup_base_js %}
+{% endblock %}

@@ -138,7 +138,9 @@ function func_get_popup_ajax(popup_name, data){
         },
 
         success:function(data){
+            console.log('asgaeg222')
             $('body').append(`<div id="${popup_name}">${data}</div>`);
+            console.log('asgaeg')
         },
 
         complete:function(){

@@ -1,0 +1,47 @@
+	#popup_my_info_change .popup_mobile .wrapper_top{
+		height: 30px;
+		margin-bottom: 10px;
+	}
+
+	.popup_my_info_change{
+		/*min-height: 100%;*/
+	}	
+
+		.popup_my_info_change .wrapper_popup_title{
+				padding: 0px;
+			}
+			.popup_my_info_change .obj_font_size_20_weight_bold{
+
+				padding: 0 20px;
+				height: 35px;
+				line-height: 35px;
+			}
+			.popup_my_info_change .obj_font_size_14_weight_500{
+
+				padding: 0 20px;
+				height: 20px;
+				line-height: 20px;
+			}
+			.popup_my_info_change .wrapper_calendar_plan_view_title .obj_font_size_14_weight_500{
+				position: absolute;
+				top: 55px;
+			}
+
+
+		.popup_my_info_change > .obj_box_full{
+
+			margin-bottom: 10px;
+			padding: 20px;
+		}
+		.popup_my_info_change > .obj_box_full > article{
+			margin-bottom: 15px;
+		}
+		.popup_my_info_change > .obj_box_full > article > input{
+			-webkit-appearance:none;
+			width: 100%;
+			border: 0;
+			border-bottom: 1px solid #f2f2f2;
+			line-height: 35px;
+			height: 35px;
+			padding: 0;
+		}

@@ -1661,3 +1661,11 @@ class PopupTicketInfoView(TemplateView):
         context['class_data'] = class_list
         context['lecture_info'] = lecture_info
         return context
+
+
+class PopupMyInfoChangeView(TemplateView):
+    template_name = 'popup/trainee_popup_my_info_change.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupMyInfoChangeView, self).get_context_data(**kwargs)
+        return context
