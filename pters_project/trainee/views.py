@@ -1669,3 +1669,17 @@ class PopupMyInfoChangeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupMyInfoChangeView, self).get_context_data(**kwargs)
         return context
+
+class UserPolicyView(TemplateView):
+    template_name = 'trainee_user_policy.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserPolicyView, self).get_context_data(**kwargs)
+        return context
+
+class PrivacyPolicyView(TemplateView):
+    template_name = 'trainee_privacy_policy.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PrivacyPolicyView, self).get_context_data(**kwargs)
+        return context

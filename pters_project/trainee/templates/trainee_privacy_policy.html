@@ -1,0 +1,58 @@
+{% extends "trainee_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainee/page/pters.trainee.page.mypage.css" %}>
+{% endblock %}
+
+{% block content %}
+
+    <div class="trainee_mypage">
+
+        <div class="wrapper_box_basic_info">
+            <div class="obj_box_full">
+                <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">내 정보</div>
+                    <h2 class="obj_font_size_15_weight_bold" id="trainee_info_name">손 욱(SXNWXXK)</h2>
+                    <div class="obj_button obj_font_size_13_weight_500" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_my_info_change', 90, POPUP_FROM_BOTTOM, {'lecture_id':'{{ing_lecture_info.lecture_tb_id}}' } )">변경하기</div>
+                    <div class="obj_font_size_12_weight_normal" id="trainee_info_birth">1990.01.23</div>
+                    <div class="obj_font_size_12_weight_normal" id="trainee_info_phone">010-4461-6646</div>
+                    <div class="obj_font_size_12_weight_normal" id="trainee_info_email">sxnwxxk@gmail.com</div>
+            </div>
+        </div>
+        <div class="wrapper_current_ticket">
+            <div class="obj_box_full">
+                <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">수강권 정보</div>
+     
+                <div class="obj_box_card" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_ticket_info', 90, POPUP_FROM_BOTTOM, {'lecture_id':'{{ing_lecture_info.lecture_tb_id}}' } )">
+                    <div class="wrapper_my_ticket_status obj_font_size_12_weight_500 obj_font_color_white">
+                        진행중
+                    </div>
+                    <div class="wrapper_my_ticket_title">
+                        <div class="obj_font_size_15_weight_bold obj_font_color_white">수업명</div>
+                    </div>
+                </div>
+  
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block local_js_footer %}
+    <script type="text/javascript" src={% static_url "user/js/trainee/func/pters.trainee.func.schedule.js" %}></script>
+    <script type="text/javascript">
+    	//Nav바에 현재 페이지에 밑줄 표기
+
+        window.addEventListener('load', function () {
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                alert('{{ message }}');
+            {% endif %}
+        {% endfor %}
+        });
+
+    </script>
+
+{% endblock %}

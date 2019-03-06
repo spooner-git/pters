@@ -77,6 +77,11 @@ urlpatterns = [
     # 프로그램 선택 페이지
     url(r'^trainee_program/$', views.ProgramSelectView.as_view(), name='trainee_program'),
 
+    # 이용약관
+    url(r'^trainee_user_policy/$', views.UserPolicyView.as_view(), name='trainee_user_policy'),
+    # 개인정보 처리방침
+    url(r'^trainee_privacy_policy/$', views.PrivacyPolicyView.as_view(), name='trainee_privacy_policy'),
+
     # 회원 빈 월간 일정 페이지
     url(r'^cal_month_blank/$', views.CalMonthBlankView.as_view(), name='cal_month_blank'),
     # 회원 빈 Mypage 페이지
