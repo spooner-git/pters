@@ -138,8 +138,8 @@
 
                     <div class="wrapper_my_ticket_detail obj_table_cell_x3">
                         <p class="obj_font_size_12_weight_bold obj_font_color_white">
-                                ~ {{ ing_lecture_info.lecture_tb.end_date | date:"Y.m.d(l)"|cut:"요일"  }}<br>
-                                {{ ing_lecture_info.lecture_tb.lecture_rem_count }}<span class="obj_font_size_12_weight_normal">/xx번</span>
+                                ~ {{ ing_lecture_info.lecture_tb.end_date | date:"Y.m.d (l)"|cut:"요일"  }}<br>
+                                {{ ing_lecture_info.lecture_tb.lecture_rem_count }}<span class="obj_font_size_12_weight_normal">/{{ ing_lecture_info.lecture_tb.lecture_reg_count }}번</span>
                         </p>
                     </div>
                 </div>
