@@ -224,7 +224,7 @@ class TraineeCalendarView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
 
 class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'mypage_trainee.html'
+    template_name = 'trainee_mypage.html'
 
     def get(self, request):
         # context = super(MyPageView, self).get_context_data(**kwargs)
