@@ -101,21 +101,24 @@
                 <div class="obj_box_full">
                     <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">진행중인 수강권</div>
                     {% for ing_lecture_info in ing_lecture_data %}
-                    <div class="obj_box_card" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_ticket_info', 90, POPUP_FROM_BOTTOM, {'lecture_id':'{{ing_lecture_info.lecture_tb_id}}' } )">
-                        <div class="wrapper_my_ticket_type">
-                            <div class="obj_font_size_12_weight_bold obj_font_color_white">{{ ing_lecture_info.lecture_tb.package_tb.package_type_cd_nm }}</div>
+                    <div class="obj_box_card obj_table_raw" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_ticket_info', 90, POPUP_FROM_BOTTOM, {'lecture_id':'{{ing_lecture_info.lecture_tb_id}}' } )">
+                        <div class="wrapper_my_ticket_type obj_table_cell_x3">
+                            <!-- <div class="obj_font_size_12_weight_bold obj_font_color_white">{{ ing_lecture_info.lecture_tb.package_tb.package_type_cd_nm }}</div> -->
+                            {% if ing_lecture_info.lecture_tb.package_tb.package_type_cd == "ONE_TO_ONE" %}
+                                <img src="{% static_url "common/icon/person_black.png" %}">
+                            {% else %}
+                                <img src="{% static_url "common/icon/people_black.png" %}">
+                            {% endif %}
                         </div>
-                        <div class="wrapper_my_ticket_title">
+                        <div class="wrapper_my_ticket_title obj_table_cell_x3">
                             <div class="obj_font_size_15_weight_bold obj_font_color_white">{{ ing_lecture_info.lecture_tb.package_tb.name }}</div>
                         </div>
 
-                        <div class="wrapper_my_ticket_detail">
-                            <div class="obj_font_size_11_weight_bold obj_font_color_white">
-                                {{ ing_lecture_info.lecture_tb.end_date | date:"Y.m.d(l)"|cut:"요일"  }}
-                                <span class="obj_font_size_11_weight_normal">까지</span>
-                                {{ ing_lecture_info.lecture_tb.lecture_rem_count }}번
-                                <span class="obj_font_size_11_weight_normal">남았습니다.</span>
-                            </div>
+                        <div class="wrapper_my_ticket_detail obj_table_cell_x3">
+                            <p class="obj_font_size_12_weight_bold obj_font_color_white">
+                                    ~ {{ ing_lecture_info.lecture_tb.end_date | date:"Y.m.d (l)"|cut:"요일"  }}<br>
+                                    {{ ing_lecture_info.lecture_tb.lecture_rem_count }}<span class="obj_font_size_12_weight_normal">/{{ ing_lecture_info.lecture_tb.lecture_reg_count }}번</span>
+                            </p>
                         </div>
                     </div>
                     {% endfor %}
@@ -138,6 +141,7 @@
                 </div>
             </div>
         </div>
+
         {% else %}
         <div class="wrapper_title ">
             <div class="obj_table_raw">
@@ -154,6 +158,7 @@
         {% endif %}
     {% endif %}
     </div>
+
     <form id="form_program_select" action="{% url 'trainee:program_select' %}" method="POST">
         {% csrf_token %}
         <input type="hidden" name="class_id" id="form_program_select_class_id">

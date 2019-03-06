@@ -77,12 +77,17 @@ urlpatterns = [
     # 프로그램 선택 페이지
     url(r'^trainee_program/$', views.ProgramSelectView.as_view(), name='trainee_program'),
 
+    # 이용약관
+    url(r'^trainee_user_policy/$', views.UserPolicyView.as_view(), name='trainee_user_policy'),
+    # 개인정보 처리방침
+    url(r'^trainee_privacy_policy/$', views.PrivacyPolicyView.as_view(), name='trainee_privacy_policy'),
+
     # 회원 빈 월간 일정 페이지
     url(r'^cal_month_blank/$', views.CalMonthBlankView.as_view(), name='cal_month_blank'),
     # 회원 빈 Mypage 페이지
     url(r'^mypage_trainee_blank/$', views.MyPageBlankView.as_view(), name='mypage_trainee_blank'),
     # Mypage 페이지
-    url(r'^mypage_trainee/$', views.MyPageView.as_view(), name='mypage_trainee'),
+    url(r'^trainee_mypage/$', views.MyPageView.as_view(), name='trainee_mypage'),
     # 강좌 선택 페이지
     url(r'^lecture_select/$', views.LectureSelectView.as_view(), name='lecture_select'),
     # 회원 탈퇴 페이지
@@ -103,5 +108,8 @@ urlpatterns = [
     url(r'^popup_ticket_info/$', views.PopupTicketInfoView.as_view(),
         name='popup_ticket_info'),
 
+    # 회원 마이 정보 수정 팝업 페이지
+    url(r'^popup_my_info_change/$', views.PopupMyInfoChangeView.as_view(),
+        name='popup_my_info_change'),
 
 ]

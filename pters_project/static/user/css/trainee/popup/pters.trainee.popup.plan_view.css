@@ -1,17 +1,34 @@
-.popup_calendar_plan_view{
-	/*min-height: 100%;*/
-}
-	.popup_calendar_plan_view > .obj_font_size_20_weight_bold{
-		padding: 0 20px;
-		height: 35px;
-		line-height: 35px;
+	#popup_calendar_plan_view .popup_mobile .wrapper_top{
+		height: 50px;
+		margin-bottom: 10px;
 	}
-	.popup_calendar_plan_view > .obj_font_size_14_weight_500{
-		padding: 0 20px;
-		height: 20px;
-		line-height: 20px;
-	}
-	.popup_calendar_plan_view > .obj_box_full{
-		margin-top: 30px;
-		margin-bottom: 30px;
-	}
+
+	.popup_calendar_plan_view{
+		/*min-height: 100%;*/
+	}	
+
+		.popup_calendar_plan_view .wrapper_calendar_plan_view_title{
+				padding: 0 20px;
+			}
+			.popup_calendar_plan_view .obj_font_size_20_weight_bold{
+
+				padding: 0 20px;
+				height: 35px;
+				line-height: 35px;
+			}
+			.popup_calendar_plan_view .obj_font_size_14_weight_500{
+
+				padding: 0 20px;
+				height: 20px;
+				line-height: 20px;
+			}
+			.popup_calendar_plan_view .wrapper_calendar_plan_view_title .obj_font_size_14_weight_500{
+				position: absolute;
+				top: 55px;
+			}
+
+
+		.popup_calendar_plan_view > .obj_box_full{
+			margin-top: 30px;
+			margin-bottom: 30px;
+		}

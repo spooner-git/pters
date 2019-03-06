@@ -224,7 +224,7 @@ class TraineeCalendarView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
 
 class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'mypage_trainee.html'
+    template_name = 'trainee_mypage.html'
 
     def get(self, request):
         # context = super(MyPageView, self).get_context_data(**kwargs)
@@ -1660,4 +1660,26 @@ class PopupTicketInfoView(TemplateView):
             lecture_info.lecture_abs_count = lecture_abs_count
         context['class_data'] = class_list
         context['lecture_info'] = lecture_info
+        return context
+
+
+class PopupMyInfoChangeView(TemplateView):
+    template_name = 'popup/trainee_popup_my_info_change.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupMyInfoChangeView, self).get_context_data(**kwargs)
+        return context
+
+class UserPolicyView(TemplateView):
+    template_name = 'trainee_user_policy.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserPolicyView, self).get_context_data(**kwargs)
+        return context
+
+class PrivacyPolicyView(TemplateView):
+    template_name = 'trainee_privacy_policy.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PrivacyPolicyView, self).get_context_data(**kwargs)
         return context

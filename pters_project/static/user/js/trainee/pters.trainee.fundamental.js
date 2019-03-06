@@ -86,5 +86,16 @@ function func_ajax_after_send(ajax_name){
         $(this).addClass('func_tab_selected');
     });
 
+    //pters_func_radio
+    $(document).on('click', '.func_radio_element', function(e){
+        let $wrapper = $(this).parents('.func_radio_wrap');
+        let $outer = $(this).find('.func_radio_element_button_outer');
+        let $inner = $(this).find('.func_radio_element_button_inner');
+        let $element_siblings = $wrapper.find('.func_radio_element_button_inner');
+
+        $outer.find('div').addClass('func_radio_element_button_inner');
+        $element_siblings.removeClass('func_radio_element_button_inner');
+
+    });
 
 /* 피터스 전용 모듈*/

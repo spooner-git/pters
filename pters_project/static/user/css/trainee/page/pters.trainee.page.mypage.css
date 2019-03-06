@@ -1,0 +1,56 @@
+
+	.trainee_mypage .obj_box_full{
+		border-left: 0;
+		border-right: 0;
+	}
+
+	.trainee_mypage .wrapper_box_basic_info{
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+	.trainee_mypage .wrapper_box_basic_info #trainee_info_name{
+		display: inline-block;
+		height: 30px;
+		line-height: 30px;
+		margin-top: 10px;
+		margin-bottom: 5px;
+	}
+	.trainee_mypage .wrapper_box_basic_info .obj_button{
+		display: inline-block;
+		float: right;
+		margin-top: 10px;
+	}
+	.trainee_mypage .wrapper_box_basic_info .obj_box_full{
+		padding: 20px;
+	}
+	.trainee_mypage .wrapper_box_basic_info .obj_box_full .obj_font_size_12_weight_normal{
+		height: 20px;
+		line-height: 20px;
+	}
+
+	.trainee_mypage .wrapper_current_ticket .obj_box_full{
+		padding: 20px;
+	}
+
+
+	.trainee_mypage .wrapper_current_ticket .obj_box_card{
+		text-align: center;
+		margin-left: 0;
+		margin-right: 0;
+		margin-bottom: 10px;
+		padding: 15px 0 17px 0;
+	}
+
+	.trainee_mypage .wrapper_current_ticket .wrapper_my_ticket_status{
+		height: 18px;
+		line-height: 18px;
+	}
+	.trainee_mypage .wrapper_current_ticket .wrapper_my_ticket_title{
+		height: 25px;
+		line-height: 25px;
+	}
+	.trainee_mypage .wrapper_current_ticket .wrapper_sub_title{
+		height: 20px;
+		line-height: 20px;
+		margin-bottom: 15px;
+	}
