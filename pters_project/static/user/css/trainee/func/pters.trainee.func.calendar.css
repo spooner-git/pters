@@ -12,6 +12,7 @@
 		}
 		.pters_calendar .obj_box_full{
 			/*margin-top: 20px;*/
+			overflow-y: hidden;
 			padding: 0;
 			border-left: 0;
 			border-right: 0;

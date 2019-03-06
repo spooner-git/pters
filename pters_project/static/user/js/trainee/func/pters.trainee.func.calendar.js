@@ -152,16 +152,17 @@ function pters_month_calendar(calendar_name, calendar_options){
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7"></div>`);
                 }else{
 
-                    // dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
-                    //                            onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':'${data_date}'})">
-                    //                            <div class="${font_color}">${date_cache}</div>
-                    //                            <div id="calendar_plan_cell_${data_date}"></div>
-                    //                       </div>`);
-                    dateCellsToJoin.push(`<div class="obj_table_cell_x7 month_date" data-date="${data_date}">
+                    dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
+                                               onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':'${data_date}'})">
                                                <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
                                                <div class="calendar_date_number ${font_color}">${date_cache}</div>
                                                <div id="calendar_plan_cell_${data_date}"></div>
                                           </div>`);
+                    // dateCellsToJoin.push(`<div class="obj_table_cell_x7 month_date" data-date="${data_date}">
+                    //                            <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
+                    //                            <div class="calendar_date_number ${font_color}">${date_cache}</div>
+                    //                            <div id="calendar_plan_cell_${data_date}"></div>
+                    //                       </div>`);
                     date_cache++;
                 }
             }
@@ -399,7 +400,7 @@ function pters_month_calendar(calendar_name, calendar_options){
 
         $target_html.html(html);
         func_set_scrolling_to_timeline('.wrapper_cal_timeline');
-        func_set_month_date_button_for_timeline();
+        //func_set_month_date_button_for_timeline();
     }
 
     /**
@@ -459,40 +460,46 @@ function pters_month_calendar(calendar_name, calendar_options){
     }
 
     function func_set_expand_function(){
+        let calendar_month_height = $(`.${calendar_name}_wrapper_month_cal`).height();
         $(document).on('click', `.${calendar_name}_expand_button`, function(){
             // let original_height;
             // let expand_height;
-            func_time_line_wide_view($(this).attr('data-open'));
+            func_time_line_wide_view($(this).attr('data-open'), calendar_month_height);
+
         });
     }
 
-    function func_time_line_wide_view(type){
+    function func_time_line_wide_view(type, calendar_month_height){
         let $calendar_name_expand_button = $(`.${calendar_name}_expand_button`);
         let $calendar_name_expand_button_img = $(`.${calendar_name}_expand_button`).find('img');
         let $calendar_name_wrapper_month_cal = $(`.${calendar_name}_wrapper_month_cal`);
+        
         let $wrapper_cal_timeline = $('.wrapper_cal_timeline');
         switch(type){
             case SHOW:
                 $calendar_name_expand_button.attr('data-open', HIDE);
                 $calendar_name_expand_button_img.attr('src', '/static/common/icon/expand_more_black.png');
-                $calendar_name_wrapper_month_cal.show();
+                // $calendar_name_wrapper_month_cal.show();
+                $calendar_name_wrapper_month_cal.animate({'height': `${calendar_month_height}px`}, 200);
                 $wrapper_cal_timeline.css('height', `${original_height}px`);
             break;
 
             case HIDE:
                 $calendar_name_expand_button.attr('data-open', SHOW);
                 $calendar_name_expand_button_img.attr('src', '/static/common/icon/expand_less_black.png');
-                $calendar_name_wrapper_month_cal.hide();
+                // $calendar_name_wrapper_month_cal.hide();
+                $calendar_name_wrapper_month_cal.animate({height: 0}, 200);
                 $wrapper_cal_timeline.css('height', `${expand_height}px`);
             break;
 
             case undefined:
                 original_height = parseInt($wrapper_cal_timeline.css('height'));
                 expand_height = calendar_height - calendar_toolbox_height - calendar_timeline_toolbox_height;
-                console.log(calendar_height, calendar_toolbox_height, calendar_timeline_toolbox_height);
+
                 $calendar_name_expand_button.attr('data-open', SHOW);
                 $calendar_name_expand_button_img.attr('src', '/static/common/icon/expand_less_black.png');
-                $calendar_name_wrapper_month_cal.hide();
+                // $calendar_name_wrapper_month_cal.hide();
+                $calendar_name_wrapper_month_cal.animate({height: 0}, 200);
                 $wrapper_cal_timeline.css('height', `${expand_height}px`);
         }
     }
