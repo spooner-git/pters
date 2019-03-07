@@ -47,7 +47,14 @@
 	}
 	.trainee_main .wrapper_program_select{
 		width : 20%;
-		text-align: right;
+	}
+	.trainee_main .wrapper_program_select select{
+		-webkit-appearance: none;
+		-webkit-text-fill-color: #000000;
+		border: 0;
+		border-radius: 0;
+		background-color: transparent;
+		text-align-last:right;
 	}
 	.trainee_main .wrapper_sub_title{
 		margin-left: 5px;
