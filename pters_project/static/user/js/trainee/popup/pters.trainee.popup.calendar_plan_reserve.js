@@ -49,7 +49,6 @@ $(document).on("change", "select[title='time_select']", function(){
     $('#form_content_training_end_date').val(end_date);
     $('#form_content_training_time').val(start_time);
     $('#form_content_training_end_time').val(end_time);
-
 });
 
 

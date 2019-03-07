@@ -88,6 +88,7 @@ function func_ajax_after_send(ajax_name){
 
     //pters_func_radio
     $(document).on('click', '.func_radio_element', function(e){
+        console.log('clicked')
         let $wrapper = $(this).parents('.func_radio_wrap');
         let $outer = $(this).find('.func_radio_element_button_outer');
         let $inner = $(this).find('.func_radio_element_button_inner');

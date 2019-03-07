@@ -88,8 +88,6 @@
 		}
 
 		.popup_calendar_plan_reserve .wrapper_reserve_form{
-			padding-top: 20px;
-			padding-bottom: 20px;
 			border-bottom: 1px solid #e6e6e6;
 			border-top: 1px solid #e6e6e6;
 			border-radius: 0;
@@ -100,7 +98,12 @@
 		/*.wrapper_reserve_form .obj_table_cell_x2{
 			vertical-align: top;
 		}*/
-
+		.popup_calendar_plan_reserve .wrapper_reserve_form > .obj_box_full{
+			padding: 20px;
+			margin-bottom: 10px;
+			border: 0;
+			border-radius: 0;
+		}
 		.wrapper_reserve_form .wrapper_reserve_form_title{
 			width: 95px;
 		}
