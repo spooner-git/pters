@@ -51,7 +51,6 @@
 	.trainee_main .wrapper_program_select select{
 		-webkit-appearance: none;
 		-webkit-text-fill-color: #000000;
-		text-align: -webkit-center;
 		text-align-last:right;
 		border: 0;
 		border-radius: 0;
