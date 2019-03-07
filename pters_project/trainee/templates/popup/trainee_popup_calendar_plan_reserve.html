@@ -327,7 +327,6 @@
             // }
 
             function func_group_time_dom_draw(target_html, selected_date, schedule_json, setting_info){
-                console.log(schedule_json)
 
                 let $target_html = $(target_html);
                 let group_ids = schedule_json.group_schedule_group_id;
@@ -408,6 +407,7 @@
 
 
         $(document).on('click', '.func_tab_element', function(){
+            $('.func_radio_element_button_inner').removeClass('func_radio_element_button_inner')
             $('#form_plan_add').find('input').val('');
             let this_type = $(this).attr('data-tab');
             $target_to_show = $(`#reserve_form_${this_type}`);
