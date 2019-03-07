@@ -51,11 +51,14 @@
 	.trainee_main .wrapper_program_select select{
 		-webkit-appearance: none;
 		-webkit-text-fill-color: #000000;
+		direction: rtl;
 		text-align-last:right;
 		border: 0;
 		border-radius: 0;
 		background-color: transparent;
-		
+	}
+	.trainee_main .wrapper_program_select option{
+		direction: ltr;
 	}
 	.trainee_main .wrapper_sub_title{
 		margin-left: 5px;

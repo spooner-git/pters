@@ -18,7 +18,7 @@
                             {{ request.session.program_title }}
                     </div>
                     <div class="wrapper_program_select obj_table_cell_x2">
-                        <select class="obj_font_size_13_weight_500 obj_font_color_light_grey" title="program_select" dir="rtl">
+                        <select class="obj_font_size_13_weight_500 obj_font_color_light_grey" title="program_select">
                             <option selected="" disabled="">프로그램 변경</option>
                             {% for class_info in class_data %}
                             <option data-class_id="{{ class_info.class_tb_id }}">{{ class_info.class_type_name }} - {{ class_info.class_tb.member.name }} 강사</option>
