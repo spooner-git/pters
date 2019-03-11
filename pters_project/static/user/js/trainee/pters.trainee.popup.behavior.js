@@ -276,3 +276,12 @@ function func_set_popup_basic(popup_name, data){
         $popup.find('.popup_basic_confirm').attr('onclick', data.onclick_function);
     }
 }
+
+function show_error_message(message){
+    layer_popup.open_layer_popup(POPUP_BASIC,
+                                 'popup_basic_user_confirm',
+                                 POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
+                                 {'popup_title':'',
+                                  'popup_comment':`${message}`,
+                                  'onclick_function':`layer_popup.close_layer_popup()`});
+}

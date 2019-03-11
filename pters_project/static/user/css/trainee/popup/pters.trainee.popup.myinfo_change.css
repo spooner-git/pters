@@ -33,10 +33,10 @@
 			margin-bottom: 10px;
 			padding: 20px;
 		}
-		.popup_my_info_change > .obj_box_full > article{
+		.popup_my_info_change > .obj_box_full article{
 			margin-bottom: 15px;
 		}
-		.popup_my_info_change > .obj_box_full > article > input{
+		.popup_my_info_change > .obj_box_full article input{
 			-webkit-appearance:none;
 			width: 100%;
 			border: 0;
