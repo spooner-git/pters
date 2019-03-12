@@ -22,19 +22,19 @@
                 </article>
                 <article>
                     <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">아이디</div>
-                    <input type="text" name="id" class="obj_font_size_14_weight_500" placeholder="sxnwxxk">
+                    <input type="text" name="id" class="obj_font_size_14_weight_500" placeholder="sxnwxxk" style="" disabled>
                 </article>
                 <article>
                     <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">생년월일</div>
-                    <input type="text" name="birthday" class="obj_font_size_14_weight_500" placeholder="1990.01.23">
+                    <input type="date" name="birthday" class="obj_font_size_14_weight_500" value="1990-01-23" max="2025-12-31" min="1919-01-01">
                 </article>
                 <article>
                     <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">연락처</div>
-                    <input type="text" name="phone" class="obj_font_size_14_weight_500" placeholder="010-4461-6646">
+                    <input type="tel" name="phone" class="obj_font_size_14_weight_500" placeholder="010-4461-6646">
                 </article>
                 <article>
                     <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">이메일</div>
-                    <input type="text" name="email" class="obj_font_size_14_weight_500" placeholder="sxnwxxk@gmail.com">
+                    <input type="email" name="email" class="obj_font_size_14_weight_500" placeholder="sxnwxxk@gmail.com" disabled>
                 </article>
 
 
@@ -68,8 +68,9 @@
 
                 //통신성공시 처리
                 success:function(data){
-                    var jsondata = JSON.parse(data);
-                    if(jsondata.messageArray.length > 0){
+                    let jsondata = JSON.parse(data);
+                    let error_message = jsondata.messageArray;
+                    if(error_message.length > 0){
                         layer_popup.close_layer_popup();
                         show_error_message(error_message[0]);
                     }else{
