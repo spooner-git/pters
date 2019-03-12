@@ -9,41 +9,27 @@
     <div class="trainee_alarm">
 
         <div class="wrapper_alarm_unread obj_box_full">
-            <p class="obj_font_size_11_weight_bold obj_font_color_dark_grey wrapper_alarm_unread_title">새로운 알림</p> 
-
+            <p class="obj_font_size_11_weight_bold obj_font_color_dark_grey wrapper_alarm_unread_title">새로운 알림</p>
+        {% for class_info in class_data %}
+            {% if class_info.np_lecture_counts > 0 %}
             <div class="wrapper_alarm_element obj_font_size_16_weight_500">
                 <div class="wrapper_alarm_element_title">
-                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
+                    <div class="alarm_status">{{ class_info.class_type_name }}</div>
                 </div>
                 <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
-                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
+                    {{ class_info.class_tb.member.name }}강사님 '{{ class_info.class_type_name }}' 프로그램을 연결 요청했습니다.
                 </div>
+                {% for class_lecture_info in class_info.class_lecture_data %}
+                <div class="obj_font_size_15_weight_bold">(수강권: {{ class_lecture_info.package_tb.name }}) </div>
+                {% endfor %}
+                <div class="obj_button_gen obj_font_bg_white_grey"
+                     onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
+                                                           {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
+                                                           'onclick_function':`func_program_select('{{ class_info.class_tb_id }}', ${PROGRAM_LECTURE_CONNECT_DELETE})`});">취소하기</div>
+                <div class="obj_button_gen obj_font_bg_white_black" onclick="func_program_select('{{ class_info.class_tb_id }}',`${PROGRAM_LECTURE_CONNECT_ACCEPT}`);">연결하기</div>
             </div>
-
-    {#        {% for class_info in class_data %}#}
-    {#            {% if class_info.np_lecture_counts > 0 %}#}
-    {#            <div class="wrapper_new_request">#}
-    {#                <div class="obj_box_full">#}
-    {#                    <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">새로운 프로그램</div>#}
-    {#                    <div class="wrapper_program_title obj_table_cell_x2 obj_font_size_18_weight_bold">{{ class_info.class_type_name }}</div>#}
-    {#                    <div class="obj_box_card obj_font_bg_white_black">#}
-    {#                        {% for class_lecture_info in class_info.class_lecture_data %}#}
-    {#                        <div class="obj_font_size_15_weight_bold"> {{ class_lecture_info.package_tb.name }} </div>#}
-    {#                        {% endfor %}#}
-    {#                        <div class="obj_font_size_12_weight_normal">{{ class_info.class_tb.member.name }} 강사</div>#}
-    {#                    </div>#}
-    {#                    <div class="wrapper_request_select_box">#}
-    {#                        <div class="obj_font_size_11_weight_normal obj_font_color_light_black">강사님이 연동을 신청했습니다.</div>#}
-    {#                        <div class="obj_button_gen obj_font_bg_white_black" onclick="func_program_select('{{ class_info.class_tb_id }}',`${PROGRAM_LECTURE_CONNECT_ACCEPT}`);">연결하기</div>#}
-    {#                        <div class="obj_button_gen obj_font_bg_white_grey"#}
-    {#                             onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,#}
-    {#                                                                   {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',#}
-    {#                                                                   'onclick_function':`func_program_select('{{ class_info.class_tb_id }}', ${PROGRAM_LECTURE_CONNECT_DELETE})`});">취소하기</div>#}
-    {#                    </div>#}
-    {#                </div>#}
-    {#            </div>#}
-    {#            {% endif %}#}
-    {#        {% endfor %}#}
+            {% endif %}
+        {% endfor %}
         </div>
 
         <div class="wrapper_alarm_list obj_box_full ">

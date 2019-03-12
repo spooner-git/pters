@@ -1094,12 +1094,14 @@ class GetTraineeGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Templa
         return context
 
 
-class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
-    context_object_name = "log_data"
+class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    # context_object_name = "log_data"
     template_name = "trainee_alarm.html"
-    page_template = 'trainee_alarm_page.html'
+    # page_template = 'trainee_alarm_page.html'
 
-    def get_queryset(self):
+    def get_context_data(self, **kwargs):
+        context = super(AlarmView, self).get_context_data(**kwargs)
+        context = func_get_class_list(context, self.request.user.id)
         lecture_id = self.request.session.get('lecture_id', '')
         error = None
         log_data = None
@@ -1149,7 +1151,9 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
                         else:
                             log_info.time_ago = str(sec) + '초 전'
 
-        return log_data
+            context['log_data'] = log_data
+
+        return context
 
 
 class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, View):
