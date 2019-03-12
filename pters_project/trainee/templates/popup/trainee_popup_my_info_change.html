@@ -62,7 +62,7 @@
                 show_error_message('전화번호는 숫자만 입력해주세요.');
                 return false;
             }
-            
+
             $.ajax({
                 url:'/trainee/update_trainee_info/',
                 type:'POST',
@@ -100,7 +100,9 @@
 
         function func_check_tel_format_validity(){
             let $input_tel = $('input[name="phone"]');
-            if($input_tel.val().indexOf('-') != -1){
+            let special_pattern = /[`~!@#$%^&*|\\\'\";:\/?\-\_ ]/gi;
+
+            if(special_pattern.test($input_tel.val()) == true){
                 return false;
             }else{
                 return true;
