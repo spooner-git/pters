@@ -94,6 +94,8 @@ urlpatterns = [
     url(r'^lecture_select/$', views.LectureSelectView.as_view(), name='lecture_select'),
     # 회원 탈퇴 페이지
     url(r'^delete_trainee_account/$', views.DeleteTraineeAccountView.as_view(), name='delete_trainee_account'),
+    # 문의 페이지
+    url(r'^trainee_inquiry/$', views.TraineeInquiryView.as_view(), name='trainee_inquiry'),
 
 
     # 팝업 #########################################################################################################

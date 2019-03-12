@@ -1,0 +1,131 @@
+{% extends "trainee_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <!-- <link rel="stylesheet" href={% static_url "user/css/trainee/page/pters.trainee.page.inquiry.css" %}> -->
+    <style type="text/css">
+        .trainee_inquiry{
+            background-color: #f2f2f2;
+        }
+        .wrapper_inquiry_select_box{
+            padding: 15px 20px 20px 20px;
+            background-image: linear-gradient(107deg, #000000, #ffffff);
+            border: 1px solid #e6e6e6;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        .wrapper_inquiry_select_box_title{
+            margin-bottom: 10px;
+        }
+        .wrapper_inquiry_type_select{
+            -webkit-appearance:none;
+            background-color: #ffffff;
+            height: 40px;
+            width: 100%;
+            border-radius: 2px;
+            border:0;
+        }
+        .wrapper_trainee_iquiry_textarea{
+            resize: none;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        textarea{
+            font-family: 'Noto Sans KR', sans-serif !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="trainee_inquiry">
+        <form id="form_inquiry"  action="{% url 'board:add_question_info' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="inquiry_type" id="id_inquire_type">
+            <input type="hidden" name="inquire_body" id="id_inquire_body">
+        </form>
+        <div class="wrapper_inquiry_select_box">
+            <div class="wrapper_inquiry_select_box_title obj_font_size_15_weight_900 obj_font_color_white">레슨-온에게 문의하기</div>
+            <select class="wrapper_inquiry_type_select">
+                {% for qa_type_info in qa_type_data %}
+                    <option value="{{ qa_type_info.common_cd }}">{{ qa_type_info.common_cd_nm }}</option>
+                {% endfor %}
+                <option disabled selected>선택</option>
+                <option value="1">문의 타입1</option>
+                <option value="1">문의 타입2</option>
+                <option value="1">문의 타입3</option>
+            </select>
+        </div>
+
+        <textarea class="wrapper_trainee_iquiry_textarea obj_box_full" placeholder="문의 내용을 입력 해주세요.&#13;&#10;(작성하신 문의는 등록하신 이메일로 답변 드립니다.)"></textarea>
+
+        <div id="button_inquiry_send" class="obj_button_big obj_font_bg_white_black">보내기</div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block local_js_footer %}
+    <script type="text/javascript">
+    	//Nav바에 현재 페이지에 밑줄 표기
+        let device_height = $(window).height();
+        let select_box_height = 115;
+        let button_height = 55;
+        let margins = 15;
+        let nav_bar_height = parseInt($('body').css('padding-top'));
+        let iphone_scroll_vibe_margin = 2;
+
+
+        window.addEventListener('load', function () {
+            {% for message in messages %}
+                {% if message.tags == "error" %}
+                    alert('{{ message }}');
+                {% endif %}
+            {% endfor %}
+
+            $('.wrapper_trainee_iquiry_textarea').css('height', device_height-nav_bar_height-select_box_height-button_height-margins-iphone_scroll_vibe_margin);
+
+            func_set_webkit_overflow_scrolling('.wrapper_trainee_iquiry_textarea');
+        });
+
+        $('#button_inquiry_send').click(function(){
+            let type = $('#id_inquire_type');
+            let body = $('#id_inquire_body');
+            func_send_inquiry(type, body);
+        });
+
+        $('.wrapper_inquiry_type_select').change(function(){
+            $('#id_inquire_type').val($(this).val());
+        });
+
+        function func_send_inquiry(type, body){
+            let validity = func_check_inquiry_validity(type, body);
+            if(validity == false){
+                return false;
+            }
+            alert('문의 발송 완료');
+            $('#form_inquiry').submit();
+        }
+
+        function func_check_inquiry_validity(type, body){
+            var content = $('.wrapper_trainee_iquiry_textarea').val();
+            content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
+            $('#id_inquire_body').val(content);
+
+            if(type.val() == ""){
+                show_error_message('문의 타입을 선택해주세요.');
+                return false;
+            }
+            if(body.val() == ""){
+                show_error_message('문의 내용을 작성해주세요.');
+                return false;
+            }
+            return true;
+        }
+
+    </script>
+
+{% endblock %}

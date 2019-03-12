@@ -1795,3 +1795,10 @@ class PrivacyPolicyView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PrivacyPolicyView, self).get_context_data(**kwargs)
         return context
+
+class TraineeInquiryView(TemplateView):
+    template_name = 'trainee_inquiry.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TraineeInquiryView, self).get_context_data(**kwargs)
+        return context
