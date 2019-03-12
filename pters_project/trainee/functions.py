@@ -708,6 +708,41 @@ def func_get_trainee_ing_lecture_list(context, class_id, user_id):
     return context
 
 
+def func_get_trainee_ing_group_list(context, class_id, user_id):
+
+    query_member_auth_cd \
+        = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
+          " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " + str(user_id)
+    lecture_list = ClassLectureTb.objects.select_related(
+        'lecture_tb__member',
+        'lecture_tb__package_tb').filter(class_tb_id=class_id,
+                                         lecture_tb__member_id=user_id,
+                                         lecture_tb__state_cd='IP',
+                                         lecture_tb__use=USE
+                                         ).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
+                                                    ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date',
+                                                                                             'lecture_tb__reg_dt')
+
+    for lecture_info in lecture_list:
+        lecture_info_package_tb = lecture_info.lecture_tb.package_tb
+
+        lecture_info.package_group_data = PackageGroupTb.objects.select_related(
+            'group_tb').filter(package_tb_id=lecture_info_package_tb.package_id,
+                               group_tb__use=USE,
+                               use=USE).order_by('-group_tb__group_type_cd', 'group_tb__reg_dt')
+
+        try:
+            lecture_info_package_tb.package_type_cd_nm \
+                = CommonCdTb.objects.get(common_cd=lecture_info_package_tb.package_type_cd).common_cd_nm
+            if lecture_info_package_tb.package_type_cd_nm == '1:1':
+                lecture_info_package_tb.package_type_cd_nm = '개인'
+        except ObjectDoesNotExist:
+            lecture_info_package_tb.package_type_cd_nm = ''
+
+    context['ing_lecture_data'] = lecture_list
+    return context
+
+
 # 검사후 괜찮다면 1:1 레슨은  예약 허용 시간대 + 강사 업무시간 + 예약 가능 시간 ~  예약 호용 시간대 + 강사 업무 시간
 # 그룹 레슨의 경우 오픈된 수업중 예약 허용 시간대 + 강사 업무시간 + 예약 가능 시간 ~  예약 호용 시간대 + 강사 업무 시간
 def func_get_trainee_reserve_schedule_list(context, class_id, user_id, group_id, select_date):

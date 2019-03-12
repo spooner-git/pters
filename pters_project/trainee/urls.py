@@ -86,8 +86,10 @@ urlpatterns = [
     url(r'^cal_month_blank/$', views.CalMonthBlankView.as_view(), name='cal_month_blank'),
     # 회원 빈 Mypage 페이지
     url(r'^mypage_trainee_blank/$', views.MyPageBlankView.as_view(), name='mypage_trainee_blank'),
+
     # Mypage 페이지
     url(r'^trainee_mypage/$', views.MyPageView.as_view(), name='trainee_mypage'),
+
     # 강좌 선택 페이지
     url(r'^lecture_select/$', views.LectureSelectView.as_view(), name='lecture_select'),
     # 회원 탈퇴 페이지
@@ -107,6 +109,8 @@ urlpatterns = [
     url(r'^popup_calendar_plan_reserve_complete/$', views.PopupCalendarPlanReserveCompleteView.as_view(),
         name='popup_calendar_plan_reserve_complete'),
     # 회원 수강권 정보 팝업 페이지
+    url(r'^popup_group_ticket_info/$', views.PopupGroupTicketInfoView.as_view(),
+        name='popup_group_ticket_info'),
     url(r'^popup_ticket_info/$', views.PopupTicketInfoView.as_view(),
         name='popup_ticket_info'),
 

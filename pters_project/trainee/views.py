@@ -15,21 +15,19 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
-from django.views.generic.base import ContextMixin
 from el_pagination.views import AjaxListView
 
 # Create your views here.
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
-    SCHEDULE_DUPLICATION_DISABLE, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, PROGRAM_LECTURE_CONNECT_ACCEPT, \
-    SCHEDULE_ABSENCE
+    SCHEDULE_DUPLICATION_DISABLE, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, PROGRAM_LECTURE_CONNECT_ACCEPT
 
 from configs.views import AccessTestMixin
 
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.functions import func_get_trainer_setting_list
-from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb
+from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb, GroupTb
 from .models import LectureTb, MemberLectureTb
 
 from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
@@ -39,7 +37,7 @@ from .functions import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
     func_get_lecture_connection_list, func_get_trainee_next_schedule_by_class_id, func_get_trainee_select_schedule, \
-    func_get_trainee_ing_lecture_list, func_check_select_date_reserve_setting
+    func_get_trainee_ing_group_list, func_check_select_date_reserve_setting
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +59,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         class_id = request.session.get('class_id', '')
 
         if class_id is None or class_id == '':
-            self.url = '/trainee/trainee_program/'
+            self.url = '/trainee/trainee_main/'
         else:
             query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                                  " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = "+str(request.user.id)+" and" \
@@ -152,7 +150,7 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = func_get_class_list(context, self.request.user.id)
         if class_id is not None and class_id != '':
             context = func_get_trainee_next_schedule_by_class_id(context, class_id, self.request.user.id)
-            context = func_get_trainee_ing_lecture_list(context, class_id, self.request.user.id)
+            context = func_get_trainee_ing_group_list(context, class_id, self.request.user.id)
 
         return context
 
@@ -256,18 +254,22 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
             context['class_info'] = class_info
 
         if error is None:
-            if member_info.phone is None:
+            if member_info.phone is None or member_info.phone == '':
                 member_info.phone = ''
+            else:
+                member_info.phone = member_info.phone[0:3] + '-' + \
+                                    member_info.phone[3:7] + '-' + \
+                                    member_info.phone[7:11]
             if member_info.birthday_dt is None:
                 member_info.birthday_dt = ''
             context['member_info'] = member_info
 
-        if error is None:
-            if class_id != '' and class_id is not None:
-                context = func_get_trainee_on_schedule(context, class_id, request.user.id, None, None)
-                context = func_get_trainee_on_repeat_schedule(context, request.user.id, class_id)
-                context = get_trainee_schedule_data_by_class_id_func(context, request.user.id,
-                                                                     class_id)
+        # if error is None:
+        #     if class_id != '' and class_id is not None:
+        #         context = func_get_trainee_on_schedule(context, class_id, request.user.id, None, None)
+        #         context = func_get_trainee_on_repeat_schedule(context, request.user.id, class_id)
+        #         context = get_trainee_schedule_data_by_class_id_func(context, request.user.id,
+        #                                                              class_id)
                 # 강사 setting 값 로드
                 # context = get_trainer_setting_data(context, class_info.member_id, class_id)
 
@@ -1625,6 +1627,67 @@ class PopupCalendarPlanReserveCompleteView(TemplateView):
         return context
 
 
+class PopupGroupTicketInfoView(TemplateView):
+    template_name = 'popup/trainee_popup_group_ticket_info.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupGroupTicketInfoView, self).get_context_data(**kwargs)
+        lecture_id = self.request.GET.get('lecture_id')
+        group_id = self.request.GET.get('group_id')
+        error = None
+        class_list = ClassLectureTb.objects.select_related('class_tb__member').filter(lecture_tb_id=lecture_id,
+                                                                                      auth_cd='VIEW', use=USE)
+
+        for class_info in class_list:
+            if class_info.class_tb.member.phone is not None and class_info.class_tb.member.phone != '':
+                class_info.class_tb.member.phone = class_info.class_tb.member.phone[0:3] + '-' + \
+                                                   class_info.class_tb.member.phone[3:7] + '-' +\
+                                                   class_info.class_tb.member.phone[7:11]
+
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = '수강권 정보를 불러오지 못했습니다.'
+
+        try:
+            group_info = GroupTb.objects.get(group_id=group_id)
+        except ObjectDoesNotExist:
+            error = '수업 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                lecture_info.package_tb.package_type_cd_nm \
+                    = CommonCdTb.objects.get(common_cd=lecture_info.package_tb.package_type_cd).common_cd_nm
+                if lecture_info.package_tb.package_type_cd_nm == '1:1':
+                    lecture_info.package_tb.package_type_cd_nm = '개인'
+            except ObjectDoesNotExist:
+                lecture_info.package_tb.package_type_cd_nm = ''
+
+            lecture_abs_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PC').count()
+            lecture_info.lecture_abs_count = lecture_abs_count
+        if error is None:
+            query_status = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `SCHEDULE_TB`.`STATE_CD`"
+            if group_info.group_type_cd != 'ONE_TO_ONE':
+                schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
+                                                          group_tb_id=group_id,
+                                                          use=USE).annotate(status=RawSQL(query_status,
+                                                                                          [])).order_by('-start_dt',
+                                                                                                        '-end_dt')
+            else:
+                schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
+                                                          group_tb__isnull=True,
+                                                          use=USE).annotate(status=RawSQL(query_status,
+                                                                                          [])).order_by('-start_dt',
+                                                                                                        '-end_dt')
+
+        context['class_data'] = class_list
+        context['lecture_info'] = lecture_info
+        context['group_info'] = group_info
+        context['schedule_data'] = schedule_list
+
+        return context
+
+
 class PopupTicketInfoView(TemplateView):
     template_name = 'popup/trainee_popup_ticket_info.html'
 
@@ -1668,7 +1731,44 @@ class PopupMyInfoChangeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupMyInfoChangeView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        sns_id = self.request.session.get('social_login_id', '')
+        member_info = None
+        class_info = None
+        error = None
+        # today = datetime.date.today()
+        if class_id != '' and class_id is not None:
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+            except ObjectDoesNotExist:
+                error = '수강 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                member_info = MemberTb.objects.get(member_id=self.request.user.id)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
+
+        if class_id != '' and class_id is not None:
+            if error is None:
+                try:
+                    class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
+                except ObjectDoesNotExist:
+                    error = '수강정보를 불러오지 못했습니다.'
+            context['class_info'] = class_info
+
+        if error is None:
+            if member_info.phone is None or member_info.phone == '':
+                member_info.phone = ''
+            else:
+                member_info.phone = member_info.phone[0:3] + '-' + \
+                                    member_info.phone[3:7] + '-' + \
+                                    member_info.phone[7:11]
+            if member_info.birthday_dt is None:
+                member_info.birthday_dt = ''
+            context['member_info'] = member_info
         return context
+
 
 class UserPolicyView(TemplateView):
     template_name = 'trainee_user_policy.html'
@@ -1676,6 +1776,7 @@ class UserPolicyView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(UserPolicyView, self).get_context_data(**kwargs)
         return context
+
 
 class PrivacyPolicyView(TemplateView):
     template_name = 'trainee_privacy_policy.html'

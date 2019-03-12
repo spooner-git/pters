@@ -315,6 +315,11 @@
         width: 20%;
         vertical-align: middle;
     }
+    .obj_table_cell_x6{
+        display: table-cell;
+        width: 16.6%;
+        vertical-align: middle;
+    }
     .obj_table_cell_x7{
         display: table-cell;
         width: 14.28%;
