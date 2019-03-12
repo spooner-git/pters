@@ -47,6 +47,7 @@
 	}
 	.trainee_main .wrapper_program_select{
 		width : 20%;
+		text-align : right;
 	}
 	.trainee_main .wrapper_program_select select{
 		-webkit-appearance: none;

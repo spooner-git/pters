@@ -15,14 +15,12 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
-from django.views.generic.base import ContextMixin
 from el_pagination.views import AjaxListView
 
 # Create your views here.
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
-    SCHEDULE_DUPLICATION_DISABLE, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, PROGRAM_LECTURE_CONNECT_ACCEPT, \
-    SCHEDULE_ABSENCE
+    SCHEDULE_DUPLICATION_DISABLE, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, PROGRAM_LECTURE_CONNECT_ACCEPT
 
 from configs.views import AccessTestMixin
 
@@ -39,7 +37,7 @@ from .functions import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
     func_get_lecture_connection_list, func_get_trainee_next_schedule_by_class_id, func_get_trainee_select_schedule, \
-    func_get_trainee_ing_lecture_list, func_check_select_date_reserve_setting
+    func_get_trainee_ing_group_list, func_check_select_date_reserve_setting
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +59,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         class_id = request.session.get('class_id', '')
 
         if class_id is None or class_id == '':
-            self.url = '/trainee/trainee_program/'
+            self.url = '/trainee/trainee_main/'
         else:
             query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                                  " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = "+str(request.user.id)+" and" \
@@ -152,7 +150,7 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = func_get_class_list(context, self.request.user.id)
         if class_id is not None and class_id != '':
             context = func_get_trainee_next_schedule_by_class_id(context, class_id, self.request.user.id)
-            context = func_get_trainee_ing_lecture_list(context, class_id, self.request.user.id)
+            context = func_get_trainee_ing_group_list(context, class_id, self.request.user.id)
 
         return context
 
