@@ -100,7 +100,7 @@
 
         function func_check_tel_format_validity(){
             let $input_tel = $('input[name="phone"]');
-            let special_pattern = /[`~!@#$%^&*|\\\'\";:\/?\-\_ ]/gi;
+            let special_pattern = /[`~!@#$%^&*+|\\\'\";:\/?\-\_ ]/gi;
 
             if(special_pattern.test($input_tel.val()) == true){
                 return false;
