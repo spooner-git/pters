@@ -94,6 +94,8 @@
     <script type="text/javascript" src={% static_url "user/js/trainee/popup/pters.trainee.popup.calendar_plan_reserve.js" %}></script>
     <script type="text/javascript">
         $(document).ready(function(){
+            $('#form_plan_add').find('input').val('');
+
             let time_unit;
             // let start_time_option;
             let selected_date = `{{ select_date }}`.split(' ')[0];
@@ -328,7 +330,7 @@
 
             function func_group_time_dom_draw(target_html, selected_date, schedule_json, setting_info){
 
-                console.log(schedule_json)
+                console.log(schedule_json);
                 let $target_html = $(target_html);
                 let group_ids = schedule_json.group_schedule_group_id;
                 let group_names = schedule_json.group_schedule_group_name;
@@ -408,7 +410,7 @@
 
 
         $(document).on('click', '.func_tab_element', function(){
-            $('.func_radio_element_button_inner').removeClass('func_radio_element_button_inner')
+            $('.func_radio_element_button_inner').removeClass('func_radio_element_button_inner');
             $('#form_plan_add').find('input').val('');
             let this_type = $(this).attr('data-tab');
             $target_to_show = $(`#reserve_form_${this_type}`);
