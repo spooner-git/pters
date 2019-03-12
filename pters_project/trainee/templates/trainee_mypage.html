@@ -12,11 +12,11 @@
         <div class="wrapper_box_basic_info">
             <div class="obj_box_full">
                 <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">내 정보</div>
-                    <h2 class="obj_font_size_15_weight_bold" id="trainee_info_name">{{ member_info.name }} ({{ member_info.id }})</h2>
-                    <div class="obj_button obj_font_size_13_weight_500" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_my_info_change', 90, POPUP_FROM_BOTTOM, {'lecture_id':'{{ing_lecture_info.lecture_tb_id}}' } )">변경하기</div>
-                    <div class="obj_font_size_12_weight_normal" id="trainee_info_birth">{{ member_info.birthday_dt }}</div>
+                    <h2 class="obj_font_size_15_weight_bold" id="trainee_info_name">{{ member_info.name }} ({{ member_info.user.username }})</h2>
+                    <div class="obj_button obj_font_size_13_weight_500" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_my_info_change', 90, POPUP_FROM_BOTTOM, {} )">변경하기</div>
+                    <div class="obj_font_size_12_weight_normal" id="trainee_info_birth">{{ member_info.birthday_dt | date:'Y.m.d' }}</div>
                     <div class="obj_font_size_12_weight_normal" id="trainee_info_phone">{{ member_info.phone }}</div>
-                    <div class="obj_font_size_12_weight_normal" id="trainee_info_email">{{ member_info.email }}</div>
+                    <div class="obj_font_size_12_weight_normal" id="trainee_info_email">{{ member_info.user.email }}</div>
             </div>
         </div>
         <div class="wrapper_current_ticket">

@@ -22,7 +22,7 @@
                 </article>
                 <article>
                     <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">아이디</div>
-                    <input type="text" name="id" class="obj_font_size_14_weight_500" placeholder="{{ member_info.id }}" style="" disabled>
+                    <input type="text" name="id" class="obj_font_size_14_weight_500" placeholder="{{ member_info.user.username }}" style="" disabled>
                 </article>
                 <article>
                     <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">생년월일</div>
@@ -34,7 +34,7 @@
                 </article>
                 <article>
                     <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">이메일</div>
-                    <input type="email" name="email" class="obj_font_size_14_weight_500" placeholder="{{ member_info.email }}" disabled>
+                    <input type="email" name="email" class="obj_font_size_14_weight_500" placeholder="{{ member_info.user.email }}" disabled>
                 </article>
 
 
