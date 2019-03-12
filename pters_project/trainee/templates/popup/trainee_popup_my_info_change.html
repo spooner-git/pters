@@ -57,6 +57,12 @@
     <script type="text/javascript">
 
         function func_send_my_info_change(){
+            let tel_validation = func_check_tel_format_validity();
+            if(tel_validation == false){
+                show_error_message('전화번호는 숫자만 입력해주세요.');
+                return false;
+            }
+            
             $.ajax({
                 url:'/trainee/update_trainee_info/',
                 type:'POST',
@@ -90,6 +96,15 @@
 
                 }
             });
+        }
+
+        function func_check_tel_format_validity(){
+            let $input_tel = $('input[name="phone"]');
+            if($input_tel.val().indexOf('-') != -1){
+                return false;
+            }else{
+                return true;
+            }
         }
 
 
