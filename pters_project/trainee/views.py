@@ -27,7 +27,7 @@ from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.functions import func_get_trainer_setting_list
-from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb, GroupTb
+from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb, GroupTb, PackageGroupTb
 from .models import LectureTb, MemberLectureTb
 
 from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
@@ -37,7 +37,8 @@ from .functions import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
     func_get_lecture_connection_list, func_get_trainee_next_schedule_by_class_id, func_get_trainee_select_schedule, \
-    func_get_trainee_ing_group_list, func_check_select_date_reserve_setting
+    func_get_trainee_ing_group_list, func_check_select_date_reserve_setting, func_get_trainee_ing_lecture_list, \
+    func_get_trainee_lecture_list
 
 logger = logging.getLogger(__name__)
 
@@ -264,6 +265,8 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                 member_info.birthday_dt = ''
             context['member_info'] = member_info
 
+        if error is None:
+            context = func_get_trainee_lecture_list(context, class_id, request.user.id)
         # if error is None:
         #     if class_id != '' and class_id is not None:
         #         context = func_get_trainee_on_schedule(context, class_id, request.user.id, None, None)
@@ -1711,6 +1714,14 @@ class PopupTicketInfoView(TemplateView):
             error = '수강권 정보를 불러오지 못했습니다.'
 
         if error is None:
+            query_group_type = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`group_type_cd`"
+            lecture_info.package_group_data = PackageGroupTb.objects.select_related(
+                'group_tb').filter(package_tb_id=lecture_info.package_tb_id,
+                                   group_tb__use=USE,
+                                   use=USE).annotate(group_type_cd_nm=RawSQL(query_group_type,
+                                                                             [])).order_by('-group_tb__group_type_cd',
+                                                                                           'group_tb__reg_dt')
+
             try:
                 lecture_info.package_tb.package_type_cd_nm \
                     = CommonCdTb.objects.get(common_cd=lecture_info.package_tb.package_type_cd).common_cd_nm
