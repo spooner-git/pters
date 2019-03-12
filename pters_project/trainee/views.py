@@ -27,7 +27,7 @@ from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.functions import func_get_trainer_setting_list
-from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb
+from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb, GroupTb
 from .models import LectureTb, MemberLectureTb
 
 from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
@@ -1620,6 +1620,67 @@ class PopupCalendarPlanReserveCompleteView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanReserveCompleteView, self).get_context_data(**kwargs)
+        return context
+
+
+class PopupGroupTicketInfoView(TemplateView):
+    template_name = 'popup/trainee_popup_group_ticket_info.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupGroupTicketInfoView, self).get_context_data(**kwargs)
+        lecture_id = self.request.GET.get('lecture_id')
+        group_id = self.request.GET.get('group_id')
+        error = None
+        class_list = ClassLectureTb.objects.select_related('class_tb__member').filter(lecture_tb_id=lecture_id,
+                                                                                      auth_cd='VIEW', use=USE)
+
+        for class_info in class_list:
+            if class_info.class_tb.member.phone is not None and class_info.class_tb.member.phone != '':
+                class_info.class_tb.member.phone = class_info.class_tb.member.phone[0:3] + '-' + \
+                                                   class_info.class_tb.member.phone[3:7] + '-' +\
+                                                   class_info.class_tb.member.phone[7:11]
+
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = '수강권 정보를 불러오지 못했습니다.'
+
+        try:
+            group_info = GroupTb.objects.get(group_id=group_id)
+        except ObjectDoesNotExist:
+            error = '수업 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                lecture_info.package_tb.package_type_cd_nm \
+                    = CommonCdTb.objects.get(common_cd=lecture_info.package_tb.package_type_cd).common_cd_nm
+                if lecture_info.package_tb.package_type_cd_nm == '1:1':
+                    lecture_info.package_tb.package_type_cd_nm = '개인'
+            except ObjectDoesNotExist:
+                lecture_info.package_tb.package_type_cd_nm = ''
+
+            lecture_abs_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PC').count()
+            lecture_info.lecture_abs_count = lecture_abs_count
+        if error is None:
+            query_status = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `SCHEDULE_TB`.`STATE_CD`"
+            if group_info.group_type_cd != 'ONE_TO_ONE':
+                schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
+                                                          group_tb_id=group_id,
+                                                          use=USE).annotate(status=RawSQL(query_status,
+                                                                                          [])).order_by('-start_dt',
+                                                                                                        '-end_dt')
+            else:
+                schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
+                                                          group_tb__isnull=True,
+                                                          use=USE).annotate(status=RawSQL(query_status,
+                                                                                          [])).order_by('-start_dt',
+                                                                                                        '-end_dt')
+
+        context['class_data'] = class_list
+        context['lecture_info'] = lecture_info
+        context['group_info'] = group_info
+        context['schedule_data'] = schedule_list
+
         return context
 
 
