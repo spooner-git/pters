@@ -2,6 +2,9 @@
     .content_page{
         position: fixed;
         top: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 800px;
         width: 100%;
         overflow: auto;
         -webkit-overflow-scrolling: touch;

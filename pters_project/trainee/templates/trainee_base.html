@@ -190,6 +190,19 @@
 
             func_set_webkit_overflow_scrolling('.content_page');
 
+            //Nav 팝업 PC버전
+            if(windowWidth > 800){
+                $('#nav_btn_menu').attr('onclick', "layer_popup.open_layer_popup(POPUP_INNER_HTML, 'pters_mobile_side_menu', 70, POPUP_FROM_TOP)")
+            }
+            $(window).resize(function(){
+                let windowWidth_now = $(window).width();
+                if(windowWidth <= 800 && windowWidth_now > 800){
+                    location.reload();
+                }else if(windowWidth > 800 && windowWidth_now <=800){
+                    location.reload();
+                }
+            })
+
         </script>
         {% block local_js_footer %}
         {% endblock %}
