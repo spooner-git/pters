@@ -9,6 +9,7 @@
     body{
         padding-top: 50px;
         margin: 0;
+        overflow: hidden;
         /*height: 100%;*/
     }
 

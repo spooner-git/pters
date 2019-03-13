@@ -5,6 +5,8 @@ let layer_popup = (function(){
     let popup_array = [];
 
     function func_open_layer_popup(popup_name, popup_size, animation_type){
+        $('.content_page').css('overflow-y', 'hidden');
+
         let $popup_selector;
         let popup_data = {"popup_name":popup_name, "popup_size":popup_size, "animation_type":animation_type};
         //똑같은 팝업 여러개 못뜨도록
@@ -51,6 +53,11 @@ let layer_popup = (function(){
                 $(`#${popup_data.popup_name}`).remove();
             }, 300);
         }
+
+        if(popup_array.length == 0){
+            $('.content_page').css('overflow-y', 'auto');
+        }
+
         return popup_data;
     }
 
@@ -68,6 +75,9 @@ let layer_popup = (function(){
                 $popup_selector_wrap.remove();
             }, 300);
         }
+
+        $('.content_page').css('overflow-y', 'auto');
+        
         return popup_data;
     }
 
