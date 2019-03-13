@@ -48,13 +48,10 @@ function func_set_webkit_overflow_scrolling(target_selector){
             const popupHeight = $selector.height();
             const scrollHeight = $selector.prop('scrollHeight');
             const scrollLocation = $selector.scrollTop();
-            console.log(popupHeight , scrollLocation , scrollHeight)
             if(popupHeight + scrollLocation == scrollHeight){
                 $selector.animate({scrollTop : scrollLocation-1}, 10);
-                console.log('아래')
             }else if(popupHeight + scrollLocation == popupHeight){
                 $selector.animate({scrollTop : scrollLocation+1}, 10);
-                console.log('위')
             }
         });
     }

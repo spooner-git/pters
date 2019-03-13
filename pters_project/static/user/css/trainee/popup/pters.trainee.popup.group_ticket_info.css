@@ -7,6 +7,11 @@
 		height: 30px;
 		line-height: 30px;
 	}
+	.popup_group_ticket_info{
+		/*-webkit-overflow-scrolling: touch;*/
+		/*background-color: #000000;*/
+		/*border-radius: 8px 8px 0px 0px;*/
+	}
 	.popup_group_ticket_info .obj_font_size_12_weight_500{
 		height: 20px;
 		line-height: 20px;
@@ -120,6 +125,11 @@
 		padding-bottom:5px;
 		border-bottom: 1px solid #eeeeee;
 		text-align: center;
+		position: sticky;
+		position: -webkit-sticky;
+		top: 0;
+		z-index: 1;
+		background-color: #ffffff;
 	}
 
 	.popup_group_ticket_info .wrapper_my_history_detail_info{
