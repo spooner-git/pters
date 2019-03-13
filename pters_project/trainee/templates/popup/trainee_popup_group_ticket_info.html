@@ -106,6 +106,18 @@
 {% block popup_base_js %}
 <script type="text/javascript">
     $('#ticket_basic_info').addClass('ticket_info_selected');
+
+    window.addEventListener('load', function () {
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                alert('{{ message }}');
+            {% endif %}
+        {% endfor %}
+        
+        console.log('123')
+    });
+    func_set_webkit_overflow_scrolling('.popup_group_ticket_info');
+
     //popup_group_ticket_info_swipe_close();
     function ticket_basic_info(){
         $('#ticket_basic_info').addClass('ticket_info_selected');

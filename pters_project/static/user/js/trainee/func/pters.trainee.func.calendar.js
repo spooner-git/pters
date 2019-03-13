@@ -179,11 +179,15 @@ function pters_month_calendar(calendar_name, calendar_options){
         //달력의 하단 숫자부분만 스크롤 되고, 연월일, 월화수목 표기는 스크롤 되지 않도록 사이즈를 조절한다.
 
 
+        // let timeline_calendar_upper_tool = `<div class="pters_timeline_cal_upper_tool_box obj_font_size_13_weight_500 obj_font_color_light_grey">
+        //                                         <div class="pters_timeline_cal_type_text selected">전체</div>
+        //                                         <div class="pters_timeline_cal_type_text">예약 완료</div>
+        //                                         <div class="pters_timeline_cal_type_text">예약 대기</div>
+        //                                         <div class="pters_timeline_cal_type_text">반복 일정</div>
+        //                                         <div></div>
+        //                                     </div>`;
         let timeline_calendar_upper_tool = `<div class="pters_timeline_cal_upper_tool_box obj_font_size_13_weight_500 obj_font_color_light_grey">
-                                                <div class="pters_timeline_cal_type_text selected">전체</div>
-                                                <div class="pters_timeline_cal_type_text">예약 완료</div>
-                                                <div class="pters_timeline_cal_type_text">예약 대기</div>
-                                                <div class="pters_timeline_cal_type_text">반복 일정</div>
+                                                <div class="pters_timeline_cal_type_text selected">전체 일정</div>
                                                 <div></div>
                                             </div>`;
 

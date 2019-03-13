@@ -151,6 +151,8 @@ function func_get_popup_ajax(popup_name, data){
     });
 }
 
+
+
 function func_set_popup_position($popup_selector, animation_type, popup_size){
     let translate_x = 0;
     let translate_y = 0;
