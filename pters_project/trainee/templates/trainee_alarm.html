@@ -33,67 +33,18 @@
         </div>
 
         <div class="wrapper_alarm_list obj_box_full ">
-            <p class="obj_font_size_11_weight_bold obj_font_color_dark_grey wrapper_alarm_list_title">2019년 1월 16일 (수)</p>
-
+            <p class="obj_font_size_11_weight_bold obj_font_color_dark_grey wrapper_alarm_list_title">이전 알림</p>
+            {% for log_info in log_data %}
             <div class="wrapper_alarm_element obj_font_size_16_weight_500">
                 <div class="wrapper_alarm_element_title">
-                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
+                    <div class="alarm_oval"></div><div class="alarm_status">{{ log_info.log_how }} - {{ log_info.time_ago }}</div>
                 </div>
                 <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
-                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
+                    {{ log_info.log_info }}이 {{ log_info.log_how }} 되었습니다.
                 </div>
+                <div>({{ log_info.log_detail }})</div>
             </div>
-
-            <div class="wrapper_alarm_element obj_font_size_16_weight_500">
-                <div class="wrapper_alarm_element_title">
-                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
-                </div>
-                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
-                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
-                </div>
-            </div>
-
-            <div class="wrapper_alarm_element obj_font_size_16_weight_500">
-                <div class="wrapper_alarm_element_title">
-                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
-                </div>
-                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
-                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
-                </div>
-            </div>
-            <div class="wrapper_alarm_element obj_font_size_16_weight_500">
-                <div class="wrapper_alarm_element_title">
-                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
-                </div>
-                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
-                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
-                </div>
-            </div>
-            <div class="wrapper_alarm_element obj_font_size_16_weight_500">
-                <div class="wrapper_alarm_element_title">
-                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
-                </div>
-                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
-                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
-                </div>
-            </div>
-            <div class="wrapper_alarm_element obj_font_size_16_weight_500">
-                <div class="wrapper_alarm_element_title">
-                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
-                </div>
-                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
-                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
-                </div>
-            </div>
-            <div class="wrapper_alarm_element obj_font_size_16_weight_500">
-                <div class="wrapper_alarm_element_title">
-                    <div class="alarm_oval"></div><div class="alarm_status">예약 완료</div>
-                </div>
-                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
-                    2019년 1월 17일(목) 14:00~16:00에 김현기 강사님의 ‘(개인) 탄탄가슴 만들기’ 수업이 예약되었습니다.
-                </div>
-            </div>
-
+            {% endfor %}
         </div>
 
         

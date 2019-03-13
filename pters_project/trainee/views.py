@@ -1101,16 +1101,29 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AlarmView, self).get_context_data(**kwargs)
-        context = func_get_class_list(context, self.request.user.id)
-        lecture_id = self.request.session.get('lecture_id', '')
+        class_id = self.request.session.get('class_id', '')
+        # lecture_id = self.request.session.get('lecture_id', '')
         error = None
         log_data = None
+        log_list = []
 
-        if lecture_id is None or lecture_id == '':
-            error = '수강정보를 불러오지 못했습니다.'
+        context = func_get_class_list(context, self.request.user.id)
+
+        # if lecture_id is None or lecture_id == '':
+        #     error = '수강정보를 불러오지 못했습니다.'
 
         if error is None:
-            log_data = LogTb.objects.filter(lecture_tb_id=lecture_id, use=USE).order_by('-reg_dt')
+            today = datetime.date.today()
+            three_days_ago = today - datetime.timedelta(days=7)
+            # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=USE).order_by('-reg_dt')
+
+            query_member_auth_cd \
+                = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
+                  " where D.LECTURE_TB_ID = `LOG_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " + str(self.request.user.id)
+
+            log_data = LogTb.objects.filter(class_tb_id=class_id, reg_dt__gte=three_days_ago,
+                                            use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
+                                                              ).filter(member_auth_cd='VIEW').order_by('-reg_dt')
 
         if error is None:
             for log_info in log_data:
