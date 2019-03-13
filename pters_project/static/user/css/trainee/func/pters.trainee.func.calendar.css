@@ -27,6 +27,8 @@
 		height: 20px;
 		line-height: 20px;
 		padding-top: 9px;
+		margin: 0 auto;
+		width: 97%;
 	}
 	.pters_calendar .pters_month_cal_day_name_box .obj_table_cell_x7{
 		border-color: transparent;
