@@ -4,7 +4,7 @@
     <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.mobile_side_menu.css" %}>
 {% endblock %}
 {% block popup_base_wrapper_top_left %}
-    <img src="/static/user/res/PTERS_logo_pure.png" class="logo_pters">
+    <img src="/static/user/res/PTERS_logo_pure.png" class="logo_pters" onclick="location.href='{% url 'trainee:trainee_main' %}'">
 {% endblock %}
 
 {% block popup_base_contents %}
