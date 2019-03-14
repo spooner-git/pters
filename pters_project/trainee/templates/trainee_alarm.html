@@ -16,17 +16,20 @@
                 <div class="wrapper_alarm_element_title">
                     <div class="alarm_status">{{ class_info.class_type_name }}</div>
                 </div>
-                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
-                    {{ class_info.class_tb.member.name }}강사님 '{{ class_info.class_type_name }}' 프로그램을 연결 요청했습니다.
+                <div class="wrapper_alarm_element_text obj_font_size_12_weight_normal">
+                    <span class="obj_font_size_12_weight_500">{{ class_info.class_tb.member.name }}</span> 강사님 
+                    <span class="obj_font_size_12_weight_500">'{{ class_info.class_type_name }}'</span> 프로그램을 연결 요청했습니다.
                 </div>
                 {% for class_lecture_info in class_info.class_lecture_data %}
-                <div class="obj_font_size_15_weight_bold">(수강권: {{ class_lecture_info.package_tb.name }}) </div>
+                <div class="obj_font_size_11_weight_normal obj_font_color_light_black">(수강권: {{ class_lecture_info.package_tb.name }}) </div>
                 {% endfor %}
-                <div class="obj_button_gen obj_font_bg_white_grey"
-                     onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-                                                           {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
-                                                           'onclick_function':`func_program_select('{{ class_info.class_tb_id }}', ${PROGRAM_LECTURE_CONNECT_DELETE})`});">취소하기</div>
-                <div class="obj_button_gen obj_font_bg_white_black" onclick="func_program_select('{{ class_info.class_tb_id }}',`${PROGRAM_LECTURE_CONNECT_ACCEPT}`);">연결하기</div>
+                <div class="wrapper_request_select_box">
+                    <div class="obj_button_gen obj_font_bg_white_black" onclick="func_program_select('{{ class_info.class_tb_id }}',`${PROGRAM_LECTURE_CONNECT_ACCEPT}`);">연결하기</div>
+                    <div class="obj_button_gen obj_font_bg_white_grey"
+                         onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
+                                                               {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
+                                                               'onclick_function':`func_program_select('{{ class_info.class_tb_id }}', ${PROGRAM_LECTURE_CONNECT_DELETE})`});">취소하기</div>
+                </div>
             </div>
             {% endif %}
         {% endfor %}
@@ -37,12 +40,13 @@
             {% for log_info in log_data %}
             <div class="wrapper_alarm_element obj_font_size_16_weight_500">
                 <div class="wrapper_alarm_element_title">
-                    <div class="alarm_oval"></div><div class="alarm_status">{{ log_info.log_how }} - {{ log_info.time_ago }}</div>
+                    <!-- <div class="alarm_oval"></div> -->
+                    <div class="alarm_status">{{ log_info.log_how }} <span class="alarm_time_ago obj_font_size_11_weight_normal obj_font_color_light_grey">{{ log_info.time_ago }}</span></div>
                 </div>
-                <div class="wrapper_alarm_element_text obj_font_size_14_weight_normal obj_font_color_light_black">
+                <div class="wrapper_alarm_element_text obj_font_size_12_weight_normal">
                     {{ log_info.log_info }}이 {{ log_info.log_how }} 되었습니다.
                 </div>
-                <div>({{ log_info.log_detail }})</div>
+                <div class="obj_font_size_11_weight_normal obj_font_color_light_black">({{ log_info.log_detail }})</div>
             </div>
             {% endfor %}
         </div>
