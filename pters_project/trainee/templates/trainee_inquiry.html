@@ -43,19 +43,19 @@
     <div class="trainee_inquiry">
         <form id="form_inquiry"  action="{% url 'board:add_question_info' %}" method="post">
             {% csrf_token %}
-            <input type="hidden" name="inquiry_type" id="id_inquire_type">
+            <input type="hidden" name="next_page" value="{% url 'trainee:trainee_inquiry' %}">
+            <input type="hidden" name="inquire_type" id="id_inquire_type">
             <input type="hidden" name="inquire_body" id="id_inquire_body">
+            <input type="hidden" name="inquire_subject" id="id_inquire_subject" value="[수강회원문의]">
         </form>
         <div class="wrapper_inquiry_select_box">
             <div class="wrapper_inquiry_select_box_title obj_font_size_15_weight_900 obj_font_color_white">레슨-온에게 문의하기</div>
             <select class="wrapper_inquiry_type_select">
+                <option disabled selected>선택</option>
                 {% for qa_type_info in qa_type_data %}
                     <option value="{{ qa_type_info.common_cd }}">{{ qa_type_info.common_cd_nm }}</option>
                 {% endfor %}
-                <option disabled selected>선택</option>
-                <option value="1">문의 타입1</option>
-                <option value="1">문의 타입2</option>
-                <option value="1">문의 타입3</option>
+                
             </select>
         </div>
 

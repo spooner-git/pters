@@ -1813,9 +1813,12 @@ class PrivacyPolicyView(TemplateView):
         context = super(PrivacyPolicyView, self).get_context_data(**kwargs)
         return context
 
-class TraineeInquiryView(TemplateView):
+
+class TraineeInquiryView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'trainee_inquiry.html'
 
     def get_context_data(self, **kwargs):
         context = super(TraineeInquiryView, self).get_context_data(**kwargs)
+        qa_type_list = CommonCdTb.objects.filter(upper_common_cd='16', use=1).order_by('order')
+        context['qa_type_data'] = qa_type_list
         return context
