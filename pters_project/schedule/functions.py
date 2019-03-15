@@ -568,16 +568,16 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
     log_type_detail = ''
 
     if log_type == 'LS01':
-        log_type_name = '일정'
-        log_type_detail = '등록'
+        log_type_name = '예약'
+        log_type_detail = '완료'
 
     if log_type == 'LS02':
         log_type_name = '일정'
         log_type_detail = '취소'
 
     if log_type == 'LS03':
-        log_type_name = '일정'
-        log_type_detail = '완료'
+        log_type_name = '예약'
+        log_type_detail = '출석'
     if log_type == 'LR01':
         log_type_name = '반복 일정'
         log_type_detail = '등록'

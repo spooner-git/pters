@@ -124,17 +124,23 @@
 	}
 
 	.popup_ticket_info .wrapper_my_history_detail_lecture_count{
-		width: 25px;
+		width: 10%;
 	}
-	.popup_ticket_info .wrapper_my_history_detail_lecture_name{
-		width: 125px;
+	.popup_ticket_info .wrapper_my_history_detail_lecture_start_date{
+		width: 20%;
 	}
-	.popup_ticket_info .wrapper_my_history_detail_lecture_date{
-		width: 80px;
+	.popup_ticket_info .wrapper_my_history_detail_lecture_end_date{
+		width: 20%;
 	}
-	.popup_ticket_info .wrapper_my_history_detail_lecture_time{
-		width: 80px;
+	.popup_ticket_info .wrapper_my_history_detail_lecture_reg_count{
+		width: 10%;
+	}
+	.popup_ticket_info .wrapper_my_history_detail_lecture_rem_count{
+		width: 10%;
+	}
+	.popup_ticket_info .wrapper_my_history_detail_lecture_price{
+		width: 20%;
 	}
 	.popup_ticket_info .wrapper_my_history_detail_lecture_status{
-		width: 25px;
+		width: 10%;
 	}

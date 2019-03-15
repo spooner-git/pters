@@ -13,7 +13,7 @@
         <div class="obj_box_popup_topper">
 {#            <div class="obj_font_size_12_weight_500 obj_font_color_white">{{ lecture_info.package_tb.package_type_cd_nm }}</div>#}
             <div class="wrapper_my_ticket_title">
-                <div class="obj_font_size_18_weight_bold obj_font_color_white">{{ lecture_info.package_tb.name }}</div>
+                <div class="obj_font_size_18_weight_bold obj_font_color_white">{{ package_info.name }}</div>
             </div>
 
             <div class="wrapper_my_ticket_tab obj_font_color_light_grey">
@@ -23,7 +23,7 @@
         </div>
         <div class="obj_box_full">
             <div id="wrapper_my_ticket_detail">
-             {% for package_group_info in lecture_info.package_group_data %}
+             {% for package_group_info in package_info.package_group_data %}
                 <div class="wrapper_my_ticket_detail_date">
                     <div class="wrapper_my_ticket_detail_date_title obj_font_size_11_weight_normal obj_font_color_light_grey">
                         <div class="obj_table_raw">수업 종류</div>
@@ -35,61 +35,43 @@
                     </div>
                 </div>
             {% endfor %}
-                <div class="wrapper_my_ticket_detail_date">
-                    <div class="wrapper_my_ticket_detail_date_title obj_font_size_11_weight_normal obj_font_color_light_grey">
-                        <div class="obj_table_raw">시작일</div>
-                        <div class="obj_table_raw">종료일</div>
+                {% for lecture_info in lecture_data %}
+                {% if forloop.first %}
+                    <div class="obj_table_raw wrapper_my_ticket_detail_teacher">
+                        <div class="obj_table_cell_x3" style="width:30px;">
+                            <div class="obj_box_photo"></div>
+                        </div>
+                        <div class="obj_table_cell_x3 wrapper_teacher_name">
+                            <div class="obj_font_size_12_weight_500">{{ lecture_info.class_tb.member.name }}</div>
+                            <div class="obj_font_size_11_weight_normal obj_font_color_light_grey">강사</div>
+                        </div>
+                        <div class="obj_table_cell_x3 text_button_phone obj_font_size_13_weight_500 obj_font_color_pters_red">{{ lecture_info.class_tb.member.phone }}</div>
                     </div>
-                    <div class="wrapper_my_ticket_detail_date_info obj_font_size_14_weight_500" style="text-align: right;">
-                        <div class="obj_table_raw">{{ lecture_info.start_date | date:"Y.m.d(l)"|cut:"요일" }}</div>
-                        <div class="obj_table_raw">{{ lecture_info.end_date | date:"Y.m.d(l)"|cut:"요일" }}</div>
-                    </div>
-                </div>
-                <div class="wrapper_my_ticket_detail_date">
-                    <div class="wrapper_my_ticket_detail_date_title obj_font_size_11_weight_normal obj_font_color_light_grey">
-                        <div class="obj_table_raw">등록 횟수</div>
-                        <div class="obj_table_raw">등록금</div>
-                        <div class="obj_table_raw">등록금</div>
-                    </div>
-                    <div class="wrapper_my_ticket_detail_date_info obj_font_size_14_weight_500">
-                        <div class="obj_table_raw">{{ lecture_info.lecture_reg_count }} 회</div>
-                        <div class="obj_table_raw">{{ lecture_info.start_date | date:"Y.m.d(l)"|cut:"요일" }}</div>
-                        <div class="obj_table_raw">{{ lecture_info.price |intcomma }} 원</div>
-                    </div>
-                </div>
-                {% for class_info in class_data %}
-                <div class="obj_table_raw wrapper_my_ticket_detail_teacher">
-                    <div class="obj_table_cell_x3" style="width:30px;">
-                        <div class="obj_box_photo"></div>
-                    </div>
-                    <div class="obj_table_cell_x3 wrapper_teacher_name">
-                        <div class="obj_font_size_12_weight_500">{{ class_info.class_tb.member.name }}</div>
-                        <div class="obj_font_size_11_weight_normal obj_font_color_light_grey">강사</div>
-                    </div>
-                    <div class="obj_table_cell_x3 text_button_phone obj_font_size_13_weight_500 obj_font_color_pters_red">{{ class_info.class_tb.member.phone }}</div>
-                </div>
+                {% endif %}
                 {% endfor %}
             </div>
 
             <div id="wrapper_my_history_detail" style="display:none;">
                 <div class="wrapper_my_history_detail_title obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
-                    <div class="wrapper_my_history_detail_lecture_count obj_table_cell_x4">회차</div>
-                    <div class="wrapper_my_history_detail_lecture_name obj_table_cell_x4">등록일</div>
-                    <div class="wrapper_my_history_detail_lecture_date obj_table_cell_x4">등록금</div>
-                    <div class="wrapper_my_history_detail_lecture_status obj_table_cell_x4">상태</div>
+                    <div class="wrapper_my_history_detail_lecture_count obj_table_cell_x7">회차</div>
+                    <div class="wrapper_my_history_detail_lecture_start_date obj_table_cell_x7">시작일</div>
+                    <div class="wrapper_my_history_detail_lecture_end_date obj_table_cell_x7">종료일</div>
+                    <div class="wrapper_my_history_detail_lecture_reg_count obj_table_cell_x7">등록횟수</div>
+                    <div class="wrapper_my_history_detail_lecture_rem_count obj_table_cell_x7">남은횟수</div>
+                    <div class="wrapper_my_history_detail_lecture_price obj_table_cell_x7">등록금</div>
+                    <div class="wrapper_my_history_detail_lecture_status obj_table_cell_x7">상태</div>
                 </div>
+                {% for lecture_info in lecture_data %}
                 <div class="wrapper_my_history_detail_info obj_table_raw obj_font_size_11_weight_500">
-                    <div class="wrapper_my_history_detail_lecture_count obj_table_cell_x4">2</div>
-                    <div class="wrapper_my_history_detail_lecture_name obj_table_cell_x4">2019.01.01(화)</div>
-                    <div class="wrapper_my_history_detail_lecture_date obj_table_cell_x4">100,000,000원</div>
-                    <div class="wrapper_my_history_detail_lecture_status obj_table_cell_x4">결석</div>
+                    <div class="wrapper_my_history_detail_lecture_count obj_table_cell_x7">{{ forloop.revcounter }}</div>
+                    <div class="wrapper_my_history_detail_lecture_start_date obj_table_cell_x7">{{ lecture_info.lecture_tb.start_date | date:"Y.m.d(l)"|cut:"요일"  }}</div>
+                    <div class="wrapper_my_history_detail_lecture_end_date obj_table_cell_x7">{{ lecture_info.lecture_tb.end_date | date:"Y.m.d(l)"|cut:"요일"  }}</div>
+                    <div class="wrapper_my_history_detail_lecture_reg_count obj_table_cell_x7">{{ lecture_info.lecture_tb.lecture_reg_count }}</div>
+                    <div class="wrapper_my_history_detail_lecture_rem_count obj_table_cell_x7">{{ lecture_info.lecture_tb.lecture_rem_count }}</div>
+                    <div class="wrapper_my_history_detail_lecture_price obj_table_cell_x7">{{ lecture_info.lecture_tb.price | intcomma }}원</div>
+                    <div class="wrapper_my_history_detail_lecture_status obj_table_cell_x7">{{ lecture_info.status }}</div>
                 </div>
-                <div class="wrapper_my_history_detail_info obj_table_raw obj_font_size_11_weight_500">
-                    <div class="wrapper_my_history_detail_lecture_count obj_table_cell_x4">1</div>
-                    <div class="wrapper_my_history_detail_lecture_name obj_table_cell_x4">(그룹) 탄탄가슴 만들기</div>
-                    <div class="wrapper_my_history_detail_lecture_date obj_table_cell_x4">2019.01.15 (화)</div>
-                    <div class="wrapper_my_history_detail_lecture_status obj_table_cell_x4">완료</div>
-                </div>
+                {% endfor %}
             </div>
 
         </div>
