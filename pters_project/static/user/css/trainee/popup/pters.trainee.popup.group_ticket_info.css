@@ -12,17 +12,11 @@
 		/*background-color: #000000;*/
 		/*border-radius: 8px 8px 0px 0px;*/
 	}
-	.popup_group_ticket_info .obj_font_size_12_weight_500{
-		height: 20px;
-		line-height: 20px;
-	}
-	.popup_group_ticket_info .obj_font_size_11_weight_normal{
-		height: 30px;
-		line-height: 30px;
-	}
+
+
 	.popup_group_ticket_info .obj_box_full{
 		margin-top: 5px;
-		padding: 20px;
+		padding: 10px 20px;
 	}
 	.popup_group_ticket_info .wrapper_my_ticket_tab{
 		margin-top: 15px;
@@ -51,9 +45,17 @@
 		width: 20px;
 		vertical-align: middle;
 	}
+	.popup_group_ticket_info .wrapper_my_ticket_title > div{
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.popup_group_ticket_info .wrapper_my_ticket_detail .obj_box_full{
+		border-left: 0;
+		border-right: 0;
+	}
 
 	.popup_group_ticket_info .wrapper_my_ticket_detail_date{
-		padding-bottom: 20px;
 		height: 60px;
 	}
 		.popup_group_ticket_info .wrapper_my_ticket_detail_date .obj_table_raw{
@@ -74,7 +76,6 @@
 	.popup_group_ticket_info .wrapper_my_ticket_detail_count{
 		border-top: 1px solid #eeeeee;
 		border-bottom: 1px solid #eeeeee;
-		padding: 20px 0;
 		height: 120px;
 	}
 		.popup_group_ticket_info .wrapper_my_ticket_detail_count .obj_table_raw{
@@ -93,9 +94,8 @@
 	}
 
 	.popup_group_ticket_info .wrapper_my_ticket_detail_teacher{
-		padding-top: 15px;
 		height: 36px;
-
+		box-sizing: border-box;
 	}
 		.popup_group_ticket_info .wrapper_my_ticket_detail_teacher .obj_table_cell_x3{
 			width: auto;
@@ -120,10 +120,13 @@
 			line-height: 36px;
 		}
 
+	.popup_group_ticket_info #wrapper_my_history_detail{
+		background-color: #ffffff;
+	}
 	.popup_group_ticket_info .wrapper_my_history_detail_title{
 		height: 20px;
-		padding-bottom:5px;
-		border-bottom: 1px solid #eeeeee;
+		padding: 10px 0;
+		margin-top: 10px;
 		text-align: center;
 		position: sticky;
 		position: -webkit-sticky;
