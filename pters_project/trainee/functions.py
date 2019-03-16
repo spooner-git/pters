@@ -711,7 +711,7 @@ def func_get_trainee_ing_lecture_list(context, class_id, user_id):
     return context
 
 
-def func_get_trainee_lecture_list(context, class_id, user_id):
+def func_get_trainee_package_list(context, class_id, user_id):
 
     query_member_auth_cd \
         = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
@@ -728,7 +728,7 @@ def func_get_trainee_lecture_list(context, class_id, user_id):
                                                     ).filter(member_auth_cd='VIEW').order_by('lecture_tb__state_cd',
                                                                                              'lecture_tb__start_date',
                                                                                              'lecture_tb__reg_dt')
-
+    package_list = []
     for lecture_info in lecture_list:
         lecture_info_package_tb = lecture_info.lecture_tb.package_tb
         try:
@@ -739,7 +739,19 @@ def func_get_trainee_lecture_list(context, class_id, user_id):
         except ObjectDoesNotExist:
             lecture_info_package_tb.package_type_cd_nm = ''
 
-    context['ing_lecture_data'] = lecture_list
+        test = True
+
+        for package_info in package_list:
+            if package_info.lecture_tb.package_tb.package_id == lecture_info_package_tb.package_id:
+                if lecture_info.lecture_tb.state_cd == 'IP':
+                    package_info.lecture_tb.state_cd = 'IP'
+                    package_info.status = lecture_info.status
+                test = False
+
+        if test is True:
+            package_list.append(lecture_info)
+
+    context['ing_package_data'] = package_list
     return context
 
 

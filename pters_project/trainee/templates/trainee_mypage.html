@@ -22,13 +22,15 @@
         <div class="wrapper_current_ticket">
             <div class="obj_box_full">
                 <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">수강권 정보</div>
-                {% for ing_lecture_info in ing_lecture_data %}
-                <div class="obj_box_card" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_ticket_info', 90, POPUP_FROM_BOTTOM, {'lecture_id':'{{ing_lecture_info.lecture_tb_id}}' } )">
+                {% for ing_package_info in ing_package_data %}
+                <div class="obj_box_card" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_ticket_info', 90,
+                                                                                POPUP_FROM_BOTTOM, {'package_id':'{{ ing_package_info.lecture_tb.package_tb.package_id }}',
+                                                                                                    'lecture_id':'{{ing_package_info.lecture_tb_id}}' } )">
                     <div class="wrapper_my_ticket_status obj_font_size_12_weight_500 obj_font_color_white">
-                        {{ ing_lecture_info.status }}
+                        {{ ing_package_info.status }}
                     </div>
                     <div class="wrapper_my_ticket_title">
-                        <div class="obj_font_size_15_weight_bold obj_font_color_white">{{ ing_lecture_info.lecture_tb.package_tb.name }}</div>
+                        <div class="obj_font_size_15_weight_bold obj_font_color_white">{{ ing_package_info.lecture_tb.package_tb.name }}</div>
                     </div>
                 </div>
                 {% endfor %}

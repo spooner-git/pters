@@ -213,11 +213,10 @@ def add_schedule_logic(request):
         push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(':')
         if en_dis_type == ON_SCHEDULE_TYPE and setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
             push_lecture_id.append(lecture_id)
-            push_title.append(class_type_name + ' 수업 - 일정 알림')
-            push_message.append(request.user.first_name+'님이 '
-                                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+            push_title.append(class_type_name + ' 수업 - 예약 완료')
+            push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] +
-                                ' [1:1 레슨] 일정을 등록했습니다.')
+                                ' 개인 수업이 예약 완료 되었습니다.')
 
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
@@ -346,7 +345,7 @@ def delete_schedule_logic(request):
             log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name+request.user.first_name, to_member_name=member_name,
                              class_tb_id=class_id, lecture_tb_id=lecture_id,
-                             log_info='[1:1 레슨] 일정', log_how='취소',
+                             log_info='개인 수업', log_how='예약 취소',
                              log_detail=str(start_dt) + '/' + str(end_dt), use=USE)
             log_data.save()
 
@@ -357,17 +356,15 @@ def delete_schedule_logic(request):
 
         if en_dis_type == ON_SCHEDULE_TYPE and setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
             push_lecture_id.append(schedule_info.lecture_tb_id)
-            push_title.append(class_type_name + ' 수업 - 일정 알림')
+            push_title.append(class_type_name + ' - 예약 취소')
             if group_id is not None and group_id != '':
-                push_message.append(request.user.first_name+'님이 '
-                                    + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                    + ' ['+group_type_cd_name+'] '+group_name + ' 일정을 취소했습니다.')
+                                    + ' ['+group_type_cd_name+'] '+group_name + ' 수업이 예약 취소 되었습니다.')
             else:
-                push_message.append(request.user.first_name+'님이 '
-                                    + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                    + ' [1:1 레슨] 일정을 취소했습니다.')
+                                    + ' 개인 수업이 예약 취소 되었습니다.')
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
             context['push_message'] = push_message
@@ -417,7 +414,7 @@ def finish_schedule_logic(request):
         except ObjectDoesNotExist:
             error = '일정 정보를 불러오지 못했습니다.'
         if schedule_state_cd == 'PE':
-            schedule_state_cd_name = '완료'
+            schedule_state_cd_name = '출석 처리'
         elif schedule_state_cd == 'PC':
             schedule_state_cd_name = '결석 처리'
 
@@ -514,31 +511,31 @@ def finish_schedule_logic(request):
         #                    member_name, ON_SCHEDULE_TYPE, 'LS03', request)
 
         push_lecture_id.append(schedule_info.lecture_tb_id)
-        push_title.append(class_type_name + ' 수업 - 일정 알림')
+        push_title.append(class_type_name + ' - '+schedule_state_cd_name)
         if schedule_info.group_tb_id is not None and schedule_info.group_tb_id != '':
             log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name+request.user.first_name,
                              to_member_name=member_name,
                              class_tb_id=class_id, lecture_tb_id='',
                              log_info='['+schedule_info.get_group_type_cd_name()+'] '
-                                      + schedule_info.get_group_name() + ' 일정', log_how=schedule_state_cd_name,
+                                      + schedule_info.get_group_name() + ' 수업', log_how=schedule_state_cd_name,
                              log_detail=str(start_date) + '/' + str(end_date), use=USE)
             log_data.save()
             push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                 + ' ['+schedule_info.get_group_type_cd_name()+'] ' + schedule_info.get_group_name()
-                                + ' 일정이 '+schedule_state_cd_name+'됐습니다.')
+                                + ' 수업이 '+schedule_state_cd_name+' 되었습니다.')
         else:
             log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name+request.user.first_name,
                              to_member_name=member_name,
                              class_tb_id=class_id, lecture_tb_id='',
-                             log_info='[1:1 레슨] 일정', log_how=schedule_state_cd_name,
+                             log_info='개인 수업', log_how=schedule_state_cd_name,
                              log_detail=str(start_date) + '/' + str(end_date), use=USE)
             log_data.save()
             push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + ' [1:1 레슨] 일정이 '+schedule_state_cd_name+'됐습니다.')
+                                + ' 개인 수업이 '+schedule_state_cd_name+' 되었습니다.')
 
         if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
             context['push_lecture_id'] = push_lecture_id

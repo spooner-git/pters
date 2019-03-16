@@ -27,7 +27,7 @@ from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.functions import func_get_trainer_setting_list
-from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb, GroupTb, PackageGroupTb
+from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb, GroupTb, PackageGroupTb, PackageTb
 from .models import LectureTb, MemberLectureTb
 
 from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
@@ -37,8 +37,7 @@ from .functions import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
     func_get_lecture_connection_list, func_get_trainee_next_schedule_by_class_id, func_get_trainee_select_schedule, \
-    func_get_trainee_ing_group_list, func_check_select_date_reserve_setting, func_get_trainee_ing_lecture_list, \
-    func_get_trainee_lecture_list
+    func_get_trainee_ing_group_list, func_check_select_date_reserve_setting, func_get_trainee_package_list
 
 logger = logging.getLogger(__name__)
 
@@ -266,19 +265,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
             context['member_info'] = member_info
 
         if error is None:
-            context = func_get_trainee_lecture_list(context, class_id, request.user.id)
-        # if error is None:
-        #     if class_id != '' and class_id is not None:
-        #         context = func_get_trainee_on_schedule(context, class_id, request.user.id, None, None)
-        #         context = func_get_trainee_on_repeat_schedule(context, request.user.id, class_id)
-        #         context = get_trainee_schedule_data_by_class_id_func(context, request.user.id,
-        #                                                              class_id)
-                # 강사 setting 값 로드
-                # context = get_trainer_setting_data(context, class_info.member_id, class_id)
-
-            # 회원 setting 값 로드
-            # context = get_trainee_setting_data(context, request.user.id)
-            # request.session['setting_language'] = context['lt_lan_01']
+            context = func_get_trainee_package_list(context, class_id, request.user.id)
 
         context['check_password_changed'] = 1
         if sns_id != '' and sns_id is not None:
@@ -1655,8 +1642,13 @@ class PopupGroupTicketInfoView(TemplateView):
         lecture_id = self.request.GET.get('lecture_id')
         group_id = self.request.GET.get('group_id')
         error = None
-        class_list = ClassLectureTb.objects.select_related('class_tb__member').filter(lecture_tb_id=lecture_id,
-                                                                                      auth_cd='VIEW', use=USE)
+        query_member_auth_cd \
+            = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
+              " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " + str(self.request.user.id)
+        class_list = ClassLectureTb.objects.select_related(
+            'class_tb__member').filter(lecture_tb_id=lecture_id,
+                                       use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd,
+                                                                               [])).filter(member_auth_cd='VIEW')
 
         for class_info in class_list:
             if class_info.class_tb.member.phone is not None and class_info.class_tb.member.phone != '':
@@ -1713,44 +1705,55 @@ class PopupTicketInfoView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupTicketInfoView, self).get_context_data(**kwargs)
-        lecture_id = self.request.GET.get('lecture_id')
+        package_id = self.request.GET.get('package_id')
         error = None
 
-        class_list = ClassLectureTb.objects.select_related('class_tb__member').filter(lecture_tb_id=lecture_id,
-                                                                                      auth_cd='VIEW', use=USE)
+        query_member_auth_cd \
+            = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
+              " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " + str(self.request.user.id)
+        lecture_list = ClassLectureTb.objects.select_related(
+            'class_tb__member',
+            'lecture_tb__package_tb').filter(lecture_tb__package_tb__package_id=package_id,
+                                             use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd,
+                                                                                     [])).filter(member_auth_cd='VIEW')
 
-        for class_info in class_list:
-            if class_info.class_tb.member.phone is not None and class_info.class_tb.member.phone != '':
-                class_info.class_tb.member.phone = class_info.class_tb.member.phone[0:3] + '-' + \
-                                                   class_info.class_tb.member.phone[3:7] + '-' +\
-                                                   class_info.class_tb.member.phone[7:11]
+        for lecture_info in lecture_list:
+            if lecture_info.class_tb.member.phone is not None and lecture_info.class_tb.member.phone != '':
+                lecture_info.class_tb.member.phone = lecture_info.class_tb.member.phone[0:3] + '-' + \
+                                                     lecture_info.class_tb.member.phone[3:7] + '-' + \
+                                                     lecture_info.class_tb.member.phone[7:11]
+            try:
+                lecture_info.status \
+                    = CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.state_cd).common_cd_nm
+            except ObjectDoesNotExist:
+                lecture_info.status = ''
 
-        try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-        except ObjectDoesNotExist:
-            error = '수강권 정보를 불러오지 못했습니다.'
+        if error is None:
+            try:
+                package_info = PackageTb.objects.get(package_id=package_id)
+            except ObjectDoesNotExist:
+                error = '수강권 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                package_info.package_type_cd_nm \
+                    = CommonCdTb.objects.get(common_cd=package_info.package_type_cd).common_cd_nm
+                if package_info.package_type_cd_nm == '1:1':
+                    package_info.package_type_cd_nm = '개인'
+            except ObjectDoesNotExist:
+                package_info.package_type_cd_nm = ''
 
         if error is None:
             query_group_type = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`group_type_cd`"
-            lecture_info.package_group_data = PackageGroupTb.objects.select_related(
-                'group_tb').filter(package_tb_id=lecture_info.package_tb_id,
+            package_info.package_group_data = PackageGroupTb.objects.select_related(
+                'group_tb').filter(package_tb_id=package_id,
                                    group_tb__use=USE,
                                    use=USE).annotate(group_type_cd_nm=RawSQL(query_group_type,
                                                                              [])).order_by('-group_tb__group_type_cd',
                                                                                            'group_tb__reg_dt')
 
-            try:
-                lecture_info.package_tb.package_type_cd_nm \
-                    = CommonCdTb.objects.get(common_cd=lecture_info.package_tb.package_type_cd).common_cd_nm
-                if lecture_info.package_tb.package_type_cd_nm == '1:1':
-                    lecture_info.package_tb.package_type_cd_nm = '개인'
-            except ObjectDoesNotExist:
-                lecture_info.package_tb.package_type_cd_nm = ''
-
-            lecture_abs_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PC').count()
-            lecture_info.lecture_abs_count = lecture_abs_count
-        context['class_data'] = class_list
-        context['lecture_info'] = lecture_info
+        context['package_info'] = package_info
+        context['lecture_data'] = lecture_list
         return context
 
 
