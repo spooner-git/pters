@@ -191,8 +191,8 @@
                 <p class="pw_notice">이메일 인증을 하셔야 정상 가입이 되오니 정확한 이메일을 입력해주세요</p>
             </div>
             <div class="outerbox">
-                <input type="password" name="" placeholder="새 비밀번호"  id="pw_input"  autocomplete="off">
-                <input type="password" name="" placeholder="비밀번호 확인" id="pw_input_re" style="margin-left: 10px;"  autocomplete="off"><span class="pw_confirm"></span>
+                <input type="password" name="" placeholder="새 비밀번호"  id="pw_input"  autocomplete="new-password">
+                <input type="password" name="" placeholder="비밀번호 확인" id="pw_input_re" style="margin-left: 10px;"  autocomplete="new-password"><span class="pw_confirm"></span>
                 <p class="pw_notice">비밀번호는 특수문자, 영문 대소문자, 숫자를 혼합하여 8자이상 입력해주세요.</p>
             </div>
 
@@ -973,7 +973,7 @@
         </div>
     </div>
 
-    <form action="../" id="add-member-id-form" method="post">
+    <form action="../" id="add-member-id-form" method="post" autocomplete="new-password">
         {% csrf_token %}
         <div style="display: none">
             {{ form.as_p }}
