@@ -47,7 +47,7 @@ from trainer.functions import func_get_ing_group_member_list, func_get_end_group
     func_get_ing_package_member_list, func_get_end_package_member_list
 from trainer.models import GroupTb, PackageTb, ClassTb, ClassLectureTb, GroupLectureTb, PackageGroupTb
 
-from .forms import MyPasswordResetForm, MyPasswordChangeForm
+from .forms import MyPasswordResetForm, MyPasswordChangeForm, MyRegistrationForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb
 
 logger = logging.getLogger(__name__)
@@ -1565,7 +1565,7 @@ class BaseRegistrationView(FormView):
 
     """
     disallowed_url = 'registration_disallowed'
-    form_class = RegistrationForm
+    form_class = MyRegistrationForm
     success_url = None
     template_name = 'registration/registration_form.html'
 
