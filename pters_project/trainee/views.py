@@ -1619,6 +1619,11 @@ class PopupCalendarPlanReserveView(TemplateView):
         context = super(PopupCalendarPlanReserveView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
         select_date = self.request.GET.get('select_date')
+        # 개인 수업 예약 가능 횟수 호출
+        # 회원과 연결되어있는 수강권중에서 개인 수업이 포함되어 있는 경우 count
+
+        # 선택한날에 오픈되어 있는 그룹수업의 예약 가능 횟수 호출
+        # 회원과 연결되어있는 수강권중에서 해당 그룹 수업이 포함되어 있는 경우 count
 
         context['error'] = None
         context['select_date'] = datetime.datetime.strptime(select_date, '%Y-%m-%d')

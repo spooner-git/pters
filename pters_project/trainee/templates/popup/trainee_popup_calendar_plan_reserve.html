@@ -37,7 +37,7 @@
                 <div class="obj_table_raw wrapper_ticket_info">
                     <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/person_black.png"></div>
                     <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal ">개인 수업</div>
-                    <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: xx 번)</div>
+                    <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능:  번)</div>
                 </div>
                 <div class="wrapper_reserve_form_data">
                     <div class="obj_table_raw">
@@ -119,8 +119,6 @@
                 let this_date = selected_date_split[2];
                 let thisDay = new Date(this_year, Number(this_month)-1, this_date).getDay();
 
-                console.log(selected_date);
-                console.log('thisDay',thisDay);
 
                 let workStartTime_ = time_h_m_to_hh_mm(setting_info.setting_trainer_work_time_available[thisDay].split('-')[0]);
                 let workEndTime_ = time_h_m_to_hh_mm(setting_info.setting_trainer_work_time_available[thisDay].split('-')[1]);

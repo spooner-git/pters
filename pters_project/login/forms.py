@@ -2,7 +2,9 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm, AuthenticationForm, SetPasswordForm
 from django.contrib.auth.models import User
+from django.forms import TextInput
 from django.utils.functional import lazy
+from registration.forms import RegistrationForm
 
 from login.models import MemberTb
 from django.utils.translation import ugettext, ugettext_lazy as _
@@ -20,6 +22,14 @@ class MemberForm(forms.ModelForm):
     class Meta:
         model = MemberTb
         fields = ('name', 'phone', 'contents')
+
+
+class MyRegistrationForm(RegistrationForm):
+    def __init__(self, *args, **kwargs):
+        super(RegistrationForm, self).__init__(*args, **kwargs)
+        self.fields['password1'].widget.attrs.update({
+            'autocomplete': 'new-password'
+        })
 
 
 class MyPasswordResetForm(PasswordResetForm):
