@@ -16,27 +16,41 @@
             vertical-align: middle;
         }
 
-        .popup_time_input{
+
+        /*Time Input Computer*/
+        #shade_for_computer{
             display: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: #282828;
+            opacity: 0.5;
+            top: 0;
+            left: 0;
+
+        }
+
+        #time_input_computer{
+            display: none;
+            position: fixed;
             width: 90%;
             max-width: 300px;
             height: auto;
             background-color: #ffffff;
             border: 1px solid #cccccc;
-            position: fixed;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
             padding: 20px;
         }
-        .popup_time_input .popup_time_input_hour{
+        #time_input_computer .popup_time_input_hour{
             width: 100%;
             height: 100%;
         }
-        .popup_time_input .popup_time_input_minute{
+        #time_input_computer .popup_time_input_minute{
             display: none;
         }
-        .popup_time_input button{
+        #time_input_computer button{
             width: 70px;
             height: 30px;
             text-align: center;
@@ -47,100 +61,156 @@
         button:disabled{
             background-color: #f2f2f2;
         }
+        /*Time Input Computer*/
+
     </style>
 {% endblock %}
 
 {% block content %}
 
     <div class="test_page">
-
-        <div class="func_time_input">
+        <div class="func_time_input" id="time_1">
             <span>--:--</span>
         </div>
 
+        <div class="func_time_input" id="time_2">
+            <span>--:--</span>
+        </div>
+
+        <div class="func_time_input" id="time_3">
+            <span>--:--</span>
+        </div>
     </div>
 
-    <div class="popup_time_input">
-        <div class="wrapper_time_input_preview"></div>
-        <div class="popup_time_input_hour">
-            <button>0</button>
-            <button>1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>4</button>
-            <button>5</button>
-            <button>6</button>
-            <button>7</button>
-            <button>8</button>
-            <button>9</button>
-            <button>10</button>
-            <button>11</button>
-            <button>12</button>
-            <button>13</button>
-            <button>14</button>
-            <button>15</button>
-            <button>16</button>
-            <button>17</button>
-            <button>18</button>
-            <button>19</button>
-            <button>20</button>
-            <button>21</button>
-            <button>22</button>
-            <button>23</button>
-        </div>
-        <div class="popup_time_input_minute">
-            <button disabled>0</button>
-            <button disabled>5</button>
-            <button>10</button>
-            <button>15</button>
-            <button>20</button>
-            <button disabled>25</button>
-            <button disabled>30</button>
-            <button disabled>35</button>
-            <button>40</button>
-            <button>45</button>
-            <button>50</button>
-            <button disabled>55</button>
-        </div>
-    </div>
+
 
 
 {% endblock %}
 
 {% block local_js_footer %}
     <script type="text/javascript">
-        $('.func_time_input').click(function(){
-            $('.popup_time_input').show();
+        
+        class TimeInput{
+            constructor(selector_result){
+                this.selector_result = selector_result;
+                this.selector_computer = '#time_input_computer';
+
+                this.$selector_result = $(`${this.selector_result}`);
+                this.$selector_computer = $(`${this.selector_computer}`);
+
+                this.set_events();
+                this.add_computer();
+            }
+
+            set_events(){
+                let self = this;
+
+                $(document).off('click', `${self.selector_computer} .popup_time_input_hour button`)
+                            .on('click', `${self.selector_computer} .popup_time_input_hour button`, function(){
+                    let hour = $(this).text();
+                    $(self.selector_computer).attr('data-hour', hour);
+                    $('.wrapper_time_input_preview').text(`${hour}시`);
+                    $('.popup_time_input_hour').fadeOut(20, function(){
+                        $('.popup_time_input_minute').fadeIn();
+                    });
+                });
+
+                $(document).off('click', `${self.selector_computer} .popup_time_input_minute button`)
+                            .on('click', `${self.selector_computer} .popup_time_input_minute button`, function(){
+                    let hour = $(self.selector_computer).attr('data-hour');
+                    let min = $(this).text();
+                    let time = `${hour}:${min}`;
+
+                    let target = $(self.selector_computer).attr('data-target');
+                    $(target).text(time);
+                    self.close_computer();
+                });
+            }
+
+            open_computer(){
+                $(`${this.selector_computer}`).show().attr('data-target', this.selector_result);
+                $('#shade_for_computer').fadeIn('fast');
+            }
+
+            close_computer(){
+                $(`${this.selector_computer} .popup_time_input_hour`).show();
+                $(`${this.selector_computer} .popup_time_input_minute`).hide();
+                $(`${this.selector_computer} .wrapper_time_input_preview`).text('');
+                $(this.selector_computer).hide().attr('data-target', '');
+                $('#shade_for_computer').fadeOut('fast');   
+            }
+
+            add_computer(){
+                if($('body').find(this.selector_computer).length == 0){
+                    $('body').append(this.draw_computer());
+                }
+            }
+
+            draw_computer(){
+                let html_computer = `<div id="shade_for_computer"></div>
+                                    <div id="time_input_computer">
+                                        <div class="wrapper_time_input_preview"></div>
+                                        <div class="popup_time_input_hour">
+                                            <button>0</button>
+                                            <button>1</button>
+                                            <button>2</button>
+                                            <button>3</button>
+                                            <button>4</button>
+                                            <button>5</button>
+                                            <button>6</button>
+                                            <button>7</button>
+                                            <button>8</button>
+                                            <button>9</button>
+                                            <button>10</button>
+                                            <button>11</button>
+                                            <button>12</button>
+                                            <button>13</button>
+                                            <button>14</button>
+                                            <button>15</button>
+                                            <button>16</button>
+                                            <button>17</button>
+                                            <button>18</button>
+                                            <button>19</button>
+                                            <button>20</button>
+                                            <button>21</button>
+                                            <button>22</button>
+                                            <button>23</button>
+                                        </div>
+                                        <div class="popup_time_input_minute">
+                                            <button disabled>0</button>
+                                            <button disabled>5</button>
+                                            <button>10</button>
+                                            <button>15</button>
+                                            <button>20</button>
+                                            <button disabled>25</button>
+                                            <button disabled>30</button>
+                                            <button disabled>35</button>
+                                            <button>40</button>
+                                            <button>45</button>
+                                            <button>50</button>
+                                            <button disabled>55</button>
+                                        </div>
+                                    </div>`;
+                return html_computer;
+            }
+        }
+
+
+        $('#time_1').click(function(){
+            time1.open_computer();
         });
 
-
-
-        $('.popup_time_input_hour button').click(function(){
-
-            let hour = $(this).text();
-            $('.popup_time_input').attr('data-hour', hour);
-            $('.wrapper_time_input_preview').text(`${hour}시`)
-            $('.popup_time_input_hour').fadeOut(20, function(){
-                $('.popup_time_input_minute').fadeIn();
-            });
-            
+        $('#time_2').click(function(){
+            time2.open_computer();
         });
 
-        $('.popup_time_input_minute button').click(function(){
-
-            let hour = $('.popup_time_input').attr('data-hour');
-            let min = $(this).text();
-
-            let time = `${hour}:${min}`;
-
-            $('.popup_time_input_hour').show();
-            $('.popup_time_input_minute').hide();
-            $('.popup_time_input').hide();
-            $('.wrapper_time_input_preview').text('');
-
-            $('.func_time_input span').text(time);
-
+        $('#time_3').click(function(){
+            time3.open_computer();
         });
+
+        let time1 = new TimeInput('#time_1 span');
+        let time2 = new TimeInput('#time_2 span');
+        let time3 = new TimeInput('#time_3 span');
 
 
     </script>
