@@ -97,6 +97,8 @@ urlpatterns = [
     # 문의 페이지
     url(r'^trainee_inquiry/$', views.TraineeInquiryView.as_view(), name='trainee_inquiry'),
 
+    # 테스트 페이지 (테스트 완료후 지울것 190316)
+    url(r'^test_page/$', views.TestPageView.as_view(), name='test_page'),
 
     # 팝업 #########################################################################################################
     # 회원 일정 팝업 페이지

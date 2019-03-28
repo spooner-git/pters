@@ -289,7 +289,8 @@
                     }
 
                     let endtime = add_time(addOkArray[i], '00:'+classDur);
-                    timeArray[i] ='<option data-start="'+selected_date+' '+addOkArray[i]+'" data-end="'+selected_date+' '+endtime+'">'+offText+offHour+':'+offmin+' ~ '+endtime+'</option>';
+                    let time_text= offText+offHour+':'+offmin+' ~ '+endtime;
+                    timeArray[i] ='<option data-start="'+selected_date+' '+addOkArray[i]+'" data-end="'+selected_date+' '+endtime+'">'+time_text+'</option>';
                 }
                 timeArray.unshift('<option selected disabled>예약 시간 선택</option>');
                 let timeArraySum = timeArray.join('');

@@ -1830,3 +1830,12 @@ class TraineeInquiryView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         qa_type_list = CommonCdTb.objects.filter(upper_common_cd='16', use=1).order_by('order')
         context['qa_type_data'] = qa_type_list
         return context
+
+
+#skkim Test페이지, 테스트 완료후 지울것 190316
+class TestPageView(TemplateView):
+    template_name = 'test_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TestPageView, self).get_context_data(**kwargs)
+        return context

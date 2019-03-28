@@ -1,0 +1,148 @@
+{% extends "trainee_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <!-- <link rel="stylesheet" href={% static_url "user/css/trainee/page/pters.trainee.page.inquiry.css" %}> -->
+    <style type="text/css">
+        .func_time_input{
+            display: inline-block;
+            width: 100px;
+            height: 40px;
+            border: 1px solid #cccccc;
+            text-align: center;
+            cursor: pointer;
+        }
+        .func_time_input > span{
+            vertical-align: middle;
+        }
+
+        .popup_time_input{
+            display: none;
+            width: 90%;
+            max-width: 300px;
+            height: auto;
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+        }
+        .popup_time_input .popup_time_input_hour{
+            width: 100%;
+            height: 100%;
+        }
+        .popup_time_input .popup_time_input_minute{
+            display: none;
+        }
+        .popup_time_input button{
+            width: 70px;
+            height: 30px;
+            text-align: center;
+            background-color: #ffffff;
+            border: 1px solid #8d8d8d;
+            margin: 5px;
+        }
+        button:disabled{
+            background-color: #f2f2f2;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="test_page">
+
+        <div class="func_time_input">
+            <span>--:--</span>
+        </div>
+
+    </div>
+
+    <div class="popup_time_input">
+        <div class="wrapper_time_input_preview"></div>
+        <div class="popup_time_input_hour">
+            <button>0</button>
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>4</button>
+            <button>5</button>
+            <button>6</button>
+            <button>7</button>
+            <button>8</button>
+            <button>9</button>
+            <button>10</button>
+            <button>11</button>
+            <button>12</button>
+            <button>13</button>
+            <button>14</button>
+            <button>15</button>
+            <button>16</button>
+            <button>17</button>
+            <button>18</button>
+            <button>19</button>
+            <button>20</button>
+            <button>21</button>
+            <button>22</button>
+            <button>23</button>
+        </div>
+        <div class="popup_time_input_minute">
+            <button disabled>0</button>
+            <button disabled>5</button>
+            <button>10</button>
+            <button>15</button>
+            <button>20</button>
+            <button disabled>25</button>
+            <button disabled>30</button>
+            <button disabled>35</button>
+            <button>40</button>
+            <button>45</button>
+            <button>50</button>
+            <button disabled>55</button>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block local_js_footer %}
+    <script type="text/javascript">
+        $('.func_time_input').click(function(){
+            $('.popup_time_input').show();
+        });
+
+
+
+        $('.popup_time_input_hour button').click(function(){
+
+            let hour = $(this).text();
+            $('.popup_time_input').attr('data-hour', hour);
+            $('.wrapper_time_input_preview').text(`${hour}시`)
+            $('.popup_time_input_hour').fadeOut(20, function(){
+                $('.popup_time_input_minute').fadeIn();
+            });
+            
+        });
+
+        $('.popup_time_input_minute button').click(function(){
+
+            let hour = $('.popup_time_input').attr('data-hour');
+            let min = $(this).text();
+
+            let time = `${hour}:${min}`;
+
+            $('.popup_time_input_hour').show();
+            $('.popup_time_input_minute').hide();
+            $('.popup_time_input').hide();
+            $('.wrapper_time_input_preview').text('');
+
+            $('.func_time_input span').text(time);
+
+        });
+
+
+    </script>
+
+{% endblock %}
