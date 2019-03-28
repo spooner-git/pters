@@ -179,7 +179,8 @@
             add_computer(){
                 if($('body').find(this.selector_computer).length == 0){
                     $('body').append(this.draw_computer());
-                    this.set_webkit_overflow_scrolling('.time_dropdown');
+                    this.set_webkit_overflow_scrolling('.popup_time_input_minute');
+                    this.set_webkit_overflow_scrolling('.popup_time_input_hour');
                 }
             }
 
@@ -234,7 +235,7 @@
 
             set_webkit_overflow_scrolling(target_selector){
                 let $selector = $(target_selector);
-                $selector.scrollTop(1);
+                // $selector.scrollTop(1);
                 $selector.scroll(function(){
                     const popupHeight = $selector.height();
                     const scrollHeight = $selector.prop('scrollHeight');
