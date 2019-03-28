@@ -179,54 +179,11 @@
             add_computer(){
                 if($('body').find(this.selector_computer).length == 0){
                     $('body').append(this.draw_computer());
+                    this.set_webkit_overflow_scrolling('.time_dropdown');
                 }
             }
 
             draw_computer(){
-                // let html_computer = `<div id="shade_for_computer"></div>
-                //                     <div id="time_input_computer">
-                //                         <div class="wrapper_time_input_preview"></div>
-                //                         <div class="popup_time_input_hour">
-                //                             <button>0</button>
-                //                             <button>1</button>
-                //                             <button>2</button>
-                //                             <button>3</button>
-                //                             <button>4</button>
-                //                             <button>5</button>
-                //                             <button>6</button>
-                //                             <button>7</button>
-                //                             <button>8</button>
-                //                             <button>9</button>
-                //                             <button>10</button>
-                //                             <button>11</button>
-                //                             <button>12</button>
-                //                             <button>13</button>
-                //                             <button>14</button>
-                //                             <button>15</button>
-                //                             <button>16</button>
-                //                             <button>17</button>
-                //                             <button>18</button>
-                //                             <button>19</button>
-                //                             <button>20</button>
-                //                             <button>21</button>
-                //                             <button>22</button>
-                //                             <button>23</button>
-                //                         </div>
-                //                         <div class="popup_time_input_minute">
-                //                             <button disabled>0</button>
-                //                             <button disabled>5</button>
-                //                             <button>10</button>
-                //                             <button>15</button>
-                //                             <button>20</button>
-                //                             <button disabled>25</button>
-                //                             <button disabled>30</button>
-                //                             <button disabled>35</button>
-                //                             <button>40</button>
-                //                             <button>45</button>
-                //                             <button>50</button>
-                //                             <button disabled>55</button>
-                //                         </div>
-                //                     </div>`;
                 let html_computer = `<div id="shade_for_computer"></div>
                                         <div id="time_input_computer">
                                             <div class="time_input_computer_title">시작 시간 선택</div>
@@ -274,6 +231,22 @@
                                         </div>`;
                 return html_computer;
             }
+
+            set_webkit_overflow_scrolling(target_selector){
+                let $selector = $(target_selector);
+                $selector.scrollTop(1);
+                $selector.scroll(function(){
+                    const popupHeight = $selector.height();
+                    const scrollHeight = $selector.prop('scrollHeight');
+                    const scrollLocation = $selector.scrollTop();
+                    if(popupHeight + scrollLocation == scrollHeight){
+                        $selector.animate({scrollTop : scrollLocation-1}, 10);
+                    }else if(popupHeight + scrollLocation == popupHeight){
+                        $selector.animate({scrollTop : scrollLocation+1}, 10);
+                    }
+                });
+            }
+
         }
 
 
