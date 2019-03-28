@@ -4,11 +4,9 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db import IntegrityError
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
-from django.db.models.functions import Coalesce
 from django.utils import timezone
 
-from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, TO_TRAINEE_LESSON_ALARM_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
-    AUTO_FINISH_OFF, MEMBER_RESERVE_PROHIBITION_ON, SCHEDULE_ABSENCE
+from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, MEMBER_RESERVE_PROHIBITION_ON
 
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
@@ -16,7 +14,7 @@ from trainer.models import ClassTb, ClassLectureTb, GroupLectureTb, SettingTb, P
 from .models import MemberLectureTb
 
 
-def func_get_holiday_schedule(context, start_date, end_date):
+def func_get_holiday_schedule(context):
 
     # holiday = HolidayTb.objects.filter(holiday_dt__gte=start_date, holiday_dt__lt=end_date, use=USE)
     holiday = HolidayTb.objects.filter(use=USE)
@@ -525,38 +523,12 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
 
                 lecture_counts += 1
 
-                group_info = None
-                group_check = 0
-                # try:
-                #     group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id)
-                # except ObjectDoesNotExist:
-                #     group_check = 1
-                # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_tb_id,
-                #                                            package_tb__isnull=True)
-                # if len(group_data) > 0:
-                #     group_info = group_data[0]
-                # else:
-                #     group_check = 1
-                #
-                # if group_check == 0:
-                #     lecture_info_data.group_name = group_info.group_tb.name
-                #     lecture_info_data.group_type_cd = group_info.group_tb.group_type_cd
-                #     lecture_info_data.group_type_cd_name = group_info.group_tb.get_group_type_cd_name()
-                #     lecture_info_data.group_member_num = group_info.group_tb.member_num
-                #     lecture_info_data.group_note = group_info.group_tb.note
-                #     lecture_info_data.group_state_cd = group_info.group_tb.state_cd
-                #     lecture_info_data.group_state_cd_name = group_info.group_tb.get_state_cd_name()
-                    # try:
-                    #     state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
-                    #     lecture_info_data.group_state_cd_nm = state_cd_nm.common_cd_nm
-                    # except ObjectDoesNotExist:
-                    #     error = '그룹 정보를 불러오지 못했습니다.'
                 lecture_info_data.group_name = lecture_info.lecture_tb.package_tb.name
                 lecture_info_data.group_type_cd = lecture_info.lecture_tb.package_tb.package_type_cd
-                # lecture_info_data.group_type_cd_name = group_info.group_tb.get_group_type_cd_name()
                 try:
                     lecture_info_data.group_type_cd_name = \
-                        CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.package_tb.package_type_cd).common_cd_nm
+                        CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.package_tb.package_type_cd
+                                               ).common_cd_nm
                 except ObjectDoesNotExist:
                     lecture_info_data.group_type_cd_name = ''
                 if lecture_info.lecture_tb.package_tb.package_group_num == 1:
@@ -573,11 +545,6 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                     lecture_info_data.group_member_num = 'x'
                 lecture_info_data.group_note = lecture_info.lecture_tb.package_tb.note
                 lecture_info_data.group_state_cd = lecture_info.lecture_tb.package_tb.state_cd
-                # try:
-                #     lecture_info_data.group_state_cd_name = \
-                #         CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.package_tb.state_cd).common_cd_nm
-                # except ObjectDoesNotExist:
-                #     lecture_info_data.group_state_cd_name = ''
 
                 output_lecture_list.append(lecture_info_data)
 
@@ -757,6 +724,8 @@ def func_get_trainee_select_schedule(context, class_id, user_id, select_date):
 
     # query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as C where C.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
     error = None
+    start_dt = None
+    end_dt = None
     try:
         start_dt = datetime.datetime.strptime(select_date + ' 00:00', '%Y-%m-%d %H:%M')
     except ValueError:
@@ -909,9 +878,13 @@ def func_get_trainee_reserve_schedule_list(context, class_id, user_id, group_id,
     # 3. 예약 가능 시간 고려
     # 5. 수업 오픈 고려 (1:1인경우 예약된 시간 전부 안되도록, 그룹인 경우 자신이 속한 시간 제외한 수업)
     # 6.
-    datetime_now = timezone.now()
-    today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
-    now_time = datetime.datetime.strptime(datetime_now.strftime('%H:%M'), '%H:%M')
+    # datetime_now = timezone.now()
+    # today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
+    # now_time = datetime.datetime.strptime(datetime_now.strftime('%H:%M'), '%H:%M')
+    class_info = None
+    start_dt = None
+    end_dt = None
+    schedule_data = None
 
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
@@ -923,11 +896,11 @@ def func_get_trainee_reserve_schedule_list(context, class_id, user_id, group_id,
 
     if error is None:
         # 근접 예약 취소/등록 시간 : 구버전 호환 + 시간 단위
-        lt_res_enable_cancel_time_legacy = 0
+        # lt_res_enable_cancel_time_legacy = 0
         # 강사 업무 시간 : 구버전 호환
         lt_work_time_legacy = '00:00-23:59'
         # 근접 예약 등록 시간 : 구버전 호환 위해 default -1 + 분 단위
-        lt_res_enable_time = -1
+        # lt_res_enable_time = -1
         # 강사 업무 시간
         lt_work_time_avail = ['', '', '', '', '', '', '']
 
@@ -938,8 +911,8 @@ def func_get_trainee_reserve_schedule_list(context, class_id, user_id, group_id,
                                                                  Q(setting_type_cd='LT_RES_05') |
                                                                  Q(setting_type_cd='LT_RES_CANCEL_TIME'))
         for setting_info in setting_data:
-            if setting_info.setting_type_cd == 'LT_RES_02':
-                lt_res_enable_cancel_time_legacy = int(setting_info.setting_info)
+            # if setting_info.setting_type_cd == 'LT_RES_02':
+            #     lt_res_enable_cancel_time_legacy = int(setting_info.setting_info)
             if setting_info.setting_type_cd == 'LT_RES_04':
                 lt_work_time_legacy = setting_info.setting_info
             if setting_info.setting_type_cd == 'LT_WORK_SUN_TIME_AVAIL':
@@ -956,16 +929,16 @@ def func_get_trainee_reserve_schedule_list(context, class_id, user_id, group_id,
                 lt_work_time_avail[5] = setting_info.setting_info
             if setting_info.setting_type_cd == 'LT_WORK_SAT_TIME_AVAIL':
                 lt_work_time_avail[6] = setting_info.setting_info
-            if setting_info.setting_type_cd == 'LT_RES_ENABLE_TIME':
-                lt_res_enable_time = int(setting_info.setting_info)
-            if setting_info.setting_type_cd == 'LT_RES_MEMBER_TIME_DURATION':
-                lt_res_member_time_duration = int(setting_info.setting_info)
-            if setting_info.setting_type_cd == 'LT_RES_MEMBER_START_TIME':
-                lt_res_member_start_time = setting_info.setting_info
+            # if setting_info.setting_type_cd == 'LT_RES_ENABLE_TIME':
+            #     lt_res_enable_time = int(setting_info.setting_info)
+            # if setting_info.setting_type_cd == 'LT_RES_MEMBER_TIME_DURATION':
+            #     lt_res_member_time_duration = int(setting_info.setting_info)
+            # if setting_info.setting_type_cd == 'LT_RES_MEMBER_START_TIME':
+            #     lt_res_member_start_time = setting_info.setting_info
 
         # 근접 예약 등록 가능 시간 구버전 호환 + 시간 -> 분
-        if lt_res_enable_time == -1:
-            lt_res_enable_time = lt_res_enable_cancel_time_legacy * 60
+        # if lt_res_enable_time == -1:
+            # lt_res_enable_time = lt_res_enable_cancel_time_legacy * 60
         # 강사 업무 시간 구버전 호환
         if lt_work_time_avail[0] == '':
             lt_work_time_avail[0] = lt_work_time_legacy
@@ -983,31 +956,31 @@ def func_get_trainee_reserve_schedule_list(context, class_id, user_id, group_id,
             lt_work_time_avail[6] = lt_work_time_legacy
 
         # 선택한 일자의 강사 업무 시간 확인
-        work_avail_start_time = datetime.datetime.strptime(lt_work_time_avail[int(select_date.strftime('%w'))].split('-')[0],
-                                                           '%H:%M')
-        work_avail_end_time = datetime.datetime.strptime(lt_work_time_avail[int(select_date.strftime('%w'))].split('-')[1],
-                                                         '%H:%M')
+        # work_avail_start_time = datetime.datetime.strptime(
+        #     lt_work_time_avail[int(select_date.strftime('%w'))].split('-')[0], '%H:%M')
+        # work_avail_end_time = datetime.datetime.strptime(
+        #     lt_work_time_avail[int(select_date.strftime('%w'))].split('-')[1], '%H:%M')
 
         # 근접 예약 등록 가능 시간 셋팅
-        reserve_prohibition_time = lt_res_enable_time
+        # reserve_prohibition_time = lt_res_enable_time
 
         # 근접 예약 등록 가능 시간이 일 단위를 넘는 경우
-        if reserve_prohibition_time >= 24*60:
-            reserve_prohibition_date = int(reserve_prohibition_time/60/24)
+        # if reserve_prohibition_time >= 24*60:
+        #     reserve_prohibition_date = int(reserve_prohibition_time/60/24)
 
         # 근접 예약 시간 확인
-        reserve_disable_time = datetime_now + datetime.timedelta(minutes=reserve_prohibition_time)
+        # reserve_disable_time = datetime_now + datetime.timedelta(minutes=reserve_prohibition_time)
 
         # 시작 시각
-        if lt_res_member_start_time == 'A-0':
-            test = '매시각 0분 마다'
-        elif lt_res_member_start_time == 'A-30':
-            test = '매시각 30분 마다'
-        elif lt_res_member_start_time == 'E-30':
-            test = '30분 마다'
+        # if lt_res_member_start_time == 'A-0':
+        #     test = '매시각 0분 마다'
+        # elif lt_res_member_start_time == 'A-30':
+        #     test = '매시각 30분 마다'
+        # elif lt_res_member_start_time == 'E-30':
+        #     test = '30분 마다'
 
         # 진행 시간 (분단위)
-        lt_res_member_time_duration = lt_res_member_time_duration * class_info.class_hour
+        # lt_res_member_time_duration = lt_res_member_time_duration * class_info.class_hour
 
     try:
         start_dt = datetime.datetime.strptime(select_date + ' 00:00', '%Y-%m-%d %H:%M')
@@ -1020,27 +993,29 @@ def func_get_trainee_reserve_schedule_list(context, class_id, user_id, group_id,
         error = '등록 값의 형태에 문제가 있습니다.'
 
     # 1:1 수업인 경우
-    if group_id is None or group_id == '':
-        test = 'test'
-        schedule_data = ScheduleTb.objects.filter(class_tb=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                                                  start_dt__gte=start_dt, start_dt__lte=end_dt).order_by('start_dt')
+    if error is None:
+        if group_id is None or group_id == '':
+            # test = 'test'
+            schedule_data = ScheduleTb.objects.filter(class_tb=class_id, en_dis_type=ON_SCHEDULE_TYPE,
+                                                      start_dt__gte=start_dt, start_dt__lte=end_dt,
+                                                      lecture_tb__member_id=user_id).order_by('start_dt')
 
     # 그룹 수업인 경우
-    else:
-        test = 'test'
-
-    for schedule_info in schedule_data:
-        try:
-            group_type_name = CommonCdTb.objects.get(common_cd=schedule_info.group_tb.group_type_cd).common_cd_nm
-            group_name = schedule_info.group_tb.name
-        except ObjectDoesNotExist:
-            group_type_name = '개인'
-            group_name = '1:1 레슨'
-        except AttributeError:
-            group_type_name = '개인'
-            group_name = '1:1 레슨'
-        schedule_info.group_name = group_name
-        schedule_info.group_type_name = group_type_name
+    # else:
+    #     test = 'test'
+    if error is None:
+        for schedule_info in schedule_data:
+            try:
+                group_type_name = CommonCdTb.objects.get(common_cd=schedule_info.group_tb.group_type_cd).common_cd_nm
+                group_name = schedule_info.group_tb.name
+            except ObjectDoesNotExist:
+                group_type_name = '개인'
+                group_name = '1:1 레슨'
+            except AttributeError:
+                group_type_name = '개인'
+                group_name = '1:1 레슨'
+            schedule_info.group_name = group_name
+            schedule_info.group_type_name = group_type_name
 
     context['schedule_data'] = schedule_data
 
@@ -1060,6 +1035,10 @@ def func_check_select_date_reserve_setting(class_id, trainer_id, select_date):
     reserve_stop = MEMBER_RESERVE_PROHIBITION_ON
     # 예약 가능 일자
     reserve_avail_date = 7
+    reserve_avail_end_date = today
+    reserve_avail_start_time = None
+    reserve_avail_end_time = None
+    reserve_avail_time_split = None
 
     try:
         select_date = datetime.datetime.strptime(select_date + ' 00:00', '%Y-%m-%d %H:%M')
@@ -1124,6 +1103,9 @@ def func_check_select_time_reserve_setting(class_id, trainer_id, start_date, end
     add_del_end_time = datetime.datetime.strptime(end_date.strftime('%H:%M'), '%H:%M')
     reserve_prohibition_date = 0
     error_comment = ''
+    work_avail_start_time = None
+    work_avail_end_time = None
+    reserve_disable_time = None
 
     if error is None:
         # 근접 예약 취소/등록 시간 : 구버전 호환 + 시간 단위
@@ -1191,10 +1173,10 @@ def func_check_select_time_reserve_setting(class_id, trainer_id, start_date, end
             lt_work_time_avail[6] = lt_work_time_legacy
 
         # 선택한 일자의 강사 업무 시간 확인
-        work_avail_start_time = datetime.datetime.strptime(lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[0],
-                                                           '%H:%M')
-        work_avail_end_time = datetime.datetime.strptime(lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[1],
-                                                         '%H:%M')
+        work_avail_start_time = datetime.datetime.strptime(
+            lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[0], '%H:%M')
+        work_avail_end_time = datetime.datetime.strptime(
+            lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[1], '%H:%M')
 
         # 근접 예약 등록 가능 시간 셋팅
         if add_del_type == ADD_SCHEDULE:

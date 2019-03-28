@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get("PTERS_DJANGO_SECRET", '')
 
 DEBUG = True
 
-#ALLOWED_HOSTS = ['pters.co.kr','www.pters.co.kr','kr.pters.co.kr','jp.pters.co.kr','us.pters.co.kr','13.125.37.117']
+# ALLOWED_HOSTS = ['pters.co.kr','www.pters.co.kr','kr.pters.co.kr','jp.pters.co.kr','us.pters.co.kr','13.125.37.117']
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -161,7 +161,6 @@ STATICFILES_DIRS = (
   os.path.join(BASE_DIR, "static"),
   'static/',
 )
-STATIC_ROOT = '/static/'
 # STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
 
 # LOGIN URL
@@ -302,4 +301,3 @@ LOGGING = {
 }
 
 EL_PAGINATION_LOADING = "<img src='/static/user/res/ajax/loading.gif' alt='loading' style='width:10%;'/>"
-
