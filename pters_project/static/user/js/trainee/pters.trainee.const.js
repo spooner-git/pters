@@ -51,4 +51,8 @@ const FIREFOX = 'firefox';
 const CHROME = 'chrome';
 const EDGE = 'edge';
 
+/* px */
+const MAX_WIDTH = 800;
+/* % */
+const DISPLAY = 50;
 /**/

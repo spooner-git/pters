@@ -15,7 +15,6 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
-from el_pagination.views import AjaxListView
 
 # Create your views here.
 
@@ -70,7 +69,8 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 'lecture_tb__member').filter(
                 lecture_tb__member_id=request.user.id,
                 use=USE).annotate(auth_type_cd=RawSQL(query_auth_type_cd,
-                                                      [])).exclude(auth_type_cd='DELETE').order_by('-lecture_tb__start_date')
+                                                      [])).exclude(auth_type_cd='DELETE'
+                                                                   ).order_by('-lecture_tb__start_date')
             if lecture_data is None or len(lecture_data) == 0:
                 # self.url = '/trainee/cal_month_blank/'
                 self.url = '/trainee/trainee_main/'
@@ -204,19 +204,19 @@ class TraineeCalendarView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(TraineeCalendarView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
 
-        date = self.request.GET.get('date', '')
-        day = self.request.GET.get('day', '')
-        today = datetime.date.today()
-        if date != '':
-            today = datetime.datetime.strptime(date, '%Y-%m-%d')
-        if day == '':
-            day = 46
-        start_date = today - datetime.timedelta(days=int(day))
-        end_date = today + datetime.timedelta(days=int(day))
+        # date = self.request.GET.get('date', '')
+        # day = self.request.GET.get('day', '')
+        # today = datetime.date.today()
+        # if date != '':
+        #     today = datetime.datetime.strptime(date, '%Y-%m-%d')
+        # if day == '':
+        #     day = 46
+        # start_date = today - datetime.timedelta(days=int(day))
+        # end_date = today + datetime.timedelta(days=int(day))
 
         context = func_get_class_lecture_count(context, class_id, self.request.user.id)
 
-        context = func_get_holiday_schedule(context, start_date, end_date)
+        context = func_get_holiday_schedule(context)
 
         return context
 
@@ -276,14 +276,6 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'trainee_lecture_select.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(LectureSelectView, self).get_context_data(**kwargs)
-        return context
-
-
 class ProgramSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'trainee_program.html'
 
@@ -300,13 +292,13 @@ class ProgramSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-class DeleteTraineeAccountView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'delete_trainee_account_form.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(DeleteTraineeAccountView, self).get_context_data(**kwargs)
-
-        return context
+# class DeleteTraineeAccountView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+#     template_name = 'delete_trainee_account_form.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(DeleteTraineeAccountView, self).get_context_data(**kwargs)
+#
+#         return context
 
 
 # pt 일정 추가
@@ -375,7 +367,8 @@ def add_trainee_schedule_logic(request):
                     error = '이미 결석 처리된 일정입니다.'
 
     if error is None:
-        error = func_check_select_time_reserve_setting(class_id, class_info.member_id, start_date, end_date, ADD_SCHEDULE)
+        error = func_check_select_time_reserve_setting(class_id, class_info.member_id,
+                                                       start_date, end_date, ADD_SCHEDULE)
 
     if error is None:
         if group_schedule_id == '' or group_schedule_id is None:
@@ -524,7 +517,8 @@ def delete_trainee_schedule_logic(request):
         error = func_check_select_date_reserve_setting(class_id, class_info.member_id, str(start_date).split(' ')[0])
 
     if error is None:
-        error = func_check_select_time_reserve_setting(class_id, class_info.member_id, start_date, end_date, DEL_SCHEDULE)
+        error = func_check_select_time_reserve_setting(class_id, class_info.member_id,
+                                                       start_date, end_date, DEL_SCHEDULE)
 
     if error is None:
         try:
@@ -618,6 +612,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         class_id = self.request.session.get('class_id', '')
         trainer_id = self.request.session.get('trainer_id', '')
         today = datetime.date.today()
+        error = None
         if date != '':
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
         if day == '':
@@ -633,7 +628,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             except ObjectDoesNotExist:
                 error = '수강정보를 불러오지 못했습니다.'
 
-        context['error'] = None
+        context['error'] = error
         # context = func_get_holiday_schedule(context, start_date, end_date)
         context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, start_date, end_date)
         context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
@@ -768,7 +763,8 @@ def program_select_logic(request):
             lecture_data = ClassLectureTb.objects.select_related('class_tb', 'lecture_tb__member').filter(
                 class_tb_id=class_id, lecture_tb__member_id=request.user.id,
                 use=USE).annotate(member_auth_cd=RawSQL(query_auth_type_cd,
-                                                        [])).filter(member_auth_cd='WAIT').order_by('-lecture_tb__start_date')
+                                                        [])).filter(member_auth_cd='WAIT'
+                                                                    ).order_by('-lecture_tb__start_date')
             for lecture_info in lecture_data:
                 try:
                     member_lecture = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id,
@@ -787,7 +783,8 @@ def program_select_logic(request):
             lecture_data = ClassLectureTb.objects.select_related('class_tb', 'lecture_tb__member').filter(
                 class_tb_id=class_id, lecture_tb__member_id=request.user.id,
                 use=USE).annotate(member_auth_cd=RawSQL(query_auth_type_cd,
-                                                      [])).filter(member_auth_cd='WAIT').order_by('-lecture_tb__start_date')
+                                                        [])).filter(member_auth_cd='WAIT'
+                                                                    ).order_by('-lecture_tb__start_date')
 
             for lecture_info in lecture_data:
                 try:
@@ -800,6 +797,7 @@ def program_select_logic(request):
 
         if lecture_connection_check != PROGRAM_LECTURE_CONNECT_DELETE:
             # 선택한 프로그램 연결
+            class_info = None
             request.session['class_id'] = class_id
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
@@ -882,7 +880,6 @@ class GetTraineeInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
 def update_trainee_info_logic(request):
     first_name = request.POST.get('first_name', '')
-    last_name = request.POST.get('last_name', '')
     phone = request.POST.get('phone', '')
     contents = request.POST.get('contents', '')
     country = request.POST.get('country', '')
@@ -913,9 +910,6 @@ def update_trainee_info_logic(request):
     if first_name is None or first_name == '':
         first_name = user.first_name
 
-    # if last_name is None or last_name == '':
-    #     last_name = user.last_name
-
     if contents is None or contents == '':
         contents = member.contents
 
@@ -943,9 +937,7 @@ def update_trainee_info_logic(request):
         try:
             with transaction.atomic():
                 user.first_name = first_name
-                # user.last_name = last_name
                 user.save()
-                # member.name = last_name + first_name
                 member.name = first_name
                 member.phone = phone
                 member.contents = contents
@@ -1092,7 +1084,6 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         # lecture_id = self.request.session.get('lecture_id', '')
         error = None
         log_data = None
-        log_list = []
 
         context = func_get_class_list(context, self.request.user.id)
 
@@ -1512,6 +1503,8 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
     pt_end_date = ''
     lecture_counts = 0
     lecture_list = None
+    lecture_finish_count = 0
+    lecture_absence_count = 0
 
     if class_id is None or class_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -1617,8 +1610,13 @@ class PopupCalendarPlanReserveView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanReserveView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id')
+        # class_id = self.request.session.get('class_id')
         select_date = self.request.GET.get('select_date')
+        # 개인 수업 예약 가능 횟수 호출
+        # 회원과 연결되어있는 수강권중에서 개인 수업이 포함되어 있는 경우 count
+
+        # 선택한날에 오픈되어 있는 그룹수업의 예약 가능 횟수 호출
+        # 회원과 연결되어있는 수강권중에서 해당 그룹 수업이 포함되어 있는 경우 count
 
         context['error'] = None
         context['select_date'] = datetime.datetime.strptime(select_date, '%Y-%m-%d')
@@ -1641,10 +1639,16 @@ class PopupGroupTicketInfoView(TemplateView):
         context = super(PopupGroupTicketInfoView, self).get_context_data(**kwargs)
         lecture_id = self.request.GET.get('lecture_id')
         group_id = self.request.GET.get('group_id')
+
         error = None
+        lecture_info = None
+        group_info = None
+        schedule_list = None
+
         query_member_auth_cd \
             = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
-              " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " + str(self.request.user.id)
+              " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " \
+              + str(self.request.user.id)
         class_list = ClassLectureTb.objects.select_related(
             'class_tb__member').filter(lecture_tb_id=lecture_id,
                                        use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd,
@@ -1707,10 +1711,12 @@ class PopupTicketInfoView(TemplateView):
         context = super(PopupTicketInfoView, self).get_context_data(**kwargs)
         package_id = self.request.GET.get('package_id')
         error = None
+        package_info = None
 
         query_member_auth_cd \
             = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
-              " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " + str(self.request.user.id)
+              " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " \
+              + str(self.request.user.id)
         lecture_list = ClassLectureTb.objects.select_related(
             'class_tb__member',
             'lecture_tb__package_tb').filter(lecture_tb__package_tb__package_id=package_id,
@@ -1744,7 +1750,8 @@ class PopupTicketInfoView(TemplateView):
                 package_info.package_type_cd_nm = ''
 
         if error is None:
-            query_group_type = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`group_type_cd`"
+            query_group_type = "select COMMON_CD_NM from COMMON_CD_TB as B " \
+                               "where B.COMMON_CD = `GROUP_TB`.`group_type_cd`"
             package_info.package_group_data = PackageGroupTb.objects.select_related(
                 'group_tb').filter(package_tb_id=package_id,
                                    group_tb__use=USE,
@@ -1763,7 +1770,7 @@ class PopupMyInfoChangeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupMyInfoChangeView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-        sns_id = self.request.session.get('social_login_id', '')
+        # sns_id = self.request.session.get('social_login_id', '')
         member_info = None
         class_info = None
         error = None
@@ -1827,7 +1834,7 @@ class TraineeInquiryView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-#skkim Test페이지, 테스트 완료후 지울것 190316
+# skkim Test페이지, 테스트 완료후 지울것 190316
 class TestPageView(TemplateView):
     template_name = 'test_page.html'
 

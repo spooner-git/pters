@@ -168,23 +168,40 @@ function func_set_popup_position($popup_selector, animation_type, popup_size){
     let translate_y = 0;
     let width = 100;
     let height = 100;
+    let left = 0;
 
     switch (animation_type) {
         case POPUP_FROM_LEFT:
             translate_x = -windowWidth;
             width = popup_size;
+            if(windowWidth > MAX_WIDTH) {
+                left = MAX_WIDTH - (windowWidth - popup_size * windowWidth / 100);
+                width = MAX_WIDTH * width / windowWidth;
+            }
             break;
         case POPUP_FROM_RIGHT:
             translate_x = windowWidth;
             width = popup_size;
+            if(windowWidth > MAX_WIDTH) {
+                left = MAX_WIDTH - (windowWidth - popup_size * windowWidth / 100);
+                width = MAX_WIDTH * width / windowWidth;
+            }
             break;
         case POPUP_FROM_BOTTOM:
             translate_y = windowHeight;
             height = popup_size;
+            if(windowWidth > MAX_WIDTH) {
+                left = windowWidth * DISPLAY / 100 - MAX_WIDTH*DISPLAY/100;
+                width = MAX_WIDTH * width / windowWidth;
+            }
             break;
         case POPUP_FROM_TOP:
             translate_y = -windowHeight;
             height = popup_size;
+            if(windowWidth > MAX_WIDTH) {
+                left = windowWidth * DISPLAY / 100 - MAX_WIDTH*DISPLAY/100;
+                width = MAX_WIDTH * width / windowWidth;
+            }
             break;
         case POPUP_FROM_PAGE:
             break;
@@ -193,7 +210,8 @@ function func_set_popup_position($popup_selector, animation_type, popup_size){
     $popup_selector.css({
         "transform": `translate(${translate_x}px, ${translate_y}px)`,
         "width": `${width}%`,
-        "height": `${height}%`
+        "height": `${height}%`,
+        "left": `${left}px`
     });
 
 }

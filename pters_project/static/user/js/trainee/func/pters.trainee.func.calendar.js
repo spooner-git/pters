@@ -153,7 +153,8 @@ function pters_month_calendar(calendar_name, calendar_options){
                 }else{
 
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
-                                               onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':'${data_date}'})">
+                                               id="calendar_cell_${data_date}"
+                                               onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${data_date}'})">
                                                <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
                                                <div class="calendar_date_number ${font_color}">${date_cache}</div>
                                                <div id="calendar_plan_cell_${data_date}"></div>
@@ -339,6 +340,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         }
 
         for(let date in schedule_number_dic["general"]){
+            $(`#calendar_cell_${date}`).attr('onclick', `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, 'popup_calendar_plan_view', 90, ${POPUP_FROM_BOTTOM}, {'select_date':'${date}'})`);
             $(`#calendar_plan_cell_${date}`).html(`<div class="schedule_marking"></div>`);
         }
         for(let date_group in schedule_number_dic["group"]){
