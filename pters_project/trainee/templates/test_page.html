@@ -6,7 +6,7 @@
     <style type="text/css">
         .func_time_input{
             display: inline-block;
-            width: 100px;
+            width: 200px;
             height: 40px;
             border: 1px solid #cccccc;
             text-align: center;
@@ -27,21 +27,34 @@
             opacity: 0.5;
             top: 0;
             left: 0;
-
+            z-index: 1499;
+            cursor: pointer;
         }
 
         #time_input_computer{
             display: none;
             position: fixed;
-            width: 90%;
-            max-width: 300px;
+            width: 95%;
+            max-width: 350px;
             height: auto;
             background-color: #ffffff;
-            border: 1px solid #cccccc;
+            border-radius: 4px;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            padding: 20px;
+            padding: 20 0px;
+            text-align: center;
+            z-index: 1500;
+        }
+        #time_input_computer .time_input_computer_title{
+            height: 30px;
+            background-color: #000000;
+            color: #ffffff;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+        #time_input_computer .wrapper_time_input_preview{
+            background-color: #f4f4f4;
         }
         #time_input_computer .popup_time_input_hour{
             width: 100%;
@@ -58,6 +71,25 @@
             border: 1px solid #8d8d8d;
             margin: 5px;
         }
+
+        ul{
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        #time_input_computer .time_dropdown{
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            max-height: 230px;
+        }
+        #time_input_computer .time_dropdown li{
+            height: 40px;
+            line-height: 40px;
+            border-bottom: 1px solid #cccccc;
+            cursor: pointer;
+        }
+
         button:disabled{
             background-color: #f2f2f2;
         }
@@ -104,25 +136,38 @@
 
             set_events(){
                 let self = this;
+                let hour_text_temp;
+                let min_text_temp;
+                let hour_data_temp;
+                let min_data_temp;
 
-                $(document).off('click', `${self.selector_computer} .popup_time_input_hour button`)
-                            .on('click', `${self.selector_computer} .popup_time_input_hour button`, function(){
-                    let hour = $(this).text();
-                    $(self.selector_computer).attr('data-hour', hour);
-                    $('.wrapper_time_input_preview').text(`${hour}시`);
+                $(document).off('click', `${self.selector_computer} .popup_time_input_hour li`)
+                            .on('click', `${self.selector_computer} .popup_time_input_hour li`, function(){
+                    hour_text_temp = $(this).text();
+                    hour_data_temp = $(this).attr('data-hour');
+                    $(self.selector_computer).attr('data-hour', hour_text_temp);
+                    $('.wrapper_time_input_preview').text(`${hour_text_temp}`);
                     $('.popup_time_input_hour').fadeOut(20, function(){
                         $('.popup_time_input_minute').fadeIn();
+                        $(`${self.selector_computer} .popup_time_input_minute`).scrollTop(1);
                     });
                 });
 
-                $(document).off('click', `${self.selector_computer} .popup_time_input_minute button`)
-                            .on('click', `${self.selector_computer} .popup_time_input_minute button`, function(){
-                    let hour = $(self.selector_computer).attr('data-hour');
-                    let min = $(this).text();
-                    let time = `${hour}:${min}`;
+                $(document).off('click', `${self.selector_computer} .popup_time_input_minute li`)
+                            .on('click', `${self.selector_computer} .popup_time_input_minute li`, function(){
+                    // let hour = $(self.selector_computer).attr('data-hour');
+                    min_text_temp = $(this).text();
+                    min_data_temp = $(this).attr('data-min');
+
+                    let time_text = `${hour_text_temp}:${min_text_temp}`;
+                    let time_data = `${hour_data_temp}:${min_data_temp}`;
 
                     let target = $(self.selector_computer).attr('data-target');
-                    $(target).text(time);
+                    $(target).text(time_text).attr('data-time', time_data);
+                    self.close_computer();
+                });
+
+                $(document).off('click', `#shade_for_computer`).on('click', `#shade_for_computer`, function(){
                     self.close_computer();
                 });
             }
@@ -130,6 +175,7 @@
             open_computer(){
                 $(`${this.selector_computer}`).show().attr('data-target', this.selector_result);
                 $('#shade_for_computer').fadeIn('fast');
+                $(`${this.selector_computer} .popup_time_input_hour`).scrollTop(1);
             }
 
             close_computer(){
@@ -137,62 +183,81 @@
                 $(`${this.selector_computer} .popup_time_input_minute`).hide();
                 $(`${this.selector_computer} .wrapper_time_input_preview`).text('');
                 $(this.selector_computer).hide().attr('data-target', '');
-                $('#shade_for_computer').fadeOut('fast');   
+                $('#shade_for_computer').fadeOut('fast');
             }
 
             add_computer(){
                 if($('body').find(this.selector_computer).length == 0){
                     $('body').append(this.draw_computer());
+                    this.set_webkit_overflow_scrolling('.popup_time_input_minute');
+                    this.set_webkit_overflow_scrolling('.popup_time_input_hour');
                 }
             }
 
             draw_computer(){
                 let html_computer = `<div id="shade_for_computer"></div>
-                                    <div id="time_input_computer">
-                                        <div class="wrapper_time_input_preview"></div>
-                                        <div class="popup_time_input_hour">
-                                            <button>0</button>
-                                            <button>1</button>
-                                            <button>2</button>
-                                            <button>3</button>
-                                            <button>4</button>
-                                            <button>5</button>
-                                            <button>6</button>
-                                            <button>7</button>
-                                            <button>8</button>
-                                            <button>9</button>
-                                            <button>10</button>
-                                            <button>11</button>
-                                            <button>12</button>
-                                            <button>13</button>
-                                            <button>14</button>
-                                            <button>15</button>
-                                            <button>16</button>
-                                            <button>17</button>
-                                            <button>18</button>
-                                            <button>19</button>
-                                            <button>20</button>
-                                            <button>21</button>
-                                            <button>22</button>
-                                            <button>23</button>
-                                        </div>
-                                        <div class="popup_time_input_minute">
-                                            <button disabled>0</button>
-                                            <button disabled>5</button>
-                                            <button>10</button>
-                                            <button>15</button>
-                                            <button>20</button>
-                                            <button disabled>25</button>
-                                            <button disabled>30</button>
-                                            <button disabled>35</button>
-                                            <button>40</button>
-                                            <button>45</button>
-                                            <button>50</button>
-                                            <button disabled>55</button>
-                                        </div>
-                                    </div>`;
+                                        <div id="time_input_computer">
+                                            <div class="time_input_computer_title">시작 시간 선택</div>
+                                            <div class="wrapper_time_input_preview"></div>
+                                            <ul class="popup_time_input_hour time_dropdown">
+                                                <li data-hour="00">오전 00시</li>
+                                                <li data-hour="01">오전 01시</li>
+                                                <li data-hour="02">오전 02시</li>
+                                                <li data-hour="03">오전 03시</li>
+                                                <li data-hour="04">오전 04시</li>
+                                                <li data-hour="05">오전 05시</li>
+                                                <li data-hour="06">오전 06시</li>
+                                                <li data-hour="07">오전 07시</li>
+                                                <li data-hour="08">오전 08시</li>
+                                                <li data-hour="09">오전 09시</li>
+                                                <li data-hour="10">오전 10시</li>
+                                                <li data-hour="11">오전 11시</li>
+                                                <li data-hour="12">오전 12시</li>
+                                                <li data-hour="13">오후 01시</li>
+                                                <li data-hour="14">오후 02시</li>
+                                                <li data-hour="15">오후 03시</li>
+                                                <li data-hour="16">오후 04시</li>
+                                                <li data-hour="17">오후 05시</li>
+                                                <li data-hour="18">오후 06시</li>
+                                                <li data-hour="19">오후 07시</li>
+                                                <li data-hour="20">오후 08시</li>
+                                                <li data-hour="21">오후 09시</li>
+                                                <li data-hour="22">오후 10시</li>
+                                                <li data-hour="23">오후 11시</li>
+                                            </ul>
+                                            <ul class="popup_time_input_minute time_dropdown">
+                                                <li data-min="00">00분</li>
+                                                <li data-min="05">05분</li>
+                                                <li data-min="10">10분</li>
+                                                <li data-min="15">15분</li>
+                                                <li data-min="20">20분</li>
+                                                <li data-min="25">25분</li>
+                                                <li data-min="30">30분</li>
+                                                <li data-min="35">35분</li>
+                                                <li data-min="40">40분</li>
+                                                <li data-min="45">45분</li>
+                                                <li data-min="50">50분</li>
+                                                <li data-min="55">55분</li>
+                                            </ul>
+                                        </div>`;
                 return html_computer;
             }
+
+            set_webkit_overflow_scrolling(target_selector){
+                let $selector = $(target_selector);
+                // $selector.scrollTop(1);
+                $selector.scroll(function(){
+                    const popupHeight = $selector.height();
+                    const scrollHeight = $selector.prop('scrollHeight');
+                    const scrollLocation = $selector.scrollTop();
+                    if(popupHeight + scrollLocation == scrollHeight){
+                        $selector.animate({scrollTop : scrollLocation-1}, 10);
+                    }else if(popupHeight + scrollLocation == popupHeight){
+                        $selector.animate({scrollTop : scrollLocation+1}, 10);
+                    }
+                });
+            }
+
         }
 
 
