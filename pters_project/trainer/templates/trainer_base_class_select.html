@@ -447,10 +447,9 @@
         $.ajax({
 
             url: ' /trainer/get_class_list/',
-            type: 'POST',
+            type: 'GET',
             dataType : 'html',
-            cache: false,
-            timeout: 60000,
+            crossDomain: true,
 
             beforeSend:function(){
 {#                $('html').css("cursor","wait");#}
@@ -481,8 +480,7 @@
 {#                $('html').css("cursor","auto");#}
             },
 
-            error:function(request,status,error){
-                alert("2221code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            error:function(){
                 console.log('server error')
             }
         })
