@@ -1076,7 +1076,7 @@ function playSound() {
             url: ' /trainer/get_class_list/',
             type: 'GET',
             dataType : 'html',
-            crossDomain: true,
+            async: false,
 
             beforeSend:function(){
                 beforeSend()

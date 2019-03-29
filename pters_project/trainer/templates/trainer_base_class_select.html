@@ -449,7 +449,7 @@
             url: ' /trainer/get_class_list/',
             type: 'GET',
             dataType : 'html',
-            crossDomain: true,
+            async: false,
 
             beforeSend:function(){
 {#                $('html').css("cursor","wait");#}
@@ -480,10 +480,9 @@
 {#                $('html').css("cursor","auto");#}
             },
 
-            error: function (jqXHR, textStatus, errorThrown) {
-            alert('new textStatus=' + textStatus + ' errorThrown=' + errorThrown);
-        },
-
+            error:function(){
+                console.log('server error')
+            }
         })
     }
 
