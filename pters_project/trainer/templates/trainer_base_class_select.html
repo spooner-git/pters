@@ -480,9 +480,10 @@
 {#                $('html').css("cursor","auto");#}
             },
 
-            error:function(){
-                console.log('server error')
-            }
+            error: function (jqXHR, textStatus, errorThrown) {
+            alert('new textStatus=' + textStatus + ' errorThrown=' + errorThrown);
+        },
+
         })
     }
 
