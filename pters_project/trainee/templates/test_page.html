@@ -149,6 +149,7 @@
                     $('.wrapper_time_input_preview').text(`${hour_text_temp}`);
                     $('.popup_time_input_hour').fadeOut(20, function(){
                         $('.popup_time_input_minute').fadeIn();
+                        $(`${self.selector_computer} .popup_time_input_minute`).scrollTop(1);
                     });
                 });
 
@@ -174,6 +175,7 @@
             open_computer(){
                 $(`${this.selector_computer}`).show().attr('data-target', this.selector_result);
                 $('#shade_for_computer').fadeIn('fast');
+                $(`${this.selector_computer} .popup_time_input_hour`).scrollTop(1);
             }
 
             close_computer(){
