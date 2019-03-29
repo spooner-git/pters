@@ -716,6 +716,7 @@
             url: ' /trainer/get_class_list/',
             type: 'GET',
             dataType : 'html',
+            async: false,
 
             beforeSend:function(){
 {#                $('html').css("cursor","wait");#}
@@ -769,6 +770,7 @@
             data:{"class_id": classid, "auth_cd":'WAIT'},
             dataType : 'html',
             type:'GET',
+            async: false,
 
             beforeSend:function(){
 

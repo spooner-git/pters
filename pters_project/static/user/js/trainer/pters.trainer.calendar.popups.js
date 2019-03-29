@@ -1350,6 +1350,7 @@
             type : 'GET',
             data : {"date":today_form, "day":searchdate},
             dataType : 'html',
+            async: false,
 
             beforeSend:function(){
                 beforeSend_();
@@ -1433,6 +1434,7 @@
             url:'/schedule/finish_schedule/',
             type:'POST',
             data:send_data,
+            async: false,
 
             beforeSend:function(){
                 beforeSend();
@@ -1522,6 +1524,7 @@
             url:'/schedule/update_memo_schedule/',
             type:'POST',
             data:{"schedule_id":schedule_id, "add_memo":memo},
+            async: false,
 
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1556,6 +1559,7 @@
             url:'/schedule/upload_sign_image/',
             type:'POST',
             data:send_data,
+            async: false,
 
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1647,6 +1651,7 @@
                     "sound": "default"
                 }
             }),
+            async: false,
 
             beforeSend:function(){
 
