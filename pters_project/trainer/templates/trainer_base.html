@@ -1075,9 +1075,9 @@ function playSound() {
         $.ajax({
 
             url: ' /trainer/get_class_list/',
-            type: 'POST',
+            type: 'GET',
             dataType : 'html',
-            cache: false,
+            "timeout": 60000,
 
 
             beforeSend:function(){
@@ -1124,7 +1124,7 @@ function playSound() {
             },
 
             error:function(request,status,error){
-                alert("222code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                alert("2212code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                 console.log('server error')
             }
         })
