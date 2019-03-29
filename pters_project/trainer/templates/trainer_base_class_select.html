@@ -480,7 +480,8 @@
 {#                $('html').css("cursor","auto");#}
             },
 
-            error:function(){
+            error:function(request,status,error){
+                alert("222code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                 console.log('server error')
             }
         })
