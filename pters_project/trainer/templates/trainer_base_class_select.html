@@ -450,6 +450,7 @@
             type: 'POST',
             dataType : 'html',
             cache: false,
+            timeout: 60000,
 
             beforeSend:function(){
 {#                $('html').css("cursor","wait");#}
@@ -481,7 +482,7 @@
             },
 
             error:function(request,status,error){
-                alert("222code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                alert("2221code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                 console.log('server error')
             }
         })
