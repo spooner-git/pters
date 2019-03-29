@@ -93,6 +93,7 @@ function func_get_ajax_schedule_data_temp(input_reference_date, callback){
         type : 'GET',
         data : {"date": input_reference_date, "day":1},
         dataType : 'html',
+        async: false,
 
         beforeSend:function(xhr, settings){
             func_ajax_before_send(xhr, settings, "func_get_ajax_schedule_data_temp");

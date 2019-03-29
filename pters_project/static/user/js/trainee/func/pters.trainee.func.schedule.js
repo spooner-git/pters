@@ -20,6 +20,7 @@ function func_schedule(data, call_method, type){
             data: data,
             dataType : 'html',
             type:'POST',
+            async: false,
 
             beforeSend:function(xhr, settings){
                 console.log('test1');

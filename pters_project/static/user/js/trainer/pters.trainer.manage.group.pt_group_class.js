@@ -521,6 +521,7 @@ function draw_memberlist_for_addByList(targetHTML){
         url: '/trainer/get_member_list/',
 
         dataType: 'html',
+        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -604,6 +605,7 @@ $('button#addBySearch_search').click(function(e){
         type:'GET',
         data: {'id':searchID, 'id_flag':user_id_flag},
         dataType : 'html',
+        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -1191,6 +1193,7 @@ function get_group_end_list(use, callback){
         url:'/trainer/get_group_end_list/',
 
         dataType : 'html',
+        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -1285,6 +1288,7 @@ function delete_group_from_list(group_id, use, callback){
         type:'POST',
         data: {"group_id":group_id, "next_page":next_page},
         dataType : 'html',
+        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1359,6 +1363,7 @@ function delete_groupmember_from_grouplist(use, callback){
         data:JSON.stringify(group_delete_JSON),
         //data:{"member_name":fullname, "member_id":id, "group_id":group_id, "next_page":'/trainer/get_group_info/'},
         dataType : 'html',
+        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1411,6 +1416,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
         type:'POST',
         data: {"group_id":group_id, "name":group_name, "member_num":group_capacity, "note":group_memo, "group_type_cd":group_type, "ing_color_cd":ing_bg_color, "end_color_cd":end_bg_color, "ing_font_color_cd":ing_font_color, "end_font_color_cd":end_font_color},
         dataType : 'html',
+        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1517,6 +1523,7 @@ function modify_group_status(group_id, option, use, callback){
         type:'POST',
         data: {"group_id":group_id},
         dataType : 'html',
+        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -2154,6 +2161,7 @@ function get_groupmember_list(group_id, use, callback){
         data: {"group_id":group_id},
         type:'GET',
         dataType : 'html',
+        async: false,
 
         beforeSend:function(xhr){
             beforeSend();
@@ -2216,6 +2224,7 @@ function get_end_groupmember_list(group_id, use, callback){
         data: {"group_id":group_id},
         type:'GET',
         dataType : 'html',
+        async: false,
 
         beforeSend:function(xhr){
             beforeSend();
@@ -2734,6 +2743,7 @@ function get_group_repeat_info(group_id, use, callback){
         type:'GET',
         data: {"group_id": group_id},
         dataType : 'html',
+        async: false,
 
         beforeSend:function(xhr){
             //beforeSend(); //ajax 로딩이미지 출력
@@ -2895,6 +2905,7 @@ function set_group_member_repeat_info(group_repeat_id, use, callback){
         type:'GET',
         data: {"group_repeat_id": group_repeat_id},
         dataType : 'html',
+        async: false,
 
         beforeSend:function(){
             //beforeSend(); //ajax 로딩이미지 출력
@@ -2970,6 +2981,7 @@ function get_member_group_class_ing_list(use, callback){
         type:'GET',
         data: {"page": lecture_page_num, "sort_val": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
         dataType : 'html',
+        async: false,
 
         beforeSend:function(){
             // startTime = performance.now();
@@ -3034,6 +3046,7 @@ function get_member_group_class_end_list(use, callback){
         type:'GET',
         data: {"page": lecture_page_num, "sort_val": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
         dataType : 'html',
+        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -3094,6 +3107,7 @@ function get_member_group_class_ing_list_page(use, callback){
         type:'GET',
         data: {"page": ++lecture_page_num, "sort_val": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
         dataType : 'html',
+        async: false,
 
         beforeSend:function(){
             // startTime = performance.now();
@@ -3159,6 +3173,7 @@ function get_member_group_class_end_list_page(use, callback){
         type:'GET',
         data: {"page": ++lecture_page_num, "sort_val": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
         dataType : 'html',
+        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -3235,6 +3250,7 @@ function send_member_fixed_info($this, group_id, db_id, fix, use, callback){
         data:JSON.stringify({"group_id":group_id, "member_info":[{"member_id":db_id, "fix_info":fix}]}),
         dataType : 'html',
         type:'POST',
+        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

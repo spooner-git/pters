@@ -369,6 +369,7 @@
                 type:'POST',
                 data : $('#modify-member-id-form').serialize(),
                 dataType : 'html',
+                async: false,
 
                 beforeSend:function(){
                     beforeSend();
@@ -577,6 +578,7 @@
                     type:'POST',
                     data : {"username":userid, "email":newemail, "member_id":db_id},
                     dataType : 'html',
+                    async: false,
 
                     beforeSend:function(xhr, settings){
                         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -611,6 +613,7 @@
                 type:'GET',
                 data:{"email" : newemail },
                 dataType : 'html',
+                async: false,
 
                 beforeSend:function(){
                 },
@@ -668,6 +671,7 @@
                     url:'https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=h5MuvYzSFLlrFTs19g0V&client_secret=fL5b0bMvHH&access_token='+social_accessToken+'&service_provider=NAVER',
                     type:'GET',
                     dataType:'json',
+                    async: false,
 
                     beforeSend:function(){
                     },
@@ -692,6 +696,7 @@
                     type:'POST',
                     data : {"sns_id":social_login_id, "sns_type":social_login_type},
                     dataType : 'html',
+                    async: false,
 
                     beforeSend:function(xhr, settings){
                         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
