@@ -183,7 +183,10 @@ function func_set_popup_position($popup_selector, animation_type, popup_size){
             translate_x = windowWidth;
             width = popup_size;
             if(windowWidth > MAX_WIDTH) {
-                left = MAX_WIDTH - (windowWidth - popup_size * windowWidth / 100);
+
+                /* 계산식 : 왼쪽 공백 크기 + (content 화면 크기 - 팝업 크기) - (animation translate 크기) */
+                left = (windowWidth - MAX_WIDTH)/2 + (MAX_WIDTH - MAX_WIDTH*width/100) - (windowWidth - popup_size * windowWidth / 100);
+
                 width = MAX_WIDTH * width / windowWidth;
             }
             break;
@@ -191,7 +194,7 @@ function func_set_popup_position($popup_selector, animation_type, popup_size){
             translate_y = windowHeight;
             height = popup_size;
             if(windowWidth > MAX_WIDTH) {
-                left = windowWidth * DISPLAY / 100 - MAX_WIDTH*DISPLAY/100;
+                left = windowWidth / 2 - MAX_WIDTH/2;
                 width = MAX_WIDTH * width / windowWidth;
             }
             break;
@@ -199,7 +202,7 @@ function func_set_popup_position($popup_selector, animation_type, popup_size){
             translate_y = -windowHeight;
             height = popup_size;
             if(windowWidth > MAX_WIDTH) {
-                left = windowWidth * DISPLAY / 100 - MAX_WIDTH*DISPLAY/100;
+                left = windowWidth / 2 - MAX_WIDTH/2;
                 width = MAX_WIDTH * width / windowWidth;
             }
             break;
