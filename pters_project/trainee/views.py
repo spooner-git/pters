@@ -311,6 +311,7 @@ def add_trainee_schedule_logic(request):
     class_info = None
     start_date = None
     end_date = None
+    select_date = None
     push_class_id = []
     push_title = []
     push_message = []
@@ -396,6 +397,16 @@ def add_trainee_schedule_logic(request):
     if error is None:
         if lecture_id is None:
             error = '예약 가능 횟수를 확인해주세요.'
+
+    if error is None:
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = '수강정보를 불러오지 못했습니다.'
+
+        if error is None:
+            if start_date.date() > lecture_info.end_date:
+                error = '수강 종료일 이후의 일정은 등록이 불가능합니다.'
 
     if error is None:
         error = pt_add_logic_func(training_date, start_date, end_date, request.user.id, lecture_id, class_id,
