@@ -363,6 +363,8 @@ function func_group_time_dom_draw(target_html, selected_date, schedule_json, set
     for(let group_id in group_dic){
         let html_to_join = [];
         let len = schedule_json.group_schedule_group_id.length;
+        let this_schedule_lecture_avail_count = 0;
+
         for(let i=0; i<len; i++){
             let start_split = schedule_json.group_schedule_start_datetime[i].split(' ');
             let end_split = schedule_json.group_schedule_end_datetime[i].split(' ');
@@ -382,6 +384,7 @@ function func_group_time_dom_draw(target_html, selected_date, schedule_json, set
                                         <div class="func_radio_element_title">${this_schedule_start_time} ~ ${this_schedule_end_time} (${this_schedule_particiants}/${this_schedule_max_participants}명)</div>
                                         <div class="func_radio_element_button"><div class="func_radio_element_button_outer"><div class=""></div></div></div>
                                     </div>`);
+                this_schedule_lecture_avail_count = schedule_json.group_lecture_avail_count[i];
             }
         }
 
@@ -390,7 +393,7 @@ function func_group_time_dom_draw(target_html, selected_date, schedule_json, set
                             <div class="obj_table_raw wrapper_ticket_info">
                                 <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/people_black.png"></div>
                                 <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal "> ${group_dic[group_id]}</div>
-                                <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: % 번)</div>
+                                <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: ${this_schedule_lecture_avail_count} 번)</div>
                             </div>
                             <div class="wrapper_reserve_form_data">
                                 <div class="func_radio_wrap wrapper_group_reserve_select">
