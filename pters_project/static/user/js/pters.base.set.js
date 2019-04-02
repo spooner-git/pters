@@ -991,6 +991,7 @@ function get_trainee_participate_group(use, callback){
         //data: $('#pt-add-form').serialize(),
         dataType : 'html',
         type:'GET',
+        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -1254,6 +1255,7 @@ function clear_badge_counter(){
     $.ajax({
         url:'/login/clear_badge_counter/',
         type:'POST',
+        async: false,
         //dataType : 'html',
 
         beforeSend:function(xhr, settings) {
@@ -1290,6 +1292,7 @@ function update_push_token(token, device_id) {
         url:'/login/add_push_token/',
         type:'POST',
         data:{"token_info":token, "device_id":device_id},
+        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
