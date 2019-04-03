@@ -17,9 +17,21 @@
 }
 
 .wrapper_popup_basic_comment{
+    position: relative;
     height: 65px;
-    line-height: 65px;
+    /*line-height: 65px;*/
     text-align: center;
+    
+}
+.wrapper_popup_basic_comment > p{
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left:  50%;
+    transform: translate(-50%, -50%);
+    width:  100%;
+    padding: 0 15px;
+    box-sizing: border-box;
 }
 
 .wrapper_popup_basic_buttons{
