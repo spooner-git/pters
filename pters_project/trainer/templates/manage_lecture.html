@@ -1341,12 +1341,11 @@
 {#          var member_Html = memberlist.html;#}
             var group_class_Html = group_class_ListHtml('current', jsondata);
             $('#currentGroupList').html(group_class_Html);
-
-            get_member_ing_list("callback", function(jsondata) {
-                $('#currentMemberList').attr('total_member_num', jsondata.total_member_num);
-            });
         });
 
+        get_member_ing_list("callback", function(jsondata) {
+            $('#currentMemberList').attr('total_member_num', jsondata.total_member_num);
+        });
 
         var _origin = $(window).scrollTop();
         $(window).scroll(function() {
