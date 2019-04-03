@@ -289,7 +289,6 @@ $(document).ready(function(){
             type : 'GET',
             data : {"date":today_form, "day":5},
             dataType : 'html',
-            async: false,
 
             beforeSend:function(){
                 beforeSend_();

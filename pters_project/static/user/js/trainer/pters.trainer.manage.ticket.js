@@ -539,7 +539,6 @@ function draw_memberlist_for_addByList(targetHTML){
         url: '/trainer/get_member_list/',
 
         dataType: 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -626,7 +625,6 @@ $('button#addBySearch_search').click(function(e){
         type:'GET',
         data: {'id':searchID, 'id_flag':user_id_flag},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -1097,7 +1095,6 @@ function get_group_ing_list(use, callback){
         url:'/trainer/get_group_ing_list/',
 
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -1157,7 +1154,6 @@ function get_group_end_list(use, callback){
         url:'/trainer/get_group_end_list/',
 
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -1221,7 +1217,6 @@ function delete_group_from_list(group_id, use, callback){
         type:'POST',
         data: {"group_id":group_id, "next_page":next_page},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1297,7 +1292,6 @@ function delete_groupmember_from_grouplist(use, callback){
         data:JSON.stringify(group_delete_JSON),
         //data:{"member_name":fullname, "member_id":id, "group_id":group_id, "next_page":'/trainer/get_group_info/'},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1350,7 +1344,6 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
         type:'POST',
         data: {"group_id":group_id, "name":group_name, "member_num":group_capacity, "note":group_memo, "group_type_cd":group_type},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1441,7 +1434,6 @@ function modify_group_status(group_id, option){
         type:'POST',
         data: {"group_id":group_id},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1922,7 +1914,6 @@ function get_groupmember_list(group_id, use, callback){
         data: {"group_id":group_id},
         type:'GET',
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr){
             beforeSend();
@@ -1982,7 +1973,6 @@ function get_end_groupmember_list(group_id, use, callback){
         data: {"group_id":group_id},
         type:'GET',
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr){
             beforeSend();
@@ -2235,7 +2225,6 @@ function get_group_repeat_info(group_id){
         type:'GET',
         data: {"group_id": group_id},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr){
             //beforeSend(); //ajax 로딩이미지 출력
@@ -2391,7 +2380,6 @@ function set_group_member_repeat_info(group_repeat_id, use, callback){
         type:'GET',
         data: {"group_repeat_id": group_repeat_id},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             //beforeSend(); //ajax 로딩이미지 출력
@@ -2647,7 +2635,6 @@ function get_package_ing_list(use, callback){
         type:'GET',
         data: {"page": ticket_page_num, "sort_val": ticket_sort_val, "sort_order_by":ticket_sort_order_by, "keyword":ticket_keyword},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -2711,7 +2698,6 @@ function get_package_end_list(use, callback){
         type:'GET',
         data: {"page": ticket_page_num, "sort_val": ticket_sort_val, "sort_order_by":ticket_sort_order_by, "keyword":ticket_keyword},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -2796,7 +2782,6 @@ function get_package_ing_list_page(use, callback){
         type:'GET',
         data: {"page": ++ticket_page_num, "sort_val": ticket_sort_val, "sort_order_by":ticket_sort_order_by, "keyword":ticket_keyword},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -2860,7 +2845,6 @@ function get_package_end_list_page(use, callback){
         type:'GET',
         data: {"page": ++ticket_page_num, "sort_val": ticket_sort_val, "sort_order_by":ticket_sort_order_by, "keyword":ticket_keyword},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -3405,7 +3389,6 @@ function get_package_member_list(package_id, use, callback){
         data: {"package_id":package_id},
         type:'GET',
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr){
             beforeSend();
@@ -3465,7 +3448,6 @@ function get_end_package_member_list(package_id, use, callback){
         data: {"package_id":package_id},
         type:'GET',
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr){
             beforeSend();
@@ -3793,7 +3775,6 @@ function send_new_package_info(packagedata, use, callback){
         data: JSON.stringify(packagedata),
         type:'POST',
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings){
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -3870,7 +3851,6 @@ function get_grouplist_in_package(package_id, state, use, callback){
         data: {"package_id": package_id},
         type:'GET',
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings){
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -3946,7 +3926,6 @@ function delete_package_from_list(package_id, use, callback){
         type:'POST',
         data: {"package_id":package_id, "next_page":next_page},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -4007,7 +3986,6 @@ function delete_group_from_package(package_id, group_id, use, callback){
         type:'POST',
         data: {"package_id":package_id, "group_id":group_id},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -4085,7 +4063,6 @@ function add_group_from_package(package_id, group_id, use, callback){
         type:'POST',
         data: {"package_id":package_id, "group_id":group_id},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -4145,7 +4122,6 @@ function modify_package_from_list(package_id, package_name, package_note, use, c
         type:'POST',
         data: {"package_id":package_id, "package_name":package_name, "package_note":package_note},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -4258,7 +4234,6 @@ function modify_package_status(package_id, option, use, callback){
         type:'POST',
         data: {"package_id":package_id},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -4331,7 +4306,6 @@ function add_ticketmember_form_func(){
         type:'POST',
         data: JSON.stringify(added_ticket_member_info_to_jsonformat()),
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -4471,7 +4445,6 @@ function delete_ticketmember_from_grouplist(use, callback){
         data:JSON.stringify(group_delete_JSON),
         //data:{"member_name":fullname, "member_id":id, "group_id":group_id, "next_page":'/trainer/get_group_info/'},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

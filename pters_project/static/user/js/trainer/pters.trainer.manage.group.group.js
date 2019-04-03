@@ -257,7 +257,6 @@ function draw_memberlist_for_addByList(targetHTML){
         url:'/trainer/get_member_list/',
 
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -339,7 +338,6 @@ $('button#addBySearch_search').click(function(e){
         type:'GET',
         data: {'id':searchID, 'id_flag':user_id_flag},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -653,7 +651,6 @@ function get_group_ing_list(use, callback){
         url:'/trainer/get_group_ing_list/',
 
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend()
@@ -710,7 +707,6 @@ function get_group_end_list(use, callback){
         url:'/trainer/get_group_end_list/',
 
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend()
@@ -772,7 +768,6 @@ function delete_group_from_list(group_id){
         type:'POST',
         data: {"group_id":group_id, "next_page":next_page},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -833,7 +828,6 @@ function delete_groupmember_from_grouplist(use, callback){
         data:JSON.stringify(group_delete_JSON),
         //data:{"member_name":fullname, "member_id":id, "group_id":group_id, "next_page":'/trainer/get_group_info/'},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -883,7 +877,6 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
         type:'POST',
         data: {"group_id":group_id, "name":group_name, "member_num":group_capacity, "note":group_memo, "group_type_cd":group_type},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -954,7 +947,6 @@ function modify_group_status(group_id, option){
         type:'POST',
         data: {"group_id":group_id},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1097,7 +1089,6 @@ function get_groupmember_list(group_id, use, callback){
         data: {"group_id":group_id},
         type:'GET',
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend()
@@ -1300,7 +1291,6 @@ function get_group_repeat_info(group_id){
         type:'GET',
         data: {"group_id": group_id},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             //beforeSend(); //ajax 로딩이미지 출력
@@ -1452,7 +1442,6 @@ function set_group_member_repeat_info(group_repeat_id, use, callback){
         type:'GET',
         data: {"group_repeat_id": group_repeat_id},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             //beforeSend(); //ajax 로딩이미지 출력
