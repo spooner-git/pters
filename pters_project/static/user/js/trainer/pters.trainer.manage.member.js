@@ -3231,7 +3231,6 @@ function get_member_ing_list(use, callback){
         type:'GET',
         data: {"page": page_num, "sort_val": member_sort_val, "sort_order_by":member_sort_order_by, "keyword":keyword},
         dataType : 'html',
-        async: false,
 
 
         beforeSend:function(){

@@ -2635,7 +2635,6 @@ function get_package_ing_list(use, callback){
         type:'GET',
         data: {"page": ticket_page_num, "sort_val": ticket_sort_val, "sort_order_by":ticket_sort_order_by, "keyword":ticket_keyword},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
