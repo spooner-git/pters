@@ -1,4 +1,8 @@
 /*모바일 사이드 메뉴*/
+.popup_mobile{
+    background-color: #f5f5f5;
+    border-radius: 8px 0 0 8px;
+}
     .pters_mobile_side_menu{
         /*margin-top: 25px;*/
         padding: 0 20px;

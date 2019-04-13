@@ -16,9 +16,9 @@
                 <div class="obj_font_size_18_weight_bold obj_font_color_white">{{ package_info.name }}</div>
             </div>
 
-            <div class="wrapper_my_ticket_tab obj_font_color_light_grey">
+            <div class="wrapper_my_ticket_tab obj_font_color_white">
                 <div id="ticket_basic_info" class="wrapper_my_ticket_basic_info obj_font_size_13_weight_bold" onclick="ticket_basic_info();">기본 정보</div>
-                <div id="ticket_lesson_history" class="wrapper_my_ticket_lesson_history obj_font_size_13_weight_500" onclick="ticket_lesson_history();">수강권 내역</div>
+                <div id="ticket_lesson_history" class="wrapper_my_ticket_lesson_history obj_font_size_13_weight_normal" onclick="ticket_lesson_history();">수강권 내역</div>
             </div>
         </div>
         <div class="obj_box_full">
@@ -45,7 +45,7 @@
                             <div class="obj_font_size_12_weight_500">{{ lecture_info.class_tb.member.name }}</div>
                             <div class="obj_font_size_11_weight_normal obj_font_color_light_grey">강사</div>
                         </div>
-                        <div class="obj_table_cell_x3 text_button_phone obj_font_size_13_weight_500 obj_font_color_pters_red">{{ lecture_info.class_tb.member.phone }}</div>
+                        <div class="obj_table_cell_x3 text_button_phone obj_font_size_13_weight_500">{{ lecture_info.class_tb.member.phone }}</div>
                     </div>
                 {% endif %}
                 {% endfor %}
@@ -79,7 +79,7 @@
 {% endblock %}
 
 {% block popoup_base_wrapper_bottom_inside %}
-    <div class="obj_button_big obj_font_bg_black_white" onclick="layer_popup.close_layer_popup()">확인</div>
+    <div class="obj_button_big obj_font_bg_coral_white" onclick="layer_popup.close_layer_popup()">확인</div>
 {% endblock %}
 {% block popup_base_js %}
 <script type="text/javascript">

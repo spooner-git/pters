@@ -41,14 +41,14 @@
         top: 0;
         left: 50%;
         transform: translateX(-50%);
-        background-color: #000000;
+        background-color: #ff3b44;
         box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.25);
         z-index: 1;
 
         /*Nav바 폰트스타일*/
         font-size: 15px;
         font-weight: 500;
-        color : #b3b3b3;
+        color : #ffffff;
         letter-spacing: -0.3px;
         padding-top: 10px;
     }
@@ -206,6 +206,7 @@
     .func_tab_wrap{
         display: block;
         border-bottom: 3px solid transparent;
+        color: #b3b3b3;
     }
     .func_tab_wrap > div{
         display: inline-block;
@@ -213,7 +214,7 @@
     }
 
     .func_tab_selected{
-        border-bottom: 3px solid #000000;
+        border-bottom: 3px solid #ff3b44;
         color: #000000;
         font-weight: bold;
     }
@@ -240,7 +241,7 @@
         vertical-align: middle;
         width: 16px;
         height: 16px;
-        border: 1px solid #000000;
+        border: 1px solid #ff3b44;
         border-radius: 50%;
     }
     .func_radio_element_button > div > div.func_radio_element_button_inner{
@@ -250,7 +251,7 @@
         transform: translate(-50%, -50%);
         width: 10px;
         height: 10px;
-        background-color: #000000;
+        background-color: #ff3b44;
         border-radius: 50%;
     }
 

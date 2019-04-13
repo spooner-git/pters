@@ -4,8 +4,12 @@
 
 	.popup_calendar_plan_reserve_complete{
 		/*min-height: 100%;*/
+		background-image: linear-gradient(1deg, #fb767d, #ff3b44);
+		border-radius: 8px 8px 0px 0px;
 	}	
-
+		div.obj_box_popup_topper{
+			background-color: transparent;
+		}
 		.popup_calendar_plan_reserve_complete .wrapper_calendar_plan_reserve_complete_title{
 			padding-bottom: 20px;
 		}
@@ -19,4 +23,5 @@
 		}
 		.popup_calendar_plan_reserve_complete .obj_box_full{
 			margin-top: 10px;
+			background-color: transparent;
 		}

@@ -37,7 +37,7 @@
     }
     .obj_box_popup_topper{
         height: auto;
-        background-color: #000000;
+        background-color: #ff3b44;
         border-radius: 8px 8px 0px 0px;
         box-shadow: 0 0 15px 0 rgba(131, 131, 131, 0.25);
         padding-top: 20px;
@@ -47,7 +47,7 @@
 
     .obj_box_card{
         height: auto;
-        background-color: #000000;
+        background-color: #ff3b44;
         border-radius: 5px;
         box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
         margin-left: 20px;
@@ -131,6 +131,11 @@
         font-weight: 500;
         letter-spacing: -0.5px;
     }
+    .obj_font_size_13_weight_normal{
+        font-size: 13px;
+        font-weight: normal;
+        letter-spacing: -0.5px;
+    }
     .obj_font_size_12_weight_bold{
         font-size: 12px;
         font-weight: bold;
@@ -205,6 +210,9 @@
     .obj_font_color_pters_red{
         color: #fe4e65;
     }
+    .obj_font_color_coral{
+        color: #ff3b44;
+    }
 
 /* 버튼 */
     .obj_icon_basic{
@@ -240,7 +248,7 @@
         line-height: 45px;
         text-align: center;
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
-        border: 5px solid #f0f0f0;
+        border: 5px solid #f0f0f0 !important;
         border-radius: 2px;
         box-sizing: border-box;
         font-size: 15px;
@@ -291,6 +299,20 @@
         color: #fe4e65;
         background-color: transparent;
         border: 1px solid #fe4e65;
+    }
+    .obj_font_bg_white_coral{
+        color: #ffffff;
+        background-color: #ff3b44;
+        border: 1px solid transparent;
+    }
+    .obj_font_bg_coral_white{
+        color: #ff3b44;
+        background-color: #ffffff;
+    }
+    .obj_font_bg_coral_trans{
+        color: #ff3b44;
+        background-color: #ffffff;
+        border: 1px solid #ff3b44;
     }
 /* table */
     .obj_table_raw{
