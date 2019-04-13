@@ -9,6 +9,7 @@
 	}	
 		div.obj_box_popup_topper{
 			background-color: transparent;
+			box-shadow: unset;
 		}
 		.popup_calendar_plan_reserve_complete .wrapper_calendar_plan_reserve_complete_title{
 			padding-bottom: 20px;
