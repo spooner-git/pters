@@ -1102,7 +1102,6 @@ $(document).ready(function(){
             type : 'GET',
             data : {"group_repeat_schedule_id":group_repeat_id},
             dataType : 'html',
-            async: false,
 
             beforeSend:function(){
                 beforeSend()
@@ -1994,7 +1993,6 @@ function send_modified_member_base_data(dbID){
         type:'POST',
         data:$form.serialize(),
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr){
             $('#upbutton-modify img').attr('src', '/static/user/res/ajax/loading.gif');
@@ -3028,7 +3026,6 @@ function get_member_list(use, callback){
         url:'/trainer/get_member_list/',
 
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend()
@@ -3095,9 +3092,7 @@ function get_member_list_page(url, use, callback){
         url:url,
         type:'GET',
         data: {"page": ++page_num, "sort_val": member_sort_val, "sort_order_by":member_sort_order_by, "keyword":keyword},
-
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             startTime = performance.now();
@@ -3167,7 +3162,6 @@ function get_member_ing_list_all(use, callback){
         url:'/trainer/get_member_ing_list/',
         type:'GET',
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -3237,7 +3231,7 @@ function get_member_ing_list(use, callback){
         type:'GET',
         data: {"page": page_num, "sort_val": member_sort_val, "sort_order_by":member_sort_order_by, "keyword":keyword},
         dataType : 'html',
-        async: false,
+
 
         beforeSend:function(){
             beforeSend();
@@ -3272,14 +3266,14 @@ function get_member_ing_list(use, callback){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 
-                if(use == "callback"){
+                if(use == "callback") {
                     callback(jsondata);
-
-                }else if(use == "return"){
-                    return jsondata;
-                }else{
-                    //memberListSet('current','name','no',jsondata);
                 }
+                // }else if(use == "return"){
+                //     return jsondata;
+                // }else{
+                    //memberListSet('current','name','no',jsondata);
+                // }
                 // console.log('success');
             }
         },
@@ -3289,7 +3283,7 @@ function get_member_ing_list(use, callback){
             $('#errorMessageBar').show();
             $('#errorMessageText').text('통신 에러: 관리자 문의');
         }
-    })
+    });
 }
 
 function get_member_end_list(use, callback){
@@ -3304,7 +3298,6 @@ function get_member_end_list(use, callback){
         type:'GET',
         data: {"page": page_num, "sort_val": member_sort_val, "sort_order_by":member_sort_order_by, "keyword":keyword},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -3354,7 +3347,7 @@ function get_member_end_list(use, callback){
             $('#errorMessageBar').show();
             $('#errorMessageText').text('통신 에러: 관리자 문의');
         }
-    })
+    });
 }
 
 //서버로부터 패키지 목록 가져오기
@@ -3365,7 +3358,6 @@ function get_package_ing_list_all(use, callback){
     $.ajax({
         url:'/trainer/get_package_ing_list/',
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -4072,7 +4064,6 @@ function get_indiv_member_info(dbID){
         type:'GET',
         data: {"member_id": dbID, 'id_flag':db_id_flag},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr){
             //beforeSend(); //ajax 로딩이미지 출력
@@ -4379,7 +4370,6 @@ function send_member_modified_data(dbID){
         type:'POST',
         data: $form.serialize(),
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr){
             beforeSend();
@@ -4427,7 +4417,6 @@ function resend_member_reg_data_pc(lectureID, dbID){
         type:'POST',
         data:{"lecture_id":lectureID,"member_id":dbID,"member_view_state_cd": 'WAIT' , "next_page":'/trainer/get_member_list/'},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -4472,7 +4461,6 @@ function delete_member_reg_data_pc(lectureID, dbID){
         type:'POST',
         data:{"lecture_id":lectureID, "member_id":dbID, "next_page":'/trainer/get_error_info/'},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -4547,7 +4535,6 @@ function complete_member_reg_data_pc(lectureID, dbID){
         type:'POST',
         data:{"lecture_id":lectureID, "member_id": dbID, "next_page":'/trainer/get_error_info/'},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -4600,7 +4587,6 @@ function resume_member_reg_data_pc(lectureID, dbID, ing_member_check){
         type:'POST',
         data:{"lecture_id":lectureID, "member_id" : dbID, "next_page":'/trainer/get_member_list/'},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -4664,7 +4650,6 @@ function refund_member_lecture_data(lectureID, dbID, refund_price, refund_date){
             type:'POST',
             data:{"lecture_id":lectureID, "member_id": dbID, "refund_price": refund_price, "refund_date":refund_date, "next_page":'/trainer/get_member_list/'},
             dataType : 'html',
-            async: false,
 
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -4853,7 +4838,6 @@ function disconnect_member_lecture_data(stateCode, lectureID, dbID){
         type:'POST',
         data:{"lecture_id":lectureID, "member_id": dbID, "member_view_state_cd": stateCode ,"next_page":'/trainer/get_member_list/'},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -4904,7 +4888,6 @@ function get_member_lecture_list(dbID, use, callback){
         type:'GET',
         data:{"member_id":dbID},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -5221,7 +5204,6 @@ function get_member_history_list(dbID){
         type:'GET',
         data:{"member_id":dbID},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend()
@@ -5393,7 +5375,6 @@ function add_member_form_func(ing_member_check){
         type:'POST',
         data: $('#member-add-form-new').serialize(),
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr){
             beforeSend();
@@ -5507,7 +5488,6 @@ function add_member_form_noemail_func(){
         type:'POST',
         data: $('#add-member-id-form').serialize(),
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr){
             beforeSend();
@@ -5572,7 +5552,6 @@ function add_group_form_func(){
             "note" : $('#comment').val()
         },
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -5655,7 +5634,6 @@ function add_groupmember_form_func(){
         type:'POST',
         data: JSON.stringify(added_member_info_to_jsonformat()),
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -5717,7 +5695,6 @@ function deleteMemberAjax(){
         type:'POST',
         data: $form.serialize(),
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr){
             beforeSend();
@@ -5831,7 +5808,6 @@ function get_indiv_repeat_info(dbID){
         type:'GET',
         data: {"member_id": dbID},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             //beforeSend(); //ajax 로딩이미지 출력
@@ -5961,7 +5937,6 @@ function send_repeat_delete_personal(repeat_schedule_id, use, callback){
         type:'POST',
         data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/get_trainer_schedule/'},
         dataType:'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -6011,7 +5986,6 @@ function send_push_func(lecture_id, title, message){
         type : 'POST',
         dataType: 'html',
         data : {"lecture_id":lecture_id, "title":title, "message":message, "next_page":'/trainer/get_error_info/'},
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -6041,7 +6015,6 @@ function send_repeat_delete_group(repeat_schedule_id, use, callback){
         type:'POST',
         data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/get_error_info/'},
         dataType:'html',
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

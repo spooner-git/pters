@@ -473,7 +473,6 @@
                 data: JSON.stringify({
                     customer_uid: customer_uid
                 }),
-                async: false,
 
                 beforeSend:function(xhr, settings) {
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -570,7 +569,6 @@
                             start_date: today,
                             period_month: period_month
                         }),
-                        async: false,
 
                         beforeSend:function(xhr, settings) {
                             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -597,7 +595,6 @@
                                     data: JSON.stringify({
                                         customer_uid : before_customer_uid
                                     }),
-                                    async: false,
 
                                     beforeSend:function(xhr, settings) {
                                         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

@@ -1076,7 +1076,6 @@ function playSound() {
             url: '/trainer/get_class_list/',
             type: 'GET',
             dataType : 'html',
-            async: false,
 
             beforeSend:function(){
                 beforeSend()
@@ -1133,7 +1132,6 @@ function playSound() {
             data:{"class_id": classid, "auth_cd":'WAIT'},
             type:'GET',
             dataType : 'html',
-            async: false,
 
             beforeSend:function(){
                 beforeSend()

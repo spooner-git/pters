@@ -178,7 +178,6 @@
                     type:'POST',
                     data: $form.serialize(),
                     dataType : 'html',
-                    async: false,
 
                     beforeSend:function(xhr, settings) {
                         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -214,7 +213,6 @@
                     type:'POST',
                     data: $form.serialize(),
                     dataType : 'html',
-                    async: false,
 
                     beforeSend:function(xhr, settings) {
                         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -270,7 +268,6 @@
             type:'GET',
             data:{"email" : newemail },
             dataType : 'html',
-            async: false,
 
             beforeSend:function(){
             },

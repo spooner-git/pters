@@ -180,7 +180,6 @@
                 url: ' /trainer/get_class_list/',
                 type: 'GET',
                 dataType : 'html',
-                async: false,
 
                 beforeSend:function(){
                     beforeSend()
@@ -234,7 +233,6 @@
                 data:{"class_id":class_id},
                 dataType : 'html',
                 type:'POST',
-                async: false,
 
                 beforeSend:function(xhr, settings) {
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -521,7 +519,6 @@
                 data:{"class_id":class_id, "class_hour":classUnit, "subject_cd":subject_cd, "subject_detail_nm":subject_detail_nm},
                 dataType : 'html',
                 type:'POST',
-                async: false,
 
                 beforeSend:function(xhr, settings) {
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

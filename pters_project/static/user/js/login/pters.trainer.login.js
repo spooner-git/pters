@@ -23,7 +23,6 @@ function delete_token(device_id){
         url:'/login/delete_push_token/',
         type:'POST',
         data:{"device_id": device_id},
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

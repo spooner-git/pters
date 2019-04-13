@@ -22,7 +22,6 @@ function ajaxCheckSchedule(){
     $.ajax({
         url: '/schedule/check_schedule_update/',
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             //beforeSend();

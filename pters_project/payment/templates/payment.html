@@ -591,7 +591,6 @@
                     period_month : period_month,
                     pay_method : pay_method
                 }),
-                async: false,
 
                 beforeSend:function(xhr, settings) {
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -754,7 +753,6 @@
                                     start_date: payment_date,
                                     period_month: period_month
                                 }),
-                                async: false,
 
                                 beforeSend: function (xhr, settings) {
                                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -891,7 +889,6 @@
                 type: 'GET',
                 dataType : 'html',
                 data:{"product_id": product_id},
-                async: false,
 
                 beforeSend:function(){
                     beforeSend();
@@ -997,7 +994,6 @@
                 start_date: payment_date,
                 os_info: os_info
             }),
-            async: false,
 
             beforeSend: function (xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1048,7 +1044,6 @@
                 product_id: product_id,
                 transaction_id: transaction_id
             }),
-            async: false,
 
             beforeSend: function (xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

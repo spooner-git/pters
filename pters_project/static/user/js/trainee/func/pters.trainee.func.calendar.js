@@ -269,7 +269,6 @@ function pters_month_calendar(calendar_name, calendar_options){
             type : 'GET',
             data : {"date": input_reference_date, "day":31},
             dataType : 'html',
-            async: false,
 
             beforeSend:function(xhr, settings){
                 func_ajax_before_send(xhr, settings, "func_get_ajax_schedule_data");

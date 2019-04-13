@@ -831,7 +831,6 @@
                             type:'POST',
                             data:serializeArray,
                             dataType : 'html',
-                            async: false,
 
                             beforeSend:function(){
                             },
@@ -856,7 +855,6 @@
                                         type:'POST',
                                         data:$form.serialize(),
                                         dataType : 'html',
-                                        async: false,
 
                                         beforeSend:function(xhr, settings) {
                                             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1085,7 +1083,6 @@
                     //data:{"id" : $('#id_input').val() },
                     data:serializeArray,
                     dataType : 'html',
-                    async: false,
 
                     beforeSend:function(){
                     },
@@ -1127,7 +1124,6 @@
                 //data:{"email" : $('#id_email').val() },
                 data:serializeArray,
                 dataType : 'html',
-                async: false,
 
                 beforeSend:function(){
                 },
@@ -1165,7 +1161,6 @@
                 type:'POST',
                 data:serializeArray,
                 dataType : 'html',
-                async: false,
 
                 beforeSend:function(){
                 },

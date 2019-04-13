@@ -1474,7 +1474,6 @@ $(document).ready(function(){
                     type:'POST',
                     data:sendData,
                     dataType : 'html',
-                    async: false,
 
                     beforeSend:function(xhr){
                         beforeSend(); //ajax 로딩 이미지 출력
@@ -2088,7 +2087,6 @@ function get_current_member_list(use, callback){
     $.ajax({
         url: '/trainer/get_member_ing_list/',
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             //beforeSend(); //ajax 로딩이미지 출력
@@ -2130,7 +2128,6 @@ function get_current_group_list(use, callback){
     $.ajax({
         url: '/trainer/get_group_ing_list/',
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             //beforeSend(); //ajax 로딩이미지 출력
@@ -2234,7 +2231,6 @@ function ajaxRepeatConfirmSend(use, callback){
         type:'POST',
         data: $form.serialize(),
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend(); //ajax 로딩이미지 출력
@@ -2290,7 +2286,6 @@ function ajaxTimeGraphSet(date, use, callback){
         type : 'GET',
         data : {"date":today_form, "day":1}, //월간 46 , 주간 18, 하루 1
         dataType : 'html',
-        async: false,
 
         beforeSend:function(xhr){
             beforeSend();
@@ -2384,7 +2379,6 @@ function get_repeat_info(dbID){
         type: type_,
         data: data_,
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend(); //ajax 로딩이미지 출력
@@ -2424,7 +2418,6 @@ function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
         type : 'GET',
         data : {"group_repeat_schedule_id":group_repeat_id},
         dataType : 'html',
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -3242,7 +3235,6 @@ function send_push_func(lecture_id, title, message){
         type : 'POST',
         dataType: 'html',
         data : {"lecture_id":lecture_id, "title":title, "message":message, "next_page":'/trainer/get_error_info/'},
-        async: false,
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -3293,7 +3285,6 @@ function get_group_plan_participants(group_schedule_id, callbackoption, callback
         type : 'GET',
         dataType: 'html',
         data: {"group_schedule_id": group_schedule_id},
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -3496,7 +3487,6 @@ function send_add_groupmember_plan(use, callback){
         type : 'POST',
         dataType: 'html',
         data: sendData,
-        async: false,
 
         beforeSend:function(){
             beforeSend();
@@ -3556,7 +3546,6 @@ function send_add_othergroupmember_plan(dbid, leid, schedule_id, use, callback){
         type : 'POST',
         dataType: 'html',
         data: {"member_id":dbid, "lecture_id":leid, "schedule_id":schedule_id, "next_page":'/trainer/get_error_info'},
-        async: false,
 
         beforeSend:function(xhr, settings){
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -3697,7 +3686,6 @@ function send_plan_delete(option, callbackoption, callback){
         url: url_,
         type:'POST',
         data: serializeArray, //sendData,
-        async: false,
 
         beforeSend:function(xhr){
             beforeSend();
