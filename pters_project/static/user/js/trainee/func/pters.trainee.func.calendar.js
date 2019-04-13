@@ -187,7 +187,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         //                                         <div class="pters_timeline_cal_type_text">반복 일정</div>
         //                                         <div></div>
         //                                     </div>`;
-        let timeline_calendar_upper_tool = `<div class="pters_timeline_cal_upper_tool_box obj_font_size_13_weight_500 obj_font_color_light_grey">
+        let timeline_calendar_upper_tool = `<div class="pters_timeline_cal_upper_tool_box pters_timeline_cal_upper_tool_box_${calendar_name} obj_font_size_13_weight_500 obj_font_color_light_grey">
                                                 <div class="pters_timeline_cal_type_text selected">전체 일정</div>
                                                 <div></div>
                                             </div>`;
@@ -467,11 +467,11 @@ function pters_month_calendar(calendar_name, calendar_options){
 
     function func_set_expand_function(){
         let calendar_month_height = $(`.${calendar_name}_wrapper_month_cal`).height();
-        $(document).on('click', `.${calendar_name}_expand_button`, function(){
+        $(document).on('click', `.${calendar_name}_expand_button, .pters_timeline_cal_upper_tool_box_${calendar_name}`, function(){
+            let data = $(`.${calendar_name}_expand_button`).attr('data-open');
             // let original_height;
             // let expand_height;
-            func_time_line_wide_view($(this).attr('data-open'), calendar_month_height);
-
+            func_time_line_wide_view(data, calendar_month_height);
         });
     }
 
