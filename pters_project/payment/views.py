@@ -776,7 +776,7 @@ def payment_for_iap_logic(request):
         payment_info.save()
 
     if error is None:
-        logger.error(str(request.user.last_name) + str(request.user.first_name)
+        logger.info(str(request.user.last_name) + str(request.user.first_name)
                      + '(' + str(request.user.id) + ')님 iap 결제 완료:' + str(product_id) + ':'+' '+str(start_date))
     else:
         messages.error(request, error)
