@@ -318,5 +318,5 @@ function show_error_message(message){
                                  POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
                                  {'popup_title':'',
                                   'popup_comment':`${message}`,
-                                  'onclick_function':`layer_popup.close_layer_popup()`});
+                                  'onclick_function':`layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
 }
