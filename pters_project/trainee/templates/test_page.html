@@ -13,7 +13,7 @@
             cursor: pointer;
         }
         .func_time_input > span{
-            vertical-align: middle;
+            line-height: 40px;
         }
 
 
@@ -55,6 +55,15 @@
         }
         #time_input_computer .wrapper_time_input_preview{
             background-color: #f4f4f4;
+            height: 40px;
+            line-height: 40px;
+            cursor: pointer;
+        }
+        #time_input_computer .wrapper_time_input_preview .undo{
+            display: none;
+            position: absolute;
+            left: 0;
+            margin-left: 16px;
         }
         #time_input_computer .popup_time_input_hour{
             width: 100%;
@@ -123,9 +132,11 @@
     <script type="text/javascript">
         
         class TimeInput{
-            constructor(selector_result){
+            constructor(selector_result, title){
                 this.selector_result = selector_result;
                 this.selector_computer = '#time_input_computer';
+
+                this.title = title;
 
                 this.$selector_result = $(`${this.selector_result}`);
                 this.$selector_computer = $(`${this.selector_computer}`);
@@ -146,7 +157,8 @@
                     hour_text_temp = $(this).text();
                     hour_data_temp = $(this).attr('data-hour');
                     $(self.selector_computer).attr('data-hour', hour_text_temp);
-                    $('.wrapper_time_input_preview').text(`${hour_text_temp}`);
+                    $('.wrapper_time_input_preview .result_text').text(`${hour_text_temp}`);
+                    $(`${self.selector_computer} .wrapper_time_input_preview .undo`).show();
                     $('.popup_time_input_hour').fadeOut(20, function(){
                         $('.popup_time_input_minute').fadeIn();
                         $(`${self.selector_computer} .popup_time_input_minute`).scrollTop(1);
@@ -167,6 +179,16 @@
                     self.close_computer();
                 });
 
+                $(document).off('click', `${self.selector_computer} .wrapper_time_input_preview`)
+                            .on('click', `${self.selector_computer} .wrapper_time_input_preview`, function(){
+                                $('.popup_time_input_minute').fadeOut(20, function(){
+                                    $(`${self.selector_computer} .wrapper_time_input_preview .result_text`).text('');
+                                    $(`${self.selector_computer} .wrapper_time_input_preview .undo`).hide();
+                                    $(`${self.selector_computer} .popup_time_input_hour`).fadeIn();
+                                    $(`${self.selector_computer} .popup_time_input_hour`).scrollTop(1);
+                                });
+                            });
+
                 $(document).off('click', `#shade_for_computer`).on('click', `#shade_for_computer`, function(){
                     self.close_computer();
                 });
@@ -176,12 +198,14 @@
                 $(`${this.selector_computer}`).show().attr('data-target', this.selector_result);
                 $('#shade_for_computer').fadeIn('fast');
                 $(`${this.selector_computer} .popup_time_input_hour`).scrollTop(1);
+                $(`${this.selector_computer} .time_input_computer_title`).text(this.title);
             }
 
             close_computer(){
                 $(`${this.selector_computer} .popup_time_input_hour`).show();
                 $(`${this.selector_computer} .popup_time_input_minute`).hide();
-                $(`${this.selector_computer} .wrapper_time_input_preview`).text('');
+                $(`${this.selector_computer} .wrapper_time_input_preview .result_text`).text('');
+                $(`${this.selector_computer} .wrapper_time_input_preview .undo`).hide();
                 $(this.selector_computer).hide().attr('data-target', '');
                 $('#shade_for_computer').fadeOut('fast');
             }
@@ -197,8 +221,8 @@
             draw_computer(){
                 let html_computer = `<div id="shade_for_computer"></div>
                                         <div id="time_input_computer">
-                                            <div class="time_input_computer_title">시작 시간 선택</div>
-                                            <div class="wrapper_time_input_preview"></div>
+                                            <div class="time_input_computer_title">${this.title}</div>
+                                            <div class="wrapper_time_input_preview"><span class="undo">←</span><span class="result_text"></span></div>
                                             <ul class="popup_time_input_hour time_dropdown">
                                                 <li data-hour="00">오전 00시</li>
                                                 <li data-hour="01">오전 01시</li>
@@ -273,9 +297,9 @@
             time3.open_computer();
         });
 
-        let time1 = new TimeInput('#time_1 span');
-        let time2 = new TimeInput('#time_2 span');
-        let time3 = new TimeInput('#time_3 span');
+        let time1 = new TimeInput('#time_1 span', '시작 시간 선택');
+        let time2 = new TimeInput('#time_2 span', '시간 선택');
+        let time3 = new TimeInput('#time_3 span', 'Time Selector');
 
 
     </script>
