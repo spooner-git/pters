@@ -249,6 +249,7 @@ def timeuntil_formatting(input_date_time, setting_time):
     reserve_prohibition_date = time_compare_val.days
     reserve_prohibition_hour = int(abs(time_compare_val.seconds)/60/60)
     reserve_prohibition_minute = int(abs(time_compare_val.seconds)/60 - reserve_prohibition_hour*60)
+    error_comment = ''
 
     if reserve_prohibition_date > 0:
         error_comment = str(reserve_prohibition_date) + '일'
@@ -258,7 +259,5 @@ def timeuntil_formatting(input_date_time, setting_time):
 
         if reserve_prohibition_minute > 0:
             error_comment += str(reserve_prohibition_minute) + '분'
-    else:
-        error_comment = 0
 
     return error_comment

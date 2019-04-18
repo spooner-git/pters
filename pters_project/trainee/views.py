@@ -416,9 +416,10 @@ def add_trainee_schedule_logic(request):
                 error = '수강 종료일 이후의 일정은 등록이 불가능합니다.'
 
     if error is None:
-        error = pt_add_logic_func(training_date, start_date, end_date, request.user.id, lecture_id, class_id,
-                                  request, group_schedule_id)
-
+        schedule_result = pt_add_logic_func(training_date, start_date, end_date, request.user.id, lecture_id, class_id,
+                                            request, group_schedule_id)
+        error = schedule_result['error']
+        context['schedule_id'] = schedule_result['schedule_id']
     if error is None:
         # func_update_member_schedule_alarm(class_id)
         # class_info.schedule_check = 1
@@ -1222,6 +1223,7 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
     group_schedule_info = None
     group_id = None
     note = ''
+    schedule_result = None
     # start_date = None
     # end_date = None
     if lecture_id is None or lecture_id == '':
@@ -1339,8 +1341,7 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
                              use=USE)
             log_data.save()
 
-    else:
-        return error
+    return schedule_result
 
 
 def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
@@ -1663,6 +1664,28 @@ class PopupCalendarPlanReserveCompleteView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanReserveCompleteView, self).get_context_data(**kwargs)
+        schedule_id = self.request.GET.get('schedule_id')
+        schedule_info = None
+        if schedule_id is not None and schedule_id != '':
+            try:
+                schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id, use=USE)
+            except ObjectDoesNotExist:
+                schedule_info = None
+
+        if schedule_info is not None:
+            try:
+                group_type_name = CommonCdTb.objects.get(common_cd=schedule_info.group_tb.group_type_cd).common_cd_nm
+                group_name = schedule_info.group_tb.name
+            except ObjectDoesNotExist:
+                group_type_name = '개인'
+                group_name = '1:1 레슨'
+            except AttributeError:
+                group_type_name = '개인'
+                group_name = '1:1 레슨'
+            schedule_info.group_name = group_name
+            schedule_info.group_type_name = group_type_name
+
+        context['schedule_info'] = schedule_info
         return context
 
 

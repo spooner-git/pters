@@ -22,11 +22,9 @@ function func_schedule(data, call_method, type){
             type:'POST',
 
             beforeSend:function(xhr, settings){
-                console.log('test1');
                 func_ajax_before_send(xhr,settings, "func_schedule");
             },
             success:function(result_data){
-                console.log('test3');
                 let jsondata = JSON.parse(result_data);
                 /**
                  * @param jsondata.messageArray
@@ -38,7 +36,7 @@ function func_schedule(data, call_method, type){
                 }else{
                     //성공
                     if(type == ADD){
-                        layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve_complete', 90, POPUP_FROM_BOTTOM);
+                        layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve_complete', 90, POPUP_FROM_BOTTOM, {'schedule_id':jsondata.schedule_id});
                     }else if(type == DELETE){
                         layer_popup.all_close_layer_popup();
                     }
