@@ -388,6 +388,34 @@ function func_schedule(data, call_method, type){
         return resultHour + ":" + resultMin;
     }
 
+    function trainee_compare_date(date1, date2){
+        let date1_split =  date1.split('-');
+        let date2_split =  date2.split('-');
+        let yy1 = date1_split[0];
+        let mm1  = date1_split[1];
+        let dd1 = date1_split[2];
+        let yy2 = date2_split[0];
+        let mm2  = date2_split[1];
+        let dd2 = date2_split[2];
+
+        if(yy1.length<2){yy1 = '0'+ yy1;}
+        if(mm1.length<2){mm1 = '0'+ mm1;}
+        if(dd1.length<2){dd1 = '0'+ dd1;}
+        if(yy2.length<2){yy2 = '0'+ yy2;}
+        if(mm2.length<2){mm2 = '0'+ mm2;}
+        if(dd2.length<2){dd2 = '0' + dd2}
+
+
+        let date1_num = yy1+mm1+dd1;
+        let date2_num = yy2+mm2+dd2;
+        if(date1_num > date2_num){
+            return 1;
+        }else if(date1_num == date2_num){
+            return 0;
+        }else{
+            return -1;
+        }
+    }
     function compare_time(time1, time2){
         let hour1 = time1.split(':')[0];
         let min1  = time1.split(':')[1];

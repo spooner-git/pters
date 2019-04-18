@@ -15,7 +15,6 @@
 
 
         <div class="wrapper_box_next_plan">
-            {% now "DATETIME_FORMAT" as today %}
             {% for schedule_info in schedule_data %}
             <div class="obj_box_full">
                 <div class="obj_box_full_grey">
@@ -100,7 +99,12 @@
 {% endblock %}
 
 {% block popoup_base_wrapper_bottom_inside %}
-    <div class="obj_button_big obj_font_bg_white_coral" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'{{ date_format| date:'Y-m-d' }}'})">예약 추가하기</div>
+    {% now "Y-m-d" as todays_date %}
+    {% if date_format|date:"Y-m-d" >= todays_date %}
+        <div class="obj_button_big obj_font_bg_white_coral" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'{{ date_format| date:'Y-m-d' }}'})">예약 추가하기</div>
+    {% else %}
+        <div class="obj_button_big obj_font_bg_pink_white" onclick="layer_popup.all_close_layer_popup()">확인</div>
+    {% endif %}
 {% endblock %}
 
 {% block popup_base_js %}

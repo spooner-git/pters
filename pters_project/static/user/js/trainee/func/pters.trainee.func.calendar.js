@@ -151,14 +151,24 @@ function pters_month_calendar(calendar_name, calendar_options){
                 }else if(date_cache > reference_date_month_last_day){ // 마지막 날짜가 끝난 이후 처리
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7"></div>`);
                 }else{
+                    if(trainee_compare_date(data_date , today_yyyy_mm_dd)== -1){
+                        dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
+                                                   id="calendar_cell_${data_date}">
+                                                   <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
+                                                   <div class="calendar_date_number ${font_color}">${date_cache}</div>
+                                                   <div id="calendar_plan_cell_${data_date}"></div>
+                                              </div>`);
 
-                    dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
-                                               id="calendar_cell_${data_date}"
-                                               onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${data_date}'})">
-                                               <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
-                                               <div class="calendar_date_number ${font_color}">${date_cache}</div>
-                                               <div id="calendar_plan_cell_${data_date}"></div>
-                                          </div>`);
+                    }
+                    else{
+                        dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
+                                                   id="calendar_cell_${data_date}"
+                                                   onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${data_date}'})">
+                                                   <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
+                                                   <div class="calendar_date_number ${font_color}">${date_cache}</div>
+                                                   <div id="calendar_plan_cell_${data_date}"></div>
+                                              </div>`);
+                    }
                     // dateCellsToJoin.push(`<div class="obj_table_cell_x7 month_date" data-date="${data_date}">
                     //                            <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
                     //                            <div class="calendar_date_number ${font_color}">${date_cache}</div>

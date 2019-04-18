@@ -261,3 +261,8 @@ def timeuntil_formatting(input_date_time, setting_time):
             error_comment += str(reserve_prohibition_minute) + '분'
 
     return error_comment
+
+
+@property
+def is_past_due(self):
+    return datetime.date.today() >= self.date
