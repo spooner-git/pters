@@ -52,6 +52,7 @@
         <div class="wrapper_alarm_list obj_box_full ">
             <p class="obj_font_size_11_weight_bold obj_font_color_dark_grey wrapper_alarm_list_title">이전 알림</p>
             {% for log_info in log_data %}
+                {% if log_info.log_read != 0 %}
                 <div class="wrapper_alarm_element obj_font_size_16_weight_500">
                     <div class="wrapper_alarm_element_title">
                         <!-- <div class="alarm_oval"></div> -->
@@ -62,6 +63,7 @@
                     </div>
                     <div class="obj_font_size_11_weight_normal obj_font_color_light_black">({{ log_info.log_detail }})</div>
                 </div>
+                {% endif %}
             {% endfor %}
         </div>
 

@@ -152,6 +152,11 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             context = func_get_trainee_next_schedule_by_class_id(context, class_id, self.request.user.id)
             context = func_get_trainee_ing_group_list(context, class_id, self.request.user.id)
 
+        reserve_prohibition_time = self.request.session.get('setting_member_reserve_cancel_time')
+
+        # 근접 예약 시간 확인
+        reserve_disable_time = timezone.now() + datetime.timedelta(minutes=reserve_prohibition_time)
+        context['reserve_disable_time'] = reserve_disable_time
         return context
 
 
