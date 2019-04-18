@@ -371,12 +371,27 @@ function pters_month_calendar(calendar_name, calendar_options){
                 let schedule_time_start = split[1].substr(0, 5);
                 let schedule_time_end = split[2].substr(0, 5);
                 let schedule_id = split[3];
+                let schedule_finish = split[4];
+                let schedule_repeat_id = split[5];
+                let schedule_type = '개별일정';
+                if(schedule_finish==SCHEDULE_NOT_FINISH){
+                    schedule_finish = '예약 완료';
+                }
+                else if(schedule_finish==SCHEDULE_FINISH){
+                    schedule_finish = '참석';
+                }
+                else if(schedule_finish==SCHEDULE_ABSENCE){
+                    schedule_finish = '결석';
+                }
+                if(schedule_repeat_id != 'None'){
+                    schedule_type = '반복일정'
+                }
 
                 temp_array.push(
                                     `
                                     <div class="obj_table_raw" data-scheduleid=${schedule_id}>
                                         <div class="obj_table_cell_x2">
-                                            <img src=""><span class="obj_font_size_14_weight_normal">${schedule_name}</span><div class="obj_tag obj_font_bg_coral_trans obj_font_size_16_weight_bold">예약 타입</div>
+                                            <img src=""><span class="obj_font_size_14_weight_normal">${schedule_name}</span><div class="obj_tag obj_font_bg_coral_trans obj_font_size_16_weight_bold">${schedule_finish}</div>
                                         </div>
                                         <div class="obj_table_cell_x2 obj_font_size_14_weight_500">${schedule_time_start}~${schedule_time_end}</div>
                                     </div>
@@ -428,10 +443,12 @@ function pters_month_calendar(calendar_name, calendar_options){
             let schedule_end_time = json.classTimeArray_end_date[j].split(' ')[1];
             let schedule_id = json.scheduleIdArray[j];
             let schedule_name = json.schedule_group_name[j];
+            let schedule_finish = json.scheduleFinishArray[j];
+            let schedule_repeat_id = json.class_repeat_schedule_id[j];
             if(schedule_name.length == 0){
                 schedule_name = "개인 레슨";
             }
-            dic[json.classTimeArray_start_date[j].split(' ')[0]].push(schedule_name+' / '+schedule_start_time+' / '+schedule_end_time+' / '+schedule_id);
+            dic[json.classTimeArray_start_date[j].split(' ')[0]].push(schedule_name+' / '+schedule_start_time+' / '+schedule_end_time+' / '+schedule_id+' / '+schedule_finish+' / '+schedule_repeat_id);
         }
         return dic;
     }

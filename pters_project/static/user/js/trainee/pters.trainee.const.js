@@ -51,6 +51,10 @@ const FIREFOX = 'firefox';
 const CHROME = 'chrome';
 const EDGE = 'edge';
 
+const SCHEDULE_NOT_FINISH = 0;
+const SCHEDULE_FINISH = 1;
+const SCHEDULE_ABSENCE = 2;
+
 /* px */
 const MAX_WIDTH = 800;
 
