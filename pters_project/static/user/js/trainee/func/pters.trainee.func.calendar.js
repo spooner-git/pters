@@ -151,24 +151,12 @@ function pters_month_calendar(calendar_name, calendar_options){
                 }else if(date_cache > reference_date_month_last_day){ // 마지막 날짜가 끝난 이후 처리
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7"></div>`);
                 }else{
-                    if(trainee_compare_date(data_date , today_yyyy_mm_dd)== -1){
-                        dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
-                                                   id="calendar_cell_${data_date}">
-                                                   <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
-                                                   <div class="calendar_date_number ${font_color}">${date_cache}</div>
-                                                   <div id="calendar_plan_cell_${data_date}"></div>
-                                              </div>`);
-
-                    }
-                    else{
-                        dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
-                                                   id="calendar_cell_${data_date}"
-                                                   onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${data_date}'})">
-                                                   <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
-                                                   <div class="calendar_date_number ${font_color}">${date_cache}</div>
-                                                   <div id="calendar_plan_cell_${data_date}"></div>
-                                              </div>`);
-                    }
+                    dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
+                                               id="calendar_cell_${data_date}">
+                                               <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
+                                               <div class="calendar_date_number ${font_color}">${date_cache}</div>
+                                               <div id="calendar_plan_cell_${data_date}"></div>
+                                          </div>`);
                     // dateCellsToJoin.push(`<div class="obj_table_cell_x7 month_date" data-date="${data_date}">
                     //                            <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
                     //                            <div class="calendar_date_number ${font_color}">${date_cache}</div>
@@ -227,6 +215,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             calendar_variable.draw_month_calendar_table(func_get_prev_month(reference_year, reference_month),
                                                         design_options);
             func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
+                func_set_avail_date(jsondata.avail_date_data);
                 func_draw_schedule_data(jsondata);
             });
         });
@@ -234,6 +223,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             calendar_variable.draw_month_calendar_table(func_get_next_month(reference_year, reference_month),
                                                         design_options);
             func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
+                func_set_avail_date(jsondata.avail_date_data);
                 func_draw_schedule_data(jsondata);
             });
         });
@@ -298,7 +288,6 @@ function pters_month_calendar(calendar_name, calendar_options){
                         callback(jsondata);
                     }
                 }
-                func_set_avail_date(jsondata.avail_date_data);
                 func_draw_schedule_timeline_data(jsondata);
             },
 
@@ -317,13 +306,14 @@ function pters_month_calendar(calendar_name, calendar_options){
         let temp_array = [];
         for(let i=0; i<length; i++){
             temp_array.push(`#calendar_plan_cell_${avail_date_array[i]}`);
+            $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${avail_date_array[i]}'})`);
         }
         let $first_day = $(`${temp_array.shift()}`);
         $first_day.siblings('div.calendar_date_number').css({'height':'20px', 'width':'20px', 'border-radius':'50%', 'background-color':'#ff3b44', 'margin':'0 auto', 'color':'#ffffff'});
         $first_day.parent('.obj_table_cell_x7').css({'background-color': 'rgba(255, 59, 68, 0.07)'});
         // $first_day.parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-left-radius':'5px', 'border-bottom-left-radius':'5px'});
         // $(`${temp_array.pop()}`).parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-right-radius':'5px', 'border-bottom-right-radius':'5px'});
-        $(`${temp_array.join(', ')}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)');
+        // $(`${temp_array.join(', ')}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `"layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${temp_array.join(', ')}'})"`);
     }
 
     /**
@@ -397,10 +387,8 @@ function pters_month_calendar(calendar_name, calendar_options){
                     schedule_type = '반복일정'
                 }
 
-                temp_array.push(
-                                    `
-                                    <div class="obj_table_raw" data-scheduleid=${schedule_id}>
-                                        <div class="obj_table_cell_x2">
+                temp_array.push(`<div class="obj_table_raw" data-scheduleid=${schedule_id}>
+                                    <div class="obj_table_cell_x2">
                                             <img src=""><span class="obj_font_size_14_weight_normal">${schedule_name}</span><div class="obj_tag obj_font_bg_coral_trans obj_font_size_16_weight_bold">${schedule_finish}</div>
                                         </div>
                                         <div class="obj_table_cell_x2 obj_font_size_14_weight_500">${schedule_time_start}~${schedule_time_end}</div>
@@ -587,6 +575,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                 input_reference_date = current_year+'-'+(current_month+1)+'-'+1;
             }
             func_get_ajax_schedule_data(input_reference_date, "callback", function(jsondata){
+                func_set_avail_date(jsondata.avail_date_data);
                 func_draw_schedule_data(jsondata);
             });
         },

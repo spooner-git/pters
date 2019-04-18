@@ -1650,6 +1650,8 @@ class PopupCalendarPlanView(TemplateView):
                 # 근접 예약 시간 확인
                 reserve_disable_time = timezone.now() + datetime.timedelta(minutes=reserve_prohibition_time)
                 context['reserve_disable_time'] = reserve_disable_time
+                context['avail_end_date'] = datetime.datetime.strptime(str(context['avail_date_data'].pop()),
+                                                                       '%Y-%m-%d')
         # if len(context['schedule_data']) == 0:
         #     return redirect('/trainee/popup_calendar_plan_reserve/')
         return context
