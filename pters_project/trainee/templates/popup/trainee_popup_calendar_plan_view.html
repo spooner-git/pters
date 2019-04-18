@@ -1,5 +1,7 @@
 {% extends "popup/trainee_base_popup.html" %}
 {% load static_url %}
+{% load background_trainee_data %}
+
 {% block popup_base_css %}
     <!-- pters.trainee.popup.plan_view.css -->
     <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan_view.css" %}>
@@ -13,6 +15,7 @@
 
 
         <div class="wrapper_box_next_plan">
+            {% now "DATETIME_FORMAT" as today %}
             {% for schedule_info in schedule_data %}
             <div class="obj_box_full">
                 <div class="obj_box_full_grey">
@@ -43,7 +46,17 @@
                     {% endif %}
                 </div>
                 <div class="obj_table_raw wrapper_cancel_notice">
-                    <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">취소 가능 시간까지 <span class="obj_font_size_11_weight_500 obj_font_color_coral">3시간 26분</span> 남았습니다.</div>
+                    {% if reserve_disable_time > schedule_info.start_dt %}
+                        <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">
+                            <span class="obj_font_size_11_weight_500 obj_font_color_coral"> 예약 취소가 불가한 일정입니다. </span>
+                        </div>
+                    {% else %}
+                        <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">
+                            취소 가능 시간까지
+                            <span class="obj_font_size_11_weight_500 obj_font_color_coral"> {{ schedule_info.start_dt | timeuntil_formatting:request.session.setting_member_reserve_cancel_time }} </span>
+                            남았습니다.
+                        </div>
+                    {% endif %}
                     <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_coral_trans"
                          onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
                                                                {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',

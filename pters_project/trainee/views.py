@@ -1624,6 +1624,12 @@ class PopupCalendarPlanView(TemplateView):
         context['select_date'] = select_date
 
         context['date_format'] = datetime.datetime.strptime(select_date, '%Y-%m-%d')
+        reserve_prohibition_time = self.request.session.get('setting_member_reserve_cancel_time')
+
+        # 근접 예약 시간 확인
+        reserve_disable_time = timezone.now() + datetime.timedelta(minutes=reserve_prohibition_time)
+        context['reserve_disable_time'] = reserve_disable_time
+
         if class_id is not None and class_id != '':
             context = func_get_trainee_select_schedule(context, class_id, self.request.user.id, select_date)
         # if len(context['schedule_data']) == 0:

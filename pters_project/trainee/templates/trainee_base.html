@@ -45,6 +45,35 @@
         <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.mobile_side_menu.css" %}>
         {% block local_css %}
         {% endblock %}
+        <script type="text/javascript">
+
+            {% load background_trainee_data %}
+            {% autoescape off %}
+            let get_setting = {% get_setting_info request %};
+            let auth_type_cd = {% get_function_auth_type_cd request %};
+            let auth_product_type_name = '{{ request.session.product_type_name }}';
+            {% endautoescape %}
+
+            let setting_info = {'class_hour':'{{request.session.class_hour}}',
+                                'class_type_name':'{{ request.session.class_type_name }}',
+                                'class_type_code':'{{ request.session.class_type_code}}',
+                                'class_center_name':'{{ request.session.class_center_name }}',
+                                'setting_member_reserve_time_available':'{{ request.session.setting_member_reserve_time_available }}',
+                                'setting_member_reserve_time_prohibition':'{{ request.session.setting_member_reserve_time_prohibition }}',
+                                'setting_member_reserve_prohibition':'{{ request.session.setting_member_reserve_prohibition }}',
+                                'setting_trainer_work_time_available':['{{ request.session.setting_trainer_work_sun_time_avail }}',
+                                                                       '{{ request.session.setting_trainer_work_mon_time_avail }}',
+                                                                       '{{ request.session.setting_trainer_work_tue_time_avail }}',
+                                                                       '{{ request.session.setting_trainer_work_wed_time_avail }}',
+                                                                       '{{ request.session.setting_trainer_work_ths_time_avail }}',
+                                                                       '{{ request.session.setting_trainer_work_fri_time_avail }}',
+                                                                       '{{ request.session.setting_trainer_work_sat_time_avail }}'],
+                                'setting_member_reserve_date_available':'{{ request.session.setting_member_reserve_date_available }}',
+                                'setting_member_reserve_enable_time':'{{ request.session.setting_member_reserve_enable_time }}',
+                                'setting_member_reserve_cancel_time':'{{ request.session.setting_member_reserve_cancel_time }}',
+                                'setting_member_time_duration':'{{ request.session.setting_member_time_duration }}',
+                                'setting_member_start_time':'{{ request.session.setting_member_start_time }}'};
+            </script>
     </head>
 
     <body>
@@ -113,33 +142,6 @@
         <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.fundamental.js" %}></script>
         <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.popup.behavior.js" %}></script>
         <script type="text/javascript">
-
-            {% load background_trainee_data %}
-            {% autoescape off %}
-            let get_setting = {% get_setting_info request %};
-            let auth_type_cd = {% get_function_auth_type_cd request %};
-            let auth_product_type_name = '{{ request.session.product_type_name }}';
-            {% endautoescape %}
-
-            let setting_info = {'class_hour':'{{request.session.class_hour}}',
-                                'class_type_name':'{{ request.session.class_type_name }}',
-                                'class_type_code':'{{ request.session.class_type_code}}',
-                                'class_center_name':'{{ request.session.class_center_name }}',
-                                'setting_member_reserve_time_available':'{{ request.session.setting_member_reserve_time_available }}',
-                                'setting_member_reserve_time_prohibition':'{{ request.session.setting_member_reserve_time_prohibition }}',
-                                'setting_member_reserve_prohibition':'{{ request.session.setting_member_reserve_prohibition }}',
-                                'setting_trainer_work_time_available':['{{ request.session.setting_trainer_work_sun_time_avail }}',
-                                                                       '{{ request.session.setting_trainer_work_mon_time_avail }}',
-                                                                       '{{ request.session.setting_trainer_work_tue_time_avail }}',
-                                                                       '{{ request.session.setting_trainer_work_wed_time_avail }}',
-                                                                       '{{ request.session.setting_trainer_work_ths_time_avail }}',
-                                                                       '{{ request.session.setting_trainer_work_fri_time_avail }}',
-                                                                       '{{ request.session.setting_trainer_work_sat_time_avail }}'],
-                                'setting_member_reserve_date_available':'{{ request.session.setting_member_reserve_date_available }}',
-                                'setting_member_reserve_enable_time':'{{ request.session.setting_member_reserve_enable_time }}',
-                                'setting_member_reserve_cancel_time':'{{ request.session.setting_member_reserve_cancel_time }}',
-                                'setting_member_time_duration':'{{ request.session.setting_member_time_duration }}',
-                                'setting_member_start_time':'{{ request.session.setting_member_start_time }}'};
 
             //기기 사이즈, 창사이즈 계산
             const windowWidth = $(window).width();
