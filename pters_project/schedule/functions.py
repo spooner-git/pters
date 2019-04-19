@@ -581,7 +581,6 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
     if log_type == 'LR01':
         log_type_name = '반복 일정'
         log_type_detail = '등록'
-
     if log_type == 'LR02':
         log_type_name = '반복 일정'
         log_type_detail = '취소'
@@ -590,7 +589,7 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
         log_data = LogTb(log_type=log_type, auth_member_id=request.user.id,
                          from_member_name=user_name, to_member_name=member_name,
                          class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info="'개인' "+log_type_name, log_how=log_type_detail,
+                         log_info='1:1'+log_type_name, log_how=log_type_detail,
                          log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
     elif en_dis_type == OFF_SCHEDULE_TYPE:
