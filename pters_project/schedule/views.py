@@ -335,7 +335,7 @@ def delete_schedule_logic(request):
             log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name+request.user.first_name, to_member_name=member_name,
                              class_tb_id=class_id, lecture_tb_id=lecture_id,
-                             log_info='['+group_type_cd_name+'] '+group_name + ' 일정', log_how='취소',
+                             log_info='['+group_type_cd_name+'] '+group_name + ' 수업', log_how='예약 취소',
                              log_detail=str(start_dt) + '/' + str(end_dt), use=USE)
             log_data.save()
 
@@ -516,7 +516,7 @@ def finish_schedule_logic(request):
             log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name+request.user.first_name,
                              to_member_name=member_name,
-                             class_tb_id=class_id, lecture_tb_id='',
+                             class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                              log_info='['+schedule_info.get_group_type_cd_name()+'] '
                                       + schedule_info.get_group_name() + ' 수업', log_how=schedule_state_cd_name,
                              log_detail=str(start_date) + '/' + str(end_date), use=USE)
@@ -524,18 +524,18 @@ def finish_schedule_logic(request):
             push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                 + ' ['+schedule_info.get_group_type_cd_name()+'] ' + schedule_info.get_group_name()
-                                + ' 수업이 '+schedule_state_cd_name+' 되었습니다.')
+                                + ' 수업이 '+schedule_state_cd_name+' 처리 되었습니다.')
         else:
             log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name+request.user.first_name,
                              to_member_name=member_name,
-                             class_tb_id=class_id, lecture_tb_id='',
+                             class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                              log_info='개인 수업', log_how=schedule_state_cd_name,
                              log_detail=str(start_date) + '/' + str(end_date), use=USE)
             log_data.save()
             push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + ' 개인 수업이 '+schedule_state_cd_name+' 되었습니다.')
+                                + ' 개인 수업이 '+schedule_state_cd_name+' 처리 되었습니다.')
 
         if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
             context['push_lecture_id'] = push_lecture_id
@@ -1391,7 +1391,7 @@ def add_group_schedule_logic(request):
                                                  to_member_name=member_info.name,
                                                  class_tb_id=class_id,
                                                  log_info='['+group_info.get_group_type_cd_name()+'] '
-                                                          + group_info.name + ' 일정', log_how='등록',
+                                                          + group_info.name + ' 수업', log_how='예약 완료',
                                                  log_detail=str(schedule_start_datetime) + '/' + str(
                                                      schedule_end_datetime), use=USE)
                                 log_data.save()
@@ -1399,14 +1399,14 @@ def add_group_schedule_logic(request):
                                 push_info_schedule_start_date = str(schedule_start_datetime).split(':')
                                 push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(':')
                                 push_lecture_id.append(lecture_id)
-                                push_title.append(class_type_name + ' 수업 - 일정 알림')
+                                push_title.append(class_type_name + ' 수업 - 수업 알림')
                                 push_message.append(request.user.first_name + '님이 '
                                                     + push_info_schedule_start_date[0] + ':'
                                                     + push_info_schedule_start_date[1] + '~'
                                                     + push_info_schedule_end_date[0] + ':'
                                                     + push_info_schedule_end_date[1]
                                                     + ' ['+group_info.get_group_type_cd_name()+'] '
-                                                    + group_info.name + ' 일정을 등록했습니다')
+                                                    + group_info.name + ' 수업을 등록했습니다')
 
                     except TypeError:
                         error_temp = '오류가 발생했습니다. [1]'
@@ -1564,26 +1564,27 @@ def delete_group_schedule_logic(request):
                 push_info_schedule_end_date = str(end_dt).split(' ')[1].split(':')
 
                 push_lecture_id.append(member_group_schedule_info.lecture_tb_id)
-                push_title.append(class_type_name + ' 수업 - 일정 알림')
+                push_title.append(class_type_name + ' 수업 - 수업 알림')
                 if group_id is not None and group_id != '':
                     log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                                      from_member_name=request.user.last_name + request.user.first_name,
                                      to_member_name=member_name,
                                      class_tb_id=class_id, lecture_tb_id='',
                                      log_info='[' + member_group_schedule_info.get_group_type_cd_name() + '] '
-                                              + member_group_schedule_info.get_group_name() + ' 일정', log_how='취소',
+                                              + member_group_schedule_info.get_group_name() + ' 수업',
+                                     log_how='예약 취소',
                                      log_detail=str(start_dt) + '/' + str(end_dt), use=USE)
                     log_data.save()
                     push_message.append(request.user.first_name+'님이 '
                                         + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                         + ' [' + group_info.get_group_type_cd_name()+'] '+group_info.name
-                                        + ' 일정을 취소했습니다.')
+                                        + ' 수업을 예약 취소했습니다.')
                 else:
                     push_message.append(request.user.first_name+'님이 '
                                         + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                        + ' [1:1 레슨] 일정을 취소했습니다.')
+                                        + ' [1:1 레슨] 수업을 예약 취소했습니다.')
 
     if error is None:
 
@@ -1600,7 +1601,8 @@ def delete_group_schedule_logic(request):
         log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info='['+group_info.get_group_type_cd_name()+'] '+group_info.name + ' 일정', log_how='취소',
+                         log_info='['+group_info.get_group_type_cd_name()+'] '+group_info.name + ' 수업',
+                         log_how='예약 취소',
                          log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt), use=USE)
         log_data.save()
 
@@ -1789,22 +1791,22 @@ def finish_group_schedule_logic(request):
                                      to_member_name=member_name,
                                      class_tb_id=class_id, lecture_tb_id='',
                                      log_info='[' + member_group_schedule_info.get_group_type_cd_name() + '] '
-                                              + member_group_schedule_info.get_group_name() + ' 일정',
-                                     log_how=schedule_state_cd_name,
+                                              + member_group_schedule_info.get_group_name() + ' 수업',
+                                     log_how='참석'+schedule_state_cd_name,
                                      log_detail=str(start_date) + '/' + str(end_date), use=USE)
                     log_data.save()
                     push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                         + ' [' + schedule_info.get_group_type_cd_name() + '] '
-                                        + schedule_info.get_group_name() + ' 일정이 '+schedule_state_cd_name+'됐습니다.')
+                                        + schedule_info.get_group_name() + ' 수업이 참석'+schedule_state_cd_name+'됐습니다.')
 
     if error is None:
 
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info='['+group_info.get_group_type_cd_name()+'] '+group_info.name + ' 일정',
-                         log_how=schedule_state_cd_name,
+                         log_info='['+group_info.get_group_type_cd_name()+'] '+group_info.name + 수업,
+                         log_how='참석'+schedule_state_cd_name,
                          log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
     if error is None:
