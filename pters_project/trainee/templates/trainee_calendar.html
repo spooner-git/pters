@@ -38,7 +38,20 @@
         //calendar 이름에 문자 제외 로직 필요 (에러 출력하도록)
         //혹은 initialize할때 변경해야한다고 출력해도 될듯
         //혹은 console만 안내하고 사용자는 모르도록해도 될듯
-        let month_calendar = pters_month_calendar('pters1', {"target_html":'#calendar'});
+        let calendar_move_buttons = "none";
+        let calendar_expand_buttons = "";
+        if(os == WINDOW){
+            calendar_move_buttons = "";
+            calendar_expand_buttons = "none";
+        }
+        const custom_design_options = {"font_color_sunday":["obj_font_color_pters_dark_red"],
+                                      "font_color_saturday":["obj_font_color_light_blue"],
+                                      "font_date_basic":["obj_font_size_12_weight_500"],
+                                      "font_day_names":["obj_font_size_11_weight_normal"],
+                                      "height_week_row":[50],
+                                      "move_buttons":calendar_move_buttons,
+                                      "expand_buttons": calendar_expand_buttons};
+        let month_calendar = pters_month_calendar('pters1', {"target_html":'#calendar', "design_options": custom_design_options});
         // var month_calendar2 = pters_month_calendar('pters2',{"target_html":custom_targetHTML, "design_options":custom_design_options});
         month_calendar.init_month_calendar_table();
         // month_calendar2.init_month_calendar_table();

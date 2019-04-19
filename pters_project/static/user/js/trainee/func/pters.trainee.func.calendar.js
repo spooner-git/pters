@@ -5,7 +5,9 @@ function pters_month_calendar(calendar_name, calendar_options){
                                   "font_color_saturday":["obj_font_color_light_blue"],
                                   "font_date_basic":["obj_font_size_12_weight_500"],
                                   "font_day_names":["obj_font_size_11_weight_normal"],
-                                  "height_week_row":[50]};
+                                  "height_week_row":[50],
+                                  "move_buttons":"none",
+                                  "expand_buttons": ""};
 
     const default_targetHTML = '#calendar';
 
@@ -99,7 +101,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         //                                     </div>
         //                                 </div>`;
         let month_calendar_upper_tool = `<div class="pters_month_cal_upper_tool_box">
-                                            <div id="${calendar_name}_go_prev_month" class="next_prev_month" style="display:none;">
+                                            <div id="${calendar_name}_go_prev_month" class="next_prev_month" style="display:${design_options.move_buttons};">
                                                 <img src="/static/common/icon/navigate_before_black.png" class="obj_icon_basic"> 
                                             </div>
                                             <div class="pters_month_cal_tool_date_text">
@@ -108,11 +110,11 @@ function pters_month_calendar(calendar_name, calendar_options){
                                                     ${Number(reference_date_year)}년 ${Number(reference_date_month)}월
                                                 </div>
                                             </div>
-                                            <div id="${calendar_name}_go_next_month" class="next_prev_month" style="display:none;">
-                                                <img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic">
-                                            </div>
-                                            <div class="expand_button ${calendar_name}_expand_button">
+                                            <div class="expand_button ${calendar_name}_expand_button" style="display:${design_options.expand_buttons};">
                                                 <img src="/static/common/icon/expand_more_black.png" class="obj_icon_basic">
+                                            </div>
+                                            <div id="${calendar_name}_go_next_month" class="next_prev_month" style="display:${design_options.move_buttons};">
+                                                <img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic">
                                             </div>
                                             <div class="help_calendar_indicator obj_font_size_9_weight_500 ">
                                                 <div style="background-color:rgba(255, 59, 68, 0.07)">개인 수업 예약</div>
@@ -644,7 +646,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         },
         "get_current_month":function(){
             return reference_date;
-        },
+        }
     };
 }
 
