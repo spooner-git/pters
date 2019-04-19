@@ -37,7 +37,7 @@
     }
     .obj_box_popup_topper{
         height: auto;
-        background-color: #ff3b44;
+        background-color: #ff4b4b;
         border-radius: 8px 8px 0px 0px;
         box-shadow: 0 0 15px 0 rgba(131, 131, 131, 0.25);
         padding-top: 20px;
@@ -47,7 +47,7 @@
 
     .obj_box_card{
         height: auto;
-        background-color: #ff3b44;
+        background-color: #ff4b4b;
         border-radius: 5px;
         box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
         margin-left: 20px;
@@ -211,7 +211,7 @@
         color: #fe4e65;
     }
     .obj_font_color_coral{
-        color: #ff3b44;
+        color: #ff4b4b;
     }
 
 /* 버튼 */
@@ -294,7 +294,7 @@
     }
     .obj_font_bg_white_dark_grey{
         color: #ffffff;
-        background-color: #464646;
+        background-color: #464646;0
     }
     .obj_font_bg_trans_pink{
         color: #fe4e65;
@@ -303,17 +303,17 @@
     }
     .obj_font_bg_white_coral{
         color: #ffffff;
-        background-color: #ff3b44;
+        background-color: #ff4b4b;
         border: 1px solid transparent;
     }
     .obj_font_bg_coral_white{
-        color: #ff3b44;
+        color: #ff4b4b;
         background-color: #ffffff;
     }
     .obj_font_bg_coral_trans{
-        color: #ff3b44;
+        color: #ff4b4b;
         background-color: #ffffff;
-        border: 1px solid #ff3b44;
+        border: 1px solid #ff4b4b;
     }
 /* table */
     .obj_table_raw{
