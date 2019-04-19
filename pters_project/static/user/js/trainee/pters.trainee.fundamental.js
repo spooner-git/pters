@@ -41,7 +41,7 @@ const csrftoken = getCookie('csrftoken');
 
 
 function func_set_webkit_overflow_scrolling(target_selector){
-    //if(os == IOS){
+    if(os == IOS){
         let $selector = $(target_selector);
         $selector.scrollTop(1);
         $selector.scroll(function(e){
@@ -57,7 +57,7 @@ function func_set_webkit_overflow_scrolling(target_selector){
             }
             
         });
-    //}
+    }
 }
 
 let ajax_name_array = [];
