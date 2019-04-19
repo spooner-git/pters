@@ -220,7 +220,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                 func_set_avail_date(jsondata.avail_date_data);
                 func_draw_schedule_data(jsondata);
                 func_draw_schedule_timeline_data(jsondata);
-                func_set_timeline_to_today_or_near()
+                func_set_timeline_to_today_or_near();
             });
         });
         $('#'+next_id).click(function(){
@@ -230,7 +230,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                 func_set_avail_date(jsondata.avail_date_data);
                 func_draw_schedule_data(jsondata);
                 func_draw_schedule_timeline_data(jsondata);
-                func_set_timeline_to_today_or_near()
+                func_set_timeline_to_today_or_near();
             });
         });
     }
