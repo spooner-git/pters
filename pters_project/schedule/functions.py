@@ -568,16 +568,16 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
     log_type_detail = ''
 
     if log_type == 'LS01':
-        log_type_name = '예약'
-        log_type_detail = '완료'
+        log_type_name = '수업'
+        log_type_detail = '예약 완료'
 
     if log_type == 'LS02':
-        log_type_name = '일정'
-        log_type_detail = '취소'
+        log_type_name = '수업'
+        log_type_detail = '예약 취소'
 
     if log_type == 'LS03':
         log_type_name = '예약'
-        log_type_detail = '출석'
+        log_type_detail = '참석'
     if log_type == 'LR01':
         log_type_name = '반복 일정'
         log_type_detail = '등록'
@@ -590,14 +590,14 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
         log_data = LogTb(log_type=log_type, auth_member_id=request.user.id,
                          from_member_name=user_name, to_member_name=member_name,
                          class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='[1:1 레슨] '+log_type_name, log_how=log_type_detail,
+                         log_info="'개인' "+log_type_name, log_how=log_type_detail,
                          log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
     elif en_dis_type == OFF_SCHEDULE_TYPE:
         log_data = LogTb(log_type=log_type, auth_member_id=request.user.id,
                          from_member_name=user_name,
                          class_tb_id=class_id,
-                         log_info='OFF '+log_type_name, log_how=log_type_detail,
+                         log_info='OFF ', log_how=log_type_detail,
                          log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
     else:
