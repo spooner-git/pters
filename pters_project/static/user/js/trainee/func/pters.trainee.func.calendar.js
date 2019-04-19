@@ -85,21 +85,6 @@ function pters_month_calendar(calendar_name, calendar_options){
 
         let current_month_first_date_day = new Date(`${reference_date_year}`,`${reference_date_month-1}`,`${'1'}`).getDay();
 
-        //달력의 상단의 연월 표기
-        // let month_calendar_upper_tool = `<div class="pters_month_cal_upper_tool_box">
-        //                                     <div id="${calendar_name}_go_prev_month" class="next_prev_month">
-        //                                         <img src="/static/common/icon/navigate_before_black.png" class="obj_icon_basic"> 
-        //                                     </div>
-        //                                     <div class="pters_month_cal_tool_date_text">
-                                                
-        //                                         <div class="obj_font_size_20_weight_bold">
-        //                                             ${Number(reference_date_year)}년 ${Number(reference_date_month)}월
-        //                                         </div>
-        //                                     </div>
-        //                                     <div id="${calendar_name}_go_next_month" class="next_prev_month">
-        //                                         <img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic">
-        //                                     </div>
-        //                                 </div>`;
         let month_calendar_upper_tool = `<div class="pters_month_cal_upper_tool_box">
                                             <div id="${calendar_name}_go_prev_month" class="next_prev_month" style="display:${design_options.move_buttons};">
                                                 <img src="/static/common/icon/navigate_before_black.png" class="obj_icon_basic"> 
@@ -116,7 +101,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                                             <div id="${calendar_name}_go_next_month" class="next_prev_month" style="display:${design_options.move_buttons};">
                                                 <img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic">
                                             </div>
-                                            <div class="help_calendar_indicator obj_font_size_9_weight_500 ">
+                                            <div class="help_calendar_indicator obj_font_size_9_weight_500">
                                                 <div style="background-color:rgba(255, 59, 68, 0.07)">개인 수업 예약</div>
                                                 <div style="background-color:rgba(255, 59, 68, 0.38)">그룹 수업 예약</div>
                                             </div>
@@ -381,22 +366,27 @@ function pters_month_calendar(calendar_name, calendar_options){
                 let schedule_finish = split[4];
                 let schedule_repeat_id = split[5];
                 let schedule_type = '개별일정';
+                let schedule_finish_tag;
                 if(schedule_finish==SCHEDULE_NOT_FINISH){
                     schedule_finish = '예약 완료';
+                    schedule_finish_tag = "obj_font_bg_white_coral";
                 }
                 else if(schedule_finish==SCHEDULE_FINISH){
-                    schedule_finish = '참석';
+                    schedule_finish = '참석 완료';
+                    schedule_finish_tag = "obj_font_bg_coral_trans";
                 }
                 else if(schedule_finish==SCHEDULE_ABSENCE){
                     schedule_finish = '결석';
+                    schedule_finish_tag = "obj_font_bg_white_grey";
                 }
                 if(schedule_repeat_id != 'None'){
-                    schedule_type = '반복일정'
+                    schedule_type = '반복일정';
+                    schedule_finish_tag = "obj_font_bg_coral_trans";
                 }
 
                 temp_array.push(`<div class="obj_table_raw" data-scheduleid=${schedule_id}>
                                     <div class="obj_table_cell_x2">
-                                            <img src=""><span class="obj_font_size_14_weight_normal">${schedule_name}</span><div class="obj_tag obj_font_bg_coral_trans obj_font_size_16_weight_bold">${schedule_finish}</div>
+                                            <img src=""><span class="obj_font_size_14_weight_normal">${schedule_name}</span><div class="obj_tag ${schedule_finish_tag} obj_font_size_16_weight_bold">${schedule_finish}</div>
                                         </div>
                                         <div class="obj_table_cell_x2 obj_font_size_14_weight_500">${schedule_time_start}~${schedule_time_end}</div>
                                     </div>

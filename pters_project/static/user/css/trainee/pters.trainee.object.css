@@ -286,6 +286,7 @@
     .obj_font_bg_white_grey{
         color: #ffffff;
         background-color: #656565;
+        border: 1px solid transparent;
     }
     .obj_font_bg_white_black{
         color: #ffffff;
