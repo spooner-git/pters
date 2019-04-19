@@ -29,8 +29,8 @@ function pters_month_calendar(calendar_name, calendar_options){
     let current_year = date.getFullYear(); //현재 년도
     let current_month = date.getMonth(); //달은 0부터 출력해줌 0~11
     let current_date = date.getDate();
-    let today_yyyy_mm_dd = current_year+'-'+(current_month+1)+'-'+current_date;
-    let reference_date = today_yyyy_mm_dd;
+    let today_yyyy_m_d = current_year+'-'+(current_month+1)+'-'+current_date;
+    let reference_date = today_yyyy_m_d;
     let original_height;
     let expand_height;
 
@@ -217,6 +217,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
                 func_set_avail_date(jsondata.avail_date_data);
                 func_draw_schedule_data(jsondata);
+                func_draw_schedule_timeline_data(jsondata);
             });
         });
         $('#'+next_id).click(function(){
@@ -225,6 +226,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
                 func_set_avail_date(jsondata.avail_date_data);
                 func_draw_schedule_data(jsondata);
+                func_draw_schedule_timeline_data(jsondata);
             });
         });
     }
@@ -287,8 +289,9 @@ function pters_month_calendar(calendar_name, calendar_options){
                     if(use == "callback"){
                         callback(jsondata);
                     }
+                    // func_draw_schedule_timeline_data(jsondata);
                 }
-                func_draw_schedule_timeline_data(jsondata);
+                
             },
 
             complete:function(){
@@ -422,6 +425,64 @@ function pters_month_calendar(calendar_name, calendar_options){
         //func_set_month_date_button_for_timeline();
     }
 
+    function func_set_timeline_to_today_or_near(){
+        let timeline_date_text_loc_array = {};
+        // let len = $('.timeline_date_text').length;
+        // each 빼는 방법 고려해보기
+        let timeline_date_length = 0;
+        $('.timeline_date_text').each(function(){
+            timeline_date_length++;
+            let id = $(this).attr('id');
+            timeline_date_text_loc_array[id] = $(this).offset().top - nav_height -calendar_toolbox_height - calendar_month_inner_height - calendar_timeline_toolbox_height;
+        });
+
+
+        let today_yyyy_mm_dd = date_format(today_yyyy_m_d)["yyyy-mm-dd"];
+        let if_today_has_schedule = $(`#calendar_cell_${today_yyyy_mm_dd} .schedule_marking`).length;
+        if(if_today_has_schedule > 0){
+            let desire_date_position =  timeline_date_text_loc_array[`timeline_${today_yyyy_mm_dd}`];
+            $('.wrapper_cal_timeline').animate( { scrollTop : desire_date_position }, function(){
+                $('.wrapper_cal_timeline').animate( { scrollTop : desire_date_position }, 100 );
+            });
+        }else{
+            if(timeline_date_length == 0){
+                return;
+            }else{
+
+                //오늘 날짜부터 하나씩 더하면서 일정이 있는 가장 가까운 날짜 찾기
+                let plus_scan = 0;
+                let date_for_scan = today_yyyy_mm_dd;
+                while($(`#timeline_${date_for_scan}`).length == 0){
+                    date_for_scan = date_format(`${current_year}-${current_month+1}-${current_date+plus_scan}`)["yyyy-mm-dd"];
+                    plus_scan++;
+                    if(plus_scan > 31){
+                        date_for_scan = today_yyyy_mm_dd;
+                        break;
+                    }
+                }
+
+                //오늘 날짜부터 하나씩 빼면서 일정이 있는 가장 가까운 날짜 찾기
+                let minus_scan = 0;
+                while($(`#timeline_${date_for_scan}`).length == 0){
+                    minus_scan--;
+                    date_for_scan = date_format(`${current_year}-${current_month+1}-${current_date+minus_scan}`)["yyyy-mm-dd"];
+                    if(minus_scan < -31){
+                        date_for_scan = today_yyyy_mm_dd;
+                        break;
+                    }
+                }
+
+                if(date_for_scan != today_yyyy_mm_dd){
+                    let desire_date_position =  timeline_date_text_loc_array[`timeline_${date_for_scan}`];
+                    $('.wrapper_cal_timeline').animate( { scrollTop : desire_date_position }, function(){
+                        $('.wrapper_cal_timeline').animate( { scrollTop : desire_date_position }, 100 );
+                    });
+                }
+
+            }
+        }
+    }
+
     /**
      * @param jsondata                              schedule json data object.
      * @param jsondata.classTimeArray_start_date    시작 시각.
@@ -540,7 +601,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             return calendar_name;
         },
         "init_month_calendar_table":function(){
-            func_draw_month_calendar_table(today_yyyy_mm_dd);
+            func_draw_month_calendar_table(today_yyyy_m_d);
             func_draw_month_calendar_size(calendar_height, calendar_toolbox_height, calendar_month_day_name_text_height);
             func_month_calendar_basic_size(calendar_height);
             func_set_touch_move_to_month_calendar(calendar_options.target_html);
@@ -563,7 +624,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         "draw_month_calendar_table":function (input_reference_date) {
 
             if(input_reference_date==undefined){
-                input_reference_date = today_yyyy_mm_dd;
+                input_reference_date = today_yyyy_m_d;
             }
             reference_date = input_reference_date;
             func_draw_month_calendar_table(input_reference_date);
@@ -577,6 +638,8 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_get_ajax_schedule_data(input_reference_date, "callback", function(jsondata){
                 func_set_avail_date(jsondata.avail_date_data);
                 func_draw_schedule_data(jsondata);
+                func_draw_schedule_timeline_data(jsondata);
+                func_set_timeline_to_today_or_near();
             });
         },
         "get_current_month":function(){
