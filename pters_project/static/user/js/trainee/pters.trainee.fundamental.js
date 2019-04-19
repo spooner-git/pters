@@ -44,7 +44,9 @@ function func_set_webkit_overflow_scrolling(target_selector){
     if(os == IOS){
         let $selector = $(target_selector);
         $selector.scrollTop(1);
-        $selector.scroll(function(){
+        $selector.scroll(function(e){
+            e.stopPropagation();
+            e.preventDefault();
             const popupHeight = $selector.height();
             const scrollHeight = $selector.prop('scrollHeight');
             const scrollLocation = $selector.scrollTop();
