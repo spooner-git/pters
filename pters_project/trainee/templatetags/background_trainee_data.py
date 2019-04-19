@@ -266,3 +266,7 @@ def timeuntil_formatting(input_date_time, setting_time):
 @property
 def is_past_due(self):
     return datetime.date.today() >= self.date
+
+@register.filter
+def multiply(value, arg):
+    return value * arg

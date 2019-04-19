@@ -400,8 +400,8 @@ function func_group_time_dom_draw(target_html, selected_date, schedule_json, set
                                 </div>
                             </div>
                             <div class="wrapper_reserve_caution obj_font_size_11_weight_500 obj_font_color_grey">
-                                <p><span class="obj_font_color_pters_red">수업 시작 0시간 전까지 예약</span> 할 수 있습니다.</p>
-                                <p><span class="obj_font_color_pters_red">수업 시작 0시간 전까지 취소</span> 할 수 있습니다.</p>
+                                <p><span class="obj_font_color_pters_red">수업 시작 ${setting_info.setting_member_reserve_enable_time/60}시간 전까지 예약</span> 할 수 있습니다.</p>
+                                <p><span class="obj_font_color_pters_red">수업 시작 ${setting_info.setting_member_reserve_cancel_time/60}시간 전까지 취소</span> 할 수 있습니다.</p>
                             </div>
                         </div>`;
             html_to_join_final.push(wrap);

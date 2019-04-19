@@ -454,7 +454,7 @@ def add_trainee_schedule_logic(request):
                 push_message.append(request.user.first_name + '님이 '
                                     + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                    + ' [1:1 레슨] 일정을 등록했습니다')
+                                    + ' [1:1 레슨] 수업을 예약했습니다')
             else:
 
                 push_class_id.append(class_id)
@@ -462,8 +462,7 @@ def add_trainee_schedule_logic(request):
                 push_message.append(request.user.first_name + '님이 '
                                     + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                    + ' ['+schedule_info.get_group_type_cd_name()+']'
-                                    + schedule_info.get_group_name() + ' 일정을 등록했습니다')
+                                    + schedule_info.get_group_name() + ' 수업을 예약했습니다')
 
             context['push_class_id'] = push_class_id
             context['push_title'] = push_title
@@ -495,7 +494,7 @@ def delete_trainee_schedule_logic(request):
     push_class_id = []
     push_title = []
     push_message = []
-    group_name = ''
+    group_name = '1:1 레슨'
     group_type_name = ''
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
     lecture_id = None
@@ -518,8 +517,10 @@ def delete_trainee_schedule_logic(request):
             error = '이미 지난 일정입니다.'
 
     if error is None:
-        if schedule_info.state_cd == 'PE' or schedule_info.state_cd == 'PC':
-            error = '종료된 일정입니다.'
+        if schedule_info.state_cd == 'PE':
+            error = '참석 완료된 일정입니다.'
+        elif schedule_info.state_cd == 'PC':
+            error = '결석 처리된 일정입니다.'
 
     if error is None:
         lecture_info = schedule_info.lecture_tb
@@ -582,12 +583,13 @@ def delete_trainee_schedule_logic(request):
         # func_update_member_schedule_alarm(class_id)
         # class_info.schedule_check = 1
         # class_info.save()
-
+        if group_name == '':
+            group_name = '1:1 레슨'
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_info.class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info=' ['+group_type_name+']'+group_name + ' 일정',
-                         log_how='취소', log_detail=str(start_date) + '/' + str(end_date), use=USE)
+                         log_info=group_name + ' 수업',
+                         log_how='예약 취소', log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
 
         try:
@@ -602,11 +604,11 @@ def delete_trainee_schedule_logic(request):
             push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
             push_class_id.append(class_id)
-            push_title.append(class_type_name + ' 수업 - 일정 알림')
+            push_title.append(class_type_name + ' - 수업 알림')
             push_message.append(request.user.first_name + '님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + ' ['+group_type_name+']'+group_name+' 일정을 취소했습니다.')
+                                + group_name+' 수업을 예약 취소했습니다.')
 
             context['push_class_id'] = push_class_id
             context['push_title'] = push_title
@@ -1340,15 +1342,15 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
                              lecture_tb_id=lecture_id,
-                             log_info='['+group_schedule_info.get_group_type_cd_name() + ']'
-                                      + group_schedule_info.get_group_name() + ' 일정', log_how='등록',
+                             log_info=group_schedule_info.get_group_name() + ' 수업', log_how='예약 완료',
                              log_detail=str(start_date) + '/' + str(end_date),  use=USE)
             log_data.save()
         else:
             log_data = LogTb(log_type='LS01', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name+request.user.first_name,
                              class_tb_id=class_id, lecture_tb_id=lecture_id,
-                             log_info='[1:1 레슨] 일정', log_how='등록', log_detail=str(start_date) + '/' + str(end_date),
+                             log_info='1:1 레슨 수업', log_how='예약 완료',
+                             log_detail=str(start_date) + '/' + str(end_date),
                              use=USE)
             log_data.save()
 
