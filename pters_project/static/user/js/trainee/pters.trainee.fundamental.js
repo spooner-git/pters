@@ -49,9 +49,9 @@ function func_set_webkit_overflow_scrolling(target_selector){
             const scrollHeight = $selector.prop('scrollHeight');
             const scrollLocation = $selector.scrollTop();
             if(popupHeight + scrollLocation == scrollHeight){
-                $selector.animate({scrollTop : scrollLocation-1}, 0);
+                $selector.animate({scrollTop : scrollLocation-1}, 100);
             }else if(popupHeight + scrollLocation == popupHeight){
-                $selector.animate({scrollTop : scrollLocation+1}, 0);
+                $selector.animate({scrollTop : scrollLocation+1}, 100);
             }
         });
     }
