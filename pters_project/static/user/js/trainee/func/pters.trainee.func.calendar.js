@@ -369,11 +369,11 @@ function pters_month_calendar(calendar_name, calendar_options){
                 let schedule_finish_tag;
                 if(schedule_finish==SCHEDULE_NOT_FINISH){
                     schedule_finish = '예약 완료';
-                    schedule_finish_tag = "obj_font_bg_white_coral";
+                    schedule_finish_tag = "obj_font_bg_coral_trans";
                 }
                 else if(schedule_finish==SCHEDULE_FINISH){
                     schedule_finish = '참석 완료';
-                    schedule_finish_tag = "obj_font_bg_coral_trans";
+                    schedule_finish_tag = "obj_font_bg_white_coral";
                 }
                 else if(schedule_finish==SCHEDULE_ABSENCE){
                     schedule_finish = '결석';
