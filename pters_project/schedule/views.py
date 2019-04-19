@@ -414,9 +414,9 @@ def finish_schedule_logic(request):
         except ObjectDoesNotExist:
             error = '일정 정보를 불러오지 못했습니다.'
         if schedule_state_cd == 'PE':
-            schedule_state_cd_name = '출석 처리'
+            schedule_state_cd_name = '출석'
         elif schedule_state_cd == 'PC':
-            schedule_state_cd_name = '결석 처리'
+            schedule_state_cd_name = '결석'
 
     if error is None:
         if member_id is None or member_id == '':
