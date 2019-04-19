@@ -41,22 +41,23 @@ const csrftoken = getCookie('csrftoken');
 
 
 function func_set_webkit_overflow_scrolling(target_selector){
-    if(os == IOS){
+    //if(os == IOS){
         let $selector = $(target_selector);
         $selector.scrollTop(1);
         $selector.scroll(function(e){
-            e.stopPropagation();
-            e.preventDefault();
             const popupHeight = $selector.height();
             const scrollHeight = $selector.prop('scrollHeight');
             const scrollLocation = $selector.scrollTop();
-            if(popupHeight + scrollLocation == scrollHeight){
-                $selector.animate({scrollTop : scrollLocation-1}, 100);
-            }else if(popupHeight + scrollLocation == popupHeight){
-                $selector.animate({scrollTop : scrollLocation+1}, 100);
+            if(scrollHeight > popupHeight+1){
+               if(popupHeight + scrollLocation == scrollHeight){
+                    $selector.animate({scrollTop : scrollLocation-1}, 100);
+                }else if(popupHeight + scrollLocation == popupHeight){
+                    $selector.animate({scrollTop : scrollLocation+1}, 100);
+                }
             }
+            
         });
-    }
+    //}
 }
 
 let ajax_name_array = [];
