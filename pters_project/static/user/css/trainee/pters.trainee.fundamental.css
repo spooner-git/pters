@@ -42,13 +42,15 @@
         left: 50%;
         transform: translateX(-50%);
         background-color: #ff4b4b;
+        /*background-image: linear-gradient(to right,#ea0e0e,#d60404);*/
+        /*background-image: linear-gradient(to right,#0eca68,#00bf5f);*/
         box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.25);
         z-index: 1;
 
         /*Nav바 폰트스타일*/
         font-size: 15px;
         font-weight: 500;
-        color : #ffffff;
+        color : rgba(255, 255, 255, 0.6);
         letter-spacing: -0.3px;
         padding-top: 10px;
     }
