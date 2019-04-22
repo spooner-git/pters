@@ -1666,6 +1666,7 @@ class PopupCalendarPlanReserveView(TemplateView):
         context = super(PopupCalendarPlanReserveView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
         select_date = self.request.GET.get('select_date')
+        trainer_id = self.request.session.get('trainer_id', '')
         # 개인 수업 예약 가능 횟수 호출
         # 회원과 연결되어있는 수강권중에서 개인 수업이 포함되어 있는 경우 count
 
@@ -1676,7 +1677,41 @@ class PopupCalendarPlanReserveView(TemplateView):
 
         context['error'] = None
         context['select_date'] = datetime.datetime.strptime(select_date, '%Y-%m-%d')
+        start_date = datetime.datetime.strptime(select_date + ' 00:00', '%Y-%m-%d %H:%M')
+        end_date = datetime.datetime.strptime(select_date + ' 23:59', '%Y-%m-%d %H:%M')
+        # context = func_get_holiday_schedule(context, start_date, end_date)
+        # context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, start_date, end_date)
+        # context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
+        # 그룹 스케쥴과 예약 가능 횟수 동시에 들고 와야할듯
+        context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
+        # context = func_get_class_lecture_count(context, class_id, self.request.user.id)
+        group_data = []
+        group_id_list = []
+        for group_schedule_info in context['group_schedule_data']:
+            group_lecture_avail_count = 0
+            query_member_auth_cd = "select `AUTH_CD` from MEMBER_LECTURE_TB as B" \
+                                   " where B.USE=1" \
+                                   " and B.LECTURE_TB_ID = `GROUP_LECTURE_TB`.`LECTURE_TB_ID`"
+            group_lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(
+                group_tb_id=group_schedule_info.group_tb_id,
+                lecture_tb__member_id=self.request.user.id,
+                lecture_tb__use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd,
+                                                                    [])).filter(member_auth_cd='VIEW')
 
+            for group_lecture_info in group_lecture_data:
+                group_lecture_avail_count += group_lecture_info.lecture_tb.lecture_avail_count
+            group_schedule_info.group_lecture_avail_count = group_lecture_avail_count
+
+            if group_id_list.count(group_schedule_info.group_tb.group_id) == 0:
+                group_id_list.append(group_schedule_info.group_tb.group_id)
+                group_info = {'group_id': group_schedule_info.group_tb.group_id,
+                              'group_name': group_schedule_info.group_tb.name,
+                              'group_lecture_avail_count': group_lecture_avail_count}
+                group_data.append(group_info)
+
+        context['group_data'] = group_data
+        # if trainer_id != '' and trainer_id is not None:
+        #     context = func_get_trainer_setting_list(context, trainer_id, class_id)
         return context
 
 

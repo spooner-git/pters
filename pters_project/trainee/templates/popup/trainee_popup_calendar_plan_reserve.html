@@ -59,29 +59,31 @@
         </div>
 
         <div class="wrapper_reserve_form _target_link_to_tab" id="reserve_form_group">
+            {% for group_info in group_data %}
             <div class="obj_box_full">
                 <div class="obj_table_raw wrapper_ticket_info">
                     <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/people_black.png"></div>
-                    <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal ">%그룹 수업%</div>
-                    <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: % 번)</div>
+                    <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal ">{{ group_info.group_name }}</div>
+                    <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: {{ group_info.group_lecture_avail_count }} 번)</div>
                 </div>
                 <div class="wrapper_reserve_form_data">
                     <div class="func_radio_wrap wrapper_group_reserve_select">
-                        <div class="func_radio_element obj_font_size_14_weight_500">
-                            <div class="func_radio_element_title">08:00 ~ 10:00 (1/10명)</div>
-                            <div class="func_radio_element_button"><div class="func_radio_element_button_outer"><div class="func_radio_element_button_inner"></div></div></div>
-                        </div>
-                        <div class="func_radio_element obj_font_size_14_weight_500">
-                            <div class="func_radio_element_title">13:00 ~ 15:00 (6/10명)</div>
-                            <div class="func_radio_element_button"><div class="func_radio_element_button_outer"><div class=""></div></div></div>
-                        </div>
+                        {% for group_schedule_info in group_schedule_data %}
+                            {% if group_info.group_id == group_schedule_info.group_tb.group_id %}
+                            <div class="func_radio_element obj_font_size_14_weight_500" data-group-schedule-id="{{ group_schedule_info.schedule_id }}" data-date="{{ select_date | date:'Y-m-d' }}" data-start-time="{{ group_schedule_info.start_dt | date:'H:i'}}" data-end-time="{{ group_schedule_info.end_dt | date:'H:i'}}">
+                                <div class="func_radio_element_title">{{ group_schedule_info.start_dt | date:'H:i'}} ~ {{ group_schedule_info.end_dt | date:'H:i'}}  ({{ group_schedule_info.group_current_member_num }}/{{ group_schedule_info.group_tb.member_num }}명)</div>
+                                <div class="func_radio_element_button"><div class="func_radio_element_button_outer"><div class="func_radio_element_button_inner"></div></div></div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="wrapper_reserve_caution obj_font_size_11_weight_500 obj_font_color_grey">
-                    <p><span class="obj_font_color_coral">수업 시작 0시간 전까지 예약</span> 할 수 있습니다.</p>
-                    <p><span class="obj_font_color_coral">수업 시작 0시간 전까지 취소</span> 할 수 있습니다.</p>
+                    <p><span class="obj_font_color_coral">수업 시작 {% widthratio request.session.setting_member_reserve_enable_time 60 1 %}시간 전까지 예약</span> 할 수 있습니다.</p>
+                    <p><span class="obj_font_color_coral">수업 시작 {% widthratio request.session.setting_member_reserve_cancel_time 60 1 %}시간 전까지 취소</span> 할 수 있습니다.</p>
                 </div>
             </div>
+            {% endfor %}
         </div>
         
     </div>
@@ -98,7 +100,7 @@
             let selected_date = `{{ select_date }}`.split(' ')[0];
             func_get_ajax_schedule_data_temp(selected_date.replace(/\./gi, '-'), function(schedule_json){
                 func_start_time_dom_draw('select[title="time_select"]', selected_date, schedule_json, setting_info);
-                func_group_time_dom_draw('#reserve_form_group', selected_date, schedule_json, setting_info);
+{#                func_group_time_dom_draw('#reserve_form_group', selected_date, schedule_json, setting_info);#}
             });
         });
 
