@@ -16,13 +16,13 @@
                 <div class="obj_font_size_18_weight_bold obj_font_color_white">{{ package_info.name }}</div>
             </div>
 
-            <div class="wrapper_my_ticket_tab obj_font_color_white">
-                <div id="ticket_basic_info" class="wrapper_my_ticket_basic_info obj_font_size_13_weight_bold" onclick="ticket_basic_info();">기본 정보</div>
-                <div id="ticket_lesson_history" class="wrapper_my_ticket_lesson_history obj_font_size_13_weight_normal" onclick="ticket_lesson_history();">수강권 내역</div>
+            <div class="wrapper_my_ticket_tab obj_font_color_white obj_font_size_13_weight_normal">
+                <div id="ticket_basic_info" class="wrapper_my_ticket_basic_info" onclick="ticket_basic_info();">기본 정보</div>
+                <div id="ticket_lesson_history" class="wrapper_my_ticket_lesson_history" onclick="ticket_lesson_history();">수강권 내역</div>
             </div>
         </div>
-        <div class="obj_box_full">
-            <div id="wrapper_my_ticket_detail">
+        <div class="">
+            <div id="wrapper_my_ticket_detail" class="obj_box_full">
              {% for package_group_info in package_info.package_group_data %}
                 <div class="wrapper_my_ticket_detail_date">
                     <div class="wrapper_my_ticket_detail_date_title obj_font_size_11_weight_normal obj_font_color_light_grey">

@@ -35,6 +35,7 @@
 		.popup_group_ticket_info .wrapper_my_ticket_tab .ticket_info_selected{
 			border-bottom-color: #ffffff;
 			color: #ffffff;
+			font-weight: bold;
 		}
 
 	.popup_group_ticket_info .wrapper_my_ticket_title{
