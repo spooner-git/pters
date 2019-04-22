@@ -77,7 +77,7 @@ let layer_popup = (function(){
             func_set_close_popup_animation($popup_selector, popup_data.animation_type);
 
             setTimeout(function(){
-                $popup_selector.css({"transform": "translateX(100%)", "z-index":-10});
+                //$popup_selector.css({"transform": "translateX(100%)", "z-index":-10});
                 //$(`#${popup_data.popup_name}`).remove();
                 $popup_selector_wrap.remove();
             }, 250);

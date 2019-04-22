@@ -106,7 +106,7 @@
             {% include 'popup/trainee_mobile_side_menu.html' %}
         {% endblock %}
         <img src="/static/user/res/ajax/loading.gif" alt="" class="ajax_load_image">
-        <div id="shade_for_popup_basic" style="position:fixed;top:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;"></div>
+        <div id="shade_for_popup_basic" style="position:fixed;top:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" onclick="layer_popup.all_close_layer_popup();"></div>
         <div class="content_page">
             {% block content %}
             {% endblock %}
