@@ -27,6 +27,7 @@ def func_get_lecture_id(class_id, member_id):
     # 강좌에 해당하는 수강/회원 정보 가져오기
     lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id,
                                                  class_tb__use=USE,
+                                                 auth_cd='VIEW',
                                                  lecture_tb__member_id=member_id,
                                                  lecture_tb__state_cd='IP',
                                                  lecture_tb__lecture_avail_count__gt=0,
