@@ -12,11 +12,13 @@
             padding-top: 20px;
             height: 35px;
             line-height: 35px;
+            cursor: pointer;
         }
         .pters_mobile_side_menu .wrapper_side_menu_sub{
             padding-bottom: 5px;
             height: 30px;
             line-height: 30px;
+            cursor: pointer;
         }
         .pters_mobile_side_menu .wrapper_menu_inquiry{
             padding: 20px 0;
