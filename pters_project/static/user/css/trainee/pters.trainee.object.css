@@ -19,7 +19,7 @@
         top: 0;
         left: 0px;
         background-color: #000000;
-        box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.25);
+        box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2);
         z-index: 1;
     }
 
@@ -27,13 +27,13 @@
         height: auto;
         background-color: #ffffff;
         border-radius: 2px;
-        border: 1px solid #e6e6e6;
+        border: 1px solid #ededed;
     }
     .obj_box_full_grey{
         height: auto;
-        background-color: #f7f7f7;
+        background-color: #fafafa;
         border-radius: 5px;
-        border: 1px solid #e6e6e6;
+        border: 1px solid #f2f2f2;
     }
     .obj_box_popup_topper{
         height: auto;
@@ -49,19 +49,12 @@
         height: auto;
         background-color: #ff4b4b;
         border-radius: 5px;
-        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
+        box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.25);
         margin-left: 20px;
         margin-right: 20px;
         padding: 20px;
     }
 
-    /*.obj_box_schedule{*/
-        /*height: auto;*/
-        /*background-color: #ffffff;*/
-        /*margin-left: 20px;*/
-        /*margin-right: 20px;*/
-        /*padding: 20px;*/
-    /*}*/
     .obj_box_photo{
         height: 30px;
         width: 30px;
@@ -71,11 +64,7 @@
     }
 
 /* 텍스트 박스 */
-    .obj_font_size_20_weight_bold{
-        font-size: 20px;
-        font-weight: bold;
-        letter-spacing: -0.5px;
-    }
+
     .obj_font_size_18_weight_900{
         font-size: 18px;
         font-weight: 900;
@@ -86,16 +75,9 @@
         font-weight: bold;
         letter-spacing: -0.5px;
     }
-    .obj_font_size_16_weight_bold{
-        font-size: 16px;
-        font-weight: bold;
-        letter-spacing: -0.5px;
-    }
-    .obj_font_size_16_weight_500{
-        font-size: 16px;
-        font-weight: 500;
-        letter-spacing: -0.5px;
-    }
+
+
+
     .obj_font_size_15_weight_900{
         font-size: 15px;
         font-weight: 900;
@@ -111,6 +93,8 @@
         font-weight: 500;
         letter-spacing: -0.5px;
     }
+
+
     .obj_font_size_14_weight_500{
         font-size: 14px;
         font-weight: 500;
@@ -121,6 +105,8 @@
         font-weight: normal;
         letter-spacing: -0.5px;
     }
+
+
     .obj_font_size_13_weight_bold{
         font-size: 13px;
         font-weight: bold;
@@ -136,6 +122,8 @@
         font-weight: normal;
         letter-spacing: -0.5px;
     }
+
+
     .obj_font_size_12_weight_bold{
         font-size: 12px;
         font-weight: bold;
@@ -151,6 +139,8 @@
         font-weight: normal;
         letter-spacing: -0.5px;
     }
+
+
     .obj_font_size_11_weight_bold{
         font-size:11px;
         font-weight: bold;
@@ -166,21 +156,13 @@
         font-weight: normal;
         letter-spacing: -0.3px;
     }
-    .obj_font_size_10_weight_900{
-        font-size: 10px;
-        font-weight: 900;
-        letter-spacing: -0.3px;
-    }
+
     .obj_font_size_10_weight_500{
         font-size: 10px;
         font-weight: 500;
         letter-spacing: -0.3px;
     }
-    .obj_font_size_9_weight_500{
-        font-size: 9px;
-        font-weight: 500;
-        letter-spacing: -0.3px;
-    }
+
 
 /* 글자 색상 */
     .obj_font_color_black{

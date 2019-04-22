@@ -101,7 +101,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                                             <div id="${calendar_name}_go_next_month" class="next_prev_month" style="display:${design_options.move_buttons};">
                                                 <img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic">
                                             </div>
-                                            <div class="help_calendar_indicator obj_font_size_9_weight_500">
+                                            <div class="help_calendar_indicator obj_font_size_10_weight_500">
                                                 <div style="background-color:rgba(255, 59, 68, 0.07)">개인 수업 예약</div>
                                                 <div style="background-color:rgba(255, 59, 68, 0.38)">그룹 수업 예약</div>
                                             </div>

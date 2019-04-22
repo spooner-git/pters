@@ -7,19 +7,16 @@
         /*margin-top: 25px;*/
         padding: 0 20px;
     }
-        .pters_mobile_side_menu .obj_font_size_20_weight_bold{
+
+        .pters_mobile_side_menu .wrapper_side_menu_main{
+            padding-top: 20px;
             height: 35px;
             line-height: 35px;
         }
-        .pters_mobile_side_menu .obj_font_size_16_weight_bold{
+        .pters_mobile_side_menu .wrapper_side_menu_sub{
+            padding-bottom: 5px;
             height: 30px;
             line-height: 30px;
-        }
-        .pters_mobile_side_menu .wrapper_side_menu_main{
-            padding-top: 20px;
-        }
-        .pters_mobile_side_menu .wrapper_side_menu_sub{
-            padding-bottom: 15px;
         }
         .pters_mobile_side_menu .wrapper_menu_inquiry{
             padding: 20px 0;
