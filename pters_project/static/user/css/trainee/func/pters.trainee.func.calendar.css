@@ -74,7 +74,7 @@
 		cursor: pointer;
 	}
 	.pters_calendar .pters_timeline_cal_upper_tool_box .selected{
-		border-bottom: 2px solid #ff3b44;
+		border-bottom: 2px solid #ff4b4b;
 		color: #000000;
 		font-weight: bold;
 	}
@@ -169,17 +169,24 @@
 	}
 
 
-
+	.plan_cell{
+		position: relative;
+	}
 	.schedule_marking{
-		display: inline-block;
+		position: absolute;
 		width: 4px;
 		height: 4px;
-		/*border: 1px solid #ff3b44;*/
+		/*display: inline-block;
+		border: 1px solid #ff4b4b;
+		vertical-align: middle;*/
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
 		border-radius: 50%;
-		background-color: #ff3b44;
-		vertical-align: middle;
+		background-color: #ff4b4b;
+		
 	}
-	.schedule_marking_group{
+	/*.schedule_marking_group{
 		display: inline-block;
 		width: 4px;
 		height: 4px;
@@ -187,7 +194,7 @@
 		border-radius: 50%;
 		background-color: #ffffff;
 		vertical-align: middle;
-	}
+	}*/
 	.group_plan_indicator{
 		height: 3px;
 		margin-bottom: 3px;

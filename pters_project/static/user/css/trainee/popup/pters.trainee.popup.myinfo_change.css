@@ -10,7 +10,9 @@
 		.popup_my_info_change .wrapper_popup_title{
 				padding: 0px;
 			}
-			.popup_my_info_change .obj_font_size_20_weight_bold{
+			.popup_my_info_change .wrapper_popup_title_text{
+				position: absolute;
+				top: 20px;
 
 				padding: 0 20px;
 				height: 35px;
@@ -22,7 +24,7 @@
 				height: 20px;
 				line-height: 20px;
 			}
-			.popup_my_info_change .wrapper_calendar_plan_view_title .obj_font_size_14_weight_500{
+			.popup_my_info_change .wrapper_calendar_plan_view_title .wrapper_popup_title_date{
 				position: absolute;
 				top: 55px;
 			}

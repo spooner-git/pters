@@ -12,7 +12,7 @@
             <p class="obj_font_size_11_weight_bold obj_font_color_dark_grey wrapper_alarm_unread_title">새로운 알림</p>
             {% for class_info in class_data %}
                 {% if class_info.np_lecture_counts > 0 %}
-                    <div class="wrapper_alarm_element obj_font_size_16_weight_500">
+                    <div class="wrapper_alarm_element obj_font_size_15_weight_500">
                         <div class="wrapper_alarm_element_title">
                             <div class="alarm_status">{{ class_info.class_type_name }}</div>
                         </div>
@@ -35,7 +35,7 @@
             {% endfor %}
             {% for log_info in log_data %}
                 {% if log_info.log_read == 0 %}
-                    <div class="wrapper_alarm_element obj_font_size_16_weight_500">
+                    <div class="wrapper_alarm_element obj_font_size_15_weight_500">
                         <div class="wrapper_alarm_element_title">
                             <!-- <div class="alarm_oval"></div> -->
                             <div class="alarm_status">{{ log_info.log_how }} <span class="alarm_time_ago obj_font_size_11_weight_normal obj_font_color_light_grey">{{ log_info.time_ago }}</span></div>
@@ -53,7 +53,7 @@
             <p class="obj_font_size_11_weight_bold obj_font_color_dark_grey wrapper_alarm_list_title">이전 알림</p>
             {% for log_info in log_data %}
                 {% if log_info.log_read != 0 %}
-                <div class="wrapper_alarm_element obj_font_size_16_weight_500">
+                <div class="wrapper_alarm_element obj_font_size_15_weight_500">
                     <div class="wrapper_alarm_element_title">
                         <!-- <div class="alarm_oval"></div> -->
                         <div class="alarm_status">{{ log_info.log_how }} <span class="alarm_time_ago obj_font_size_11_weight_normal obj_font_color_light_grey">{{ log_info.time_ago }}</span></div>

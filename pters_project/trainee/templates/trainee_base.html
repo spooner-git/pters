@@ -106,7 +106,7 @@
             {% include 'popup/trainee_mobile_side_menu.html' %}
         {% endblock %}
         <img src="/static/user/res/ajax/loading.gif" alt="" class="ajax_load_image">
-        <div id="shade_for_popup_basic" style="position:fixed;top:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;"></div>
+        <div id="shade_for_popup_basic" style="position:fixed;top:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" onclick="layer_popup.all_close_layer_popup();"></div>
         <div class="content_page">
             {% block content %}
             {% endblock %}
@@ -142,6 +142,12 @@
         <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.fundamental.js" %}></script>
         <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.popup.behavior.js" %}></script>
         <script type="text/javascript">
+
+            $("nav > .nav_trainee_menu_box_l > a").click(function(){
+                $('.nav_selected').removeClass('nav_selected');
+                $(this).find('div').addClass('nav_selected');
+            });
+
 
             //기기 사이즈, 창사이즈 계산
             const windowWidth = $(window).width();
@@ -204,7 +210,7 @@
                 }else if(windowWidth > 800 && windowWidth_now <=800){
                     location.reload();
                 }
-            })
+            });
 
         </script>
         {% block local_js_footer %}

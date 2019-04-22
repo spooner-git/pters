@@ -24,7 +24,8 @@ function pters_month_calendar(calendar_name, calendar_options){
     const calendar_toolbox_height = 61;
     const calendar_month_day_name_text_height = 40;
     const calendar_timeline_toolbox_height = 35;
-    const calendar_month_inner_height = 332;
+    const calendar_month_week_row_total_height = design_options["height_week_row"]*6;
+    const calendar_month_inner_height = calendar_month_week_row_total_height+30;
 
     let last_day_array = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];      //각 달의 일수
     let date = new Date();
@@ -45,8 +46,10 @@ function pters_month_calendar(calendar_name, calendar_options){
     function func_draw_month_calendar_size(calendar_height, calendar_toolbox_height, calendar_month_day_name_text_height){
         // $('.pters_month_cal_content_box').css({"height":calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height,
         //                                        "max-height":calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height - 3});
-        $('.pters_month_cal_content_box').css({"height":calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height,
-                                               "max-height":300});
+
+        // $('.pters_month_cal_content_box').css({"height":calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height,
+        //                                        "max-height":300});
+        $('.pters_month_cal_content_box').css({"max-height":calendar_month_week_row_total_height+"px"});
     }
 
     function func_get_month_end_day (input_year, input_month){
@@ -101,7 +104,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                                             <div id="${calendar_name}_go_next_month" class="next_prev_month" style="display:${design_options.move_buttons};">
                                                 <img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic">
                                             </div>
-                                            <div class="help_calendar_indicator obj_font_size_9_weight_500">
+                                            <div class="help_calendar_indicator obj_font_size_10_weight_500">
                                                 <div style="background-color:rgba(255, 59, 68, 0.07)">개인 수업 예약</div>
                                                 <div style="background-color:rgba(255, 59, 68, 0.38)">그룹 수업 예약</div>
                                             </div>
@@ -142,7 +145,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                                                id="calendar_cell_${data_date}">
                                                <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
                                                <div class="calendar_date_number ${font_color}">${date_cache}</div>
-                                               <div id="calendar_plan_cell_${data_date}"></div>
+                                               <div id="calendar_plan_cell_${data_date}" class="plan_cell" style="height:${design_options["height_week_row"]-6-20-1}px"></div>
                                           </div>`);
                     // dateCellsToJoin.push(`<div class="obj_table_cell_x7 month_date" data-date="${data_date}">
                     //                            <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
@@ -178,7 +181,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                                             </div>`;
 
 
-        let time_line_height = calendar_height  - calendar_toolbox_height - calendar_month_day_name_text_height - 300 - calendar_timeline_toolbox_height;
+        let time_line_height = calendar_height  - calendar_toolbox_height - calendar_month_day_name_text_height - calendar_month_week_row_total_height - calendar_timeline_toolbox_height;
         time_line_height = time_line_height + "px";
         //상단의 연월 표기, 일월화수목 표기, 달력숫자를 합쳐서 화면에 그린다.
         $targetHTML.html(`${month_calendar_upper_tool}
@@ -301,7 +304,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${avail_date_array[i]}'})`);
         }
         let $first_day = $(`${temp_array.shift()}`);
-        $first_day.siblings('div.calendar_date_number').css({'height':'20px', 'width':'20px', 'border-radius':'50%', 'background-color':'#ff3b44', 'margin':'0 auto', 'color':'#ffffff'});
+        $first_day.siblings('div.calendar_date_number').css({'height':'20px', 'width':'20px', 'border-radius':'50%', 'background-color':'#ff4b4b', 'margin':'0 auto', 'color':'#ffffff'});
         $first_day.parent('.obj_table_cell_x7').css({'background-color': 'rgba(255, 59, 68, 0.07)'});
         // $first_day.parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-left-radius':'5px', 'border-bottom-left-radius':'5px'});
         // $(`${temp_array.pop()}`).parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-right-radius':'5px', 'border-bottom-right-radius':'5px'});

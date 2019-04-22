@@ -14,8 +14,8 @@
     <div class="popup_calendar_plan_reserve_complete">
         <div class="obj_box_popup_topper">
             <div class="wrapper_calendar_plan_reserve_complete_title">
-                <div class="obj_font_size_18_weight_900 obj_font_color_white">예약 신청 완료</div>
-                <div class="obj_font_size_13_weight_500 obj_font_color_white">김현기 강사님의 수업에 예약 신청되었습니다.</div>
+                <div class="wrapper_popup_title_text obj_font_size_18_weight_900 obj_font_color_white">예약 신청 완료</div>
+                <div class="wrapper_popup_title_date obj_font_size_13_weight_500 obj_font_color_white">김현기 강사님의 수업에 예약 신청되었습니다.</div>
             </div>
         </div>
         
@@ -50,9 +50,9 @@
                     {% endif %}
                 </div>
                 <div class="obj_table_raw wrapper_cancel_notice">
-                    <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">
-                        취소 가능 시간까지
-                        <span class="obj_font_size_11_weight_500 obj_font_color_coral"> {{ schedule_info.start_dt | timeuntil_formatting:request.session.setting_member_reserve_cancel_time }} </span>
+                    <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_white">
+                        *취소 가능 시간이
+                        <span class="obj_font_size_11_weight_500"> {{ schedule_info.start_dt | timeuntil_formatting:request.session.setting_member_reserve_cancel_time }} </span>
                         남았습니다.
                     </div>
                     <!-- <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey"

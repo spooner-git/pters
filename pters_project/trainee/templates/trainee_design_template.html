@@ -18,17 +18,18 @@
                     background-color: #f7f5f6;
                 }
                 body{
-                    padding-top: 50px;
+                    padding: 50px 16px 0 16px;
                     margin: 0;
+                    overflow-y: auto;
                 }
 
             /* object 구분자 */
                 .object_type_name{
-                  margin-top: 40px;
+                  margin-top: 100px;
                   margin-bottom: 10px;
-                  font-size: 20px;
-                  font-weight: 800;
-                  border-top : 2px solid #e6e6e6;
+                  font-size: 30px;
+                  font-weight: 900;
+                  letter-spacing: -1.5px;
                 }
                 .object_name {
                   margin-top: 30px;
@@ -42,6 +43,9 @@
                 .obj_box_full_grey{
                     height: 50px;
                 }
+                .obj_box_popup_topper{
+                    height: 30px;
+                }
         </style>
     </head>
 
@@ -49,10 +53,10 @@
         <a href="{% url 'trainee:trainee_main' %}"><div class="obj_button_gen obj_font_bg_white_grey" style="float:right;">돌아가기</div></a>
 
 
-        <div class="object_type_name">box</div>
+        <div class="object_type_name">BOX</div>
 
         <div class="object_name">1) obj_box_nav_bar</div>
-        <div class="obj_box_nav_bar obj_font_bg_white_black"></div>
+        <div class="obj_box_nav_bar"></div>
         <!--<div class="obj_box_nav_bar obj_font_bg_white_dark_grey"></div>-->
 
         <div class="object_name">2) obj_box_full</div>
@@ -64,53 +68,66 @@
         <!--<div class="obj_box_full obj_font_bg_white_dark_grey"></div>-->
 
         <div class="object_name">4) obj_box_card</div>
-        <div class="obj_box_card obj_font_bg_white_black"></div> <br/>
+        <div class="obj_box_card"></div> <br/>
         <!--<div class="obj_box_card obj_font_bg_white_dark_grey"></div>-->
 
-        <div class="object_name">5) obj_box_photo</div>
+        <div class="object_name">5) obj_box_popup_topper</div>
+        <div class="obj_box_popup_topper"></div> <br/>
+
+        <div class="object_name">6) obj_box_photo</div>
         <div class="obj_box_photo">basic</div>
         <!--<div class="obj_box_photo obj_font_bg_black_white">b/w</div>-->
 
-        <div class="object_type_name">text</div>
+        <div class="object_type_name">TEXT</div>
 
-        <div class="object_name">1) obj_font_size_20_weight_bold</div>
-        <div class="obj_font_size_20_weight_bold">가나다라마바사아자차카타파하0123456789</div>
+        <div class="object_name">1) obj_font_size_18_weight_900</div>
+        <div class="obj_font_size_18_weight_900">가나다라마바사아자차카타파하0123456789</div>
 
         <div class="object_name">2) obj_font_size_18_weight_bold</div>
         <div class="obj_font_size_18_weight_bold">가나다라마바사아자차카타파하0123456789</div>
 
-        <div class="object_name">3) obj_font_size_16_weight_bold</div>
-        <div class="obj_font_size_16_weight_bold">가나다라마바사아자차카타파하0123456789</div>
+        <br>
 
-        <div class="object_name">4) obj_font_size_16_weight_500</div>
-        <div class="obj_font_size_16_weight_500">가나다라마바사아자차카타파하0123456789</div>
-
-        <div class="object_name">5) obj_font_size_15_weight_900</div>
+        <div class="object_name">3) obj_font_size_15_weight_900</div>
         <div class="obj_font_size_15_weight_900">가나다라마바사아자차카타파하0123456789</div>
 
-        <div class="object_name">6) obj_font_size_15_weight_bold</div>
+        <div class="object_name">4) obj_font_size_15_weight_bold</div>
         <div class="obj_font_size_15_weight_bold">가나다라마바사아자차카타파하0123456789</div>
 
-        <div class="object_name">7) obj_font_size_15_weight_500</div>
-        <div class="obj_font_size_15_weight_bold">가나다라마바사아자차카타파하0123456789</div>
+        <div class="object_name">5) obj_font_size_15_weight_500</div>
+        <div class="obj_font_size_15_weight_500">가나다라마바사아자차카타파하0123456789</div>
 
-        <div class="object_name">8) obj_font_size_14_weight_500</div>
+        <br>
+
+        <div class="object_name">6) obj_font_size_14_weight_500</div>
         <div class="obj_font_size_14_weight_500 ">가나다라마바사아자차카타파하0123456789</div>
 
-        <div class="object_name">9) obj_font_size_14_weight_normal</div>
+        <div class="object_name">7) obj_font_size_14_weight_normal</div>
         <div class="obj_font_size_14_weight_normal">가나다라마바사아자차카타파하0123456789</div>
 
-        <div class="object_name">10) obj_font_size_13_weight_bold</div>
+        <br>
+
+        <div class="object_name">8) obj_font_size_13_weight_bold</div>
         <div class="obj_font_size_13_weight_bold">가나다라마바사아자차카타파하0123456789</div>
 
-        <div class="object_name">11) obj_font_size_13_weight_500</div>
+        <div class="object_name">9) obj_font_size_13_weight_500</div>
         <div class="obj_font_size_13_weight_500">가나다라마바사아자차카타파하0123456789</div>
+
+        <div class="object_name">10) obj_font_size_13_weight_500</div>
+        <div class="obj_font_size_13_weight_normal">가나다라마바사아자차카타파하0123456789</div>
+
+        <br>
+
+        <div class="object_name">11) obj_font_size_12_weight_500</div>
+        <div class="obj_font_size_12_weight_bold">가나다라마바사아자차카타파하0123456789</div>
 
         <div class="object_name">12) obj_font_size_12_weight_500</div>
         <div class="obj_font_size_12_weight_500">가나다라마바사아자차카타파하0123456789</div>
 
         <div class="object_name">13) obj_font_size_12_weight_normal</div>
         <div class="obj_font_size_12_weight_normal">가나다라마바사아자차카타파하0123456789</div>
+
+        <br>
 
         <div class="object_name">14) obj_font_size_11_weight_bold</div>
         <div class="obj_font_size_11_weight_bold">가나다라마바사아자차카타파하0123456789</div>
@@ -121,17 +138,15 @@
         <div class="object_name">16) obj_font_size_11_weight_normal</div>
         <div class="obj_font_size_11_weight_normal">가나다라마바사아자차카타파하0123456789</div>
 
-        <div class="object_name">17) obj_font_size_10_weight_900</div>
-        <div class="obj_font_size_10_weight_900">가나다라마바사아자차카타파하0123456789</div>
+        <br>
 
-        <div class="object_name">18) obj_font_size_10_weight_500</div>
+        <div class="object_name">17) obj_font_size_10_weight_500</div>
         <div class="obj_font_size_10_weight_500">가나다라마바사아자차카타파하0123456789</div>
 
-        <div class="object_name">18) obj_font_size_9_weight_500</div>
-        <div class="obj_font_size_10_weight_500">가나다라마바사아자차카타파하0123456789</div>
+        <br>
 
 
-        <div class="object_type_name">text color</div>
+        <div class="object_type_name">TEXT COLOR</div>
 
         <div class="object_name">1) obj_font_color_black</div>
         <div class="obj_font_color_black">#000000</div>

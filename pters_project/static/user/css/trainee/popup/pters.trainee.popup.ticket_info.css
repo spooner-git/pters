@@ -20,6 +20,11 @@
 		padding: 20px;
 	}
 
+	.popup_ticket_info #wrapper_my_history_detail{
+		background-color: #ffffff;
+		margin-top: 5px;
+	}
+
 	.popup_ticket_info .wrapper_my_ticket_tab{
 		margin-top: 15px;
 		height: 35px;
@@ -37,6 +42,7 @@
 		.popup_ticket_info .wrapper_my_ticket_tab .ticket_info_selected{
 			border-bottom-color: #ffffff;
 			color: #ffffff;
+			font-weight: bold;
 		}
 
 	.popup_ticket_info .wrapper_my_ticket_title{

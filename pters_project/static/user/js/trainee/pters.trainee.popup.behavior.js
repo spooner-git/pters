@@ -73,8 +73,11 @@ let layer_popup = (function(){
             let $popup_selector = $(`.${popup_data.popup_name}`).parents('.popup_mobile');
             //팝업이 옆으로 닫히는 애니메이션이 종료된후 해당 팝업의 html을 지운다.
             let $popup_selector_wrap = $(`#${popup_data.popup_name}`);
+
+            func_set_close_popup_animation($popup_selector, popup_data.animation_type);
+
             setTimeout(function(){
-                $popup_selector.css({"transform": "translateX(100%)", "z-index":-10});
+                //$popup_selector.css({"transform": "translateX(100%)", "z-index":-10});
                 //$(`#${popup_data.popup_name}`).remove();
                 $popup_selector_wrap.remove();
             }, 250);
