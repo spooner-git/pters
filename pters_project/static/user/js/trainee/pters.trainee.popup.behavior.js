@@ -99,16 +99,16 @@ let layer_popup = (function(){
             }else if(call_method==POPUP_INNER_HTML){
                 // 확인 용도
             }
-            func_set_popup_position($(`.${popup_name}`).parents('.popup_mobile'), animation_type, popup_size);
-
             let func_animation_set = this.animation_set;
             setTimeout(function(){
+            func_set_popup_position($(`.${popup_name}`).parents('.popup_mobile'), animation_type, popup_size);
+
                 let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
                 if(popup_data!=undefined && Object.keys(popup_data).length > 0){
                     func_animation_set(OPEN, popup_data);
                 }
                   // func_prevent_double_click_free();
-            }, 0);
+            }, 10);
         },
 
         "close_layer_popup": function(popup_size) {
@@ -143,29 +143,32 @@ let layer_popup = (function(){
 
 //Ajax로 팝업 html을 통째로 들고온다.
 function func_get_popup_ajax(popup_name, data){
-    $.ajax({
-        url: `/trainee/${popup_name}/`,
-        type : 'GET',
-        data: data,
-        dataType : 'html',
-        async : false,
+    ajax_load_image(SHOW);
+    setTimeout(function() {
+        $.ajax({
+            url: `/trainee/${popup_name}/`,
+            type: 'GET',
+            data: data,
+            dataType: 'html',
+            async: false,
 
-        beforeSend:function(xhr, settings){
-            func_ajax_before_send(xhr, settings, popup_name);
-        },
+            beforeSend: function (xhr, settings) {
+                func_ajax_before_send(xhr, settings, popup_name);
+            },
 
-        success:function(data){
-            $('body').append(`<div id="${popup_name}">${data}</div>`);
-        },
+            success: function (data) {
+                $('body').append(`<div id="${popup_name}">${data}</div>`);
+            },
 
-        complete:function(){
-            func_ajax_after_send(popup_name);
-        },
+            complete: function () {
+                func_ajax_after_send(popup_name);
+            },
 
-        error:function(){
-            console.log('server error');
-        }
-    });
+            error: function () {
+                console.log('server error');
+            }
+        });
+    }, 10);
 }
 
 
