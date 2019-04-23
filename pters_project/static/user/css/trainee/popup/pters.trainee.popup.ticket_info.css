@@ -17,7 +17,9 @@
 	}
 	.popup_ticket_info .obj_box_full{
 		margin-top: 5px;
-		padding: 20px;
+		padding: 10px 20px;
+		border-color: #ebebeb;
+		box-sizing: border-box;
 	}
 
 	.popup_ticket_info #wrapper_my_history_detail{
@@ -50,8 +52,7 @@
 	}
 
 	.popup_ticket_info .wrapper_my_ticket_detail_date{
-		padding-bottom: 20px;
-		height: 60px;
+		
 	}
 		.popup_ticket_info .wrapper_my_ticket_detail_date .obj_table_raw{
 			height: 30px;
