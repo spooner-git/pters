@@ -159,6 +159,7 @@
         margin-top : 10px;
         margin-bottom: 15px;
         padding : 15px;
+        border: solid 1px #b5b5b5;
     }
 
     .wrapper_box_next_plan .wrapper_lecture_title{
