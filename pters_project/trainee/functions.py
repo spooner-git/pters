@@ -661,7 +661,8 @@ def func_get_trainee_next_schedule_by_class_id(context, class_id, user_id):
                                                    lecture_tb__member_id=user_id,
                                                    en_dis_type=ON_SCHEDULE_TYPE,
                                                    start_dt__gte=now,
-                                                   use=USE).exclude(state_cd='PE').order_by('start_dt')
+                                                   use=USE).exclude(Q(state_cd='PE')
+                                                                    |Q(state_cd='PC')).order_by('start_dt')
 
     if len(next_schedule_data) > 0:
         next_schedule_info = next_schedule_data[0]

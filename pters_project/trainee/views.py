@@ -57,74 +57,87 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
         class_id = request.session.get('class_id', '')
 
-        if class_id is None or class_id == '':
+        # if class_id is None or class_id == '':
+        #     self.url = '/trainee/trainee_main/'
+        # else:
+
+        query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
+                             " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = "+str(request.user.id)+" and" \
+                             " B.USE=1"
+
+        lecture_data = ClassLectureTb.objects.select_related(
+            'class_tb',
+            'lecture_tb__member').filter(
+            lecture_tb__member_id=request.user.id,
+            use=USE).annotate(auth_type_cd=RawSQL(query_auth_type_cd,
+                                                  [])).exclude(auth_type_cd='DELETE'
+                                                               ).order_by('-lecture_tb__start_date')
+        if lecture_data is None or len(lecture_data) == 0:
+            # self.url = '/trainee/cal_month_blank/'
             self.url = '/trainee/trainee_main/'
+
+        elif len(lecture_data) == 1:
+            for lecture_info in lecture_data:
+                request.session['class_id'] = lecture_info.class_tb_id
+                request.session['lecture_id'] = lecture_info.lecture_tb_id
+                request.session['trainer_id'] = lecture_info.class_tb.member_id
+                if lecture_info.auth_type_cd == 'WAIT':
+                    # self.url = '/trainee/lecture_select/'
+                    self.url = '/trainee/trainee_main/'
+                elif lecture_info.auth_type_cd == 'DELETE':
+                    # self.url = '/trainee/cal_month_blank/'
+                    self.url = '/trainee/trainee_main/'
+                else:
+                    request.session['class_hour'] = lecture_info.class_tb.class_hour
+                    request.session['class_type_code'] = lecture_info.class_tb.subject_cd
+                    request.session['program_title'] = lecture_info.class_tb.get_class_type_cd_name()
+                    request.session['class_center_name'] = lecture_info.class_tb.get_center_name()
+
         else:
-            query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
-                                 " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = "+str(request.user.id)+" and" \
-                                 " B.USE=1"
+            class_tb_comp = None
+            class_counter = 0
+            lecture_np_counter = 0
+            lecture_id_select = ''
+            class_tb_selected = None
+            for lecture_info in lecture_data:
+                if lecture_info.auth_type_cd == 'WAIT':
+                    lecture_np_counter += 1
 
-            lecture_data = ClassLectureTb.objects.select_related(
-                'class_tb',
-                'lecture_tb__member').filter(
-                lecture_tb__member_id=request.user.id,
-                use=USE).annotate(auth_type_cd=RawSQL(query_auth_type_cd,
-                                                      [])).exclude(auth_type_cd='DELETE'
-                                                                   ).order_by('-lecture_tb__start_date')
-            if lecture_data is None or len(lecture_data) == 0:
-                # self.url = '/trainee/cal_month_blank/'
-                self.url = '/trainee/trainee_main/'
-
-            elif len(lecture_data) == 1:
-                for lecture_info in lecture_data:
-                    request.session['class_id'] = lecture_info.class_tb_id
-                    request.session['lecture_id'] = lecture_info.lecture_tb_id
-                    request.session['trainer_id'] = lecture_info.class_tb.member_id
-                    if lecture_info.auth_type_cd == 'WAIT':
-                        # self.url = '/trainee/lecture_select/'
-                        self.url = '/trainee/trainee_main/'
-                    elif lecture_info.auth_type_cd == 'DELETE':
-                        # self.url = '/trainee/cal_month_blank/'
-                        self.url = '/trainee/trainee_main/'
-                    else:
-                        request.session['class_hour'] = lecture_info.class_tb.class_hour
-                        request.session['class_type_code'] = lecture_info.class_tb.subject_cd
-                        request.session['program_title'] = lecture_info.class_tb.get_class_type_cd_name()
-                        request.session['class_center_name'] = lecture_info.class_tb.get_center_name()
-
-            else:
-                class_tb_comp = None
-                class_counter = 0
-                lecture_np_counter = 0
-                lecture_id_select = ''
-                for lecture_info in lecture_data:
-                    if lecture_info.auth_type_cd == 'WAIT':
-                        lecture_np_counter += 1
-                    if class_tb_comp is not None:
-                        if str(class_tb_comp.class_id) != str(lecture_info.class_tb_id):
-                            class_tb_comp = lecture_info.class_tb
-                            if lecture_info.lecture_tb.lecture_avail_count > 0:
-                                lecture_id_select = lecture_info.lecture_tb_id
-                            class_counter += 1
-                    else:
+                if lecture_info.auth_type_cd == 'VIEW' and class_tb_selected is None:
+                    class_tb_selected = lecture_info.class_tb
+                    class_lecture_id_select = lecture_info.lecture_tb_id
+                if class_tb_comp is not None:
+                    if str(class_tb_comp.class_id) != str(lecture_info.class_tb_id):
                         class_tb_comp = lecture_info.class_tb
                         if lecture_info.lecture_tb.lecture_avail_count > 0:
                             lecture_id_select = lecture_info.lecture_tb_id
                         class_counter += 1
-
-                if class_counter > 1 or lecture_np_counter > 0:
-                    # self.url = '/trainee/lecture_select/'
-                    self.url = '/trainee/trainee_main/'
                 else:
-                    # self.url = '/trainee/cal_month/'
-                    self.url = '/trainee/trainee_main/'
-                    request.session['trainer_id'] = class_tb_comp.member_id
-                    request.session['class_id'] = class_tb_comp.class_id
-                    request.session['lecture_id'] = lecture_id_select
-                    request.session['class_hour'] = class_tb_comp.class_hour
-                    request.session['class_type_code'] = class_tb_comp.subject_cd
-                    request.session['program_title'] = class_tb_comp.get_class_type_cd_name()
-                    request.session['class_center_name'] = class_tb_comp.get_center_name()
+                    class_tb_comp = lecture_info.class_tb
+                    if lecture_info.lecture_tb.lecture_avail_count > 0:
+                        lecture_id_select = lecture_info.lecture_tb_id
+                    class_counter += 1
+
+            if class_counter > 1 or lecture_np_counter > 0:
+                # self.url = '/trainee/lecture_select/'
+                request.session['trainer_id'] = class_tb_selected.member_id
+                request.session['class_id'] = class_tb_selected.class_id
+                request.session['lecture_id'] = class_lecture_id_select
+                request.session['class_hour'] = class_tb_selected.class_hour
+                request.session['class_type_code'] = class_tb_selected.subject_cd
+                request.session['program_title'] = class_tb_selected.get_class_type_cd_name()
+                request.session['class_center_name'] = class_tb_selected.get_center_name()
+                self.url = '/trainee/trainee_main/'
+            else:
+                # self.url = '/trainee/cal_month/'
+                self.url = '/trainee/trainee_main/'
+                request.session['trainer_id'] = class_tb_comp.member_id
+                request.session['class_id'] = class_tb_comp.class_id
+                request.session['lecture_id'] = lecture_id_select
+                request.session['class_hour'] = class_tb_comp.class_hour
+                request.session['class_type_code'] = class_tb_comp.subject_cd
+                request.session['program_title'] = class_tb_comp.get_class_type_cd_name()
+                request.session['class_center_name'] = class_tb_comp.get_center_name()
 
         return super(IndexView, self).get(request, **kwargs)
 
