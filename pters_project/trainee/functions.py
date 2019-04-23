@@ -661,8 +661,7 @@ def func_get_trainee_next_schedule_by_class_id(context, class_id, user_id):
                                                    lecture_tb__member_id=user_id,
                                                    en_dis_type=ON_SCHEDULE_TYPE,
                                                    start_dt__gte=now,
-                                                   use=USE).exclude(Q(state_cd='PE')
-                                                                    |Q(state_cd='PC')).order_by('start_dt')
+                                                   use=USE).order_by('start_dt')
 
     if len(next_schedule_data) > 0:
         next_schedule_info = next_schedule_data[0]
@@ -1163,10 +1162,10 @@ def func_check_select_time_reserve_setting(class_id, trainer_id, start_date, end
     # 강사 업무 시간 확인
     if error is None:
         if add_del_start_time < work_avail_start_time:
-            error = '강사 업무시간이 아닙니다.'
+            error = '예약 가능 시간이 아닙니다.'
 
         if add_del_end_time > work_avail_end_time:
-            error = '강사 업무시간이 아닙니다.'
+            error = '예약 가능 시간이 아닙니다.'
 
     # 근접 예약 시간 확인
     if error is None:
