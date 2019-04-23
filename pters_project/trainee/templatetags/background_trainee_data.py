@@ -238,7 +238,6 @@ def get_function_auth_type_cd(request):
 @register.filter
 def timeuntil_formatting(input_date_time, setting_time):
     today = timezone.now()
-    # print(str(input_date_time))
     error = None
     try:
         time_compare = datetime.datetime.strptime(str(input_date_time), '%Y-%m-%d %H:%M')
@@ -265,7 +264,8 @@ def timeuntil_formatting(input_date_time, setting_time):
 
             if reserve_prohibition_minute > 0:
                 error_comment += str(reserve_prohibition_minute) + '분'
-    error_comment = ''
+    else:
+        error_comment = ''
     return error_comment
 
 

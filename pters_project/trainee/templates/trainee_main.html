@@ -68,7 +68,7 @@
                             {% else %}
                                 <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">
                                     취소 가능 시간까지
-                                    <span class="obj_font_size_11_weight_500 obj_font_color_coral"> {{ next_schedule_info.start_dt | timeuntil_formatting:request.session.setting_member_reserve_cancel_time }} </span>
+                                    <span class="obj_font_size_11_weight_500 obj_font_color_coral"> {{ next_schedule_info.start_dt | date:'Y-m-d H:i' | timeuntil_formatting:request.session.setting_member_reserve_cancel_time }} </span>
                                     남았습니다.
                                 </div>
                                 <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_coral_trans"
