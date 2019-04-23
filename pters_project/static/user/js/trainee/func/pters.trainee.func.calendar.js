@@ -178,7 +178,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         let timeline_calendar_upper_tool = `<div class="pters_timeline_cal_upper_tool_box pters_timeline_cal_upper_tool_box_${calendar_name} obj_font_size_13_weight_500 obj_font_color_light_grey">
                                                 <div class="pters_timeline_cal_type_text" data-timeline="${SCHEDULE_ALL}">전체 일정</div>
                                                 <div class="pters_timeline_cal_type_text selected" data-timeline="${SCHEDULE_NOT_FINISH}">예정 일정</div>
-                                                <div class="pters_timeline_cal_type_text" data-timeline="${SCHEDULE_FINISH_ANYWAY}">종료 일정</div>
+                                                <div class="pters_timeline_cal_type_text" data-timeline="${SCHEDULE_FINISH_ANYWAY}">지난 일정</div>
                                                 <div></div>
                                             </div>`;
 
@@ -375,11 +375,17 @@ function pters_month_calendar(calendar_name, calendar_options){
                 let schedule_finish_tag;
 
                 if(type == SCHEDULE_FINISH_ANYWAY){
-                    if(schedule_finish != SCHEDULE_FINISH && schedule_finish != SCHEDULE_ABSENCE){
+                    // if(schedule_finish != SCHEDULE_FINISH && schedule_finish != SCHEDULE_ABSENCE){
+                    //     continue;
+                    // }
+                    if(trainee_compare_date(date, reference_date) != -1){
                         continue;
                     }
                 }else if(type == SCHEDULE_NOT_FINISH){
-                    if(schedule_finish != SCHEDULE_NOT_FINISH){
+                    // if(schedule_finish != SCHEDULE_NOT_FINISH){
+                    //     continue;
+                    // }
+                    if(trainee_compare_date(date, reference_date) == -1){
                         continue;
                     }
                 }
