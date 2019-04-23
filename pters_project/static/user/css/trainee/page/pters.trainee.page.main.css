@@ -65,6 +65,11 @@
 		margin-left: 5px;
 	}
 
+	.trainee_main .wrapper_box_next_plan .obj_box_full{
+		margin-left: 5px;
+		margin-right: 5px;
+		border: 1px solid #f2f2f2;
+	}
 	.trainee_main .wrapper_current_ticket .obj_box_full{
 		margin-top: 10px;
 		margin-left: 5px;
@@ -78,7 +83,6 @@
 		text-align: left;
 	}
 	.trainee_main .wrapper_my_ticket_type > img{
-		filter: invert(90);
 		width: 20px;
 		vertical-align: middle;
 	}

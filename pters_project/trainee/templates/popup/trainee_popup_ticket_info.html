@@ -22,9 +22,9 @@
             </div>
         </div>
         <div class="">
-            <div id="wrapper_my_ticket_detail" class="obj_box_full">
+            <div id="wrapper_my_ticket_detail">
              {% for package_group_info in package_info.package_group_data %}
-                <div class="wrapper_my_ticket_detail_date">
+                <div class="wrapper_my_ticket_detail_date obj_box_full">
                     <div class="wrapper_my_ticket_detail_date_title obj_font_size_11_weight_normal obj_font_color_light_grey">
                         <div class="obj_table_raw">수업 종류</div>
                         <div class="obj_table_raw">수업명</div>
@@ -37,7 +37,7 @@
             {% endfor %}
                 {% for lecture_info in lecture_data %}
                 {% if forloop.first %}
-                    <div class="obj_table_raw wrapper_my_ticket_detail_teacher">
+                    <div class="obj_table_raw wrapper_my_ticket_detail_teacher obj_box_full">
                         <div class="obj_table_cell_x3" style="width:30px;">
                             <div class="obj_box_photo"></div>
                         </div>

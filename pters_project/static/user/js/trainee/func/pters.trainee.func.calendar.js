@@ -176,7 +176,9 @@ function pters_month_calendar(calendar_name, calendar_options){
         //                                         <div></div>
         //                                     </div>`;
         let timeline_calendar_upper_tool = `<div class="pters_timeline_cal_upper_tool_box pters_timeline_cal_upper_tool_box_${calendar_name} obj_font_size_13_weight_500 obj_font_color_light_grey">
-                                                <div class="pters_timeline_cal_type_text selected">전체 일정</div>
+                                                <div class="pters_timeline_cal_type_text" data-timeline="${SCHEDULE_ALL}">전체 일정</div>
+                                                <div class="pters_timeline_cal_type_text selected" data-timeline="${SCHEDULE_NOT_FINISH}">예정 일정</div>
+                                                <div class="pters_timeline_cal_type_text" data-timeline="${SCHEDULE_FINISH_ANYWAY}">종료 일정</div>
                                                 <div></div>
                                             </div>`;
 
@@ -207,7 +209,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
                 func_set_avail_date(jsondata.avail_date_data);
                 func_draw_schedule_data(jsondata);
-                func_draw_schedule_timeline_data(jsondata);
+                func_draw_schedule_timeline_data(jsondata, SCHEDULE_NOT_FINISH);
                 func_set_timeline_to_today_or_near();
             });
         });
@@ -217,7 +219,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
                 func_set_avail_date(jsondata.avail_date_data);
                 func_draw_schedule_data(jsondata);
-                func_draw_schedule_timeline_data(jsondata);
+                func_draw_schedule_timeline_data(jsondata, SCHEDULE_NOT_FINISH);
                 func_set_timeline_to_today_or_near();
             });
         });
@@ -345,7 +347,8 @@ function pters_month_calendar(calendar_name, calendar_options){
     }
     //일정 표기 관련
 
-    function func_draw_schedule_timeline_data(jsondata){
+    function func_draw_schedule_timeline_data(jsondata, type){
+        // type = SCHEDULE_ALL, SCHEDULE_FINISH_ANYWAY, SCHEDULE_NOT_FINISH
 
         let data_dic_form = func_make_schedule_data_for_timeline(jsondata);
         let $target_html = $('.wrapper_cal_timeline');
@@ -370,17 +373,28 @@ function pters_month_calendar(calendar_name, calendar_options){
                 let schedule_repeat_id = split[5];
                 let schedule_type = '개별일정';
                 let schedule_finish_tag;
+
+                if(type == SCHEDULE_FINISH_ANYWAY){
+                    if(schedule_finish != SCHEDULE_FINISH && schedule_finish != SCHEDULE_ABSENCE){
+                        continue;
+                    }
+                }else if(type == SCHEDULE_NOT_FINISH){
+                    if(schedule_finish != SCHEDULE_NOT_FINISH){
+                        continue;
+                    }
+                }
+
                 if(schedule_finish==SCHEDULE_NOT_FINISH){
                     schedule_finish = '예약 완료';
-                    schedule_finish_tag = "obj_font_bg_coral_trans";
+                    schedule_finish_tag = "obj_font_bg_white_coral";
                 }
                 else if(schedule_finish==SCHEDULE_FINISH){
-                    schedule_finish = '참석 완료';
-                    schedule_finish_tag = "obj_font_bg_white_coral";
+                    schedule_finish = '출석';
+                    schedule_finish_tag = "obj_font_bg_white_grey";
                 }
                 else if(schedule_finish==SCHEDULE_ABSENCE){
                     schedule_finish = '결석';
-                    schedule_finish_tag = "obj_font_bg_white_grey";
+                    schedule_finish_tag = "obj_font_bg_grey_trans";
                 }
                 if(schedule_repeat_id != 'None'){
                     schedule_type = '반복일정';
@@ -395,6 +409,9 @@ function pters_month_calendar(calendar_name, calendar_options){
                                     </div>
                                     `
                                 );
+            }
+            if(temp_array.length == 0){
+                continue;
             }
             html_to_join_array.push(
                                         `
@@ -540,14 +557,14 @@ function pters_month_calendar(calendar_name, calendar_options){
 
     function func_set_expand_function(){
         let calendar_month_height = $(`.${calendar_name}_wrapper_month_cal`).height();
-        $(document).on('click', `.${calendar_name}_expand_button, .pters_timeline_cal_upper_tool_box_${calendar_name}`, function(){
+        $(document).on('click', `.${calendar_name}_expand_button`, function(){
             let data = $(`.${calendar_name}_expand_button`).attr('data-open');
             // let original_height;
             // let expand_height;
             func_time_line_wide_view(data, calendar_month_height);
         });
     }
-
+    
     function func_time_line_wide_view(type, calendar_month_height){
         let $calendar_name_expand_button = $(`.${calendar_name}_expand_button`);
         let $calendar_name_expand_button_img = $(`.${calendar_name}_expand_button`).find('img');
@@ -583,6 +600,24 @@ function pters_month_calendar(calendar_name, calendar_options){
         }
     }
 
+    function func_add_event_set_timline_type_select(){
+        $(document).on('click', `.pters_timeline_cal_upper_tool_box_${calendar_name} > div.pters_timeline_cal_type_text`, function(){
+            $(this).siblings('div').removeClass('selected');
+            $(this).addClass('selected');
+
+            let type = $(this).attr('data-timeline');
+
+            func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
+                func_set_avail_date(jsondata.avail_date_data);
+                func_draw_schedule_data(jsondata);
+                func_draw_schedule_timeline_data(jsondata, type);
+                func_set_timeline_to_today_or_near();
+            });
+        });
+    }
+
+
+
     
 
 
@@ -604,6 +639,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_set_touch_move_to_month_calendar(calendar_options.target_html);
             func_set_prev_next_month_button(this);
             func_set_expand_function(this);
+            func_add_event_set_timline_type_select();
         },
         "get_design_options": function() {
             return design_options;
@@ -635,7 +671,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_get_ajax_schedule_data(input_reference_date, "callback", function(jsondata){
                 func_set_avail_date(jsondata.avail_date_data);
                 func_draw_schedule_data(jsondata);
-                func_draw_schedule_timeline_data(jsondata);
+                func_draw_schedule_timeline_data(jsondata, SCHEDULE_NOT_FINISH);
                 func_set_timeline_to_today_or_near();
             });
         },

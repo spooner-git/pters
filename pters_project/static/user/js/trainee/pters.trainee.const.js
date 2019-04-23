@@ -54,6 +54,8 @@ const EDGE = 'edge';
 const SCHEDULE_NOT_FINISH = 0;
 const SCHEDULE_FINISH = 1;
 const SCHEDULE_ABSENCE = 2;
+const SCHEDULE_ALL = 3;
+const SCHEDULE_FINISH_ANYWAY = 4;
 
 /* px */
 const MAX_WIDTH = 800;

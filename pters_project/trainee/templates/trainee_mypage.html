@@ -26,11 +26,11 @@
                 <div class="obj_box_card" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_ticket_info', 90,
                                                                                 POPUP_FROM_BOTTOM, {'package_id':'{{ ing_package_info.lecture_tb.package_tb.package_id }}',
                                                                                                     'lecture_id':'{{ing_package_info.lecture_tb_id}}' } )">
-                    <div class="wrapper_my_ticket_status obj_font_size_12_weight_500 obj_font_color_white">
+                    <div class="wrapper_my_ticket_status obj_font_size_12_weight_500">
                         {{ ing_package_info.status }}
                     </div>
                     <div class="wrapper_my_ticket_title">
-                        <div class="obj_font_size_15_weight_bold obj_font_color_white">{{ ing_package_info.lecture_tb.package_tb.name }}</div>
+                        <div class="obj_font_size_15_weight_bold">{{ ing_package_info.lecture_tb.package_tb.name }}</div>
                     </div>
                 </div>
                 {% endfor %}

@@ -78,7 +78,7 @@
                             {% endif %}
                         </div>
                     {% else %}
-                        <div style="text-align:center;">다음 일정이 없습니다.</div>
+                        <div class="obj_font_color_dark_grey obj_font_size_13_weight_normal" style="text-align:center;padding:20px;background-color:#fafafa;border:1px solid #ededed;margin-top:20px;margin-bottom:10px;border-radius: 5px;box-sizing: border-box;">다음 일정이 없습니다.</div>
 {#                        <div class="obj_box_full_grey">#}
 {#                            <div class="wrapper_tag">#}
 {#                                <div class="obj_tag obj_font_bg_white_black">예약완료</div>#}
@@ -125,7 +125,7 @@
                         {% for ing_group_info in ing_lecture_info.package_group_data %}
                         <div class="obj_box_card obj_table_raw" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_group_ticket_info', 90, POPUP_FROM_BOTTOM, {'lecture_id':'{{ing_lecture_info.lecture_tb_id}}', 'group_id':'{{ ing_group_info.group_tb_id }}' } )">
                             <div class="wrapper_my_ticket_type obj_table_cell_x3">
-{#                                <div class="obj_font_size_12_weight_bold obj_font_color_white">{{ ing_lecture_info.lecture_tb.package_tb.package_type_cd_nm }}</div>#}
+{#                                <div class="obj_font_size_12_weight_bold">{{ ing_lecture_info.lecture_tb.package_tb.package_type_cd_nm }}</div>#}
                                 {% if ing_group_info.group_tb.group_type_cd == "ONE_TO_ONE" %}
                                     <img src="{% static_url "common/icon/person_black.png" %}">
                                 {% else %}
@@ -133,12 +133,12 @@
                                 {% endif %}
                             </div>
                             <div class="wrapper_my_ticket_title obj_table_cell_x3">
-                                <div class="obj_font_size_15_weight_bold obj_font_color_white">{{ ing_group_info.group_tb.name }}</div>
+                                <div class="obj_font_size_15_weight_bold">{{ ing_group_info.group_tb.name }}</div>
                             </div>
 
                             <div class="wrapper_my_ticket_detail obj_table_cell_x3">
 {#                                {% if forloop.last%}#}
-{#                                <p class="obj_font_size_12_weight_bold obj_font_color_white">#}
+{#                                <p class="obj_font_size_12_weight_bold">#}
 {#                                        ~ {{ ing_lecture_info.lecture_tb.end_date | date:"Y.m.d (l)"|cut:"요일"  }}<br>#}
 {#                                        {{ ing_lecture_info.lecture_tb.lecture_rem_count }}<span class="obj_font_size_12_weight_normal">/{{ ing_lecture_info.lecture_tb.lecture_reg_count }}번</span>#}
 {#                                </p>#}

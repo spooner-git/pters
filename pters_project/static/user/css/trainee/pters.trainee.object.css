@@ -27,7 +27,7 @@
         height: auto;
         background-color: #ffffff;
         border-radius: 2px;
-        border: 1px solid #ededed;
+        border: 1px solid #f2f2f2;
     }
     .obj_box_full_grey{
         height: auto;
@@ -47,9 +47,9 @@
 
     .obj_box_card{
         height: auto;
-        background-color: #ff3b44;
+        background-color: #ffffff;
         border-radius: 5px;
-        box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.25);
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
         margin-left: 20px;
         margin-right: 20px;
         padding: 20px;
@@ -276,7 +276,7 @@
     }
     .obj_font_bg_white_dark_grey{
         color: #ffffff;
-        background-color: #464646;0
+        background-color: #464646;
     }
     .obj_font_bg_trans_pink{
         color: #fe4e65;
@@ -291,6 +291,11 @@
     .obj_font_bg_coral_white{
         color: #ff3b44;
         background-color: #ffffff;
+    }
+    .obj_font_bg_grey_trans{
+        color: #656565;
+        background-color: #ffffff;
+        border: 1px solid #656565;
     }
     .obj_font_bg_coral_trans{
         color: #ff3b44;
