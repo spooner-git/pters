@@ -74,7 +74,7 @@
 		cursor: pointer;
 	}
 	.pters_calendar .pters_timeline_cal_upper_tool_box .selected{
-		border-bottom: 2px solid #ff4b4b;
+		border-bottom: 2px solid #ff3b44;
 		color: #000000;
 		font-weight: bold;
 	}
@@ -177,13 +177,13 @@
 		width: 4px;
 		height: 4px;
 		/*display: inline-block;
-		border: 1px solid #ff4b4b;
+		border: 1px solid #ff3b44;
 		vertical-align: middle;*/
 		left: 50%;
 		top: 50%;
 		transform: translate(-50%, -50%);
 		border-radius: 50%;
-		background-color: #ff4b4b;
+		background-color: #ff3b44;
 		
 	}
 	/*.schedule_marking_group{
