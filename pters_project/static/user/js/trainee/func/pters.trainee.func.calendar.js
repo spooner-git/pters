@@ -378,14 +378,14 @@ function pters_month_calendar(calendar_name, calendar_options){
                     // if(schedule_finish != SCHEDULE_FINISH && schedule_finish != SCHEDULE_ABSENCE){
                     //     continue;
                     // }
-                    if(trainee_compare_date(date, reference_date) != -1){
+                    if(trainee_compare_date(date, today_yyyy_m_d) != -1){
                         continue;
                     }
                 }else if(type == SCHEDULE_NOT_FINISH){
                     // if(schedule_finish != SCHEDULE_NOT_FINISH){
                     //     continue;
                     // }
-                    if(trainee_compare_date(date, reference_date) == -1){
+                    if(trainee_compare_date(date, today_yyyy_m_d) == -1){
                         continue;
                     }
                 }
