@@ -153,7 +153,7 @@ function func_get_popup_ajax(popup_name, data){
             async: false,
 
             beforeSend: function (xhr, settings) {
-                func_ajax_before_send(xhr, settings, popup_name);
+                func_ajax_before_send(xhr, settings, popup_name, data);
             },
 
             success: function (data) {
@@ -161,7 +161,7 @@ function func_get_popup_ajax(popup_name, data){
             },
 
             complete: function () {
-                func_ajax_after_send(popup_name);
+                func_ajax_after_send(popup_name, data);
             },
 
             error: function () {

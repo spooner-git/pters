@@ -22,7 +22,7 @@ function func_schedule(data, call_method, type){
             type:'POST',
 
             beforeSend:function(xhr, settings){
-                func_ajax_before_send(xhr,settings, "func_schedule");
+                func_ajax_before_send(xhr,settings, "func_schedule", data);
             },
             success:function(result_data){
                 let jsondata = JSON.parse(result_data);
@@ -46,8 +46,7 @@ function func_schedule(data, call_method, type){
                 }
             },
             complete:function(){
-                console.log('test2');
-                func_ajax_after_send("func_schedule");
+                func_ajax_after_send("func_schedule", data);
             },
 
             error:function(){

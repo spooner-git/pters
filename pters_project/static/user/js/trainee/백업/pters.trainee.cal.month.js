@@ -22,37 +22,37 @@ $(document).ready(function(){
 
     //setInterval(function(){ajaxCheckSchedule()}, 2000)// 자동 ajax 새로고침(일정가져오기)
 
-    function ajaxCheckSchedule(){
-        $.ajax({
-            url: '/schedule/check_schedule_update/',
-            dataType : 'html',
-
-            beforeSend:function(xhr, settings){
-                func_ajax_before_send(xhr,settings, "ajaxCheckSchedule");
-            },
-
-            success:function(data){
-                var jsondata = JSON.parse(data);
-                if(jsondata.messageArray.length>0){
-                    $('#errorMessageBar').show();
-                    $('#errorMessageText').text(jsondata.messageArray);
-                }else{
-                    var update_data_changed = jsondata.data_changed;
-                    if(update_data_changed[0]=="1"){
-                        ajaxClassTime("this");
-                    }
-                }
-            },
-
-            complete:function(){
-                func_ajax_after_send("ajaxCheckSchedule");
-            },
-
-            error:function(){
-                console.log('server error');
-            }
-        });
-    }
+    // function ajaxCheckSchedule(){
+    //     $.ajax({
+    //         url: '/schedule/check_schedule_update/',
+    //         dataType : 'html',
+    //
+    //         beforeSend:function(xhr, settings){
+    //             func_ajax_before_send(xhr,settings, "ajaxCheckSchedule");
+    //         },
+    //
+    //         success:function(data){
+    //             var jsondata = JSON.parse(data);
+    //             if(jsondata.messageArray.length>0){
+    //                 $('#errorMessageBar').show();
+    //                 $('#errorMessageText').text(jsondata.messageArray);
+    //             }else{
+    //                 var update_data_changed = jsondata.data_changed;
+    //                 if(update_data_changed[0]=="1"){
+    //                     ajaxClassTime("this");
+    //                 }
+    //             }
+    //         },
+    //
+    //         complete:function(){
+    //             func_ajax_after_send("ajaxCheckSchedule");
+    //         },
+    //
+    //         error:function(){
+    //             console.log('server error');
+    //         }
+    //     });
+    // }
 
 
     //플로팅 버튼

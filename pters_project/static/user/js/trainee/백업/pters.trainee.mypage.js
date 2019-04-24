@@ -253,14 +253,15 @@ $(document).ready(function(){
     }
 
     function get_trainee_reg_history(){
+        let ajax_data = {"class_id":class_id[0], "auth_cd":'VIEW'};
         $.ajax({
             url: '/trainee/get_trainee_lecture_list/',
-            data:{"class_id":class_id[0], "auth_cd":'VIEW'},
+            data: ajax_data,
             dataType : 'html',
             type:'GET',
 
             beforeSend:function(xhr, settings){
-                func_ajax_before_send(xhr,settings, "get_trainee_reg_history");
+                func_ajax_before_send(xhr,settings, "get_trainee_reg_history", ajax_data);
             },
 
             success:function(data){
@@ -279,7 +280,7 @@ $(document).ready(function(){
             },
 
             complete:function(){
-                func_ajax_after_send("get_trainee_reg_history");
+                func_ajax_after_send("get_trainee_reg_history", ajax_data);
             },
 
             error:function(){
