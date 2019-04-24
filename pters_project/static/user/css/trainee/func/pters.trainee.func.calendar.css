@@ -184,7 +184,19 @@
 		transform: translate(-50%, -50%);
 		border-radius: 50%;
 		background-color: #ff3b44;
-		
+	}
+	.schedule_marking_grey{
+		position: absolute;
+		width: 4px;
+		height: 4px;
+		/*display: inline-block;
+		border: 1px solid #ff3b44;
+		vertical-align: middle;*/
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		border-radius: 50%;
+		background-color: #b3b3b3;
 	}
 	/*.schedule_marking_group{
 		display: inline-block;

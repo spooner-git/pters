@@ -338,11 +338,21 @@ function pters_month_calendar(calendar_name, calendar_options){
 
         for(let date in schedule_number_dic["general"]){
             $(`#calendar_cell_${date}`).attr('onclick', `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, 'popup_calendar_plan_view', 90, ${POPUP_FROM_BOTTOM}, {'select_date':'${date}'})`);
-            $(`#calendar_plan_cell_${date}`).html(`<div class="schedule_marking"></div>`);
+            let compare_date = trainee_compare_date(today_yyyy_m_d, date);
+            if(compare_date > 0){//오늘보다 과거
+                $(`#calendar_plan_cell_${date}`).html(`<div class="schedule_marking_grey"></div>`);
+            }else{ //오늘을 포함하는 미래
+                $(`#calendar_plan_cell_${date}`).html(`<div class="schedule_marking"></div>`);
+            }
         }
         for(let date_group in schedule_number_dic["group"]){
             // $(`#calendar_plan_cell_${date_group}`).html(`<div class="schedule_marking_group"></div>`);
-            $(`#calendar_group_plan_cell_${date_group}`).css('background-color', 'rgba(255, 59, 68, 0.38)');
+            let compare_date = trainee_compare_date(today_yyyy_m_d, date_group);
+            if(compare_date > 0){//오늘보다 과거
+
+            }else{ //오늘을 포함하는 미래
+                $(`#calendar_group_plan_cell_${date_group}`).css('background-color', 'rgba(255, 59, 68, 0.38)');
+            }
         }
     }
     //일정 표기 관련
