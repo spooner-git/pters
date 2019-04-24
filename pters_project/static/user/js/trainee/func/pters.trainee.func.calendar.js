@@ -260,15 +260,16 @@ function pters_month_calendar(calendar_name, calendar_options){
 
     //일정 표기 관련
     function func_get_ajax_schedule_data(input_reference_date, use, callback){
+        let ajax_url = '/trainee/get_trainee_schedule/';
         let ajax_data = {"date": input_reference_date, "day":31};
         $.ajax({
-            url: '/trainee/get_trainee_schedule/',
+            url: ajax_url,
             type : 'GET',
             data : ajax_data,
             dataType : 'html',
 
             beforeSend:function(xhr, settings){
-                func_ajax_before_send(xhr, settings, "func_get_ajax_schedule_data", ajax_data);
+                func_ajax_before_send(xhr, settings, ajax_url, ajax_data);
             },
 
             success:function(data){
@@ -290,7 +291,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             },
 
             complete:function(){
-                func_ajax_after_send("func_get_ajax_schedule_data", ajax_data);
+                func_ajax_after_send(ajax_url, ajax_data);
             },
 
             error:function(){

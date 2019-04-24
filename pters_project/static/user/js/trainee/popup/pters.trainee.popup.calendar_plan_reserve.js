@@ -88,15 +88,16 @@ $(document).on('click', '.func_tab_element', function(){
 
 
 function func_get_ajax_schedule_data_temp(input_reference_date, callback){
+    let ajax_url = '/trainee/get_trainee_schedule/';
     let ajax_data = {"date": input_reference_date, "day":1};
     $.ajax({
-        url: '/trainee/get_trainee_schedule/',
+        url: ajax_url,
         type : 'GET',
         data : ajax_data,
         dataType : 'html',
 
         beforeSend:function(xhr, settings){
-            func_ajax_before_send(xhr, settings, "func_get_ajax_schedule_data_temp", ajax_data);
+            func_ajax_before_send(xhr, settings, ajax_url, ajax_data);
         },
 
 
@@ -116,7 +117,7 @@ function func_get_ajax_schedule_data_temp(input_reference_date, callback){
         },
 
         complete:function(){
-            func_ajax_after_send("func_get_ajax_schedule_data_temp", ajax_data);
+            func_ajax_after_send(ajax_url, ajax_data);
         },
 
         error:function(){

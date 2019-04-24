@@ -15,14 +15,15 @@
 
 function func_schedule(data, call_method, type){
     if(call_method == CALL_AJAX){
+        let ajax_url = `/trainee/${type}_trainee_schedule/`;
         $.ajax({
-            url: `/trainee/${type}_trainee_schedule/`,
+            url: ajax_url,
             data: data,
             dataType : 'html',
             type:'POST',
 
             beforeSend:function(xhr, settings){
-                func_ajax_before_send(xhr,settings, "func_schedule", data);
+                func_ajax_before_send(xhr,settings, ajax_url, data);
             },
             success:function(result_data){
                 let jsondata = JSON.parse(result_data);
@@ -46,7 +47,7 @@ function func_schedule(data, call_method, type){
                 }
             },
             complete:function(){
-                func_ajax_after_send("func_schedule", data);
+                func_ajax_after_send(ajax_url, data);
             },
 
             error:function(){

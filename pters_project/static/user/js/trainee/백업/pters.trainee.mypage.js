@@ -179,13 +179,14 @@ $(document).ready(function(){
         get_trainee_reg_history();
     }
     function get_trainee_lecture_history(){
+        let ajax_url = '/trainee/get_trainee_schedule_history/';
         $.ajax({
-            url: '/trainee/get_trainee_schedule_history/',
+            url: ajax_url,
             dataType : 'html',
             type:'GET',
 
             beforeSend:function(xhr, settings){
-                func_ajax_before_send(xhr, settings, "get_trainee_schedule_history");
+                func_ajax_before_send(xhr, settings, ajax_url);
             },
 
             success:function(data){
@@ -199,7 +200,7 @@ $(document).ready(function(){
             },
 
             complete:function(){
-                func_ajax_after_send("get_trainee_schedule_history");
+                func_ajax_after_send(ajax_url);
             },
 
             error:function(){
@@ -253,15 +254,16 @@ $(document).ready(function(){
     }
 
     function get_trainee_reg_history(){
+        let ajax_url = '/trainee/get_trainee_lecture_list/';
         let ajax_data = {"class_id":class_id[0], "auth_cd":'VIEW'};
         $.ajax({
-            url: '/trainee/get_trainee_lecture_list/',
+            url: ajax_url,
             data: ajax_data,
             dataType : 'html',
             type:'GET',
 
             beforeSend:function(xhr, settings){
-                func_ajax_before_send(xhr,settings, "get_trainee_reg_history", ajax_data);
+                func_ajax_before_send(xhr,settings, ajax_url, ajax_data);
             },
 
             success:function(data){
@@ -280,7 +282,7 @@ $(document).ready(function(){
             },
 
             complete:function(){
-                func_ajax_after_send("get_trainee_reg_history", ajax_data);
+                func_ajax_after_send(ajax_url, ajax_data);
             },
 
             error:function(){
