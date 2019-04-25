@@ -338,6 +338,7 @@ def add_trainee_schedule_logic(request):
     class_info = None
     start_date = None
     end_date = None
+    select_date = None
     push_class_id = []
     push_title = []
     push_message = []

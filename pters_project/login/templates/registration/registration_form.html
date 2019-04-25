@@ -973,7 +973,7 @@
         </div>
     </div>
 
-    <form action="../" id="add-member-id-form" method="post">
+    <form action="../" id="add-member-id-form" method="post" autocomplete="new-password">
         {% csrf_token %}
         <div style="display:none;">
             {{ form.as_p }}
