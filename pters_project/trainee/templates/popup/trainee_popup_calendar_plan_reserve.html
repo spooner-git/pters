@@ -92,7 +92,7 @@
     </div>
 {% endblock %}
 {% block popoup_base_wrapper_bottom_inside %}
-    <div class="obj_button_big obj_font_bg_white_coral" onclick="func_schedule($('#form_plan_add').serialize(), CALL_AJAX, ADD)">예약하기</div>
+    <div class="obj_button_big obj_font_bg_white_coral" onclick="cancel_enable_check_func();">예약하기</div>
 {% endblock %}
 
 {% block popup_base_js %}
@@ -107,5 +107,21 @@
             });
         });
 
+        function cancel_enable_check_func(){
+            //let input_data = ;
+            let reserve_cancel_time = '{{ request.session.setting_member_reserve_cancel_time }}';
+            let date = new Date();
+            let current_time = add_time(date.getHours()+':'+date.getMinutes(),'00:'+reserve_cancel_time);
+            current_time = current_time.split(':')[0]%24 + ':' + current_time.split(':')[1];
+            let select_time = $('#form_content_training_time').val();
+            if(!compare_time(current_time, select_time)){
+                func_schedule($('#form_plan_add').serialize(), CALL_AJAX, ADD);
+            }else{
+                layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
+                                                                               {'popup_title':'', 'popup_comment':'취소가 불가능한 시간입니다.<br/> 정말 등록하시겠습니까?',
+                                                                               'onclick_function':`func_schedule('${$('#form_plan_add').serialize()}', ${CALL_AJAX}, '${ADD}')`});
+
+            }
+        }
     </script>
 {% endblock %}

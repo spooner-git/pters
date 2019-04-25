@@ -45,7 +45,7 @@
                     {% endif %}
                 </div>
                 <div class="obj_table_raw wrapper_cancel_notice">
-                    {% if reserve_disable_time > schedule_info.start_dt %}
+                    {% if cancel_disable_time > schedule_info.start_dt %}
                         <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">
                             <span class="obj_font_size_11_weight_500 obj_font_color_coral">
                                 {% if schedule_info.state_cd == 'PE' %}
@@ -53,7 +53,7 @@
                                 {% elif schedule_info.state_cd == 'PC'%}
                                     결석한 수업입니다.
                                 {% else %}
-                                    이미 지난 수업입니다.
+                                    취소가 불가능한 시간입니다.
                                 {% endif %}
                             </span>
                         </div>

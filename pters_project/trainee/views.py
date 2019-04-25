@@ -171,10 +171,10 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
             if class_info is not None:
                 context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
-                reserve_prohibition_time = context['lt_res_cancel_time']
-                # 근접 예약 시간 확인
-                reserve_disable_time = timezone.now() + datetime.timedelta(minutes=reserve_prohibition_time)
-                context['reserve_disable_time'] = reserve_disable_time
+                cancel_prohibition_time = context['lt_res_cancel_time']
+                # 근접 취소 시간 확인
+                cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
+                context['cancel_disable_time'] = cancel_disable_time
 
         return context
 
@@ -1662,10 +1662,10 @@ class PopupCalendarPlanView(TemplateView):
 
             if class_info is not None:
                 context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
-                reserve_prohibition_time = context['lt_res_cancel_time']
+                cancel_prohibition_time = context['lt_res_cancel_time']
                 # 근접 예약 시간 확인
-                reserve_disable_time = timezone.now() + datetime.timedelta(minutes=reserve_prohibition_time)
-                context['reserve_disable_time'] = reserve_disable_time
+                cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
+                context['cancel_disable_time'] = cancel_disable_time
                 context['avail_end_date'] = datetime.datetime.strptime(str(context['avail_date_data'].pop()),
                                                                        '%Y-%m-%d')
         # if len(context['schedule_data']) == 0:
@@ -1722,7 +1722,6 @@ class PopupCalendarPlanReserveView(TemplateView):
                               'group_name': group_schedule_info.group_tb.name,
                               'group_lecture_avail_count': group_lecture_avail_count}
                 group_data.append(group_info)
-
         context['group_data'] = group_data
         # if trainer_id != '' and trainer_id is not None:
         #     context = func_get_trainer_setting_list(context, trainer_id, class_id)
@@ -1763,10 +1762,10 @@ class PopupCalendarPlanReserveCompleteView(TemplateView):
             schedule_info.group_type_name = group_type_name
 
             context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
-            reserve_prohibition_time = context['lt_res_cancel_time']
-            # 근접 예약 시간 확인
-            reserve_disable_time = timezone.now() + datetime.timedelta(minutes=reserve_prohibition_time)
-            context['reserve_disable_time'] = reserve_disable_time
+            cancel_prohibition_time = context['lt_res_cancel_time']
+            # 근접 취소 시간 확인
+            cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
+            context['cancel_disable_time'] = cancel_disable_time
 
         context['schedule_info'] = schedule_info
         return context
