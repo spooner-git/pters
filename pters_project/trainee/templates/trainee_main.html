@@ -82,7 +82,7 @@
                                     {% endif %}
 
                                 </div>
-                                {% if next_schedule_info.state_cd == 'PE' and next_schedule_info.state_cd == 'PC' %}
+                                {% if next_schedule_info.state_cd != 'PE' and next_schedule_info.state_cd != 'PC' %}
                                     <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_coral_trans"
                                          onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
                                                                                {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
