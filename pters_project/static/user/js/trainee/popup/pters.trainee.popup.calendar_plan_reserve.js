@@ -411,3 +411,4 @@ function func_group_time_dom_draw(target_html, selected_date, schedule_json, set
 
     $target_html.html(html_to_join_final.join(''));
 }
+
