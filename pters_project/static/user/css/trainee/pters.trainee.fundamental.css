@@ -4,7 +4,7 @@
 /*기본 html, body스타일*/
     html{
         font-family: 'Noto Sans KR', sans-serif !important;
-        background-color: #f7f5f6;
+       /* background-color: #f7f5f6;*/
     }
     body{
         padding-top: 50px;

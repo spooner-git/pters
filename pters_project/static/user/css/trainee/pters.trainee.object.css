@@ -9,6 +9,7 @@
         overflow: auto;
         -webkit-overflow-scrolling: touch;
         z-index: 0;
+        background-color: #f7f5f6;
         /*height: 100%;*/
     }
 
