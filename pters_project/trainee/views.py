@@ -1734,8 +1734,15 @@ class PopupCalendarPlanReserveCompleteView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanReserveCompleteView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
         schedule_id = self.request.GET.get('schedule_id')
         schedule_info = None
+
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            class_info = None
+
         if schedule_id is not None and schedule_id != '':
             try:
                 schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id, use=USE)
@@ -1754,6 +1761,12 @@ class PopupCalendarPlanReserveCompleteView(TemplateView):
                 group_name = '1:1 레슨'
             schedule_info.group_name = group_name
             schedule_info.group_type_name = group_type_name
+
+            context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
+            reserve_prohibition_time = context['lt_res_cancel_time']
+            # 근접 예약 시간 확인
+            reserve_disable_time = timezone.now() + datetime.timedelta(minutes=reserve_prohibition_time)
+            context['reserve_disable_time'] = reserve_disable_time
 
         context['schedule_info'] = schedule_info
         return context
