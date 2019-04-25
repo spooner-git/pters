@@ -67,14 +67,27 @@
                                 </div>
                             {% else %}
                                 <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">
-                                    취소 가능 시간까지
-                                    <span class="obj_font_size_11_weight_500 obj_font_color_coral"> {{ next_schedule_info.start_dt | date:'Y-m-d H:i' | timeuntil_formatting:request.session.setting_member_reserve_cancel_time }} </span>
-                                    남았습니다.
+                                    {% if next_schedule_info.state_cd == 'PE' %}
+                                        <span class="obj_font_size_11_weight_500 obj_font_color_coral">
+                                            출석 완료된 수업입니다.
+                                        </span>
+                                    {% elif next_schedule_info.state_cd == 'PC'%}
+                                        <span class="obj_font_size_11_weight_500 obj_font_color_coral">
+                                            결석 완료된 수업입니다.
+                                        </span>
+                                    {% else %}
+                                        취소 가능 시간까지
+                                        <span class="obj_font_size_11_weight_500 obj_font_color_coral"> {{ next_schedule_info.start_dt | date:'Y-m-d H:i' | timeuntil_formatting:request.session.setting_member_reserve_cancel_time }} </span>
+                                        남았습니다.
+                                    {% endif %}
+
                                 </div>
-                                <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_coral_trans"
-                                     onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-                                                                           {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
-                                                                           'onclick_function':`func_schedule('form_plan_delete', ${CALL_PAGE_MOVE}, '${DELETE}')`})">취소하기</div>
+                                {% if next_schedule_info.state_cd == 'PE' and next_schedule_info.state_cd == 'PC' %}
+                                    <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_coral_trans"
+                                         onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
+                                                                               {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
+                                                                               'onclick_function':`func_schedule('form_plan_delete', ${CALL_PAGE_MOVE}, '${DELETE}')`})">취소하기</div>
+                                {% endif %}
                             {% endif %}
                         </div>
                     {% else %}
