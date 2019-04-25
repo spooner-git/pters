@@ -118,7 +118,7 @@
                 func_schedule($('#form_plan_add').serialize(), CALL_AJAX, ADD);
             }else{
                 layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-                                                                               {'popup_title':'', 'popup_comment':'취소가 불가능한 시간입니다.<br/> 정말 등록하시겠습니까?',
+                                                                               {'popup_title':'', 'popup_comment':'예약 취소가 불가능한 시간입니다.<br/> 정말 등록하시겠습니까?',
                                                                                'onclick_function':`func_schedule('${$('#form_plan_add').serialize()}', ${CALL_AJAX}, '${ADD}')`});
 
             }
