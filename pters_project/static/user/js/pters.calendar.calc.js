@@ -103,9 +103,9 @@ function diff_date(startdate, enddate){
 	var diff = 0;
 	while(datesum != enddate_){
 		diff++;
-		datesum = add_date(startdate, diff)
+		datesum = add_date(startdate, diff);
 	}
-	return diff
+	return diff;
 }
 
 //달 더하기 계산 : 2018-7-5에서 7개월 후는 언제?

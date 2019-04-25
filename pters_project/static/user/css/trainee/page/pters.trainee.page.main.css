@@ -1,0 +1,113 @@
+/*(현재 페이지 한해) 현재 페이지에서만 사용하는 커스텀 css*/
+	.trainee_main .obj_font_size_18_weight_bold{
+		height: 30px;
+		line-height: 30px;
+	}
+	.trainee_main .obj_font_size_15_weight_bold{
+		height: 28px;
+		line-height: 28px;
+	}
+	.trainee_main .obj_font_size_13_weight_500{
+		height: 30px;
+		line-height: 30px;
+	}
+	.trainee_main .obj_font_size_12_weight_bold{
+		height: 20px;
+		line-height: 20px;
+	}
+	.trainee_main .obj_font_size_12_weight_500{
+		height: 20px;
+		line-height: 20px;
+	}
+	.trainee_main .obj_font_size_11_weight_bold{
+		height: 20px;
+		line-height: 20px;
+	}
+	.trainee_main .obj_font_size_11_weight_normal{
+		height: 20px;
+		line-height: 20px;
+	}
+
+/* box */
+	.trainee_main .obj_box_card{
+		/*margin: 0px;*/
+		margin: 10px 0px 0px 0px;
+		padding: 10px 20px 15px;
+	}
+
+/* wrapper */
+	.trainee_main .wrapper_title{
+		margin-top: 30px;
+		margin-bottom: 20px;
+		padding: 0 20px;
+	}
+	.trainee_main .wrapper_title .obj_font_size_12_weight_normal{
+		height: 25px;
+		line-height: 25px;
+	}
+	.trainee_main .wrapper_program_select{
+		width : 20%;
+		text-align : right;
+	}
+	.trainee_main .wrapper_program_select select{
+		-webkit-appearance: none;
+		-webkit-text-fill-color: #ff3b44;
+		direction: rtl;
+		text-align-last:right;
+		border: 0;
+		border-radius: 0;
+		background-color: transparent;
+	}
+	.trainee_main .wrapper_program_select option{
+		direction: ltr;
+	}
+	.trainee_main .wrapper_sub_title{
+		margin-left: 5px;
+	}
+
+	.trainee_main .wrapper_box_next_plan .obj_box_full{
+		margin-left: 5px;
+		margin-right: 5px;
+		border: 1px solid #f2f2f2;
+	}
+	.trainee_main .wrapper_current_ticket .obj_box_full{
+		margin-top: 10px;
+		margin-left: 5px;
+		margin-right: 5px;
+		padding: 15px 10px;
+	}
+
+	.trainee_main .wrapper_my_ticket_type{
+		width: 25px;
+		padding-left: 20px;
+		text-align: left;
+	}
+	.trainee_main .wrapper_my_ticket_type > img{
+		width: 20px;
+		vertical-align: middle;
+	}
+	.trainee_main .wrapper_my_ticket_title{
+		width: auto;
+		margin-bottom: 4px;
+		text-align: left;
+	}
+	.trainee_main .wrapper_my_ticket_detail{
+		text-align: right;
+		height: 18px;
+		line-height: 18px;
+		vertical-align: top;
+		padding-right: 20px;
+	}
+	.trainee_main .wrapper_my_ticket_detail p.obj_font_size_12_weight_bold{
+		margin: 0;
+	}
+
+	
+
+	.trainee_main .wrapper_current_ticket .obj_table_raw{
+		padding: 15px 0;
+	}
+	.trainee_main .wrapper_current_ticket .obj_table_cell_x3{
+		height: 40px;
+	}
+/*(현재 페이지 한해) 현재 페이지에서만 사용하는 커스텀 css*/

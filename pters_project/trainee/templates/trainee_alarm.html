@@ -1,20 +1,94 @@
-<form action="{% url 'trainer:alarm_delete' %}" name="alarm-delete-form" id="alarm-delete-form" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="log_id_size" id="log_id_size">
-    <input type="hidden" name="next_page" value = '{% url 'trainer:alarm' %}'>
-    {% include page_template %}
-</form>
+{% extends "trainee_base.html" %}
 {% load static_url %}
 
-{% block js %}
-    <script src="https://code.jquery.com/jquery-latest.js"></script>
-    <script src="{% static_url "common/js/el-pagination.js" %}"></script>
-    <script>
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainee/page/pters.trainee.page.alarm.css" %}>
+{% endblock %}
 
-        $.endlessPaginate({
-            paginateOnScroll: true,
-            paginateOnScrollMargin: 10
-        });
+{% block content %}
+    <div class="trainee_alarm">
 
+        <div class="wrapper_alarm_unread obj_box_full">
+            <p class="obj_font_size_11_weight_bold obj_font_color_dark_grey wrapper_alarm_unread_title">새로운 알림</p>
+            {% for class_info in class_data %}
+                {% if class_info.np_lecture_counts > 0 %}
+                    <div class="wrapper_alarm_element obj_font_size_15_weight_500">
+                        <div class="wrapper_alarm_element_title">
+                            <div class="alarm_status">{{ class_info.class_type_name }}</div>
+                        </div>
+                        <div class="wrapper_alarm_element_text obj_font_size_12_weight_normal">
+                            <span class="obj_font_size_12_weight_500">{{ class_info.class_tb.member.name }}</span> 강사님
+                            <span class="obj_font_size_12_weight_500">'{{ class_info.class_type_name }}'</span> 프로그램을 연결 요청했습니다.
+                        </div>
+                        {% for class_lecture_info in class_info.class_lecture_data %}
+                            <div class="obj_font_size_11_weight_normal obj_font_color_light_black">(수강권: {{ class_lecture_info.package_tb.name }}) </div>
+                        {% endfor %}
+                        <div class="wrapper_request_select_box">
+                            <div class="obj_button_gen obj_font_bg_white_coral" onclick="func_program_select('{{ class_info.class_tb_id }}',`'${PROGRAM_LECTURE_CONNECT_ACCEPT}'`);">연결하기</div>
+                            <div class="obj_button_gen obj_font_bg_coral_trans"
+                                 onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
+                                         {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
+                                         'onclick_function':`func_program_select('{{ class_info.class_tb_id }}', '${PROGRAM_LECTURE_CONNECT_DELETE}')`});">취소하기</div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% for log_info in log_data %}
+                {% if log_info.log_read == 0 %}
+                    <div class="wrapper_alarm_element obj_font_size_15_weight_500">
+                        <div class="wrapper_alarm_element_title">
+                            <!-- <div class="alarm_oval"></div> -->
+                            <div class="alarm_status">{{ log_info.log_how }} <span class="alarm_time_ago obj_font_size_11_weight_normal obj_font_color_light_grey">{{ log_info.time_ago }}</span></div>
+                        </div>
+                        <div class="wrapper_alarm_element_text obj_font_size_12_weight_normal">
+                            {{ log_info.log_info }}이 {{ log_info.log_how }} 되었습니다.
+                        </div>
+                        <div class="obj_font_size_11_weight_normal obj_font_color_light_black">({{ log_info.log_detail }})</div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="wrapper_alarm_list obj_box_full ">
+            <p class="obj_font_size_11_weight_bold obj_font_color_dark_grey wrapper_alarm_list_title">이전 알림</p>
+            {% for log_info in log_data %}
+                {% if log_info.log_read != 0 %}
+                <div class="wrapper_alarm_element obj_font_size_15_weight_500">
+                    <div class="wrapper_alarm_element_title">
+                        <!-- <div class="alarm_oval"></div> -->
+                        <div class="alarm_status">{{ log_info.log_how }} <span class="alarm_time_ago obj_font_size_11_weight_normal obj_font_color_light_grey">{{ log_info.time_ago }}</span></div>
+                    </div>
+                    <div class="wrapper_alarm_element_text obj_font_size_12_weight_normal">
+                        {{ log_info.log_info }}이 {{ log_info.log_how }} 되었습니다.
+                    </div>
+                    <div class="obj_font_size_11_weight_normal obj_font_color_light_black">({{ log_info.log_detail }})</div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+
+    </div>
+
+    <form id="form_program_select" action="{% url 'trainee:program_select' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="class_id" id="form_program_select_class_id">
+        <input type="hidden" name="lecture_connection_check" id="form_program_select_lecture_connection_check">
+        <input type="hidden" name="next_page" value="{% url 'trainee:trainee_alarm' %}">
+    </form>
+{% endblock %}
+
+{% block local_js_footer %}
+    <!--  <script type="text/javascript" src={% static_url "user/js/trainee/func/pters.trainee.func.schedule.js" %}></script> -->
+    <script type="text/javascript">
+        //Nav바에 현재 페이지에 밑줄 표기
+        $('#nav_btn_alarm').addClass("nav_selected");
+
+        function func_program_select(class_id, program_select){
+            $('#form_program_select_class_id').val(class_id);
+            $('#form_program_select_lecture_connection_check').val(program_select);
+            $('#form_program_select').submit();
+        }
     </script>
+
 {% endblock %}

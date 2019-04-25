@@ -584,7 +584,6 @@
     </div>
 
 {% endblock %}
-
 {% block content %}
 {% endblock %}
 <footer class="fixfooter bottomzero">
@@ -600,7 +599,7 @@
     </div>
     <div class="bottomfooter2">
         <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-        <a href="http://www.spooner.co.kr" class="_company text-company"></a>
+        <a href="https://www.spooner.co.kr" class="_company text-company"></a>
         <span class="_company" style="margin-left:10px;margin-right: 10px;">|</span>
         <a class="_helpfooter text-help" href='{% url 'trainer:help_setting' %}'></a>
         <span class="_helpfooter" style="margin-left:10px;margin-right: 10px;">|</span>
@@ -638,7 +637,7 @@
 
 <script async src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
 <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
-<link rel="manifest" href={% static_url "manifest.json" %}>
+{#<link rel="manifest" href={% static_url "manifest.json" %}>#}
 <script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>
 <audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3"></audio>
 <script>
@@ -1074,7 +1073,7 @@ function playSound() {
 
     function ajax_read_lecture_info_from_db(HTMLselector, use, callback){
         $.ajax({
-            url: ' /trainer/get_class_list/',
+            url: '/trainer/get_class_list/',
             type: 'GET',
             dataType : 'html',
 

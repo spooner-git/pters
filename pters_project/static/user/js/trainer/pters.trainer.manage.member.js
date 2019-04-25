@@ -3092,7 +3092,6 @@ function get_member_list_page(url, use, callback){
         url:url,
         type:'GET',
         data: {"page": ++page_num, "sort_val": member_sort_val, "sort_order_by":member_sort_order_by, "keyword":keyword},
-
         dataType : 'html',
 
         beforeSend:function(){
@@ -3233,6 +3232,7 @@ function get_member_ing_list(use, callback){
         data: {"page": page_num, "sort_val": member_sort_val, "sort_order_by":member_sort_order_by, "keyword":keyword},
         dataType : 'html',
 
+
         beforeSend:function(){
             beforeSend();
         },
@@ -3266,14 +3266,14 @@ function get_member_ing_list(use, callback){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 
-                if(use == "callback"){
+                if(use == "callback") {
                     callback(jsondata);
-
-                }else if(use == "return"){
-                    return jsondata;
-                }else{
-                    //memberListSet('current','name','no',jsondata);
                 }
+                // }else if(use == "return"){
+                //     return jsondata;
+                // }else{
+                    //memberListSet('current','name','no',jsondata);
+                // }
                 // console.log('success');
             }
         },
@@ -3283,7 +3283,7 @@ function get_member_ing_list(use, callback){
             $('#errorMessageBar').show();
             $('#errorMessageText').text('통신 에러: 관리자 문의');
         }
-    })
+    });
 }
 
 function get_member_end_list(use, callback){
@@ -3347,7 +3347,7 @@ function get_member_end_list(use, callback){
             $('#errorMessageBar').show();
             $('#errorMessageText').text('통신 에러: 관리자 문의');
         }
-    })
+    });
 }
 
 //서버로부터 패키지 목록 가져오기

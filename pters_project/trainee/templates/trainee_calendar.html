@@ -1,0 +1,66 @@
+{% extends "trainee_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainee/page/pters.trainee.page.plan.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/func/pters.trainee.func.calendar.css" %}>
+{% endblock %}
+
+{% block content %}
+    <div id="calendar" class="pters_calendar"></div>
+    <!-- <div id="calendar2" class="pters_calendar"></div> -->
+
+    <!-- <div class="button_gen font_bg_white_grey" onclick="layer_popup('open', 'popup_calendar_plan_view')">일정팝업</div>
+    <div class="button_gen font_bg_white_pink" onclick="layer_popup('open', 'popup_calendar_plan_reserve')">예약팝업</div> -->
+{% endblock %}
+
+{% block popup %}
+{#    {% include 'popup/trainee_calendar_plan_view.html' %}#}
+{#    {% include 'popup/trainee_calendar_plan_reserve.html' %}#}
+{#    {% include 'popup/trainee_popup_calendar_plan_reserve_complete.html' %}#}
+{% endblock %}
+
+{% block local_js_footer %}
+    <script type="text/javascript" src={% static_url "user/js/trainee/page/pters.trainee.page.plan.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainee/func/pters.trainee.func.calendar.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainee/func/pters.trainee.func.schedule.js" %}></script>
+    <script type="text/javascript">
+        // Nav 바에 현재 페이지에 밑줄 표기
+        $('#nav_btn_plan').addClass("nav_selected");
+
+        /*const custom_design_options = {"font_color_sunday":"font_color_light_blue",
+                                      "font_color_saturday":"font_color_pters_red",
+                                      "font_date_basic":"textbox_size_14_weight_normal",
+                                      "font_day_names":"textbox_size_16_weight_bold",
+                                      "height_week_row":50};
+        const custom_targetHTML = '#calendar2';
+           */
+        //calendar 이름에 문자 제외 로직 필요 (에러 출력하도록)
+        //혹은 initialize할때 변경해야한다고 출력해도 될듯
+        //혹은 console만 안내하고 사용자는 모르도록해도 될듯
+        let calendar_move_buttons = "none";
+        let calendar_expand_buttons = "";
+        let calendar_expand_button_on_timeline = "none";
+        if(os == WINDOW){
+            calendar_move_buttons = "";
+            calendar_expand_buttons = "none";
+            calendar_expand_button_on_timeline = "";
+        }
+        const custom_design_options = {"font_color_sunday":["obj_font_color_pters_dark_red"],
+                                      "font_color_saturday":["obj_font_color_light_blue"],
+                                      "font_date_basic":["obj_font_size_12_weight_500"],
+                                      "font_day_names":["obj_font_size_11_weight_normal"],
+                                      "height_week_row":[50],
+                                      "move_buttons":calendar_move_buttons,
+                                      "expand_buttons": calendar_expand_buttons,
+                                      "expand_button_on_timeline": calendar_expand_button_on_timeline
+                                      };
+        let month_calendar = pters_month_calendar('pters1', {"target_html":'#calendar', "design_options": custom_design_options});
+        // var month_calendar2 = pters_month_calendar('pters2',{"target_html":custom_targetHTML, "design_options":custom_design_options});
+        month_calendar.init_month_calendar_table();
+        // month_calendar2.init_month_calendar_table();
+        month_calendar.draw_month_calendar_schedule();
+
+    </script>
+
+{% endblock %}

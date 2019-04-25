@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.expressions import RawSQL
 
 from django.utils import timezone
-from configs.const import USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
+from configs.const import USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE, ADD_SCHEDULE
 from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb, ProductFunctionAuthTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
@@ -234,3 +234,45 @@ def get_function_auth_type_cd(request):
 
     return context
 
+
+@register.filter
+def timeuntil_formatting(input_date_time, setting_time):
+    today = timezone.now()
+    error = None
+    try:
+        time_compare = datetime.datetime.strptime(str(input_date_time), '%Y-%m-%d %H:%M')
+    except ValueError:
+        error = '값 없음'
+
+    if error is None:
+        # 근접 예약 등록 가능 시간 셋팅
+        reserve_prohibition_time = setting_time
+
+        # 근접 예약 시간 확인
+        reserve_disable_time = time_compare - datetime.timedelta(minutes=reserve_prohibition_time)
+        time_compare_val = (reserve_disable_time - today)
+        reserve_prohibition_date = time_compare_val.days
+        reserve_prohibition_hour = int(abs(time_compare_val.seconds)/60/60)
+        reserve_prohibition_minute = int(abs(time_compare_val.seconds)/60 - reserve_prohibition_hour*60)
+        error_comment = ''
+
+        if reserve_prohibition_date > 0:
+            error_comment = str(reserve_prohibition_date) + '일'
+        elif reserve_prohibition_date == 0:
+            if reserve_prohibition_hour > 0:
+                error_comment = str(reserve_prohibition_hour) + '시간 '
+
+            if reserve_prohibition_minute > 0:
+                error_comment += str(reserve_prohibition_minute) + '분'
+    else:
+        error_comment = ''
+    return error_comment
+
+
+@property
+def is_past_due(self):
+    return datetime.date.today() >= self.date
+
+@register.filter
+def multiply(value, arg):
+    return value * arg

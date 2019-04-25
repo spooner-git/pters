@@ -1,0 +1,262 @@
+/*폰트 임포트*/
+    @import url(/static/common/fonts/notosanskr.css);
+
+/*기본 html, body스타일*/
+    html{
+        font-family: 'Noto Sans KR', sans-serif !important;
+       /* background-color: #f7f5f6;*/
+    }
+    body{
+        padding-top: 50px;
+        margin: 0;
+        overflow: hidden;
+        /*height: 100%;*/
+    }
+
+/*Ajax 로드 이미지*/
+    img.ajax_load_image{
+        display: none;
+        position: fixed;
+        z-index: 1500;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 40px;
+    }
+
+/*OS 기본요소 편집*/
+    a{
+        text-decoration: none;
+    }
+        a:-webkit-any-link{
+            color: unset;
+        }
+
+/*Nav bar 관련 CSS*/
+    nav{
+        position:fixed;
+        max-width: 800px;
+        width: 100%;
+        height: 40px;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #ff3b44;
+        /*background-image: linear-gradient(to right,#ea0e0e,#d60404);*/
+        /*background-image: linear-gradient(to right,#0eca68,#00bf5f);*/
+        box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.25);
+        z-index: 1;
+
+        /*Nav바 폰트스타일*/
+        font-size: 15px;
+        font-weight: 500;
+        color : rgba(255, 255, 255, 0.6);
+        letter-spacing: -0.3px;
+        padding-top: 10px;
+    }
+        nav > div{
+            line-height: 37px;
+        }
+            nav > div > a >  div{
+                display: inline-block;
+                /*padding: 0 5px 0 5px;*/
+                border-bottom: 3px solid transparent;
+                text-align: center;
+                /*cursor: pointer;*/
+            }
+    .nav_trainee_menu_box_l{
+        position: absolute;
+        left: 20px;
+    }
+        .nav_trainee_menu_box_l > a > div{
+            min-width: 35px;
+            margin-right: 15px;
+        }
+    .nav_trainee_menu_box_r{
+        position: absolute;
+        right: 20px;
+    }
+    .nav_selected{
+        border-bottom-color: #ffffff;
+        color: #ffffff;
+    }
+    .nav_disabled{
+        color: #999999;
+    }
+    /* nav 버튼 */
+    /*#nav_btn_home{
+        width: 30px;
+        margin-right: 15px;
+    }
+    #nav_btn_plan{
+        width: 30px;
+        margin-right: 15px;
+    }
+    #nav_btn_alarm{
+        width: 30px;
+    }
+    #nav_btn_program_select{
+        width: 90px;
+    }*/
+    .nav_btn_img{
+        width: 18px;
+        vertical-align: middle;
+    }
+    #nav_btn_alarm{
+
+    }
+        #nav_btn_alarm > img{
+            padding: 11px;
+        }
+    #nav_btn_menu{
+
+    }
+        #nav_btn_menu > img{
+            padding: 8px 0;
+        }
+
+/*일정 박스 조립*/
+    .wrapper_box_next_plan .obj_font_size_16_weight_bold{
+        height: 30px;
+        line-height: 30px;
+    }
+	.wrapper_box_next_plan .obj_font_size_15_weight_500{
+		height: 22px;
+		line-height: 22px;
+	}
+    .wrapper_box_next_plan .obj_font_size_14_weight_500{
+        height: 26px;
+        line-height: 26px;
+    }
+    .wrapper_box_next_plan .obj_font_size_12_weight_normal{
+        height: 38px;
+        line-height: 38px;
+    }
+	.wrapper_box_next_plan .obj_font_size_11_weight_bold{
+		height: 20px;
+		line-height: 20px;
+	}
+    .wrapper_box_next_plan .obj_font_size_10_weight_500{
+        height: 16px;
+        line-height: 16px;
+    }
+
+    .wrapper_box_next_plan .obj_box_full{
+		margin-bottom: 10px;
+		padding: 15px;
+        border: 0;
+    }
+
+    .wrapper_img_lesson_type{
+        text-align: center;
+    }
+    .wrapper_img_lesson_type > img{
+        width: 20px;
+        vertical-align: middle;
+    }
+
+    .wrapper_box_next_plan .obj_box_full_grey{
+        margin-top : 10px;
+        margin-bottom: 15px;
+        padding : 15px;
+        border: solid 1px #b5b5b5;
+    }
+
+    .wrapper_box_next_plan .wrapper_lecture_title{
+        text-align: center;
+    }
+    .wrapper_box_next_plan .wrapper_teacher_memo_text{
+        text-align: center;
+    }
+
+    .wrapper_box_next_plan .wrapper_plan_info{
+        padding: 15px 0;
+        margin: 10px 0;
+        border-top: 1px solid #eeeeee;
+        border-bottom: 1px solid #eeeeee;
+    }
+        .wrapper_box_next_plan .wrapper_plan_info .obj_table_raw{
+            text-align: center;
+        }
+
+    .wrapper_box_next_plan .wrapper_cancel_notice{
+        height: 30px;
+        line-height: 30px;
+        margin-top: 15px;
+    }
+        .wrapper_box_next_plan .wrapper_cancel_notice .obj_table_cell_x2{
+            width: auto;
+        }
+        .wrapper_box_next_plan .wrapper_cancel_notice .obj_button_gen{
+            width: 90px;
+            float: right;
+        }
+
+    .wrapper_box_next_plan .wrapper_tag{
+        text-align: center;
+        height: 18px;
+    }
+
+
+/*일정 예약 박스 조립*/
+    
+
+
+
+/* 피터스 전용 모듈*/
+
+    /*pters_func_tab탭*/
+    .func_tab_wrap{
+        display: block;
+        border-bottom: 3px solid transparent;
+        color: #b3b3b3;
+    }
+    .func_tab_wrap > div{
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .func_tab_selected{
+        border-bottom: 3px solid #ff3b44;
+        color: #000000;
+        font-weight: bold;
+    }
+
+    /*pters_func_radio*/
+    .func_radio_wrap{
+
+    }
+    .func_radio_element{
+        display: table;
+        width: 100%;
+        cursor: pointer;
+    }
+    .func_radio_element_title{
+        display: table-cell;
+    }
+    .func_radio_element_button{
+        display: table-cell;
+        text-align: center;
+    }
+    .func_radio_element_button > div.func_radio_element_button_outer{
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #ff3b44;
+        border-radius: 50%;
+    }
+    .func_radio_element_button > div > div.func_radio_element_button_inner{
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 10px;
+        height: 10px;
+        background-color: #ff3b44;
+        border-radius: 50%;
+    }
+
+
+/* 피터스 전용 모듈*/

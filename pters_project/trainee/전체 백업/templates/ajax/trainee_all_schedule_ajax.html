@@ -1,0 +1,26 @@
+    {
+      "messageArray" :
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "ptScheduleIdArray" :
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "ptScheduleLectureIdArray" :
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.lecture_tb_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "ptScheduleStartDtArray" :
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "ptScheduleEndDtArray" :
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "ptScheduleStateCdArray" :
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "ptSchedulePermissionStateCdArray" :
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.permission_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "ptScheduleNoteArray" :
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "ptScheduleIdxArray" :
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.idx }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "ptScheduleRegDtArray" :
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "ptScheduleModDtArray" :
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+
+    }

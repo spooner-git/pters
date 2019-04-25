@@ -167,15 +167,15 @@
             </div>
 
             <div class="outerbox">
-                <input type="text" name="" placeholder="새로운 ID" id="id_input" maxlength="20"  autocomplete="off">
+                <input type="text" name="" placeholder="새로운 ID" id="id_input" maxlength="20" autocomplete="off">
 {#                <button class="register_button" onclick="check_id();">중복 확인</button>#}
                 <span class="id_confirm"></span>
                 <p class="pw_notice">최소 4자이상 영문, 숫자 그리고 @/./-/_만 가능합니다.</p>
             </div>
 
             <div class="outerbox">
-                <input type="text" name="email_first" placeholder="이메일"  id="email_input"  autocomplete="off"> @
-                <input type="text" name="email_last" placeholder="이메일 뒷부분"  id="email_input_re"  autocomplete="off" >
+                <input type="text" name="email_first" placeholder="이메일"  id="email_input" autocomplete="off"> @
+                <input type="text" name="email_last" placeholder="이메일 뒷부분"  id="email_input_re" autocomplete="off" >
                 <div style="display: inline-block;">
                     <img src="/static/user/res/icon-down-grey.png" style="position: absolute;width: 10px;margin-top:15px;margin-left:66px;opacity: 0.5;">
                     <select class="login_dropdown" id="email_option" title="email">
@@ -191,8 +191,8 @@
                 <p class="pw_notice">이메일 인증을 하셔야 정상 가입이 되오니 정확한 이메일을 입력해주세요</p>
             </div>
             <div class="outerbox">
-                <input type="password" name="" placeholder="새 비밀번호"  id="pw_input"  autocomplete="off">
-                <input type="password" name="" placeholder="비밀번호 확인" id="pw_input_re" style="margin-left: 10px;"  autocomplete="off"><span class="pw_confirm"></span>
+                <input type="password" name="" placeholder="새 비밀번호"  id="pw_input"  autocomplete="new-password">
+                <input type="password" name="" placeholder="비밀번호 확인" id="pw_input_re" style="margin-left: 10px;"  autocomplete="new-password"><span class="pw_confirm"></span>
                 <p class="pw_notice">비밀번호는 특수문자, 영문 대소문자, 숫자를 혼합하여 8자이상 입력해주세요.</p>
             </div>
 
@@ -975,7 +975,7 @@
 
     <form action="../" id="add-member-id-form" method="post">
         {% csrf_token %}
-        <div style="display: none">
+        <div style="display:none;">
             {{ form.as_p }}
         </div>
         <input type="hidden" name="id" id="newid2" value=""  autocomplete="off">
@@ -1058,7 +1058,7 @@
         });
 
         var group_type = 'trainer';
-        var $form = $('#add-member-id-form');
+{#        var $form = $('#add-member-id-form');#}
 
         $('#local_registration').click(function(){
             //$('#page1_content').fadeIn();
@@ -1098,6 +1098,7 @@
 
         $('.explainbox button').click(function(){
             var selector_outerbox_horizontal = $('.outerbox_horizontal');
+            let $form = $('#add-member-id-form');
             $('._step1_label').css('transform','translateX(-250%)');
             selector_outerbox_horizontal.css('transform','translateX(-250%)');
             $('.registerbox_add').css('transform','translateX(-50%)');
@@ -1109,13 +1110,10 @@
             $('._step2_label span').text($(this).text());
             if($(this).text() == "수강 회원 가입"){
                 group_type = 'trainee';
-                $form = $('#add-member-id-form');
             }else if($(this).text() == "강사 가입"){
                 group_type = 'trainer';
-                $form = $('#add-member-id-form');
             }else if($(this).text() == "센터사업자 가입"){
                 group_type = 'center';
-                $form = $('#add-member-id-form');
             }
             $('#id_group_type').val(group_type);
             //input_birth_to_form();
@@ -1266,6 +1264,9 @@
             $('#id_duplicate_check').val('none');
             var userinput = $(this).val();
             $('#id_username').attr('value',userinput);
+            var test_val = document.getElementsByName('username');
+            test_val.value = userinput;
+            console.log(test_val.value);
             $('#newid2').attr('value',userinput);
             check_id();
         });
@@ -1288,7 +1289,6 @@
             if(selector_pw_input.val().length > 7){
                 if($(this).val().length==0){
                     $('.pw_confirm').css({'display':'none'});
-                    $form.find();
                     $('#id_password1').attr('value',"");
                     $('#id_password2').attr('value',"");
                 }else if($(this).val() != selector_pw_input.val()){
@@ -1490,7 +1490,7 @@
                 //document.getElementById('add-member-id-form').submit();
                 var $form = $('#add-member-id-form');
                 var serializeArray = $form.serializeArray();
-                console.log(serializeArray)
+                console.log(serializeArray);
                 $.ajax({
                     //url:'/accounts/register/',
                     url:'/login/add_member_info/',

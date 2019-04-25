@@ -16,4 +16,3 @@ class LectureTbAdmin(admin.ModelAdmin):
 class MemberLectureTbAdmin(admin.ModelAdmin):
     list_display = ('member_lecture_id', 'member', 'lecture_tb', 'auth_cd',
                     'mod_member_id', 'reg_dt', 'mod_dt', 'use')
-

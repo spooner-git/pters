@@ -1,0 +1,76 @@
+{% extends 'popup/trainee_base_popup.html' %}
+{% load static_url %}
+{% load background_trainee_data %}
+
+{% block popup_base_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan_reserve.complete.css" %}>
+{% endblock %}
+
+{% block popup_base_wrapper_top %}
+{% endblock %}
+<!-- pters.trainee.popup.plan_reserve.complete.css -->
+{% block popup_base_contents %}
+
+    <div class="popup_calendar_plan_reserve_complete">
+        <div class="obj_box_popup_topper">
+            <div class="wrapper_calendar_plan_reserve_complete_title">
+                <div class="wrapper_popup_title_text obj_font_size_18_weight_900 obj_font_color_white">예약 신청 완료</div>
+                <div class="wrapper_popup_title_date obj_font_size_13_weight_500 obj_font_color_white">김현기 강사님의 수업에 예약 신청되었습니다.</div>
+            </div>
+        </div>
+        
+
+        <div class="wrapper_box_next_plan">
+            <div class="obj_box_full">
+                <div class="obj_box_full_grey">
+                    <!-- <div class="wrapper_tag">
+                        <div class="obj_tag obj_font_bg_white_black">예약완료</div>
+                    </div> -->
+                    <div  class="wrapper_img_lesson_type">
+                        <img src="{% static_url "common/icon/people_black.png" %}">
+                    </div>
+                    
+                    <div class="wrapper_lecture_title obj_font_size_15_weight_500">
+                        ({{ schedule_info.group_type_name }}) {{ schedule_info.group_name }}
+                    </div>
+                    <div class="wrapper_plan_info">
+                        <div class="obj_table_raw obj_font_size_10_weight_500 obj_font_color_light_grey">
+                            <div class="obj_table_cell_x3">일자</div>
+                            <div class="obj_table_cell_x3">요일</div>
+                            <div class="obj_table_cell_x3">진행시간</div>
+                        </div>
+                        <div class="obj_table_raw obj_font_size_14_weight_500">
+                            <div class="obj_table_cell_x3">{{ schedule_info.start_dt | date:'Y.m.d' }}</div>
+                            <div class="obj_table_cell_x3">{{ schedule_info.start_dt | date:"l" }}</div>
+                            <div class="obj_table_cell_x3">{{ schedule_info.start_dt | time:'H:i' }} ~ {{ schedule_info.end_dt | time:'H:i' }}</div>
+                        </div>
+                    </div>
+                    {% if next_schedule_info.note %}
+                    <div class="wrapper_teacher_memo_text obj_font_size_12_weight_normal"><span>"{{ schedule_info.note }}"</span></div>
+                    {% endif %}
+                </div>
+                <div class="obj_table_raw wrapper_cancel_notice">
+                    <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_white">
+                        *취소 가능 시간이
+                        <span class="obj_font_size_11_weight_500"> {{ schedule_info.start_dt | timeuntil_formatting:request.session.setting_member_reserve_cancel_time }} </span>
+                        남았습니다.
+                    </div>
+                    <!-- <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey"
+                         onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
+                                                               {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
+                                                               'onclick_function':`func_schedule('form_plan_delete', ${CALL_PAGE_MOVE}, '${DELETE}')`})">취소하기</div> -->
+                </div>
+            </div>
+        </div>
+            
+
+
+    </div>
+{% endblock %}
+
+{% block popoup_base_wrapper_bottom_inside %}
+    <div class="obj_button_big obj_font_bg_pink_white" onclick="layer_popup.all_close_layer_popup()">확인</div>
+{% endblock %}
+
+{% block popup_base_js %}
+{% endblock %}

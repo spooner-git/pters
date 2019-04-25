@@ -25,6 +25,8 @@
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_tb.member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "class_group_schedule_id":
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "class_repeat_schedule_id":
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.repeat_schedule_tb_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "offTimeArray_start_date" :
       [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
@@ -57,6 +59,8 @@
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.ing_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_end_color_cd":
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.end_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_lecture_avail_count":
+      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "package_type_cd_name":
       [{% for package_info in package_data %}"{{ package_info.package_tb.package_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
@@ -68,6 +72,9 @@
       [{% for package_info in package_data %}"{{ package_info.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "package_lecture_avail_count":
       [{% for package_info in package_data %}"{{ package_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "avail_date_data":
+      [{% for avail_date_info in avail_date_data %}"{{ avail_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "lecture_flag":
       ["{{ lecture_flag }}"],
@@ -82,12 +89,12 @@
       [{{ lecture_reg_count }}],
       "lecture_finish_count" :
       [{{ lecture_finish_count }}],
-      "group_lecture_avail_count" :
-      [{{ group_lecture_avail_count }}],
-      "group_lecture_reg_count" :
-      [{{ group_lecture_reg_count }}],
-      "group_lecture_finish_count" :
-      [{{ group_lecture_finish_count }}],
+{#      "group_lecture_avail_count" :#}
+{#      [{{ group_lecture_avail_count }}],#}
+{#      "group_lecture_reg_count" :#}
+{#      [{{ group_lecture_reg_count }}],#}
+{#      "group_lecture_finish_count" :#}
+{#      [{{ group_lecture_finish_count }}],#}
       "class_lecture_avail_count" :
       [{{ class_lecture_avail_count }}],
       "class_lecture_reg_count" :

@@ -1,0 +1,184 @@
+	#popup_calendar_plan_reserve .popup_mobile .wrapper_top{
+		height: 50px;
+		margin-bottom: 0;
+	}
+
+	.popup_calendar_plan_reserve{
+		/*min-height: 100%;*/
+	}
+		.popup_calendar_plan_reserve .wrapper_calendar_plan_reserve_title{
+			padding: 0 20px;
+		}
+		.popup_calendar_plan_reserve .wrapper_popup_title_text{
+			position: absolute;
+			top: 20px;
+			height: 35px;
+			line-height: 35px;
+		}
+		.popup_calendar_plan_reserve .obj_font_size_14_weight_500{
+			height: 20px;
+			line-height: 20px;
+		}
+		.popup_calendar_plan_reserve .wrapper_calendar_plan_reserve_title .wrapper_popup_title_date{
+			position: absolute;
+			top: 55px;
+		}
+			
+		.popup_calendar_plan_reserve .obj_font_size_14_weight_normal{
+			height: 35px;
+			line-height: 35px;
+		}
+		.popup_calendar_plan_reserve .obj_font_size_13_weight_500{
+			height: 24px;
+			line-height: 24px;
+		}
+		.popup_calendar_plan_reserve .obj_font_size_12_weight_500{
+			height: 35px;
+			line-height: 35px;
+		}
+		.popup_calendar_plan_reserve .obj_font_size_11_weight_normal{
+			height: 30px;
+			line-height: 30px;
+		}
+		.popup_calendar_plan_reserve .wrapper_reserve_form_data .obj_table_raw .obj_font_size_14_weight_500{
+			height: 50px;
+			line-height: 50px;
+			padding-top: 0;
+			padding-bottom: 0;
+			padding-left: 20px;
+		}
+
+		.popup_calendar_plan_reserve > .obj_box_full{
+			margin-bottom: 10px;
+			padding: 10px 20px;
+			border: 0;
+		}
+		.popup_calendar_plan_reserve > .obj_box_full .obj_icon_expand{
+			filter: invert(100);
+			float: right;
+		}
+
+		/*.wrapper_ticket_info{
+			display: none;
+			border-top: 1px solid #b6b6b6;
+			margin-top: 10px;
+		}*/
+
+		.wrapper_ticket_info{
+			border-bottom: 1px solid #f2f2f2;
+			padding-bottom: 15px;
+		}
+
+		.wrapper_ticket_info > .wrapper_ticket_icon_personal{
+			width: 15px;
+		}
+			.wrapper_ticket_info > .wrapper_ticket_icon_personal > img{
+				width: 15px;
+				vertical-align: middle;
+			}
+		.wrapper_ticket_info > .wrapper_ticket_name{
+			width: auto;
+		}
+		.wrapper_ticket_info > .wrapper_ticket_reserve_avail_count{
+			text-align: center;
+			width: 105px;
+		}
+
+
+		#reserve_form_group{
+			display: none;
+		}
+
+		.popup_calendar_plan_reserve .wrapper_reserve_form{
+			border-bottom: 1px solid #e6e6e6;
+			border-top: 1px solid #e6e6e6;
+			border-radius: 0;
+		}
+		.wrapper_reserve_form .obj_table_raw{
+			margin-bottom: 20px;
+		}
+		/*.wrapper_reserve_form .obj_table_cell_x2{
+			vertical-align: top;
+		}*/
+		.popup_calendar_plan_reserve .wrapper_reserve_form > .obj_box_full{
+			padding: 20px;
+			margin-bottom: 10px;
+			border: 0;
+			border-radius: 0;
+		}
+		.wrapper_reserve_form .wrapper_reserve_form_title{
+			width: 95px;
+		}
+		.wrapper_reserve_form .wrapper_reserve_form_data{
+			position: relative;
+			width: auto;
+		}
+		.wrapper_reserve_form .wrapper_reserve_form_data .obj_icon_arrow{
+			position: absolute;
+			padding: 6px 0;
+			right: 0;
+			filter: opacity(50%);
+			z-index: -1;
+		}
+		.wrapper_reserve_form .obj_table_raw select{
+			-webkit-appearance:none;
+			width: 100%;
+			border: 1px solid #e6e6e6;
+			border-radius: 0;
+			padding: 6px 0;
+			background-color: transparent;
+		}
+		.wrapper_reserve_form .obj_table_raw input{
+			-webkit-appearance:none;
+			width: 100%;
+			border: 0;
+			border-bottom: 1px solid #e6e6e6;
+			border-radius: 0;
+			padding: 6px 0;
+			background-color: transparent;
+		}
+			.wrapper_reserve_form .obj_table_raw input::-webkit-input-placeholder{
+				color: #b6b6b6;
+			}
+
+		.wrapper_reserve_form .func_radio_wrap{
+
+		}
+			.wrapper_reserve_form .func_radio_element{
+				height: 50px;
+				line-height: 50px;
+				border: 1px solid #e6e6e6;
+				border-radius: 0;
+				background-color: transparent;
+				margin-bottom: 10px;
+			}
+			.wrapper_reserve_form .func_radio_element_title{
+				padding-left: 20px;
+			}
+
+
+		.wrapper_reserve_caution{
+			margin-top: 15px;
+			padding-top: 15px;
+			padding-bottom: 10px;
+			border-top: 1px solid #f2f2f2;
+		}
+		.wrapper_reserve_caution > p{
+			margin: 0;
+			height: 25px;
+		}
+
+
+
+		#popup_calendar_plan_reserve .func_tab_wrap{
+			height: 35px;
+			line-height: 35px;
+			padding-left: 20px;
+			background-color: #ffffff;
+			margin-bottom: 10px;
+		}
+		#popup_calendar_plan_reserve .func_tab_element{
+			width: 60px;
+			text-align: center;
+			margin-right: 10px;
+		}

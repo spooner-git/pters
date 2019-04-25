@@ -1,0 +1,226 @@
+/* calender  */
+	.pters_calendar{
+		overflow-y: hidden;
+	}
+		.pters_calendar .obj_font_size_20_weight_bold{
+			line-height: 30px;
+			height: 30px;
+		}
+		.pters_calendar .obj_font_size_12_weight_500{
+			line-height: 20px;
+			height: 20px;
+		}
+		.pters_calendar .obj_box_full{
+			/*margin-top: 20px;*/
+			overflow-y: hidden;
+			padding: 0;
+			border-left: 0;
+			border-right: 0;
+		}
+		.pters_calendar .obj_table_cell_x7{
+			text-align: center;
+			vertical-align: top;
+			border-bottom: 1px solid #f5f5f5;
+		}
+
+	.pters_calendar .pters_month_cal_day_name_box{
+		height: 20px;
+		line-height: 20px;
+		padding-top: 9px;
+		margin: 0 auto;
+		width: 97%;
+	}
+	.pters_calendar .pters_month_cal_day_name_box .obj_table_cell_x7{
+		border-color: transparent;
+	}
+	.pters_calendar .pters_month_cal_upper_tool_box{
+		margin-top: 10px;
+		width: 100%;
+		height: 50px;
+		text-align: center;
+		background-color: #ffffff;
+		border-top: 1px solid #e6e6e6;
+	}
+	.pters_calendar .pters_month_cal_tool_date_text{
+		display:inline-block;
+		width: 80px;
+		vertical-align:middle;
+	}
+	.pters_calendar .help_calendar_indicator{
+		display: inline-block;
+		position: absolute;
+		right: 0;
+		padding: 10px 20px 10px 0;
+	}
+	.pters_calendar .help_calendar_indicator > div{
+		height: 13px;
+		line-height: 13px;
+		width: 60px;
+		margin-bottom: 5px;
+	}
+
+	.pters_calendar .pters_timeline_cal_upper_tool_box{
+		position: relative;
+		background-color: #ffffff;
+		height: 35px;
+		padding-left: 20px;
+		padding-right: 20px;
+		/*cursor: pointer;*/
+	}
+	.pters_calendar .pters_timeline_cal_upper_tool_box .pters_timeline_cal_type_text{
+		display: inline-block;
+		margin-left: 10px;
+		margin-right: 10px;
+		line-height: 33px;
+		cursor: pointer;
+	}
+	.pters_calendar .pters_timeline_cal_upper_tool_box .pters_timeline_cal_expand_button_on_timeline{
+		background-image: url("/static/common/icon/expand_less_black.png");
+		background-size: 24px;
+		background-position: center;
+		background-repeat: no-repeat;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 70px;
+		height: 35px;
+		cursor: pointer;
+	}
+	.pters_calendar .pters_timeline_cal_upper_tool_box .selected{
+		border-bottom: 2px solid #ff3b44;
+		color: #000000;
+		font-weight: bold;
+	}
+	.pters_calendar .wrapper_cal_timeline{
+		width: 100%;
+		overflow-y: auto;
+	}
+	.pters_calendar .wrapper_cal_timeline .timeline_element_date{
+		position: relative;
+		border-top: 1px solid #e6e6e6;
+		margin-top: 30px;
+		padding: 24px 20px 0 20px;
+	}
+	.pters_calendar .wrapper_cal_timeline .timeline_element_date .obj_table_raw{
+		height: 35px;
+		line-height: 35px;
+		margin-bottom: 15px;
+	}
+	.pters_calendar .wrapper_cal_timeline .timeline_element_date .obj_table_raw .obj_table_cell_x2:nth-of-type(1){
+		width: auto;
+	}
+	.pters_calendar .wrapper_cal_timeline .timeline_element_date .obj_table_raw .obj_table_cell_x2:nth-of-type(2){
+		width: 100px;
+	}
+	.pters_calendar .wrapper_cal_timeline .timeline_element_date .obj_table_raw .obj_tag{
+		vertical-align: middle;
+		width: 45px;
+		line-height: 15px;
+		height: 15px;
+		font-size: 10px;
+		font-weight: normal;
+		margin-left: 10px;
+	}
+	.pters_calendar .wrapper_cal_timeline .timeline_element_date .timeline_date_text{
+		width: 100px;
+		height: 20px;
+		background-color: #ffffff;
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		top: -10px;
+		text-align: center;
+	}
+
+
+	.pters_calendar .next_prev_month{
+		display:inline-block;
+		vertical-align:middle;
+		height:50px;
+		cursor: pointer;
+	}
+
+	.pters_calendar .expand_button{
+		display:inline-block;
+		vertical-align:middle;
+		height:50px;
+		cursor: pointer;
+	}
+
+	.pters_calendar .obj_icon_basic{
+		margin-top:13px;
+	}
+
+	.pters_calendar .pters_month_cal_content_wrapper{
+		top: 155px;
+		overflow-y: auto;
+		/*-webkit-overflow-scrolling: touch;*/
+		-webkit-overflow-scrolling:auto;
+	}
+		.pters_calendar .pters_month_cal_content_wrapper .obj_table_raw{
+			height: 90px;
+			text-align: center;
+			vertical-align: top;
+		}
+	.pters_calendar .pters_month_cal_content_box{
+		top: 155px;
+		height: auto;
+		overflow-y: auto;
+		/*-webkit-overflow-scrolling: touch;*/
+		-webkit-overflow-scrolling:auto;
+	}	
+		.pters_calendar .pters_month_cal_content_box .obj_table_raw{
+			width: 97%;
+			margin: 0 auto;
+		}
+		/*.pters_calendar .pters_month_cal_content_box .obj_table_cell_x7{
+			padding-top: 9px;
+		}*/
+
+	::-webkit-scrollbar{
+		width: 0;
+	}
+
+
+	.plan_cell{
+		position: relative;
+	}
+	.schedule_marking{
+		position: absolute;
+		width: 4px;
+		height: 4px;
+		/*display: inline-block;
+		border: 1px solid #ff3b44;
+		vertical-align: middle;*/
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		border-radius: 50%;
+		background-color: #ff3b44;
+	}
+	.schedule_marking_grey{
+		position: absolute;
+		width: 4px;
+		height: 4px;
+		/*display: inline-block;
+		border: 1px solid #ff3b44;
+		vertical-align: middle;*/
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		border-radius: 50%;
+		background-color: #b3b3b3;
+	}
+	/*.schedule_marking_group{
+		display: inline-block;
+		width: 4px;
+		height: 4px;
+		border: 1px solid #000000;
+		border-radius: 50%;
+		background-color: #ffffff;
+		vertical-align: middle;
+	}*/
+	.group_plan_indicator{
+		height: 3px;
+		margin-bottom: 3px;
+	}

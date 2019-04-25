@@ -1,4 +1,6 @@
     {
+        "schedule_id":
+        "{{ schedule_id }}",
         "push_class_id":
       [{% for push_class_id_info in push_class_id %}"{{ push_class_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
         "push_title":

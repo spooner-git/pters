@@ -1,0 +1,27 @@
+    {
+      "logIdArray":
+      [{% for log_info in log_data %}"{{ log_data.log_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "logTypeArray":
+      [{% for log_info in log_data %}"{{ log_data.log_type }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "logAuthMemberIdArray":
+      [{% for log_info in log_data %}"{{ log_data.auth_member_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "logFromMemberNameArray":
+      [{% for log_info in log_data %}"{{ log_data.from_member_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "logToMemberNameArray":
+      [{% for log_info in log_data %}"{{ log_data.to_member_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "logClassTbIdArray":
+      [{% for log_info in log_data %}"{{ log_data.class_tb_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "logLectureTbIdArray":
+      [{% for log_info in log_data %}"{{ log_data.lecture_tb_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "logInfoArray":
+      [{% for log_info in log_data %}"{{ log_data.log_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "logHowArray":
+      [{% for log_info in log_data %}"{{ log_data.log_how }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "logDetailArray":
+      [{% for log_info in log_data %}"{{ log_data.log_detail }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "logRegDtArray":
+      [{% for log_info in log_data %}"{{ log_data.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "logReadArray":
+      [{% for log_info in log_data %}"{{ log_data.read }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+
+    }

@@ -1,0 +1,35 @@
+/*모바일 사이드 메뉴*/
+.popup_mobile{
+    background-color: #f5f5f5;
+    border-radius: 8px 0 0 8px;
+}
+    .pters_mobile_side_menu{
+        /*margin-top: 25px;*/
+        padding: 0 20px;
+    }
+
+        .pters_mobile_side_menu .wrapper_side_menu_main{
+            padding-top: 20px;
+            height: 35px;
+            line-height: 35px;
+            cursor: pointer;
+        }
+        .pters_mobile_side_menu .wrapper_side_menu_sub{
+            padding-bottom: 5px;
+            height: 30px;
+            line-height: 30px;
+            cursor: pointer;
+        }
+        .pters_mobile_side_menu .wrapper_menu_inquiry{
+            padding: 20px 0;
+            margin: 25px 0;
+            border-top: 1px solid #e6e6e6;
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        .pters_mobile_side_menu .wrapper_top .logo_pters{
+            width: 80px;
+            vertical-align: top;
+        }
+
+        

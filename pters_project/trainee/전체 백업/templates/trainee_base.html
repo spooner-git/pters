@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WG2KK6D');</script>
+    <!-- End Google Tag Manager -->
+
+    <!--Google Adsense-->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-4554121851965192",
+        enable_page_level_ads: true
+      });
+    </script>
+    <!--Google Adsense-->
+
+    {% load static_url %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
+    <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
+    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{% block title %}PTERS{% endblock %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href={% static_url "common/css/bootstrap.min.css" %} rel="stylesheet">
+    <link rel="icon" href="/static/common/favicon.ico">
+    <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
+    <link rel="shortcut icon" href="/static/common/favicon-152.png">
+    <link rel="stylesheet" href={% static_url "user/css/pters.base.set.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.select.teacher.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.base.css" %}>
+    <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
+    {% block local_css %}
+    {% endblock %}
+    <style>
+        .bottomfooter2 a{
+            color:  #7d7d7d;
+        }
+        .bottomfooter3 a{
+            color:  #7d7d7d;
+        }
+        #shade_caution{
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            z-index: 400;
+            background: black;
+            opacity: 0.5;
+            top: 0;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+{% block navbar %}
+
+    <div id="pshade" class="pshade _shade"></div>
+    <div id="mshade" class="mshade _shade"></div>
+    <div id="shade_caution"></div>
+
+    <div id="errorMessageBar">
+        <span id="errorMessageText"></span><span>닫기</span>
+    </div>
+
+    <nav class="navbar navbar-fixed-top navbar-default wrap" id="mobilever">
+        <div class="">
+            <div class="navbar-header">
+                <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'trainee:mypage_trainee' %}'">
+                    <a><img src={% static_url "user/res/icon-user-setting.png" %} style="width:25px;"></a>
+                </button>
+                {% block nav_center_img %}
+                    <span id="uptext" class="uptext" style="cursor: default;" onclick="location.href='{% url 'trainee:cal_month' %}'">{{ user.first_name }}님 일정 - {{ request.session.class_type_name }} </span>
+                {% endblock %}
+{#                <!--#}
+{#                 <button id="upbutton-right" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'login:logout' %}'">#}
+{#                    <a><img src={% static_url "user/res/icon-calendar-week.png" %} style="width:20px;"></a>#}
+{#                 </button> #}
+{#                  -->#}
+                <button id="upbutton-right" class="navbar-toggle" aria-controls="navbar" onclick="open_lecture_select_popup()">
+                    <a><img src={% static_url "user/res/icon-calendar-week.png" %} style="width:20px;"></a>
+                </button>
+            </div>
+        </div><!-- /.container -->
+    </nav><!-- /.navbar -->
+
+    <nav class="navbar navbar-fixed-top" id="pcver">
+        <div class="centermenu">
+            <img src="/static/user/res/PTERS_logo_pure.png?v2" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'trainee:cal_month'%}'" style="cursor: pointer;">
+            <div class="centermenu_box" style="margin-left: 97px;text-align: left;">
+                <div class="centermenu_div">
+                    <a href="{% url 'trainee:mypage_trainee' %}" class="centermenu_text"></a>
+                </div>
+                <div class="centermenu_div">
+                    <a class="centermenu_text"   onclick="location.href='{% url 'trainee:cal_month'%}'">달력</a>
+                </div>
+                <div class="centermenu_div">
+                    <a class="centermenu_text" onclick="open_lecture_select_popup()">프로그램 선택</a>
+                </div>
+                <div class="centermenu_div">
+                    <a class="centermenu_text" onclick="location.href='{% url 'trainee:mypage_trainee' %}'">마이페이지</a>
+                </div>
+                <div class="centermenu_div">
+                    <a href="#" class="centermenu_text"></a>
+                </div>
+                <div class="centermenu_div">
+                    <a href="#" class="centermenu_text"></a>
+                </div>
+            </div>
+            <div id="loginInfo" class="centermenu_div" style="float:right;cursor:pointer;"　
+                 onclick="location.href='{% url 'trainee:mypage_trainee' %}'">
+                <span class="pcwhere"></span>
+                <span class="pcwho">{{ request.session.class_type_name }} - {{user.first_name}}님<span></span></span>
+            </div>
+            <span class="pclogout text-logout" onclick="location.href='{% url 'login:logout' %}'">로그아웃</span>
+{#            <span id="pters-version" style="position: absolute;top:55px;right:0%;color:#a2a2a2;font-size:10px;"> {{ request.session.class_center_name }} {{ request.session.class_type_name }}</span>#}
+        </div>
+    </nav>
+
+    <div id="popup_lecture_select" class="_popup">
+        <form action="{% url 'trainee:lecture_processing' %}" id="lecture-check-form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="lecture_id" id="id_check_lecture_id">
+            <input type="hidden" name="check" id="id_check">
+            <input type="hidden" name="class_id" id="id_class_id">
+            <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainee:index' %}">
+        </form>
+        <label>프로그램 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
+        <p>이동을 원하는 프로그램을 선택해 주세요.</p>
+        <div class="pters_table">
+            <div class="pters_table_cell_head table_lecture_name">프로그램명</div>
+            <div class="pters_table_cell_head table_trainer_name">강사</div>
+            <!--<div class="pters_table_cell">연락처</div>-->
+            <div class="pters_table_cell_head table_selection">선택</div>
+        </div>
+        <div class="lecture_select_table_list">
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block footer %}
+    <footer class="fixfooter bottomzero">
+        <div class="bottomfooter2">
+            <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
+            <a href="http://www.spooner.co.kr" class="_company">회사소개</a>
+<!--        <a class="JPtext _company">会社紹介</a>
+            <a class="ENtext _company">About us</a> -->
+            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
+            <a class="KRtext" href="{% url 'policy' %}">이용약관</a>
+            <!-- <a class="JPtext">利用案内</a>
+            <a class="ENtext">Help</a> -->
+            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
+            <a class="KRtext" href="{% url 'privacy' %}">개인정보처리방침</a>
+            <!-- <a class="JPtext">個人情報処理方針</a>
+            <a class="ENtext">Privacy Policy</a> -->
+        </div>
+
+        <div class="bottomfooter3">
+            <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
+            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
+            <a class="KRtext" href="{% url 'policy' %}">이용약관</a>
+            <!-- <a class="JPtext">利用案内</a>
+            <a class="ENtext">Help</a> -->
+            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
+            <a class="KRtext" href="{% url 'privacy' %}">개인정보처리방침</a>
+            <!-- <a class="JPtext">個人情報処理方針</a>
+            <a class="ENtext">Privacy Policy</a> -->
+        </div>
+
+    </footer>
+
+
+
+{% endblock %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src={% static_url "user/js/pters.common.module.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.common.close.set.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
+<script src={% static_url "common/js/bootstrap.min.js" %}></script>
+<script type="text/javascript" src={% static_url "common/js/jquery.swipe.js" %}></script>
+<script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
+<script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
+{#<script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
+{#<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>#}
+{#<script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
+{#<link rel="manifest" href={% static_url "manifest.json" %}>#}
+{#<!--<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>#}
+{#<audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>#}
+{#    <script>#}
+{#    function playSound() {#}
+{#          var sound = document.getElementById("audio");#}
+{#          sound.loop = false;#}
+{#          sound.play();#}
+{#      }#}
+{#    </script>-->#}
+{#<!-- <script type="text/javascript">#}
+{#// var requestButton = document.querySelector(".request-btn");#}
+{##}
+{# //});#}
+{# //const messageChannel = new MessageChannel();#}
+{# //messageChannel.port1.onmessage = function(event){ console.log('msg from SW', event); }#}
+{# //navigator.serviceWorker.controller.postMessage({'hello':'test'});#}
+{#     function messageCommunicationWithWorker(){#}
+{#         navigator.serviceWorker.getRegistrations().then(function(registrations) {#}
+{#             registrations.forEach(function (v) {#}
+{#                 send_message_to_sw(v.active, "data").then(function (m) {#}
+{#                     playSound();#}
+{#                     ajaxClassTime();#}
+{#                     messageCommunicationWithWorker();#}
+{#                 });#}
+{#             });#}
+{#         });#}
+{#     }#}
+{#     messageCommunicationWithWorker();#}
+{# </script>-->#}
+<script>
+
+    $('#errorMessageBar span:nth-child(2)').click(function(){
+        $('#errorMessageBar').fadeOut();
+        $('.ajaxloadingPC').hide();
+    });
+
+    ///********************* 회원 월간 달력 옵션*************************************///
+    ///********************* 회원 월간 달력 옵션*************************************///
+
+    {% load background_trainee_data %}
+    {% autoescape off %}
+    var setting_info = {% get_setting_info request %};
+    var auth_type_cd = {% get_function_auth_type_cd request %};
+    var auth_product_type_name = '{{ request.session.product_type_name }}';
+    {% endautoescape %}
+
+    var class_name = '{{ request.session.class_type_name }}';
+    var class_code = '{{ request.session.class_type_code }}';
+    var social_login_check = '{{ request.session.social_login_check }}';
+    var social_login_type = '{{ request.session.social_login_type }}';
+    var social_login_id = '{{ request.session.social_login_id }}';
+    var social_accessToken = '{{ request.session.social_accessToken }}';
+
+    var class_background_img_url = [];
+
+    var Options = {  "hourunit" : 30,                       // 30 or 60
+        "classDur" : '{{ request.session.class_hour }}',      // 30 or 60
+        "timeDur" : '{{ request.session.setting_member_time_duration }}',
+        "startTime": '{{ request.session.setting_member_start_time }}',
+        "stoptimeStart": worktime_extract_hour('{{ request.session.setting_member_reserve_time_available }}')['start'],                    //강사가 설정한 예약불가 시간 (시작)
+        "stoptimeEnd": worktime_extract_hour('{{ request.session.setting_member_reserve_time_available }}')['end'] ,                        //강사가 설정한 예약불가 시간 (종료)
+        "limit":Number('{{ request.session.setting_member_reserve_enable_time }}')/60,      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+        "reserve":Number('{{ request.session.setting_member_reserve_prohibition }}'),                //회원 일정 기능을 enable 1/disable 0
+        "availDate":Number('{{ request.session.setting_member_reserve_date_available }}'),
+        "cancellimit":Number('{{ request.session.setting_member_reserve_cancel_time }}')/60,  //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
+        "firstPushToMember":'-',
+        "secondPushToMember":'-',
+        "regErgentPushToMember":'-',
+        "planChangePush":'-',
+        "regErgentPush":'-',
+
+        "worktime":'',
+        "worktimeWeeklyOn": "",
+        "worktimeWeekly":['{{ request.session.setting_trainer_work_sun_time_avail }}',
+                          '{{ request.session.setting_trainer_work_mon_time_avail }}',
+                          '{{ request.session.setting_trainer_work_tue_time_avail }}',
+                          '{{ request.session.setting_trainer_work_wed_time_avail }}',
+                          '{{ request.session.setting_trainer_work_ths_time_avail }}',
+                          '{{ request.session.setting_trainer_work_fri_time_avail }}',
+                          '{{ request.session.setting_trainer_work_sat_time_avail }}'],
+        "worktimeOffDay":[],
+        "workStartTime":'',
+        "workEndTime":'',
+
+        "language" : "KOR",             //Korea, Japan, English
+        "location" : "Japan"           //Korea, Japan, English
+    };
+
+
+
+
+    //요일별 업무시간이 모두 같으면 worktime, workStartTime, workEndTime 셋팅
+    var week_worktime_selected = false;
+    for(var i=0; i<Options.worktimeWeekly.length; i++){
+        if(Options.worktimeWeekly[i] == Options.worktimeWeekly[0]){
+            //
+        }else{
+            week_worktime_selected = true;
+        }
+    }
+    if(week_worktime_selected == false){
+        Options.worktimeWeeklyOn = 0;
+        Options.worktime = Options.worktimeWeekly[0];
+        Options.workStartTime = worktime_extract_hour(Options.worktime)["start"];
+        Options.workEndTime = worktime_extract_hour(Options.worktime)["end"];
+    }else{
+        Options.worktimeWeeklyOn = 1;
+        Options.workStartTime =  worktime_extract_maxmin(Options.worktimeWeekly)["min"];
+        Options.workEndTime = worktime_extract_maxmin(Options.worktimeWeekly)["max"];
+    }
+    Options.worktime = `${Options.workStartTime}:00-${Options.workEndTime}:00`;
+    //요일별 업무시간이 모두 같으면 worktime, workStartTime, workEndTime 셋팅
+
+    //요일별 업무시간을 보고 휴일날짜를 구한다.
+    for(var i=0; i<Options.worktimeWeekly.length; i++){
+        if(Options.worktimeWeekly[i].split('-')[0] == Options.worktimeWeekly[i].split('-')[1]){
+            Options.worktimeOffDay[i] = 1;
+        }else{
+            Options.worktimeOffDay[i] = 0;
+        }
+    }
+    //요일별 업무시간을 보고 휴일날짜를 구한다.
+
+
+
+
+
+
+    var lt_res_enable_time = ['{{ request.session.setting_member_reserve_enable_time }}'];
+    var lt_res_cancel_time = ['{{ request.session.setting_member_reserve_cancel_time }}'];
+
+    if(Options.language=="JPN"){
+        $(".KRtext, .ENtext").remove();
+        $(".JPtext").show();
+    }else if(Options.language=="ENG"){
+        $(".KRtext, .JPtext").remove();
+        $(".ENtext").show();
+    }else if(Options.language=="KOR"){
+        $(".ENtext, .JPtext").remove();
+        $(".KRtext").show();
+    }
+    var varUA = navigator.userAgent.toLowerCase();
+    if(varUA.match('android') != null){
+        $('._company').css('display','none');
+        $('.ads_wrap').css('display','none');
+        $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
+        platform_check = 'mobile'
+    }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+        $('._company').css('display','none');
+        $('.ads_wrap').css('display','none');
+        $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
+        platform_check = 'mobile';
+    }else{
+        platform_check = 'pc';
+    }
+
+
+    ///********************* 회원 월간 달력 옵션*************************************///
+    ///********************* 회원 월간 달력 옵션*************************************///
+
+
+    ///********************* 강의 선택*************************************///
+    ///********************* 강의 선택*************************************///
+
+    var lec_select_regCountArray = [];
+    var lec_select_countArray = [];
+    var lec_select_startArray = [];
+    var lec_select_endArray = [];
+    var lec_select_lectureIdArray = [];
+    var lec_select_trainerNameArray = [];
+    var lec_select_availCountArray = [];
+    var lec_select_classIdArray = [];
+
+
+    function ajax_read_lecture_info_from_db(){
+        $.ajax({
+
+            //url: '/trainee/read_trainee_lecture_by_class_ajax/',
+            url: '/trainee/get_trainee_class_list/',
+            dataType : 'html',
+            //type:'POST',
+
+
+            beforeSend:function(){
+
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    //lec_select_regCountArray = jsondata.regCountArray;
+                    //lec_select_countArray = jsondata.countArray;
+                    //lec_select_startArray = jsondata.startArray;
+                    //lec_select_endArray = jsondata.endArray;
+                    lec_select_lectureIdArray = jsondata.lectureIdArray;
+                    lec_select_trainerNameArray = jsondata.trainerNameArray;
+                    //lec_select_availCountArray = jsondata.availCountArray;
+                    lec_select_npLectureCountsArray = jsondata.npLectureCountsArray;
+                    lec_select_classInfoArray = jsondata.classInfoArray;
+                    lec_select_classIdArray = jsondata.classIdArray;
+                    fill_lecture_select_popup();
+                }
+
+            },
+
+            complete:function(){
+
+            },
+
+            error:function(){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text('통신 에러: 관리자 문의');
+            }
+        });
+    }
+
+    function ajax_read_lecture_detail_info_from_db(classid){
+        $.ajax({
+            url: '/trainee/get_trainee_lecture_list/',
+            data:{"class_id": classid, "auth_cd":'WAIT'},
+            type:'GET',
+            dataType : 'html',
+
+            beforeSend:function(){
+
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    lec_select_regCountArray = jsondata.countArray;
+                    lec_select_startArray = jsondata.startArray;
+                    lec_select_endArray = jsondata.endArray;
+                    lec_select_lectureIdArray = jsondata.lectureIdArray;
+                    //lec_select_trainerNameArray = jsondata.trainerNameArray;
+                    lec_select_availCountArray = jsondata.availCountArray;
+                    lec_select_stateArray = jsondata.memberViewStateArray;
+                    lec_select_lectureCountsArray = jsondata.lectureCountsArray;
+                    //lec_select_npLectureCountsArray = jsondata.npLectureCountsArray;
+                    // lec_select_classInfoArray = jsondata.classInfoArray;
+                    //lec_select_classIdArray = jsondata.classIdArray;
+
+                    fill_lecture_connect_select_popup(classid);
+                }
+            },
+
+            complete:function(){
+
+            },
+
+            error:function(){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text('통신 에러: 관리자 문의');
+            }
+        });
+    }
+
+    function open_lecture_select_popup(){
+        shade_index(100);
+        $('#popup_lecture_select').show();
+        ajax_read_lecture_info_from_db();
+        disable_window_scroll();
+    }
+
+    function fill_lecture_select_popup(){
+        var len = lec_select_trainerNameArray.length;
+        var list_table_to_join = [];
+        for(var i=0; i<len; i++){
+            if(lec_select_npLectureCountsArray[i] == '0'){
+                var table = '<div class="pters_table" style="margin-top:0;" id="classid-"'+lec_select_classIdArray[i]+'>';
+                var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_classInfoArray[i]+'</div>';
+                var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>';
+                var selection = '<div class="pters_table_cell table_selection"  data-classid="'+lec_select_classIdArray[i]+'"><a data="" '+'onclick="lecture_check('+lec_select_lectureIdArray[i]+',2, '+lec_select_classIdArray[i]+')"'+'">선택</a></div>';
+                var sum = table + lectureName + trainerName + selection + '</div>';
+                list_table_to_join.push(sum);
+            }else{
+                var table = '<div class="pters_table" style="margin-top:0;" id="classid-'+lec_select_classIdArray[i]+'">';
+                var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_classInfoArray[i]+'</div>';
+                var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>';
+                var selection = '<div class="pters_table_cell table_selection _npOpen" data-classid="'+lec_select_classIdArray[i]+'">New<img src="/static/user/res/daycal_arrow_pink.png" style="transform:rotate(-90deg); width:5px;margin-left:7px;"></div>';
+                var sum = table + lectureName + trainerName + selection + '</div>';
+                list_table_to_join.push(sum);
+            }
+        }
+        var list_table = list_table_to_join.join('');
+        $('.lecture_select_table_list').html(list_table);
+    }
+
+
+    function fill_lecture_connect_select_popup(classid){
+        var len = lec_select_trainerNameArray.length;
+        var list_table_to_join = [];
+        //for(var j=0; j<lec_select_stateArray.length; j++){
+        for(var j=0; j<1; j++){
+            if(lec_select_stateArray[j] == 'WAIT'){
+                console.log(lec_select_startArray[j]);
+                var table = '<div class="pters_table" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[0]+'">';
+                var lectureName = '<div class="pters_table_cell table_lecture_name"></div>';
+                var trainerName = '<div class="pters_table_cell table_trainer_name">'+'수강 정보 연동'+'</div>';
+                var selection = '<div class="pters_table_cell table_selection"><a data="" '
+                    +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',0, '+classid+')">연결/</a><a data="" '
+                    +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',1, '+classid+')">취소</a></div>';
+                var sum = table + lectureName + trainerName + selection + '</div>';
+                list_table_to_join.push(sum);
+            }else if(lec_select_stateArray[j] == 'VIEW'){
+                var table = '<div class="pters_table" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[0]+'">';
+                var lectureName = '<div class="pters_table_cell table_lecture_name"></div>';
+                var trainerName = '<div class="pters_table_cell table_trainer_name">'+'수강 정보 연동'+'</div>';
+                var selection = '<div class="pters_table_cell table_selection"><a data="" '
+                    +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',2, '+classid+')">선택</a></div>';
+                var sum = table + lectureName + trainerName + selection + '</div>';
+                list_table_to_join.push(sum);
+            }
+        }
+        if( $('#classid-'+classid).attr('data-open') != 'open'){
+            var list_table = list_table_to_join.join('');
+        }
+        $('#classid-'+classid).after(list_table).attr('data-open','open');
+    }
+
+
+    $(document).on('click','div._npOpen',function(){
+        var classid = $(this).attr('data-classid');
+        ajax_read_lecture_detail_info_from_db(classid);
+        var trainer = $(this).siblings('.table_trainer_name').text();
+        var $hiddenElement = $('.pters_table[data-pter='+trainer+']');
+        if($hiddenElement.hasClass('displayNone')){
+            $hiddenElement.removeClass('displayNone');
+            $(this).find('img').css('transform','rotate(90deg)');
+        }else{
+            $hiddenElement.addClass('displayNone');
+            $(this).find('img').css('transform','rotate(-90deg)');
+        }
+    });
+
+    $('.button_close_popup').click(function(){
+        shade_index(-100);
+        $(this).parents('div._popup').hide();
+        enable_window_scroll();
+    });
+
+    function lecture_check(lecture_id, check, class_id){
+        $('#id_check_lecture_id').val(lecture_id);
+        $('#id_check').val(check);
+        $('#id_class_id').val(class_id);
+        if(check=='2'){
+            $('#id_next_page').val('{% url 'trainee:cal_month'%}');
+        }else if(check=='0'){
+            $('#id_next_page').val('{% url 'trainee:cal_month'%}');
+        }else{
+            $('#id_next_page').val('{% url 'trainee:index' %}');
+        }
+        document.getElementById('lecture-check-form').submit();
+    }
+
+    ///********************* 강의 선택*************************************///
+    ///********************* 강의 선택*************************************///
+
+
+    function openNav(){
+        $("#outer_Sidenav").animate({"width":"100%"},1);
+        $("#inner_Sidenav").css("width","80%");
+        $(".sidebar_text").css({'font-size':"15px",'opacity':"1"});
+        $("#user_name,#welcome").css({'font-size':"14px",'opacity':"1"});
+        $(".sidebar_icon,.sidebar_upper img").css('opacity','1');
+        //$('body').css('overflow-y','hidden');
+        disable_window_scroll();
+        $('#shade').css({'background-color':'black','z-index':'50'});
+    }
+
+    function closeNav(){
+        $(".sidebar_icon,.sidebar_upper img").css('opacity','0');
+        $("#outer_Sidenav").css("width","0");
+        $("#inner_Sidenav").css("width","0");
+        $(".sidebar_text,#user_name,#welcome").css({'font-size':"0px",'opacity':"0"});
+        //$('body').css('overflow-y','');
+        enable_window_scroll();
+        $('#shade').css({'background-color':'transparent','z-index':'-1'});
+    };
+
+</script>
+<script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.common.option.inspector.js" %}></script>
+<script type="text/javascript">pters_option_inspector("ads","","");</script>
+
+
+
+{% block local_js_footer %}
+{% endblock %}
+
+</body>
+</html>
+
+<!--
+
+2017.8.3업데이트 내역
+
+1.Navigation Bar의 Bell ,메뉴 버튼 크기 및 위치 조정
+2.Navigation Bar의 Bell 이미지 변경
+
+3.파일명 변경 및 코드 분리
+    skstyle.css ->> pters.month.cal.css 월간 달력 css
+    skcalendar.js ->> pters.month.cal.js 월간 달력 js
+    sidebar.css ->> pters.base.set.css 상단바,사이드바 css
+    skstyle.js ->> pters.base.set.js 상단바, 사이드바 js
+
+-->
+
+
+
