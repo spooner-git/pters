@@ -213,8 +213,14 @@ function pters_month_calendar(calendar_name, calendar_options){
         $('#'+prev_id).click(function(){
             let prev_month_date = func_get_prev_month(reference_year, reference_month);
             let prev_month_date_split_array = prev_month_date.split('-');
-            if((prev_month_date_split_array[0] <= current_year) && (prev_month_date_split_array[1] < current_month)){
-                time_line_tab_selector = SCHEDULE_FINISH_ANYWAY;
+            if(Number(prev_month_date_split_array[0]) == current_year){
+                if(Number(prev_month_date_split_array[1]) < current_month) {
+                    time_line_tab_selector = SCHEDULE_FINISH_ANYWAY;
+                }
+            }
+            else if(Number(prev_month_date_split_array[0]) < current_year){
+                    time_line_tab_selector = SCHEDULE_FINISH_ANYWAY;
+
             }
             calendar_variable.draw_month_calendar_table(prev_month_date, design_options);
             $(`div.pters_timeline_cal_type_text[data-timeline='${time_line_tab_selector}']`).trigger('click');
@@ -229,8 +235,14 @@ function pters_month_calendar(calendar_name, calendar_options){
         $('#'+next_id).click(function(){
             let next_month_date = func_get_next_month(reference_year, reference_month);
             let next_month_date_split_array = next_month_date.split('-');
-            if((next_month_date_split_array[0] <= current_year) && (next_month_date_split_array[1] < current_month)){
-                time_line_tab_selector = SCHEDULE_FINISH_ANYWAY;
+            if(Number(next_month_date_split_array[0]) == current_year){
+                if(Number(next_month_date_split_array[1]) < current_month) {
+                    time_line_tab_selector = SCHEDULE_FINISH_ANYWAY;
+                }
+            }
+            else if(Number(next_month_date_split_array[0]) < current_year){
+                    time_line_tab_selector = SCHEDULE_FINISH_ANYWAY;
+
             }
             calendar_variable.draw_month_calendar_table(next_month_date, design_options);
             $(`div.pters_timeline_cal_type_text[data-timeline='${time_line_tab_selector}']`).trigger('click');
