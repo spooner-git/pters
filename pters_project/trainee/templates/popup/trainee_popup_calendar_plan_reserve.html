@@ -113,8 +113,10 @@
             cancel_enable_date_time.setMinutes( cancel_enable_date_time.getMinutes() + {{ request.session.setting_member_reserve_cancel_time }} );
 
             // 취소 가능 날짜(yyyy-mm-dd) / 시간 구하기(hh:mm)
-            let cancel_enable_date = date.getFullYear() + '-' +('0'+(date.getMonth()+1)).slice(-2)  + '-' + ('0'+date.getDate()).slice(-2);
-            let cancel_enable_time = ('0'+date.getHours()).slice(-2)+':'+('0'+date.getMinutes()).slice(-2);
+            let cancel_enable_date = cancel_enable_date_time.getFullYear() + '-'
+                +('0'+(cancel_enable_date_time.getMonth()+1)).slice(-2)  + '-'
+                + ('0'+cancel_enable_date_time.getDate()).slice(-2);
+            let cancel_enable_time = ('0'+cancel_enable_date_time.getHours()).slice(-2)+':'+('0'+cancel_enable_date_time.getMinutes()).slice(-2);
 
             // 선택 날짜(yyyy-mm-dd) / 시간 가져오기(hh:mm)
             let select_date = $('#form_content_training_date').val();
@@ -127,8 +129,8 @@
                     func_schedule($('#form_plan_add').serialize(), CALL_AJAX, ADD);
                 }else{
                     layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-                                                                                   {'popup_title':'', 'popup_comment':'예약 취소가 불가능한 시간입니다.<br/> 정말 등록하시겠습니까?',
-                                                                                   'onclick_function':`func_schedule('${$('#form_plan_add').serialize()}', ${CALL_AJAX}, '${ADD}')`});
+                        {'popup_title':'', 'popup_comment':'예약 취소가 불가능한 시간입니다.<br/> 정말 등록하시겠습니까?',
+                            'onclick_function':`func_schedule('${$('#form_plan_add').serialize()}', ${CALL_AJAX}, '${ADD}')`});
 
                 }
             }
