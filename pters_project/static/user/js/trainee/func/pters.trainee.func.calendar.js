@@ -144,7 +144,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7"></div>`);
                 }else{
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
-                                               id="calendar_cell_${data_date}">
+                                               id="calendar_cell_${data_date}" onclick="show_error_message('예약이 불가능한 날짜입니다.')">
                                                <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
                                                <div class="calendar_date_number ${font_color}">${date_cache}</div>
                                                <div id="calendar_plan_cell_${data_date}" class="plan_cell" style="height:${design_options["height_week_row"]-6-20-1}px"></div>
