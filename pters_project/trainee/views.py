@@ -843,6 +843,14 @@ def program_select_logic(request):
                              log_how='연결 취소',
                              log_detail='', use=USE)
             log_data.save()
+            log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name + request.user.first_name,
+                             class_tb_id=class_info.class_id,
+                             log_info=class_info.member.name + ' 강사님의 \''
+                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                             log_how='연결 취소',
+                             log_detail='', use=USE)
+            log_data.save()
 
         elif lecture_connection_check == PROGRAM_LECTURE_CONNECT_ACCEPT:
             # 선택한 프로그램의 연결 대기중인 수강권 전부 연결
@@ -873,6 +881,14 @@ def program_select_logic(request):
             log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id_session,
+                             log_info=class_info.member.name + ' 강사님의 \''
+                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                             log_how='연결 완료',
+                             log_detail='', use=USE)
+            log_data.save()
+            log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name + request.user.first_name,
+                             class_tb_id=class_info.class_id,
                              log_info=class_info.member.name + ' 강사님의 \''
                                       + class_info.get_class_type_cd_name()+'\' 프로그램',
                              log_how='연결 완료',
