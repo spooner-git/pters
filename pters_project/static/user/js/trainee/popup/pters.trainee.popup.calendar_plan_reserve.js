@@ -312,7 +312,11 @@ function func_start_time_dom_draw(target_html, selected_date, schedule_json, set
         let time_text= offText+offHour+':'+offmin+' ~ '+endtime;
         timeArray[i] ='<option data-start="'+selected_date+' '+addOkArray[i]+'" data-end="'+selected_date+' '+endtime+'">'+time_text+'</option>';
     }
-    timeArray.unshift('<option selected disabled>예약 시간 선택</option>');
+    if(timeArray.length == 0){
+        timeArray.unshift('<option selected disabled>예약 가능 시간이 없습니다.</option>');
+    }else{
+        timeArray.unshift('<option selected disabled>예약 시간 선택</option>');
+    }
     let timeArraySum = timeArray.join('');
     $target_html.html(timeArraySum);
 }
