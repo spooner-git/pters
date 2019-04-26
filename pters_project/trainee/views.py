@@ -795,6 +795,7 @@ class GetTraineeCountView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 def program_select_logic(request):
 
     class_id = request.POST.get('class_id', '')
+    class_id_session = request.session.get('class_id', '')
     # lecture_id = request.POST.get('lecture_id', '')
     lecture_connection_check = request.POST.get('lecture_connection_check', PROGRAM_SELECT)
     next_page = request.POST.get('next_page', '/trainee/trainee_main/')
@@ -828,6 +829,21 @@ def program_select_logic(request):
                 except ObjectDoesNotExist:
                     error = None
 
+            class_info = None
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+            except ObjectDoesNotExist:
+                error = '수강정보를 불러오지 못했습니다.'
+
+            log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name + request.user.first_name,
+                             class_tb_id=class_id_session,
+                             log_info=class_info.member.name + ' 강사님의 \''
+                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                             log_how='연결 취소',
+                             log_detail='', use=USE)
+            log_data.save()
+
         elif lecture_connection_check == PROGRAM_LECTURE_CONNECT_ACCEPT:
             # 선택한 프로그램의 연결 대기중인 수강권 전부 연결
             query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
@@ -839,7 +855,6 @@ def program_select_logic(request):
                 use=USE).annotate(member_auth_cd=RawSQL(query_auth_type_cd,
                                                         [])).filter(member_auth_cd='WAIT'
                                                                     ).order_by('-lecture_tb__start_date')
-
             for lecture_info in lecture_data:
                 try:
                     member_lecture = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id,
@@ -848,6 +863,22 @@ def program_select_logic(request):
                     member_lecture.save()
                 except ObjectDoesNotExist:
                     error = None
+
+            class_info = None
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+            except ObjectDoesNotExist:
+                error = '수강정보를 불러오지 못했습니다.'
+
+            log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name + request.user.first_name,
+                             class_tb_id=class_id_session,
+                             log_info=class_info.member.name + ' 강사님의 \''
+                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                             log_how='연결 완료',
+                             log_detail='', use=USE)
+            log_data.save()
+            next_page = '/trainee/trainee_main/'
 
         if lecture_connection_check != PROGRAM_LECTURE_CONNECT_DELETE:
             # 선택한 프로그램 연결
@@ -1153,9 +1184,11 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
                   " where D.LECTURE_TB_ID = `LOG_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " + str(self.request.user.id)
 
-            log_data = LogTb.objects.filter(class_tb_id=class_id, reg_dt__gte=three_days_ago,
-                                            use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
-                                                              ).filter(member_auth_cd='VIEW').order_by('-reg_dt')
+            log_data = LogTb.objects.filter(
+                class_tb_id=class_id, reg_dt__gte=three_days_ago,
+                use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
+                                  ).filter(Q(member_auth_cd='VIEW')
+                                           | Q(auth_member_id=self.request.user.id)).order_by('-reg_dt')
 
         if error is None:
             for log_info in log_data:
