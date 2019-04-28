@@ -684,45 +684,45 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             day = 46
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
+        if class_id is not None and class_id != '':
+            if trainer_id == '' or trainer_id is None:
+                try:
+                    class_info = ClassTb.objects.get(class_id=class_id)
+                    trainer_id = class_info.member_id
+                    self.request.session['trainer_id'] = trainer_id
+                except ObjectDoesNotExist:
+                    error = '수강정보를 불러오지 못했습니다.'
 
-        if trainer_id == '' or trainer_id is None:
-            try:
-                class_info = ClassTb.objects.get(class_id=class_id)
-                trainer_id = class_info.member_id
-                self.request.session['trainer_id'] = trainer_id
-            except ObjectDoesNotExist:
-                error = '수강정보를 불러오지 못했습니다.'
+            context['error'] = error
+            # context = func_get_holiday_schedule(context, start_date, end_date)
+            context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, start_date, end_date)
+            context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
+            # 그룹 스케쥴과 예약 가능 횟수 동시에 들고 와야할듯
+            context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
+            context = func_get_class_lecture_count(context, class_id, self.request.user.id)
 
-        context['error'] = error
-        # context = func_get_holiday_schedule(context, start_date, end_date)
-        context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, start_date, end_date)
-        context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
-        # 그룹 스케쥴과 예약 가능 횟수 동시에 들고 와야할듯
-        context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
-        context = func_get_class_lecture_count(context, class_id, self.request.user.id)
+            for group_schedule_info in context['group_schedule_data']:
+                group_lecture_avail_count = 0
+                query_member_auth_cd = "select `AUTH_CD` from MEMBER_LECTURE_TB as B" \
+                                       " where B.USE=1" \
+                                       " and B.LECTURE_TB_ID = `GROUP_LECTURE_TB`.`LECTURE_TB_ID`"
+                group_lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(
+                    group_tb_id=group_schedule_info.group_tb_id,
+                    lecture_tb__member_id=self.request.user.id,
+                    lecture_tb__use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd,
+                                                                        [])).filter(member_auth_cd='VIEW')
 
-        for group_schedule_info in context['group_schedule_data']:
-            group_lecture_avail_count = 0
-            query_member_auth_cd = "select `AUTH_CD` from MEMBER_LECTURE_TB as B" \
-                                   " where B.USE=1" \
-                                   " and B.LECTURE_TB_ID = `GROUP_LECTURE_TB`.`LECTURE_TB_ID`"
-            group_lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(
-                group_tb_id=group_schedule_info.group_tb_id,
-                lecture_tb__member_id=self.request.user.id,
-                lecture_tb__use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd,
-                                                                    [])).filter(member_auth_cd='VIEW')
+                for group_lecture_info in group_lecture_data:
+                    group_lecture_avail_count += group_lecture_info.lecture_tb.lecture_avail_count
+                group_schedule_info.group_lecture_avail_count = group_lecture_avail_count
 
-            for group_lecture_info in group_lecture_data:
-                group_lecture_avail_count += group_lecture_info.lecture_tb.lecture_avail_count
-            group_schedule_info.group_lecture_avail_count = group_lecture_avail_count
+            if trainer_id != '' and trainer_id is not None:
+                context = func_get_trainer_setting_list(context, trainer_id, class_id)
 
-        if trainer_id != '' and trainer_id is not None:
-            context = func_get_trainer_setting_list(context, trainer_id, class_id)
-
-        if context['error'] is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + context['error'])
-            messages.error(self.request, context['error'])
+            if context['error'] is not None:
+                logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
+                             + str(self.request.user.id) + ']' + context['error'])
+                messages.error(self.request, context['error'])
 
         return context
 
