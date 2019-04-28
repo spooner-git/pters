@@ -304,7 +304,8 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
             context['member_info'] = member_info
 
         if error is None:
-            context = func_get_trainee_package_list(context, class_id, request.user.id)
+            if class_id != '' and class_id is not None:
+                context = func_get_trainee_package_list(context, class_id, request.user.id)
 
         context['check_password_changed'] = 1
         if sns_id != '' and sns_id is not None:
