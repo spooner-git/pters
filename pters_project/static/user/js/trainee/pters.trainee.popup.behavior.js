@@ -310,6 +310,7 @@ function func_set_shade(popup_array_length){
  */
 function func_set_popup_basic(popup_name, data){
     let $popup = $(`.${popup_name}`);
+        console.log(data.popup_comment);
     if(data != undefined && data.popup_comment!=undefined){
         $popup.find('.wrapper_popup_basic_comment').html(`<p>${data.popup_comment}</p>`);
     }
@@ -319,6 +320,7 @@ function func_set_popup_basic(popup_name, data){
 }
 
 function show_error_message(message){
+        console.log(message);
     layer_popup.open_layer_popup(POPUP_BASIC,
                                  'popup_basic_user_confirm',
                                  POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
