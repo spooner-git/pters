@@ -180,46 +180,60 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
+class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
+    def get(self, request):
+        return redirect('/trainee/trainee_main/')
+
+
+class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'mypage_trainee_blank.html'
+
+    def get(self, request):
+        return redirect('/trainee/trainee_mypage/')
+
+
 class CalMonthBlankView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'cal_month_trainee_blank.html'
 
     def get(self, request):
+        return redirect('/trainee/trainee_main/')
         # context = super(CalMonthBlankView, self).get_context_data(**kwargs)
-        context = {}
+        # context = {}
         # context = get_trainee_setting_data(context, request.user.id)
-        holiday = HolidayTb.objects.filter(use=USE)
+        # holiday = HolidayTb.objects.filter(use=USE)
         # request.session['setting_language'] = context['lt_lan_01']
-        context['holiday'] = holiday
-        return render(request, self.template_name, context)
+        # context['holiday'] = holiday
+        # return render(request, self.template_name, context)
 
 
 class MyPageBlankView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'mypage_trainee_blank.html'
 
     def get(self, request):
+        return redirect('/trainee/trainee_mypage/')
         # context = super(MyPageBlankView, self).get_context_data(**kwargs)
-        context = {}
-        member_info = None
-        error = None
-        sns_id = request.session.get('social_login_id', '')
-        try:
-            member_info = MemberTb.objects.get(member_id=request.user.id)
-        except ObjectDoesNotExist:
-            error = '회원 정보를 불러오지 못했습니다.'
-
-        if error is None:
-            if member_info.phone is None:
-                member_info.phone = ''
-            if member_info.birthday_dt is None:
-                member_info.birthday_dt = ''
-            context['member_info'] = member_info
-        context['check_password_changed'] = 1
-        if sns_id != '' and sns_id is not None:
-            sns_password_change_check = SnsInfoTb.objects.filter(member_id=request.user.id, sns_id=sns_id,
-                                                                 change_password_check=1, use=USE).count()
-            if sns_password_change_check == 0:
-                context['check_password_changed'] = 0
-        return render(request, self.template_name, context)
+        # context = {}
+        # member_info = None
+        # error = None
+        # sns_id = request.session.get('social_login_id', '')
+        # try:
+        #     member_info = MemberTb.objects.get(member_id=request.user.id)
+        # except ObjectDoesNotExist:
+        #     error = '회원 정보를 불러오지 못했습니다.'
+        #
+        # if error is None:
+        #     if member_info.phone is None:
+        #         member_info.phone = ''
+        #     if member_info.birthday_dt is None:
+        #         member_info.birthday_dt = ''
+        #     context['member_info'] = member_info
+        # context['check_password_changed'] = 1
+        # if sns_id != '' and sns_id is not None:
+        #     sns_password_change_check = SnsInfoTb.objects.filter(member_id=request.user.id, sns_id=sns_id,
+        #                                                          change_password_check=1, use=USE).count()
+        #     if sns_password_change_check == 0:
+        #         context['check_password_changed'] = 0
+        # return render(request, self.template_name, context)
 
 
 class TraineeCalendarView(LoginRequiredMixin, AccessTestMixin, TemplateView):

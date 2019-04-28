@@ -82,11 +82,6 @@ urlpatterns = [
     # 개인정보 처리방침
     url(r'^trainee_privacy_policy/$', views.PrivacyPolicyView.as_view(), name='trainee_privacy_policy'),
 
-    # 회원 빈 월간 일정 페이지
-    url(r'^cal_month_blank/$', views.CalMonthBlankView.as_view(), name='cal_month_blank'),
-    # 회원 빈 Mypage 페이지
-    url(r'^mypage_trainee_blank/$', views.MyPageBlankView.as_view(), name='mypage_trainee_blank'),
-
     # Mypage 페이지
     url(r'^trainee_mypage/$', views.MyPageView.as_view(), name='trainee_mypage'),
 
@@ -118,4 +113,13 @@ urlpatterns = [
     url(r'^popup_my_info_change/$', views.PopupMyInfoChangeView.as_view(),
         name='popup_my_info_change'),
 
+    # 삭제된 페이지
+    # 회원 빈 월간 일정 페이지
+    url(r'^cal_month_blank/$', views.CalMonthBlankView.as_view(), name='cal_month_blank'),
+    # 회원 빈 Mypage 페이지
+    url(r'^mypage_trainee_blank/$', views.MyPageBlankView.as_view(), name='mypage_trainee_blank'),
+    # 월간 일정 페이지
+    url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
+    # Mypage 페이지
+    url(r'^mypage_trainee/$', views.MyPageView.as_view(), name='mypage_trainee'),
 ]
