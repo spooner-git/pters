@@ -50,11 +50,17 @@
                     {% endif %}
                 </div>
                 <div class="obj_table_raw wrapper_cancel_notice">
-                    <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_white">
-                        *취소 가능 시간이
-                        <span class="obj_font_size_11_weight_500"> {{ schedule_info.start_dt | timeuntil_formatting:request.session.setting_member_reserve_cancel_time }} </span>
-                        남았습니다.
-                    </div>
+                    {% if cancel_disable_time > schedule_info.start_dt %}
+                        <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_white">
+                            <span class="obj_font_size_11_weight_500"> * 예약 취소가 불가한 일정입니다. </span>
+                        </div>
+                    {% else %}
+                        <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_white">
+                            * 취소 가능 시간이
+                            <span class="obj_font_size_11_weight_500"> {{ schedule_info.start_dt | date:'Y-m-d H:i' | timeuntil_formatting:request.session.setting_member_reserve_cancel_time }} </span>
+                            남았습니다.
+                        </div>
+                    {% endif %}
                     <!-- <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey"
                          onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
                                                                {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',

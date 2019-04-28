@@ -36,7 +36,8 @@ from .functions import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
     func_get_lecture_connection_list, func_get_trainee_next_schedule_by_class_id, func_get_trainee_select_schedule, \
-    func_get_trainee_ing_group_list, func_check_select_date_reserve_setting, func_get_trainee_package_list
+    func_get_trainee_ing_group_list, func_check_select_date_reserve_setting, func_get_trainee_package_list, \
+    func_get_class_list_only_view
 
 logger = logging.getLogger(__name__)
 
@@ -160,7 +161,7 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(TraineeMainView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
         context['error'] = None
-        context = func_get_class_list(context, self.request.user.id)
+        context = func_get_class_list_only_view(context, self.request.user.id)
         if class_id is not None and class_id != '':
             context = func_get_trainee_next_schedule_by_class_id(context, class_id, self.request.user.id)
             context = func_get_trainee_ing_group_list(context, class_id, self.request.user.id)
@@ -171,10 +172,10 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
             if class_info is not None:
                 context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
-                reserve_prohibition_time = context['lt_res_cancel_time']
-                # 근접 예약 시간 확인
-                reserve_disable_time = timezone.now() + datetime.timedelta(minutes=reserve_prohibition_time)
-                context['reserve_disable_time'] = reserve_disable_time
+                cancel_prohibition_time = context['lt_res_cancel_time']
+                # 근접 취소 시간 확인
+                cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
+                context['cancel_disable_time'] = cancel_disable_time
 
         return context
 
@@ -429,6 +430,17 @@ def add_trainee_schedule_logic(request):
     if error is None:
         if lecture_id is None:
             error = '예약 가능 횟수를 확인해주세요.'
+        else:
+            try:
+                test_member_lecture = MemberLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
+            except ObjectDoesNotExist:
+                test_member_lecture = None
+
+            if test_member_lecture is not None:
+                if test_member_lecture.auth_cd == 'WAIT':
+                    error = ' 알림 -> 프로그램 연결 허용 선택후 이용 가능합니다.'
+                elif test_member_lecture.auth_cd == 'DELETE':
+                    error = '강사님에게 프로그램 연결을 요청하세요.'
 
     if error is None:
         try:
@@ -795,6 +807,7 @@ class GetTraineeCountView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 def program_select_logic(request):
 
     class_id = request.POST.get('class_id', '')
+    class_id_session = request.session.get('class_id', '')
     # lecture_id = request.POST.get('lecture_id', '')
     lecture_connection_check = request.POST.get('lecture_connection_check', PROGRAM_SELECT)
     next_page = request.POST.get('next_page', '/trainee/trainee_main/')
@@ -828,6 +841,29 @@ def program_select_logic(request):
                 except ObjectDoesNotExist:
                     error = None
 
+            class_info = None
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+            except ObjectDoesNotExist:
+                error = '수강정보를 불러오지 못했습니다.'
+
+            log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name + request.user.first_name,
+                             class_tb_id=class_id_session,
+                             log_info=class_info.member.name + ' 강사님의 \''
+                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                             log_how='연결 취소',
+                             log_detail='', use=USE)
+            log_data.save()
+            log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name + request.user.first_name,
+                             class_tb_id=class_info.class_id,
+                             log_info=class_info.member.name + ' 강사님의 \''
+                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                             log_how='연결 취소',
+                             log_detail='', use=USE)
+            log_data.save()
+
         elif lecture_connection_check == PROGRAM_LECTURE_CONNECT_ACCEPT:
             # 선택한 프로그램의 연결 대기중인 수강권 전부 연결
             query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
@@ -839,7 +875,6 @@ def program_select_logic(request):
                 use=USE).annotate(member_auth_cd=RawSQL(query_auth_type_cd,
                                                         [])).filter(member_auth_cd='WAIT'
                                                                     ).order_by('-lecture_tb__start_date')
-
             for lecture_info in lecture_data:
                 try:
                     member_lecture = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id,
@@ -848,6 +883,30 @@ def program_select_logic(request):
                     member_lecture.save()
                 except ObjectDoesNotExist:
                     error = None
+
+            class_info = None
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+            except ObjectDoesNotExist:
+                error = '수강정보를 불러오지 못했습니다.'
+
+            log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name + request.user.first_name,
+                             class_tb_id=class_id_session,
+                             log_info=class_info.member.name + ' 강사님의 \''
+                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                             log_how='연결 완료',
+                             log_detail='', use=USE)
+            log_data.save()
+            log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name + request.user.first_name,
+                             class_tb_id=class_info.class_id,
+                             log_info=class_info.member.name + ' 강사님의 \''
+                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                             log_how='연결 완료',
+                             log_detail='', use=USE)
+            log_data.save()
+            next_page = '/trainee/trainee_main/'
 
         if lecture_connection_check != PROGRAM_LECTURE_CONNECT_DELETE:
             # 선택한 프로그램 연결
@@ -1153,9 +1212,11 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
                   " where D.LECTURE_TB_ID = `LOG_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " + str(self.request.user.id)
 
-            log_data = LogTb.objects.filter(class_tb_id=class_id, reg_dt__gte=three_days_ago,
-                                            use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
-                                                              ).filter(member_auth_cd='VIEW').order_by('-reg_dt')
+            log_data = LogTb.objects.filter(
+                class_tb_id=class_id, reg_dt__gte=three_days_ago,
+                use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
+                                  ).filter(Q(member_auth_cd='VIEW')
+                                           | Q(auth_member_id=self.request.user.id)).order_by('-reg_dt')
 
         if error is None:
             for log_info in log_data:
@@ -1662,10 +1723,10 @@ class PopupCalendarPlanView(TemplateView):
 
             if class_info is not None:
                 context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
-                reserve_prohibition_time = context['lt_res_cancel_time']
+                cancel_prohibition_time = context['lt_res_cancel_time']
                 # 근접 예약 시간 확인
-                reserve_disable_time = timezone.now() + datetime.timedelta(minutes=reserve_prohibition_time)
-                context['reserve_disable_time'] = reserve_disable_time
+                cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
+                context['cancel_disable_time'] = cancel_disable_time
                 context['avail_end_date'] = datetime.datetime.strptime(str(context['avail_date_data'].pop()),
                                                                        '%Y-%m-%d')
         # if len(context['schedule_data']) == 0:
@@ -1722,7 +1783,6 @@ class PopupCalendarPlanReserveView(TemplateView):
                               'group_name': group_schedule_info.group_tb.name,
                               'group_lecture_avail_count': group_lecture_avail_count}
                 group_data.append(group_info)
-
         context['group_data'] = group_data
         # if trainer_id != '' and trainer_id is not None:
         #     context = func_get_trainer_setting_list(context, trainer_id, class_id)
@@ -1734,8 +1794,15 @@ class PopupCalendarPlanReserveCompleteView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanReserveCompleteView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
         schedule_id = self.request.GET.get('schedule_id')
         schedule_info = None
+
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            class_info = None
+
         if schedule_id is not None and schedule_id != '':
             try:
                 schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id, use=USE)
@@ -1754,6 +1821,12 @@ class PopupCalendarPlanReserveCompleteView(TemplateView):
                 group_name = '1:1 레슨'
             schedule_info.group_name = group_name
             schedule_info.group_type_name = group_type_name
+
+            context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
+            cancel_prohibition_time = context['lt_res_cancel_time']
+            # 근접 취소 시간 확인
+            cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
+            context['cancel_disable_time'] = cancel_disable_time
 
         context['schedule_info'] = schedule_info
         return context

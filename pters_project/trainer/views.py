@@ -2438,7 +2438,12 @@ def update_lecture_connection_info_logic(request):
     class_id = request.session.get('class_id', '')
     error = None
     member_info = None
-    member_lecture_info = None
+    class_info = None
+
+    try:
+        class_info = ClassTb.objects.get(class_id=class_id)
+    except ObjectDoesNotExist:
+        error = '프로그램 정보를 불러오지 못했습니다.'
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -2479,12 +2484,16 @@ def update_lecture_connection_info_logic(request):
         member_lecture_info.save()
 
     if error is None:
-        # log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
-        #                  from_member_name=request.user.last_name + request.user.first_name,
-        #                  to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
-        #                  log_info='수강권 연동 상태', log_how='수정', use=USE)
-        #
-        # log_data.save()
+        # if auth_cd == 'DELETE':
+        #     log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+        #                      from_member_name=request.user.last_name + request.user.first_name,
+        #                      to_member_name=member_info.name,
+        #                      class_tb_id=class_info.class_id, lecture_tb_id=member_lecture_info.lecture_tb_id,
+        #                      log_info=class_info.member.name +
+        #                               ' 강사님 [' + class_info.get_class_type_cd_name()+'] 프로그램',
+        #                      log_how='연결 취소',
+        #                      log_detail='', use=USE)
+        #     log_data.save()
 
         return redirect(next_page)
     else:

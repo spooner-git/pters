@@ -32,9 +32,9 @@ function pters_month_calendar(calendar_name, calendar_options){
     let last_day_array = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];      //각 달의 일수
     let date = new Date();
     let current_year = date.getFullYear(); //현재 년도
-    let current_month = date.getMonth(); //달은 0부터 출력해줌 0~11
+    let current_month = date.getMonth()+1; //달은 0부터 출력해줌 0~11
     let current_date = date.getDate();
-    let today_yyyy_m_d = current_year+'-'+(current_month+1)+'-'+current_date;
+    let today_yyyy_m_d = current_year+'-'+(current_month)+'-'+current_date;
     let reference_date = today_yyyy_m_d;
     let original_height;
     let expand_height;
@@ -144,7 +144,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7"></div>`);
                 }else{
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
-                                               id="calendar_cell_${data_date}">
+                                               id="calendar_cell_${data_date}" onclick="show_error_message('예약이 불가능한 날짜입니다.')">
                                                <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
                                                <div class="calendar_date_number ${font_color}">${date_cache}</div>
                                                <div id="calendar_plan_cell_${data_date}" class="plan_cell" style="height:${design_options["height_week_row"]-6-20-1}px"></div>
@@ -206,25 +206,52 @@ function pters_month_calendar(calendar_name, calendar_options){
         let inner_calendar_name = calendar_name;
         let prev_id = inner_calendar_name + "_go_prev_month";
         let next_id = inner_calendar_name + "_go_next_month";
+        let time_line_tab_selector = SCHEDULE_NOT_FINISH;
+
+
+
         $('#'+prev_id).click(function(){
-            calendar_variable.draw_month_calendar_table(func_get_prev_month(reference_year, reference_month),
-                                                        design_options);
-            func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
-                func_set_avail_date(jsondata.avail_date_data);
-                func_draw_schedule_data(jsondata);
-                func_draw_schedule_timeline_data(jsondata, SCHEDULE_NOT_FINISH);
-                func_set_timeline_to_today_or_near();
-            });
+            let prev_month_date = func_get_prev_month(reference_year, reference_month);
+            let prev_month_date_split_array = prev_month_date.split('-');
+            if(Number(prev_month_date_split_array[0]) == current_year){
+                if(Number(prev_month_date_split_array[1]) < current_month) {
+                    time_line_tab_selector = SCHEDULE_FINISH_ANYWAY;
+                }
+            }
+            else if(Number(prev_month_date_split_array[0]) < current_year){
+                    time_line_tab_selector = SCHEDULE_FINISH_ANYWAY;
+
+            }
+            calendar_variable.draw_month_calendar_table(prev_month_date, design_options);
+            $(`div.pters_timeline_cal_type_text[data-timeline='${time_line_tab_selector}']`).trigger('click');
+            // func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
+            //     func_set_avail_date(jsondata.avail_date_data);
+            //     func_draw_schedule_data(jsondata);
+            //     func_draw_schedule_timeline_data(jsondata, time_line_tab_selector);
+            //     func_set_timeline_to_today_or_near();
+            // });
+
         });
         $('#'+next_id).click(function(){
-            calendar_variable.draw_month_calendar_table(func_get_next_month(reference_year, reference_month),
-                                                        design_options);
-            func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
-                func_set_avail_date(jsondata.avail_date_data);
-                func_draw_schedule_data(jsondata);
-                func_draw_schedule_timeline_data(jsondata, SCHEDULE_NOT_FINISH);
-                func_set_timeline_to_today_or_near();
-            });
+            let next_month_date = func_get_next_month(reference_year, reference_month);
+            let next_month_date_split_array = next_month_date.split('-');
+            if(Number(next_month_date_split_array[0]) == current_year){
+                if(Number(next_month_date_split_array[1]) < current_month) {
+                    time_line_tab_selector = SCHEDULE_FINISH_ANYWAY;
+                }
+            }
+            else if(Number(next_month_date_split_array[0]) < current_year){
+                    time_line_tab_selector = SCHEDULE_FINISH_ANYWAY;
+
+            }
+            calendar_variable.draw_month_calendar_table(next_month_date, design_options);
+            $(`div.pters_timeline_cal_type_text[data-timeline='${time_line_tab_selector}']`).trigger('click');
+            // func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
+            //     func_set_avail_date(jsondata.avail_date_data);
+            //     func_draw_schedule_data(jsondata);
+            //     func_draw_schedule_timeline_data(jsondata, time_line_tab_selector);
+            //     func_set_timeline_to_today_or_near();
+            // });
         });
     }
 
@@ -488,7 +515,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                 let plus_scan = 0;
                 let date_for_scan = today_yyyy_mm_dd;
                 while($(`#timeline_${date_for_scan}`).length == 0){
-                    date_for_scan = date_format(`${current_year}-${current_month+1}-${current_date+plus_scan}`)["yyyy-mm-dd"];
+                    date_for_scan = date_format(`${current_year}-${current_month}-${current_date+plus_scan}`)["yyyy-mm-dd"];
                     plus_scan++;
                     if(plus_scan > 31){
                         date_for_scan = today_yyyy_mm_dd;
@@ -500,7 +527,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                 let minus_scan = 0;
                 while($(`#timeline_${date_for_scan}`).length == 0){
                     minus_scan--;
-                    date_for_scan = date_format(`${current_year}-${current_month+1}-${current_date+minus_scan}`)["yyyy-mm-dd"];
+                    date_for_scan = date_format(`${current_year}-${current_month}-${current_date+minus_scan}`)["yyyy-mm-dd"];
                     if(minus_scan < -31){
                         date_for_scan = today_yyyy_mm_dd;
                         break;
@@ -698,7 +725,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         },
         "draw_month_calendar_schedule":function(input_reference_date){
             if(input_reference_date==undefined){
-                input_reference_date = current_year+'-'+(current_month+1)+'-'+1;
+                input_reference_date = current_year+'-'+(current_month)+'-'+1;
             }
             func_get_ajax_schedule_data(input_reference_date, "callback", function(jsondata){
                 func_set_avail_date(jsondata.avail_date_data);

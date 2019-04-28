@@ -92,7 +92,7 @@
     </div>
 {% endblock %}
 {% block popoup_base_wrapper_bottom_inside %}
-    <div class="obj_button_big obj_font_bg_white_coral" onclick="func_schedule($('#form_plan_add').serialize(), CALL_AJAX, ADD)">예약하기</div>
+    <div class="obj_button_big obj_font_bg_white_coral" onclick="cancel_enable_check_func();">예약하기</div>
 {% endblock %}
 
 {% block popup_base_js %}
@@ -107,5 +107,37 @@
             });
         });
 
+        function cancel_enable_check_func(){
+            // 취소 가능 날짜+시간 계산하기
+            let cancel_enable_date_time = new Date();
+            cancel_enable_date_time.setMinutes( cancel_enable_date_time.getMinutes() + {{ request.session.setting_member_reserve_cancel_time }} );
+
+            // 취소 가능 날짜(yyyy-mm-dd) / 시간 구하기(hh:mm)
+            let cancel_enable_date = cancel_enable_date_time.getFullYear() + '-'
+                +('0'+(cancel_enable_date_time.getMonth()+1)).slice(-2)  + '-'
+                + ('0'+cancel_enable_date_time.getDate()).slice(-2);
+            let cancel_enable_time = ('0'+cancel_enable_date_time.getHours()).slice(-2)+':'+('0'+cancel_enable_date_time.getMinutes()).slice(-2);
+
+            // 선택 날짜(yyyy-mm-dd) / 시간 가져오기(hh:mm)
+            let select_date = $('#form_content_training_date').val();
+            let select_time = $('#form_content_training_time').val();
+
+            // 취소 가능 날짜와 선택 날짜 비교 (선택 날짜가 취소가능 날짜보다 뒤인 경우 바로 예약)
+            if(trainee_compare_date(cancel_enable_date, select_date) != -1){
+                // 취소 가능 시간과 선택 시간 비교 (선택 시간이 취소 가능 시간보다 뒤인 경우 바로 예약)
+                if(!compare_time(cancel_enable_time, select_time)){
+                    func_schedule($('#form_plan_add').serialize(), CALL_AJAX, ADD);
+                }else{
+                    layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
+                        {'popup_title':'', 'popup_comment':'예약 취소가 불가능한 시간입니다.<br/> 정말 등록하시겠습니까?',
+                            'onclick_function':`func_schedule('${$('#form_plan_add').serialize()}', ${CALL_AJAX}, '${ADD}')`});
+
+                }
+            }
+            else{
+                func_schedule($('#form_plan_add').serialize(), CALL_AJAX, ADD);
+            }
+
+        }
     </script>
 {% endblock %}

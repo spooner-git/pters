@@ -653,6 +653,60 @@ def func_get_class_list(context, member_id):
     return context
 
 
+def func_get_class_list_only_view(context, member_id):
+
+    error = None
+
+    query_member_auth_cd \
+        = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
+          " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = "+str(member_id)
+
+    query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `CLASS_TB`.`SUBJECT_CD`"
+
+    class_lecture_data = ClassLectureTb.objects.select_related(
+        'class_tb', 'lecture_tb').filter(
+        lecture_tb__member_id=member_id, use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd, []),
+                                                           class_type_name=RawSQL(query_type_cd, [])
+                                                           ).filter(member_auth_cd='VIEW').order_by('class_tb_id')
+
+    class_list = []
+    # wait_class_list = []
+    if len(class_lecture_data) > 0:
+        for class_lecture_info in class_lecture_data:
+            class_id = class_lecture_info.class_tb_id
+            input_class_info = None
+
+            for class_info in class_list:
+                if str(class_info.class_tb_id) == str(class_id):
+                    input_class_info = class_info
+                    break
+
+            if input_class_info is None:
+                input_class_info = class_lecture_info
+                input_class_info.np_lecture_counts = 0
+                input_class_info.lecture_counts = 0
+                input_class_info.lecture_rem_count = 0
+                if class_lecture_info.class_tb.subject_detail_nm is not None\
+                        and class_lecture_info.class_tb.subject_detail_nm != '':
+                    input_class_info.class_type_name = class_lecture_info.class_tb.subject_detail_nm
+
+                input_class_info.class_lecture_data = []
+                class_list.append(input_class_info)
+
+            if input_class_info.member_auth_cd == 'WAIT':
+                input_class_info.np_lecture_counts += 1
+                input_class_info.class_lecture_data.append(class_lecture_info.lecture_tb)
+            if input_class_info.member_auth_cd == 'VIEW':
+                input_class_info.lecture_counts += 1
+                input_class_info.lecture_rem_count += class_lecture_info.lecture_tb.lecture_rem_count
+
+    context['class_data'] = class_list
+
+    if error is not None:
+        context['error'] = error
+
+    return context
+
 def func_get_trainee_next_schedule_by_class_id(context, class_id, user_id):
 
     now = timezone.now()
@@ -1035,7 +1089,7 @@ def func_check_select_date_reserve_setting(class_id, trainer_id, select_date):
 
     # 예약 정지 상태 확인
     if reserve_stop == MEMBER_RESERVE_PROHIBITION_ON:
-        error = '현재 예약 등록/취소 정지 상태입니다.'
+        error = '강사님이 예약 기능을 일시 정지하셨습니다.<br/>강사님께 직접 문의해주세요.'
 
     # 예약 가능 일자 확인
     if error is None:
