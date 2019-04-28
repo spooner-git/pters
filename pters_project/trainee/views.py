@@ -36,7 +36,8 @@ from .functions import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
     func_get_lecture_connection_list, func_get_trainee_next_schedule_by_class_id, func_get_trainee_select_schedule, \
-    func_get_trainee_ing_group_list, func_check_select_date_reserve_setting, func_get_trainee_package_list
+    func_get_trainee_ing_group_list, func_check_select_date_reserve_setting, func_get_trainee_package_list, \
+    func_get_class_list_only_view
 
 logger = logging.getLogger(__name__)
 
@@ -160,7 +161,7 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(TraineeMainView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
         context['error'] = None
-        context = func_get_class_list(context, self.request.user.id)
+        context = func_get_class_list_only_view(context, self.request.user.id)
         if class_id is not None and class_id != '':
             context = func_get_trainee_next_schedule_by_class_id(context, class_id, self.request.user.id)
             context = func_get_trainee_ing_group_list(context, class_id, self.request.user.id)
@@ -429,6 +430,17 @@ def add_trainee_schedule_logic(request):
     if error is None:
         if lecture_id is None:
             error = '예약 가능 횟수를 확인해주세요.'
+        else:
+            try:
+                test_member_lecture = MemberLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
+            except ObjectDoesNotExist:
+                test_member_lecture = None
+
+            if test_member_lecture is not None:
+                if test_member_lecture.auth_cd == 'WAIT':
+                    error = ' 알림 -> 프로그램 연결 허용 선택후 이용 가능합니다.'
+                elif test_member_lecture.auth_cd == 'DELETE':
+                    error = '강사님에게 프로그램 연결을 요청하세요.'
 
     if error is None:
         try:
