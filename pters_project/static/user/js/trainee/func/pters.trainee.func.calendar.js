@@ -736,6 +736,9 @@ function pters_month_calendar(calendar_name, calendar_options){
         },
         "get_current_month":function(){
             return reference_date;
+        },
+        "move_month":function(direction){
+            func_move_month(direction);
         }
     };
 }
