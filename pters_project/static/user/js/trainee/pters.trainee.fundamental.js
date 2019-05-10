@@ -195,15 +195,12 @@ function send_push_func(class_id, title, message){
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
-            beforeSend();
         },
 
         success:function(response){
-            console.log(response);
         },
 
         complete:function(){
-            completeSend();
         },
 
         error:function(){
