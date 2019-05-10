@@ -1396,29 +1396,37 @@ class AddPushTokenView(View):
 
         if self.error == '':
             if str(request.user) != 'AnonymousUser':
+                logger.info('test1')
                 if device_id == 'pc':
                     token_data = PushInfoTb.objects.filter(member_id=request.user.id, device_id=device_id, use=USE)
+                    logger.info('test1-1')
                 else:
                     token_data = PushInfoTb.objects.filter(device_id=device_id, use=USE)
+                    logger.info('test1-2')
 
                 if len(token_data) == 0:
                     add_token_check = True
+                    logger.info('test2-1')
                 elif len(token_data) == 1:
                     token_data.update(token=keyword, last_login=timezone.now(), member_id=request.user.id,
                                       session_info=request.session.session_key, device_info=str(user_agent))
+                    logger.info('test2-2')
                 else:
                     token_data.delete()
                     add_token_check = True
+                    logger.info('test2-3')
 
                 if add_token_check:
                     token_data = PushInfoTb.objects.filter(token=keyword, use=USE)
                     if len(token_data) > 0:
+                        logger.info('test3-1')
                         token_data.delete()
 
                     token_info = PushInfoTb(member_id=request.user.id, token=keyword, last_login=timezone.now(),
                                             session_info=request.session.session_key, device_id=device_id,
                                             device_info=str(user_agent), use=USE)
                     token_info.save()
+                    logger.info('test3-2')
                 logger.info(request.user.first_name+'['+str(request.user.id)+']'+keyword+'///'+device_id)
                 logger.info(str(request.session.session_key))
                 logger.info(str(user_agent))
@@ -1433,6 +1441,7 @@ class DeletePushTokenView(View):
     error = ''
 
     def post(self, request):
+        logger.info('test3-3??')
         device_id = request.POST.get('device_id', '')
         if device_id != '':
             token_data = PushInfoTb.objects.filter(device_id=device_id, use=USE)
