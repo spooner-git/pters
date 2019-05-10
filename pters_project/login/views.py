@@ -1419,6 +1419,9 @@ class AddPushTokenView(View):
                                             session_info=request.session.session_key, device_id=device_id,
                                             device_info=str(user_agent), use=USE)
                     token_info.save()
+                logger.info(request.user.first_name+'['+str(request.user.id)+']'+keyword+'///'+device_id)
+                logger.info(str(request.session.session_key))
+                logger.info(str(user_agent))
                 request.session['device_id'] = device_id
                 request.session['push_token'] = keyword
 
