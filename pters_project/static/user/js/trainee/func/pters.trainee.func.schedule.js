@@ -31,10 +31,16 @@ function func_schedule(data, call_method, type){
                  * @param jsondata.messageArray
                 **/
                 let error_message = jsondata.messageArray;
+
                 if(error_message.length>0){
                     layer_popup.close_layer_popup();
                     show_error_message(error_message[0]);
                 }else{
+                    if(jsondata.push_lecture_id.length>0){
+                        for(var i=0; i<jsondata.push_lecture_id.length; i++) {
+                            send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i]);
+                        }
+                    }
                     //성공
                     if(type == ADD){
                         layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve_complete', 90, POPUP_FROM_BOTTOM, {'schedule_id':jsondata.schedule_id});

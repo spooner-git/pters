@@ -106,3 +106,79 @@ function func_ajax_after_send(ajax_name, ajax_data){
     });
 
 /* 피터스 전용 모듈*/
+
+
+function clear_badge_counter(){
+    $.ajax({
+        url:'/login/clear_badge_counter/',
+        type:'POST',
+        //dataType : 'html',
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            //alert('before clear_badge_counter afsavf')
+            console.log('before');
+        },
+
+        //통신성공시 처리
+        success:function(){
+            //alert('test')
+            console.log('sucess');
+
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            console.log('error');
+            //alert('error clear_badge_counter')
+            //console.log('error:clear_badge_counter')
+        }
+    });
+}
+
+function update_push_token(token, device_id) {
+    $.ajax({
+        url:'/login/add_push_token/',
+        type:'POST',
+        data:{"token_info":token, "device_id":device_id},
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            //AjaxBeforeSend();
+        },
+
+        //통신성공시 처리
+        success:function(){
+            $('a.text-payment').parent('div').css('display', 'inline-block');
+            if(device_id != 'pc') {
+                // $('a.text-payment').parent('div').css('display', 'none');
+                $('.ads_wrap').css('display', 'none');
+                $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
+                // $('#paymentSetting').css('display', 'none');
+                $('._company').css('display', 'none');
+            }else{
+                // $('a.text-payment').parent('div').css('display', 'inline-block');
+            }
+            console.log('토큰 등록 완료');
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+
+        },
+
+        //통신 실패시 처리
+        error:function(){
+
+        }
+    });
+}
