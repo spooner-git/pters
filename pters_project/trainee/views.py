@@ -659,7 +659,7 @@ def delete_trainee_schedule_logic(request):
             context['push_title'] = ''
             context['push_message'] = ''
 
-        return render(request, 'ajax/trainee_error_info.html', context)
+        return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)

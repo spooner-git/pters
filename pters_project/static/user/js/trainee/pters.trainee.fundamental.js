@@ -144,8 +144,6 @@ function clear_badge_counter(){
 }
 
 function update_push_token(token, device_id) {
-    console.log(token);
-    console.log(device_id);
     $.ajax({
         url:'/login/add_push_token/',
         type:'POST',
