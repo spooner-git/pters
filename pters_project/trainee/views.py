@@ -358,7 +358,7 @@ def add_trainee_schedule_logic(request):
     push_class_id = []
     push_title = []
     push_message = []
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_class_id': None, 'push_title': None, 'push_message': None}
     schedule_info = None
     lecture_id = None
     lt_res_member_time_duration = 1
@@ -537,7 +537,7 @@ def delete_trainee_schedule_logic(request):
     push_message = []
     group_name = '1:1 레슨'
     group_type_name = ''
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_class_id': None, 'push_title': None, 'push_message': None}
     lecture_id = None
 
     if schedule_id == '':
@@ -663,7 +663,7 @@ def delete_trainee_schedule_logic(request):
             context['push_title'] = ''
             context['push_message'] = ''
 
-        return redirect(next_page)
+        return render(request, 'ajax/trainee_error_info.html', context)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
