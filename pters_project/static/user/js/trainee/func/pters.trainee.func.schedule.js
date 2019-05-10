@@ -47,8 +47,12 @@ function func_schedule(data, call_method, type){
                     }else if(type == DELETE){
                         layer_popup.all_close_layer_popup();
                     }
-
-                    month_calendar.draw_month_calendar_schedule(month_calendar.get_current_month());
+                    try { // statements to try
+                        month_calendar.draw_month_calendar_schedule(month_calendar.get_current_month());
+                    }
+                    catch (e) {
+                      window.location.reload();
+                    }
 
                 }
             },
