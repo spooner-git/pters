@@ -36,7 +36,6 @@ function func_schedule(data, call_method, type){
                     layer_popup.close_layer_popup();
                     show_error_message(error_message[0]);
                 }else{
-                    console.log(jsondata);
                     if(jsondata.push_class_id.length>0){
                         for(var i=0; i<jsondata.push_class_id.length; i++) {
                             send_push_func(jsondata.push_class_id[i], jsondata.push_title[i], jsondata.push_message[i]);

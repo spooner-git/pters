@@ -503,7 +503,7 @@ def add_trainee_schedule_logic(request):
                 push_message.append(request.user.first_name + '님이 '
                                     + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                    + schedule_info.get_group_name() + ' 수업을 예약했습니다')
+                                    + ' [' + schedule_info.get_group_name() + '] 수업을 예약했습니다')
 
             context['push_class_id'] = push_class_id
             context['push_title'] = push_title
@@ -640,7 +640,6 @@ def delete_trainee_schedule_logic(request):
         except ObjectDoesNotExist:
             lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
 
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+str(lt_pus_from_trainee_lesson_alarm))
         if lt_pus_from_trainee_lesson_alarm == FROM_TRAINEE_LESSON_ALARM_ON:
             push_info_schedule_start_date = str(start_date).split(':')
             push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
@@ -650,11 +649,8 @@ def delete_trainee_schedule_logic(request):
             push_message.append(request.user.first_name + '님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + group_name+' 수업을 예약 취소했습니다.')
+                                + ' ['+group_name+'] 수업을 예약 취소했습니다.')
 
-            logger.error(str(push_class_id))
-            logger.error(str(push_title))
-            logger.error(str(push_message))
             context['push_class_id'] = push_class_id
             context['push_title'] = push_title
             context['push_message'] = push_message
