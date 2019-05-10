@@ -182,3 +182,32 @@ function update_push_token(token, device_id) {
         }
     });
 }
+
+function send_push_func(class_id, title, message){
+
+    $.ajax({
+        url: '/schedule/send_push_to_trainer/',
+        type : 'POST',
+        dataType: 'html',
+        data : {"class_id":class_id, "title":title, "message":message, "next_page":'/trainee/get_trainee_error_info/'},
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            beforeSend();
+        },
+
+        success:function(response){
+            console.log(response);
+        },
+
+        complete:function(){
+            completeSend();
+        },
+
+        error:function(){
+            console.log('server error')
+        }
+    })
+}
