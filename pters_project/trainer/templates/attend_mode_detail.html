@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
+    <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
+    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
+
+    <title>PTERS-출석체크모드</title>
+
+    <link rel="icon" href="/static/common/favicon.ico">
+    <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
+    <link rel="shortcut icon" href="/static/common/favicon-48.png">
+    <style type="text/css">
+        @import url(/static/common/fonts/notosanskr.css);
+
+        html,body{
+            font-family: 'Noto Sans KR',sans-serif !important;
+        }
+
+
+        html{
+            font-size: 10px;
+        }
+        body{
+            background-color: #cccccc;
+            margin: 0;
+        }
+        @media(min-width:768px){
+            html{
+                font-size: 14px;
+            }
+        }
+        p{
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        section{
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        button{
+            border: 1px solid #cccccc;
+            background-color: #ffffff;
+            height: 35px;
+            padding: 5px 10px;
+            min-width: 50px;
+            border-radius: 5px;
+        }
+
+        #attend_mode_wrapper{
+            display: none;
+            width: 100%;
+            max-width: 650px;
+            margin: 0 auto;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            box-shadow: 1px 1px 3px 2px #cccccc;
+        }
+
+        #wrapper_lesson_now{
+            background-color: #ffffff;
+            border-radius: 5px;
+        }
+        #wrapper_arrow_button{
+            position: relative;
+            height: 35px;
+        }
+        #wrapper_arrow_button button:first-child{
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #wrapper_arrow_button button:last-child{
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        #wrapper_arrow_button .logo{
+            height: 35px;
+            background-image: url("/static/user/res/PTERS_logo_pure.png");
+            background-repeat: no-repeat;
+            background-size: 100px;
+            background-position: center;
+        }
+        #wrapper_lesson_now_info{
+            margin: 0 auto;
+            max-width: 550px;
+            padding: 15px;
+            box-sizing: border-box;
+            text-align: center
+        }
+        #wrapper_lesson_now_info_name{
+            padding: 15px;
+            border: 2px solid #fe4e65;
+            border-radius: 10px;
+            background: linear-gradient(to right, #f4f4f4, #f4f4f4 20%, #ffffff);
+        }
+
+        
+
+        #wrapper_submit_button{
+            text-align: center
+        }
+
+
+
+        /* attend_mode_detail */
+        
+        #button_confirm_attend{
+            width:100%;
+            max-width: 300px;
+            background-color: #fe4e65;
+            border-color: #fe4e65;
+            color: #ffffff;
+            height: 45px;
+            margin-top: 10px;
+        }
+
+        #button_back{
+            width: 70%;
+            max-width: 200px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        #wrapper_ticket_change_info{
+            text-align: center
+        }
+        #img_ticket_change_arrow{
+            transform: rotate(90deg);
+            width: 15px;
+        }
+
+        /* attend_mode_detail */
+
+
+        .fts_24{font-size: 1.7rem;}
+        .fts_22{font-size: 1.5rem;}
+        .fts_20{font-size: 1.4rem;}
+        .fts_16{font-size: 1.14rem;}
+
+        .ftw_bd{font-weight: bold;}
+        .ftw_500{font-weight: 500;}
+
+        .ftc_pink{color: #fe4e65}
+    </style>
+</head>
+
+<body>
+    <div id="attend_mode_wrapper">
+        <section id="wrapper_lesson_now">
+            <div id="wrapper_arrow_button">
+                <button onclick="move_button(event, 'prev')" hidden>&#60;&#60;</button>
+                <div class="logo"></div>
+                <button onclick="move_button(event, 'next')" hidden>&#62;&#62;</button>
+            </div>
+
+            <div id="wrapper_lesson_now_info">
+                <p class="fts_24 ftw_bd">스노우 회원님</p>
+        
+                <div id="wrapper_lesson_now_info_name">
+                    <p class="fts_20" style="margin-top: 0;">2019.05.15 (수요일)</p>
+                    <p class="fts_24 ftw_bd" style="text-decoration: underline">14:00 - 15:00</p>
+                    <p class="fts_22 ftw_bd">(그룹) 2:1 커플레슨</p>
+                </div>
+            </div>
+
+            <div id="wrapper_ticket_change_info">
+                <p class="fts_20 ftw_bd">수강권 차감</p>
+                <p class="fts_20">2:1 커플그룹 (5 / 10)</p>
+                <div><img src="/static/user/res/btn_next.png" id="img_ticket_change_arrow"></div>
+                <p class="fts_22 ftw_bd">2:1 커플그룹 (4 / 10)</p>
+            </div>
+
+
+        </section>
+
+
+        <section id="wrapper_submit_button">
+                <div><button onclick="alert(event.target.innerHTML)" id="button_confirm_attend" class="fts_22 ftw_bd">출석</button></div>
+                <div><button onclick="location.href='/trainer/attend_mode/'" id="button_back" class="fts_16">뒤로</button></div>
+        </section>
+
+    </div>
+
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+        window.onload=function(){
+            let window_height = window.innerHeight;
+            let content_height = $('#attend_mode_wrapper').height();
+
+            $('#attend_mode_wrapper').fadeIn();
+            if(content_height < window_height){
+                $('#attend_mode_wrapper').css({'left':'50%', 'top':'50%', 'transform':'translate(-50%, -50%)', 'position':'absolute'})
+            }
+        }
+        
+
+
+        function form_confirm(e){
+            e.preventDefault();
+            console.log(e);
+            alert(e.target.innerHTML)
+        }
+
+        function move_button(e, direction){
+            e.preventDefault();
+            switch(direction){
+                case "prev":
+                    alert('prev');
+                break;
+                    
+                case "next":
+                    alert('next');
+                break;
+            }
+        }
+
+        function back_to_normal_mode(e){
+            e.preventDefault();
+            alert('관리자만~')
+        }
+
+    </script>
+</body>
+</html>
+

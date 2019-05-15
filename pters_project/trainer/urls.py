@@ -251,6 +251,10 @@ urlpatterns = [
     url(r'^frompters_setting/$', views.FromPtersView.as_view(), name='frompters_setting'),
     # About us 페이지
     url(r'^aboutus_setting/$', views.AboutUsView.as_view(), name='aboutus_setting'),
+    # Attend Mode 페이지
+    url(r'^attend_mode/$', views.AttendModeView.as_view(), name='attend_mode'),
+    # Attend Mode Detail 페이지
+    url(r'^attend_mode_detail/$', views.AttendModeDetailView.as_view(), name='attend_mode_detail'),
     # 강좌 선택 페이지
     url(r'^class_select/$', views.ClassSelectView.as_view(), name='class_select'),
     # 강좌 추가 페이지
