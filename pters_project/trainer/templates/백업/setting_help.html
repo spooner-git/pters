@@ -1,0 +1,246 @@
+{% extends "trainer_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.help.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+{% endblock %}
+
+
+
+{% block content %}
+    <form action="{% url 'board:add_question_info' %}" id="update-setting-inquire-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next_page" value="{% url 'trainer:help_setting' %}">
+        <input type="hidden" name="inquire_type" id="id_inquire_type">
+        <div id="help_label" class="settingMenu wrap800">
+            <p class="settingText">PTERS 이용 문의</p>
+            <p class="settingText2">도움이 필요하신 분께서는 아래 양식을 작성해주세요.</p>
+        </div>
+        <div id="help_setting" class="settingBox wrap800">
+            <div id="go_to_faq">
+                <label><img src="/static/user/res/icon-info.png">사용법 및 자주 묻는 질문</label>
+                <div class="label_explain">
+                    <p>피터스의 이용방법과 자주 묻는 질문을 <br><a href="https://blog.naver.com/ppkyum" style="color: #fe4e65;font-weight: bold;" target="_blank">여기</a>를 클릭하여 확인해보세요!</p>
+                </div>
+            </div>
+
+            <div class="_write">
+                <label><img src="/static/user/res/icon-info.png">직접 문의 하기 
+                    <div id="myquestion_history">내 문의 내역</div>
+                </label>
+                <div class="label_explain">
+                    <p>이용 문의 외 기능제안도 감사히 접수 하겠습니다.<br>작성하신 문의는 등록하신 이메일로 답변 드립니다.</p>
+                </div>
+                <div class="inquire_type_wrap">
+                    <span>문의 유형 : </span>
+                    <select>
+                        <option disabled selected>선택</option>
+                        {% for qa_type_info in qa_type_data %}
+                        <option value="{{ qa_type_info.common_cd }}">{{ qa_type_info.common_cd_nm }}</option>
+{#                        <option value="ERROR">기능 오류</option>#}
+{#                        <option value="USAGE">사용법 문의</option>#}
+{#                        <option value="SUGGEST">기능 제안</option>#}
+{#                        <option value="OTHER">기타</option>#}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="inquire_type_wrap"><p>제목 : </p><input type="" name="inquire_subject" id="id_inquire_title" placeholder=" 문의 제목을 입력해주세요."  maxlength="255"></div>
+                <div class="textarea_wrap">
+                    <p>문의 내용: </p>
+                    <textarea class="textarea" placeholder=" 이 곳에 문의 내용을 작성해 주세요.(최대 1,000자)" name="textarea_body" maxlength="1000" onkeyup="characterCheck()" onkeydown="characterCheck()"></textarea>
+                    <input type="hidden" name="inquire_body" id="id_inquire_body">
+                </div>
+            </div>
+
+            <div class="_mylist">
+                <label><img src="/static/user/res/icon-info.png">내 문의 내역 
+                    <div id="myquestion_history_return">문의 작성</div>
+                </label>
+                <div class="label_explain">
+                    <p>고객님께서 문의해주신 내역입니다.</p>
+                </div>
+                <div id="myquestion_history_list">
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="popupBtn_mini" style="margin-bottom: 50px;">
+            <button class="submitBtn _button_Prev">이전</button>
+            <button class="submitBtn _button_Next">등록</button>
+        </div>
+    </form>
+{% endblock %}
+
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script>
+        $('a.__help').css('color','#fe4e65;');
+        if($('body').width()<600){
+            $('#page-base-addstyle').css('display','block');
+            $('#page-base').css('display','none');
+            $('#uptext2').text("이용문의");
+        }
+
+        $('select').change(function(){
+            $('#id_inquire_type').val($(this).val());
+            $('#id_inquire_type').attr('value',$(this).val());
+        });
+
+        function characterCheck() {
+            var RegExp = /[\{\}\[\]\/,;:|\)*~`^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;//정규식 구문
+            var obj = document.getElementsByName("textarea_body")[0];
+            if (RegExp.test(obj.value)) {
+                obj.value = obj.value.substring(0, obj.value.length - 1);//특수문자를 지우는 구문
+            }
+        }
+
+        $("#upbutton-check, ._button_Next").click(function(e){
+            e.preventDefault();
+            var error_message = '';
+            if($('#id_inquire_type').val().length == 0){
+                error_message = '유형을 선택해주세요';
+            }
+            else if($('#id_inquire_title').val().length == 0){
+                error_message = '제목을 입력해주세요.';
+            }
+            // else if($('#id_inquire_body').val().length == 0){
+            //     error_message = '내용을 입력해주세요.';
+            // }
+            else if($('textarea[name="textarea_body"]').val().length == 0){
+                error_message = '내용을 입력해주세요.';
+            }
+            if(error_message==''){
+                alert('문의를 전송 하였습니다.');
+                var content = $('textarea').val();
+                content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
+                $('#id_inquire_body').val(content);
+                document.getElementById('update-setting-inquire-form').submit();
+            }
+            else{
+                alert(error_message);
+            }
+        });
+
+ 
+        $('#upbutton-x, ._button_Prev').click(function(){
+            location.href="/trainer/trainer_main/";
+        });
+
+
+        $('#myquestion_history').click(function(){
+            get_myquestion_list();
+            $('._write, .popupBtn_mini').hide();
+            $('._mylist').show();
+        });
+
+        $('#myquestion_history_return').click(function(){
+            $('._write, .popupBtn_mini').show();
+            $('._mylist').hide();
+        });
+
+
+        function get_myquestion_list(){
+            $.ajax({
+                    url: '/board/get_question_list/',
+                    type: 'GET',
+                    dataType : 'html',
+
+                    beforeSend:function(){
+                        beforeSend()
+                    },
+
+                    success:function(data){
+                        console.log(data);
+                        var jsondata = JSON.parse(data);
+                        console.log(jsondata);
+                        if(jsondata.messageArray.length>0){
+                            $('#errorMessageBar').show();
+                            $('#errorMessageText').text(jsondata.messageArray);
+                        }else{
+                            draw_myquestion_list(jsondata, $('#myquestion_history_list'));
+                        }
+                    },
+
+                    complete:function(){
+                        completeSend();
+                    },
+
+                    error:function(){
+                        console.log('server error');
+                    }
+                })
+        }
+
+
+        function draw_myquestion_list(jsondata, targetSelector){
+            var targetHtml = targetSelector;
+            var email = "{{ request.user.email }}";
+{#            var htmlToJoin = [`<div>답변은 <span style="font-weight:bold;color:#fe4e65">${jsondata.email_address[0]}</span> 로 발송 드립니다.</div>`]#}
+
+            var htmlToJoin = [`<div>답변은 <span style="font-weight:bold;color:#fe4e65">${email}</span> 로 발송 드립니다.</div>
+                              <div class="myquestion_history_table_title">
+                                    <div class="myquestion_history_table_cell_title _qatable_no">No.</div>
+                                    <div class="myquestion_history_table_cell_title _qatable_type">문의유형</div>
+                                    <div class="myquestion_history_table_cell_title _qatable_title">문의제목</div>
+                                    <div class="myquestion_history_table_cell_title _qatable_regdt">작성일</div>
+                                    <div class="myquestion_history_table_cell_title _qatable_status">상태</div>
+                              </div>`];
+            
+            var len = jsondata.question_id.length;
+            var counter = len;
+            for(var i=0; i<len; i++){
+                var number = `<div class="myquestion_history_table_cell _qatable_no">${counter--}.</div>`;
+                var qa_type = `<div class="myquestion_history_table_cell _qatable_type">${jsondata.qa_type_cd_name[i]}</div>`;
+                var qa_title = `<div class="myquestion_history_table_cell _qatable_title"><p>${jsondata.title[i]}</p></div>`;
+                var qa_regdt = `<div class="myquestion_history_table_cell _qatable_regdt">${date_format_to_user_hangul(jsondata.reg_dt[i],'minimize')}</div>`;
+                var qa_status = `<div class="myquestion_history_table_cell _qatable_status">${jsondata.status_type_cd_name[i]}</div>`;
+
+                var table = `<div class="myquestion_history_table" data-qid="${jsondata.question_id[i]}">
+                                ${number}${qa_type}${qa_title}${qa_regdt}${qa_status}
+                            </div>`;
+                var content = `<div class="myquestion_history_table_content" data-qid="${jsondata.question_id[i]}">
+                                ${jsondata.contents[i]}
+                            </div>`;
+                htmlToJoin.push(table+content);
+            }
+            if(len == 0){
+                htmlToJoin.push(`<div class="myquestion_history_table">
+                                        문의 내역이 없습니다.
+                                </div>`);
+            }
+            targetHtml.html(htmlToJoin.join(''));
+        }
+
+        $(document).on('click','div.myquestion_history_table',function(){
+            var qid = $(this).attr('data-qid');
+            var $myContent = $(`.myquestion_history_table_content[data-qid=${qid}]`);
+            if($myContent.css('display') == "none"){
+                $myContent.show();
+            }else{
+                $myContent.hide();
+            }
+        });
+
+
+        var varUA = navigator.userAgent.toLowerCase();
+        if(varUA.match('android') != null){
+            $('#go_to_faq').css('display','none');
+            //$('.ads_wrap').css('display','none');
+        }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+            $('#go_to_faq').css('display','none');
+            //$('.ads_wrap').css('display','none');
+        }else{
+
+        }
+
+        var messageArray = [{% for message in messages %}{% if message.tags == "error" %}'{{ message }}'{%if forloop.last == False%},{% endif %}{% endif %}{% endfor %}];
+        var helpInfoArray = [{% for message in messages %}{% if message.tags == "info" %}'{{ message }}'{%if forloop.last == False%},{% endif %}{% endif %}{% endfor %}];
+
+    </script>
+
+{% endblock %}

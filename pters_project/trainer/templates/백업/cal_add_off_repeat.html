@@ -1,0 +1,175 @@
+{% extends "trainer_base_add_off_repeat.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.off.repeat.add.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/pters.mini.cal.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+{% endblock %}
+
+
+
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div id="inputError">
+                <div id="errorMsg" class="inputErrorInner"><p style="line-height: 35px;vertical-align: middle;margin:0;">{{ message }}</p></div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form action="{% url 'schedule:add_repeat_schedule' %}" id="add-repeat-schedule-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="repeat_freq" id="id_repeat_freq">
+        <input type="hidden" name="repeat_start_date" id="id_repeat_start_date">
+        <input type="hidden" name="repeat_end_date" id="id_repeat_end_date">
+        <input type="hidden" name="repeat_day" id="id_repeat_day">
+        <input type="hidden" name="repeat_start_time" id="id_repeat_start_time">
+        <input type="hidden" name="repeat_dur" id="id_repeat_dur">
+        <input type="hidden" name="en_dis_type" value="0">
+        <input type="hidden" name="next_page" value="{% url 'trainer:get_trainer_schedule' %}">
+    </form>
+
+
+
+
+    <div id="offRepeatSummary" class="ptaddbox">
+        <span id="summaryText">일정요약</span>
+        <div class="summaryInnerBox">
+            <span class="summaryInnerBoxText">매주 월요일 오전 11시</span>
+            <span class="summaryInnerBoxText2">반복종료 : 계속반복</span>
+            <span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;">
+      <div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>
+      </span>
+        </div>
+        <div class="summaryInnerBox">
+            <span class="summaryInnerBoxText">매주 수요일 오후 3시</span>
+            <span class="summaryInnerBoxText2">반복종료 : 2017.12.31</span>
+            <span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;">
+      <div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>
+      </span>
+        </div>
+    </div>
+
+
+
+
+    <div id="repeatSetting" class="ptaddbox">
+        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/offadd/icon-repeat.png" %} style="width:14px;"> 반복 빈도</div>
+        <div id="repeattypeSelected" class="dropdown">
+            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+            <ul id="repeats" class="dropdown-menu pters_dropdown_custom">
+                <!-- 회원명 DB연동 필요-->
+                <li><a data-repeat="WW">매주</a></li>
+                <li><a data-repeat="2W">격주</a></li>
+                <li><a data-repeat="DD">매일</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="dateSelector" class="ptaddbox">
+        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 반복 시작</div>
+        <p class="datepicktext dropdown"><input type="text" id="datepicker" placeholder="-" readonly></p>
+    </div>
+
+    <div id="dateSelector2" class="ptaddbox">
+        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 반복 종료</div>
+        <p class="datepicktext dropdown"><input type="text" id="datepicker2" placeholder="-" readonly></p>
+    </div>
+
+
+    <div id="daySelect" class="ptaddbox">
+        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %} style="width:14px;"> 요일별 일정</div>
+        <div class="dateButtonGroup" style="width:100%;">
+            <div class="dateButton" data-date="SUN">일</div>
+            <div class="dateButton" data-date="MON">월</div>
+            <div class="dateButton" data-date="TUE">화</div>
+            <div class="dateButton" data-date="WED">수</div>
+            <div class="dateButton" data-date="THS">목</div>
+            <div class="dateButton" data-date="FRI">금</div>
+            <div class="dateButton" data-date="SAT">토</div>
+        </div>
+    </div>
+
+
+    <div id="classStartTime" class="ptaddbox">
+        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시각</div>
+        <div id="starttimesSelected" class="dropdown">
+            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+            <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
+                <!-- 회원명 DB연동 필요-->
+                <li><a data-trainingtime="00:00:00.000000">오전 0시</a></li>
+                <li><a data-trainingtime="01:00:00.000000">오전 1시</a></li>
+                <li><a data-trainingtime="02:00:00.000000">오전 2시</a></li>
+                <li><a data-trainingtime="03:00:00.000000">오전 3시</a></li>
+                <li><a data-trainingtime="04:00:00.000000">오전 4시</a></li>
+                <li><a data-trainingtime="05:00:00.000000">오전 5시</a></li>
+                <li><a data-trainingtime="06:00:00.000000">오전 6시</a></li>
+                <li><a data-trainingtime="07:00:00.000000">오전 7시</a></li>
+                <li><a data-trainingtime="08:00:00.000000">오전 8시</a></li>
+                <li><a data-trainingtime="09:00:00.000000">오전 9시</a></li>
+                <li><a data-trainingtime="10:00:00.000000">오전 10시</a></li>
+                <li><a data-trainingtime="11:00:00.000000">오전 11시</a></li>
+                <li><a data-trainingtime="12:00:00.000000">오후 12시</a></li>
+                <li><a data-trainingtime="13:00:00.000000">오후 1시</a></li>
+                <li><a data-trainingtime="14:00:00.000000">오후 2시</a></li>
+                <li><a data-trainingtime="15:00:00.000000">오후 3시</a></li>
+                <li><a data-trainingtime="16:00:00.000000">오후 4시</a></li>
+                <li><a data-trainingtime="17:00:00.000000">오후 5시</a></li>
+                <li><a data-trainingtime="18:00:00.000000">오후 6시</a></li>
+                <li><a data-trainingtime="19:00:00.000000">오후 7시</a></li>
+                <li><a data-trainingtime="20:00:00.000000">오후 8시</a></li>
+                <li><a data-trainingtime="21:00:00.000000">오후 9시</a></li>
+                <li><a data-trainingtime="22:00:00.000000">오후 10시</a></li>
+                <li><a data-trainingtime="23:00:00.000000">오후 11시</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div id="classDuration" class="ptaddbox">
+        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
+        <div id="durationsSelected" class="dropdown">
+            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+            <ul id="durations" class="dropdown-menu pters_dropdown_custom">
+                <!-- 회원명 DB연동 필요-->
+                <li><a data-dur="1">1시간</a></li>
+                <li><a data-dur="2">2시간</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div id="submitBtnWrap" class="ptaddbox">
+        <button id="submitBtn" name="submit"  type="button" class="btn">일정 등록</button>
+    </div>
+
+
+
+
+
+
+
+
+{% endblock %}
+
+
+
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.off.repeat.js" %}></script>
+
+
+
+
+
+
+{% endblock %}

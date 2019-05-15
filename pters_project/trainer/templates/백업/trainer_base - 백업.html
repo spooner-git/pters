@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static_url %}
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable:no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+        <title>{% block title %}피터스 - 강사{% endblock %}</title>
+            
+        <link rel="icon" href="/static/common/favicon.ico">
+        <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
+        <link rel="shortcut icon" href="/static/common/favicon-48.png">
+
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+        <!-- Bootstrap core CSS -->
+        <link href={% static_url "common/css/bootstrap.min.css" %} rel="stylesheet">
+        <link rel="stylesheet" href={% static_url "user/css/pters.base.set.css" %}>
+        <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
+        
+        
+        {% block local_css %}
+        {% endblock %}
+    
+    </head>
+    <body>
+    {% block navbar %}
+        <div id="shade"></div>
+
+        <div id="commonPopup" style="position:absolute;display:none;width: 110px;height: 50px;background: transparent;z-index: 200;">
+            <div style="display:inline-block;width: 30px;height: 30px;border-radius: 50%;background: #fe4e65;color: #ffffff">추가</div>
+            <div style="display:inline-block;width: 30px;height: 30px;border-radius: 50%;background: #282828;color: #ffffff">변경</div>
+        </div>
+
+        <nav class="navbar navbar-fixed-top navbar-default"  id="page-base">
+            <div id="navshade"></div>
+            <div class="container" style="max-width:1000px;">
+                <div class="navbar-header">
+                    <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="openNav()">
+                        <span class="icon-bar" style="width: 20px;"></span>
+                        <span class="icon-bar" style="width:60%;"></span>
+                        <span class="icon-bar" style="width: 20px;"></span>
+                    </button>
+                    {% block nav_center_img %}
+                        <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'index' %}">{{ user.last_name }} {{ user.first_name }}  코치님 일정</a>-->
+                        <a id="uptext" class="uptext" href="{% url 'index' %}">{{ user.last_name }} {{ user.first_name }}  <span></span></a>
+                    {% endblock %}
+                    <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
+                        <a href="{% url 'trainer:alarm' %}"><img src={% static_url "user/res/main/alarm-on.png" %} style="width:20px;"></a>
+                    </button>
+                    
+                    <div id="outer_Sidenav" class="outer_Sidenav">
+                      
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    </div>
+                    
+                    <div id="inner_Sidenav" class="sidenav">
+                        
+                        <div class="sidebar_upper" onclick="location.href='{% url 'index' %}'">
+                            <a href="{% url 'index' %}" style="width:100%;height: 100%;z-index: 1"></a>
+                            <div style="z-index: -1"><img src={% static_url "user/res/icon-pf.png" %} alt="#"></div>
+                            <div id="user_name">{{ user.last_name }} {{user.first_name}}
+                                <span class="KRtext">님</span><span class="JPtext">様</span><span class="ENtext"></span>
+                            </div>
+                            <div id="welcome"><span class="KRtext">안녕하세요!</span><span class="JPtext">こんにちは</span><span class="ENtext">What a nice day!</span></div>
+                        </div>                     
+
+                        <div class="sidebar_div" id="cal_day"><img src={% static_url "user/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#">
+                            <a href="{% url 'trainer:cal_day' %}" class="sidebar_text __todayplan">
+                            </a>
+                        </div>
+                        <div class="sidebar_div"><img src={% static_url "user/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#">
+                            <a href="{% url 'trainer:cal_week' %}" class="sidebar_text __weekplan">
+                            </a>
+                        </div>
+                        <div class="sidebar_div"><img src={% static_url "user/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#">
+                            <a href="{% url 'trainer:cal_month' %}" class="sidebar_text __monthplan">
+                            </a>
+                        </div>
+                        <div class="sidebar_div"><img src={% static_url "user/res/icon-user-setting.png" %} class="sidebar_icon" alt="#">
+                            <a href="{% url 'trainer:member_manage' %}" class="sidebar_text __membermanage">
+                            </a>
+                        </div>
+                        <div class="sidebar_div"><img src={% static_url "user/res/icon-pencil.png" %} class="sidebar_icon" alt="#">
+                            <a href="{% url 'trainer:work_manage' %}" class="sidebar_text __workmanage">
+                            </a>
+                        </div>
+                        <div class="sidebar_div" style="height: 100%;"></div>
+                        <div class="sidebar_div sidebar_div_last">
+                          <div class="sidebar_div_last1">
+                            <img src="{% static_url "user/res/icon-setting.png" %}" class="sidebar_icon sidebar_icon_setting" alt="#">
+                            <a href="{% url 'trainer:trainer_setting' %}" class="sidebar_text __setting">
+                            </a>
+                          </div>
+                          <div class="sidebar_div_last2">
+                            <img src={% static_url "user/res/icon-info.png" %} alt="#" class="sidebar_icon_info sidebar_icon">
+                          </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div><!-- /.container -->
+        </nav><!-- /.navbar -->
+
+        <nav class="navbar navbar-fixed-top navbar-default" id="page-base-addstyle">
+            <div class="container">
+                <div class="navbar-header">
+                    <button id="upbutton-x" class="navbar-toggle" aria-controls="navbar">
+                        <img src={% static_url "user/res/ptadd/btn-x.png" %} style="width:90%;">
+                    </button>
+                    {% block nav_center_img1 %}
+                        <a id="uptext2" class="uptext"></a>
+                    {% endblock %}
+                    <button id="upbutton-check" class="navbar-toggle" aria-controls="navbar">
+                        <img src={% static_url "user/res/ptadd/btn-complete.png" %} style="width:100%;">
+                    </button>
+                </div>
+            </div><!-- /.container -->
+        </nav><!-- /.navbar -->
+
+        <nav class="navbar navbar-fixed-top navbar-default" id="page-base-modifystyle">
+            <div class="container">
+                <div class="navbar-header">
+                    <button id="upbutton-x-modify" class="navbar-toggle" aria-controls="navbar">
+                        <img src={% static_url "user/res/ptadd/btn-x.png" %} style="width:90%;">
+                    </button>
+                    {% block nav_center_img2 %}
+                        <a id="uptext3" class="uptext">회원 정보</a>
+                    {% endblock %}
+                    <button id="upbutton-modify" class="navbar-toggle" aria-controls="navbar" data-type = "view">
+                        <img src={% static_url "user/res/member/icon-edit.png" %} style="width:100%;">
+                    </button>
+                </div>
+            </div><!-- /.container -->
+        </nav><!-- /.navbar -->
+        
+        <nav class="navbar navbar-fixed-top" id="pcver">
+            <div class="centermenu">
+                <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'index' %}'" style="cursor: pointer;">
+                <div class="centermenu_box">
+                    <div class="centermenu_div" style="display: none;">
+                        <a href="{% url 'trainer:cal_day' %}" class="centermenu_text __todayplan"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="{% url 'trainer:cal_week' %}" class="centermenu_text __weekplan"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="{% url 'trainer:cal_month' %}" class="centermenu_text __monthplan"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="{% url 'trainer:member_manage' %}" class="centermenu_text __membermanage"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="{% url 'trainer:work_manage' %}" class="centermenu_text __workmanage"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text __setting"></a>
+                    </div>
+                </div>
+                <div id="loginInfo" class="centermenu_div" style="float:right;">
+                    <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:3px;">
+                    <span class="pcwhere"></span>
+                    <span class="pcwho">{{ user.last_name }} {{user.first_name}} <span></span></span>
+                </div>
+                <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
+                <!--
+                <span id="pters-version" style="position: absolute;top:55px;right:0%;color:#a2a2a2;font-size:10px;">v0.1712.0000</span>
+                -->
+            </div>
+        </nav>
+        
+        <div class="footergap">
+            
+        </div>
+        
+    {% endblock %}
+    
+    {% block content %}
+    {% endblock %}
+
+        <footer class="fixfooter bottomzero">
+            <div class="bottomfooter1">
+                <span>English</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>한국어</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>日本語</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+            </div>
+            <div class="bottomfooter2">
+                <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
+                <span>회사소개</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>이용안내</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>제휴제안</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>개인정보처리방침</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>고객센터</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+            </div>
+        </footer>
+        
+        <!--
+        <footer class="fixfooter">
+            <div class="bottomfooter1">
+                <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
+                <span>회사소개</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>이용안내</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>제휴제안</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>개인정보처리방침</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>고객센터</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+            </div>
+            <div class="bottomfooter2">
+                <p>스푸너(SPOONER) 통신판매업 신고 : 제 2017-서울동작-0672호, 사업자등록번호 : 463-56-00284, 대표자 : OOO,XXX</p>
+                <p>Tel : xxxx-xxxx, Fax : xxxx-xxxx, 주소 : 서울특별시 동작구 신대방동 보라매로 5가길 7 캐릭터그린빌 오피스텔 x층 XXX호</p>
+                <p>이용 및 제휴문의 : skkim@spooner.co.kr</p>
+                <p>- </p>
+                <p>Copyright(C) SPOONER All rights reserved.</p>
+            </div>
+        </footer>
+        -->
+    
+    {% block footer %}
+ 
+    {% endblock %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"> //미니달력</script>
+    <script src={% static_url "common/js/bootstrap.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/jquery.swipe.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
+    <script>
+             function openNav(){
+               $("#outer_Sidenav").show();
+               $("#inner_Sidenav").css({'width':'250px'});
+               $('#float_btn_wrap, #float_btn').fadeOut()
+               //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeIn('fast')
+             }
+
+             function closeNav(){
+              $("#outer_Sidenav").hide();
+              $("#inner_Sidenav").css({'width':'0'});
+              $('#float_btn_wrap, #float_btn').fadeIn()
+              //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeOut('fast')
+             }; 
+
+
+            var stoptime = '{{ request.session.setting_member_reserve_time_available }}'
+             if(stoptime.length>0){
+                var stoptimeStart = Number('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0])
+                var stoptimeEnd = Number('{{ request.session.setting_member_reserve_time_available }}'.split('-')[1].split(':')[0])
+             }else{
+                var stoptimeStart = ''
+                var stoptimeEnd = ''
+             }
+
+             var Options = {  "stoptimeStart": stoptimeStart ,             //강사가 설정한 예약불가 시간 (시작)
+                              "stoptimeEnd": stoptimeEnd ,                //강사가 설정한 예약불가 시간 (종료)
+                              "limit":'{{ request.session.setting_member_reserve_time_prohibition }}',      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+                              "reserve":'{{ request.session.setting_member_reserve_prohibition }}',    //회원 일정 기능을 enable 1/disable 0
+
+                              "firstPushToMember":'-',
+                              "secondPushToMember":'-',
+                              "regErgentPushToMember":'-',
+                              "planChangePush":'-',
+                              "regErgentPush":'-',
+
+
+                              "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
+                              "location" : "Japan",           //Korea, Japan, English, Chinese
+            }
+
+              if(Options.language=="JPN"){
+                $(".KRtext, .ENtext").remove();
+                $(".JPtext").show();
+              }else if(Options.language=="ENG"){
+                $(".KRtext, .JPtext").remove();
+                $(".ENtext").show();
+              }else if(Options.language=="KOR"){
+                $(".ENtext, .JPtext").remove();
+                $(".KRtext").show();
+              }
+
+    </script>
+
+    {% block local_js_footer %}
+    {% endblock %}
+
+    </body>
+</html>

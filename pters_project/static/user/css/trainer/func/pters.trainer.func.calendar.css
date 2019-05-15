@@ -1,0 +1,33 @@
+
+.cal_week_line{
+	display: table;
+	width: 100%;
+	text-align: center;
+	height: 40px;
+	line-height: 40px;
+	border-bottom: 1px solid #cccccc;
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+.cal_week_line > div{
+	display: table-cell;
+	width: 14.285%;
+	padding: 20px 10px;
+}
+
+
+.week_time_line{
+	width: 100%;
+	display: table;
+}
+.week_time_line > div{
+	display: table;
+	width: 12.5%;
+}
+
+.cal_font_color_grey{
+	color: #cccccc;
+}
+.cal_font_color_black{
+	color: #1e1e1e;
+}

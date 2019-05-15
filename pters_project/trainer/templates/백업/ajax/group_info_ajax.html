@@ -1,0 +1,38 @@
+    {
+      "group_id":
+      [{% for group_info in group_data %}"{{ group_info.group_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_type_cd":
+      [{% for group_info in group_data %}"{{ group_info.group_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_type_cd_nm":
+      [{% for group_info in group_data %}"{{ group_info.group_type_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "member_num":
+      [{% for group_info in group_data %}"{{ group_info.member_num  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_name":
+      [{% for group_info in group_data %}"{{ group_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_note":
+      [{% for group_info in group_data %}"{{ group_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_reg_dt":
+      [{% for group_info in group_data %}"{{ group_info.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_mod_dt":
+      [{% for group_info in group_data %}"{{ group_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "state_cd":
+      [{% for group_info in group_data %}"{{ group_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "state_cd_name":
+      [{% for group_info in group_data %}"{{ group_info.state_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_member_num":
+      [{% for group_info in group_data %}"{{ group_info.group_member_num }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+      "group_ing_color_cd":
+      [{% for group_info in group_data %}"{{ group_info.ing_color_cd }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+      "group_end_color_cd":
+      [{% for group_info in group_data %}"{{ group_info.end_color_cd }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+      "group_ing_font_color_cd":
+      [{% for group_info in group_data %}"{{ group_info.ing_font_color_cd }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+      "group_end_font_color_cd":
+      [{% for group_info in group_data %}"{{ group_info.end_font_color_cd }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+
+      "total_group_num" :
+      ["{{ total_group_num }}"],
+
+      "messageArray" :
+      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }

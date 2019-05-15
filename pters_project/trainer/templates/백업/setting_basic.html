@@ -1,0 +1,1178 @@
+{% extends "trainer_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.reserve.setting.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+    <style type="text/css">
+        .fixfooter{
+            position: relative;
+        }
+        @media(min-width:600px){
+            .fixfooter{
+                position: relative;
+            }
+            .bottomfooter3 span{
+                color: #282828;
+            }
+        }
+    </style>
+{% endblock %}
+
+
+
+{% block content %}
+
+    <form action="{% url 'trainer:update_setting_basic' %}" id="update-setting-reserve-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="setting_trainer_work_time_available"       id="id_setting_trainer_work_time" value=""> <!--min 00:00 max 23:59  업무 시간 설정 -->
+        <input type="hidden" name="setting_schedule_auto_finish"              id="id_setting_schedule_auto_finish" value=""> <!--시간이 지나면 일정을 자동으로 완료-->
+        <input type="hidden" name="setting_lecture_auto_finish"               id="id_setting_lecture_auto_finish" value=""> <!--시간이 지나면 수강정보를 자동으로 완료-->
+
+        <input type="hidden" name="setting_trainer_work_sun_time_avail" id="setting_trainer_work_sun_time_avail" value="">
+        <input type="hidden" name="setting_trainer_work_mon_time_avail" id="setting_trainer_work_mon_time_avail" value="">
+        <input type="hidden" name="setting_trainer_work_tue_time_avail" id="setting_trainer_work_tue_time_avail" value="">
+        <input type="hidden" name="setting_trainer_work_wed_time_avail" id="setting_trainer_work_wed_time_avail" value="">
+        <input type="hidden" name="setting_trainer_work_ths_time_avail" id="setting_trainer_work_ths_time_avail" value="">
+        <input type="hidden" name="setting_trainer_work_fri_time_avail" id="setting_trainer_work_fri_time_avail" value="">
+        <input type="hidden" name="setting_trainer_work_sat_time_avail" id="setting_trainer_work_sat_time_avail" value="">
+
+        <input type="hidden" name="next_page" value = '{% url 'trainer:basic_setting' %}'>
+    </form>
+
+    <!--
+    <div id="shade_for_preview"></div>
+
+    <div id="preview_iframe_popup">
+        <p id="preview_explain" style="color:#fe4e65;font-weight:500">예약 설정 이해를 위한 미리 보기 화면으로 내 일정과는 차이가 있습니다.</p>
+         <span id="close_preview_iframe_popup">닫기</span>
+
+        <div id="preview_option_values">
+            <div><p>업무 시간</p><p id="set_value_workTime"></p></div>
+            <div><p>예약 기본 시간 단위</p><p id="set_value_timeDur"></p></div>
+            <div><p>예약 시작 시각</p><p id="set_value_startTime"></p></div>
+            <div><p>예약 허용 날짜 구간</p><p id="set_value_availDate"></p></div>
+            <div><p>예약 허용 시간대</p><p id="set_value_availTime"></p></div>
+            <div><p>근접 예약 금지</p><p id="set_value_reserveLimitTime"></p></div>
+            <div><p>근접 취소 금지</p><p id="set_value_cancelLimitTime"></p></div>
+            <div><p>예약 정지</p><p id="set_value_reserveProhibit"></p></div>
+        </div>
+        <iframe src=""></iframe>
+
+    </div>
+    -->
+
+
+    <div id="ymdText">
+        <div id="ymdTextWrap">
+            <div id="menuName">기본 설정
+            </div>
+            <div id="menuDescription">편의를 위한 기본 설정을 합니다.
+            </div>
+        </div>
+    </div>
+
+    <div id="ymdText_gap">
+        
+    </div>
+
+    <button id="mobile_preview_btn" class="_button_Preview" style="display: none;">미리보기</button>
+
+
+    <div id="trainerWorkTimeSettingText" class="settingMenu wrap800">
+        <p class="settingText">업무 시간 설정</p>
+        <p class="settingText2">설정된 업무 시간만 일정표에 노출됩니다.</p>
+    </div>
+    <div id="trainerWorkTimeSetting" class="settingBox wrap800" style="z-index: 10;">
+        <div class="iconText" style="margin-bottom:0">
+            <img src="/static/user/res/icon-start.png" alt="" class="icons"><span> 시작 시각</span>
+            <div id="workTimehourSelect" class="dropdown">
+                <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+                <ul id="ulWorkTimes" class="dropdown-menu pters_dropdown_custom ulTimes">
+                    <li><a data-time="0">오전 0시</a></li>
+                    <li><a data-time="1">오전 1시</a></li>
+                    <li><a data-time="2">오전 2시</a></li>
+                    <li><a data-time="3">오전 3시</a></li>
+                    <li><a data-time="4">오전 4시</a></li>
+                    <li><a data-time="5">오전 5시</a></li>
+                    <li><a data-time="6">오전 6시</a></li>
+                    <li><a data-time="7">오전 7시</a></li>
+                    <li><a data-time="8">오전 8시</a></li>
+                    <li><a data-time="9">오전 9시</a></li>
+                    <li><a data-time="10">오전 10시</a></li>
+                    <li><a data-time="11">오전 11시</a></li>
+                    <li><a data-time="12">오후 12시</a></li>
+                    <li><a data-time="13">오후 1시</a></li>
+                    <li><a data-time="14">오후 2시</a></li>
+                    <li><a data-time="15">오후 3시</a></li>
+                    <li><a data-time="16">오후 4시</a></li>
+                    <li><a data-time="17">오후 5시</a></li>
+                    <li><a data-time="18">오후 6시</a></li>
+                    <li><a data-time="19">오후 7시</a></li>
+                    <li><a data-time="20">오후 8시</a></li>
+                    <li><a data-time="21">오후 9시</a></li>
+                    <li><a data-time="22">오후 10시</a></li>
+                    <li><a data-time="23">오후 11시</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="iconText" style="margin-bottom:0">
+            <img src="/static/user/res/icon-start.png" alt="" class="icons"><span> 종료 시각</span>
+            <div id="workTimehourSelect2" class="dropdown">
+                <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+                <ul id="ulWorkTimes2" class="dropdown-menu pters_dropdown_custom ulTimes">
+                    <!--
+                    <li><a data-time="0">오전 0시</a></li>
+                    <li><a data-time="1">오전 1시</a></li>
+                    <li><a data-time="2">오전 2시</a></li>
+                    <li><a data-time="3">오전 3시</a></li>
+                    <li><a data-time="4">오전 4시</a></li>
+                    <li><a data-time="5">오전 5시</a></li>
+                    <li><a data-time="6">오전 6시</a></li>
+                    <li><a data-time="7">오전 7시</a></li>
+                    <li><a data-time="8">오전 8시</a></li>
+                    <li><a data-time="9">오전 9시</a></li>
+                    <li><a data-time="10">오전 10시</a></li>
+                    <li><a data-time="11">오전 11시</a></li>
+                    <li><a data-time="12">오후 12시</a></li>
+                    <li><a data-time="13">오후 1시</a></li>
+                    <li><a data-time="14">오후 2시</a></li>
+                    <li><a data-time="15">오후 3시</a></li>
+                    <li><a data-time="16">오후 4시</a></li>
+                    <li><a data-time="17">오후 5시</a></li>
+                    <li><a data-time="18">오후 6시</a></li>
+                    <li><a data-time="19">오후 7시</a></li>
+                    <li><a data-time="20">오후 8시</a></li>
+                    <li><a data-time="21">오후 9시</a></li>
+                    <li><a data-time="22">오후 10시</a></li>
+                    <li><a data-time="23">오후 11시</a></li>
+                    <li><a data-time="24">오전 12시</a></li>
+                    -->
+                </ul>
+            </div>
+        </div>
+
+        <div style="padding-bottom:10px;">
+            <span class="pters_switch_label">요일별 설정</span>
+            <div id="switch_worktime_weekly" class="pters_switch" style="transform: scale(0.7);">
+                <div class="switchback"></div>
+                <div class="switchball switchoff"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="trainerWorkTimeSetting_" class="settingBox wrap800" style="z-index: 9;">
+        <div class="pters_seekbar_wrapper_wrap">
+            <div style="margin:0">
+                <span class="worktimeWeekly_dayname">일</span>
+                <span class="pters_switch_label">휴무</span>
+                <div id="switch_worktime_sun" class="pters_switch">
+                    <div class="switchback"></div>
+                    <div class="switchball switchoff"></div>
+                </div>
+            </div> 
+            <div class="pters_seekbar_wrapper worktime_sun" id="worktimeset_seekbar_sun">
+                <div class="pters_seekbar_bar">
+                    <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="1">01</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="2">02</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="3">03</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="4">04</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="5">05</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="6">06</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="7">07</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="8">08</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="9">09</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="10">10</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="11">11</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="12">12</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="13">13</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="14">14</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="15">15</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="16">16</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="17">17</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="18">18</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="19">19</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="20">20</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="21">21</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="22">22</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="23">23</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="24">24</span></div>
+                </div>
+                <div class="pters_seekbar_start_ball"></div>
+                <div class="pters_seekbar_end_ball"></div>
+                <div class="pters_seekbar_length_bar"></div>
+                <div class="pters_seekbar_mobile_guide"></div>
+            </div>
+
+            <div style="margin:0">
+                <span class="worktimeWeekly_dayname">월</span>
+                <span class="pters_switch_label">휴무</span>
+                <div id="switch_worktime_mon" class="pters_switch">
+                    <div class="switchback"></div>
+                    <div class="switchball switchoff"></div>
+                </div>
+            </div> 
+            <div class="pters_seekbar_wrapper worktime_mon" id="worktimeset_seekbar_mon">
+                <div class="pters_seekbar_bar">
+                    <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="1">01</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="2">02</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="3">03</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="4">04</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="5">05</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="6">06</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="7">07</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="8">08</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="9">09</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="10">10</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="11">11</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="12">12</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="13">13</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="14">14</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="15">15</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="16">16</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="17">17</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="18">18</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="19">19</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="20">20</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="21">21</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="22">22</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="23">23</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="24">24</span></div>
+                </div>
+                <div class="pters_seekbar_start_ball"></div>
+                <div class="pters_seekbar_end_ball"></div>
+                <div class="pters_seekbar_length_bar"></div>
+                <div class="pters_seekbar_mobile_guide"></div>
+            </div>
+
+            <div style="margin:0">
+                <span class="worktimeWeekly_dayname">화</span>
+                <span class="pters_switch_label">휴무</span>
+                <div id="switch_worktime_tue" class="pters_switch">
+                    <div class="switchback"></div>
+                    <div class="switchball switchoff"></div>
+                </div>
+            </div> 
+            <div class="pters_seekbar_wrapper worktime_tue" id="worktimeset_seekbar_tue">
+                <div class="pters_seekbar_bar">
+                    <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="1">01</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="2">02</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="3">03</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="4">04</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="5">05</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="6">06</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="7">07</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="8">08</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="9">09</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="10">10</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="11">11</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="12">12</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="13">13</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="14">14</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="15">15</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="16">16</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="17">17</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="18">18</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="19">19</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="20">20</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="21">21</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="22">22</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="23">23</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="24">24</span></div>
+                </div>
+                <div class="pters_seekbar_start_ball"></div>
+                <div class="pters_seekbar_end_ball"></div>
+                <div class="pters_seekbar_length_bar"></div>
+                <div class="pters_seekbar_mobile_guide"></div>
+            </div>
+
+            <div style="margin:0">
+                <span class="worktimeWeekly_dayname">수</span>
+                <span class="pters_switch_label">휴무</span>
+                <div id="switch_worktime_wed" class="pters_switch">
+                    <div class="switchback"></div>
+                    <div class="switchball switchoff"></div>
+                </div>
+            </div>  
+            <div class="pters_seekbar_wrapper worktime_wed" id="worktimeset_seekbar_wed">
+                <div class="pters_seekbar_bar">
+                    <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="1">01</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="2">02</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="3">03</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="4">04</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="5">05</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="6">06</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="7">07</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="8">08</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="9">09</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="10">10</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="11">11</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="12">12</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="13">13</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="14">14</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="15">15</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="16">16</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="17">17</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="18">18</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="19">19</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="20">20</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="21">21</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="22">22</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="23">23</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="24">24</span></div>
+                </div>
+                <div class="pters_seekbar_start_ball"></div>
+                <div class="pters_seekbar_end_ball"></div>
+                <div class="pters_seekbar_length_bar"></div>
+                <div class="pters_seekbar_mobile_guide"></div>
+            </div>
+
+            <div style="margin:0">
+                <span class="worktimeWeekly_dayname">목</span>
+                <span class="pters_switch_label">휴무</span>
+                <div id="switch_worktime_thu" class="pters_switch">
+                    <div class="switchback"></div>
+                    <div class="switchball switchoff"></div>
+                </div>
+            </div> 
+            <div class="pters_seekbar_wrapper worktime_thu" id="worktimeset_seekbar_thu">
+                <div class="pters_seekbar_bar">
+                    <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="1">01</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="2">02</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="3">03</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="4">04</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="5">05</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="6">06</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="7">07</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="8">08</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="9">09</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="10">10</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="11">11</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="12">12</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="13">13</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="14">14</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="15">15</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="16">16</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="17">17</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="18">18</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="19">19</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="20">20</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="21">21</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="22">22</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="23">23</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="24">24</span></div>
+                </div>
+                <div class="pters_seekbar_start_ball"></div>
+                <div class="pters_seekbar_end_ball"></div>
+                <div class="pters_seekbar_length_bar"></div>
+                <div class="pters_seekbar_mobile_guide"></div>
+            </div>
+
+            <div style="margin:0">
+                <span class="worktimeWeekly_dayname">금</span>
+                <span class="pters_switch_label">휴무</span>
+                <div id="switch_worktime_fri" class="pters_switch">
+                    <div class="switchback"></div>
+                    <div class="switchball switchoff"></div>
+                </div>
+            </div> 
+            <div class="pters_seekbar_wrapper worktime_fri" id="worktimeset_seekbar_fri">
+                <div class="pters_seekbar_bar">
+                    <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="1">01</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="2">02</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="3">03</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="4">04</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="5">05</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="6">06</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="7">07</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="8">08</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="9">09</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="10">10</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="11">11</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="12">12</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="13">13</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="14">14</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="15">15</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="16">16</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="17">17</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="18">18</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="19">19</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="20">20</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="21">21</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="22">22</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="23">23</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="24">24</span></div>
+                </div>
+                <div class="pters_seekbar_start_ball"></div>
+                <div class="pters_seekbar_end_ball"></div>
+                <div class="pters_seekbar_length_bar"></div>
+                <div class="pters_seekbar_mobile_guide"></div>
+            </div>
+
+            <div style="margin:0">
+                <span class="worktimeWeekly_dayname">토</span>
+                <span class="pters_switch_label">휴무</span>
+                <div id="switch_worktime_sat" class="pters_switch">
+                    <div class="switchback"></div>
+                    <div class="switchball switchoff"></div>
+                </div>
+            </div> 
+            <div class="pters_seekbar_wrapper worktime_sat" id="worktimeset_seekbar_sat">
+                <div class="pters_seekbar_bar">
+                    <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="1">01</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="2">02</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="3">03</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="4">04</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="5">05</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="6">06</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="7">07</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="8">08</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="9">09</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="10">10</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="11">11</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="12">12</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="13">13</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="14">14</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="15">15</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="16">16</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="17">17</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="18">18</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="19">19</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="20">20</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="21">21</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="22">22</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="23">23</span></div>
+                    <div class="pters_seekbar_segment"><span data-value="24">24</span></div>
+                </div>
+                <div class="pters_seekbar_start_ball"></div>
+                <div class="pters_seekbar_end_ball"></div>
+                <div class="pters_seekbar_length_bar"></div>
+                <div class="pters_seekbar_mobile_guide"></div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div id="trainerAutoCompleteSettingText" class="settingMenu wrap800" style="border-bottom: 1px solid #eaeaea;">
+        <span class="settingText">일정 자동 완료</span>
+        <p class="settingText2">일정 완료 사인을 하지 않고도,<br> 시간이 지나면 자동으로 완료처리가 됩니다.</p>
+        <div id="switch_autocomplete" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
+    </div>
+
+    <div id="traineeAutoFinishSettingText" class="settingMenu wrap800" style="border-bottom: 1px solid #eaeaea;">
+        <span class="settingText">수강정보 자동 완료</span>
+        <p class="settingText2">회원등록시 입력한 종료일이 지나면<br> 자동으로 종료 처리가 됩니다.</p>
+        <div id="switch_autofinish" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
+    </div>
+
+
+    <div class="popupBtn_mini" style="margin-top: 200px;">
+        <button class="submitBtn _button_Prev">이전</button>
+        <!--<button class="submitBtn _button_Preview">미리보기</button>-->
+        <button class="submitBtn _button_Next">등록</button>
+    </div>
+
+
+    
+
+
+
+{% endblock %}
+
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script>
+        $('a.__setting').css('color','#fe4e65;');
+        if($('body').width()<600){
+            $('#page-base-addstyle').css('display','block');
+            $('#page-base').css('display','none');
+            $('#uptext2').text("기본 설정");
+        }
+
+        var select_all_check = false;
+
+        //업무 시간 설정 seekbar
+        var sun_Worktime = worktime_extract_hour(Options.worktimeWeekly[0]);
+        var mon_Worktime = worktime_extract_hour(Options.worktimeWeekly[1]);
+        var tue_Worktime = worktime_extract_hour(Options.worktimeWeekly[2]);
+        var wed_Worktime = worktime_extract_hour(Options.worktimeWeekly[3]);
+        var thu_Worktime = worktime_extract_hour(Options.worktimeWeekly[4]);
+        var fri_Worktime = worktime_extract_hour(Options.worktimeWeekly[5]);
+        var sat_Worktime = worktime_extract_hour(Options.worktimeWeekly[6]);
+        var worktime_Array = {"mon":mon_Worktime, "tue":tue_Worktime, "wed":wed_Worktime, "thu":thu_Worktime, "fri":fri_Worktime, "sat":sat_Worktime, "sun":sun_Worktime};
+
+        var worktime_week_form_Array = ["#setting_trainer_work_sun_time_avail", "#setting_trainer_work_mon_time_avail", "#setting_trainer_work_tue_time_avail", "#setting_trainer_work_wed_time_avail", "#setting_trainer_work_ths_time_avail", "#setting_trainer_work_fri_time_avail", "#setting_trainer_work_sat_time_avail"];
+        for(var i=0; i<worktime_week_form_Array.length; i++){
+            $(worktime_week_form_Array[i]).val(Options.worktimeWeekly[i])
+        };
+
+        $('#id_setting_member_reserve_available_time').val(Options.stoptimeStart+':00-'+Options.stoptimeEnd+':00');
+        $('#id_setting_member_reserve_time_prohibition').val(Options.limit);
+        $('#id_setting_member_cancel_time_prohibition').val(Options.cancellimit);
+        $('#id_setting_member_reserve_prohibition').val(Options.reserve);
+        $('#id_setting_schedule_auto_finish').val(Options.autocomplete);
+        $('#id_setting_lecture_auto_finish').val(Options.lecture_autocomplete);
+
+
+        if(Options.limit > 0){ //근접시간 예약 금지 설정
+            $('#switch1').find('.switchball').removeClass('switchoff').addClass('switchon');
+            $('#switch1').find('.switchback').addClass('switchon-back');
+            $('#memberDisableSetting').show();
+            $("#timeSelect button").addClass("dropdown_selected").text(Options.limit/60+"시간 전").val(Options.limit);
+        }else if(Options.limit == 0){
+            $('#switch1').find('.switchball').removeClass('switchon');
+            $('#switch1').find('.switchback').removeClass('switchon-back');
+        }
+        if(Options.cancellimit > 0){
+            $('#switch_cancel_limit').find('.switchball').removeClass('switchoff').addClass('switchon');
+            $('#switch_cancel_limit').find('.switchback').addClass('switchon-back');
+            $('#memberCancelDisableSetting').show();
+            $("#timeSelect2 button").addClass("dropdown_selected").text(Options.cancellimit/60+"시간 전").val(Options.cancellimit);
+        }else if(Options.cancellimit == 0){
+            $('#switch_cancel_limit').find('.switchball').removeClass('switchon');
+            $('#switch_cancel_limit').find('.switchback').removeClass('switchon-back');
+        }
+
+        if(Options.reserve == 1){ //회원 예약 일시 정지
+            $('#switch2').find('.switchball').removeClass('switchoff').addClass('switchon');
+            $('#switch2').find('.switchback').addClass('switchon-back');
+        }else if(Options.reserve == 0){
+            $('#switch2').find('.switchball').removeClass('switchon').addClass('switchoff');
+            $('#switch2').find('.switchback').removeClass('switchon-back');
+        }
+
+        if(Options.autocomplete == 1 ){ //일정 자동 완료
+            $('#switch_autocomplete').find('.switchball').removeClass('switchoff').addClass('switchon');
+            $('#switch_autocomplete').find('.switchback').addClass('switchon-back');
+        }else if(Options.autocomplete == 0 ){
+            $('#switch_autocomplete').find('.switchball').removeClass('switchon').addClass('switchoff');
+            $('#switch_autocomplete').find('.switchback').removeClass('switchon-back');
+        }
+
+        if(Options.lecture_autocomplete == 1 ){ //수강 정보 자동 완료
+            $('#switch_autofinish').find('.switchball').removeClass('switchoff').addClass('switchon');
+            $('#switch_autofinish').find('.switchback').addClass('switchon-back');
+        }else if(Options.lecture_autocomplete == 0 ){
+            $('#switch_autofinish').find('.switchball').removeClass('switchon').addClass('switchoff');
+            $('#switch_autofinish').find('.switchback').removeClass('switchon-back');
+        }
+
+        if(Options.worktimeWeeklyOn == 1){
+            $('#switch_worktime_weekly').find('.switchball').removeClass('switchoff').addClass('switchon');
+            $('#switch_worktime_weekly').find('.switchback').addClass('switchon-back');
+            initialize_worktime_weekly();
+            disable_worktime_dropdown();
+        }else if(Options.worktimeWeeklyOn == 0){
+            $('#switch_worktime_weekly').find('.switchball').removeClass('switchon').addClass('switchoff');
+            $('#switch_worktime_weekly').find('.switchback').removeClass('switchon-back');
+            enable_worktime_dropdown();
+        }
+
+        var switches_weekly_dayoff = ['#switch_worktime_sun','#switch_worktime_mon','#switch_worktime_tue','#switch_worktime_wed','#switch_worktime_thu','#switch_worktime_fri','#switch_worktime_sat'];
+        var wrapper_weekly_dayoff = ['#worktimeset_seekbar_sun','#worktimeset_seekbar_mon','#worktimeset_seekbar_tue','#worktimeset_seekbar_wed','#worktimeset_seekbar_thu','#worktimeset_seekbar_fr','#worktimeset_seekbar_sat'];
+        var len_worktimeOffDay = Options.worktimeOffDay.length;
+        for(var i=0; i<len_worktimeOffDay; i++){
+            if(Options.worktimeOffDay[i] == 1){
+                $(wrapper_weekly_dayoff[i]).css('display','none');
+                $(switches_weekly_dayoff[i]).attr('value',PTERS_SWITCH_ON);
+                $(switches_weekly_dayoff[i]).find('.switchball').removeClass('switchoff').addClass('switchon');
+                $(switches_weekly_dayoff[i]).find('.switchback').addClass('switchon-back');
+            }else if(Options.worktimeOffDay[i] == 0){
+                $(switches_weekly_dayoff[i]).attr('value',PTERS_SWITCH_OFF);
+                $(switches_weekly_dayoff[i]).find('.switchball').removeClass('switchon').addClass('switchoff');
+                $(switches_weekly_dayoff[i]).find('.switchback').removeClass('switchon-back');
+            }
+        }
+
+
+        /*업무 시간 설정 DB저장값으로 초기셋팅*/
+        $('#id_setting_trainer_work_time').val(worktime)
+        if(Options.workStartTime>12){
+            var worktimestart = Number(Options.workStartTime)-12
+            var scale = "오후";
+            if(Options.workStartTime == 24){
+                var scale = '오전'
+                var worktimestart = 12
+            }
+            $("#workTimehourSelect button").addClass("dropdown_selected").text(scale+worktimestart+"시").val(Options.workStartTime);
+            fill_dropdown_reserve_endtime($('#workTimehourSelect button').val(),$('#ulWorkTimes2'))
+        }else{
+            var scale = "오전"
+            if(Options.workStartTime == 12){
+                var scale = "오후"
+            }
+            $("#workTimehourSelect button").addClass("dropdown_selected").text(scale+Options.workStartTime+"시").val(Options.workStartTime);
+            fill_dropdown_reserve_endtime($('#workTimehourSelect button').val(),$('#ulWorkTimes2'))
+        }
+
+        if(Options.workEndTime>12){
+            var worktimeend = Number(Options.workEndTime)-12
+            var scale = "오후"
+            if(Options.workEndTime == 24){
+                var scale = '오전'
+                var worktimeend = 12
+            }
+            $("#workTimehourSelect2 button").addClass("dropdown_selected").text(scale+worktimeend+"시").val(Options.workEndTime);
+        }else{
+            var scale = "오전"
+            if(Options.workEndTime == 12){
+                var scale = "오후"
+            }
+            $("#workTimehourSelect2 button").addClass("dropdown_selected").text(scale+Options.workEndTime+"시").val(Options.workEndTime);
+        }
+        /*업무 시간 설정 DB저장값으로 초기셋팅*/
+
+        /*회원 예약 허용 날짜 설정 DB저장값으로 초기셋팅*/
+        $('#id_setting_member_reserve_available_date').val(Options.availDate)
+        $("#dateSelect button").addClass("dropdown_selected").text("+"+Options.availDate+"일").val(Options.limit);
+        /*회원 예약 허용 날짜 설정 DB저장값으로 초기셋팅*/
+
+
+        /*회원 예약 허용 시간대 설정 DB저장값으로 초기셋팅*/
+        $('#id_setting_member_reserve_available_time').val(stoptime)
+        if(Options.stoptimeStart>12){
+            var stoptimestart = Number(Options.stoptimeStart)-12
+            var scale = "오후"
+            if(Options.stoptimeStart == 24){
+                var scale = '오전'
+                var stoptimestart = 12
+            }
+            $("#hourSelect button").addClass("dropdown_selected").text(scale+stoptimestart+"시").val(Options.stoptimeStart);
+            fill_dropdown_reserve_endtime($('#hourSelect button').val(),$('#ulTimes2'))
+        }else{
+            var scale = "오전"
+            if(Options.stoptimeEnd == 12){
+                var scale = "오후"
+            }
+            $("#hourSelect button").addClass("dropdown_selected").text(scale+Options.stoptimeStart+"시").val(Options.stoptimeStart);
+            fill_dropdown_reserve_endtime($('#hourSelect button').val(),$('#ulTimes2'))
+        }
+
+        if(Options.stoptimeEnd>12){
+            var stoptimeend = Number(Options.stoptimeEnd)-12
+            var scale = "오후"
+            if(Options.stoptimeEnd == 24){
+                var scale = '오전'
+                var stoptimeend = 12
+            }
+            $("#hourSelect2 button").addClass("dropdown_selected").text(scale+stoptimeend+"시").val(Options.stoptimeEnd);
+        }else{
+            var scale = "오전"
+            if(Options.stoptimeEnd == 12){
+                var scale = "오후"
+            }
+            $("#hourSelect2 button").addClass("dropdown_selected").text(scale+Options.stoptimeEnd+"시").val(Options.stoptimeEnd);
+        }
+        /*회원 예약 허용 시간대 설정 DB저장값으로 초기셋팅*/
+
+        /*예약 시작 시간 설정*/
+        Options.startTime;
+
+        var $set_value = $('#ulTimes_mstart li a[data-type='+Options.startTime+']');
+        $('#mstartHourSelect button').val(Options.startTime).text($set_value.text()).addClass('dropdown_selected');
+        $('#id_setting_member_start_time').val(Options.startTime);
+
+        $('#ulTimes_mstart li a').click(function(){
+            $('#mstartHourSelect button').val($(this).attr('data-type')).text($(this).text());
+            $('#id_setting_member_start_time').val($(this).attr('data-type'));
+            check_dropdown_selected();
+        });
+        /*예약 시작 시간 설정*/
+
+
+        /* 예약 기본 시간 단위 설정 */
+        var $ulTimes_rsvHour = $('#ulTimes_rsvHour');
+        if(Options.classDur == 30){
+            $ulTimes_rsvHour.html('<li><a data-time="1">30분</a></li>'+
+                                  '<li><a data-time="2">1시간</a></li>'+
+                                  '<li><a data-time="3">1시간 30분</a></li>'+
+                                  '<li><a data-time="4">2시간</a></li>'+
+                                  '<li><a data-time="5">2시간 30분</a></li>'+
+                                  '<li><a data-time="6">3시간</a></li>'+
+                                  '<li><a data-time="7">3시간 30분</a></li>'+
+                                  '<li><a data-time="8">4시간</a></li>'+
+                                  '<li><a data-time="9">4시간 30분</a></li>'+
+                                  '<li><a data-time="10">5시간</a></li>')
+            
+        }else if(Options.classDur == 60){
+            $ulTimes_rsvHour.html('<li><a data-time="1">1시간</a></li>'+
+                                  '<li><a data-time="2">2시간</a></li>'+
+                                  '<li><a data-time="3">3시간</a></li>'+
+                                  '<li><a data-time="4">4시간</a></li>'+
+                                  '<li><a data-time="5">5시간</a></li>')
+        }
+
+        if(Options.timeDur != ""){
+            var $set_value = $('#ulTimes_rsvHour li a[data-time='+Options.timeDur+']')
+            $('#rsvHourSelect button').val(Options.timeDur).text($set_value.text()).addClass('dropdown_selected');
+            $('#id_setting_member_reserve_time_duration').val(Options.timeDur);
+        }else{
+            var $set_value = $('#ulTimes_rsvHour li a[data-time='+1+']')
+            $('#rsvHourSelect button').val(1).text($set_value.text()).addClass('dropdown_selected');
+            $('#id_setting_member_reserve_time_duration').val(1);
+
+        }
+
+        $(document).on('click','#ulTimes_rsvHour li a',function(){
+            $('#rsvHourSelect button').val($(this).attr('data-time')).text($(this).text());
+            $('#id_setting_member_reserve_time_duration').val($(this).attr('data-time'));
+            check_dropdown_selected();
+        });
+
+        /* 예약 기본 시간 단위 설정 */
+        $('#switch1').click(function(){
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $('#memberDisableSetting').hide('fast','swing')
+                $('#id_setting_member_reserve_time_prohibition').val(0)
+
+            }else{
+                $('#memberDisableSetting').show('fast','swing')
+                $('#id_setting_member_reserve_time_prohibition').val($('#timeSelect button').val())
+            }
+            check_dropdown_selected();
+        });
+
+        $('#switch2').click(function(){
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $('#id_setting_member_reserve_prohibition').val(PTERS_SWITCH_OFF)
+            }else{
+                $('#id_setting_member_reserve_prohibition').val(PTERS_SWITCH_ON)
+            }
+            check_dropdown_selected();
+        });
+
+        $('#switch_cancel_limit').click(function(){
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $('#memberCancelDisableSetting').hide('fast','swing')
+                $('#id_setting_member_cancel_time_prohibition').val(0)
+
+            }else{
+                $('#memberCancelDisableSetting').show('fast','swing')
+                $('#id_setting_member_cancel_time_prohibition').val($('#timeSelect2 button').val())
+            }
+            check_dropdown_selected();
+        });
+
+        $('#switch_autocomplete').click(function(){
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $('#id_setting_schedule_auto_finish').val(PTERS_SWITCH_OFF)
+
+            }else{
+                $('#id_setting_schedule_auto_finish').val(PTERS_SWITCH_ON)
+            }
+            check_dropdown_selected();
+        })
+
+        $('#switch_autofinish').click(function(){
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $('#id_setting_lecture_auto_finish').val(PTERS_SWITCH_OFF)
+
+            }else{
+                $('#id_setting_lecture_auto_finish').val(PTERS_SWITCH_ON)
+            }
+            check_dropdown_selected();
+        })
+
+        $('#switch_worktime_weekly').click(function(){
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $('#id_setting_trainer_work_time_weekly_switch').val(PTERS_SWITCH_OFF);
+                $('#trainerWorkTimeSetting_').hide();
+                enable_worktime_dropdown();
+                var work_start_h = $('#workTimehourSelect button').val()+':00';
+                var work_end_h = $('#workTimehourSelect2 button').val()+':00';
+                if(work_start_h == "24:00"){work_start_h = "23:59"};
+                if(work_end_h == "24:00"){work_end_h = "23:59"};
+                var worktimes = `${work_start_h}-${work_end_h}`;
+                for(var i=0; i<7; i++){$(worktime_week_form_Array[i]).val(worktimes)};
+            }else{
+                $('#id_setting_trainer_work_time_weekly_switch').val(PTERS_SWITCH_ON);
+                initialize_worktime_weekly();
+                disable_worktime_dropdown();
+                for(var i=0; i<7; i++){$(worktime_week_form_Array[i]).val(Options.worktimeWeekly[i])};
+            }
+        check_dropdown_selected();
+        })
+
+        /*
+        for(var t=0; t < switches_weekly_dayoff.length; t++ ){
+            $(switches_weekly_dayoff[t]).click(function(){
+                var dayname = $(this).attr('id').split('_')[2];
+                var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
+                if($(this).find('.switchball').hasClass('switchoff')){
+                    $(this).parent('div').siblings(target).show();
+                    initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                    console.log(t,'t')
+                    $(worktime_week_form_Array[t]).val(Options.worktimeWeekly[t]);
+                }else{
+                    $(worktime_week_form_Array[t]).val('0:00-0:00')
+                    $(this).parent('div').siblings(target).hide();
+                }
+            })
+        };
+        */
+
+        $(switches_weekly_dayoff[0]).click(function(){
+            var dayname = $(this).attr('id').split('_')[2];
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`;
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $(this).parent('div').siblings(target).show();
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();});
+                $(worktime_week_form_Array[0]).val(Options.worktimeWeekly[0]);
+            }else{
+                $(worktime_week_form_Array[0]).val('0:00-0:00');
+                $(this).parent('div').siblings(target).hide();
+            }
+            check_dropdown_selected();
+        })
+        $(switches_weekly_dayoff[1]).click(function(){
+            var dayname = $(this).attr('id').split('_')[2];
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $(this).parent('div').siblings(target).show();
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                $(worktime_week_form_Array[1]).val(Options.worktimeWeekly[1]);
+            }else{
+                $(worktime_week_form_Array[1]).val('0:00-0:00')
+                $(this).parent('div').siblings(target).hide();
+            }
+            check_dropdown_selected();
+        })
+        $(switches_weekly_dayoff[2]).click(function(){
+            var dayname = $(this).attr('id').split('_')[2];
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`;
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $(this).parent('div').siblings(target).show();
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();});
+                $(worktime_week_form_Array[2]).val(Options.worktimeWeekly[2]);
+            }else{
+                $(worktime_week_form_Array[2]).val('0:00-0:00');
+                $(this).parent('div').siblings(target).hide();
+            }
+            check_dropdown_selected();
+        })
+        $(switches_weekly_dayoff[3]).click(function(){
+            var dayname = $(this).attr('id').split('_')[2];
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`;
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $(this).parent('div').siblings(target).show();
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();});
+                $(worktime_week_form_Array[3]).val(Options.worktimeWeekly[3]);
+            }else{
+                $(worktime_week_form_Array[3]).val('0:00-0:00')
+                $(this).parent('div').siblings(target).hide();
+            }
+            check_dropdown_selected();
+        })
+        $(switches_weekly_dayoff[4]).click(function(){
+            var dayname = $(this).attr('id').split('_')[2];
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`;
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $(this).parent('div').siblings(target).show();
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();});
+                $(worktime_week_form_Array[4]).val(Options.worktimeWeekly[4]);
+            }else{
+                $(worktime_week_form_Array[4]).val('0:00-0:00');
+                $(this).parent('div').siblings(target).hide();
+            }
+            check_dropdown_selected();
+        })
+        $(switches_weekly_dayoff[5]).click(function(){
+            var dayname = $(this).attr('id').split('_')[2];
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`;
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $(this).parent('div').siblings(target).show();
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();});
+                $(worktime_week_form_Array[5]).val(Options.worktimeWeekly[5]);
+            }else{
+                $(worktime_week_form_Array[5]).val('0:00-0:00');
+                $(this).parent('div').siblings(target).hide();
+            }
+            check_dropdown_selected();
+        })
+        $(switches_weekly_dayoff[6]).click(function(){
+            var dayname = $(this).attr('id').split('_')[2];
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`;
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $(this).parent('div').siblings(target).show();
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();});
+                $(worktime_week_form_Array[6]).val(Options.worktimeWeekly[6]);
+            }else{
+                $(worktime_week_form_Array[6]).val('0:00-0:00');
+                $(this).parent('div').siblings(target).hide();
+            }
+            check_dropdown_selected();
+        })
+        
+
+
+
+
+
+
+        $('.pters_seekbar_wrapper').change(function(){
+            worktime_seekbar_values_to_form();
+        })
+
+
+        function initialize_worktime_weekly(){
+            $('#trainerWorkTimeSetting_').show();
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_sun'),sun_Worktime["start"], sun_Worktime["end"],600,function(){worktime_seekbar_values_to_form();});
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_mon'),mon_Worktime["start"], mon_Worktime["end"],600,function(){worktime_seekbar_values_to_form();});
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_tue'),tue_Worktime["start"], tue_Worktime["end"],600,function(){worktime_seekbar_values_to_form();});
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_wed'),wed_Worktime["start"], wed_Worktime["end"],600,function(){worktime_seekbar_values_to_form();});
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_thu'),thu_Worktime["start"], thu_Worktime["end"],600,function(){worktime_seekbar_values_to_form();});
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_fri'),fri_Worktime["start"], fri_Worktime["end"],600,function(){worktime_seekbar_values_to_form();});
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_sat'),sat_Worktime["start"], sat_Worktime["end"],600,function(){worktime_seekbar_values_to_form();});
+        };
+
+        function disable_worktime_dropdown(){
+            $('#workTimehourSelect button, #workTimehourSelect2 button').attr('disabled',true).addClass('disabled_button');
+        };
+
+        function enable_worktime_dropdown(){
+            $('#workTimehourSelect button, #workTimehourSelect2 button').attr('disabled',false).removeClass('disabled_button');
+        };
+
+
+        function worktime_seekbar_values_to_form(){
+            var resultStartArray = [];
+            var resultEndArray = [];
+            $('#trainerWorkTimeSetting_ .pters_seekbar_wrapper').each(function(){
+                var starts = $(this).attr('value').split('-')[0];
+                var ends = $(this).attr('value').split('-')[1];
+                if(starts == "24:00"){starts = "23:59"};
+                if(ends == "24:00"){ends = "23:59"};
+                var dayname = $(this).attr('id').split("_")[2];
+                if($('#switch_worktime_'+dayname).attr('value') == 1 ){
+                    starts = "0:00";
+                    ends = "0:00";
+                }
+                resultStartArray.push(starts);
+                resultEndArray.push(ends);
+            });
+            for(var i=0; i<resultStartArray.length; i++){
+                $(worktime_week_form_Array[i]).val(`${resultStartArray[i]}-${resultEndArray[i]}`)
+            }
+            check_dropdown_selected();
+        };
+
+
+        function make_available_date_format(hourselect, hourselect2){
+            var $hourselect = hourselect
+            var $hourselect2 = hourselect2
+            var starthour = $hourselect.find('button').val()
+            var endhour = $hourselect2.find('button').val()
+            if(starthour == "24"){
+                var starthour = "23:59"
+            }else{
+                var starthour = $hourselect.find('button').val() + ':00'
+            }
+            if(endhour == "24"){
+                var endhour = "23:59"
+            }else{
+                var endhour = $hourselect2.find('button').val() + ':00'
+            }
+            var availableTime = starthour+'-'+endhour
+            return availableTime
+        };
+
+
+
+        /*업무 시간 설정*/
+        $("#ulWorkTimes li a").click(function(){
+            $("#workTimehourSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
+            fill_dropdown_reserve_endtime($(this).attr('data-time'),$('#ulWorkTimes2'))
+            var availableTime = make_available_date_format($('#workTimehourSelect'),$('#workTimehourSelect2'))
+            for(var i=0; i<worktime_week_form_Array.length; i++){
+                $(worktime_week_form_Array[i]).val(availableTime)
+            }
+            check_dropdown_selected();
+        });
+        $(document).on('click',"#ulWorkTimes2 li a",function(){
+            $("#workTimehourSelect2 button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
+            var availableTime = make_available_date_format($('#workTimehourSelect'),$('#workTimehourSelect2'))
+            for(var i=0; i<worktime_week_form_Array.length; i++){
+                $(worktime_week_form_Array[i]).val(availableTime)
+            }
+            check_dropdown_selected();
+        });
+        /*업무 시간 설정*/
+
+        /*회원 예약 허용 시간대 설정*/
+        $("#ulTimes li a").click(function(){
+            $("#hourSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
+            var availableTime = make_available_date_format($('#hourSelect'),$('#hourSelect2'))
+            $('#id_setting_member_reserve_available_time').val(availableTime)
+            fill_dropdown_reserve_endtime($(this).attr('data-time'),$('#ulTimes2'))
+
+            check_dropdown_selected();
+        });
+        $(document).on('click',"#ulTimes2 li a",function(){
+            $("#hourSelect2 button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
+            var availableTime = make_available_date_format($('#hourSelect'),$('#hourSelect2'))
+            $('#id_setting_member_reserve_available_time').val(availableTime)
+            check_dropdown_selected();
+        });
+        /*회원 예약 허용 시간대 설정*/
+
+        $("#ulTimes3 li a").click(function(){
+            $("#timeSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time')*60);
+            $('#id_setting_member_reserve_time_prohibition').val($('#timeSelect button').val())
+            check_dropdown_selected();
+        });
+
+        $("#ulTimes4 li a").click(function(){
+            $("#timeSelect2 button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time')*60);
+            $('#id_setting_member_cancel_time_prohibition').val($('#timeSelect2 button').val())
+            check_dropdown_selected();
+        });
+
+        $('#ulTimes_availDate li a').click(function(){
+            $("#dateSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
+            $('#id_setting_member_reserve_available_date').val($(this).attr('data-time'))
+            check_dropdown_selected()
+        });
+
+        function fill_dropdown_reserve_endtime(starttime, target){
+            var array = [];
+            var last;
+            for(var i=Number(starttime)+1; i<=24; i++){
+                if(i==24){
+                    array.push('<li><a data-time="'+i+'">오전 12시</a></li>');
+                }else if(i<12){
+                    array.push('<li><a data-time="'+i+'">오전 '+i+'시</a></li>');
+                }else if(i==12){
+                    array.push('<li><a data-time="'+i+'">오후 '+i+'시</a></li>');
+                }else if(i>=12){
+                    array.push('<li><a data-time="'+i+'">오후 '+(i-12)+'시</a></li>');
+                }
+            }            
+            target.html(array.join(''))
+            target.siblings('button').val(target.find('a').last().attr('data-time')).text(target.find('a').last().text())
+        }
+
+
+
+        $("#upbutton-check, ._button_Next").click(function(){
+            console.log(select_all_check);
+            if(select_all_check==true){
+                document.getElementById('update-setting-reserve-form').submit();
+            }else{
+
+                //입력값 확인 메시지 출력 가능
+            }
+        });
+        $('#upbutton-x, ._button_Prev').click(function(){
+            location.href="/trainer/trainer_setting/"
+        });
+
+        $('._button_Preview, #ymdText').click(function(){
+            $('#preview_iframe_popup > iframe').attr('src','/trainer/iframe_preview');
+
+
+            $('#set_value_workTime').text( $('#id_setting_trainer_work_time').val() )
+            $('#set_value_timeDur').text( duration_number_to_hangul($('#id_setting_member_reserve_time_duration').val()*Options.classDur/60) )
+            $('#set_value_startTime').text( startTime_to_hangul($('#id_setting_member_start_time').val()) )
+            $('#set_value_availDate').text( '+'+$('#id_setting_member_reserve_available_date').val()+'일' )
+            $('#set_value_availTime').text( $('#id_setting_member_reserve_available_time').val() )
+            $('#set_value_reserveLimitTime').text( duration_number_to_hangul($('#id_setting_member_reserve_time_prohibition').val()/60) )
+            $('#set_value_cancelLimitTime').text( duration_number_to_hangul($('#id_setting_member_cancel_time_prohibition').val()/60) )
+            $('#set_value_reserveProhibit').text( function(){
+                                                                if($('#id_setting_member_reserve_prohibition').val() == '1'){
+                                                                    return '예약 불가'
+                                                                }else if($('#id_setting_member_reserve_prohibition').val() == '0'){
+                                                                    return '예약 가능'
+                                                                }
+                                                            } )
+
+            $('#preview_iframe_popup, #shade_for_preview').show();
+
+            var popupwidth = $('#preview_iframe_popup').width();
+            if(bodywidth > 600){
+                var popupheight = $('#preview_iframe_popup').height() -$('#preview_option_values').height() - $('#preview_iframe_popup > p').height()-22;
+                console.log($('#preview_iframe_popup').height(), $('#preview_option_values').height() , $('#preview_iframe_popup > p').height())
+            }else{
+                var popupheight = $('#preview_iframe_popup').height() - $('#preview_iframe_popup > p').height()-20;
+            }
+            $('#preview_iframe_popup > iframe').css({'width':popupwidth,'height':popupheight})
+        })
+
+        $('#close_preview_iframe_popup').click(function(){
+            $('#preview_iframe_popup, #shade_for_preview').hide();
+        })
+
+        function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
+            var availableTime = $('#id_setting_member_reserve_available_time').val();
+            var limit = $('#id_setting_member_reserve_time_prohibition').val();
+            var cancellimit = $('#id_setting_member_cancel_time_prohibition').val();
+            var reservedisable =  $('#id_setting_member_reserve_prohibition').val();
+            var workTime = $('#id_setting_trainer_work_time').val();
+            var availDate = $('#id_setting_member_reserve_available_date').val();
+            var basicTimeDur = $('#id_setting_member_reserve_time_duration').val();
+            var startTime = $('#id_setting_member_start_time').val();
+            var autocomplete = $('#id_setting_schedule_auto_finish').val();
+            var autofinish = $('#id_setting_lecture_auto_finish').val();
+
+            var week_mon = $('#setting_trainer_work_mon_time_avail').val();
+            var week_tue = $('#setting_trainer_work_tue_time_avail').val();
+            var week_wed = $('#setting_trainer_work_wed_time_avail').val();
+            var week_thu = $('#setting_trainer_work_ths_time_avail').val();
+            var week_fri = $('#setting_trainer_work_fri_time_avail').val();
+            var week_sat = $('#setting_trainer_work_sat_time_avail').val();
+            var week_sun = $('#setting_trainer_work_sun_time_avail').val();
+
+            if(//availableTime == stoptime && 
+                //limit == Options.limit && 
+                //reservedisable == Options.reserve && 
+                workTime == worktime && 
+                //availDate == Options.availDate && 
+                //cancellimit == Options.cancellimit && 
+                //basicTimeDur == Options.timeDur && 
+                //startTime == Options.startTime && 
+                autocomplete == Options.autocomplete &&
+                autofinish == Options.lecture_autocomplete &&
+                week_sun == Options.worktimeWeekly[0] &&
+                week_mon == Options.worktimeWeekly[1] &&
+                week_tue == Options.worktimeWeekly[2] &&
+                week_wed == Options.worktimeWeekly[3] &&
+                week_thu == Options.worktimeWeekly[4] &&
+                week_fri == Options.worktimeWeekly[5] &&
+                week_sat == Options.worktimeWeekly[6] 
+
+
+                 ){
+                    $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+                    select_all_check=false;
+                    console.log('false')
+            }else{
+                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+                select_all_check=true;
+                console.log(week_sun , Options.worktimeWeekly[0] ,
+                                week_mon , Options.worktimeWeekly[1] ,
+                                week_tue , Options.worktimeWeekly[2] ,
+                                week_wed , Options.worktimeWeekly[3] ,
+                                week_thu , Options.worktimeWeekly[4] ,
+                                week_fri , Options.worktimeWeekly[5] ,
+                                week_sat , Options.worktimeWeekly[6] )
+                console.log('true')
+            }
+        }
+    </script>
+    <script>
+        var lt_res_01 =  ['{{ lt_res_01 }}'];
+        var lt_res_02 =  ['{{ lt_res_02 }}'];
+        var lt_res_03 =  ['{{ lt_res_03 }}'];
+    </script>
+
+{% endblock %}

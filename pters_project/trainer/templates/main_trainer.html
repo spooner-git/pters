@@ -1,127 +1,42 @@
 {% extends "trainer_base.html" %}
+
+
+
 {% load static_url %}
 
 {% block local_css %}
-    <meta name="upperText" content="main_trainer">
-    <link rel="stylesheet" href={% static_url "user/css/main/main_trainer.css" %}>
+    <meta name="description" content="main">
     <style>
-        .KRtext,.JPtext,.ENtext{
-            display: none;
-        }
-        .class_lecture_info_tag{
-            display: block;
-        }
-        @media(min-width: 600px){
-            .class_lecture_info_tag{
-                display: none;
-            }
-        }
-
-
-        #notice_popup_main{
-            display: none;
-            width: 95%;
-            max-width: 520px;
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px solid #282828;
-            background: #f4f4f4;
-            padding:20px;
-            z-index: 98;
-        }
-        #notice_popup_close_main, #notice_popup_close_temp{
-            cursor: pointer;
+        div.main_page{
+            font-size: 18px;
         }
     </style>
 {% endblock %}
 
 {% block content %}
-    <span class="class_lecture_info_tag" style="position: absolute;top:50px;right:10px;color:#f4f4f4;font-size:10px;"> {{ request.session.class_center_name }} {{ request.session.class_type_name }}</span>
-    <!-- <div id="main_content"  class="container" >  -->
-        <div class='center_box wrap'>
-            <div class='center_box_text center_box_text_up' onclick="location.href='{% url 'trainer:cal_total' %}'">
-                <div class='center_box_monthyear'><p href="#"></p></div>
-                <div class='center_box_day'><p href="#"></p></div>
-            </div>
-            <div class='center_box_text' onclick="location.href='{% url 'trainer:cal_total' %}'" >
-                <div class='center_box_plan'>
-                    <p></p>
-                </div>
-                <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="{% url 'trainer:cal_total' %}" class="center_box_num">{{ today_schedule_num }}</a><span class="KRtext">건</span><span class="JPtext">件</span><span class="ENtext"></span></div>
-            </div>
-            <div class="lower_box wrap" onclick="location.href='{% url 'trainer:member_manage' %}'">
-                <div class="lower_box_child">
-                    <div class="lower_box_child_inner">
-                        <div class="KRtext">진행중</div><div class="JPtext">進行中</div><div class="ENtext">Ongoing Member</div>
-                        <a href="{% url 'trainer:member_manage' %}" id='total_member' class='lower_box_num'>{{total_member_num}}</a>
-                        <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
-                    </div>
-                </div>
-                <div class="lower_box_child">
-                    <div class="lower_box_child_inner">
-                        <div class="KRtext">이번달 신규</div><div class="JPtext">日程変更</div><div class="ENtext">--</div>
-                        <a href="{% url 'trainer:member_manage' %}" id='request_num' class='lower_box_num'>{{ new_member_num }}</a>
-                        <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
-                    </div>
-                </div>
-                <div class="lower_box_child">
-                    <div class="lower_box_child_inner">
-                        <div class="KRtext">종료 임박</div><div class="JPtext">終了切迫</div><div class="ENtext">Need re-contract</div>
-                        <a href="{% url 'trainer:member_manage' %}" id='finish_member' class='lower_box_num'>{{ to_be_end_member_num }}</a>
-                        <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-    <!-- </div> -->
-
-    <div id="notice_popup_main">
-        <p style="font-size:16px;color:#fe4e65;font-weight: bold;">그룹 기능 오픈 안내</p>
-        <br>
-        <p>2018.6.27(수)부터 2주간, 그룹 기능 베타서비스가 모든 이용자님들께 오픈됩니다.</p>
-        <p>베타 기간중 사용하시는 이용자님들께는 향후 그룹 기능 유료화 전환 이후에도 </p>
-        <p><span style="color:#fe4e65;">지속 무료로 서비스를 제공</span>하여 드리오니(1인 1ID)</p>
-        <p>많은 이용과 서비스 피드백을 부탁드립니다.</p>
-        <br>
-        <p>-피터스팀 드림</p>
-        <p style="text-align: right;margin-bottom: 0;font-size: 11px;">
-            <span id="notice_popup_close_temp" style="margin-right: 10px;"><img src="/static/user/res/member/icon-x-grey.png" style="width: 8px;"> 닫기</span>
-            <span id="notice_popup_close_main"><img src="/static/user/res/member/icon-x-grey.png" style="width: 8px;"> 오늘 더 보지 않기</span>
-        </p>
+    <div class="cal_page">
+        메인 페이지 <br> 메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>
     </div>
-
+    <div class="cal_page">
+        메인 페이지 <br> 메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>
+    </div>
+    <div class="cal_page">
+        메인 페이지 <br> 메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>
+    </div>
+    <div class="cal_page">
+        메인 페이지 <br> 메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>
+    </div>
+    <div class="cal_page">
+        메인 페이지 <br> 메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>
+    </div>
+    <div class="cal_page">
+        메인 페이지 <br> 메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>
+    </div>
 {% endblock %}
 
+
 {% block local_js_footer %}
-    <script type="text/javascript" src={% static_url "user/js/main/main_trainer.js" %}></script>
-    <script type="text/javascript">
-        $('.bottomfooter3').css('display', 'none');
-
-        $('#notice_popup_main').click(function(){
-            $(this).css('display', 'none');
-        });
-
-        $('#notice_popup_close_temp').click(function(e){
-            e.stopPropagation();
-            $('#notice_popup_main').css('display', 'none');
-        });
-
-        $('#notice_popup_close_main').click(function(e){
-            e.stopPropagation();
-            $.cookie('notice_popup_main', 'hidden', {expires : 1});
-            $('#notice_popup_main').css('display', 'none');
-        });
-
-        if($.cookie('notice_popup_main') == 'hidden'){
-            $('#notice_popup_main').css('display', 'none');
-            //테스트$('#notice_popup').css('display','block')
-        }else{
-            //$('#notice_popup_main').css('display','block') 공지 팝업 안보이게 잠시 주석처리
-        }
+    <script>
+        $('div.main_page').css({'background-color':'#f4f4f4', 'color':'blue'});
     </script>
-
-
 {% endblock %}

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WG2KK6D');</script>
+    <!-- End Google Tag Manager -->
+    <!--Google Adsense-
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-4554121851965192",
+        enable_page_level_ads: true
+      });
+    </script>
+    <Google Adsense-->
+
+    {% load static_url %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>{% block title %}PTERS{% endblock %}</title>
+
+    <link rel="icon" href="/static/common/favicon.ico">
+    <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
+    <link rel="shortcut icon" href="/static/common/favicon-48.png">
+
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href={% static_url "common/css/bootstrap.min.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/iframe/pters.base.set.iframe.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/pters.base.popup.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.select.class.css" %}>
+    <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
+    {% block local_css %}
+    {% endblock %}
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+{% block navbar %}
+    <div id="pters_version_information" style="position: absolute;top: 0;display: none;">v180430-1</div>
+
+    <div id="pshade" class="pshade _shade"></div>
+    <div id="mshade" class="mshade _shade"></div>
+    <div id="mshade_popup" class="mshade_popup _shade"></div>
+
+    <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
+
+    <div id="how_to_use_pters">
+
+    </div>
+
+    <div id="alarm">
+        <div id="alarm_delete">
+            <img src="/static/user/res/member/icon-delete-black.png" style="height:25px;float: right;margin-right: 10px; ">
+        </div>
+        <div id="alarm-iframe-div"></div>
+        <div style="text-align: center;"><button style="background: transparent;border:0;"><img src="/static/user/res/icon-down-grey.png" style="transform:rotate(180deg);"></button></div>
+    </div>
+
+    <div id="errorMessageBar">
+        <span id="errorMessageText"></span><span>닫기</span>
+    </div>
+
+<!--
+    <div id="popup_lecture_select" class="popups">
+        <form action="{% url 'trainer:select_class_processing' %}" id="lecture-check-form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="class_id" id="id_class_id">
+            <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:index' %}">
+        </form>
+        <p>
+            <span class="KRtext">클래스를 선택 해주세요.</span>
+            <span class="JPtext">クラスを選択してください。</span>
+            <span class="ENtext">Choose class</span>
+            <img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup">
+        </p>
+        <div class="pters_table">
+            <div class="pters_table_cell_head table_center_name"><span class="KRtext">센터</span><span class="JPtext">センター</span><span class="ENtext">Center</span></div>
+            <div class="pters_table_cell_head table_lecture_name"><span class="KRtext">클래스</span><span class="JPtext">クラス</span><span class="ENtext">Class</span></div>
+            <div class="pters_table_cell_head table_trainee_num"><span class="KRtext">수강생</span><span class="JPtext">受講生</span><span class="ENtext">Member</span></div>
+            <div class="pters_table_cell_head table_start_date"><span class="KRtext">개강일</span><span class="JPtext">開始</span><span class="ENtext">Open Date</span></div>
+            <div class="pters_table_cell_head table_lecture_status"><span class="KRtext">상태</span><span class="JPtext">状態</span><span class="ENtext">Status</span></div>
+        </div>
+        <div class="lecture_select_table_list">
+        </div>
+    </div>
+-->
+
+    <!--일정 눌렀을때 팝업메뉴-->
+    <div id="cal_popup_planinfo" class="popups">
+        <div id="popup_img">
+            <span id="popup_planinfo_title" class="popup_title"></span>
+            <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
+        </div>
+        <div class="popup_info_text">
+            <p id="popup_info"></p>
+            <p id="popup_info2"></p>
+            <input id="popup_info3_memo" type="text" maxlength="15" title="메모" readonly>
+            <img src="/static/user/res/icon-pencil.png" style="width: 12px;cursor:pointer;margin-left: 5px;" title="메모 수정" id="popup_info3_memo_modify" data-type="view">
+            <p style="font-size:10px;color:#282828;opacity:0.6;text-align: center;" class="pt_memo_guide_popup">레슨일정의 메모는 회원님께 공유됩니다.</p>
+        </div>
+        <div id="popup_btn_complete" class="popup_inner popup_inner_finish popup_inner_x3">
+            <span class="KRtext">일정 완료</span><span class="JPtext">日程完了</span><span class="ENtext">Finish Schedule</span>
+        </div>
+        <div id="popup_btn_delete" class="popup_inner popup_inner_delete  popup_inner_x3">
+            <span class="KRtext">일정 취소</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span>
+        </div>
+        <div class="popup_inner  popup_inner_x3" onclick="close_info_popup('cal_popup_planinfo')">
+            <span class="KRtext">닫기</span><span class="JPtext">閉じる</span><span class="ENtext">Close</span>
+        </div>
+        <div id="canvasWrap">
+            <span class="KRtext">회원님 완료 서명을 입력해주세요.</span>
+            <span class="JPtext">完了署名を入力して下さい</span>
+            <span class="ENtext">Enter Completion Signature</span>
+            <canvas id="canvas"></canvas>
+        </div>
+        <div id="popup_btn_viewGroupParticipants"><span>참석자</span><img src="/static/user/res/icon-down-grey.png"></div>
+        <div id="groupParticipants">
+
+        </div>
+        <div id="popup_sign_img">
+            <img src="" id="id_sign_img">
+        </div>
+
+        <div id="subpopup_addByList_plan" class="subpopup_addGroup" style="top:110px;width: 100%;">
+            <div class="mode_switch_button_wrap_cal" style="margin-top:5px;">
+                <div class="mode_switch_button mode_active" data-page="thisgroup" style="width: 90px;">이 그룹 회원</div>
+                <!--<div class="mode_switch_button" data-page="whole">전체 회원</div>-->
+            </div>
+            <div id="subpopup_addByList_whole">"<div class='list_addByList'>리스트 불러오는 중...</div>"</div>
+            <div id="subpopup_addByList_thisgroup">"<div class='list_addByList'>리스트 불러오는 중...</div>"</div>
+        </div>
+    </div>
+    <!--일정 눌렀을때 팝업메뉴-->
+
+    <!--삭제 확인 팝업메뉴-->
+    <div id="cal_popup_plandelete" class="popups">
+        <div id="popup_img">
+            <span id="popup_delete_title" class="popup_title"></span>
+            <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
+        </div>
+        <div id="popup_delete_question" class="KRtext popup_info_text">정말 일정을 취소하시겠습니까?</div>
+        <div id="popup_delete_question" class="JPtext popup_info_text">日程を削除しますか</div>
+        <div id="popup_delete_question" class="ENtext popup_info_text">Are you sure to cancel the schedule?</div>
+        <div id="popup_delete_btn_yes" class="popup_inner popup_inner_delete">
+            <span class="KRtext">예</span>
+            <span class="JPtext">はい</span>
+            <span class="ENtext">Yes</span>
+        </div>
+        <div id="popup_delete_btn_no" class="popup_inner popup_inner_delete" onclick="close_info_popup('cal_popup_plandelete')">
+            <span class="KRtext">아니오</span>
+            <span class="JPtext">いいえ</span>
+            <span class="ENtext">No</span>
+        </div>
+    </div>
+    <!--삭제 확인 팝업메뉴-->
+
+    <!--반복일정 등록 확인 팝업메뉴-->
+    <div id="cal_popup_repeatconfirm" class="popups">
+        <div id="popup_img">
+            <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
+        </div>
+        <div class="popup_info_text">
+            <p class="_repeatconfirmQuestion"></p>
+            <p id="repeat_confirm_day"></p>
+            <p id="repeat_confirm_dur"></p>
+        </div>
+        <div id="popup_btn_repeatconfirm_yes" class="popup_inner popup_inner_delete">
+            <span style="color:#282828;" class="KRtext">예</span>
+            <span style="color:#282828;" class="JPtext">はい</span>
+            <span style="color:#282828;" class="ENtext">Yes</span>
+        </div>
+        <div id="popup_btn_repeatconfirm_no" class="popup_inner popup_inner_delete">
+            <span class="KRtext">아니오</span>
+            <span class="JPtext">いいえ</span>
+            <span class="ENtext">No</span>
+        </div>
+    </div>
+    <!--반복일정 등록 확인 팝업메뉴-->
+
+    <!--[월간전용] 일정조회(강사)팝업 -->
+    <div id="cal_popup_plancheck" class="popups">
+        <div style="position: relative;">
+            <div>
+                <img src="/static/user/res/ptadd/icon-cal.png" alt="" class="img_cal">
+                <span id="countNum"></span>
+            </div>
+            <img src="/static/user/res/ptadd/btn-x.png" alt="" id="btn_close5" class="btn_close_popup" onclick="close_info_popup('cal_popup_plancheck')">
+            <p class="popup_ymdText"></p>
+        </div>
+        <p style="font-size: 11px;color:#fe4e65;"></p>
+        <div class="popup_inner_month" style="height: auto;"></div>
+    </div>
+    <!--[월간전용] 일정조회(강사)팝업 -->
+
+    <!--[월간전용] 알림 팝업
+    <div id="ng_popup" class="popups">
+       <img src="/static/user/res/stopmark.png" alt="Caution!" style="width:30px;margin: 20px;">
+        <div id="ng_popup_text" style="margin-bottom: 20px;">
+          <p>일정은 오늘 날짜 기준</p><p>2주앞만 설정 가능합니다.</p>
+        </div>
+    </div>
+    [월간전용] 알림 팝업 -->
+
+
+    <!--
+    <nav class="navbar navbar-fixed-top navbar-default"  id="page-base">
+        <div id="navshade"></div>
+        <div class="container" style="max-width:1000px;">
+            <div class="navbar-header">
+                <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="openNav()">
+                    <span class="icon-bar" style="width: 20px;"></span>
+                    <span class="icon-bar" style="width:60%;"></span>
+                    <span class="icon-bar" style="width: 20px;"></span>
+                </button>
+                {% block nav_center_img %}
+                    <a id="uptext" class="uptext">{{ user.last_name}} {{user.first_name }}  <span></span></a>
+                {% endblock %}
+                <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar" onclick="openAlarm('mobile')">
+                    <a><img src="{% static_url "user/res/main/alarm-on.png" %}" style="width:20px;"></a>
+                </button>
+
+                <div id="outer_Sidenav" class="outer_Sidenav">
+
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                </div>
+
+                <div id="inner_Sidenav" class="sidenav">
+
+                    <div class="sidebar_upper" onclick="location.href='{% url 'index' %}'">
+                        <a href="{% url 'index' %}" style="width:100%;height: 100%;z-index: 1"></a>
+                        <div style="z-index: -1"><img src="{% static_url "user/res/icon-pf.png" %}" alt="#"></div>
+                        <div id="user_name">{{user.last_name}} {{user.first_name}}
+                            <span class="KRtext">님</span><span class="JPtext">様</span><span class="ENtext"></span>
+                        </div>
+                        <div id="welcome">
+                            <span class="KRtext">안녕하세요!</span>
+                            <span class="JPtext">Hello!</span>
+                            <span class="ENtext">What a nice day!</span>
+                            <p style="margin-top:15px;color:#f4f4f4;font-size:12px;"> {{ request.session.class_center_name }} {{ request.session.class_type_name }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="sidebar_div" id="cal_day" onclick="sideGoPage('cal_day')"><img src="{% static_url "user/res/icon-calendar-day.png" %}" class="sidebar_icon" alt="#">
+                        <a class="sidebar_text __todayplan">
+                        </a>
+                    </div>
+                    <div class="sidebar_div" onclick="sideGoPage('cal_week')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
+                        <a class="sidebar_text __weekplan">
+                        </a>
+                    </div>
+                    <div class="sidebar_div" onclick="sideGoPage('cal_month')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
+                        <a class="sidebar_text __monthplan">
+                        </a>
+                    </div>
+                    <div class="sidebar_div" onclick="sideGoPage('member_manage')"><img src="{% static_url "user/res/icon-user-setting.png" %}" class="sidebar_icon" alt="#">
+                        <a class="sidebar_text __membermanage">
+                        </a>
+                    </div>
+                    <div class="sidebar_div" onclick="sideGoPage('group_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
+                        <a class="sidebar_text __groupmanage">
+                        </a>
+                    </div>
+
+                        <div class="sidebar_div"><img src={% static_url "user/res/icon-pencil.png" %} class="sidebar_icon" alt="#">
+                            <a href="{% url 'trainer:work_manage' %}" class="sidebar_text __workmanage">
+                            </a>
+                        </div>
+           
+                    <div class="sidebar_div" onclick="open_lecture_select_popup()"><img src="{% static_url "user/res/member/icon-repeat.png" %}" class="sidebar_icon" alt="#">
+                        <a class="sidebar_text __calSelect">
+                        </a>
+                    </div>
+                    <div class="sidebar_div"><img src="{% static_url "user/res/icon-pencil.png" %}" class="sidebar_icon" alt="#">
+                        <a href="{% url 'trainer:help_setting' %}" class="sidebar_text __help">
+                        </a>
+                    </div>
+                    <div style="height: 100%; border-top:0.5px solid #cccccc;background:#ffffff;"></div>
+                    <div class="sidebar_div_last">
+                        <div class="sidebar_div_last1" onclick="sideGoPage('trainer_setting')">
+                            <img src="{% static_url "user/res/icon-setting.png" %}" class="sidebar_icon sidebar_icon_setting" alt="#">
+                            <a class="sidebar_text __setting">
+                            </a>
+                        </div>
+                        <div class="sidebar_div_last2">
+                            <a href="https://blog.naver.com/ppkyum" target="_blank">
+                            <img src="{% static_url "user/res/icon-info.png" %}" alt="#" class="sidebar_icon_info sidebar_icon">
+                            </a>
+                        </div> 
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+-->
+<!--
+    <nav class="navbar navbar-fixed-top navbar-default" id="page-base-addstyle">
+        <div class="container">
+            <div class="navbar-header">
+                <button id="upbutton-x" class="navbar-toggle" aria-controls="navbar">
+                    <img src="{% static_url "user/res/ptadd/btn-x.png" %}" style="width:90%;">
+                </button>
+                {% block nav_center_img1 %}
+                    <a id="uptext2" class="uptext"></a>
+                {% endblock %}
+                <button id="upbutton-check" class="navbar-toggle" aria-controls="navbar">
+                    <img src="{% static_url "user/res/ptadd/btn-complete.png" %}" style="width:100%;">
+                </button>
+            </div>
+        </div>
+    </nav>
+-->
+
+<!--
+    <nav class="navbar navbar-fixed-top navbar-default" id="page-base-modifystyle">
+        <div class="container">
+            <div class="navbar-header">
+                <button id="upbutton-x-modify" class="navbar-toggle" aria-controls="navbar">
+                    <img src="{% static_url "user/res/ptadd/btn-x.png" %}" style="width:90%;">
+                </button>
+                {% block nav_center_img2 %}
+                    <a id="uptext3" class="uptext"><span class="KRtext">회원 정보</span><span class="JPtext">メンバー</span><span class="ENtext">Member Info.</span></a>
+                {% endblock %}
+                <button id="upbutton-modify" class="navbar-toggle" aria-controls="navbar" data-type = "view">
+                    <img src="{% static_url "user/res/member/icon-edit.png" %}" style="width:100%;">
+                </button>
+            </div>
+        </div>
+    </nav>
+-->
+<!--
+    <nav class="navbar navbar-fixed-top" id="pcver">
+        <div class="centermenu">
+            <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'index' %}'" style="cursor: pointer;">
+            <div class="centermenu_box">
+                <div class="centermenu_div" style="display: none;">
+                    <a href="{% url 'trainer:cal_day' %}" class="centermenu_text __todayplan"></a>
+                </div>
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:cal_week' %}" class="centermenu_text __weekplan"></a>
+                </div>
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:cal_month' %}" class="centermenu_text __monthplan"></a>
+                </div>
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:member_manage' %}" class="centermenu_text __membermanage"></a>
+                </div>
+                <div class="centermenu_div" style="margin-right: 25px;">
+                    <a href="{% url 'trainer:group_manage' %}" class="centermenu_text __groupmanage"></a>
+                </div>
+
+
+                    <div class="centermenu_div">
+                        <a href="{% url 'trainer:work_manage' %}" class="centermenu_text __workmanage"></a>
+                    </div>
+
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text __setting"></a>
+                </div>
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:help_setting' %}" class="centermenu_text __help"></a>
+                </div>
+
+                <div class="centermenu_div">
+                    <a class="centermenu_text __alarm"></a>
+                </div>
+                <div class="centermenu_div">
+                    <a class="centermenu_text __calSelect" onclick="open_lecture_select_popup()"></a>
+                </div>
+
+            </div>
+            <div id="loginInfo" class="centermenu_div" style="float:right;" onclick="open_lecture_select_popup_pc(); openAlarm('pc'); ">
+                <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:4px;">
+                <span class="pcwhere">{{ request.session.class_type_name }}</span>
+                <span class="pcwho">{{user.last_name}} {{user.first_name}} <span class="_nameAttach"></span></span>
+            </div>
+            <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
+            <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"></span>
+            <div class="pcver-slide-menu">
+                <div id="myInfo">
+                    <label><img src="/static/user/res/member/icon-user.png"><span class="KRtext">내 클래스 정보</span><span class="JPtext">My Class</span><span class="ENtext">My Classes</span></label>
+                    <span>{{ request.session.class_center_name }}</span>
+                    <span>{{user.last_name}} {{user.first_name}}</span>
+                    <span class="_nameAttach"></span>
+                    <span id="myPageMove" onclick="location.href='{% url 'trainer:trainer_mypage' %}'">My Page</span>
+                    <img src="/static/user/res/ptadd/btn-x.png" onclick="closeAlarm('pc')">
+                </div>
+                <div class="pters_table">
+                    <div class="pters_table_cell_head table_center_name"><span class="KRtext">센터</span><span class="JPtext">センター</span><span class="ENtext">Center</span></div>
+                    <div class="pters_table_cell_head table_lecture_name"><span class="KRtext">클래스</span><span class="JPtext">クラス</span><span class="ENtext">Class</span></div>
+                    <div class="pters_table_cell_head table_trainee_num"><span class="KRtext">수강생</span><span class="JPtext">受講生</span><span class="ENtext">Member</span></div>
+                    <div class="pters_table_cell_head table_start_date"><span class="KRtext">개강일</span><span class="JPtext">開始</span><span class="ENtext">Open Date</span></div>
+                    <div class="pters_table_cell_head table_lecture_status"><span class="KRtext">상태</span><span class="JPtext">状態</span><span class="ENtext">Status</span></div>
+                </div>
+                <div id="subject-selector"></div>
+                <div id="alarm-notify">
+                    <img id="alarm-on-pc" src="/static/user/res/main/alarm-on.png">
+                    <span class="KRtext">알림</span>
+                    <span class="JPtext">新しい通知があります</span>
+                    <span class="ENtext">New notification arrived</span>
+                    <img id="alarm-page-arrow" src="/static/user/res/icon-down-grey.png">
+                </div>
+                <div id="alarm-iframe-div-pc"></div>
+                <div id="alarm-close-pc"><img src="/static/user/res/icon-down-grey.png"></div>
+            </div>
+        </div>
+    </nav>
+-->
+
+    <div class="footergap">
+
+    </div>
+
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+<footer class="fixfooter bottomzero">
+    <div class="bottomfooter1">
+        <form action="{% url 'trainer:update_setting_language' %}" id="update-setting-language-form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="setting_member_language" id="id_setting_language" value="">
+            <input type="hidden" name = "next_page" value="/trainer/trainer_main">
+        </form>
+        <span class="language_set" onclick="languageSet('ENG')" hidden>English</span><span style="margin-left:10px;margin-right: 10px;" hidden>|</span>
+        <span class="language_set" onclick="languageSet('KOR')" hidden>한국어</span><span style="margin-left:10px;margin-right: 10px;" hidden>|</span>
+        <span class="language_set" onclick="languageSet('JPN')" hidden>日本語</span><span style="margin-left:10px;margin-right: 10px;" hidden>|</span>
+    </div>
+    <div class="bottomfooter2">
+        <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
+        <a href="http://www.spooner.co.kr" class="KRtext _company">회사소개</a><a href="http://www.spooner.co.kr" class="JPtext _company">会社紹介</a><a href="http://www.spooner.co.kr" class="ENtext _company">About us</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="KRtext" href='{% url 'trainer:help_setting' %}'>이용문의</a><a class="JPtext">利用案内</a><a class="ENtext">Help</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="KRtext">제휴제안</a><a class="JPtext">提携</a><a class="ENtext">Partnership</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="KRtext" href='{% url 'policy' %}'>이용약관</a><a class="JPtext">利用案内</a><a class="ENtext">Policy</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="KRtext" href='{% url 'privacy' %}'>개인정보처리방침</a><a class="JPtext">個人情報処理方針</a><a class="ENtext">Privacy Policy</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="KRtext" href="https://blog.naver.com/ppkyum" target="_blank">사용법 및 FAQ</a><a class="JPtext">ヘルプ</a><a class="ENtext">Customer Service</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+    </div>
+    <div class="bottomfooter3">
+        <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
+        <a class="KRtext" href='{% url 'trainer:help_setting' %}'>이용문의</a><a class="JPtext">利用案内</a><a class="ENtext">Help</a><span style="margin-left:5px;margin-right: 5px;">|</span>
+        <a class="KRtext" href='{% url 'policy' %}'>이용약관</a><a class="JPtext">利用案内</a><a class="ENtext">Policy</a><span style="margin-left:5px;margin-right: 5px;">|</span>
+        <a class="KRtext" href='{% url 'privacy' %}'>개인정보처리방침</a><a class="JPtext">個人情報処理方針</a><a class="ENtext">Privacy Policy</a>
+    </div>
+</footer>
+<!--
+<footer class="fixfooter">
+    <div class="bottomfooter1">
+        <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
+        <span>회사소개</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+        <span>이용안내</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+        <span>제휴제안</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+        <span>개인정보처리방침</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+        <span>고객센터</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+    </div>
+    <div class="bottomfooter2">
+        <p>스푸너(SPOONER) 통신판매업 신고 : 제 2017-서울동작-0672호, 사업자등록번호 : 463-56-00284, 대표자 : OOO,XXX</p>
+        <p>Tel : xxxx-xxxx, Fax : xxxx-xxxx, 주소 : 서울특별시 동작구 신대방동 보라매로 5가길 7 캐릭터그린빌 오피스텔 x층 XXX호</p>
+        <p>이용 및 제휴문의 : skkim@spooner.co.kr</p>
+        <p>- </p>
+        <p>Copyright(C) SPOONER All rights reserved.</p>
+    </div>
+</footer>
+-->
+
+{% block footer %}
+
+{% endblock %}
+<!--
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"> //미니달력</script>
+-->
+
+<script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
+<script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
+
+<script src={% static_url "common/js/bootstrap.min.js" %}></script>
+<script type="text/javascript" src={% static_url "common/js/jquery.swipe.js" %}></script>
+<script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
+<script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
+
+{#    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>#}
+{#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
+{#    <link rel="manifest" href={% static_url "manifest.json" %}>#}
+{#<!--<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>#}
+{#    <audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>#}
+{#    <script>#}
+{#    function playSound() {#}
+{#          var sound = document.getElementById("audio");#}
+{#          sound.loop = false;#}
+{#          sound.play();#}
+{#      }#}
+{#    </script>#}
+{#    <script type="text/javascript">#}
+{#        #}
+{#// var requestButton = document.querySelector(".request-btn");#}
+{##}
+{#    //});#}
+{#    //const messageChannel = new MessageChannel();#}
+{#    //messageChannel.port1.onmessage = function(event){ console.log('msg from SW', event); }#}
+{#    //navigator.serviceWorker.controller.postMessage({'hello':'test'});#}
+{#        function messageCommunicationWithWorker(){#}
+{#            navigator.serviceWorker.getRegistrations().then(function(registrations) {#}
+{#                registrations.forEach(function (v) {#}
+{#                    send_message_to_sw(v.active, "hello cal week").then(function (m) {#}
+{#                        playSound();#}
+{#                        ajaxClassTime();#}
+{#                        messageCommunicationWithWorker();#}
+{#                    });#}
+{#                });#}
+{#            });#}
+{#        }#}
+{#        messageCommunicationWithWorker();#}
+{#    </script>-->#}
+<script type="text/javascript">
+    var class_name = '{{ request.session.class_type_name }}';
+    var class_code = '{{ request.session.class_type_code }}';
+    {#            open_lecture_select_popup_pc()#}
+
+    /* Shade 클릭해서 팝업 닫기
+     $('.pshade').click(function(){
+     if($('body').width()>600){
+     $('#calendar').css('position','relative')
+     $('.popups').css('display','none')
+     $('.pshade').css({'z-index':-100,'display':'none'})
+     toggleGroupParticipantsList('off')
+     }
+     $('#alarm').css('transform','translate(-50%,-200%)');
+     })
+     Shade 클릭해서 팝업 닫기*/
+
+    $('#errorMessageBar span:nth-child(2)').click(function(){
+        //window.location.reload()
+        $('#errorMessageBar').fadeOut();
+        $('#errorMessageText').text('');
+{#        $('html').css("cursor","auto");#}
+        $('.ajaxloadingPC').hide();
+
+        if($('body').width()>600){
+            //$('#calendar').css('position','relative')
+            //$('.popups').hide();
+            //shade_index(-100)
+        }else{
+            $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+        }
+    });
+
+    $('#uptext').click(function(){
+        window.location.reload();
+    });
+
+    function openNav(){
+
+        {#               $("#outer_Sidenav").css('display_block', 'block');#}
+        $("#outer_Sidenav").show();
+        $("#inner_Sidenav").css({'width':'250px'});
+        $('#float_btn_wrap, #float_btn').hide('fast');
+
+
+        //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeIn('fast')
+    }
+
+    function closeNav(){
+
+        {#               $("#outer_Sidenav").css('display', 'none');#}
+        $("#outer_Sidenav").hide();
+        $("#inner_Sidenav").css({'width':'0'});
+        $('#float_btn_wrap, #float_btn').show('fast');
+
+
+        //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeOut('fast')
+    }
+
+
+    function openAlarm(option){ // pc or mobile
+        if(option == 'mobile'){
+            if($('#alarm-iframe').contents().find(".log_id_array").length == 0){
+                $('#alarm_delete').hide();
+            }else{
+                $('#alarm_delete').show();
+            }
+            shade_index(100);
+            $('#alarm').css('height','70%');
+            $('#alarm-iframe-div').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="540" height="305" frameborder="0"></iframe>');
+        }
+        else if(option == 'pc'){
+            //open_lecture_select_popup_pc()
+            if($('#alarm-iframe').contents().find(".log_id_array").length == 0){
+                $('#alarm_delete').hide();
+            }else{
+                $('#alarm_delete').show();
+            }
+            $('.pcver-slide-menu').css({'height':'auto','box-shadow':'1px 1px 1px 1px #c5c5c5'});
+            $('#alarm-iframe-div-pc').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="100%" height="300" frameborder="0"></iframe>');
+        }
+    }
+
+    function closeAlarm(option){
+        if(option=='pc'){
+            var selector_alarm_iframe_div_pc = $('#alarm-iframe-div-pc');
+            $('.pcver-slide-menu').css({'height':'0','box-shadow':'unset'});
+            selector_alarm_iframe_div_pc.css('height','0px');
+            $('#alarm-close-pc').fadeOut();
+            selector_alarm_iframe_div_pc.html('');
+        }
+    }
+
+    $('#alarm-notify').click(function(){
+        $('#alarm-iframe-div-pc').css('height','300px');
+        $('#alarm-close-pc').fadeIn();
+    });
+
+    $('#alarm-close-pc').click(function(){
+        $('#alarm-iframe-div-pc').css('height','0px');
+        $('#alarm-close-pc').fadeOut();
+    });
+
+    var class_hour = '{{ request.session.class_hour }}';
+
+
+    var worktime = '{{ request.session.setting_trainer_work_time_available }}';
+    var stoptime = '{{ request.session.setting_member_reserve_time_available }}';
+    var stoptimeStart = '';
+    var stoptimeEnd = '';
+    var worktimeStart = '';
+    var worktimeEnd = '';
+
+    if(stoptime.length>0){
+        stoptimeStart = Number('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0]);
+        stoptimeEnd = Number('{{ request.session.setting_member_reserve_time_available }}'.split('-')[1].split(':')[0]);
+    }else{
+        stoptimeStart = '';
+        stoptimeEnd = '';
+    }
+
+    if(worktime.length>0){
+        worktimeStart = Number('{{ request.session.setting_trainer_work_time_available }}'.split(':')[0]);
+        worktimeEnd = Number('{{ request.session.setting_trainer_work_time_available }}'.split('-')[1].split(':')[0]);
+        if('{{ request.session.setting_trainer_work_time_available }}'.split(':')[0] == '23' && '{{ request.session.setting_trainer_work_time_available }}'.split(':')[1] == '59'){
+            worktimeStart = 24;
+        }
+        if('{{ request.session.setting_trainer_work_time_available }}'.split('-')[1].split(':')[0] == '23' && '{{ request.session.setting_trainer_work_time_available }}'.split('-')[1].split(':')[1] == '59' ){
+            worktimeEnd = 24;
+        }
+    }else{
+        worktimeStart = '';
+        worktimeEnd = '';
+    }
+
+    var Options = {   "hourunit" : 30, // 30 or 60
+        "classDur" : Number('{{ request.session.class_hour }}'), // 30 or 60
+        "stoptimeStart": stoptimeStart ,             //강사가 설정한 예약불가 시간 (시작)
+        "stoptimeEnd": stoptimeEnd ,                //강사가 설정한 예약불가 시간 (종료)
+        "limit":'{{ request.session.setting_member_reserve_enable_time }}',      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+        "cancellimit": '{{ request.session.setting_member_reserve_cancel_time }}', //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
+        "reserve":'{{ request.session.setting_member_reserve_prohibition }}',    //회원 일정 기능을 enable 1/disable 0
+        "availDate":Number({{ request.session.setting_member_reserve_date_available }}),
+
+        "firstPushToMember":'-',
+        "secondPushToMember":'-',
+        "regErgentPushToMember":'-',
+        "planChangePush":'-',
+        "regErgentPush":'-',
+
+        "workStartTime":worktimeStart,
+        "workEndTime":worktimeEnd,
+
+
+        "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
+        "location" : "Japan"           //Korea, Japan, English, Chinese
+    };
+
+    if(Options.language=="JPN"){
+        $(".KRtext, .ENtext").remove();
+        $(".JPtext").show();
+    }else if(Options.language=="ENG"){
+        $(".KRtext, .JPtext").remove();
+        $(".ENtext").show();
+    }else if(Options.language=="KOR"){
+        $(".ENtext, .JPtext").remove();
+        $(".KRtext").show();
+    }
+
+    var varUA = navigator.userAgent.toLowerCase();
+    if(varUA.match('android') != null){
+        $('._company').css('display','none');
+        $('.ads_wrap').css('display','none');
+    }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+        $('._company').css('display','none');
+        $('.ads_wrap').css('display','none');
+    }else{
+
+    }
+
+    function languageSet(language){
+        $('#id_setting_language').val(language);
+        document.getElementById('update-setting-language-form').submit();
+    }
+
+
+    ///********************* 강의 선택*************************************///
+    ///********************* 강의 선택*************************************///
+
+    var lec_select_regCountArray = [];
+    var lec_select_countArray = [];
+    var lec_select_startArray = [];
+    var lec_select_endArray = [];
+    var lec_select_lectureIdArray = [];
+    var lec_select_trainerNameArray = [];
+    var lec_select_availCountArray = [];
+    var lec_select_classIdArray = [];
+
+
+    function ajax_read_lecture_info_from_db(HTMLselector){
+        $.ajax({
+            url: ' /trainer/get_class_list/',
+            type: 'GET',
+            dataType : 'html',
+
+            beforeSend:function(){
+                beforeSend()
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else if(jsondata.classIdArray.length == 0){
+
+                }else{
+                    lec_select_classIdArray = jsondata.classIdArray;
+                    lec_select_centerNameArray = jsondata.centerNameArray;
+                    lec_select_subjectNameArray = jsondata.subjectNameArray;
+                    lec_select_startDateArray = jsondata.startDateArray;
+                    lec_select_stateNameArray = jsondata.stateNameArray;
+                    lec_select_classMemberNumArray = jsondata.classMemberNumArray;
+                    lec_select_classInProgressMemberNumArray = jsondata.classInProgressMemberNumArray;
+
+                    lec_select_classHourArray = jsondata.classHourArray;
+                    lec_select_classHourUnitArray = jsondata.classHourUnitArray;
+                    lec_select_stateCodeArray = jsondata.stateCodeArray;
+                    lec_select_subjectCodeArray= jsondata.subjectCodeArray;
+                    lec_select_currentClassId = jsondata.currentClassId;
+
+                    //Options.classDur = lec_select_classHourArray[lec_select_classIdArray.indexOf(lec_select_currentClassId[0])]
+
+                    if(lec_select_classIdArray.length == 0){
+                        location.href="{% url 'trainer:add_class' %}";
+                    }else{
+                        fill_lecture_select_popup(HTMLselector);
+                    }
+                }
+            },
+
+            complete:function(){
+                completeSend()
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        })
+    }
+
+    function ajax_read_lecture_detail_info_from_db(classid){
+        $.ajax({
+            url: '/trainee/get_trainee_lecture_list/',
+            data:{"class_id": classid, "auth_cd":'WAIT'},
+            type:'GET',
+            dataType : 'html',
+
+            beforeSend:function(){
+                beforeSend()
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    lec_select_regCountArray = jsondata.countArray;
+                    lec_select_startArray = jsondata.startArray;
+                    lec_select_endArray = jsondata.endArray;
+                    lec_select_lectureIdArray = jsondata.lectureIdArray;
+                    lec_select_classIdArray = jsondata.classIdArray
+                    lec_select_trainerNameArray = jsondata.trainerNameArray;
+                    lec_select_availCountArray = jsondata.availCountArray;
+                    lec_select_stateArray = jsondata.memberViewStateArray;
+                    lec_select_lectureCountsArray = jsondata.lectureCountsArray;
+                    //lec_select_npLectureCountsArray = jsondata.npLectureCountsArray;
+                    lec_select_classInfoArray = jsondata.classInfoArray;
+                    lec_select_classIdArray = jsondata.classIdArray;
+
+                    fill_lecture_connect_select_popup(classid) ;
+                }
+            },
+
+            complete:function(){
+                completeSend()
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        })
+    }
+
+    function open_lecture_select_popup(){
+        $('.popups').hide();
+        $('#popup_lecture_select').fadeIn('fast');
+        closeNav();
+        shade_index(100);
+        ajax_read_lecture_info_from_db($('.lecture_select_table_list'));
+    }
+
+    function open_lecture_select_popup_pc(){
+        $('.popups').hide();
+        closeNav();
+        ajax_read_lecture_info_from_db($('#subject-selector'));
+    }
+
+    function fill_lecture_select_popup(HTMLselector){
+        var len = lec_select_subjectNameArray.length;
+        var list_table_to_join = [];
+        var center_counter = 0;
+        for(var i=0; i<len; i++){
+            //if(lec_select_npLectureCountsArray[i] == '0'){
+            var currentClass = "";
+            var table = "";
+            if(lec_select_classIdArray[i] == lec_select_currentClassId[0]){
+                currentClass = 'currentClass';
+                //var selectionText = '<a data="" '+'onclick=""'+'">-</a>'
+                table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">';
+            }else{
+                currentClass = "";
+                //var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">선택</a>'
+                table = '<div class="pters_table lecture_row" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'>';
+            }
+            //var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
+            var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+lec_select_centerNameArray[i]+'</div>';
+            var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+lec_select_subjectNameArray[i]+'</div>';
+            var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'">'+lec_select_classInProgressMemberNumArray[i]+'명</div>';
+            var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>';
+            var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+lec_select_stateNameArray[i]+'</div>';
+            //var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>';
+            var sum = table + centerName + lectureName + traineeNum + startDate + status + '</div>';
+            list_table_to_join.push(sum);
+            if(lec_select_centerNameArray[i] != ''){
+                center_counter += 1;
+            }
+        }
+        var list_table = list_table_to_join.join('');
+        HTMLselector.html(list_table);
+
+        if(center_counter==0){
+            $('.table_center_name').css('display', 'none');
+        }
+        //$('.lecture_select_table_list').html(list_table)
+    }
+
+    $('#popup_lecture_select .button_close_popup').click(function(){
+        $(this).parents('div.popups').fadeOut('fast');
+        shade_index(-100);
+    });
+
+
+    function lecture_check(class_id){
+        //$('#id_check_lecture_id').val(lecture_id);
+        //$('#id_check').val(check);
+        $('#id_class_id').val(class_id);
+        $('#id_next_page').val('{% url 'trainer:index'%}');
+        document.getElementById('lecture-check-form').submit();
+    }
+
+
+    ///********************* 강의 선택*************************************///
+    ///********************* 강의 선택*************************************///
+
+</script>
+<script type="text/javascript" src={% static_url "common/js/jquery.cookie.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.base.set.iframe.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
+
+{% block local_js_footer %}
+{% endblock %}
+
+</body>
+</html>

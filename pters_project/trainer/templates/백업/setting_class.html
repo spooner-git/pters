@@ -1,0 +1,566 @@
+{% extends "trainer_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.select.class.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+    <style type="text/css">
+        .table_trainee_num{
+            visibility: hidden;
+        }
+        .table_start_date{
+            visibility: hidden;
+        }
+        .settingBox{
+            margin-top: 80px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #cccccc;
+        }
+        #menuDescription{
+            line-height: 40px;
+        }
+        .fixfooter{
+            position: relative;
+        }
+
+        .lecture_delete{
+            width: 20%;
+            vertical-align: bottom;
+        }
+        @media(min-width:600px){
+            .table_trainee_num{
+                visibility: visible;
+            }
+            .table_start_date{
+                visibility: visible;
+            }
+            .settingBox{
+                margin-top: 100px;
+            }
+            #menuDescription{
+                line-height: unset;
+            }
+            .fixfooter{
+                margin-top: 300px;
+            }
+            .bottomfooter3 span{
+                color: #282828;
+            }
+        }
+    </style>
+{% endblock %}
+
+
+
+{% block content %}
+
+    <form action="{% url 'trainer:select_class_processing' %}" id="lecture-check-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="class_id" id="id_class_id">
+        <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:index' %}">
+    </form>
+
+    <div id="ymdText">
+        <div id="ymdTextWrap">
+            <div id="menuName">프로그램 관리
+            </div>
+            <div id="menuDescription">나의 전체 프로그램 리스트를 관리할 수 있습니다.
+            </div>
+        </div>
+    </div>
+
+    <!--
+    <div id="defaultFeeSettingText" class="settingMenu wrap800">
+        <p class="settingText">클래스 관리</p>
+        <p class="settingText2">나의 전체 클래스 리스트를 관리할 수 있습니다.</p>
+    </div>
+    -->
+
+    <div id="defaultFeeSetting" class="settingBox wrap800">
+        <p><button class="submitBtn classAdd">추가</button></p>
+        <div class="pters_table pters_table_at_setting_page" style="background: #f7f7f7;">
+            <div class="pters_table_cell_head table_center_name">센터</div>
+            <div class="pters_table_cell_head table_lecture_name">프로그램</div>
+            <div class="pters_table_cell_head table_trainee_num">수강생</div>
+            <div class="pters_table_cell_head table_start_date">개설일</div>
+            <div class="pters_table_cell_head table_lecture_status">상태</div>
+            <div class="pters_table_cell_head table_class_unit">레슨 시간 단위</div>
+            <div class="pters_table_cell_head lecture_delete">관리</div>
+            <!--
+            <div class="pters_table_cell_head lecture_selection">이동</div>
+            -->
+        </div>
+        <div class="lecture_select_table_list">
+        </div>
+    </div>
+
+    <div class="popupBtn_mini">
+        <button class="submitBtn _button_Prev">이전</button>
+        <button class="submitBtn _button_Next">추가</button>
+    </div>
+
+{% endblock %}
+
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <script>
+        $('a.__setting').css('color','#fe4e65;');
+
+        if($('body').width()<600){
+            $('#page-base').css('display','none');
+            $('#page-base-modifystyle').css('display','block');
+            $('#uptext3').text('프로그램 관리');
+            $('#uptext').text("프로그램 관리");
+            $('#upbutton-modify').hide();
+        }
+
+        $('#upbutton-x-modify, ._button_Prev').click(function(){
+            location.href="/trainer/trainer_setting/";
+        });
+
+        $('button._button_Next, button.classAdd').click(function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            pters_option_inspector("program_create", "", $('.lecture_select_table_list').attr('data-programcount') );
+        });
+
+        var lt_sal_01 =  ['{{ lt_sal_01 }}'];
+        var lt_sal_02 =  ['{{ lt_sal_02 }}'];
+        var lt_sal_03 =  ['{{ lt_sal_03 }}'];
+        var lt_sal_04 =  ['{{ lt_sal_04 }}'];
+        var lt_sal_05 =  ['{{ lt_sal_05 }}'];
+        var lt_sal_00 =  ['{{ lt_sal_00 }}'];
+
+        ajax_read_lecture_info_from_db_PAGE();
+
+        $(document).on('click','._icon_del',function(e){
+            e.stopPropagation();
+            if(!$(this).hasClass('disabled_button')){
+                var class_id = $(this).parent('div').attr('data-classid');
+// {#                if(class_id != lec_select_currentClassId[0]){#}
+                $('#cal_popup_plandelete').show();
+                $('#popup_delete_question').html("<p>정말 삭제하시겠습니까?<br>현재까지의 데이터가 모두 삭제됩니다.</p>")
+// {#                    $('#shade').show()#}
+                shade_index(100);
+// {#                }#}
+// {#                else{#}
+// {#                    alert('현재 활성화 되어있는 프로그램은 삭제 불가능합니다.\n 다른 프로그램으로 이동후 현재 프로그램이 삭제 가능합니다.')#}
+// {#                }#}
+
+                $('#popup_delete_btn_yes').click(function(){
+                    ajax_del_lecture_info(class_id);
+                    $(this).parents('.popups').hide();
+                    shade_index(-100);
+                    $("#popup_delete_btn_yes").off();
+                    $('#popup_delete_btn_no, .popup_close_x_button').off();
+                });
+
+                $('#popup_delete_btn_no, .popup_close_x_button').click(function(){
+                    $(this).parents('.popups').hide();
+                    shade_index(-100);
+                    $("#popup_delete_btn_yes").off();
+                    $('#popup_delete_btn_no, .popup_close_x_button').off();
+                });
+            }
+            
+        })
+
+
+
+        ///********************* 강의 선택*************************************///
+        ///********************* 강의 선택*************************************///
+
+        function ajax_read_lecture_info_from_db_PAGE(){
+            $.ajax({
+
+                url: ' /trainer/get_class_list/',
+                type: 'GET',
+                dataType : 'html',
+
+                beforeSend:function(){
+                    beforeSend()
+                },
+
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    console.log(jsondata)
+                    if(jsondata.messageArray.length>0){
+                        $('#errorMessageBar').show()
+                        $('#errorMessageText').text(jsondata.messageArray)
+                    }else{
+                        lec_select_classIdArray = jsondata.classIdArray
+                        lec_select_centerNameArray = jsondata.centerNameArray;
+                        lec_select_subjectNameArray = jsondata.subjectNameArray;
+                        lec_select_startDateArray = jsondata.startDateArray;
+                        lec_select_stateNameArray = jsondata.stateNameArray;
+                        lec_select_classMemberNumArray = jsondata.classMemberNumArray;
+                        lec_select_classInProgressMemberNumArray = jsondata.classInProgressMemberNumArray;
+
+                        lec_select_classHourArray = jsondata.classHourArray;
+                        lec_select_classHourUnitArray = jsondata.classHourUnitArray;
+                        lec_select_stateCodeArray = jsondata.stateCodeArray;
+                        lec_select_subjectCodeArray= jsondata.subjectCodeArray;
+                        lec_select_currentClassId = jsondata.currentClassId;
+                        lec_select_classHour = jsondata.classHourArray;
+
+                        if(lec_select_classIdArray.length == 0){
+                            location.href="/trainer/add_class/?cancel_redirect_url=/trainer/class_setting/"
+                        }else{
+                            fill_lecture_select_page(jsondata)
+                        }
+                    }
+                },
+
+                complete:function(){
+                    completeSend()
+                },
+
+                error:function(){
+                    console.log('server error')
+                }
+            })
+        }
+
+
+
+        function ajax_del_lecture_info(class_id){
+            $.ajax({
+                url: '/trainer/delete_class_info/',
+                data:{"class_id":class_id},
+                dataType : 'html',
+                type:'POST',
+
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                    beforeSend();
+                    pters_option_inspector("program_delete", xhr, "");
+                },
+
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    if(jsondata.messageArray.length>0){
+                        $('#errorMessageBar').show()
+                        $('#errorMessageText').text(jsondata.messageArray)
+                    }else{
+
+                        if(class_id != lec_select_currentClassId[0]){
+                            ajax_read_lecture_info_from_db_PAGE()
+                        }
+                        else{
+                            location.href='/trainer/';
+                        }
+                    }
+                },
+
+                complete:function(){
+                    completeSend()
+                },
+
+                error:function(){
+                    $('#errorMessageBar').show()
+                    $('#errorMessageText').text('통신 에러: 관리자 문의')
+                }
+            })
+        }
+
+        function fill_lecture_select_page(jsondata){
+            var json = class_sort_by_center(jsondata)
+            var list_table_to_join = [];
+            var program_count = 0;
+            for(center in json){
+                //console.log('center---',center)
+
+                var subject_join = []
+                var center_counter = 0;
+                var centers = [];
+                for(subject in json[center]){
+                    program_count++
+                    //console.log(subject)
+                    //console.log(json[center][subject]['classId'])
+                    var className = json[center][subject]['className'];
+                    var classId = json[center][subject]['classId'];
+                    var classHour = json[center][subject]['classHour'];
+                    var classHourUnit = json[center][subject]['classHourUnit'];
+                    var classIPNumber = json[center][subject]['classInProgressMemberNum'];
+                    var classMemberNum = json[center][subject]['classMemberNum'];
+                    var startDt = json[center][subject]['startDate'];
+                    var endDt = json[center][subject]['endDate'];
+                    var modDate = json[center][subject]['modDate'];
+                    var regDate = json[center][subject]['regDate'];
+                    var stateCode = json[center][subject]['stateCode'];
+                    var stateName = json[center][subject]['stateName'];
+                    var subjectCode = json[center][subject]['subjectCode']
+
+                    var borderCss = "borderless_top borderless_bottom"
+                    if(subject_join.length == 0){
+                        borderCss = "borderless_bottom"
+                    }
+
+                    if(classId == lec_select_currentClassId[0]){
+                        $('.pcwhere').text(className)
+                        var table = '<div class="pters_table pters_table_at_setting_page '+borderCss+'" style="margin-top:0;" id="classid" data-classid="'+classId+'">'
+                        var currentClass = 'currentClass'
+{#                        var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del" style="opacity:0.5;">'#}
+                        var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del">'
+                        var selectionText = '<a style="cursor:default;">-</a>'
+                        if(Number(classHour) == 60){
+                            var selected30 = ""
+                            var selected60 = "selected"
+                        }else if(Number(classHour) == 30){
+                            var selected30 = "selected"
+                            var selected60 = ""
+                        }
+                        var goToLecture = '"'
+                        var textdeco = ""
+                        var classUnitDropdown = '<select data-classid="'+classId+'" data-subjectcd="'+subjectCode+'" data-subjectname="'+className+'" "><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
+                    }else{
+                        var table = '<div class="pters_table pters_table_at_setting_page _selection '+borderCss+'" style="margin-top:0;" id="classid" data-classid="'+classId+'">'
+                        var currentClass = ""
+                        var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del">'
+                        var selectionText = '<a data="" '+'onclick="lecture_check('+classId+')"'+' style="cursor:pointer;">이동</a>'
+                        if(Number(classHour) == 60){
+                            var selected30 = ""
+                            var selected60 = "selected"
+                        }else if(Number(classHour) == 30){
+                            var selected30 = "selected"
+                            var selected60 = ""
+                        }
+                        var goToLecture = '" onclick="lecture_check('+classId+')"'
+                        var textdeco = ' class="subjectnamespan'
+                        var classUnitDropdown = '<select disabled style="color:#cccccc" data-classid="'+classId+'" data-subjectcd="'+subjectCode+'" data-subjectname="'+className+'" "><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
+                    }
+                    var centerName__ = center;
+                    if(center == ""){
+                        var centerName__ = '센터 미지정'
+                    }
+                    var centerName = '<div class="pters_table_cell table_center_name '+currentClass+goToLecture+'>'+centerName__+'</div>'
+                    var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+'<span '+textdeco+goToLecture+'>'+className+'</span>'+'<input type="" name="subjectname" maxlength="12" placeholder="새로운 프로그램명을 입력 해주세요.">'+'</div>'
+                    var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+goToLecture+'>'+classIPNumber+'명</div>'
+                    var startDate = '<div class="pters_table_cell table_start_date '+currentClass+goToLecture+'>'+date_format_to_yyyymmdd(startDt,'.')+'</div>'
+                    var status = '<div class="pters_table_cell table_lecture_status '+currentClass+goToLecture+'>'+stateName+'</div>'
+                    var unitSelect = '<div class="pters_table_cell table_class_unit '+currentClass+'">'+classUnitDropdown+'</div>'
+                    var manageIcon = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _icon_modify" data-type="view">'
+                    var manageIcon3 = '<img src="/static/user/res/btn-pt-complete-small.png" class="pcmanageicon _icon_send" data-classid="'+classId+'">'
+                    var manageIcon4 = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _icon_cancel" data-classid="'+classId+'">'
+
+                    var del = '<div class="pters_table_cell lecture_delete"  data-classid="'+classId+'">'+manageIcon+manageIcon2+manageIcon3+manageIcon4+'</div>'
+                    var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+classId+'">'+selectionText+'</div>'
+
+
+                    var additionalRow = '<div class="pters_table_row">'+
+                                            '프로그램 단위 ' + classUnitDropdown+
+                                            '&nbsp;  | &nbsp; ' + '개설일 '+ date_format_to_yyyymmdd(startDt,'.') +
+                                            '&nbsp;  | &nbsp; ' + '수강생 '+ classIPNumber+' 명'  + 
+                                        '</div>'
+
+                    //var sum = table + lectureName + traineeNum + startDate + status + unitSelect + del + '</div>' + additionalRow
+                    if(subject_join.length == 0){
+                        var sum = table + centerName + lectureName + traineeNum + startDate + status + unitSelect + del + '</div>' + additionalRow
+                    }else{
+                        var sum = table + lectureName + traineeNum + startDate + status + unitSelect + del + '</div>' + additionalRow
+                    }
+                    
+                    subject_join.push(sum)
+                    if(center != ''){
+                        center_counter += 1;
+                    }
+
+                }//for2
+                list_table_to_join.push(subject_join.join(''))
+                
+            }//for1
+            $('.lecture_select_table_list').html(list_table_to_join.join('')).attr("data-programcount", program_count);
+        }
+
+        /*
+        function class_sort_by_center(jsondata){
+            var len = jsondata.subjectNameArray.length;
+            var center_subject = {}
+            for(var i=0; i<len; i++){
+                center_subject[jsondata.centerNameArray[i]] = {}
+            }
+            for(var j=0; j<len; j++){
+                center_subject[jsondata.centerNameArray[j]][jsondata.subjectNameArray[j]] = {}
+            }
+            for(var k=0; k<len; k++){
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['subjectCode'] = jsondata.subjectCodeArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classHour'] = jsondata.classHourArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classHourUnit'] = jsondata.classHourUnitArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classId'] = jsondata.classIdArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classInProgressMemberNum'] = jsondata.classInProgressMemberNumArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classMemberNum'] = jsondata.classMemberNumArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['startDate'] = jsondata.startDateArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['endDate'] = jsondata.endDateArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['stateCode'] = jsondata.stateCodeArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['stateName'] = jsondata.stateNameArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['modDate'] = jsondata.modDtArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['regDate'] = jsondata.regDtArray[k];
+            }
+            return center_subject
+        }*/
+
+        function class_sort_by_center(jsondata){
+            var len = jsondata.subjectNameArray.length;
+            var center_subject = {}
+            for(var i=0; i<len; i++){
+                center_subject[jsondata.centerNameArray[i]] = {}
+            }
+            for(var j=0; j<len; j++){
+                center_subject[jsondata.centerNameArray[j]][jsondata.classIdArray[j]] = {}
+            }
+            for(var k=0; k<len; k++){
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['subjectCode'] = jsondata.subjectCodeArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classHour'] = jsondata.classHourArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classHourUnit'] = jsondata.classHourUnitArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['className'] = jsondata.subjectNameArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classId'] = jsondata.classIdArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classInProgressMemberNum'] = jsondata.classInProgressMemberNumArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classMemberNum'] = jsondata.classMemberNumArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['startDate'] = jsondata.startDateArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['endDate'] = jsondata.endDateArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['stateCode'] = jsondata.stateCodeArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['stateName'] = jsondata.stateNameArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['modDate'] = jsondata.modDtArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['regDate'] = jsondata.regDtArray[k];
+            }
+            return center_subject
+        }
+
+
+
+        $('.button_close_popup').click(function(){
+            $(this).parents('div.popups').fadeOut('fast')
+            $('#shade,#shade3').hide()
+        })
+
+        $(document).on('change','.pters_table_row select, .table_class_unit select',function(){
+            var selectedUnit = $(this).val()
+            var selectedClassUnit = selectedUnit.replace(/시간|분|時間|分|h|m/gi,'')
+            var subject_cd = $(this).attr('data-subjectcd')
+            var subject_detail_nm = $(this).attr('data-subjectname')
+            var class_id = $(this).attr('data-classid')
+            if(selectedClassUnit == '1'){
+                var classUnit = "60"
+            }else if(selectedClassUnit == '30'){
+                var classUnit = "30"
+            }
+            var comment = '레슨 시간 단위가 '+selectedUnit+'으로 변경 되었습니다.'
+            update_class_info(class_id, classUnit, subject_cd, subject_detail_nm, comment)
+        })
+
+        $(document).on('click','img._icon_modify',function(e){
+            e.stopPropagation();
+            pters_option_inspector("program_update", "", $(this));
+            // if(!$(this).hasClass('disabled_button')){
+            //     var $this = $(this);
+            //     var $thiscancel = $this.siblings('._icon_cancel');
+            //     var $thisdel =  $this.siblings('._icon_del');
+            //     var $thissend = $this.siblings('._icon_send');
+            //     $('img._icon_modify, img._icon_del').addClass('disabled_button')
+            //     $this.css('display','none');
+            //     $thisdel.css('display','none');
+            //     $thissend.css('display','inline-block');
+            //     $thiscancel.css('display','inline-block');
+
+            //     $this.parent('div').siblings('.table_lecture_name').find('input').css('display','block')
+            // }
+        })
+
+        $(document).on('click', '._icon_cancel', function(e){
+            e.stopPropagation()
+            var $this = $(this)
+            $this.off('click')
+            $('img._icon_modify, img._icon_del').removeClass('disabled_button');
+            $this.siblings('._icon_modify').css('display','inline-block');
+            $this.siblings('._icon_del').css('display','inline-block');
+            $this.css('display','none');
+            $this.siblings('._icon_send').css('display','none');
+            $this.parent('div').siblings('.table_lecture_name').find('input').css('display','none');
+            $this.parent('div').siblings('.table_lecture_name').attr('data-subjectname',"")
+        })
+
+        $(document).on('click', '._icon_send', function(e){
+            e.stopPropagation()
+            var class_id = $(this).attr('data-classid');
+            var classUnit = ""
+            var subject_cd;
+            var subject_detail_nm = $('#defaultFeeSetting div.pters_table_at_setting_page[data-classid='+class_id+'] .table_lecture_name').attr('data-subjectname')
+            if(subject_detail_nm == "요가"){var subject_cd = "YG"}
+                else if(subject_detail_nm == '발레'){var subject_cd = "BL"}
+                    else if(subject_detail_nm == '당구'){var subject_cd = "BILLIARD"}
+                        else if(subject_detail_nm == '골프'){var subject_cd = "GOLF"}
+                            else if(subject_detail_nm == '필라테스'){var subject_cd = "PI"}
+                                else if(subject_detail_nm == '웨이트 트레이닝'){var subject_cd = "WT"}
+                                    else{var subject_cd = "ETC"}
+            
+            var comment = "프로그램명이 "+subject_detail_nm+"으로 변경 되었습니다."
+            if(subject_detail_nm.length>0){
+                update_class_info(class_id, classUnit, subject_cd, subject_detail_nm, comment)
+            }
+        })
+
+        $(document).on('keyup','.table_lecture_name input',function(){
+            $(this).parent('.table_lecture_name').attr('data-subjectname', $(this).val())
+        })
+        $(document).on('click','.table_lecture_name input',function(e){
+            e.stopPropagation();
+            e.preventDefault();
+        })
+
+        function update_class_info(class_id, classUnit, subject_cd, subject_detail_nm, comment){
+            $.ajax({
+                url: '/trainer/update_class_info/',
+                data:{"class_id":class_id, "class_hour":classUnit, "subject_cd":subject_cd, "subject_detail_nm":subject_detail_nm},
+                dataType : 'html',
+                type:'POST',
+
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                    beforeSend()
+                },
+
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    console.log(jsondata)
+                    if(jsondata.messageArray.length>0){
+                        $('#errorMessageBar').show()
+                        $('#errorMessageText').text(jsondata.messageArray)
+                    }else{
+                        alert(comment)
+                        ajax_read_lecture_info_from_db_PAGE()
+                    }
+                },
+
+                complete:function(){
+                    completeSend()
+                },
+
+                error:function(){
+                    $('#errorMessageBar').show()
+                    $('#errorMessageText').text('통신 에러: 관리자 문의')
+                }
+            })
+        }
+
+
+        function lecture_check(class_id){
+            $('#id_class_id').val(class_id);
+            $('#id_next_page').val('{% url 'trainer:index' %}');
+            document.getElementById('lecture-check-form').submit();
+        }
+
+        ///********************* 강의 선택*************************************///
+        ///********************* 강의 선택*************************************///
+
+        show_free_member_use_guide("program");
+    </script>
+
+{% endblock %}

@@ -1,0 +1,155 @@
+<style type="text/css">
+
+    .new_alarm{
+        border-bottom:1px solid #e8e8e8;
+        padding: 8px 2px 8px 2px;
+    }
+        .new_alarm > p{
+            font-weight: bold;
+            margin-top:0;
+            margin-bottom: 5px;
+            font-size: 14px;
+            letter-spacing: -0.7;
+        }
+        .new_alarm > p > img{
+            width: 15px;
+            margin-right: 5px;
+        }
+        .new_who{
+            
+        }
+        .new_whose{
+            
+        }
+        .new_what{
+            color:#fe4e65;
+            
+        }
+        .new_how{
+            color:#fe4e65;
+            
+        }
+        .new_log_wrap{
+            color:#7d7d7d;
+            font-size: 13px;
+            margin-left: 22px;
+        }
+            .new_log_wrap > span{
+                
+            }
+        .new_time_ago{
+            font-weight: 400;
+            font-size:12px;
+            float:right;
+            color:#7d7d7d;
+        }
+            .new_time_ago > img{
+                width: 12px;
+            }
+
+    .old_alarm{
+        border-bottom:1px solid #e8e8e8;
+        padding: 8px 2px 8px 2px;
+    }
+        .old_alarm > p{
+            font-weight: bold;
+            color:#7d7d7d;
+            margin-top:0;
+            margin-bottom: 5px;
+            font-size: 13.5px;
+            letter-spacing: -0.7;
+        }
+        .old_alarm > p > img{
+            width: 15px;
+            margin-right: 5px;
+            visibility: hidden;
+        }
+        .old_who{
+            
+        }
+        .old_whose{
+           ;
+        }
+        .old_what{
+            
+        }
+        .old_how{
+            
+        }
+        .old_log_wrap{
+            color:#7d7d7d;
+            font-size: 13px;
+            margin-left: 22px;
+        }
+            .old_log_wrap > span{
+
+            }
+        .old_time_ago{
+            font-weight: 400;font-size:12px;float:right;color:#7d7d7d;
+        }
+            .old_time_ago > img{
+                width: 12px;
+            }
+
+
+
+</style>
+
+
+<form action="{% url 'trainer:alarm_delete' %}" name="alarm-delete-form" id="alarm-delete-form" method="post" style="padding:10px;background: #ffffff;padding-top:0;">
+    {% csrf_token %}
+    <input type="hidden" name="log_id_size" id="log_id_size">
+    <input type="hidden" name="next_page" value = '{% url 'trainer:alarm_pc' %}'>
+    {% include page_template %}
+</form>
+{% load static_url %}
+
+{% block js %}
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <script src="{% static_url "common/js/el-pagination.js" %}"></script>
+    <script>
+        var selector_alarm_iframe = $('#alarm-delete-form');
+        var newalarm_count = selector_alarm_iframe.find("div.new_alarm").length;
+        var count;
+        if(newalarm_count >= 20){
+            $('#new_alarm_count div', parent.document).text('+20');
+            $('#new_alarm_count_text', parent.document).text('새로운 알림이 '+newalarm_count+'건 이상 있습니다.');
+        }else{
+            $('#new_alarm_count div', parent.document).text(newalarm_count);
+            $('#new_alarm_count_text', parent.document).text('새로운 알림이 '+newalarm_count+'건 있습니다.');
+            if(newalarm_count == 0){
+                $('.alarm_delete_pc',parent.document).hide();
+            }
+        }
+
+        /*
+        if(newalarm_count > 0){
+            $('#alarm_button', parent.document).attr('src','/static/user/res/alarm/alarm-on.png')
+        }else{
+            $('#alarm_button', parent.document).attr('src','/static/user/res/alarm/alarm-off-white.png')
+        }
+        */
+
+
+        $('.alarm_delete_pc',parent.document).click(function(){
+            var alarm_size = selector_alarm_iframe.find(".log_id_array").length;
+            // alert(alarm_size+'건의 알림을 삭제합니다.');
+            selector_alarm_iframe.find("#log_id_size").val(alarm_size);
+            selector_alarm_iframe.submit();
+        });
+
+        function clearAlarmList(){
+            var alarm_size = selector_alarm_iframe.find(".log_id_array").length;
+            // alert(alarm_size+'건의 알림을 삭제합니다.');
+            selector_alarm_iframe.find("#log_id_size").val(alarm_size);
+            selector_alarm_iframe.submit();
+        }
+
+        $.endlessPaginate({
+            paginateOnScrollMargin: 10,
+            paginateOnScroll: true
+        });
+
+
+    </script>
+{% endblock %}
