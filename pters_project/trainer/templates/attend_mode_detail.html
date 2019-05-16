@@ -51,14 +51,20 @@
             border-radius: 5px;
         }
 
-        #attend_mode_wrapper{
+        #content_wrapper{
+            position: fixed;
             display: none;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
             width: 100%;
             max-width: 650px;
             margin: 0 auto;
             background-color: #f4f4f4;
             border-radius: 5px;
             box-shadow: 1px 1px 3px 2px #cccccc;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         #wrapper_lesson_now{
@@ -137,6 +143,46 @@
 
         /* attend_mode_detail */
 
+        /* 팝업 */
+        .popup{
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1500;
+            width: 90%;
+            max-width: 300px;
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            padding: 20px;
+            text-align: center
+        }
+        .popup > div{
+            margin: 10px 0;
+        }
+        .popup input{
+            -webkit-appearance: none;
+            border: 1px solid #cccccc;
+            border-radius: 0;
+            width: 150px;
+            height: 30px;
+            
+        }
+        .popup button{
+            width: 100px;
+            margin: 5px;
+        }
+        .popup_shade{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #282828;
+            opacity: 0.5;
+        }
+        /* 팝업 */
+
 
         .fts_24{font-size: 1.7rem;}
         .fts_22{font-size: 1.5rem;}
@@ -151,7 +197,13 @@
 </head>
 
 <body>
-    <div id="attend_mode_wrapper">
+    <div id="debug" style="position:fixed;z-index: 1500;top:0;left:0;" hidden>
+        <span id="debug_x">x:</span><span id="debug_x_value"></span>
+        <span id="debug_y">y:</span><span id="debug_y_value"></span>
+        <span id="debug_offset"></span>
+    </div>
+
+    <div id="content_wrapper">
         <section id="wrapper_lesson_now">
             <div id="wrapper_arrow_button">
                 <button onclick="move_button(event, 'prev')" hidden>&#60;&#60;</button>
@@ -181,31 +233,46 @@
 
 
         <section id="wrapper_submit_button">
-                <div><button onclick="alert(event.target.innerHTML)" id="button_confirm_attend" class="fts_22 ftw_bd">출석</button></div>
+                <div><button onclick="form_confirm(event, 'signature')" id="button_confirm_attend" class="fts_22 ftw_bd">출석</button></div>
                 <div><button onclick="location.href='/trainer/attend_mode/'" id="button_back" class="fts_16">뒤로</button></div>
         </section>
 
     </div>
 
+    <div id="popup_storage"></div>
    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>
         window.onload=function(){
             let window_height = window.innerHeight;
-            let content_height = $('#attend_mode_wrapper').height();
+            let content_height = $('#content_wrapper').height();
 
-            $('#attend_mode_wrapper').fadeIn();
-            if(content_height < window_height){
-                $('#attend_mode_wrapper').css({'left':'50%', 'top':'50%', 'transform':'translate(-50%, -50%)', 'position':'absolute'})
+            $('#content_wrapper').fadeIn();
+            if(content_height < window_height-10){
+                // $('#content_wrapper').css({'left':'50%', 'top':'50%', 'transform':'translate(-50%, -50%)'})
+                
+            }else{
+                $('#content_wrapper').css({'height': window_height});
             }
+
+            func_set_webkit_overflow_scrolling('#content_wrapper');
         }
-        
+
+        //유저가 터치인지 마우스 사용인지 알아낸다
+        var touch_or_mouse = "";
+        window.addEventListener('touchstart', function(){
+            touch_or_mouse = "touch";
+        });
+        //유저가 터치인지 마우스 사용인지 알아낸다
+            
 
 
-        function form_confirm(e){
+        function form_confirm(e, type){
             e.preventDefault();
-            console.log(e);
-            alert(e.target.innerHTML)
+            
+            let a = popup(type);
+            a.draw();
+            let sign = new Signature('#canvas', 324, 200);
         }
 
         function move_button(e, direction){
@@ -226,6 +293,214 @@
             alert('관리자만~')
         }
 
+
+        function popup(type){
+            let $popup_storage = $('#popup_storage');
+            let html = {
+                        "signature":`<div id="popup_signature" class="popup">
+                                        <canvas id="canvas" style="background-color:#f4f4f4;"></canvas>
+                                        <button onclick="complete_this_plan();">완료</button>
+                                        <button onclick="popup().clear();">취소</button>
+                                    </div>
+                                    <div class="popup_shade" onclick="popup().clear()"></div>`
+            }
+
+            let draw = function(){  $('#content_wrapper').css('overflow-y', 'hidden');
+                                    $popup_storage.html(html[type]);
+                                }
+                        
+            let clear = function(){ $('#content_wrapper').css('overflow-y', 'auto');
+                                    $('#popup_storage').html('');
+                                }
+                        
+
+            return ({
+                    "draw": draw,
+                    "clear": clear
+            })
+        }
+
+       
+
+        function complete_this_plan(){
+            // $.ajax({
+            //     url: `/trainee/${popup_name}/`,
+            //     type: 'GET',
+            //     data: data,
+            //     dataType: 'html',
+            //     async: false,
+
+            //     beforeSend: function (xhr, settings) {
+            //         func_ajax_before_send(xhr, settings, popup_name, data);
+            //     },
+
+            //     success: function (data) {
+            //         popup().clear();
+            //     },
+
+            //     complete: function () {
+            //         func_ajax_after_send(popup_name, data);
+            //     },
+
+            //     error: function () {
+            //         console.log('server error');
+            //     }
+            // });
+            popup().clear();
+        }
+
+        class Signature{
+            constructor(targetHTML, width, height){
+                this.targetHTML = targetHTML;
+                this.pos = {
+                                "drawable" : false,
+                                "x": -1,
+                                "y": -1
+                            };
+                this.canvas = document.querySelector(this.targetHTML);
+                this.ctx = this.canvas.getContext("2d");
+                this.set_size(width, height);
+                this.set_event();
+                this.clear();
+            }
+
+            set_size(w, h){
+                this.width = w;
+                this.height = h;
+                this.canvas.style.width = this.width;
+                this.canvas.style.height = this.height;
+                // $("canvas").attr("width", 324).attr("height", 200);
+            }
+
+
+            clear(){
+                this.ctx.clearRect(0, 0, 324, 300);
+            }
+
+            set_event(){
+                let self = this;
+                $(document).off('mousedown', this.targetHTML).on('mousedown', this.targetHTML,function(e){ self.listener(e); })
+                $(document).off('mousemove', this.targetHTML).on('mousemove', this.targetHTML,function(e){ self.listener(e); })
+                $(document).off('mouseup', this.targetHTML).on('mouseup', this.targetHTML,function(e){ self.listener(e); })
+                $(document).off('mouseout', this.targetHTML).on('mouseout', this.targetHTML,function(e){ self.listener(e); })
+                $(document).off('touchstart', this.targetHTML).on('touchstart', this.targetHTML,function(e){ self.listener(e); })
+                $(document).off('touchmove', this.targetHTML).on('touchmove', this.targetHTML,function(e){ self.listener(e); })
+                $(document).off('touchend', this.targetHTML).on('touchend', this.targetHTML,function(e){ self.listener(e); })
+                $(document).off('touchcancel', this.targetHTML).on('touchcancel', this.targetHTML,function(){ self.listener(e); })
+            }
+
+            listener(event){
+                switch(event.type){
+                    case "touchstart":
+                        this.initDraw(event);
+                        break;
+
+                    case "touchmove":
+                        if(this.pos.drawable){
+                            this.draw(event);
+                        }
+                        break;
+                    case "touchend":
+                    case "touchcancel":
+                        this.finishDraw();
+                        break;
+
+                    case "mousedown":
+                        this.initDraw(event);
+                        break;
+                    case "mousemove":
+                        if(this.pos.drawable){
+                            this.draw(event);
+                        }
+                        break;
+                    case "mouseup":
+                    case "mouseout":
+                        this.finishDraw();
+                        break;
+
+                }
+            }
+
+            initDraw(event){
+                this.ctx.strokeStyle="#282828";
+                this.ctx.beginPath();
+                this.pos.drawable = true;
+                var coors = this.getPosition(event);
+                this.pos.x = coors.X;
+                this.pos.y = coors.Y;
+                this.ctx.moveTo(this.pos.x, this.pos.y);
+            }
+
+            draw(event){
+                this.ctx.strokeStyle="#282828";
+                event.preventDefault();
+                var coors = this.getPosition(event);
+                this.ctx.lineTo(coors.X, coors.Y);
+                this.pos.x = coors.X;
+                this.pos.y = coors.Y;
+                this.ctx.stroke();
+            }
+
+            finishDraw(){
+                this.pos.drawable = false;
+                this.pos.x = -1;
+                this.pos.y = -1;
+            }
+
+            getPosition(event){
+                var x;
+                var y;
+                var offset_for_canvas__ = $(this.targetHTML).offset();
+                if(touch_or_mouse=="touch"){
+                    x = event.originalEvent.touches[0].clientX - offset_for_canvas__.left;
+                    y = event.originalEvent.touches[0].clientY - offset_for_canvas__.top;
+                }else{
+                    x = event.originalEvent.pageX - offset_for_canvas__.left;
+                    y = event.originalEvent.pageY - offset_for_canvas__.top;
+                }
+                // $('#debug_x_value').text(x);
+                // $('#debug_y_value').text(y);
+                // $('#debug_offset').text(offset_for_canvas__.top);
+                return {X:x, Y:y};
+            }
+        }
+        
+
+    </script>
+
+    <script>
+        //기기종류 판단
+        const varUA = navigator.userAgent.toLowerCase();
+        let os = "IOS";
+        if (varUA.match(/android/) != null) {
+            os = "ANDROID";
+        }else if (varUA.match(/iphone/) != null || varUA.match(/ipad/) != null || varUA.match(/ipod/) != null) {
+            os = "IOS";
+        }else if (varUA.match(/macintosh/) != null){
+            os = "IOS";
+        }else{
+            os = "WINDOW";
+        }
+        
+        function func_set_webkit_overflow_scrolling(target_selector){
+            if(os == "IOS"){
+                let $selector = $(target_selector);
+                $selector.scrollTop(1);
+                $selector.scroll(function(e){
+                    const popupHeight = $selector.height();
+                    const scrollHeight = $selector.prop('scrollHeight');
+                    const scrollLocation = $selector.scrollTop();
+                    if(scrollHeight > popupHeight+1){
+                    if(popupHeight + scrollLocation == scrollHeight){
+                            $selector.animate({scrollTop : scrollLocation-1}, 10);
+                        }else if(popupHeight + scrollLocation == popupHeight){
+                            $selector.animate({scrollTop : scrollLocation+1}, 10);
+                        }
+                    }
+                    
+                });
+            }
+        }
     </script>
 </body>
 </html>

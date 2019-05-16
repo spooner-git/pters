@@ -60,7 +60,8 @@
             background-color: transparent;
         }
 
-        #attend_mode_wrapper{
+        #content_wrapper{
+            position: fixed;
             display:none;
             width: 100%;
             max-width: 650px;
@@ -68,6 +69,8 @@
             background-color: #f4f4f4;
             border-radius: 5px;
             box-shadow: 1px 1px 3px 2px #cccccc;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         #wrapper_lesson_now{
@@ -191,7 +194,7 @@
 </head>
 
 <body>
-    <div id="attend_mode_wrapper">
+    <div id="content_wrapper">
         <section id="wrapper_lesson_now">
             <div id="wrapper_arrow_button">
                 <button onclick="move_button(event, 'prev')" hidden>&#60;&#60;</button>
@@ -200,17 +203,17 @@
             </div>
 
             <div id="wrapper_lesson_now_info">
-                <p class="fts_20">2019.05.15 (화요일)</p>
-
-                <p class="fts_24 ftw_bd">14:00 - 15:00</p>
+                <p class="fts_22">2019.05.15 (화요일)</p>
         
                 <div id="wrapper_lesson_now_info_name" data-id="1" onclick="lesson_select(this)">
                     <p style="margin:0;" class="fts_16">현재 진행중인 수업</p>
                     <p class="fts_22 ftw_bd">(그룹) 2:1 커플레슨</p>
+                    <p class="fts_20">14:00 - 15:00</p>
                 </div>
                 <div id="wrapper_lesson_now_info_name" data-id="2"  onclick="lesson_select(this)">
                     <p style="margin:0;" class="fts_16">현재 진행중인 수업</p>
                     <p class="fts_22 ftw_bd">(그룹) 2:1 커플레슨</p>
+                    <p class="fts_20">14:00 - 15:00</p>
                 </div>
             </div>
         </section>
@@ -239,15 +242,18 @@
     <script>
         window.onload=function(){
             let window_height = window.innerHeight;
-            let content_height = $('#attend_mode_wrapper').height();
+            let content_height = $('#content_wrapper').height();
 
-            $('#attend_mode_wrapper').fadeIn();
+            $('#content_wrapper').fadeIn();
             if(content_height < window_height){
-                $('#attend_mode_wrapper').css({'left':'50%', 'top':'50%', 'transform':'translate(-50%, -50%)', 'position':'absolute'})
+                $('#content_wrapper').css({'left':'50%', 'top':'50%', 'transform':'translate(-50%, -50%)', 'position':'absolute'})
+            }else{
+                $('#content_wrapper').css('height', window_height);
             }
+
+            func_set_webkit_overflow_scrolling('#content_wrapper');
         }
         
-
 
         function form_confirm(e){
             e.preventDefault();
@@ -328,6 +334,45 @@
         }
 
     </script>
+    <script>
+            //기기종류 판단
+            const varUA = navigator.userAgent.toLowerCase();
+            let device = "PC";
+            let os = "IOS";
+            if (varUA.match(/android/) != null) {
+                device = "MOBILE";
+                os = "ANDROID";
+            }else if (varUA.match(/iphone/) != null || varUA.match(/ipad/) != null || varUA.match(/ipod/) != null) {
+                device = "MOBILE";
+                os = "IOS";
+            }else if (varUA.match(/macintosh/) != null){
+                device = PC;
+                os = "IOS";
+            }else{
+                device = PC;
+                os = "WINDOW";
+            }
+            
+            function func_set_webkit_overflow_scrolling(target_selector){
+                if(os == "IOS"){
+                    let $selector = $(target_selector);
+                    $selector.scrollTop(1);
+                    $selector.scroll(function(e){
+                        const popupHeight = $selector.height();
+                        const scrollHeight = $selector.prop('scrollHeight');
+                        const scrollLocation = $selector.scrollTop();
+                        if(scrollHeight > popupHeight+1){
+                        if(popupHeight + scrollLocation == scrollHeight){
+                                $selector.animate({scrollTop : scrollLocation-1}, 10);
+                            }else if(popupHeight + scrollLocation == popupHeight){
+                                $selector.animate({scrollTop : scrollLocation+1}, 10);
+                            }
+                        }
+                        
+                    });
+                }
+            }
+        </script>
 </body>
 </html>
 
