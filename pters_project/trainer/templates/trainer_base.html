@@ -19,6 +19,10 @@
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="/static/user/css/trainer/pters.trainer.object.css">
 
+    <!-- 메뉴_calendar -->
+    <link rel="stylesheet" href={% static_url "user/css/trainer/func/pters.trainer.func.calendar.css" %}>
+    <!-- 메뉴_calendar -->
+
     <style>
         #root_progress{
             display: none;
@@ -80,7 +84,7 @@
             width: 100%;
             max-width: 800px;
             height: 60px;
-            background-color: #cccccc;
+            background-color: #ffffff;
             left: 50%;
             transform: translateX(-50%);
             bottom: 0;
@@ -106,6 +110,9 @@
 {% block navbar %}
 {% endblock %}
 
+<div id="shade_for_popup_basic" style="position:fixed;top:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
+onclick="layer_popup.all_close_layer_popup();"></div>
+
 <div id="root_progress">
     <progress id="progress_bar" value="0" max="100"></progress>
 </div>
@@ -116,27 +123,27 @@
 </div>
 
 <nav id="root_nav">
-    <div class="obj_table_raw">
+    <div class="obj_table_raw" style="height:60px;">
         <!-- <div class="obj_table_cell_x5" onclick="sideGoPage('trainer_main')"> -->
         <div class="obj_table_cell_x5" onclick="location.href='/trainer/trainer_main/' ">
-            <div>img</div>
-            <div>홈</div>
+            <div><img src="/static/common/icon/icon_home.png" alt=""></div>
+            <!-- <div>홈</div> -->
         </div>
-        <div class="obj_table_cell_x5" onclick="sideGoPage('cal_total')">
-            <div>img</div>
-            <div>일정</div>
+        <div class="obj_table_cell_x5" onclick="sideGoPage('calendar')">
+            <div><img src="/static/common/icon/icon_cal.png" alt=""></div>
+            <!-- <div>일정</div> -->
         </div>
-        <div class="obj_table_cell_x5" onclick="sideGoPage('lecture_manage')">
-            <div>img</div>
-            <div>수업</div>
+        <div class="obj_table_cell_x5" onclick="sideGoPage('lecture')">
+            <div><img src="/static/common/icon/icon_lecture.png" alt=""></div>
+            <!-- <div>수업</div> -->
         </div>
-        <div class="obj_table_cell_x5" onclick="sideGoPage('member_manage')">
-            <div>img</div>
-            <div>회원</div>
+        <div class="obj_table_cell_x5" onclick="sideGoPage('member')">
+            <div><img src="/static/common/icon/icon_member.png" alt=""></div>
+            <!-- <div>회원</div> -->
         </div>
-        <div class="obj_table_cell_x5" onclick="sideGoPage('trainer_setting')">
-            <div>img</div>
-            <div>더보기</div>
+        <div class="obj_table_cell_x5" onclick="sideGoPage('setting')">
+            <div><img src="/static/common/icon/icon_more.png" alt=""></div>
+            <!-- <div>더보기</div> -->
         </div>
     </div>
 </nav>
@@ -154,9 +161,15 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
 
-<!-- 일정 페이지 스크립트 -->
-<script type="text/javascript" src={% static_url "user/js/trainer/func/pters.trainer.func.calendar.js" %} async></script>
-<!-- 일정 페이지 스크립트 -->
+<!-- 페이지 스크립트 로드-->
+<script type="text/javascript" src={% static_url "user/js/trainer/func/pters.trainer.func.calendar.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/func/pters.trainer.func.lecture.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/func/pters.trainer.func.member.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/func/pters.trainer.func.setting.js" %}></script>
+<!-- 페이지 스크립트 로드-->
+<!-- POPUP Behavior -->
+<script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.popup.behavior.js" %}></script>
+<!-- POPUP Behavior -->
 
 
 <script>
@@ -231,51 +244,62 @@
         }
     }
 
+    // function sideGoPage(page){
+    //     let url = "/trainer/"+page+'/';
+    //     $.ajax({
+    //         url: url,
+    //         // data: data,
+    //         dataType : 'html',
+    //         // type:'POST',
+
+    //         beforeSend:function(xhr, settings){
+    //             progress_bar(50);
+    //             //$('.ajax_loading_image').show();
+    //         },
+    //         success:function(data){
+    //             $root_content.html(data);
+    //         },
+    //         complete:function(){
+    //             progress_bar(100);
+    //             //$('.ajax_loading_image').hide();
+    //         },
+
+    //         error:function(){
+    //             console.log('server error');
+    //         }
+    //     });
+    // }
+    
+
+    
+    var calendar = new Calendar('#root_content', 'calendar');
+    var lecture = new Lecture('#root_content', 'calendar');
+    var member = new Member('#root_content', 'calendar');
+    var setting = new Setting('#root_content', 'calendar');
+
     function sideGoPage(page){
-        let url = "/trainer/"+page+'/';
-        $.ajax({
-            url: url,
-            // data: data,
-            dataType : 'html',
-            // type:'POST',
-
-            beforeSend:function(xhr, settings){
-                progress_bar(50);
-                //$('.ajax_loading_image').show();
-            },
-            success:function(data){
-                $root_content.html(data);
-            },
-            complete:function(){
-                progress_bar(100);
-                //$('.ajax_loading_image').hide();
-            },
-
-            error:function(){
-                console.log('server error');
-            }
-        });
-    }
-
-    function func_set_webkit_overflow_scrolling(target_selector){
-    if(os == IOS){
-            let $selector = $(target_selector);
-            $selector.scrollTop(1);
-            $selector.scroll(function(e){
-                const popupHeight = $selector.height();
-                const scrollHeight = $selector.prop('scrollHeight');
-                const scrollLocation = $selector.scrollTop();
-                if(scrollHeight > popupHeight+1){
-                if(popupHeight + scrollLocation == scrollHeight){
-                        $selector.animate({scrollTop : scrollLocation-1}, 10);
-                    }else if(popupHeight + scrollLocation == popupHeight){
-                        $selector.animate({scrollTop : scrollLocation+1}, 10);
-                    }
-                }
-                
-            });
+        switch(page){
+            case 'home':
+                $root_content.html('<div>main 페이지</div>');
+            break;
+            case 'calendar':
+                calendar.init();
+            break;
+            case 'lecture':
+                lecture.init();
+            break;
+            case 'member':
+                member.init();
+            break;
+            case 'setting':
+                setting.init();
+            break;
         }
+
+
     }
+
+    
 
 
 </script>

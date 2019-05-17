@@ -12,14 +12,15 @@ class Calendar {
         this.current_month = d.getMonth()+1;
         this.current_date = d.getDate();
 
-        this.init();
+        // this.init();
     }
 
     init(){
         let component = this.static_component();
-        $(this.targetHTML).html(
-            component.initial_page
-        )
+        document.querySelector(this.targetHTML).innerHTML = component.initial_page
+        // $(this.targetHTML).html(
+        //     component.initial_page
+        // )
         this.render_month_cal( (this.last_page_num+this.first_page_num)/2 ,this.current_year, this.current_month);
     }
 
@@ -88,12 +89,14 @@ class Calendar {
             weeks_div = [...weeks_div, this.draw_week_line_for_month_calendar(year, month, i, 'popup_alert_month')];
         }
         let component = this.static_component();
-        $(`#page${page}`).html(component.month_cal_upper_box + weeks_div.join(''));
+        // $(`#page${page}`).html(component.month_cal_upper_box + weeks_div.join(''));
+        document.querySelector(`#page${page}`).innerHTML = component.month_cal_upper_box + weeks_div.join('');
     }
 
     render_week_cal(page ,year, month, week){ //주간 달력 렌더링 (연, 월, 몇번째 주)
         let data = this.draw_week_line_for_month_calendar(year, month, week, 'popup_alert_week');
         $(`#page${page}`).html(data);
+        document.querySelector(`#page${page}`).innerHTML = data;
     }
 
     get_week_dates(year, month, week){
