@@ -31,3 +31,19 @@
 .cal_font_color_black{
 	color: #1e1e1e;
 }
+
+
+/* 스케쥴 표시 */
+.calendar_schedule_display_month{
+	font-size: 12px;
+	height: 15px;
+	line-height: 15px;
+	width: 15px;
+	margin: 0 auto;
+	border: 1px solid transparent;
+}
+.has_schedule{
+	border-color: #cccccc;
+	border-radius: 50%;
+}
+/* 스케쥴 표시 */

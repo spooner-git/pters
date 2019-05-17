@@ -180,6 +180,22 @@ class Calendar {
         let _date = week_dates_info.date;
         let _color = week_dates_info.color;
 
+        let schedule_data = this.dummy_schedule_data_for_test();
+
+        let schedule_num = [];
+        for(let i=0; i<7; i++){
+            if(week_dates_info == false){
+                continue;
+            }
+
+            let date_to_search = date_format(`${_year[i]}-${_month[i]}-${_date[i]}`)["yyyy-mm-dd"];
+            if(date_to_search in schedule_data){
+                schedule_num.push(schedule_data[date_to_search].length);
+            }else{
+                schedule_num.push(0);
+            }
+        }
+
         return(
             week_dates_info == false 
             ? 
@@ -188,16 +204,55 @@ class Calendar {
             </div>`
             :
             `<div class="cal_week_line"">
-                <div class=${_color[0]} onClick="${onclick_func}(${_year[0]}, ${_month[0]}, ${_date[0]})">${_date[0]}</div>
-                <div class=${_color[1]} onClick="${onclick_func}(${_year[1]}, ${_month[1]}, ${_date[1]})">${_date[1]}</div>
-                <div class=${_color[2]} onClick="${onclick_func}(${_year[2]}, ${_month[2]}, ${_date[2]})">${_date[2]}</div>
-                <div class=${_color[3]} onClick="${onclick_func}(${_year[3]}, ${_month[3]}, ${_date[3]})">${_date[3]}</div>
-                <div class=${_color[4]} onClick="${onclick_func}(${_year[4]}, ${_month[4]}, ${_date[4]})">${_date[4]}</div>
-                <div class=${_color[5]} onClick="${onclick_func}(${_year[5]}, ${_month[5]}, ${_date[5]})">${_date[5]}</div>
-                <div class=${_color[6]} onClick="${onclick_func}(${_year[6]}, ${_month[6]}, ${_date[6]})">${_date[6]}</div>
+                <div class=${_color[0]} onClick="${onclick_func}(${_year[0]}, ${_month[0]}, ${_date[0]})">${_date[0]}<div class="calendar_schedule_display_month ${schedule_num[0]!=0?"has_schedule":""}">${schedule_num[0]!=0?schedule_num[0]:""}</div></div>
+                <div class=${_color[1]} onClick="${onclick_func}(${_year[1]}, ${_month[1]}, ${_date[1]})">${_date[1]}<div class="calendar_schedule_display_month ${schedule_num[1]!=0?"has_schedule":""}">${schedule_num[1]!=0?schedule_num[1]:""}</div></div>
+                <div class=${_color[2]} onClick="${onclick_func}(${_year[2]}, ${_month[2]}, ${_date[2]})">${_date[2]}<div class="calendar_schedule_display_month ${schedule_num[2]!=0?"has_schedule":""}">${schedule_num[2]!=0?schedule_num[2]:""}</div></div>
+                <div class=${_color[3]} onClick="${onclick_func}(${_year[3]}, ${_month[3]}, ${_date[3]})">${_date[3]}<div class="calendar_schedule_display_month ${schedule_num[3]!=0?"has_schedule":""}">${schedule_num[3]!=0?schedule_num[3]:""}</div></div>
+                <div class=${_color[4]} onClick="${onclick_func}(${_year[4]}, ${_month[4]}, ${_date[4]})">${_date[4]}<div class="calendar_schedule_display_month ${schedule_num[4]!=0?"has_schedule":""}">${schedule_num[4]!=0?schedule_num[4]:""}</div></div>
+                <div class=${_color[5]} onClick="${onclick_func}(${_year[5]}, ${_month[5]}, ${_date[5]})">${_date[5]}<div class="calendar_schedule_display_month ${schedule_num[5]!=0?"has_schedule":""}">${schedule_num[5]!=0?schedule_num[5]:""}</div></div>
+                <div class=${_color[6]} onClick="${onclick_func}(${_year[6]}, ${_month[6]}, ${_date[6]})">${_date[6]}<div class="calendar_schedule_display_month ${schedule_num[6]!=0?"has_schedule":""}">${schedule_num[6]!=0?schedule_num[6]:""}</div></div>
             </div>`
         )
     }
+
+
+    request_schedule_data(date, days, callback){
+        let date_ = date;
+        let days_ = days;
+        if(date_ == undefined){date_ = `${this.current_year}-${this.current_month}-01`}
+        if(days_ == undefined){days = 31}
+
+        $.ajax({
+            url: '/trainer/get_trainer_schedule/',
+            type : 'GET',
+            data : {"date":date, "day":days},
+            dataType : 'html',
+
+            beforeSend:function(){
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    console.log(jsondata.messageArray);
+                }else{
+                    console.log(jsondata);
+                    callback();
+                    return jsondata;
+                }
+
+            },
+
+            complete:function(){
+
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        });
+    }
+
 
     static_component(){
         return(
@@ -222,6 +277,50 @@ class Calendar {
         )
     }
 
+    dummy_schedule_data_for_test(){
+        return(
+            {  "2019-05-07":[ 
+                                {"start":"08:00", "end":"09:00", "finished":false, "type":"private"},
+                                {"start":"09:00", "end":"10:00", "finished":false, "type":"private"},
+                                {"start":"11:00", "end":"12:00", "finished":false, "type":"private"},
+                                {"start":"13:00", "end":"14:00", "finished":false, "type":"private"},
+                                {"start":"15:00", "end":"16:00", "finished":true, "type":"private"},
+                                {"start":"17:00", "end":"18:00", "finished":false, "type":"group", "reserved":5, "max":5},
+                                {"start":"19:00", "end":"20:00", "finished":false, "type":"group", "reserved":3, "max":5} 
+                            ],
+                "2019-05-22":[ 
+                                {"start":"08:00", "end":"09:00", "finished":false, "type":"private"},
+                                {"start":"11:00", "end":"13:00", "finished":false, "type":"private"} 
+                            ],
+                "2019-05-24":[ 
+                                {"start":"06:00", "end":"08:00", "finished":false, "type":"private"},
+                                {"start":"08:00", "end":"11:00", "finished":false, "type":"private"},
+                                {"start":"20:00", "end":"21:00", "finished":false, "type":"private"},
+
+                            ],
+                            "2019-05-07":[ 
+                                {"start":"08:00", "end":"09:00", "finished":false, "type":"private"},
+                                {"start":"09:00", "end":"10:00", "finished":false, "type":"private"},
+                                {"start":"11:00", "end":"12:00", "finished":false, "type":"private"},
+                                {"start":"13:00", "end":"14:00", "finished":false, "type":"private"},
+                                {"start":"15:00", "end":"16:00", "finished":true, "type":"private"},
+                                {"start":"17:00", "end":"18:00", "finished":false, "type":"group", "reserved":5, "max":5},
+                                {"start":"19:00", "end":"20:00", "finished":false, "type":"group", "reserved":3, "max":5} 
+                            ],
+                "2019-06-05":[ 
+                                {"start":"08:00", "end":"09:00", "finished":false, "type":"private"},
+                                {"start":"11:00", "end":"13:00", "finished":false, "type":"private"} 
+                            ],
+                "2019-06-17":[ 
+                                {"start":"06:00", "end":"08:00", "finished":false, "type":"private"},
+                                {"start":"08:00", "end":"11:00", "finished":false, "type":"private"},
+                                {"start":"20:00", "end":"21:00", "finished":false, "type":"private"},
+
+                            ],
+            }
+        )
+    }
+
 }
 
 function popup_alert_month(y, m, d){
@@ -232,6 +331,34 @@ function popup_alert_week(y, m, d){
     alert(`주간 날짜 클릭 ${y} ${m} ${d}`)
 }
 
+function date_format(date){
+    let date_raw = date.replace(/[-_., ]/gi,"-").split('-');
+    let yyyy = date_raw[0];
+    let m = Number(date_raw[1]);
+    let d = Number(date_raw[2]);
+    let mm = date_raw[1];
+    let dd = date_raw[2];
 
+    if(m<10){
+        mm = '0'+m
+    }
+    if(d<10){
+        dd = '0'+d
+    }
+
+    return{
+            "yyyy-mm-dd":`${yyyy}-${mm}-${dd}`,
+            "yyyy-m-d":`${yyyy}-${m}-${d}`,
+
+            "yyyy.mm.dd":`${yyyy}.${mm}.${dd}`,
+            "yyyy.m.d":`${yyyy}.${m}.${d}`,
+
+            "yyyy_mm_dd":`${yyyy}_${mm}_${dd}`,
+            "yyyy_m_d":`${yyyy}_${m}_${d}`,
+
+            "yyyy/mm/dd":`${yyyy}/${mm}/${dd}`,
+            "yyyy/m/d":`${yyyy}/${m}/${d}`
+    };
+}
 
 
