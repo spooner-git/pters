@@ -307,7 +307,12 @@
                                     <div class="popup_shade" onclick="popup().clear()"></div>`,
                         "admin_check":`<div id="popup_input_password" class="popup">
                                             <div><p class="fts_20 ftw_bd">관리자 비밀번호를 입력해주세요.</p></div>
-                                            <div><input type="password" name="password" placeholder="입력" autocomplete="off"></div>
+                                            <div style="position:relative;">
+                                                    <input type="text" name="username" autocomplete="off" style="position:absolute;z-index:1500;background-color:transparent;color:transparent" onkeyup="document.querySelector('#password_real').value = this.value">
+                                                    <input type="password" name="password" placeholder="입력" autocomplete="new-password" id="password_real">
+                                                    <div><button onclick="event.preventDefault(); 
+                                                        document.querySelector('#password_real').type == 'password' ? document.querySelector('#password_real').type = 'text' : document.querySelector('#password_real').type = 'password'">보이기/숨기기</button></div>
+                                            </div>
                                             <div class="ftw_16"><button onclick="popup('admin_menu').draw()">확인</button><button onclick="popup().clear()">취소</button></div>
                                         </div>
                                         <div class="popup_shade" onclick="popup().clear()">
