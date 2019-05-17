@@ -223,7 +223,7 @@
         <section id="wrapper_phone_input">
             <form action="" id="form_data_phone">
                 <p>등록된 전화번호</p>
-                <input type="tel" placeholder="숫자만 입력" id="input_form_phone">
+                <input type="tel" placeholder="숫자만 입력" id="input_form_phone" autocomplete="off">
                 <input type="hidden" id="input_form_lesson_id">
             </form>
         </section>
@@ -282,7 +282,7 @@
         function back_to_normal_mode(e){
             e.preventDefault();
             // let a = popup('admin_check');
-            let a = popup('admin_menu');
+            let a = popup('admin_check');
             a.draw();
         }
 
@@ -307,8 +307,8 @@
                                     <div class="popup_shade" onclick="popup().clear()"></div>`,
                         "admin_check":`<div id="popup_input_password" class="popup">
                                             <div><p class="fts_20 ftw_bd">관리자 비밀번호를 입력해주세요.</p></div>
-                                            <div><input type="password" name="password" placeholder="입력" autocomplete="new-password"></div>
-                                            <div class="ftw_16"><button>확인</button><button onclick="popup().clear()">취소</button></div>
+                                            <div><input type="password" name="password" placeholder="입력" autocomplete="off"></div>
+                                            <div class="ftw_16"><button onclick="popup('admin_menu').draw()">확인</button><button onclick="popup().clear()">취소</button></div>
                                         </div>
                                         <div class="popup_shade" onclick="popup().clear()">
                                         </div>`,
