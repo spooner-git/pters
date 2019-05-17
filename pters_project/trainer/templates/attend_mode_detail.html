@@ -187,6 +187,7 @@
         .fts_24{font-size: 1.7rem;}
         .fts_22{font-size: 1.5rem;}
         .fts_20{font-size: 1.4rem;}
+        .fts_18{font-size: 1.28rem;}
         .fts_16{font-size: 1.14rem;}
 
         .ftw_bd{font-weight: bold;}
@@ -302,7 +303,14 @@
                                         <button onclick="complete_this_plan();">완료</button>
                                         <button onclick="popup().clear();">취소</button>
                                     </div>
-                                    <div class="popup_shade" onclick="popup().clear()"></div>`
+                                    <div class="popup_shade" onclick="popup().clear()"></div>`,
+                        "admin_check":`<div id="popup_input_password" class="popup">
+                                        <div><p class="fts_20 ftw_bd">관리자 비밀번호를 입력해주세요.</p></div>
+                                        <div><input type="password" name="password" placeholder="입력" autocomplete="new-password"></div>
+                                        <div class="ftw_16"><button>확인</button><button onclick="popup().clear()">취소</button></div>
+                                    </div>
+                                    <div class="popup_shade" onclick="popup().clear()">
+                                    </div>`
             }
 
             let draw = function(){  $('#content_wrapper').css('overflow-y', 'hidden');

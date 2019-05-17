@@ -52,7 +52,8 @@
         }
 
         #button_back{
-            background-image: url("/static/user/res/login/icon-lock-pink.png");
+            /* background-image: url("/static/user/res/login/icon-lock-pink.png"); */
+            background-image: url("/static/user/res/icon-setting.png");
             background-size: 25px;
             background-position: center;
             background-repeat: no-repeat;
@@ -164,7 +165,7 @@
             
         }
         .popup button{
-            width: 100px;
+            min-width: 100px;
             margin: 5px;
         }
         .popup_shade{
@@ -184,6 +185,7 @@
         .fts_24{font-size: 1.7rem;}
         .fts_22{font-size: 1.5rem;}
         .fts_20{font-size: 1.4rem;}
+        .fts_18{font-size: 1.28rem;}
         .fts_16{font-size: 1.14rem;}
 
         .ftw_bd{font-weight: bold;}
@@ -279,7 +281,9 @@
 
         function back_to_normal_mode(e){
             e.preventDefault();
-            popup();
+            // let a = popup('admin_check');
+            let a = popup('admin_menu');
+            a.draw();
         }
 
         function lesson_select(context){
@@ -290,17 +294,75 @@
         }
 
 
-        function popup(){
+        
+
+        function popup(type){
             let $popup_storage = $('#popup_storage');
-            $popup_storage.html(
-                `<div id="popup_input_password" class="popup">
-                    <div><p class="fts_20 ftw_bd">관리자 비밀번호를 입력해주세요.</p></div>
-                    <div><input type="password" name="password" placeholder="입력" autocomplete="new-password"></div>
-                    <div class="ftw_16"><button>확인</button><button onclick="$('#popup_storage').html('')">취소</button></div>
-                </div>
-                <div class="popup_shade" onclick="$('#popup_storage').html('')">
-                </div>`
-            )
+            let html = {
+                        "signature":`<div id="popup_signature" class="popup">
+                                        <canvas id="canvas" style="background-color:#f4f4f4;"></canvas>
+                                        <button onclick="complete_this_plan();">완료</button>
+                                        <button onclick="popup().clear();">취소</button>
+                                    </div>
+                                    <div class="popup_shade" onclick="popup().clear()"></div>`,
+                        "admin_check":`<div id="popup_input_password" class="popup">
+                                            <div><p class="fts_20 ftw_bd">관리자 비밀번호를 입력해주세요.</p></div>
+                                            <div><input type="password" name="password" placeholder="입력" autocomplete="new-password"></div>
+                                            <div class="ftw_16"><button>확인</button><button onclick="popup().clear()">취소</button></div>
+                                        </div>
+                                        <div class="popup_shade" onclick="popup().clear()">
+                                        </div>`,
+                        'admin_menu':`
+                                    <div class="popup">
+                                        <p class="fts_22 ftw_bd" style="margin-top:0">관리자 옵션</p>
+                                        <form id="form_admin_menu" action="" method="" style="text-align:left;border:1px solid #cccccc;padding:10px;">
+                                            <div style="padding:10px 0;">
+                                                <input id="form_input_plan_display" type="hidden" name="plan_display" value="5">
+                                                <p class="fts_18 ftw_bd" style="margin-top:0">수업 표시 설정</p>
+                                                <div style="font-size:12px;">
+                                                    아무 처리가 없으면 수업 종료 후
+                                                    <select style="height:35px;" onchange="document.querySelector('#form_input_plan_not_handled').value = this.value">
+                                                        <option value="5">5</option>
+                                                        <option value="10">10</option>
+                                                        <option value="15">15</option>
+                                                        <option value="20">20</option>
+                                                        <option value="25">25</option>
+                                                        <option value="30">30</option>
+                                                    </select>
+                                                    분 까지 표시
+                                                </div>
+                                            </div>
+                                            <div style="padding:10px 0;">
+                                                <input id="form_input_plan_not_handled" type="hidden" name="plan_not_handled" value="0">
+                                                <p class="fts_18 ftw_bd" style="margin-top:0">출석하지 않고 시간이 지났을 때</p>
+                                                <select style="height:35px;width:100%;" onchange="document.querySelector('#form_input_plan_not_handled').value = this.value">
+                                                    <option selected value="0">아무것도 하지 않음</option>
+                                                    <option value="1">결석 처리</option>
+                                                    <option value="2">출석 처리</option>
+                                                </select>
+                                            </div>
+                                            <div style="text-align:center;"><button onclick="event.preventDefault(); alert('설정 저장'); popup().clear();">저장하고 창 닫기</button></div>
+                                        </form>
+                                        
+                                        <div style="margin-top:20px;"><button style="background-color:#f4f4f4" onclick="event.preventDefault();location.href='/trainer/trainer_setting/'">출석체크 모드 종료</button></div>
+                                    </div>
+                                    <div class="popup_shade" onclick="popup().clear()">
+                                    </div>`
+            }
+
+            let draw = function(){  $('#content_wrapper').css('overflow-y', 'hidden');
+                                    $popup_storage.html(html[type]);
+                                }
+                        
+            let clear = function(){ $('#content_wrapper').css('overflow-y', 'auto');
+                                    $('#popup_storage').html('');
+                                }
+                        
+
+            return ({
+                    "draw": draw,
+                    "clear": clear
+            })
         }
 
         function password_check(password){
@@ -333,46 +395,42 @@
             });
         }
 
+
     </script>
     <script>
-            //기기종류 판단
-            const varUA = navigator.userAgent.toLowerCase();
-            let device = "PC";
-            let os = "IOS";
-            if (varUA.match(/android/) != null) {
-                device = "MOBILE";
-                os = "ANDROID";
-            }else if (varUA.match(/iphone/) != null || varUA.match(/ipad/) != null || varUA.match(/ipod/) != null) {
-                device = "MOBILE";
-                os = "IOS";
-            }else if (varUA.match(/macintosh/) != null){
-                device = PC;
-                os = "IOS";
-            }else{
-                device = PC;
-                os = "WINDOW";
-            }
-            
-            function func_set_webkit_overflow_scrolling(target_selector){
-                if(os == "IOS"){
-                    let $selector = $(target_selector);
-                    $selector.scrollTop(1);
-                    $selector.scroll(function(e){
-                        const popupHeight = $selector.height();
-                        const scrollHeight = $selector.prop('scrollHeight');
-                        const scrollLocation = $selector.scrollTop();
-                        if(scrollHeight > popupHeight+1){
-                        if(popupHeight + scrollLocation == scrollHeight){
-                                $selector.animate({scrollTop : scrollLocation-1}, 10);
-                            }else if(popupHeight + scrollLocation == popupHeight){
-                                $selector.animate({scrollTop : scrollLocation+1}, 10);
-                            }
+        //기기종류 판단
+        const varUA = navigator.userAgent.toLowerCase();
+        let os = "IOS";
+        if (varUA.match(/android/) != null) {
+            os = "ANDROID";
+        }else if (varUA.match(/iphone/) != null || varUA.match(/ipad/) != null || varUA.match(/ipod/) != null) {
+            os = "IOS";
+        }else if (varUA.match(/macintosh/) != null){
+            os = "IOS";
+        }else{
+            os = "WINDOW";
+        }
+        
+        function func_set_webkit_overflow_scrolling(target_selector){
+            if(os == "IOS"){
+                let $selector = $(target_selector);
+                $selector.scrollTop(1);
+                $selector.scroll(function(e){
+                    const popupHeight = $selector.height();
+                    const scrollHeight = $selector.prop('scrollHeight');
+                    const scrollLocation = $selector.scrollTop();
+                    if(scrollHeight > popupHeight+1){
+                    if(popupHeight + scrollLocation == scrollHeight){
+                            $selector.animate({scrollTop : scrollLocation-1}, 10);
+                        }else if(popupHeight + scrollLocation == popupHeight){
+                            $selector.animate({scrollTop : scrollLocation+1}, 10);
                         }
-                        
-                    });
-                }
+                    }
+                    
+                });
             }
-        </script>
+        }
+    </script>
 </body>
 </html>
 
