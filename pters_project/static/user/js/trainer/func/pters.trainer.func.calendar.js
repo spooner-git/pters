@@ -61,28 +61,28 @@ class Calendar {
         let self = this;
         switch(direction){
             case "next":
-                this.current_year = this.current_month + 1 > 12 ? this.current_year +1 : this.current_year;
-                this.current_month = this.current_month +1 > 12 ? 1 : this.current_month + 1;
+                let next = this.get_next_month();
+                this.current_year = next.year;
+                this.current_month = next.month;
                 this.render_month_cal((this.last_page_num+this.first_page_num)/2, this.current_year, this.current_month)
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, function(jsondata, date){
                     if(date == `${self.current_year}-${self.current_month}-01`){
                         self.render_month_cal((self.last_page_num+self.first_page_num)/2, self.current_year, self.current_month, jsondata);
                     }
-                    
                 })
                 // $(this.targetHTML).append(`<div id="page${this.last_page_num+1}"></div>`)
                 // this.last_page_num++;
             break;
 
             case "prev":
-                this.current_year = this.current_month - 1 < 1 ? this.current_year - 1 : this.current_year;
-                this.current_month = this.current_month - 1 < 1 ? 12 : this.current_month - 1;
+                let prev = this.get_prev_month();
+                this.current_year = prev.year;
+                this.current_month = prev.month;
                 this.render_month_cal((this.last_page_num+this.first_page_num)/2, this.current_year, this.current_month)
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, function(jsondata, date){
                     if(date == `${self.current_year}-${self.current_month}-01`){
                         self.render_month_cal((self.last_page_num+self.first_page_num)/2, self.current_year, self.current_month, jsondata);
                     }
-                    
                 })
                 // $(this.targetHTML).prepend(`<div id="page${this.first_page_num-1}"></div>`)
                 // this.first_page_num--;
@@ -197,7 +197,7 @@ class Calendar {
             )
     }
 
-    draw_week_line_for_month_calendar(year, month, week, schedule_data,onclick_func){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
+    draw_week_line_for_month_calendar(year, month, week, schedule_data, onclick_func){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
