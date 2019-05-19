@@ -51,7 +51,8 @@ from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClas
     PackageTb, PackageGroupTb
 
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
-    func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count
+    func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count, \
+    func_get_trainer_attend_schedule
 from stats.functions import get_sales_data, get_stats_member_data
 from .functions import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
@@ -398,21 +399,61 @@ class AboutUsView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         return context
 
+
 class AttendModeView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'attend_mode.html'
 
     def get_context_data(self, **kwargs):
         context = super(AttendModeView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
 
+        today = timezone.now()
+        try:
+            prev_time_setting_info = SettingTb.objects.get(member_id=self.request.user.id,
+                                                           class_tb_id=class_id,
+                                                           setting_type_cd='LT_ATTEND_CLASS_PREV_TIME',
+                                                           use=USE)
+        except ObjectDoesNotExist:
+            prev_time_setting_info = 120
+        try:
+            after_time_setting_info = SettingTb.objects.get(member_id=self.request.user.id,
+                                                            class_tb_id=class_id,
+                                                            setting_type_cd='LT_ATTEND_CLASS_AFTER_TIME',
+                                                            use=USE)
+        except ObjectDoesNotExist:
+            after_time_setting_info = 10
+        start_date = today + datetime.timedelta(minutes=int(prev_time_setting_info))
+        end_date = today - datetime.timedelta(minutes=int(after_time_setting_info))
+        context = func_get_trainer_attend_schedule(context, class_id, start_date, end_date, today)
+
+        # context['today'] = today
         return context
 
-class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+
+class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'attend_mode_detail.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(AttendModeDetailView, self).get_context_data(**kwargs)
+    def post(self, request):
+        context = {}
+        class_id = request.session.get('class_id', '')
+        phone_number = request.POST.get('input_form_phone', '')
+        schedule_id = request.POST.get('input_form_lesson_id', '')
+        try:
+            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+        except ObjectDoesNotExist:
+            schedule_info = None
 
-        return context
+        member_data = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                    lecture_tb__member__phone=phone_number,
+                                                    auth_cd='VIEW',
+                                                    use=USE)
+        if len(member_data) > 0:
+            context['member_info'] = member_data[0].lecture_tb.member
+
+        if schedule_info is not None:
+            context['schedule_info'] = schedule_info
+        return render(request, self.template_name, context)
+
 
 class BGSettingView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'setting_background.html'

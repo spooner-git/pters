@@ -213,12 +213,24 @@
             </div>
 
             <div id="wrapper_lesson_now_info">
-                <p class="fts_24 ftw_bd">스노우 회원님</p>
+                <p class="fts_24 ftw_bd">
+                    {% if member_info %}
+                        {{ member_info.name }} 회원님
+                    {% else %}
+                        휴대폰 번호를 확인해주세요.
+                    {% endif %}
+                </p>
         
                 <div id="wrapper_lesson_now_info_name">
-                    <p class="fts_20" style="margin-top: 0;">2019.05.15 (수요일)</p>
-                    <p class="fts_24 ftw_bd" style="text-decoration: underline">14:00 - 15:00</p>
-                    <p class="fts_22 ftw_bd">(그룹) 2:1 커플레슨</p>
+                    <p class="fts_20" style="margin-top: 0;">{{ schedule_info.start_dt | date:"Y.m.d (l)" |cut:"요일" }}</p>
+                    <p class="fts_24 ftw_bd" style="text-decoration: underline">{{ schedule_info.start_dt | time:"H:i" }} - {{ schedule_info.end_dt | time:"H:i" }}</p>
+                    <p class="fts_22 ftw_bd">
+                        {% if schedule_info.group_tb %}
+                            (그룹) {{ schedule_info.group_tb.name }}
+                        {% else %}
+                            (개인) 1:1 레슨
+                        {% endif %}
+                   </p>
                 </div>
             </div>
 

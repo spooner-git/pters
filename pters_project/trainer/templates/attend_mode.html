@@ -205,26 +205,34 @@
             </div>
 
             <div id="wrapper_lesson_now_info">
-                <p class="fts_22">2019.05.15 (화요일)</p>
-        
-                <div id="wrapper_lesson_now_info_name" data-id="1" onclick="lesson_select(this)">
+            {% now "Y.m.d (l)" as today %}
+                <p class="fts_22">{{ today |cut:"요일" }}</p>
+
+                {% for group_schedule_info in group_schedule_data %}
+                <div id="wrapper_lesson_now_info_name" data-id="{{ group_schedule_info.schedule_id }}" onclick="lesson_select(this)">
                     <p style="margin:0;" class="fts_16">현재 진행중인 수업</p>
-                    <p class="fts_22 ftw_bd">(그룹) 2:1 커플레슨</p>
-                    <p class="fts_20">14:00 - 15:00</p>
+                    <p class="fts_22 ftw_bd">(그룹) {{ group_schedule_info.group_tb.name }}</p>
+                    <p class="fts_20">{{ group_schedule_info.start_dt | date:"Y.m.d (l) H:i" |cut:"요일" }} ~ {{ group_schedule_info.end_dt | time:'H:i' }}</p>
                 </div>
-                <div id="wrapper_lesson_now_info_name" data-id="2"  onclick="lesson_select(this)">
+                {% endfor %}
+
+                {% for pt_schedule_info in pt_schedule_data %}
+                <div id="wrapper_lesson_now_info_name" data-id="{{ pt_schedule_info.schedule_id }}" onclick="lesson_select(this)">
                     <p style="margin:0;" class="fts_16">현재 진행중인 수업</p>
-                    <p class="fts_22 ftw_bd">(그룹) 2:1 커플레슨</p>
-                    <p class="fts_20">14:00 - 15:00</p>
+                    <p class="fts_22 ftw_bd">(개인) 1:1 레슨</p>
+                    <p class="fts_20">{{ pt_schedule_info.start_dt | date:"Y.m.d (l) H:i" |cut:"요일" }} ~ {{ pt_schedule_info.end_dt | time:'H:i' }}</p>
                 </div>
+                {% endfor %}
+
             </div>
         </section>
 
         <section id="wrapper_phone_input">
-            <form action="" id="form_data_phone">
+            <form action="{% url 'trainer:attend_mode_detail' %}" id="form_data_phone" method="post">
+                <div style="display:none;">{% csrf_token %}</div>
                 <p>등록된 전화번호</p>
-                <input type="tel" placeholder="숫자만 입력" id="input_form_phone" autocomplete="off">
-                <input type="hidden" id="input_form_lesson_id">
+                <input type="tel" placeholder="숫자만 입력" name="input_form_phone" id="input_form_phone" autocomplete="off">
+                <input type="hidden" name="input_form_lesson_id" id="input_form_lesson_id">
             </form>
         </section>
 
@@ -260,10 +268,11 @@
         function form_confirm(e){
             e.preventDefault();
             if($('#input_form_lesson_id').val().length == 0){
-                alert('수업을 선택해주세요!')
+                alert('수업을 선택해주세요!');
                 return false;
             }
-            location.href='/trainer/attend_mode_detail/';
+            let form_info = $('#form_data_phone');
+            form_info.submit();
         }
 
         function move_button(e, direction){
