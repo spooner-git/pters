@@ -4,8 +4,9 @@ class Calendar {
     constructor(targetHTML, instance){
         this.targetHTML = targetHTML;
         this.instance = instance;
-        this.last_page_num = 2;
-        this.first_page_num = 0;
+        // this.last_page_num = 2;
+        // this.first_page_num = 0;
+        this.current_page_num = 1;
 
         let d = new Date();
         this.current_year = d.getFullYear();
@@ -22,10 +23,10 @@ class Calendar {
         // $(this.targetHTML).html(
         //     component.initial_page
         // )
-        this.render_month_cal( (this.last_page_num+this.first_page_num)/2 ,this.current_year, this.current_month);
+        this.render_month_cal( this.current_page_num ,this.current_year, this.current_month);
         this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, function(jsondata, date){
             if(date == `${self.current_year}-${self.current_month}-01`){
-                self.render_month_cal((self.last_page_num+self.first_page_num)/2, self.current_year, self.current_month, jsondata);
+                self.render_month_cal( self.current_page_num, self.current_year, self.current_month, jsondata);
             }
             
         })
@@ -40,7 +41,7 @@ class Calendar {
     }
 
     get_prev_month(){
-        let prev_month = this.current_month-1 < 0 ? 12 : this.current_month - 1;
+        let prev_month = this.current_month-1 < 1 ? 12 : this.current_month - 1;
         let year = this.current_month-1 < 1 ? this.current_year-1 : this.current_year;
         console.log("year", year, "month", prev_month)
         return {
@@ -64,10 +65,16 @@ class Calendar {
                 let next = this.get_next_month();
                 this.current_year = next.year;
                 this.current_month = next.month;
-                this.render_month_cal((this.last_page_num+this.first_page_num)/2, this.current_year, this.current_month)
+
+                /*페이지 삽입*/
+                this.current_page_num = this.current_page_num + 1;
+                this.append_child(this.targetHTML, 'div', this.current_page_num)
+                /*페이지 삽입*/
+
+                this.render_month_cal( this.current_page_num, this.current_year, this.current_month)
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, function(jsondata, date){
                     if(date == `${self.current_year}-${self.current_month}-01`){
-                        self.render_month_cal((self.last_page_num+self.first_page_num)/2, self.current_year, self.current_month, jsondata);
+                        self.render_month_cal(self.current_page_num, self.current_year, self.current_month, jsondata);
                     }
                 })
                 // $(this.targetHTML).append(`<div id="page${this.last_page_num+1}"></div>`)
@@ -78,10 +85,18 @@ class Calendar {
                 let prev = this.get_prev_month();
                 this.current_year = prev.year;
                 this.current_month = prev.month;
-                this.render_month_cal((this.last_page_num+this.first_page_num)/2, this.current_year, this.current_month)
+
+                /*페이지 삽입*/
+                this.current_page_num = this.current_page_num - 1;
+                this.prepend_child(this.targetHTML, 'div', this.current_page_num)
+                /*페이지 삽입*/
+
+                console.log('this,current_page_num',this.current_page_num)
+
+                this.render_month_cal(this.current_page_num, this.current_year, this.current_month)
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, function(jsondata, date){
                     if(date == `${self.current_year}-${self.current_month}-01`){
-                        self.render_month_cal((self.last_page_num+self.first_page_num)/2, self.current_year, self.current_month, jsondata);
+                        self.render_month_cal(self.current_page_num, self.current_year, self.current_month, jsondata);
                     }
                 })
                 // $(this.targetHTML).prepend(`<div id="page${this.first_page_num-1}"></div>`)
@@ -302,7 +317,7 @@ class Calendar {
                                   </div>
                                   `
                 ,
-                "initial_page":`<div id="page0"></div><div id="page1"></div><div id="page2"></div>`
+                "initial_page":`<div id="page1" class="pages"></div>`
             }
         )
     }
@@ -324,11 +339,87 @@ class Calendar {
             if(Math.abs(tsy - tey) < 100){
                if(ts>te+50){
                     self.move_month("next");
-                }else if(ts<te-50){
+                }else if(ts<te-20){
                     self.move_month("prev");
                 }
             }
         });
+    }
+
+    toggle_touch_move_to_month_cal(onoff, input_target_html){
+        let self = this;
+        let ts;
+        let tsy;
+        let selector_body = $(input_target_html);
+
+        switch(onoff){
+            case "on":
+                    selector_body.off("touchstart").on("touchstart", function(e){
+                        ts = e.originalEvent.touches[0].clientX;
+                        tsy = e.originalEvent.touches[0].clientY;
+                    });
+                
+                  
+                    selector_body.off("touchend").on("touchend", function(e){
+                        let te = e.originalEvent.changedTouches[0].clientX;
+                        let tey = e.originalEvent.changedTouches[0].clientY;
+                        if(Math.abs(tsy - tey) < 100){
+                           if(ts>te+50){
+                                self.move_month("next");
+                            }else if(ts<te-20){
+                                self.move_month("prev");
+                            }
+                        }
+                    });
+            break;
+
+            case "off":
+                    selector_body.off("touchstart").off("touchend");
+            break;
+        }
+    }
+
+    append_child(target, type, page_num){
+        let self = this;
+        let el = document.createElement(type);
+        el.id = `page${page_num}`;
+        el.style.transform = 'translateX(100%)';
+        el.classList.add('pages');
+        document.querySelector(target).appendChild(el);
+    
+        let el_prev = document.getElementById(`page${page_num-1}`);
+        
+        self.toggle_touch_move_to_month_cal('off', 'body');
+        setTimeout(function(){
+            el.style.transform = 'translateX(0)';
+            el_prev.style.transform = 'translateX(-100%)';
+            setTimeout(function(){
+                el_prev.parentNode.removeChild(el_prev);
+                self.toggle_touch_move_to_month_cal('on', 'body');
+            },300)
+        }, 0)
+    }
+    
+    prepend_child(target, type, page_num){
+        let self = this;
+        let el = document.createElement(type);
+        el.id = `page${page_num}`;
+        el.style.transform = 'translateX(-100%)';
+        el.classList.add('pages');
+        let _target = document.querySelector(target);
+        _target.insertBefore(el, _target.childNodes[0]);
+    
+        let el_prev = document.getElementById(`page${page_num+1}`);
+        
+        self.toggle_touch_move_to_month_cal('off', 'body');
+        setTimeout(function(){
+            el.style.transform = 'translateX(0)';
+            el_prev.style.transform = 'translateX(100%)';
+            setTimeout(function(){
+                el_prev.parentNode.removeChild(el_prev);
+                self.toggle_touch_move_to_month_cal('on', 'body');
+            },300)
+        }, 0)
     }
 
 }
@@ -370,6 +461,8 @@ function date_format(date){
             "yyyy/m/d":`${yyyy}/${m}/${d}`
     };
 }
+
+
 
 
 

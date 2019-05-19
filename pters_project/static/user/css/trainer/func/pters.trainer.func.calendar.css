@@ -1,3 +1,8 @@
+.pages{
+	position: absolute;
+	transition: 0.3s;
+}
+
 
 .cal_week_line{
 	display: table;
