@@ -16,12 +16,20 @@ class Calendar {
     }
 
     init(){
+        let self = this;
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page
         // $(this.targetHTML).html(
         //     component.initial_page
         // )
         this.render_month_cal( (this.last_page_num+this.first_page_num)/2 ,this.current_year, this.current_month);
+        this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, function(jsondata, date){
+            if(date == `${self.current_year}-${self.current_month}-01`){
+                self.render_month_cal((self.last_page_num+self.first_page_num)/2, self.current_year, self.current_month, jsondata);
+            }
+            
+        })
+        this.set_touch_move_to_month_cal('body');
     }
 
     get_current_month(){
@@ -50,11 +58,18 @@ class Calendar {
     }
 
     move_month(direction){
+        let self = this;
         switch(direction){
             case "next":
                 this.current_year = this.current_month + 1 > 12 ? this.current_year +1 : this.current_year;
                 this.current_month = this.current_month +1 > 12 ? 1 : this.current_month + 1;
                 this.render_month_cal((this.last_page_num+this.first_page_num)/2, this.current_year, this.current_month)
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, function(jsondata, date){
+                    if(date == `${self.current_year}-${self.current_month}-01`){
+                        self.render_month_cal((self.last_page_num+self.first_page_num)/2, self.current_year, self.current_month, jsondata);
+                    }
+                    
+                })
                 // $(this.targetHTML).append(`<div id="page${this.last_page_num+1}"></div>`)
                 // this.last_page_num++;
             break;
@@ -63,6 +78,12 @@ class Calendar {
                 this.current_year = this.current_month - 1 < 1 ? this.current_year - 1 : this.current_year;
                 this.current_month = this.current_month - 1 < 1 ? 12 : this.current_month - 1;
                 this.render_month_cal((this.last_page_num+this.first_page_num)/2, this.current_year, this.current_month)
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, function(jsondata, date){
+                    if(date == `${self.current_year}-${self.current_month}-01`){
+                        self.render_month_cal((self.last_page_num+self.first_page_num)/2, self.current_year, self.current_month, jsondata);
+                    }
+                    
+                })
                 // $(this.targetHTML).prepend(`<div id="page${this.first_page_num-1}"></div>`)
                 // this.first_page_num--;
             break;
@@ -83,10 +104,13 @@ class Calendar {
 
     }
     
-    render_month_cal(page, year, month){ //월간 달력 렌더링 (연, 월)
+    render_month_cal(page, year, month, schedule_data){ //월간 달력 렌더링 (연, 월)
+        if(schedule_data == undefined){
+            schedule_data = false;
+        }
         let weeks_div = [];
         for(let i=0; i<6; i++){
-            weeks_div = [...weeks_div, this.draw_week_line_for_month_calendar(year, month, i, 'popup_alert_month')];
+            weeks_div = [...weeks_div, this.draw_week_line_for_month_calendar(year, month, i, schedule_data,'popup_alert_month')];
         }
         let component = this.static_component();
         // $(`#page${page}`).html(component.month_cal_upper_box + weeks_div.join(''));
@@ -173,28 +197,33 @@ class Calendar {
             )
     }
 
-    draw_week_line_for_month_calendar(year, month, week, onclick_func){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
+    draw_week_line_for_month_calendar(year, month, week, schedule_data,onclick_func){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
         let _date = week_dates_info.date;
         let _color = week_dates_info.color;
 
-        let schedule_data = this.dummy_schedule_data_for_test();
+        // let schedule_data = this.dummy_schedule_data_for_test();
 
         let schedule_num = [];
-        for(let i=0; i<7; i++){
-            if(week_dates_info == false){
-                continue;
-            }
+        if(schedule_data){
+            for(let i=0; i<7; i++){
+                if(week_dates_info == false){
+                    continue;
+                }
 
-            let date_to_search = date_format(`${_year[i]}-${_month[i]}-${_date[i]}`)["yyyy-mm-dd"];
-            if(date_to_search in schedule_data){
-                schedule_num.push(schedule_data[date_to_search].length);
-            }else{
-                schedule_num.push(0);
+                let date_to_search = date_format(`${_year[i]}-${_month[i]}-${_date[i]}`)["yyyy-mm-dd"];
+                if(date_to_search in schedule_data){
+                    schedule_num.push(schedule_data[date_to_search].length);
+                }else{
+                    schedule_num.push(0);
+                }
             }
+        }else{
+            schedule_num = [0, 0, 0, 0, 0, 0, 0]
         }
+        
 
         return(
             week_dates_info == false 
@@ -232,12 +261,13 @@ class Calendar {
             },
 
             success:function(data){
+                console.log(data)
                 var jsondata = JSON.parse(data);
                 if(jsondata.messageArray.length>0){
                     console.log(jsondata.messageArray);
                 }else{
                     console.log(jsondata);
-                    callback();
+                    callback(jsondata, date_);
                     return jsondata;
                 }
 
@@ -277,48 +307,28 @@ class Calendar {
         )
     }
 
-    dummy_schedule_data_for_test(){
-        return(
-            {  "2019-05-07":[ 
-                                {"start":"08:00", "end":"09:00", "finished":false, "type":"private"},
-                                {"start":"09:00", "end":"10:00", "finished":false, "type":"private"},
-                                {"start":"11:00", "end":"12:00", "finished":false, "type":"private"},
-                                {"start":"13:00", "end":"14:00", "finished":false, "type":"private"},
-                                {"start":"15:00", "end":"16:00", "finished":true, "type":"private"},
-                                {"start":"17:00", "end":"18:00", "finished":false, "type":"group", "reserved":5, "max":5},
-                                {"start":"19:00", "end":"20:00", "finished":false, "type":"group", "reserved":3, "max":5} 
-                            ],
-                "2019-05-22":[ 
-                                {"start":"08:00", "end":"09:00", "finished":false, "type":"private"},
-                                {"start":"11:00", "end":"13:00", "finished":false, "type":"private"} 
-                            ],
-                "2019-05-24":[ 
-                                {"start":"06:00", "end":"08:00", "finished":false, "type":"private"},
-                                {"start":"08:00", "end":"11:00", "finished":false, "type":"private"},
-                                {"start":"20:00", "end":"21:00", "finished":false, "type":"private"},
-
-                            ],
-                            "2019-05-07":[ 
-                                {"start":"08:00", "end":"09:00", "finished":false, "type":"private"},
-                                {"start":"09:00", "end":"10:00", "finished":false, "type":"private"},
-                                {"start":"11:00", "end":"12:00", "finished":false, "type":"private"},
-                                {"start":"13:00", "end":"14:00", "finished":false, "type":"private"},
-                                {"start":"15:00", "end":"16:00", "finished":true, "type":"private"},
-                                {"start":"17:00", "end":"18:00", "finished":false, "type":"group", "reserved":5, "max":5},
-                                {"start":"19:00", "end":"20:00", "finished":false, "type":"group", "reserved":3, "max":5} 
-                            ],
-                "2019-06-05":[ 
-                                {"start":"08:00", "end":"09:00", "finished":false, "type":"private"},
-                                {"start":"11:00", "end":"13:00", "finished":false, "type":"private"} 
-                            ],
-                "2019-06-17":[ 
-                                {"start":"06:00", "end":"08:00", "finished":false, "type":"private"},
-                                {"start":"08:00", "end":"11:00", "finished":false, "type":"private"},
-                                {"start":"20:00", "end":"21:00", "finished":false, "type":"private"},
-
-                            ],
+    set_touch_move_to_month_cal(input_target_html){
+        let self = this;
+        let ts;
+        let tsy;
+        let selector_body = $(input_target_html);
+        selector_body.off("touchstart").on("touchstart", function(e){
+            ts = e.originalEvent.touches[0].clientX;
+            tsy = e.originalEvent.touches[0].clientY;
+        });
+    
+      
+        selector_body.off("touchend").on("touchend", function(e){
+            let te = e.originalEvent.changedTouches[0].clientX;
+            let tey = e.originalEvent.changedTouches[0].clientY;
+            if(Math.abs(tsy - tey) < 100){
+               if(ts>te+50){
+                    self.move_month("next");
+                }else if(ts<te-50){
+                    self.move_month("prev");
+                }
             }
-        )
+        });
     }
 
 }
@@ -360,5 +370,7 @@ function date_format(date){
             "yyyy/m/d":`${yyyy}/${m}/${d}`
     };
 }
+
+
 
 
