@@ -1,6 +1,22 @@
+#cal_display_panel{
+	height: 40px;
+	text-align: center;
+}
+	.display_year{
+		font-size: 20px;
+		margin-right: 10px;
+	}
+	.display_month{
+		font-size: 35px;
+		line-height: 40px;
+		font-weight: bold;
+		color: #fe4e65;
+	}
 .pages{
 	position: absolute;
-	transition: 0.3s;
+	top: 40px;
+	transition: 0.2s ease-in-out;
+	/* transition-timing-function: ease; */
 }
 
 
@@ -48,7 +64,7 @@
 	border: 1px solid transparent;
 }
 .has_schedule{
-	border-color: #cccccc;
+	border-color: #fe4e65;
 	border-radius: 50%;
 }
 /* 스케쥴 표시 */
