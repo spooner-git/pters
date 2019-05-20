@@ -563,7 +563,6 @@ def upload_sign_image_logic(request):
     schedule_id = request.POST.get('schedule_id', '')
     image_test = request.POST.get('upload_file', '')
     context = {'error': None}
-
     s3 = boto3.resource('s3', aws_access_key_id=getattr(settings, "PTERS_AWS_ACCESS_KEY_ID", ''),
                         aws_secret_access_key=getattr(settings, "PTERS_AWS_SECRET_ACCESS_KEY", ''))
     bucket = s3.Bucket(getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", ''))

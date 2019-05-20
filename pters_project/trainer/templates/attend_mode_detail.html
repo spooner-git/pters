@@ -226,9 +226,9 @@
                     <p class="fts_24 ftw_bd" style="text-decoration: underline">{{ schedule_info.start_dt | time:"H:i" }} - {{ schedule_info.end_dt | time:"H:i" }}</p>
                     <p class="fts_22 ftw_bd">
                         {% if schedule_info.group_tb %}
-                            (그룹) {{ schedule_info.group_tb.name }}
+                            [그룹] {{ schedule_info.group_tb.name }}
                         {% else %}
-                            (개인) 1:1 레슨
+                            [개인] 1:1 레슨
                         {% endif %}
                    </p>
                 </div>
@@ -236,9 +236,25 @@
 
             <div id="wrapper_ticket_change_info">
                 <p class="fts_20 ftw_bd">수강권 차감</p>
-                <p class="fts_20">2:1 커플그룹 (5 / 10)</p>
+                <p class="fts_20">
+                    {% if lecture_info.package_tb.package_type_cd == 'PACKAGE' %}
+                        [패키지]
+                    {% elif lecture_info.package_tb.package_type_cd == 'GROUP' %}
+                        [그룹]
+                    {% else %}
+                        [개인]
+                    {% endif %}
+                    {{ lecture_info.package_tb.name }} ({{ lecture_info.lecture_rem_count }} / {{ lecture_info.lecture_reg_count }})</p>
                 <div><img src="/static/user/res/btn_next.png" id="img_ticket_change_arrow"></div>
-                <p class="fts_22 ftw_bd">2:1 커플그룹 (4 / 10)</p>
+                <p class="fts_22 ftw_bd">
+                    {% if lecture_info.package_tb.package_type_cd == 'PACKAGE' %}
+                        [패키지]
+                    {% elif lecture_info.package_tb.package_type_cd == 'GROUP' %}
+                        [그룹]
+                    {% else %}
+                        [개인]
+                    {% endif %}
+                    {{ lecture_info.package_tb.name }} ({{ lecture_info.lecture_rem_count|add:"-1" }} / {{ lecture_info.lecture_reg_count }})</p>
             </div>
 
 
@@ -250,11 +266,18 @@
                 <div><button onclick="location.href='/trainer/attend_mode/'" id="button_back" class="fts_16">뒤로</button></div>
         </section>
 
+        <form action="{% url 'trainer:attend_finish' %}" id="form_attend_data" method="post">
+            <div style="display:none;">{% csrf_token %}
+            <input type="hidden" name="member_id" value="{{ member_id }}">
+            <input type="hidden" name="schedule_id" value="{{ schedule_id }}">
+            </div>
+        </form>
     </div>
 
     <div id="popup_storage"></div>
    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
     <script>
         window.onload=function(){
             let window_height = window.innerHeight;
@@ -366,6 +389,11 @@
             //         console.log('server error');
             //     }
             // });
+
+            let drawCanvas = document.getElementById('canvas');
+            let send_data = $('#form_attend_data').serializeArray();
+            send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')});
+            signImageSend(send_data);
             popup().clear();
         }
 
@@ -485,7 +513,43 @@
             }
         }
         
+        function signImageSend(send_data){
+            $.ajax({
+                url:'/schedule/upload_sign_image/',
+                type:'POST',
+                data:send_data,
 
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                    //beforeSend();
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    if(jsondata.messageArray.length>0){
+                        $('#errorMessageBar').show();
+                        $('#errorMessageText').text(jsondata.messageArray);
+                    }else{
+                        console.log('sign_image_save_success');
+                        $('#form_attend_data').submit();
+                    }
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                    alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.");
+                    console.log('sign_image_save_fail');
+                }
+            })
+        }
     </script>
 
     <script>
@@ -521,6 +585,28 @@
                 });
             }
         }
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
     </script>
 </body>
 </html>

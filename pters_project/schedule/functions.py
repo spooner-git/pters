@@ -841,14 +841,15 @@ def func_get_trainer_attend_on_schedule(context, class_id, start_date, end_date,
     context['pt_schedule_data'] = ScheduleTb.objects.select_related('lecture_tb__member'
                                                                     ).filter(Q(start_dt__lte=now,
                                                                                end_dt__gte=now) |
-                                                                             Q(start_dt__lte=now,
-                                                                               start_dt__gte=start_date) |
+                                                                             Q(start_dt__gte=now,
+                                                                               start_dt__lte=start_date) |
                                                                              Q(end_dt__gte=end_date,
                                                                                end_dt__lte=now),
                                                                              lecture_tb__isnull=False,
                                                                              lecture_tb__use=USE,
                                                                              class_tb=class_id,
                                                                              en_dis_type=ON_SCHEDULE_TYPE,
+                                                                             state_cd='NP',
                                                                              use=USE).order_by('start_dt', 'reg_dt')
 
 

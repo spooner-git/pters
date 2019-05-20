@@ -219,8 +219,9 @@ urlpatterns = [
     # 공지사항 조회
     url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(), name='get_notice_info_ajax'),
 
-
-
+    # Attend Mode 기능 ###############################################################################################
+    url(r'^attend_check/$', views.attend_check_logic, name='attend_check'),
+    url(r'^attend_finish/$', views.attend_finish_logic, name='attend_finish'),
 
     # 페이지 #####################################################################################################
     # 강사 메인 페이지

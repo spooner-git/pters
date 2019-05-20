@@ -52,7 +52,8 @@ from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClas
 
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
     func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count, \
-    func_get_trainer_attend_schedule
+    func_get_trainer_attend_schedule, func_get_group_lecture_id, func_check_group_available_member_before, \
+    func_add_schedule, func_check_group_available_member_after
 from stats.functions import get_sales_data, get_stats_member_data
 from .functions import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
@@ -421,7 +422,7 @@ class AttendModeView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                                                             setting_type_cd='LT_ATTEND_CLASS_AFTER_TIME',
                                                             use=USE)
         except ObjectDoesNotExist:
-            after_time_setting_info = 10
+            after_time_setting_info = 30
         start_date = today + datetime.timedelta(minutes=int(prev_time_setting_info))
         end_date = today - datetime.timedelta(minutes=int(after_time_setting_info))
         context = func_get_trainer_attend_schedule(context, class_id, start_date, end_date, today)
@@ -436,8 +437,9 @@ class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, View):
     def post(self, request):
         context = {}
         class_id = request.session.get('class_id', '')
-        phone_number = request.POST.get('input_form_phone', '')
-        schedule_id = request.POST.get('input_form_lesson_id', '')
+        phone_number = request.POST.get('phone_number', '')
+        schedule_id = request.POST.get('schedule_id', '')
+        error = None
         try:
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
@@ -449,9 +451,38 @@ class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, View):
                                                     use=USE)
         if len(member_data) > 0:
             context['member_info'] = member_data[0].lecture_tb.member
+            member_id = member_data[0].lecture_tb.member_id
+            context['member_id'] = member_id
+            if schedule_info.lecture_tb is None or schedule_info.lecture_tb == '':
+                try:
+                    group_schedule_info = ScheduleTb.objects.get(group_schedule_id=schedule_id,
+                                                                 group_tb_id=schedule_info.group_tb_id,
+                                                                 lecture_tb__member_id=member_id)
+                    context['lecture_info'] = group_schedule_info.lecture_tb
+
+                except ObjectDoesNotExist:
+                    lecture_id = func_get_group_lecture_id(schedule_info.group_tb_id, member_id)
+                    if lecture_id is None or lecture_id == '':
+                        error = '예약 가능한 횟수가 없습니다.'
+                    else:
+                        try:
+                            context['lecture_info'] = LectureTb.objects.get(lecture_id=lecture_id)
+                        except ObjectDoesNotExist:
+                            error = '수강정보를 불러오지 못했습니다.'
+            else:
+                if schedule_info.lecture_tb.member_id==member_id:
+                    context['lecture_info'] = schedule_info.lecture_tb
+                else:
+                    error = '번호와 수업이 일치하지 않습니다.'
 
         if schedule_info is not None:
             context['schedule_info'] = schedule_info
+            context['schedule_id'] = schedule_id
+        if error is not None:
+            logger.error('class_id:'+str(class_id) + '/phone_number:' + str(phone_number) + '/schedule_id:'
+                         + str(schedule_id) + '/' + error)
+            messages.error(request, error)
+
         return render(request, self.template_name, context)
 
 
@@ -5869,3 +5900,133 @@ class GetNoticeInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['board_list'] = board_list
 
         return context
+
+
+# 출석 체크 완료 기능
+def attend_check_logic(request):
+    class_id = request.session.get('class_id', '')
+    phone_number = request.POST.get('phone_number', '')
+    schedule_id = request.POST.get('schedule_id', '')
+    error = None
+
+    try:
+        schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+    except ObjectDoesNotExist:
+        schedule_info = None
+
+    member_data = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                lecture_tb__member__phone=phone_number,
+                                                auth_cd='VIEW',
+                                                use=USE)
+    if len(member_data) > 0:
+        member_id = member_data[0].lecture_tb.member_id
+        if schedule_info.lecture_tb is None or schedule_info.lecture_tb == '':
+            try:
+                group_schedule_info = ScheduleTb.objects.get(group_schedule_id=schedule_id,
+                                                             group_tb_id=schedule_info.group_tb_id,
+                                                             lecture_tb__member_id=member_id)
+                if group_schedule_info.state_cd == 'PE':
+                    error = '이미 출석 처리된 수업입니다.'
+
+            except ObjectDoesNotExist:
+                lecture_id = func_get_group_lecture_id(schedule_info.group_tb_id, member_id)
+                if lecture_id is None or lecture_id == '':
+                    error = '예약 가능한 횟수가 없습니다.'
+                else:
+                    try:
+                        LectureTb.objects.get(lecture_id=lecture_id)
+                    except ObjectDoesNotExist:
+                        error = '수강정보를 불러오지 못했습니다.'
+        else:
+            if schedule_info.state_cd == 'PE':
+                error = '이미 출석 처리된 수업입니다.'
+            if error is None:
+                if schedule_info.lecture_tb.member_id != member_id:
+                    error = '번호와 수업이 일치하지 않습니다.'
+
+    if error is None:
+
+        return render(request, 'ajax/trainer_error_ajax.html')
+    else:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+        return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 출석 체크 완료 기능
+def attend_finish_logic(request):
+    member_id = request.POST.get('member_id')
+    schedule_id = request.POST.get('schedule_id')
+    class_id = request.session.get('class_id', '')
+    error = None
+    try:
+        schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+    except ObjectDoesNotExist:
+        schedule_info = None
+
+    if member_id is not None:
+        try:
+            with transaction.atomic():
+                if schedule_info.lecture_tb is None or schedule_info.lecture_tb == '':
+                    try:
+                        group_schedule_info = ScheduleTb.objects.get(group_schedule_id=schedule_id,
+                                                                     group_tb_id=schedule_info.group_tb_id,
+                                                                     lecture_tb__member_id=member_id)
+                        if group_schedule_info.state_cd == 'PE':
+                            error = '이미 출석 처리된 수업입니다.'
+
+                        if error is None:
+                            group_schedule_info.state_cd = 'PE'
+                            group_schedule_info.save()
+                            error = func_refresh_lecture_count(class_id, group_schedule_info.lecture_tb_id)
+
+                    except ObjectDoesNotExist:
+                        lecture_id = func_get_group_lecture_id(schedule_info.group_tb_id, member_id)
+                        if lecture_id is None or lecture_id == '':
+                            error = '예약 가능한 횟수가 없습니다.'
+                        else:
+                            error = func_check_group_available_member_before(class_id, schedule_info.group_tb_id,
+                                                                             schedule_id)
+
+                        if error is None:
+                            schedule_result = func_add_schedule(class_id, lecture_id, None,
+                                                                schedule_info.group_tb_id, schedule_id,
+                                                                schedule_info.start_dt, schedule_info.end_dt,
+                                                                schedule_info.note, ON_SCHEDULE_TYPE,
+                                                                member_id, 'AP', 'PE')
+                            error = schedule_result['error']
+
+                        if error is None:
+                            error = func_refresh_lecture_count(class_id, lecture_id)
+
+                        if error is None:
+                            error = func_check_group_available_member_after(class_id, schedule_info.group_tb_id,
+                                                                            schedule_id)
+
+                else:
+                    if schedule_info.lecture_tb.member_id == member_id:
+                        if schedule_info.state_cd == 'PE':
+                            error = '이미 출석 처리된 수업입니다.'
+                        if error is None:
+                            schedule_info.state_cd = 'PE'
+                            schedule_info.save()
+                            error = func_refresh_lecture_count(class_id, schedule_info.lecture_tb.lecture_id)
+
+        except TypeError:
+            error = error
+        except ValueError:
+            error = error
+        except IntegrityError:
+            error = error
+        except InternalError:
+            error = error
+
+    if error is None:
+
+        return redirect('/trainer/attend_mode/')
+    else:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+        return render(request, 'ajax/trainer_error_ajax.html')

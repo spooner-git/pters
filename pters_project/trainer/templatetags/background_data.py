@@ -140,8 +140,9 @@ def get_setting_info(request):
                                                           use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
                 schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                                  end_dt__gt=now,
-                                                                 use=USE).exclude(Q(state_cd='PE')|Q(state_cd='PC'))
+                                                                 use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
                 repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+
                 if len(schedule_data) > 0:
                     schedule_data.update(state_cd='PE')
                 if len(schedule_data_delete) > 0:
