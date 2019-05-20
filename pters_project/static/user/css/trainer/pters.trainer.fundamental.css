@@ -4,6 +4,11 @@
      font-family: 'Noto Sans KR', sans-serif !important;
  /* background-color: #f7f5f6;*/
  }
+
+ html, body{
+    /* overscroll-behavior-y: contain; */
+ }
+
  /*기본 html, body스타일*/
 
  /* .content_page{

@@ -1,5 +1,5 @@
 #cal_display_panel{
-	height: 40px;
+	height: 125px;
 	text-align: center;
 }
 	.display_year{
@@ -14,8 +14,9 @@
 	}
 .pages{
 	position: absolute;
-	top: 40px;
+	top: 125px;
 	transition: 0.2s ease-in-out;
+	background-color: #ffffff;
 	/* transition-timing-function: ease; */
 }
 
@@ -46,6 +47,30 @@
 	width: 12.5%;
 }
 
+.week_cal_time_text{
+	font-size: 11px;
+}
+.week_row{
+	width: 100%;
+	display: table;
+	border-collapse: collapse;
+}
+.week_row > div{
+	position: relative;
+	display: table-cell;
+	width: 12.5%;
+}
+.week_row article{
+	height: 40px;
+	text-align: center;
+	font-size: 12px;
+	border-top: 1px solid #cccccc;
+	box-sizing: border-box;
+}
+.week_row article:first-child{
+	border-color: transparent
+}
+
 .cal_font_color_grey{
 	color: #cccccc;
 }
@@ -66,5 +91,19 @@
 .has_schedule{
 	border-color: #fe4e65;
 	border-radius: 50%;
+}
+
+.calendar_schedule_display_week{
+	position: absolute;
+	left: 0;
+	width: 100%;
+	background-color: #fe4e65;
+	border: 1px solid #ffffff;
+}
+.week_group_schedule{
+	background-color: #fe4e65;
+}
+.week_private_schedule{
+	background-color: green;
 }
 /* 스케쥴 표시 */

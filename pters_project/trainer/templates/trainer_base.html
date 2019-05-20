@@ -76,6 +76,7 @@
             width: 100%;
             overflow: auto;
             -webkit-overflow-scrolling: touch;
+            /* overscroll-behavior-y: contain; */
             z-index: 0;
             background-color: #f7f5f6;
             height: 100%;
@@ -207,7 +208,6 @@ onclick="layer_popup.all_close_layer_popup();"></div>
     const initial_window_width = window.innerWidth;
     const $root_content = $('#root_content');
     func_set_webkit_overflow_scrolling('#root_content');
-    
 
     $root_content.scroll(function(){
         let scroll_loc = $(this).scrollTop();
@@ -284,7 +284,7 @@ onclick="layer_popup.all_close_layer_popup();"></div>
                 $root_content.html('<div>main 페이지</div>');
             break;
             case 'calendar':
-                calendar.init();
+                calendar.init("month");
             break;
             case 'lecture':
                 lecture.init();

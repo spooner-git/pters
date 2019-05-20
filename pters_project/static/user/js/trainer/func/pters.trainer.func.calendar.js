@@ -5,37 +5,51 @@ class Calendar {
         this.targetHTML = targetHTML;
         this.subtargetHTML = 'calendar_wrap';
         this.instance = instance;
-        // this.last_page_num = 2;
-        // this.first_page_num = 0;
+        
+        this.cal_type = "week";
         this.current_page_num = 1;
 
         let d = new Date();
         this.current_year = d.getFullYear();
         this.current_month = d.getMonth()+1;
         this.current_date = d.getDate();
+        this.current_week = Math.ceil( (this.current_date + new Date(this.current_year, this.current_month, 1).getDay() )/7 ) - 1;
 
+        this.worktime = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+        console.log("this.current_week", this.current_week)
         // this.init();
     }
 
-    init(){
-        let self = this;
+    init(cal_type){
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page
-        // $(this.targetHTML).html(
-        //     component.initial_page
-        // )
-        this.render_month_cal( this.current_page_num ,this.current_year, this.current_month);
-        this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, function(jsondata, date){
-            if(date == `${self.current_year}-${self.current_month}-01`){
-                self.render_month_cal( self.current_page_num, self.current_year, self.current_month, jsondata);
-            }
-            
-        })
-        this.toggle_touch_move_to_month_cal('on', '#calendar_wrap');
+
+        this.cal_type = cal_type;
+        switch(cal_type){
+            case "month":
+                this.render_month_cal( this.current_page_num ,this.current_year, this.current_month);
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                    if(date == `${this.current_year}-${this.current_month}-01`){
+                        this.render_month_cal( this.current_page_num, this.current_year, this.current_month, jsondata);
+                    }
+                })
+                this.toggle_touch_move('on', '#calendar_wrap');
+            break;
+
+            case "week":
+                this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                    if(date == `${this.current_year}-${this.current_month}-01`){
+                        this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+                        this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                    }
+                })
+                this.toggle_touch_move('on', '#calendar_wrap');
+            break;
+        }
     }
 
     get_current_month(){
-        console.log("year", this.current_year, "month", this.current_month)
         return {
             "year": this.current_year, "month": this.current_month
         }
@@ -44,7 +58,6 @@ class Calendar {
     get_prev_month(){
         let prev_month = this.current_month-1 < 1 ? 12 : this.current_month - 1;
         let year = this.current_month-1 < 1 ? this.current_year-1 : this.current_year;
-        console.log("year", year, "month", prev_month)
         return {
             "year":year, "month": prev_month
         }
@@ -53,9 +66,63 @@ class Calendar {
     get_next_month(){
         let next_month = this.current_month+1 > 12 ? 1 : this.current_month + 1;
         let year = this.current_month+1 > 12 ? this.current_year+1 : this.current_year;
-        console.log("year", year, "month", next_month)
         return {
             "year":year, "month": next_month
+        }
+    }
+
+    get_current_week(){
+        return {
+            "year":this.current_year, "month":this.current_month, "week":this.current_week
+        }
+        
+    }
+
+    get_prev_week(){
+        let year = this.current_year;
+        let month = this.current_month;
+        let week = this.current_week;
+        let first_day = new Date(year, month-1, 1).getDay();
+        let last_date = new Date(year, month, 0).getDate();
+        let week_num_this_month = Math.ceil( (first_day + last_date)/7  );
+
+        let prev_year = year - 1;
+        let prev_month = month - 1 < 1 ? 12 : month-1;
+
+        week = week - 1;
+        if(week - 1 < -1){
+            week = Math.ceil( ( new Date(prev_month == 12 ? prev_year: year, prev_month-1, 1).getDay() + new Date(prev_month == 12 ? prev_year: year, prev_month, 0).getDate()  )/7 - 1  )
+            month = month - 1 < 1 ? 12  : month - 1;
+            year = month == 12 ? year - 1 : year;
+                   
+        }
+
+        return {
+            "year":year, "month":month, "week":week
+        }
+    }
+
+    get_next_week(){
+        let year = this.current_year;
+        let month = this.current_month;
+        let week = this.current_week;
+        let first_day = new Date(year, month-1, 1).getDay();
+        let last_date = new Date(year, month, 0).getDate();
+        let week_num_this_month = Math.ceil( (first_day + last_date)/7  );
+
+        let next_year = year + 1;
+        let next_month = month + 1 > 12 ? 1 : month + 1;
+
+        week = week + 1;
+        if(week + 1 > week_num_this_month){
+            week = 0;
+            month = month + 1 > 12 ? 1  : month + 1;
+            year = month ==  1 ? year + 1 : year;
+                   
+        }
+
+        return {
+            "year":year, "month":month, "week":week
         }
     }
 
@@ -63,15 +130,14 @@ class Calendar {
         this.current_year = year;
         this.current_month = month;
         this.render_month_cal( this.current_page_num, this.current_year, this.current_month)
-        this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, function(jsondata, date){
-            if(date == `${self.current_year}-${self.current_month}-01`){
-                self.render_month_cal(self.current_page_num, self.current_year, self.current_month, jsondata);
+        this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+            if(date == `${this.current_year}-${this.current_month}-01`){
+                this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
             }
         })
     }
 
     move_month(direction){
-        let self = this;
         switch(direction){
             case "next":
                 let next = this.get_next_month();
@@ -84,13 +150,11 @@ class Calendar {
                 /*페이지 삽입*/
 
                 this.render_month_cal( this.current_page_num, this.current_year, this.current_month)
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, function(jsondata, date){
-                    if(date == `${self.current_year}-${self.current_month}-01`){
-                        self.render_month_cal(self.current_page_num, self.current_year, self.current_month, jsondata);
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                    if(date == `${this.current_year}-${this.current_month}-01`){
+                        this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
                     }
                 })
-                // $(this.targetHTML).append(`<div id="page${this.last_page_num+1}"></div>`)
-                // this.last_page_num++;
             break;
 
             case "prev":
@@ -103,16 +167,12 @@ class Calendar {
                 this.prepend_child(this.subtargetHTML, 'div', this.current_page_num)
                 /*페이지 삽입*/
 
-                console.log('this,current_page_num',this.current_page_num)
-
                 this.render_month_cal(this.current_page_num, this.current_year, this.current_month)
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, function(jsondata, date){
-                    if(date == `${self.current_year}-${self.current_month}-01`){
-                        self.render_month_cal(self.current_page_num, self.current_year, self.current_month, jsondata);
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                    if(date == `${this.current_year}-${this.current_month}-01`){
+                        this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
                     }
                 })
-                // $(this.targetHTML).prepend(`<div id="page${this.first_page_num-1}"></div>`)
-                // this.first_page_num--;
             break;
         }
     }
@@ -120,15 +180,60 @@ class Calendar {
     move_week(direction){
         switch(direction){
             case "next":
+                let next = this.get_next_week();
+                this.current_year = next.year;
+                this.current_month = next.month;
+                this.current_week = next.week;
+                
+
+                /*페이지 삽입*/
+                this.current_page_num = this.current_page_num + 1;
+                this.append_child(this.subtargetHTML, 'div', this.current_page_num)
+                /*페이지 삽입*/
+
+                this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                    if(date == `${this.current_year}-${this.current_month}-01`){
+                        this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+                        this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                    }
+                })
             break;
 
             case "prev":
+                let prev = this.get_prev_week();
+                this.current_year = prev.year;
+                this.current_month = prev.month;
+                this.current_week = prev.week;
+                console.log(prev)
+                
+
+                /*페이지 삽입*/
+                this.current_page_num = this.current_page_num - 1;
+                this.prepend_child(this.subtargetHTML, 'div', this.current_page_num)
+                /*페이지 삽입*/
+
+                this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                    if(date == `${this.current_year}-${this.current_month}-01`){
+                        this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+                        this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                    }
+                })
             break;
         }
     }
 
     switch_cal_type(){
+        switch(this.cal_type){
+            case "month":
+                this.init("week");
+            break;
 
+            case "week":
+                this.init("month");
+            break;
+        }
     }
     
     render_month_cal(page, year, month, schedule_data){ //월간 달력 렌더링 (연, 월)
@@ -137,18 +242,19 @@ class Calendar {
         }
         let weeks_div = [];
         for(let i=0; i<6; i++){
-            weeks_div = [...weeks_div, this.draw_week_line_for_month_calendar(year, month, i, schedule_data,'popup_alert_month')];
+            weeks_div = [...weeks_div, this.draw_week_line(year, month, i, schedule_data,'popup_alert_month')];
         }
         let component = this.static_component();
-        console.log(page)
-        document.getElementById(`page${page}`).innerHTML = component.month_cal_upper_box + weeks_div.join('');
-        document.getElementById('cal_display_panel').innerHTML = `<span class="display_year">${year}</span><span class="display_month">${month}</span>`;
+        document.getElementById(`page${page}`).innerHTML = weeks_div.join('');
+        document.getElementById('cal_display_panel').innerHTML = component.month_cal_upper_box;
     }
 
-    render_week_cal(page ,year, month, week){ //주간 달력 렌더링 (연, 월, 몇번째 주)
-        let data = this.draw_week_line_for_month_calendar(year, month, week, 'popup_alert_week');
-        $(`#page${page}`).html(data);
+    render_week_cal(page ,year, month, week, schedule_data){ //주간 달력 렌더링 (연, 월, 몇번째 주)
+        let component = this.static_component();
+        let data = this.draw_week_line(year, month, week, schedule_data, 'popup_alert_week', "week");
+        
         document.getElementById(`page${page}`).innerHTML = data;
+        document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box;
     }
 
     get_week_dates(year, month, week){
@@ -225,14 +331,12 @@ class Calendar {
             )
     }
 
-    draw_week_line_for_month_calendar(year, month, week, schedule_data, onclick_func){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
+    draw_week_line(year, month, week, schedule_data, onclick_func, month_or_week){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
         let _date = week_dates_info.date;
         let _color = week_dates_info.color;
-
-        // let schedule_data = this.dummy_schedule_data_for_test();
 
         let schedule_num = [];
         if(schedule_data){
@@ -251,7 +355,8 @@ class Calendar {
         }else{
             schedule_num = [0, 0, 0, 0, 0, 0, 0]
         }
-        
+
+        let week_html_template = this.week_schedule_draw(year, month, week, schedule_data);
 
         return(
             week_dates_info == false 
@@ -260,7 +365,8 @@ class Calendar {
                 <div style="background-image:url('/static/user/res/PTERS_logo_pure.png');background-position:center;background-repeat:no-repeat;background-size:100px;height:30px;"></div>
             </div>`
             :
-            `<div class="cal_week_line"">
+            `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:0;background-color:#ffffff;z-index:10` : ""}">
+                ${month_or_week == "week" ? `<div class="week_cal_time_text">시간</div>` : ""}
                 <div class=${_color[0]} onClick="${onclick_func}(${_year[0]}, ${_month[0]}, ${_date[0]})">${_date[0]}<div class="calendar_schedule_display_month ${schedule_num[0]!=0?"has_schedule":""}">${schedule_num[0]!=0?schedule_num[0]:""}</div></div>
                 <div class=${_color[1]} onClick="${onclick_func}(${_year[1]}, ${_month[1]}, ${_date[1]})">${_date[1]}<div class="calendar_schedule_display_month ${schedule_num[1]!=0?"has_schedule":""}">${schedule_num[1]!=0?schedule_num[1]:""}</div></div>
                 <div class=${_color[2]} onClick="${onclick_func}(${_year[2]}, ${_month[2]}, ${_date[2]})">${_date[2]}<div class="calendar_schedule_display_month ${schedule_num[2]!=0?"has_schedule":""}">${schedule_num[2]!=0?schedule_num[2]:""}</div></div>
@@ -268,9 +374,62 @@ class Calendar {
                 <div class=${_color[4]} onClick="${onclick_func}(${_year[4]}, ${_month[4]}, ${_date[4]})">${_date[4]}<div class="calendar_schedule_display_month ${schedule_num[4]!=0?"has_schedule":""}">${schedule_num[4]!=0?schedule_num[4]:""}</div></div>
                 <div class=${_color[5]} onClick="${onclick_func}(${_year[5]}, ${_month[5]}, ${_date[5]})">${_date[5]}<div class="calendar_schedule_display_month ${schedule_num[5]!=0?"has_schedule":""}">${schedule_num[5]!=0?schedule_num[5]:""}</div></div>
                 <div class=${_color[6]} onClick="${onclick_func}(${_year[6]}, ${_month[6]}, ${_date[6]})">${_date[6]}<div class="calendar_schedule_display_month ${schedule_num[6]!=0?"has_schedule":""}">${schedule_num[6]!=0?schedule_num[6]:""}</div></div>
-            </div>`
+            </div>
+            ${month_or_week == "week" ? week_html_template: ""}`
         )
     }
+
+    week_schedule_draw(year, month, week, schedule_data){
+        let week_dates_info = this.get_week_dates(year, month, week);
+        let _year = week_dates_info.year;
+        let _month = week_dates_info.month;
+        let _date = week_dates_info.date;
+        let _color = week_dates_info.color;
+
+        let schedules = [];
+        if(schedule_data){
+            for(let i=0; i<7; i++){
+                if(week_dates_info == false){
+                    continue;
+                }
+
+                let date_to_search = date_format(`${_year[i]}-${_month[i]}-${_date[i]}`)["yyyy-mm-dd"];
+                if(date_to_search in schedule_data){
+                    schedules.push(
+                            schedule_data[date_to_search].map( (plan) => { 
+                                let diff = time_diff(plan.start, plan.end);
+                                let tform_s = time_form(plan.start);
+                                let styles = `height:${diff.hour*40+diff.minute/60}px;top:${tform_s.hour*40 + tform_s.minute/60}px`;
+                                return `<div onclick="alert('${date_to_search} ${plan.start}~${plan.end}')" class="calendar_schedule_display_week" style="${styles}"></div>`;
+                             })
+                    );
+                }else{
+                    schedules.push([]);
+                }
+            }
+        }else{
+            schedules = [];
+        }
+
+        console.log('schedules', schedules)
+
+        
+        let week_html_template = `
+                                <div class="week_row">
+                                    <div>${ (this.worktime.map( (t) => { return `<article>${t}:00</article>` } )).join('') }</div>
+                                    <div>${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
+                                    <div>${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
+                                    <div>${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
+                                    <div>${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
+                                    <div>${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
+                                    <div>${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
+                                    <div>${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
+                                </div>
+                                `;
+        return week_html_template;
+    }
+
+    
 
 
     request_schedule_data(date, days, callback){
@@ -289,13 +448,12 @@ class Calendar {
             },
 
             success:function(data){
-                console.log(data)
                 var jsondata = JSON.parse(data);
                 if(jsondata.messageArray.length>0){
-                    console.log(jsondata.messageArray);
+                    console.log("에러:" + jsondata.messageArray);
                 }else{
-                    console.log(jsondata);
                     callback(jsondata, date_);
+                    console.log(jsondata)
                     return jsondata;
                 }
 
@@ -315,15 +473,19 @@ class Calendar {
     static_component(){
         return(
             {
-                "month_cal_upper_box":` 
+                "month_cal_upper_box":` <div onclick="${this.instance}.switch_cal_type()"><span class="display_year">${this.current_year}</span><span class="display_month">${this.current_month}</span><img src="/static/common/icon/icon_swap.png"></div>
                                         <div><button onclick="${this.instance}.move_month('prev')">이전</button><button onclick="${this.instance}.move_month('next')">다음</button></div>
                                         <div class="cal_week_line">
                                             <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
                                         </div>`
                 ,
-                "week_cal_upper_box":`<div>
-                                            <div>시간</div><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
+                "week_cal_upper_box":`
+                                        <div onclick="${this.instance}.switch_cal_type()"><span class="display_year">${this.current_year}</span><span class="display_month">${this.current_month}</span><img src="/static/common/icon/icon_swap.png"></div>
+                                        <div><button onclick="${this.instance}.move_week('prev')">이전</button><button onclick="${this.instance}.move_week('next')">다음</button></div>
+                                        <div class="cal_week_line">
+                                            <div class="week_cal_time_text"></div><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
                                         </div>`
+                                        
                 ,
                 "week_time_line":`<div class="week_time_line>
                                     <div>시간</div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
@@ -335,28 +497,37 @@ class Calendar {
         )
     }
 
-    toggle_touch_move_to_month_cal(onoff, input_target_html){
-        let self = this;
+    toggle_touch_move(onoff, input_target_html){
         let ts;
         let tsy;
         let selector_body = $(input_target_html);
+        let x_threshold;
+        let y_threshold;
+        if(this.cal_type == "week"){
+            x_threshold = 50;
+            y_threshold = 100;
+        }else if(this.cal_type == "month"){
+            x_threshold = 50;
+            y_threshold = 200;
+        }
 
         switch(onoff){
             case "on":
-                    selector_body.off("touchstart").on("touchstart", function(e){
+                    selector_body.off("touchstart").on("touchstart", (e) => {
                         ts = e.originalEvent.touches[0].clientX;
                         tsy = e.originalEvent.touches[0].clientY;
                     });
+
                 
                   
-                    selector_body.off("touchend").on("touchend", function(e){
+                    selector_body.off("touchend").on("touchend", (e) => {
                         let te = e.originalEvent.changedTouches[0].clientX;
                         let tey = e.originalEvent.changedTouches[0].clientY;
-                        if(Math.abs(tsy - tey) < 200){
-                           if(ts>te+50){
-                                self.move_month("next");
-                            }else if(ts<te-20){
-                                self.move_month("prev");
+                        if(Math.abs(tsy - tey) < y_threshold){
+                           if(ts>te+x_threshold){
+                                if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
+                            }else if(ts<te-x_threshold){
+                                if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
                             }
                         }
                     });
@@ -369,7 +540,6 @@ class Calendar {
     }
 
     append_child(target, type, page_num){
-        let self = this;
         let el = document.createElement(type);
         el.id = `page${page_num}`;
         el.style.transform = 'translateX(100%)';
@@ -378,19 +548,20 @@ class Calendar {
     
         let el_prev = document.getElementById(`page${page_num-1}`);
         
-        self.toggle_touch_move_to_month_cal('off', '#calendar_wrap');
-        setTimeout(function(){
+        this.toggle_touch_move('off', '#calendar_wrap');
+        setTimeout(() => {
             el.style.transform = 'translateX(0)';
             el_prev.style.transform = 'translateX(-100%)';
-            setTimeout(function(){
-                el_prev.parentNode.removeChild(el_prev);
-                self.toggle_touch_move_to_month_cal('on', '#calendar_wrap');
+            setTimeout(() => {
+                this.toggle_touch_move('on', '#calendar_wrap');
             },100)
+            setTimeout(() => {
+                el_prev.parentNode.removeChild(el_prev);
+            }, 200)
         }, 0)
     }
     
     prepend_child(target, type, page_num){
-        let self = this;
         let el = document.createElement(type);
         el.id = `page${page_num}`;
         el.style.transform = 'translateX(-100%)';
@@ -400,14 +571,16 @@ class Calendar {
     
         let el_prev = document.getElementById(`page${page_num+1}`);
         
-        self.toggle_touch_move_to_month_cal('off', '#calendar_wrap');
-        setTimeout(function(){
+        this.toggle_touch_move('off', '#calendar_wrap');
+        setTimeout(() => {
             el.style.transform = 'translateX(0)';
             el_prev.style.transform = 'translateX(100%)';
-            setTimeout(function(){
-                el_prev.parentNode.removeChild(el_prev);
-                self.toggle_touch_move_to_month_cal('on', '#calendar_wrap');
+            setTimeout(() => {
+                this.toggle_touch_move('on', '#calendar_wrap');
             },100)
+            setTimeout(() => {
+                el_prev.parentNode.removeChild(el_prev);
+            }, 200)
         }, 0)
     }
 
@@ -449,6 +622,37 @@ function date_format(date){
             "yyyy/mm/dd":`${yyyy}/${mm}/${dd}`,
             "yyyy/m/d":`${yyyy}/${m}/${d}`
     };
+}
+
+function time_form(_time1){
+    let time1 = _time1.split(':');
+
+    let hh1 = Number(time1[0]);
+    let mm1 = Number(time1[1]);
+
+    return {hour: hh1, minute: mm1};
+}
+
+function time_diff(_time1, _time2){
+    // _time2는 항상 _time1보다 뒤의 시간이어야 한다.
+
+    let time1 = _time1.split(':');
+    let time2 = _time2.split(':');
+
+    let hh1 = Number(time1[0]);
+    let mm1 = Number(time1[1]);
+    let hh2 = Number(time2[0]);
+    let mm2 = Number(time2[1]);
+
+    let hh_diff = hh2 - hh1;
+    let mm_diff = mm2 - mm1;
+
+    if(mm_diff < 0){
+        hh_diff = hh_diff - 1;
+        mm_diff = mm_diff + 60; 
+    }
+
+    return {hour: hh_diff, minute: mm_diff};
 }
 
 
