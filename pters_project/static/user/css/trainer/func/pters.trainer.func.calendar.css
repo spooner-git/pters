@@ -3,6 +3,10 @@
 	height: 102px;
 	text-align: center;
 }
+	.cal_upper_box{
+		height: 67px;
+		line-height: 67px;
+	}
 	.display_year{
 		font-size: 20px;
 		margin-right: 10px;
@@ -12,6 +16,9 @@
 		line-height: 40px;
 		font-weight: bold;
 		color: #fe4e65;
+	}
+	.display_week{
+		font-size: 18px;
 	}
 .pages{
 	position: absolute;

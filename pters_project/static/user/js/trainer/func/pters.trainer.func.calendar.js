@@ -19,8 +19,6 @@ class Calendar {
         this.current_week = Math.ceil( (this.current_date + new Date(this.current_year, this.current_month, 1).getDay() )/7 ) - 1;
 
         this.worktime = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
-        console.log("this.current_week", this.current_week)
-        // this.init();
     }
 
     init(cal_type){
@@ -78,7 +76,6 @@ class Calendar {
         return {
             "year":this.current_year, "month":this.current_month, "week":this.current_week
         }
-        
     }
 
     get_prev_week(){
@@ -93,11 +90,14 @@ class Calendar {
         let prev_month = month - 1 < 1 ? 12 : month-1;
 
         week = week - 1;
-        if(week - 1 < -1){
+        if(week == -1 && first_day == 0){
             week = Math.ceil( ( new Date(prev_month == 12 ? prev_year: year, prev_month-1, 1).getDay() + new Date(prev_month == 12 ? prev_year: year, prev_month, 0).getDate()  )/7 - 1  )
             month = month - 1 < 1 ? 12  : month - 1;
-            year = month == 12 ? year - 1 : year;
-                   
+            year = month == 12 ? year - 1 : year;   
+        }else if(week == -1 && first_day !=0){
+            week = Math.ceil( ( new Date(prev_month == 12 ? prev_year: year, prev_month-1, 1).getDay() + new Date(prev_month == 12 ? prev_year: year, prev_month, 0).getDate()  )/7 - 2  )
+            month = month - 1 < 1 ? 12  : month - 1;
+            year = month == 12 ? year - 1 : year;      
         }
 
         return {
@@ -117,13 +117,18 @@ class Calendar {
         let next_month = month + 1 > 12 ? 1 : month + 1;
 
         week = week + 1;
-        if(week + 1 > week_num_this_month){
+        if(week  == week_num_this_month && new Date(year, month, 0).getDay() != 6 ){
+            week = 1;
+            month = month + 1 > 12 ? 1  : month + 1;
+            year = month ==  1 ? year + 1 : year;
+
+        }else if(week == week_num_this_month){
             week = 0;
             month = month + 1 > 12 ? 1  : month + 1;
             year = month ==  1 ? year + 1 : year;
-                   
-        }
 
+        }
+        
         return {
             "year":year, "month":month, "week":week
         }
@@ -208,7 +213,6 @@ class Calendar {
                 this.current_year = prev.year;
                 this.current_month = prev.month;
                 this.current_week = prev.week;
-                console.log(prev)
                 
 
                 /*페이지 삽입*/
@@ -282,6 +286,7 @@ class Calendar {
         let dates_of_this_week = [];
         let color_of_this_week = [];
         let date_cache = 1;
+        let month_cache;
         let finished = false;
         for(let i=0; i<=week; i++){
             let yearCellsToJoin = [];
@@ -291,16 +296,17 @@ class Calendar {
             for(let j=0; j<7; j++){
                 if(i==0 && j<firstday_this_month){ //첫번째 주일때 처리
                     yearCellsToJoin.unshift(Number(month)-1 > 0 ? Number(year) : Number(year) - 1);
-                    monthCellsToJoin.unshift(Number(month)-1);
+                    monthCellsToJoin.unshift(Number(month)-1 < 1 ? 12 : Number(month)-1);
                     dateCellsToJoin.unshift(lastday_prev_month-j);
                     dateColorClass.unshift('cal_font_color_grey');
-                }else if(date_cache > lastday_this_month){ // 마지막 날짜가 끝난 이후 처리
+                }else if(date_cache > lastday_this_month || month_cache == month + 1){ // 마지막 날짜가 끝난 이후 처리
                     if(date_cache == lastday_this_month+1){
                         date_cache = 1;
+                        month_cache = month + 1
                         finished = true;
                     }
                     yearCellsToJoin.push(Number(month)+1 > 12 ? Number(year)+1 : year);
-                    monthCellsToJoin.push(Number(month)+1);
+                    monthCellsToJoin.push(Number(month)+1 > 12? 1 : Number(month)+1);
                     dateCellsToJoin.push(date_cache);
                     dateColorClass.push('cal_font_color_grey');
                     date_cache++
@@ -308,7 +314,7 @@ class Calendar {
                     yearCellsToJoin.push(Number(year));
                     monthCellsToJoin.push(Number(month));
                     dateCellsToJoin.push(date_cache);
-                    dateColorClass.push( finished == true ? 'cal_font_color_grey' : 'cal_font_color_black');
+                    dateColorClass.push( 'cal_font_color_black');
                     date_cache++;
                 }
             }
@@ -415,9 +421,6 @@ class Calendar {
         }else{
             schedules = [];
         }
-
-        console.log('schedules', schedules)
-
         
         let week_html_template = `
                                 <div class="week_row">
@@ -458,7 +461,6 @@ class Calendar {
                     console.log("에러:" + jsondata.messageArray);
                 }else{
                     callback(jsondata, date_);
-                    console.log(jsondata)
                     return jsondata;
                 }
 
@@ -478,15 +480,28 @@ class Calendar {
     static_component(){
         return(
             {
-                "month_cal_upper_box":` <div onclick="${this.instance}.switch_cal_type()"><span class="display_year">${this.current_year}</span><span class="display_month">${this.current_month}</span><img src="/static/common/icon/icon_swap.png"></div>
-                                        <div><button onclick="${this.instance}.move_month('prev')">이전</button><button onclick="${this.instance}.move_month('next')">다음</button></div>
+                "month_cal_upper_box":` <div class="cal_upper_box">
+                                            <button onclick="${this.instance}.move_month('prev')">이전</button>
+                                            <div style="display:inline-block" onclick="${this.instance}.switch_cal_type()">
+                                                <span class="display_year">${this.current_year}</span>
+                                                <span class="display_month">${this.current_month}</span>
+                                                <img src="/static/common/icon/icon_swap.png">
+                                            </div>
+                                            <button onclick="${this.instance}.move_month('next')">다음</button>
+                                        </div>
                                         <div class="cal_week_line_dates">
                                             <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
                                         </div>`
                 ,
                 "week_cal_upper_box":`
-                                        <div onclick="${this.instance}.switch_cal_type()"><span class="display_year">${this.current_year}</span><span class="display_month">${this.current_month}</span><img src="/static/common/icon/icon_swap.png"></div>
-                                        <div><button onclick="${this.instance}.move_week('prev')">이전</button><button onclick="${this.instance}.move_week('next')">다음</button></div>
+                                        <div class="cal_upper_box">
+                                            <button onclick="${this.instance}.move_week('prev')">이전</button>
+                                            <div style="display:inline-block" onclick="${this.instance}.switch_cal_type()">
+                                                <span class="display_week">${this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0]}월 ${this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0]}일 - ${this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]}월 ${this.get_week_dates(this.current_year, this.current_month, this.current_week).date[6]}일</span>
+                                                <img src="/static/common/icon/icon_swap.png">
+                                            </div>
+                                            <button onclick="${this.instance}.move_week('next')">다음</button>
+                                        </div>
                                         <div class="cal_week_line_dates">
                                             <div class="week_cal_time_text"></div><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
                                         </div>`
