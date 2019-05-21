@@ -5931,7 +5931,7 @@ def attend_check_logic(request):
             except ObjectDoesNotExist:
                 lecture_id = func_get_group_lecture_id(schedule_info.group_tb_id, member_id)
                 if lecture_id is None or lecture_id == '':
-                    error = '예약 가능한 횟수가 없습니다.'
+                    error = '예약 가능한 횟수가 없습니다. 수강권을 확인해주세요.'
                 else:
                     try:
                         LectureTb.objects.get(lecture_id=lecture_id)
@@ -5943,6 +5943,8 @@ def attend_check_logic(request):
             if error is None:
                 if schedule_info.lecture_tb.member_id != member_id:
                     error = '번호와 수업이 일치하지 않습니다.'
+    else:
+        error = '휴대폰 번호를 확인해주세요.'
 
     if error is None:
 
