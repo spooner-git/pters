@@ -460,13 +460,30 @@
 
         </div>
     </div>
-
+    <div id="trainerAutoCompleteSettingText" class="settingMenu wrap800" style="border-bottom: 1px solid #eaeaea;">
+        <span class="settingText">일정 자동 완료</span>
+        <p class="settingText2">출석하지 않고 수업 시간이 지났을 때 아래와 같이 처리 됩니다.</p>
+    </div>
+    <div id="memberAvailDateSetting" class="settingBox wrap800">
+        <div class="iconText" style="width: 100%;">
+            <img src="/static/user/res/icon-start.png" alt="" class="icons"><span>설정</span>
+            <div id="dateSelect" class="dropdown" style="max-width:230px;">
+                <select id="select_schedule_auto_finish" style="height:35px;width:100%;" onchange="document.querySelector('#id_setting_schedule_auto_finish').value = this.value; check_dropdown_selected();">
+                    <option value="0">아무것도 하지 않음</option>
+                    <option value="1">출석 처리</option>
+                    <option value="2">결석 처리(횟수 차감됨)</option>
+                    <option value="3">취소 처리(횟수 차감 되지 않음)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <!--
     <div id="trainerAutoCompleteSettingText" class="settingMenu wrap800" style="border-bottom: 1px solid #eaeaea;">
         <span class="settingText">일정 자동 완료</span>
         <p class="settingText2">일정 완료 사인을 하지 않고도,<br> 시간이 지나면 자동으로 완료처리가 됩니다.</p>
         <div id="switch_autocomplete" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
     </div>
-
+     -->
     <div id="traineeAutoFinishSettingText" class="settingMenu wrap800" style="border-bottom: 1px solid #eaeaea;">
         <span class="settingText">수강정보 자동 완료</span>
         <p class="settingText2">회원등록시 입력한 종료일이 지나면<br> 자동으로 종료 처리가 됩니다.</p>
@@ -521,6 +538,7 @@
         $('#id_setting_member_reserve_time_prohibition').val(Options.limit);
         $('#id_setting_member_cancel_time_prohibition').val(Options.cancellimit);
         $('#id_setting_member_reserve_prohibition').val(Options.reserve);
+        document.getElementById("select_schedule_auto_finish").value = Options.autocomplete;
         $('#id_setting_schedule_auto_finish').val(Options.autocomplete);
         $('#id_setting_lecture_auto_finish').val(Options.lecture_autocomplete);
 

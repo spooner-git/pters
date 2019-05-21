@@ -266,7 +266,7 @@
                 <div><button onclick="location.href='/trainer/attend_mode/'" id="button_back" class="fts_16">뒤로</button></div>
         </section>
 
-        <form action="{% url 'trainer:attend_finish' %}" id="form_attend_data" method="post">
+        <form action="{% url 'trainer:attend_mode_finish' %}" id="form_attend_data" method="post">
             <div style="display:none;">{% csrf_token %}
             <input type="hidden" name="member_id" value="{{ member_id }}">
             <input type="hidden" name="schedule_id" value="{{ schedule_id }}">

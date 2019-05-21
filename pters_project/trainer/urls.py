@@ -220,8 +220,10 @@ urlpatterns = [
     url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(), name='get_notice_info_ajax'),
 
     # Attend Mode 기능 ###############################################################################################
-    url(r'^attend_check/$', views.attend_check_logic, name='attend_check'),
-    url(r'^attend_finish/$', views.attend_finish_logic, name='attend_finish'),
+    url(r'^attend_mode_check/$', views.attend_mode_check_logic, name='attend_mode_check'),
+    url(r'^attend_mode_finish/$', views.attend_mode_finish_logic, name='attend_mode_finish'),
+    # 일반 설정 관련 Setting 수정
+    url(r'^update_attend_mode_setting/$', views.update_attend_mode_setting_logic, name='update_setting_basic'),
 
     # 페이지 #####################################################################################################
     # 강사 메인 페이지

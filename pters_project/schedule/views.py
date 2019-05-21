@@ -23,7 +23,7 @@ from django.core.files.base import ContentFile
 # Create your views here.
 from configs import settings
 from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, TO_TRAINEE_LESSON_ALARM_ON, \
-    TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, SCHEDULE_DUPLICATION_ENABLE
+    TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, SCHEDULE_DUPLICATION_ENABLE, AUTO_ABSENCE_ON
 
 from login.models import LogTb, MemberTb
 from trainer.functions import func_get_end_package_member_list, func_get_ing_package_member_list
@@ -155,8 +155,11 @@ def add_schedule_logic(request):
                 if error is None:
                     state_cd = 'NP'
                     permission_state_cd = 'AP'
-                    if setting_schedule_auto_finish == AUTO_FINISH_ON and timezone.now() > schedule_end_datetime:
-                        state_cd = 'PE'
+                    if timezone.now() > schedule_end_datetime:
+                        if setting_schedule_auto_finish == AUTO_FINISH_ON:
+                            state_cd = 'PE'
+                        elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
+                            state_cd = 'PC'
                     schedule_result = func_add_schedule(class_id, lecture_id, None, None, None, schedule_start_datetime,
                                                         schedule_end_datetime, note, en_dis_type, request.user.id,
                                                         permission_state_cd,
@@ -1290,8 +1293,11 @@ def add_group_schedule_logic(request):
                 if error is None:
                     state_cd = 'NP'
                     permission_state_cd = 'AP'
-                    if setting_schedule_auto_finish == AUTO_FINISH_ON and timezone.now() > schedule_end_datetime:
-                        state_cd = 'PE'
+                    if timezone.now() > schedule_end_datetime:
+                        if setting_schedule_auto_finish == AUTO_FINISH_ON:
+                            state_cd = 'PE'
+                        elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
+                            state_cd = 'PC'
                     schedule_result = func_add_schedule(class_id, None, None,
                                                         group_id, None,
                                                         schedule_start_datetime, schedule_end_datetime,
@@ -1357,9 +1363,11 @@ def add_group_schedule_logic(request):
 
                                 state_cd = 'NP'
                                 permission_state_cd = 'AP'
-                                if setting_schedule_auto_finish == AUTO_FINISH_ON\
-                                        and timezone.now() > schedule_end_datetime:
-                                    state_cd = 'PE'
+                                if timezone.now() > schedule_end_datetime:
+                                    if setting_schedule_auto_finish == AUTO_FINISH_ON:
+                                        state_cd = 'PE'
+                                    elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
+                                        state_cd = 'PC'
                                 schedule_result = func_add_schedule(class_id, lecture_id, None,
                                                                     group_id, group_schedule_id,
                                                                     schedule_start_datetime, schedule_end_datetime,
@@ -1909,9 +1917,12 @@ def add_member_group_schedule_logic(request):
 
                     state_cd = schedule_info.state_cd
                     permission_state_cd = 'AP'
-                    if setting_schedule_auto_finish == AUTO_FINISH_ON \
-                            and timezone.now() > schedule_info.end_dt:
-                        state_cd = 'PE'
+
+                    if timezone.now() > schedule_info.end_dt:
+                        if setting_schedule_auto_finish == AUTO_FINISH_ON:
+                            state_cd = 'PE'
+                        elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
+                            state_cd = 'PC'
                     schedule_result = func_add_schedule(class_id, lecture_id, None,
                                                         group_id, group_schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,
@@ -2066,9 +2077,11 @@ def add_other_member_group_schedule_logic(request):
 
                     state_cd = schedule_info.state_cd
                     permission_state_cd = 'AP'
-                    if setting_schedule_auto_finish == AUTO_FINISH_ON \
-                            and timezone.now() > schedule_info.end_dt:
-                        state_cd = 'PE'
+                    if timezone.now() > schedule_info.end_dt:
+                        if setting_schedule_auto_finish == AUTO_FINISH_ON:
+                            state_cd = 'PE'
+                        elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
+                            state_cd = 'PC'
                     schedule_result = func_add_schedule(class_id, lecture_id, None,
                                                         group_id, group_schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,
