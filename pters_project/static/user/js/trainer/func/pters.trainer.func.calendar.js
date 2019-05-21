@@ -18,7 +18,7 @@ class Calendar {
         this.current_date = d.getDate();
         this.current_week = Math.ceil( (this.current_date + new Date(this.current_year, this.current_month, 1).getDay() )/7 ) - 1;
 
-        this.worktime = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+        this.worktime = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
     }
 
     init(cal_type){
@@ -377,7 +377,7 @@ class Calendar {
             </div>`
             :
             `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:0;background-color:#ffffff;z-index:10` : ""}">
-                ${month_or_week == "week" ? `<div class="week_cal_time_text">시간</div>` : ""}
+                ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
                 <div class=${_color[0]} onClick="${onclick_func}(${_year[0]}, ${_month[0]}, ${_date[0]})">${_date[0]}<div class="calendar_schedule_display_month ${schedule_num[0]!=0?"has_schedule":""}">${schedule_num[0]!=0?schedule_num[0]:""}</div></div>
                 <div class=${_color[1]} onClick="${onclick_func}(${_year[1]}, ${_month[1]}, ${_date[1]})">${_date[1]}<div class="calendar_schedule_display_month ${schedule_num[1]!=0?"has_schedule":""}">${schedule_num[1]!=0?schedule_num[1]:""}</div></div>
                 <div class=${_color[2]} onClick="${onclick_func}(${_year[2]}, ${_month[2]}, ${_date[2]})">${_date[2]}<div class="calendar_schedule_display_month ${schedule_num[2]!=0?"has_schedule":""}">${schedule_num[2]!=0?schedule_num[2]:""}</div></div>
@@ -411,7 +411,7 @@ class Calendar {
                                 let diff = time_diff(plan.start, plan.end);
                                 let tform_s = time_form(plan.start);
                                 let styles = `height:${diff.hour*40+diff.minute/60}px;top:${tform_s.hour*40 + tform_s.minute/60}px`;
-                                return `<div onclick="alert('${date_to_search} ${plan.start}~${plan.end}')" class="calendar_schedule_display_week" style="${styles}"></div>`;
+                                return `<div onclick="event.stopPropagation();alert('${date_to_search} ${plan.start}~${plan.end}')" class="calendar_schedule_display_week" style="${styles}"></div>`;
                              })
                     );
                 }else{
@@ -421,17 +421,17 @@ class Calendar {
         }else{
             schedules = [];
         }
-        
+        console.log(_year, _month, _date)
         let week_html_template = `
                                 <div class="week_row">
                                     <div>${ (this.worktime.map( (t) => { return `<article>${t}:00</article>` } )).join('') }</div>
-                                    <div>${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
-                                    <div>${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
-                                    <div>${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
-                                    <div>${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
-                                    <div>${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
-                                    <div>${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
-                                    <div>${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
+                                    <div onclick="console.log(event.offsetY/40, ${_year[0]},${_month[0]},${_date[0]})">${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
+                                    <div onclick="console.log(event.offsetY/40, ${_year[1]},${_month[1]},${_date[1]})">${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
+                                    <div onclick="console.log(event.offsetY/40, ${_year[2]},${_month[2]},${_date[2]})">${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
+                                    <div onclick="console.log(event.offsetY/40, ${_year[3]},${_month[3]},${_date[3]})">${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
+                                    <div onclick="console.log(event.offsetY/40, ${_year[4]},${_month[4]},${_date[4]})">${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
+                                    <div onclick="console.log(event.offsetY/40, ${_year[5]},${_month[5]},${_date[5]})">${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
+                                    <div onclick="console.log(event.offsetY/40, ${_year[6]},${_month[6]},${_date[6]})">${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
                                 </div>
                                 `;
         return week_html_template;
