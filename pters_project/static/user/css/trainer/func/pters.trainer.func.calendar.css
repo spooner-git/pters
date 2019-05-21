@@ -1,5 +1,6 @@
 #cal_display_panel{
-	height: 125px;
+	position: absolute;
+	height: 102px;
 	text-align: center;
 }
 	.display_year{
@@ -14,10 +15,10 @@
 	}
 .pages{
 	position: absolute;
-	top: 125px;
+	top: 102px;
+	width: 100%;
 	transition: 0.2s ease-in-out;
 	background-color: #ffffff;
-	/* transition-timing-function: ease; */
 }
 
 
@@ -35,6 +36,20 @@
 	display: table-cell;
 	width: 14.285%;
 	padding: 0px 10px;
+}
+.cal_week_line_dates{
+	display: table;
+	width: 100%;
+	text-align: center;
+	height: 35px;
+	line-height: 35px;
+	/* border-bottom: 1px solid #cccccc; */
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+.cal_week_line_dates > div{
+	display: table-cell;
+	width: 14.285%;
 }
 
 

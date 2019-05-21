@@ -2,6 +2,9 @@
 
 class Calendar {
     constructor(targetHTML, instance){
+        this.window_height = window.innerHeight;
+        this.pages_height = this.window_height - 102-45;
+
         this.targetHTML = targetHTML;
         this.subtargetHTML = 'calendar_wrap';
         this.instance = instance;
@@ -247,6 +250,7 @@ class Calendar {
         let component = this.static_component();
         document.getElementById(`page${page}`).innerHTML = weeks_div.join('');
         document.getElementById('cal_display_panel').innerHTML = component.month_cal_upper_box;
+        func_set_webkit_overflow_scrolling(`#page${page}`);
     }
 
     render_week_cal(page ,year, month, week, schedule_data){ //주간 달력 렌더링 (연, 월, 몇번째 주)
@@ -255,6 +259,7 @@ class Calendar {
         
         document.getElementById(`page${page}`).innerHTML = data;
         document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box;
+        func_set_webkit_overflow_scrolling(`#page${page}`);
     }
 
     get_week_dates(year, month, week){
@@ -475,14 +480,14 @@ class Calendar {
             {
                 "month_cal_upper_box":` <div onclick="${this.instance}.switch_cal_type()"><span class="display_year">${this.current_year}</span><span class="display_month">${this.current_month}</span><img src="/static/common/icon/icon_swap.png"></div>
                                         <div><button onclick="${this.instance}.move_month('prev')">이전</button><button onclick="${this.instance}.move_month('next')">다음</button></div>
-                                        <div class="cal_week_line">
+                                        <div class="cal_week_line_dates">
                                             <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
                                         </div>`
                 ,
                 "week_cal_upper_box":`
                                         <div onclick="${this.instance}.switch_cal_type()"><span class="display_year">${this.current_year}</span><span class="display_month">${this.current_month}</span><img src="/static/common/icon/icon_swap.png"></div>
                                         <div><button onclick="${this.instance}.move_week('prev')">이전</button><button onclick="${this.instance}.move_week('next')">다음</button></div>
-                                        <div class="cal_week_line">
+                                        <div class="cal_week_line_dates">
                                             <div class="week_cal_time_text"></div><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
                                         </div>`
                                         
@@ -492,22 +497,27 @@ class Calendar {
                                   </div>
                                   `
                 ,
-                "initial_page":`<div id="${this.subtargetHTML}"><div id="cal_display_panel"><span></span></div><div id="page${this.current_page_num}" class="pages"></div></div>`
+                "initial_page":`<div id="${this.subtargetHTML}"><div id="cal_display_panel"><span></span></div><div id="page${this.current_page_num}" class="pages" style="left:0px;"></div></div>`
             }
         )
     }
 
+
     toggle_touch_move(onoff, input_target_html){
         let ts;
         let tsy;
+        let tm;
+        let tmy;
         let selector_body = $(input_target_html);
         let x_threshold;
         let y_threshold;
+        let swiper_x = false;
+        let root_content = document.getElementById(`root_content`);
         if(this.cal_type == "week"){
-            x_threshold = 50;
-            y_threshold = 100;
+            x_threshold = 20;
+            y_threshold = 200;
         }else if(this.cal_type == "month"){
-            x_threshold = 50;
+            x_threshold = 20;
             y_threshold = 200;
         }
 
@@ -518,23 +528,47 @@ class Calendar {
                         tsy = e.originalEvent.touches[0].clientY;
                     });
 
-                
-                  
+                    selector_body.off('touchmove').on('touchmove', (e) => {
+                        tm = e.originalEvent.touches[0].clientX;
+                        tmy = e.originalEvent.touches[0].clientY;
+                     
+                        // if( Math.abs(ts - tm) > x_threshold && Math.abs(ts - tm) > Math.abs(tsy - tmy)  ){
+                        if( Math.abs(ts - tm) > Math.abs(tsy - tmy) && swiper_x == false ){
+                            $('#root_content').on('touchmove', (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                return false;
+                            })
+                            // root_content.style.overflowY = 'hidden';
+                            swiper_x = true;
+                        }
+                    })
+
                     selector_body.off("touchend").on("touchend", (e) => {
+
+                        if(swiper_x == true){
+                            // root_content.style.overflowY = 'scroll';
+                            $('#root_content').off('touchmove');
+                            swiper_x = false;
+                        }
+                        
+
                         let te = e.originalEvent.changedTouches[0].clientX;
                         let tey = e.originalEvent.changedTouches[0].clientY;
-                        if(Math.abs(tsy - tey) < y_threshold){
+                        // if(Math.abs(tsy - tey) < y_threshold){
+                        if( Math.abs(ts - te) > Math.abs(tsy - tey)){
                            if(ts>te+x_threshold){
                                 if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
                             }else if(ts<te-x_threshold){
                                 if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
                             }
                         }
+                        return true;
                     });
             break;
 
             case "off":
-                    selector_body.off("touchstart").off("touchend");
+                    selector_body.off("touchstart").off("touchend").off('touchmove');
             break;
         }
     }
@@ -654,9 +688,6 @@ function time_diff(_time1, _time2){
 
     return {hour: hh_diff, minute: mm_diff};
 }
-
-
-
 
 
 

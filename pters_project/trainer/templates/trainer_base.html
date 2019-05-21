@@ -71,12 +71,12 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate3D(-50%, -50%, 0);
             max-width: 800px;
             width: 100%;
-            overflow: auto;
+            overflow-y: auto;
+            overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
-            /* overscroll-behavior-y: contain; */
             z-index: 0;
             background-color: #f7f5f6;
             height: 100%;
@@ -85,14 +85,27 @@
             position: fixed;
             width: 100%;
             max-width: 800px;
-            height: 60px;
-            background-color: #ffffff;
+            height: 45px;
+            background-color: #e8e8e8;
             left: 50%;
             transform: translateX(-50%);
             bottom: 0;
             text-align: center;
             transition: 0.2s;
         }
+            .nav_img{
+                height: 30px;
+                line-height: 30px;
+            }
+                .nav_img>img{
+                    height: 25px;
+                    vertical-align: middle;
+                }
+            .nav_text{
+                height: 15px;
+                line-height: 15px;
+                font-size:11px;
+            }
         .ajax_loading_image{
             display: none;
             position: fixed;
@@ -111,6 +124,7 @@
 
 {% block navbar %}
 {% endblock %}
+<div id="debug_toolbar" style="position:fixed;top:0;font-size:13px;background-color:#1e1e1e85;color:#ffffff;width:100%;left:0;z-index:1500" hidden></div>
 
 <div id="shade_for_popup_basic" style="position:fixed;top:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
 onclick="layer_popup.all_close_layer_popup();"></div>
@@ -125,27 +139,27 @@ onclick="layer_popup.all_close_layer_popup();"></div>
 </div>
 
 <nav id="root_nav">
-    <div class="obj_table_raw" style="height:60px;">
+    <div class="obj_table_raw" style="height:100%;">
         <!-- <div class="obj_table_cell_x5" onclick="sideGoPage('trainer_main')"> -->
-        <div class="obj_table_cell_x5" onclick="location.href='/trainer/trainer_main/' ">
-            <div><img src="/static/common/icon/icon_home.png" alt=""></div>
-            <!-- <div>홈</div> -->
+        <div class="obj_table_cell_x5 nav_item" onclick="location.href='/trainer/trainer_main/' ">
+            <div class="nav_img"><img src="/static/common/icon/icon_home.png" alt=""></div>
+            <div class="nav_text">홈</div>
         </div>
-        <div class="obj_table_cell_x5" onclick="sideGoPage('calendar')">
-            <div><img src="/static/common/icon/icon_cal.png" alt=""></div>
-            <!-- <div>일정</div> -->
+        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('calendar', this)">
+            <div class="nav_img"><img src="/static/common/icon/icon_cal.png" alt=""></div>
+            <div class="nav_text">일정</div>
         </div>
-        <div class="obj_table_cell_x5" onclick="sideGoPage('lecture')">
-            <div><img src="/static/common/icon/icon_lecture.png" alt=""></div>
-            <!-- <div>수업</div> -->
+        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('lecture', this)">
+            <div class="nav_img"><img src="/static/common/icon/icon_lecture.png" alt=""></div>
+            <div class="nav_text">수업</div>
         </div>
-        <div class="obj_table_cell_x5" onclick="sideGoPage('member')">
-            <div><img src="/static/common/icon/icon_member.png" alt=""></div>
-            <!-- <div>회원</div> -->
+        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('member', this)">
+            <div class="nav_img"><img src="/static/common/icon/icon_member.png" alt=""></div>
+            <div class="nav_text">회원</div>
         </div>
-        <div class="obj_table_cell_x5" onclick="sideGoPage('setting')">
-            <div><img src="/static/common/icon/icon_more.png" alt=""></div>
-            <!-- <div>더보기</div> -->
+        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('setting', this)">
+            <div class="nav_img"><img src="/static/common/icon/icon_more.png" alt=""></div>
+            <div class="nav_text">더보기</div>
         </div>
     </div>
 </nav>
@@ -278,13 +292,18 @@ onclick="layer_popup.all_close_layer_popup();"></div>
     var member = new Member('#root_content', 'member');
     var setting = new Setting('#root_content', 'setting');
 
-    function sideGoPage(page){
+    function sideGoPage(page, context){
+        Array.from(document.getElementsByClassName('nav_item')).forEach( (element) => {
+            element.style.background = 'unset';
+        })
+        context.style.background = 'linear-gradient(to left,#e664657d, #9198e57a)';
+        
         switch(page){
             case 'home':
                 $root_content.html('<div>main 페이지</div>');
             break;
             case 'calendar':
-                calendar.init("month");
+                calendar.init("week");
             break;
             case 'lecture':
                 lecture.init();
@@ -296,12 +315,8 @@ onclick="layer_popup.all_close_layer_popup();"></div>
                 setting.init();
             break;
         }
-
-
+        $root_content.scrollTop(1);
     }
-
-    
-
 
 </script>
 

@@ -13,9 +13,10 @@ function dynamic_added_script_exe(script_url, callback){
 
 function func_set_webkit_overflow_scrolling(target_selector){
     if(os == IOS){
+        console.log('webkit_overflow_scrolling');
             let $selector = $(target_selector);
             $selector.scrollTop(1);
-            $selector.scroll(function(e){
+            $selector.off('scroll').scroll(function(e){
                 const popupHeight = $selector.height();
                 const scrollHeight = $selector.prop('scrollHeight');
                 const scrollLocation = $selector.scrollTop();
@@ -30,3 +31,4 @@ function func_set_webkit_overflow_scrolling(target_selector){
             });
         }
 }
+
