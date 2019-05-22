@@ -230,7 +230,7 @@
                     {% if not pt_schedule_info.group_tb %}
                         <div id="wrapper_lesson_now_info_name" data-id="{{ pt_schedule_info.schedule_id }}" onclick="lesson_select(this)">
                             <p style="margin:0;" class="fts_16">현재 진행중인 수업</p>
-                            <p class="fts_22 ftw_bd">(개인) 1:1 레슨 - {{ pt_schedule_info.lecture_tb.member.name }}</p>
+                            <p class="fts_22 ftw_bd">(개인) 1:1 레슨 - {{ pt_schedule_info.lecture_tb.member.name }} 회원님</p>
                             <p class="fts_20">{{ pt_schedule_info.start_dt | time:'H:i' }} ~ {{ pt_schedule_info.end_dt | time:'H:i' }}</p>
                         </div>
                     {% endif %}
