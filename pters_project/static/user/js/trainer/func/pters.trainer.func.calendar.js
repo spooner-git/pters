@@ -707,20 +707,8 @@ function time_diff(_time1, _time2){
 }
 
 
-
-// 중복일정 새로운 알고리즘 고안
-function consider_duplicated_plan(whole){
-    let data = [...whole];
-    let result = duplicated_plans(data);
-    return result;
-}
-
-
-
-
-
 // 중복일정 관련 함수
-
+// 중복일정 관련 함수
 function clear_duplicated_time(jsondata){
     //중복 제거 (그룹 일정때문에 중복으로 들어오는 것들)
     // var all_start_date_time = jsondata.group_schedule_start_datetime.concat(jsondata.offTimeArray_start_date);
@@ -820,7 +808,6 @@ function clear_duplicated_time(jsondata){
     return {"clear_start_array":resultStart_Array, "clear_end_array":resultEnd_Array};
 }
 
-
 function know_whether_plans_has_duplicates(starttime, endtime, starttime_compare, endtime_compare){
     if( compare_time(starttime_compare, starttime) && compare_time(endtime, endtime_compare)  ){  //비교대상 시간이 비교시간안에 쏙 들어갈때
         return 1;
@@ -877,9 +864,6 @@ function array_element_count(array, wanted){
     return counts[wanted];
 }
 
-
-
-// 중복일정 관련 함수
 function duplicated_plans(jsondata){
     // 1:1 일정 / 그룹 일정 / OFF 일정 합치기
     // var testArray_start = jsondata.group_schedule_start_datetime.concat(jsondata.offTimeArray_start_date);
@@ -1062,7 +1046,8 @@ function duplicated_plans(jsondata){
 
     return result_data;
 }
-//중복일정 계산하기
+// 중복일정 관련 함수
+// 중복일정 관련 함수
 
 
 
