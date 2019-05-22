@@ -117,8 +117,6 @@
 
 .calendar_schedule_display_week{
 	position: absolute;
-	left: 0;
-	width: 100%;
 	background-color: #fe4e65;
 	border: 1px solid #ffffff;
 	box-sizing: border-box;
