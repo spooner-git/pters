@@ -224,6 +224,7 @@ urlpatterns = [
     url(r'^attend_mode_finish/$', views.attend_mode_finish_logic, name='attend_mode_finish'),
     # 일반 설정 관련 Setting 수정
     url(r'^update_attend_mode_setting/$', views.update_attend_mode_setting_logic, name='update_setting_basic'),
+    url(r'^check_admin_password/$', views.check_admin_password_logic, name='check_admin_password'),
 
     # 페이지 #####################################################################################################
     # 강사 메인 페이지

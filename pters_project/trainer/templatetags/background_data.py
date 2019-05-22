@@ -110,6 +110,7 @@ def get_setting_info(request):
         request.session['setting_to_trainee_lesson_alarm'] = context['lt_pus_to_trainee_lesson_alarm']
         request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
         request.session['setting_language'] = context['lt_lan_01']
+        request.session['setting_admin_password'] = context['setting_admin_password']
 
         if context['lt_schedule_auto_finish'] == AUTO_FINISH_ON:
             not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, state_cd='NP',

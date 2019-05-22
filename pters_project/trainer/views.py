@@ -407,29 +407,39 @@ class AttendModeView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(AttendModeView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
+        setting_admin_password = '0000'
         setting_attend_class_prev_display_time = 0
         setting_attend_class_after_display_time = 0
         setting_schedule_auto_finish = 0
-        today = timezone.now()
+        current_time = timezone.now()
+        check_setting_counter = 0
         setting_data = SettingTb.objects.filter(member_id=self.request.user.id, class_tb_id=class_id, use=USE)
 
         for setting_info in setting_data:
+            if setting_info.setting_type_cd == 'LT_ADMIN_PASSWORD':
+                setting_admin_password = setting_info.setting_info
+                check_setting_counter += 1
             if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_PREV_DISPLAY_TIME':
                 setting_attend_class_prev_display_time = int(setting_info.setting_info)
+                check_setting_counter += 1
             if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_AFTER_DISPLAY_TIME':
                 setting_attend_class_after_display_time = int(setting_info.setting_info)
+                check_setting_counter += 1
             if setting_info.setting_type_cd == 'LT_SCHEDULE_AUTO_FINISH':
                 setting_schedule_auto_finish = int(setting_info.setting_info)
+                check_setting_counter += 1
 
-        start_date = today + datetime.timedelta(minutes=int(setting_attend_class_prev_display_time))
-        end_date = today - datetime.timedelta(minutes=int(setting_attend_class_after_display_time))
-        context = func_get_trainer_attend_schedule(context, class_id, start_date, end_date, today)
+        start_date = current_time + datetime.timedelta(minutes=int(setting_attend_class_prev_display_time))
+        end_date = current_time - datetime.timedelta(minutes=int(setting_attend_class_after_display_time))
+        context = func_get_trainer_attend_schedule(context, class_id, start_date, end_date, current_time)
 
+        context['setting_admin_password'] = setting_admin_password
         context['setting_attend_class_prev_display_time'] = setting_attend_class_prev_display_time
         context['setting_attend_class_after_display_time'] = setting_attend_class_after_display_time
         context['setting_schedule_auto_finish'] = setting_schedule_auto_finish
+        if check_setting_counter != 4:
+            context['check_setting_data'] = 1
 
-        # context['today'] = today
         return context
 
 
@@ -5380,6 +5390,7 @@ def update_setting_basic_logic(request):
     setting_trainer_work_sat_time_avail = request.POST.get('setting_trainer_work_sat_time_avail', '00:00-23:59')
     setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_lecture_auto_finish = request.POST.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
+    setting_admin_password = request.POST.get('setting_admin_password', '0000')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
 
@@ -5403,6 +5414,8 @@ def update_setting_basic_logic(request):
             setting_schedule_auto_finish = AUTO_FINISH_OFF
         if setting_lecture_auto_finish is None or setting_lecture_auto_finish == '':
             setting_lecture_auto_finish = AUTO_FINISH_OFF
+        if setting_admin_password is None or setting_admin_password == '':
+            setting_admin_password = '0000'
 
     if error is None:
         try:
@@ -5463,6 +5476,12 @@ def update_setting_basic_logic(request):
             lt_lecture_auto_finish = SettingTb(member_id=request.user.id,
                                                class_tb_id=class_id, setting_type_cd='LT_LECTURE_AUTO_FINISH',
                                                use=USE)
+        try:
+            admin_password = SettingTb.objects.get(member_id=request.user.id,
+                                                   class_tb_id=class_id, setting_type_cd='LT_ADMIN_PASSWORD')
+        except ObjectDoesNotExist:
+            admin_password = SettingTb(member_id=request.user.id,
+                                       class_tb_id=class_id, setting_type_cd='LT_ADMIN_PASSWORD', use=USE)
 
     if error is None:
         try:
@@ -5490,6 +5509,8 @@ def update_setting_basic_logic(request):
 
                 lt_lecture_auto_finish.setting_info = setting_lecture_auto_finish
                 lt_lecture_auto_finish.save()
+                admin_password.setting_info = setting_admin_password
+                admin_password.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -6036,8 +6057,9 @@ def attend_mode_finish_logic(request):
         return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 강사 기본 setting 업데이트 api
+# 강사 출석 기능 setting 업데이트 api
 def update_attend_mode_setting_logic(request):
+    setting_admin_password = request.POST.get('setting_admin_password', '0000')
     setting_attend_class_prev_display_time = request.POST.get('setting_attend_class_prev_display_time', '5')
     setting_attend_class_after_display_time = request.POST.get('setting_attend_class_after_display_time', '5')
     setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
@@ -6056,6 +6078,12 @@ def update_attend_mode_setting_logic(request):
 
     if error is None:
         try:
+            admin_password = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
+                                                   setting_type_cd='LT_ADMIN_PASSWORD')
+        except ObjectDoesNotExist:
+            admin_password = SettingTb(member_id=request.user.id, class_tb_id=class_id,
+                                       setting_type_cd='LT_ADMIN_PASSWORD', use=USE)
+        try:
             attend_class_prev_display_time = SettingTb.objects.get(member_id=request.user.id,
                                                                    class_tb_id=class_id,
                                                                    setting_type_cd='LT_ATTEND_CLASS_PREV_DISPLAY_TIME')
@@ -6072,24 +6100,23 @@ def update_attend_mode_setting_logic(request):
                                                         class_tb_id=class_id,
                                                         setting_type_cd='LT_ATTEND_CLASS_AFTER_DISPLAY_TIME', use=USE)
         try:
-            lt_schedule_auto_finish = SettingTb.objects.get(member_id=request.user.id,
-                                                            class_tb_id=class_id,
-                                                            setting_type_cd='LT_SCHEDULE_AUTO_FINISH')
+            schedule_auto_finish = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
+                                                         setting_type_cd='LT_SCHEDULE_AUTO_FINISH')
         except ObjectDoesNotExist:
-            lt_schedule_auto_finish = SettingTb(member_id=request.user.id,
-                                                class_tb_id=class_id, setting_type_cd='LT_SCHEDULE_AUTO_FINISH',
-                                                use=USE)
+            schedule_auto_finish = SettingTb(member_id=request.user.id,
+                                             class_tb_id=class_id, setting_type_cd='LT_SCHEDULE_AUTO_FINISH', use=USE)
 
     if error is None:
         try:
             with transaction.atomic():
-
+                admin_password.setting_info = setting_admin_password
+                admin_password.save()
                 attend_class_prev_display_time.setting_info = setting_attend_class_prev_display_time
                 attend_class_prev_display_time.save()
                 attend_class_after_display_time.setting_info = setting_attend_class_after_display_time
                 attend_class_after_display_time.save()
-                lt_schedule_auto_finish.setting_info = setting_schedule_auto_finish
-                lt_schedule_auto_finish.save()
+                schedule_auto_finish.setting_info = setting_schedule_auto_finish
+                schedule_auto_finish.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -6111,3 +6138,30 @@ def update_attend_mode_setting_logic(request):
         messages.error(request, error)
 
         return redirect(next_page)
+
+
+#
+def check_admin_password_logic(request):
+    setting_admin_password = request.POST.get('setting_admin_password', '')
+    class_id = request.session.get('class_id', '')
+
+    error = None
+
+    try:
+        admin_password = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
+                                               setting_type_cd='LT_ADMIN_PASSWORD').setting_info
+    except ObjectDoesNotExist:
+        admin_password = '0000'
+
+    if admin_password != setting_admin_password:
+        error = '관리자 비밀번호가 일치하지 않습니다.'
+
+    if error is None:
+
+        return render(request, 'ajax/trainer_error_ajax.html')
+    else:
+        logger.error(
+            request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+        return render(request, 'ajax/trainer_error_ajax.html')

@@ -157,7 +157,7 @@
             transform: translate(-50%, -50%);
             z-index: 1500;
             width: 90%;
-            max-width: 300px;
+            max-width: 380px;
             background-color: #ffffff;
             border: 1px solid #cccccc;
             padding: 20px;
@@ -230,7 +230,7 @@
                     {% if not pt_schedule_info.group_tb %}
                         <div id="wrapper_lesson_now_info_name" data-id="{{ pt_schedule_info.schedule_id }}" onclick="lesson_select(this)">
                             <p style="margin:0;" class="fts_16">현재 진행중인 수업</p>
-                            <p class="fts_22 ftw_bd">(개인) 1:1 레슨</p>
+                            <p class="fts_22 ftw_bd">(개인) 1:1 레슨 - {{ pt_schedule_info.lecture_tb.member.name }}</p>
                             <p class="fts_20">{{ pt_schedule_info.start_dt | time:'H:i' }} ~ {{ pt_schedule_info.end_dt | time:'H:i' }}</p>
                         </div>
                     {% endif %}
@@ -243,7 +243,7 @@
             <form action="{% url 'trainer:attend_mode_detail' %}" id="form_data_phone" method="post">
                 <div style="display:none;">{% csrf_token %}</div>
                 <p>등록된 전화번호</p>
-                <input type="tel" placeholder="숫자만 입력" name="phone_number" id="input_form_phone" autocomplete="off">
+                <input type="tel" placeholder="숫자만 입력" name="phone_number" id="input_form_phone" autocomplete="off" onkeyup="limit_char_only_number(this);">
                 <input type="hidden" name="schedule_id" id="input_form_lesson_id">
             </form>
         </section>
@@ -260,14 +260,14 @@
     </div>
 
     <div id="popup_storage"></div>
-
+    <input type="hidden" id="admin_password" name="setting_admin_password" value="">
    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>
         window.onload=function(){
             let window_height = window.innerHeight;
             let content_height = $('#content_wrapper').height();
-
+            let check_setting_data = '{{ check_setting_data }}';
             $('#content_wrapper').fadeIn();
             if(content_height < window_height){
                 $('#content_wrapper').css({'left':'50%', 'top':'50%', 'transform':'translate(-50%, -50%)', 'position':'absolute'})
@@ -275,6 +275,9 @@
                 $('#content_wrapper').css('height', window_height);
             }
             func_set_webkit_overflow_scrolling('#content_wrapper');
+            if(check_setting_data == '1'){
+                back_to_normal_mode(event, 'admin_menu');
+            }
         };
         
 
@@ -355,20 +358,28 @@
                         "admin_check":`<div id="popup_input_password" class="popup">
                                             <div><p class="fts_20 ftw_bd">관리자 비밀번호를 입력해주세요.</p></div>
                                             <div style="position:relative;">
-                                                    <input type="text" name="username" autocomplete="off" style="position:absolute;z-index:1500;background-color:transparent;caret-color:transparent;-webkit-text-color-fill:transparent;color:transparent" onkeyup="document.querySelector('#password_real').value = this.value">
+                                                <input type='tel' value="" onkeyup="limit_char_only_number(this);" minlength="4" maxlength="4">
+                                                    <!--<input type="text" name="username" autocomplete="off" style="position:absolute;z-index:1500;background-color:transparent;caret-color:transparent;-webkit-text-color-fill:transparent;color:transparent" onkeyup="document.querySelector('#password_real').value = this.value">
                                                     <input type="password" name="password" placeholder="입력" autocomplete="new-password" id="password_real">
                                                     <div><button onclick="event.preventDefault(); 
                                                         document.querySelector('#password_real').type == 'password' ? document.querySelector('#password_real').type = 'text' : document.querySelector('#password_real').type = 'password'">보이기/숨기기</button></div>
+                                                    -->
                                             </div>
-                                            <div class="ftw_16"><button onclick="popup('admin_menu').draw()">확인</button><button onclick="event.preventDefault();popup().clear()">취소</button></div>
+                                            <div class="ftw_16"><button onclick="admin_password_check('admin_menu');">확인</button><button onclick="clear_popup(event);">취소</button></div>
                                         </div>
-                                        <div class="popup_shade" onclick="popup().clear()">
+                                        <div class="popup_shade" onclick="clear_popup(event);">
                                         </div>`,
                         'admin_menu':`
                                     <div class="popup">
                                         <p class="fts_22 ftw_bd" style="margin-top:0">관리자 옵션</p>
                                         <form id="form_admin_menu" action="/trainer/update_attend_mode_setting/" method="post" style="text-align:left;border:1px solid #cccccc;padding:10px;">
                                             <div style="display:none;">{% csrf_token %}</div>
+                                            <div style="padding:10px 0;">
+                                                <p class="fts_18 ftw_bd" style="margin-top:0">관리자 비밀번호 설정</p>
+                                                (암호화 되어 저장되지 않으므로 일상적인 번호로 하세요.)
+                                                <br/><br/>
+                                                <input type='tel' name="setting_admin_password" id="input_setting_admin_password" value="{{ setting_admin_password }}" onkeyup="limit_char_only_number(this);" minlength="4" maxlength="4">
+                                            </div>
                                             <div style="padding:10px 0;">
                                                 <input id="form_prev_display_time" type="hidden" name="setting_attend_class_prev_display_time" value="{{ setting_attend_class_prev_display_time }}">
                                                 <input id="form_after_display_time" type="hidden" name="setting_attend_class_after_display_time" value="{{ setting_attend_class_prev_display_time }}">
@@ -410,24 +421,29 @@
                                                     <option value="3">취소 처리(횟수 차감 되지 않음)</option>
                                                 </select>
                                             </div>
-                                            <div style="text-align:center;"><button onclick="save_setting_value(event);">저장하고 창 닫기</button></div>
+                                            <div style="text-align:center;"><button onclick="save_setting_value(event);">저장하고 창 닫기</button>
+                                                                            <button onclick="clear_popup(event);">취소</button>
+                                            </div>
                                         </form>
                                     </div>
-                                    <div class="popup_shade" onclick="popup().clear()">
+                                    <div class="popup_shade" onclick="clear_popup(event);">
                                     </div>`,
                         'exit':`<div id="popup_input_password" class="popup">
                                     <div><p class="fts_20 ftw_bd">관리자 비밀번호를 입력해주세요.</p></div>
                                     <div style="position:relative;">
-                                            <input type="text" name="username" autocomplete="off" style="position:absolute;z-index:1500;background-color:transparent;caret-color:transparent;-webkit-text-color-fill:transparent;color:transparent" onkeyup="document.querySelector('#password_real').value = this.value">
+                                            <input type='tel' value="" onkeyup="limit_char_only_number(this);" minlength="4" maxlength="4">
+                                            <!--<input type="text" name="username" autocomplete="off" style="position:absolute;z-index:1500;background-color:transparent;caret-color:transparent;-webkit-text-color-fill:transparent;color:transparent" onkeyup="document.querySelector('#password_real').value = this.value">
                                             <input type="password" name="password" placeholder="입력" autocomplete="new-password" id="password_real">
                                             <div><button onclick="event.preventDefault();
                                                 document.querySelector('#password_real').type == 'password' ? document.querySelector('#password_real').type = 'text' : document.querySelector('#password_real').type = 'password'">보이기/숨기기</button></div>
+                                            -->
                                     </div>
-                                    <div class="ftw_16"><button style="background-color:#f4f4f4" onclick="event.preventDefault();location.href='/trainer/trainer_setting/'">출석체크 모드 종료</button>
-                                                        <button onclick="event.preventDefault();popup().clear()">취소</button>
+                                    <div class="ftw_16"><button style="background-color:#f4f4f4" onclick="admin_password_check('exit');">출석체크 모드 종료</button>
+                                                        <button style="background-color:#f4f4f4" onclick="location.href='/login/logout/';">로그아웃</button>
+                                                        <button onclick="clear_popup(event);">취소</button>
                                     </div>
                                 </div>
-                                <div class="popup_shade" onclick="popup().clear()">
+                                <div class="popup_shade" onclick="clear_popup(event);">
                                 </div>`
             };
 
@@ -452,28 +468,40 @@
         }
         function save_setting_value(e){
             e.preventDefault();
-            console.log('test1');
-            $('#form_admin_menu').submit();
-            console.log('test2');
-            popup().clear();
-            console.log('test3');
+            if($('#input_setting_admin_password').val().length!=4){
+                alert('관리자 비밀번호는 4자만 가능합니다.')
+            }
+            else{
+                $('#form_admin_menu').submit();
+                popup().clear();
+            }
         }
-        function password_check(password){
-            let url = '//'
+        function admin_password_check(popup_name){
+            let password = $('#admin_password').val();
             $.ajax({
-                url: url,
+                url: '/trainer/check_admin_password/',
                 type:'POST',
-                data:{'password':password},
-                //dataType : 'html',
+                data:{'setting_admin_password':password},
+                dataType : 'html',
 
                 beforeSend:function(xhr, settings) {
-                    
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
                 },
 
                 //통신성공시 처리
-                success:function(){
-                    console.log('sucess');
-
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    if(jsondata.messageArray.length>0){
+                        alert(jsondata.messageArray);
+                    }else{
+                        if(popup_name == 'exit'){
+                            location.href = '/trainer/trainer_setting/'
+                        }else if(popup_name=='admin_menu'){
+                            back_to_normal_mode(event,'admin_menu');
+                        }
+                    }
                 },
 
                 //보내기후 팝업창 닫기
@@ -486,6 +514,12 @@
                     console.log('error');
                 }
             });
+        }
+        function clear_popup(e){
+
+            e.preventDefault();
+            $('#admin_password').val('');
+            popup().clear();
         }
 
 
@@ -521,6 +555,41 @@
                     }
                     
                 });
+            }
+        }
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        function limit_char_only_number(e){
+            // var limit =  /[~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\]/gi;
+            var limit =  /[^0-9\,]/gi;
+            var temp = $(e).val();
+            if(limit.test(temp)){
+                $(e).val(temp.replace(limit, ""));
+                alert("숫자만 입력하실 수 있습니다.");
+            }
+            else{
+                $('#admin_password').val(temp);
             }
         }
     </script>
