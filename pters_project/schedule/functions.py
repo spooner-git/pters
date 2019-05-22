@@ -856,6 +856,8 @@ def func_get_trainer_attend_on_schedule(context, class_id, start_date, end_date,
 def func_get_trainer_attend_group_schedule(context, class_id, start_date, end_date, now, group_id):
     query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
             "AND B.STATE_CD != \'PC\' AND B.USE=1"
+    finish_member_query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
+                          "AND B.STATE_CD = \'PE\' AND B.USE=1"
     query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as C where C.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
     group_schedule_data = ScheduleTb.objects.select_related('group_tb').filter(Q(start_dt__lte=now,
                                                                                  end_dt__gte=now) |
@@ -869,12 +871,15 @@ def func_get_trainer_attend_group_schedule(context, class_id, start_date, end_da
                                                                                en_dis_type=ON_SCHEDULE_TYPE, use=USE)
     if group_id is None or group_id == '':
         group_schedule_data = group_schedule_data.annotate(group_current_member_num=RawSQL(query, []),
+                                                           group_current_finish_member_num=RawSQL(finish_member_query,
+                                                                                                  []),
                                                            group_type_cd_name=RawSQL(query_type_cd,
                                                                                      [])).order_by('start_dt')
 
     else:
         group_schedule_data = group_schedule_data.filter(
             group_tb_id=group_id).annotate(group_current_member_num=RawSQL(query, []),
+                                           group_current_finish_member_num=RawSQL(finish_member_query, []),
                                            group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
 
     context['group_schedule_data'] = group_schedule_data
