@@ -5941,33 +5941,47 @@ def attend_mode_check_logic(request):
                                                 lecture_tb__member__phone=phone_number,
                                                 auth_cd='VIEW',
                                                 use=USE)
-    if len(member_data) > 0:
-        member_id = member_data[0].lecture_tb.member_id
-        if schedule_info.lecture_tb is None or schedule_info.lecture_tb == '':
-            try:
-                group_schedule_info = ScheduleTb.objects.get(group_schedule_id=schedule_id,
-                                                             group_tb_id=schedule_info.group_tb_id,
-                                                             lecture_tb__member_id=member_id)
-                if group_schedule_info.state_cd == 'PE':
-                    error = '이미 출석 처리된 수업입니다.'
+    member_id_list = []
+    for member_info in member_data:
+        member_id_test = 0
+        for member_id_element in member_id_list:
+            if member_id_element == member_info.lecture_tb.member_id:
+                member_id_test += 1
+                break
+        if member_id_test == 0:
+            member_id_list.append(member_info.lecture_tb.member_id)
 
-            except ObjectDoesNotExist:
-                lecture_id = func_get_group_lecture_id(schedule_info.group_tb_id, member_id)
-                if lecture_id is None or lecture_id == '':
-                    error = '예약 가능한 횟수가 없습니다. 수강권을 확인해주세요.'
-                else:
-                    try:
-                        LectureTb.objects.get(lecture_id=lecture_id)
-                    except ObjectDoesNotExist:
-                        error = '수강정보를 불러오지 못했습니다.'
+    if len(member_id_list) > 1:
+        error = '중복되는 휴대폰 번호 2개 이상 존재합니다. 강사에게 문의해주세요.'
+
+    if error is None:
+        if len(member_data) > 0:
+            member_id = member_data[0].lecture_tb.member_id
+            if schedule_info.lecture_tb is None or schedule_info.lecture_tb == '':
+                try:
+                    group_schedule_info = ScheduleTb.objects.get(group_schedule_id=schedule_id,
+                                                                 group_tb_id=schedule_info.group_tb_id,
+                                                                 lecture_tb__member_id=member_id)
+                    if group_schedule_info.state_cd == 'PE':
+                        error = '이미 출석 처리된 수업입니다.'
+
+                except ObjectDoesNotExist:
+                    lecture_id = func_get_group_lecture_id(schedule_info.group_tb_id, member_id)
+                    if lecture_id is None or lecture_id == '':
+                        error = '예약 가능한 횟수가 없습니다. 수강권을 확인해주세요.'
+                    else:
+                        try:
+                            LectureTb.objects.get(lecture_id=lecture_id)
+                        except ObjectDoesNotExist:
+                            error = '수강정보를 불러오지 못했습니다.'
+            else:
+                if schedule_info.state_cd == 'PE':
+                    error = '이미 출석 처리된 수업입니다.'
+                if error is None:
+                    if schedule_info.lecture_tb.member_id != member_id:
+                        error = '휴대폰 번호와 수업이 일치하지 않습니다.'
         else:
-            if schedule_info.state_cd == 'PE':
-                error = '이미 출석 처리된 수업입니다.'
-            if error is None:
-                if schedule_info.lecture_tb.member_id != member_id:
-                    error = '번호와 수업이 일치하지 않습니다.'
-    else:
-        error = '휴대폰 번호를 확인해주세요.'
+            error = '휴대폰 번호를 확인해주세요.'
 
     if error is None:
 

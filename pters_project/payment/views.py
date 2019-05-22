@@ -185,7 +185,6 @@ def billing_check_logic(request):
     custom_data = None
     user_id = None
     member_info = None
-    product_id = None
     context = {}
 
     token_result = func_get_payment_token()
@@ -243,8 +242,8 @@ def billing_check_logic(request):
                                                                    imp_uid, access_token)
         error = webhook_info['error']
         user_id = webhook_info['user_id']
-        product_id = custom_data['product_id']
-        product_name = ''
+        # product_id = custom_data['product_id']
+        # product_name = ''
 
     if error is None:
         try:
@@ -256,14 +255,9 @@ def billing_check_logic(request):
         if member_info is not None:
             logger.info(str(member_info.name) + '님 정기 결제 완료['
                         + str(member_info.member_id) + ']' + str(payment_result['merchant_uid']))
-            try:
-                product_info = ProductTb.objects.get(product_id=product_id, use=USE)
-                product_name = product_info.name
-            except ObjectDoesNotExist:
-                product_name = ''
 
             email = EmailMessage('[PTERS 결제]' + member_info.name + '회원 결제 완료',
-                                 '정기 결제 완료 : ' + str(product_name) + ':' + str(timezone.now()),
+                                 '정기 결제 완료 : ' + str(timezone.now()),
                                  to=['support@pters.co.kr'])
             email.send()
     else:
