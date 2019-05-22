@@ -121,6 +121,7 @@
 	width: 100%;
 	background-color: #fe4e65;
 	border: 1px solid #ffffff;
+	box-sizing: border-box;
 }
 .week_group_schedule{
 	background-color: #fe4e65;
