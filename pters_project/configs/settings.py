@@ -167,6 +167,10 @@ STATIC_ROOT = '/static/'
 LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/trainer/index/'
 
+# IMP API
+PTERS_IMP_REST_API_KEY = os.environ.get('PTERS_IMP_REST_API_KEY', '')
+PTERS_IMP_REST_API_SECRET = os.environ.get('PTERS_IMP_REST_API_SECRET', '')
+
 # Email Activation
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_SSL = True

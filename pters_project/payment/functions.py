@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.utils import timezone
 
+from configs import settings
 from configs.const import USE, UN_USE
 
 from .models import PaymentInfoTb, ProductPriceTb, BillingInfoTb, BillingCancelInfoTb
@@ -35,7 +36,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
         next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0)
         # next_schedule_timestamp = timezone.now() + timezone.timedelta(minutes=5)
         next_schedule_timestamp = next_schedule_timestamp.timestamp()
-        token_result = func_get_payment_token()
+        token_result = func_get_imp_token()
         access_token = token_result['access_token']
         error = token_result['error']
         merchant_uid = 'm_' + str(payment_user_info.member_id) + '_' + payment_user_info.product_tb_id\
@@ -122,7 +123,7 @@ def func_set_billing_schedule_now(customer_uid, payment_user_info):
         # next_schedule_timestamp = timezone.now() + timezone.timedelta(minutes=5)
         next_schedule_timestamp = timezone.now() + timezone.timedelta(seconds=2)
         next_schedule_timestamp = next_schedule_timestamp.timestamp()
-        token_result = func_get_payment_token()
+        token_result = func_get_imp_token()
         access_token = token_result['access_token']
         error = token_result['error']
         merchant_uid = 'm_' + str(payment_user_info.member_id) + '_' + payment_user_info.product_tb_id\
@@ -193,14 +194,15 @@ def func_set_billing_schedule_now(customer_uid, payment_user_info):
     return error
 
 
-def func_get_payment_token():
-    context = {'error': None, 'access_token': None}
-    data_token = {
-        'imp_key': "3714680457579852",  # REST API키
-        'imp_secret': "2lsGAvxWcGqTtsjZcSK8LimgEuzYnJRq5j6GPEC1k3VOveNH6yQSQd8uIIt6rkwxEDdthPvBTqpoFd6M"
-        # REST API Secret
-    }
+def func_get_imp_token():
 
+    access_token = None
+    error = None
+
+    data_token = {
+        'imp_key': getattr(settings, "PTERS_IMP_REST_API_KEY", ''),  # REST API 키
+        'imp_secret': getattr(settings, "PTERS_IMP_REST_API_SECRET", '')  # REST API Secret
+    }
     body = json.dumps(data_token)
     h = httplib2.Http()
 
@@ -209,8 +211,6 @@ def func_get_payment_token():
 
     json_data = content.decode('utf-8')
     json_loading_data = None
-    error = None
-
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -220,15 +220,13 @@ def func_get_payment_token():
 
     if error is None:
         if resp['status'] == '200':
-            context['access_token'] = json_loading_data['response']['access_token']
-    else:
-        context['error'] = error
+            access_token = json_loading_data['response']['access_token']
 
-    return context
+    return {'access_token': access_token, 'error': error}
 
 
 def func_resend_payment_info(customer_uid, merchant_uid, price):
-    token_result = func_get_payment_token()
+    token_result = func_get_imp_token()
     access_token = token_result['access_token']
     error = token_result['error']
 
@@ -636,7 +634,7 @@ def func_update_billing_logic(payment_result):
 
 
 def func_cancel_period_billing_schedule(customer_uid):
-    token_result = func_get_payment_token()
+    token_result = func_get_imp_token()
     access_token = token_result['access_token']
     error = token_result['error']
 

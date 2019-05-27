@@ -4959,7 +4959,7 @@ class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
     template_name = 'ajax/trainer_error_ajax.html'
 
     def post(self, request):
-        class_id = request.POST.get('class_id', '')
+        class_id = request.session.get('class_id', '')
         background_img_id = request.POST.get('background_img_id', '')
         background_img_type_cd = request.POST.get('background_img_type_cd', '')
         url = request.POST.get('url', '')

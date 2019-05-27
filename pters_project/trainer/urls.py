@@ -220,10 +220,13 @@ urlpatterns = [
     url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(), name='get_notice_info_ajax'),
 
     # Attend Mode 기능 ###############################################################################################
+    # 일정선택후 휴대폰 번호 입력시 확인 기능
     url(r'^attend_mode_check/$', views.attend_mode_check_logic, name='attend_mode_check'),
+    # 휴대폰 번호 입력후 출석 완료 기능
     url(r'^attend_mode_finish/$', views.attend_mode_finish_logic, name='attend_mode_finish'),
-    # 일반 설정 관련 Setting 수정
+    # 출석체크 모드 Setting 수정
     url(r'^update_attend_mode_setting/$', views.update_attend_mode_setting_logic, name='update_setting_basic'),
+    # 관리자 비밀번호 확인
     url(r'^check_admin_password/$', views.check_admin_password_logic, name='check_admin_password'),
 
     # 페이지 #####################################################################################################

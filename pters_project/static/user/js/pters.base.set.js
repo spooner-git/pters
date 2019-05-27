@@ -1056,7 +1056,21 @@ $(window).resize(function(){
 if(class_background_img_url.length == 0){
     $('#ymdText, #upperImg').css('background-image',"url(/static/user/res/main/bg-image-basic-ymdText.png)");
 }else{
-    $('#ymdText, #upperImg').css('background-image',"url('"+class_background_img_url[2].replace(/\)/gi,"")+"')");
+    let background_type_cd = 'YMD_IMG_URL';
+    let img_url = '';
+    if(bodywidth >= 600 ) {
+        background_type_cd = 'YMD_IMG_URL';
+    }
+    else{
+        background_type_cd = 'YMD_IMG_URL_MOBILE';
+    }
+
+    for(let i=0; i<class_background_type_cd.length; i++){
+        if(class_background_type_cd[i] == background_type_cd){
+             img_url = class_background_img_url[i];
+        }
+    }
+    $('#ymdText, #upperImg').css('background-image',"url('"+img_url+"')");
 }
 
 function numberWithCommas(x) { //천단위 콤마 찍기
