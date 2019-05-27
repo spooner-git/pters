@@ -15,125 +15,90 @@ from .models import PaymentInfoTb, ProductPriceTb, BillingInfoTb, BillingCancelI
 logger = logging.getLogger(__name__)
 
 
-def func_set_billing_schedule(customer_uid, payment_user_info):
+def func_set_billing_schedule(customer_uid, pre_payment_info, paid_date):
     error = None
     product_price_info = None
-    try:
-        billing_info = BillingInfoTb.objects.get(member_id=payment_user_info.member.member_id,
-                                                 customer_uid=customer_uid, use=USE)
-        billing_info.next_payment_date = payment_user_info.end_date
-        billing_info.save()
-    except ObjectDoesNotExist:
-        error = '정기 결제 등록에 실패했습니다.'
 
     if error is None:
-        payment_type_cd = payment_user_info.payment_type_cd
-        product_id = payment_user_info.product_tb_id
-        # price = payment_user_info.price
-        date = int(billing_info.payed_date)
+        access_token = func_get_imp_token()
+        error = access_token['error']
 
-        next_billing_date_time = datetime.datetime.combine(payment_user_info.end_date, datetime.datetime.min.time())
-        next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0)
-        # next_schedule_timestamp = timezone.now() + timezone.timedelta(minutes=5)
-        next_schedule_timestamp = next_schedule_timestamp.timestamp()
-        token_result = func_get_imp_token()
-        access_token = token_result['access_token']
-        error = token_result['error']
-        merchant_uid = 'm_' + str(payment_user_info.member_id) + '_' + payment_user_info.product_tb_id\
+    if error is None:
+
+        next_billing_date_time = datetime.datetime.combine(pre_payment_info.end_date, datetime.datetime.min.time())
+        next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0).timestamp()
+
+        merchant_uid = 'm_' + str(pre_payment_info.member_id) + '_' + pre_payment_info.product_tb_id\
                        + '_' + str(next_schedule_timestamp).split('.')[0]
 
     if error is None:
         try:
-            product_price_info = ProductPriceTb.objects.get(product_tb_id=product_id,
-                                                            payment_type_cd=payment_type_cd,
-                                                            period_month=payment_user_info.period_month,
+            product_price_info = ProductPriceTb.objects.get(product_tb_id=pre_payment_info.product_tb_id,
+                                                            payment_type_cd=pre_payment_info.payment_type_cd,
+                                                            period_month=pre_payment_info.period_month,
                                                             use=USE)
         except ObjectDoesNotExist:
             error = '결제 정보를 불러오지 못했습니다.'
 
     if error is None:
+        date = int(paid_date)
         price = int(product_price_info.sale_price * 1.1)
         name = product_price_info.product_tb.name + ' - ' + product_price_info.name
+        next_start_date = pre_payment_info.end_date
+        next_end_date = func_get_end_date(pre_payment_info.payment_type_cd,
+                                          next_start_date, int(pre_payment_info.period_month), date)
+        next_start_date = next_start_date + datetime.timedelta(days=1)
 
     if error is None:
-        start_date = payment_user_info.end_date
-        end_date = func_get_end_date(payment_type_cd, start_date, int(payment_user_info.period_month), date)
-        start_date = start_date + datetime.timedelta(days=1)
-        payment_info = PaymentInfoTb(member_id=payment_user_info.member.member_id,
-                                     product_tb_id=product_id,
-                                     payment_type_cd=payment_type_cd, customer_uid=customer_uid,
-                                     start_date=start_date, end_date=end_date,
-                                     paid_date=payment_user_info.end_date,
-                                     period_month=payment_user_info.period_month,
+
+        payment_info = PaymentInfoTb(member_id=pre_payment_info.member.member_id,
+                                     product_tb_id=pre_payment_info.product_tb_id,
+                                     payment_type_cd=pre_payment_info.payment_type_cd, customer_uid=customer_uid,
+                                     start_date=next_start_date,
+                                     end_date=next_end_date,
+                                     paid_date=pre_payment_info.end_date,
+                                     period_month=pre_payment_info.period_month,
                                      name=name,
                                      price=price,
                                      status='reserve',
-                                     pay_method=payment_user_info.pay_method,
-                                     card_name=payment_user_info.card_name, use=UN_USE)
-        # payment_info.save()
+                                     pay_method=pre_payment_info.pay_method,
+                                     card_name=pre_payment_info.card_name,
+                                     use=UN_USE)
         payment_info.save()
+
         merchant_uid = merchant_uid + '_' + str(payment_info.payment_info_id)
+
         payment_info.merchant_uid = merchant_uid
         payment_info.save()
-    if error is None and access_token is not None:
-        data = {
-                'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
-                'schedules': [
-                    {
-                        'merchant_uid': merchant_uid,  # 주문 번호
-                        'schedule_at': next_schedule_timestamp,  # 결제 시도 시각 in Unix Time Stamp.ex.다음 달  1 일
-                        'amount': price,
-                        'name': name,
-                        'buyer_name': payment_user_info.member.name,
-                        'buyer_tel': '',
-                        'buyer_email': payment_user_info.member.user.email
-                    }
-                ]
-        }
 
-        body = json.dumps(data)
-        h = httplib2.Http()
-        resp, content = h.request("https://api.iamport.kr/subscribe/payments/schedule", method="POST", body=body,
-                                  headers={'Content-Type': 'application/json;',
-                                           'Authorization': access_token})
-        if resp['status'] != '200':
-            error = '오류가 발생했습니다.'
+    if error is None and access_token['access_token'] is not None:
+        error = func_set_iamport_schedule(access_token['access_token'], name, price,
+                                          customer_uid, merchant_uid, next_schedule_timestamp,
+                                          pre_payment_info.member.name, pre_payment_info.member.user.email)
     return error
 
 
-def func_set_billing_schedule_now(customer_uid, payment_user_info):
+def func_set_billing_schedule_now(customer_uid, pre_payment_info, paid_date):
     error = None
     product_price_info = None
-    try:
-        billing_info = BillingInfoTb.objects.get(member_id=payment_user_info.member.member_id,
-                                                 customer_uid=customer_uid, use=USE)
-        # billing_info.next_payment_date = payment_user_info.end_date
-        # billing_info.save()
-    except ObjectDoesNotExist:
-        error = '정기 결제 등록에 실패했습니다.'
 
     if error is None:
-        payment_type_cd = payment_user_info.payment_type_cd
-        product_id = payment_user_info.product_tb_id
-        # price = payment_user_info.price
-        date = int(billing_info.payed_date)
+        access_token = func_get_imp_token()
+        error = access_token['error']
 
-        # next_billing_date_time = datetime.datetime.combine(payment_user_info.end_date, datetime.datetime.min.time())
-        # next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0)
-        # next_schedule_timestamp = timezone.now() + timezone.timedelta(minutes=5)
+    if error is None:
+        date = int(paid_date)
+
         next_schedule_timestamp = timezone.now() + timezone.timedelta(seconds=2)
         next_schedule_timestamp = next_schedule_timestamp.timestamp()
-        token_result = func_get_imp_token()
-        access_token = token_result['access_token']
-        error = token_result['error']
-        merchant_uid = 'm_' + str(payment_user_info.member_id) + '_' + payment_user_info.product_tb_id\
+        merchant_uid = 'm_' + str(pre_payment_info.member_id) + '_' + pre_payment_info.product_tb_id\
                        + '_' + str(next_schedule_timestamp).split('.')[0]
 
     if error is None:
         try:
-            product_price_info = ProductPriceTb.objects.get(product_tb_id=product_id,
-                                                            payment_type_cd=payment_type_cd,
-                                                            period_month=payment_user_info.period_month,
+            product_price_info = ProductPriceTb.objects.get(product_tb_id=pre_payment_info.product_tb_id,
+                                                            payment_type_cd=pre_payment_info.payment_type_cd,
+                                                            period_month=pre_payment_info.period_month,
                                                             use=USE)
         except ObjectDoesNotExist:
             error = '결제 정보를 불러오지 못했습니다.'
@@ -141,55 +106,33 @@ def func_set_billing_schedule_now(customer_uid, payment_user_info):
     if error is None:
         price = int(product_price_info.sale_price * 1.1)
         name = product_price_info.product_tb.name + ' - ' + product_price_info.name
+        next_start_date = pre_payment_info.end_date
+        next_end_date = func_get_end_date(pre_payment_info.payment_type_cd, next_start_date,
+                                          int(pre_payment_info.period_month), date)
 
     if error is None:
-        start_date = payment_user_info.end_date
-        end_date = func_get_end_date(payment_type_cd, start_date, int(payment_user_info.period_month), date)
-        # start_date = start_date + datetime.timedelta(days=1)
-        payment_info = PaymentInfoTb(member_id=payment_user_info.member.member_id,
-                                     product_tb_id=product_id,
-                                     payment_type_cd=payment_type_cd, customer_uid=customer_uid,
-                                     start_date=start_date, end_date=end_date,
-                                     paid_date=payment_user_info.end_date,
-                                     period_month=payment_user_info.period_month,
+        payment_info = PaymentInfoTb(member_id=pre_payment_info.member.member_id,
+                                     product_tb_id=pre_payment_info.product_tb_id,
+                                     payment_type_cd=pre_payment_info.payment_type_cd, customer_uid=customer_uid,
+                                     start_date=next_start_date, end_date=next_end_date,
+                                     paid_date=pre_payment_info.end_date,
+                                     period_month=pre_payment_info.period_month,
                                      name=name,
                                      price=price,
                                      status='reserve',
-                                     pay_method=payment_user_info.pay_method,
-                                     card_name=payment_user_info.card_name, use=UN_USE)
-        # payment_info.save()
+                                     pay_method=pre_payment_info.pay_method,
+                                     card_name=pre_payment_info.card_name, use=UN_USE)
         payment_info.save()
-        billing_info.next_payment_date = end_date
-        billing_info.save()
+
         merchant_uid = merchant_uid + '_' + str(payment_info.payment_info_id)
+
         payment_info.merchant_uid = merchant_uid
         payment_info.save()
-    if error is None and access_token is not None:
-        data = {
-                'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
-                'schedules': [
-                    {
-                        'merchant_uid': merchant_uid,  # 주문 번호
-                        'schedule_at': next_schedule_timestamp,  # 결제 시도 시각 in Unix Time Stamp.ex.다음 달  1 일
-                        'amount': price,
-                        'name': name,
-                        'buyer_name': payment_user_info.member.name,
-                        'buyer_tel': '',
-                        'buyer_email': payment_user_info.member.user.email
-                    }
-                ]
-        }
 
-        body = json.dumps(data)
-        h = httplib2.Http()
-        resp, content = h.request("https://api.iamport.kr/subscribe/payments/schedule", method="POST", body=body,
-                                  headers={'Content-Type': 'application/json;',
-                                           'Authorization': access_token})
-        if resp['status'] != '200':
-            error = '오류가 발생했습니다.'
-
-    # if error is None:
-    #     func_set_billing_schedule(customer_uid, payment_info)
+    if error is None and access_token['access_token'] is not None:
+        error = func_set_iamport_schedule(access_token['access_token'], name, price,
+                                          customer_uid, merchant_uid, next_schedule_timestamp,
+                                          pre_payment_info.member.name, pre_payment_info.member.user.email)
 
     return error
 
@@ -274,43 +217,31 @@ def func_check_payment_price_info(product_id, payment_type_cd, input_price, peri
 
 
 def func_get_end_date(payment_type_cd, start_date, month, date):
-    end_date = start_date
-    if payment_type_cd == 'PERIOD':
-        next_month_origin = int(end_date.strftime('%m')) + month
-        next_month = next_month_origin
-        origin_year = int(end_date.strftime('%Y'))
-        if next_month_origin > 12:
-            next_month = next_month_origin % 12
-            if next_month == 0:
-                next_month = 1
 
-        # end_date = end_date + datetime.timedelta(days=1)
+    end_date = start_date
+
+    if payment_type_cd == 'PERIOD':
+        next_month = int(end_date.strftime('%m')) + month
+        next_year = int(end_date.strftime('%Y'))
+        if next_month > 12:
+            next_month %= 12
+            next_year += 1
+
         # 다음 결제 달로 이동
+        end_date = end_date.replace(year=next_year, month=next_month, day=1)
+
+        # 직전달 결제일로 이동
         for i in range(1, 32):
             try:
-                end_date = end_date.replace(month=next_month)
+                end_date = end_date.replace(day=date)
                 break
             except ValueError:
-                end_date = end_date - datetime.timedelta(days=1)
+                date -= 1
 
-            if int(end_date.strftime('%d')) <= 1:
+            if date <= 1:
                 break
-        # 년도 변경 (2/29일 때문에 마지막에 변경)
-        if next_month_origin > 12:
-            end_date = end_date.replace(year=origin_year+1)
-
-        # 다음달 날짜 확인
-        end_date_day = int(end_date.strftime('%d'))
-        if end_date_day != date:
-            for i in range(1, 32):
-                try:
-                    end_date = end_date.replace(day=date)
-                    break
-                except ValueError:
-                    date -= 1
-                if date <= 1:
-                    break
     else:
+        # 인앱 결제를 통한 단일 결제의 경우 30일 이용권
         end_date += datetime.timedelta(days=30)
 
     return end_date
@@ -640,7 +571,7 @@ def func_cancel_period_billing_schedule(customer_uid):
 
     if error is None and access_token is not None:
         data = {
-                'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
+            'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
         }
 
         body = json.dumps(data)
@@ -760,3 +691,59 @@ def func_iamport_webhook_customer_billing_logic(custom_data, payment_result, mer
     context['error'] = error
 
     return context
+
+
+# imp_uid 를 통해 결제 정보 가져오기
+def func_get_payment_info_from_imp(imp_uid, access_token):
+
+    error_message = None
+    payment_info = None
+
+    h = httplib2.Http()
+
+    resp, content = h.request("https://api.iamport.kr/payments/"+str(imp_uid), method="GET",
+                              headers={'Authorization': access_token})
+
+    json_data = content.decode('utf-8')
+    json_loading_data = None
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error_message = '오류가 발생했습니다.'
+    except TypeError:
+        error_message = '오류가 발생했습니다.'
+
+    if error_message is None:
+        if resp['status'] == '200':
+            payment_info = json_loading_data['response']
+
+    return payment_info
+
+
+def func_set_iamport_schedule(access_token, name, price, customer_uid, merchant_uid, next_schedule_timestamp,
+                              buyer_name, buyer_email):
+    data = {
+        'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
+        'schedules': [
+            {
+                'merchant_uid': merchant_uid,  # 주문 번호
+                'schedule_at': next_schedule_timestamp,  # 결제 시도 시각 in Unix Time Stamp.ex.다음 달  1 일
+                'amount': price,
+                'name': name,
+                'buyer_name': buyer_name,
+                'buyer_tel': '',
+                'buyer_email': buyer_email
+            }
+        ]
+    }
+
+    body = json.dumps(data)
+    h = httplib2.Http()
+    resp, content = h.request("https://api.iamport.kr/subscribe/payments/schedule", method="POST", body=body,
+                              headers={'Content-Type': 'application/json;',
+                                       'Authorization': access_token})
+    if resp['status'] != '200':
+        error = '오류가 발생했습니다.'
+
+    return error

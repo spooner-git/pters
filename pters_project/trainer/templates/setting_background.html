@@ -196,6 +196,7 @@
             var $loc = $('#background_contents_wrap .background_wrap:nth-of-type('+i+')');
             var wrapperimgurl = $loc.css('background-image');
             for(let j=0; j<class_background_img_url.length; j++){
+                console.log(wrapperimgurl+':'+class_background_img_url[j]);
                 if(wrapperimgurl.includes(class_background_img_url[j])){
                     let $bg_select_button = $loc.find('div.bg_select_button');
                     $bg_select_button.find('span').text('현재 배경');
