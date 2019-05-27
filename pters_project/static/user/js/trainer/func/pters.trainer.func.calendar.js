@@ -935,7 +935,9 @@ function duplicated_plans(jsondata){
     var result = {};
 
     //겹치지 않는 합쳐진 일정
+    let pp = 0;
     for(var plan_ in duplicate_dic){
+        console.log("plan_", plan_)
         var temp_index = [];
         var temp_celldivide;
 
@@ -995,11 +997,11 @@ function duplicated_plans(jsondata){
                             var comp_start_time = comp_split[0];
                             var comp_end_time = comp_split[1];
 
-                            if(ref_end_time == "00:00:00"){
-                                ref_end_time = "24:00:00";
+                            if(ref_end_time == "00:00"){
+                                ref_end_time = "24:00";
                             }
-                            if(comp_end_time == "00:00:00"){
-                                comp_end_time = "24:00:00";
+                            if(comp_end_time == "00:00"){
+                                comp_end_time = "24:00";
                             }
                             var duplication_type_ = know_whether_plans_has_duplicates(ref_start_time, ref_end_time,
                                                                                       comp_start_time, comp_end_time);
@@ -1030,18 +1032,12 @@ function duplicated_plans(jsondata){
 
         temp_celldivide = Math.max.apply(null, temp_index) +1;
 
-        // for(var z=0; z<array_sorted.length; z++){
-        //     result[array_sorted[z]] = [];
-        // }
-
-        // for(var v=0; v<array_sorted.length; v++){
-        //     result[array_sorted[v]].push([temp_index[v], temp_celldivide]);
-        // }
-
-        for(let p=0; p<result_data.length; p++){
-            result_data[p].duplicated_index = temp_index[p]
-            result_data[p].duplicated_cell = temp_celldivide
+        for(let p=0; p<temp_index.length; p++){
+            result_data[pp].duplicated_index = temp_index[p]
+            result_data[pp].duplicated_cell = temp_celldivide
+            pp++
         }
+        
     }
 
     return result_data;
