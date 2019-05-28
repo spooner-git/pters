@@ -608,7 +608,7 @@
                                     price = 0;
                                 }
                             }
-                            payment(name, pay_method, payment_type_cd, price, jsondata.next_start_date[0], period_month);
+                            payment(name, pay_method, payment_type_cd, price, merchant_uid, customer_uid);
                         }
                         else if(con_test == false){
                             shade_index(-100);

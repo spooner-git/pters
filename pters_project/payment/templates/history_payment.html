@@ -512,7 +512,7 @@
         var IMP = window.IMP; // 생략가능
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
-        function payment(name, pay_method, product_id, start_date, before_customer_uid, period_month, input_price){
+        function payment(name, pay_method, product_id, start_date, before_customer_uid, period_month, input_price, merchant_uid, customer_uid){
             var date = new Date();
             var month = date.getMonth()+1;
             var day = date.getDate();
@@ -533,8 +533,8 @@
             var request_pay_period_data = {
                 pg : 'danal', // version 1.1.0부터 지원.
                 pay_method : pay_method,
-                merchant_uid : merchant_uid_data,
-                customer_uid : customer_uid_data, // 카드(빌링키)와 1:1로 대응하는 값
+                merchant_uid : merchant_uid,
+                customer_uid : customer_uid, // 카드(빌링키)와 1:1로 대응하는 값
                 name : name,
                 amount : price,
                 buyer_email : '{{ request.user.email }}',
