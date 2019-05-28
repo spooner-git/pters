@@ -241,7 +241,7 @@ def check_finish_billing_logic(request):
                         pre_billing_info.card_name = payment_info['card_name']
                         pre_billing_info.save()
 
-                        if payment_info.status == 'paid':
+                        if payment_info['status'] == 'paid':
                             # 정상 결제, 정기 결제인 경우 예약
                             error = func_set_billing_schedule(pre_payment_info.customer_uid,
                                                               pre_payment_info, today)
@@ -327,7 +327,7 @@ def billing_check_logic(request):
                         pre_billing_info.card_name = payment_info['card_name']
                         pre_billing_info.save()
 
-                        if payment_info.status == 'paid':
+                        if payment_info['status'] == 'paid':
                             # 정상 결제, 정기 결제인 경우 예약
                             error = func_set_billing_schedule(pre_payment_info.customer_uid,
                                                               pre_payment_info, today)
