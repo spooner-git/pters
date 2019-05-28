@@ -1,14 +1,43 @@
 #cal_display_panel{
 	position: absolute;
 	height: 102px;
-	text-align: center;
+	z-index: 10;
+	/* text-align: center; */
 }
 	.cal_upper_box{
-		height: 67px;
-		line-height: 67px;
+		position: relative;
+		height: 50px;
+		line-height: 50px;
 		background-color: #ffffff;
 		border-bottom: 1px solid #cccccc;
+		padding: 0 20px;
+		box-sizing: border-box;
 	}
+	.cal_tools_wrap{
+		display: table;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 100px;
+		height: 100%;
+	}
+	.cal_tools_wrap > .add_plan{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_add.png");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	}
+	.cal_tools_wrap > .swap_cal{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_swap.png");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	}
+	
 	.display_year{
 		/* font-size: 20px;
 		margin-right: 10px; */
@@ -27,10 +56,11 @@
 	}
 .pages{
 	position: absolute;
-	top: 102px;
+	top: 85px;
 	width: 100%;
 	transition: 0.2s ease-in-out;
 	background-color: #ffffff;
+	z-index: 1;
 }
 
 
@@ -55,9 +85,11 @@
 	text-align: center;
 	height: 35px;
 	line-height: 35px;
-	/* border-bottom: 1px solid #cccccc; */
+	border-bottom: 1px solid #cccccc;
+	background-color: #ffffff;
 	border-collapse: collapse;
 	table-layout: fixed;
+	font-size: 11px;
 }
 .cal_week_line_dates > div{
 	display: table-cell;
@@ -86,12 +118,15 @@
 	position: relative;
 	display: table-cell;
 	width: 12.5%;
+	background-image: url("/static/user/res/calendar_hour.png");
+	background-size: 30px 40px;
+	background-position: top;
 }
 .week_row article{
 	height: 40px;
 	text-align: center;
 	font-size: 12px;
-	border-top: 1px solid #cccccc;
+	/* border-top: 1px solid #fe4e65; */
 	box-sizing: border-box;
 }
 .week_row article:first-child{
@@ -103,6 +138,12 @@
 }
 .cal_font_color_black{
 	color: #1e1e1e;
+}
+.cal_font_color_pink{
+	color: #fe4e65;
+}
+.cal_fw_bd{
+	font-weight: bold;
 }
 
 

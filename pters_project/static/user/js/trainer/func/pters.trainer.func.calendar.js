@@ -12,7 +12,11 @@ class Calendar {
         this.cal_type = "week";
         this.current_page_num = 1;
 
+        
+
         let d = new Date();
+        this.today = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+
         this.current_year = d.getFullYear();
         this.current_month = d.getMonth()+1;
         this.current_date = d.getDate();
@@ -313,26 +317,40 @@ class Calendar {
             let dateColorClass = [];
             for(let j=0; j<7; j++){
                 if(i==0 && j<firstday_this_month){ //첫번째 주일때 처리
-                    yearCellsToJoin.unshift(Number(month)-1 > 0 ? Number(year) : Number(year) - 1);
-                    monthCellsToJoin.unshift(Number(month)-1 < 1 ? 12 : Number(month)-1);
-                    dateCellsToJoin.unshift(lastday_prev_month-j);
-                    dateColorClass.unshift('cal_font_color_grey');
+                    let _year = Number(month)-1 > 0 ? Number(year) : Number(year) - 1;
+                    let _month = Number(month)-1 < 1 ? 12 : Number(month)-1;
+                    let _date = lastday_prev_month-j;
+
+                    yearCellsToJoin.unshift(_year);
+                    monthCellsToJoin.unshift(_month);
+                    dateCellsToJoin.unshift(_date);
+
+                    dateColorClass.unshift(`${_year}-${_month}-${_date}` == this.today ? 'cal_font_color_pink cal_fw_bd' : 'cal_font_color_grey');
                 }else if(date_cache > lastday_this_month || month_cache == month + 1){ // 마지막 날짜가 끝난 이후 처리
                     if(date_cache == lastday_this_month+1){
                         date_cache = 1;
                         month_cache = month + 1
                         finished = true;
                     }
-                    yearCellsToJoin.push(Number(month)+1 > 12 ? Number(year)+1 : year);
-                    monthCellsToJoin.push(Number(month)+1 > 12? 1 : Number(month)+1);
-                    dateCellsToJoin.push(date_cache);
-                    dateColorClass.push('cal_font_color_grey');
+                    let _year = Number(month)+1 > 12 ? Number(year)+1 : year;
+                    let _month = Number(month)+1 > 12? 1 : Number(month)+1;
+                    let _date = date_cache;
+
+                    yearCellsToJoin.push(_year);
+                    monthCellsToJoin.push(_month);
+                    dateCellsToJoin.push(_date);
+                    dateColorClass.push(`${_year}-${_month}-${_date}` == this.today ? 'cal_font_color_pink cal_fw_bd' : 'cal_font_color_grey');
                     date_cache++
                 }else{
-                    yearCellsToJoin.push(Number(year));
-                    monthCellsToJoin.push(Number(month));
-                    dateCellsToJoin.push(date_cache);
-                    dateColorClass.push( 'cal_font_color_black');
+                    let _year = Number(year);
+                    let _month = Number(month);
+                    let _date = date_cache;
+
+
+                    yearCellsToJoin.push(_year);
+                    monthCellsToJoin.push(_month);
+                    dateCellsToJoin.push(_date);
+                    dateColorClass.push(`${_year}-${_month}-${_date}` == this.today ? 'cal_font_color_pink cal_fw_bd' : 'cal_font_color_black');
                     date_cache++;
                 }
             }
@@ -396,13 +414,13 @@ class Calendar {
             :
             `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:0;background-color:#ffffff;z-index:10` : ""}">
                 ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
-                <div class=${_color[0]} onClick="${onclick_func}(${_year[0]}, ${_month[0]}, ${_date[0]})">${_date[0]}<div class="calendar_schedule_display_month ${schedule_num[0]!=0?"has_schedule":""}">${schedule_num[0]!=0?schedule_num[0]:""}</div></div>
-                <div class=${_color[1]} onClick="${onclick_func}(${_year[1]}, ${_month[1]}, ${_date[1]})">${_date[1]}<div class="calendar_schedule_display_month ${schedule_num[1]!=0?"has_schedule":""}">${schedule_num[1]!=0?schedule_num[1]:""}</div></div>
-                <div class=${_color[2]} onClick="${onclick_func}(${_year[2]}, ${_month[2]}, ${_date[2]})">${_date[2]}<div class="calendar_schedule_display_month ${schedule_num[2]!=0?"has_schedule":""}">${schedule_num[2]!=0?schedule_num[2]:""}</div></div>
-                <div class=${_color[3]} onClick="${onclick_func}(${_year[3]}, ${_month[3]}, ${_date[3]})">${_date[3]}<div class="calendar_schedule_display_month ${schedule_num[3]!=0?"has_schedule":""}">${schedule_num[3]!=0?schedule_num[3]:""}</div></div>
-                <div class=${_color[4]} onClick="${onclick_func}(${_year[4]}, ${_month[4]}, ${_date[4]})">${_date[4]}<div class="calendar_schedule_display_month ${schedule_num[4]!=0?"has_schedule":""}">${schedule_num[4]!=0?schedule_num[4]:""}</div></div>
-                <div class=${_color[5]} onClick="${onclick_func}(${_year[5]}, ${_month[5]}, ${_date[5]})">${_date[5]}<div class="calendar_schedule_display_month ${schedule_num[5]!=0?"has_schedule":""}">${schedule_num[5]!=0?schedule_num[5]:""}</div></div>
-                <div class=${_color[6]} onClick="${onclick_func}(${_year[6]}, ${_month[6]}, ${_date[6]})">${_date[6]}<div class="calendar_schedule_display_month ${schedule_num[6]!=0?"has_schedule":""}">${schedule_num[6]!=0?schedule_num[6]:""}</div></div>
+                <div class="${_color[0]}" onClick="${onclick_func}(${_year[0]}, ${_month[0]}, ${_date[0]})">${_date[0]}<div class="calendar_schedule_display_month ${schedule_num[0]!=0?"has_schedule":""}">${schedule_num[0]!=0?schedule_num[0]:""}</div></div>
+                <div class="${_color[1]}" onClick="${onclick_func}(${_year[1]}, ${_month[1]}, ${_date[1]})">${_date[1]}<div class="calendar_schedule_display_month ${schedule_num[1]!=0?"has_schedule":""}">${schedule_num[1]!=0?schedule_num[1]:""}</div></div>
+                <div class="${_color[2]}" onClick="${onclick_func}(${_year[2]}, ${_month[2]}, ${_date[2]})">${_date[2]}<div class="calendar_schedule_display_month ${schedule_num[2]!=0?"has_schedule":""}">${schedule_num[2]!=0?schedule_num[2]:""}</div></div>
+                <div class="${_color[3]}" onClick="${onclick_func}(${_year[3]}, ${_month[3]}, ${_date[3]})">${_date[3]}<div class="calendar_schedule_display_month ${schedule_num[3]!=0?"has_schedule":""}">${schedule_num[3]!=0?schedule_num[3]:""}</div></div>
+                <div class="${_color[4]}" onClick="${onclick_func}(${_year[4]}, ${_month[4]}, ${_date[4]})">${_date[4]}<div class="calendar_schedule_display_month ${schedule_num[4]!=0?"has_schedule":""}">${schedule_num[4]!=0?schedule_num[4]:""}</div></div>
+                <div class="${_color[5]}" onClick="${onclick_func}(${_year[5]}, ${_month[5]}, ${_date[5]})">${_date[5]}<div class="calendar_schedule_display_month ${schedule_num[5]!=0?"has_schedule":""}">${schedule_num[5]!=0?schedule_num[5]:""}</div></div>
+                <div class="${_color[6]}" onClick="${onclick_func}(${_year[6]}, ${_month[6]}, ${_date[6]})">${_date[6]}<div class="calendar_schedule_display_month ${schedule_num[6]!=0?"has_schedule":""}">${schedule_num[6]!=0?schedule_num[6]:""}</div></div>
             </div>
             ${month_or_week == "week" ? this.week_schedule_draw(year, month, week, schedule_data): ""}`
         )
@@ -473,6 +491,7 @@ class Calendar {
             dataType : 'html',
 
             beforeSend:function(){
+                $('.ajax_loading_image').show();
             },
 
             success:function(data){
@@ -487,7 +506,7 @@ class Calendar {
             },
 
             complete:function(){
-
+                $('.ajax_loading_image').hide();
             },
 
             error:function(){
@@ -502,12 +521,15 @@ class Calendar {
             {
                 "month_cal_upper_box":` <div class="cal_upper_box">
                                             <button onclick="${this.instance}.move_month('prev')" style="vertical-align:middle;" hidden>이전</button>
-                                            <div style="display:inline-block;width:200px;" onclick="${this.instance}.switch_cal_type()">
-                                                <span class="display_year">${this.current_year}</span>
-                                                <span class="display_month">${this.current_month}</span>
-                                                <img src="/static/common/icon/icon_swap.png">
+                                            <div style="display:inline-block;width:200px;">
+                                                <span class="display_year">${this.current_year}년</span>
+                                                <span class="display_month">${this.current_month}월</span>
                                             </div>
                                             <button onclick="${this.instance}.move_month('next')" style="vertical-align:middle;" hidden>다음</button>
+                                            <div class="cal_tools_wrap">
+                                                <div class="swap_cal" onclick="${this.instance}.switch_cal_type()"></div>
+                                                <div class="add_plan"></div>
+                                            </div>
                                         </div>
                                         <div class="cal_week_line_dates">
                                             <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
@@ -516,11 +538,14 @@ class Calendar {
                 "week_cal_upper_box":`
                                         <div class="cal_upper_box">
                                             <button onclick="${this.instance}.move_week('prev')" style="vertical-align:middle;" hidden>이전</button>
-                                            <div style="display:inline-block;width:200px;" onclick="${this.instance}.switch_cal_type()">
+                                            <div style="display:inline-block;width:200px;">
                                                 <span class="display_week">${this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0]}월 ${this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0]}일 - ${this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]}월 ${this.get_week_dates(this.current_year, this.current_month, this.current_week).date[6]}일</span>
-                                                <img src="/static/common/icon/icon_swap.png">
                                             </div>
                                             <button onclick="${this.instance}.move_week('next')" style="vertical-align:middle;" hidden>다음</button>
+                                            <div class="cal_tools_wrap">
+                                                <div class="swap_cal"  onclick="${this.instance}.switch_cal_type()"></div>
+                                                <div class="add_plan"></div>
+                                            </div>
                                         </div>
                                         <div class="cal_week_line_dates">
                                             <div class="week_cal_time_text"></div><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
