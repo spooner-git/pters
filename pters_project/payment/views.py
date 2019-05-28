@@ -208,7 +208,7 @@ def check_finish_billing_logic(request):
                 pre_payment_info.paid_date = today
                 pre_payment_info.status = payment_info['status']
                 if int(payment_info['amount']) == 0:
-                    payment_info.status = 'pre_paid'
+                    pre_payment_info.status = 'pre_paid'
                 pre_payment_info.imp_uid = payment_info['imp_uid']
                 pre_payment_info.channel = payment_info['channel']
                 pre_payment_info.buyer_email = payment_info['buyer_email']
@@ -248,7 +248,7 @@ def check_finish_billing_logic(request):
 
                         else:
                             # 결제 오류인 경우 iamport 상의 예약 제거
-                            error = func_cancel_period_billing_schedule(payment_info.customer_uid)
+                            error = func_cancel_period_billing_schedule(pre_payment_info.customer_uid)
 
         except TypeError:
             error = '오류가 발생했습니다.[2-1]'
@@ -256,6 +256,9 @@ def check_finish_billing_logic(request):
             error = '오류가 발생했습니다.[2-2]'
         except InternalError:
             error = error
+
+    if error is not None:
+        logger.error('[결제 오류]:' + str(error))
 
     return render(request, 'ajax/payment_error_info.html', context)
 
@@ -269,6 +272,7 @@ def billing_check_logic(request):
     pre_payment_info = None
     pre_billing_info = None
     payment_info = None
+    member_info = None
     context = {}
     error = None
     access_token = func_get_imp_token()
@@ -294,7 +298,7 @@ def billing_check_logic(request):
                 pre_payment_info.paid_date = today
                 pre_payment_info.status = payment_info['status']
                 if int(payment_info['amount']) == 0:
-                    payment_info.status = 'pre_paid'
+                    pre_payment_info.status = 'pre_paid'
                 pre_payment_info.imp_uid = payment_info['imp_uid']
                 pre_payment_info.channel = payment_info['channel']
                 pre_payment_info.buyer_email = payment_info['buyer_email']
@@ -334,7 +338,7 @@ def billing_check_logic(request):
 
                         else:
                             # 결제 오류인 경우 iamport 상의 예약 제거
-                            error = func_cancel_period_billing_schedule(payment_info.customer_uid)
+                            error = func_cancel_period_billing_schedule(pre_payment_info.customer_uid)
 
         except TypeError:
             error = '오류가 발생했습니다.[2-1]'
@@ -362,6 +366,8 @@ def billing_check_logic(request):
         if member_info is not None:
             logger.error(str(member_info.name) + '님 결제 오류['
                          + str(member_info.member_id) + ']' + str(error))
+        else:
+            logger.error('[결제 오류]:' + str(error))
 
     return render(request, 'ajax/payment_error_info.html', context)
 
