@@ -6,15 +6,20 @@
 	.cal_upper_box{
 		height: 67px;
 		line-height: 67px;
+		background-color: #ffffff;
+		border-bottom: 1px solid #cccccc;
 	}
 	.display_year{
-		font-size: 20px;
-		margin-right: 10px;
+		/* font-size: 20px;
+		margin-right: 10px; */
+		font-size: 18px;
 	}
 	.display_month{
-		font-size: 35px;
+		/* font-size: 35px;
 		line-height: 40px;
 		font-weight: bold;
+		color: #fe4e65; */
+		font-size: 18px;
 		color: #fe4e65;
 	}
 	.display_week{

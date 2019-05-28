@@ -28,6 +28,7 @@ class Calendar {
         this.cal_type = cal_type;
         switch(cal_type){
             case "month":
+                this.render_upper_box(cal_type);
                 this.render_month_cal( this.current_page_num ,this.current_year, this.current_month);
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
@@ -38,6 +39,7 @@ class Calendar {
             break;
 
             case "week":
+                this.render_upper_box(cal_type);
                 this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
@@ -157,6 +159,7 @@ class Calendar {
                 this.append_child(this.subtargetHTML, 'div', this.current_page_num)
                 /*페이지 삽입*/
 
+                this.render_upper_box("month");
                 this.render_month_cal( this.current_page_num, this.current_year, this.current_month)
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
@@ -175,6 +178,7 @@ class Calendar {
                 this.prepend_child(this.subtargetHTML, 'div', this.current_page_num)
                 /*페이지 삽입*/
 
+                this.render_upper_box("month");
                 this.render_month_cal(this.current_page_num, this.current_year, this.current_month)
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
@@ -199,6 +203,7 @@ class Calendar {
                 this.append_child(this.subtargetHTML, 'div', this.current_page_num)
                 /*페이지 삽입*/
 
+                this.render_upper_box("week");
                 this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
@@ -220,6 +225,7 @@ class Calendar {
                 this.prepend_child(this.subtargetHTML, 'div', this.current_page_num)
                 /*페이지 삽입*/
 
+                this.render_upper_box("week");
                 this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
@@ -242,6 +248,18 @@ class Calendar {
             break;
         }
     }
+
+    render_upper_box(type){
+        let component = this.static_component();
+        switch(type){
+            case "month":
+                document.getElementById('cal_display_panel').innerHTML = component.month_cal_upper_box;
+            break;
+            case "week":
+                document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box;
+            break;
+        }
+    }
     
     render_month_cal(page, year, month, schedule_data){ //월간 달력 렌더링 (연, 월)
         if(schedule_data == undefined){
@@ -251,18 +269,18 @@ class Calendar {
         for(let i=0; i<6; i++){
             weeks_div = [...weeks_div, this.draw_week_line(year, month, i, schedule_data,'popup_alert_month')];
         }
-        let component = this.static_component();
+        // let component = this.static_component();
         document.getElementById(`page${page}`).innerHTML = weeks_div.join('');
-        document.getElementById('cal_display_panel').innerHTML = component.month_cal_upper_box;
+        // document.getElementById('cal_display_panel').innerHTML = component.month_cal_upper_box;
         func_set_webkit_overflow_scrolling(`#page${page}`);
     }
 
     render_week_cal(page ,year, month, week, schedule_data){ //주간 달력 렌더링 (연, 월, 몇번째 주)
-        let component = this.static_component();
+        // let component = this.static_component();
         let data = this.draw_week_line(year, month, week, schedule_data, 'popup_alert_week', "week");
         
         document.getElementById(`page${page}`).innerHTML = data;
-        document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box;
+        // document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box;
         func_set_webkit_overflow_scrolling(`#page${page}`);
     }
 
@@ -483,13 +501,13 @@ class Calendar {
         return(
             {
                 "month_cal_upper_box":` <div class="cal_upper_box">
-                                            <button onclick="${this.instance}.move_month('prev')">이전</button>
-                                            <div style="display:inline-block" onclick="${this.instance}.switch_cal_type()">
+                                            <button onclick="${this.instance}.move_month('prev')" style="vertical-align:middle;" hidden>이전</button>
+                                            <div style="display:inline-block;width:200px;" onclick="${this.instance}.switch_cal_type()">
                                                 <span class="display_year">${this.current_year}</span>
                                                 <span class="display_month">${this.current_month}</span>
                                                 <img src="/static/common/icon/icon_swap.png">
                                             </div>
-                                            <button onclick="${this.instance}.move_month('next')">다음</button>
+                                            <button onclick="${this.instance}.move_month('next')" style="vertical-align:middle;" hidden>다음</button>
                                         </div>
                                         <div class="cal_week_line_dates">
                                             <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
@@ -497,12 +515,12 @@ class Calendar {
                 ,
                 "week_cal_upper_box":`
                                         <div class="cal_upper_box">
-                                            <button onclick="${this.instance}.move_week('prev')">이전</button>
-                                            <div style="display:inline-block" onclick="${this.instance}.switch_cal_type()">
+                                            <button onclick="${this.instance}.move_week('prev')" style="vertical-align:middle;" hidden>이전</button>
+                                            <div style="display:inline-block;width:200px;" onclick="${this.instance}.switch_cal_type()">
                                                 <span class="display_week">${this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0]}월 ${this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0]}일 - ${this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]}월 ${this.get_week_dates(this.current_year, this.current_month, this.current_week).date[6]}일</span>
                                                 <img src="/static/common/icon/icon_swap.png">
                                             </div>
-                                            <button onclick="${this.instance}.move_week('next')">다음</button>
+                                            <button onclick="${this.instance}.move_week('next')" style="vertical-align:middle;" hidden>다음</button>
                                         </div>
                                         <div class="cal_week_line_dates">
                                             <div class="week_cal_time_text"></div><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
