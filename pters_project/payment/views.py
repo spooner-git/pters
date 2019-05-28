@@ -188,10 +188,12 @@ def check_finish_billing_logic(request):
     access_token = func_get_imp_token()
     today = timezone.now()
 
-    if access_token['error_message'] is None:
+    if access_token['error'] is None:
         payment_info = func_get_payment_info_from_imp(imp_uid, access_token['access_token'])
+        if payment_info is None:
+            error = '결제에 실패했습니다.[0]'
     else:
-        error = access_token['error_message']
+        error = access_token['error']
 
     if error is None:
         try:
@@ -272,10 +274,12 @@ def billing_check_logic(request):
     access_token = func_get_imp_token()
     today = timezone.now()
 
-    if access_token['error_message'] is None:
+    if access_token['error'] is None:
         payment_info = func_get_payment_info_from_imp(imp_uid, access_token['access_token'])
+        if payment_info is None:
+            error = '결제에 실패했습니다.[0]'
     else:
-        error = access_token['error_message']
+        error = access_token['error']
 
     if error is None:
         try:
