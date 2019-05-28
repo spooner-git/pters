@@ -186,7 +186,7 @@ def check_finish_billing_logic(request):
     context = {}
     error = None
     access_token = func_get_imp_token()
-    today = timezone.now()
+    today = datetime.date.today()
 
     if access_token['error'] is None:
         payment_info = func_get_payment_info_from_imp(imp_uid, access_token['access_token'])
@@ -243,12 +243,11 @@ def check_finish_billing_logic(request):
                     if payment_info['status'] == 'paid':
                         # 정상 결제, 정기 결제인 경우 예약
                         error = func_set_billing_schedule(pre_payment_info.customer_uid,
-                                                          pre_payment_info, today)
+                                                          pre_payment_info, int(today.strftime('%d')))
 
                     else:
                         # 결제 오류인 경우 iamport 상의 예약 제거
                         error = func_cancel_period_billing_schedule(pre_payment_info.customer_uid)
-
 
     if error is not None:
         logger.error('[결제 오류]:' + str(error))
@@ -269,7 +268,7 @@ def billing_check_logic(request):
     context = {}
     error = None
     access_token = func_get_imp_token()
-    today = timezone.now()
+    today = datetime.date.today()
 
     if access_token['error'] is None:
         payment_info = func_get_payment_info_from_imp(imp_uid, access_token['access_token'])
@@ -326,12 +325,11 @@ def billing_check_logic(request):
                     if payment_info['status'] == 'paid':
                         # 정상 결제, 정기 결제인 경우 예약
                         error = func_set_billing_schedule(pre_payment_info.customer_uid,
-                                                          pre_payment_info, today)
+                                                          pre_payment_info, int(today.strftime('%d')))
 
                     else:
                         # 결제 오류인 경우 iamport 상의 예약 제거
                         error = func_cancel_period_billing_schedule(pre_payment_info.customer_uid)
-
 
     if error is None:
         try:
@@ -436,7 +434,7 @@ def restart_period_billing_logic(request):
                 error = func_set_billing_schedule_now(customer_uid, payment_info, date)
             else:
                 # 결제일이 지나지 않은 경우 예약을 다시 생성한다.
-                error = func_set_billing_schedule(customer_uid, payment_info)
+                error = func_set_billing_schedule(customer_uid, payment_info, date)
 
     context['error'] = error
     if error is not None:
@@ -477,7 +475,7 @@ def clear_pause_period_billing_logic(request):
                 error = func_set_billing_schedule_now(customer_uid, payment_info, date)
             else:
                 # 결제일이 지나지 않은 경우 예약을 다시 생성한다.
-                error = func_set_billing_schedule(customer_uid, payment_info)
+                error = func_set_billing_schedule(customer_uid, payment_info, date)
 
     if error is None:
         try:

@@ -656,7 +656,9 @@ def func_iamport_webhook_customer_billing_logic(custom_data, payment_result, mer
                     if payment_type_cd == 'PERIOD':
                         # 결제 정보 저장
                         # if error is None:
-                        error = func_set_billing_schedule(customer_uid, payment_user_info_result['payment_user_info'])
+                        error = func_set_billing_schedule(customer_uid,
+                                                          payment_user_info_result['payment_user_info'],
+                                                          int(today.strftime('%d')))
                 else:
                     error = payment_user_info_result['error']
 
