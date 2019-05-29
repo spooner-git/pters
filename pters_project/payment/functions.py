@@ -80,6 +80,7 @@ def func_set_billing_schedule(customer_uid, pre_payment_info, paid_date):
 def func_set_billing_schedule_now(customer_uid, pre_payment_info, paid_date):
     error = None
     product_price_info = None
+    today = datetime.date.today()
 
     if error is None:
         access_token = func_get_imp_token()
@@ -103,7 +104,7 @@ def func_set_billing_schedule_now(customer_uid, pre_payment_info, paid_date):
     if error is None:
         price = int(product_price_info.sale_price * 1.1)
         name = product_price_info.product_tb.name + ' - ' + product_price_info.name
-        next_start_date = pre_payment_info.end_date
+        next_start_date = today
         next_end_date = func_get_end_date(pre_payment_info.payment_type_cd, next_start_date,
                                           int(pre_payment_info.period_month), paid_date)
 
@@ -125,7 +126,6 @@ def func_set_billing_schedule_now(customer_uid, pre_payment_info, paid_date):
 
         payment_info.merchant_uid = merchant_uid
         payment_info.save()
-
     if error is None and access_token['access_token'] is not None:
         error = func_set_iamport_schedule(access_token['access_token'], name, price,
                                           customer_uid, merchant_uid, next_schedule_timestamp,

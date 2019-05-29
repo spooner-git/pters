@@ -567,8 +567,6 @@
 
                         success:function(data){
                             var jsondata = JSON.parse(data);
-                            initialJSON = jsondata;
-                            console.log('/payment/billing_finish/::'+jsondata);
                             if(jsondata.messageArray.length>0){
                                 msg = '결제에 실패하였습니다.';
                                 msg += '에러내용 : ' + jsondata.messageArray;
