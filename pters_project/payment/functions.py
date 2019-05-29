@@ -722,6 +722,7 @@ def func_get_payment_info_from_imp(imp_uid, access_token):
 
 def func_set_iamport_schedule(access_token, name, price, customer_uid, merchant_uid, next_schedule_timestamp,
                               buyer_name, buyer_email):
+    error = None
     data = {
         'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
         'schedules': [
