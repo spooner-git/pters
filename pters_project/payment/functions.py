@@ -41,12 +41,11 @@ def func_set_billing_schedule(customer_uid, pre_payment_info, paid_date):
             error = '결제 정보를 불러오지 못했습니다.'
 
     if error is None:
-        date = int(paid_date)
         price = int(product_price_info.sale_price * 1.1)
         name = product_price_info.product_tb.name + ' - ' + product_price_info.name
         next_start_date = pre_payment_info.end_date
         next_end_date = func_get_end_date(pre_payment_info.payment_type_cd,
-                                          next_start_date, int(pre_payment_info.period_month), date)
+                                          next_start_date, int(pre_payment_info.period_month), paid_date)
         next_start_date = next_start_date + datetime.timedelta(days=1)
 
     if error is None:
@@ -87,8 +86,6 @@ def func_set_billing_schedule_now(customer_uid, pre_payment_info, paid_date):
         error = access_token['error']
 
     if error is None:
-        date = int(paid_date)
-
         next_schedule_timestamp = timezone.now() + timezone.timedelta(seconds=2)
         next_schedule_timestamp = next_schedule_timestamp.timestamp()
         merchant_uid = 'm_' + str(pre_payment_info.member_id) + '_' + pre_payment_info.product_tb_id\
@@ -108,7 +105,7 @@ def func_set_billing_schedule_now(customer_uid, pre_payment_info, paid_date):
         name = product_price_info.product_tb.name + ' - ' + product_price_info.name
         next_start_date = pre_payment_info.end_date
         next_end_date = func_get_end_date(pre_payment_info.payment_type_cd, next_start_date,
-                                          int(pre_payment_info.period_month), date)
+                                          int(pre_payment_info.period_month), paid_date)
 
     if error is None:
         payment_info = PaymentInfoTb(member_id=pre_payment_info.member.member_id,
