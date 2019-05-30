@@ -12,8 +12,6 @@ class Calendar {
         this.cal_type = "week";
         this.current_page_num = 1;
 
-        
-
         let d = new Date();
         this.today = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
 
@@ -469,8 +467,9 @@ class Calendar {
 
                             let cell_index = plan.duplicated_index;
                             let cell_divide = plan.duplicated_cell;
-                            let styles = `width:${100/cell_divide}%;height:${diff.hour*40+40*diff.minute/60}px;top:${(plan_start.hour-work_start)*40 + 40*plan_start.minute/60}px;left:${cell_index*100/cell_divide}%`;
-                            return `<div onclick="event.stopPropagation();alert('${date_to_search} ${plan.start}~${plan.end}')" class="calendar_schedule_display_week" style="${styles}"></div>`;
+                            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, 'popup_calendar_plan_view', 90, ${POPUP_FROM_BOTTOM}, {'select_date':${date_to_search}})`
+                            let styles = `width:${100/cell_divide}%;height:${diff.hour*60+60*diff.minute/60}px;top:${(plan_start.hour-work_start)*60 + 60*plan_start.minute/60}px;left:${cell_index*100/cell_divide}%`;
+                            return `<div onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week" style="${styles}"></div>`;
                         })
                     );
                 }else{
@@ -483,19 +482,33 @@ class Calendar {
         let week_html_template = `
                                 <div class="week_row">
                                     <div>${ (this.worktime.map( (t) => { return `<article>${t}:00</article>` } )).join('') }</div>
-                                    <div onclick="console.log(event.offsetY/40, ${_year[0]},${_month[0]},${_date[0]})">${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
-                                    <div onclick="console.log(event.offsetY/40, ${_year[1]},${_month[1]},${_date[1]})">${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
-                                    <div onclick="console.log(event.offsetY/40, ${_year[2]},${_month[2]},${_date[2]})">${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
-                                    <div onclick="console.log(event.offsetY/40, ${_year[3]},${_month[3]},${_date[3]})">${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
-                                    <div onclick="console.log(event.offsetY/40, ${_year[4]},${_month[4]},${_date[4]})">${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
-                                    <div onclick="console.log(event.offsetY/40, ${_year[5]},${_month[5]},${_date[5]})">${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
-                                    <div onclick="console.log(event.offsetY/40, ${_year[6]},${_month[6]},${_date[6]})">${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})">${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})">${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})">${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})">${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})">${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})">${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})">${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
                                 </div>
                                 `;
         return week_html_template;
     }
 
-    
+    display_user_click(event, year, month, date){
+        $('.week_indicator').remove();
+
+        let pos = event.offsetY;
+        let pos_hour = pos/60;
+        let offset_hour = pos_hour > Math.floor(pos_hour)+0.5 ? Math.floor(pos_hour) + 0.5 : Math.floor(pos_hour);
+        let offset_px = offset_hour * 60;
+
+        let indicator = document.createElement('div');
+        indicator.classList.add('week_indicator');
+        indicator.style.top = offset_px+'px';
+        event.target.appendChild(indicator);
+
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':`${year}-${month}-${date}`});
+    }
 
 
     request_schedule_data(date, days, callback){
@@ -511,7 +524,7 @@ class Calendar {
             dataType : 'html',
 
             beforeSend:function(){
-                $('.ajax_loading_image').show();
+                ajax_load_image(SHOW);
             },
 
             success:function(data){
@@ -526,7 +539,7 @@ class Calendar {
             },
 
             complete:function(){
-                $('.ajax_loading_image').hide();
+                ajax_load_image(HIDE);
             },
 
             error:function(){

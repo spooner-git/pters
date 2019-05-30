@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="/static/user/css/trainer/pters.trainer.fundamental.css">
     <link rel="stylesheet" href="/static/user/css/trainer/pters.trainer.object.css">
+    <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.base.css" %}>
 
     <!-- 메뉴_calendar -->
     <link rel="stylesheet" href={% static_url "user/css/trainer/func/pters.trainer.func.calendar.css" %}>
@@ -126,7 +127,7 @@
 {% endblock %}
 <div id="debug_toolbar" style="position:fixed;top:0;font-size:13px;background-color:#1e1e1e85;color:#ffffff;width:100%;left:0;z-index:1500" hidden></div>
 
-<div id="shade_for_popup_basic" style="position:fixed;top:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
+<div id="shade_for_popup_basic" style="position:fixed;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
 onclick="layer_popup.all_close_layer_popup();"></div>
 
 <div id="root_progress">
@@ -218,8 +219,8 @@ onclick="layer_popup.all_close_layer_popup();"></div>
         browser = EDGE;
     }
 
-    const initial_window_height = window.innerHeight;
-    const initial_window_width = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const windowWidth = window.innerWidth;
     const $root_content = $('#root_content');
     func_set_webkit_overflow_scrolling('#root_content');
 

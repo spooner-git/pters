@@ -289,4 +289,12 @@ urlpatterns = [
     # iframe 회원 달력 미리보기 페이지
     url(r'^iframe_preview/$', views.CalPreviewIframeView.as_view(), name='iframe_preview'),
     ######################################################################################################
+
+    # 리뉴얼 
+    #팝업
+    # 일정 팝업 페이지
+    url(r'^popup_calendar_plan_view/$', views.PopupCalendarPlanView.as_view(),
+        name='popup_calendar_plan_view')
 ]
+
+
