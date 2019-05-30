@@ -679,14 +679,14 @@ def check_update_period_billing_logic(request):
         if today > billing_info.next_payment_date:
             paid_date = int(today.strftime('%d'))
             context['next_start_date'] = str(today)
-            context['nex_end_date'] = func_get_end_date('PERIOD', today, billing_info.period_month, paid_date)
+            context['next_end_date'] = func_get_end_date('PERIOD', today, billing_info.period_month, paid_date)
             context['price'] = billing_info.price
             status = 'ready'
         else:
             # 결제일이 지나지 않은 경우 0원으로 결제
             paid_date = int(billing_info.next_payment_date.strftime('%d'))
             context['next_start_date'] = str(billing_info.next_payment_date)
-            context['nex_end_date'] = str(billing_info.next_payment_date)
+            context['next_end_date'] = str(billing_info.next_payment_date)
             context['price'] = 0
             status = 'pre_paid'
         try:
