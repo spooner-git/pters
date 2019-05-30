@@ -708,7 +708,7 @@ def check_update_period_billing_logic(request):
                                              use=UN_USE)
                 payment_info.save()
                 billing_info = BillingInfoTb(member_id=request.user.id,
-                                             price=context['price'],
+                                             price=billing_info.price,
                                              name=billing_info.name,
                                              pay_method='card',
                                              product_tb_id=billing_info.product_tb_id,
