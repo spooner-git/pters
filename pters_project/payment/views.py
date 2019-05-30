@@ -243,14 +243,14 @@ def check_finish_billing_logic(request):
                             pre_billing_info.use = USE
                             pre_billing_info.save()
 
-                            if payment_info['status'] == 'paid' or payment_info['status'] == 'pre_paid':
-                                # 정상 결제, 정기 결제인 경우 예약
-                                error = func_set_billing_schedule(pre_payment_info.customer_uid,
-                                                                  pre_payment_info, int(today.strftime('%d')))
-
-                            else:
-                                # 결제 오류인 경우 iamport 상의 예약 제거
-                                error = func_cancel_period_billing_schedule(pre_payment_info.customer_uid)
+                            # if payment_info['status'] == 'paid' or payment_info['status'] == 'pre_paid':
+                            #     # 정상 결제, 정기 결제인 경우 예약
+                            #     error = func_set_billing_schedule(pre_payment_info.customer_uid,
+                            #                                       pre_payment_info, int(today.strftime('%d')))
+                            #
+                            # else:
+                            #     # 결제 오류인 경우 iamport 상의 예약 제거
+                            #     error = func_cancel_period_billing_schedule(pre_payment_info.customer_uid)
 
         except TypeError:
             error = '오류가 발생했습니다.[2]'
