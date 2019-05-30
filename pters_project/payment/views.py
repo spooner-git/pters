@@ -224,6 +224,8 @@ def check_finish_billing_logic(request):
 
                     # 정기 결제인 경우 정보 update
                     if pre_payment_info.payment_type_cd == 'PERIOD':
+                        before_billing_data = BillingInfoTb.objects.filter(member_id=pre_payment_info.member_id,
+                                                                           use=USE).exclude(customer_uid=pre_payment_info.customer_uid)
                         try:
                             pre_billing_info = BillingInfoTb.objects.get(customer_uid=pre_payment_info.customer_uid)
                         except ObjectDoesNotExist:
@@ -233,6 +235,9 @@ def check_finish_billing_logic(request):
                             if payment_info['status'] == 'paid':
                                 pre_billing_info.state_cd = 'IP'
                                 pre_billing_info.next_payment_date = pre_payment_info.end_date
+                                if len(before_billing_data) > 0:
+                                    before_billing_data.update(use=UN_USE)
+                                pre_billing_info.use = USE
                             elif payment_info['status'] == 'failed':
                                 pre_billing_info.state_cd = 'ERR'
                             elif payment_info['status'] == 'cancelled':  # 결제 취소 상태로 업데이트
@@ -240,17 +245,7 @@ def check_finish_billing_logic(request):
                             else:  # 결제 오류 상태로 업데이트
                                 pre_billing_info.state_cd = 'ERR'
                             pre_billing_info.card_name = payment_info['card_name']
-                            pre_billing_info.use = USE
                             pre_billing_info.save()
-
-                            # if payment_info['status'] == 'paid' or payment_info['status'] == 'pre_paid':
-                            #     # 정상 결제, 정기 결제인 경우 예약
-                            #     error = func_set_billing_schedule(pre_payment_info.customer_uid,
-                            #                                       pre_payment_info, int(today.strftime('%d')))
-                            #
-                            # else:
-                            #     # 결제 오류인 경우 iamport 상의 예약 제거
-                            #     error = func_cancel_period_billing_schedule(pre_payment_info.customer_uid)
 
         except TypeError:
             error = '오류가 발생했습니다.[2]'
@@ -312,6 +307,8 @@ def billing_check_logic(request):
 
                 # 정기 결제인 경우 정보 update
                 if pre_payment_info.payment_type_cd == 'PERIOD':
+                    before_billing_data = BillingInfoTb.objects.filter(member_id=pre_payment_info.member_id,
+                                                                       use=USE).exclude(customer_uid=pre_payment_info.customer_uid)
                     try:
                         pre_billing_info = BillingInfoTb.objects.get(customer_uid=pre_payment_info.customer_uid)
                     except ObjectDoesNotExist:
@@ -321,6 +318,9 @@ def billing_check_logic(request):
                         if payment_info['status'] == 'paid':
                             pre_billing_info.state_cd = 'IP'
                             pre_billing_info.next_payment_date = pre_payment_info.end_date
+                            pre_billing_info.use = USE
+                            if len(before_billing_data) > 0:
+                                before_billing_data.update(use=UN_USE)
                         elif payment_info['status'] == 'failed':
                             pre_billing_info.state_cd = 'ERR'
                         elif payment_info['status'] == 'cancelled':  # 결제 취소 상태로 업데이트
@@ -328,7 +328,6 @@ def billing_check_logic(request):
                         else:  # 결제 오류 상태로 업데이트
                             pre_billing_info.state_cd = 'ERR'
                         pre_billing_info.card_name = payment_info['card_name']
-                        pre_billing_info.use = USE
                         pre_billing_info.save()
 
                         if payment_info['status'] == 'paid':
