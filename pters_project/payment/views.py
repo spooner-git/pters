@@ -448,19 +448,18 @@ def restart_period_billing_logic(request):
             payment_info = None
 
         if pre_payment_info is not None:
-            if payment_info.end_date <= today:
+            if pre_payment_info.end_date <= today:
                 # 결제일이 지난 경우 오늘 바로 결제를 시도한다.
-                payment_info.end_date = today
-                error = func_set_billing_schedule_now(customer_uid, payment_info, date)
+                pre_payment_info.end_date = today
+                error = func_set_billing_schedule_now(customer_uid, pre_payment_info, date)
             else:
                 # 결제일이 지나지 않은 경우 예약을 다시 생성한다.
-                error = func_set_billing_schedule(customer_uid, payment_info, date)
+                error = func_set_billing_schedule(customer_uid, pre_payment_info, date)
         else:
             if payment_info is not None:
                 # 오늘 바로 결제를 시도한다.
                 payment_info.end_date = today
                 error = func_set_billing_schedule_now(customer_uid, payment_info, date)
-
 
     context['error'] = error
     if error is not None:
@@ -503,13 +502,13 @@ def clear_pause_period_billing_logic(request):
             payment_info = None
 
         if pre_payment_info is not None:
-            if payment_info.end_date <= today:
+            if pre_payment_info.end_date <= today:
                 # 결제일이 지난 경우 오늘 바로 결제를 시도한다.
-                payment_info.end_date = today
-                error = func_set_billing_schedule_now(customer_uid, payment_info, date)
+                pre_payment_info.end_date = today
+                error = func_set_billing_schedule_now(customer_uid, pre_payment_info, date)
             else:
                 # 결제일이 지나지 않은 경우 예약을 다시 생성한다.
-                error = func_set_billing_schedule(customer_uid, payment_info, date)
+                error = func_set_billing_schedule(customer_uid, pre_payment_info, date)
         else:
             if payment_info is not None:
                 # 오늘 바로 결제를 시도한다.
