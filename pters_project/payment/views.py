@@ -343,6 +343,7 @@ def billing_check_logic(request):
             error = '오류가 발생했습니다.[2]'
         except ValueError:
             error = '오류가 발생했습니다.[3]'
+
     if error is None:
         try:
             member_info = MemberTb.objects.get(member_id=pre_payment_info.member_id)
