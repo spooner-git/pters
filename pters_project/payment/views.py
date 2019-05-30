@@ -1244,9 +1244,18 @@ class PaymentHistoryView(LoginRequiredMixin, View):
             try:
                 billing_info = BillingInfoTb.objects.get(member_id=request.user.id,
                                                          product_tb_id=product_info.product_id,
+                                                         state_cd='IP',
                                                          use=USE)
             except ObjectDoesNotExist:
                 billing_info = None
+
+            if billing_info is None:
+                try:
+                    billing_info = BillingInfoTb.objects.get(member_id=request.user.id,
+                                                             product_tb_id=product_info.product_id,
+                                                             use=USE)
+                except ObjectDoesNotExist:
+                    billing_info = None
 
             if len(payment_data) > 0:
                 for payment_info in payment_data:
