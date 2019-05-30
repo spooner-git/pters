@@ -20,9 +20,9 @@ class Calendar {
         this.current_year = d.getFullYear();
         this.current_month = d.getMonth()+1;
         this.current_date = d.getDate();
-        this.current_week = Math.ceil( (this.current_date + new Date(this.current_year, this.current_month, 1).getDay() )/7 ) - 1;
+        this.current_week = Math.ceil( (this.current_date + new Date(this.current_year, this.current_month-1, 1).getDay() )/7 ) - 1;
 
-        this.worktime = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+        this.worktime = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
     }
 
     init(cal_type){
@@ -35,8 +35,10 @@ class Calendar {
                 this.render_upper_box(cal_type);
                 this.render_month_cal( this.current_page_num ,this.current_year, this.current_month);
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
-                    if(date == `${this.current_year}-${this.current_month}-01`){
-                        this.render_month_cal( this.current_page_num, this.current_year, this.current_month, jsondata);
+                    if(this.cal_type == cal_type){
+                        if(date == `${this.current_year}-${this.current_month}-01`){
+                            this.render_month_cal( this.current_page_num, this.current_year, this.current_month, jsondata);
+                        }
                     }
                 })
                 this.toggle_touch_move('on', '#calendar_wrap');
@@ -46,9 +48,11 @@ class Calendar {
                 this.render_upper_box(cal_type);
                 this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
-                    if(date == `${this.current_year}-${this.current_month}-01`){
-                        this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                        this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                    if(this.cal_type == cal_type){
+                        if(date == `${this.current_year}-${this.current_month}-01`){
+                            this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+                            this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                        }
                     }
                 })
                 this.toggle_touch_move('on', '#calendar_wrap');
@@ -365,6 +369,7 @@ class Calendar {
         let [date1, date2, date3, date4, date5, date6, date7] = dates_of_this_week[week];
         let [color1, color2, color3, color4, color5, color6, color7] = color_of_this_week[week];
        
+        
         return(
                {"year" :  years_of_this_week[week],
                 "month" : months_of_this_week[week],
@@ -433,6 +438,9 @@ class Calendar {
         let _date = week_dates_info.date;
         let _color = week_dates_info.color;
 
+        let work_start = this.worktime[0];
+        let work_end = this.worktime[this.worktime.length - 1];
+
         let schedules = [];
         if(schedule_data){
             for(let i=0; i<7; i++){
@@ -445,11 +453,23 @@ class Calendar {
                     duplicated_plans(schedule_data[date_to_search]); // daily schedule for duplicated plans;
                     schedules.push(
                         schedule_data[date_to_search].map( (plan) => {
-                            let diff = time_diff(plan.start, plan.end);
                             let tform_s = time_form(plan.start);
+                            let tform_e = time_form(plan.end);
+
+                            let start_hour = tform_s.hour;
+                            let start_min = tform_s.minute;
+                            let end_hour = tform_e.hour;
+                            let end_min = tform_e.minute;
+
+                            let plan_start = {full:`${start_hour < work_start ? work_start : start_hour}:${start_min}`, hour:`${start_hour < work_start ? work_start : start_hour}`, minute:start_min};
+                            let plan_end = {full:`${end_hour > work_end ? work_end+1 : end_hour }:${end_min}`, hour:`${end_hour > work_end ? work_end+1 : end_hour }`, minute:end_min};
+                            
+
+                            let diff = time_diff(plan_start.full, plan_end.full);
+
                             let cell_index = plan.duplicated_index;
                             let cell_divide = plan.duplicated_cell;
-                            let styles = `width:${100/cell_divide}%;height:${diff.hour*40+40*diff.minute/60}px;top:${tform_s.hour*40 + 40*tform_s.minute/60}px;left:${cell_index*100/cell_divide}%`;
+                            let styles = `width:${100/cell_divide}%;height:${diff.hour*40+40*diff.minute/60}px;top:${(plan_start.hour-work_start)*40 + 40*plan_start.minute/60}px;left:${cell_index*100/cell_divide}%`;
                             return `<div onclick="event.stopPropagation();alert('${date_to_search} ${plan.start}~${plan.end}')" class="calendar_schedule_display_week" style="${styles}"></div>`;
                         })
                     );
