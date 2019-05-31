@@ -1,5 +1,6 @@
 class Member{
     constructor(targetHTML, instance){
+        this.page_name = 'member';
         this.targetHTML = targetHTML;
         this.instance = instance;
 
@@ -61,12 +62,19 @@ class Member{
 
     //상단을 렌더링
     render_upper_box(){
+        if(current_page != this.page_name){
+            return false;
+        }
+
         let component = this.static_component();
         document.getElementById('member_display_panel').innerHTML = component.member_upper_box;
     }
 
     //회원 리스트를 렌더링
     render_member_list(jsondata, list_type){
+        if(current_page != this.page_name){
+            return false;
+        }
 
         let db_id, name, reg_count, rem_count, avl_count, phone, length;
 
@@ -89,8 +97,6 @@ class Member{
             length = jsondata.finishDidArray.length;
             this.member_list_type_text = "종료";
         }
-
-        console.log(db_id)
 
         this.member_length = length;
 

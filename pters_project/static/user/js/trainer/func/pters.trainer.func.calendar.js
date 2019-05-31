@@ -2,6 +2,7 @@
 
 class Calendar {
     constructor(targetHTML, instance){
+        this.page_name = "calendar";
         this.window_height = window.innerHeight;
         this.pages_height = this.window_height - 102-45;
 
@@ -258,6 +259,10 @@ class Calendar {
     }
 
     render_upper_box(type){
+        if(current_page != this.page_name){
+            return false;
+        }
+
         let component = this.static_component();
         switch(type){
             case "month":
@@ -270,6 +275,10 @@ class Calendar {
     }
     
     render_month_cal(page, year, month, schedule_data){ //월간 달력 렌더링 (연, 월)
+        if(current_page != this.page_name){
+            return false;
+        }
+
         if(schedule_data == undefined){
             schedule_data = false;
         }
@@ -277,15 +286,15 @@ class Calendar {
         for(let i=0; i<6; i++){
             weeks_div = [...weeks_div, this.draw_week_line(year, month, i, schedule_data, `${this.instance}.open_popup_plan_view`)];
         }
-        // let component = this.static_component();
         document.getElementById(`page${page}`).innerHTML = weeks_div.join('');
         // document.getElementById('cal_display_panel').innerHTML = component.month_cal_upper_box;
         func_set_webkit_overflow_scrolling(`#page${page}`);
     }
 
     render_week_cal(page ,year, month, week, schedule_data){ //주간 달력 렌더링 (연, 월, 몇번째 주)
-        // let component = this.static_component();
-
+        if(current_page != this.page_name){
+            return false;
+        }
 
         let data = this.draw_week_line(year, month, week, schedule_data, `${this.instance}.zoom_week_cal`, "week");
         
@@ -495,7 +504,6 @@ class Calendar {
                 }
                 let date_to_search = date_format(`${_year[i]}-${_month[i]}-${_date[i]}`)["yyyy-mm-dd"];
                 if(date_to_search in schedule_data){
-                    console.log(`${date_to_search}---------------------------------------------------------------------------------------------`)
                     duplicated_plans(schedule_data[date_to_search]); // daily schedule for duplicated plans;
                     schedules.push(
                         schedule_data[date_to_search].map( (plan) => {
@@ -1065,7 +1073,6 @@ function duplicated_plans(jsondata){
     //겹치지 않는 합쳐진 일정
     let pp = 0;
     for(var plan_ in duplicate_dic){
-        console.log("plan_", plan_)
         var temp_index = [];
         var temp_celldivide;
 

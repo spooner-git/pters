@@ -223,6 +223,7 @@ onclick="layer_popup.all_close_layer_popup();"></div>
     const windowHeight = window.innerHeight;
     const windowWidth = window.innerWidth;
     const $root_content = $('#root_content');
+    var current_page = "home";
     func_set_webkit_overflow_scrolling('#root_content');
 
     $root_content.scroll(function(){
@@ -268,6 +269,8 @@ onclick="layer_popup.all_close_layer_popup();"></div>
     var setting = new Setting('#root_content', 'setting');
 
     function sideGoPage(page, context){
+        current_page = page;
+
         Array.from(document.getElementsByClassName('nav_item')).forEach( (element) => {
             element.style.background = 'unset';
         })
