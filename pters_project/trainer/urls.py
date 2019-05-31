@@ -228,6 +228,8 @@ urlpatterns = [
     url(r'^update_attend_mode_setting/$', views.update_attend_mode_setting_logic, name='update_setting_basic'),
     # 관리자 비밀번호 확인
     url(r'^check_admin_password/$', views.check_admin_password_logic, name='check_admin_password'),
+    # 출석 체크 모드 스케쥴 조회
+    url(r'^get_attend_mode_schedule/$', views.GetAttendModeScheduleView.as_view(), name='get_attend_mode_schedule'),
 
     # 페이지 #####################################################################################################
     # 강사 메인 페이지

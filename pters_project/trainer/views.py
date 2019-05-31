@@ -6179,3 +6179,27 @@ def check_admin_password_logic(request):
         messages.error(request, error)
 
         return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetAttendModeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/schedule_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetAttendModeScheduleView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        setting_attend_class_prev_display_time = 0
+        setting_attend_class_after_display_time = 0
+        current_time = timezone.now()
+        setting_data = SettingTb.objects.filter(member_id=self.request.user.id, class_tb_id=class_id, use=USE)
+
+        for setting_info in setting_data:
+            if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_PREV_DISPLAY_TIME':
+                setting_attend_class_prev_display_time = int(setting_info.setting_info)
+            if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_AFTER_DISPLAY_TIME':
+                setting_attend_class_after_display_time = int(setting_info.setting_info)
+
+        start_date = current_time + datetime.timedelta(minutes=int(setting_attend_class_prev_display_time))
+        end_date = current_time - datetime.timedelta(minutes=int(setting_attend_class_after_display_time))
+        context = func_get_trainer_attend_schedule(context, class_id, start_date, end_date, current_time)
+
+        return context
