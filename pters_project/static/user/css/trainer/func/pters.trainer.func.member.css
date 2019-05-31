@@ -1,0 +1,87 @@
+#member_display_panel{
+	position: sticky;
+	position: -webkit-sticky;
+	height: auto;
+	z-index: 10;
+	width: 100%;
+	top: 0;
+	/* text-align: center; */
+}
+	.member_upper_box{
+		position: relative;
+		height: 50px;
+		line-height: 50px;
+		background-color: #ffffff;
+		border-bottom: 1px solid #cccccc;
+		padding: 0 20px;
+		box-sizing: border-box;
+	}
+	.member_tools_wrap{
+		display: table;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 140px;
+		height: 100%;
+	}
+	.member_tools_wrap > .search_member{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_search.png");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	}
+	.member_tools_wrap > .add_member{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_add.png?v2");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	}
+	.member_tools_wrap > .swap_list{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_swap.png?v2");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	}
+
+
+
+.member_wrapper{
+	display: table;
+	width: 100%;
+	padding: 10px 15px;
+	background-color: #ffffff;
+	border: 1px solid #f4f4f4;
+	margin: 10px auto;
+	box-sizing: border-box;
+}
+
+.member_data_l{
+	display: table-cell;
+	width: auto;
+}
+.member_data_r{
+	display: table-cell;
+	width: 20%;
+	max-width: 100px;
+	vertical-align: middle;
+}
+.member_name{
+	font-size: 20px;
+	font-weight: bold;
+}
+.member_counts{
+	font-size: 13px;
+}
+.member_phone, .member_sms{
+	display: table-cell;
+}
+.icon_contact{
+	width: 25px;
+	margin: 0 10px;
+}

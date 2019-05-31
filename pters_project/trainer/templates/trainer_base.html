@@ -21,9 +21,10 @@
     <link rel="stylesheet" href="/static/user/css/trainer/pters.trainer.object.css">
     <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.base.css" %}>
 
-    <!-- 메뉴_calendar -->
+    <!-- 페이지 CSS 로드 -->
     <link rel="stylesheet" href={% static_url "user/css/trainer/func/pters.trainer.func.calendar.css" %}>
-    <!-- 메뉴_calendar -->
+    <link rel="stylesheet" href={% static_url "user/css/trainer/func/pters.trainer.func.member.css" %}>
+    <!-- 페이지 CSS 로드 -->
 
     <style>
         #root_progress{
@@ -259,7 +260,7 @@ onclick="layer_popup.all_close_layer_popup();"></div>
             $root_progress.fadeIn();
         }
     }
-    
+
     
     var calendar = new Calendar('#root_content', 'calendar');
     var lecture = new Lecture('#root_content', 'lecture');

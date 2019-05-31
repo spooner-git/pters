@@ -2,6 +2,7 @@
 	position: absolute;
 	height: 102px;
 	z-index: 10;
+	width: 100%;
 	/* text-align: center; */
 }
 	.cal_upper_box{
@@ -24,7 +25,7 @@
 	.cal_tools_wrap > .add_plan{
 		display: table-cell;
 		height: 100%;
-		background-image: url("/static/common/icon/icon_add.png");
+		background-image: url("/static/common/icon/icon_add.png?v2");
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 23px;
@@ -32,7 +33,7 @@
 	.cal_tools_wrap > .swap_cal{
 		display: table-cell;
 		height: 100%;
-		background-image: url("/static/common/icon/icon_swap.png");
+		background-image: url("/static/common/icon/icon_swap.png?v2");
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 23px;
