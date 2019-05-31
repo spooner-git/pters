@@ -76,7 +76,8 @@
 }
 .cal_week_line > div{
 	display: table-cell;
-	width: 14.285%;
+	/* width: 14.285%; */
+	width: 12.5%;
 	padding: 0px 10px;
 }
 .cal_week_line_dates{
@@ -93,7 +94,8 @@
 }
 .cal_week_line_dates > div{
 	display: table-cell;
-	width: 14.285%;
+	/* width: 14.285%; */
+	width: 12.5%;
 }
 
 

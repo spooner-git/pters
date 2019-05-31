@@ -12,6 +12,8 @@ class Calendar {
         this.cal_type = "week";
         this.current_page_num = 1;
 
+        this.week_zoomed = false;
+
         let d = new Date();
         this.today = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
 
@@ -273,7 +275,7 @@ class Calendar {
         }
         let weeks_div = [];
         for(let i=0; i<6; i++){
-            weeks_div = [...weeks_div, this.draw_week_line(year, month, i, schedule_data,'popup_alert_month')];
+            weeks_div = [...weeks_div, this.draw_week_line(year, month, i, schedule_data, `${this.instance}.open_popup_plan_view`)];
         }
         // let component = this.static_component();
         document.getElementById(`page${page}`).innerHTML = weeks_div.join('');
@@ -283,12 +285,58 @@ class Calendar {
 
     render_week_cal(page ,year, month, week, schedule_data){ //주간 달력 렌더링 (연, 월, 몇번째 주)
         // let component = this.static_component();
-        let data = this.draw_week_line(year, month, week, schedule_data, 'popup_alert_week', "week");
+
+
+        let data = this.draw_week_line(year, month, week, schedule_data, `${this.instance}.zoom_week_cal`, "week");
         
         document.getElementById(`page${page}`).innerHTML = data;
         // document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box;
         func_set_webkit_overflow_scrolling(`#page${page}`);
     }
+
+    open_popup_plan_view(event, year, month, date){
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':`${year}-${month}-${date}`})
+    }
+
+    zoom_week_cal(event){
+        let clicked_number = event.target.dataset.row;
+
+        if(clicked_number == undefined){
+            return false;
+        }
+
+        if(this.week_zoomed == false){
+            for(let i=1; i<=7; i++){
+                if(i==clicked_number){
+                    Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
+                        el.style.width = "100%";
+                    })
+                    continue;
+                }
+                Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
+                    el.style.display = "none";
+                })
+                
+            }
+            this.week_zoomed = true;
+            this.toggle_touch_move('off', '#calendar_wrap');
+        }else if(this.week_zoomed == true){
+            for(let i=1; i<=7; i++){
+                if(i==clicked_number){
+                    Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
+                        el.style.width = "12.5%";
+                    })
+                    continue;
+                }
+                Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
+                    el.style.display = "table-cell";
+                })
+            }
+            this.week_zoomed = false;
+            this.toggle_touch_move('on', '#calendar_wrap');
+        }
+    }
+
 
     get_week_dates(year, month, week){
         const firstday_this_month = (new Date(Number(year), Number(month)-1, 1)).getDay(); // 3
@@ -417,13 +465,13 @@ class Calendar {
             :
             `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:0;background-color:#ffffff;z-index:10` : ""}">
                 ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
-                <div class="${_color[0]}" onClick="${onclick_func}(${_year[0]}, ${_month[0]}, ${_date[0]})">${_date[0]}<div class="calendar_schedule_display_month ${schedule_num[0]!=0?"has_schedule":""}">${schedule_num[0]!=0?schedule_num[0]:""}</div></div>
-                <div class="${_color[1]}" onClick="${onclick_func}(${_year[1]}, ${_month[1]}, ${_date[1]})">${_date[1]}<div class="calendar_schedule_display_month ${schedule_num[1]!=0?"has_schedule":""}">${schedule_num[1]!=0?schedule_num[1]:""}</div></div>
-                <div class="${_color[2]}" onClick="${onclick_func}(${_year[2]}, ${_month[2]}, ${_date[2]})">${_date[2]}<div class="calendar_schedule_display_month ${schedule_num[2]!=0?"has_schedule":""}">${schedule_num[2]!=0?schedule_num[2]:""}</div></div>
-                <div class="${_color[3]}" onClick="${onclick_func}(${_year[3]}, ${_month[3]}, ${_date[3]})">${_date[3]}<div class="calendar_schedule_display_month ${schedule_num[3]!=0?"has_schedule":""}">${schedule_num[3]!=0?schedule_num[3]:""}</div></div>
-                <div class="${_color[4]}" onClick="${onclick_func}(${_year[4]}, ${_month[4]}, ${_date[4]})">${_date[4]}<div class="calendar_schedule_display_month ${schedule_num[4]!=0?"has_schedule":""}">${schedule_num[4]!=0?schedule_num[4]:""}</div></div>
-                <div class="${_color[5]}" onClick="${onclick_func}(${_year[5]}, ${_month[5]}, ${_date[5]})">${_date[5]}<div class="calendar_schedule_display_month ${schedule_num[5]!=0?"has_schedule":""}">${schedule_num[5]!=0?schedule_num[5]:""}</div></div>
-                <div class="${_color[6]}" onClick="${onclick_func}(${_year[6]}, ${_month[6]}, ${_date[6]})">${_date[6]}<div class="calendar_schedule_display_month ${schedule_num[6]!=0?"has_schedule":""}">${schedule_num[6]!=0?schedule_num[6]:""}</div></div>
+                <div class="${_color[0]} _week_row_1" data-row="1" onclick="${onclick_func}(event, ${_year[0]}, ${_month[0]}, ${_date[0]})">${_date[0]}<div class="calendar_schedule_display_month ${schedule_num[0]!=0?"has_schedule":""}">${schedule_num[0]!=0?schedule_num[0]:""}</div></div>
+                <div class="${_color[1]} _week_row_2" data-row="2" onclick="${onclick_func}(event, ${_year[1]}, ${_month[1]}, ${_date[1]})">${_date[1]}<div class="calendar_schedule_display_month ${schedule_num[1]!=0?"has_schedule":""}">${schedule_num[1]!=0?schedule_num[1]:""}</div></div>
+                <div class="${_color[2]} _week_row_3" data-row="3" onclick="${onclick_func}(event, ${_year[2]}, ${_month[2]}, ${_date[2]})">${_date[2]}<div class="calendar_schedule_display_month ${schedule_num[2]!=0?"has_schedule":""}">${schedule_num[2]!=0?schedule_num[2]:""}</div></div>
+                <div class="${_color[3]} _week_row_4" data-row="4" onclick="${onclick_func}(event, ${_year[3]}, ${_month[3]}, ${_date[3]})">${_date[3]}<div class="calendar_schedule_display_month ${schedule_num[3]!=0?"has_schedule":""}">${schedule_num[3]!=0?schedule_num[3]:""}</div></div>
+                <div class="${_color[4]} _week_row_5" data-row="5" onclick="${onclick_func}(event, ${_year[4]}, ${_month[4]}, ${_date[4]})">${_date[4]}<div class="calendar_schedule_display_month ${schedule_num[4]!=0?"has_schedule":""}">${schedule_num[4]!=0?schedule_num[4]:""}</div></div>
+                <div class="${_color[5]} _week_row_6" data-row="6" onclick="${onclick_func}(event, ${_year[5]}, ${_month[5]}, ${_date[5]})">${_date[5]}<div class="calendar_schedule_display_month ${schedule_num[5]!=0?"has_schedule":""}">${schedule_num[5]!=0?schedule_num[5]:""}</div></div>
+                <div class="${_color[6]} _week_row_7" data-row="7" onclick="${onclick_func}(event, ${_year[6]}, ${_month[6]}, ${_date[6]})">${_date[6]}<div class="calendar_schedule_display_month ${schedule_num[6]!=0?"has_schedule":""}">${schedule_num[6]!=0?schedule_num[6]:""}</div></div>
             </div>
             ${month_or_week == "week" ? this.week_schedule_draw(year, month, week, schedule_data): ""}`
         )
@@ -481,14 +529,14 @@ class Calendar {
         }
         let week_html_template = `
                                 <div class="week_row">
-                                    <div>${ (this.worktime.map( (t) => { return `<article>${t}:00</article>` } )).join('') }</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})">${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})">${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})">${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})">${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})">${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})">${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})">${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
+                                    <div class="week_cal_time_text">${ (this.worktime.map( (t) => { return `<article>${t}:00</article>` } )).join('') }</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1">${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2">${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3">${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})" class="_week_row_4">${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})" class="_week_row_5">${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})" class="_week_row_6">${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})" class="_week_row_7">${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
                                 </div>
                                 `;
         return week_html_template;
@@ -581,8 +629,12 @@ class Calendar {
                                             </div>
                                         </div>
                                         <div class="cal_week_line_dates">
-                                            <div class="week_cal_time_text"></div><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
-                                        </div>`
+                                            <div class="week_cal_time_text"></div>
+                                            <div class="_week_row_1">일</div><div class="_week_row_2">월</div><div class="_week_row_3">화</div>
+                                            <div class="_week_row_4">수</div><div class="_week_row_5">목</div><div class="_week_row_6">금</div>
+                                            <div class="_week_row_7">토</div>
+                                        </div>
+                                        `
                                         
                 ,
                 "week_time_line":`<div class="week_time_line>
@@ -713,11 +765,11 @@ class Calendar {
 
 }
 
-function popup_alert_month(y, m, d){
+function popup_alert_month(event, y, m, d){
     alert(`월간 날짜 클릭 ${y} ${m} ${d}`)
 }
 
-function popup_alert_week(y, m, d){
+function popup_alert_week(event, y, m, d){
     alert(`주간 날짜 클릭 ${y} ${m} ${d}`)
 }
 
