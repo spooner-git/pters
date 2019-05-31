@@ -4,16 +4,23 @@ class Member{
         this.instance = instance;
 
         this.member_length = 0;
-        this.member_list_type = "";
+        this.member_list_type_text = "";
+        this.list_type = "ongoing";
     }
 
-    init(){
+    init(list_type){
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page
 
+        if(list_type==undefined){
+            list_type = "ongoing";
+        }
+
+        this.list_type = list_type;
+
         this.render_upper_box();
         this.request_member_list((jsondata) => {
-            this.render_member_list(jsondata);
+            this.render_member_list(jsondata, list_type);
             this.render_upper_box();
         });
     }
@@ -59,17 +66,33 @@ class Member{
     }
 
     //회원 리스트를 렌더링
-    render_member_list(jsondata, type){
-        let db_id = jsondata.dIdArray;
-        let name = jsondata.nameArray;
-        let reg_count = jsondata.regCountArray;
-        let rem_count = jsondata.countArray;
-        let avl_count = jsondata.availCountArray;
-        let phone = jsondata.phoneArray;
-        let length = jsondata.dIdArray.length;
+    render_member_list(jsondata, list_type){
+
+        let db_id, name, reg_count, rem_count, avl_count, phone, length;
+
+        if(list_type == "ongoing"){
+            db_id = jsondata.dIdArray;
+            name = jsondata.nameArray;
+            reg_count = jsondata.regCountArray;
+            rem_count = jsondata.countArray;
+            avl_count = jsondata.availCountArray;
+            phone = jsondata.phoneArray;
+            length = jsondata.dIdArray.length;
+            this.member_list_type_text = "진행중";
+        }else if(list_type == "ended"){
+            db_id = jsondata.finishDidArray;
+            name = jsondata.finishnameArray;
+            reg_count = jsondata.finishRegCountArray;
+            rem_count = jsondata.finishcountArray;
+            avl_count = jsondata.finishAvailCountArray;
+            phone = jsondata.finishphoneArray;
+            length = jsondata.finishDidArray.length;
+            this.member_list_type_text = "종료";
+        }
+
+        console.log(db_id)
 
         this.member_length = length;
-        this.member_list_type = "진행중";
 
         let html_temp = [];
         for(let i=0; i<length; i++){
@@ -95,6 +118,19 @@ class Member{
     }
 
 
+    switch_type(){
+        switch(this.list_type){
+            case "ongoing":
+                this.init("ended");
+            break;
+
+            case "ended":
+                this.init("ongoing");
+            break;
+        }
+    }
+
+
 
 
 
@@ -102,10 +138,11 @@ class Member{
         return(
             {    "member_upper_box":`   <div class="member_upper_box">
                                             <div style="display:inline-block;width:200px;">
-                                                <span class="">[${this.member_list_type}] ${this.member_length}명</span>
+                                                <span>회원 리스트 </span>
+                                                <span class="">[${this.member_list_type_text}] ${this.member_length}명</span>
                                             </div>
                                             <div class="member_tools_wrap">
-                                                <div class="swap_list" onclick="alert('swap list 함수')"></div>
+                                                <div class="swap_list" onclick="${this.instance}.switch_type();"></div>
                                                 <div class="search_member"></div>
                                                 <div class="add_member"></div>
                                             </div>
