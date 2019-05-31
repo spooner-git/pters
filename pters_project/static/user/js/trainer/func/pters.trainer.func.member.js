@@ -13,7 +13,7 @@ class Member{
         document.querySelector(this.targetHTML).innerHTML = component.initial_page
 
         if(list_type==undefined){
-            list_type = "ongoing";
+            list_type = this.list_type;
         }
 
         this.list_type = list_type;
