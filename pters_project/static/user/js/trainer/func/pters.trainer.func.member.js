@@ -118,6 +118,7 @@ class Member{
     }
 
 
+    //리스트 타입을 스위치
     switch_type(){
         switch(this.list_type){
             case "ongoing":
