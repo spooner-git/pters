@@ -119,7 +119,7 @@ class Member{
             html_temp.push(html);
         }
 
-        document.querySelector('#content_wrap').innerHTML = html_temp.join("");
+        document.querySelector('#member_content_wrap').innerHTML = html_temp.join("");
         $('#root_content').scrollTop(1);
     }
 
@@ -155,7 +155,7 @@ class Member{
                                             </div>
                                         </div>`
                                 ,
-                "initial_page":`<div id="${this.subtargetHTML}"><div id="member_display_panel"></div><div id="content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div></div>`
+                "initial_page":`<div id="${this.subtargetHTML}"><div id="member_display_panel"></div><div id="member_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div></div>`
             }
         )
     }

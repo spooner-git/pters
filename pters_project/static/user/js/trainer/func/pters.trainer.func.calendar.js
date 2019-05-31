@@ -517,7 +517,6 @@ class Calendar {
 
                             let plan_start = {full:`${start_hour < work_start ? work_start : start_hour}:${start_min}`, hour:`${start_hour < work_start ? work_start : start_hour}`, minute:start_min};
                             let plan_end = {full:`${end_hour > work_end ? work_end+1 : end_hour }:${end_min}`, hour:`${end_hour > work_end ? work_end+1 : end_hour }`, minute:end_min};
-                            
 
                             let diff = time_diff(plan_start.full, plan_end.full);
 
