@@ -5,8 +5,10 @@ class Member{
         this.instance = instance;
 
         this.member_length = 0;
+        this.member_ing_length = 0;
+        this.member_end_length = 0;
         this.member_list_type_text = "";
-        this.list_type = "ongoing";
+        this.list_type = "ing";
     }
 
     init(list_type){
@@ -78,7 +80,7 @@ class Member{
 
         let db_id, name, reg_count, rem_count, avl_count, phone, length;
 
-        if(list_type == "ongoing"){
+        if(list_type == "ing"){
             db_id = jsondata.dIdArray;
             name = jsondata.nameArray;
             reg_count = jsondata.regCountArray;
@@ -87,7 +89,7 @@ class Member{
             phone = jsondata.phoneArray;
             length = jsondata.dIdArray.length;
             this.member_list_type_text = "진행중";
-        }else if(list_type == "ended"){
+        }else if(list_type == "end"){
             db_id = jsondata.finishDidArray;
             name = jsondata.finishnameArray;
             reg_count = jsondata.finishRegCountArray;
@@ -99,6 +101,8 @@ class Member{
         }
 
         this.member_length = length;
+        this.member_ing_length = jsondata.dIdArray.length;
+        this.member_end_length = jsondata.finishDidArray.length;
 
         let html_temp = [];
         for(let i=0; i<length; i++){
@@ -125,14 +129,19 @@ class Member{
 
 
     //리스트 타입을 스위치
-    switch_type(){
-        switch(this.list_type){
-            case "ongoing":
-                this.init("ended");
+    switch_type(type){
+        // console.log(context);
+        if(type == this.list_type){
+            return false;
+        }
+
+        switch(type){
+            case "ing":
+                this.init("ing");
             break;
 
-            case "ended":
-                this.init("ongoing");
+            case "end":
+                this.init("end");
             break;
         }
     }
@@ -145,17 +154,28 @@ class Member{
         return(
             {    "member_upper_box":`   <div class="member_upper_box">
                                             <div style="display:inline-block;width:200px;">
-                                                <span>회원 리스트 </span>
-                                                <span class="">[${this.member_list_type_text}] ${this.member_length}명</span>
+                                                <span style="font-size:20px;font-weight:bold;">회원</span>
                                             </div>
                                             <div class="member_tools_wrap">
-                                                <div class="swap_list" onclick="${this.instance}.switch_type();"></div>
                                                 <div class="search_member"></div>
                                                 <div class="add_member"></div>
                                             </div>
+                                        </div>
+                                        <div class="member_bottom_tools_wrap">
+                                            <div class="list_type_tab_wrap">
+                                                <div onclick="${this.instance}.switch_type('ing');" class="${this.list_type == "ing" ? "tab_selected" : ""}">진행중<span style="font-size:10px;">(${this.member_ing_length})</span></div>
+                                                <div onclick="${this.instance}.switch_type('end');" class="${this.list_type == "end" ? "tab_selected" : ""}">종료<span style="font-size:10px;">(${this.member_end_length})</span></div>
+                                            </div>
+                                            <div class="list_sort_select_wrap">
+                                                <select>
+                                                    <option>이름순</option>
+                                                    <option>남은 횟수순</option>
+                                                    <option>등록 횟수순</option>
+                                                </select>
+                                            </div>
                                         </div>`
                                 ,
-                "initial_page":`<div id="${this.subtargetHTML}"><div id="member_display_panel"></div><div id="member_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div></div>`
+                "initial_page":`<div id="member_display_panel"></div><div id="member_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div>`
             }
         )
     }
