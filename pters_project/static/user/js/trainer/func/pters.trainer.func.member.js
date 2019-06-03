@@ -62,6 +62,7 @@ class Member{
         })
     }
 
+
     //상단을 렌더링
     render_upper_box(){
         if(current_page != this.page_name){
