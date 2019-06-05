@@ -25,6 +25,7 @@
     <link rel="stylesheet" href={% static_url "user/css/trainer/func/pters.trainer.func.calendar.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/func/pters.trainer.func.member.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/func/pters.trainer.func.lecture.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/func/pters.trainer.func.menu.css" %}>
     <!-- 페이지 CSS 로드 -->
 
     <style>
@@ -160,7 +161,7 @@ onclick="layer_popup.all_close_layer_popup();"></div>
             <div class="nav_img"><img src="/static/common/icon/icon_member.png" alt=""></div>
             <div class="nav_text">회원</div>
         </div>
-        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('setting', this)">
+        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('menu', this)">
             <div class="nav_img"><img src="/static/common/icon/icon_more.png" alt=""></div>
             <div class="nav_text">전체</div>
         </div>
@@ -184,7 +185,7 @@ onclick="layer_popup.all_close_layer_popup();"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/func/pters.trainer.func.calendar.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/func/pters.trainer.func.lecture.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/func/pters.trainer.func.member.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/func/pters.trainer.func.setting.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/func/pters.trainer.func.menu.js" %}></script>
 <!-- 페이지 스크립트 로드-->
 <!-- POPUP Behavior -->
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.popup.behavior.js" %}></script>
@@ -267,7 +268,7 @@ onclick="layer_popup.all_close_layer_popup();"></div>
     var calendar = new Calendar('#root_content', 'calendar');
     var lecture = new Lecture('#root_content', 'lecture');
     var member = new Member('#root_content', 'member');
-    var setting = new Setting('#root_content', 'setting');
+    var menu = new Menu('#root_content', 'menu');
 
     function sideGoPage(page, context){
         current_page = page;
@@ -290,8 +291,8 @@ onclick="layer_popup.all_close_layer_popup();"></div>
             case 'member':
                 member.init();
             break;
-            case 'setting':
-                setting.init();
+            case 'menu':
+                menu.init();
             break;
         }
         $root_content.scrollTop(1);
