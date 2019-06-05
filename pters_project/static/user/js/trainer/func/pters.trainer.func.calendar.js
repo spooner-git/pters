@@ -562,7 +562,7 @@ class Calendar {
         indicator.style.top = offset_px+'px';
         event.target.appendChild(indicator);
 
-        layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':`${year}-${month}-${date}`});
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_add', 70, POPUP_FROM_TOP, {'select_date':`${year}-${month}-${date}`});
     }
 
 

@@ -293,8 +293,9 @@ urlpatterns = [
     # 리뉴얼 
     #팝업
     # 일정 팝업 페이지
-    url(r'^popup_calendar_plan_view/$', views.PopupCalendarPlanView.as_view(),
-        name='popup_calendar_plan_view')
+    url(r'^popup_calendar_plan_view/$', views.PopupCalendarPlanView.as_view(),name='popup_calendar_plan_view'),
+    # 일정 팝업 페이지
+    url(r'^popup_calendar_plan_add/$', views.PopupCalendarPlanAdd.as_view(),name='popup_calendar_plan_add')
 ]
 
 
