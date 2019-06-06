@@ -9,6 +9,8 @@ class Member{
         this.member_end_length = 0;
         this.member_list_type_text = "";
         this.list_type = "ing";
+
+        this.search = false;
     }
 
     init(list_type){
@@ -107,7 +109,7 @@ class Member{
 
         let html_temp = [];
         for(let i=0; i<length; i++){
-            let html = `<article class="member_wrapper" data-dbid="${db_id[i]}" onclick="alert('${name[i]} (ID:${db_id[i]})')">
+            let html = `<article class="member_wrapper" data-dbid="${db_id[i]}" data-name="${name[i]}" onclick="alert('${name[i]} (ID:${db_id[i]})')">
                             <div class="member_data_l">
                                 <div class="member_name">${name[i]}</div>
                                 <div class="member_counts"> ${rem_count[i]} / ${reg_count[i]} <span style="font-size:10px;color:#8d8d8d;">(남은 횟수 / 총 등록횟수)</span></div>
@@ -147,7 +149,38 @@ class Member{
         }
     }
 
+    search_member_tool_visible(event){
+        event.stopPropagation();
+        event.preventDefault();
+        switch(this.search){
+            case true:
+                this.search = false;
+                document.getElementsByClassName('search_input')[0].style.transform = 'translateY(-50px)';
+                event.target.style.backgroundImage = 'url("/static/common/icon/icon_search.png")';
+            break;
 
+            case false:
+                this.search = true;
+                document.getElementsByClassName('search_input')[0].style.transform = 'translateY(0)';
+                document.getElementsByClassName('search_input')[0].value = '';
+                event.target.style.backgroundImage = 'url("/static/common/icon/close_black.png")';
+            break;
+        }
+    }
+
+    search_member_by_typing(event){
+
+        let value = event.target.value;
+        Array.from(document.getElementsByClassName('member_wrapper')).forEach((el)=>{
+            let name = el.dataset.name;
+            if(name.match(value)){
+                el.style.display = 'block';
+                $('#root_content').scrollTop(1);
+            }else{
+                el.style.display = 'none';
+            }
+        })
+    }
 
 
 
@@ -158,7 +191,9 @@ class Member{
                                                 <span style="font-size:20px;font-weight:bold;">회원</span>
                                             </div>
                                             <div class="member_tools_wrap">
-                                                <div class="search_member"></div>
+                                                <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">
+                                                    <input type="text" class="search_input" placeholder="검색" onclick="event.stopPropagation();" onkeyup="${this.instance}.search_member_by_typing(event)">
+                                                </div>
                                                 <div class="add_member"></div>
                                             </div>
                                         </div>

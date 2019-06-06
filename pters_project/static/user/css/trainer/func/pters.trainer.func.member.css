@@ -32,6 +32,19 @@
 		background-position: center;
 		background-size: 23px;
 	}
+	.member_tools_wrap > .search_member > .search_input{
+		position: absolute;
+		-webkit-appearance: none;
+		width: 200%;
+		height: 50px;
+		left: -200%;
+		border: 1px solid #cccccc;
+		background-color: #ffffff;
+		border-radius: 0;
+		transform: translateY(-50px);
+		box-sizing: border-box;
+		transition: 0.25s;
+	}
 	.member_tools_wrap > .add_member{
 		display: table-cell;
 		height: 100%;
