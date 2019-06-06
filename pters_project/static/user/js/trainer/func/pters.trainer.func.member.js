@@ -71,6 +71,7 @@ class Member{
             return false;
         }
 
+        this.search = false;
         let component = this.static_component();
         document.getElementById('member_display_panel').innerHTML = component.member_upper_box;
     }
