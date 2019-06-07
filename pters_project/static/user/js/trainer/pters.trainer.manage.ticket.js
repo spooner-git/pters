@@ -972,8 +972,9 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
                 else{
                     // $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
                     //toggle_lock_unlock_inputfield_grouplist(group_id, true)
-                    modify_package_from_list(package_id, package_name, package_memo);
-                    smart_refresh_member_group_class_list();
+                    modify_package_from_list(package_id, package_name, package_memo, 'callback', function(){
+                        smart_refresh_member_group_class_list();
+                    });
                 }
                 break;
         }
