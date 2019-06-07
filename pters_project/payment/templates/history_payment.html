@@ -251,12 +251,12 @@
                              data-product-id="{{ current_payment_info.product_tb_id }}"
                              data-period-month="{{ current_payment_info.period_month }}"><span>삭제</span></div>
                         {% endif %}
-                        {% if current_payment_info.billing_state_cd != 'END' %}
+{#                        {% if current_payment_info.billing_state_cd != 'END' %}#}
                         <div class="pay_method_changeButton" data-customer_uid="{{ current_payment_info.customer_uid }}"
                              data-payment_name="{{ current_payment_info.name }}"
                              data-product-id="{{ current_payment_info.product_tb_id }}"
                              data-period-month="{{ current_payment_info.period_month }}"><span>변경</span></div>
-                        {% endif %}
+{#                        {% endif %}#}
                     </div>
                 </div>
             {% endfor %}
@@ -391,11 +391,13 @@
         <input type="hidden" name="cancel_reason" id="id_cancel_reason" value="">
         <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
     </form>
+    <!-- 해지 신청 취소 -->
     <form action="{% url 'payment:restart_period_billing' %}" id="restart-period-payment-form" method="post">
         {% csrf_token %}
         <input type="hidden" name="customer_uid" id="id_customer_uid_restart" value="">
         <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
     </form>
+    <!-- 일시 정지 해제 -->
     <form action="{% url 'payment:clear_pause_period_billing' %}" id="clear-pause-period-payment-form" method="post">
         {% csrf_token %}
         <input type="hidden" name="customer_uid" id="id_customer_uid_clear_pause" value="">
@@ -466,13 +468,15 @@
 
         function check_payment(name, customer_uid, product_id, period_month){
             var error_check = true;
+            var date = new Date();
+            var new_merchant_uid = 'm_{{request.user.id}}_'+product_id+'_' + date.getTime();
+            var new_customer_uid = 'c_{{request.user.id}}_'+product_id+'_' + date.getTime();
             $.ajax({
                 url: "/payment/check_update_period_billing/", // 서비스 웹서버
                 type: "POST",
-                headers: { "Content-Type": "application/json" },
-                data: JSON.stringify({
-                    customer_uid: customer_uid
-                }),
+                data: {"customer_uid": customer_uid,
+                       "new_merchant_uid":new_merchant_uid, "new_customer_uid":new_customer_uid},
+                dataType : 'html',
 
                 beforeSend:function(xhr, settings) {
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -483,18 +487,12 @@
 
                 success:function(data){
                     var jsondata = JSON.parse(data);
-                    initialJSON = jsondata;
-                    console.log(initialJSON);
                     if(jsondata.messageArray.length>0){
-                        {#                        $('#errorMessageBar').show();#}
-                        {#                        $('#errorMessageText').text(jsondata.messageArray);#}
                         error_check = false;
                         alert(jsondata.messageArray);
                     }else {
-                        if(jsondata.billing_info != ''){
-                            alert(jsondata.billing_info);
-                        }
-                        payment(name, 'card',  product_id, jsondata.next_start_date[0], customer_uid, period_month, jsondata.price[0]);
+                        payment(name, 'card',  product_id, jsondata.next_start_date[0],
+                            customer_uid, period_month, jsondata.price[0], new_merchant_uid, new_customer_uid);
                     }
 
                 },
@@ -514,10 +512,8 @@
         var IMP = window.IMP; // 생략가능
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
-        function payment(name, pay_method, product_id, start_date, before_customer_uid, period_month, input_price){
+        function payment(name, pay_method, product_id, start_date, before_customer_uid, period_month, input_price, merchant_uid, customer_uid){
             var date = new Date();
-            var merchant_uid_data = 'm_{{request.user.id}}_'+product_id+'_' + date.getTime();
-            var customer_uid_data = 'c_{{request.user.id}}_'+product_id+'_' + date.getTime();
             var month = date.getMonth()+1;
             var day = date.getDate();
             var price = input_price;
@@ -537,18 +533,10 @@
             var request_pay_period_data = {
                 pg : 'danal', // version 1.1.0부터 지원.
                 pay_method : pay_method,
-                merchant_uid : merchant_uid_data,
-                customer_uid : customer_uid_data, // 카드(빌링키)와 1:1로 대응하는 값
+                merchant_uid : merchant_uid,
+                customer_uid : customer_uid, // 카드(빌링키)와 1:1로 대응하는 값
                 name : name,
                 amount : price,
-                custom_data: {
-                    "user_id":{{ request.user.id }},
-                    "product_id":product_id,
-                    "payment_type_cd":payment_type_cd,
-                    "customer_uid":customer_uid_data,
-                    "start_date":  today,
-                    "period_month": period_month
-                },
                 buyer_email : '{{ request.user.email }}',
                 buyer_name : '{{ request.user.first_name }}',
             };
@@ -579,8 +567,6 @@
 
                         success:function(data){
                             var jsondata = JSON.parse(data);
-                            initialJSON = jsondata;
-                            console.log('/payment/billing_finish/::'+jsondata);
                             if(jsondata.messageArray.length>0){
                                 msg = '결제에 실패하였습니다.';
                                 msg += '에러내용 : ' + jsondata.messageArray;
@@ -605,8 +591,6 @@
 
                                     success:function(data){
                                         var jsondata = JSON.parse(data);
-                                        initialJSON = jsondata;
-                                        console.log('/payment/update_period_billing_logic/::'+jsondata);
                                         if(jsondata.messageArray.length>0){
                                             msg = '결제 정보 변경에 실패하였습니다.';
                                             msg += '에러내용 : ' + jsondata.messageArray;

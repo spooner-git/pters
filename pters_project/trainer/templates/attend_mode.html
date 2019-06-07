@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
+    <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
+    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
+
+    <title>PTERS-출석체크모드</title>
+
+    <link rel="icon" href="/static/common/favicon.ico">
+    <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
+    <link rel="shortcut icon" href="/static/common/favicon-48.png">
+    <style type="text/css">
+        @import url(/static/common/fonts/notosanskr.css);
+
+        html,body{
+            font-family: 'Noto Sans KR',sans-serif !important;
+        }
+
+
+        html{
+            font-size: 10px;
+        }
+        body{
+            background-color: #cccccc;
+            margin: 0;
+        }
+        @media(min-width:768px){
+            html{
+                font-size: 14px;
+            }
+        }
+        p{
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        section{
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        button{
+            border: 1px solid #cccccc;
+            background-color: #ffffff;
+            height: 35px;
+            padding: 5px 10px;
+            min-width: 50px;
+            border-radius: 5px;
+        }
+
+        #button_setting{
+            /* background-image: url("/static/user/res/login/icon-lock-pink.png"); */
+            background-image: url("/static/common/icon/settings_black.png");
+            background-size: 25px;
+            background-position: left;
+            background-repeat: no-repeat;
+            border: 0;
+            background-color: transparent;
+        }
+
+        #button_back{
+            /* background-image: url("/static/user/res/login/icon-lock-pink.png"); */
+            background-image: url("/static/common/icon/exit_to_app_black.png");
+            background-size: 25px;
+            background-position: right;
+            background-repeat: no-repeat;
+            border: 0;
+            background-color: transparent;
+        }
+
+        #content_wrapper{
+            position: fixed;
+            display:none;
+            width: 100%;
+            max-width: 650px;
+            margin: 0 auto;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            box-shadow: 1px 1px 3px 2px #cccccc;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #wrapper_lesson_now{
+            background-color: #ffffff;
+            border-radius: 5px;
+        }
+        #wrapper_arrow_button{
+            position: relative;
+            height: 35px;
+        }
+        #wrapper_arrow_button button:first-child{
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #wrapper_arrow_button button:last-child{
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        #wrapper_arrow_button .logo{
+            height: 35px;
+            background-image: url("/static/user/res/PTERS_logo_pure.png");
+            background-repeat: no-repeat;
+            background-size: 100px;
+            background-position: center;
+        }
+        #wrapper_lesson_now_info{
+            margin: 0 auto;
+            max-width: 550px;
+            padding: 15px;
+            box-sizing: border-box;
+            text-align: center
+        }
+        #wrapper_lesson_now_info_name{
+            padding: 15px;
+            border: 2px solid #1e1e1e;
+            border-radius: 10px;
+            background: linear-gradient(to right, #f4f4f4, #f4f4f4 20%, #ffffff);
+            margin-top: 15px;
+        }
+        .lesson_selected{
+            border-width: 2px !important;
+            border-color: #fe4e65 !important;
+        }
+
+        #wrapper_phone_input{
+            text-align: center;
+        }
+        #input_form_phone{
+            -webkit-appearance: none;
+            border: 1px solid #cccccc;
+            height: 40px;
+            width: 90%;
+            max-width: 300px;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        #wrapper_submit_button{
+            text-align: center
+        }
+        #wrapper_submit_button > button{
+            width: 200px;
+        }
+
+
+        /* 팝업 */
+        .popup{
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1500;
+            width: 90%;
+            max-width: 380px;
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            padding: 20px;
+            text-align: center
+        }
+        .popup > div{
+            margin: 10px 0;
+        }
+        .popup input{
+            -webkit-appearance: none;
+            border: 1px solid #cccccc;
+            border-radius: 0;
+            width: 150px;
+            height: 30px;
+            
+        }
+        .popup button{
+            min-width: 100px;
+            margin: 5px;
+        }
+        .popup_shade{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #282828;
+            opacity: 0.5;
+        }
+        /* 팝업 */
+
+
+        .fts_24{font-size: 1.7rem;}
+        .fts_22{font-size: 1.5rem;}
+        .fts_20{font-size: 1.4rem;}
+        .fts_18{font-size: 1.28rem;}
+        .fts_16{font-size: 1.14rem;}
+
+        .ftw_bd{font-weight: bold;}
+        .ftw_500{font-weight: 500;}
+
+        .ftc_pink{color: #fe4e65}
+    </style>
+</head>
+
+<body>
+    <div id="content_wrapper">
+        <section id="wrapper_lesson_now">
+            <div id="wrapper_arrow_button">
+                <button onclick="location.reload();" style="border:0;"><img src="/static/common/icon/refresh_black.png" style="width:25px; height:25px;"></button>
+                <div class="logo"></div>
+                <button onclick="move_button(event, 'next')" hidden>&#62;&#62;</button>
+            </div>
+
+            <div id="wrapper_lesson_now_info">
+            {% now "Y.m.d (l)" as today %}
+                <p class="fts_22">{{ today |cut:"요일" }} - 현재 진행중인 수업</p>
+
+                {% for group_schedule_info in group_schedule_data %}
+                <div id="wrapper_lesson_now_info_name" data-id="{{ group_schedule_info.schedule_id }}" onclick="lesson_select(this)">
+{#                    <p style="margin:0;" class="fts_16">현재 진행중인 수업</p>#}
+                    <p class="fts_22 ftw_bd">(그룹) {{ group_schedule_info.group_tb.name }} - 정원 : {{ group_schedule_info.group_tb.member_num }} <br/>
+                        출석 : {{ group_schedule_info.group_current_finish_member_num }} / 예약 : {{ group_schedule_info.group_current_member_num }}</p>
+                    <p class="fts_20">{{ group_schedule_info.start_dt | time:'H:i' }} ~ {{ group_schedule_info.end_dt | time:'H:i' }}</p>
+                </div>
+                {% endfor %}
+
+                {% for pt_schedule_info in pt_schedule_data %}
+                    {% if not pt_schedule_info.group_tb %}
+                        <div id="wrapper_lesson_now_info_name" data-id="{{ pt_schedule_info.schedule_id }}" onclick="lesson_select(this)">
+{#                            <p style="margin:0;" class="fts_16">현재 진행중인 수업</p>#}
+                            <p class="fts_22 ftw_bd">(개인) 1:1 레슨 - {{ pt_schedule_info.lecture_tb.member.name }} 회원</p>
+                            <p class="fts_20">{{ pt_schedule_info.start_dt | time:'H:i' }} ~ {{ pt_schedule_info.end_dt | time:'H:i' }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <section id="wrapper_phone_input">
+            <form action="{% url 'trainer:attend_mode_detail' %}" id="form_data_phone" method="post">
+                <div style="display:none;">{% csrf_token %}</div>
+                <p>등록된 전화번호</p>
+                <input type="tel" placeholder="숫자만 입력" name="phone_number" id="input_form_phone" autocomplete="off" onkeyup="limit_char_only_number(this);">
+                <input type="hidden" name="schedule_id" id="input_form_lesson_id">
+            </form>
+        </section>
+
+        <section id="wrapper_submit_button">
+                <button onclick="form_confirm(event)">확인</button>
+        </section>
+
+        <section id="wrapper_submit_button">
+                <button id="button_setting" onclick="back_to_normal_mode(event, 'admin_check')"></button>
+                <button id="button_back" onclick="back_to_normal_mode(event, 'exit')"></button>
+        </section>
+
+    </div>
+
+    <div id="popup_storage"></div>
+    <input type="hidden" id="admin_password" name="setting_admin_password" value="">
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+
+        let group_schedule_id = [{% for group_schedule_info in group_schedule_data %}'{{ group_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        let scheduleIdArray = [{% for pt_schedule_info in pt_schedule_data %}'{{ pt_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+
+        window.onload=function(){
+            let window_height = window.innerHeight;
+            let content_height = $('#content_wrapper').height();
+            let check_setting_data = '{{ check_setting_data }}';
+            $('#content_wrapper').fadeIn();
+            console.log(content_height, window_height)
+            if(content_height < window_height){
+                $('#content_wrapper').css({'left':'50%', 'top':'50%', 'transform':'translate(-50%, -50%)', 'position':'absolute'})
+            }else{
+                $('#content_wrapper').css({'left':'50%', 'transform':'translateX(-50%)', 'height': window_height});
+            }
+            func_set_webkit_overflow_scrolling('#content_wrapper');
+            if(check_setting_data == '1'){
+                back_to_normal_mode(event, 'admin_menu');
+            }
+        };
+        setInterval(function(){
+            $.ajax({
+                url: '/trainer/get_attend_mode_schedule/',
+                type : 'GET',
+                dataType : 'html',
+
+                beforeSend:function(){
+                },
+
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    if(jsondata.messageArray.length>0){
+                        alert(jsondata.messageArray);
+                    }else{
+                        if(JSON.stringify(group_schedule_id) != JSON.stringify(jsondata.group_schedule_id)){
+                            location.reload();
+                        }
+                        if(JSON.stringify(scheduleIdArray) != JSON.stringify(jsondata.scheduleIdArray)){
+                            location.reload();
+                        }
+                    }
+                },
+                complete:function(){
+                },
+
+                error:function(){
+                    console.log('server error');
+                }
+            });
+        }, 60000);// 자동 ajax 새로고침(일정가져오기)
+
+
+        function form_confirm(e){
+            e.preventDefault();
+            if($('#input_form_lesson_id').val().length == 0){
+                alert('수업을 선택해주세요!');
+                return false;
+            }
+            let form_info = $('#form_data_phone');
+            $.ajax({
+                url: '/trainer/attend_mode_check/',
+                type : 'POST',
+                data : form_info.serialize(),
+                dataType : 'html',
+
+                beforeSend:function(){
+                },
+
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    if(jsondata.messageArray.length>0){
+                        alert(jsondata.messageArray);
+                    }else{
+                        form_info.submit();
+                    }
+
+                },
+
+                complete:function(){
+                },
+
+                error:function(){
+                    console.log('server error');
+                }
+            });
+        }
+
+        function move_button(e, direction){
+            e.preventDefault();
+            switch(direction){
+                case "prev":
+                    alert('prev');
+                break;
+                    
+                case "next":
+                    alert('next');
+                break;
+            }
+        }
+
+        function back_to_normal_mode(e, popup_name){
+            e.preventDefault();
+            // let a = popup('admin_check');
+            let a = popup(popup_name);
+            a.draw();
+        }
+
+        function lesson_select(context){
+            $('.lesson_selected').removeClass('lesson_selected');
+            $(context).addClass('lesson_selected');
+            let this_lesson_id = $(context).attr('data-id');
+            $('#input_form_lesson_id').val(this_lesson_id);
+        }
+
+
+        
+
+        function popup(type){
+            let $popup_storage = $('#popup_storage');
+            let html = {
+                        "signature":`<div id="popup_signature" class="popup">
+                                        <canvas id="canvas" style="background-color:#f4f4f4;"></canvas>
+                                        <button onclick="complete_this_plan();">완료</button>
+                                        <button onclick="popup().clear();">취소</button>
+                                    </div>
+                                    <div class="popup_shade" onclick="popup().clear()"></div>`,
+                        "admin_check":`<div id="popup_input_password" class="popup">
+                                            <div><p class="fts_20 ftw_bd">관리자 비밀번호를 입력해주세요.</p></div>
+                                            <div style="position:relative;">
+                                                <input type='tel' value="" onkeyup="limit_char_only_number(this);" minlength="4" maxlength="4">
+                                                    <!--<input type="text" name="username" autocomplete="off" style="position:absolute;z-index:1500;background-color:transparent;caret-color:transparent;-webkit-text-color-fill:transparent;color:transparent" onkeyup="document.querySelector('#password_real').value = this.value">
+                                                    <input type="password" name="password" placeholder="입력" autocomplete="new-password" id="password_real">
+                                                    <div><button onclick="event.preventDefault(); 
+                                                        document.querySelector('#password_real').type == 'password' ? document.querySelector('#password_real').type = 'text' : document.querySelector('#password_real').type = 'password'">보이기/숨기기</button></div>
+                                                    -->
+                                            </div>
+                                            <div class="ftw_16"><button onclick="admin_password_check('admin_menu');">확인</button><button onclick="clear_popup(event);">취소</button></div>
+                                        </div>
+                                        <div class="popup_shade" onclick="clear_popup(event);">
+                                        </div>`,
+                        'admin_menu':`
+                                    <div class="popup">
+                                        <p class="fts_22 ftw_bd" style="margin-top:0">관리자 옵션</p>
+                                        <form id="form_admin_menu" action="/trainer/update_attend_mode_setting/" method="post" style="text-align:left;border:1px solid #cccccc;padding:10px;">
+                                            <div style="display:none;">{% csrf_token %}</div>
+                                            <div style="padding:10px 0;">
+                                                <p class="fts_18 ftw_bd" style="margin-top:0">관리자 비밀번호 설정</p>
+                                                (암호화 되어 저장되지 않으므로 일상적인 번호로 하세요.)
+                                                <br/><br/>
+                                                <input type='tel' name="setting_admin_password" id="input_setting_admin_password" value="{{ setting_admin_password }}" onkeyup="limit_char_only_number(this);" minlength="4" maxlength="4">
+                                            </div>
+                                            <div style="padding:10px 0;">
+                                                <input id="form_prev_display_time" type="hidden" name="setting_attend_class_prev_display_time" value="{{ setting_attend_class_prev_display_time }}">
+                                                <input id="form_after_display_time" type="hidden" name="setting_attend_class_after_display_time" value="{{ setting_attend_class_prev_display_time }}">
+                                                <p class="fts_18 ftw_bd" style="margin-top:0">수업 표시 설정</p>
+                                                <div style="font-size:12px;">
+                                                    수업 시작
+                                                    <select id='select_prev_time_display' style="height:35px;" onchange="document.querySelector('#form_prev_display_time').value = this.value">
+                                                        <option value="0">0</option>
+                                                        <option value="5">5</option>
+                                                        <option value="10">10</option>
+                                                        <option value="15">15</option>
+                                                        <option value="20">20</option>
+                                                        <option value="25">25</option>
+                                                        <option value="30">30</option>
+                                                    </select>
+                                                    분 전부터 표시
+                                                </div>
+                                                <div style="font-size:12px;">
+                                                    수업 종료
+                                                    <select id='select_after_time_display' style="height:35px;" onchange="document.querySelector('#form_after_display_time').value = this.value">
+                                                        <option value="0">0</option>
+                                                        <option value="5">5</option>
+                                                        <option value="10">10</option>
+                                                        <option value="15">15</option>
+                                                        <option value="20">20</option>
+                                                        <option value="25">25</option>
+                                                        <option value="30">30</option>
+                                                    </select>
+                                                    분 후까지 표시
+                                                </div>
+                                            </div>
+                                            <div style="padding:10px 0;">
+                                                <input id="form_setting_schedule_auto_finish" type="hidden" name="setting_schedule_auto_finish" value="{{ setting_schedule_auto_finish }}">
+                                                <p class="fts_18 ftw_bd" style="margin-top:0">출석하지 않고 수업 시간이 지났을 때</p>
+                                                <select id='select_schedule_auto_finish' style="height:35px;width:100%;" onchange="document.querySelector('#form_setting_schedule_auto_finish').value = this.value">
+                                                    <option value="0">아무것도 하지 않음</option>
+                                                    <option value="1">출석 처리</option>
+                                                    <option value="2">결석 처리(횟수 차감됨)</option>
+                                                    <option value="3">취소 처리(횟수 차감 되지 않음)</option>
+                                                </select>
+                                            </div>
+                                            <div style="text-align:center;"><button onclick="save_setting_value(event);">저장하고 창 닫기</button>
+                                                                            <button onclick="clear_popup(event);">취소</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="popup_shade" onclick="clear_popup(event);">
+                                    </div>`,
+                        'exit':`<div id="popup_input_password" class="popup">
+                                    <div><p class="fts_20 ftw_bd">관리자 비밀번호를 입력해주세요.</p></div>
+                                    <div style="position:relative;">
+                                            <input type='tel' value="" onkeyup="limit_char_only_number(this);" minlength="4" maxlength="4">
+                                            <!--<input type="text" name="username" autocomplete="off" style="position:absolute;z-index:1500;background-color:transparent;caret-color:transparent;-webkit-text-color-fill:transparent;color:transparent" onkeyup="document.querySelector('#password_real').value = this.value">
+                                            <input type="password" name="password" placeholder="입력" autocomplete="new-password" id="password_real">
+                                            <div><button onclick="event.preventDefault();
+                                                document.querySelector('#password_real').type == 'password' ? document.querySelector('#password_real').type = 'text' : document.querySelector('#password_real').type = 'password'">보이기/숨기기</button></div>
+                                            -->
+                                    </div>
+                                    <div class="ftw_16"><button style="background-color:#f4f4f4" onclick="admin_password_check('exit');">출석체크 모드 종료</button>
+                                                        <button style="background-color:#f4f4f4" onclick="location.href='/login/logout/';">로그아웃</button>
+                                                        <button onclick="clear_popup(event);">취소</button>
+                                    </div>
+                                </div>
+                                <div class="popup_shade" onclick="clear_popup(event);">
+                                </div>`
+            };
+
+            let draw = function(){  $('#content_wrapper').css('overflow-y', 'hidden');
+                                    $popup_storage.html(html[type]);
+                                    if(type == 'admin_menu'){
+                                        document.getElementById('select_schedule_auto_finish').value = '{{ setting_schedule_auto_finish }}';
+                                        document.getElementById('select_prev_time_display').value = '{{ setting_attend_class_prev_display_time }}';
+                                        document.getElementById('select_after_time_display').value = '{{ setting_attend_class_after_display_time }}';
+                                    }
+                                }
+                        
+            let clear = function(){ $('#content_wrapper').css('overflow-y', 'auto');
+                                    $('#popup_storage').html('');
+                                }
+
+
+            return ({
+                    "draw": draw,
+                    "clear": clear
+            })
+        }
+        function save_setting_value(e){
+            e.preventDefault();
+            if($('#input_setting_admin_password').val().length!=4){
+                alert('관리자 비밀번호는 4자만 가능합니다.')
+            }
+            else{
+                $('#form_admin_menu').submit();
+                popup().clear();
+            }
+        }
+        function admin_password_check(popup_name){
+            let password = $('#admin_password').val();
+            $.ajax({
+                url: '/trainer/check_admin_password/',
+                type:'POST',
+                data:{'setting_admin_password':password},
+                dataType : 'html',
+
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    if(jsondata.messageArray.length>0){
+                        alert(jsondata.messageArray);
+                    }else{
+                        if(popup_name == 'exit'){
+                            location.href = '/trainer/trainer_setting/'
+                        }else if(popup_name=='admin_menu'){
+                            back_to_normal_mode(event,'admin_menu');
+                        }
+                    }
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                    console.log('error');
+                }
+            });
+        }
+        function clear_popup(e){
+
+            e.preventDefault();
+            $('#admin_password').val('');
+            popup().clear();
+        }
+
+
+    </script>
+    <script>
+        //기기종류 판단
+        const varUA = navigator.userAgent.toLowerCase();
+        let os = "IOS";
+        if (varUA.match(/android/) != null) {
+            os = "ANDROID";
+        }else if (varUA.match(/iphone/) != null || varUA.match(/ipad/) != null || varUA.match(/ipod/) != null) {
+            os = "IOS";
+        }else if (varUA.match(/macintosh/) != null){
+            os = "IOS";
+        }else{
+            os = "WINDOW";
+        }
+        
+        function func_set_webkit_overflow_scrolling(target_selector){
+            if(os == "IOS"){
+                let $selector = $(target_selector);
+                $selector.scrollTop(1);
+                $selector.scroll(function(e){
+                    const popupHeight = $selector.height();
+                    const scrollHeight = $selector.prop('scrollHeight');
+                    const scrollLocation = $selector.scrollTop();
+                    if(scrollHeight > popupHeight+1){
+                    if(popupHeight + scrollLocation == scrollHeight){
+                            $selector.animate({scrollTop : scrollLocation-1}, 10);
+                        }else if(popupHeight + scrollLocation == popupHeight){
+                            $selector.animate({scrollTop : scrollLocation+1}, 10);
+                        }
+                    }
+                    
+                });
+            }
+        }
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        function limit_char_only_number(e){
+            // var limit =  /[~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\]/gi;
+            var limit =  /[^0-9\,]/gi;
+            var temp = $(e).val();
+            if(limit.test(temp)){
+                $(e).val(temp.replace(limit, ""));
+                alert("숫자만 입력하실 수 있습니다.");
+            }
+            else{
+                $('#admin_password').val(temp);
+            }
+        }
+    </script>
+</body>
+</html>
+

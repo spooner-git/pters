@@ -64,6 +64,7 @@ var multi_language_set = {
                                     "text-language":"Language/言語/언어",
                                     "text-fromptersteam":"피터스 공지",
                                     "text-aboutus":"About us",
+                                    "text-attendmode":"출석체크 모드",
 
                                     "text-yes":"예",
                                     "text-no":"아니오",
@@ -379,6 +380,7 @@ $('.text-purchase').text(multi_language_set[Options.language]["text-purchase"]);
 $('.text-language').text(multi_language_set[Options.language]["text-language"]);
 $('.text-fromptersteam').text(multi_language_set[Options.language]["text-fromptersteam"]);
 $('.text-aboutus').text(multi_language_set[Options.language]["text-aboutus"]);
+$('.text-attendmode').text(multi_language_set[Options.language]["text-attendmode"]);
 
 
 //Trainer Base - Popups
