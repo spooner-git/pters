@@ -46,7 +46,7 @@ class Menu{
                 continue;
             }
 
-            html_temp.push(`<div class="menu_element_wrap" onclick="alert('${item_el.name}페이지로 이동')">
+            html_temp.push(`<div class="menu_element_wrap" onclick="sideGoPage('${el}', this)">
                                 <img src="/static/common/icon/icon_more.png">
                                 <span>${item_el.name}</span>
                             </div>`)

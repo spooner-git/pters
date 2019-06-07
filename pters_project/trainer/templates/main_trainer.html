@@ -7,36 +7,22 @@
 {% block local_css %}
     <meta name="description" content="main">
     <style>
-        div.main_page{
-            font-size: 18px;
-        }
+
     </style>
 {% endblock %}
 
 {% block content %}
-    <div class="cal_page">
-        메인 페이지 <br> 메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>
-    </div>
-    <div class="cal_page">
-        메인 페이지 <br> 메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>
-    </div>
-    <div class="cal_page">
-        메인 페이지 <br> 메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>
-    </div>
-    <div class="cal_page">
-        메인 페이지 <br> 메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>
-    </div>
-    <div class="cal_page">
-        메인 페이지 <br> 메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>
-    </div>
-    <div class="cal_page">
-        메인 페이지 <br> 메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>메인 페이지 <br>
-    </div>
+    
 {% endblock %}
 
 
 {% block local_js_footer %}
     <script>
-        $('div.main_page').css({'background-color':'#f4f4f4', 'color':'blue'});
+        var class_center_name = `{{ request.session.class_center_name }}`;
+        var class_type_name = `{{ request.session.class_type_name }}`;
+        var today_schedule_num = `{{ today_schedule_num }}`;
+        var total_member_num = `{{total_member_num}}`;
+        var new_member_num = `{{ new_member_num }}`;
+        var to_be_ended_member_num = `{{ to_be_end_member_num }}`;
     </script>
 {% endblock %}

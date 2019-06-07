@@ -22,10 +22,11 @@
     <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.base.css" %}>
 
     <!-- 페이지 CSS 로드 -->
-    <link rel="stylesheet" href={% static_url "user/css/trainer/func/pters.trainer.func.calendar.css" %}>
-    <link rel="stylesheet" href={% static_url "user/css/trainer/func/pters.trainer.func.member.css" %}>
-    <link rel="stylesheet" href={% static_url "user/css/trainer/func/pters.trainer.func.lecture.css" %}>
-    <link rel="stylesheet" href={% static_url "user/css/trainer/func/pters.trainer.func.menu.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.home.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.calendar.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.member.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.lecture.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.menu.css" %}>
     <!-- 페이지 CSS 로드 -->
 
     <style>
@@ -69,7 +70,6 @@
             border-radius: 1px;
             /* box-shadow:0px 0px 6px #777 inset; */
         }
-
 
         #root_content{
             position: fixed;
@@ -144,8 +144,8 @@ onclick="layer_popup.all_close_layer_popup();"></div>
 
 <nav id="root_nav">
     <div class="obj_table_raw" style="height:100%;">
-        <!-- <div class="obj_table_cell_x5" onclick="sideGoPage('trainer_main')"> -->
-        <div class="obj_table_cell_x5 nav_item" onclick="location.href='/trainer/trainer_main/' ">
+        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('home', this)" id="home">
+        <!-- <div class="obj_table_cell_x5 nav_item" onclick="location.href='/trainer/trainer_main/' "> -->
             <div class="nav_img"><img src="/static/common/icon/icon_home.png" alt=""></div>
             <div class="nav_text">홈</div>
         </div>
@@ -176,16 +176,20 @@ onclick="layer_popup.all_close_layer_popup();"></div>
 {% block footer %}
 
 {% endblock %}
+
+{% block local_js_footer %}
+{% endblock %}
 <script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
 
 <!-- 페이지 스크립트 로드-->
-<script type="text/javascript" src={% static_url "user/js/trainer/func/pters.trainer.func.calendar.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/func/pters.trainer.func.lecture.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/func/pters.trainer.func.member.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/func/pters.trainer.func.menu.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.home.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.calendar.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.lecture.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.member.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.menu.js" %}></script>
 <!-- 페이지 스크립트 로드-->
 <!-- POPUP Behavior -->
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.popup.behavior.js" %}></script>
@@ -264,7 +268,7 @@ onclick="layer_popup.all_close_layer_popup();"></div>
         }
     }
 
-    
+    var home = new Home('#root_content', 'home');
     var calendar = new Calendar('#root_content', 'calendar');
     var lecture = new Lecture('#root_content', 'lecture');
     var member = new Member('#root_content', 'member');
@@ -280,7 +284,8 @@ onclick="layer_popup.all_close_layer_popup();"></div>
         
         switch(page){
             case 'home':
-                $root_content.html('<div>main 페이지</div>');
+                // $root_content.html('<div>main 페이지</div>');
+                home.init();
             break;
             case 'calendar':
                 calendar.init("week");
@@ -298,10 +303,11 @@ onclick="layer_popup.all_close_layer_popup();"></div>
         $root_content.scrollTop(1);
     }
 
+    $('#home').trigger('click');
+
 </script>
 
-{% block local_js_footer %}
-{% endblock %}
+
 
 </body>
 </html>
