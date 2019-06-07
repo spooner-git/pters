@@ -272,10 +272,11 @@
             let content_height = $('#content_wrapper').height();
             let check_setting_data = '{{ check_setting_data }}';
             $('#content_wrapper').fadeIn();
+            console.log(content_height, window_height)
             if(content_height < window_height){
                 $('#content_wrapper').css({'left':'50%', 'top':'50%', 'transform':'translate(-50%, -50%)', 'position':'absolute'})
             }else{
-                $('#content_wrapper').css('height', window_height);
+                $('#content_wrapper').css({'left':'50%', 'transform':'translateX(-50%)', 'height': window_height});
             }
             func_set_webkit_overflow_scrolling('#content_wrapper');
             if(check_setting_data == '1'){
