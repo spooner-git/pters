@@ -34,6 +34,7 @@
 	}
 	.member_tools_wrap > .search_member > .search_input{
 		position: absolute;
+		display: none;
 		-webkit-appearance: none;
 		width: 200%;
 		height: 50px;
