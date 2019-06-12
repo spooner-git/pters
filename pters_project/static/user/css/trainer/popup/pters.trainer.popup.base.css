@@ -29,15 +29,26 @@
                 width: 24px;
                 height: 24px;
             }
+            .popup_mobile .wrapper_top .obj_icon_prev{
+                float: left;
+                width: 24px;
+                height: 24px;
+            }
         .popup_mobile.popup_full{
             background-color: #f2f2f2;
             border-top-right-radius: 8px; 
             border-top-left-radius: 8px;
         }
+        .popup_mobile.popup_no_border_radius{
+            border-radius: 0;
+        }
             .popup_mobile.popup_full .wrapper_top{
                 background-color: #ffffff;
                 border-top-right-radius: 8px; 
                 border-top-left-radius: 8px;
+            }
+            .popup_mobile.popup_no_border_radius .wrapper_top{
+                border-radius: 0;
             }
             .popup_mobile.popup_full .wrapper_top .obj_icon_x{
                 margin-top: 4px;

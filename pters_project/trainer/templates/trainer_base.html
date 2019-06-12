@@ -25,7 +25,7 @@
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.home.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.calendar.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.member.css" %}>
-    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.lecture.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.ticket.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.menu.css" %}>
     <!-- 페이지 CSS 로드 -->
 
@@ -153,7 +153,7 @@ onclick="layer_popup.all_close_layer_popup();"></div>
             <div class="nav_img"><img src="/static/common/icon/icon_cal.png" alt=""></div>
             <div class="nav_text">일정</div>
         </div>
-        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('lecture', this)">
+        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('ticket', this)">
             <div class="nav_img"><img src="/static/common/icon/icon_lecture.png" alt=""></div>
             <div class="nav_text">수업</div>
         </div>
@@ -187,7 +187,7 @@ onclick="layer_popup.all_close_layer_popup();"></div>
 <!-- 페이지 스크립트 로드-->
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.home.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.calendar.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.lecture.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.ticket.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.member.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.menu.js" %}></script>
 <!-- 페이지 스크립트 로드-->
@@ -270,7 +270,7 @@ onclick="layer_popup.all_close_layer_popup();"></div>
 
     var home = new Home('#root_content', 'home');
     var calendar = new Calendar('#root_content', 'calendar');
-    var lecture = new Lecture('#root_content', 'lecture');
+    var ticket = new Ticket('#root_content', 'ticket');
     var member = new Member('#root_content', 'member');
     var menu = new Menu('#root_content', 'menu');
 
@@ -290,8 +290,8 @@ onclick="layer_popup.all_close_layer_popup();"></div>
             case 'calendar':
                 calendar.init("week");
             break;
-            case 'lecture':
-                lecture.init();
+            case 'ticket':
+                ticket.init();
             break;
             case 'member':
                 member.init();

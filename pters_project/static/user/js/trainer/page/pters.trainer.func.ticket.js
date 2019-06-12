@@ -1,6 +1,6 @@
-class Lecture{
+class Ticket{
     constructor(targetHTML, instance){
-        this.page_name = 'lecture';
+        this.page_name = 'ticket';
         this.targetHTML = targetHTML;
         this.instance = instance;
 
@@ -74,7 +74,7 @@ class Lecture{
         }
 
         let component = this.static_component();
-        document.getElementById('lecture_display_panel').innerHTML = component.lecture_upper_box;
+        document.getElementById('ticket_display_panel').innerHTML = component.ticket_upper_box;
     }
 
     //수강권 리스트를 렌더링
@@ -110,7 +110,7 @@ class Lecture{
 
         let html_temp = [];
         for(let i=0; i<length; i++){
-            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'ticketid':${ticket_id[i]}});`;
+            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'ticketid':${ticket_id[i]}});`;
             let html = `<article class="ticket_wrapper" data-ticketid="${ticket_id[i]}" onclick="${onclick}">
                             <div class="ticket_data_u">
                                 <div class="ticket_name">${ticket_name[i]} <span style="font-size:11px;float:right;">${ticket_type_text[i]}</span></div>
@@ -124,7 +124,7 @@ class Lecture{
             html_temp.push(html);
         }
 
-        document.querySelector('#lecture_content_wrap').innerHTML = html_temp.join("");
+        document.querySelector('#ticket_content_wrap').innerHTML = html_temp.join("");
         $('#root_content').scrollTop(1);
     }
 
@@ -144,19 +144,19 @@ class Lecture{
 
     static_component(){
         return(
-            {    "lecture_upper_box":`   <div class="lecture_upper_box">
+            {    "ticket_upper_box":`   <div class="ticket_upper_box">
                                             <div style="display:inline-block;width:200px;">
                                                 <span>${this.list_type_text} </span>
                                                 <span class="">[${this.list_status_type_text}] ${this.data_length}개</span>
                                             </div>
-                                            <div class="lecture_tools_wrap">
+                                            <div class="ticket_tools_wrap">
                                                 <div class="swap_list" onclick="${this.instance}.switch_type();"></div>
-                                                <div class="search_lecture"></div>
-                                                <div class="add_lecture" onclick="layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_LECTURE_ADD}', 95, ${POPUP_FROM_BOTTOM}, {'data':null})"></div>
+                                                <div class="search_ticket"></div>
+                                                <div class="add_ticket" onclick="layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_TICKET_ADD}', 95, ${POPUP_FROM_BOTTOM}, {'data':null})"></div>
                                             </div>
                                         </div>`
                                 ,
-                "initial_page":`<div id="${this.subtargetHTML}"><div id="lecture_display_panel"></div><div id="lecture_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div></div>`
+                "initial_page":`<div id="${this.subtargetHTML}"><div id="ticket_display_panel"></div><div id="ticket_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div></div>`
             }
         )
     }

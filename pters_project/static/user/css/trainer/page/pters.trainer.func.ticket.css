@@ -1,4 +1,4 @@
-#lecture_display_panel{
+#ticket_display_panel{
 	position: sticky;
 	position: -webkit-sticky;
 	height: auto;
@@ -7,7 +7,7 @@
 	top: 0;
 	/* text-align: center; */
 }
-	.lecture_upper_box{
+	.ticket_upper_box{
 		position: relative;
 		height: 50px;
 		line-height: 50px;
@@ -16,7 +16,7 @@
 		padding: 0 20px;
 		box-sizing: border-box;
 	}
-	.lecture_tools_wrap{
+	.ticket_tools_wrap{
 		display: table;
 		position: absolute;
 		right: 0;
@@ -24,7 +24,7 @@
 		width: 140px;
 		height: 100%;
 	}
-	.lecture_tools_wrap > .search_lecture{
+	.ticket_tools_wrap > .search_ticket{
 		display: table-cell;
 		height: 100%;
 		background-image: url("/static/common/icon/icon_search.png");
@@ -32,7 +32,7 @@
 		background-position: center;
 		background-size: 23px;
 	}
-	.lecture_tools_wrap > .add_lecture{
+	.ticket_tools_wrap > .add_ticket{
 		display: table-cell;
 		height: 100%;
 		background-image: url("/static/common/icon/icon_add.png?v2");
@@ -40,7 +40,7 @@
 		background-position: center;
 		background-size: 23px;
 	}
-	.lecture_tools_wrap > .swap_list{
+	.ticket_tools_wrap > .swap_list{
 		display: table-cell;
 		height: 100%;
 		background-image: url("/static/common/icon/icon_swap.png?v2");
