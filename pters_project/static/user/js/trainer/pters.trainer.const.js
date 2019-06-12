@@ -61,3 +61,17 @@ const SCHEDULE_FINISH_ANYWAY = 4;
 const MAX_WIDTH = 800;
 
 /**/
+
+
+/* 팝업 주소 */
+
+const POPUP_ADDRESS_PLAN_VIEW = 'popup_calendar_plan_view';
+const POPUP_ADDRESS_PLAN_ADD = 'popup_calendar_plan_add';
+const POPUP_ADDRESS_MEMBER_VIEW = 'popup_member_view';
+const POPUP_ADDRESS_MEMBER_ADD = 'popup_member_add';
+const POPUP_ADDRESS_LECTURE_VIEW = 'popup_lecture_view';
+const POPUP_ADDRESS_LECTURE_ADD = 'popup_lecture_add';
+const POPUP_ADDRESS_TICKET_VIEW = 'popup_ticket_view';
+const POPUP_ADDRESS_TICKET_ADD = 'popup_ticket_add';
+
+/* 팝업 주소 */

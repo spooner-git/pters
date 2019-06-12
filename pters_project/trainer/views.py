@@ -5886,3 +5886,58 @@ class PopupCalendarPlanAdd(TemplateView):
         # if len(context['schedule_data']) == 0:
         #     return redirect('/trainee/popup_calendar_plan_reserve/')
         return context
+
+
+class PopupMemberAdd(TemplateView):
+    template_name = 'popup/trainer_popup_member_add.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupMemberAdd, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        select_date = self.request.GET.get('select_date')
+        return context
+
+class PopupMemberView(TemplateView):
+    template_name = 'popup/trainer_popup_member_view.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupMemberView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        select_date = self.request.GET.get('select_date')
+        return context
+
+class PopupLectureAdd(TemplateView):
+    template_name = 'popup/trainer_popup_lecture_add.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupLectureAdd, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        select_date = self.request.GET.get('select_date')
+        return context
+
+class PopupLectureView(TemplateView):
+    template_name = 'popup/trainer_popup_lecture_view.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupLectureView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        select_date = self.request.GET.get('select_date')
+        return context
+
+class PopupTicketAdd(TemplateView):
+    template_name = 'popup/trainer_popup_ticket_add.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupTicketAdd, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        select_date = self.request.GET.get('select_date')
+        return context
+
+class PopupTicketView(TemplateView):
+    template_name = 'popup/trainer_popup_ticket_view.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupTicketView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        select_date = self.request.GET.get('select_date')
+        return context

@@ -304,7 +304,7 @@ class Calendar {
     }
 
     open_popup_plan_view(event, year, month, date){
-        layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':`${year}-${month}-${date}`})
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, 90, POPUP_FROM_BOTTOM, {'select_date':`${year}-${month}-${date}`})
     }
 
     zoom_week_cal(event){
@@ -522,7 +522,7 @@ class Calendar {
 
                             let cell_index = plan.duplicated_index;
                             let cell_divide = plan.duplicated_cell;
-                            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, 'popup_calendar_plan_view', 90, ${POPUP_FROM_BOTTOM}, {'select_date':${date_to_search}})`
+                            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_PLAN_VIEW}', 90, ${POPUP_FROM_BOTTOM}, {'select_date':${date_to_search}})`
                             let styles = `width:${100/cell_divide}%;height:${diff.hour*60+60*diff.minute/60}px;top:${(plan_start.hour-work_start)*60 + 60*plan_start.minute/60}px;left:${cell_index*100/cell_divide}%`;
                             return `<div onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week" style="${styles}"></div>`;
                         })
@@ -562,7 +562,7 @@ class Calendar {
         indicator.style.top = offset_px+'px';
         event.target.appendChild(indicator);
 
-        layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_add', 70, POPUP_FROM_TOP, {'select_date':`${year}-${month}-${date}`});
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 95, POPUP_FROM_BOTTOM, {'select_date':`${year}-${month}-${date}`});
     }
 
 
@@ -616,7 +616,7 @@ class Calendar {
                                             <button onclick="${this.instance}.move_month('next')" style="vertical-align:middle;" hidden>다음</button>
                                             <div class="cal_tools_wrap">
                                                 <div class="swap_cal" onclick="${this.instance}.switch_cal_type()"></div>
-                                                <div class="add_plan"></div>
+                                                <div class="add_plan" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 95, POPUP_FROM_BOTTOM, {'select_date':'${this.current_year}-${this.current_month}-${this.current_date}'})"></div>
                                             </div>
                                         </div>
                                         <div class="cal_week_line_dates">
@@ -632,7 +632,7 @@ class Calendar {
                                             <button onclick="${this.instance}.move_week('next')" style="vertical-align:middle;" hidden>다음</button>
                                             <div class="cal_tools_wrap">
                                                 <div class="swap_cal"  onclick="${this.instance}.switch_cal_type()"></div>
-                                                <div class="add_plan"></div>
+                                                <div class="add_plan" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 95, POPUP_FROM_BOTTOM, {'select_date':'${this.current_year}-${this.current_month}-${this.current_date}'})"></div>
                                             </div>
                                         </div>
                                         <div class="cal_week_line_dates">

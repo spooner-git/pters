@@ -1,18 +1,18 @@
-{% extends "popup/trainee_base_popup_noajax.html" %}
+{% extends "popup/trainee_base_popup.html" %}
 {% load static_url %}
 {% load background_trainee_data %}
 
 {% block popup_base_css %}
     <!-- pters.trainee.popup.plan_view.css -->
-    <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.plan_add.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.plan_view.css" %}>
 {% endblock %}
 
 {% block popup_base_wrapper_top_left %}
-일정 추가
+수강권 추가
 {% endblock %}
 
 {% block popup_base_contents %}
-    <div class="popup_calendar_plan_add">
+    <div class="popup_ticket_add">
         <div class="wrapper_calendar_plan_view_title">
             <div class="wrapper_popup_title_text obj_font_size_18_weight_900">{{ date_format | date:'Y.m.d (l)'|cut:"요일" }} </div>
             <div class="wrapper_popup_title_date obj_font_size_13_weight_500"><span class="obj_font_color_pters_red">{{ schedule_data | length }}개</span>의 수업이 있습니다.</div>
@@ -88,7 +88,7 @@
                 </div>
             </div>
             {% empty %}
-              <div style="text-align:center;">예약된 일정이 없습니다.</div>
+                <div style="text-align:center;">예약된 일정이 없습니다.</div>
 {#            <div class="obj_box_full">#}
 {#                <div class="obj_box_full_grey">#}
 {#                    <div class="wrapper_tag">#}

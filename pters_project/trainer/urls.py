@@ -295,7 +295,19 @@ urlpatterns = [
     # 일정 팝업 페이지
     url(r'^popup_calendar_plan_view/$', views.PopupCalendarPlanView.as_view(),name='popup_calendar_plan_view'),
     # 일정 팝업 페이지
-    url(r'^popup_calendar_plan_add/$', views.PopupCalendarPlanAdd.as_view(),name='popup_calendar_plan_add')
+    url(r'^popup_calendar_plan_add/$', views.PopupCalendarPlanAdd.as_view(),name='popup_calendar_plan_add'),
+    # 회원정보 팝업 페이지
+    url(r'^popup_member_view/$', views.PopupMemberView.as_view(),name='popup_member_view'),
+    # 회원추가 팝업 페이지
+    url(r'^popup_member_add/$', views.PopupMemberAdd.as_view(),name='popup_member_add'),
+    # 수업정보 팝업 페이지
+    url(r'^popup_lecture_view/$', views.PopupLectureView.as_view(),name='popup_lecture_view'),
+    # 수업추가 팝업 페이지
+    url(r'^popup_lecture_add/$', views.PopupLectureAdd.as_view(),name='popup_lecture_add'),
+    # 수강권정보 팝업 페이지
+    url(r'^popup_ticket_view/$', views.PopupTicketView.as_view(),name='popup_ticket_view'),
+    # 수강권추가 팝업 페이지
+    url(r'^popup_ticket_add/$', views.PopupTicketAdd.as_view(),name='popup_ticket_add')
 ]
 
 

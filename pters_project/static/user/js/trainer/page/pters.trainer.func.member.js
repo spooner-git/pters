@@ -110,7 +110,8 @@ class Member{
 
         let html_temp = [];
         for(let i=0; i<length; i++){
-            let html = `<article class="member_wrapper" data-dbid="${db_id[i]}" data-name="${name[i]}" onclick="alert('${name[i]} (ID:${db_id[i]})')">
+            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'dbid':${db_id[i]}});`;
+            let html = `<article class="member_wrapper" data-dbid="${db_id[i]}" data-name="${name[i]}" onclick="${onclick}">
                             <div class="member_data_l">
                                 <div class="member_name">${name[i]}</div>
                                 <div class="member_counts"> ${rem_count[i]} / ${reg_count[i]} <span style="font-size:10px;color:#8d8d8d;">(남은 횟수 / 총 등록횟수)</span></div>
@@ -191,7 +192,6 @@ class Member{
     }
 
 
-
     static_component(){
         return(
             {    "member_upper_box":`   <div class="member_upper_box">
@@ -202,7 +202,7 @@ class Member{
                                                 <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">
                                                     <input type="text" class="search_input" placeholder="검색" onclick="event.stopPropagation();" onkeyup="${this.instance}.search_member_by_typing(event)">
                                                 </div>
-                                                <div class="add_member"></div>
+                                                <div class="add_member" onclick="layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_MEMBER_ADD}', 95, ${POPUP_FROM_BOTTOM}, {'data':null})"></div>
                                             </div>
                                         </div>
                                         <div class="member_bottom_tools_wrap">

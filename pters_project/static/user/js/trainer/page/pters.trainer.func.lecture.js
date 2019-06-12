@@ -110,7 +110,8 @@ class Lecture{
 
         let html_temp = [];
         for(let i=0; i<length; i++){
-            let html = `<article class="ticket_wrapper" data-ticketid="${ticket_id[i]}" onclick="alert('${ticket_name[i]} (ID:${ticket_id[i]})')">
+            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'ticketid':${ticket_id[i]}});`;
+            let html = `<article class="ticket_wrapper" data-ticketid="${ticket_id[i]}" onclick="${onclick}">
                             <div class="ticket_data_u">
                                 <div class="ticket_name">${ticket_name[i]} <span style="font-size:11px;float:right;">${ticket_type_text[i]}</span></div>
                                 <div class="ticket_note">${ticket_note[i]}</div>
@@ -151,7 +152,7 @@ class Lecture{
                                             <div class="lecture_tools_wrap">
                                                 <div class="swap_list" onclick="${this.instance}.switch_type();"></div>
                                                 <div class="search_lecture"></div>
-                                                <div class="add_lecture"></div>
+                                                <div class="add_lecture" onclick="layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_LECTURE_ADD}', 95, ${POPUP_FROM_BOTTOM}, {'data':null})"></div>
                                             </div>
                                         </div>`
                                 ,
