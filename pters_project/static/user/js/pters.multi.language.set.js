@@ -86,7 +86,7 @@ var multi_language_set = {
                                     "text-plancomplete":"일정 완료",
                                     "text-plancancel":"일정 취소",
                                     "text-completesign":"완료 서명",
-                                    "text-pleasesign":"회원님 완료 서명을 입력해주세요.",
+                                    "text-pleasesign":"이곳에 회원님 완료 서명을 입력해주세요.",
                                     "text-participants":"참석자",
 
                                     "text-thisgroupmember":"이 그룹 회원",
@@ -400,6 +400,7 @@ $('.text-register').text(multi_language_set[Options.language]["text-register"]);
 $('.text-deletequestion-plan').text(multi_language_set[Options.language]["text-deletequestion-plan"])
 $('.text-memberinfo').text(multi_language_set[Options.language]["text-memberinfo"]);
 $('.text-thisgroupmember').text(multi_language_set[Options.language]["text-thisgroupmember"]);
+// $('.text-pleasesign').text(multi_language_set[Options.language]["text-pleasesign"]);
 
 //Calendar
 $('.text-sundaymin').text(multi_language_set[Options.language]["text-sundaymin"]);
