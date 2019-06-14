@@ -400,7 +400,7 @@ $('.text-register').text(multi_language_set[Options.language]["text-register"]);
 $('.text-deletequestion-plan').text(multi_language_set[Options.language]["text-deletequestion-plan"])
 $('.text-memberinfo').text(multi_language_set[Options.language]["text-memberinfo"]);
 $('.text-thisgroupmember').text(multi_language_set[Options.language]["text-thisgroupmember"]);
-// $('.text-pleasesign').text(multi_language_set[Options.language]["text-pleasesign"]);
+$('.text-pleasesign').text(multi_language_set[Options.language]["text-pleasesign"]);
 
 //Calendar
 $('.text-sundaymin').text(multi_language_set[Options.language]["text-sundaymin"]);
