@@ -3547,13 +3547,18 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
                 morningday = "오후";
             }
             
-            if(splited[9] >= 1){
+            if(splited[9] == 1){
                 htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-group-type-cd-name="'+splited[13]+'" data-currentmembernum="'+groupcurrent+'" data-membernum="'+groupmaxnum+'" data-dbid="'+splited[10]+'" data-scheduleid="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[seq_name_memo]+'" data-memo="'+schedule_memo[seq_name_memo]+'">'+
                                     '<div class="plancheckmorningday">'+morningday+'</div>'+
                                     '<div class="planchecktime">'+time_format_add_ampm(stime+':'+sminute, "none")+' - '+time_format_add_ampm(etime+':'+eminute, "none")+'</div>'+
                                     '<div class="plancheckname"><img src="/static/user/res/btn-pt-complete.png">'+'<p '+textsize+'>'+name+'</p></div>'+
                                 '</div>');
-
+            }else if(splited[9] == 2){
+                htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-group-type-cd-name="'+splited[13]+'" data-currentmembernum="'+groupcurrent+'" data-membernum="'+groupmaxnum+'" data-dbid="'+splited[10]+'" data-scheduleid="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[seq_name_memo]+'" data-memo="'+schedule_memo[seq_name_memo]+'">'+
+                                    '<div class="plancheckmorningday">'+morningday+'</div>'+
+                                    '<div class="planchecktime">'+time_format_add_ampm(stime+':'+sminute, "none")+' - '+time_format_add_ampm(etime+':'+eminute, "none")+'</div>'+
+                                    '<div class="plancheckname"><img src="/static/user/res/btn-absence.png">'+'<p '+textsize+'>'+name+'</p></div>'+
+                                '</div>');
             }else if(splited[9] == 0){
                 htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-group-type-cd-name="'+splited[13]+'" data-currentmembernum="'+groupcurrent+'" data-membernum="'+groupmaxnum+'" data-dbid="'+splited[10]+'" data-scheduleid="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[seq_name_memo]+'" data-memo="'+schedule_memo[seq_name_memo]+'">'+
                                     '<div class="plancheckmorningday">'+morningday+'</div>'+

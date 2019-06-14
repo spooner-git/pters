@@ -85,7 +85,7 @@ var multi_language_set = {
 
                                     "text-plancomplete":"일정 완료",
                                     "text-plancancel":"일정 취소",
-                                    "text-completesign":"완료 서명",
+                                    "text-completesign":"서명",
                                     "text-pleasesign":"이곳에 회원님 완료 서명을 입력해주세요.",
                                     "text-participants":"참석자",
 
@@ -193,7 +193,7 @@ var multi_language_set = {
                                     "text-finish":"終了",
                                     "text-plancomplete":"日程完了",
                                     "text-plancancel":"日程削除",
-                                    "text-completesign":"完了署名",
+                                    "text-completesign":"署名",
                                     "text-pleasesign":"会員の署名を書いてください",
                                     "text-participants":"参加者",
 
