@@ -105,19 +105,38 @@ $(document).ready(function(){
             }
         })
     }else{
-        if(width_size > 600){
-            $('html').css('background-image',"url('"+class_background_img_url[0].replace(/\)/gi,"")+"')");
-        }else{
-            $('html').css('background-image',"url('"+class_background_img_url[1].replace(/\)/gi,"")+"')");
+
+        let background_type_cd = 'BACKGROUND_IMG_URL_PC';
+        let img_url = '';
+        if(width_size >= 600 ) {
+            background_type_cd = 'BACKGROUND_IMG_URL_PC';
         }
+        else{
+            background_type_cd = 'BACKGROUND_IMG_URL_MOBILE';
+        }
+        for(let i=0; i<class_background_type_cd.length; i++){
+            if(class_background_type_cd[i] == background_type_cd){
+                 img_url = class_background_img_url[i];
+            }
+        }
+        $('html').css('background-image',"url('"+img_url+"')");
 
         $(window).resize(function(){
             var width_size = window.outerWidth;
-            if(width_size > 600){
-                $('html').css('background-image',"url('"+class_background_img_url[0].replace(/\)/gi,"")+"')");
-            }else{
-                $('html').css('background-image',"url('"+class_background_img_url[1].replace(/\)/gi,"")+"')");
+            let background_type_cd = 'BACKGROUND_IMG_URL_PC';
+            let img_url = '';
+            if(width_size >= 600 ) {
+                background_type_cd = 'BACKGROUND_IMG_URL_PC';
             }
+            else{
+                background_type_cd = 'BACKGROUND_IMG_URL_MOBILE';
+            }
+            for(let i=0; i<class_background_type_cd.length; i++){
+                if(class_background_type_cd[i] == background_type_cd){
+                     img_url = class_background_img_url[i];
+                }
+            }
+            $('html').css('background-image',"url('"+img_url+"')");
         });
     }
 

@@ -1004,6 +1004,7 @@ function playSound() {
 
         "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
         "location" : "Korea",         //Korea, Japan, English, Chinese
+        "admin_password" : "{{ request.session.setting_admin_password }}",
     };
     
     //요일별 업무시간이 모두 같으면 worktime, workStartTime, workEndTime 셋팅

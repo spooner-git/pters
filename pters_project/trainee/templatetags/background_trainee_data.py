@@ -5,11 +5,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.expressions import RawSQL
 
 from django.utils import timezone
-from configs.const import USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE, ADD_SCHEDULE
+from configs.const import USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE, ADD_SCHEDULE, AUTO_ABSENCE_ON, AUTO_CANCEL_ON, UN_USE
 from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb, ProductFunctionAuthTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
-from schedule.models import ScheduleTb, RepeatScheduleTb
+from schedule.models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb
 from trainee.views import get_trainee_setting_data
 from trainer.models import ClassLectureTb, ClassTb, PackageGroupTb, GroupLectureTb
 from trainer.functions import func_get_trainer_setting_list, func_get_ing_package_member_list, \
@@ -89,6 +89,40 @@ def get_setting_info(request):
                 not_finish_schedule_info.state_cd = 'PE'
                 not_finish_schedule_info.save()
                 func_refresh_lecture_count(class_id, not_finish_schedule_info.lecture_tb_id)
+        elif context['lt_schedule_auto_finish'] == AUTO_ABSENCE_ON:
+            not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, state_cd='NP',
+                                                                 en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now,
+                                                                 use=USE)
+            for not_finish_schedule_info in not_finish_schedule_data:
+                not_finish_schedule_info.state_cd = 'PC'
+                not_finish_schedule_info.save()
+                func_refresh_lecture_count(class_id, not_finish_schedule_info.lecture_tb_id)
+        elif context['lt_schedule_auto_finish'] == AUTO_CANCEL_ON:
+            not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, state_cd='NP',
+                                                                 en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now,
+                                                                 use=USE)
+            for not_finish_schedule_info in not_finish_schedule_data:
+                delete_schedule_info = DeleteScheduleTb(schedule_id=not_finish_schedule_info.schedule_id,
+                                                        class_tb_id=not_finish_schedule_info.class_tb_id,
+                                                        group_tb_id=not_finish_schedule_info.group_tb_id,
+                                                        lecture_tb_id=not_finish_schedule_info.lecture_tb_id,
+                                                        group_schedule_id=not_finish_schedule_info.group_schedule_id,
+                                                        delete_repeat_schedule_tb
+                                                        =not_finish_schedule_info.repeat_schedule_tb_id,
+                                                        start_dt=not_finish_schedule_info.start_dt,
+                                                        end_dt=not_finish_schedule_info.end_dt,
+                                                        permission_state_cd=not_finish_schedule_info.permission_state_cd,
+                                                        state_cd=not_finish_schedule_info.state_cd,
+                                                        note=not_finish_schedule_info.note,
+                                                        en_dis_type=not_finish_schedule_info.en_dis_type,
+                                                        member_note=not_finish_schedule_info.member_note,
+                                                        reg_member_id=not_finish_schedule_info.reg_member_id,
+                                                        del_member_id=request.user.id,
+                                                        reg_dt=not_finish_schedule_info.reg_dt, mod_dt=timezone.now(),
+                                                        use=UN_USE)
+                delete_schedule_info.save()
+                not_finish_schedule_info.delete()
+                func_refresh_lecture_count(class_id, delete_schedule_info.lecture_tb_id)
 
         if context['lt_lecture_auto_finish'] == AUTO_FINISH_ON:
             class_lecture_data = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,

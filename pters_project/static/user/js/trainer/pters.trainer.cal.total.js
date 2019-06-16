@@ -3508,7 +3508,7 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
 
             // 이름/메모 제외 split 문제 없음 - hkkim.190118
             var splited = dateplans[i-1].split('_');
-
+            
             var seq_name_memo = Number(splited[16]);
 
             var stime = Number(splited[0]);
@@ -3546,13 +3546,19 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
             }else if(stime>=12 && dateplans[i-2]==undefined){
                 morningday = "오후";
             }
-            if(splited[9]==1){
+            
+            if(splited[9] == 1){
                 htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-group-type-cd-name="'+splited[13]+'" data-currentmembernum="'+groupcurrent+'" data-membernum="'+groupmaxnum+'" data-dbid="'+splited[10]+'" data-scheduleid="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[seq_name_memo]+'" data-memo="'+schedule_memo[seq_name_memo]+'">'+
                                     '<div class="plancheckmorningday">'+morningday+'</div>'+
                                     '<div class="planchecktime">'+time_format_add_ampm(stime+':'+sminute, "none")+' - '+time_format_add_ampm(etime+':'+eminute, "none")+'</div>'+
                                     '<div class="plancheckname"><img src="/static/user/res/btn-pt-complete.png">'+'<p '+textsize+'>'+name+'</p></div>'+
                                 '</div>');
-
+            }else if(splited[9] == 2){
+                htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-group-type-cd-name="'+splited[13]+'" data-currentmembernum="'+groupcurrent+'" data-membernum="'+groupmaxnum+'" data-dbid="'+splited[10]+'" data-scheduleid="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[seq_name_memo]+'" data-memo="'+schedule_memo[seq_name_memo]+'">'+
+                                    '<div class="plancheckmorningday">'+morningday+'</div>'+
+                                    '<div class="planchecktime">'+time_format_add_ampm(stime+':'+sminute, "none")+' - '+time_format_add_ampm(etime+':'+eminute, "none")+'</div>'+
+                                    '<div class="plancheckname"><img src="/static/user/res/btn-absence.png">'+'<p '+textsize+'>'+name+'</p></div>'+
+                                '</div>');
             }else if(splited[9] == 0){
                 htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[11]+'" data-groupid="'+splited[12]+'" data-group-type-cd-name="'+splited[13]+'" data-currentmembernum="'+groupcurrent+'" data-membernum="'+groupmaxnum+'" data-dbid="'+splited[10]+'" data-scheduleid="'+splited[7]+'"  data-lectureid="'+splited[8]+'" data-schedule-check="'+splited[9]+'" data-memberName="'+schedule_names[seq_name_memo]+'" data-memo="'+schedule_memo[seq_name_memo]+'">'+
                                     '<div class="plancheckmorningday">'+morningday+'</div>'+
@@ -3568,7 +3574,6 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
 
     }
     htmltojoin.push('<div class="plan_raw_blank plan_raw_add" data-date="'+dateinfo+'"><img src="/static/user/res/floatbtn/btn-plus.png" style="width:20px;cursor:pointer;"></div>')
-
 
     $('#cal_popup_plancheck .popup_inner_month').html(htmltojoin.join(''));
 }

@@ -17,6 +17,12 @@
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
 
+        <div id="attendMode" class="settingMenu" onclick="location.href='{% url 'trainer:attend_mode' %}'">
+            <img src="/static/user/res/icon-user-setting.png" alt="" class="settingImg">
+            <span class="settingText"><span class="text-attendmode"></span><img src="/static/user/res/beta_tag.png" style="width:40px;margin-left:5px;vertical-align: top;"></span>
+            <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+        </div>
+
         <div id="salesSetting" class="settingMenu" onclick="location.href='{% url 'trainer:class_setting' %}'">
             <img src="/static/user/res/icon-money.png" alt="" class="settingImg">
             <span class="settingText"><span class="text-programmanage"></span></span>

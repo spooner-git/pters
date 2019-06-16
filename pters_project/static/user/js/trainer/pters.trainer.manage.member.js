@@ -1702,7 +1702,6 @@ $(document).ready(function(){
                                 if(status_to_be == "resume"){
                                     $id_ticket_status.attr('data-ticket_status','IP');
                                     get_package_member_list(package_id);
-
                                     get_grouplist_in_package(package_id, "current", "callback", function(jsondata){
                                         draw_grouplist_in_package($targetlecturelist, jsondata);
                                     });
@@ -1715,6 +1714,9 @@ $(document).ready(function(){
                                 }
                         });
 
+                    }
+                    else{
+                        smart_refresh_member_group_class_list();
                     }
                 });
             }
@@ -1817,9 +1819,6 @@ $(document).ready(function(){
                         status_change_check = false;
                     }
                     $('.mobile_status_color_palette').hide();
-                    console.log(status_to_be)
-                    console.log(old_lecture_state_cd)
-                    console.log(status_change_check)
                     //modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
                     modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "", "callback", function(){
                         if(status_change_check==true) {
@@ -1832,6 +1831,9 @@ $(document).ready(function(){
                                         get_end_groupmember_list(group_id);
                                     }
                             });
+                        }
+                        else{
+                            smart_refresh_member_group_class_list();
                         }
                     });
                 }
@@ -1869,6 +1871,8 @@ $(document).ready(function(){
                         status_change_check = false;
                     }
                     var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
+                    console.log(status_change_check)
+                    console.log(status_to_be)
                     modify_package_from_list(package_id, package_name, package_memo, "callback", function(){
                         if(status_change_check==true){
                             modify_package_status(package_id, status_to_be, "callback", function(){
@@ -1887,6 +1891,9 @@ $(document).ready(function(){
                                 }
                                 // $('#upbutton-x-modify').removeClass('disabled_button');
                             });
+                        }
+                        else{
+                            smart_refresh_member_group_class_list();
                         }
                         $('#upbutton-x-modify').removeClass('disabled_button');
                     });
