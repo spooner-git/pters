@@ -1,0 +1,31 @@
+ /*폰트 임포트*/
+ @import url(/static/common/fonts/notosanskr.css);
+ html{
+     font-family: 'Noto Sans KR', sans-serif !important;
+ /* background-color: #f7f5f6;*/
+ }
+
+ html, body{
+    overscroll-behavior-y: contain; 
+    /* position: fixed; 
+    height: 100%;
+    width: 100%;
+    overflow: hidden; */
+ }
+
+ /*기본 html, body스타일*/
+
+ /* .content_page{
+    position: fixed;
+    top: 0px;
+    left: 0%;
+    transform: translateX(-50%);
+    max-width: 800px;
+    width: 100%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    z-index: 0;
+    background-color: #f7f5f6;
+
+} 
+*/

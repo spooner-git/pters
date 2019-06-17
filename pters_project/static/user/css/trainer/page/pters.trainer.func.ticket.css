@@ -1,0 +1,79 @@
+#ticket_display_panel{
+	position: sticky;
+	position: -webkit-sticky;
+	height: auto;
+	z-index: 10;
+	width: 100%;
+	top: 0;
+	/* text-align: center; */
+}
+	.ticket_upper_box{
+		position: relative;
+		height: 50px;
+		line-height: 50px;
+		background-color: #ffffff;
+		border-bottom: 1px solid #cccccc;
+		padding: 0 20px;
+		box-sizing: border-box;
+	}
+	.ticket_tools_wrap{
+		display: table;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 140px;
+		height: 100%;
+	}
+	.ticket_tools_wrap > .search_ticket{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_search.png");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	}
+	.ticket_tools_wrap > .add_ticket{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_add.png?v2");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	}
+	.ticket_tools_wrap > .swap_list{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_swap.png?v2");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	}
+
+
+
+.ticket_wrapper{
+	width: 100%;
+	padding: 10px 15px;
+	background-color: #ffffff;
+	border: 1px solid #f4f4f4;
+	margin: 10px auto;
+	box-sizing: border-box;
+}
+
+.ticket_data_u{
+	
+}
+.ticket_data_b{
+
+}
+.ticket_name{
+	font-size: 20px;
+	font-weight: bold;
+}
+.ticket_member_number{
+	font-size: 13px;
+}
+.ticket_note{
+	margin-bottom: 5px;
+	font-size: 11px;
+}
