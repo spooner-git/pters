@@ -1149,6 +1149,7 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     lt_lan_01 = 'KOR'
     lt_pus_to_trainee_lesson_alarm = TO_TRAINEE_LESSON_ALARM_OFF
     lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
+    setting_admin_password = '0000'
     avail_date_list = []
     setting_data = SettingTb.objects.filter(member_id=user_id, class_tb_id=class_id, use=USE)
 
@@ -1195,6 +1196,8 @@ def func_get_trainer_setting_list(context, user_id, class_id):
             lt_pus_to_trainee_lesson_alarm = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_PUS_FROM_TRAINEE_LESSON_ALARM':
             lt_pus_from_trainee_lesson_alarm = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_ADMIN_PASSWORD':
+            setting_admin_password = setting_info.setting_info
 
     if lt_res_cancel_time == -1:
         lt_res_cancel_time = lt_res_02*60
@@ -1241,6 +1244,7 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     context['lt_lecture_auto_finish'] = lt_lecture_auto_finish
     context['lt_pus_to_trainee_lesson_alarm'] = lt_pus_to_trainee_lesson_alarm
     context['lt_pus_from_trainee_lesson_alarm'] = lt_pus_from_trainee_lesson_alarm
+    context['setting_admin_password'] = setting_admin_password
 
     return context
 

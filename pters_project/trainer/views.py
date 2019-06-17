@@ -51,7 +51,9 @@ from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClas
     PackageTb, PackageGroupTb
 
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
-    func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count
+    func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count, \
+    func_get_trainer_attend_schedule, func_get_group_lecture_id, func_check_group_available_member_before, \
+    func_add_schedule, func_check_group_available_member_after
 from stats.functions import get_sales_data, get_stats_member_data
 from .functions import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
@@ -397,6 +399,103 @@ class AboutUsView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(AboutUsView, self).get_context_data(**kwargs)
 
         return context
+
+
+class AttendModeView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'attend_mode.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AttendModeView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        setting_admin_password = '0000'
+        setting_attend_class_prev_display_time = 0
+        setting_attend_class_after_display_time = 0
+        setting_schedule_auto_finish = 0
+        current_time = timezone.now()
+        check_setting_counter = 0
+        setting_data = SettingTb.objects.filter(member_id=self.request.user.id, class_tb_id=class_id, use=USE)
+
+        for setting_info in setting_data:
+            if setting_info.setting_type_cd == 'LT_ADMIN_PASSWORD':
+                setting_admin_password = setting_info.setting_info
+                check_setting_counter += 1
+            if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_PREV_DISPLAY_TIME':
+                setting_attend_class_prev_display_time = int(setting_info.setting_info)
+                check_setting_counter += 1
+            if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_AFTER_DISPLAY_TIME':
+                setting_attend_class_after_display_time = int(setting_info.setting_info)
+                check_setting_counter += 1
+            if setting_info.setting_type_cd == 'LT_SCHEDULE_AUTO_FINISH':
+                setting_schedule_auto_finish = int(setting_info.setting_info)
+                check_setting_counter += 1
+
+        start_date = current_time + datetime.timedelta(minutes=int(setting_attend_class_prev_display_time))
+        end_date = current_time - datetime.timedelta(minutes=int(setting_attend_class_after_display_time))
+        context = func_get_trainer_attend_schedule(context, class_id, start_date, end_date, current_time)
+
+        context['setting_admin_password'] = setting_admin_password
+        context['setting_attend_class_prev_display_time'] = setting_attend_class_prev_display_time
+        context['setting_attend_class_after_display_time'] = setting_attend_class_after_display_time
+        context['setting_schedule_auto_finish'] = setting_schedule_auto_finish
+        if check_setting_counter != 4:
+            context['check_setting_data'] = 1
+
+        return context
+
+
+class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'attend_mode_detail.html'
+
+    def post(self, request):
+        context = {}
+        class_id = request.session.get('class_id', '')
+        phone_number = request.POST.get('phone_number', '')
+        schedule_id = request.POST.get('schedule_id', '')
+        error = None
+        try:
+            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+        except ObjectDoesNotExist:
+            schedule_info = None
+
+        member_data = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                    lecture_tb__member__phone=phone_number,
+                                                    auth_cd='VIEW',
+                                                    use=USE)
+        if len(member_data) > 0:
+            context['member_info'] = member_data[0].lecture_tb.member
+            member_id = member_data[0].lecture_tb.member_id
+            context['member_id'] = member_id
+            if schedule_info.lecture_tb is None or schedule_info.lecture_tb == '':
+                try:
+                    group_schedule_info = ScheduleTb.objects.get(group_schedule_id=schedule_id,
+                                                                 group_tb_id=schedule_info.group_tb_id,
+                                                                 lecture_tb__member_id=member_id)
+                    context['lecture_info'] = group_schedule_info.lecture_tb
+
+                except ObjectDoesNotExist:
+                    lecture_id = func_get_group_lecture_id(schedule_info.group_tb_id, member_id)
+                    if lecture_id is None or lecture_id == '':
+                        error = '예약 가능한 횟수가 없습니다.'
+                    else:
+                        try:
+                            context['lecture_info'] = LectureTb.objects.get(lecture_id=lecture_id)
+                        except ObjectDoesNotExist:
+                            error = '수강정보를 불러오지 못했습니다.'
+            else:
+                if schedule_info.lecture_tb.member_id==member_id:
+                    context['lecture_info'] = schedule_info.lecture_tb
+                else:
+                    error = '번호와 수업이 일치하지 않습니다.'
+
+        if schedule_info is not None:
+            context['schedule_info'] = schedule_info
+            context['schedule_id'] = schedule_id
+        if error is not None:
+            logger.error('class_id:'+str(class_id) + '/phone_number:' + str(phone_number) + '/schedule_id:'
+                         + str(schedule_id) + '/' + error)
+            messages.error(request, error)
+
+        return render(request, self.template_name, context)
 
 
 class BGSettingView(LoginRequiredMixin, AccessTestMixin, View):
@@ -4860,7 +4959,7 @@ class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
     template_name = 'ajax/trainer_error_ajax.html'
 
     def post(self, request):
-        class_id = request.POST.get('class_id', '')
+        class_id = request.session.get('class_id', '')
         background_img_id = request.POST.get('background_img_id', '')
         background_img_type_cd = request.POST.get('background_img_type_cd', '')
         url = request.POST.get('url', '')
@@ -5291,6 +5390,7 @@ def update_setting_basic_logic(request):
     setting_trainer_work_sat_time_avail = request.POST.get('setting_trainer_work_sat_time_avail', '00:00-23:59')
     setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_lecture_auto_finish = request.POST.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
+    setting_admin_password = request.POST.get('setting_admin_password', '0000')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
 
@@ -5314,6 +5414,8 @@ def update_setting_basic_logic(request):
             setting_schedule_auto_finish = AUTO_FINISH_OFF
         if setting_lecture_auto_finish is None or setting_lecture_auto_finish == '':
             setting_lecture_auto_finish = AUTO_FINISH_OFF
+        if setting_admin_password is None or setting_admin_password == '':
+            setting_admin_password = '0000'
 
     if error is None:
         try:
@@ -5374,6 +5476,12 @@ def update_setting_basic_logic(request):
             lt_lecture_auto_finish = SettingTb(member_id=request.user.id,
                                                class_tb_id=class_id, setting_type_cd='LT_LECTURE_AUTO_FINISH',
                                                use=USE)
+        try:
+            admin_password = SettingTb.objects.get(member_id=request.user.id,
+                                                   class_tb_id=class_id, setting_type_cd='LT_ADMIN_PASSWORD')
+        except ObjectDoesNotExist:
+            admin_password = SettingTb(member_id=request.user.id,
+                                       class_tb_id=class_id, setting_type_cd='LT_ADMIN_PASSWORD', use=USE)
 
     if error is None:
         try:
@@ -5401,6 +5509,8 @@ def update_setting_basic_logic(request):
 
                 lt_lecture_auto_finish.setting_info = setting_lecture_auto_finish
                 lt_lecture_auto_finish.save()
+                admin_password.setting_info = setting_admin_password
+                admin_password.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -5815,9 +5925,284 @@ class GetNoticeInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
+# 출석 체크 완료 기능
+def attend_mode_check_logic(request):
+    class_id = request.session.get('class_id', '')
+    phone_number = request.POST.get('phone_number', '')
+    schedule_id = request.POST.get('schedule_id', '')
+    error = None
+
+    try:
+        schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+    except ObjectDoesNotExist:
+        schedule_info = None
+
+    member_data = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                lecture_tb__member__phone=phone_number,
+                                                auth_cd='VIEW',
+                                                use=USE)
+    member_id_list = []
+    for member_info in member_data:
+        member_id_test = 0
+        for member_id_element in member_id_list:
+            if member_id_element == member_info.lecture_tb.member_id:
+                member_id_test += 1
+                break
+        if member_id_test == 0:
+            member_id_list.append(member_info.lecture_tb.member_id)
+
+    if len(member_id_list) > 1:
+        error = '중복되는 휴대폰 번호 2개 이상 존재합니다. 강사에게 문의해주세요.'
+
+    if error is None:
+        if len(member_data) > 0:
+            member_id = member_data[0].lecture_tb.member_id
+            if schedule_info.lecture_tb is None or schedule_info.lecture_tb == '':
+                try:
+                    group_schedule_info = ScheduleTb.objects.get(group_schedule_id=schedule_id,
+                                                                 group_tb_id=schedule_info.group_tb_id,
+                                                                 lecture_tb__member_id=member_id)
+                    if group_schedule_info.state_cd == 'PE':
+                        error = '이미 출석 처리된 수업입니다.'
+
+                except ObjectDoesNotExist:
+                    lecture_id = func_get_group_lecture_id(schedule_info.group_tb_id, member_id)
+                    if lecture_id is None or lecture_id == '':
+                        error = '예약 가능한 횟수가 없습니다. 수강권을 확인해주세요.'
+                    else:
+                        try:
+                            LectureTb.objects.get(lecture_id=lecture_id)
+                        except ObjectDoesNotExist:
+                            error = '수강정보를 불러오지 못했습니다.'
+            else:
+                if schedule_info.state_cd == 'PE':
+                    error = '이미 출석 처리된 수업입니다.'
+                if error is None:
+                    if schedule_info.lecture_tb.member_id != member_id:
+                        error = '휴대폰 번호와 수업이 일치하지 않습니다.'
+        else:
+            error = '휴대폰 번호를 확인해주세요.'
+
+    if error is None:
+
+        return render(request, 'ajax/trainer_error_ajax.html')
+    else:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+        return render(request, 'ajax/trainer_error_ajax.html')
 
 
+# 출석 체크 완료 기능
+def attend_mode_finish_logic(request):
+    member_id = request.POST.get('member_id')
+    schedule_id = request.POST.get('schedule_id')
+    class_id = request.session.get('class_id', '')
+    error = None
+    try:
+        schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+    except ObjectDoesNotExist:
+        schedule_info = None
 
+    if member_id is not None:
+        try:
+            with transaction.atomic():
+                if schedule_info.lecture_tb is None or schedule_info.lecture_tb == '':
+                    try:
+                        group_schedule_info = ScheduleTb.objects.get(group_schedule_id=schedule_id,
+                                                                     group_tb_id=schedule_info.group_tb_id,
+                                                                     lecture_tb__member_id=member_id)
+                        if group_schedule_info.state_cd == 'PE':
+                            error = '이미 출석 처리된 수업입니다.'
+
+                        if error is None:
+                            group_schedule_info.state_cd = 'PE'
+                            group_schedule_info.save()
+                            error = func_refresh_lecture_count(class_id, group_schedule_info.lecture_tb_id)
+
+                    except ObjectDoesNotExist:
+                        lecture_id = func_get_group_lecture_id(schedule_info.group_tb_id, member_id)
+                        if lecture_id is None or lecture_id == '':
+                            error = '예약 가능한 횟수가 없습니다.'
+                        else:
+                            error = func_check_group_available_member_before(class_id, schedule_info.group_tb_id,
+                                                                             schedule_id)
+
+                        if error is None:
+                            schedule_result = func_add_schedule(class_id, lecture_id, None,
+                                                                schedule_info.group_tb_id, schedule_id,
+                                                                schedule_info.start_dt, schedule_info.end_dt,
+                                                                schedule_info.note, ON_SCHEDULE_TYPE,
+                                                                member_id, 'AP', 'PE')
+                            error = schedule_result['error']
+
+                        if error is None:
+                            error = func_refresh_lecture_count(class_id, lecture_id)
+
+                        if error is None:
+                            error = func_check_group_available_member_after(class_id, schedule_info.group_tb_id,
+                                                                            schedule_id)
+
+                else:
+                    if schedule_info.lecture_tb.member_id == member_id:
+                        if schedule_info.state_cd == 'PE':
+                            error = '이미 출석 처리된 수업입니다.'
+                        if error is None:
+                            schedule_info.state_cd = 'PE'
+                            schedule_info.save()
+                            error = func_refresh_lecture_count(class_id, schedule_info.lecture_tb.lecture_id)
+
+        except TypeError:
+            error = error
+        except ValueError:
+            error = error
+        except IntegrityError:
+            error = error
+        except InternalError:
+            error = error
+
+    if error is None:
+
+        return redirect('/trainer/attend_mode/')
+    else:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+        return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 강사 출석 기능 setting 업데이트 api
+def update_attend_mode_setting_logic(request):
+    setting_admin_password = request.POST.get('setting_admin_password', '0000')
+    setting_attend_class_prev_display_time = request.POST.get('setting_attend_class_prev_display_time', '5')
+    setting_attend_class_after_display_time = request.POST.get('setting_attend_class_after_display_time', '5')
+    setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
+
+    class_id = request.session.get('class_id', '')
+    next_page = request.POST.get('next_page', '/trainer/attend_mode/')
+
+    error = None
+    if error is None:
+        if setting_attend_class_prev_display_time is None or setting_attend_class_prev_display_time == '':
+            setting_attend_class_prev_display_time = '5'
+        if setting_attend_class_after_display_time is None or setting_attend_class_after_display_time == '':
+            setting_attend_class_after_display_time = '5'
+        if setting_schedule_auto_finish is None or setting_schedule_auto_finish == '':
+            setting_schedule_auto_finish = AUTO_FINISH_OFF
+
+    if error is None:
+        try:
+            admin_password = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
+                                                   setting_type_cd='LT_ADMIN_PASSWORD')
+        except ObjectDoesNotExist:
+            admin_password = SettingTb(member_id=request.user.id, class_tb_id=class_id,
+                                       setting_type_cd='LT_ADMIN_PASSWORD', use=USE)
+        try:
+            attend_class_prev_display_time = SettingTb.objects.get(member_id=request.user.id,
+                                                                   class_tb_id=class_id,
+                                                                   setting_type_cd='LT_ATTEND_CLASS_PREV_DISPLAY_TIME')
+        except ObjectDoesNotExist:
+            attend_class_prev_display_time = SettingTb(member_id=request.user.id,
+                                                       class_tb_id=class_id,
+                                                       setting_type_cd='LT_ATTEND_CLASS_PREV_DISPLAY_TIME', use=USE)
+        try:
+            attend_class_after_display_time = SettingTb.objects.get(member_id=request.user.id,
+                                                                    class_tb_id=class_id,
+                                                                    setting_type_cd='LT_ATTEND_CLASS_AFTER_DISPLAY_TIME')
+        except ObjectDoesNotExist:
+            attend_class_after_display_time = SettingTb(member_id=request.user.id,
+                                                        class_tb_id=class_id,
+                                                        setting_type_cd='LT_ATTEND_CLASS_AFTER_DISPLAY_TIME', use=USE)
+        try:
+            schedule_auto_finish = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
+                                                         setting_type_cd='LT_SCHEDULE_AUTO_FINISH')
+        except ObjectDoesNotExist:
+            schedule_auto_finish = SettingTb(member_id=request.user.id,
+                                             class_tb_id=class_id, setting_type_cd='LT_SCHEDULE_AUTO_FINISH', use=USE)
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                admin_password.setting_info = setting_admin_password
+                admin_password.save()
+                attend_class_prev_display_time.setting_info = setting_attend_class_prev_display_time
+                attend_class_prev_display_time.save()
+                attend_class_after_display_time.setting_info = setting_attend_class_after_display_time
+                attend_class_after_display_time.save()
+                schedule_auto_finish.setting_info = setting_schedule_auto_finish
+                schedule_auto_finish.save()
+
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError:
+            error = '등록 값에 문제가 있습니다.'
+        except ValidationError:
+            error = '등록 값에 문제가 있습니다.'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+
+        return redirect(next_page)
+    else:
+        logger.error(
+            request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+#
+def check_admin_password_logic(request):
+    setting_admin_password = request.POST.get('setting_admin_password', '')
+    class_id = request.session.get('class_id', '')
+
+    error = None
+
+    try:
+        admin_password = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
+                                               setting_type_cd='LT_ADMIN_PASSWORD').setting_info
+    except ObjectDoesNotExist:
+        admin_password = '0000'
+
+    if admin_password != setting_admin_password:
+        error = '관리자 비밀번호가 일치하지 않습니다.'
+
+    if error is None:
+
+        return render(request, 'ajax/trainer_error_ajax.html')
+    else:
+        logger.error(
+            request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+        return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetAttendModeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/schedule_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetAttendModeScheduleView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        setting_attend_class_prev_display_time = 0
+        setting_attend_class_after_display_time = 0
+        current_time = timezone.now()
+        setting_data = SettingTb.objects.filter(member_id=self.request.user.id, class_tb_id=class_id, use=USE)
+
+        for setting_info in setting_data:
+            if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_PREV_DISPLAY_TIME':
+                setting_attend_class_prev_display_time = int(setting_info.setting_info)
+            if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_AFTER_DISPLAY_TIME':
+                setting_attend_class_after_display_time = int(setting_info.setting_info)
+
+        start_date = current_time + datetime.timedelta(minutes=int(setting_attend_class_prev_display_time))
+        end_date = current_time - datetime.timedelta(minutes=int(setting_attend_class_after_display_time))
+        context = func_get_trainer_attend_schedule(context, class_id, start_date, end_date, current_time)
+
+        return context
 
 
 # 리뉴얼

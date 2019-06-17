@@ -219,8 +219,17 @@ urlpatterns = [
     # 공지사항 조회
     url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(), name='get_notice_info_ajax'),
 
-
-
+    # Attend Mode 기능 ###############################################################################################
+    # 일정선택후 휴대폰 번호 입력시 확인 기능
+    url(r'^attend_mode_check/$', views.attend_mode_check_logic, name='attend_mode_check'),
+    # 휴대폰 번호 입력후 출석 완료 기능
+    url(r'^attend_mode_finish/$', views.attend_mode_finish_logic, name='attend_mode_finish'),
+    # 출석체크 모드 Setting 수정
+    url(r'^update_attend_mode_setting/$', views.update_attend_mode_setting_logic, name='update_setting_basic'),
+    # 관리자 비밀번호 확인
+    url(r'^check_admin_password/$', views.check_admin_password_logic, name='check_admin_password'),
+    # 출석 체크 모드 스케쥴 조회
+    url(r'^get_attend_mode_schedule/$', views.GetAttendModeScheduleView.as_view(), name='get_attend_mode_schedule'),
 
     # 페이지 #####################################################################################################
     # 강사 메인 페이지
@@ -251,6 +260,10 @@ urlpatterns = [
     url(r'^frompters_setting/$', views.FromPtersView.as_view(), name='frompters_setting'),
     # About us 페이지
     url(r'^aboutus_setting/$', views.AboutUsView.as_view(), name='aboutus_setting'),
+    # Attend Mode 페이지
+    url(r'^attend_mode/$', views.AttendModeView.as_view(), name='attend_mode'),
+    # Attend Mode Detail 페이지
+    url(r'^attend_mode_detail/$', views.AttendModeDetailView.as_view(), name='attend_mode_detail'),
     # 강좌 선택 페이지
     url(r'^class_select/$', views.ClassSelectView.as_view(), name='class_select'),
     # 강좌 추가 페이지

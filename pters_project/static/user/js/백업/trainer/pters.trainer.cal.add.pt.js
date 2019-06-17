@@ -1497,6 +1497,7 @@ $(document).ready(function(){
                             $('#errorMessageBar').show();
                             $('#errorMessageText').text(jsondata.messageArray);
                         }else{
+                            console.log(jsondata);
                             var repeat_info;
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
                                 draw_repeat_reg_list(jsondata);

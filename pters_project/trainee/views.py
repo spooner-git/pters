@@ -358,7 +358,7 @@ def add_trainee_schedule_logic(request):
     push_class_id = []
     push_title = []
     push_message = []
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_class_id': None, 'push_title': None, 'push_message': None}
     schedule_info = None
     lecture_id = None
     lt_res_member_time_duration = 1
@@ -503,7 +503,7 @@ def add_trainee_schedule_logic(request):
                 push_message.append(request.user.first_name + '님이 '
                                     + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                    + schedule_info.get_group_name() + ' 수업을 예약했습니다')
+                                    + ' [' + schedule_info.get_group_name() + '] 수업을 예약했습니다')
 
             context['push_class_id'] = push_class_id
             context['push_title'] = push_title
@@ -537,7 +537,7 @@ def delete_trainee_schedule_logic(request):
     push_message = []
     group_name = '1:1 레슨'
     group_type_name = ''
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_class_id': None, 'push_title': None, 'push_message': None}
     lecture_id = None
 
     if schedule_id == '':
@@ -628,7 +628,7 @@ def delete_trainee_schedule_logic(request):
             group_name = '1:1 레슨'
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name+request.user.first_name,
-                         class_tb_id=class_info.class_id, lecture_tb_id=lecture_info.lecture_id,
+                         class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info=group_name + ' 수업',
                          log_how='예약 취소', log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
@@ -649,7 +649,7 @@ def delete_trainee_schedule_logic(request):
             push_message.append(request.user.first_name + '님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + group_name+' 수업을 예약 취소했습니다.')
+                                + ' ['+group_name+'] 수업을 예약 취소했습니다.')
 
             context['push_class_id'] = push_class_id
             context['push_title'] = push_title
@@ -659,7 +659,7 @@ def delete_trainee_schedule_logic(request):
             context['push_title'] = ''
             context['push_message'] = ''
 
-        return redirect(next_page)
+        return render(request, 'ajax/trainee_error_info.html', context)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)

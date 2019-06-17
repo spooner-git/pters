@@ -354,22 +354,25 @@
             selector_popup_btn_complete.show();
             $("#popup_text1").css("display", "block");
             $("#popup_sign_img").css("display", "none");
-        }else{
+        }else if(finished=="1"){
             selector_popup_btn_complete.hide();
             $("#popup_text1").css("display", "none");
             $("#popup_sign_img").css("display", "block");
-            // $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image//spooner_test/'+$(this).attr('schedule-id')+'.png');
             $("#id_sign_img").attr('src', 'https://s3.ap-northeast-2.amazonaws.com/pters-image-master/'+$(this).attr('data-scheduleid')+'.png');
             var myImage = document.getElementById("id_sign_img");
             myImage.onerror = function(){
-                /*this.src="";
-                */
                 $("#id_sign_img").attr('src', '/static/user/res/auto_complete.png');
-               // $("#popup_sign_img").css("display","none");
-
             };
+        }else if(finished=="2"){
+            selector_popup_btn_complete.hide();
+            $("#popup_text1").css("display", "none");
+            $("#popup_sign_img").css("display", "block");
+            $("#id_sign_img").attr('src', '/static/user/res/absence.png');
+            // var myImage = document.getElementById("id_sign_img");
+            // myImage.onerror = function(){
+            //     $("#id_sign_img").attr('src', '/static/user/res/auto_absence.png');
+            // };
         }
-
         schedule_on_off = 1;
         if(bodywidth >= 600){
             selector_cal_popup_planinfo.css({'display':'block', 'top':(($(window).height()-selector_cal_popup_planinfo.outerHeight())/2+$(window).scrollTop()), 'left':(($(window).width()-selector_cal_popup_planinfo.outerWidth())/2+$(window).scrollLeft())});
@@ -771,7 +774,7 @@
                 $("#popup_btn_complete").show();
                 $("#popup_text1").css("display", "block");
                 $("#popup_sign_img").css("display", "none");
-            }else{
+            }else if(schedule_finish_check=="1"){
                 $("#popup_btn_complete").hide();
                 $("#popup_text1").css("display", "none");
                 $("#popup_sign_img").css("display", "block");
@@ -783,6 +786,17 @@
                     //$("#popup_sign_img").css("display","none")
                     $("#id_sign_img").attr('src', '/static/user/res/auto_complete.png');
                 };
+            }else if(schedule_finish_check=="2"){
+                $("#popup_btn_complete").hide();
+                $("#popup_text1").css("display", "none");
+                $("#popup_sign_img").css("display", "block");
+                $("#id_sign_img").attr('src', '/static/user/res/absence.png');
+                // var myImage = document.getElementById("id_sign_img");
+                // myImage.onerror = function() {
+                //     //this.src="";
+                //     //$("#popup_sign_img").css("display","none")
+                //     $("#id_sign_img").attr('src', '/static/user/res/auto_complete.png');
+                // };
             }
 
 

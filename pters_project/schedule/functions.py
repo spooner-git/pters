@@ -782,10 +782,15 @@ def func_send_push_trainee(class_id, title, message):
 
 
 def func_get_trainer_schedule(context, class_id, start_date, end_date):
-
     func_get_trainer_on_schedule(context, class_id, start_date, end_date)
     func_get_trainer_off_schedule(context, class_id, start_date, end_date)
     func_get_trainer_group_schedule(context, class_id, start_date, end_date, None)
+    return context
+
+
+def func_get_trainer_attend_schedule(context, class_id, start_date, end_date, now):
+    func_get_trainer_attend_on_schedule(context, class_id, start_date, end_date, now)
+    func_get_trainer_attend_group_schedule(context, class_id, start_date, end_date, now, None)
     return context
 
 
@@ -826,6 +831,55 @@ def func_get_trainer_group_schedule(context, class_id, start_date, end_date, gro
     else:
         group_schedule_data = group_schedule_data.filter(
             group_tb_id=group_id).annotate(group_current_member_num=RawSQL(query, []),
+                                           group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
+
+    context['group_schedule_data'] = group_schedule_data
+
+
+def func_get_trainer_attend_on_schedule(context, class_id, start_date, end_date, now):
+    # PT 스케쥴 정보 셋팅
+    context['pt_schedule_data'] = ScheduleTb.objects.select_related('lecture_tb__member'
+                                                                    ).filter(Q(start_dt__lte=now,
+                                                                               end_dt__gte=now) |
+                                                                             Q(start_dt__gte=now,
+                                                                               start_dt__lte=start_date) |
+                                                                             Q(end_dt__gte=end_date,
+                                                                               end_dt__lte=now),
+                                                                             lecture_tb__isnull=False,
+                                                                             lecture_tb__use=USE,
+                                                                             class_tb=class_id,
+                                                                             en_dis_type=ON_SCHEDULE_TYPE,
+                                                                             state_cd='NP',
+                                                                             use=USE).order_by('start_dt', 'reg_dt')
+
+
+def func_get_trainer_attend_group_schedule(context, class_id, start_date, end_date, now, group_id):
+    query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
+            "AND B.STATE_CD != \'PC\' AND B.USE=1"
+    finish_member_query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
+                          "AND B.STATE_CD = \'PE\' AND B.USE=1"
+    query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as C where C.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
+    group_schedule_data = ScheduleTb.objects.select_related('group_tb').filter(Q(start_dt__lte=now,
+                                                                                 end_dt__gte=now) |
+                                                                               Q(start_dt__gte=now,
+                                                                                 start_dt__lte=start_date) |
+                                                                               Q(end_dt__gte=end_date,
+                                                                                 end_dt__lte=now),
+                                                                               group_tb__isnull=False,
+                                                                               lecture_tb__isnull=True,
+                                                                               class_tb=class_id,
+                                                                               en_dis_type=ON_SCHEDULE_TYPE, use=USE)
+    if group_id is None or group_id == '':
+        group_schedule_data = group_schedule_data.annotate(group_current_member_num=RawSQL(query, []),
+                                                           group_current_finish_member_num=RawSQL(finish_member_query,
+                                                                                                  []),
+                                                           group_type_cd_name=RawSQL(query_type_cd,
+                                                                                     [])).order_by('start_dt')
+
+    else:
+        group_schedule_data = group_schedule_data.filter(
+            group_tb_id=group_id).annotate(group_current_member_num=RawSQL(query, []),
+                                           group_current_finish_member_num=RawSQL(finish_member_query, []),
                                            group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
 
     context['group_schedule_data'] = group_schedule_data

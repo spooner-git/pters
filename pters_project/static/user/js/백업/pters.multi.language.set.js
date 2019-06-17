@@ -64,6 +64,7 @@ var multi_language_set = {
                                     "text-language":"Language/言語/언어",
                                     "text-fromptersteam":"피터스 공지",
                                     "text-aboutus":"About us",
+                                    "text-attendmode":"출석체크 모드",
 
                                     "text-yes":"예",
                                     "text-no":"아니오",
@@ -84,8 +85,8 @@ var multi_language_set = {
 
                                     "text-plancomplete":"일정 완료",
                                     "text-plancancel":"일정 취소",
-                                    "text-completesign":"완료 서명",
-                                    "text-pleasesign":"회원님 완료 서명을 입력해주세요.",
+                                    "text-completesign":"서명",
+                                    "text-pleasesign":"이곳에 회원님 완료 서명을 입력해주세요.",
                                     "text-participants":"참석자",
 
                                     "text-thisgroupmember":"이 그룹 회원",
@@ -192,7 +193,7 @@ var multi_language_set = {
                                     "text-finish":"終了",
                                     "text-plancomplete":"日程完了",
                                     "text-plancancel":"日程削除",
-                                    "text-completesign":"完了署名",
+                                    "text-completesign":"署名",
                                     "text-pleasesign":"会員の署名を書いてください",
                                     "text-participants":"参加者",
 
@@ -379,6 +380,7 @@ $('.text-purchase').text(multi_language_set[Options.language]["text-purchase"]);
 $('.text-language').text(multi_language_set[Options.language]["text-language"]);
 $('.text-fromptersteam').text(multi_language_set[Options.language]["text-fromptersteam"]);
 $('.text-aboutus').text(multi_language_set[Options.language]["text-aboutus"]);
+$('.text-attendmode').text(multi_language_set[Options.language]["text-attendmode"]);
 
 
 //Trainer Base - Popups
@@ -398,6 +400,7 @@ $('.text-register').text(multi_language_set[Options.language]["text-register"]);
 $('.text-deletequestion-plan').text(multi_language_set[Options.language]["text-deletequestion-plan"])
 $('.text-memberinfo').text(multi_language_set[Options.language]["text-memberinfo"]);
 $('.text-thisgroupmember').text(multi_language_set[Options.language]["text-thisgroupmember"]);
+$('.text-pleasesign').text(multi_language_set[Options.language]["text-pleasesign"]);
 
 //Calendar
 $('.text-sundaymin').text(multi_language_set[Options.language]["text-sundaymin"]);

@@ -167,6 +167,11 @@ STATIC_ROOT = '/static/'
 LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/trainer/index/'
 
+# IMP API
+PAYMENT_ID = os.environ.get("PAYMENT_ID", '')
+PTERS_IMP_REST_API_KEY = os.environ.get('PTERS_IMP_REST_API_KEY', '')
+PTERS_IMP_REST_API_SECRET = os.environ.get('PTERS_IMP_REST_API_SECRET', '')
+
 # Email Activation
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_SSL = True
@@ -189,8 +194,6 @@ PTERS_PUSH_SERVER_KEY = os.environ.get("PTERS_PUSH_SERVER_KEY", '')
 
 # db data upload size
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 100000
-
-PAYMENT_ID = os.environ.get("PAYMENT_ID", '')
 
 LOG_FILE = os.path.join(os.path.dirname(__file__), '..', 'logs/default_log.log')
 LOG_FILE_LOGIN = os.path.join(os.path.dirname(__file__), '..', 'logs/login_log.log')

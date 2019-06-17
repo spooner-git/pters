@@ -28,6 +28,7 @@
         <input type="hidden" name="setting_trainer_work_time_available"       id="id_setting_trainer_work_time" value=""> <!--min 00:00 max 23:59  업무 시간 설정 -->
         <input type="hidden" name="setting_schedule_auto_finish"              id="id_setting_schedule_auto_finish" value=""> <!--시간이 지나면 일정을 자동으로 완료-->
         <input type="hidden" name="setting_lecture_auto_finish"               id="id_setting_lecture_auto_finish" value=""> <!--시간이 지나면 수강정보를 자동으로 완료-->
+        <input type="hidden" name="setting_admin_password" id="id_setting_admin_password" value="">
 
         <input type="hidden" name="setting_trainer_work_sun_time_avail" id="setting_trainer_work_sun_time_avail" value="">
         <input type="hidden" name="setting_trainer_work_mon_time_avail" id="setting_trainer_work_mon_time_avail" value="">
@@ -460,13 +461,39 @@
 
         </div>
     </div>
-
+    <div id="trainerAutoCompleteSettingText" class="settingMenu wrap800" style="border-bottom: 1px solid #eaeaea;">
+        <span class="settingText">출석체크 모드 관리자 비밀번호</span>
+        <p class="settingText2">초기 비밀번호는 0000입니다. <br/> (암호화 되어 저장되지 않으므로 일상적인 번호로 하세요.) </p>
+    </div>
+    <div id="memberAvailDateSetting" class="settingBox wrap800">
+        <div class="iconText" style="width: 100%;">
+                <input type='tel' name="setting_admin_password" id="input_setting_admin_password" onkeyup="limit_char_only_number(this); $('#id_setting_admin_password').val(this.value); check_dropdown_selected();" minlength="4" maxlength="4">
+            </div>
+    </div>
+    <div id="trainerAutoCompleteSettingText" class="settingMenu wrap800" style="border-bottom: 1px solid #eaeaea;">
+        <span class="settingText">일정 자동 완료</span>
+        <p class="settingText2">출석하지 않고 수업 시간이 지났을 때 아래와 같이 리 됩니다.</p>
+    </div>
+    <div id="memberAvailDateSetting" class="settingBox wrap800">
+        <div class="iconText" style="width: 100%;">
+            <img src="/static/user/res/icon-start.png" alt="" class="icons"><span></span>
+            <div id="dateSelect" class="dropdown" style="max-width:230px;">
+                <select id="select_schedule_auto_finish" style="height:35px;width:100%;" onchange="document.querySelector('#id_setting_schedule_auto_finish').value = this.value; check_dropdown_selected();">
+                    <option value="0">아무것도 하지 않음</option>
+                    <option value="1">출석 처리</option>
+                    <option value="2">결석 처리(횟수 차감됨)</option>
+                    <option value="3">취소 처리(횟수 차감 되지 않음)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <!--
     <div id="trainerAutoCompleteSettingText" class="settingMenu wrap800" style="border-bottom: 1px solid #eaeaea;">
         <span class="settingText">일정 자동 완료</span>
         <p class="settingText2">일정 완료 사인을 하지 않고도,<br> 시간이 지나면 자동으로 완료처리가 됩니다.</p>
         <div id="switch_autocomplete" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
     </div>
-
+     -->
     <div id="traineeAutoFinishSettingText" class="settingMenu wrap800" style="border-bottom: 1px solid #eaeaea;">
         <span class="settingText">수강정보 자동 완료</span>
         <p class="settingText2">회원등록시 입력한 종료일이 지나면<br> 자동으로 종료 처리가 됩니다.</p>
@@ -503,6 +530,7 @@
         var select_all_check = false;
 
         //업무 시간 설정 seekbar
+
         var sun_Worktime = worktime_extract_hour(Options.worktimeWeekly[0]);
         var mon_Worktime = worktime_extract_hour(Options.worktimeWeekly[1]);
         var tue_Worktime = worktime_extract_hour(Options.worktimeWeekly[2]);
@@ -521,9 +549,11 @@
         $('#id_setting_member_reserve_time_prohibition').val(Options.limit);
         $('#id_setting_member_cancel_time_prohibition').val(Options.cancellimit);
         $('#id_setting_member_reserve_prohibition').val(Options.reserve);
+        document.getElementById("select_schedule_auto_finish").value = Options.autocomplete;
         $('#id_setting_schedule_auto_finish').val(Options.autocomplete);
         $('#id_setting_lecture_auto_finish').val(Options.lecture_autocomplete);
-
+        document.getElementById("id_setting_admin_password").value = Options.admin_password;
+        document.getElementById("input_setting_admin_password").value = Options.admin_password;
 
         if(Options.limit > 0){ //근접시간 예약 금지 설정
             $('#switch1').find('.switchball').removeClass('switchoff').addClass('switchon');
@@ -1066,11 +1096,16 @@
 
         $("#upbutton-check, ._button_Next").click(function(){
             console.log(select_all_check);
-            if(select_all_check==true){
-                document.getElementById('update-setting-reserve-form').submit();
+            let admin_password = $('#id_setting_admin_password').val();
+            if(admin_password.length!=4){
+                alert('관리자 비밀번호는 4자만 가능합니다.')
             }else{
+                if(select_all_check==true){
+                    document.getElementById('update-setting-reserve-form').submit();
+                }else{
 
-                //입력값 확인 메시지 출력 가능
+                    //입력값 확인 메시지 출력 가능
+                }
             }
         });
         $('#upbutton-x, ._button_Prev').click(function(){
@@ -1123,6 +1158,7 @@
             var startTime = $('#id_setting_member_start_time').val();
             var autocomplete = $('#id_setting_schedule_auto_finish').val();
             var autofinish = $('#id_setting_lecture_auto_finish').val();
+            var admin_password = $('#id_setting_admin_password').val();
 
             var week_mon = $('#setting_trainer_work_mon_time_avail').val();
             var week_tue = $('#setting_trainer_work_tue_time_avail').val();
@@ -1135,7 +1171,7 @@
             if(//availableTime == stoptime && 
                 //limit == Options.limit && 
                 //reservedisable == Options.reserve && 
-                workTime == worktime && 
+                workTime == worktime &&
                 //availDate == Options.availDate && 
                 //cancellimit == Options.cancellimit && 
                 //basicTimeDur == Options.timeDur && 
@@ -1148,7 +1184,8 @@
                 week_wed == Options.worktimeWeekly[3] &&
                 week_thu == Options.worktimeWeekly[4] &&
                 week_fri == Options.worktimeWeekly[5] &&
-                week_sat == Options.worktimeWeekly[6] 
+                week_sat == Options.worktimeWeekly[6] &&
+                admin_password == Options.admin_password
 
 
                  ){
@@ -1158,14 +1195,6 @@
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                 select_all_check=true;
-                console.log(week_sun , Options.worktimeWeekly[0] ,
-                                week_mon , Options.worktimeWeekly[1] ,
-                                week_tue , Options.worktimeWeekly[2] ,
-                                week_wed , Options.worktimeWeekly[3] ,
-                                week_thu , Options.worktimeWeekly[4] ,
-                                week_fri , Options.worktimeWeekly[5] ,
-                                week_sat , Options.worktimeWeekly[6] )
-                console.log('true')
             }
         }
     </script>

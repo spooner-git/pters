@@ -23,7 +23,7 @@ from django.core.files.base import ContentFile
 # Create your views here.
 from configs import settings
 from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, TO_TRAINEE_LESSON_ALARM_ON, \
-    TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, SCHEDULE_DUPLICATION_ENABLE
+    TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, SCHEDULE_DUPLICATION_ENABLE, AUTO_ABSENCE_ON
 
 from login.models import LogTb, MemberTb
 from trainer.functions import func_get_end_package_member_list, func_get_ing_package_member_list
@@ -155,8 +155,11 @@ def add_schedule_logic(request):
                 if error is None:
                     state_cd = 'NP'
                     permission_state_cd = 'AP'
-                    if setting_schedule_auto_finish == AUTO_FINISH_ON and timezone.now() > schedule_end_datetime:
-                        state_cd = 'PE'
+                    if timezone.now() > schedule_end_datetime:
+                        if setting_schedule_auto_finish == AUTO_FINISH_ON:
+                            state_cd = 'PE'
+                        elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
+                            state_cd = 'PC'
                     schedule_result = func_add_schedule(class_id, lecture_id, None, None, None, schedule_start_datetime,
                                                         schedule_end_datetime, note, en_dis_type, request.user.id,
                                                         permission_state_cd,
@@ -360,12 +363,12 @@ def delete_schedule_logic(request):
         push_info_schedule_end_date = str(end_dt).split(' ')[1].split(':')
 
         if en_dis_type == ON_SCHEDULE_TYPE and setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
-            push_lecture_id.append(schedule_info.lecture_tb_id)
+            push_lecture_id.append(lecture_id)
             push_title.append(class_type_name + ' - 예약 취소')
             if group_id is not None and group_id != '':
                 push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                    + group_name + ' 수업이 예약 취소 되었습니다.')
+                                    + ' ['+group_name + '] 수업이 예약 취소 되었습니다.')
             else:
                 push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
@@ -527,8 +530,8 @@ def finish_schedule_logic(request):
             log_data.save()
             push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + schedule_info.get_group_name()
-                                + ' 수업이 '+schedule_state_cd_name+' 처리 되었습니다.')
+                                + ' ['+schedule_info.get_group_name()
+                                + '] 수업이 '+schedule_state_cd_name+' 처리 되었습니다.')
         else:
             log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name+request.user.first_name,
@@ -563,7 +566,6 @@ def upload_sign_image_logic(request):
     schedule_id = request.POST.get('schedule_id', '')
     image_test = request.POST.get('upload_file', '')
     context = {'error': None}
-
     s3 = boto3.resource('s3', aws_access_key_id=getattr(settings, "PTERS_AWS_ACCESS_KEY_ID", ''),
                         aws_secret_access_key=getattr(settings, "PTERS_AWS_SECRET_ACCESS_KEY", ''))
     bucket = s3.Bucket(getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", ''))
@@ -1115,7 +1117,7 @@ def delete_repeat_schedule_logic(request):
             else:
                 push_message.append(request.user.first_name + '님이 ' + str(start_date)
                                     + '~' + str(end_date)
-                                    + group_name+' 반복 일정을 취소했습니다')
+                                    + ' [' + group_name+'] 반복 일정을 취소했습니다')
 
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
@@ -1291,8 +1293,11 @@ def add_group_schedule_logic(request):
                 if error is None:
                     state_cd = 'NP'
                     permission_state_cd = 'AP'
-                    if setting_schedule_auto_finish == AUTO_FINISH_ON and timezone.now() > schedule_end_datetime:
-                        state_cd = 'PE'
+                    if timezone.now() > schedule_end_datetime:
+                        if setting_schedule_auto_finish == AUTO_FINISH_ON:
+                            state_cd = 'PE'
+                        elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
+                            state_cd = 'PC'
                     schedule_result = func_add_schedule(class_id, None, None,
                                                         group_id, None,
                                                         schedule_start_datetime, schedule_end_datetime,
@@ -1358,9 +1363,11 @@ def add_group_schedule_logic(request):
 
                                 state_cd = 'NP'
                                 permission_state_cd = 'AP'
-                                if setting_schedule_auto_finish == AUTO_FINISH_ON\
-                                        and timezone.now() > schedule_end_datetime:
-                                    state_cd = 'PE'
+                                if timezone.now() > schedule_end_datetime:
+                                    if setting_schedule_auto_finish == AUTO_FINISH_ON:
+                                        state_cd = 'PE'
+                                    elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
+                                        state_cd = 'PC'
                                 schedule_result = func_add_schedule(class_id, lecture_id, None,
                                                                     group_id, group_schedule_id,
                                                                     schedule_start_datetime, schedule_end_datetime,
@@ -1418,7 +1425,7 @@ def add_group_schedule_logic(request):
                                                     + push_info_schedule_start_date[1] + '~'
                                                     + push_info_schedule_end_date[0] + ':'
                                                     + push_info_schedule_end_date[1]
-                                                    + group_info.name + ' 수업을 등록했습니다')
+                                                    + ' [' + group_info.name + '] 수업을 등록했습니다')
 
                     except TypeError:
                         error_temp = '오류가 발생했습니다. [1]'
@@ -1589,8 +1596,8 @@ def delete_group_schedule_logic(request):
                     push_message.append(request.user.first_name+'님이 '
                                         + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                        + group_info.name
-                                        + ' 수업을 예약 취소했습니다.')
+                                        + ' ['+group_info.name
+                                        + '] 수업을 예약 취소했습니다.')
                 else:
                     push_message.append(request.user.first_name+'님이 '
                                         + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
@@ -1807,7 +1814,8 @@ def finish_group_schedule_logic(request):
                     log_data.save()
                     push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                        + schedule_info.get_group_name() + ' 수업을 '+schedule_state_cd_name+' 했습니다.')
+                                        + ' [' + schedule_info.get_group_name() + '] 수업을 '
+                                        + schedule_state_cd_name + ' 했습니다.')
 
     if error is None:
 
@@ -1909,9 +1917,12 @@ def add_member_group_schedule_logic(request):
 
                     state_cd = schedule_info.state_cd
                     permission_state_cd = 'AP'
-                    if setting_schedule_auto_finish == AUTO_FINISH_ON \
-                            and timezone.now() > schedule_info.end_dt:
-                        state_cd = 'PE'
+
+                    if timezone.now() > schedule_info.end_dt:
+                        if setting_schedule_auto_finish == AUTO_FINISH_ON:
+                            state_cd = 'PE'
+                        elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
+                            state_cd = 'PC'
                     schedule_result = func_add_schedule(class_id, lecture_id, None,
                                                         group_id, group_schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,
@@ -1973,7 +1984,7 @@ def add_member_group_schedule_logic(request):
             push_message.append(request.user.first_name + '님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + group_info.name+' 수업을 예약 완료했습니다')
+                                + ' ['+group_info.name+'] 수업을 예약 완료했습니다')
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
             context['push_message'] = push_message
@@ -2066,9 +2077,11 @@ def add_other_member_group_schedule_logic(request):
 
                     state_cd = schedule_info.state_cd
                     permission_state_cd = 'AP'
-                    if setting_schedule_auto_finish == AUTO_FINISH_ON \
-                            and timezone.now() > schedule_info.end_dt:
-                        state_cd = 'PE'
+                    if timezone.now() > schedule_info.end_dt:
+                        if setting_schedule_auto_finish == AUTO_FINISH_ON:
+                            state_cd = 'PE'
+                        elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
+                            state_cd = 'PC'
                     schedule_result = func_add_schedule(class_id, lecture_id, None,
                                                         group_id, group_schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,
@@ -2130,7 +2143,7 @@ def add_other_member_group_schedule_logic(request):
             push_message.append(request.user.first_name + '님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + group_info.name + ' 수업을 예약 완료했습니다')
+                                + ' [' + group_info.name + '] 수업을 예약 완료했습니다')
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
             context['push_message'] = push_message
@@ -2565,7 +2578,7 @@ def add_group_repeat_schedule_confirm(request):
                         push_lecture_id.append(lecture_id)
                         push_title.append(class_type_name + ' - 수업 알림')
                         push_message.append(request.user.first_name + '님이 ' + str(start_date) + '~' + str(end_date)
-                                            + group_info.name + ' 반복 일정을 등록했습니다')
+                                            + ' ['+group_info.name + '] 반복 일정을 등록했습니다')
 
             information = '반복 일정 등록이 완료됐습니다.'
     if error is None:
@@ -2738,7 +2751,7 @@ def delete_group_repeat_schedule_logic(request):
                 push_title.append(class_type_name + ' - 반복 일정 알림')
                 push_message.append(request.user.first_name + '님이 ' + str(start_date)
                                     + '~' + str(end_date)
-                                    + repeat_schedule_info.get_group_name() + ' 반복 일정을 취소했습니다')
+                                    + ' ['+repeat_schedule_info.get_group_name() + '] 반복 일정을 취소했습니다')
 
     if error is None:
 
