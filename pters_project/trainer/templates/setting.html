@@ -7,32 +7,32 @@
 {% block content %}
 
     <div id="settingMenuBox">
-        <div id="myPage" class="settingMenu" onclick="location.href='{% url 'trainer:trainer_mypage' %}'">
+        <div id="myPage" class="settingMenu" onclick="location.href=`{% url 'trainer:trainer_mypage' %}`">
             마이페이지
         </div>
 
-        <div id="salesSetting" class="settingMenu" onclick="location.href='{% url 'trainer:class_setting' %}'">
+        <div id="salesSetting" class="settingMenu" onclick="location.href=`{% url 'trainer:class_setting' %}`">
             프로그램 설정
         </div>
 
-        <div id="basicSetting" class="settingMenu" onclick="location.href='{% url 'trainer:basic_setting' %}'">
+        <div id="basicSetting" class="settingMenu" onclick="location.href=`{% url 'trainer:basic_setting' %}`">
             기본 업무 설정
         </div>
 
-        <div id="reserveSetting" class="settingMenu" onclick="location.href='{% url 'trainer:reserve_setting' %}'">
+        <div id="reserveSetting" class="settingMenu" onclick="location.href=`{% url 'trainer:reserve_setting' %}`">
             회원 예약 설정
         </div>
 
-        <div id="pushSetting" class="settingMenu" onclick="location.href='{% url 'trainer:push_setting' %}'">
+        <div id="pushSetting" class="settingMenu" onclick="location.href=`{% url 'trainer:push_setting' %}`">
             푸시 설정
         </div>
 
-        <div id="bgSetting" class="settingMenu" onclick="location.href='{% url 'trainer:background_setting' %}'">
+        <div id="bgSetting" class="settingMenu" onclick="location.href=`{% url 'trainer:background_setting' %}`">
             배경 설정
         </div>
 
 
-        <div id="paymentSetting" class="settingMenu" onclick="location.href='{% url 'payment:index' %}'">
+        <div id="paymentSetting" class="settingMenu" onclick="location.href=`{% url 'payment:index' %}`">
             이용권 구매
         </div>
          
@@ -40,18 +40,18 @@
             언어 설정
         </div>
 
-        <div id="from_pters_team" class="settingMenu" onclick="location.href='{% url 'trainer:frompters_setting' %}'">
+        <div id="from_pters_team" class="settingMenu" onclick="location.href=`{% url 'trainer:frompters_setting' %}`">
             From Pters Team
         </div>
 
-        <div id="about_us" class="settingMenu" onclick="location.href='{% url 'trainer:aboutus_setting' %}'">
+        <div id="about_us" class="settingMenu" onclick="location.href=`{% url 'trainer:aboutus_setting' %}`">
             About us
         </div>
 
     </div>
 
     <div id="logout">
-        <span class="text-logout" onclick="location.href='{% url 'login:logout' %}'">로그아웃</span>
+        <span class="text-logout" onclick="location.href=`{% url 'login:logout' %}`">로그아웃</span>
     </div>
 
 {% endblock %}
