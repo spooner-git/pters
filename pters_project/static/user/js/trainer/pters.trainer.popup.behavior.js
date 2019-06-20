@@ -154,9 +154,8 @@ let layer_popup = (function(){
 
 //Ajax로 팝업 html을 통째로 들고온다.
 function func_get_popup_ajax(popup_name, data, callback){
-    ajax_load_image(SHOW);
-    setTimeout(function() {
-        console.log(data,popup_name)
+    // ajax_load_image(SHOW);
+    // setTimeout(function() {
         $.ajax({
             url: `/trainer/${popup_name}/`,
             type: 'GET',
@@ -165,6 +164,7 @@ function func_get_popup_ajax(popup_name, data, callback){
             // async: false,
 
             beforeSend: function (xhr, settings) {
+                ajax_load_image(SHOW);
                 func_ajax_before_send(xhr, settings, popup_name, data);
             },
 
@@ -181,7 +181,7 @@ function func_get_popup_ajax(popup_name, data, callback){
                 console.log('server error');
             }
         });
-    }, 10);
+    // }, 10);
 }
 
 
