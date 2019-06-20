@@ -2623,14 +2623,14 @@ def add_group_info_logic(request):
                                  state_cd='IP', use=USE)
 
             group_info.save()
-
-            package_info = PackageTb(class_tb_id=class_id, name=name,
-                                     package_type_cd=group_type_cd, note=note, state_cd='IP', use=USE)
-            package_info.save()
-
-            package_group_info = PackageGroupTb(class_tb_id=class_id, package_tb_id=package_info.package_id,
-                                                group_tb_id=group_info.group_id, use=USE)
-            package_group_info.save()
+            # 2019-06-20 그룹 생성시 package 자동 생성 제거 hkkim
+            # package_info = PackageTb(class_tb_id=class_id, name=name,
+            #                          package_type_cd=group_type_cd, note=note, state_cd='IP', use=USE)
+            # package_info.save()
+            #
+            # package_group_info = PackageGroupTb(class_tb_id=class_id, package_tb_id=package_info.package_id,
+            #                                     group_tb_id=group_info.group_id, use=USE)
+            # package_group_info.save()
     except ValueError:
         error = '오류가 발생했습니다. [1]'
     except IntegrityError:
