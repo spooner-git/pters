@@ -93,22 +93,33 @@ let layer_popup = (function(){
             // if(func_prevent_double_click_set()) return;
 
             if(call_method == POPUP_AJAX_CALL){
-                func_get_popup_ajax(popup_name, data);
+                func_get_popup_ajax(popup_name, data, ()=>{
+                    let func_animation_set = this.animation_set;
+                    setTimeout(function(){
+                    func_set_popup_position($(`.${popup_name}`).parents('.popup_mobile'), animation_type, popup_size);
+
+                        let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
+                        if(popup_data!=undefined && Object.keys(popup_data).length > 0){
+                            func_animation_set(OPEN, popup_data);
+                        }
+                        // func_prevent_double_click_free();
+                    }, 10);
+                });
             }else if(call_method==POPUP_BASIC){
                 func_set_popup_basic(popup_name, data)
             }else if(call_method==POPUP_INNER_HTML){
                 // 확인 용도
             }
-            let func_animation_set = this.animation_set;
-            setTimeout(function(){
-            func_set_popup_position($(`.${popup_name}`).parents('.popup_mobile'), animation_type, popup_size);
+            // let func_animation_set = this.animation_set;
+            // setTimeout(function(){
+            // func_set_popup_position($(`.${popup_name}`).parents('.popup_mobile'), animation_type, popup_size);
 
-                let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
-                if(popup_data!=undefined && Object.keys(popup_data).length > 0){
-                    func_animation_set(OPEN, popup_data);
-                }
-                  // func_prevent_double_click_free();
-            }, 10);
+            //     let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
+            //     if(popup_data!=undefined && Object.keys(popup_data).length > 0){
+            //         func_animation_set(OPEN, popup_data);
+            //     }
+            //       // func_prevent_double_click_free();
+            // }, 10);
         },
 
         "close_layer_popup": function(popup_size) {
@@ -142,15 +153,16 @@ let layer_popup = (function(){
 
 
 //Ajax로 팝업 html을 통째로 들고온다.
-function func_get_popup_ajax(popup_name, data){
+function func_get_popup_ajax(popup_name, data, callback){
     ajax_load_image(SHOW);
     setTimeout(function() {
+        console.log(data,popup_name)
         $.ajax({
             url: `/trainer/${popup_name}/`,
             type: 'GET',
             data: data,
             dataType: 'html',
-            async: false,
+            // async: false,
 
             beforeSend: function (xhr, settings) {
                 func_ajax_before_send(xhr, settings, popup_name, data);
@@ -158,6 +170,7 @@ function func_get_popup_ajax(popup_name, data){
 
             success: function (data) {
                 $('body').append(`<div id="${popup_name}">${data}</div>`);
+                callback();
             },
 
             complete: function () {

@@ -304,7 +304,7 @@ class Calendar {
     }
 
     open_popup_plan_view(event, year, month, date){
-        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, 90, POPUP_FROM_BOTTOM, {'select_date':`${year}-${month}-${date}`})
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, 90, POPUP_FROM_BOTTOM, {'select_date':`${year}-${month}-${date}`});
     }
 
     zoom_week_cal(event){
@@ -522,7 +522,8 @@ class Calendar {
 
                             let cell_index = plan.duplicated_index;
                             let cell_divide = plan.duplicated_cell;
-                            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_PLAN_VIEW}', 90, ${POPUP_FROM_BOTTOM}, {'select_date':${date_to_search}})`
+                            // let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_PLAN_VIEW}', 90, ${POPUP_FROM_BOTTOM}, {'select_date':'${date_to_search}'})`;
+                            let onclick = `${this.instance}.open_popup_plan_view(event, ${_year[i]}, ${_month[i]}, ${_date[i]})`;
                             let styles = `width:${100/cell_divide}%;height:${diff.hour*60+60*diff.minute/60}px;top:${(plan_start.hour-work_start)*60 + 60*plan_start.minute/60}px;left:${cell_index*100/cell_divide}%`;
                             return `<div onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week" style="${styles}"></div>`;
                         })

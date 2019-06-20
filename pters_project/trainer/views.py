@@ -6213,30 +6213,6 @@ class PopupCalendarPlanView(TemplateView):
         context = super(PopupCalendarPlanView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
         select_date = self.request.GET.get('select_date')
-
-        # context['error'] = None
-        # context['select_date'] = select_date
-
-        # context['date_format'] = datetime.datetime.strptime(select_date, '%Y-%m-%d')
-
-        # if class_id is not None and class_id != '':
-        #     context = func_get_trainee_select_schedule(context, class_id, self.request.user.id, select_date)
-        #     try:
-        #         class_info = ClassTb.objects.get(class_id=class_id)
-        #     except ObjectDoesNotExist:
-        #         class_info = None
-
-        #     if class_info is not None:
-        #         context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
-        #         cancel_prohibition_time = context['lt_res_cancel_time']
-        #         # 근접 예약 시간 확인
-        #         cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
-        #         context['cancel_disable_time'] = cancel_disable_time
-        #         context['avail_end_date'] = datetime.datetime.strptime(str(context['avail_date_data'].pop()),
-        #                                                                '%Y-%m-%d')
-
-        # if len(context['schedule_data']) == 0:
-        #     return redirect('/trainee/popup_calendar_plan_reserve/')
         return context
 
 class PopupCalendarPlanAdd(TemplateView):
@@ -6246,30 +6222,6 @@ class PopupCalendarPlanAdd(TemplateView):
         context = super(PopupCalendarPlanAdd, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
         select_date = self.request.GET.get('select_date')
-
-        # context['error'] = None
-        # context['select_date'] = select_date
-
-        # context['date_format'] = datetime.datetime.strptime(select_date, '%Y-%m-%d')
-
-        # if class_id is not None and class_id != '':
-        #     context = func_get_trainee_select_schedule(context, class_id, self.request.user.id, select_date)
-        #     try:
-        #         class_info = ClassTb.objects.get(class_id=class_id)
-        #     except ObjectDoesNotExist:
-        #         class_info = None
-
-        #     if class_info is not None:
-        #         context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
-        #         cancel_prohibition_time = context['lt_res_cancel_time']
-        #         # 근접 예약 시간 확인
-        #         cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
-        #         context['cancel_disable_time'] = cancel_disable_time
-        #         context['avail_end_date'] = datetime.datetime.strptime(str(context['avail_date_data'].pop()),
-        #                                                                '%Y-%m-%d')
-
-        # if len(context['schedule_data']) == 0:
-        #     return redirect('/trainee/popup_calendar_plan_reserve/')
         return context
 
 
