@@ -3236,7 +3236,7 @@ def finish_group_info_logic(request):
 
             package_group_info.package_tb.package_group_num = package_group_count
             if package_group_info.package_tb.package_group_num == 0:
-                package_group_info.package_tb.state_cd = 'PE'
+                # package_group_info.package_tb.state_cd = 'PE'
                 package_group_count = PackageGroupTb.objects.filter(class_tb_id=class_id,
                                                                     package_tb_id=package_group_info.package_tb_id,
                                                                     group_tb__use=USE,
