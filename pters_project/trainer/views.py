@@ -1839,14 +1839,14 @@ def export_excel_member_info_logic(request):
                     np_lecture_counts += 1
                 lecture_counts += 1
 
-                if lecture_info.package_tb.package_type_cd == 'NORMAL':
-                    group_check = 1
-                elif lecture_info.package_tb.package_type_cd == 'EMPTY':
-                    group_check = 2
-                elif lecture_info.package_tb.package_type_cd == 'PACKAGE':
-                    group_check = 3
-                else:
-                    group_check = 0
+                # if lecture_info.package_tb.package_type_cd == 'NORMAL':
+                #     group_check = 1
+                # elif lecture_info.package_tb.package_type_cd == 'EMPTY':
+                #     group_check = 2
+                # elif lecture_info.package_tb.package_type_cd == 'PACKAGE':
+                #     group_check = 3
+                # else:
+                #     group_check = 0
 
                 lecture_list_info.group_info = ''
 
@@ -2952,7 +2952,7 @@ def add_group_member_logic(request):
                     for user_info in user_db_id_list:
                         try:
                             package_info = PackageGroupTb.objects.filter(
-                                ~Q(package_tb__package_type_cd='PACKAGE'),
+                                # ~Q(package_tb__package_type_cd='PACKAGE'),
                                 group_tb_id=json_loading_data['lecture_info']['group_id'], use=USE).latest('mod_dt')
                             package_id = package_info.package_tb_id
                         except ObjectDoesNotExist:
@@ -3244,26 +3244,26 @@ def finish_group_info_logic(request):
                 package_group_info.package_tb.package_group_num = package_group_count
 
             elif package_group_info.package_tb.package_group_num == 1:
-                try:
-                    if package_group_info.package_tb.state_cd == 'IP':
-                        package_type_info = PackageGroupTb.objects.get(class_tb_id=class_id,
-                                                                       # group_tb__state_cd='IP',
-                                                                       package_tb_id=package_group_info.package_tb_id,
-                                                                       group_tb__state_cd='IP',
-                                                                       group_tb__use=USE,
-                                                                       use=USE)
-                    else:
-                        package_type_info = PackageGroupTb.objects.get(class_tb_id=class_id,
-                                                                       # group_tb__state_cd='IP',
-                                                                       package_tb_id=package_group_info.package_tb_id,
-                                                                       group_tb__use=USE,
-                                                                       use=USE)
+                # try:
+                if package_group_info.package_tb.state_cd == 'IP':
+                    package_type_info = PackageGroupTb.objects.get(class_tb_id=class_id,
+                                                                   # group_tb__state_cd='IP',
+                                                                   package_tb_id=package_group_info.package_tb_id,
+                                                                   group_tb__state_cd='IP',
+                                                                   group_tb__use=USE,
+                                                                   use=USE)
+                else:
+                    package_type_info = PackageGroupTb.objects.get(class_tb_id=class_id,
+                                                                   # group_tb__state_cd='IP',
+                                                                   package_tb_id=package_group_info.package_tb_id,
+                                                                   group_tb__use=USE,
+                                                                   use=USE)
 
-                    package_group_info.package_tb.package_type_cd = package_type_info.group_tb.group_type_cd
-                except MultipleObjectsReturned:
-                    package_group_info.package_tb.package_type_cd = 'PACKAGE'
-                except ObjectDoesNotExist:
-                    package_group_info.package_tb.package_type_cd = package_group_info.package_tb.package_type_cd
+                    # package_group_info.package_tb.package_type_cd = package_type_info.group_tb.group_type_cd
+                # except MultipleObjectsReturned:
+                #     package_group_info.package_tb.package_type_cd = 'PACKAGE'
+                # except ObjectDoesNotExist:
+                #     package_group_info.package_tb.package_type_cd = package_group_info.package_tb.package_type_cd
             package_group_info.package_tb.save()
 
     if error is None:
@@ -3329,9 +3329,9 @@ def progress_group_info_logic(request):
                 package_group_info.package_tb.state_cd = 'PE'
             elif package_group_info.package_tb.package_group_num == 1:
                 package_group_info.package_tb.state_cd = 'IP'
-                package_group_info.package_tb.package_type_cd = group_info.group_type_cd
-            else:
-                package_group_info.package_tb.package_type_cd = 'PACKAGE'
+                # package_group_info.package_tb.package_type_cd = group_info.group_type_cd
+            # else:
+            #     package_group_info.package_tb.package_type_cd = 'PACKAGE'
 
             package_group_info.package_tb.save()
 
@@ -3468,19 +3468,20 @@ def add_package_info_logic(request):
                 if len(json_loading_data['new_package_group_data']) == 0:
                     error = '패키지는 1가지 이상의 수강권을 선택하셔야 합니다.'
                     raise InternalError
-                elif len(json_loading_data['new_package_group_data']) > 1:
-                    package_type_cd = 'PACKAGE'
+                # elif len(json_loading_data['new_package_group_data']) > 1:
+                #     package_type_cd = 'PACKAGE'
                 elif len(json_loading_data['new_package_group_data']) == 1:
                     group_id = json_loading_data['new_package_group_data'][0]['group_id']
-                    try:
-                        package_type_cd = GroupTb.objects.get(group_id=group_id, use=USE).group_type_cd
-                    except ObjectDoesNotExist:
-                        error = '오류가 발생했습니다. [3]'
+                    # try:
+                    #     package_type_cd = GroupTb.objects.get(group_id=group_id, use=USE).group_type_cd
+                    # except ObjectDoesNotExist:
+                    #     error = '오류가 발생했습니다. [3]'
                 else:
                     error = '오류가 발생했습니다. [4]'
 
                 package_info = PackageTb(class_tb_id=class_id, name=package_name,
-                                         state_cd='IP', package_type_cd=package_type_cd,
+                                         state_cd='IP',
+                                         # package_type_cd=package_type_cd,
                                          package_group_num=len(json_loading_data['new_package_group_data']),
                                          ing_package_member_num=0, end_package_member_num=0,
                                          note=json_loading_data['package_info']['package_note'], use=USE)
@@ -3639,7 +3640,7 @@ def add_package_group_info_logic(request):
                                                                                                     package_tb_id=package_id,
                                                                                                     use=USE).count()
 
-                package_group_info.package_tb.package_type_cd = 'PACKAGE'
+                # package_group_info.package_tb.package_type_cd = 'PACKAGE'
                 package_group_info.package_tb.save()
                 package_group_lecture_data = ClassLectureTb.objects.select_related(
                     'lecture_tb__member').filter(class_tb_id=class_id, auth_cd='VIEW',
@@ -3729,28 +3730,27 @@ def delete_package_group_info_logic(request):
                     #                                                                    group_tb__use=USE,
                     #                                                                    package_tb_id=package_id,
                     #                                                                    use=USE).count()
-                    if package_info.package_group_num == 1:
-                        try:
-                            # if package_info.state_cd == 'IP':
-                            package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
-                                                                            group_tb__state_cd='IP',
-                                                                            package_tb_id=package_id, use=USE)
-                            # else:
-                            #     package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
-                            #                                                     package_tb_id=package_id, use=USE)
-                            package_info.package_type_cd = package_group_info.group_tb.group_type_cd
-                        except MultipleObjectsReturned:
-                            package_info.package_type_cd = 'PACKAGE'
-                        except ObjectDoesNotExist:
-                            package_info.package_type_cd = package_info.package_type_cd
-
-                    package_ing_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
-                                                                          group_tb__state_cd='IP',
-                                                                          package_tb_id=package_id,
-                                                                          use=USE).count()
+                    # if package_info.package_group_num == 1:
+                    #     try:
+                    #         if package_info.state_cd == 'IP':
+                    #             package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
+                    #                                                             group_tb__state_cd='IP',
+                    #                                                             package_tb_id=package_id, use=USE)
+                    #         else:
+                    #             package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
+                    #                                                             package_tb_id=package_id, use=USE)
+                    #         package_info.package_type_cd = package_group_info.group_tb.group_type_cd
+                    #     except MultipleObjectsReturned:
+                    #         package_info.package_type_cd = 'PACKAGE'
+                    #     except ObjectDoesNotExist:
+                    #         package_info.package_type_cd = package_info.package_type_cd
+                    #
+                    # package_ing_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                    #                                                       group_tb__state_cd='IP',
+                    #                                                       package_tb_id=package_id,
+                    #                                                       use=USE).count()
                     # if package_ing_group_num == 0:
                     #     package_info.state_cd = 'PE'
-                    package_info.package_group_num = package_ing_group_num
                     package_info.save()
 
                 if package_info is not None:
@@ -3834,21 +3834,18 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         sort_info = int(package_sort)
 
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
-        query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
-                                "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
+        # query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
+        #                         "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
         package_data = PackageTb.objects.filter(
             class_tb_id=class_id, state_cd='IP',
-            use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
-                              package_type_cd_nm=RawSQL(query_package_type_cd,
-                                                        [])).filter(Q(name__contains=keyword)
-                                                                    | Q(package_type_cd_nm__contains=keyword)
-                                                                    ).order_by('name')
-        order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
-        order = {key: i for i, key in enumerate(order)}
+            use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, [])).filter(name__contains=keyword).order_by('name')
+
+        # order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
+        # order = {key: i for i, key in enumerate(order)}
         # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
 
-        package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
-                                                                               sort_order_by))
+        # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
+        #                                                                        sort_order_by))
         if keyword == '' or keyword is None:
             if sort_info == SORT_PACKAGE_MEMBER_COUNT:
                 package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('ing_package_member_num'),
@@ -3911,21 +3908,17 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
 
         error = None
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
-        query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
-                                "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
+        # query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
+        #                         "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
         package_data = PackageTb.objects.filter(
             Q(state_cd='PE') | Q(end_package_member_num__gt=0), class_tb_id=class_id,
-            use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
-                              package_type_cd_nm=RawSQL(
-                                  query_package_type_cd,[])).filter(Q(name__contains=keyword)
-                                                                    | Q(package_type_cd_nm__contains=keyword)
-                                                                    ).order_by('name')
-        order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
-        order = {key: i for i, key in enumerate(order)}
+            use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, [])).filter(name__contains=keyword).order_by('name')
+        # order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
+        # order = {key: i for i, key in enumerate(order)}
         # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
 
-        package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
-                                                                               sort_order_by))
+        # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
+        #                                                                        sort_order_by))
 
         if keyword == '' or keyword is None:
             if sort_info == SORT_PACKAGE_MEMBER_COUNT:
@@ -3989,16 +3982,14 @@ class GetSinglePackageViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         error = None
 
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
-        query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
-                                "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
+        # query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
+        #                         "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
         query_package_group_id = "select GROUP_TB_ID from PACKAGE_GROUP_TB as B " \
                                  "where B.PACKAGE_TB_ID = `PACKAGE_TB`.`ID`"
-        package_data = PackageTb.objects.filter(
-            ~Q(package_type_cd='PACKAGE'), class_tb_id=class_id, state_cd='IP',
-            use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
-                              group_tb_id=RawSQL(query_package_group_id, []),
-                              package_type_cd_nm=RawSQL(query_package_type_cd,
-                                                        [])).order_by('-package_type_cd', '-package_id')
+        package_data = PackageTb.objects.filter(class_tb_id=class_id, state_cd='IP',
+                                                use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
+                                                                  group_tb_id=RawSQL(query_package_group_id,
+                                                                                     [])).order_by('-package_id')
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -4717,7 +4708,8 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                                                     state_cd='IP', member_num=1, use=USE)
                     one_to_one_group_info.save()
                     package_info = PackageTb(class_tb_id=class_info.class_id, name='1:1 레슨',
-                                             package_type_cd='ONE_TO_ONE', package_group_num=1, state_cd='IP', use=USE)
+                                             # package_type_cd='ONE_TO_ONE',
+                                             package_group_num=1, state_cd='IP', use=USE)
                     package_info.save()
                     package_group_info = PackageGroupTb(class_tb_id=class_info.class_id,
                                                         package_tb_id=package_info.package_id,

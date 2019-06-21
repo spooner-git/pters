@@ -57,10 +57,10 @@ class BackgroundImgTbAdmin(admin.ModelAdmin):
 
 @admin.register(PackageTb)
 class PackageTbAdmin(admin.ModelAdmin):
-    list_display = ('package_id', 'class_tb', 'name', 'package_type_cd',
+    list_display = ('package_id', 'class_tb', 'name',
                     'ing_package_member_num', 'end_package_member_num',
                     'package_group_num', 'state_cd', 'note', 'reg_dt', 'mod_dt', 'use')
-    search_fields = ['class_tb__member__name', 'package_type_cd', 'name']
+    search_fields = ['class_tb__member__name', 'name']
 
 
 @admin.register(PackageGroupTb)

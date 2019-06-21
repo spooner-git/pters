@@ -237,23 +237,23 @@
             <div id="wrapper_ticket_change_info">
                 <p class="fts_20 ftw_bd">수강권 차감</p>
                 <p class="fts_20">
-                    {% if lecture_info.package_tb.package_type_cd == 'PACKAGE' %}
-                        [패키지]
-                    {% elif lecture_info.package_tb.package_type_cd == 'GROUP' %}
-                        [그룹]
-                    {% else %}
-                        [개인]
-                    {% endif %}
+{#                    {% if lecture_info.package_tb.package_type_cd == 'PACKAGE' %}#}
+{#                        [패키지]#}
+{#                    {% elif lecture_info.package_tb.package_type_cd == 'GROUP' %}#}
+{#                        [그룹]#}
+{#                    {% else %}#}
+{#                        [개인]#}
+{#                    {% endif %}#}
                     {{ lecture_info.package_tb.name }} ({{ lecture_info.lecture_rem_count }} / {{ lecture_info.lecture_reg_count }})</p>
                 <div><img src="/static/user/res/btn_next.png" id="img_ticket_change_arrow"></div>
                 <p class="fts_22 ftw_bd">
-                    {% if lecture_info.package_tb.package_type_cd == 'PACKAGE' %}
-                        [패키지]
-                    {% elif lecture_info.package_tb.package_type_cd == 'GROUP' %}
-                        [그룹]
-                    {% else %}
-                        [개인]
-                    {% endif %}
+{#                    {% if lecture_info.package_tb.package_type_cd == 'PACKAGE' %}#}
+{#                        [패키지]#}
+{#                    {% elif lecture_info.package_tb.package_type_cd == 'GROUP' %}#}
+{#                        [그룹]#}
+{#                    {% else %}#}
+{#                        [개인]#}
+{#                    {% endif %}#}
                     {{ lecture_info.package_tb.name }} ({{ lecture_info.lecture_rem_count|add:"-1" }} / {{ lecture_info.lecture_reg_count }})</p>
             </div>
 

@@ -5,10 +5,10 @@
       [{% for package_info in package_data %}"{{ package_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "package_note":
       [{% for package_info in package_data %}"{{ package_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "package_type_cd":
-      [{% for package_info in package_data %}"{{ package_info.package_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "package_type_cd_nm":
-      [{% for package_info in package_data %}"{{ package_info.package_type_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+{#      "package_type_cd":#}
+{#      [{% for package_info in package_data %}"{{ package_info.package_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],#}
+{#      "package_type_cd_nm":#}
+{#      [{% for package_info in package_data %}"{{ package_info.package_type_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],#}
       "package_reg_dt":
       [{% for package_info in package_data %}"{{ package_info.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "package_mod_dt":

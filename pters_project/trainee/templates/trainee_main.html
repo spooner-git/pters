@@ -159,7 +159,7 @@
                             </div>
                         </div>
                         {% endfor %}
-                    {% if ing_lecture_info.lecture_tb.package_tb.package_type_cd == "PACKAGE" %}
+                    {% if ing_lecture_info.package_group_data|length > 1 %}
                     <div class="obj_font_size_11_weight_bold obj_font_color_dark_grey">*잔여 횟수가 동시에 차감되는 수강권입니다.</div>
                     {% endif %}
                 </div>

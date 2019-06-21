@@ -360,11 +360,11 @@ def func_get_lecture_count(context, class_id, user_id):
 
             if lecture_list_info.lecture_count > 0:
 
-                try:
-                    lecture_info.package_tb.package_type_cd_name = \
-                        CommonCdTb.objects.get(common_cd=lecture_info.package_tb.package_type_cd).common_cd_nm
-                except ObjectDoesNotExist:
-                    lecture_info.package_tb.package_type_cd_name = ''
+                # try:
+                #     lecture_info.package_tb.package_type_cd_name = \
+                #         CommonCdTb.objects.get(common_cd=lecture_info.package_tb.package_type_cd).common_cd_nm
+                # except ObjectDoesNotExist:
+                #     lecture_info.package_tb.package_type_cd_name = ''
 
                 if len(package_data) == 0:
                     package_data.append(lecture_info)
@@ -486,13 +486,13 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                 lecture_counts += 1
 
                 lecture_info_data.group_name = lecture_info.lecture_tb.package_tb.name
-                lecture_info_data.group_type_cd = lecture_info.lecture_tb.package_tb.package_type_cd
-                try:
-                    lecture_info_data.group_type_cd_name = \
-                        CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.package_tb.package_type_cd
-                                               ).common_cd_nm
-                except ObjectDoesNotExist:
-                    lecture_info_data.group_type_cd_name = ''
+                # lecture_info_data.group_type_cd = lecture_info.lecture_tb.package_tb.package_type_cd
+                # try:
+                #     lecture_info_data.group_type_cd_name = \
+                #         CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.package_tb.package_type_cd
+                #                                ).common_cd_nm
+                # except ObjectDoesNotExist:
+                #     lecture_info_data.group_type_cd_name = ''
                 if lecture_info.lecture_tb.package_tb.package_group_num == 1:
                     try:
                         package_group_info = PackageGroupTb.objects.get(
@@ -794,15 +794,15 @@ def func_get_trainee_ing_lecture_list(context, class_id, user_id):
                                                     ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date',
                                                                                              'lecture_tb__reg_dt')
 
-    for lecture_info in lecture_list:
-        lecture_info_package_tb = lecture_info.lecture_tb.package_tb
-        try:
-            lecture_info_package_tb.package_type_cd_nm \
-                = CommonCdTb.objects.get(common_cd=lecture_info_package_tb.package_type_cd).common_cd_nm
-            if lecture_info_package_tb.package_type_cd_nm == '1:1':
-                lecture_info_package_tb.package_type_cd_nm = '개인'
-        except ObjectDoesNotExist:
-            lecture_info_package_tb.package_type_cd_nm = ''
+    # for lecture_info in lecture_list:
+    #     lecture_info_package_tb = lecture_info.lecture_tb.package_tb
+    #     try:
+    #         lecture_info_package_tb.package_type_cd_nm \
+    #             = CommonCdTb.objects.get(common_cd=lecture_info_package_tb.package_type_cd).common_cd_nm
+    #         if lecture_info_package_tb.package_type_cd_nm == '1:1':
+    #             lecture_info_package_tb.package_type_cd_nm = '개인'
+    #     except ObjectDoesNotExist:
+    #         lecture_info_package_tb.package_type_cd_nm = ''
 
     context['ing_lecture_data'] = lecture_list
     return context
@@ -828,13 +828,13 @@ def func_get_trainee_package_list(context, class_id, user_id):
     package_list = []
     for lecture_info in lecture_list:
         lecture_info_package_tb = lecture_info.lecture_tb.package_tb
-        try:
-            lecture_info_package_tb.package_type_cd_nm \
-                = CommonCdTb.objects.get(common_cd=lecture_info_package_tb.package_type_cd).common_cd_nm
-            if lecture_info_package_tb.package_type_cd_nm == '1:1':
-                lecture_info_package_tb.package_type_cd_nm = '개인'
-        except ObjectDoesNotExist:
-            lecture_info_package_tb.package_type_cd_nm = ''
+        # try:
+        #     lecture_info_package_tb.package_type_cd_nm \
+        #         = CommonCdTb.objects.get(common_cd=lecture_info_package_tb.package_type_cd).common_cd_nm
+        #     if lecture_info_package_tb.package_type_cd_nm == '1:1':
+        #         lecture_info_package_tb.package_type_cd_nm = '개인'
+        # except ObjectDoesNotExist:
+        #     lecture_info_package_tb.package_type_cd_nm = ''
 
         test = True
 
@@ -875,13 +875,13 @@ def func_get_trainee_ing_group_list(context, class_id, user_id):
                                group_tb__use=USE,
                                use=USE).order_by('-group_tb__group_type_cd', 'group_tb__reg_dt')
 
-        try:
-            lecture_info_package_tb.package_type_cd_nm \
-                = CommonCdTb.objects.get(common_cd=lecture_info_package_tb.package_type_cd).common_cd_nm
-            if lecture_info_package_tb.package_type_cd_nm == '1:1':
-                lecture_info_package_tb.package_type_cd_nm = '개인'
-        except ObjectDoesNotExist:
-            lecture_info_package_tb.package_type_cd_nm = ''
+        # try:
+        #     lecture_info_package_tb.package_type_cd_nm \
+        #         = CommonCdTb.objects.get(common_cd=lecture_info_package_tb.package_type_cd).common_cd_nm
+        #     if lecture_info_package_tb.package_type_cd_nm == '1:1':
+        #         lecture_info_package_tb.package_type_cd_nm = '개인'
+        # except ObjectDoesNotExist:
+        #     lecture_info_package_tb.package_type_cd_nm = ''
 
     context['ing_lecture_data'] = lecture_list
     return context
