@@ -1886,13 +1886,6 @@ class PopupGroupTicketInfoView(TemplateView):
             error = '수업 정보를 불러오지 못했습니다.'
 
         if error is None:
-            # try:
-            #     lecture_info.package_tb.package_type_cd_nm \
-            #         = CommonCdTb.objects.get(common_cd=lecture_info.package_tb.package_type_cd).common_cd_nm
-            #     if lecture_info.package_tb.package_type_cd_nm == '1:1':
-            #         lecture_info.package_tb.package_type_cd_nm = '개인'
-            # except ObjectDoesNotExist:
-            #     lecture_info.package_tb.package_type_cd_nm = ''
 
             lecture_abs_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PC').count()
             lecture_info.lecture_abs_count = lecture_abs_count
@@ -1954,15 +1947,6 @@ class PopupTicketInfoView(TemplateView):
                 package_info = PackageTb.objects.get(package_id=package_id)
             except ObjectDoesNotExist:
                 error = '수강권 정보를 불러오지 못했습니다.'
-
-        # if error is None:
-        #     try:
-        #         package_info.package_type_cd_nm \
-        #             = CommonCdTb.objects.get(common_cd=package_info.package_type_cd).common_cd_nm
-        #         if package_info.package_type_cd_nm == '1:1':
-        #             package_info.package_type_cd_nm = '개인'
-        #     except ObjectDoesNotExist:
-        #         package_info.package_type_cd_nm = ''
 
         if error is None:
             query_group_type = "select COMMON_CD_NM from COMMON_CD_TB as B " \

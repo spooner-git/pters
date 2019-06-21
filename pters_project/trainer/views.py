@@ -1839,27 +1839,7 @@ def export_excel_member_info_logic(request):
                     np_lecture_counts += 1
                 lecture_counts += 1
 
-                # if lecture_info.package_tb.package_type_cd == 'NORMAL':
-                #     group_check = 1
-                # elif lecture_info.package_tb.package_type_cd == 'EMPTY':
-                #     group_check = 2
-                # elif lecture_info.package_tb.package_type_cd == 'PACKAGE':
-                #     group_check = 3
-                # else:
-                #     group_check = 0
-
                 lecture_list_info.group_info = ''
-
-                if lecture_info.use != UN_USE:
-                    # if lecture_info.state_cd == 'IP':
-                    if group_check == 0:
-                        lecture_list_info.group_info = '1:1 레슨'
-                    elif group_check == 1:
-                        lecture_list_info.group_info = '[그룹]'+lecture_info.package_tb.name
-                    elif group_check == 2:
-                        lecture_list_info.group_info = '[클래스]'+lecture_info.package_tb.name
-                    else:
-                        lecture_list_info.group_info = '[패키지]'+lecture_info.package_tb.name
 
                 if '\r\n' in lecture_info.note:
                     lecture_info.note = lecture_info.note.replace('\r\n', ' ')
@@ -3243,27 +3223,6 @@ def finish_group_info_logic(request):
                                                                     use=USE).count()
                 package_group_info.package_tb.package_group_num = package_group_count
 
-            elif package_group_info.package_tb.package_group_num == 1:
-                # try:
-                if package_group_info.package_tb.state_cd == 'IP':
-                    package_type_info = PackageGroupTb.objects.get(class_tb_id=class_id,
-                                                                   # group_tb__state_cd='IP',
-                                                                   package_tb_id=package_group_info.package_tb_id,
-                                                                   group_tb__state_cd='IP',
-                                                                   group_tb__use=USE,
-                                                                   use=USE)
-                else:
-                    package_type_info = PackageGroupTb.objects.get(class_tb_id=class_id,
-                                                                   # group_tb__state_cd='IP',
-                                                                   package_tb_id=package_group_info.package_tb_id,
-                                                                   group_tb__use=USE,
-                                                                   use=USE)
-
-                    # package_group_info.package_tb.package_type_cd = package_type_info.group_tb.group_type_cd
-                # except MultipleObjectsReturned:
-                #     package_group_info.package_tb.package_type_cd = 'PACKAGE'
-                # except ObjectDoesNotExist:
-                #     package_group_info.package_tb.package_type_cd = package_group_info.package_tb.package_type_cd
             package_group_info.package_tb.save()
 
     if error is None:
@@ -3329,9 +3288,6 @@ def progress_group_info_logic(request):
                 package_group_info.package_tb.state_cd = 'PE'
             elif package_group_info.package_tb.package_group_num == 1:
                 package_group_info.package_tb.state_cd = 'IP'
-                # package_group_info.package_tb.package_type_cd = group_info.group_type_cd
-            # else:
-            #     package_group_info.package_tb.package_type_cd = 'PACKAGE'
 
             package_group_info.package_tb.save()
 
@@ -3460,7 +3416,6 @@ def add_package_info_logic(request):
             with transaction.atomic():
 
                 package_name = json_loading_data['package_info']['package_name']
-                # package_type_cd = ''
                 if package_name is None or package_name == '':
                     error = '패키지 이름을 입력하세요.'
                     raise InternalError
@@ -3468,20 +3423,13 @@ def add_package_info_logic(request):
                 if len(json_loading_data['new_package_group_data']) == 0:
                     error = '패키지는 1가지 이상의 수강권을 선택하셔야 합니다.'
                     raise InternalError
-                # elif len(json_loading_data['new_package_group_data']) > 1:
-                #     package_type_cd = 'PACKAGE'
                 elif len(json_loading_data['new_package_group_data']) == 1:
                     group_id = json_loading_data['new_package_group_data'][0]['group_id']
-                    # try:
-                    #     package_type_cd = GroupTb.objects.get(group_id=group_id, use=USE).group_type_cd
-                    # except ObjectDoesNotExist:
-                    #     error = '오류가 발생했습니다. [3]'
                 else:
                     error = '오류가 발생했습니다. [4]'
 
                 package_info = PackageTb(class_tb_id=class_id, name=package_name,
                                          state_cd='IP',
-                                         # package_type_cd=package_type_cd,
                                          package_group_num=len(json_loading_data['new_package_group_data']),
                                          ing_package_member_num=0, end_package_member_num=0,
                                          note=json_loading_data['package_info']['package_note'], use=USE)
@@ -3640,7 +3588,6 @@ def add_package_group_info_logic(request):
                                                                                                     package_tb_id=package_id,
                                                                                                     use=USE).count()
 
-                # package_group_info.package_tb.package_type_cd = 'PACKAGE'
                 package_group_info.package_tb.save()
                 package_group_lecture_data = ClassLectureTb.objects.select_related(
                     'lecture_tb__member').filter(class_tb_id=class_id, auth_cd='VIEW',
