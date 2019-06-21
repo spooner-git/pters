@@ -2725,18 +2725,18 @@ def delete_group_info_logic(request):
                 for package_data_info in package_data:
                     package_data_info.use = UN_USE
                     package_data_info.save()
-                    if package_data_info.package_tb.state_cd == 'IP':
-                        package_data_info.package_tb.package_group_num = PackageGroupTb.objects.filter(
-                            package_tb_id=package_data_info.package_tb_id, group_tb__state_cd='IP',
-                            group_tb__use=USE, use=USE).count()
-                    else:
-                        package_data_info.package_tb.package_group_num = PackageGroupTb.objects.filter(
-                            package_tb_id=package_data_info.package_tb_id, group_tb__use=USE, use=USE).count()
-
-                    if package_data_info.package_tb.package_group_num <= 0:
-                        package_data_info.package_tb.state_cd = 'PE'
-                        package_data_info.package_tb.use = UN_USE
-                        package_data_info.package_tb.save()
+                    # if package_data_info.package_tb.state_cd == 'IP':
+                    #     package_data_info.package_tb.package_group_num = PackageGroupTb.objects.filter(
+                    #         package_tb_id=package_data_info.package_tb_id, group_tb__state_cd='IP',
+                    #         group_tb__use=USE, use=USE).count()
+                    # else:
+                    #     package_data_info.package_tb.package_group_num = PackageGroupTb.objects.filter(
+                    #         package_tb_id=package_data_info.package_tb_id, group_tb__use=USE, use=USE).count()
+                    #
+                    # if package_data_info.package_tb.package_group_num <= 0:
+                    #     package_data_info.package_tb.state_cd = 'PE'
+                    #     package_data_info.package_tb.use = UN_USE
+                    #     package_data_info.package_tb.save()
 
             if error is not None:
                 raise InternalError
