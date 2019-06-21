@@ -3748,8 +3748,9 @@ def delete_package_group_info_logic(request):
                                                                           group_tb__state_cd='IP',
                                                                           package_tb_id=package_id,
                                                                           use=USE).count()
-                    if package_ing_group_num == 0:
-                        package_info.state_cd = 'PE'
+                    # if package_ing_group_num == 0:
+                    #     package_info.state_cd = 'PE'
+                    package_info.package_group_num = package_ing_group_num
                     package_info.save()
 
                 if package_info is not None:
