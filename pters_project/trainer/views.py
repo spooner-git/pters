@@ -3700,15 +3700,17 @@ def delete_package_group_info_logic(request):
     if error is None:
         try:
             with transaction.atomic():
+                # 그룹에 패키지에서 제외되도록 설정
                 package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id,
                                                                    package_tb_id=package_id, group_tb_id=group_id,
                                                                    use=USE)
                 package_group_data.update(use=UN_USE)
 
+                # 그룹이 회원의 수강권에서 제외되도록 설정
                 package_group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
                                                                            lecture_tb__package_tb_id=package_id)
-
                 package_group_lecture_data.update(fix_state_cd='', use=UN_USE)
+
                 try:
                     package_info = PackageTb.objects.get(package_id=package_id)
                 except ObjectDoesNotExist:
@@ -3716,25 +3718,26 @@ def delete_package_group_info_logic(request):
 
                 if package_info is not None:
 
-                    if package_info.state_cd == 'IP':
-                        package_info.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
-                                                                                       group_tb__state_cd='IP',
-                                                                                       package_tb_id=package_id,
-                                                                                       use=USE).count()
-                    else:
-                        package_info.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
-                                                                                       group_tb__use=USE,
-                                                                                       package_tb_id=package_id,
-                                                                                       use=USE).count()
+                    # if package_info.state_cd == 'IP':
+                    # 진행중인 패키지의 경우 진행중 그룹의 숫자를 count
+                    package_info.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                                                                                   group_tb__state_cd='IP',
+                                                                                   package_tb_id=package_id,
+                                                                                   use=USE).count()
+                    # else:
+                    #     package_info.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                    #                                                                    group_tb__use=USE,
+                    #                                                                    package_tb_id=package_id,
+                    #                                                                    use=USE).count()
                     if package_info.package_group_num == 1:
                         try:
-                            if package_info.state_cd == 'IP':
-                                package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
-                                                                                group_tb__state_cd='IP',
-                                                                                package_tb_id=package_id, use=USE)
-                            else:
-                                package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
-                                                                                package_tb_id=package_id, use=USE)
+                            # if package_info.state_cd == 'IP':
+                            package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
+                                                                            group_tb__state_cd='IP',
+                                                                            package_tb_id=package_id, use=USE)
+                            # else:
+                            #     package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
+                            #                                                     package_tb_id=package_id, use=USE)
                             package_info.package_type_cd = package_group_info.group_tb.group_type_cd
                         except MultipleObjectsReturned:
                             package_info.package_type_cd = 'PACKAGE'
