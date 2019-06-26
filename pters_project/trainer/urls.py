@@ -149,21 +149,6 @@ urlpatterns = [
     url(r'^delete_package_member_info/$', views.delete_package_member_info_logic, name='delete_package_member_info'),
 
 
-
-    # 수업 관리 기능 ######################################################################################################
-    # 진행중 회원/그룹/클래스 list 조회
-    url(r'^get_member_group_class_ing_list/$', views.GetMemberGroupClassIngListViewAjax.as_view(),
-        name='get_member_group_class_ing_list'),
-    url(r'^get_member_group_class_end_list/$', views.GetMemberGroupClassEndListViewAjax.as_view(),
-        name='get_member_group_class_end_list'),
-    # 진행중 회원 목록 조회 1:1만
-    url(r'^get_member_one_to_one_ing_list/$', views.GetMemberOneToOneIngListViewAjax.as_view(),
-        name='get_member_one_to_one_ing_list'),
-    # 진행 완료 회원 목록 조회 1:1만
-    url(r'^get_member_one_to_one_end_list/$', views.GetMemberOneToOneEndListViewAjax.as_view(),
-        name='get_member_one_to_one_end_list'),
-
-
     # 강좌 기능 ##########################################################################################################
     # 강좌 정보 조회
     url(r'^get_class_list/$', views.GetClassListViewAjax.as_view(), name='get_class_list'),
