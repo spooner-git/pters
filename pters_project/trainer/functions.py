@@ -47,7 +47,7 @@ def func_get_class_member_ing_list(class_id, keyword):
                                            class_tb_id=class_id, auth_cd='VIEW',
                                            lecture_tb__state_cd='IP', lecture_tb__use=USE,
                                            lecture_tb__member__use=USE,
-                                           use=USE).order_by('lecture_tb__member__name')
+                                           use=USE).order_by('lecture_tb__member_id')
     for class_lecture_info in class_lecture_data:
         check_member = None
         member_id = class_lecture_info.lecture_tb.member_id
@@ -88,22 +88,21 @@ def func_get_class_member_end_list(class_id, keyword):
                                            use=USE
                                            ).exclude(lecture_tb__state_cd='IP'
                                                      ).annotate(ip_lecture_count=RawSQL(query_ip_lecture_count, [])
-                                                                ).order_by('lecture_tb__member__name')
+                                                                ).order_by('lecture_tb__member_id')
     # class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
     # class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
     # member_id = None
     for class_lecture_info in class_lecture_data:
         if class_lecture_info.ip_lecture_count == 0:
-            check_member = None
-            member_id = class_lecture_info.lecture_tb.member_id
+            check_member = True
+            member_id = class_lecture_info.lecture_tb.member.member_id
 
             for member_info in all_member:
                 if str(member_info.member_id) == str(member_id):
-                    check_member = member_info
+                    check_member = False
 
-            if check_member is None:
+            if check_member:
                 all_member.append(class_lecture_info.lecture_tb.member)
-
     return all_member
 
 
