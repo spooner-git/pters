@@ -225,7 +225,7 @@ urlpatterns = [
     # 휴대폰 번호 입력후 출석 완료 기능
     url(r'^attend_mode_finish/$', views.attend_mode_finish_logic, name='attend_mode_finish'),
     # 출석체크 모드 Setting 수정
-    url(r'^update_attend_mode_setting/$', views.update_attend_mode_setting_logic, name='update_setting_basic'),
+    url(r'^update_attend_mode_setting/$', views.update_attend_mode_setting_logic, name='update_attend_mode_setting'),
     # 관리자 비밀번호 확인
     url(r'^check_admin_password/$', views.check_admin_password_logic, name='check_admin_password'),
     # 출석 체크 모드 스케쥴 조회
