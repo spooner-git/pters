@@ -221,7 +221,6 @@ def func_get_member_ing_list(class_id, user_id, keyword):
 def func_get_member_end_list(class_id, user_id, keyword):
 
     member_list = []
-
     query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as A where A.LECTURE_TB_ID =" \
                           " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and A.AUTH_CD=\'VIEW\' and" \
                           " A.USE=1"
@@ -289,7 +288,6 @@ def func_get_member_end_list(class_id, user_id, keyword):
 
         if not member_test:
             member_test = True
-            print(str(member_info.name))
             member_list.append(member_info)
 
     return member_list
