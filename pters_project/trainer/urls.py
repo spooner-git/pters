@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^get_error_info/$', views.GetErrorInfoView.as_view(), name='get_error_info'),
 
     # 일정 기능 #####################################################################################################
+    url(r'^get_all_schedule/$', views.GetAllScheduleView.as_view(), name='get_all_schedule'),
     # 강사 스케쥴 조회 - 1:1/Group/Off
     url(r'^get_trainer_schedule/$', views.GetTrainerScheduleView.as_view(), name='get_trainer_schedule'),
     # 강사 스케쥴 조회 - Off
@@ -147,21 +148,6 @@ urlpatterns = [
     url(r'^add_package_member/$', views.add_package_member_logic, name='add_package_member'),
     # 패키지 회원 삭제
     url(r'^delete_package_member_info/$', views.delete_package_member_info_logic, name='delete_package_member_info'),
-
-
-
-    # 수업 관리 기능 ######################################################################################################
-    # 진행중 회원/그룹/클래스 list 조회
-    url(r'^get_member_group_class_ing_list/$', views.GetMemberGroupClassIngListViewAjax.as_view(),
-        name='get_member_group_class_ing_list'),
-    url(r'^get_member_group_class_end_list/$', views.GetMemberGroupClassEndListViewAjax.as_view(),
-        name='get_member_group_class_end_list'),
-    # 진행중 회원 목록 조회 1:1만
-    url(r'^get_member_one_to_one_ing_list/$', views.GetMemberOneToOneIngListViewAjax.as_view(),
-        name='get_member_one_to_one_ing_list'),
-    # 진행 완료 회원 목록 조회 1:1만
-    url(r'^get_member_one_to_one_end_list/$', views.GetMemberOneToOneEndListViewAjax.as_view(),
-        name='get_member_one_to_one_end_list'),
 
 
     # 강좌 기능 ##########################################################################################################

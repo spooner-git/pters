@@ -53,12 +53,12 @@ from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClas
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
     func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count, \
     func_get_trainer_attend_schedule, func_get_group_lecture_id, func_check_group_available_member_before, \
-    func_add_schedule, func_check_group_available_member_after
+    func_add_schedule, func_check_group_available_member_after, func_get_all_schedule
 from stats.functions import get_sales_data, get_stats_member_data
 from .functions import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
     func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list, \
-    func_get_class_member_ing_list, func_get_class_member_end_list, func_get_member_one_to_one_ing_list, func_get_member_one_to_one_end_list, \
+    func_get_class_member_ing_list, func_get_class_member_end_list, \
     func_get_ing_group_member_list, func_get_end_group_member_list, func_get_ing_package_member_list, \
     func_get_end_package_member_list, func_get_ing_package_in_member_list, func_get_end_package_in_member_list
 
@@ -204,7 +204,6 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             class_lecture_list = ClassLectureTb.objects.select_related(
                 'lecture_tb__member').filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=USE,
                                              auth_cd='VIEW', use=USE).order_by('-lecture_tb__start_date')
-
             for member_info in all_member:
                 # member_data = member_info
 
@@ -220,7 +219,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                     start_date = ''
                     for lecture_info_data in class_lecture_list:
                         lecture_info = lecture_info_data.lecture_tb
-                        if str(lecture_info.member_id) == str(member_info.member_id):
+                        if str(lecture_info.member_id) == str(member_info):
                             if lecture_info_data.auth_cd == 'WAIT':
                                 np_member_num += 1
                             member_lecture_reg_count += lecture_info.lecture_reg_count
@@ -1013,6 +1012,48 @@ class CalPreviewIframeView(LoginRequiredMixin, AccessTestMixin, View):
 
 
 # ############### ############### ############### ############### ############### ############### ##############
+class GetAllScheduleView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        start_time = timezone.now()
+        # context = {}
+        class_id = self.request.session.get('class_id', '')
+        date = self.request.GET.get('date', '')
+        day = self.request.GET.get('day', '')
+        today = datetime.date.today()
+
+        if date != '':
+            today = datetime.datetime.strptime(date, '%Y-%m-%d')
+        if day == '':
+            day = 46
+        start_date = today - datetime.timedelta(days=int(day))
+        end_date = today + datetime.timedelta(days=int(day))
+        all_schedule_data = func_get_all_schedule(class_id, start_date, end_date)
+        end_time = timezone.now()
+
+        return JsonResponse(all_schedule_data, json_dumps_params={'ensure_ascii': True})
+
+    # def get_context_data(self, **kwargs):
+    #     start_time = timezone.now()
+    #     # context = {}
+    #     context = super(GetAllScheduleView, self).get_context_data(**kwargs)
+    #     class_id = self.request.session.get('class_id', '')
+    #     date = self.request.GET.get('date', '')
+    #     day = self.request.GET.get('day', '')
+    #     today = datetime.date.today()
+    #
+    #     if date != '':
+    #         today = datetime.datetime.strptime(date, '%Y-%m-%d')
+    #     if day == '':
+    #         day = 46
+    #     start_date = today - datetime.timedelta(days=int(day))
+    #     end_date = today + datetime.timedelta(days=int(day))
+    #     context = func_get_all_schedule(context, class_id, start_date, end_date)
+    #     end_time = timezone.now()
+    #     print(str(end_time-start_time))
+    #     return context
+
+
 class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/schedule_ajax.html'
 
@@ -1217,9 +1258,12 @@ class GetMemberListView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         class_id = self.request.session.get('class_id', '')
         keyword = self.request.GET.get('keyword', '')
         # context = get_member_data(context, class_id, None, self.request.user.id)
-
-        context['member_data'] = func_get_member_ing_list(class_id, self.request.user.id, keyword)
-        context['member_finish_data'] = func_get_member_end_list(class_id, self.request.user.id, keyword)
+        member_data = func_get_member_ing_list(class_id, self.request.user.id, keyword)
+        member_data = sorted(member_data, key=attrgetter('name'), reverse=int(SORT_ASC))
+        context['member_data'] = member_data
+        member_finish_data = func_get_member_end_list(class_id, self.request.user.id, keyword)
+        member_finish_data = sorted(member_finish_data, key=attrgetter('name'), reverse=int(SORT_ASC))
+        context['member_finish_data'] = member_finish_data
         # return context
         return context
 
@@ -1298,32 +1342,6 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
                 member_data = None
 
         context['member_data'] = member_data
-        # end_dt = timezone.now()
-        # print(str(end_dt-start_dt))
-        return context
-
-
-class GetMemberOneToOneIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/member_list_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        # start_dt = timezone.now()
-        context = super(GetMemberOneToOneIngListViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        context['member_data'] = func_get_member_one_to_one_ing_list(class_id, self.request.user.id)
-        # end_dt = timezone.now()
-        # print(str(end_dt-start_dt))
-        return context
-
-
-class GetMemberOneToOneEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/member_list_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        # start_dt = timezone.now()
-        context = super(GetMemberOneToOneEndListViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        context['member_data'] = func_get_member_one_to_one_end_list(class_id, self.request.user.id)
         # end_dt = timezone.now()
         # print(str(end_dt-start_dt))
         return context
@@ -4430,137 +4448,6 @@ class GetGroupMemberRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMix
             group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
         context['repeat_schedule_data'] = group_repeat_schedule_data
 
-        return context
-
-
-class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/member_group_class_list_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(GetMemberGroupClassIngListViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        page = self.request.GET.get('page', 0)
-        lecture_sort = self.request.GET.get('sort_val', SORT_LECTURE_NAME)
-        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
-        keyword = self.request.GET.get('keyword', '')
-        sort_info = int(lecture_sort)
-
-        error = None
-        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
-        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
-        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', name__contains=keyword, use=USE
-                                            ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
-                                                       state_cd_nm=RawSQL(query_state_cd, []),
-                                                       # group_member_num=RawSQL(query_group_member_num, [])
-                                                       ).order_by('-group_type_cd', 'name', '-ing_group_member_num')
-
-        context['total_group_num'] = len(group_data)
-        if keyword == '' or keyword is None:
-            if sort_info == SORT_LECTURE_NAME:
-                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('name'),
-                                                      reverse=int(sort_order_by))
-            elif sort_info == SORT_LECTURE_MEMBER_COUNT:
-                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('ing_group_member_num'),
-                                                      reverse=int(sort_order_by))
-            elif sort_info == SORT_LECTURE_CAPACITY_COUNT:
-                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('member_num'),
-                                                      reverse=int(sort_order_by))
-            elif sort_info == SORT_LECTURE_CREATE_DATE:
-                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('reg_dt'),
-                                                      reverse=int(sort_order_by))
-        else:
-            if sort_info == SORT_LECTURE_NAME:
-                group_data = sorted(group_data, key=attrgetter('name'), reverse=int(sort_order_by))
-            elif sort_info == SORT_LECTURE_MEMBER_COUNT:
-                group_data = sorted(group_data, key=attrgetter('ing_group_member_num'),
-                                                      reverse=int(sort_order_by))
-            elif sort_info == SORT_LECTURE_CAPACITY_COUNT:
-                group_data = sorted(group_data, key=attrgetter('member_num'),
-                                                      reverse=int(sort_order_by))
-            elif sort_info == SORT_LECTURE_CREATE_DATE:
-                group_data = sorted(group_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
-
-        if page != 0:
-            paginator = Paginator(group_data, 20)  # Show 20 contacts per page
-            try:
-                group_data = paginator.page(page)
-            except EmptyPage:
-                group_data = None
-        if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
-                self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
-
-        context['group_data'] = group_data
-        # end_time = timezone.now()
-        # print(str(end_time-start_time))
-        return context
-
-
-class GetMemberGroupClassEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/member_group_class_list_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(GetMemberGroupClassEndListViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        page = self.request.GET.get('page', 0)
-        lecture_sort = self.request.GET.get('sort_val', SORT_LECTURE_NAME)
-        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
-        keyword = self.request.GET.get('keyword', '')
-        sort_info = int(lecture_sort)
-
-        error = None
-        # start_time = timezone.now()
-        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
-        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
-        group_data = GroupTb.objects.filter(Q(end_group_member_num__gt=0) | ~Q(state_cd='IP'),
-                                            class_tb_id=class_id, name__contains=keyword, use=USE
-                                            ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
-                                                       state_cd_nm=RawSQL(query_state_cd, []),
-                                                       ).order_by('-group_type_cd', 'name', '-end_group_member_num')
-
-        context['total_group_num'] = len(group_data)
-
-        if keyword == '' or keyword is None:
-            if sort_info == SORT_LECTURE_NAME:
-                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('name'),
-                                                      reverse=int(sort_order_by))
-            elif sort_info == SORT_LECTURE_MEMBER_COUNT:
-                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('end_group_member_num'),
-                                                      reverse=int(sort_order_by))
-            elif sort_info == SORT_LECTURE_CAPACITY_COUNT:
-                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('member_num'),
-                                                      reverse=int(sort_order_by))
-            elif sort_info == SORT_LECTURE_CREATE_DATE:
-                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('reg_dt'),
-                                                      reverse=int(sort_order_by))
-        else:
-            if sort_info == SORT_LECTURE_NAME:
-                group_data = sorted(group_data, key=attrgetter('name'), reverse=int(sort_order_by))
-            elif sort_info == SORT_LECTURE_MEMBER_COUNT:
-                group_data = sorted(group_data, key=attrgetter('end_group_member_num'),
-                                                      reverse=int(sort_order_by))
-            elif sort_info == SORT_LECTURE_CAPACITY_COUNT:
-                group_data = sorted(group_data, key=attrgetter('member_num'),
-                                                      reverse=int(sort_order_by))
-            elif sort_info == SORT_LECTURE_CREATE_DATE:
-                group_data = sorted(group_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
-
-        if page != 0:
-            paginator = Paginator(group_data, 20)  # Show 20 contacts per page
-            try:
-                group_data = paginator.page(page)
-            except EmptyPage:
-                group_data = None
-
-        if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
-                self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
-
-        context['group_data'] = group_data
-        # end_time = timezone.now()
-        # print(str(end_time-start_time))
         return context
 
 
