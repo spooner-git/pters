@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^get_error_info/$', views.GetErrorInfoView.as_view(), name='get_error_info'),
 
     # 일정 기능 #####################################################################################################
+    url(r'^get_all_schedule/$', views.GetAllScheduleView.as_view(), name='get_all_schedule'),
     # 강사 스케쥴 조회 - 1:1/Group/Off
     url(r'^get_trainer_schedule/$', views.GetTrainerScheduleView.as_view(), name='get_trainer_schedule'),
     # 강사 스케쥴 조회 - Off

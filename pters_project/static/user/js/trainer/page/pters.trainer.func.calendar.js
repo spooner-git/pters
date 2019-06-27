@@ -295,7 +295,6 @@ class Calendar {
         if(current_page != this.page_name){
             return false;
         }
-
         let data = this.draw_week_line(year, month, week, schedule_data, `${this.instance}.zoom_week_cal`, "week");
         
         document.getElementById(`page${page}`).innerHTML = data;
@@ -507,8 +506,8 @@ class Calendar {
                     duplicated_plans(schedule_data[date_to_search]); // daily schedule for duplicated plans;
                     schedules.push(
                         schedule_data[date_to_search].map( (plan) => {
-                            let tform_s = time_form(plan.start);
-                            let tform_e = time_form(plan.end);
+                            let tform_s = time_form(plan.start_time);
+                            let tform_e = time_form(plan.end_time);
 
                             let start_hour = tform_s.hour;
                             let start_min = tform_s.minute;
@@ -574,24 +573,18 @@ class Calendar {
         if(days_ == undefined){days = 31}
 
         $.ajax({
-            url: '/trainer/get_trainer_schedule/',
+            url: '/trainer/get_all_schedule/',
             type : 'GET',
             data : {"date":date, "day":days},
-            dataType : 'html',
+            dataType: "JSON",
 
             beforeSend:function(){
                 ajax_load_image(SHOW);
             },
 
             success:function(data){
-                var jsondata = JSON.parse(data);
-                if(jsondata.messageArray.length>0){
-                    console.log("에러:" + jsondata.messageArray);
-                }else{
-                    callback(jsondata, date_);
-                    return jsondata;
-                }
-
+                callback(data, date_);
+                return data;
             },
 
             complete:function(){
@@ -861,8 +854,8 @@ function clear_duplicated_time(jsondata){
     let all_end_date_time = [];
 
     jsondata.forEach( (plan) => {
-        all_start_date_time.push(plan.start);
-        all_end_date_time.push(plan.end);
+        all_start_date_time.push(plan.start_time);
+        all_end_date_time.push(plan.end_time);
     })
 
     var disable_time_array_start_date = all_start_date_time;
@@ -1012,15 +1005,13 @@ function duplicated_plans(jsondata){
     //     }
     // }
     let result_data = [...jsondata];
-
     let testArray_start = [];
     let testArray_end = [];
 
     jsondata.forEach( (plan) => {
-        testArray_start.push(plan.start);
-        testArray_end.push(plan.end);
+        testArray_start.push(plan.start_time);
+        testArray_end.push(plan.end_time);
     })
-
     var duplicate_dic = {};
 
     //중복일정을 큰 덩어리로 가져오기

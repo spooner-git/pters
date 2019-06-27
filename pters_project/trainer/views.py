@@ -53,7 +53,7 @@ from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClas
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
     func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count, \
     func_get_trainer_attend_schedule, func_get_group_lecture_id, func_check_group_available_member_before, \
-    func_add_schedule, func_check_group_available_member_after
+    func_add_schedule, func_check_group_available_member_after, func_get_all_schedule
 from stats.functions import get_sales_data, get_stats_member_data
 from .functions import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
@@ -1012,6 +1012,48 @@ class CalPreviewIframeView(LoginRequiredMixin, AccessTestMixin, View):
 
 
 # ############### ############### ############### ############### ############### ############### ##############
+class GetAllScheduleView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        start_time = timezone.now()
+        # context = {}
+        class_id = self.request.session.get('class_id', '')
+        date = self.request.GET.get('date', '')
+        day = self.request.GET.get('day', '')
+        today = datetime.date.today()
+
+        if date != '':
+            today = datetime.datetime.strptime(date, '%Y-%m-%d')
+        if day == '':
+            day = 46
+        start_date = today - datetime.timedelta(days=int(day))
+        end_date = today + datetime.timedelta(days=int(day))
+        all_schedule_data = func_get_all_schedule(class_id, start_date, end_date)
+        end_time = timezone.now()
+
+        return JsonResponse(all_schedule_data, json_dumps_params={'ensure_ascii': True})
+
+    # def get_context_data(self, **kwargs):
+    #     start_time = timezone.now()
+    #     # context = {}
+    #     context = super(GetAllScheduleView, self).get_context_data(**kwargs)
+    #     class_id = self.request.session.get('class_id', '')
+    #     date = self.request.GET.get('date', '')
+    #     day = self.request.GET.get('day', '')
+    #     today = datetime.date.today()
+    #
+    #     if date != '':
+    #         today = datetime.datetime.strptime(date, '%Y-%m-%d')
+    #     if day == '':
+    #         day = 46
+    #     start_date = today - datetime.timedelta(days=int(day))
+    #     end_date = today + datetime.timedelta(days=int(day))
+    #     context = func_get_all_schedule(context, class_id, start_date, end_date)
+    #     end_time = timezone.now()
+    #     print(str(end_time-start_time))
+    #     return context
+
+
 class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/schedule_ajax.html'
 
@@ -1281,7 +1323,7 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         member_data = func_get_member_end_list(class_id, self.request.user.id, keyword)
 
         sort_info = int(member_sort)
-        print(str(sort_info))
+
         if sort_info == SORT_MEMBER_NAME:
             member_data = sorted(member_data, key=attrgetter('name'), reverse=int(sort_order_by))
         elif sort_info == SORT_REMAIN_COUNT:
@@ -1303,7 +1345,6 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         # end_dt = timezone.now()
         # print(str(end_dt-start_dt))
         return context
-
 
 
 # 회원수정

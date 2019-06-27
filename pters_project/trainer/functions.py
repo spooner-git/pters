@@ -226,18 +226,21 @@ def func_get_member_end_list(class_id, user_id, keyword):
                           " A.USE=1"
     query_lecture_ip_count = "select count(*) from LECTURE_TB as C where C.MEMBER_ID" \
                              "=(select B.MEMBER_ID from LECTURE_TB as B where B.ID =" \
-                             " `CLASS_LECTURE_TB`.`LECTURE_TB_ID`) and C.STATE_CD=\'IP\' and C.USE=1"
+                             " `CLASS_LECTURE_TB`.`LECTURE_TB_ID`)" \
+                             " and " + class_id +\
+                             " = (select D.CLASS_TB_ID from CLASS_LECTURE_TB as D" \
+                             " where D.LECTURE_TB_ID=C.ID and D.CLASS_TB_ID=" + class_id + ")"\
+                             " and C.STATE_CD=\'IP\' and C.USE=1"
 
     all_lecture_list = ClassLectureTb.objects.select_related(
         'lecture_tb__package_tb',
         'lecture_tb__member').filter(~Q(lecture_tb__state_cd='IP'),
                                      Q(lecture_tb__member__name__contains=keyword) |
                                      Q(lecture_tb__member__user__username__contains=keyword),
-                                     class_tb_id=class_id, auth_cd='VIEW',
-                                     lecture_tb__use=USE,
+                                     class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
                                      use=USE).annotate(lecture_count=RawSQL(query_lecture_count, []),
-                                                       lecture_ip_count=RawSQL(query_lecture_ip_count,
-                                                                               [])).filter(lecture_ip_count=0).order_by('lecture_tb__member_id')
+                                                       lecture_ip_count=RawSQL(query_lecture_ip_count, [])
+                                                       ).filter(lecture_ip_count=0).order_by('lecture_tb__member_id')
     member_test = False
     member_info = None
 

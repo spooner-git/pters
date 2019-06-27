@@ -1,6 +1,7 @@
 import datetime
 import json
 import httplib2
+import collections
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.db.models import Q
@@ -18,7 +19,6 @@ from trainee.models import LectureTb, MemberLectureTb
 from trainer.functions import func_get_ing_package_member_list, func_get_end_group_member_list_count, \
     func_get_ing_group_member_list_count, func_get_member_ing_list, func_get_class_member_ing_list
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
-
 
 # 1:1 Lecture Id 조회
 def func_get_lecture_id(class_id, member_id):
@@ -781,6 +781,68 @@ def func_send_push_trainee(class_id, title, message):
     return error
 
 
+def func_get_all_schedule(class_id, start_date, end_date):
+    query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
+            "AND B.STATE_CD != \'PC\' AND B.USE=1"
+
+    schedule_data = ScheduleTb.objects.select_related(
+        'lecture_tb__member',
+        'group_tb').filter(class_tb=class_id, start_dt__gte=start_date, start_dt__lt=end_date,
+                           group_schedule_id__isnull=True,
+                           use=USE).annotate(group_current_member_num=RawSQL(query,
+                                                                             [])).order_by('start_dt', 'reg_dt')
+
+    ordered_schedule_dict = collections.OrderedDict()
+    temp_schedule_date = None
+    date_schedule_list = []
+    for schedule_info in schedule_data:
+        # 날짜별로 모아주기 위해서 날짜 분리
+        schedule_start_date = str(schedule_info.start_dt).split(' ')
+        schedule_end_date = str(schedule_info.end_dt).split(' ')
+        schedule_start_time = schedule_start_date[1].split(':')
+        schedule_end_time = schedule_end_date[1].split(':')
+        schedule_type = schedule_info.en_dis_type
+        # 새로운 날짜로 넘어간 경우 array 비워주고 값 셋팅
+        if temp_schedule_date != schedule_start_date[0]:
+            temp_schedule_date = schedule_start_date[0]
+            date_schedule_list = []
+        # array 에 값을 추가후 dictionary 에 추가
+        try:
+            member_name = schedule_info.lecture_tb.member.name
+        except AttributeError:
+            member_name = ''
+
+        try:
+            group_id = schedule_info.group_tb.group_id
+            group_name = schedule_info.group_tb.name
+            group_max_member_num = schedule_info.group_tb.member_num
+            group_current_member_num = schedule_info.group_current_member_num
+            schedule_type = 2
+        except AttributeError:
+            group_id = ''
+            group_name = ''
+            group_max_member_num = ''
+            group_current_member_num = ''
+
+        date_schedule_list.append({'schedule_id': schedule_info.schedule_id,
+                                   'start_time': schedule_start_time[0]+':'+schedule_start_time[1],
+                                   'end_time': schedule_end_time[0]+':'+schedule_end_time[1],
+                                   'state_cd': schedule_info.state_cd,
+                                   'schedule_type': schedule_type,
+                                   'note': schedule_info.note,
+                                   'member_name': member_name,
+                                   'group_id': group_id,
+                                   'group_name': group_name,
+                                   'group_max_member_num': group_max_member_num,
+                                   'group_current_member_num': group_current_member_num})
+
+        ordered_schedule_dict[schedule_start_date[0]] = date_schedule_list
+
+    # result_data = json.dumps(ordered_schedule_dict)
+
+    return ordered_schedule_dict
+
+
 def func_get_trainer_schedule(context, class_id, start_date, end_date):
     func_get_trainer_on_schedule(context, class_id, start_date, end_date)
     func_get_trainer_off_schedule(context, class_id, start_date, end_date)
@@ -796,14 +858,13 @@ def func_get_trainer_attend_schedule(context, class_id, start_date, end_date, no
 
 def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
     # PT 스케쥴 정보 셋팅
-    context['pt_schedule_data'] = ScheduleTb.objects.select_related('lecture_tb__member'
-                                                                    ).filter(lecture_tb__isnull=False,
-                                                                             lecture_tb__use=USE,
-                                                                             class_tb=class_id,
-                                                                             en_dis_type=ON_SCHEDULE_TYPE,
-                                                                             start_dt__gte=start_date,
-                                                                             start_dt__lt=end_date,
-                                                                             use=USE).order_by('start_dt', 'reg_dt')
+    schedule_data = ScheduleTb.objects.select_related('lecture_tb__member'
+                                                      ).filter(lecture_tb__isnull=False, lecture_tb__use=USE,
+                                                               class_tb=class_id, en_dis_type=ON_SCHEDULE_TYPE,
+                                                               start_dt__gte=start_date, start_dt__lt=end_date,
+                                                               use=USE).order_by('start_dt', 'reg_dt')
+
+    context['pt_schedule_data'] = schedule_data
 
 
 def func_get_trainer_off_schedule(context, class_id, start_date, end_date):
