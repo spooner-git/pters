@@ -4,28 +4,40 @@
 <style>
     .wrapper_popup_time_selector_function{
         text-align: center;
-        background-image: linear-gradient(#8e8e8e, white 35%, white 65%, #8e8e8e);
+        /* background-image: linear-gradient(#8e8e8e, white 35%, white 65%, #8e8e8e); */
     }
     .select_wrapper{
         display: inline-block;
-        width: 30%;
+        width: 45%;
         position: relative;
         overflow: hidden;
-        height: 120px;
+        height: 170px;
+    }
+    .selector_title{
+        position: absolute;
+        width: 100%;
+        top: 0px;
+        height: 20px;
+        line-height: 20px;
+        background-color: #ffffff;
+        z-index: 2;
     }
     .select_wrapper_child{
         position: absolute;
+        top: 20px;
         width: 100%;
-        height: 120px;
+        height: 150px;
         z-index: 1;
+        background-image: linear-gradient(#8e8e8e, transparent 35%, transparent 65%, #8e8e8e);
     }
     .selector_indicator{
         position: absolute;
-        top: 40px;
+        top: 70px;
         width: 100%;
-        height: 40px;
-        border-top: 1px solid #fe4e65;
-        border-bottom: 1px solid #fe4e65;
+        height: 50px;
+        /* border-top: 1px solid #fe4e65;
+        border-bottom: 1px solid #fe4e65; */
+        box-shadow: 0px 0px 10px 0px #fe4e65;
     }
 
     .select_wrapper ul{
@@ -37,8 +49,8 @@
     .select_wrapper ul > li{
         color: #1e1e1e;
         background-color: transparent;
-        height: 40px;
-        line-height: 40px;
+        height: 50px;
+        line-height: 50px;
     }
 </style>
 
@@ -63,38 +75,27 @@
 
 <div class="popup_mobile popup_mobile_basic">
 	<div class="popup_basic_time_selector obj_font_size_15_weight_500">
-        <div class="wrapper_popup_basic_comment obj_font_size_13_weight_500"></div>
+        <div class="wrapper_popup_basic_comment obj_font_size_13_weight_500" onclick='show_selected_time()'></div>
 
         <div class="wrapper_popup_time_selector_function">
 
             <div class="select_wrapper">
-                <div id="ampm_wrap" class="select_wrapper_child">
-                    <ul>
-                        <li></li>
-                        <li>오전</li>
-                        <li>오후</li>
-                        <li></li>
-                    </ul>
-                </div>
-                <div class="selector_indicator"></div>
-            </div>
-
-            <div class="select_wrapper">
+                <div class="selector_title">시작 시간</div>
                 <div id="hour_wrap" class="select_wrapper_child">
                     <ul>
                         <li></li>
-                        <li>00</li>
-                        <li>01</li>
-                        <li>02</li>
-                        <li>03</li>
-                        <li>04</li>
-                        <li>05</li>
-                        <li>06</li>
-                        <li>07</li>
-                        <li>08</li>
-                        <li>09</li>
-                        <li>10</li>
-                        <li>11</li>
+                        <li data-spos=0>13:00</li>
+                        <li data-spos=50>13:05</li>
+                        <li data-spos=100>13:10</li>
+                        <li data-spos=150>13:15</li>
+                        <li data-spos=200>13:20</li>
+                        <li data-spos=250>13:25</li>
+                        <li data-spos=300>13:30</li>
+                        <li data-spos=350>13:35</li>
+                        <li data-spos=400>13:40</li>
+                        <li data-spos=450>13:45</li>
+                        <li data-spos=500>13:50</li>
+                        <li data-spos=550>13:55</li>
                         <li></li>
                     </ul>
                 </div>
@@ -102,21 +103,22 @@
             </div>
 
             <div class="select_wrapper">
+                <div class="selector_title">종료 시간</div>
                 <div id="minute_wrap" class="select_wrapper_child">
                     <ul>
                         <li></li>
-                        <li>00</li>
-                        <li>05</li>
-                        <li>10</li>
-                        <li>15</li>
-                        <li>20</li>
-                        <li>25</li>
-                        <li>30</li>
-                        <li>35</li>
-                        <li>40</li>
-                        <li>45</li>
-                        <li>50</li>
-                        <li>55</li>
+                        <li data-epos=0>14:00</li>
+                        <li data-epos=50>14:05</li>
+                        <li data-epos=100>14:10</li>
+                        <li data-epos=150>14:15</li>
+                        <li data-epos=200>14:20</li>
+                        <li data-epos=250>14:25</li>
+                        <li data-epos=300>14:30</li>
+                        <li data-epos=350>14:35</li>
+                        <li data-epos=400>14:40</li>
+                        <li data-epos=450>14:45</li>
+                        <li data-epos=500>14:50</li>
+                        <li data-epos=550>14:55</li>
                         <li></li>
                     </ul>
                 </div>
@@ -134,21 +136,78 @@
 
 
 <script type="text/javascript">
-    var hour_scroll, minute_scroll, ampm_scroll;
-
-    ampm_scroll = new IScroll('#ampm_wrap',{
-                        mouseWheel : true,
-                        snap: 'li'
-                    })
+    var hour_scroll, minute_scroll;
 
     hour_scroll = new IScroll('#hour_wrap',{
                         mouseWheel : true,
-                        snap: 'li'
+                        // snap: 'li'
                     })
 
     minute_scroll = new IScroll('#minute_wrap',{
                         mouseWheel : true,
-                        snap: 'li'
+                        // snap: 'li'
     })
+
+    let user_scroll_hour = false;
+    hour_scroll.on('scrollEnd', function(){
+        if(user_scroll_hour == true){
+            user_scroll_hour = false;
+            let posY = this.y;
+            let min = posY-posY%50;
+            let max = min - 50;
+
+            let snap;
+            
+            if(Math.abs(posY - max) < Math.abs(posY - min)){
+                snap = max;
+            }else{
+                snap = min;
+            }
+            hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+        }
+    })
+
+    hour_scroll.on('beforeScrollStart', function(){
+        user_scroll_hour = true;
+    })
+
+    let user_scroll_minute = false;
+    minute_scroll.on('scrollEnd', function(){
+        if(user_scroll_minute == true){
+            user_scroll_minute = false;
+            let posY = this.y;
+            let min = posY-posY%50;
+            let max = min - 50;
+
+            let snap;
+            
+            if(Math.abs(posY - max) < Math.abs(posY - min)){
+                snap = max;
+            }else{
+                snap = min;
+            }
+            minute_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+        }
+    })
+
+    minute_scroll.on('beforeScrollStart', function(){
+        user_scroll_minute = true;
+    })
+
+    function show_selected_time(){
+        let start = $(`li[data-spos="${Math.abs(hour_scroll.y)}"]`).text();
+        let end = $(`li[data-epos="${Math.abs(minute_scroll.y)}"]`).text();
+
+        if(start == undefined || start == ''){
+            alert('시작시간 입력을 다시 해주세요.')
+        }
+        else if(end == undefined || end == ''){
+            alert('종료시간 입력을 다시 해주세요.')
+        }
+        else{
+            alert('시작:' + start + ' ~ ' + '종료:'+ end)
+        }
+        
+    }
     
 </script>

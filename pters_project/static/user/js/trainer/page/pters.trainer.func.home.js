@@ -26,7 +26,7 @@ class Home{
     render_menu(){
         let html_temp = [];
         let time_select_popup = `layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-        {'popup_title':'', 'popup_comment':'시간 선택 팝업',
+        {'popup_title':'', 'popup_comment':'시간을 선택해주세요',
         'onclick_function':null})`;
 
         html_temp.push(`<div>${class_center_name}</div>
