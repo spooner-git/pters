@@ -2,8 +2,10 @@
 import datetime
 import json
 import logging
+import operator
 import random
 import urllib
+import collections
 from operator import itemgetter, attrgetter
 
 from urllib.parse import quote
@@ -11,6 +13,7 @@ from urllib.parse import quote
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist, ValidationError, MultipleObjectsReturned
 from django.core.paginator import Paginator, EmptyPage
 from django.db import IntegrityError
@@ -1015,8 +1018,6 @@ class CalPreviewIframeView(LoginRequiredMixin, AccessTestMixin, View):
 class GetAllScheduleView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
-        start_time = timezone.now()
-        # context = {}
         class_id = self.request.session.get('class_id', '')
         date = self.request.GET.get('date', '')
         day = self.request.GET.get('day', '')
@@ -1029,7 +1030,6 @@ class GetAllScheduleView(LoginRequiredMixin, AccessTestMixin, View):
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
         all_schedule_data = func_get_all_schedule(class_id, start_date, end_date)
-        end_time = timezone.now()
 
         return JsonResponse(all_schedule_data, json_dumps_params={'ensure_ascii': True})
 
@@ -1250,101 +1250,93 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-class GetMemberListView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/member_list_all_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(GetMemberListView, self).get_context_data(**kwargs)
+class GetMemberListView(LoginRequiredMixin, AccessTestMixin, View):
+    def get(self, request):
         class_id = self.request.session.get('class_id', '')
         keyword = self.request.GET.get('keyword', '')
-        # context = get_member_data(context, class_id, None, self.request.user.id)
-        member_data = func_get_member_ing_list(class_id, self.request.user.id, keyword)
-        member_data = sorted(member_data, key=attrgetter('name'), reverse=int(SORT_ASC))
-        context['member_data'] = member_data
-        member_finish_data = func_get_member_end_list(class_id, self.request.user.id, keyword)
-        member_finish_data = sorted(member_finish_data, key=attrgetter('name'), reverse=int(SORT_ASC))
-        context['member_finish_data'] = member_finish_data
-        # return context
-        return context
+        current_member_data = func_get_member_ing_list(class_id, self.request.user.id, keyword)
+        finish_member_data = func_get_member_end_list(class_id, self.request.user.id, keyword)
+        return JsonResponse({'current_member_data': current_member_data,
+                             'finish_member_data': finish_member_data},
+                            json_dumps_params={'ensure_ascii': True})
 
 
-class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/member_list_ajax.html'
+class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
-    def get_context_data(self, **kwargs):
-        # start_dt = timezone.now()
-        context = super(GetMemberIngListViewAjax, self).get_context_data(**kwargs)
+    def get(self, request):
         class_id = self.request.session.get('class_id', '')
         page = self.request.GET.get('page', 0)
         member_sort = self.request.GET.get('sort_val', SORT_MEMBER_NAME)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
 
-        member_data = func_get_member_ing_list(class_id, self.request.user.id, keyword)
-
+        current_member_data = func_get_member_ing_list(class_id, self.request.user.id, keyword)
+        finish_member_num = len(func_get_class_member_end_list(class_id, keyword))
         sort_info = int(member_sort)
-
         if sort_info == SORT_MEMBER_NAME:
-            member_data = sorted(member_data, key=attrgetter('name'), reverse=int(sort_order_by))
+            current_member_data = sorted(current_member_data, key=lambda elem: elem['member_name'],
+                                        reverse=int(sort_order_by))
         elif sort_info == SORT_REMAIN_COUNT:
-            member_data = sorted(member_data, key=attrgetter('lecture_rem_count'), reverse=int(sort_order_by))
+            current_member_data = sorted(current_member_data, key=lambda elem: elem['lecture_rem_count'],
+                                         reverse=int(sort_order_by))
         elif sort_info == SORT_START_DATE:
-            member_data = sorted(member_data, key=attrgetter('start_date'), reverse=int(sort_order_by))
+            current_member_data = sorted(current_member_data, key=lambda elem: elem['start_date'],
+                                         reverse=int(sort_order_by))
         elif sort_info == SORT_REG_COUNT:
-            member_data = sorted(member_data, key=attrgetter('lecture_reg_count'), reverse=int(sort_order_by))
-
-        context['total_member_num'] = len(member_data)
-        if page != 0:
-            paginator = Paginator(member_data, 20)  # Show 20 contacts per page
-            try:
-                member_data = paginator.page(page)
-            except EmptyPage:
-                member_data = None
-
-        context['member_data'] = member_data
+            current_member_data = sorted(current_member_data, key=lambda elem: elem['lecture_reg_count'],
+                                         reverse=int(sort_order_by))
+        # context['total_member_num'] = len(member_data)
+        # if page != 0:
+        #     paginator = Paginator(member_data, 20)  # Show 20 contacts per page
+        #     try:
+        #         member_data = paginator.page(page)
+        #     except EmptyPage:
+        #         member_data = None
+        #
+        # context['member_data'] = member_data
         # end_dt = timezone.now()
-        # print(str(end_dt-start_dt))
+        return JsonResponse({'current_member_data': current_member_data, 'finish_member_num': finish_member_num},
+                            json_dumps_params={'ensure_ascii': True})
 
-        return context
 
+class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
-class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/member_list_ajax.html'
-
-    def get_context_data(self, **kwargs):
+    def get(self, request):
         # start_dt = timezone.now()
-        context = super(GetMemberEndListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         page = self.request.GET.get('page', 0)
         member_sort = self.request.GET.get('sort_val', SORT_MEMBER_NAME)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
 
-        member_data = func_get_member_end_list(class_id, self.request.user.id, keyword)
+        finish_member_data = func_get_member_end_list(class_id, self.request.user.id, keyword)
+        current_member_num = len(func_get_class_member_ing_list(class_id, keyword))
 
         sort_info = int(member_sort)
-
         if sort_info == SORT_MEMBER_NAME:
-            member_data = sorted(member_data, key=attrgetter('name'), reverse=int(sort_order_by))
+            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['member_name'],
+                                        reverse=int(sort_order_by))
         elif sort_info == SORT_REMAIN_COUNT:
-            member_data = sorted(member_data, key=attrgetter('lecture_rem_count'), reverse=int(sort_order_by))
+            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['lecture_rem_count'],
+                                        reverse=int(sort_order_by))
         elif sort_info == SORT_START_DATE:
-            member_data = sorted(member_data, key=attrgetter('start_date'), reverse=int(sort_order_by))
+            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['start_date'],
+                                        reverse=int(sort_order_by))
         elif sort_info == SORT_REG_COUNT:
-            member_data = sorted(member_data, key=attrgetter('lecture_reg_count'), reverse=int(sort_order_by))
+            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['lecture_reg_count'],
+                                        reverse=int(sort_order_by))
 
-        context['total_member_num'] = len(member_data)
-        if page != 0:
-            paginator = Paginator(member_data, 20)  # Show 20 contacts per page
-            try:
-                member_data = paginator.page(page)
-            except EmptyPage:
-                member_data = None
-
-        context['member_data'] = member_data
+        # context['total_member_num'] = len(member_data)
+        # if page != 0:
+        #     paginator = Paginator(member_data, 20)  # Show 20 contacts per page
+        #     try:
+        #         member_data = paginator.page(page)
+        #     except EmptyPage:
+        #         member_data = None
+        #
         # end_dt = timezone.now()
-        # print(str(end_dt-start_dt))
-        return context
+        return JsonResponse({'finish_member_data': finish_member_data, 'current_member_num': current_member_num},
+                            json_dumps_params={'ensure_ascii': True})
 
 
 # 회원수정

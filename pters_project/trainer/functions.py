@@ -1,4 +1,5 @@
 import datetime
+import collections
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
@@ -92,23 +93,23 @@ def func_get_class_member_end_list(class_id, keyword):
                                            use=USE
                                            ).exclude(lecture_tb__state_cd='IP'
                                                      ).annotate(ip_lecture_count=RawSQL(query_ip_lecture_count, [])
-                                                                ).order_by('lecture_tb__member__name')
+                                                                ).filter(ip_lecture_count=0).values('lecture_tb__member_id').order_by('lecture_tb__member').distinct()
     # class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
     # class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
     # member_id = None
-    for class_lecture_info in class_lecture_data:
-        if class_lecture_info.ip_lecture_count == 0:
-            check_member = None
-            member_id = class_lecture_info.lecture_tb.member_id
+    # for class_lecture_info in class_lecture_data:
+    #     if class_lecture_info.ip_lecture_count == 0:
+    #         check_member = None
+    #         member_id = class_lecture_info.lecture_tb.member_id
+    #
+    #         for member_info in all_member:
+    #             if str(member_info.member_id) == str(member_id):
+    #                 check_member = member_info
+    #
+    #         if check_member is None:
+    #             all_member.append(class_lecture_info.lecture_tb.member)
 
-            for member_info in all_member:
-                if str(member_info.member_id) == str(member_id):
-                    check_member = member_info
-
-            if check_member is None:
-                all_member.append(class_lecture_info.lecture_tb.member)
-
-    return all_member
+    return class_lecture_data
 
 
 def func_get_class_member_one_to_one_end_list(class_id):
@@ -149,78 +150,25 @@ def func_get_class_member_one_to_one_end_list(class_id):
 
 def func_get_member_ing_list(class_id, user_id, keyword):
 
-    member_list = []
-
     query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                           " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
                           " B.USE=1"
 
     all_lecture_list = ClassLectureTb.objects.select_related(
         'lecture_tb__package_tb',
-        'lecture_tb__member').filter(Q(lecture_tb__member__name__contains=keyword) |
-                                     Q(lecture_tb__member__user__username__contains=keyword),
-                                     class_tb_id=class_id, auth_cd='VIEW',
-                                     lecture_tb__state_cd='IP',
-                                     lecture_tb__use=USE,
-                                     use=USE).annotate(lecture_count=RawSQL(query_lecture_count,
-                                                                            [])).order_by('lecture_tb__member_id')
-    member_test = False
-    member_info = None
-    for lecture_info_data in all_lecture_list:
-        if not member_test:
-            member_info = lecture_info_data.lecture_tb.member
-        else:
-            if member_info.member_id != lecture_info_data.lecture_tb.member.member_id:
-                member_info = lecture_info_data.lecture_tb.member
-                member_test = False
-            else:
-                member_test = True
-
-        lecture_info = lecture_info_data.lecture_tb
-
-        if not member_test:
-            member_info.lecture_reg_count = 0
-            member_info.lecture_rem_count = 0
-            member_info.lecture_avail_count = 0
-            member_info.start_date = None
-            member_info.end_date = None
-            if member_info.reg_info is None or str(member_info.reg_info) != str(user_id):
-                if lecture_info_data.lecture_count == 0:
-                    member_info.sex = ''
-                    member_info.birthday_dt = ''
-                    if member_info.phone is None or member_info.phone == '':
-                        member_info.phone = ''
-                    else:
-                        member_info.phone = '***-****-' + member_info.phone[7:]
-                    member_info.user.email = ''
-
-        member_info.lecture_id = lecture_info.lecture_id
-        member_info.lecture_reg_count += lecture_info.lecture_reg_count
-        member_info.lecture_rem_count += lecture_info.lecture_rem_count
-        member_info.lecture_avail_count += lecture_info.lecture_avail_count
-
-        if member_info.start_date is None or member_info.start_date == '':
-            member_info.start_date = lecture_info.start_date
-        else:
-            if member_info.start_date > lecture_info.start_date:
-                member_info.start_date = lecture_info.start_date
-
-        if member_info.end_date is None or member_info.end_date == '':
-            member_info.end_date = lecture_info.end_date
-        else:
-            if member_info.end_date < lecture_info.end_date:
-                member_info.end_date = lecture_info.end_date
-
-        if not member_test:
-            member_test = True
-            member_list.append(member_info)
-
-    return member_list
+        'lecture_tb__member__user').filter(Q(lecture_tb__member__name__contains=keyword) |
+                                           Q(lecture_tb__member__user__username__contains=keyword),
+                                           class_tb_id=class_id, auth_cd='VIEW',
+                                           lecture_tb__state_cd='IP',
+                                           lecture_tb__use=USE,
+                                           use=USE).annotate(lecture_count=RawSQL(query_lecture_count,
+                                                                                  [])).order_by('lecture_tb__member_id',
+                                                                                                'lecture_tb__end_date')
+    return func_get_member_from_lecture_list(all_lecture_list, user_id)
 
 
 def func_get_member_end_list(class_id, user_id, keyword):
 
-    member_list = []
     query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as A where A.LECTURE_TB_ID =" \
                           " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and A.AUTH_CD=\'VIEW\' and" \
                           " A.USE=1"
@@ -234,66 +182,83 @@ def func_get_member_end_list(class_id, user_id, keyword):
 
     all_lecture_list = ClassLectureTb.objects.select_related(
         'lecture_tb__package_tb',
-        'lecture_tb__member').filter(~Q(lecture_tb__state_cd='IP'),
-                                     Q(lecture_tb__member__name__contains=keyword) |
-                                     Q(lecture_tb__member__user__username__contains=keyword),
-                                     class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
-                                     use=USE).annotate(lecture_count=RawSQL(query_lecture_count, []),
-                                                       lecture_ip_count=RawSQL(query_lecture_ip_count, [])
-                                                       ).filter(lecture_ip_count=0).order_by('lecture_tb__member_id')
-    member_test = False
-    member_info = None
+        'lecture_tb__member__user').filter(~Q(lecture_tb__state_cd='IP'),
+                                           Q(lecture_tb__member__name__contains=keyword) |
+                                           Q(lecture_tb__member__user__username__contains=keyword),
+                                           class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
+                                           use=USE).annotate(lecture_count=RawSQL(query_lecture_count, []),
+                                                             lecture_ip_count=RawSQL(query_lecture_ip_count, [])
+                                                             ).filter(lecture_ip_count=0).order_by('lecture_tb__member_id',
+                                                                                                   'lecture_tb__end_date')
+
+    return func_get_member_from_lecture_list(all_lecture_list, user_id)
+
+
+def func_get_member_from_lecture_list(all_lecture_list, user_id):
+    ordered_member_dict = collections.OrderedDict()
+    temp_member_id = None
+    lecture_reg_count = 0
+    lecture_rem_count = 0
+    lecture_avail_count = 0
+    start_date = None
+    end_date = None
 
     for lecture_info_data in all_lecture_list:
-        if not member_test:
-            member_info = lecture_info_data.lecture_tb.member
-        else:
-            if member_info.member_id != lecture_info_data.lecture_tb.member.member_id:
-                member_info = lecture_info_data.lecture_tb.member
-                member_test = False
-            else:
-                member_test = True
-
         lecture_info = lecture_info_data.lecture_tb
+        member_info = lecture_info.member
+        member_id = str(member_info.member_id)
+        if temp_member_id != member_id:
+            temp_member_id = member_id
+            lecture_reg_count = 0
+            lecture_rem_count = 0
+            lecture_avail_count = 0
+            start_date = None
+            end_date = None
 
-        if not member_test:
-            member_info.lecture_reg_count = 0
-            member_info.lecture_rem_count = 0
-            member_info.lecture_avail_count = 0
-            member_info.start_date = None
-            member_info.end_date = None
-            if member_info.reg_info is None or str(member_info.reg_info) != str(user_id):
-                if lecture_info_data.lecture_count == 0:
-                    member_info.sex = ''
-                    member_info.birthday_dt = ''
-                    if member_info.phone is None or member_info.phone == '':
-                        member_info.phone = ''
-                    else:
-                        member_info.phone = '***-****-' + member_info.phone[7:]
-                    member_info.user.email = ''
+        lecture_reg_count += lecture_info.lecture_reg_count
+        lecture_rem_count += lecture_info.lecture_rem_count
+        lecture_avail_count += lecture_info.lecture_avail_count
+        if member_info.reg_info is None or str(member_info.reg_info) != str(user_id):
+            if lecture_info_data.lecture_count == 0:
+                member_info.sex = ''
+                member_info.birthday_dt = ''
+                if member_info.phone is None or member_info.phone == '':
+                    member_info.phone = ''
+                else:
+                    member_info.phone = '***-****-' + member_info.phone[7:]
+                member_info.user.email = ''
 
-        member_info.lecture_id = lecture_info.lecture_id
-        member_info.lecture_reg_count += lecture_info.lecture_reg_count
-        member_info.lecture_rem_count += lecture_info.lecture_rem_count
-        member_info.lecture_avail_count += lecture_info.lecture_avail_count
-
-        if member_info.start_date is None or member_info.start_date == '':
-            member_info.start_date = lecture_info.start_date
+        if start_date is None:
+            start_date = lecture_info.start_date
         else:
-            if member_info.start_date > lecture_info.start_date:
-                member_info.start_date = lecture_info.start_date
-
-        if member_info.end_date is None or member_info.end_date == '':
-            member_info.end_date = lecture_info.end_date
+            if start_date > lecture_info.start_date:
+                start_date = lecture_info.start_date
+        if end_date is None:
+            end_date = lecture_info.end_date
         else:
-            if member_info.end_date < lecture_info.end_date:
-                member_info.end_date = lecture_info.end_date
+            if end_date < lecture_info.end_date:
+                end_date = lecture_info.end_date
 
-        if not member_test:
-            member_test = True
-            member_list.append(member_info)
+        member_data = {'member_id': member_id,
+                       'member_name': member_info.name,
+                       'member_phone': member_info.phone,
+                       'member_email': member_info.user.email,
+                       'member_sex': member_info.sex,
+                       'member_birthday_dt': member_info.birthday_dt,
+                       'lecture_reg_count': lecture_reg_count,
+                       'lecture_rem_count': lecture_rem_count,
+                       'lecture_avail_count': lecture_avail_count,
+                       'start_date': start_date,
+                       'end_date': end_date}
+
+        ordered_member_dict[member_id] = member_data
+
+    member_list = []
+    for member_id in ordered_member_dict:
+        member_list.append(ordered_member_dict[member_id])
 
     return member_list
+
 
 
 def func_get_trainee_schedule_list(context, class_id, member_id):
