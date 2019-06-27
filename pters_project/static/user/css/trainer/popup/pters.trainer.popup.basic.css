@@ -2,7 +2,7 @@
 .popup_mobile_basic{
     background-color:transparent;
 }
-.popup_basic_user_select, .popup_basic_user_confirm{
+.popup_mobile_basic > div{
     /*display: none;*/
     position: fixed;
     top: 50%;

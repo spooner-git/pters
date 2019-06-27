@@ -25,12 +25,17 @@ class Home{
 
     render_menu(){
         let html_temp = [];
+        let time_select_popup = `layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
+        {'popup_title':'', 'popup_comment':'시간을 선택해주세요',
+        'onclick_function':null})`;
+
         html_temp.push(`<div>${class_center_name}</div>
                     <div>${class_type_name}</div>
                     <div>오늘 일정 ${today_schedule_num}건</div>
                     <div>총 회원수 ${total_member_num}명</div>
                     <div>이번달 신규 ${new_member_num}명</div>
-                    <div>종료 임박 ${to_be_ended_member_num}명</div>`)
+                    <div>종료 임박 ${to_be_ended_member_num}명</div>
+                    <button onclick="event.preventDefault();${time_select_popup}">시간 선택 임시</button>`)
         
         document.querySelector('#home_content_wrap').innerHTML = html_temp.join("");
     }
