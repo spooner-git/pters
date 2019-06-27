@@ -1,6 +1,46 @@
 {% load static_url %}
 
 <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.basic.css" %}>
+<style>
+    .wrapper_popup_time_selector_function{
+        text-align: center;
+        background-image: linear-gradient(#8e8e8e, white 35%, white 65%, #8e8e8e);
+    }
+    .select_wrapper{
+        display: inline-block;
+        width: 30%;
+        position: relative;
+        overflow: hidden;
+        height: 120px;
+    }
+    .select_wrapper_child{
+        position: absolute;
+        width: 100%;
+        height: 120px;
+        z-index: 1;
+    }
+    .selector_indicator{
+        position: absolute;
+        top: 40px;
+        width: 100%;
+        height: 40px;
+        border-top: 1px solid #fe4e65;
+        border-bottom: 1px solid #fe4e65;
+    }
+
+    .select_wrapper ul{
+        color: #1e1e1e;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .select_wrapper ul > li{
+        color: #1e1e1e;
+        background-color: transparent;
+        height: 40px;
+        line-height: 40px;
+    }
+</style>
 
 <div class="popup_mobile popup_mobile_basic">
     <div class="popup_basic_user_select obj_font_size_15_weight_500">
@@ -21,7 +61,94 @@
     </div>
 </div>
 
+<div class="popup_mobile popup_mobile_basic">
+	<div class="popup_basic_time_selector obj_font_size_15_weight_500">
+        <div class="wrapper_popup_basic_comment obj_font_size_13_weight_500"></div>
+
+        <div class="wrapper_popup_time_selector_function">
+
+            <div class="select_wrapper">
+                <div id="ampm_wrap" class="select_wrapper_child">
+                    <ul>
+                        <li></li>
+                        <li>오전</li>
+                        <li>오후</li>
+                        <li></li>
+                    </ul>
+                </div>
+                <div class="selector_indicator"></div>
+            </div>
+
+            <div class="select_wrapper">
+                <div id="hour_wrap" class="select_wrapper_child">
+                    <ul>
+                        <li></li>
+                        <li>00</li>
+                        <li>01</li>
+                        <li>02</li>
+                        <li>03</li>
+                        <li>04</li>
+                        <li>05</li>
+                        <li>06</li>
+                        <li>07</li>
+                        <li>08</li>
+                        <li>09</li>
+                        <li>10</li>
+                        <li>11</li>
+                        <li></li>
+                    </ul>
+                </div>
+                <div class="selector_indicator"></div>
+            </div>
+
+            <div class="select_wrapper">
+                <div id="minute_wrap" class="select_wrapper_child">
+                    <ul>
+                        <li></li>
+                        <li>00</li>
+                        <li>05</li>
+                        <li>10</li>
+                        <li>15</li>
+                        <li>20</li>
+                        <li>25</li>
+                        <li>30</li>
+                        <li>35</li>
+                        <li>40</li>
+                        <li>45</li>
+                        <li>50</li>
+                        <li>55</li>
+                        <li></li>
+                    </ul>
+                </div>
+                <div class="selector_indicator"></div>
+            </div>
+
+        </div>
+
+        <div class="wrapper_popup_basic_buttons obj_table_raw">
+            <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">닫기</div>
+            <!-- <div class="popup_basic_confirm obj_table_cell_x2">확인</div> -->
+        </div>
+    </div>
+</div>
+
 
 <script type="text/javascript">
+    var hour_scroll, minute_scroll, ampm_scroll;
 
+    ampm_scroll = new IScroll('#ampm_wrap',{
+                        mouseWheel : true,
+                        snap: 'li'
+                    })
+
+    hour_scroll = new IScroll('#hour_wrap',{
+                        mouseWheel : true,
+                        snap: 'li'
+                    })
+
+    minute_scroll = new IScroll('#minute_wrap',{
+                        mouseWheel : true,
+                        snap: 'li'
+    })
+    
 </script>

@@ -96,7 +96,7 @@ let layer_popup = (function(){
                 func_get_popup_ajax(popup_name, data, ()=>{
                     let func_animation_set = this.animation_set;
                     setTimeout(function(){
-                    func_set_popup_position($(`.${popup_name}`).parents('.popup_mobile'), animation_type, popup_size);
+                        func_set_popup_position($(`.${popup_name}`).parents('.popup_mobile'), animation_type, popup_size);
 
                         let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
                         if(popup_data!=undefined && Object.keys(popup_data).length > 0){
@@ -106,13 +106,23 @@ let layer_popup = (function(){
                     }, 10);
                 });
             }else if(call_method==POPUP_BASIC){
-                func_set_popup_basic(popup_name, data)
+                func_set_popup_basic(popup_name, data);
+                let func_animation_set = this.animation_set;
+                setTimeout(function(){
+                    func_set_popup_position($(`.${popup_name}`).parents('.popup_mobile'), animation_type, popup_size);
+
+                    let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
+                    if(popup_data!=undefined && Object.keys(popup_data).length > 0){
+                        func_animation_set(OPEN, popup_data);
+                    }
+                      // func_prevent_double_click_free();
+                }, 10);
             }else if(call_method==POPUP_INNER_HTML){
                 // 확인 용도
             }
             // let func_animation_set = this.animation_set;
             // setTimeout(function(){
-            // func_set_popup_position($(`.${popup_name}`).parents('.popup_mobile'), animation_type, popup_size);
+            //     func_set_popup_position($(`.${popup_name}`).parents('.popup_mobile'), animation_type, popup_size);
 
             //     let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
             //     if(popup_data!=undefined && Object.keys(popup_data).length > 0){
