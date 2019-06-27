@@ -117,10 +117,10 @@ class Member{
                                 <div class="member_counts"> ${rem_count[i]} / ${reg_count[i]} <span style="font-size:10px;color:#8d8d8d;">(남은 횟수 / 총 등록횟수)</span></div>
                             </div>
                             <div class="member_data_r">
-                                <div class="member_phone" onclick="event.stopPropagation();location.href='tel:${phone[i]}'" ${phone[i] == "" ? "style='display:none;'" : ""}>
+                                <div class="member_phone" onclick="event.stopPropagation();location.href='tel:${phone[i]}'" ${phone[i] == "None" ? "style='display:none;'" : ""}>
                                     <img src="/static/common/icon/icon_phone.png" class="icon_contact">
                                 </div>
-                                <div class="member_sms" onclick="event.stopPropagation();location.href='sms:${phone[i]}'" ${phone[i] == "" ? "style='display:none;'" : ""}>
+                                <div class="member_sms" onclick="event.stopPropagation();location.href='sms:${phone[i]}'" ${phone[i] == "None" ? "style='display:none;'" : ""}>
                                     <img src="/static/common/icon/icon_message.png" class="icon_contact">
                                 </div>
                             </div>
