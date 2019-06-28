@@ -63,7 +63,8 @@ from .functions import func_get_class_member_id_list, func_get_trainee_schedule_
     func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list, \
     func_get_class_member_ing_list, func_get_class_member_end_list, \
     func_get_ing_group_member_list, func_get_end_group_member_list, func_get_ing_package_member_list, \
-    func_get_end_package_member_list, func_get_ing_package_in_member_list, func_get_end_package_in_member_list
+    func_get_end_package_member_list, func_get_ing_package_in_member_list, func_get_end_package_in_member_list, \
+    func_check_member_connection_info, func_get_member_info
 
 logger = logging.getLogger(__name__)
 
@@ -1154,100 +1155,61 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateV
         return context
 
 
-class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/search_member_id_ajax.html'
+class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
+    # template_name = 'ajax/search_member_id_ajax.html'
 
-    def get_context_data(self, **kwargs):
-        # context = {}
-        context = super(GetMemberInfoView, self).get_context_data(**kwargs)
-        user_id = self.request.GET.get('id', '')
+    def get(self, request):
         member_id = self.request.GET.get('member_id', '')
-        id_flag = self.request.GET.get('id_flag', 0)
         class_id = self.request.session.get('class_id', '')
-        ing_member_check = ING_MEMBER_FALSE
-        member = ''
-        user = ''
         error = None
-        group = None
-        lecture_count = 0
 
-        if int(id_flag) == 1:
-            if user_id == '':
-                error = '회원 ID를 확인해 주세요.'
-            if error is None:
-                try:
-                    user = User.objects.get(username=user_id)
-                except ObjectDoesNotExist:
-                    error = '회원 ID를 확인해 주세요.'
-
-            if error is None:
-                try:
-                    group = user.groups.get(user=user.id)
-                except ObjectDoesNotExist:
-                    error = '회원 ID를 확인해 주세요.'
-
-                if error is None:
-                    if group.name != 'trainee':
-                        error = '회원 ID를 확인해 주세요.'
-        else:
-            if member_id == '':
-                error = '회원 ID를 확인해 주세요.'
-            if error is None:
-                try:
-                    user = User.objects.get(id=member_id)
-                except ObjectDoesNotExist:
-                    error = '회원 ID를 확인해 주세요.'
+        if member_id == '':
+            error = '회원 ID를 입력해주세요.'
 
         if error is None:
-            try:
-                member = MemberTb.objects.get(user_id=user.id)
-            except ObjectDoesNotExist:
-                error = '회원 ID를 확인해 주세요.'
-        if error is None:
-            query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
-                                "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(user.id) + \
-                                "' and B.USE=1"
+            member_result = func_get_member_info(class_id, self.reqeust.user.id, member_id)
+            error = member_result.error
 
-            lecture_list = ClassLectureTb.objects.select_related(
-                'lecture_tb__member').filter(class_tb_id=class_id,
-                                             lecture_tb__member_id=user.id,
-                                             lecture_tb__use=USE, auth_cd='VIEW',
-                                             use=USE).annotate(member_auth=RawSQL(query_member_auth,
-                                                                                  []))
-            lecture_count = lecture_list.filter(member_auth='VIEW').count()
-
-            if lecture_list.filter(lecture_tb__state_cd='IP').count() > 0:
-                ing_member_check = ING_MEMBER_TRUE
-
-        if error is None:
-            if member.reg_info is None or str(member.reg_info) != str(self.request.user.id):
-                if lecture_count == 0:
-                    member.sex = ''
-                    member.birthday_dt = ''
-                    if member.phone is None:
-                        member.phone = ''
-                    else:
-                        member.phone = '***-****-' + member.phone[7:]
-                    member.user.email = ''
-
-            if member.birthday_dt is None or member.birthday_dt == '':
-                member.birthday_dt = ''
-            else:
-                member.birthday_dt = str(member.birthday_dt)
-
-            if member.phone is None:
-                member.phone = ''
-            if member.sex is None:
-                member.sex = ''
-
-        context['ing_member_check'] = ing_member_check
-        context['member_info'] = member
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name
                          + '[' + str(self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        return context
+        return JsonResponse(member_result.member_info, json_dumps_params={'ensure_ascii': True})
+
+
+class SearchMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
+    # template_name = 'ajax/search_member_id_ajax.html'
+
+    def get(self, request):
+        search_id = self.request.GET.get('search_id', '')
+        class_id = self.request.session.get('class_id', '')
+        error = None
+        user_info = None
+
+        if search_id == '':
+            error = '회원 ID를 입력해 주세요.'
+
+        if error is None:
+            if len(search_id) < 3:
+                error = '3글자 이상 입력해주세요.'
+
+        if error is None:
+            try:
+                user_info = User.objects.get(username=search_id)
+            except ObjectDoesNotExist:
+                error = '회원 ID를 확인해 주세요.'
+
+        if error is None:
+            member_result = func_get_member_info(class_id, self.reqeust.user.id, user_info.id)
+            error = member_result.error
+
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name
+                         + '[' + str(self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        return JsonResponse(member_result.member_info, json_dumps_params={'ensure_ascii': True})
 
 
 class GetMemberListView(LoginRequiredMixin, AccessTestMixin, View):
@@ -1343,7 +1305,6 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 def update_member_info_logic(request):
     member_id = request.POST.get('member_id')
     first_name = request.POST.get('first_name', '')
-    last_name = request.POST.get('last_name', '')
     phone = request.POST.get('phone', '')
     sex = request.POST.get('sex', '')
     birthday_dt = request.POST.get('birthday', '')
@@ -1367,7 +1328,6 @@ def update_member_info_logic(request):
             error = '회원 ID를 확인해 주세요.'
 
     input_first_name = ''
-    input_last_name = ''
     input_phone = ''
     input_sex = ''
     input_birthday_dt = ''
@@ -1380,11 +1340,6 @@ def update_member_info_logic(request):
             input_first_name = user.first_name
         else:
             input_first_name = first_name
-
-        # if last_name is None or last_name == '':
-        #     input_last_name = user.last_name
-        # else:
-        #     input_last_name = last_name
 
         if sex is None or sex == '':
             input_sex = member.sex
@@ -1411,17 +1366,13 @@ def update_member_info_logic(request):
             with transaction.atomic():
                 if user.first_name != input_first_name:
                     user.first_name = input_first_name
-                    # user.last_name = input_last_name
-                    # member.name = input_last_name + input_first_name
                     member.name = input_first_name
-                    # username = user.last_name + user.first_name
                     username = user.first_name
 
                     i = 0
                     count = MemberTb.objects.filter(name=username).count()
                     max_range = (100 * (10 ** len(str(count)))) - 1
                     for i in range(0, 100):
-                        # username = user.last_name + user.first_name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
                         username = user.first_name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
                         try:
                             User.objects.get(username=username)
@@ -1452,19 +1403,11 @@ def update_member_info_logic(request):
         except InternalError:
             error = error
 
-    if error is None:
-        # log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
-        #                  from_member_name=request.user.last_name + request.user.first_name,
-        #                  to_member_name=user.last_name + user.first_name,
-        #                  log_info='회원 정보', log_how='수정', use=USE)
-        # log_data.save()
-
-        return redirect(next_page)
-    else:
-        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-        return redirect(next_page)
+    return redirect(next_page)
 
 
 # 회원가입 api
@@ -2088,8 +2031,7 @@ def add_lecture_info_logic(request):
 
     if error is None:
 
-        error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
-                                      class_id, package_id, input_counts, input_price,
+        error = func_add_lecture_info(request.user.id, class_id, package_id, input_counts, input_price,
                                       input_start_date, input_end_date, input_contents,
                                       user.id, setting_lecture_auto_finish)
     if error is None:
@@ -2947,8 +2889,7 @@ def add_group_member_logic(request):
                             package_id = package_info.package_tb_id
                         except ObjectDoesNotExist:
                             package_id = ''
-                        error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
-                                                      class_id, package_id,
+                        error = func_add_lecture_info(request.user.id, class_id, package_id,
                                                       json_loading_data['lecture_info']['counts'],
                                                       json_loading_data['lecture_info']['price'],
                                                       json_loading_data['lecture_info']['start_date'],
@@ -4241,8 +4182,7 @@ def add_package_member_logic(request):
 
                 if error is None:
                     for user_info in user_db_id_list:
-                        error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
-                                                      class_id, package_id,
+                        error = func_add_lecture_info(request.user.id, class_id, package_id,
                                                       json_loading_data['lecture_info']['counts'],
                                                       json_loading_data['lecture_info']['price'],
                                                       json_loading_data['lecture_info']['start_date'],
