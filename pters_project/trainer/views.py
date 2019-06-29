@@ -3005,18 +3005,14 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
         class_id = self.request.session.get('class_id', '')
         error = None
         # start_time = timezone.now()
-        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
-        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
-        # query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
-        #                          "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
-        #                          " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
+        query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
+                                 "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
+                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
 
         group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE
-                                            ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
-                                                       state_cd_nm=RawSQL(query_state_cd, [])
-                                                       # group_member_num=RawSQL(query_group_member_num, [])
+                                            ).annotate(group_member_num=RawSQL(query_group_member_num, [])
                                                        ).order_by('-group_type_cd', 'name')
-        context['total_group_num'] = len(group_data)
+
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
@@ -3038,14 +3034,8 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
         class_id = self.request.session.get('class_id', '')
         error = None
 
-        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
-        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
-
         group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE
-                                            ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
-                                                       state_cd_nm=RawSQL(query_state_cd, [])
-                                                       ).order_by('-group_type_cd', 'name')
-        context['total_group_num'] = len(group_data)
+                                            ).order_by('-group_type_cd', 'name')
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
@@ -3713,26 +3703,51 @@ def delete_package_group_info_logic(request):
     return redirect(next_page)
 
 
-class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/package_info_ajax.html'
+class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
-    def get_context_data(self, **kwargs):
-        context = super(GetPackageIngListViewAjax, self).get_context_data(**kwargs)
+    def get(self, request):
         class_id = self.request.session.get('class_id', '')
-        error = None
-
         page = self.request.GET.get('page', 0)
         package_sort = self.request.GET.get('sort_val', SORT_PACKAGE_TYPE)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
         sort_info = int(package_sort)
+        error = None
 
-        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
-        # query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
-        #                         "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
-        package_data = PackageTb.objects.filter(
-            class_tb_id=class_id, state_cd='IP',
-            use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, [])).filter(name__contains=keyword).order_by('name')
+        query_package_member_num =" select count(distinct(d.MEMBER_ID)) from LECTURE_TB as d" \
+                                  " where d.PACKAGE_TB_ID=`PACKAGE_GROUP_TB`.`PACKAGE_TB_ID`" \
+                                  " and d.STATE_CD=\'IP\' and d.USE=1 " \
+                                  " and (select c.AUTH_CD from CLASS_LECTURE_TB as c" \
+                                  " where c.CLASS_TB_ID=" + class_id + " and c.LECTURE_TB_ID=d.ID and c.USE=1)=\'VIEW\'"
+
+        package_group_data = PackageGroupTb.objects.select_related(
+            'package_tb', 'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='IP', group_tb__use=USE,
+                                             package_tb__state_cd='IP', package_tb__use=USE,
+                                             use=USE).annotate(package_member_num=RawSQL(query_package_member_num,
+                                                                                         [])).order_by('package_tb_id',
+                                                                                                       'group_tb_id')
+
+        package_data = collections.OrderedDict()
+        temp_package_id = None
+        package_group_list = []
+        for package_group_info in package_group_data:
+            package_tb = package_group_info.package_tb
+            group_tb = package_group_info.group_tb
+            package_id = str(package_tb.package_id)
+            if temp_package_id != package_id:
+                temp_package_id = package_id
+                package_group_list = []
+
+            package_group_list.append(group_tb.name)
+            package_data[package_id] = {'package_id': package_id,
+                                        'package_name': package_tb.name,
+                                        'package_member_num': package_group_info.package_member_num,
+                                        'package_group_list': package_group_list}
+        package_list = []
+        for package_info in package_data:
+            package_list.append(package_data[package_info])
+        # package_data = PackageTb.objects.filter(class_tb_id=class_id, state_cd='IP',
+        #                                         use=USE).filter(name__contains=keyword).order_by('name')
 
         # order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
         # order = {key: i for i, key in enumerate(order)}
@@ -3740,58 +3755,57 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
 
         # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
         #                                                                        sort_order_by))
-        if keyword == '' or keyword is None:
-            if sort_info == SORT_PACKAGE_MEMBER_COUNT:
-                package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('ing_package_member_num'),
-                                                          reverse=int(sort_order_by))
-            if sort_info == SORT_PACKAGE_NAME:
-                package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('name'),
-                                                          reverse=int(sort_order_by))
-            elif sort_info == SORT_PACKAGE_CREATE_DATE:
-                package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('reg_dt'),
-                                                          reverse=int(sort_order_by))
-        else:
-            if sort_info == SORT_PACKAGE_MEMBER_COUNT:
-                package_data = sorted(package_data, key=attrgetter('ing_package_member_num'),
-                                      reverse=int(sort_order_by))
-            if sort_info == SORT_PACKAGE_NAME:
-                package_data = sorted(package_data, key=attrgetter('name'),
-                                      reverse=int(sort_order_by))
-            elif sort_info == SORT_PACKAGE_CREATE_DATE:
-                package_data = sorted(package_data, key=attrgetter('reg_dt'),
-                                      reverse=int(sort_order_by))
-
-        context['total_package_num'] = len(package_data)
-        if page != 0:
-            paginator = Paginator(package_data, 20)  # Show 20 contacts per page
-            try:
-                package_data = paginator.page(page)
-            except EmptyPage:
-                package_data = None
-
-        if package_data is not None:
-
-            for package_info in package_data:
-                package_info.package_group_data = PackageGroupTb.objects.select_related(
-                    'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='IP',
-                                       package_tb_id=package_info.package_id, group_tb__use=USE,
-                                       use=USE).order_by('-group_tb__group_type_cd', '-group_tb__name')
+        # if keyword == '' or keyword is None:
+        #     if sort_info == SORT_PACKAGE_MEMBER_COUNT:
+        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('ing_package_member_num'),
+        #                                                   reverse=int(sort_order_by))
+        #     if sort_info == SORT_PACKAGE_NAME:
+        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('name'),
+        #                                                   reverse=int(sort_order_by))
+        #     elif sort_info == SORT_PACKAGE_CREATE_DATE:
+        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('reg_dt'),
+        #                                                   reverse=int(sort_order_by))
+        # else:
+        #     if sort_info == SORT_PACKAGE_MEMBER_COUNT:
+        #         package_data = sorted(package_data, key=attrgetter('ing_package_member_num'),
+        #                               reverse=int(sort_order_by))
+        #     if sort_info == SORT_PACKAGE_NAME:
+        #         package_data = sorted(package_data, key=attrgetter('name'),
+        #                               reverse=int(sort_order_by))
+        #     elif sort_info == SORT_PACKAGE_CREATE_DATE:
+        #         package_data = sorted(package_data, key=attrgetter('reg_dt'),
+        #                               reverse=int(sort_order_by))
+        #
+        # context['total_package_num'] = len(package_data)
+        # if page != 0:
+        #     paginator = Paginator(package_data, 20)  # Show 20 contacts per page
+        #     try:
+        #         package_data = paginator.page(page)
+        #     except EmptyPage:
+        #         package_data = None
+        #
+        # if package_data is not None:
+        #
+        #     for package_info in package_data:
+        #         package_info.package_group_data = PackageGroupTb.objects.select_related(
+        #             'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='IP',
+        #                                package_tb_id=package_info.package_id, group_tb__use=USE,
+        #                                use=USE).order_by('-group_tb__group_type_cd', '-group_tb__name')
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        context['package_data'] = package_data
+        # context['package_data'] = package_data
 
-        return context
+        return JsonResponse({'current_package_data': package_list}, json_dumps_params={'ensure_ascii': True})
 
 
-class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/package_info_ajax.html'
+class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+    # template_name = 'ajax/package_info_ajax.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(GetPackageEndListViewAjax, self).get_context_data(**kwargs)
+    def get(self, request):
         class_id = self.request.session.get('class_id', '')
 
         page = self.request.GET.get('page', 0)
@@ -3801,70 +3815,90 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         sort_info = int(package_sort)
 
         error = None
-        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
-        # query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
-        #                         "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
-        package_data = PackageTb.objects.filter(
-            Q(state_cd='PE') | Q(end_package_member_num__gt=0), class_tb_id=class_id,
-            use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, [])).filter(name__contains=keyword).order_by('name')
-        # order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
-        # order = {key: i for i, key in enumerate(order)}
-        # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
 
-        # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
-        #                                                                        sort_order_by))
+        query_package_member_num =" select count(distinct(d.MEMBER_ID)) from LECTURE_TB as d" \
+                                  " where d.PACKAGE_TB_ID=`PACKAGE_GROUP_TB`.`PACKAGE_TB_ID`" \
+                                  " and d.USE=1 " \
+                                  " and (select c.AUTH_CD from CLASS_LECTURE_TB as c" \
+                                  " where c.CLASS_TB_ID=" + class_id + " and c.LECTURE_TB_ID=d.ID and c.USE=1)=\'VIEW\'"
 
-        if keyword == '' or keyword is None:
-            if sort_info == SORT_PACKAGE_MEMBER_COUNT:
-                package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('ing_package_member_num'),
-                                                          reverse=int(sort_order_by))
-            if sort_info == SORT_PACKAGE_NAME:
-                package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('name'),
-                                                          reverse=int(sort_order_by))
-            elif sort_info == SORT_PACKAGE_CREATE_DATE:
-                package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('reg_dt'),
-                                                          reverse=int(sort_order_by))
-        else:
-            if sort_info == SORT_PACKAGE_MEMBER_COUNT:
-                package_data = sorted(package_data, key=attrgetter('ing_package_member_num'),
-                                      reverse=int(sort_order_by))
-            if sort_info == SORT_PACKAGE_NAME:
-                package_data = sorted(package_data, key=attrgetter('name'),
-                                      reverse=int(sort_order_by))
-            elif sort_info == SORT_PACKAGE_CREATE_DATE:
-                package_data = sorted(package_data, key=attrgetter('reg_dt'),
-                                      reverse=int(sort_order_by))
+        package_group_data = PackageGroupTb.objects.select_related(
+            'package_tb', 'group_tb').filter(class_tb_id=class_id, group_tb__use=USE,
+                                             package_tb__state_cd='PE', package_tb__use=USE,
+                                             use=USE).annotate(package_member_num=RawSQL(query_package_member_num,
+                                                                                         [])).order_by('package_tb_id',
+                                                                                                       'group_tb_id')
 
-        context['total_package_num'] = len(package_data)
-        if page != 0:
-            paginator = Paginator(package_data, 20)  # Show 20 contacts per page
-            try:
-                package_data = paginator.page(page)
-            except EmptyPage:
-                package_data = None
+        package_data = collections.OrderedDict()
+        temp_package_id = None
+        package_group_list = []
+        for package_group_info in package_group_data:
+            package_tb = package_group_info.package_tb
+            group_tb = package_group_info.group_tb
+            package_id = str(package_tb.package_id)
+            if temp_package_id != package_id:
+                temp_package_id = package_id
+                package_group_list = []
 
-        if package_data is not None:
-            for package_info in package_data:
-                if package_info.state_cd == 'IP':
-                    package_info.package_group_data = PackageGroupTb.objects.select_related(
-                        'group_tb').filter(class_tb_id=class_id,
-                                           package_tb_id=package_info.package_id, group_tb__state_cd='IP',
-                                           use=USE).order_by('-group_tb__group_type_cd', '-group_tb__name')
+            package_group_list.append(group_tb.name)
+            package_data[package_id] = {'package_id': package_id,
+                                        'package_name': package_tb.name,
+                                        'package_member_num': package_group_info.package_member_num,
+                                        'package_group_list': package_group_list}
+        package_list = []
+        for package_info in package_data:
+            package_list.append(package_data[package_info])
 
-                else:
-                    package_info.package_group_data = PackageGroupTb.objects.select_related(
-                        'group_tb').filter(class_tb_id=class_id,
-                                           package_tb_id=package_info.package_id, group_tb__use=USE,
-                                           use=USE).order_by('-group_tb__group_type_cd', '-group_tb__name')
+        # if keyword == '' or keyword is None:
+        #     if sort_info == SORT_PACKAGE_MEMBER_COUNT:
+        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('ing_package_member_num'),
+        #                                                   reverse=int(sort_order_by))
+        #     if sort_info == SORT_PACKAGE_NAME:
+        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('name'),
+        #                                                   reverse=int(sort_order_by))
+        #     elif sort_info == SORT_PACKAGE_CREATE_DATE:
+        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('reg_dt'),
+        #                                                   reverse=int(sort_order_by))
+        # else:
+        #     if sort_info == SORT_PACKAGE_MEMBER_COUNT:
+        #         package_data = sorted(package_data, key=attrgetter('ing_package_member_num'),
+        #                               reverse=int(sort_order_by))
+        #     if sort_info == SORT_PACKAGE_NAME:
+        #         package_data = sorted(package_data, key=attrgetter('name'),
+        #                               reverse=int(sort_order_by))
+        #     elif sort_info == SORT_PACKAGE_CREATE_DATE:
+        #         package_data = sorted(package_data, key=attrgetter('reg_dt'),
+        #                               reverse=int(sort_order_by))
+
+        # context['total_package_num'] = len(package_data)
+        # if page != 0:
+        #     paginator = Paginator(package_data, 20)  # Show 20 contacts per page
+        #     try:
+        #         package_data = paginator.page(page)
+        #     except EmptyPage:
+        #         package_data = None
+        #
+        # if package_data is not None:
+        #     for package_info in package_data:
+        #         if package_info.state_cd == 'IP':
+        #             package_info.package_group_data = PackageGroupTb.objects.select_related(
+        #                 'group_tb').filter(class_tb_id=class_id,
+        #                                    package_tb_id=package_info.package_id, group_tb__state_cd='IP',
+        #                                    use=USE).order_by('-group_tb__group_type_cd', '-group_tb__name')
+        #
+        #         else:
+        #             package_info.package_group_data = PackageGroupTb.objects.select_related(
+        #                 'group_tb').filter(class_tb_id=class_id,
+        #                                    package_tb_id=package_info.package_id, group_tb__use=USE,
+        #                                    use=USE).order_by('-group_tb__group_type_cd', '-group_tb__name')
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        context['package_data'] = package_data
-
-        return context
+        # context['package_data'] = package_data
+        return JsonResponse({'finish_package_data': package_list}, json_dumps_params={'ensure_ascii': True})
 
 
 class GetSinglePackageViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):

@@ -99,10 +99,12 @@ urlpatterns = [
     url(r'^add_group_member/$', views.add_group_member_logic, name='add_group_member'),
     # 그룹 회원 삭제
     url(r'^delete_group_member_info/$', views.delete_group_member_info_logic, name='delete_group_member_info'),
-    # 진행중 그룹 list 조회
+
+    # 진행중 그룹 list 조회 - refactoring 진행중
     url(r'^get_group_ing_list/$', views.GetGroupIngListViewAjax.as_view(), name='get_group_ing_list'),
-    # 완료된 그룹 list 조회
+    # 완료된 그룹 list 조회 - refactoring 진행중
     url(r'^get_group_end_list/$', views.GetGroupEndListViewAjax.as_view(), name='get_group_end_list'),
+
     # 그룹 회원 조회
     url(r'^get_group_member/$', views.GetGroupMemberViewAjax.as_view(), name='get_group_member'),
     # 그룹 종료 회원 조회
@@ -125,10 +127,12 @@ urlpatterns = [
     url(r'^add_package_group_info/$', views.add_package_group_info_logic, name='add_package_group_info'),
     # 패키지에 그룹 삭제
     url(r'^delete_package_group_info/$', views.delete_package_group_info_logic, name='delete_package_group_info'),
-    # 진행중 패키지 list 조회
+
+    # 진행중 패키지 list 조회 - refactoring 진행중
     url(r'^get_package_ing_list/$', views.GetPackageIngListViewAjax.as_view(), name='get_package_ing_list'),
-    # 완료된 패키지 list 조회
+    # 완료된 패키지 list 조회 - refactoring 진행중
     url(r'^get_package_end_list/$', views.GetPackageEndListViewAjax.as_view(), name='get_package_end_list'),
+
     # 패키지 만들 list 조회
     url(r'^get_single_package_list/$', views.GetSinglePackageViewAjax.as_view(),
         name='get_single_package_list'),
