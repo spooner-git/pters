@@ -63,8 +63,8 @@ from .functions import func_get_class_member_id_list, func_get_trainee_schedule_
     func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list, \
     func_get_class_member_ing_list, func_get_class_member_end_list, \
     func_get_ing_group_member_list, func_get_end_group_member_list, func_get_ing_package_member_list, \
-    func_get_end_package_member_list, func_get_ing_package_in_member_list, func_get_end_package_in_member_list, \
-    func_check_member_connection_info, func_get_member_info
+    func_get_end_package_member_list, \
+    func_check_member_connection_info, func_get_member_info, func_get_member_from_lecture_list
 
 logger = logging.getLogger(__name__)
 
@@ -3046,7 +3046,7 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 for package_info in group_data[group_info]['group_package_id_list']:
                     if lecture_info.lecture_tb.package_tb.package_id == package_info:
                         member_list[lecture_info.lecture_tb.member_id] = lecture_info.lecture_tb.member_id
-            group_data[group_info]['group_member_num'] = len(member_list)
+            group_data[group_info]['group_ing_member_num'] = len(member_list)
             group_list.append(group_data[group_info])
 
         if error is not None:
@@ -3109,7 +3109,7 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/group_member_ajax.html'
 
-    def get_context_data(self, **kwargs):
+    def get(self, request):
         # context = {}
         context = super(GetGroupMemberViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
@@ -3123,8 +3123,7 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        context['member_data'] = member_data
-        return context
+        return JsonResponse({'group_member_data': member_data}, json_dumps_params={'ensure_ascii': True})
 
 
 class GetEndGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -3814,7 +3813,7 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 if package_id == package_info:
                     member_id = lecture_info.lecture_tb.member_id
                     member_list[member_id] = member_id
-            package_data[package_info]['package_member_num'] = len(member_list)
+            package_data[package_info]['package_ing_member_num'] = len(member_list)
             package_list.append(package_data[package_info])
         # package_data = PackageTb.objects.filter(class_tb_id=class_id, state_cd='IP',
         #                                         use=USE).filter(name__contains=keyword).order_by('name')
@@ -3923,7 +3922,7 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 if package_id == package_info:
                     member_id = lecture_info.lecture_tb.member_id
                     member_list[member_id] = member_id
-            package_data[package_info]['package_member_num'] = len(member_list)
+            package_data[package_info]['package_end_member_num'] = len(member_list)
             package_list.append(package_data[package_info])
 
         # if keyword == '' or keyword is None:
@@ -4006,45 +4005,73 @@ class GetSinglePackageViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         return context
 
 
-class GetPackageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/package_member_ajax.html'
+class GetPackageIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
-    def get_context_data(self, **kwargs):
+    def get(self, request):
         # context = {}
-        context = super(GetPackageMemberViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         package_id = self.request.GET.get('package_id', '')
         error = None
         # member_data = []
-        member_data = func_get_ing_package_in_member_list(class_id, package_id, self.request.user.id)
+
+        query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
+                              " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
+                              " B.USE=1"
+
+        all_lecture_list = ClassLectureTb.objects.select_related(
+            'lecture_tb__package_tb',
+            'lecture_tb__member__user'
+        ).filter(class_tb_id=class_id, auth_cd='VIEW', lecture_tb__package_tb_id=package_id, lecture_tb__state_cd='IP',
+                 lecture_tb__use=USE, use=USE).annotate(lecture_count=RawSQL(query_lecture_count,
+                                                                             [])).order_by('lecture_tb__member_id',
+                                                                                           'lecture_tb__end_date')
+        member_list = func_get_member_from_lecture_list(all_lecture_list, request.user.id)
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        context['member_data'] = member_data
-        return context
+        return JsonResponse({'package_ing_member_list': member_list}, json_dumps_params={'ensure_ascii': True})
 
 
-class GetEndPackageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/package_member_ajax.html'
+class GetPackageEndMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
-    def get_context_data(self, **kwargs):
+    def get(self, request):
         # context = {}
-        context = super(GetEndPackageMemberViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         package_id = self.request.GET.get('package_id', '')
         error = None
-        member_data = func_get_end_package_in_member_list(class_id, package_id, self.request.user.id)
+
+        query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as A where A.LECTURE_TB_ID =" \
+                              " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and A.AUTH_CD=\'VIEW\' and" \
+                              " A.USE=1"
+        query_lecture_ip_count = "select count(*) from LECTURE_TB as C where C.MEMBER_ID" \
+                                 "=(select B.MEMBER_ID from LECTURE_TB as B where B.ID =" \
+                                 " `CLASS_LECTURE_TB`.`LECTURE_TB_ID`)" \
+                                 " and " + class_id + \
+                                 " = (select D.CLASS_TB_ID from CLASS_LECTURE_TB as D" \
+                                 " where D.LECTURE_TB_ID=C.ID and D.CLASS_TB_ID=" + class_id + ")" \
+                                 " and C.STATE_CD=\'IP\' and C.PACKAGE_TB_ID=" + package_id + " and C.USE=1"
+
+        all_lecture_list = ClassLectureTb.objects.select_related(
+            'lecture_tb__package_tb',
+            'lecture_tb__member__user'
+        ).filter(~Q(lecture_tb__state_cd='IP'), class_tb_id=class_id, auth_cd='VIEW',
+                 lecture_tb__package_tb_id=package_id, lecture_tb__use=USE,
+                 use=USE).annotate(lecture_count=RawSQL(query_lecture_count, []),
+                                   lecture_ip_count=RawSQL(query_lecture_ip_count, [])
+                                   ).filter(lecture_ip_count=0).order_by('lecture_tb__member_id',
+                                                                         'lecture_tb__end_date')
+
+        member_list = func_get_member_from_lecture_list(all_lecture_list, request.user.id)
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        context['member_data'] = member_data
-        return context
+        return JsonResponse({'package_end_member_list': member_list}, json_dumps_params={'ensure_ascii': True})
 
 
 def finish_package_info_logic(request):
