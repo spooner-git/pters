@@ -92,29 +92,20 @@ class Ticket{
 
     //수강권 리스트를 렌더링
     render_ticket_list(jsondata, list_status_type){
+
         if(current_page != this.page_name){
             return false;
         }
 
-        let ticket_id, ticket_name, ticket_member_number, ticket_end_member_number, ticket_note, length;
+        let whole_data, length;
 
         if(list_status_type == "ing"){
-            ticket_id = jsondata.package_id;
-            ticket_name = jsondata.package_name;
-            // ticket_type_text = jsondata.package_type_cd_nm;
-            ticket_member_number = jsondata.package_ing_member_num;
-            ticket_end_member_number = jsondata.package_end_member_num;
-            ticket_note = jsondata.package_note;
-            length = ticket_id.length;
+            whole_data = jsondata.current_package_data;
+            length = whole_data.length;
             this.list_status_type_text = "진행중";
         }else if(list_status_type == "end"){
-            ticket_id = jsondata.package_id;
-            ticket_name = jsondata.package_name;
-            // ticket_type_text = jsondata.package_type_cd_nm;
-            ticket_member_number = jsondata.package_ing_member_num;
-            ticket_end_member_number = jsondata.package_end_member_num;
-            ticket_note = jsondata.package_note;
-            length = ticket_id.length;
+            whole_data = jsondata.finish_package_data;
+            length = whole_data.length;
             this.list_status_type_text = "종료";
         }
 
@@ -123,14 +114,23 @@ class Ticket{
 
         let html_temp = [];
         for(let i=0; i<length; i++){
-            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'ticketid':${ticket_id[i]}});`;
-            let html = `<article class="ticket_wrapper" data-ticketid="${ticket_id[i]}" onclick="${onclick}">
+            let data = whole_data[i];
+            let ticket_id = data.package_id;
+            let ticket_name = data.package_name;
+            let ticket_note = data.package_note != undefined ? data.package_note : "";
+            let ticket_member_number = data.package_ing_member_num;
+            let ticket_end_member_number = data.package_end_member_num;
+
+
+            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'ticketid':${ticket_id}});`;
+            let html = `<article class="ticket_wrapper" data-ticketid="${ticket_id}" onclick="${onclick}">
                             <div class="ticket_data_u">
-                                <div class="ticket_name">${ticket_name[i]}</div>
-                                <div class="ticket_note">${ticket_note[i]}</div>
+                                <div class="ticket_name">${ticket_name}</div>
+                                <div class="ticket_note">${ticket_note}</div>
                             </div>
                             <div class="ticket_data_b">
-                                <div class="ticket_member_number">${ticket_member_number[i]}명<span style="font-size:10px;color:#8d8d8d;">(현재) </span> <span style="font-size:10px">${ticket_end_member_number[i]}명</span><span style="font-size:10px;color:#8d8d8d;">(종료)</span></div>
+                                <div class="ticket_member_number">${list_status_type == "ing" ? ticket_member_number : ticket_end_member_number}명
+                                </div>
                                 
                             </div>
                         </article>`
