@@ -3773,7 +3773,7 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         keyword = self.request.GET.get('keyword', '')
         sort_info = int(package_sort)
         error = None
-        start_time = timezone.now()
+        # start_time = timezone.now()
 
         package_group_data = PackageGroupTb.objects.select_related(
             'package_tb', 'group_tb').filter(class_tb_id=class_id, package_tb__state_cd='IP', package_tb__use=USE,
@@ -3869,8 +3869,7 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
         # context['package_data'] = package_data
 
-        end_time = timezone.now()
-        print(str(end_time-start_time))
+        # end_time = timezone.now()
         return JsonResponse({'current_package_data': package_list}, json_dumps_params={'ensure_ascii': True})
 
 
