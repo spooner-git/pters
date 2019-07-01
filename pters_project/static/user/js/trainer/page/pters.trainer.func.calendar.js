@@ -35,7 +35,7 @@ class Calendar {
             case "month":
                 this.render_upper_box(cal_type);
                 this.render_month_cal( this.current_page_num ,this.current_year, this.current_month);
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(this.cal_type == cal_type){
                         if(date == `${this.current_year}-${this.current_month}-01`){
                             this.render_month_cal( this.current_page_num, this.current_year, this.current_month, jsondata);
@@ -48,7 +48,7 @@ class Calendar {
             case "week":
                 this.render_upper_box(cal_type);
                 this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(this.cal_type == cal_type){
                         if(date == `${this.current_year}-${this.current_month}-01`){
                             this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
@@ -70,17 +70,28 @@ class Calendar {
     get_prev_month(){
         let prev_month = this.current_month-1 < 1 ? 12 : this.current_month - 1;
         let year = this.current_month-1 < 1 ? this.current_year-1 : this.current_year;
+        let week = this.current_week > this.get_week_number(year, prev_month) ? this.get_week_number(year, prev_month) : this.current_week;
+        
         return {
-            "year":year, "month": prev_month
+            "year":year, "month": prev_month, "week":week
         }
     }
 
     get_next_month(){
         let next_month = this.current_month+1 > 12 ? 1 : this.current_month + 1;
         let year = this.current_month+1 > 12 ? this.current_year+1 : this.current_year;
+        let week = this.current_week > this.get_week_number(year, next_month) ? this.get_week_number(year, next_month) : this.current_week;
+
         return {
-            "year":year, "month": next_month
+            "year":year, "month": next_month, "week": week
         }
+    }
+
+    get_week_number(year, month){
+        let first_day = new Date(year, month-1, 1).getDay();
+        let last_date = new Date(year, month, 0).getDate();
+        let week_num_this_month = Math.ceil( (first_day + last_date)/7  ) - 1;
+        return week_num_this_month;
     }
 
     get_current_week(){
@@ -95,7 +106,6 @@ class Calendar {
         let week = this.current_week;
         let first_day = new Date(year, month-1, 1).getDay();
         let last_date = new Date(year, month, 0).getDate();
-        let week_num_this_month = Math.ceil( (first_day + last_date)/7  );
 
         let prev_year = year - 1;
         let prev_month = month - 1 < 1 ? 12 : month-1;
@@ -149,7 +159,7 @@ class Calendar {
         this.current_year = year;
         this.current_month = month;
         this.render_month_cal( this.current_page_num, this.current_year, this.current_month)
-        this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+        this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
             if(date == `${this.current_year}-${this.current_month}-01`){
                 this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
             }
@@ -162,6 +172,7 @@ class Calendar {
                 let next = this.get_next_month();
                 this.current_year = next.year;
                 this.current_month = next.month;
+                this.current_week = next.week;
 
                 /*페이지 삽입*/
                 this.current_page_num = this.current_page_num + 1;
@@ -170,7 +181,7 @@ class Calendar {
 
                 this.render_upper_box("month");
                 this.render_month_cal( this.current_page_num, this.current_year, this.current_month)
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
                     }
@@ -181,6 +192,7 @@ class Calendar {
                 let prev = this.get_prev_month();
                 this.current_year = prev.year;
                 this.current_month = prev.month;
+                this.current_week = prev.week;
 
                 /*페이지 삽입*/
                 this.current_page_num = this.current_page_num - 1;
@@ -189,7 +201,7 @@ class Calendar {
 
                 this.render_upper_box("month");
                 this.render_month_cal(this.current_page_num, this.current_year, this.current_month)
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
                     }
@@ -214,7 +226,7 @@ class Calendar {
 
                 this.render_upper_box("week");
                 this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
                         this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
@@ -236,7 +248,7 @@ class Calendar {
 
                 this.render_upper_box("week");
                 this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
                         this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
@@ -486,6 +498,7 @@ class Calendar {
     }
 
     week_schedule_draw(year, month, week, schedule_data){
+        console.log(schedule_data)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
@@ -570,12 +583,12 @@ class Calendar {
         let date_ = date;
         let days_ = days;
         if(date_ == undefined){date_ = `${this.current_year}-${this.current_month}-01`}
-        if(days_ == undefined){days = 31}
+        if(days_ == undefined){days_ = 31}
 
         $.ajax({
             url: '/trainer/get_all_schedule/',
             type : 'GET',
-            data : {"date":date, "day":days},
+            data : {"date":date_, "day":days_},
             dataType: "JSON",
 
             beforeSend:function(){
@@ -621,7 +634,11 @@ class Calendar {
                                         <div class="cal_upper_box">
                                             <button onclick="${this.instance}.move_week('prev')" style="vertical-align:middle;" hidden>이전</button>
                                             <div style="display:inline-block;width:200px;font-size:20px;font-weight:bold;">
-                                                <span class="display_week">${this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0]}월 ${this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0]}일 - ${this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]}월 ${this.get_week_dates(this.current_year, this.current_month, this.current_week).date[6]}일</span>
+                                                <span class="display_week">${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0] :null}월 
+                                                                           ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0] :null}일 - 
+                                                                           ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]: null}월 
+                                                                           ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[6]: null}일
+                                                </span>
                                             </div>
                                             <button onclick="${this.instance}.move_week('next')" style="vertical-align:middle;" hidden>다음</button>
                                             <div class="cal_tools_wrap">
