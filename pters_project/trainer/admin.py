@@ -30,8 +30,7 @@ class ClassLectureTbAdmin(admin.ModelAdmin):
 
 @admin.register(GroupTb)
 class GroupTbAdmin(admin.ModelAdmin):
-    list_display = ('group_id', 'class_tb', 'name', 'group_type_cd', 'member_num',
-                    'ing_group_member_num', 'end_group_member_num', 'state_cd',
+    list_display = ('group_id', 'class_tb', 'name', 'group_type_cd', 'member_num', 'state_cd',
                     'ing_color_cd', 'end_color_cd', 'ing_font_color_cd', 'end_font_color_cd',
                     'note', 'reg_dt', 'mod_dt', 'use')
     search_fields = ['class_tb__member__name']
@@ -57,9 +56,7 @@ class BackgroundImgTbAdmin(admin.ModelAdmin):
 
 @admin.register(PackageTb)
 class PackageTbAdmin(admin.ModelAdmin):
-    list_display = ('package_id', 'class_tb', 'name',
-                    'ing_package_member_num', 'end_package_member_num',
-                    'package_group_num', 'state_cd', 'note', 'reg_dt', 'mod_dt', 'use')
+    list_display = ('package_id', 'class_tb', 'name', 'state_cd', 'note', 'reg_dt', 'mod_dt', 'use')
     search_fields = ['class_tb__member__name', 'name']
 
 

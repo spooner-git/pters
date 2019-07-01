@@ -26,7 +26,6 @@ from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON
     TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, SCHEDULE_DUPLICATION_ENABLE, AUTO_ABSENCE_ON
 
 from login.models import LogTb, MemberTb
-from trainer.functions import func_get_end_package_member_list, func_get_ing_package_member_list
 from trainer.models import GroupLectureTb, GroupTb, ClassTb, ClassLectureTb, PackageGroupTb
 from trainee.models import LectureTb, MemberLectureTb
 from .models import ScheduleTb, RepeatScheduleTb
@@ -194,9 +193,6 @@ def add_schedule_logic(request):
             except ObjectDoesNotExist:
                 lecture_info = None
             if lecture_info is not None:
-                lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-                lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-                lecture_info.package_tb.save()
 
                 package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
                 for package_group_info in package_group_data:
@@ -496,9 +492,6 @@ def finish_schedule_logic(request):
         #                                      lecture_tb__package_tb_id=lecture_info.package_tb_id, use=USE)
         # package_ing_lecture_count = package_lecture_data.filter(lecture_tb__state_cd='IP').count()
         # package_end_lecture_count = package_lecture_data.count() - package_ing_lecture_count
-        # lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-        # lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-        # lecture_info.package_tb.save()
         #
         # package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
 
@@ -1445,19 +1438,6 @@ def add_group_schedule_logic(request):
                     else:
                         info_message = info_message + ',' + member_info.name
 
-    # if error is None:
-    #     for package_tb_info in package_tb_list:
-    #         package_tb_info.ing_package_member_num = len(
-    #             func_get_ing_package_member_list(class_id, package_tb_info.package_id))
-    #         package_tb_info.end_package_member_num = len(
-    #             func_get_end_package_member_list(class_id, package_tb_info.package_id))
-    #         package_tb_info.save()
-    #
-    #         package_group_data = PackageGroupTb.objects.select_related(
-    #             'group_tb').filter(package_tb_id=package_tb_info.package_id, use=USE)
-    #         for package_group_info in package_group_data:
-    #             func_refresh_group_status(package_group_info.group_tb_id, None, None)
-
     if error is None:
         if info_message is not None:
             info_message += '님의 일정이 등록되지 않았습니다.'
@@ -2113,11 +2093,6 @@ def add_other_member_group_schedule_logic(request):
         # except ObjectDoesNotExist:
         #     lecture_info = None
         # if lecture_info is not None:
-        #     lecture_info.package_tb.ing_package_member_num = len(
-        #         func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-        #     lecture_info.package_tb.end_package_member_num = len(
-        #         func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-        #     lecture_info.package_tb.save()
         #
         #     package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
         #     for package_group_info in package_group_data:

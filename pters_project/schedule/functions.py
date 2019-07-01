@@ -16,8 +16,7 @@ from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE
 from login.models import LogTb, PushInfoTb
 from trainer.models import MemberClassTb, GroupLectureTb, ClassLectureTb, GroupTb, PackageGroupTb
 from trainee.models import LectureTb, MemberLectureTb
-from trainer.functions import func_get_ing_package_member_list, func_get_end_group_member_list_count, \
-    func_get_ing_group_member_list_count, func_get_member_ing_list, func_get_class_member_ing_list
+from trainer.functions import func_get_member_ing_list, func_get_class_member_ing_list
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
 
 # 1:1 Lecture Id 조회
@@ -112,14 +111,6 @@ def func_refresh_lecture_count(class_id, lecture_id):
 
     if error is None:
         if lecture_info.state_cd != check_lecture_state_cd:
-            lecture_info.package_tb.ing_package_member_num =\
-                len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-            lecture_info.package_tb.end_package_member_num = \
-                len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-            lecture_info.package_tb.save()
-
-    if error is None:
-        if lecture_info.state_cd != check_lecture_state_cd:
             if lecture_info.state_cd == 'PE' or lecture_info.state_cd == 'RF':
                 group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
                 group_lecture_data.update(fix_state_cd='')
@@ -130,15 +121,6 @@ def func_refresh_lecture_count(class_id, lecture_id):
                                                      package_tb_id=lecture_info.package_tb_id,
                                                      use=USE)
             for package_group_info in package_group_data:
-                # package_group_info.group_tb.ing_group_member_num =\
-                #     len(func_get_ing_group_member_list(class_id,
-                #                                        package_group_info.group_tb_id,
-                #                                        package_group_info.group_tb.class_tb.member_id))
-                # package_group_info.group_tb.end_group_member_num = \
-                #     len(func_get_end_group_member_list(class_id,
-                #                                        package_group_info.group_tb_id,
-                #                                        package_group_info.group_tb.class_tb.member_id))
-                # package_group_info.group_tb.save()
                 func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     return error
@@ -206,14 +188,6 @@ def func_refresh_lecture_count_for_delete(class_id, lecture_id, auth_member_num)
 
     if error is None and check_info is None:
         if lecture_info.state_cd != check_lecture_state_cd:
-            lecture_info.package_tb.ing_package_member_num =\
-                len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-            lecture_info.package_tb.end_package_member_num = \
-                len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-            lecture_info.package_tb.save()
-
-    if error is None and check_info is None:
-        if lecture_info.state_cd != check_lecture_state_cd:
             if lecture_info.state_cd == 'PE' or lecture_info.state_cd == 'RF':
                 group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
                 group_lecture_data.update(fix_state_cd='')
@@ -224,15 +198,6 @@ def func_refresh_lecture_count_for_delete(class_id, lecture_id, auth_member_num)
                                                      package_tb_id=lecture_info.package_tb_id,
                                                      use=USE)
             for package_group_info in package_group_data:
-                # package_group_info.group_tb.ing_group_member_num =\
-                #     len(func_get_ing_group_member_list(class_id,
-                #                                        package_group_info.group_tb_id,
-                #                                        package_group_info.group_tb.class_tb.member_id))
-                # package_group_info.group_tb.end_group_member_num = \
-                #     len(func_get_end_group_member_list(class_id,
-                #                                        package_group_info.group_tb_id,
-                #                                        package_group_info.group_tb.class_tb.member_id))
-                # package_group_info.group_tb.save()
                 func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     return error
@@ -273,19 +238,6 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
             if group_repeat_schedule_total_count == group_repeat_schedule_end_count:
                 group_repeat_schedule_info.state_cd = 'PE'
                 group_repeat_schedule_info.save()
-
-    # 그룹 카운팅
-    if group_id is not None and group_id != '':
-        try:
-            group_info = GroupTb.objects.get(group_id=group_id, use=USE)
-        except ObjectDoesNotExist:
-            group_info = None
-        if group_info is not None:
-            group_info.ing_group_member_num = len(func_get_ing_group_member_list_count(group_info.class_tb_id,
-                                                                                       group_id))
-            group_info.end_group_member_num = len(func_get_end_group_member_list_count(group_info.class_tb_id,
-                                                                                       group_id))
-            group_info.save()
 
 
 # 일정 등록

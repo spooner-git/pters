@@ -43,8 +43,6 @@ from configs.const import USE, UN_USE
 from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
 from trainee.models import MemberLectureTb
-from trainer.functions import func_get_ing_group_member_list, func_get_end_group_member_list, \
-    func_get_ing_package_member_list, func_get_end_package_member_list
 from trainer.models import GroupTb, PackageTb, ClassTb, ClassLectureTb, GroupLectureTb, PackageGroupTb
 
 from .forms import MyPasswordResetForm, MyPasswordChangeForm, MyRegistrationForm
@@ -229,26 +227,9 @@ class ServiceTestLoginView(TemplateView):
         #         group_data = None
         #     else:
         #         for group_info in group_data:
-        #             # 그룹에 해당하는 인원 체크
-        #             group_info.ing_group_member_num = len(func_get_ing_group_member_list(class_info.class_id,
-        #                                                                                  group_info.group_id,
-        #                                                                                  class_info.member_id))
-        #             group_info.end_group_member_num = len(func_get_end_group_member_list(class_info.class_id,
-        #                                                                                  group_info.group_id,
-        #                                                                                  class_info.member_id))
-        #             group_info.save()
         #
         #             package_group_test = PackageGroupTb.objects.filter(group_tb_id=group_info.group_id)
-        #             if len(package_group_test) > 0:
-        #                 # 패키지에 해당하는 그룹이 만들어져있는 경우 (패키지가 이미 만들어져있는 경우)
-        #                 for package_group_test_info in package_group_test:
-        #                     package_group_test_info.package_tb.ing_package_member_num = \
-        #                         len(func_get_ing_package_member_list(class_info.class_id, package_group_test_info.package_tb_id))
-        #                     package_group_test_info.package_tb.end_package_member_num = \
-        #                         len(func_get_end_package_member_list(class_info.class_id, package_group_test_info.package_tb_id))
-        #                     package_group_test_info.save()
-        #
-        #             else:
+        #             if len(package_group_test) == 0:
         #                 package_info = PackageTb(class_tb_id=group_info.class_tb_id, name=group_info.name,
         #                                          state_cd=group_info.state_cd, package_type_cd=group_info.group_type_cd,
         #                                          ing_package_member_num=group_info.ing_group_member_num,
