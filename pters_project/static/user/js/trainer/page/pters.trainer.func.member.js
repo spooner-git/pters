@@ -27,29 +27,44 @@ class Member{
         this.request_member_list((jsondata) => {
             this.render_member_list(jsondata, list_type);
             this.render_upper_box();
-        });
+        }, list_type);
     }
 
 
     //회원 리스트 서버에서 불러오기
-    request_member_list(callback){
+    request_member_list(callback, list_type){
+        var start_time;
+        var end_time;
+        var url;
+        console.log(list_type)
+        if(list_type == 'ing'){
+            url = '/trainer/get_member_ing_list/';
+        }else if(list_type == 'end'){
+            url = '/trainer/get_member_end_list/';
+        }else{
+            url = '/trainer/get_member_list';
+        }
         $.ajax({
-            url:'/trainer/get_member_list/',
-            dataType : 'html',
+            url:url,
+            dataType : 'JSON',
     
             beforeSend:function(){
                 ajax_load_image(SHOW);
+                start_time = performance.now();
             },
     
             //통신성공시 처리
             success:function(data){
-                var jsondata = JSON.parse(data);
-                if(jsondata.messageArray.length>0){
-                    console.log("에러:" + jsondata.messageArray);
-                }else{
-                    callback(jsondata);
-                    return jsondata;
-                }
+                // var jsondata = JSON.parse(data);
+                console.log(data)
+                end_time = performance.now();
+                // if(jsondata.messageArray.length>0){
+                //     console.log("에러:" + jsondata.messageArray);
+                // }else{
+                    console.log(end_time-start_time+'ms');
+                    callback(data);
+                    return data;
+                // }
             },
 
             //보내기후 팝업창 닫기
@@ -81,46 +96,37 @@ class Member{
         if(current_page != this.page_name){
             return false;
         }
+        // let length;
+        let render_member_data;
 
-        let db_id, name, reg_count, rem_count, avl_count, phone, length;
 
         if(list_type == "ing"){
-            db_id = jsondata.dIdArray;
-            name = jsondata.nameArray;
-            reg_count = jsondata.regCountArray;
-            rem_count = jsondata.countArray;
-            avl_count = jsondata.availCountArray;
-            phone = jsondata.phoneArray;
-            length = jsondata.dIdArray.length;
+            this.member_ing_length = Object.keys(jsondata.current_member_data).length;
+            this.member_end_length = jsondata.finish_member_num;
+            render_member_data = jsondata.current_member_data;
             this.member_list_type_text = "진행중";
         }else if(list_type == "end"){
-            db_id = jsondata.finishDidArray;
-            name = jsondata.finishnameArray;
-            reg_count = jsondata.finishRegCountArray;
-            rem_count = jsondata.finishcountArray;
-            avl_count = jsondata.finishAvailCountArray;
-            phone = jsondata.finishphoneArray;
-            length = jsondata.finishDidArray.length;
+            this.member_ing_length = jsondata.current_member_num;
+            this.member_end_length = Object.keys(jsondata.finish_member_data).length;
+            render_member_data = jsondata.finish_member_data;
             this.member_list_type_text = "종료";
         }
-
-        this.member_length = length;
-        this.member_ing_length = jsondata.dIdArray.length;
-        this.member_end_length = jsondata.finishDidArray.length;
+        // this.member_length = length;
 
         let html_temp = [];
-        for(let i=0; i<length; i++){
-            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'dbid':${db_id[i]}});`;
-            let html = `<article class="member_wrapper" data-dbid="${db_id[i]}" data-name="${name[i]}" onclick="${onclick}">
+        for (let member_info in render_member_data){
+            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'dbid':${render_member_data[member_info].member_id}});`;
+            let html = `<article class="member_wrapper" data-dbid="${render_member_data[member_info].member_id}" data-name="${render_member_data[member_info].member_name}" onclick="${onclick}">
                             <div class="member_data_l">
-                                <div class="member_name">${name[i]}</div>
-                                <div class="member_counts"> ${rem_count[i]} / ${reg_count[i]} <span style="font-size:10px;color:#8d8d8d;">(남은 횟수 / 총 등록횟수)</span></div>
+                                <div class="member_name">${render_member_data[member_info].member_name}</div>
+                                <div class="member_counts"> ${render_member_data[member_info].lecture_rem_count} / ${render_member_data[member_info].lecture_reg_count} <span style="font-size:10px;color:#8d8d8d;">(남은 횟수 / 총 등록횟수)</span></div>
                             </div>
                             <div class="member_data_r">
-                                <div class="member_phone" onclick="event.stopPropagation();location.href='tel:${phone[i]}'" ${phone[i] == "None" ? "style='display:none;'" : ""}>
+                                <div class="member_phone" onclick="event.stopPropagation();location.href='tel:${render_member_data[member_info].member_phone}'" ${render_member_data[member_info].member_phone == "" ? "style='display:none;'" : ""}>
                                     <img src="/static/common/icon/icon_phone.png" class="icon_contact">
                                 </div>
-                                <div class="member_sms" onclick="event.stopPropagation();location.href='sms:${phone[i]}'" ${phone[i] == "None" ? "style='display:none;'" : ""}>
+                                <div class="member_sms" onclick="event.stopPropagation();location.href='sms:${render_member_data[member_info].member_phone}'" ${render_member_data[member_info].member_phone== "" ? "style='display:none;'" : ""}>
+
                                     <img src="/static/common/icon/icon_message.png" class="icon_contact">
                                 </div>
                             </div>

@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^get_error_info/$', views.GetErrorInfoView.as_view(), name='get_error_info'),
 
     # 일정 기능 #####################################################################################################
+    # 강사 스케쥴 조회 - 수업/OFF - refactoring
     url(r'^get_all_schedule/$', views.GetAllScheduleView.as_view(), name='get_all_schedule'),
     # 강사 스케쥴 조회 - 1:1/Group/Off
     url(r'^get_trainer_schedule/$', views.GetTrainerScheduleView.as_view(), name='get_trainer_schedule'),
@@ -30,6 +31,7 @@ urlpatterns = [
     # 강사 스케쥴 조회 - Group
     url(r'^get_trainer_group_schedule/$', views.GetTrainerGroupScheduleView.as_view(),
         name='get_trainer_group_schedule'),
+
     # 회원 스케쥴 조회 - 1:1/Group
     url(r'^get_member_schedule/$', views.GetMemberScheduleView.as_view(), name='get_member_schedule'),
     # 회원 반복 일정 조회 - 1:1/Group
@@ -46,14 +48,16 @@ urlpatterns = [
         name='get_group_member_repeat_schedule_list'),
 
     # 회원 기능 #####################################################################################################
-    # 회원 정보 조회
+    # 회원 정보 조회 - refactoring
     url(r'^get_member_info/$', views.GetMemberInfoView.as_view(), name='get_member_info'),
-    # 전체 회원 목록 조회
+    url(r'^search_member_info/$', views.SearchMemberInfoView.as_view(), name='search_member_info'),
+    # 전체 회원 목록 조회 - refactoring
     url(r'^get_member_list/$', views.GetMemberListView.as_view(), name='get_member_list'),
-    # 진행중 회원 목록 조회
+    # 진행중 회원 목록 조회 - refactoring
     url(r'^get_member_ing_list/$', views.GetMemberIngListViewAjax.as_view(), name='get_member_ing_list'),
-    # 진행 완료 회원 목록 조회
+    # 진행 완료 회원 목록 조회 - refactoring
     url(r'^get_member_end_list/$', views.GetMemberEndListViewAjax.as_view(), name='get_member_end_list'),
+
     # 회원 정보 수정
     url(r'^update_member_info/$', views.update_member_info_logic, name='update_member_info'),
     # 회원 정보 삭제
@@ -64,7 +68,7 @@ urlpatterns = [
     url(r'^export_excel_member_info/$', views.export_excel_member_info_logic, name='export_excel_member_info'),
 
     # 수강 정보 기능 #####################################################################################################
-    # 수강정보 조회
+    # 수강정보 조회 - refactoring 진행중
     url(r'^get_lecture_list/$', views.GetLectureListView.as_view(), name='get_lecture_list'),
     # 수강정보 추가
     url(r'^add_lecture_info/$', views.add_lecture_info_logic, name='add_lecture_info'),
@@ -95,10 +99,12 @@ urlpatterns = [
     url(r'^add_group_member/$', views.add_group_member_logic, name='add_group_member'),
     # 그룹 회원 삭제
     url(r'^delete_group_member_info/$', views.delete_group_member_info_logic, name='delete_group_member_info'),
-    # 진행중 그룹 list 조회
+
+    # 진행중 그룹 list 조회 - refactoring 진행중
     url(r'^get_group_ing_list/$', views.GetGroupIngListViewAjax.as_view(), name='get_group_ing_list'),
-    # 완료된 그룹 list 조회
+    # 완료된 그룹 list 조회 - refactoring 진행중
     url(r'^get_group_end_list/$', views.GetGroupEndListViewAjax.as_view(), name='get_group_end_list'),
+
     # 그룹 회원 조회
     url(r'^get_group_member/$', views.GetGroupMemberViewAjax.as_view(), name='get_group_member'),
     # 그룹 종료 회원 조회
@@ -121,10 +127,12 @@ urlpatterns = [
     url(r'^add_package_group_info/$', views.add_package_group_info_logic, name='add_package_group_info'),
     # 패키지에 그룹 삭제
     url(r'^delete_package_group_info/$', views.delete_package_group_info_logic, name='delete_package_group_info'),
-    # 진행중 패키지 list 조회
+
+    # 진행중 패키지 list 조회 - refactoring 진행중
     url(r'^get_package_ing_list/$', views.GetPackageIngListViewAjax.as_view(), name='get_package_ing_list'),
-    # 완료된 패키지 list 조회
+    # 완료된 패키지 list 조회 - refactoring 진행중
     url(r'^get_package_end_list/$', views.GetPackageEndListViewAjax.as_view(), name='get_package_end_list'),
+
     # 패키지 만들 list 조회
     url(r'^get_single_package_list/$', views.GetSinglePackageViewAjax.as_view(),
         name='get_single_package_list'),

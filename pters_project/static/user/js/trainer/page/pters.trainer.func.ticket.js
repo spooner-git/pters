@@ -25,34 +25,47 @@ class Ticket{
             this.render_ticket_list(jsondata, list_status_type);
             this.render_upper_box();
         });
+
     }
 
 
     //회원 리스트 서버에서 불러오기
     request_ticket_list(status ,callback){
         //sort_order_by : ticket_type_seq, ticket_name, ticket_member_many, ticket_member_few, ticket_create_new, ticket_create_old
-
+        let url;
+        if(status=='ing'){
+            url = '/trainer/get_group_ing_list/';
+        }else if (status=='end'){
+            url = '/trainer/get_package_end_list/';
+        }else{
+            url = '/trainer/get_package_list/';
+        }
+        let start_time;
+        let end_time;
         $.ajax({
-            url:`/trainer/get_package_${status}_list/`,
+            url:url,
             type:'GET',
             // data: {"page": ticket_page_num, "sort_val": ticket_sort_val, "sort_order_by":ticket_sort_order_by, "keyword":ticket_keyword},
             data: {"page": 1, "sort_val": 0, "sort_order_by":0, "keyword":""},
-            dataType : 'html',
+            // dataType : 'html',
     
             beforeSend:function(){
+                start_time = performance.now();
                 ajax_load_image(SHOW);
             },
     
             //통신성공시 처리
             success:function(data){
-                var jsondata = JSON.parse(data);
-                if(jsondata.messageArray.length>0){
-                    console.log("에러:" + jsondata.messageArray);
-                }else{
-                    callback(jsondata);
-                    console.log(jsondata)
-                    return jsondata;
-                }
+                console.log(data);
+                // var jsondata = JSON.parse(data);
+                // if(jsondata.messageArray.length>0){
+                //     console.log("에러:" + jsondata.messageArray);
+                // }else{
+                end_time = performance.now();
+                console.log((end_time-start_time)+'ms');
+                    callback(data);
+                    return data;
+                // }
             },
 
             //보내기후 팝업창 닫기
