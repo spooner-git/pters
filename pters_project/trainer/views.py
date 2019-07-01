@@ -2997,53 +2997,114 @@ def delete_group_member_info_logic(request):
         return redirect(next_page)
 
 
-class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/group_info_ajax.html'
+class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
-    def get_context_data(self, **kwargs):
-        context = super(GetGroupIngListViewAjax, self).get_context_data(**kwargs)
+    def get(self, request):
         class_id = self.request.session.get('class_id', '')
         error = None
         # start_time = timezone.now()
-        query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
-                                 "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
-                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
+        query_group_member_num =" select count(distinct(d.MEMBER_ID)) from LECTURE_TB as d" \
+                                " where (select b.GROUP_TB_ID from PACKAGE_GROUP_TB as b" \
+                                " where b.CLASS_TB_ID=" + class_id + " and b.PACKAGE_TB_ID=d.PACKAGE_TB_ID and b.GROUP_TB_ID= `PACKAGE_GROUP_TB`.`GROUP_TB_ID`" \
+                                " and b.use=1) = `PACKAGE_GROUP_TB`.`GROUP_TB_ID`" \
+                                " and d.STATE_CD=\'IP\' and d.USE=1" \
+                                " and (select a.STATE_CD from PACKAGE_TB as a where a.ID = d.PACKAGE_TB_ID and a.USE=1) = \'IP\'" \
+                                " and (select c.AUTH_CD from CLASS_LECTURE_TB as c" \
+                                " where c.CLASS_TB_ID=" + class_id + " and c.LECTURE_TB_ID=d.ID and c.USE=1)=\'VIEW\'"
 
-        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE
-                                            ).annotate(group_member_num=RawSQL(query_group_member_num, [])
-                                                       ).order_by('-group_type_cd', 'name')
+        group_package_data = PackageGroupTb.objects.select_related(
+            'package_tb', 'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='IP', group_tb__use=USE,
+                                             use=USE).order_by('group_tb_id', 'package_tb_id')
+
+        group_data = collections.OrderedDict()
+        temp_group_id = None
+        group_package_list = []
+        for group_package_info in group_package_data:
+            group_tb = group_package_info.group_tb
+            package_tb = group_package_info.package_tb
+            group_id = str(group_tb.group_id)
+
+            if temp_group_id != group_id:
+                temp_group_id = group_id
+                group_package_list = []
+
+            if package_tb.state_cd == 'IP' and package_tb.use == USE:
+                group_package_list.append(package_tb.name)
+
+            group_data[group_id] = {'group_id': group_id,
+                                    'group_name': group_tb.name,
+                                    'group_max_num': group_tb.member_num,
+                                    'group_package_list': group_package_list}
+        group_list = []
+
+        query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                            "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and B.USE=1"
+        for group_info in group_data:
+            lecture_list = GroupLectureTb.objects.select_related(
+                'group_tb', 'lecture_tb__member').filter(group_tb_id=group_info,
+                                                         lecture_tb__state_cd='IP', lecture_tb__use=USE,
+                                                         use=USE).annotate(class_count=RawSQL(query_class_count, [])
+                                                                           ).filter(
+                class_count__gte=1).values('lecture_tb__member_id').order_by('lecture_tb__member_id').distinct()
+            group_data[group_info]['group_member_num'] = len(lecture_list)
+            group_list.append(group_data[group_info])
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
-
-        context['group_data'] = group_data
 
         # end_time = timezone.now()
         # print(str(end_time-start_time))
 
-        return context
+        return JsonResponse({'current_group_data': group_list}, json_dumps_params={'ensure_ascii': True})
 
 
-class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/group_info_ajax.html'
+class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
-    def get_context_data(self, **kwargs):
-        context = super(GetGroupEndListViewAjax, self).get_context_data(**kwargs)
+    def get(self, request):
         class_id = self.request.session.get('class_id', '')
         error = None
 
-        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE
-                                            ).order_by('-group_type_cd', 'name')
+        query_group_member_num =" select count(distinct(d.MEMBER_ID)) from LECTURE_TB as d" \
+                                  " where d.PACKAGE_TB_ID=`PACKAGE_GROUP_TB`.`PACKAGE_TB_ID`" \
+                                  " and d.STATE_CD=\'IP\' and d.USE=1 " \
+                                  " and (select c.AUTH_CD from CLASS_LECTURE_TB as c" \
+                                  " where c.CLASS_TB_ID=" + class_id + " and c.LECTURE_TB_ID=d.ID and c.USE=1)=\'VIEW\'"
+
+        group_package_data = PackageGroupTb.objects.select_related(
+            'package_tb', 'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='PE', group_tb__use=USE,
+                                             use=USE).order_by('group_tb_id', 'package_tb_id')
+
+        group_data = collections.OrderedDict()
+        temp_group_id = None
+        group_package_list = []
+        for group_package_info in group_package_data:
+            group_tb = group_package_info.group_tb
+            package_tb = group_package_info.package_tb
+            group_id = str(group_tb.group_id)
+
+            if temp_group_id != group_id:
+                temp_group_id = group_id
+                group_package_list = []
+
+            if package_tb.use == USE:
+                group_package_list.append(package_tb.name)
+
+            group_data[group_id] = {'group_id': group_id,
+                                    'group_name': group_tb.name,
+                                    'group_max_num': group_tb.member_num,
+                                    'group_package_list': group_package_list}
+        group_list = []
+        for group_info in group_data:
+            group_list.append(group_data[group_info])
+
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        context['group_data'] = group_data
-
-        return context
+        return JsonResponse({'finish_group_data': group_list}, json_dumps_params={'ensure_ascii': True})
 
 
 class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -3721,8 +3782,7 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                   " where c.CLASS_TB_ID=" + class_id + " and c.LECTURE_TB_ID=d.ID and c.USE=1)=\'VIEW\'"
 
         package_group_data = PackageGroupTb.objects.select_related(
-            'package_tb', 'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='IP', group_tb__use=USE,
-                                             package_tb__state_cd='IP', package_tb__use=USE,
+            'package_tb', 'group_tb').filter(class_tb_id=class_id, package_tb__state_cd='IP', package_tb__use=USE,
                                              use=USE).annotate(package_member_num=RawSQL(query_package_member_num,
                                                                                          [])).order_by('package_tb_id',
                                                                                                        'group_tb_id')
@@ -3737,8 +3797,8 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             if temp_package_id != package_id:
                 temp_package_id = package_id
                 package_group_list = []
-
-            package_group_list.append(group_tb.name)
+            if group_tb.state_cd == 'IP' and group_tb.use == USE:
+                package_group_list.append(group_tb.name)
             package_data[package_id] = {'package_id': package_id,
                                         'package_name': package_tb.name,
                                         'package_member_num': package_group_info.package_member_num,
@@ -3823,8 +3883,7 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                   " where c.CLASS_TB_ID=" + class_id + " and c.LECTURE_TB_ID=d.ID and c.USE=1)=\'VIEW\'"
 
         package_group_data = PackageGroupTb.objects.select_related(
-            'package_tb', 'group_tb').filter(class_tb_id=class_id, group_tb__use=USE,
-                                             package_tb__state_cd='PE', package_tb__use=USE,
+            'package_tb', 'group_tb').filter(class_tb_id=class_id, package_tb__state_cd='PE', package_tb__use=USE,
                                              use=USE).annotate(package_member_num=RawSQL(query_package_member_num,
                                                                                          [])).order_by('package_tb_id',
                                                                                                        'group_tb_id')
@@ -3840,7 +3899,8 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 temp_package_id = package_id
                 package_group_list = []
 
-            package_group_list.append(group_tb.name)
+            if group_tb.use == USE:
+                package_group_list.append(group_tb.name)
             package_data[package_id] = {'package_id': package_id,
                                         'package_name': package_tb.name,
                                         'package_member_num': package_group_info.package_member_num,
