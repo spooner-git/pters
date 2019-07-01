@@ -23,17 +23,17 @@ urlpatterns = [
 
     # 일정 기능 #####################################################################################################
     # 강사 스케쥴 조회 - 수업/OFF - refactoring
-    url(r'^get_all_schedule/$', views.GetAllScheduleView.as_view(), name='get_all_schedule'),
-    # 강사 스케쥴 조회 - 1:1/Group/Off
-    url(r'^get_trainer_schedule/$', views.GetTrainerScheduleView.as_view(), name='get_trainer_schedule'),
-    # 강사 스케쥴 조회 - Off
+    url(r'^get_trainer_schedule_all/$', views.GetTrainerScheduleAllView.as_view(), name='get_trainer_schedule_all'),
+    # 회원 스케쥴 조회 - 수업 - refactoring - 진행중
+    url(r'^get_member_schedule_all/$', views.GetMemberScheduleAllView.as_view(), name='get_member_schedule_all'),
+
+    # 강사 스케쥴 조회 - Off 반복
     url(r'^get_off_repeat_schedule/$', views.GetOffRepeatScheduleView.as_view(), name='get_off_repeat_schedule'),
     # 강사 스케쥴 조회 - Group
     url(r'^get_trainer_group_schedule/$', views.GetTrainerGroupScheduleView.as_view(),
         name='get_trainer_group_schedule'),
 
-    # 회원 스케쥴 조회 - 1:1/Group
-    url(r'^get_member_schedule/$', views.GetMemberScheduleView.as_view(), name='get_member_schedule'),
+
     # 회원 반복 일정 조회 - 1:1/Group
     url(r'^get_member_repeat_schedule/$', views.GetMemberRepeatScheduleView.as_view(),
         name='get_member_repeat_schedule'),
@@ -143,11 +143,6 @@ urlpatterns = [
     # 패키지 종료 회원 조회 - refactoring
     url(r'^get_package_end_member_list/$', views.GetPackageEndMemberListViewAjax.as_view(),
         name='get_package_end_member_list'),
-
-
-    # 패키지 만들 list 조회
-    url(r'^get_single_package_list/$', views.GetSinglePackageViewAjax.as_view(),
-        name='get_single_package_list'),
 
 
     # 패키지 종료 상태 변경

@@ -42,7 +42,7 @@ from trainee.models import LectureTb, MemberLectureTb
 from trainer.models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb, \
     PackageGroupTb
 
-from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
+from schedule.functions import func_get_trainer_off_repeat_schedule, \
     func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count
 from stats.functions import get_sales_data, get_stats_member_data
 from trainer.functions import func_get_class_member_id_list, func_get_trainee_schedule_list, \
@@ -829,7 +829,6 @@ class GetCenterScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             day = 46
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(47))
-        context = func_get_trainer_schedule(context, class_id, start_date, end_date)
         return context
 
 

@@ -53,10 +53,10 @@ from trainer.templatetags.background_data import get_setting_info
 from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb, \
     PackageTb, PackageGroupTb
 
-from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
+from schedule.functions import func_get_trainer_off_repeat_schedule, \
     func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count, \
     func_get_trainer_attend_schedule, func_get_group_lecture_id, func_check_group_available_member_before, \
-    func_add_schedule, func_check_group_available_member_after, func_get_all_schedule
+    func_add_schedule, func_check_group_available_member_after, func_get_trainer_schedule_all
 from stats.functions import get_sales_data, get_stats_member_data
 from .functions import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
@@ -1014,7 +1014,7 @@ class CalPreviewIframeView(LoginRequiredMixin, AccessTestMixin, View):
 
 
 # ############### ############### ############### ############### ############### ############### ##############
-class GetAllScheduleView(LoginRequiredMixin, AccessTestMixin, View):
+class GetTrainerScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
@@ -1028,74 +1028,27 @@ class GetAllScheduleView(LoginRequiredMixin, AccessTestMixin, View):
             day = 46
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
-        all_schedule_data = func_get_all_schedule(class_id, start_date, end_date)
+        all_schedule_data = func_get_trainer_schedule_all(class_id, start_date, end_date)
 
         return JsonResponse(all_schedule_data, json_dumps_params={'ensure_ascii': True})
 
-    # def get_context_data(self, **kwargs):
-    #     start_time = timezone.now()
-    #     # context = {}
-    #     context = super(GetAllScheduleView, self).get_context_data(**kwargs)
-    #     class_id = self.request.session.get('class_id', '')
-    #     date = self.request.GET.get('date', '')
-    #     day = self.request.GET.get('day', '')
-    #     today = datetime.date.today()
-    #
-    #     if date != '':
-    #         today = datetime.datetime.strptime(date, '%Y-%m-%d')
-    #     if day == '':
-    #         day = 46
-    #     start_date = today - datetime.timedelta(days=int(day))
-    #     end_date = today + datetime.timedelta(days=int(day))
-    #     context = func_get_all_schedule(context, class_id, start_date, end_date)
-    #     end_time = timezone.now()
-    #     print(str(end_time-start_time))
-    #     return context
 
+class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
 
-class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/schedule_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        # start_time = timezone.now()
-        # context = {}
-        context = super(GetTrainerScheduleView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        date = self.request.GET.get('date', '')
-        day = self.request.GET.get('day', '')
-        today = datetime.date.today()
-
-        if date != '':
-            today = datetime.datetime.strptime(date, '%Y-%m-%d')
-        if day == '':
-            day = 46
-        start_date = today - datetime.timedelta(days=int(day))
-        end_date = today + datetime.timedelta(days=int(day))
-        # end_time = timezone.now()
-        # print(str(end_time-start_time))
-        context = func_get_trainer_schedule(context, class_id, start_date, end_date)
-        return context
-
-
-class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/off_schedule_data_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        # context = {}
-        context = super(GetOffRepeatScheduleView, self).get_context_data(**kwargs)
+    def get(self, **kwargs):
+        context = {}
         class_id = self.request.session.get('class_id', '')
         error = func_get_trainer_off_repeat_schedule(context, class_id)
         if error is None:
             context['error'] = error
 
-        return context
+        return JsonResponse(context['off_repeat_schedule_data'], json_dumps_params={'ensure_ascii': True})
 
 
-class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/schedule_ajax.html'
+class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, View):
 
-    def get_context_data(self, **kwargs):
-        context = super(GetTrainerGroupScheduleView, self).get_context_data(**kwargs)
+    def get(self, **kwargs):
+        context = {}
         class_id = self.request.session.get('class_id', '')
         date = self.request.GET.get('date', '')
         day = self.request.GET.get('day', '')
@@ -1110,29 +1063,27 @@ class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateV
         end_date = today + datetime.timedelta(days=int(47))
         func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id)
 
-        return context
+        return JsonResponse(context['group_schedule_data'], json_dumps_params={'ensure_ascii': True})
 
 
-class GetMemberScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/member_schedule_ajax.html'
+class GetMemberScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
 
-    def get_context_data(self, **kwargs):
-        context = super(GetMemberScheduleView, self).get_context_data(**kwargs)
+    def get(self, request):
         class_id = self.request.session.get('class_id', '')
         member_id = self.request.GET.get('member_id', None)
-        context['error'] = None
+        error = None
 
         if member_id is None or member_id == '':
-            context['error'] = '회원 정보를 불러오지 못했습니다.'
-        if context['error'] is None:
-            context = func_get_trainee_schedule_list(context, class_id, member_id)
+            error = '회원 정보를 불러오지 못했습니다.'
 
-        if context['error'] is not None:
+        if error is None:
+            member_schedule_list = func_get_trainee_schedule_list(class_id, member_id)
+        else:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + context['error'])
-            messages.error(self.request, context['error'])
+                         + str(self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
 
-        return context
+        return JsonResponse({member_schedule_list}, json_dumps_params={'ensure_ascii': True})
 
 
 class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -1154,7 +1105,6 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateV
 
 
 class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
-    # template_name = 'ajax/search_member_id_ajax.html'
 
     def get(self, request):
         member_id = self.request.GET.get('member_id', '')
@@ -1177,7 +1127,6 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
 
 class SearchMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
-    # template_name = 'ajax/search_member_id_ajax.html'
 
     def get(self, request):
         search_id = self.request.GET.get('search_id', '')
@@ -1211,6 +1160,7 @@ class SearchMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
 
 class GetMemberListView(LoginRequiredMixin, AccessTestMixin, View):
+
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
         keyword = self.request.GET.get('keyword', '')
@@ -1871,24 +1821,28 @@ def export_excel_member_info_logic(request):
     return response
 
 
-class GetLectureListView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/lecture_list_ajax.html'
+class GetLectureListView(LoginRequiredMixin, AccessTestMixin, View):
 
-    def get_context_data(self, **kwargs):
-        # context = {}
-        context = super(GetLectureListView, self).get_context_data(**kwargs)
+    def get(self, request):
         class_id = self.request.session.get('class_id', '')
         member_id = self.request.GET.get('member_id', '')
-        context['error'] = None
+        error = None
 
-        context = func_get_lecture_list(context, class_id, member_id)
+        if class_id is None or class_id == '':
+            error = '오류가 발생했습니다.'
 
-        if context['error'] is not None:
+        if member_id is None or member_id == '':
+            error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            lecture_list = func_get_lecture_list(class_id, member_id)
+
+        if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + context['error'])
-            messages.error(self.request, context['error'])
+                         + str(self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
 
-        return context
+        return JsonResponse({'member_lecture_list': lecture_list}, json_dumps_params={'ensure_ascii': True})
 
 
 # 회원가입 api
@@ -3695,7 +3649,6 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
 
 class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
-    # template_name = 'ajax/package_info_ajax.html'
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
@@ -3802,34 +3755,6 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
         # context['package_data'] = package_data
         return JsonResponse({'finish_package_data': package_list}, json_dumps_params={'ensure_ascii': True})
-
-
-class GetSinglePackageViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/package_info_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(GetSinglePackageViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        error = None
-
-        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
-        # query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
-        #                         "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
-        query_package_group_id = "select GROUP_TB_ID from PACKAGE_GROUP_TB as B " \
-                                 "where B.PACKAGE_TB_ID = `PACKAGE_TB`.`ID`"
-        package_data = PackageTb.objects.filter(class_tb_id=class_id, state_cd='IP',
-                                                use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
-                                                                  group_tb_id=RawSQL(query_package_group_id,
-                                                                                     [])).order_by('-package_id')
-
-        if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
-                self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
-
-        context['package_data'] = package_data
-
-        return context
 
 
 class GetPackageIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):

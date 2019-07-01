@@ -733,7 +733,7 @@ def func_send_push_trainee(class_id, title, message):
     return error
 
 
-def func_get_all_schedule(class_id, start_date, end_date):
+def func_get_trainer_schedule_all(class_id, start_date, end_date):
     query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
             "AND B.STATE_CD != \'PC\' AND B.USE=1"
 
@@ -793,13 +793,6 @@ def func_get_all_schedule(class_id, start_date, end_date):
     # result_data = json.dumps(ordered_schedule_dict)
 
     return ordered_schedule_dict
-
-
-def func_get_trainer_schedule(context, class_id, start_date, end_date):
-    func_get_trainer_on_schedule(context, class_id, start_date, end_date)
-    func_get_trainer_off_schedule(context, class_id, start_date, end_date)
-    func_get_trainer_group_schedule(context, class_id, start_date, end_date, None)
-    return context
 
 
 def func_get_trainer_attend_schedule(context, class_id, start_date, end_date, now):
