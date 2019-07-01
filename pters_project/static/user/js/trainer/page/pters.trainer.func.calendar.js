@@ -35,7 +35,7 @@ class Calendar {
             case "month":
                 this.render_upper_box(cal_type);
                 this.render_month_cal( this.current_page_num ,this.current_year, this.current_month);
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(this.cal_type == cal_type){
                         if(date == `${this.current_year}-${this.current_month}-01`){
                             this.render_month_cal( this.current_page_num, this.current_year, this.current_month, jsondata);
@@ -48,7 +48,7 @@ class Calendar {
             case "week":
                 this.render_upper_box(cal_type);
                 this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(this.cal_type == cal_type){
                         if(date == `${this.current_year}-${this.current_month}-01`){
                             this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
@@ -159,7 +159,7 @@ class Calendar {
         this.current_year = year;
         this.current_month = month;
         this.render_month_cal( this.current_page_num, this.current_year, this.current_month)
-        this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+        this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
             if(date == `${this.current_year}-${this.current_month}-01`){
                 this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
             }
@@ -181,7 +181,7 @@ class Calendar {
 
                 this.render_upper_box("month");
                 this.render_month_cal( this.current_page_num, this.current_year, this.current_month)
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
                     }
@@ -201,7 +201,7 @@ class Calendar {
 
                 this.render_upper_box("month");
                 this.render_month_cal(this.current_page_num, this.current_year, this.current_month)
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
                     }
@@ -226,7 +226,7 @@ class Calendar {
 
                 this.render_upper_box("week");
                 this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
                         this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
@@ -248,7 +248,7 @@ class Calendar {
 
                 this.render_upper_box("week");
                 this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 31, (jsondata, date) => {
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
                         this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
@@ -498,6 +498,7 @@ class Calendar {
     }
 
     week_schedule_draw(year, month, week, schedule_data){
+        console.log(schedule_data)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
@@ -582,12 +583,12 @@ class Calendar {
         let date_ = date;
         let days_ = days;
         if(date_ == undefined){date_ = `${this.current_year}-${this.current_month}-01`}
-        if(days_ == undefined){days = 31}
+        if(days_ == undefined){days_ = 31}
 
         $.ajax({
             url: '/trainer/get_all_schedule/',
             type : 'GET',
-            data : {"date":date, "day":days},
+            data : {"date":date_, "day":days_},
             dataType: "JSON",
 
             beforeSend:function(){
