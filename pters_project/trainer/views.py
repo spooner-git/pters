@@ -3027,6 +3027,7 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
             group_data[group_id] = {'group_id': group_id,
                                     'group_name': group_tb.name,
+                                    'group_note': group_tb.note,
                                     'group_max_num': group_tb.member_num,
                                     'group_package_list': group_package_list,
                                     'group_package_id_list': group_package_id_list}
@@ -3090,6 +3091,7 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
             group_data[group_id] = {'group_id': group_id,
                                     'group_name': group_tb.name,
+                                    'group_note': group_tb.note,
                                     'group_max_num': group_tb.member_num,
                                     'group_package_list': group_package_list,
                                     'group_package_id_list': group_package_id_list}
