@@ -646,7 +646,7 @@ class Calendar {
                                                 <div class="add_plan" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 95, POPUP_FROM_BOTTOM, {'select_date':'${this.current_year}-${this.current_month}-${this.current_date}'})"></div>
                                             </div>
                                         </div>
-                                        <div class="cal_week_line_dates">
+                                        <div class="cal_week_line_dates" style="border-bottom:0">
                                             <div class="week_cal_time_text"></div>
                                             <div class="_week_row_1">일</div><div class="_week_row_2">월</div><div class="_week_row_3">화</div>
                                             <div class="_week_row_4">수</div><div class="_week_row_5">목</div><div class="_week_row_6">금</div>

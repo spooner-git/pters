@@ -160,8 +160,8 @@
 	border: 1px solid transparent;
 }
 .has_schedule{
-	border-color: #fe4e65;
-	border-radius: 50%;
+	/* border-color: #fe4e65;
+	border-radius: 50%; */
 }
 
 .calendar_schedule_display_week{
