@@ -5,6 +5,8 @@ class Ticket{
         this.instance = instance;
 
         this.data_length = 0;
+        this.ticket_ing_length = 0;
+        this.ticket_end_length = 0;
         this.list_type_text = "";
         this.list_status_type_text = "";
         this.list_status_type = "ing"; //ing, end
@@ -29,17 +31,18 @@ class Ticket{
     }
 
 
-    //회원 리스트 서버에서 불러오기
+    //수강권 리스트 서버에서 불러오기
     request_ticket_list(status ,callback){
         //sort_order_by : ticket_type_seq, ticket_name, ticket_member_many, ticket_member_few, ticket_create_new, ticket_create_old
         let url;
         if(status=='ing'){
-            url = '/trainer/get_group_ing_list/';
+            url = '/trainer/get_package_ing_list/';
         }else if (status=='end'){
             url = '/trainer/get_package_end_list/';
-        }else{
-            url = '/trainer/get_package_list/';
         }
+        // else{
+        //     url = '/trainer/get_package_list/';
+        // }
         let start_time;
         let end_time;
         $.ajax({
@@ -102,10 +105,12 @@ class Ticket{
         if(list_status_type == "ing"){
             whole_data = jsondata.current_package_data;
             length = whole_data.length;
+            this.ticket_ing_length = length;
             this.list_status_type_text = "진행중";
         }else if(list_status_type == "end"){
             whole_data = jsondata.finish_package_data;
             length = whole_data.length;
+            this.ticket_end_length = length;
             this.list_status_type_text = "종료";
         }
 
@@ -163,15 +168,24 @@ class Ticket{
         return(
             {    "ticket_upper_box":`   <div class="ticket_upper_box">
                                             <div style="display:inline-block;width:200px;">
-                                                <span>${this.list_type_text} </span>
-                                                <span class="">[${this.list_status_type_text}] ${this.data_length}개</span>
+                                                <div style="display:inline-block;width:200px;">
+                                                    <span style="font-size:20px;font-weight:bold;">수강권 ${this.data_length}</span>
+                                                </div>
+                                                
                                             </div>
                                             <div class="ticket_tools_wrap">
                                                 <div class="swap_list" onclick="${this.instance}.switch_type();"></div>
                                                 <div class="search_ticket"></div>
                                                 <div class="add_ticket" onclick="layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_TICKET_ADD}', 95, ${POPUP_FROM_BOTTOM}, {'data':null})"></div>
                                             </div>
-                                        </div>`
+                                        </div>
+                                        <div class="ticket_bottom_tools_wrap">
+                                            <div class="list_type_tab_wrap">
+                                                <div onclick="${this.instance}.switch_type();" class="${this.list_status_type == "ing" ? "tab_selected" : ""}">활성화</div>
+                                                <div onclick="${this.instance}.switch_type();" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화</div>
+                                            </div>
+                                        </div>
+                                            `
                                 ,
                 "initial_page":`<div id="${this.subtargetHTML}"><div id="ticket_display_panel"></div><div id="ticket_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div></div>`
             }

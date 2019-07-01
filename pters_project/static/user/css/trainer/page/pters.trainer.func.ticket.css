@@ -12,7 +12,7 @@
 		height: 50px;
 		line-height: 50px;
 		background-color: #ffffff;
-		border-bottom: 1px solid #cccccc;
+		/* border-bottom: 1px solid #cccccc; */
 		padding: 0 20px;
 		box-sizing: border-box;
 	}
@@ -21,7 +21,7 @@
 		position: absolute;
 		right: 0;
 		top: 0;
-		width: 140px;
+		width: 100px;
 		height: 100%;
 	}
 	.ticket_tools_wrap > .search_ticket{
@@ -41,12 +41,20 @@
 		background-size: 23px;
 	}
 	.ticket_tools_wrap > .swap_list{
-		display: table-cell;
+		/* display: table-cell;
 		height: 100%;
 		background-image: url("/static/common/icon/icon_swap.png?v2");
 		background-repeat: no-repeat;
 		background-position: center;
-		background-size: 23px;
+		background-size: 23px; */
+		display: none;
+	}
+
+	.ticket_bottom_tools_wrap{
+		background-color: #ffffff;
+		border-bottom: 1px solid #cccccc;
+		padding: 0 20px;
+		font-size: 14px;
 	}
 
 

@@ -202,7 +202,7 @@ class Member{
         return(
             {    "member_upper_box":`   <div class="member_upper_box">
                                             <div style="display:inline-block;width:200px;">
-                                                <span style="font-size:20px;font-weight:bold;">회원</span>
+                                                <span style="font-size:20px;font-weight:bold;">회원 ${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</span>
                                             </div>
                                             <div class="member_tools_wrap">
                                                 <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">
@@ -213,8 +213,8 @@ class Member{
                                         </div>
                                         <div class="member_bottom_tools_wrap">
                                             <div class="list_type_tab_wrap">
-                                                <div onclick="${this.instance}.switch_type('ing');" class="${this.list_type == "ing" ? "tab_selected" : ""}">진행중<span style="font-size:10px;">(${this.member_ing_length})</span></div>
-                                                <div onclick="${this.instance}.switch_type('end');" class="${this.list_type == "end" ? "tab_selected" : ""}">종료<span style="font-size:10px;">(${this.member_end_length})</span></div>
+                                                <div onclick="${this.instance}.switch_type('ing');" class="${this.list_type == "ing" ? "tab_selected" : ""}">진행중</div>
+                                                <div onclick="${this.instance}.switch_type('end');" class="${this.list_type == "end" ? "tab_selected" : ""}">종료</div>
                                             </div>
                                             <div class="list_sort_select_wrap">
                                                 <select>
