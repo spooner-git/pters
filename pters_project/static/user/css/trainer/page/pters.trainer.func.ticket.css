@@ -52,12 +52,15 @@
 
 
 .ticket_wrapper{
-	width: 100%;
+	width: 95%;
 	padding: 10px 15px;
 	background-color: #ffffff;
 	border: 1px solid #f4f4f4;
+	border-radius: 10px;
+	box-shadow: 0px 0px 9px 0px #dedede;
 	margin: 10px auto;
 	box-sizing: border-box;
+	
 }
 
 .ticket_data_u{
