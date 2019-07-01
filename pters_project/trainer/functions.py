@@ -136,7 +136,13 @@ def func_get_member_from_lecture_list(all_lecture_list, user_id):
             lecture_avail_count = 0
             start_date = None
             end_date = None
-
+        if member_id == '482':
+            print('lecture_id:'+str(lecture_info.lecture_id))
+            print('start_date:'+str(lecture_info.start_date))
+            print('end_date:'+str(lecture_info.end_date))
+            print('lecture_reg_count:'+str(lecture_info.lecture_reg_count))
+            print('lecture_rem_count:'+str(lecture_info.lecture_rem_count))
+            print('lecture_avail_count:'+str(lecture_info.lecture_avail_count))
         lecture_reg_count += lecture_info.lecture_reg_count
         lecture_rem_count += lecture_info.lecture_rem_count
         lecture_avail_count += lecture_info.lecture_avail_count

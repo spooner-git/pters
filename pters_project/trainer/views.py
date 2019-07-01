@@ -3106,44 +3106,45 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse({'finish_group_data': group_list}, json_dumps_params={'ensure_ascii': True})
 
 
-class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/group_member_ajax.html'
+class GetGroupIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
-        # context = {}
-        context = super(GetGroupMemberViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         group_id = self.request.GET.get('group_id', '')
         error = None
-        # member_data = []
-        member_data = func_get_ing_group_member_list(class_id, group_id, self.request.user.id)
+
+        group_package_data = PackageGroupTb.objects.select_related(
+            'package_tb', 'group_tb').filter(class_tb_id=class_id, group_tb_id=group_id, group_tb__use=USE,
+                                             package_tb__state_cd='IP', package_tb__use=USE,
+                                             use=USE).order_by('group_tb_id', 'package_tb_id')
+
+        # 수업에 속한 수강권을 가지고 있는 회원들을 가지고 오기 위한 작업
+        query_package_list = Q()
+        for group_package_info in group_package_data:
+            query_package_list |= Q(lecture_tb__package_tb_id=group_package_info.package_tb_id)
+
+        query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as A where A.LECTURE_TB_ID =" \
+                              " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and A.AUTH_CD=\'VIEW\' and" \
+                              " A.USE=1"
+
+        all_lecture_list = ClassLectureTb.objects.select_related(
+            'lecture_tb__package_tb',
+            'lecture_tb__member').filter(query_package_list, class_tb_id=class_id, auth_cd='VIEW',
+                                         lecture_tb__package_tb__state_cd='IP',
+                                         lecture_tb__package_tb__use=USE, lecture_tb__state_cd='IP',
+                                         lecture_tb__use=USE,
+                                         use=USE).annotate(lecture_count=RawSQL(query_lecture_count,
+                                                                                [])).order_by('lecture_tb__member_id',
+                                                                                              'lecture_tb__end_date')
+
+        member_list = func_get_member_from_lecture_list(all_lecture_list, request.user.id)
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        return JsonResponse({'group_member_data': member_data}, json_dumps_params={'ensure_ascii': True})
-
-
-class GetEndGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/group_member_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        # context = {}
-        context = super(GetEndGroupMemberViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        group_id = self.request.GET.get('group_id', '')
-        error = None
-        member_data = func_get_end_group_member_list(class_id, group_id, self.request.user.id)
-
-        if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
-                self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
-
-        context['member_data'] = member_data
-        return context
+        return JsonResponse({'group_ing_member_list': member_list}, json_dumps_params={'ensure_ascii': True})
 
 
 def finish_group_info_logic(request):

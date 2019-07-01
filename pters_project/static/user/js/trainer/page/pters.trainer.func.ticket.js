@@ -34,7 +34,7 @@ class Ticket{
         //sort_order_by : ticket_type_seq, ticket_name, ticket_member_many, ticket_member_few, ticket_create_new, ticket_create_old
         let url;
         if(status=='ing'){
-            url = '/trainer/get_package_ing_list/';
+            url = '/trainer/get_group_ing_list/';
         }else if (status=='end'){
             url = '/trainer/get_package_end_list/';
         }else{

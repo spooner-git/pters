@@ -104,11 +104,10 @@ urlpatterns = [
     url(r'^get_group_ing_list/$', views.GetGroupIngListViewAjax.as_view(), name='get_group_ing_list'),
     # 완료된 그룹 list 조회 - refactoring
     url(r'^get_group_end_list/$', views.GetGroupEndListViewAjax.as_view(), name='get_group_end_list'),
+    # 그룹 회원 조회 - refactoring
+    url(r'^get_group_ing_member_list/$', views.GetGroupIngMemberListViewAjax.as_view(), name='get_group_ing_member_list'),
+    # 그룹 종료 회원 조회 - refactoring - 필요 없음
 
-    # 그룹 회원 조회
-    url(r'^get_group_member/$', views.GetGroupMemberViewAjax.as_view(), name='get_group_member'),
-    # 그룹 종료 회원 조회
-    url(r'^get_end_group_member/$', views.GetEndGroupMemberViewAjax.as_view(), name='get_end_group_member'),
     # 그룹 종료 상태 변경
     url(r'^finish_group_info/$', views.finish_group_info_logic, name='finish_group_info'),
     # 그룹 재개 상태 변경
@@ -132,15 +131,18 @@ urlpatterns = [
     url(r'^get_package_ing_list/$', views.GetPackageIngListViewAjax.as_view(), name='get_package_ing_list'),
     # 완료된 패키지 list 조회 - refactoring
     url(r'^get_package_end_list/$', views.GetPackageEndListViewAjax.as_view(), name='get_package_end_list'),
+    # 패키지 회원 조회 - refactoring
+    url(r'^get_package_ing_member_list/$', views.GetPackageIngMemberListViewAjax.as_view(),
+        name='get_package_ing_member_list'),
+    # 패키지 종료 회원 조회 - refactoring
+    url(r'^get_package_end_member_list/$', views.GetPackageEndMemberListViewAjax.as_view(),
+        name='get_package_end_member_list'),
+
 
     # 패키지 만들 list 조회
     url(r'^get_single_package_list/$', views.GetSinglePackageViewAjax.as_view(),
         name='get_single_package_list'),
 
-    # 패키지 회원 조회 - refactoring 진행중
-    url(r'^get_package_ing_member_list/$', views.GetPackageIngMemberListViewAjax.as_view(), name='get_package_ing_member_list'),
-    # 패키지 종료 회원 조회 - refactoring 진행중
-    url(r'^get_package_end_member_list/$', views.GetPackageEndMemberListViewAjax.as_view(), name='get_package_end_member_list'),
 
     # 패키지 종료 상태 변경
     url(r'^finish_package_info/$', views.finish_package_info_logic, name='finish_package_info'),
