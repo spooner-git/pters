@@ -3796,6 +3796,7 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 package_group_id_list.append(group_tb.group_id)
             package_data[package_id] = {'package_id': package_id,
                                         'package_name': package_tb.name,
+                                        'package_note': package_tb.note,
                                         'package_group_list': package_group_list,
                                         'package_group_id_list': package_group_id_list}
         package_list = []
@@ -3894,6 +3895,7 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         package_data = collections.OrderedDict()
         temp_package_id = None
         package_group_list = []
+        package_group_id_list = []
         for package_group_info in package_group_data:
             package_tb = package_group_info.package_tb
             group_tb = package_group_info.group_tb
@@ -3901,12 +3903,16 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             if temp_package_id != package_id:
                 temp_package_id = package_id
                 package_group_list = []
+                package_group_id_list = []
 
             if group_tb.use == USE:
                 package_group_list.append(group_tb.name)
+                package_group_id_list.append(group_tb.group_id)
             package_data[package_id] = {'package_id': package_id,
                                         'package_name': package_tb.name,
-                                        'package_group_list': package_group_list}
+                                        'package_note': package_tb.note,
+                                        'package_group_list': package_group_list,
+                                        'package_group_id_list': package_group_id_list}
         package_list = []
         class_lecture_list = ClassLectureTb.objects.select_related(
             'lecture_tb__package_tb',
