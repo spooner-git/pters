@@ -120,7 +120,9 @@ class Ticket{
             let ticket_note = data.package_note != undefined ? data.package_note : "";
             let ticket_member_number = data.package_ing_member_num;
             let ticket_end_member_number = data.package_end_member_num;
-
+            let ticket_lectures_included_name = data.package_group_list;
+            // let ticket_lectures_included_id = data.package_group_id_list;
+            let ticket_lectures_included_name_html = ticket_lectures_included_name.map(el => `<div>${el}</div>`).join('');
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'ticketid':${ticket_id}});`;
             let html = `<article class="ticket_wrapper" data-ticketid="${ticket_id}" onclick="${onclick}">
@@ -131,7 +133,9 @@ class Ticket{
                             <div class="ticket_data_b">
                                 <div class="ticket_member_number">${list_status_type == "ing" ? ticket_member_number : ticket_end_member_number}명
                                 </div>
-                                
+                                <div>
+                                    ${ticket_lectures_included_name_html}
+                                </div>
                             </div>
                         </article>`
             html_temp.push(html);
