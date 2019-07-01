@@ -119,9 +119,6 @@ def get_setting_info(request):
                 lecture_info.save()
 
                 if lecture_info is not None and lecture_info != '':
-                    lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-                    lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-                    lecture_info.package_tb.save()
 
                     query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
                                         "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \

@@ -62,8 +62,6 @@ from .functions import func_get_class_member_id_list, func_get_trainee_schedule_
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
     func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list, \
     func_get_class_member_ing_list, func_get_class_member_end_list, \
-    func_get_ing_group_member_list, func_get_end_group_member_list, func_get_ing_package_member_list, \
-    func_get_end_package_member_list, \
     func_check_member_connection_info, func_get_member_info, func_get_member_from_lecture_list
 
 logger = logging.getLogger(__name__)
@@ -1479,26 +1477,8 @@ def delete_member_info_logic(request):
                                 lecture_info.state_cd = 'PE'
                                 lecture_info.save()
 
-                        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
-
-                        if len(group_data) > 0:
-                            for group_info in group_data:
-                                if group_info is not None:
-                                    group_info.group_tb.ing_group_member_num =\
-                                        len(func_get_ing_group_member_list(class_id, group_info.group_tb_id,
-                                                                           request.user.id))
-                                    group_info.group_tb.end_group_member_num = \
-                                        len(func_get_end_group_member_list(class_id, group_info.group_tb_id,
-                                                                           request.user.id))
-                                    group_info.group_tb.save()
-
                         if member_lecture_list_count > 0:
                             lecture_info.delete()
-
-                        if package_tb is not None:
-                            package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_tb.package_id))
-                            package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_tb.package_id))
-                            package_tb.save()
 
                     class_lecture_data.update(auth_cd='DELETE', mod_member_id=request.user.id)
                 else:
@@ -1520,25 +1500,6 @@ def delete_member_info_logic(request):
                         member_lecture_list = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id)
                         if len(member_lecture_list) > 0:
                             member_lecture_list.delete()
-
-                        group_data = GroupLectureTb.objects.select_related(
-                            'group_tb').filter(lecture_tb_id=lecture_id, use=USE)
-
-                        if len(group_data) > 0:
-                            for group_info in group_data:
-                                if group_info is not None:
-                                    group_info.group_tb.ing_group_member_num = \
-                                        len(func_get_ing_group_member_list(class_id, group_info.group_tb_id,
-                                                                           request.user.id))
-                                    group_info.group_tb.end_group_member_num = \
-                                        len(func_get_end_group_member_list(class_id, group_info.group_tb_id,
-                                                                           request.user.id))
-                                    group_info.group_tb.save()
-
-                        if package_tb is not None:
-                            package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_tb.package_id))
-                            package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_tb.package_id))
-                            package_tb.save()
 
                         lecture_info.delete()
                     class_lecture_data.delete()
@@ -2269,10 +2230,6 @@ def finish_lecture_info_logic(request):
         lecture_info.state_cd = 'PE'
         lecture_info.save()
 
-        lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-        lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-        lecture_info.package_tb.save()
-
         group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
         group_lecture_data.update(fix_state_cd='')
 
@@ -2378,10 +2335,6 @@ def refund_lecture_info_logic(request):
         lecture_info.state_cd = 'RF'
         lecture_info.save()
 
-        lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-        lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-        lecture_info.package_tb.save()
-
         group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
         group_lecture_data.update(fix_state_cd='')
 
@@ -2445,9 +2398,6 @@ def progress_lecture_info_logic(request):
         lecture_info.refund_date = None
         lecture_info.state_cd = 'IP'
         lecture_info.save()
-        lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-        lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-        lecture_info.package_tb.save()
         package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
         for package_group_info in package_group_data:
             func_refresh_group_status(package_group_info.group_tb_id, None, None)
@@ -3199,41 +3149,6 @@ def finish_group_info_logic(request):
         #                 lecture_info.state_cd = 'PE'
         #             lecture_info.save()
 
-        package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id, group_tb_id=group_id, use=USE)
-        for package_group_info in package_group_data:
-            package_group_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id,
-                                                                                                        package_group_info.package_tb_id))
-            package_group_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id,
-                                                                                                        package_group_info.package_tb_id))
-            if package_group_info.package_tb.state_cd == 'IP':
-                package_group_count = PackageGroupTb.objects.filter(class_tb_id=class_id,
-                                                                    package_tb_id=package_group_info.package_tb_id,
-                                                                    group_tb__state_cd='IP',
-                                                                    group_tb__use=USE,
-                                                                    use=USE).count()
-            else:
-                package_group_count = PackageGroupTb.objects.filter(class_tb_id=class_id,
-                                                                    package_tb_id=package_group_info.package_tb_id,
-                                                                    group_tb__use=USE,
-                                                                    use=USE).count()
-
-            package_group_info.package_tb.package_group_num = package_group_count
-            if package_group_info.package_tb.package_group_num == 0:
-                # package_group_info.package_tb.state_cd = 'PE'
-                package_group_count = PackageGroupTb.objects.filter(class_tb_id=class_id,
-                                                                    package_tb_id=package_group_info.package_tb_id,
-                                                                    group_tb__use=USE,
-                                                                    use=USE).count()
-                package_group_info.package_tb.package_group_num = package_group_count
-
-            package_group_info.package_tb.save()
-
-    if error is None:
-
-        group_info.ing_group_member_num = len(func_get_ing_group_member_list(class_id, group_id, request.user.id))
-        group_info.end_group_member_num = len(func_get_end_group_member_list(class_id, group_id, request.user.id))
-        group_info.save()
-
     if error is None:
         # log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
         #                  from_member_name=request.user.last_name + request.user.first_name,
@@ -3264,38 +3179,6 @@ def progress_group_info_logic(request):
             error = '그룹 정보를 불러오지 못했습니다.'
 
         group_info.state_cd = 'IP'
-        group_info.save()
-
-        package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id, group_tb_id=group_id, use=USE)
-        for package_group_info in package_group_data:
-            package_group_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_group_info.package_tb_id))
-            package_group_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_group_info.package_tb_id))
-            if package_group_info.package_tb.state_cd == 'IP':
-                package_group_count = PackageGroupTb.objects.filter(class_tb_id=class_id,
-                                                                    package_tb_id=package_group_info.package_tb_id,
-                                                                    group_tb__state_cd='IP',
-                                                                    group_tb__use=USE,
-                                                                    use=USE).count()
-            else:
-                package_group_count = PackageGroupTb.objects.filter(class_tb_id=class_id,
-                                                                    package_tb_id=package_group_info.package_tb_id,
-                                                                    group_tb__use=USE,
-                                                                    use=USE).count()
-
-            package_group_info.package_tb.package_group_num = package_group_count
-            # if package_group_info.package_tb.package_group_num == 0:
-            #     package_group_info.package_tb.state_cd = 'PE'
-            # elif package_group_info.package_tb.package_group_num == 1:
-            #     package_group_info.package_tb.state_cd = 'IP'
-
-            package_group_info.package_tb.save()
-
-        group_info.ing_group_member_num = len(func_get_ing_group_member_list(class_id,
-                                                                             group_id,
-                                                                             request.user.id))
-        group_info.end_group_member_num = len(func_get_end_group_member_list(class_id,
-                                                                             group_id,
-                                                                             request.user.id))
         group_info.save()
 
     if error is None:
@@ -3429,8 +3312,6 @@ def add_package_info_logic(request):
 
                 package_info = PackageTb(class_tb_id=class_id, name=package_name,
                                          state_cd='IP',
-                                         package_group_num=len(json_loading_data['new_package_group_data']),
-                                         ing_package_member_num=0, end_package_member_num=0,
                                          note=json_loading_data['package_info']['package_note'], use=USE)
                 package_info.save()
 
@@ -3576,18 +3457,6 @@ def add_package_group_info_logic(request):
                 package_group_info = PackageGroupTb(class_tb_id=class_id, package_tb_id=package_id,
                                                     group_tb_id=group_id, use=USE)
                 package_group_info.save()
-                if package_group_info.package_tb.state_cd == 'IP':
-                    package_group_info.package_tb.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
-                                                                                                    group_tb__state_cd='IP',
-                                                                                                    package_tb_id=package_id,
-                                                                                                    use=USE).count()
-                else:
-                    package_group_info.package_tb.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
-                                                                                                    group_tb__use=USE,
-                                                                                                    package_tb_id=package_id,
-                                                                                                    use=USE).count()
-
-                package_group_info.package_tb.save()
                 package_group_lecture_data = ClassLectureTb.objects.select_related(
                     'lecture_tb__member').filter(class_tb_id=class_id, auth_cd='VIEW',
                                                  lecture_tb__package_tb_id=package_id,
@@ -3658,89 +3527,38 @@ def delete_package_group_info_logic(request):
                                                                            lecture_tb__package_tb_id=package_id)
                 package_group_lecture_data.update(fix_state_cd='', use=UN_USE)
 
-                try:
-                    package_info = PackageTb.objects.get(package_id=package_id)
-                except ObjectDoesNotExist:
-                    package_info = None
+                class_lecture_data = ClassLectureTb.objects.select_related(
+                    'lecture_tb__package_tb').filter(class_tb_id=class_id,
+                                                     lecture_tb__package_tb_id=package_id,
+                                                     auth_cd='VIEW', lecture_tb__state_cd='IP',
+                                                     lecture_tb__use=USE, use=USE)
 
-                if package_info is not None:
-
-                    # if package_info.state_cd == 'IP':
-                    # 진행중인 패키지의 경우 진행중 그룹의 숫자를 count
-                    package_info.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
-                                                                                   group_tb__state_cd='IP',
-                                                                                   package_tb_id=package_id,
-                                                                                   use=USE).count()
-                    # else:
-                    #     package_info.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
-                    #                                                                    group_tb__use=USE,
-                    #                                                                    package_tb_id=package_id,
-                    #                                                                    use=USE).count()
-                    # if package_info.package_group_num == 1:
-                    #     try:
-                    #         if package_info.state_cd == 'IP':
-                    #             package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
-                    #                                                             group_tb__state_cd='IP',
-                    #                                                             package_tb_id=package_id, use=USE)
-                    #         else:
-                    #             package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
-                    #                                                             package_tb_id=package_id, use=USE)
-                    #         package_info.package_type_cd = package_group_info.group_tb.group_type_cd
-                    #     except MultipleObjectsReturned:
-                    #         package_info.package_type_cd = 'PACKAGE'
-                    #     except ObjectDoesNotExist:
-                    #         package_info.package_type_cd = package_info.package_type_cd
-                    #
-                    # package_ing_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
-                    #                                                       group_tb__state_cd='IP',
-                    #                                                       package_tb_id=package_id,
-                    #                                                       use=USE).count()
-                    # if package_ing_group_num == 0:
-                    #     package_info.state_cd = 'PE'
-                    package_info.save()
-
-                if package_info is not None:
-
-                    class_lecture_data = ClassLectureTb.objects.select_related(
-                        'lecture_tb__package_tb').filter(class_tb_id=class_id,
-                                                         lecture_tb__package_tb_id=package_id,
-                                                         auth_cd='VIEW', lecture_tb__state_cd='IP',
-                                                         lecture_tb__use=USE, use=USE)
-
-                    # if package_info.package_group_num == 0:
-                    #     for class_lecture_info in class_lecture_data:
-                    #         error = func_delete_lecture_info(request.user.id, class_id,
-                    #                                          class_lecture_info.lecture_tb_id,
-                    #                                          class_lecture_info.lecture_tb.member_id)
-                    #     package_info.use = UN_USE
-                    #     package_info.save()
-                    # else:
-                    schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                              lecture_tb__package_tb_id=package_id,
-                                                              group_tb_id=group_id,
-                                                              end_dt__lte=timezone.now(),
-                                                              en_dis_type=ON_SCHEDULE_TYPE
-                                                              ).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
-                    schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                     lecture_tb__package_tb_id=package_id,
-                                                                     group_tb_id=group_id,
-                                                                     # lecture_tb__isnull=True,
-                                                                     end_dt__gt=timezone.now(),
-                                                                     en_dis_type=ON_SCHEDULE_TYPE
-                                                                     ).exclude(Q(state_cd='PE')
-                                                                               | Q(state_cd='PC'))
-                    repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                           lecture_tb__package_tb_id=package_id,
-                                                                           group_tb_id=group_id)
-                    if len(schedule_data) > 0:
-                        schedule_data.update(state_cd='PE')
-                    if len(schedule_data_delete) > 0:
-                        schedule_data_delete.delete()
-                    if len(repeat_schedule_data) > 0:
-                        repeat_schedule_data.delete()
-                    for class_lecture_info in class_lecture_data:
-                        error = func_refresh_lecture_count(class_lecture_info.class_tb_id,
-                                                           class_lecture_info.lecture_tb_id)
+                schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                          lecture_tb__package_tb_id=package_id,
+                                                          group_tb_id=group_id,
+                                                          end_dt__lte=timezone.now(),
+                                                          en_dis_type=ON_SCHEDULE_TYPE
+                                                          ).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+                schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                 lecture_tb__package_tb_id=package_id,
+                                                                 group_tb_id=group_id,
+                                                                 # lecture_tb__isnull=True,
+                                                                 end_dt__gt=timezone.now(),
+                                                                 en_dis_type=ON_SCHEDULE_TYPE
+                                                                 ).exclude(Q(state_cd='PE')
+                                                                           | Q(state_cd='PC'))
+                repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                       lecture_tb__package_tb_id=package_id,
+                                                                       group_tb_id=group_id)
+                if len(schedule_data) > 0:
+                    schedule_data.update(state_cd='PE')
+                if len(schedule_data_delete) > 0:
+                    schedule_data_delete.delete()
+                if len(repeat_schedule_data) > 0:
+                    repeat_schedule_data.delete()
+                for class_lecture_info in class_lecture_data:
+                    error = func_refresh_lecture_count(class_lecture_info.class_tb_id,
+                                                       class_lecture_info.lecture_tb_id)
 
                 func_refresh_group_status(group_id, None, None)
 
@@ -4147,9 +3965,6 @@ def finish_package_info_logic(request):
             func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     if error is None:
-        package_info.package_group_num = len(package_group_data)
-        package_info.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
-        package_info.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
         package_info.state_cd = 'PE'
         package_info.save()
 
@@ -4193,9 +4008,6 @@ def progress_package_info_logic(request):
             func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     if error is None:
-        package_info.package_group_num = len(package_group_data)
-        package_info.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
-        package_info.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
         package_info.state_cd = 'IP'
         package_info.save()
 
@@ -4341,19 +4153,7 @@ def add_package_member_logic(request):
         except InternalError:
             error = error
 
-    if error is None:
-        package_info.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
-        package_info.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
-        package_info.save()
-
-        # log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
-        #                  from_member_name=request.user.last_name + request.user.first_name,
-        #                  class_tb_id=class_id,
-        #                  log_info=package_info.name + ' 수강권에 회원',
-        #                  log_how='등록', use=USE)
-        # log_data.save()
-
-    else:
+    if error is not None:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(
             request.user.id) + ']' + error)
         messages.error(request, error)
@@ -4618,7 +4418,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                     one_to_one_group_info.save()
                     package_info = PackageTb(class_tb_id=class_info.class_id, name='1:1 레슨',
                                              # package_type_cd='ONE_TO_ONE',
-                                             package_group_num=1, state_cd='IP', use=USE)
+                                             state_cd='IP', use=USE)
                     package_info.save()
                     package_group_info = PackageGroupTb(class_tb_id=class_info.class_id,
                                                         package_tb_id=package_info.package_id,

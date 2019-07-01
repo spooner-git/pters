@@ -15,8 +15,7 @@ from payment.models import BillingInfoTb, PaymentInfoTb, ProductFunctionAuthTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
 from schedule.models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb
 from trainer.models import ClassLectureTb, BackgroundImgTb, ClassTb, PackageGroupTb, GroupLectureTb
-from trainer.functions import func_get_trainer_setting_list, func_get_ing_package_member_list, \
-    func_get_end_package_member_list
+from trainer.functions import func_get_trainer_setting_list
 
 register = template.Library()
 logger = logging.getLogger(__name__)
@@ -189,11 +188,6 @@ def get_setting_info(request):
                 lecture_info.save()
 
                 if lecture_info is not None and lecture_info != '':
-                    lecture_info.package_tb.ing_package_member_num =\
-                        len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-                    lecture_info.package_tb.end_package_member_num = \
-                        len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-                    lecture_info.package_tb.save()
 
                     group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
                     group_lecture_data.update(fix_state_cd='')

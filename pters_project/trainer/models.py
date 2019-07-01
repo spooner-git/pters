@@ -137,8 +137,6 @@ class GroupTb(TimeStampedModel):
     end_font_color_cd = models.CharField(db_column='END_FONT_COLOR_CD', max_length=20, default='#282828')
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)
     member_num = models.IntegerField(db_column='MEMBER_NUM', default=2)  # Field name made lowercase.
-    ing_group_member_num = models.IntegerField(db_column='ING_GROUP_MEMBER_NUM', default=0)
-    end_group_member_num = models.IntegerField(db_column='END_GROUP_MEMBER_NUM', default=0)
     name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True, default='')
     note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True, default='')
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
@@ -172,9 +170,6 @@ class PackageTb(TimeStampedModel):
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True, default='')
     package_type_cd = models.CharField(db_column='PACKAGE_TYPE_CD', max_length=1000, blank=True, null=True, default='')
-    package_group_num = models.IntegerField(db_column='PACKAGE_GROUP_NUM', default=1)  # Field name made lowercase.
-    ing_package_member_num = models.IntegerField(db_column='ING_PACKAGE_MEMBER_NUM', default=0)
-    end_package_member_num = models.IntegerField(db_column='END_PACKAGE_MEMBER_NUM', default=0)
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)
     note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True, default='')
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.

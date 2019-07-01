@@ -58,6 +58,7 @@ urlpatterns = [
     # 진행 완료 회원 목록 조회 - refactoring
     url(r'^get_member_end_list/$', views.GetMemberEndListViewAjax.as_view(), name='get_member_end_list'),
 
+
     # 회원 정보 수정
     url(r'^update_member_info/$', views.update_member_info_logic, name='update_member_info'),
     # 회원 정보 삭제
@@ -67,9 +68,14 @@ urlpatterns = [
     # 회원 정보 엑셀 export 기능
     url(r'^export_excel_member_info/$', views.export_excel_member_info_logic, name='export_excel_member_info'),
 
+
+
     # 수강 정보 기능 #####################################################################################################
+
     # 수강정보 조회 - refactoring 진행중
     url(r'^get_lecture_list/$', views.GetLectureListView.as_view(), name='get_lecture_list'),
+
+
     # 수강정보 추가
     url(r'^add_lecture_info/$', views.add_lecture_info_logic, name='add_lecture_info'),
     # 수강정보 수정
