@@ -23,7 +23,7 @@ class Calendar {
         this.current_date = d.getDate();
         this.current_week = Math.ceil( (this.current_date + new Date(this.current_year, this.current_month-1, 1).getDay() )/7 ) - 1;
 
-        this.worktime = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+        this.worktime = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
     }
 
     init(cal_type){
@@ -229,7 +229,7 @@ class Calendar {
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                        this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                        // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
                     }
                 })
             break;
@@ -251,7 +251,7 @@ class Calendar {
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                        this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                        // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
                     }
                 })
             break;
@@ -475,7 +475,7 @@ class Calendar {
         }
 
         // let week_html_template = this.week_schedule_draw(year, month, week, schedule_data);
-
+        
         return(
             week_dates_info == false 
             ? 
@@ -498,7 +498,6 @@ class Calendar {
     }
 
     week_schedule_draw(year, month, week, schedule_data){
-        console.log(schedule_data)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
@@ -519,6 +518,28 @@ class Calendar {
                     duplicated_plans(schedule_data[date_to_search]); // daily schedule for duplicated plans;
                     schedules.push(
                         schedule_data[date_to_search].map( (plan) => {
+                            // 0 : off, 1: 1:1, 2: group
+                            let plan_name, plan_status_color, plan_font_style;
+                            if(plan.schedule_type == 0){
+                                plan_status_color = '#eeeeee';
+                                plan_name = plan.note;
+                                plan_font_style = '';
+                            }else if(plan.schedule_type == 1){
+                                plan_status_color = '#fe4e65';
+                                plan_name = plan.member_name;
+                                plan_font_style = 'color:#ffffff;';
+                            }else if(plan.schedule_type == 2){
+                                plan_status_color = '#fe4e65';
+                                plan_name = plan.group_name;
+                                plan_font_style = 'color:#ffffff;';
+                            }
+
+                            if(plan.state_cd != "NP"){
+                                plan_status_color = '#d2d1cf';
+                                plan_font_style = 'color:#282828;'
+                                plan_font_style+='text-decoration:line-through;'
+                            }
+
                             let tform_s = time_form(plan.start_time);
                             let tform_e = time_form(plan.end_time);
 
@@ -534,10 +555,13 @@ class Calendar {
 
                             let cell_index = plan.duplicated_index;
                             let cell_divide = plan.duplicated_cell;
+                            
                             // let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_PLAN_VIEW}', 90, ${POPUP_FROM_BOTTOM}, {'select_date':'${date_to_search}'})`;
                             let onclick = `${this.instance}.open_popup_plan_view(event, ${_year[i]}, ${_month[i]}, ${_date[i]})`;
-                            let styles = `width:${100/cell_divide}%;height:${diff.hour*60+60*diff.minute/60}px;top:${(plan_start.hour-work_start)*60 + 60*plan_start.minute/60}px;left:${cell_index*100/cell_divide}%`;
-                            return `<div onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week" style="${styles}"></div>`;
+                            let styles = `width:${100/cell_divide}%;height:${diff.hour*60+60*diff.minute/60}px;top:${(plan_start.hour-work_start)*60 + 60*plan_start.minute/60}px;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style}`;
+                            return `<div onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week" style="${styles}">
+                                        ${plan_name}
+                                    </div>`;
                         })
                     );
                 }else{
@@ -573,6 +597,7 @@ class Calendar {
         let indicator = document.createElement('div');
         indicator.classList.add('week_indicator');
         indicator.style.top = offset_px+'px';
+        indicator.setAttribute('onclick', "event.stopPropagation();$('.week_indicator').remove()")
         event.target.appendChild(indicator);
 
         layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 95, POPUP_FROM_BOTTOM, {'select_date':`${year}-${month}-${date}`});
@@ -596,6 +621,7 @@ class Calendar {
             },
 
             success:function(data){
+                console.log(data);
                 callback(data, date_);
                 return data;
             },
@@ -826,6 +852,10 @@ function time_form(_time1){
 
     let hh1 = Number(time1[0]);
     let mm1 = Number(time1[1]);
+
+    if(hh1 == 0 && mm1 == 0){
+        hh1 = 24
+    }
 
     return {hour: hh1, minute: mm1};
 }

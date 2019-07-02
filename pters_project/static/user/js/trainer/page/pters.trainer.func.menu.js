@@ -11,6 +11,7 @@ class Menu{
 
         this.menu_items = {    
                                 ticket: {visible: true, name:"수강권"},
+                                lecture: {visible: true, name:"수업"},
                                 statistics: {visible: true, name:"통계"},
                                 settings: {visible: true, name:"설정"},
                                 pters_pass: {visible: true, name:"PTERS 패스"},
