@@ -122,10 +122,10 @@ class Member{
                                 <div class="member_counts"> ${render_member_data[member_info].lecture_rem_count} / ${render_member_data[member_info].lecture_reg_count} <span style="font-size:10px;color:#8d8d8d;">(남은 횟수 / 총 등록횟수)</span></div>
                             </div>
                             <div class="member_data_r">
-                                <div class="member_phone" onclick="event.stopPropagation();location.href='tel:${render_member_data[member_info].member_phone}'" ${render_member_data[member_info].member_phone == "" ? "style='display:none;'" : ""}>
+                                <div class="member_phone" onclick="event.stopPropagation();location.href='tel:${render_member_data[member_info].member_phone}'" ${render_member_data[member_info].member_phone == null ? "style='display:none;'" : ""}>
                                     <img src="/static/common/icon/icon_phone.png" class="icon_contact">
                                 </div>
-                                <div class="member_sms" onclick="event.stopPropagation();location.href='sms:${render_member_data[member_info].member_phone}'" ${render_member_data[member_info].member_phone== "" ? "style='display:none;'" : ""}>
+                                <div class="member_sms" onclick="event.stopPropagation();location.href='sms:${render_member_data[member_info].member_phone}'" ${render_member_data[member_info].member_phone== null ? "style='display:none;'" : ""}>
 
                                     <img src="/static/common/icon/icon_message.png" class="icon_contact">
                                 </div>

@@ -36,9 +36,9 @@ class Lecture{
         //sort_order_by : lecture_type_seq, lecture_name, lecture_member_many, lecture_member_few, lecture_create_new, lecture_create_old
         let url;
         if(status=='ing'){
-            url = '/trainer/get_package_ing_list/';
+            url = '/trainer/get_group_ing_list/';
         }else if (status=='end'){
-            url = '/trainer/get_package_end_list/';
+            url = '/trainer/get_group_end_list/';
         }
         // else{
         //     url = '/trainer/get_package_list/';
@@ -103,12 +103,12 @@ class Lecture{
         let whole_data, length;
 
         if(list_status_type == "ing"){
-            whole_data = jsondata.current_package_data;
+            whole_data = jsondata.current_group_data;
             length = whole_data.length;
             this.lecture_ing_length = length;
             this.list_status_type_text = "진행중";
         }else if(list_status_type == "end"){
-            whole_data = jsondata.finish_package_data;
+            whole_data = jsondata.finish_group_data;
             length = whole_data.length;
             this.lecture_end_length = length;
             this.list_status_type_text = "종료";
@@ -120,26 +120,26 @@ class Lecture{
         let html_temp = [];
         for(let i=0; i<length; i++){
             let data = whole_data[i];
-            let lecture_id = data.package_id;
-            let lecture_name = data.package_name;
-            let lecture_note = data.package_note != undefined ? data.package_note : "";
-            let lecture_member_number = data.package_ing_member_num;
-            let lecture_end_member_number = data.package_end_member_num;
-            let lecture_lectures_included_name = data.package_group_list;
-            // let lecture_lectures_included_id = data.package_group_id_list;
-            let lecture_lectures_included_name_html = lecture_lectures_included_name.map(el => `<div>${el}</div>`).join('');
+            let lecture_id = data.group_id;
+            let lecture_name = data.group_name;
+            let lecture_note = data.group_note != "" ? data.group_note : " - ";
+            let lecture_max_member_number = data.group_max_num;
+            let lecture_member_number = data.group_ing_member_num;
+            // let lecture_packages_included_name = data.group_package_list;
+            // let lecture_packages_included_id = data.group_package_id_list;
+            // let lecture_packages_included_name_html = lecture_packages_included_name.map(el => `<div>${el}</div>`).join('');
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'lectureid':${lecture_id}});`;
             let html = `<article class="lecture_wrapper" data-lectureid="${lecture_id}" onclick="${onclick}">
-                            <div class="lecture_data_u">
-                                <div class="lecture_name">${lecture_name}</div>
-                                <div class="lecture_note">${lecture_note}</div>
+                            <div class="lecture_data_l">
+                                <div class="lecture_tag"></div>
                             </div>
-                            <div class="lecture_data_b">
-                                <div class="lecture_member_number">${list_status_type == "ing" ? lecture_member_number : lecture_end_member_number}명
-                                </div>
-                                <div>
-                                    ${lecture_lectures_included_name_html}
+                            <div class="lecture_data_c">
+                                <div class="lecture_name">${lecture_name}</div>
+                                <div class="lecture_note">정원 - ${lecture_max_member_number}명 / ${lecture_note}</div>
+                            </div>
+                            <div class="lecture_data_r">
+                                <div class="lecture_member_number">${list_status_type == "ing" ? lecture_member_number+'명' : ""}
                                 </div>
                             </div>
                         </article>`
