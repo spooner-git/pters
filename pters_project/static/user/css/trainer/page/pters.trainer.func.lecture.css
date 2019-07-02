@@ -122,11 +122,12 @@
   } */
 
   .lecture_tag_body {
-	position: relative;
+	position: absolute;
 	background:#282828;
 	display: inline-block;
 	height: 12px;
 	width: 12px;
+	top: 15px;
   }
   .lecture_tag_head{
 	position: absolute;
@@ -136,6 +137,6 @@
 	content: "";
 	height: 0;
 	left: 12px;
-	top: 15.5px;
+	top: 15px;
 	width: 0;
   }
