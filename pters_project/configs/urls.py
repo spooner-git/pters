@@ -28,7 +28,6 @@ urlpatterns = [
     url(r'^privacy/$', views.PrivacyView.as_view(), name='privacy'),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
     url(r'^login/', include('login.urls', namespace='login')),
-    url(r'^center/', include('center.urls', namespace='center')),
     url(r'^trainer/', include('trainer.urls', namespace='trainer')),
     url(r'^trainee/', include('trainee.urls', namespace='trainee')),
     url(r'^schedule/', include('schedule.urls', namespace='schedule')),

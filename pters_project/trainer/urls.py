@@ -22,30 +22,27 @@ urlpatterns = [
     url(r'^get_error_info/$', views.GetErrorInfoView.as_view(), name='get_error_info'),
 
     # 일정 기능 #####################################################################################################
-    # 강사 스케쥴 조회 - 수업/OFF - refactoring
+    # 강사 전체 스케쥴 조회(1:1/수업/OFF) - refactoring
     url(r'^get_trainer_schedule_all/$', views.GetTrainerScheduleAllView.as_view(), name='get_trainer_schedule_all'),
-    # 회원 스케쥴 조회 - 수업 - refactoring - 진행중
-    url(r'^get_member_schedule_all/$', views.GetMemberScheduleAllView.as_view(), name='get_member_schedule_all'),
-
-    # 강사 스케쥴 조회 - Off 반복
-    url(r'^get_off_repeat_schedule/$', views.GetOffRepeatScheduleView.as_view(), name='get_off_repeat_schedule'),
-    # 강사 스케쥴 조회 - Group
-    url(r'^get_trainer_group_schedule/$', views.GetTrainerGroupScheduleView.as_view(),
-        name='get_trainer_group_schedule'),
-
-
-    # 회원 반복 일정 조회 - 1:1/Group
-    url(r'^get_member_repeat_schedule/$', views.GetMemberRepeatScheduleView.as_view(),
-        name='get_member_repeat_schedule'),
-    # 그룹일정에 속하는 그룹회원 일정 조회
+    # 수업 일정에 속하는 회원의 일정 조회 - refactoring
     url(r'^get_group_member_schedule_list/$', views.GetGroupMemberScheduleListViewAjax.as_view(),
         name='get_group_member_schedule_list'),
-    # 그룹 반복 일정 조회
+
+    # 회원 스케쥴 조회 - 수업 - refactoring
+    url(r'^get_member_schedule_all/$', views.GetMemberScheduleAllView.as_view(), name='get_member_schedule_all'),
+
+    # 수업 스케쥴 조회 - refactoring
+    url(r'^get_group_schedule_list/$', views.GetGroupScheduleListView.as_view(), name='get_group_schedule_list'),
+
+    # OFF 반복 일정 조회 - refactoring
+    url(r'^get_off_repeat_schedule/$', views.GetOffRepeatScheduleView.as_view(), name='get_off_repeat_schedule'),
+    # 수업 반복 일정 조회 - refactoring
     url(r'^get_group_repeat_schedule_list/$', views.GetGroupRepeatScheduleListViewAjax.as_view(),
         name='get_group_repeat_schedule_list'),
-    # 그룹 반복일정과 같이 등록된 회원들의 반복일정
-    url(r'^get_group_member_repeat_schedule_list/$', views.GetGroupMemberRepeatScheduleListViewAjax.as_view(),
-        name='get_group_member_repeat_schedule_list'),
+    # 회원 반복 일정 조회 - refactoring
+    url(r'^get_member_repeat_schedule/$', views.GetMemberRepeatScheduleView.as_view(),
+        name='get_member_repeat_schedule'),
+
 
     # 회원 기능 #####################################################################################################
     # 회원 정보 조회 - refactoring
@@ -70,11 +67,10 @@ urlpatterns = [
 
 
 
-    # 수강 정보 기능 #####################################################################################################
+    # 회원 수강 정보 기능 ##################################################################################################
 
-    # 수강정보 조회 - refactoring 진행중
+    # 수강정보 조회 - refactoring
     url(r'^get_lecture_list/$', views.GetLectureListView.as_view(), name='get_lecture_list'),
-
 
     # 수강정보 추가
     url(r'^add_lecture_info/$', views.add_lecture_info_logic, name='add_lecture_info'),
@@ -232,12 +228,6 @@ urlpatterns = [
     # 페이지 #####################################################################################################
     # 강사 메인 페이지
     url(r'^trainer_main/$', views.TrainerMainView.as_view(), name='trainer_main'),
-    # 일일 일정 페이지
-    url(r'^cal_day/$', views.CalDayView.as_view(), name='cal_day'),
-    # 주간 일정 페이지
-    url(r'^cal_week/$', views.CalWeekView.as_view(), name='cal_week'),
-    # 월간 일정 페이지
-    url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
     # 일정 페이지
     url(r'^cal_total/$', views.CalTotalView.as_view(), name='cal_total'),
     # 회원/그룹/클래스 통합 뷰 페이지
@@ -302,7 +292,7 @@ urlpatterns = [
     ######################################################################################################
 
     # 리뉴얼 
-    #팝업
+    # 팝업
     # 일정 팝업 페이지
     url(r'^popup_calendar_plan_view/$', views.PopupCalendarPlanView.as_view(),name='popup_calendar_plan_view'),
     # 일정 팝업 페이지
