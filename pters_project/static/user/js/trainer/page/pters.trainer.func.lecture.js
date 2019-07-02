@@ -132,7 +132,8 @@ class Lecture{
             let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'lectureid':${lecture_id}});`;
             let html = `<article class="lecture_wrapper" data-lectureid="${lecture_id}" onclick="${onclick}">
                             <div class="lecture_data_l">
-                                <div class="lecture_tag"></div>
+                                <div class="lecture_tag_body" style="background:#fe4e65"></div>
+                                <div class="lecture_tag_head" style="border-left-color:#fe4e65"></div>
                             </div>
                             <div class="lecture_data_c">
                                 <div class="lecture_name">${lecture_name}</div>
