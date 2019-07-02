@@ -26,6 +26,7 @@
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.calendar.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.member.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.ticket.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.lecture.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.menu.css" %}>
     <!-- 페이지 CSS 로드 -->
 
@@ -192,6 +193,7 @@ onclick="layer_popup.all_close_layer_popup();"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.home.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.calendar.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.ticket.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.lecture.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.member.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.menu.js" %}></script>
 <!-- 페이지 스크립트 로드-->
@@ -275,6 +277,7 @@ onclick="layer_popup.all_close_layer_popup();"></div>
     var home = new Home('#root_content', 'home');
     var calendar = new Calendar('#root_content', 'calendar');
     var ticket = new Ticket('#root_content', 'ticket');
+    var lecture = new Lecture('#root_content', 'lecture');
     var member = new Member('#root_content', 'member');
     var menu = new Menu('#root_content', 'menu');
 
@@ -296,6 +299,9 @@ onclick="layer_popup.all_close_layer_popup();"></div>
             break;
             case 'ticket':
                 ticket.init();
+            break;
+            case 'lecture':
+                lecture.init();
             break;
             case 'member':
                 member.init();
