@@ -229,7 +229,7 @@ class Calendar {
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                        this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                        // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
                     }
                 })
             break;
@@ -251,7 +251,7 @@ class Calendar {
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                        this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                        // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
                     }
                 })
             break;
