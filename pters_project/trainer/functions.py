@@ -183,65 +183,14 @@ def func_get_member_from_lecture_list(all_lecture_list, user_id):
     return member_list
 
 
-# 회원 스케쥴 가져오기
-def func_get_trainee_schedule_list(context, class_id, member_id):
-
-    error = None
-
-    lecture_list = None
-    pt_schedule_list = []
-
-    # 수강 정보 불러 오기
-    if error is None:
-        lecture_list = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
-                                                                                  lecture_tb__member_id=member_id,
-                                                                                  lecture_tb__use=USE,
-                                                                                  use=USE
-                                                                                  ).order_by('-lecture_tb__start_date',
-                                                                                             '-lecture_tb__reg_dt')
-
-    if error is None:
-        # 강사 클래스의 반복일정 불러오기
-        if len(lecture_list) > 0:
-            idx = len(lecture_list)+1
-            for lecture_list_info in lecture_list:
-                lecture_info = lecture_list_info.lecture_tb
-                idx -= 1
-
-                if error is None:
-                    pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                 en_dis_type=ON_SCHEDULE_TYPE,
-                                                                 use=USE).order_by('-start_dt')
-
-                    if pt_schedule_data is not None and len(pt_schedule_data) > 0:
-                        idx2 = len(pt_schedule_data)+1
-                        for pt_schedule_info in pt_schedule_data:
-                            idx2 -= 1
-                            pt_schedule_info.idx = str(idx)+'-'+str(idx2)
-
-                            pt_schedule_list.append(pt_schedule_info)
-                else:
-                    error = None
-    context['pt_schedule_data'] = pt_schedule_list
-
-    if error is None:
-        context['error'] = error
-
-    return context
-
-
 def func_get_member_info(class_id, user_id, member_id):
     member_info = {}
     error = None
 
-    if member_id == '':
+    try:
+        member = MemberTb.objects.get(member_id=member_id)
+    except ObjectDoesNotExist:
         error = '회원 ID를 확인해 주세요.'
-
-    if error is None:
-        try:
-            member = MemberTb.objects.get(member_id=member_id)
-        except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
 
     if error is None:
         connection_check = func_check_member_connection_info(class_id, member.member_id)
@@ -265,7 +214,7 @@ def func_get_member_info(class_id, user_id, member_id):
                        'member_connection_check': connection_check
                        }
 
-    return {'member_info': member_info, 'error':error}
+    return {'member_info': member_info, 'error': error}
 
 
 def func_check_member_connection_info(class_id, member_id):
@@ -465,42 +414,6 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                         user.delete()
 
     return error
-
-
-# 회원의 수강리스트 가져오기
-def func_get_lecture_list(context, class_id, member_id):
-    error = None
-    context['error'] = None
-    lecture_data = None
-    if class_id is None or class_id == '':
-        error = '오류가 발생했습니다.'
-
-    if member_id is None or member_id == '':
-        error = '회원 정보를 불러오지 못했습니다.'
-
-    if error is None:
-        query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
-                            "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(member_id) + \
-                            "' and B.USE=1"
-
-        lecture_data = ClassLectureTb.objects.select_related(
-            'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW', lecture_tb__member_id=member_id,
-                                             lecture_tb__use=USE,
-                                             use=USE).annotate(member_auth=RawSQL(query_member_auth, []),
-                                                               ).order_by('-lecture_tb__start_date',
-                                                                          '-lecture_tb__reg_dt')
-
-        for lecture_info_data in lecture_data:
-            lecture_info = lecture_info_data.lecture_tb
-            if '\r\n' in lecture_info.note:
-                lecture_info.note = lecture_info.note.replace('\r\n', ' ')
-
-    context['lecture_data'] = lecture_data
-
-    if error is not None:
-        context['error'] = error
-
-    return context
 
 
 # 강사의 셋팅 정보 가져오기

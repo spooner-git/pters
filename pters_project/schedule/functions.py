@@ -733,7 +733,7 @@ def func_send_push_trainee(class_id, title, message):
     return error
 
 
-def func_get_all_schedule(class_id, start_date, end_date):
+def func_get_trainer_schedule_all(class_id, start_date, end_date):
     query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
             "AND B.STATE_CD != \'PC\' AND B.USE=1"
 
@@ -790,16 +790,7 @@ def func_get_all_schedule(class_id, start_date, end_date):
 
         ordered_schedule_dict[schedule_start_date[0]] = date_schedule_list
 
-    # result_data = json.dumps(ordered_schedule_dict)
-
     return ordered_schedule_dict
-
-
-def func_get_trainer_schedule(context, class_id, start_date, end_date):
-    func_get_trainer_on_schedule(context, class_id, start_date, end_date)
-    func_get_trainer_off_schedule(context, class_id, start_date, end_date)
-    func_get_trainer_group_schedule(context, class_id, start_date, end_date, None)
-    return context
 
 
 def func_get_trainer_attend_schedule(context, class_id, start_date, end_date, now):
@@ -807,46 +798,6 @@ def func_get_trainer_attend_schedule(context, class_id, start_date, end_date, no
     func_get_trainer_attend_group_schedule(context, class_id, start_date, end_date, now, None)
     return context
 
-
-def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
-    # PT 스케쥴 정보 셋팅
-    schedule_data = ScheduleTb.objects.select_related('lecture_tb__member'
-                                                      ).filter(lecture_tb__isnull=False, lecture_tb__use=USE,
-                                                               class_tb=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                                                               start_dt__gte=start_date, start_dt__lt=end_date,
-                                                               use=USE).order_by('start_dt', 'reg_dt')
-
-    context['pt_schedule_data'] = schedule_data
-
-
-def func_get_trainer_off_schedule(context, class_id, start_date, end_date):
-    # OFF 일정 조회
-    context['off_schedule_data'] = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                             en_dis_type=OFF_SCHEDULE_TYPE, start_dt__gte=start_date,
-                                                             start_dt__lt=end_date).order_by('start_dt')
-
-
-def func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id):
-    query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
-            "AND B.STATE_CD != \'PC\' AND B.USE=1"
-    query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as C where C.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
-    group_schedule_data = ScheduleTb.objects.select_related('group_tb').filter(group_tb__isnull=False,
-                                                                               lecture_tb__isnull=True,
-                                                                               class_tb=class_id,
-                                                                               start_dt__gte=start_date,
-                                                                               start_dt__lt=end_date,
-                                                                               en_dis_type=ON_SCHEDULE_TYPE, use=USE)
-    if group_id is None or group_id == '':
-        group_schedule_data = group_schedule_data.annotate(group_current_member_num=RawSQL(query, []),
-                                                           group_type_cd_name=RawSQL(query_type_cd,
-                                                                                     [])).order_by('start_dt')
-
-    else:
-        group_schedule_data = group_schedule_data.filter(
-            group_tb_id=group_id).annotate(group_current_member_num=RawSQL(query, []),
-                                           group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
-
-    context['group_schedule_data'] = group_schedule_data
 
 
 def func_get_trainer_attend_on_schedule(context, class_id, start_date, end_date, now):
@@ -896,16 +847,6 @@ def func_get_trainer_attend_group_schedule(context, class_id, start_date, end_da
                                            group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
 
     context['group_schedule_data'] = group_schedule_data
-
-
-def func_get_trainer_off_repeat_schedule(context, class_id):
-    error = None
-    # 강사 클래스의 반복 일정 불러오기
-
-    context['off_repeat_schedule_data'] = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                          en_dis_type=OFF_SCHEDULE_TYPE)
-
-    return error
 
 
 def func_get_repeat_schedule_date_list(repeat_type, week_type, repeat_schedule_start_date, repeat_schedule_end_date):

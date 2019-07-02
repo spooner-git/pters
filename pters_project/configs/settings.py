@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'schedule',
     'trainee',
     'trainer',
-    'center',
     'payment',
     'stats',
     'board',

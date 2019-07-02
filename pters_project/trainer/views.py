@@ -2,20 +2,17 @@
 import datetime
 import json
 import logging
-import operator
 import random
 import urllib
 import collections
-from operator import itemgetter, attrgetter
+from operator import attrgetter
 
 from urllib.parse import quote
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.core import serializers
-from django.core.exceptions import ObjectDoesNotExist, ValidationError, MultipleObjectsReturned
-from django.core.paginator import Paginator, EmptyPage
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
@@ -26,7 +23,6 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 from el_pagination.views import AjaxListView
@@ -35,44 +31,29 @@ from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
 
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
-    MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT, SORT_START_DATE, SORT_ASC, SORT_LECTURE_NAME, \
-    SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CREATE_DATE, SORT_LECTURE_CAPACITY_COUNT, SORT_PACKAGE_NAME, \
-    SORT_PACKAGE_MEMBER_COUNT, SORT_PACKAGE_CREATE_DATE, SORT_PACKAGE_TYPE, ING_MEMBER_TRUE, ING_MEMBER_FALSE, SORT_REG_COUNT
+    MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT, SORT_START_DATE, SORT_ASC, SORT_PACKAGE_TYPE,\
+    SORT_REG_COUNT, GROUP_SCHEDULE
 
 from configs.views import AccessTestMixin
-from trainee.views import get_trainee_repeat_schedule_data_func
 from login.views import add_member_no_email_func
 
 from board.models import BoardTb
-from center.models import CenterTrainerTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
-# from payment.models import PaymentInfoTb, ProductTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainee.models import LectureTb, MemberLectureTb
-from trainer.templatetags.background_data import get_setting_info
 from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb, \
-    PackageTb, PackageGroupTb
+    PackageTb, PackageGroupTb, CenterTrainerTb
 
-from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
-    func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count, \
+from schedule.functions import func_refresh_group_status, func_refresh_lecture_count, \
     func_get_trainer_attend_schedule, func_get_group_lecture_id, func_check_group_available_member_before, \
-    func_add_schedule, func_check_group_available_member_after, func_get_all_schedule
-from stats.functions import get_sales_data, get_stats_member_data
-from .functions import func_get_class_member_id_list, func_get_trainee_schedule_list, \
-    func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
+    func_add_schedule, func_check_group_available_member_after, func_get_trainer_schedule_all
+from stats.functions import get_sales_data
+from .functions import func_get_trainer_setting_list, func_add_lecture_info, \
     func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list, \
     func_get_class_member_ing_list, func_get_class_member_end_list, \
-    func_check_member_connection_info, func_get_member_info, func_get_member_from_lecture_list
+    func_get_member_info, func_get_member_from_lecture_list
 
 logger = logging.getLogger(__name__)
-
-
-class GetErrorInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/trainer_error_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(GetErrorInfoView, self).get_context_data(**kwargs)
-        return context
 
 
 class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
@@ -113,6 +94,548 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         return super(IndexView, self).get_redirect_url(*args, **kwargs)
+
+
+class GetErrorInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/trainer_error_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetErrorInfoView, self).get_context_data(**kwargs)
+        return context
+
+
+# 일정 기능 ############### ############### ############### ############### ############### ############### ##############
+
+class GetTrainerScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        date = request.GET.get('date', '')
+        day = request.GET.get('day', '')
+        today = datetime.date.today()
+
+        if date != '':
+            today = datetime.datetime.strptime(date, '%Y-%m-%d')
+        if day == '':
+            day = 46
+        start_date = today - datetime.timedelta(days=int(day))
+        end_date = today + datetime.timedelta(days=int(day))
+        all_schedule_data = func_get_trainer_schedule_all(class_id, start_date, end_date)
+
+        return JsonResponse(all_schedule_data, json_dumps_params={'ensure_ascii': True})
+
+
+class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        group_schedule_id = request.GET.get('group_schedule_id', '')
+        error = None
+        group_schedule_list = []
+        if group_schedule_id is None or group_schedule_id == '':
+            error = '일정 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            group_schedule_data = ScheduleTb.objects.select_related(
+                'lecture_tb__member').filter(class_tb_id=class_id, group_schedule_id=group_schedule_id,
+                                             use=USE).order_by('start_dt')
+            for group_schedule_info in group_schedule_data:
+                schedule_type = GROUP_SCHEDULE
+                schedule_info = {'schedule_id': group_schedule_info.schedule_id,
+                                 'member_name': group_schedule_info.lecture_tb.member.name,
+                                 'schedule_type': schedule_type,
+                                 'start_dt': str(group_schedule_info.start_dt),
+                                 'end_dt': str(group_schedule_info.end_dt),
+                                 'state_cd': group_schedule_info.state_cd,
+                                 'note': group_schedule_info.note
+                                 }
+                group_schedule_list.append(schedule_info)
+
+        if error is not None:
+            logger.error(request.user.first_name + ' ' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse({'group_member_schedule_data': group_schedule_list},
+                            json_dumps_params={'ensure_ascii': True})
+
+
+class GetMemberScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        member_id = request.GET.get('member_id', None)
+        error = None
+        ordered_schedule_dict = collections.OrderedDict()
+
+        if member_id is None or member_id == '':
+            error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            # 수강 정보 불러 오기
+            query_auth = "select AUTH_CD from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                         "`SCHEDULE_TB`.`LECTURE_TB_ID` and B.CLASS_TB_ID = " + str(class_id) + \
+                         " and B.USE=1"
+
+            member_schedule_data = ScheduleTb.objects.select_related(
+                'lecture_tb__member',
+                'group_tb').filter(
+                class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, lecture_tb__member_id=member_id,
+                lecture_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
+                                                             [])).filter(auth_cd='VIEW').order_by(
+                '-lecture_tb__start_date',
+                '-lecture_tb__reg_dt',
+                '-start_dt')
+
+            schedule_list = []
+            temp_lecture_id = None
+            for member_schedule_info in member_schedule_data:
+                lecture_id = member_schedule_info.lecture_tb.lecture_id
+                group_info = member_schedule_info.group_tb
+                schedule_type = member_schedule_info.en_dis_type
+                if temp_lecture_id != lecture_id:
+                    temp_lecture_id = lecture_id
+                    schedule_list = []
+
+                try:
+                    group_id = group_info.group_id
+                    group_name = group_info.name
+                    group_max_member_num = group_info.member_num
+                    schedule_type = 2
+                except AttributeError:
+                    group_id = ''
+                    group_name = ''
+                    group_max_member_num = ''
+
+                schedule_info = {'schedule_id': member_schedule_info.schedule_id,
+                                 'group_id': group_id,
+                                 'group_name': group_name,
+                                 'group_max_member_num': group_max_member_num,
+                                 'schedule_type': schedule_type,
+                                 'start_dt': str(member_schedule_info.start_dt),
+                                 'end_dt': str(member_schedule_info.end_dt),
+                                 'state_cd': member_schedule_info.state_cd,
+                                 'note': member_schedule_info.note
+                                 }
+                schedule_list.append(schedule_info)
+                ordered_schedule_dict[lecture_id] = schedule_list
+
+        else:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse(ordered_schedule_dict, json_dumps_params={'ensure_ascii': True})
+
+
+class GetGroupScheduleListView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        group_id = request.GET.get('group_id', None)
+        error = None
+
+        if group_id is None or group_id == '':
+            error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+
+            query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
+                    "AND B.STATE_CD != \'PC\' AND B.USE=1"
+
+            schedule_data = ScheduleTb.objects.select_related(
+                'lecture_tb__member',
+                'group_tb').filter(class_tb=class_id, group_tb_id=group_id, group_schedule_id__isnull=True,
+                                   use=USE).annotate(group_current_member_num=RawSQL(query,
+                                                                                     [])).order_by('start_dt', 'reg_dt')
+
+            group_schedule_list = []
+            for schedule_info in schedule_data:
+                schedule_type = schedule_info.en_dis_type
+
+                try:
+                    group_id = schedule_info.group_tb.group_id
+                    group_name = schedule_info.group_tb.name
+                    group_max_member_num = schedule_info.group_tb.member_num
+                    group_current_member_num = schedule_info.group_current_member_num
+                    schedule_type = 2
+                except AttributeError:
+                    group_id = ''
+                    group_name = ''
+                    group_max_member_num = ''
+                    group_current_member_num = ''
+
+                group_schedule_list.append({'schedule_id': schedule_info.schedule_id,
+                                            'start_dt': str(schedule_info.start_dt),
+                                            'end_dt': str(schedule_info.end_dt),
+                                            'state_cd': schedule_info.state_cd,
+                                            'schedule_type': schedule_type,
+                                            'note': schedule_info.note,
+                                            'group_id': group_id,
+                                            'group_name': group_name,
+                                            'group_max_member_num': group_max_member_num,
+                                            'group_current_member_num': group_current_member_num})
+
+        else:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse({'group_schedule_list': group_schedule_list}, json_dumps_params={'ensure_ascii': True})
+
+
+class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+
+        off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=OFF_SCHEDULE_TYPE)
+        off_repeat_schedule_list = []
+        for off_repeat_schedule_info in off_repeat_schedule_data:
+            off_repeat_schedule = {'repeat_schedule_id': off_repeat_schedule_info.repeat_schedule_id,
+                                   'repeat_type_cd': off_repeat_schedule_info.repeat_type_cd,
+                                   'start_date': off_repeat_schedule_info.start_date,
+                                   'end_date': off_repeat_schedule_info.end_date,
+                                   'start_time': off_repeat_schedule_info.start_time,
+                                   'end_time': off_repeat_schedule_info.end_time,
+                                   'time_duration': off_repeat_schedule_info.time_duration,
+                                   'state_cd': off_repeat_schedule_info.state_cd}
+            off_repeat_schedule_list.append(off_repeat_schedule)
+
+        messages.error(request, '')
+
+        return JsonResponse({'off_repeat_schedule_data': off_repeat_schedule_list},
+                            json_dumps_params={'ensure_ascii': True})
+
+
+class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = request.session.get('class_id', '')
+        group_id = self.request.GET.get('group_id', '')
+
+        group_repeat_schedule_list = []
+        group_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
+            'group_tb').filter(class_tb_id=class_id, group_tb_id=group_id).order_by('start_date')
+
+        for group_repeat_schedule_info in group_repeat_schedule_data:
+
+            group_repeat_schedule = {'repeat_schedule_id': group_repeat_schedule_info.repeat_schedule_id,
+                                     'repeat_type_cd': group_repeat_schedule_info.repeat_type_cd,
+                                     'start_date': group_repeat_schedule_info.start_date,
+                                     'end_date': group_repeat_schedule_info.end_date,
+                                     'start_time': group_repeat_schedule_info.start_time,
+                                     'end_time': group_repeat_schedule_info.end_time,
+                                     'time_duration': group_repeat_schedule_info.time_duration,
+                                     'state_cd': group_repeat_schedule_info.state_cd,
+                                     'group_repeat_schedule_id': group_repeat_schedule_info.group_repeat_schedule_id}
+            group_repeat_schedule_list.append(group_repeat_schedule)
+
+        return JsonResponse({'group_repeat_schedule_data': group_repeat_schedule_list},
+                            json_dumps_params={'ensure_ascii': True})
+
+
+class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = request.session.get('class_id', '')
+        member_id = self.request.GET.get('member_id', None)
+        error = None
+
+        if member_id is None or member_id == '':
+            error = '회원 정보를 불러오지 못했습니다.'
+
+        member_repeat_schedule_list = []
+        if error is None:
+            member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
+                'lecture_tb__member', 'group_tb').filter(class_tb_id=class_id,
+                                                         lecture_tb__member_id=member_id).order_by('start_date')
+
+            for member_repeat_schedule_info in member_repeat_schedule_data:
+                schedule_type = 1
+                try:
+                    group_id = member_repeat_schedule_info.group_tb.group_id
+                    group_name = member_repeat_schedule_info.group_tb.name
+                    group_max_member_num = member_repeat_schedule_info.group_tb.member_num
+                    schedule_type = 2
+                except AttributeError:
+                    group_id = ''
+                    group_name = ''
+                    group_max_member_num = ''
+
+                member_repeat_schedule = {'repeat_schedule_id': member_repeat_schedule_info.repeat_schedule_id,
+                                          'repeat_type_cd': member_repeat_schedule_info.repeat_type_cd,
+                                          'start_date': member_repeat_schedule_info.start_date,
+                                          'end_date': member_repeat_schedule_info.end_date,
+                                          'start_time': member_repeat_schedule_info.start_time,
+                                          'end_time': member_repeat_schedule_info.end_time,
+                                          'time_duration': member_repeat_schedule_info.time_duration,
+                                          'state_cd': member_repeat_schedule_info.state_cd,
+                                          'group_repeat_schedule_id': member_repeat_schedule_info.group_repeat_schedule_id,
+                                          'group_id': group_id,
+                                          'group_name': group_name,
+                                          'group_max_member_num': group_max_member_num,
+                                          'schedule_type': schedule_type}
+                member_repeat_schedule_list.append(member_repeat_schedule)
+        else:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse({'member_repeat_schedule_data': member_repeat_schedule_list},
+                            json_dumps_params={'ensure_ascii': True})
+
+
+# ############### ############### ############### ############### ############### ############### ##############
+# 회원 기능 ############### ############### ############### ############### ############### ############### ##############
+class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        member_id = request.GET.get('member_id', '')
+        error = None
+
+        if member_id == '':
+            error = '회원 ID를 입력해주세요.'
+
+        if error is None:
+            member_result = func_get_member_info(class_id, request.user.id, member_id)
+            error = member_result.error
+
+        if error is not None:
+            logger.error(request.user.first_name + ' ' + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse(member_result.member_info, json_dumps_params={'ensure_ascii': True})
+
+
+class SearchMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        search_id = request.GET.get('search_id', '')
+        error = None
+        user_info = None
+
+        if search_id == '':
+            error = '회원 ID를 입력해 주세요.'
+
+        if error is None:
+            if len(search_id) < 3:
+                error = '3글자 이상 입력해주세요.'
+
+        if error is None:
+            try:
+                user_info = User.objects.get(username=search_id)
+            except ObjectDoesNotExist:
+                error = '회원 ID를 확인해 주세요.'
+
+        if error is None:
+            member_result = func_get_member_info(class_id, request.user.id, user_info.id)
+            error = member_result.error
+
+        if error is not None:
+            logger.error(request.user.first_name + ' ' + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse(member_result.member_info, json_dumps_params={'ensure_ascii': True})
+
+
+class GetMemberListView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        keyword = request.GET.get('keyword', '')
+        current_member_data = func_get_member_ing_list(class_id, request.user.id, keyword)
+        finish_member_data = func_get_member_end_list(class_id, request.user.id, keyword)
+        return JsonResponse({'current_member_data': current_member_data,
+                             'finish_member_data': finish_member_data},
+                            json_dumps_params={'ensure_ascii': True})
+
+
+class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        page = request.GET.get('page', 0)
+        member_sort = request.GET.get('sort_val', SORT_MEMBER_NAME)
+        sort_order_by = request.GET.get('sort_order_by', SORT_ASC)
+        keyword = request.GET.get('keyword', '')
+
+        current_member_data = func_get_member_ing_list(class_id, request.user.id, keyword)
+        finish_member_num = len(func_get_class_member_end_list(class_id, keyword))
+        sort_info = int(member_sort)
+        if sort_info == SORT_MEMBER_NAME:
+            current_member_data = sorted(current_member_data, key=lambda elem: elem['member_name'],
+                                         reverse=int(sort_order_by))
+        elif sort_info == SORT_REMAIN_COUNT:
+            current_member_data = sorted(current_member_data, key=lambda elem: elem['lecture_rem_count'],
+                                         reverse=int(sort_order_by))
+        elif sort_info == SORT_START_DATE:
+            current_member_data = sorted(current_member_data, key=lambda elem: elem['start_date'],
+                                         reverse=int(sort_order_by))
+        elif sort_info == SORT_REG_COUNT:
+            current_member_data = sorted(current_member_data, key=lambda elem: elem['lecture_reg_count'],
+                                         reverse=int(sort_order_by))
+        # context['total_member_num'] = len(member_data)
+        # if page != 0:
+        #     paginator = Paginator(member_data, 20)  # Show 20 contacts per page
+        #     try:
+        #         member_data = paginator.page(page)
+        #     except EmptyPage:
+        #         member_data = None
+        #
+        # context['member_data'] = member_data
+        # end_dt = timezone.now()
+        return JsonResponse({'current_member_data': current_member_data, 'finish_member_num': finish_member_num},
+                            json_dumps_params={'ensure_ascii': True})
+
+
+class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        # start_dt = timezone.now()
+        class_id = self.request.session.get('class_id', '')
+        page = request.GET.get('page', 0)
+        member_sort = request.GET.get('sort_val', SORT_MEMBER_NAME)
+        sort_order_by = request.GET.get('sort_order_by', SORT_ASC)
+        keyword = request.GET.get('keyword', '')
+
+        finish_member_data = func_get_member_end_list(class_id, request.user.id, keyword)
+        current_member_num = len(func_get_class_member_ing_list(class_id, keyword))
+
+        sort_info = int(member_sort)
+        if sort_info == SORT_MEMBER_NAME:
+            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['member_name'],
+                                        reverse=int(sort_order_by))
+        elif sort_info == SORT_REMAIN_COUNT:
+            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['lecture_rem_count'],
+                                        reverse=int(sort_order_by))
+        elif sort_info == SORT_START_DATE:
+            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['start_date'],
+                                        reverse=int(sort_order_by))
+        elif sort_info == SORT_REG_COUNT:
+            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['lecture_reg_count'],
+                                        reverse=int(sort_order_by))
+
+        # context['total_member_num'] = len(member_data)
+        # if page != 0:
+        #     paginator = Paginator(member_data, 20)  # Show 20 contacts per page
+        #     try:
+        #         member_data = paginator.page(page)
+        #     except EmptyPage:
+        #         member_data = None
+        #
+        # end_dt = timezone.now()
+        return JsonResponse({'finish_member_data': finish_member_data, 'current_member_num': current_member_num},
+                            json_dumps_params={'ensure_ascii': True})
+
+
+# 회원수정
+def update_member_info_logic(request):
+    member_id = request.POST.get('member_id')
+    first_name = request.POST.get('first_name', '')
+    phone = request.POST.get('phone', '')
+    sex = request.POST.get('sex', '')
+    birthday_dt = request.POST.get('birthday', '')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    user = None
+    member = None
+    if member_id == '':
+        error = '회원 ID를 확인해 주세요.'
+
+    if error is None:
+        try:
+            user = User.objects.get(id=member_id)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.'
+
+        try:
+            member = MemberTb.objects.get(user_id=member_id)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.'
+
+    input_first_name = ''
+    input_phone = ''
+    input_sex = ''
+    input_birthday_dt = ''
+    if error is None:
+        if user.is_active:
+            error = '회원 정보를 수정할수 없습니다.'
+
+    if error is None:
+        if first_name is None or first_name == '':
+            input_first_name = user.first_name
+        else:
+            input_first_name = first_name
+
+        if sex is None or sex == '':
+            input_sex = member.sex
+        else:
+            input_sex = sex
+
+        if birthday_dt is None or birthday_dt == '':
+            input_birthday_dt = member.birthday_dt
+        else:
+            input_birthday_dt = birthday_dt
+
+        if phone is None or phone == '':
+            input_phone = member.phone
+        else:
+            if len(phone) != 11 and len(phone) != 10:
+                error = '연락처 자릿수를 확인해주세요.'
+            elif not phone.isdigit():
+                error = '연락처는 숫자만 입력 가능합니다.'
+            else:
+                input_phone = phone
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                if user.first_name != input_first_name:
+                    user.first_name = input_first_name
+                    member.name = input_first_name
+                    username = user.first_name
+
+                    i = 0
+                    count = MemberTb.objects.filter(name=username).count()
+                    max_range = (100 * (10 ** len(str(count)))) - 1
+                    for i in range(0, 100):
+                        username = user.first_name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+                        try:
+                            User.objects.get(username=username)
+                        except ObjectDoesNotExist:
+                            break
+
+                    if i == 100:
+                        error = 'ID 생성에 실패했습니다. 다시 시도해주세요.'
+                        raise InternalError
+
+                    user.username = username
+                    user.save()
+
+                member.phone = input_phone
+                member.sex = input_sex
+                if input_birthday_dt is not None and input_birthday_dt != '':
+                    member.birthday_dt = input_birthday_dt
+                member.save()
+
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError:
+            error = '등록 값에 문제가 있습니다.'
+        except ValidationError:
+            error = '등록 값에 문제가 있습니다.'
+        except InternalError:
+            error = error
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return redirect(next_page)
+
+# ############### ############### ############### ############### ############### ############### ##############
 
 
 class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -265,53 +788,11 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['today_schedule_num'] = today_schedule_num
 
         if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + error)
+            logger.error(self.request.user.first_name + str(self.request.user.id) + ']' + error)
             messages.error(request, error)
         else:
-            logger.info(self.request.user.last_name + self.request.user.first_name + '['
-                        + str(self.request.user.id) + '] : login success')
+            logger.info(self.request.user.first_name + '[' + str(self.request.user.id) + '] : login success')
 
-        return context
-
-
-class CalDayView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'cal_day.html'
-
-    def get(self):
-        context = {}
-        # context = super(CalDayView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        class_info = None
-        error = None
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '프로그램 정보를 불러오지 못했습니다.'
-
-        # if error is None:
-        #     request.session['class_hour'] = class_info.class_hour
-        holiday = HolidayTb.objects.filter(use=USE)
-        context['holiday'] = holiday
-
-        return render(request, self.template_name, context)
-
-
-class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'cal_week.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(CalWeekView, self).get_context_data(**kwargs)
-        context['holiday'] = HolidayTb.objects.filter(use=USE)
-        return context
-
-
-class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'cal_month.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(CalMonthView, self).get_context_data(**kwargs)
-        context['holiday'] = HolidayTb.objects.filter(use=USE)
         return context
 
 
@@ -1014,398 +1495,7 @@ class CalPreviewIframeView(LoginRequiredMixin, AccessTestMixin, View):
 
 
 # ############### ############### ############### ############### ############### ############### ##############
-class GetAllScheduleView(LoginRequiredMixin, AccessTestMixin, View):
 
-    def get(self, request):
-        class_id = self.request.session.get('class_id', '')
-        date = self.request.GET.get('date', '')
-        day = self.request.GET.get('day', '')
-        today = datetime.date.today()
-
-        if date != '':
-            today = datetime.datetime.strptime(date, '%Y-%m-%d')
-        if day == '':
-            day = 46
-        start_date = today - datetime.timedelta(days=int(day))
-        end_date = today + datetime.timedelta(days=int(day))
-        all_schedule_data = func_get_all_schedule(class_id, start_date, end_date)
-
-        return JsonResponse(all_schedule_data, json_dumps_params={'ensure_ascii': True})
-
-    # def get_context_data(self, **kwargs):
-    #     start_time = timezone.now()
-    #     # context = {}
-    #     context = super(GetAllScheduleView, self).get_context_data(**kwargs)
-    #     class_id = self.request.session.get('class_id', '')
-    #     date = self.request.GET.get('date', '')
-    #     day = self.request.GET.get('day', '')
-    #     today = datetime.date.today()
-    #
-    #     if date != '':
-    #         today = datetime.datetime.strptime(date, '%Y-%m-%d')
-    #     if day == '':
-    #         day = 46
-    #     start_date = today - datetime.timedelta(days=int(day))
-    #     end_date = today + datetime.timedelta(days=int(day))
-    #     context = func_get_all_schedule(context, class_id, start_date, end_date)
-    #     end_time = timezone.now()
-    #     print(str(end_time-start_time))
-    #     return context
-
-
-class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/schedule_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        # start_time = timezone.now()
-        # context = {}
-        context = super(GetTrainerScheduleView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        date = self.request.GET.get('date', '')
-        day = self.request.GET.get('day', '')
-        today = datetime.date.today()
-
-        if date != '':
-            today = datetime.datetime.strptime(date, '%Y-%m-%d')
-        if day == '':
-            day = 46
-        start_date = today - datetime.timedelta(days=int(day))
-        end_date = today + datetime.timedelta(days=int(day))
-        # end_time = timezone.now()
-        # print(str(end_time-start_time))
-        context = func_get_trainer_schedule(context, class_id, start_date, end_date)
-        return context
-
-
-class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/off_schedule_data_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        # context = {}
-        context = super(GetOffRepeatScheduleView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        error = func_get_trainer_off_repeat_schedule(context, class_id)
-        if error is None:
-            context['error'] = error
-
-        return context
-
-
-class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/schedule_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(GetTrainerGroupScheduleView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        date = self.request.GET.get('date', '')
-        day = self.request.GET.get('day', '')
-        group_id = self.request.GET.get('group_id', None)
-        today = datetime.date.today()
-
-        if date != '':
-            today = datetime.datetime.strptime(date, '%Y-%m-%d')
-        if day == '':
-            day = 46
-        start_date = today - datetime.timedelta(days=int(day))
-        end_date = today + datetime.timedelta(days=int(47))
-        func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id)
-
-        return context
-
-
-class GetMemberScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/member_schedule_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(GetMemberScheduleView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        member_id = self.request.GET.get('member_id', None)
-        context['error'] = None
-
-        if member_id is None or member_id == '':
-            context['error'] = '회원 정보를 불러오지 못했습니다.'
-        if context['error'] is None:
-            context = func_get_trainee_schedule_list(context, class_id, member_id)
-
-        if context['error'] is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + context['error'])
-            messages.error(self.request, context['error'])
-
-        return context
-
-
-class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/member_repeat_schedule_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        # context = {}
-        context = super(GetMemberRepeatScheduleView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        member_id = self.request.GET.get('member_id', None)
-        context['error'] = None
-        context = get_trainee_repeat_schedule_data_func(context, class_id, member_id)
-        if context['error'] is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + context['error'])
-            messages.error(self.request, context['error'])
-
-        return context
-
-
-class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
-    # template_name = 'ajax/search_member_id_ajax.html'
-
-    def get(self, request):
-        member_id = self.request.GET.get('member_id', '')
-        class_id = self.request.session.get('class_id', '')
-        error = None
-
-        if member_id == '':
-            error = '회원 ID를 입력해주세요.'
-
-        if error is None:
-            member_result = func_get_member_info(class_id, self.reqeust.user.id, member_id)
-            error = member_result.error
-
-        if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name
-                         + '[' + str(self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
-
-        return JsonResponse(member_result.member_info, json_dumps_params={'ensure_ascii': True})
-
-
-class SearchMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
-    # template_name = 'ajax/search_member_id_ajax.html'
-
-    def get(self, request):
-        search_id = self.request.GET.get('search_id', '')
-        class_id = self.request.session.get('class_id', '')
-        error = None
-        user_info = None
-
-        if search_id == '':
-            error = '회원 ID를 입력해 주세요.'
-
-        if error is None:
-            if len(search_id) < 3:
-                error = '3글자 이상 입력해주세요.'
-
-        if error is None:
-            try:
-                user_info = User.objects.get(username=search_id)
-            except ObjectDoesNotExist:
-                error = '회원 ID를 확인해 주세요.'
-
-        if error is None:
-            member_result = func_get_member_info(class_id, self.reqeust.user.id, user_info.id)
-            error = member_result.error
-
-        if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name
-                         + '[' + str(self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
-
-        return JsonResponse(member_result.member_info, json_dumps_params={'ensure_ascii': True})
-
-
-class GetMemberListView(LoginRequiredMixin, AccessTestMixin, View):
-    def get(self, request):
-        class_id = self.request.session.get('class_id', '')
-        keyword = self.request.GET.get('keyword', '')
-        current_member_data = func_get_member_ing_list(class_id, self.request.user.id, keyword)
-        finish_member_data = func_get_member_end_list(class_id, self.request.user.id, keyword)
-        return JsonResponse({'current_member_data': current_member_data,
-                             'finish_member_data': finish_member_data},
-                            json_dumps_params={'ensure_ascii': True})
-
-
-class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
-
-    def get(self, request):
-        class_id = self.request.session.get('class_id', '')
-        page = self.request.GET.get('page', 0)
-        member_sort = self.request.GET.get('sort_val', SORT_MEMBER_NAME)
-        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
-        keyword = self.request.GET.get('keyword', '')
-
-        current_member_data = func_get_member_ing_list(class_id, self.request.user.id, keyword)
-        finish_member_num = len(func_get_class_member_end_list(class_id, keyword))
-        sort_info = int(member_sort)
-        if sort_info == SORT_MEMBER_NAME:
-            current_member_data = sorted(current_member_data, key=lambda elem: elem['member_name'],
-                                        reverse=int(sort_order_by))
-        elif sort_info == SORT_REMAIN_COUNT:
-            current_member_data = sorted(current_member_data, key=lambda elem: elem['lecture_rem_count'],
-                                         reverse=int(sort_order_by))
-        elif sort_info == SORT_START_DATE:
-            current_member_data = sorted(current_member_data, key=lambda elem: elem['start_date'],
-                                         reverse=int(sort_order_by))
-        elif sort_info == SORT_REG_COUNT:
-            current_member_data = sorted(current_member_data, key=lambda elem: elem['lecture_reg_count'],
-                                         reverse=int(sort_order_by))
-        # context['total_member_num'] = len(member_data)
-        # if page != 0:
-        #     paginator = Paginator(member_data, 20)  # Show 20 contacts per page
-        #     try:
-        #         member_data = paginator.page(page)
-        #     except EmptyPage:
-        #         member_data = None
-        #
-        # context['member_data'] = member_data
-        # end_dt = timezone.now()
-        return JsonResponse({'current_member_data': current_member_data, 'finish_member_num': finish_member_num},
-                            json_dumps_params={'ensure_ascii': True})
-
-
-class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
-
-    def get(self, request):
-        # start_dt = timezone.now()
-        class_id = self.request.session.get('class_id', '')
-        page = self.request.GET.get('page', 0)
-        member_sort = self.request.GET.get('sort_val', SORT_MEMBER_NAME)
-        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
-        keyword = self.request.GET.get('keyword', '')
-
-        finish_member_data = func_get_member_end_list(class_id, self.request.user.id, keyword)
-        current_member_num = len(func_get_class_member_ing_list(class_id, keyword))
-
-        sort_info = int(member_sort)
-        if sort_info == SORT_MEMBER_NAME:
-            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['member_name'],
-                                        reverse=int(sort_order_by))
-        elif sort_info == SORT_REMAIN_COUNT:
-            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['lecture_rem_count'],
-                                        reverse=int(sort_order_by))
-        elif sort_info == SORT_START_DATE:
-            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['start_date'],
-                                        reverse=int(sort_order_by))
-        elif sort_info == SORT_REG_COUNT:
-            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['lecture_reg_count'],
-                                        reverse=int(sort_order_by))
-
-        # context['total_member_num'] = len(member_data)
-        # if page != 0:
-        #     paginator = Paginator(member_data, 20)  # Show 20 contacts per page
-        #     try:
-        #         member_data = paginator.page(page)
-        #     except EmptyPage:
-        #         member_data = None
-        #
-        # end_dt = timezone.now()
-        return JsonResponse({'finish_member_data': finish_member_data, 'current_member_num': current_member_num},
-                            json_dumps_params={'ensure_ascii': True})
-
-
-# 회원수정
-def update_member_info_logic(request):
-    member_id = request.POST.get('member_id')
-    first_name = request.POST.get('first_name', '')
-    phone = request.POST.get('phone', '')
-    sex = request.POST.get('sex', '')
-    birthday_dt = request.POST.get('birthday', '')
-    next_page = request.POST.get('next_page')
-
-    error = None
-    user = None
-    member = None
-    if member_id == '':
-        error = '회원 ID를 확인해 주세요.'
-
-    if error is None:
-        try:
-            user = User.objects.get(id=member_id)
-        except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
-
-        try:
-            member = MemberTb.objects.get(user_id=member_id)
-        except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
-
-    input_first_name = ''
-    input_phone = ''
-    input_sex = ''
-    input_birthday_dt = ''
-    if error is None:
-        if user.is_active:
-            error = '회원 정보를 수정할수 없습니다.'
-
-    if error is None:
-        if first_name is None or first_name == '':
-            input_first_name = user.first_name
-        else:
-            input_first_name = first_name
-
-        if sex is None or sex == '':
-            input_sex = member.sex
-        else:
-            input_sex = sex
-
-        if birthday_dt is None or birthday_dt == '':
-            input_birthday_dt = member.birthday_dt
-        else:
-            input_birthday_dt = birthday_dt
-
-        if phone is None or phone == '':
-            input_phone = member.phone
-        else:
-            if len(phone) != 11 and len(phone) != 10:
-                error = '연락처 자릿수를 확인해주세요.'
-            elif not phone.isdigit():
-                error = '연락처는 숫자만 입력 가능합니다.'
-            else:
-                input_phone = phone
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                if user.first_name != input_first_name:
-                    user.first_name = input_first_name
-                    member.name = input_first_name
-                    username = user.first_name
-
-                    i = 0
-                    count = MemberTb.objects.filter(name=username).count()
-                    max_range = (100 * (10 ** len(str(count)))) - 1
-                    for i in range(0, 100):
-                        username = user.first_name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
-                        try:
-                            User.objects.get(username=username)
-                        except ObjectDoesNotExist:
-                            break
-
-                    if i == 100:
-                        error = 'ID 생성에 실패했습니다. 다시 시도해주세요.'
-                        raise InternalError
-
-                    user.username = username
-                    user.save()
-
-                member.phone = input_phone
-                member.sex = input_sex
-                if input_birthday_dt is not None and input_birthday_dt != '':
-                    member.birthday_dt = input_birthday_dt
-                member.save()
-
-        except ValueError:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError:
-            error = '등록 값에 문제가 있습니다.'
-        except ValidationError:
-            error = '등록 값에 문제가 있습니다.'
-        except InternalError:
-            error = error
-
-    if error is not None:
-        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-
-    return redirect(next_page)
 
 
 # 회원가입 api
@@ -1871,24 +1961,58 @@ def export_excel_member_info_logic(request):
     return response
 
 
-class GetLectureListView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/lecture_list_ajax.html'
+class GetLectureListView(LoginRequiredMixin, AccessTestMixin, View):
 
-    def get_context_data(self, **kwargs):
-        # context = {}
-        context = super(GetLectureListView, self).get_context_data(**kwargs)
+    def get(self, request):
         class_id = self.request.session.get('class_id', '')
-        member_id = self.request.GET.get('member_id', '')
-        context['error'] = None
+        member_id = request.GET.get('member_id', '')
+        error = None
+        lecture_list = collections.OrderedDict()
 
-        context = func_get_lecture_list(context, class_id, member_id)
+        if class_id is None or class_id == '':
+            error = '오류가 발생했습니다.'
 
-        if context['error'] is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + context['error'])
-            messages.error(self.request, context['error'])
+        if member_id is None or member_id == '':
+            error = '회원 정보를 불러오지 못했습니다.'
 
-        return context
+        if error is None:
+            query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                                "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(member_id) + \
+                                "' and B.USE=1"
+
+            lecture_data = ClassLectureTb.objects.select_related(
+                'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW', lecture_tb__member_id=member_id,
+                                                 lecture_tb__use=USE,
+                                                 use=USE).annotate(member_auth=RawSQL(query_member_auth, []),
+                                                                   ).order_by('-lecture_tb__start_date',
+                                                                              '-lecture_tb__reg_dt')
+
+            for lecture_info_data in lecture_data:
+                lecture_info = lecture_info_data.lecture_tb
+                package_info = lecture_info.package_tb
+                if '\r\n' in lecture_info.note:
+                    lecture_info.note = lecture_info.note.replace('\r\n', ' ')
+
+                member_lecture_info = {'lecture_id': lecture_info.lecture_id,
+                                       'lecture_package_name': package_info.name,
+                                       'lecture_package_id': package_info.package_id,
+                                       'lecture_state_cd': lecture_info.state_cd,
+                                       'lecture_reg_count': lecture_info.lecture_reg_count,
+                                       'lecture_rem_count': lecture_info.lecture_rem_count,
+                                       'lecture_avail_count': lecture_info.lecture_avail_count,
+                                       'lecture_start_date': lecture_info.start_date,
+                                       'lecture_end_date': lecture_info.end_date,
+                                       'lecture_price': lecture_info.price,
+                                       'lecture_refund_date': lecture_info.refund_date,
+                                       'lecture_refund_price': lecture_info.refund_price,
+                                       'lecture_note': lecture_info.note}
+                lecture_list[lecture_info.lecture_id] = member_lecture_info
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse(lecture_list, json_dumps_params={'ensure_ascii': True})
 
 
 # 회원가입 api
@@ -3695,7 +3819,6 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
 
 class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
-    # template_name = 'ajax/package_info_ajax.html'
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
@@ -3802,34 +3925,6 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
         # context['package_data'] = package_data
         return JsonResponse({'finish_package_data': package_list}, json_dumps_params={'ensure_ascii': True})
-
-
-class GetSinglePackageViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/package_info_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(GetSinglePackageViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        error = None
-
-        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
-        # query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
-        #                         "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
-        query_package_group_id = "select GROUP_TB_ID from PACKAGE_GROUP_TB as B " \
-                                 "where B.PACKAGE_TB_ID = `PACKAGE_TB`.`ID`"
-        package_data = PackageTb.objects.filter(class_tb_id=class_id, state_cd='IP',
-                                                use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
-                                                                  group_tb_id=RawSQL(query_package_group_id,
-                                                                                     [])).order_by('-package_id')
-
-        if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
-                self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
-
-        context['package_data'] = package_data
-
-        return context
 
 
 class GetPackageIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
@@ -4241,93 +4336,6 @@ def delete_package_member_info_logic(request):
 
         return redirect(next_page)
 
-
-class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/schedule_lesson_data_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(GetGroupMemberScheduleListViewAjax, self).get_context_data(**kwargs)
-        group_schedule_id = self.request.GET.get('group_schedule_id', '')
-        error = None
-        group_schedule_data = None
-        if group_schedule_id is None or group_schedule_id == '':
-            error = '일정 정보를 불러오지 못했습니다.'
-
-        if error is None:
-            group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id,
-                                                            use=USE).order_by('start_dt')
-            for group_schedule_info in group_schedule_data:
-                # member_info = MemberTb.objects.get(member_id=group_schedule_info.lecture_tb.member_id)
-                member_info = group_schedule_info.lecture_tb.member
-                if member_info.reg_info is None or str(member_info.reg_info) != str(self.request.user.id):
-                    lecture_count = MemberLectureTb.objects.filter(auth_cd='VIEW', use=USE).count()
-                    if lecture_count == 0:
-                        member_info.sex = ''
-                        member_info.birthday_dt = ''
-                        if member_info.phone is None:
-                            member_info.phone = ''
-                        else:
-                            member_info.phone = '***-****-' + member_info.phone[7:]
-                        member_info.user.email = ''
-
-                if member_info.sex is None:
-                    member_info.sex = ''
-                if member_info.phone is None:
-                    member_info.phone = ''
-                group_schedule_info.member_info = member_info
-                group_schedule_info.start_dt = str(group_schedule_info.start_dt)
-                group_schedule_info.end_dt = str(group_schedule_info.end_dt)
-                if group_schedule_info.state_cd == 'PE':
-                    group_schedule_info.finish_check = 1
-                elif group_schedule_info.state_cd == 'PC':
-                    group_schedule_info.finish_check = 2
-                else:
-                    group_schedule_info.finish_check = 0
-
-        if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
-        else:
-            context['schedule_data'] = group_schedule_data
-
-        return context
-
-
-class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/schedule_repeat_data_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        # context = {}
-        context = super(GetGroupRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
-        group_id = self.request.GET.get('group_id', '')
-
-        group_repeat_schedule_data = RepeatScheduleTb.objects.select_related('group_tb'
-                                                                             ).filter(group_tb_id=group_id,
-                                                                                      group_schedule_id__isnull=True
-                                                                                      ).order_by('start_date')
-
-        context['repeat_schedule_data'] = group_repeat_schedule_data
-
-        return context
-
-
-class GetGroupMemberRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/schedule_repeat_data_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        # context = {}
-        context = super(GetGroupMemberRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
-        group_repeat_schedule_id = self.request.GET.get('group_repeat_schedule_id', '')
-
-        group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_schedule_id=group_repeat_schedule_id
-                                                                     ).order_by('start_date')
-        for group_repeat_schedule_info in group_repeat_schedule_data:
-            group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
-            group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
-        context['repeat_schedule_data'] = group_repeat_schedule_data
-
-        return context
 
 
 class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):

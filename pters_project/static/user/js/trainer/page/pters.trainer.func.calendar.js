@@ -611,7 +611,7 @@ class Calendar {
         if(days_ == undefined){days_ = 31}
 
         $.ajax({
-            url: '/trainer/get_all_schedule/',
+            url: '/trainer/get_trainer_schedule_all/',
             type : 'GET',
             data : {"date":date_, "day":days_},
             dataType: "JSON",

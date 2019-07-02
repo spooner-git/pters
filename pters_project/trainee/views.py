@@ -1447,67 +1447,6 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
     return schedule_result
 
 
-def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
-
-    error = None
-    class_info = None
-    pt_repeat_schedule_list = []
-    lecture_list = None
-
-    # 강좌 정보 가져오기
-    try:
-        class_info = ClassTb.objects.get(class_id=class_id)
-    except ObjectDoesNotExist:
-        error = '수강정보를 불러오지 못했습니다.'
-
-    # 수강 정보 불러 오기
-    if error is None:
-        if member_id is None or member_id == '':
-            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                         auth_cd='VIEW',
-                                                         lecture_tb__use=USE, use=USE)
-        else:
-            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                         auth_cd='VIEW',
-                                                         lecture_tb__member_id=member_id,
-                                                         lecture_tb__use=USE, use=USE)
-
-    if error is None:
-        # 강사 클래스의 반복일정 불러오기
-        pt_repeat_schedule_data = None
-
-        if len(lecture_list) > 0:
-            for lecture_list_info in lecture_list:
-                lecture_info = lecture_list_info.lecture_tb
-                if pt_repeat_schedule_data is None:
-                    pt_repeat_schedule_data = \
-                        RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                        en_dis_type=ON_SCHEDULE_TYPE).order_by('-reg_dt')
-                else:
-                    pt_repeat_schedule_data |= \
-                        RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                        en_dis_type=ON_SCHEDULE_TYPE).order_by('-reg_dt')
-
-            for pt_repeat_schedule_info in pt_repeat_schedule_data:
-                # pt_repeat_schedule_info.start_date = str(pt_repeat_schedule_info.start_date)
-                # pt_repeat_schedule_info.end_date = str(pt_repeat_schedule_info.end_date)
-                state_cd_name = None
-                try:
-                    state_cd_name = CommonCdTb.objects.get(common_cd=pt_repeat_schedule_info.state_cd)
-                except ObjectDoesNotExist:
-                    error = '반복 일정의 상태를 불러오지 못했습니다.'
-                if error is None:
-                    pt_repeat_schedule_info.state_cd_nm = state_cd_name.common_cd_nm
-
-                pt_repeat_schedule_list.append(pt_repeat_schedule_info)
-
-    context['pt_repeat_schedule_data'] = pt_repeat_schedule_list
-    if error is None:
-        context['error'] = error
-
-    return context
-
-
 def get_trainer_setting_data(context, user_id, class_id):
 
     lt_res_01 = '00:00-23:59'
