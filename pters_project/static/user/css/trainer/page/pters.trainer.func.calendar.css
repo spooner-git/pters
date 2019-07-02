@@ -169,6 +169,13 @@
 	background-color: #fe4e65;
 	border: 1px solid #ffffff;
 	box-sizing: border-box;
+	
+	padding-left: 3px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	font-size: 10px;
+	letter-spacing: -0.3px;
 }
 .week_group_schedule{
 	background-color: #fe4e65;
