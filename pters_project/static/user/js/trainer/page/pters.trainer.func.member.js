@@ -118,6 +118,9 @@ class Member{
             let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'dbid':${render_member_data[member_info].member_id}});`;
             let html = `<article class="member_wrapper" data-dbid="${render_member_data[member_info].member_id}" data-name="${render_member_data[member_info].member_name}" onclick="${onclick}">
                             <div class="member_data_l">
+                                <img src="/static/common/icon/icon_account.png">
+                            </div>                
+                            <div class="member_data_c">
                                 <div class="member_name">${render_member_data[member_info].member_name}</div>
                                 <div class="member_counts"> ${render_member_data[member_info].lecture_rem_count} / ${render_member_data[member_info].lecture_reg_count} <span style="font-size:10px;color:#8d8d8d;">(남은 횟수 / 총 등록횟수)</span></div>
                             </div>

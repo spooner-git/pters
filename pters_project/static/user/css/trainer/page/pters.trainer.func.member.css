@@ -119,6 +119,16 @@
 
 .member_data_l{
 	display: table-cell;
+	width: 50px;
+	text-align: left;
+	vertical-align: middle;
+}
+	.member_data_l > img{
+		width: 40px;
+		vertical-align: middle;
+	}
+.member_data_c{
+	display: table-cell;
 	width: auto;
 }
 .member_data_r{

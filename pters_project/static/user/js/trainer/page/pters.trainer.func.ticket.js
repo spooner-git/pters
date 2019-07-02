@@ -136,10 +136,18 @@ class Ticket{
                                 <div class="ticket_note">${ticket_note}</div>
                             </div>
                             <div class="ticket_data_b">
-                                <div class="ticket_member_number">${list_status_type == "ing" ? ticket_member_number : ticket_end_member_number}명
+                                <div class="ticket_member_number_wrap">
+                                    <div class="ticket_data_title">회원</div>
+                                    <div class="ticket_member_number">
+                                        ${list_status_type == "ing" ? ticket_member_number : ticket_end_member_number}명
+                                    </div>
                                 </div>
-                                <div>
-                                    ${ticket_lectures_included_name_html}
+                                
+                                <div class="ticket_lectures_wrap">
+                                    <div class="ticket_data_title">포함된 수업</div>
+                                    <div class="ticket_lectures">
+                                        ${ticket_lectures_included_name_html}
+                                    </div>
                                 </div>
                             </div>
                         </article>`
