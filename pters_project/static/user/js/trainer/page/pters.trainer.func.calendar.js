@@ -228,7 +228,6 @@ class Calendar {
                 this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
-                        this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
                         this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
                     }
                 })
@@ -250,7 +249,6 @@ class Calendar {
                 this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
                 this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                     if(date == `${this.current_year}-${this.current_month}-01`){
-                        this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
                         this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
                     }
                 })
@@ -475,7 +473,7 @@ class Calendar {
         }
 
         // let week_html_template = this.week_schedule_draw(year, month, week, schedule_data);
-
+        
         return(
             week_dates_info == false 
             ? 
@@ -498,7 +496,6 @@ class Calendar {
     }
 
     week_schedule_draw(year, month, week, schedule_data){
-        console.log(schedule_data)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
@@ -573,6 +570,7 @@ class Calendar {
         let indicator = document.createElement('div');
         indicator.classList.add('week_indicator');
         indicator.style.top = offset_px+'px';
+        indicator.setAttribute('onclick', "event.stopPropagation();$('.week_indicator').remove()")
         event.target.appendChild(indicator);
 
         layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 95, POPUP_FROM_BOTTOM, {'select_date':`${year}-${month}-${date}`});
