@@ -28,6 +28,7 @@ class LectureTb(TimeStampedModel):
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, default='')
     schedule_check = models.IntegerField(db_column='SCHEDULE_CHECK', default=1)
     note = models.CharField(db_column='NOTE', max_length=255, blank=True, default='')
+    member_auth_cd = models.CharField(db_column='MEMBER_AUTH_CD', max_length=20, blank=True, default='')
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:

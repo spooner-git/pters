@@ -238,92 +238,68 @@ def func_check_member_connection_info(class_id, member_id):
 
 # 회원의 수강권 추가하기
 def func_add_lecture_info(user_id, class_id, package_id, counts, price,
-                          start_date, end_date, contents, member_id, setting_lecture_auto_finish):
-
+                          start_date, end_date, contents, member_id):
     error = None
-    lecture_info = None
-    state_cd = 'IP'
-    lecture_rem_count = counts
-    if price is None or price == '':
-        error = '금액 정보를 입력해주세요.'
 
-    if error is None:
-        if counts is None or counts == '':
-            error = '등록 횟수 입력해주세요.'
+    try:
+        with transaction.atomic():
 
-    if error is None:
-        if setting_lecture_auto_finish == AUTO_FINISH_ON:
-            end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
-            if end_date < datetime.date.today():
-                state_cd = 'PE'
-                lecture_rem_count = 0
+            auth_cd = 'WAIT'
+            member_lecture_counts = ClassLectureTb.objects.select_related(
+                'lecture_tb__member').filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
+                                             lecture_tb__member_auth_cd='VIEW', use=USE).count()
+            if member_lecture_counts > 0:
+                auth_cd = 'VIEW'
 
-    if error is None:
-        try:
-            with transaction.atomic():
-                lecture_info = LectureTb(member_id=member_id,
-                                         package_tb_id=package_id,
-                                         lecture_reg_count=counts, lecture_rem_count=lecture_rem_count,
-                                         lecture_avail_count=lecture_rem_count, price=price, option_cd='DC',
-                                         state_cd=state_cd,
-                                         start_date=start_date, end_date=end_date,
-                                         note=contents, use=USE)
-                lecture_info.save()
-                # auth_cd = 'DELETE'
-                auth_cd = 'WAIT'
-                # if package_id != '' and package_id is not None:
-                #     auth_cd = 'WAIT'
+            lecture_info = LectureTb(member_id=member_id,
+                                     package_tb_id=package_id,
+                                     lecture_reg_count=counts, lecture_rem_count=counts,
+                                     lecture_avail_count=counts, price=price, option_cd='DC',
+                                     state_cd='IP',
+                                     start_date=start_date, end_date=end_date,
+                                     note=contents, member_auth_cd=auth_cd, use=USE)
+            lecture_info.save()
 
-                member_lecture_counts = MemberLectureTb.objects.filter(member_id=member_id, mod_member_id=user_id,
-                                                                       auth_cd='VIEW', use=USE).count()
-                if member_lecture_counts > 0:
-                    auth_cd = 'VIEW'
+            class_lecture_info = ClassLectureTb(class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                                                auth_cd='VIEW', mod_member_id=user_id, use=USE)
+            class_lecture_info.save()
 
-                member_lecture_info = MemberLectureTb(member_id=member_id, lecture_tb_id=lecture_info.lecture_id,
-                                                      auth_cd=auth_cd, mod_member_id=user_id, use=USE)
+            # 고정 회원 등록 확인 필요
 
-                member_lecture_info.save()
-                class_lecture_info = ClassLectureTb(class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                                                    auth_cd='VIEW', mod_member_id=user_id, use=USE)
-                class_lecture_info.save()
+            # query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+            #                     "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+            #                     " B.USE=1"
+            #
+            # package_group_data = PackageGroupTb.objects.select_related(
+            #     'group_tb').filter(package_tb_id=package_id, use=USE)
+            # for package_group_info in package_group_data:
+            #     group_lecture_counter = GroupLectureTb.objects.filter(
+            #         group_tb_id=package_group_info.group_tb_id, lecture_tb__member_id=member_id,
+            #         lecture_tb__state_cd='IP', lecture_tb__use=USE, fix_state_cd='FIX',
+            #         use=USE).annotate(class_count=RawSQL(query_class_count,
+            #                                              [])).filter(class_count__gte=1).count()
+            #     if group_lecture_counter > 0:
+            #         fix_state_cd = 'FIX'
+            #     else:
+            #         fix_state_cd = ''
+            #     group_lecture_info = GroupLectureTb(group_tb_id=package_group_info.group_tb_id,
+            #                                         lecture_tb_id=lecture_info.lecture_id,
+            #                                         fix_state_cd=fix_state_cd, use=USE)
+            #     group_lecture_info.save()
 
-                if package_id != '' and package_id is not None:
+            if error is not None:
+                raise InternalError
 
-                    query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
-                                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
-                                        " B.USE=1"
-
-                    # error_count = 0
-                    package_group_data = PackageGroupTb.objects.select_related(
-                        'group_tb').filter(package_tb_id=package_id, use=USE)
-                    for package_group_info in package_group_data:
-                        group_lecture_counter = GroupLectureTb.objects.filter(
-                            group_tb_id=package_group_info.group_tb_id, lecture_tb__member_id=member_id,
-                            lecture_tb__state_cd='IP', lecture_tb__use=USE, fix_state_cd='FIX',
-                            use=USE).annotate(class_count=RawSQL(query_class_count,
-                                                                 [])).filter(class_count__gte=1).count()
-                        if group_lecture_counter > 0:
-                            fix_state_cd = 'FIX'
-                        else:
-                            fix_state_cd = ''
-                        group_lecture_info = GroupLectureTb(group_tb_id=package_group_info.group_tb_id,
-                                                            lecture_tb_id=lecture_info.lecture_id,
-                                                            fix_state_cd=fix_state_cd, use=USE)
-                        group_lecture_info.save()
-
-                    if error is not None:
-                        raise InternalError
-
-        except ValueError:
-            error = '등록 값에 문제가 있습니다.[1]'
-        except IntegrityError:
-            error = '등록 값에 문제가 있습니다.[2]'
-        except TypeError:
-            error = '등록 값에 문제가 있습니다.[3]'
-        except ValidationError:
-            error = '등록 값에 문제가 있습니다.[4]'
-        except InternalError:
-            error = error
+    except ValueError:
+        error = '등록 값에 문제가 있습니다.[1]'
+    except IntegrityError:
+        error = '등록 값에 문제가 있습니다.[2]'
+    except TypeError:
+        error = '등록 값에 문제가 있습니다.[3]'
+    except ValidationError:
+        error = '등록 값에 문제가 있습니다.[4]'
+    except InternalError:
+        error = error
 
     return error
 
