@@ -18,18 +18,7 @@
 {% block popup_base_contents %}
     <div class="popup_ticket_view">
         <div id="wrapper_box_ticket_info">
-            <div class="obj_box_full">
-                <div id="wrapper_ticket_info_basic">
-                    <div class="obj_tag obj_font_bg_grey_trans" style="line-height: 20px;">횟수제</div>
-                    <div>30회 - 900,000 원</div>
-                    <div>다가오는 여름을 준비하기 위해 기초적인 수업들로 구성된 수강권입니다.</div>
-                </div>
-                <div id="wrapper_ticket_info_dates">
-                    <div>수정 <span>2019.06.24</span></div>
-                    <div>개설 <span>2019.06.21</span></div>
-                </div>
-
-            </div>
+    
         </div>
 
         <div class="gap"></div>
@@ -43,39 +32,7 @@
             </div>
             <div class="obj_box_full" style="padding: 0;">
                 <div id="wrapper_ticket_lectures_list">
-                    <ul>
-                        <li>
-                            <div class="lecture_data_l">
-                                <div class="lecture_tag_body" style="background:#fe4e65"></div>
-                                <div class="lecture_tag_head" style="border-left-color:#fe4e65"></div>
-                            </div>
-                            <div class="lecture_data_c">
-                                <div class="lecture_name">수강권 이름</div>
-                            </div>
-                            <div class="lecture_data_r">
-                                <div class="lecture_member_number">정원 - 3명
-                                </div>
-                                <div class="lecture_member_number">참여중 - 101명
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="lecture_data_l">
-                                <div class="lecture_tag_body" style="background:#fe4e65"></div>
-                                <div class="lecture_tag_head" style="border-left-color:#fe4e65"></div>
-                            </div>
-                            <div class="lecture_data_c">
-                                <div class="lecture_name">수강권 이름2</div>
-                            </div>
-                            <div class="lecture_data_r">
-                                <div class="lecture_member_number">정원 - 10명
-                                </div>
-                                <div class="lecture_member_number">참여중 - 1010명   
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+                    
                 </div>
             </div>
         </div>
@@ -91,36 +48,13 @@
             </div>
             <div class="obj_box_full" style="padding: 0;">
                 <div id="wrapper_ticket_members_list">
-                    <ul>
-                        <li>
-                            <div class="member_data_l">
-                                <img src="/static/common/icon/icon_account.png">
-                            </div>                
-                            <div class="member_data_c">
-                                <div class="member_name">회원명</div>
-                            </div>
-                            <div class="member_data_r">
-                                <div class="member_counts">10회</div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="member_data_l">
-                                <img src="/static/common/icon/icon_account.png">
-                            </div>                
-                            <div class="member_data_c">
-                                <div class="member_name">회원명2</div>
-                            </div>
-                            <div class="member_data_r">
-                                <div class="member_counts">20회</div>
-                            </div>
-                        </li>
-
-
-                    </ul>
+                    
                 </div>
             </div>
         </div>
+
+        <div class="gap"></div>
+        <div class="gap"></div>
 
     </div>
 {% endblock %}
@@ -138,8 +72,6 @@
 {% block popup_base_js %}
 
 <script>
-    func_set_webkit_overflow_scrolling('.popup_ticket_view');
-    
     function toggle_list(target_selector){
         let $target = $(target_selector);
         let status = $target.attr('data-toggle');
@@ -152,5 +84,88 @@
         }
     }
 
+    class Ticket_info{
+        constructor(targetHTML, instance){
+            this.targetHTML = targetHTML;
+            this.instance = instance;
+        }
+
+        render_basic_info(target){
+            let html = `
+                        <div class="obj_box_full">
+                            <div id="wrapper_ticket_info_basic">
+                                <div class="obj_tag obj_font_bg_grey_trans" style="line-height: 20px;">${'횟수제'}</div>
+                                <div>${'30회 - 900,000 원'}</div>
+                                <div>${'다가오는 여름을 준비하기 위해 기초적인 수업들로 구성된 수강권입니다.'}</div>
+                            </div>
+                            <div id="wrapper_ticket_info_dates">
+                                <div>수정 <span>${'2019.06.24'}</span></div>
+                                <div>개설 <span>${'2019.06.21'}</span></div>
+                            </div>
+                        </div
+                        >`
+            document.querySelector(target).innerHTML = html;
+        }
+
+        render_include_lecture_info(target){
+            let html_to_join = [];
+            for(var i=0; i<3; i++){
+                let html = 
+                            `
+                            <li onclick="open_lecture_info_popup('123')">
+                                <div class="lecture_data_l">
+                                    <div class="lecture_tag_body" style="background:#fe4e65"></div>
+                                    <div class="lecture_tag_head" style="border-left-color:#fe4e65"></div>
+                                </div>
+                                <div class="lecture_data_c">
+                                    <div class="lecture_name">수강권 이름</div>
+                                </div>
+                                <div class="lecture_data_r">
+                                    <div class="lecture_member_number">정원 - ${i}명
+                                    </div>
+                                    <div class="lecture_member_number">참여중 - 101명
+                                    </div>
+                                </div>
+                            </li>
+                            `
+                html_to_join.push(html);
+            }
+            document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`;
+        }
+
+        render_include_member_info(target){
+            let html_to_join = [];
+            for(var i=0; i<3; i++){
+                let html = 
+                            `
+                            <li onclick="open_member_info_popup('123')">
+                                <div class="member_data_l">
+                                    <img src="/static/common/icon/icon_account.png">
+                                </div>                
+                                <div class="member_data_c">
+                                    <div class="member_name">회원명</div>
+                                </div>
+                                <div class="member_data_r">
+                                    <div class="member_counts">10회</div>
+                                </div>
+                            </li>
+                            `
+                html_to_join.push(html);
+            }
+            document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`;
+
+                        
+        }
+    }
+
+    let ticket_info_popup = new Ticket_info('.popup_ticket_view', 'ticket_info_popup');
+    ticket_info_popup.render_basic_info('#wrapper_box_ticket_info');
+    ticket_info_popup.render_include_lecture_info('#wrapper_ticket_lectures_list');
+    ticket_info_popup.render_include_member_info('#wrapper_ticket_members_list');
+
+
+
+
+    func_set_webkit_overflow_scrolling('.popup_ticket_view');
 </script>
 {% endblock %}
