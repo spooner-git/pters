@@ -95,7 +95,7 @@ urlpatterns = [
     url(r'^delete_group_info/$', views.delete_group_info_logic, name='delete_group_info'),
     # 그룹 수정 - 내부 회원 수정 x
     url(r'^update_group_info/$', views.update_group_info_logic, name='update_group_info'),
-    # 진행중 그룹 list 조회
+    # 그룹 정보 조회
     url(r'^get_group_info/$', views.GetGroupInfoViewAjax.as_view(), name='get_group_info'),
 
     # 진행중 그룹 list 조회 - refactoring
@@ -125,6 +125,8 @@ urlpatterns = [
     # 패키지에 그룹 삭제
     url(r'^delete_package_group_info/$', views.delete_package_group_info_logic, name='delete_package_group_info'),
 
+    # 그룹 정보 조회
+    url(r'^get_package_info/$', views.GetPackageInfoViewAjax.as_view(), name='get_package_info'),
     # 진행중 패키지 list 조회 - refactoring
     url(r'^get_package_ing_list/$', views.GetPackageIngListViewAjax.as_view(), name='get_package_ing_list'),
     # 완료된 패키지 list 조회 - refactoring

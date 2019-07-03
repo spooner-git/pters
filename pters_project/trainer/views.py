@@ -3317,6 +3317,36 @@ def delete_package_group_info_logic(request):
     return redirect(next_page)
 
 
+class GetPackageInfoViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/group_info_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetPackageInfoViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        group_id = self.request.GET.get('group_id', '')
+        error = None
+        # start_time = timezone.now()
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
+        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
+        group_data = GroupTb.objects.filter(group_id=group_id, class_tb_id=class_id, state_cd='IP', use=USE
+                                            ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
+                                                       state_cd_nm=RawSQL(query_state_cd, [])
+                                                       # group_member_num=RawSQL(query_group_member_num, [])
+                                                       ).order_by('-group_type_cd', 'name')
+        context['total_group_num'] = len(group_data)
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['group_data'] = group_data
+
+        # end_time = timezone.now()
+        # print(str(end_time-start_time))
+
+        return context
+
+
 class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
@@ -5593,11 +5623,50 @@ class PopupTicketAdd(TemplateView):
         select_date = self.request.GET.get('select_date')
         return context
 
+
 class PopupTicketView(TemplateView):
     template_name = 'popup/trainer_popup_ticket_view.html'
 
     def get_context_data(self, **kwargs):
         context = super(PopupTicketView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
-        select_date = self.request.GET.get('select_date')
+        package_id = self.request.GET.get('ticket_id')
+
+        package_group_data = PackageGroupTb.objects.select_related(
+            'package_tb', 'group_tb').filter(class_tb_id=class_id, package_tb_id=package_id,
+                                             package_tb__state_cd='IP', package_tb__use=USE,
+                                             use=USE).order_by('package_tb_id', 'group_tb_id')
+
+        package_group_list = []
+        package_group_id_list = []
+        package_tb = None
+        for package_group_info in package_group_data:
+            group_tb = package_group_info.group_tb
+            package_tb = package_group_info.package_tb
+            if group_tb.state_cd == 'IP' and group_tb.use == USE:
+                package_group_list.append(group_tb.name)
+                package_group_id_list.append(group_tb.group_id)
+
+        class_lecture_list = ClassLectureTb.objects.select_related(
+            'lecture_tb__package_tb',
+            'lecture_tb__member').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                         lecture_tb__package_tb_id=package_id,
+                                         lecture_tb__package_tb__state_cd='IP',
+                                         lecture_tb__package_tb__use=USE, lecture_tb__state_cd='IP',
+                                         lecture_tb__use=USE,
+                                         use=USE).order_by('lecture_tb__package_tb', 'lecture_tb__member')
+
+        member_list = {}
+        for lecture_info in class_lecture_list:
+            member_id = lecture_info.lecture_tb.member_id
+            member_list[member_id] = member_id
+
+        package_info = {'package_id': package_id,
+                        'package_name': package_tb.name,
+                        'package_note': package_tb.note,
+                        'package_group_list': package_group_list,
+                        'package_group_id_list': package_group_id_list,
+                        'package_ing_member_num': len(member_list)}
+
+        context['ticket_info'] = package_info
         return context

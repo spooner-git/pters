@@ -139,7 +139,9 @@
 
 <script>
     func_set_webkit_overflow_scrolling('.popup_ticket_view');
-    
+    {% autoescape off %}
+    var ticket_info = {{ ticket_info }};
+    {% endautoescape %}
     function toggle_list(target_selector){
         let $target = $(target_selector);
         let status = $target.attr('data-toggle');

@@ -129,7 +129,7 @@ class Ticket{
             // let ticket_lectures_included_id = data.package_group_id_list;
             let ticket_lectures_included_name_html = ticket_lectures_included_name.map(el => `<div>${el}</div>`).join('');
 
-            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'ticketid':${ticket_id}});`;
+            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'ticket_id':${ticket_id}});`;
             let html = `<article class="ticket_wrapper" data-ticketid="${ticket_id}" onclick="${onclick}">
                             <div class="ticket_data_u">
                                 <div class="ticket_name">${ticket_name}</div>
