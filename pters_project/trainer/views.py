@@ -5664,6 +5664,7 @@ class PopupTicketView(TemplateView):
         package_info = {'package_id': package_id,
                         'package_name': package_tb.name,
                         'package_note': package_tb.note,
+                        'package_state_cd': package_tb.state_cd,
                         'package_group_list': package_group_list,
                         'package_group_id_list': package_group_id_list,
                         'package_ing_member_num': len(member_list)}
