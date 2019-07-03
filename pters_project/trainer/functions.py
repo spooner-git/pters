@@ -305,83 +305,85 @@ def func_add_lecture_info(user_id, class_id, package_id, counts, price,
 
 
 # 회원의 수강권 삭제하기
-def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
+def func_delete_lecture_info(user_id, class_id, lecture_id):
     error = None
-    class_lecture_info = None
     lecture_info = None
-    user = None
     member = None
 
+    try:
+        query_member_auth = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
+                            " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.USE=1"
+        class_lecture_info = ClassLectureTb.objects.select_related(
+            'lecture_tb__member').get(class_tb_id=class_id,
+                                      lecture_tb_id=lecture_id,
+                                      auth_cd='VIEW',
+                                      use=USE).annotate(member_auth_cd=RawSQL(query_member_auth, []))
+    except ObjectDoesNotExist:
+        error = '수강정보를 불러오지 못했습니다.'
+
     if error is None:
+        # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
+        # group_data.update(fix_state_cd='')
+        member = class_lecture_info.lecture_tb.member
+        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                                  state_cd='NP', use=USE)
+        schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'), class_tb_id=class_id,
+                                                         lecture_tb_id=lecture_id, use=USE)
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id)
+
         try:
-            class_lecture_info = ClassLectureTb.objects.get(class_tb_id=class_id, lecture_tb_id=lecture_id, use=USE)
-        except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
+            with transaction.atomic():
+                # 등록된 일정 정리
+                if len(schedule_data) > 0:
+                    # 예약된 일정 삭제
+                    schedule_data.delete()
+                if len(repeat_schedule_data) > 0:
+                    # 완료된 일정 비활성화
+                    schedule_data_finish.update(use=UN_USE)
+                if len(repeat_schedule_data) > 0:
+                    # 반복일정 삭제
+                    repeat_schedule_data.delete()
 
-    if error is None:
-        try:
-            user = User.objects.get(id=member_id)
-        except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
+                class_lecture_info.auth_cd = 'DELETE'
+                class_lecture_info.mod_member_id = user_id
+                class_lecture_info.save()
+                lecture_info = class_lecture_info.lecture_tb
+                if lecture_info.state_cd == 'IP':
+                    lecture_info.lecture_avail_count = 0
+                    lecture_info.state_cd = 'PE'
+                    lecture_info.save()
 
-    if error is None:
-        try:
-            member = MemberTb.objects.get(member_id=member_id)
-        except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
+                if class_lecture_info.member_auth_cd != 'VIEW':
+                    class_lecture_count = ClassLectureTb.objects.select_related(
+                        'lecture_tb__member').get(class_tb_id=class_id, lecture_tb__member_id=member.member_id,
+                                                  auth_cd='VIEW', use=USE).count()
+                    if member.user.is_active == 0 and str(member.reg_info) == str(user_id) and class_lecture_count == 0:
+                        member.contents = member.user.username + ':' + str(member.member_id)
+                        member.use = UN_USE
+                        member.save()
 
-    if error is None:
-        try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-        except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
-
-    if error is None:
-        package_tb = lecture_info.package_tb
-        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
-        group_data.update(fix_state_cd='')
-
-        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
-                                                  state_cd='NP')
-        schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'), lecture_tb_id=lecture_id)
-        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
-        member_lecture_list = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id).exclude(auth_cd='VIEW')
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
         if user.is_active:
             if len(member_lecture_list) > 0:
-                class_lecture_info.delete()
-                member_lecture_list.delete()
-                schedule_data.delete()
-                schedule_data_finish.delete()
-                repeat_schedule_data.delete()
-                lecture_info.delete()
-
-            else:
-                if len(group_data) > 0:
-                    group_data.update(use=UN_USE)
-                schedule_data.delete()
-                schedule_data_finish.update(use=UN_USE)
-                class_lecture_info.auth_cd = 'DELETE'
-                class_lecture_info.save()
-                if lecture_info.lecture_rem_count == lecture_info.lecture_reg_count:
-                    lecture_info.delete()
-                else:
-                    if lecture_info.state_cd == 'IP':
-                        lecture_info.state_cd = 'PE'
-                        lecture_info.lecture_avail_count = 0
-                        lecture_info.lecture_rem_count = 0
-                        # 굳이 UN_USE로 바꿀 필요 없을듯
-                        # lecture_info.use = UN_USE
-                        lecture_info.save()
+                if lecture_info.state_cd == 'IP':
+                    lecture_info.state_cd = 'PE'
+                    lecture_info.lecture_avail_count = 0
+                    lecture_info.lecture_rem_count = 0
+                    # 굳이 UN_USE로 바꿀 필요 없을듯
+                    # lecture_info.use = UN_USE
+                    lecture_info.save()
 
         else:
-            class_lecture_info.delete()
-            member_lecture_list.delete()
-            schedule_data.delete()
-            schedule_data_finish.delete()
-            repeat_schedule_data.delete()
-            lecture_info.delete()
             # 회원의 수강정보가 더이상 없는경우
-
             if member.reg_info is not None:
                 if str(member.reg_info) == str(user_id):
                     member_lecture_list_confirm = MemberLectureTb.objects.filter(member_id=user.id).count()
@@ -514,3 +516,83 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     context['setting_admin_password'] = setting_admin_password
 
     return context
+
+
+def func_get_package_info(class_id, package_id):
+    package_group_data = PackageGroupTb.objects.select_related(
+        'package_tb', 'group_tb').filter(class_tb_id=class_id, package_tb_id=package_id,
+                                         package_tb__state_cd='IP', package_tb__use=USE,
+                                         use=USE).order_by('package_tb_id', 'group_tb_id')
+
+    package_group_list = []
+    package_group_id_list = []
+    package_tb = None
+    for package_group_info in package_group_data:
+        package_tb = package_group_info.package_tb
+        group_tb = package_group_info.group_tb
+        if group_tb.state_cd == 'IP' and group_tb.use == USE:
+            package_group_list.append(group_tb.name)
+            package_group_id_list.append(group_tb.group_id)
+
+    class_lecture_list = ClassLectureTb.objects.select_related(
+        'lecture_tb__package_tb',
+        'lecture_tb__member').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                     lecture_tb__package_tb_id=package_id,
+                                     lecture_tb__package_tb__state_cd='IP',
+                                     lecture_tb__package_tb__use=USE, lecture_tb__state_cd='IP',
+                                     lecture_tb__use=USE,
+                                     use=USE).order_by('lecture_tb__package_tb', 'lecture_tb__member')
+
+    member_list = {}
+    for lecture_info in class_lecture_list:
+        member_id = lecture_info.lecture_tb.member_id
+        member_list[member_id] = member_id
+
+    package_info = {'package_id': package_id,
+                    'package_name': package_tb.name,
+                    'package_note': package_tb.note,
+                    'package_state_cd': package_tb.state_cd,
+                    'package_group_list': package_group_list,
+                    'package_group_id_list': package_group_id_list,
+                    'package_ing_member_num': len(member_list)}
+    return package_info
+
+
+def func_get_group_info(class_id, group_id):
+    group_package_data = PackageGroupTb.objects.select_related(
+        'package_tb', 'group_tb').filter(class_tb_id=class_id, group_tb_id=group_id,
+                                         group_tb__state_cd='IP', group_tb__use=USE,
+                                         use=USE).order_by('group_tb_id', 'package_tb_id')
+
+    query_package_list = Q()
+    group_package_list = []
+    group_package_id_list = []
+    group_tb = None
+    for group_package_info in group_package_data:
+        group_tb = group_package_info.group_tb
+        package_tb = group_package_info.package_tb
+
+        query_package_list |= Q(lecture_tb__package_tb_id=group_package_info.package_tb_id)
+        if package_tb.state_cd == 'IP' and package_tb.use == USE:
+            group_package_list.append(package_tb.name)
+            group_package_id_list.append(package_tb.package_id)
+
+    class_lecture_list = ClassLectureTb.objects.select_related(
+        'lecture_tb__package_tb',
+        'lecture_tb__member').filter(query_package_list, class_tb_id=class_id, auth_cd='VIEW',
+                                     lecture_tb__package_tb__state_cd='IP',
+                                     lecture_tb__package_tb__use=USE, lecture_tb__state_cd='IP',
+                                     lecture_tb__use=USE,
+                                     use=USE).order_by('lecture_tb__package_tb', 'lecture_tb__member')
+
+    member_list = {}
+    for lecture_info in class_lecture_list:
+        member_id = lecture_info.lecture_tb.member_id
+        member_list[member_id] = member_id
+
+    group_info = {'group_id': group_id, 'group_name': group_tb.name, 'group_note': group_tb.note,
+                  'group_state_cd': group_tb.state_cd, 'group_max_num': group_tb.member_num,
+                  'group_package_list': group_package_list,
+                  'group_package_id_list': group_package_id_list,
+                  'group_ing_member_num': len(member_list)}
+    return group_info

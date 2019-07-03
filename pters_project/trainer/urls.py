@@ -58,7 +58,7 @@ urlpatterns = [
 
     # 회원 정보 수정 - refactoring - 확인 필요
     url(r'^update_member_info/$', views.update_member_info_logic, name='update_member_info'),
-    # 회원 정보 삭제 - refactoring - 확인 필요
+    # 회원 정보 삭제 - refactoring - 진행중,  확인 필요
     url(r'^delete_member_info/$', views.delete_member_info_logic, name='delete_member_info'),
     # 회원 리스트 엑셀 export 기능
     url(r'^export_excel_member_list/$', views.export_excel_member_list_logic, name='export_excel_member_list'),
@@ -74,9 +74,9 @@ urlpatterns = [
 
     # 수강정보 추가 - refactoring 진행중
     url(r'^add_lecture_info/$', views.add_lecture_info_logic, name='add_lecture_info'),
-    # 수강정보 수정
+    # 수강정보 수정 - refactoring 진행중
     url(r'^update_lecture_info/$', views.update_lecture_info_logic, name='update_lecture_info'),
-    # 수강정보 삭제
+    # 수강정보 삭제 - refactoring 진행중
     url(r'^delete_lecture_info/$', views.delete_lecture_info_logic, name='delete_lecture_info'),
     # 수강정보 종료 상태 변경
     url(r'^finish_lecture_info/$', views.finish_lecture_info_logic, name='finish_lecture_info'),
@@ -95,7 +95,7 @@ urlpatterns = [
     url(r'^delete_group_info/$', views.delete_group_info_logic, name='delete_group_info'),
     # 그룹 수정 - 내부 회원 수정 x
     url(r'^update_group_info/$', views.update_group_info_logic, name='update_group_info'),
-    # 그룹 정보 조회
+    # 그룹 정보 조회 - refactoring
     url(r'^get_group_info/$', views.GetGroupInfoViewAjax.as_view(), name='get_group_info'),
 
     # 진행중 그룹 list 조회 - refactoring
@@ -104,7 +104,6 @@ urlpatterns = [
     url(r'^get_group_end_list/$', views.GetGroupEndListViewAjax.as_view(), name='get_group_end_list'),
     # 그룹 회원 조회 - refactoring
     url(r'^get_group_ing_member_list/$', views.GetGroupIngMemberListViewAjax.as_view(), name='get_group_ing_member_list'),
-    # 그룹 종료 회원 조회 - refactoring - 필요 없음
 
     # 그룹 종료 상태 변경
     url(r'^finish_group_info/$', views.finish_group_info_logic, name='finish_group_info'),
