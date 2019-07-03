@@ -176,6 +176,8 @@
 	overflow: hidden;
 	font-size: 10px;
 	letter-spacing: -0.3px;
+
+	z-index: 2;
 }
 .week_group_schedule{
 	background-color: #fe4e65;
@@ -192,4 +194,5 @@
 	background:linear-gradient(-45deg, #fd8494, #fe4e655e);
 	box-sizing: border-box;
 	border: 1px solid #1e1e1e;
+	z-index: 1;
 }
