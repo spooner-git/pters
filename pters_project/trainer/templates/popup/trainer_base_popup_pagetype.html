@@ -4,8 +4,8 @@
     {% block popup_base_wrapper_top %}
     <div class="wrapper_top">
         <img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup()" class="obj_icon_prev">
-        {% block popup_base_wrapper_top_left %}
-        {% endblock %}
+        <span class="icon_center">{% block popup_base_wrapper_top_center %}{% endblock %}</span>
+        <span class="icon_right">{% block popup_base_wrapper_top_right %}{% endblock %}</span>
     </div>
     {% endblock %}
 

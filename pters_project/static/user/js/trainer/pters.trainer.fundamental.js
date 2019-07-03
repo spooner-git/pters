@@ -14,19 +14,25 @@ function dynamic_added_script_exe(script_url, callback){
 function func_set_webkit_overflow_scrolling(target_selector){
     if(os == IOS){
             let $selector = $(target_selector);
-            $selector.scrollTop(1);
+            //$selector.scrollTop(1);
+
+            $selector.off('touchstart').on('touchstart', function(){
+                if($selector.scrollTop() == 0){
+                    $selector.scrollTop(1);
+                }
+            })
+
             $selector.off('scroll').scroll(function(e){
                 const popupHeight = $selector.height();
                 const scrollHeight = $selector.prop('scrollHeight');
                 const scrollLocation = $selector.scrollTop();
-                if(scrollHeight > popupHeight+1){
+                if(scrollHeight >= popupHeight+1){
                     // if(popupHeight + scrollLocation == scrollHeight){
                     //      $selector.animate({scrollTop : scrollLocation-1}, 10);
                     // }else if(popupHeight + scrollLocation == popupHeight){
                     //      $selector.animate({scrollTop : scrollLocation+1}, 10);
                     // }
                     if(popupHeight + scrollLocation >= scrollHeight){
-                        // $selector.animate({scrollTop : scrollLocation-1}, 10);
                         $selector.scrollTop(scrollLocation-1);
                     }else if(popupHeight + scrollLocation <= popupHeight){
                         $selector.scrollTop(1);
