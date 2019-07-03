@@ -537,85 +537,50 @@ def update_member_info_logic(request):
     next_page = request.POST.get('next_page')
 
     error = None
-    user = None
     member = None
+
     if member_id == '':
         error = '회원 ID를 확인해 주세요.'
 
     if error is None:
         try:
-            user = User.objects.get(id=member_id)
+            member = MemberTb.objects.get(member_id=member_id)
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
 
-        try:
-            member = MemberTb.objects.get(user_id=member_id)
-        except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
-
-    input_first_name = ''
-    input_phone = ''
-    input_sex = ''
-    input_birthday_dt = ''
     if error is None:
-        if user.is_active:
+        if member.user.is_active or request.user.id != member.reg_info:
             error = '회원 정보를 수정할수 없습니다.'
-
-    if error is None:
-        if first_name is None or first_name == '':
-            input_first_name = user.first_name
-        else:
-            input_first_name = first_name
-
-        if sex is None or sex == '':
-            input_sex = member.sex
-        else:
-            input_sex = sex
-
-        if birthday_dt is None or birthday_dt == '':
-            input_birthday_dt = member.birthday_dt
-        else:
-            input_birthday_dt = birthday_dt
-
-        if phone is None or phone == '':
-            input_phone = member.phone
-        else:
-            if len(phone) != 11 and len(phone) != 10:
-                error = '연락처 자릿수를 확인해주세요.'
-            elif not phone.isdigit():
-                error = '연락처는 숫자만 입력 가능합니다.'
-            else:
-                input_phone = phone
 
     if error is None:
         try:
             with transaction.atomic():
-                if user.first_name != input_first_name:
-                    user.first_name = input_first_name
-                    member.name = input_first_name
-                    username = user.first_name
-
+                # 회원의 이름을 변경하는 경우 자동으로 ID 변경되도록 설정
+                if member.user.first_name != first_name:
+                    username = member.user.first_name
                     i = 0
                     count = MemberTb.objects.filter(name=username).count()
                     max_range = (100 * (10 ** len(str(count)))) - 1
                     for i in range(0, 100):
-                        username = user.first_name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+                        username = member.user.first_name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
                         try:
                             User.objects.get(username=username)
                         except ObjectDoesNotExist:
                             break
 
                     if i == 100:
-                        error = 'ID 생성에 실패했습니다. 다시 시도해주세요.'
+                        error = 'ID 변경에 실패했습니다. 다시 시도해주세요.'
                         raise InternalError
 
-                    user.username = username
-                    user.save()
+                    member.user.username = username
+                    member.user.first_name = first_name
+                    member.user.save()
 
-                member.phone = input_phone
-                member.sex = input_sex
-                if input_birthday_dt is not None and input_birthday_dt != '':
-                    member.birthday_dt = input_birthday_dt
+                member.name = first_name
+                member.phone = phone
+                member.sex = sex
+                if birthday_dt is not None and birthday_dt != '':
+                    member.birthday_dt = birthday_dt
                 member.save()
 
         except ValueError:
@@ -628,6 +593,92 @@ def update_member_info_logic(request):
             error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = error
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return redirect(next_page)
+
+
+# 회원 삭제
+def delete_member_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    member_id = request.POST.get('member_id')
+    next_page = request.POST.get('next_page')
+    error = None
+    class_lecture_data = None
+    member = None
+    if member_id == '':
+        error = '회원 ID를 확인해 주세요.'
+
+    if error is None:
+
+        try:
+            member = MemberTb.objects.get(member_id=member_id)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.'
+
+    if error is None:
+        query_member_auth = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
+                            " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.USE=1"
+
+        class_lecture_data = ClassLectureTb.objects.select_related(
+            'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                             lecture_tb__member_id=member_id,
+                                             use=USE).annotate(member_auth_cd=RawSQL(query_member_auth, []))
+
+    if error is None:
+
+        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                  lecture_tb__member_id=member_id,
+                                                  state_cd='NP')
+
+        finish_schedule_data = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                         class_tb_id=class_id,
+                                                         lecture_tb__member_id=member_id)
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                                                               lecture_tb__member_id=member_id)
+
+        try:
+            with transaction.atomic():
+                # 등록된 일정 정리
+                if len(schedule_data) > 0:
+                    # 예약된 일정 삭제
+                    schedule_data.delete()
+                if len(repeat_schedule_data) > 0:
+                    # 완료된 일정 비활성화
+                    finish_schedule_data.update(use=UN_USE)
+                if len(repeat_schedule_data) > 0:
+                    # 반복일정 삭제
+                    repeat_schedule_data.delete()
+
+                class_lecture_data.update(auth_cd='DELETE', mod_member_id=request.user.id)
+
+                for class_lecture_info in class_lecture_data:
+                    lecture_info = class_lecture_info.lecture_tb
+                    if lecture_info.state_cd == 'IP':
+                        lecture_info.lecture_avail_count = 0
+                        lecture_info.state_cd = 'PE'
+                        lecture_info.save()
+
+                if len(class_lecture_data.filter(member_auth_cd='VIEW')) == 0:
+                    if member.user.is_active == 0:
+                        if str(member.reg_info) == str(request.user.id):
+                            member.contents = member.user.username + ':' + str(member_id)
+                            member.use = UN_USE
+                            member.save()
+
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -1497,127 +1548,6 @@ class CalPreviewIframeView(LoginRequiredMixin, AccessTestMixin, View):
 # ############### ############### ############### ############### ############### ############### ##############
 
 
-
-# 회원가입 api
-def delete_member_info_logic(request):
-    member_id = request.POST.get('id')
-    class_id = request.session.get('class_id', '')
-    next_page = request.POST.get('next_page')
-    member_name = ''
-    error = None
-    class_lecture_data = None
-    user = None
-    member = None
-    if member_id == '':
-        error = '회원 ID를 확인해 주세요.'
-
-    if error is None:
-
-        try:
-            user = User.objects.get(username=member_id)
-        except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
-
-        try:
-            member = MemberTb.objects.get(user_id=user.id)
-        except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
-
-    if error is None:
-        class_lecture_data = ClassLectureTb.objects.select_related(
-            'lecture_tb__package_tb').filter(class_tb_id=class_id, lecture_tb__member_id=user.id,
-                                             use=USE, auth_cd='VIEW')
-        member_name = member.name
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                if user.is_active == 1:
-                    for class_lecture_info in class_lecture_data:
-                        lecture_info = class_lecture_info.lecture_tb
-                        package_tb = lecture_info.package_tb
-                        lecture_id = lecture_info.lecture_id
-                        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                  lecture_tb_id=lecture_info.lecture_id,
-                                                                  state_cd='NP')
-
-                        schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
-                                                                         class_tb_id=class_id,
-                                                                         lecture_tb_id=lecture_info.lecture_id)
-                        repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                               lecture_tb_id=lecture_info.lecture_id)
-
-                        member_lecture_list_count = \
-                            MemberLectureTb.objects.filter(member_id=user.id,
-                                                           lecture_tb_id=lecture_info.lecture_id
-                                                           ).exclude(auth_cd='VIEW').count()
-
-                        if member_lecture_list_count > 0:
-                            schedule_data.delete()
-                            schedule_data_finish.delete()
-                            repeat_schedule_data.delete()
-                            lecture_info.use = UN_USE
-                            lecture_info.save()
-                        else:
-                            if len(schedule_data) > 0:
-                                schedule_data.delete()
-                            if len(schedule_data_finish) > 0:
-                                schedule_data_finish.update(use=UN_USE)
-                            if lecture_info.state_cd == 'IP':
-                                lecture_info.state_cd = 'PE'
-                                lecture_info.save()
-
-                        if member_lecture_list_count > 0:
-                            lecture_info.delete()
-
-                    class_lecture_data.update(auth_cd='DELETE', mod_member_id=request.user.id)
-                else:
-                    for class_lecture_info in class_lecture_data:
-                        lecture_info = class_lecture_info.lecture_tb
-                        package_tb = lecture_info.package_tb
-                        lecture_id = lecture_info.lecture_id
-                        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                  lecture_tb_id=lecture_info.lecture_id)
-                        repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                               lecture_tb_id=lecture_info.lecture_id)
-
-                        if len(schedule_data) > 0:
-                            schedule_data.delete()
-                        repeat_schedule_data.delete()
-                        lecture_info.use = UN_USE
-                        lecture_info.save()
-
-                        member_lecture_list = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id)
-                        if len(member_lecture_list) > 0:
-                            member_lecture_list.delete()
-
-                        lecture_info.delete()
-                    class_lecture_data.delete()
-                    if member.reg_info is not None:
-                        if str(member.reg_info) == str(request.user.id):
-                            member_lecture_list_confirm = MemberLectureTb.objects.filter(member_id=user.id)
-                            if len(member_lecture_list_confirm) == 0:
-                                member.delete()
-                                user.delete()
-
-        except ValueError:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
-        except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다'
-        except InternalError:
-            error = '등록 값에 문제가 있습니다.'
-
-    if error is None:
-        return redirect(next_page)
-    else:
-        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-
-        return redirect(next_page)
 
 
 def export_excel_member_list_logic(request):
