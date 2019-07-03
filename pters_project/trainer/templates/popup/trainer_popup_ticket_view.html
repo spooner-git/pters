@@ -4,121 +4,122 @@
 
 {% block popup_base_css %}
     <!-- pters.trainee.popup.plan_view.css -->
-    <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.plan_view.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.ticket_view.css" %}>
 {% endblock %}
 
-{% block popup_base_wrapper_top_left %}
-수강권 정보 보기
+{% block popup_base_wrapper_top_center %}
+수강권 이름
+{% endblock %}
+
+{% block popup_base_wrapper_top_right %}
+설정
 {% endblock %}
 
 {% block popup_base_contents %}
     <div class="popup_ticket_view">
-        <div class="wrapper_calendar_plan_view_title">
-            <div class="wrapper_popup_title_text obj_font_size_18_weight_900">{{ date_format | date:'Y.m.d (l)'|cut:"요일" }} </div>
-            <div class="wrapper_popup_title_date obj_font_size_13_weight_500"><span class="obj_font_color_pters_red">{{ schedule_data | length }}개</span>의 수업이 있습니다.</div>
+        <div id="wrapper_box_ticket_info">
+            <div class="obj_box_full">
+                <div id="wrapper_ticket_info_basic">
+                    <div class="obj_tag obj_font_bg_grey_trans" style="line-height: 20px;">횟수제</div>
+                    <div>30회 - 900,000 원</div>
+                    <div>다가오는 여름을 준비하기 위해 기초적인 수업들로 구성된 수강권입니다.</div>
+                </div>
+                <div id="wrapper_ticket_info_dates">
+                    <div>수정 <span>2019.06.24</span></div>
+                    <div>개설 <span>2019.06.21</span></div>
+                </div>
+
+            </div>
         </div>
 
+        <div class="gap"></div>
 
-        <div class="wrapper_box_next_plan">
-            {% for schedule_info in schedule_data %}
+        <div id="wrapper_box_ticket_lectures">
             <div class="obj_box_full">
-                <div class="obj_box_full_grey">
-                    <!-- <div class="wrapper_tag">
-                        <div class="obj_tag obj_font_bg_white_black">예약완료</div>
-                    </div> -->
-                    <div  class="wrapper_img_lesson_type">
-                        <img src="{% static_url "common/icon/people_black.png" %}">
-                    </div>
-                    
-                    <div class="wrapper_lecture_title obj_font_size_15_weight_500">
-                        ({{ schedule_info.group_type_name }}) {{ schedule_info.group_name }}
-                    </div>
-                    <div class="wrapper_plan_info">
-                        <div class="obj_table_raw obj_font_size_10_weight_500 obj_font_color_light_grey">
-                            <div class="obj_table_cell_x3">일자</div>
-                            <div class="obj_table_cell_x3">요일</div>
-                            <div class="obj_table_cell_x3">진행시간</div>
-                        </div>
-                        <div class="obj_table_raw obj_font_size_14_weight_500">
-                            <div class="obj_table_cell_x3">{{ schedule_info.start_dt | date:'Y.m.d' }}</div>
-                            <div class="obj_table_cell_x3">{{ schedule_info.start_dt | date:"l" }}</div>
-                            <div class="obj_table_cell_x3">{{ schedule_info.start_dt | time:'H:i' }} ~ {{ schedule_info.end_dt | time:'H:i' }}</div>
-                        </div>
-                    </div>
-                    {% if next_schedule_info.note %}
-                    <div class="wrapper_teacher_memo_text obj_font_size_12_weight_normal"><span>"{{ schedule_info.note }}"</span></div>
-                    {% endif %}
-                </div>
-                <div class="obj_table_raw wrapper_cancel_notice">
-                    {% if cancel_disable_time > schedule_info.start_dt %}
-                        <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">
-                            <span class="obj_font_size_11_weight_500 obj_font_color_coral">
-                                {% if schedule_info.state_cd == 'PE' %}
-                                    출석한 수업입니다.
-                                {% elif schedule_info.state_cd == 'PC'%}
-                                    결석한 수업입니다.
-                                {% else %}
-                                    예약 취소가 불가능한 수업입니다.
-                                {% endif %}
-                            </span>
-                        </div>
-                    {% else %}
-                        <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">
-                        {% if schedule_info.state_cd == 'PE' %}
-                            <span class="obj_font_size_11_weight_500 obj_font_color_coral">
-                                출석 처리된 수업입니다.
-                            </span>
-                        {% elif schedule_info.state_cd == 'PC'%}
-                            <span class="obj_font_size_11_weight_500 obj_font_color_coral">
-                                결석 처리된 수업입니다.
-                            </span>
-                        {% else %}
-                            취소 가능 시간까지
-                                <span class="obj_font_size_11_weight_500 obj_font_color_coral"> {{ schedule_info.start_dt | date:'Y-m-d H:i' | timeuntil_formatting:request.session.setting_member_reserve_cancel_time }} </span>
-                            남았습니다.
-                        {% endif %}
-                        </div>
-                        {% if schedule_info.state_cd != 'PE' and schedule_info.state_cd != 'PC' %}
-                            <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_coral_trans"
-                                 onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-                                                                       {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
-                                                                       'onclick_function':`func_schedule({'schedule_id':'{{ schedule_info.schedule_id }}'}, ${CALL_AJAX}, '${DELETE}')`})">취소하기</div>
-                        {% endif %}
-                    {% endif %}
+                <div id="toggle_ticket_lectures_list" onclick="toggle_list('#wrapper_ticket_lectures_list')">
+                    <span>포함된 수업</span>
+                    <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
                 </div>
             </div>
-            {% empty %}
-                <div style="text-align:center;">예약된 일정이 없습니다.</div>
-{#            <div class="obj_box_full">#}
-{#                <div class="obj_box_full_grey">#}
-{#                    <div class="wrapper_tag">#}
-{#                        <div class="obj_tag obj_font_bg_white_black">예약완료</div>#}
-{#                    </div>#}
-{#                    <div class="wrapper_lecture_title obj_font_size_15_weight_500">#}
-{#                        ({{ schedule_info.group_type_name }}) {{ schedule_info.group_name }}#}
-{#                    </div>#}
-{#                    <div class="wrapper_plan_info">#}
-{#                        <div class="obj_table_raw obj_font_size_10_weight_500 obj_font_color_light_grey">#}
-{#                            <div class="obj_table_cell_x3">일자</div>#}
-{#                            <div class="obj_table_cell_x3">요일</div>#}
-{#                            <div class="obj_table_cell_x3">진행시간</div>#}
-{#                        </div>#}
-{#                        <div class="obj_table_raw obj_font_size_14_weight_500">#}
-{#                            <div class="obj_table_cell_x3">{{ schedule_info.start_dt | date:'Y.m.d' }}</div>#}
-{#                            <div class="obj_table_cell_x3">{{ schedule_info.start_dt | date:"l" }}</div>#}
-{#                            <div class="obj_table_cell_x3">{{ schedule_info.start_dt | time:'H:i' }} ~ {{ schedule_info.end_dt | time:'H:i' }}</div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                    {% if next_schedule_info.note %}#}
-{#                    <div class="wrapper_teacher_memo_text obj_font_size_12_weight_normal"><span>"{{ schedule_info.note }}"</span></div>#}
-{#                    {% endif %}#}
-{#                </div>#}
-{#                <div class="obj_table_raw wrapper_cancel_notice">#}
-{#                    <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">취소 가능 시간까지 <span class="obj_font_color_black">3시간 26분</span> 남았습니다.</div>#}
-{#                    <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_white_grey" onclick="">취소하기</div>#}
-{#                </div>#}
-{#            </div>#}
-            {% endfor %}
+            <div class="obj_box_full" style="padding: 0;">
+                <div id="wrapper_ticket_lectures_list">
+                    <ul>
+                        <li>
+                            <div class="lecture_data_l">
+                                <div class="lecture_tag_body" style="background:#fe4e65"></div>
+                                <div class="lecture_tag_head" style="border-left-color:#fe4e65"></div>
+                            </div>
+                            <div class="lecture_data_c">
+                                <div class="lecture_name">수강권 이름</div>
+                            </div>
+                            <div class="lecture_data_r">
+                                <div class="lecture_member_number">정원 - 3명
+                                </div>
+                                <div class="lecture_member_number">참여중 - 101명
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="lecture_data_l">
+                                <div class="lecture_tag_body" style="background:#fe4e65"></div>
+                                <div class="lecture_tag_head" style="border-left-color:#fe4e65"></div>
+                            </div>
+                            <div class="lecture_data_c">
+                                <div class="lecture_name">수강권 이름2</div>
+                            </div>
+                            <div class="lecture_data_r">
+                                <div class="lecture_member_number">정원 - 10명
+                                </div>
+                                <div class="lecture_member_number">참여중 - 1010명   
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="gap"></div>
+
+        <div id="wrapper_box_ticket_members">
+            <div class="obj_box_full">
+                <div id="toggle_ticket_members_list" onclick="toggle_list('#wrapper_ticket_members_list')">
+                    <span>진행중인 회원</span>
+                    <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
+                </div>
+            </div>
+            <div class="obj_box_full" style="padding: 0;">
+                <div id="wrapper_ticket_members_list">
+                    <ul>
+                        <li>
+                            <div class="member_data_l">
+                                <img src="/static/common/icon/icon_account.png">
+                            </div>                
+                            <div class="member_data_c">
+                                <div class="member_name">회원명</div>
+                            </div>
+                            <div class="member_data_r">
+                                <div class="member_counts">10회</div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="member_data_l">
+                                <img src="/static/common/icon/icon_account.png">
+                            </div>                
+                            <div class="member_data_c">
+                                <div class="member_name">회원명2</div>
+                            </div>
+                            <div class="member_data_r">
+                                <div class="member_counts">20회</div>
+                            </div>
+                        </li>
+
+
+                    </ul>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -128,11 +129,28 @@
     {% now "Y-m-d" as todays_date %}
 
     {% if date_format|date:"Y-m-d" >= todays_date and avail_end_date|date:"Y-m-d" >= date_format|date:"Y-m-d"%}
-        <div class="obj_button_big obj_font_bg_white_coral" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'{{ date_format| date:'Y-m-d' }}'})">예약 추가하기</div>
+        <!-- <div class="obj_button_big obj_font_bg_white_coral" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'{{ date_format| date:'Y-m-d' }}'})">예약 추가하기</div> -->
     {% else %}
-        <div class="obj_button_big obj_font_bg_pink_white" onclick="layer_popup.all_close_layer_popup()">확인</div>
+        <!-- <div class="obj_button_big obj_font_bg_pink_white" onclick="layer_popup.all_close_layer_popup()">확인</div> -->
     {% endif %}
 {% endblock %}
 
 {% block popup_base_js %}
+
+<script>
+    func_set_webkit_overflow_scrolling('.popup_ticket_view');
+    
+    function toggle_list(target_selector){
+        let $target = $(target_selector);
+        let status = $target.attr('data-toggle');
+        if(status == 0){
+            $target.show(100);
+            $target.attr('data-toggle', 1);
+        }else if(status == undefined || status == 1){
+            $target.hide(100);
+            $target.attr('data-toggle', 0);
+        }
+    }
+
+</script>
 {% endblock %}
