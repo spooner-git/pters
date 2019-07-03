@@ -357,6 +357,23 @@ onclick="layer_popup.all_close_layer_popup();"></div>
     }
     $('#home').trigger('click');
 
+
+
+
+    // 회원, 수업, 수강권 정보 팝업 간단함수
+    function open_member_info_popup(db_id){
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'dbid':db_id});
+    }
+
+    function open_lecture_info_popup(lecture_id){
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lectureid':lecture_id})
+    }
+
+    function open_ticket_info_popup(ticket_id){
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticketid':ticket_id})
+    }
+    // 회원, 수업, 수강권 정보 팝업 간단함수
+
 </script>
 
 </body>
