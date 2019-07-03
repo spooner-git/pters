@@ -135,4 +135,9 @@
 {% endblock %}
 
 {% block popup_base_js %}
+    <script>
+        {% autoescape off %}
+        var lecture_info = {{ lecture_info }};
+        {% endautoescape %}
+    </script>
 {% endblock %}

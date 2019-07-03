@@ -2677,23 +2677,45 @@ class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(GetGroupInfoViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         group_id = self.request.GET.get('group_id', '')
-        error = None
         # start_time = timezone.now()
-        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
-        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
-        group_data = GroupTb.objects.filter(group_id=group_id, class_tb_id=class_id, state_cd='IP', use=USE
-                                            ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
-                                                       state_cd_nm=RawSQL(query_state_cd, [])
-                                                       # group_member_num=RawSQL(query_group_member_num, [])
-                                                       ).order_by('-group_type_cd', 'name')
-        context['total_group_num'] = len(group_data)
-        if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
-                self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
+        group_package_data = PackageGroupTb.objects.select_related(
+            'package_tb', 'group_tb').filter(class_tb_id=class_id, group_tb_id=group_id,
+                                             group_tb__state_cd='IP', group_tb__use=USE,
+                                             use=USE).order_by('group_tb_id', 'package_tb_id')
 
-        context['group_data'] = group_data
+        query_package_list = Q()
+        group_data = collections.OrderedDict()
+        group_package_list = []
+        group_package_id_list = []
+        group_tb = None
+        for group_package_info in group_package_data:
+            group_tb = group_package_info.group_tb
+            package_tb = group_package_info.package_tb
 
+            query_package_list |= Q(lecture_tb__package_tb_id=group_package_info.package_tb_id)
+            if package_tb.state_cd == 'IP' and package_tb.use == USE:
+                group_package_list.append(package_tb.name)
+                group_package_id_list.append(package_tb.package_id)
+
+        class_lecture_list = ClassLectureTb.objects.select_related(
+            'lecture_tb__package_tb',
+            'lecture_tb__member').filter(query_package_list, class_tb_id=class_id, auth_cd='VIEW',
+                                         lecture_tb__package_tb__state_cd='IP',
+                                         lecture_tb__package_tb__use=USE, lecture_tb__state_cd='IP',
+                                         lecture_tb__use=USE,
+                                         use=USE).order_by('lecture_tb__package_tb', 'lecture_tb__member')
+
+        member_list = {}
+        for lecture_info in class_lecture_list:
+            member_list[lecture_info.lecture_tb.member_id] = lecture_info.lecture_tb.member_id
+
+        group_data[group_id] = {'group_id': group_id,
+                                'group_name': group_tb.name,
+                                'group_note': group_tb.note,
+                                'group_max_num': group_tb.member_num,
+                                'group_package_list': group_package_list,
+                                'group_package_id_list': group_package_id_list,
+                                'group_ing_member_num': len(member_list)}
         # end_time = timezone.now()
         # print(str(end_time-start_time))
 
@@ -5568,13 +5590,13 @@ class PopupCalendarPlanView(TemplateView):
         select_date = self.request.GET.get('select_date')
         return context
 
+
 class PopupCalendarPlanAdd(TemplateView):
     template_name = 'popup/trainer_popup_calendar_plan_add.html'
 
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanAdd, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
-        select_date = self.request.GET.get('select_date')
         return context
 
 
@@ -5584,8 +5606,8 @@ class PopupMemberAdd(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupMemberAdd, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
-        select_date = self.request.GET.get('select_date')
         return context
+
 
 class PopupMemberView(TemplateView):
     template_name = 'popup/trainer_popup_member_view.html'
@@ -5593,8 +5615,8 @@ class PopupMemberView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupMemberView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
-        select_date = self.request.GET.get('select_date')
         return context
+
 
 class PopupLectureAdd(TemplateView):
     template_name = 'popup/trainer_popup_lecture_add.html'
@@ -5602,8 +5624,8 @@ class PopupLectureAdd(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupLectureAdd, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
-        select_date = self.request.GET.get('select_date')
         return context
+
 
 class PopupLectureView(TemplateView):
     template_name = 'popup/trainer_popup_lecture_view.html'
@@ -5611,8 +5633,48 @@ class PopupLectureView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupLectureView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
-        select_date = self.request.GET.get('select_date')
+        group_id = self.request.session.get('lecture_id')
+
+        group_package_data = PackageGroupTb.objects.select_related(
+            'package_tb', 'group_tb').filter(class_tb_id=class_id, group_tb_id=group_id,
+                                             group_tb__state_cd='IP', group_tb__use=USE,
+                                             use=USE).order_by('group_tb_id', 'package_tb_id')
+
+        query_package_list = Q()
+        group_package_list = []
+        group_package_id_list = []
+        group_tb = None
+        for group_package_info in group_package_data:
+            group_tb = group_package_info.group_tb
+            package_tb = group_package_info.package_tb
+
+            query_package_list |= Q(lecture_tb__package_tb_id=group_package_info.package_tb_id)
+            if package_tb.state_cd == 'IP' and package_tb.use == USE:
+                group_package_list.append(package_tb.name)
+                group_package_id_list.append(package_tb.package_id)
+
+        class_lecture_list = ClassLectureTb.objects.select_related(
+            'lecture_tb__package_tb',
+            'lecture_tb__member').filter(query_package_list, class_tb_id=class_id, auth_cd='VIEW',
+                                         lecture_tb__package_tb__state_cd='IP',
+                                         lecture_tb__package_tb__use=USE, lecture_tb__state_cd='IP',
+                                         lecture_tb__use=USE,
+                                         use=USE).order_by('lecture_tb__package_tb', 'lecture_tb__member')
+
+        member_list = {}
+        for lecture_info in class_lecture_list:
+            member_id = lecture_info.lecture_tb.member_id
+            member_list[member_id] = member_id
+
+        group_info = {'group_id': group_id, 'group_name': group_tb.name, 'group_note': group_tb.note,
+                      'group_state_cd': group_tb.state_cd, 'group_max_num': group_tb.member_num,
+                      'group_package_list': group_package_list,
+                      'group_package_id_list': group_package_id_list,
+                      'group_ing_member_num': len(member_list)}
+
+        context['lecture_info'] = group_info
         return context
+
 
 class PopupTicketAdd(TemplateView):
     template_name = 'popup/trainer_popup_ticket_add.html'
@@ -5620,7 +5682,6 @@ class PopupTicketAdd(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupTicketAdd, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
-        select_date = self.request.GET.get('select_date')
         return context
 
 
@@ -5641,8 +5702,8 @@ class PopupTicketView(TemplateView):
         package_group_id_list = []
         package_tb = None
         for package_group_info in package_group_data:
-            group_tb = package_group_info.group_tb
             package_tb = package_group_info.package_tb
+            group_tb = package_group_info.group_tb
             if group_tb.state_cd == 'IP' and group_tb.use == USE:
                 package_group_list.append(group_tb.name)
                 package_group_id_list.append(group_tb.group_id)

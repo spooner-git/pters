@@ -129,7 +129,7 @@ class Lecture{
             // let lecture_packages_included_id = data.group_package_id_list;
             // let lecture_packages_included_name_html = lecture_packages_included_name.map(el => `<div>${el}</div>`).join('');
 
-            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'lectureid':${lecture_id}});`;
+            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'lecture_id':${lecture_id}});`;
             let html = `<article class="lecture_wrapper" data-lectureid="${lecture_id}" onclick="${onclick}">
                             <div class="lecture_data_l">
                                 <div class="lecture_tag_body" style="background:#fe4e65"></div>
