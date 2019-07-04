@@ -576,7 +576,11 @@ def func_get_group_info(class_id, group_id):
         if package_tb.state_cd == 'IP' and package_tb.use == USE:
             group_package_list.append(package_tb.name)
             group_package_id_list.append(package_tb.package_id)
-
+    if group_tb is None:
+        try:
+            group_tb = GroupTb.objects.get(class_tb_id=class_id, group_id=group_id, use=USE)
+        except ObjectDoesNotExist:
+            group_tb = None
     class_lecture_list = ClassLectureTb.objects.select_related(
         'lecture_tb__package_tb',
         'lecture_tb__member').filter(query_package_list, class_tb_id=class_id, auth_cd='VIEW',
@@ -589,10 +593,12 @@ def func_get_group_info(class_id, group_id):
     for lecture_info in class_lecture_list:
         member_id = lecture_info.lecture_tb.member_id
         member_list[member_id] = member_id
-
-    group_info = {'group_id': group_id, 'group_name': group_tb.name, 'group_note': group_tb.note,
-                  'group_state_cd': group_tb.state_cd, 'group_max_num': group_tb.member_num,
-                  'group_package_list': group_package_list,
-                  'group_package_id_list': group_package_id_list,
-                  'group_ing_member_num': len(member_list)}
+    if group_tb is not None:
+        group_info = {'group_id': group_id, 'group_name': group_tb.name, 'group_note': group_tb.note,
+                      'group_state_cd': group_tb.state_cd, 'group_max_num': group_tb.member_num,
+                      'group_package_list': group_package_list,
+                      'group_package_id_list': group_package_id_list,
+                      'group_ing_member_num': len(member_list)}
+    else:
+        group_info = None
     return group_info

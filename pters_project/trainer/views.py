@@ -5410,8 +5410,7 @@ class PopupLectureView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupLectureView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
-        group_id = self.request.session.get('lecture_id')
-
+        group_id = self.request.GET.get('lecture_id')
         context['lecture_info'] = func_get_group_info(class_id, group_id)
         return context
 
