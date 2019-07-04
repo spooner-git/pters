@@ -1,35 +1,70 @@
-	#popup_calendar_plan_view .popup_mobile .wrapper_top{
-		height: 50px;
-		margin-bottom: 10px;
+.gap{
+	margin-top: 10px;
+}
+.popup_lecture_view{
+	-webkit-overflow-scrolling: touch;
+}
+
+.popup_lecture_view .obj_box_full{
+	padding: 0px 16px;
+}
+
+.popup_lecture_view #wrapper_lecture_info_basic{
+	padding: 20px 0px;
+}
+.popup_lecture_view #wrapper_lecture_info_dates{
+	padding: 10px 0 15px 0;
+	border-top: 1px solid #f4f4f4;
+}
+
+.popup_lecture_view #wrapper_lecture_tickets_list{
+	overflow: hidden;
+	padding: 10px 0;
+}
+
+	.popup_lecture_view #wrapper_lecture_tickets_list .swiper-slide{
+		/* border: 1px solid #f4f4f4; */
+		box-shadow: 0px 0px 9px 0px #dedede;
+		border-radius: 10px;
+	}
+	.popup_lecture_view #wrapper_lecture_tickets_list .ticket_swiper_element_wrap{
+		padding: 10px;
+	}
+		
+
+#toggle_lecture_tickets_list, #toggle_lecture_members_list{
+	height: 45px;
+	line-height: 45px;
+}
+	#toggle_lecture_tickets_list > .obj_icon_expand, #toggle_lecture_members_list > .obj_icon_expand{
+		margin-top: 12px;
+		float: right;
 	}
 
-	.popup_calendar_plan_view{
-		/*min-height: 100%;*/
-	}	
 
-		.popup_calendar_plan_view .wrapper_calendar_plan_view_title{
-				padding: 0 20px;
-			}
-			.popup_calendar_plan_view .wrapper_popup_title_text{
-				position: absolute;
-				top: 20px;
-				height: 35px;
-				line-height: 35px;
-			}
-			.popup_calendar_plan_view .obj_font_size_14_weight_500{
+.popup_lecture_view #wrapper_lecture_members_list{
+	overflow: hidden;
+}
 
-				
-				height: 20px;
-				line-height: 20px;
-			}
-			.popup_calendar_plan_view .wrapper_calendar_plan_view_title .wrapper_popup_title_date{
-				position: absolute;
-				top: 55px;
+	.popup_lecture_view #wrapper_lecture_members_list ul{
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
 
-			}
-
-
-		.popup_calendar_plan_view > .obj_box_full{
-			margin-top: 30px;
-			margin-bottom: 30px;
+		.popup_lecture_view #wrapper_lecture_members_list li{
+			display: table;
+			width: 100%;
+			line-height: 40px;
+			height: 40px;
+			padding: 5px 16px;
+			border-bottom: 1px solid #f7f5f6;
+			box-sizing: border-box;
+		}
+		.popup_lecture_view #wrapper_lecture_members_list li .member_data_l img{
+			width: 25px;
+		}
+		.popup_lecture_view .member_name{
+			font-weight: unset;
+			font-size: 16px;
 		}

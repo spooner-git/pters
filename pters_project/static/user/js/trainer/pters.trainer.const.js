@@ -75,7 +75,7 @@ const POPUP_ADDRESS_MEMBER_EDIT = 'popup_member_edit';
 
 const POPUP_ADDRESS_LECTURE_VIEW = 'popup_lecture_view';
 const POPUP_ADDRESS_LECTURE_ADD = 'popup_lecture_add';
-const POPUP_ADDRESS_LECTURE_EDIT = 'popup_lecture_add';
+const POPUP_ADDRESS_LECTURE_EDIT = 'popup_lecture_edit';
 
 const POPUP_ADDRESS_TICKET_VIEW = 'popup_ticket_view';
 const POPUP_ADDRESS_TICKET_ADD = 'popup_ticket_add';
