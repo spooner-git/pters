@@ -27,16 +27,16 @@ function func_set_webkit_overflow_scrolling(target_selector){
                 const scrollHeight = $selector.prop('scrollHeight');
                 const scrollLocation = $selector.scrollTop();
                 if(scrollHeight >= popupHeight+1){
-                    // if(popupHeight + scrollLocation == scrollHeight){
-                    //      $selector.animate({scrollTop : scrollLocation-1}, 10);
-                    // }else if(popupHeight + scrollLocation == popupHeight){
-                    //      $selector.animate({scrollTop : scrollLocation+1}, 10);
-                    // }
-                    if(popupHeight + scrollLocation >= scrollHeight){
-                        $selector.scrollTop(scrollLocation-1);
-                    }else if(popupHeight + scrollLocation <= popupHeight){
-                        $selector.scrollTop(1);
+                    if(popupHeight + scrollLocation == scrollHeight){
+                        $selector.animate({scrollTop : scrollLocation-1}, 10);
+                    }else if(popupHeight + scrollLocation == popupHeight){
+                        $selector.animate({scrollTop : scrollLocation+1}, 10);
                     }
+                    // if(popupHeight + scrollLocation >= scrollHeight){
+                    //     $selector.scrollTop(scrollLocation-1);
+                    // }else if(popupHeight + scrollLocation <= popupHeight){
+                    //     $selector.scrollTop(1);
+                    // }
                 }
                 
             });
