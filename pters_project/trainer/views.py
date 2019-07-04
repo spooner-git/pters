@@ -5608,7 +5608,6 @@ class PopupMemberAdd(TemplateView):
         class_id = self.request.session.get('class_id')
         return context
 
-
 class PopupMemberView(TemplateView):
     template_name = 'popup/trainer_popup_member_view.html'
 
@@ -5617,6 +5616,13 @@ class PopupMemberView(TemplateView):
         class_id = self.request.session.get('class_id')
         return context
 
+class PopupMemberEdit(TemplateView):
+    template_name = 'popup/trainer_popup_member_edit.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupMemberEdit, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        return context
 
 class PopupLectureAdd(TemplateView):
     template_name = 'popup/trainer_popup_lecture_add.html'
@@ -5625,7 +5631,6 @@ class PopupLectureAdd(TemplateView):
         context = super(PopupLectureAdd, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
         return context
-
 
 class PopupLectureView(TemplateView):
     template_name = 'popup/trainer_popup_lecture_view.html'
@@ -5673,6 +5678,14 @@ class PopupLectureView(TemplateView):
                       'group_ing_member_num': len(member_list)}
 
         context['lecture_info'] = group_info
+        return context
+
+class PopupLectureEdit(TemplateView):
+    template_name = 'popup/trainer_popup_lecture_edit.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupLectureEdit, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
         return context
 
 
@@ -5731,4 +5744,12 @@ class PopupTicketView(TemplateView):
                         'package_ing_member_num': len(member_list)}
 
         context['ticket_info'] = package_info
+        return context
+
+class PopupTicketEdit(TemplateView):
+    template_name = 'popup/trainer_popup_ticket_edit.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupTicketEdit, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
         return context

@@ -299,14 +299,20 @@ urlpatterns = [
     url(r'^popup_member_view/$', views.PopupMemberView.as_view(),name='popup_member_view'),
     # 회원추가 팝업 페이지
     url(r'^popup_member_add/$', views.PopupMemberAdd.as_view(),name='popup_member_add'),
+    # 회원설정 팝업 페이지
+    url(r'^popup_member_edit/$', views.PopupMemberEdit.as_view(),name='popup_member_edit'),
     # 수업정보 팝업 페이지
     url(r'^popup_lecture_view/$', views.PopupLectureView.as_view(),name='popup_lecture_view'),
     # 수업추가 팝업 페이지
     url(r'^popup_lecture_add/$', views.PopupLectureAdd.as_view(),name='popup_lecture_add'),
+    # 수업설정 팝업 페이지
+    url(r'^popup_lecture_edit/$', views.PopupLectureEdit.as_view(),name='popup_lecture_edit'),
     # 수강권정보 팝업 페이지
     url(r'^popup_ticket_view/$', views.PopupTicketView.as_view(),name='popup_ticket_view'),
     # 수강권추가 팝업 페이지
-    url(r'^popup_ticket_add/$', views.PopupTicketAdd.as_view(),name='popup_ticket_add')
+    url(r'^popup_ticket_add/$', views.PopupTicketAdd.as_view(),name='popup_ticket_add'),
+    # 수강권설정 팝업 페이지
+    url(r'^popup_ticket_edit/$', views.PopupTicketEdit.as_view(),name='popup_ticket_edit')
 ]
 
 

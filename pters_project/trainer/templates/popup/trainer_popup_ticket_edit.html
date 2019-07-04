@@ -1,0 +1,173 @@
+{% extends "popup/trainer_base_popup_pagetype.html" %}
+{% load static_url %}
+{% load background_trainee_data %}
+
+{% block popup_base_css %}
+    <!-- pters.trainee.popup.plan_view.css -->
+    <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.ticket_edit.css" %}>
+{% endblock %}
+
+{% block popup_base_wrapper_top_center %}
+<span id="ticket_name_in_popup">수강권 설정</span>
+{% endblock %}
+
+{% block popup_base_wrapper_top_right %}
+
+{% endblock %}
+
+{% block popup_base_contents %}
+    <div class="popup_ticket_edit">
+    
+        <div id="wrapper_box_ticket_settings" class="obj_box_full">
+            <ul>
+                <li class="">
+                    <div class="obj_table_raw">
+                        <div class="cell_title">수강권명</div>
+                        <div class="cell_value" onclick="open_user_input_popup(null, 'alert(`ok`)')">뜨거운 여름 준비</div>
+                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                    </div>
+                </li>
+
+                <li class="">
+                    <div class="obj_table_raw">
+                        <div class="cell_title">수강권 설명</div>
+                        <div class="cell_value">설명 내용....</div>
+                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                    </div>
+                </li>
+
+                <li class="">
+                    <div class="obj_table_raw">
+                        <div class="cell_title">포함된 수업</div>
+                        <div class="cell_value">2개</div>
+                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                    </div>
+                </li>
+
+                
+                <li class="">
+                    <div class="obj_table_raw">
+                        <div class="cell_title">횟수</div>
+                        <div class="cell_value">20회</div>
+                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                    </div>
+                </li>
+
+                <li class="">
+                    <div class="obj_table_raw">
+                        <div class="cell_title">유효 기간</div>
+                        <div class="cell_value">3개월</div>
+                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                    </div>
+                </li>
+
+                <li class="">
+                    <div class="obj_table_raw">
+                        <div class="cell_title">가격</div>
+                        <div class="cell_value">600,000원</div>
+                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                    </div>
+                </li>
+
+                <li class="">
+                    <div class="obj_table_raw">
+                        <div class="cell_title">수강 종료된 회원</div>
+                        <div class="cell_value"></div>
+                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                    </div>
+                </li>
+
+                <li class="">
+                    <div class="obj_table_raw">
+                        <div class="cell_title">수강권 이력</div>
+                        <div class="cell_value"></div>
+                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                    </div>
+                </li>
+
+                <li class="">
+                    <div class="obj_table_raw">
+                        <div class="cell_title">수강권 비활성화</div>
+                        <div class="cell_value"></div>
+                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="gap"></div>
+        <div class="gap"></div>
+
+    </div>
+{% endblock %}
+
+{% block popoup_base_wrapper_bottom_inside %}
+    {% now "Y-m-d" as todays_date %}
+
+    {% if date_format|date:"Y-m-d" >= todays_date and avail_end_date|date:"Y-m-d" >= date_format|date:"Y-m-d"%}
+        <!-- <div class="obj_button_big obj_font_bg_white_coral" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'{{ date_format| date:'Y-m-d' }}'})">예약 추가하기</div> -->
+    {% else %}
+        <!-- <div class="obj_button_big obj_font_bg_pink_white" onclick="layer_popup.all_close_layer_popup()">확인</div> -->
+    {% endif %}
+{% endblock %}
+
+{% block popup_base_js %}
+
+<script>
+
+    let onclick = `layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_input', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
+                                                {'popup_title':'', 'popup_comment':'입력 대상 이전값',
+                                                'onclick_function':null})`
+
+    function open_user_input_popup(prev_value, callback_after_input){
+        layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_input', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
+                                                {'popup_title':'', 'popup_comment':prev_value,
+                                                'onclick_function':`${callback_after_input};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`})
+    }
+
+
+    class Ticket_edit{
+        constructor(targetHTML, instance, data){
+            this.targetHTML = targetHTML;
+            this.instance = instance;
+            this.data = data;
+            
+            this.ticket_id;
+            this.ticket_name;
+            this.ticket_include_lectures;
+            this.ticket_count;
+            this.ticket_expiry;
+            this.ticekt_price;
+            
+
+            console.log(data);
+        }
+
+        render_setting_list(target){
+
+
+            let html = 
+                        `<li class="">
+                            <div class="obj_table_raw">
+                                <div class="cell_title">수강권명</div>
+                                <div class="cell_value" onclick="open_user_input_popup(null, ${callback})">뜨거운 여름 준비</div>
+                                <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                            </div>
+                        </li>`;
+
+
+            document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`; 
+        }
+
+        send_data(ticket_id, data, callback){
+
+        }
+
+
+    }
+
+
+
+    func_set_webkit_overflow_scrolling('.popup_ticket_view');
+</script>
+{% endblock %}

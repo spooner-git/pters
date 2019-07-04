@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block popup_base_wrapper_top_right %}
-설정
+<span onclick="open_ticket_edit_popup('123')">설정</span>
 {% endblock %}
 
 {% block popup_base_contents %}
@@ -97,6 +97,13 @@
             console.log(data)
         }
 
+        init(){
+            this.render_basic_info('#wrapper_box_ticket_info');
+            this.render_include_lecture_info('#wrapper_ticket_lectures_list');
+            this.render_include_member_info('#wrapper_ticket_members_list');
+            this.render_ticket_name('#ticket_name_in_popup')
+        }
+
         render_ticket_name(target){
             document.querySelector(target).innerHTML = this.data.package_name;
         }
@@ -171,10 +178,11 @@
     }
 
     let ticket_info_popup = new Ticket_info('.popup_ticket_view', 'ticket_info_popup', ticket_info);
-    ticket_info_popup.render_basic_info('#wrapper_box_ticket_info');
-    ticket_info_popup.render_include_lecture_info('#wrapper_ticket_lectures_list');
-    ticket_info_popup.render_include_member_info('#wrapper_ticket_members_list');
-    ticket_info_popup.render_ticket_name('#ticket_name_in_popup')
+    // ticket_info_popup.render_basic_info('#wrapper_box_ticket_info');
+    // ticket_info_popup.render_include_lecture_info('#wrapper_ticket_lectures_list');
+    // ticket_info_popup.render_include_member_info('#wrapper_ticket_members_list');
+    // ticket_info_popup.render_ticket_name('#ticket_name_in_popup')
+    ticket_info_popup.init();
 
 
 
