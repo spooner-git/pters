@@ -1,11 +1,11 @@
 .gap{
 	margin-top: 10px;
 }
-.popup_ticket_edit{
+.popup_lecture_edit{
 	-webkit-overflow-scrolling: touch;
 }
 
-.popup_ticket_edit .obj_box_full{
+.popup_lecture_edit .obj_box_full{
 	padding: 0px 16px;
 }
 
