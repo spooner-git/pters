@@ -147,14 +147,16 @@
                             `
                             <div class="swiper-slide" onclick="open_ticket_info_popup(${ticket_id})">
                                 <div class="ticket_swiper_element_wrap">
-                                    <div>
-                                        <div class="obj_tag obj_font_bg_grey_trans" style="line-height: 20px;">${'횟수제'}</div>
-                                    </div>
-                                    <div>
-                                        <div class="obj_font_size_14_weight_normal">${ticket_name}</div>
-                                    </div>
-                                    <div>
-                                        <span class="obj_font_size_11_weight_normal obj_font_color_dark_grey">2019.06.21</span>
+                                    <div class="ticket_swiper_element_wrap_inner">
+                                        <div>
+                                            <div class="obj_tag obj_font_bg_grey_trans" style="line-height: 20px;">${'횟수제'}</div>
+                                        </div>
+                                        <div>
+                                            <div class="obj_font_size_14_weight_normal">${ticket_name}</div>
+                                        </div>
+                                        <div>
+                                            <span class="obj_font_size_11_weight_normal obj_font_color_dark_grey">2019.06.21</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -210,8 +212,8 @@
     lecture_info_popup = new Lecture_info('.popup_lecture_view', 'lecture_info_popup', lecture_info);
     lecture_info_popup.init();
     swiper = new Swiper('.swiper-container', {
-      slidesPerView: 3,
-      spaceBetween: 10,
+      slidesPerView: 2,
+      spaceBetween: 0,
     });
 
 
