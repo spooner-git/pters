@@ -25,9 +25,8 @@
 
         <div id="wrapper_box_ticket_lectures">
             <div class="obj_box_full">
-                <div id="toggle_ticket_lectures_list" onclick="toggle_list('#wrapper_ticket_lectures_list')">
-                    <span>포함된 수업</span>
-                    <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
+                <div id="toggle_set_lectures_in_ticket">
+                        
                 </div>
             </div>
             <div class="obj_box_full" style="padding: 0;">
@@ -41,9 +40,8 @@
 
         <div id="wrapper_box_ticket_members">
             <div class="obj_box_full">
-                <div id="toggle_ticket_members_list" onclick="toggle_list('#wrapper_ticket_members_list')">
-                    <span>진행중인 회원</span>
-                    <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
+                <div id="toggle_set_members_in_ticket">
+                    
                 </div>
             </div>
             <div class="obj_box_full" style="padding: 0;">
@@ -99,9 +97,19 @@
 
         init(){
             this.render_basic_info('#wrapper_box_ticket_info');
-            this.render_include_lecture_info('#wrapper_ticket_lectures_list');
+            this.render_ticket_name('#ticket_name_in_popup');
+            this.render_lecture_list_set();
+            this.render_member_list_set();
+        }
+
+        render_member_list_set(){
+            this.render_static_component('#toggle_set_members_in_ticket', "toggle_set_member");
             this.render_include_member_info('#wrapper_ticket_members_list');
-            this.render_ticket_name('#ticket_name_in_popup')
+        }
+
+        render_lecture_list_set(){
+            this.render_static_component('#toggle_set_lectures_in_ticket', "toggle_set_lecture");
+            this.render_include_lecture_info('#wrapper_ticket_lectures_list');
         }
 
         render_ticket_name(target){
@@ -175,13 +183,26 @@
             }
             document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`;           
         }
+
+        render_static_component(target, component_name){
+            document.querySelector(target).innerHTML = this.static_component()[component_name];
+        }
+
+        static_component(){
+            return {
+                    toggle_set_lecture : `<div id="toggle_ticket_lectures_list" onclick="toggle_list('#wrapper_ticket_lectures_list')">
+                                            <span>포함된 수업 ${this.data.package_group_id_list.length}</span>
+                                            <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
+                                        </div>`,
+                    toggle_set_member: `<div id="toggle_ticket_members_list" onclick="toggle_list('#wrapper_ticket_members_list')">
+                                            <span>진행중인 회원 ${this.data.package_ing_member_num}</span>
+                                            <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
+                                        </div>`
+            }
+        }
     }
 
     let ticket_info_popup = new Ticket_info('.popup_ticket_view', 'ticket_info_popup', ticket_info);
-    // ticket_info_popup.render_basic_info('#wrapper_box_ticket_info');
-    // ticket_info_popup.render_include_lecture_info('#wrapper_ticket_lectures_list');
-    // ticket_info_popup.render_include_member_info('#wrapper_ticket_members_list');
-    // ticket_info_popup.render_ticket_name('#ticket_name_in_popup')
     ticket_info_popup.init();
 
 
