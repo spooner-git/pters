@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block popup_base_wrapper_top_right %}
-<span onclick="open_ticket_edit_popup('123')">설정</span>
+<span id="ticket_edit_popup_show_button">설정</span>
 {% endblock %}
 
 {% block popup_base_contents %}
@@ -98,6 +98,7 @@
         init(){
             this.render_basic_info('#wrapper_box_ticket_info');
             this.render_ticket_name('#ticket_name_in_popup');
+            this.render_ticket_edit_button('#ticket_edit_popup_show_button');
             this.render_lecture_list_set();
             this.render_member_list_set();
         }
@@ -114,6 +115,10 @@
 
         render_ticket_name(target){
             document.querySelector(target).innerHTML = this.data.package_name;
+        }
+
+        render_ticket_edit_button(target){
+            document.querySelector(target).onclick = () => {open_ticket_edit_popup(this.data.package_id)};
         }
 
         render_basic_info(target){

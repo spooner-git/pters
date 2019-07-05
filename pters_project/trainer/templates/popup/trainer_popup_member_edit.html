@@ -4,11 +4,11 @@
 
 {% block popup_base_css %}
     <!-- pters.trainee.popup.plan_view.css -->
-    <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.lecture_edit.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.member_edit.css" %}>
 {% endblock %}
 
 {% block popup_base_wrapper_top_center %}
-<span id="ticket_name_in_popup">수업 설정</span>
+<span id="ticket_name_in_popup">회원 설정</span>
 {% endblock %}
 
 {% block popup_base_wrapper_top_right %}
@@ -16,30 +16,30 @@
 {% endblock %}
 
 {% block popup_base_contents %}
-    <div class="popup_lecture_edit">
+    <div class="popup_member_edit">
     
-        <div id="wrapper_box_lecture_settings" class="obj_box_full">
+        <div id="wrapper_box_member_settings" class="obj_box_full">
             <ul>
                 <li class="">
                     <div class="obj_table_raw">
-                        <div class="cell_title">수업명</div>
-                        <div class="cell_value" onclick="open_user_input_popup(null, 'alert(`ok`)')">기초 가슴 운동</div>
+                        <div class="cell_title">회원명</div>
+                        <div class="cell_value" onclick="open_user_input_popup(null, 'alert(`ok`)')">피터</div>
                         <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
                     </div>
                 </li>
 
                 <li class="">
                     <div class="obj_table_raw">
-                        <div class="cell_title">정원</div>
-                        <div class="cell_value">3명</div>
+                        <div class="cell_title">회원아이디</div>
+                        <div class="cell_value">support@pters.co.kr</div>
                         <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
                     </div>
                 </li>
 
                 <li class="">
                     <div class="obj_table_raw">
-                        <div class="cell_title">진행 시간</div>
-                        <div class="cell_value">90분</div>
+                        <div class="cell_title">연락처</div>
+                        <div class="cell_value">000-0000-1111</div>
                         <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
                     </div>
                 </li>
@@ -47,31 +47,31 @@
                 
                 <li class="">
                     <div class="obj_table_raw">
-                        <div class="cell_title">색상 태그</div>
-                        <div class="cell_value"><div style="display:inline-block;width:25px;height:25px;border-radius: 3px;background-color:#fe4e65;vertical-align: middle;margin-bottom:4px;"></div></div>
+                        <div class="cell_title">생년월일</div>
+                        <div class="cell_value">1990.01.23</div>
                         <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
                     </div>
                 </li>
 
                 <li class="">
                     <div class="obj_table_raw">
-                        <div class="cell_title">반복 일정</div>
-                        <div class="cell_value">반복 안함</div>
+                        <div class="cell_title">성별</div>
+                        <div class="cell_value">남자</div>
                         <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
                     </div>
                 </li>
 
                 <li class="">
                     <div class="obj_table_raw">
-                        <div class="cell_title">고정 회원 설정</div>
-                        <div class="cell_value">1명</div>
+                        <div class="cell_title">특이사항</div>
+                        <div class="cell_value">특이사항 내용...</div>
                         <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
                     </div>
                 </li>
 
                 <li class="">
                     <div class="obj_table_raw">
-                        <div class="cell_title">수업 종료된 회원</div>
+                        <div class="cell_title">수강권 이력</div>
                         <div class="cell_value"></div>
                         <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
                     </div>
@@ -87,7 +87,15 @@
 
                 <li class="">
                     <div class="obj_table_raw">
-                        <div class="cell_title">수업 비활성화</div>
+                        <div class="cell_title">연결하기</div>
+                        <div class="cell_value"></div>
+                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                    </div>
+                </li>
+
+                <li class="">
+                    <div class="obj_table_raw">
+                        <div class="cell_title">회원 비활성화</div>
                         <div class="cell_value"></div>
                         <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
                     </div>
