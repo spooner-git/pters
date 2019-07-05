@@ -23,7 +23,7 @@
                 <li class="">
                     <div class="obj_table_raw">
                         <div class="cell_title">수강권명</div>
-                        <div class="cell_value" onclick="open_user_input_popup(null, 'alert(`ok`)')">뜨거운 여름 준비</div>
+                        <div class="cell_value" onclick="show_user_input_popup(event.target.innerText, 'console.log(11)')">뜨거운 여름 준비</div>
                         <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
                     </div>
                 </li>
@@ -114,12 +114,6 @@
 {% block popup_base_js %}
 
 <script>
-
-    function open_user_input_popup(prev_value, callback_after_input){
-        layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_input', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-                                                {'popup_title':'', 'popup_comment':prev_value,
-                                                'onclick_function':`${callback_after_input};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`})
-    }
 
 
     class Ticket_edit{

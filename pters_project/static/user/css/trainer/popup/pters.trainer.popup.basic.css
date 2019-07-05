@@ -48,3 +48,20 @@
     .wrapper_popup_basic_buttons .popup_basic_confirm{
         cursor: pointer;
     }
+
+.popup_basic_user_input{
+    text-align: center;
+}
+    .popup_basic_user_input_full{
+        -webkit-appearance: none;
+        width: 85%;
+        height: 40px;
+        font-size: 16px;
+        background-color: #ffffff;
+        margin: 10px 0;
+        border-radius: 3px;
+        border: 0;
+        border-bottom: 1px solid #cccccc;
+        box-sizing: border-box;
+        text-align: center;
+    }
