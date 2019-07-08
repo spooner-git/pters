@@ -2576,7 +2576,8 @@ class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         class_id = request.session.get('class_id', '')
         group_id = request.GET.get('group_id', '')
 
-        return JsonResponse(func_get_group_info(class_id, group_id), json_dumps_params={'ensure_ascii': True})
+        return JsonResponse(func_get_group_info(class_id, group_id, request.user.id),
+                            json_dumps_params={'ensure_ascii': True})
 
 
 class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
@@ -3142,7 +3143,7 @@ class GetPackageInfoViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         class_id = self.request.session.get('class_id')
         package_id = self.request.GET.get('ticket_id')
 
-        context['ticket_info'] = func_get_package_info(class_id, package_id)
+        context['ticket_info'] = func_get_package_info(class_id, package_id, self.request.user.id)
 
         return context
 
@@ -5385,6 +5386,7 @@ class PopupMemberAdd(TemplateView):
         class_id = self.request.session.get('class_id')
         return context
 
+
 class PopupMemberView(TemplateView):
     template_name = 'popup/trainer_popup_member_view.html'
 
@@ -5392,6 +5394,7 @@ class PopupMemberView(TemplateView):
         context = super(PopupMemberView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
         return context
+
 
 class PopupMemberEdit(TemplateView):
     template_name = 'popup/trainer_popup_member_edit.html'
@@ -5401,6 +5404,7 @@ class PopupMemberEdit(TemplateView):
         class_id = self.request.session.get('class_id')
         return context
 
+
 class PopupLectureAdd(TemplateView):
     template_name = 'popup/trainer_popup_lecture_add.html'
 
@@ -5409,6 +5413,7 @@ class PopupLectureAdd(TemplateView):
         class_id = self.request.session.get('class_id')
         return context
 
+
 class PopupLectureView(TemplateView):
     template_name = 'popup/trainer_popup_lecture_view.html'
 
@@ -5416,8 +5421,9 @@ class PopupLectureView(TemplateView):
         context = super(PopupLectureView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
         group_id = self.request.GET.get('lecture_id')
-        context['lecture_info'] = func_get_group_info(class_id, group_id)
+        context['lecture_info'] = func_get_group_info(class_id, group_id, self.request.user.id)
         return context
+
 
 class PopupLectureEdit(TemplateView):
     template_name = 'popup/trainer_popup_lecture_edit.html'
@@ -5445,8 +5451,9 @@ class PopupTicketView(TemplateView):
         class_id = self.request.session.get('class_id')
         package_id = self.request.GET.get('ticket_id')
 
-        context['ticket_info'] = func_get_package_info(class_id, package_id)
+        context['ticket_info'] = func_get_package_info(class_id, package_id, self.request.user.id)
         return context
+
 
 class PopupTicketEdit(TemplateView):
     template_name = 'popup/trainer_popup_ticket_edit.html'
