@@ -41,8 +41,6 @@ class Member{
             url = '/trainer/get_member_ing_list/';
         }else if(list_type == 'end'){
             url = '/trainer/get_member_end_list/';
-        }else{
-            url = '/trainer/get_member_list';
         }
         $.ajax({
             url:url,
@@ -96,39 +94,46 @@ class Member{
         if(current_page != this.page_name){
             return false;
         }
-        // let length;
-        let render_member_data;
 
+        let whole_data, length;
 
         if(list_type == "ing"){
-            this.member_ing_length = Object.keys(jsondata.current_member_data).length;
-            this.member_end_length = jsondata.finish_member_num;
-            render_member_data = jsondata.current_member_data;
+            whole_data = jsondata.current_member_data;
+            length = whole_data.length;
+            this.member_ing_length = length;
             this.member_list_type_text = "진행중";
         }else if(list_type == "end"){
-            this.member_ing_length = jsondata.current_member_num;
-            this.member_end_length = Object.keys(jsondata.finish_member_data).length;
-            render_member_data = jsondata.finish_member_data;
+            whole_data = jsondata.finish_member_data;
+            length = whole_data.length;
+            this.member_end_length = length;
             this.member_list_type_text = "종료";
         }
-        // this.member_length = length;
+
+        this.member_length = length;
 
         let html_temp = [];
-        for (let member_info in render_member_data){
-            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'dbid':${render_member_data[member_info].member_id}});`;
-            let html = `<article class="member_wrapper" data-dbid="${render_member_data[member_info].member_id}" data-name="${render_member_data[member_info].member_name}" onclick="${onclick}">
+        for (let i=0; i<length; i++){
+            let data = whole_data[i];
+            let member_id = data.member_id;
+            let member_name = data.member_name;
+            let member_phone = data.member_phone;
+            let member_reg = data.lecture_reg_count;
+            let member_rem = data.lecture_rem_count;
+
+            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'dbid':${member_id}});`;
+            let html = `<article class="member_wrapper" data-dbid="${member_id}" data-name="${member_name}" onclick="${onclick}">
                             <div class="member_data_l">
                                 <img src="/static/common/icon/icon_account.png">
                             </div>                
                             <div class="member_data_c">
-                                <div class="member_name">${render_member_data[member_info].member_name}</div>
-                                <div class="member_counts"> ${render_member_data[member_info].lecture_rem_count} / ${render_member_data[member_info].lecture_reg_count} <span style="font-size:10px;color:#8d8d8d;">(남은 횟수 / 총 등록횟수)</span></div>
+                                <div class="member_name">${member_name}</div>
+                                <div class="member_counts"> ${member_rem} / ${member_reg} <span style="font-size:10px;color:#8d8d8d;">(남은 횟수 / 총 등록횟수)</span></div>
                             </div>
                             <div class="member_data_r">
-                                <div class="member_phone" onclick="event.stopPropagation();location.href='tel:${render_member_data[member_info].member_phone}'" ${render_member_data[member_info].member_phone == null ? "style='display:none;'" : ""}>
+                                <div class="member_phone" onclick="event.stopPropagation();location.href='tel:${member_phone}'" ${member_phone == "None" ? "style='display:none;'" : ""}>
                                     <img src="/static/common/icon/icon_phone.png" class="icon_contact">
                                 </div>
-                                <div class="member_sms" onclick="event.stopPropagation();location.href='sms:${render_member_data[member_info].member_phone}'" ${render_member_data[member_info].member_phone== null ? "style='display:none;'" : ""}>
+                                <div class="member_sms" onclick="event.stopPropagation();location.href='sms:${member_phone}'" ${member_phone== "None" ? "style='display:none;'" : ""}>
 
                                     <img src="/static/common/icon/icon_message.png" class="icon_contact">
                                 </div>

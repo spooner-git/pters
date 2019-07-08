@@ -202,11 +202,11 @@
         static_component(){
             return {
                     toggle_set_ticket : `<div id="toggle_member_tickets_list" onclick="toggle_list('#wrapper_member_tickets_list')">
-                                            <span>포함된 수강권 ${this.data.group_package_id_list.length}</span>
+                                            <span>진행중인 수강권 ${this.data.group_package_id_list.length}</span>
                                             <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
                                         </div>`,
                     toggle_set_member: `<div id="toggle_member_members_list" onclick="toggle_list('#wrapper_member_members_list')">
-                                            <span>진행중인 회원 ${this.data.group_ing_member_num}</span>
+                                            <span>참여가능 수업 ${this.data.group_ing_member_num}</span>
                                             <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
                                         </div>`
             }
