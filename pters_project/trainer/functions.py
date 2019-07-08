@@ -867,7 +867,7 @@ def func_get_trainee_schedule_list(context, class_id, member_id):
     return context
 
 
-def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, package_id, counts, price,
+def func_add_lecture_info(user_id, class_id, package_id, counts, price,
                           start_date, end_date, contents, member_id, setting_lecture_auto_finish):
 
     error = None
@@ -911,16 +911,17 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, pa
                                          start_date=start_date, end_date=end_date,
                                          note=contents, use=USE)
                 lecture_info.save()
-                # auth_cd = 'DELETE'
                 auth_cd = 'WAIT'
-                # if package_id != '' and package_id is not None:
-                #     auth_cd = 'WAIT'
+                member = lecture_info.member
+
+                if member.reg_info == str(user_id):
+                    if not member.user.is_active:
+                        auth_cd = 'VIEW'
 
                 member_lecture_counts = MemberLectureTb.objects.filter(member_id=member_id, mod_member_id=user_id,
                                                                        auth_cd='VIEW', use=USE).count()
                 if member_lecture_counts > 0:
                     auth_cd = 'VIEW'
-
                 member_lecture_info = MemberLectureTb(member_id=member_id, lecture_tb_id=lecture_info.lecture_id,
                                                       auth_cd=auth_cd, mod_member_id=user_id, use=USE)
 

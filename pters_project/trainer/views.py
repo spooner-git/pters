@@ -2098,8 +2098,7 @@ def add_lecture_info_logic(request):
 
     if error is None:
 
-        error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
-                                      class_id, package_id, input_counts, input_price,
+        error = func_add_lecture_info(request.user.id, class_id, package_id, input_counts, input_price,
                                       input_start_date, input_end_date, input_contents,
                                       user.id, setting_lecture_auto_finish)
     if error is None:
@@ -2957,8 +2956,7 @@ def add_group_member_logic(request):
                             package_id = package_info.package_tb_id
                         except ObjectDoesNotExist:
                             package_id = ''
-                        error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
-                                                      class_id, package_id,
+                        error = func_add_lecture_info(request.user.id, class_id, package_id,
                                                       json_loading_data['lecture_info']['counts'],
                                                       json_loading_data['lecture_info']['price'],
                                                       json_loading_data['lecture_info']['start_date'],
@@ -4293,8 +4291,7 @@ def add_package_member_logic(request):
 
                 if error is None:
                     for user_info in user_db_id_list:
-                        error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
-                                                      class_id, package_id,
+                        error = func_add_lecture_info(request.user.id, class_id, package_id,
                                                       json_loading_data['lecture_info']['counts'],
                                                       json_loading_data['lecture_info']['price'],
                                                       json_loading_data['lecture_info']['start_date'],
