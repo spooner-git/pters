@@ -5,7 +5,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from configs.const import USE
 from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
 
@@ -38,16 +37,6 @@ class LectureTb(TimeStampedModel):
     def __str__(self):
         return self.member.__str__()+'_lecture'
 
-    def check_authorized(self, class_id):
-        try:
-            "trainer.ClassLectureTb".objects.get(class_tb_id=class_id, lecture_tb_id=self.lecture_id,
-                                                 auth_cd='VIEW', use=USE)
-            authorized_check = True
-        except ObjectDoesNotExist:
-            authorized_check = False
-
-        return authorized_check
-
     def get_state_cd_name(self):
         try:
             state_cd_name = CommonCdTb.objects.get(common_cd=self.state_cd).common_cd_nm
@@ -77,4 +66,3 @@ class MemberLectureTb(TimeStampedModel):
             auth_cd_name = ''
         # print(str(auth_cd_name))
         return auth_cd_name
-

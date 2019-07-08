@@ -21,5 +21,3 @@ urlpatterns = [
     url(r'^get_question_list/$', views.GetQuestionDataView.as_view(), name='get_question_list'),
     url(r'^clear_question_list/$', views.ClearQuestionDataView.as_view(), name='clear_question_list')
 ]
-
-

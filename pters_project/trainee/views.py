@@ -1,20 +1,17 @@
 import datetime
-
 import logging
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.db import InternalError
-from django.db import transaction
-from django.db import IntegrityError
+from django.db import InternalError, IntegrityError, transaction
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import View
-from django.views.generic import RedirectView
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 
 # Create your views here.
 
@@ -24,7 +21,7 @@ from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_
 from configs.views import AccessTestMixin
 
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
-from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, HolidayTb
+from schedule.models import ScheduleTb, DeleteScheduleTb
 from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb, GroupTb, PackageGroupTb, PackageTb
 from .models import LectureTb, MemberLectureTb
@@ -32,8 +29,8 @@ from .models import LectureTb, MemberLectureTb
 from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
     func_check_group_available_member_before, func_check_group_available_member_after, func_add_schedule, \
     func_date_check, func_refresh_lecture_count
-from .functions import func_get_class_lecture_count, func_get_lecture_list, \
-    func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
+from .functions import func_get_class_lecture_count, func_get_lecture_list, func_get_class_list, \
+    func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
     func_get_lecture_connection_list, func_get_trainee_next_schedule_by_class_id, func_get_trainee_select_schedule, \
     func_get_trainee_ing_group_list, func_check_select_date_reserve_setting, func_get_trainee_package_list, \
@@ -55,12 +52,6 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
     url = '/trainee/trainee_main/'
 
     def get(self, request, **kwargs):
-
-        class_id = request.session.get('class_id', '')
-
-        # if class_id is None or class_id == '':
-        #     self.url = '/trainee/trainee_main/'
-        # else:
 
         query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                              " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = "+str(request.user.id)+" and" \
@@ -100,6 +91,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
             lecture_np_counter = 0
             lecture_id_select = ''
             class_tb_selected = None
+            class_lecture_id_select = None
             for lecture_info in lecture_data:
                 if lecture_info.auth_type_cd == 'WAIT':
                     lecture_np_counter += 1
@@ -180,60 +172,34 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
-    def get(self, request):
-        return redirect('/trainee/trainee_main/')
+class CalMonthView(LoginRequiredMixin, AccessTestMixin, RedirectView):
+    url = '/trainee/trainee_main/'
+
+    def get(self, request, **kwargs):
+        return super(CalMonthView, self).get(request, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        return super(CalMonthView, self).get_redirect_url(*args, **kwargs)
 
 
-class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'mypage_trainee_blank.html'
+class CalMonthBlankView(LoginRequiredMixin, AccessTestMixin, RedirectView):
+    url = '/trainee/trainee_main/'
 
-    def get(self, request):
-        return redirect('/trainee/trainee_mypage/')
+    def get(self, request, **kwargs):
+        return super(CalMonthBlankView, self).get(request, **kwargs)
 
-
-class CalMonthBlankView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'cal_month_trainee_blank.html'
-
-    def get(self, request):
-        return redirect('/trainee/trainee_main/')
-        # context = super(CalMonthBlankView, self).get_context_data(**kwargs)
-        # context = {}
-        # context = get_trainee_setting_data(context, request.user.id)
-        # holiday = HolidayTb.objects.filter(use=USE)
-        # request.session['setting_language'] = context['lt_lan_01']
-        # context['holiday'] = holiday
-        # return render(request, self.template_name, context)
+    def get_redirect_url(self, *args, **kwargs):
+        return super(CalMonthBlankView, self).get_redirect_url(*args, **kwargs)
 
 
-class MyPageBlankView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'mypage_trainee_blank.html'
+class MyPageBlankView(LoginRequiredMixin, AccessTestMixin, RedirectView):
+    url = '/trainee/trainee_mypage/'
 
-    def get(self, request):
-        return redirect('/trainee/trainee_mypage/')
-        # context = super(MyPageBlankView, self).get_context_data(**kwargs)
-        # context = {}
-        # member_info = None
-        # error = None
-        # sns_id = request.session.get('social_login_id', '')
-        # try:
-        #     member_info = MemberTb.objects.get(member_id=request.user.id)
-        # except ObjectDoesNotExist:
-        #     error = '회원 정보를 불러오지 못했습니다.'
-        #
-        # if error is None:
-        #     if member_info.phone is None:
-        #         member_info.phone = ''
-        #     if member_info.birthday_dt is None:
-        #         member_info.birthday_dt = ''
-        #     context['member_info'] = member_info
-        # context['check_password_changed'] = 1
-        # if sns_id != '' and sns_id is not None:
-        #     sns_password_change_check = SnsInfoTb.objects.filter(member_id=request.user.id, sns_id=sns_id,
-        #                                                          change_password_check=1, use=USE).count()
-        #     if sns_password_change_check == 0:
-        #         context['check_password_changed'] = 0
-        # return render(request, self.template_name, context)
+    def get(self, request, **kwargs):
+        return super(MyPageBlankView, self).get(request, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        return super(MyPageBlankView, self).get_redirect_url(*args, **kwargs)
 
 
 class TraineeCalendarView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -241,7 +207,7 @@ class TraineeCalendarView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TraineeCalendarView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
+        # class_id = self.request.session.get('class_id', '')
 
         # date = self.request.GET.get('date', '')
         # day = self.request.GET.get('day', '')
@@ -354,13 +320,13 @@ def add_trainee_schedule_logic(request):
     class_info = None
     start_date = None
     end_date = None
-    select_date = None
     push_class_id = []
     push_title = []
     push_message = []
     context = {'push_class_id': None, 'push_title': None, 'push_message': None}
     schedule_info = None
     lecture_id = None
+    lecture_info = None
     lt_res_member_time_duration = 1
 
     if class_id is None or class_id == '':
@@ -536,7 +502,6 @@ def delete_trainee_schedule_logic(request):
     push_title = []
     push_message = []
     group_name = '1:1 레슨'
-    group_type_name = ''
     context = {'push_class_id': None, 'push_title': None, 'push_message': None}
     lecture_id = None
 
@@ -553,7 +518,6 @@ def delete_trainee_schedule_logic(request):
         start_date = schedule_info.start_dt
         end_date = schedule_info.end_dt
         group_name = schedule_info.get_group_name()
-        group_type_name = schedule_info.get_group_type_cd_name()
         if start_date < timezone.now():  # 강사 설정 시간으로 변경필요
             error = '이미 지난 일정입니다.'
 
@@ -1695,7 +1659,6 @@ class PopupCalendarPlanReserveView(TemplateView):
         context = super(PopupCalendarPlanReserveView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
         select_date = self.request.GET.get('select_date')
-        trainer_id = self.request.session.get('trainer_id', '')
         # 개인 수업 예약 가능 횟수 호출
         # 회원과 연결되어있는 수강권중에서 개인 수업이 포함되어 있는 경우 count
 

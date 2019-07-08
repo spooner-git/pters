@@ -121,5 +121,5 @@ urlpatterns = [
     # 월간 일정 페이지
     url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
     # Mypage 페이지
-    url(r'^mypage_trainee/$', views.MyPageView.as_view(), name='mypage_trainee'),
+    # url(r'^mypage_trainee/$', views.MyPageView.as_view(), name='mypage_trainee'),
 ]

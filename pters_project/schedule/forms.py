@@ -24,4 +24,3 @@ class ScheduleTbForm(forms.ModelForm):
         null_string_validator(end_dt, '종료 일시')
 
         return end_dt
-

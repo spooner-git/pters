@@ -1,16 +1,12 @@
 import logging
 
-from django.contrib.auth import logout
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
 from django.views.generic import RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import TemplateView
 
 # Create your views here.
-from configs.const import USE
-from trainee.models import MemberLectureTb
 
 logger = logging.getLogger(__name__)
 
@@ -149,7 +145,7 @@ class Error404View(TemplateView):
 
 
 class Error500View(TemplateView):
-    template_name = '505_page.html'
+    template_name = '500_page.html'
 
     def get_context_data(self, **kwargs):
         context = super(Error500View, self).get_context_data(**kwargs)
