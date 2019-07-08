@@ -102,7 +102,7 @@ def login_trainer(request):
             except ObjectDoesNotExist:
                 user = None
 
-        if user is not None and user.is_active:
+        if user is not None:
             member = None
             try:
                 member = MemberTb.objects.get(member_id=user.id)
@@ -110,28 +110,28 @@ def login_trainer(request):
                 error = 'ID/비밀번호를 확인해주세요.'
             if error is None:
                 if member.use == 1:
-                    login(request, user)
-                    if auto_login_check == '0':
-                        request.session.set_expiry(0)
-                    return redirect(next_page)
-                else:
-                    error = '이미 탈퇴된 회원입니다.'
-
-        elif user is not None and user.is_active == 0:
-            member = None
-            try:
-                member = MemberTb.objects.get(member_id=user.id)
-            except ObjectDoesNotExist:
-                error = 'ID/비밀번호를 확인해주세요.'
-            if error is None:
-                if member.use == 1:
-                    request.session['user_id'] = user.id
-                    request.session['username'] = user.username
-                    if user.email is None or user.email == '':
-                        next_page = '/login/send_email_member/'
+                    if user.is_active:
+                        login(request, user)
+                        if auto_login_check == '0':
+                            request.session.set_expiry(0)
+                        return redirect(next_page)
                     else:
-                        next_page = '/login/resend_email_member/'
-                    return redirect(next_page)
+                        group_list = user.groups.filter(user=user.id)
+                        if len(group_list) == 1:
+                            group_name = group_list[0].name
+                        if group_name == 'trainee' and password != '0000':
+                            login(request, user)
+                            if auto_login_check == '0':
+                                request.session.set_expiry(0)
+                        else:
+                            request.session['user_id'] = user.id
+                            request.session['username'] = user.username
+                            if user.email is None or user.email == '':
+                                next_page = '/login/send_email_member/'
+                            else:
+                                next_page = '/login/resend_email_member/'
+
+                        return redirect(next_page)
                 else:
                     error = '이미 탈퇴한 회원입니다.'
         else:
@@ -640,9 +640,9 @@ class NewMemberResendEmailAuthenticationView(RegistrationView, View):
     template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request):
-        form = RegistrationForm(request.POST, request.FILES)
+        form = MyRegistrationForm(request.POST, request.FILES)
         user_id = request.POST.get('username', '')
-        email = request.POST.get('email', '')
+        # email = request.POST.get('email', '')
         password = request.POST.get('password', '')
         member_type = request.POST.get('member_type', '')
         member_id = request.POST.get('member_id', '')
@@ -655,9 +655,9 @@ class NewMemberResendEmailAuthenticationView(RegistrationView, View):
             if form.is_valid():
                 if error is None:
                     if member_type == 'new':
-                        if email is None or email == '':
-                            error = 'Email을 입력해주세요.'
-                        elif user_id is None or user_id == '':
+                        # if email is None or email == '':
+                        #     error = 'Email을 입력해주세요.'
+                        if user_id is None or user_id == '':
                             error = 'ID를 입력해주세요.'
 
                 if error is None:
@@ -671,7 +671,7 @@ class NewMemberResendEmailAuthenticationView(RegistrationView, View):
                     if member_type == 'new':
                         if error is None:
                             user.username = user_id
-                            user.email = email
+                            # user.email = email
                             user.set_password(password)
                             user.save()
                 if error is None:
@@ -679,8 +679,8 @@ class NewMemberResendEmailAuthenticationView(RegistrationView, View):
                     if user is not None:
                         if user.is_active:
                             error = '이미 인증된 ID 입니다.'
-                        else:
-                            self.send_activation_email(user)
+                        # else:
+                        #     self.send_activation_email(user)
                     else:
                         error = 'ID가 존재하지 않습니다.'
 
@@ -698,10 +698,10 @@ class NewMemberResendEmailAuthenticationView(RegistrationView, View):
                                     error += err
 
         if error is not None:
-            logger.error(str(username)+'->'+str(user_id)+'['+str(email)+']'+str(error))
+            logger.error(str(username)+'->'+str(user_id)+str(error))
             messages.error(request, error)
         else:
-            logger.info(str(username)+'->'+str(user_id)+'['+str(email)+'] 회원가입 완료')
+            logger.info(str(username)+'->'+str(user_id)+' 회원가입 완료')
 
         return render(request, self.template_name)
 
@@ -1167,7 +1167,7 @@ class CheckMemberValidationView(View):
     def post(self, request):
         context = {}
         # context = super(CheckMemberValidationView, self).get_context_data(**kwargs)
-        form = RegistrationForm(self.request.POST, self.request.FILES)
+        form = MyRegistrationForm(self.request.POST, self.request.FILES)
         if form.is_valid():
             self.error = ''
         else:
