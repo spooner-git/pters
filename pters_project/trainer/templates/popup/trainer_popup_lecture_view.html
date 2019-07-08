@@ -174,18 +174,25 @@
 
         render_include_member_info(target){
             let html_to_join = [];
-            for(var i=0; i<3; i++){
+            let length = this.data.group_member_list.length;
+            for(var i=0; i<length; i++){
+                let data = this.data.group_member_list[i];
+                let member_id = data.member_id;
+                let member_name = data.member_name;
+                let member_sex = data.member_sex;
+                let member_rem = data.lecture_rem_count;
+                let member_reg = data.lecture_reg_count;
                 let html = 
                             `
-                            <li onclick="open_member_info_popup('123')">
+                            <li onclick="open_member_info_popup(${member_id})">
                                 <div class="member_data_l">
                                     <img src="/static/common/icon/icon_account.png">
                                 </div>                
                                 <div class="member_data_c">
-                                    <div class="member_name">회원명</div>
+                                    <div class="member_name">${member_name}</div>
                                 </div>
                                 <div class="member_data_r">
-                                    <div class="member_counts">10회</div>
+                                    <div class="member_counts">잔여 ${member_rem}회</div>
                                 </div>
                             </li>
                             `
