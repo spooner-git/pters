@@ -1333,7 +1333,6 @@ class GetMemberOneToOneEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Temp
 def update_member_info_logic(request):
     member_id = request.POST.get('member_id')
     first_name = request.POST.get('first_name', '')
-    last_name = request.POST.get('last_name', '')
     phone = request.POST.get('phone', '')
     sex = request.POST.get('sex', '')
     birthday_dt = request.POST.get('birthday', '')
@@ -1357,7 +1356,6 @@ def update_member_info_logic(request):
             error = '회원 ID를 확인해 주세요.'
 
     input_first_name = ''
-    input_last_name = ''
     input_phone = ''
     input_sex = ''
     input_birthday_dt = ''
@@ -1400,29 +1398,28 @@ def update_member_info_logic(request):
         try:
             with transaction.atomic():
                 if user.first_name != input_first_name:
-                    user.first_name = input_first_name
                     # user.last_name = input_last_name
                     # member.name = input_last_name + input_first_name
-                    member.name = input_first_name
                     # username = user.last_name + user.first_name
-                    username = user.first_name
+                    # username = user.first_name
+                    if not user.is_active and member.name in user.username:
+                        i = 0
+                        count = MemberTb.objects.filter(name=input_first_name).count()
+                        max_range = (100 * (10 ** len(str(count)))) - 1
+                        for i in range(0, 100):
+                            username = input_first_name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+                            try:
+                                User.objects.get(username=username)
+                            except ObjectDoesNotExist:
+                                break
 
-                    i = 0
-                    count = MemberTb.objects.filter(name=username).count()
-                    max_range = (100 * (10 ** len(str(count)))) - 1
-                    for i in range(0, 100):
-                        # username = user.last_name + user.first_name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
-                        username = user.first_name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
-                        try:
-                            User.objects.get(username=username)
-                        except ObjectDoesNotExist:
-                            break
+                        if i == 100:
+                            error = 'ID 생성에 실패했습니다. 다시 시도해주세요.'
+                            raise InternalError
 
-                    if i == 100:
-                        error = 'ID 생성에 실패했습니다. 다시 시도해주세요.'
-                        raise InternalError
-
-                    user.username = username
+                        user.username = username
+                    member.name = input_first_name
+                    user.first_name = input_first_name
                     user.save()
 
                 member.phone = input_phone

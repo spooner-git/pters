@@ -119,7 +119,7 @@ def login_trainer(request):
                         group_list = user.groups.filter(user=user.id)
                         if len(group_list) == 1:
                             group_name = group_list[0].name
-                        if group_name == 'trainee' and password != '0000':
+                        if group_name == 'trainee' and member.name not in user.username:
                             login(request, user)
                             if auto_login_check == '0':
                                 request.session.set_expiry(0)
@@ -388,8 +388,8 @@ def logout_trainer(request):
 
     logout(request)
     if error is not None:
-            logger.error(request.user.last_name + ' ' + request.user.first_name
-                         + '[' + str(request.user.id) + ']' + error)
+        logger.error(request.user.last_name + ' ' + request.user.first_name
+                     + '[' + str(request.user.id) + ']' + error)
     return redirect('/')
 
 
@@ -463,7 +463,7 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
                 error = '이미 가입된 회원입니다.'
 
         if error is not None:
-            logger.error(name+'['+email+']'+error)
+            logger.error(name + '[' + email + ']' + error)
             messages.error(request, error)
 
         return redirect(next_page)
@@ -532,7 +532,7 @@ class AddOldMemberSnsInfoView(RegistrationView, View):
                 error = '이미 가입된 회원입니다.'
 
         if error is not None:
-            logger.error(name+'['+email+']'+error)
+            logger.error(name + '[' + email + ']' + error)
             messages.error(request, error)
 
         return render(request, self.template_name)
@@ -679,8 +679,8 @@ class NewMemberResendEmailAuthenticationView(RegistrationView, View):
                     if user is not None:
                         if user.is_active:
                             error = '이미 인증된 ID 입니다.'
-                        # else:
-                        #     self.send_activation_email(user)
+                            # else:
+                            #     self.send_activation_email(user)
                     else:
                         error = 'ID가 존재하지 않습니다.'
 
@@ -698,10 +698,10 @@ class NewMemberResendEmailAuthenticationView(RegistrationView, View):
                                     error += err
 
         if error is not None:
-            logger.error(str(username)+'->'+str(user_id)+str(error))
+            logger.error(str(username) + '->' + str(user_id) + str(error))
             messages.error(request, error)
         else:
-            logger.info(str(username)+'->'+str(user_id)+' 회원가입 완료')
+            logger.info(str(username) + '->' + str(user_id) + ' 회원가입 완료')
 
         return render(request, self.template_name)
 
@@ -878,7 +878,7 @@ class ResetPasswordView(View):
 
             return render(request, self.template_name, context)
         else:
-            logger.error('email:'+email + '/' + error)
+            logger.error('email:' + email + '/' + error)
             messages.error(request, error)
             return render(request, self.template_name)
 
@@ -945,11 +945,11 @@ def add_member_info_logic_test(request):
             error = '이미 가입된 회원입니다.'
 
     if error is None:
-        logger.info(member.name+' 회원 가입 완료')
+        logger.info(member.name + ' 회원 가입 완료')
         messages.info(request, '회원가입이 정상적으로 완료됐습니다.')
         return redirect(next_page)
     else:
-        logger.error(name+'['+str(user_id)+']'+error)
+        logger.error(name + '[' + str(user_id) + ']' + error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -1031,7 +1031,7 @@ class AddMemberView(RegistrationView, View):
                                 error += err
 
         if error is not None:
-            logger.error(name+'['+form.cleaned_data['email']+']'+error)
+            logger.error(name + '[' + form.cleaned_data['email'] + ']' + error)
             messages.error(request, error)
 
         return render(request, self.template_name)
@@ -1076,7 +1076,7 @@ class AddMemberNoEmailView(View):
                                                         'user_db_id': ''})
         else:
             if context['error'] is not None:
-                logger.error(name+'[강사 회원가입]'+context['error'])
+                logger.error(name + '[강사 회원가입]' + context['error'])
                 messages.error(request, context['error'])
 
             return render(request, self.template_name, {'username': context['username'],
@@ -1330,7 +1330,7 @@ def out_member_logic(request):
                 if i == 100:
                     raise InternalError
                 if error is None:
-                    member.contents = str(user.username)+':'+str(user.id)
+                    member.contents = str(user.username) + ':' + str(user.id)
                     user.username = username
                     user.email = ''
                     user.is_active = 0
@@ -1368,7 +1368,7 @@ def out_member_logic(request):
                     billing_info.save()
                 payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                             customer_uid=billing_info.customer_uid)
-                if len(payment_data) >0:
+                if len(payment_data) > 0:
                     payment_data.update(status='cancelled', use=UN_USE)
 
                 error = None
@@ -1376,7 +1376,7 @@ def out_member_logic(request):
     if error is None:
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1458,7 +1458,7 @@ def clear_badge_counter_logic(request):
     if push_token is None or push_token == '':
         error = 'Push 정보를 가져올 수 없습니다'
 
-    logger.info(request.user.first_name+'['+str(request.user.id)+']'+push_token)
+    logger.info(request.user.first_name + '[' + str(request.user.id) + ']' + push_token)
     if error is None:
         try:
             token_data = PushInfoTb.objects.get(token=push_token, use=USE)
@@ -1472,7 +1472,7 @@ def clear_badge_counter_logic(request):
     if error is None:
         return render(request, 'ajax/token_check_ajax.html', {'token_check': token_data.token})
     else:
-        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         # messages.error(request, error)
 
         return render(request, 'ajax/token_check_ajax.html', {'token_check': ''})
