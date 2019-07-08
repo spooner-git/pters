@@ -2,7 +2,5 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/trainee/views.py" dialect="GenericSQL" />
-    <file url="mock:///views.py" dialect="MySQL" />
-    <file url="mock:///views.py" dialect="MySQL" />
   </component>
 </project>
