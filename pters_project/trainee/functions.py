@@ -1,6 +1,6 @@
 import datetime
 
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
@@ -694,6 +694,7 @@ def func_get_class_list_only_view(context, member_id):
         context['error'] = error
 
     return context
+
 
 def func_get_trainee_next_schedule_by_class_id(context, class_id, user_id):
 

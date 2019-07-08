@@ -2,7 +2,6 @@ import datetime
 import logging
 
 # Create your views here.
-from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -31,6 +30,8 @@ class GetSalesListViewAjax(LoginRequiredMixin, TemplateView):
         end_date = self.request.GET.get('end_date', '')
 
         error = None
+        sales_data_result = {}
+
         if start_date == '' or start_date is None:
             error = '시작 일자를 선택해주세요.'
         elif end_date == '' or end_date is None:
@@ -38,12 +39,14 @@ class GetSalesListViewAjax(LoginRequiredMixin, TemplateView):
         try:
             finish_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
             month_first_day = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+            self.request.session['sales_start_date'] = str(month_first_day.date())
+            self.request.session['sales_finish_date'] = str(finish_date.date())
+            sales_data_result = get_sales_data(class_id, month_first_day, finish_date)
         except TypeError:
             error = '날짜 형식에 문제 있습니다.'
         except ValueError:
             error = '날짜 형식에 문제 있습니다.'
 
-        sales_data_result = get_sales_data(class_id, month_first_day, finish_date)
         if sales_data_result['error'] is None:
             context['month_price_data'] = sales_data_result['month_price_data']
         else:
@@ -53,9 +56,6 @@ class GetSalesListViewAjax(LoginRequiredMixin, TemplateView):
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
                          + str(self.request.user.id) + ']' + error)
             messages.error(self.request, error)
-        else:
-            self.request.session['sales_start_date'] = str(month_first_day.date())
-            self.request.session['sales_finish_date'] = str(finish_date.date())
 
         return context
 
@@ -68,17 +68,17 @@ class GetSalesInfoViewAjax(LoginRequiredMixin, TemplateView):
         class_id = self.request.GET.get('class_id', '')
         month_date = self.request.GET.get('month_date', '')
         error = None
+        sales_data_result = {}
         if month_date == '' or month_date is None:
             error = '조회하고자 하는 날짜를 선택해주세요.'
 
         try:
             month_first_day = datetime.datetime.strptime(month_date, '%Y-%m-%d')
+            sales_data_result = get_sales_info(class_id, month_first_day)
         except TypeError:
             error = '날짜 형식에 문제 있습니다.'
         except ValueError:
             error = '날짜 형식에 문제 있습니다.'
-
-        sales_data_result = get_sales_info(class_id, month_first_day)
 
         if sales_data_result['error'] is None:
             context['price_data'] = sales_data_result['price_data']
@@ -110,13 +110,13 @@ class GetStatsMemberListViewAjax(LoginRequiredMixin, TemplateView):
         try:
             finish_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
             month_first_day = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+            context = get_stats_member_data(class_id, month_first_day, finish_date)
         except TypeError:
             error = '날짜 형식에 문제 있습니다.'
         except ValueError:
             error = '날짜 형식에 문제 있습니다.'
 
         if error is None:
-            context = get_stats_member_data(class_id, month_first_day, finish_date)
             error = context['error']
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['

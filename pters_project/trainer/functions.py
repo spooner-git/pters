@@ -1,22 +1,20 @@
 import datetime
 import collections
 
-from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
-from django.utils import timezone
 
-from configs.const import ON_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, FROM_TRAINEE_LESSON_ALARM_ON, \
+from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF
 
-from login.models import MemberTb, LogTb, CommonCdTb
+from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
-from trainee.models import LectureTb, MemberLectureTb
-from .models import ClassLectureTb, GroupLectureTb, GroupTb, ClassTb, SettingTb, PackageGroupTb, PackageTb
+from trainee.models import LectureTb
+from .models import ClassLectureTb, GroupTb, SettingTb, PackageGroupTb, PackageTb
 
 
 # 전체 회원 id 정보 가져오기
@@ -55,7 +53,7 @@ def func_get_class_member_end_list(class_id, keyword):
                              "and D.AUTH_CD=\'VIEW\') > 0 "
     class_lecture_data = ClassLectureTb.objects.select_related(
         'lecture_tb__member__user'
-    ).filter(Q(lecture_tb__member__name__contains=keyword)|
+    ).filter(Q(lecture_tb__member__name__contains=keyword) |
              Q(lecture_tb__member__user__username__contains=keyword),
              class_tb_id=class_id, auth_cd='VIEW',
              lecture_tb__use=USE, lecture_tb__member__use=USE,
@@ -104,14 +102,13 @@ def func_get_member_end_list(class_id, user_id, keyword):
 
     all_lecture_list = ClassLectureTb.objects.select_related(
         'lecture_tb__package_tb',
-        'lecture_tb__member__user').filter(~Q(lecture_tb__state_cd='IP'),
-                                           Q(lecture_tb__member__name__contains=keyword) |
-                                           Q(lecture_tb__member__user__username__contains=keyword),
-                                           class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
-                                           use=USE).annotate(lecture_count=RawSQL(query_lecture_count, []),
-                                                             lecture_ip_count=RawSQL(query_lecture_ip_count, [])
-                                                             ).filter(lecture_ip_count=0).order_by('lecture_tb__member_id',
-                                                                                                   'lecture_tb__end_date')
+        'lecture_tb__member__user').filter(
+        ~Q(lecture_tb__state_cd='IP'),
+        Q(lecture_tb__member__name__contains=keyword) | Q(lecture_tb__member__user__username__contains=keyword),
+        class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
+        use=USE).annotate(lecture_count=RawSQL(query_lecture_count, []),
+                          lecture_ip_count=RawSQL(query_lecture_ip_count, [])
+                          ).filter(lecture_ip_count=0).order_by('lecture_tb__member_id', 'lecture_tb__end_date')
 
     return func_get_member_from_lecture_list(all_lecture_list, user_id)
 
@@ -186,6 +183,7 @@ def func_get_member_from_lecture_list(all_lecture_list, user_id):
 def func_get_member_info(class_id, user_id, member_id):
     member_info = {}
     error = None
+    member = None
 
     try:
         member = MemberTb.objects.get(member_id=member_id)
@@ -193,7 +191,7 @@ def func_get_member_info(class_id, user_id, member_id):
         error = '회원 ID를 확인해 주세요.'
 
     if error is None:
-        connection_check = func_check_member_connection_info(class_id, member.member_id)
+        connection_check = func_check_member_connection_info(class_id, member_id)
         if member.reg_info is None or str(member.reg_info) != str(user_id):
             # 연결이 안되어 있는 경우 회원 정보 표시 안함
             if not connection_check:
@@ -240,11 +238,21 @@ def func_check_member_connection_info(class_id, member_id):
 def func_add_lecture_info(user_id, class_id, package_id, counts, price,
                           start_date, end_date, contents, member_id):
     error = None
+    member = None
+    try:
+        member = MemberTb.objects.get(member_id=member_id)
+    except ObjectDoesNotExist:
+        error = '회원 정보를 불러오지 못했습니다.'
 
     try:
         with transaction.atomic():
 
             auth_cd = 'WAIT'
+
+            if member.reg_info == str(user_id):
+                if not member.user.is_active:
+                    auth_cd = 'VIEW'
+
             member_lecture_counts = ClassLectureTb.objects.select_related(
                 'lecture_tb__member').filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
                                              lecture_tb__member_auth_cd='VIEW', use=USE).count()
@@ -307,9 +315,7 @@ def func_add_lecture_info(user_id, class_id, package_id, counts, price,
 # 회원의 수강권 삭제하기
 def func_delete_lecture_info(user_id, class_id, lecture_id):
     error = None
-    lecture_info = None
-    member = None
-
+    class_lecture_info = None
     try:
         query_member_auth = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                             " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.USE=1"
@@ -372,24 +378,6 @@ def func_delete_lecture_info(user_id, class_id, lecture_id):
             error = '등록 값의 형태가 문제 있습니다'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
-        if user.is_active:
-            if len(member_lecture_list) > 0:
-                if lecture_info.state_cd == 'IP':
-                    lecture_info.state_cd = 'PE'
-                    lecture_info.lecture_avail_count = 0
-                    lecture_info.lecture_rem_count = 0
-                    # 굳이 UN_USE로 바꿀 필요 없을듯
-                    # lecture_info.use = UN_USE
-                    lecture_info.save()
-
-        else:
-            # 회원의 수강정보가 더이상 없는경우
-            if member.reg_info is not None:
-                if str(member.reg_info) == str(user_id):
-                    member_lecture_list_confirm = MemberLectureTb.objects.filter(member_id=user.id).count()
-                    if member_lecture_list_confirm == 0:
-                        member.delete()
-                        user.delete()
 
     return error
 

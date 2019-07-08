@@ -13,10 +13,10 @@ from trainee.models import MemberLectureTb, LectureTb
 class CenterTb(TimeStampedModel):
     center_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
-    center_name = models.CharField(db_column='CENTER_NAME', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    center_name = models.CharField(db_column='CENTER_NAME', max_length=20, blank=True, null=True)
     address = models.CharField(db_column='ADDRESS', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    center_type_cd = models.CharField(db_column='CENTER_TYPE_CD', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    center_img_url = models.CharField(db_column='CENTER_IMG_URL', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    center_type_cd = models.CharField(db_column='CENTER_TYPE_CD', max_length=20, blank=True, null=True)
+    center_img_url = models.CharField(db_column='CENTER_IMG_URL', max_length=255, blank=True, null=True)
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
@@ -142,13 +142,6 @@ class ClassLectureTb(TimeStampedModel):
             group_check = 0
 
         return group_check
-
-    def get_member_lecture_auth_check(self):
-        if self.lecture_tb_id is not None and self.lecture_tb_id != '':
-            lecture_auth_count = MemberLectureTb.objects.filter(lecture_tb=self.lecture_tb_id,
-                                                                auth_cd='VIEW', lecture_tb__use=USE,
-                                                                use=USE).count()
-        return lecture_auth_count
 
     def get_group_lecture_info(self):
 

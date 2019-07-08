@@ -103,7 +103,8 @@ urlpatterns = [
     # 완료된 그룹 list 조회 - refactoring
     url(r'^get_group_end_list/$', views.GetGroupEndListViewAjax.as_view(), name='get_group_end_list'),
     # 그룹 회원 조회 - refactoring
-    url(r'^get_group_ing_member_list/$', views.GetGroupIngMemberListViewAjax.as_view(), name='get_group_ing_member_list'),
+    url(r'^get_group_ing_member_list/$', views.GetGroupIngMemberListViewAjax.as_view(),
+        name='get_group_ing_member_list'),
 
     # 그룹 종료 상태 변경
     url(r'^finish_group_info/$', views.finish_group_info_logic, name='finish_group_info'),
@@ -216,7 +217,7 @@ urlpatterns = [
     # 휴대폰 번호 입력후 출석 완료 기능
     url(r'^attend_mode_finish/$', views.attend_mode_finish_logic, name='attend_mode_finish'),
     # 출석체크 모드 Setting 수정
-    url(r'^update_attend_mode_setting/$', views.update_attend_mode_setting_logic, name='update_setting_basic'),
+    url(r'^update_attend_mode_setting/$', views.update_attend_mode_setting_logic, name='update_attend_mode_setting'),
     # 관리자 비밀번호 확인
     url(r'^check_admin_password/$', views.check_admin_password_logic, name='check_admin_password'),
     # 출석 체크 모드 스케쥴 조회
@@ -229,22 +230,8 @@ urlpatterns = [
     url(r'^cal_total/$', views.CalTotalView.as_view(), name='cal_total'),
     # 회원/그룹/클래스 통합 뷰 페이지
     url(r'^lecture_manage/$', views.ManageLectureView.as_view(), name='lecture_manage'),
-    # 수강권 페이지
-    url(r'^ticket_manage/$', views.ManageTicketView.as_view(), name='ticket_manage'),
     # 회원 관리 페이지
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
-    # 그룹 관리 페이지
-    url(r'^group_manage/$', views.ManageGroupView.as_view(), name='group_manage'),
-    # 클래스 관리 페이지
-    url(r'^class_manage/$', views.ManageClassView.as_view(), name='class_manage'),
-    # 센터 관리 페이지
-    url(r'^center_manage/$', views.ManageCenterView.as_view(), name='center_manage'),
-    # 이용 문의 페이지
-    url(r'^help_setting/$', views.HelpPtersView.as_view(), name='help_setting'),
-    # From 피터스팀 페이지
-    url(r'^frompters_setting/$', views.FromPtersView.as_view(), name='frompters_setting'),
-    # About us 페이지
-    url(r'^aboutus_setting/$', views.AboutUsView.as_view(), name='aboutus_setting'),
     # Attend Mode 페이지
     url(r'^attend_mode/$', views.AttendModeView.as_view(), name='attend_mode'),
     # Attend Mode Detail 페이지
@@ -256,7 +243,7 @@ urlpatterns = [
     # Mypage 페이지
     url(r'^trainer_mypage/$', views.MyPageView.as_view(), name='trainer_mypage'),
     # 회원 탈퇴 페이지
-    url(r'^delete_account/$', views.DeleteAccountView.as_view(), name='delete_account'),
+    # url(r'^delete_account/$', views.DeleteAccountView.as_view(), name='delete_account'),
     # Setting 페이지
     url(r'^trainer_setting/$', views.TrainerSettingView.as_view(), name='trainer_setting'),
     # 배경 화면 선택 페이지
@@ -267,51 +254,37 @@ urlpatterns = [
     url(r'^reserve_setting/$', views.ReserveSettingView.as_view(), name='reserve_setting'),
     # 예약 관련 Setting 페이지
     url(r'^basic_setting/$', views.BasicSettingView.as_view(), name='basic_setting'),
-    # 금액 Setting 페이지
-    url(r'^sales_setting/$', views.SalesSettingView.as_view(), name='sales_setting'),
-    # 클래스 Setting 페이지
-    url(r'^class_setting/$', views.ClassSettingView.as_view(), name='class_setting'),
-    # 언어 Setting 페이지
-    url(r'^language_setting/$', views.LanguageSettingView.as_view(), name='language_setting'),
     # 매출 관리 페이지
     url(r'^work_manage/$', views.ManageWorkView.as_view(), name='work_manage'),
     # 알람 조회 페이지
     url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
     # 알람 조회 페이지 PC
-    url(r'^alarm_pc/$', views.AlarmPCView.as_view(), name='alarm_pc'),
+    # url(r'^alarm_pc/$', views.AlarmPCView.as_view(), name='alarm_pc'),
 
-    # iframe 주간 일정 페이지
-    url(r'^iframe_week/$', views.CalWeekIframeView.as_view(), name='iframe_week'),
-    # iframe 월간 일정 페이지
-    url(r'^iframe_month/$', views.CalMonthIframeView.as_view(), name='iframe_month'),
-    # iframe 회원 달력 미리보기 페이지
-    url(r'^iframe_preview/$', views.CalPreviewIframeView.as_view(), name='iframe_preview'),
     ######################################################################################################
 
     # 리뉴얼 
     # 팝업
     # 일정 팝업 페이지
-    url(r'^popup_calendar_plan_view/$', views.PopupCalendarPlanView.as_view(),name='popup_calendar_plan_view'),
+    url(r'^popup_calendar_plan_view/$', views.PopupCalendarPlanView.as_view(), name='popup_calendar_plan_view'),
     # 일정 팝업 페이지
-    url(r'^popup_calendar_plan_add/$', views.PopupCalendarPlanAdd.as_view(),name='popup_calendar_plan_add'),
+    url(r'^popup_calendar_plan_add/$', views.PopupCalendarPlanAdd.as_view(), name='popup_calendar_plan_add'),
     # 회원정보 팝업 페이지
-    url(r'^popup_member_view/$', views.PopupMemberView.as_view(),name='popup_member_view'),
+    url(r'^popup_member_view/$', views.PopupMemberView.as_view(), name='popup_member_view'),
     # 회원추가 팝업 페이지
-    url(r'^popup_member_add/$', views.PopupMemberAdd.as_view(),name='popup_member_add'),
+    url(r'^popup_member_add/$', views.PopupMemberAdd.as_view(), name='popup_member_add'),
     # 회원설정 팝업 페이지
-    url(r'^popup_member_edit/$', views.PopupMemberEdit.as_view(),name='popup_member_edit'),
+    url(r'^popup_member_edit/$', views.PopupMemberEdit.as_view(), name='popup_member_edit'),
     # 수업정보 팝업 페이지
-    url(r'^popup_lecture_view/$', views.PopupLectureView.as_view(),name='popup_lecture_view'),
+    url(r'^popup_lecture_view/$', views.PopupLectureView.as_view(), name='popup_lecture_view'),
     # 수업추가 팝업 페이지
-    url(r'^popup_lecture_add/$', views.PopupLectureAdd.as_view(),name='popup_lecture_add'),
+    url(r'^popup_lecture_add/$', views.PopupLectureAdd.as_view(), name='popup_lecture_add'),
     # 수업설정 팝업 페이지
-    url(r'^popup_lecture_edit/$', views.PopupLectureEdit.as_view(),name='popup_lecture_edit'),
+    url(r'^popup_lecture_edit/$', views.PopupLectureEdit.as_view(), name='popup_lecture_edit'),
     # 수강권정보 팝업 페이지
-    url(r'^popup_ticket_view/$', views.PopupTicketView.as_view(),name='popup_ticket_view'),
+    url(r'^popup_ticket_view/$', views.PopupTicketView.as_view(), name='popup_ticket_view'),
     # 수강권추가 팝업 페이지
-    url(r'^popup_ticket_add/$', views.PopupTicketAdd.as_view(),name='popup_ticket_add'),
+    url(r'^popup_ticket_add/$', views.PopupTicketAdd.as_view(), name='popup_ticket_add'),
     # 수강권설정 팝업 페이지
-    url(r'^popup_ticket_edit/$', views.PopupTicketEdit.as_view(),name='popup_ticket_edit')
+    url(r'^popup_ticket_edit/$', views.PopupTicketEdit.as_view(), name='popup_ticket_edit')
 ]
-
-

@@ -10,9 +10,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.db import IntegrityError
-from django.db import InternalError
-from django.db import transaction
+from django.db import IntegrityError, InternalError, transaction
 from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -23,20 +21,17 @@ from django.core.files.base import ContentFile
 # Create your views here.
 from configs import settings
 from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, TO_TRAINEE_LESSON_ALARM_ON, \
-    TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, SCHEDULE_DUPLICATION_ENABLE, AUTO_ABSENCE_ON
+    TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, AUTO_ABSENCE_ON
 
 from login.models import LogTb, MemberTb
-from trainer.models import GroupLectureTb, GroupTb, ClassTb, ClassLectureTb, PackageGroupTb
+from trainer.models import GroupTb, ClassTb, PackageGroupTb
 from trainee.models import LectureTb, MemberLectureTb
 from .models import ScheduleTb, RepeatScheduleTb
 
 from .functions import func_get_lecture_id, func_add_schedule, func_refresh_lecture_count, func_date_check, \
-    func_update_member_schedule_alarm, func_save_log_data, func_check_group_schedule_enable, \
-    func_get_available_group_member_list, func_get_group_lecture_id, \
-    func_check_group_available_member_before, func_check_group_available_member_after, \
-    func_send_push_trainer, func_get_not_available_group_member_list, func_send_push_trainee, func_delete_schedule, \
-    func_delete_repeat_schedule, func_update_repeat_schedule, func_get_repeat_schedule_date_list, \
-    func_add_repeat_schedule, func_refresh_group_status, func_refresh_lecture_count_for_delete
+    func_get_group_lecture_id, func_check_group_available_member_before, func_check_group_available_member_after, \
+    func_send_push_trainer, func_send_push_trainee, func_delete_schedule, func_delete_repeat_schedule, \
+    func_update_repeat_schedule, func_get_repeat_schedule_date_list, func_add_repeat_schedule, func_refresh_group_status
 
 logger = logging.getLogger(__name__)
 
@@ -72,8 +67,8 @@ def add_schedule_logic(request):
     schedule_end_datetime = None
     lecture_id = ''
     member_info = None
-    group_info = None
-    member_name = ''
+    # group_info = None
+    # member_name = ''
     push_lecture_id = []
     push_title = []
     push_message = []
@@ -246,7 +241,7 @@ def delete_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
-    auth_member_num = request.POST.get('auth_member_num', 20)
+    # auth_member_num = request.POST.get('auth_member_num', 20)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
     push_lecture_id = []
@@ -260,9 +255,9 @@ def delete_schedule_logic(request):
     end_dt = None
     member_name = None
     schedule_info = None
-    group_type_cd_name = ''
+    # group_type_cd_name = ''
     group_name = ''
-    package_tb = None
+    # package_tb = None
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
     if en_dis_type == ON_SCHEDULE_TYPE:
@@ -296,7 +291,7 @@ def delete_schedule_logic(request):
         end_dt = schedule_info.end_dt
         group_id = schedule_info.group_tb_id
         if group_id is not None and group_id != '':
-            group_type_cd_name = schedule_info.get_group_type_cd_name()
+            # group_type_cd_name = schedule_info.get_group_type_cd_name()
             group_name = schedule_info.get_group_name()
 
     if error is None:
@@ -337,7 +332,7 @@ def delete_schedule_logic(request):
             # func_save_log_data(start_dt, end_dt, class_id, lecture_id, request.user.last_name+request.user.first_name,
             #                    member_name, en_dis_type, 'LS02', request)
             log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name+request.user.first_name, to_member_name=member_name,
+                             from_member_name=request.user.first_name, to_member_name=member_name,
                              class_tb_id=class_id, lecture_tb_id=lecture_id,
                              log_info=group_name + ' 수업', log_how='예약 취소',
                              log_detail=str(start_dt) + '/' + str(end_dt), use=USE)
@@ -347,7 +342,7 @@ def delete_schedule_logic(request):
             # func_save_log_data(start_dt, end_dt, class_id, lecture_id, request.user.last_name+request.user.first_name,
             #                    member_name, GROUP_SCHEDULE_TYPE, 'LS02', request)
             log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name+request.user.first_name, to_member_name=member_name,
+                             from_member_name=request.user.first_name, to_member_name=member_name,
                              class_tb_id=class_id, lecture_tb_id=lecture_id,
                              log_info='1:1 레슨', log_how='예약 취소',
                              log_detail=str(start_dt) + '/' + str(end_dt), use=USE)
@@ -635,7 +630,7 @@ def add_repeat_schedule_logic(request):
     # next_page = request.POST.get('next_page')
 
     duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
-    setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
+    # setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
 
     week_info = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)']
     context = {}
@@ -651,6 +646,7 @@ def add_repeat_schedule_logic(request):
     end_time_check = 0
     repeat_duplication_date_data = []
     repeat_success_date_data = []
+    schedule_check = 0
 
     if duplication_enable_flag is None or duplication_enable_flag == '':
         duplication_enable_flag = SCHEDULE_DUPLICATION_DISABLE
@@ -762,7 +758,6 @@ def add_repeat_schedule_logic(request):
             if error_date is None:
                 try:
                     with transaction.atomic():
-                        schedule_check = 0
                         schedule_result = None
                         # PT 일정 추가라면 일정 추가해야할 lecture id 찾기
                         lecture_id = None
@@ -860,8 +855,8 @@ def add_repeat_schedule_confirm(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id')
     repeat_confirm = request.POST.get('repeat_confirm')
-    date = request.POST.get('date', '')
-    day = request.POST.get('day', '')
+    # date = request.POST.get('date', '')
+    # day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
@@ -994,7 +989,7 @@ def delete_repeat_schedule_logic(request):
     push_title = []
     push_message = []
     group_id = None
-    group_type_cd_name = ''
+    # group_type_cd_name = ''
     group_name = ''
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
@@ -1016,7 +1011,7 @@ def delete_repeat_schedule_logic(request):
         lecture_id = repeat_schedule_info.lecture_tb_id
         group_id = repeat_schedule_info.group_tb_id
         if group_id is not None and group_id != '':
-            group_type_cd_name = repeat_schedule_info.get_group_type_cd_name()
+            # group_type_cd_name = repeat_schedule_info.get_group_type_cd_name()
             group_name = repeat_schedule_info.get_group_name()
 
     if error is None:
@@ -1194,8 +1189,8 @@ def add_group_schedule_logic(request):
     schedule_end_time = request.POST.get('training_end_time')
     # schedule_time_duration = request.POST.get('time_duration', '')
     note = request.POST.get('add_memo', '')
-    date = request.POST.get('date', '')
-    day = request.POST.get('day', '')
+    # date = request.POST.get('date', '')
+    # day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
@@ -1219,7 +1214,7 @@ def add_group_schedule_logic(request):
     push_title = []
     push_message = []
     package_tb_list = []
-    class_info = None
+    # class_info = None
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
     if duplication_enable_flag is None or duplication_enable_flag == '':
@@ -1399,14 +1394,12 @@ def add_group_schedule_logic(request):
                                     # for package_group_info in package_group_data:
                                     #     func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
-                                log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                                                 from_member_name=request.user.first_name,
-                                                 to_member_name=member_info.name,
-                                                 class_tb_id=class_id,
-                                                 lecture_tb_id=lecture_id,
-                                                 log_info=group_info.name + ' 수업', log_how='예약 완료',
-                                                 log_detail=str(schedule_start_datetime) + '/'
-                                                            + str(schedule_end_datetime), use=USE)
+                                log_data = LogTb(
+                                    log_type='LS02', auth_member_id=request.user.id,
+                                    from_member_name=request.user.first_name, to_member_name=member_info.name,
+                                    class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                    log_info=group_info.name + ' 수업', log_how='예약 완료',
+                                    log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime), use=USE)
                                 log_data.save()
 
                                 push_info_schedule_start_date = str(schedule_start_datetime).split(':')
@@ -1462,12 +1455,12 @@ def add_group_schedule_logic(request):
 # 그룹 일정 취소
 def delete_group_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id', '')
-    date = request.POST.get('date', '')
-    day = request.POST.get('day', '')
+    # date = request.POST.get('date', '')
+    # day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
-    auth_member_num = request.POST.get('auth_member_num', 20)
+    # auth_member_num = request.POST.get('auth_member_num', 20)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
@@ -1506,7 +1499,7 @@ def delete_group_schedule_logic(request):
             member_name = None
             schedule_id = member_group_schedule_info.schedule_id
             lecture_id = member_group_schedule_info.lecture_tb_id
-            lecture_info = member_group_schedule_info.lecture_tb
+            # lecture_info = member_group_schedule_info.lecture_tb
             repeat_schedule_id = member_group_schedule_info.repeat_schedule_tb_id
             start_dt = member_group_schedule_info.start_dt
             end_dt = member_group_schedule_info.end_dt
@@ -2146,10 +2139,10 @@ def add_group_repeat_schedule_logic(request):
     repeat_end_time = request.POST.get('repeat_end_time')
     repeat_schedule_time_duration = request.POST.get('repeat_dur', '')
     class_id = request.session.get('class_id', '')
-    next_page = request.POST.get('next_page')
+    # next_page = request.POST.get('next_page')
 
     duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
-    setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
+    # setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     group_member_ids = request.POST.get('group_member_ids', '')
     if group_member_ids is not None and group_member_ids != '':
         group_member_ids = group_member_ids.split('/')
@@ -2158,7 +2151,7 @@ def add_group_repeat_schedule_logic(request):
     error = None
     success_start_date = None
     success_end_date = None
-    class_info = None
+    # class_info = None
     group_info = None
     repeat_schedule_start_date_info = None
     repeat_schedule_end_date_info = None
@@ -2167,7 +2160,7 @@ def add_group_repeat_schedule_logic(request):
     repeat_schedule_info = None
     repeat_schedule_date_list = None
     pt_schedule_input_counter = 0
-    group_schedule_reg_counter = 0
+    # group_schedule_reg_counter = 0
     end_time_check = 0
     repeat_duplication_date_data = []
     repeat_success_date_data = []
@@ -2214,12 +2207,6 @@ def add_group_repeat_schedule_logic(request):
             error = '종료 시각을 선택해 주세요.'
         # elif repeat_schedule_time_duration == '':
         #     error = '진행 시간을 선택해 주세요.'
-
-    if error is None:
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '오류가 발생했습니다.'
 
     if error is None:
         # 그룹 정보 가져오기
@@ -2391,8 +2378,8 @@ def add_group_repeat_schedule_confirm(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id')
     repeat_confirm = request.POST.get('repeat_confirm')
-    date = request.POST.get('date', '')
-    day = request.POST.get('day', '')
+    # date = request.POST.get('date', '')
+    # day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
@@ -2405,9 +2392,9 @@ def add_group_repeat_schedule_confirm(request):
     push_lecture_id = []
     push_title = []
     push_message = []
-    error_message = None
+    # error_message = None
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
-    setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
+    # setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
@@ -2530,16 +2517,16 @@ def add_group_repeat_schedule_confirm(request):
                                                 raise InternalError
 
                                     except TypeError:
-                                        error_temp = 'TypeError'
+                                        error = 'TypeError'
                                     except ValueError:
-                                        error_temp = 'ValueError'
+                                        error = 'ValueError'
                                     except IntegrityError:
-                                        error_temp = 'IntegrityError'
+                                        error = 'IntegrityError'
                                     except InternalError:
-                                        error_temp = 'InternalError'
+                                        error = 'InternalError'
 
-                                    if error_temp is not None:
-                                        error_message = error_temp
+                                    # if error_temp is not None:
+                                    #     error_message = error_temp
                     if lecture_id is not None and lecture_id != '':
                         log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
                                          from_member_name=request.user.last_name + request.user.first_name,

@@ -16,20 +16,9 @@ logger = logging.getLogger(__name__)
 
 
 def func_set_billing_schedule(customer_uid, pre_payment_info, paid_date):
-    error = None
     product_price_info = None
-
-    if error is None:
-        access_token = func_get_imp_token()
-        error = access_token['error']
-
-    if error is None:
-
-        next_billing_date_time = datetime.datetime.combine(pre_payment_info.end_date, datetime.datetime.min.time())
-        next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0).timestamp()
-
-        merchant_uid = 'm_' + str(pre_payment_info.member_id) + '_' + pre_payment_info.product_tb_id\
-                       + '_' + str(next_schedule_timestamp).split('.')[0]
+    access_token = func_get_imp_token()
+    error = access_token['error']
 
     if error is None:
         try:
@@ -41,14 +30,18 @@ def func_set_billing_schedule(customer_uid, pre_payment_info, paid_date):
             error = '결제 정보를 불러오지 못했습니다.'
 
     if error is None:
+        next_billing_date_time = datetime.datetime.combine(pre_payment_info.end_date, datetime.datetime.min.time())
+        next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0).timestamp()
+
+        merchant_uid = 'm_' + str(pre_payment_info.member_id) + '_' + pre_payment_info.product_tb_id\
+                       + '_' + str(next_schedule_timestamp).split('.')[0]
+
         price = int(product_price_info.sale_price * 1.1)
         name = product_price_info.product_tb.name + ' - ' + product_price_info.name
         next_start_date = pre_payment_info.end_date
         next_end_date = func_get_end_date(pre_payment_info.payment_type_cd,
                                           next_start_date, int(pre_payment_info.period_month), paid_date)
         next_start_date = next_start_date + datetime.timedelta(days=1)
-
-    if error is None:
 
         payment_info = PaymentInfoTb(member_id=pre_payment_info.member.member_id,
                                      product_tb_id=pre_payment_info.product_tb_id,
@@ -70,7 +63,6 @@ def func_set_billing_schedule(customer_uid, pre_payment_info, paid_date):
         payment_info.merchant_uid = merchant_uid
         payment_info.save()
 
-    if error is None and access_token['access_token'] is not None:
         error = func_set_iamport_schedule(access_token['access_token'], name, price,
                                           customer_uid, merchant_uid, next_schedule_timestamp,
                                           pre_payment_info.member.name, pre_payment_info.member.user.email)
@@ -78,19 +70,10 @@ def func_set_billing_schedule(customer_uid, pre_payment_info, paid_date):
 
 
 def func_set_billing_schedule_now(customer_uid, pre_payment_info, paid_date):
-    error = None
     product_price_info = None
     today = datetime.date.today()
-
-    if error is None:
-        access_token = func_get_imp_token()
-        error = access_token['error']
-
-    if error is None:
-        next_schedule_timestamp = timezone.now() + timezone.timedelta(seconds=2)
-        next_schedule_timestamp = next_schedule_timestamp.timestamp()
-        merchant_uid = 'm_' + str(pre_payment_info.member_id) + '_' + pre_payment_info.product_tb_id\
-                       + '_' + str(next_schedule_timestamp).split('.')[0]
+    access_token = func_get_imp_token()
+    error = access_token['error']
 
     if error is None:
         try:
@@ -102,13 +85,17 @@ def func_set_billing_schedule_now(customer_uid, pre_payment_info, paid_date):
             error = '결제 정보를 불러오지 못했습니다.'
 
     if error is None:
+        next_schedule_timestamp = timezone.now() + timezone.timedelta(seconds=2)
+        next_schedule_timestamp = next_schedule_timestamp.timestamp()
+        merchant_uid = 'm_' + str(pre_payment_info.member_id) + '_' + pre_payment_info.product_tb_id\
+                       + '_' + str(next_schedule_timestamp).split('.')[0]
+
         price = int(product_price_info.sale_price * 1.1)
         name = product_price_info.product_tb.name + ' - ' + product_price_info.name
         next_start_date = today
         next_end_date = func_get_end_date(pre_payment_info.payment_type_cd, next_start_date,
                                           int(pre_payment_info.period_month), paid_date)
 
-    if error is None:
         payment_info = PaymentInfoTb(member_id=pre_payment_info.member.member_id,
                                      product_tb_id=pre_payment_info.product_tb_id,
                                      payment_type_cd=pre_payment_info.payment_type_cd, customer_uid=customer_uid,
@@ -126,7 +113,7 @@ def func_set_billing_schedule_now(customer_uid, pre_payment_info, paid_date):
 
         payment_info.merchant_uid = merchant_uid
         payment_info.save()
-    if error is None and access_token['access_token'] is not None:
+
         error = func_set_iamport_schedule(access_token['access_token'], name, price,
                                           customer_uid, merchant_uid, next_schedule_timestamp,
                                           pre_payment_info.member.name, pre_payment_info.member.user.email)
@@ -318,6 +305,8 @@ def func_add_billing_logic(custom_data, payment_result):
     payment_name = ''
     status = ''
     usage = USE
+    start_date = today
+    product_price_info = None
     if error is None:
         try:
             customer_uid = custom_data['customer_uid']
@@ -416,21 +405,6 @@ def func_add_billing_logic(custom_data, payment_result):
                                              buyer_name=payment_result['buyer_name'],
                                              # amount=int(payment_result['amount']),
                                              use=usage)
-                # merchandise_type_cd_list = custom_data['merchandise_type_cd'].split('/')
-                # for merchandise_type_cd_info in merchandise_type_cd_list:
-                #     try:
-                #         function_auth_info = FunctionAuthTb.objects.get(member_id=custom_data['user_id'],
-                #                                                         function_auth_type_cd=merchandise_type_cd_info,
-                #                                                         use=USE)
-                #     except ObjectDoesNotExist:
-                #         function_auth_info = FunctionAuthTb(member_id=custom_data['user_id'],
-                #                                             function_auth_type_cd=merchandise_type_cd_info,
-                #                                             reg_dt=timezone.now(),
-                #                                             mod_dt=timezone.now(),
-                #                                             use=USE)
-                #     function_auth_info.payment_type_cd = custom_data['payment_type_cd']
-                #     function_auth_info.expired_date = end_date
-                #     function_auth_info.save()
 
                 if custom_data['payment_type_cd'] == 'PERIOD':
                     billing_info = BillingInfoTb(member_id=str(custom_data['user_id']),
@@ -463,12 +437,12 @@ def func_add_billing_logic(custom_data, payment_result):
 def func_update_billing_logic(payment_result):
     context = {'error': None, 'payment_user_info': None}
     error = None
-
-    if error is None:
-        try:
-            payment_info = PaymentInfoTb.objects.get(merchant_uid=payment_result['merchant_uid'])
-        except ObjectDoesNotExist:
-            error = '오류가 발생했습니다.'
+    payment_info = None
+    billing_info = None
+    try:
+        payment_info = PaymentInfoTb.objects.get(merchant_uid=payment_result['merchant_uid'])
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다.'
 
     today = datetime.date.today()
     if error is None:
@@ -504,7 +478,6 @@ def func_update_billing_logic(payment_result):
             payment_data = PaymentInfoTb.objects.filter(customer_uid=payment_info.customer_uid,
                                                         status='reserve',
                                                         payment_type_cd='PERIOD')
-            check_billing_info = None
             try:
                 billing_info = BillingInfoTb.objects.get(customer_uid=payment_info.customer_uid, use=USE)
                 billing_info.state_cd = 'CANCEL'
@@ -551,11 +524,13 @@ def func_update_billing_logic(payment_result):
                 billing_info.save()
             except ObjectDoesNotExist:
                 error = '정기 결제 정보를 불러오지 못했습니다.'
-            payment_data = PaymentInfoTb.objects.filter(customer_uid=payment_info.customer_uid,
-                                                        status='reserve',
-                                                        payment_type_cd='PERIOD')
-            payment_data.delete()
-            error = func_cancel_period_billing_schedule(payment_info.customer_uid)
+
+            if error is None:
+                payment_data = PaymentInfoTb.objects.filter(customer_uid=payment_info.customer_uid,
+                                                            status='reserve',
+                                                            payment_type_cd='PERIOD')
+                payment_data.delete()
+                error = func_cancel_period_billing_schedule(payment_info.customer_uid)
 
     context['error'] = error
     return context
@@ -580,116 +555,6 @@ def func_cancel_period_billing_schedule(customer_uid):
             error = '오류가 발생했습니다.'
 
     return error
-
-
-def func_iamport_webhook_customer_billing_logic(custom_data, payment_result, merchant_uid, imp_uid, access_token):
-    context = {}
-    error = None
-    customer_uid = None
-    product_id = None
-    today = datetime.date.today()
-    empty_period_billing_check = False
-    if custom_data is None:
-        try:
-            payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
-            payment_type_cd = payment_user_info.payment_type_cd
-            customer_uid = payment_user_info.customer_uid
-            context['user_id'] = payment_user_info.member_id
-        except ObjectDoesNotExist:
-            error = '오류가 발생했습니다.'
-            # error = '결제 정보 [정기결제 예약 스케쥴] 세부 사항 조회 에러'
-    else:
-        try:
-            payment_type_cd = custom_data['payment_type_cd']
-            product_id = custom_data['product_id']
-            period_month = custom_data['period_month']
-            context['user_id'] = custom_data['user_id']
-        except KeyError:
-            error = '오류가 발생했습니다.'
-        except TypeError:
-            error = '오류가 발생했습니다.'
-        except ValueError:
-            error = '오류가 발생했습니다.'
-
-        try:
-            customer_uid = custom_data['customer_uid']
-        except KeyError:
-            customer_uid = None
-        except TypeError:
-            customer_uid = None
-        except ValueError:
-            customer_uid = None
-
-        try:
-            payment_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
-                                                        product_tb_id=product_id,
-                                                        use=USE).latest('end_date')
-        except ObjectDoesNotExist:
-            payment_info = None
-
-        if payment_info is None:
-            start_date = datetime.datetime.strptime(custom_data['start_date'], "%Y-%m-%d").date()
-        else:
-            start_date = payment_info.end_date
-
-        if today != start_date and custom_data['payment_type_cd'] == 'PERIOD':
-            empty_period_billing_check = True
-
-    # if error is None:
-    #     if not empty_period_billing_check:
-    #         error = func_check_payment_price_info(custom_data['product_id'], custom_data['payment_type_cd'],
-    #                                               payment_result['amount'], custom_data['period_month'])
-
-    if error is None:
-        if payment_result['status'] == 'paid':  # 결제 완료
-            if error is None:
-                # 정기 결제로 인한 webhook인 경우
-                if custom_data is None:
-                    payment_user_info_result = func_update_billing_logic(payment_result)
-                else:
-                    payment_user_info_result = func_add_billing_logic(custom_data, payment_result)
-
-                if payment_user_info_result['error'] is None:
-                    if payment_type_cd == 'PERIOD':
-                        # 결제 정보 저장
-                        # if error is None:
-                        error = func_set_billing_schedule(customer_uid,
-                                                          payment_user_info_result['payment_user_info'],
-                                                          int(today.strftime('%d')))
-                else:
-                    error = payment_user_info_result['error']
-
-            if error is not None:
-                # 결제 취소 날리기 / 결제 오류 상태로 바꾸기
-                func_send_refund_payment(imp_uid, merchant_uid, access_token)
-
-        elif payment_result['status'] == 'ready':
-            logger.info('ready Test 상태입니다..')
-            payment_user_info_result = func_update_billing_logic(payment_result)
-            # func_resend_payment_info(customer_uid, merchant_uid,
-            #                          payment_result['amount'])
-            if payment_user_info_result['error'] is not None:
-                error = payment_user_info_result['error']
-        elif payment_result['status'] == 'failed':  # 결제 오류 상태로 업데이트
-            payment_user_info_result = func_update_billing_logic(payment_result)
-            if payment_user_info_result['error'] is not None:
-                error = payment_user_info_result['error']
-        elif payment_result['status'] == 'cancelled':  # 결제 취소 상태로 업데이트
-            payment_user_info_result = func_update_billing_logic(payment_result)
-            # func_resend_payment_info(customer_uid, merchant_uid,
-            #                          payment_result['amount'])
-            if payment_user_info_result['error'] is not None:
-                error = payment_user_info_result['error']
-        else:  # 결제 오류 상태로 업데이트
-            payment_user_info_result = func_update_billing_logic(payment_result)
-            # func_resend_payment_info(customer_uid, merchant_uid,
-            #                          payment_result['amount'])
-            if payment_user_info_result['error'] is not None:
-                error = payment_user_info_result['error']
-
-    context['error'] = error
-
-    return context
 
 
 # imp_uid 를 통해 결제 정보 가져오기
