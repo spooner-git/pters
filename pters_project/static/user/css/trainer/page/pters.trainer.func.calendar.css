@@ -80,6 +80,7 @@
 	/* width: 14.285%; */
 	width: 12.5%;
 	padding: 0px 10px;
+	border-left: 1px solid #cccccc;
 }
 .cal_week_line_dates{
 	display: table;
@@ -97,6 +98,13 @@
 	display: table-cell;
 	/* width: 14.285%; */
 	width: 12.5%;
+	border-left: 1px solid #cccccc;
+}
+.no_border{
+	border: 0 !important;
+}
+.no_display{
+	display: none !important;
 }
 
 
@@ -111,6 +119,7 @@
 
 .week_cal_time_text{
 	font-size: 11px;
+	border: 0 !important;
 }
 .week_row{
 	width: 100%;
@@ -124,6 +133,7 @@
 	background-image: url("/static/user/res/calendar_hour.png");
 	background-size: 30px 60px;
 	background-position: top;
+	border-left: 1px solid #cccccc;
 }
 .week_row article{
 	height: 60px;
@@ -159,6 +169,7 @@
 	margin: 0 auto;
 	border: 1px solid transparent;
 }
+
 .has_schedule{
 	/* border-color: #fe4e65;
 	border-radius: 50%; */
