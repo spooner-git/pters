@@ -72,7 +72,7 @@
 <script>
 
     {% autoescape off %}
-    var ticket_info = {{ ticket_info }};
+    let ticket_info = {{ ticket_info }};
     {% endautoescape %}
 
     function toggle_list(target_selector){

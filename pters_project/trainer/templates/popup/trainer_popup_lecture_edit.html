@@ -115,6 +115,10 @@
 
 <script>
 
+    {% autoescape off %}
+    let lecture_info = {{ lecture_info }};
+    {% endautoescape %}
+
     function open_user_input_popup(prev_value, callback_after_input){
         layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_input', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
                                                 {'popup_title':'', 'popup_comment':prev_value,

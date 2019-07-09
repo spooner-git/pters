@@ -115,6 +115,10 @@
 
 <script>
 
+    {% autoescape off %}
+    let ticket_info = {{ ticket_info }};
+    {% endautoescape %}
+
 
     class Ticket_edit{
         constructor(targetHTML, instance, data){

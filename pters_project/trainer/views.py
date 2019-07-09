@@ -5068,6 +5068,9 @@ class PopupLectureEdit(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupLectureEdit, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        group_id = self.request.GET.get('lecture_id')
+        context['lecture_info'] = func_get_group_info(class_id, group_id, self.request.user.id)
         return context
 
 
@@ -5096,4 +5099,8 @@ class PopupTicketEdit(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupTicketEdit, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        package_id = self.request.GET.get('ticket_id')
+
+        context['ticket_info'] = func_get_package_info(class_id, package_id, self.request.user.id)
         return context
