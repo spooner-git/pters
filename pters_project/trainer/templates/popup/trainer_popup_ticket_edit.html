@@ -19,80 +19,7 @@
     <div class="popup_ticket_edit">
     
         <div id="wrapper_box_ticket_settings" class="obj_box_full">
-            <ul>
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">수강권명</div>
-                        <div class="cell_value" onclick="show_user_input_popup(event.target.innerText, 'console.log(11)')">뜨거운 여름 준비</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">수강권 설명</div>
-                        <div class="cell_value">설명 내용....</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">포함된 수업</div>
-                        <div class="cell_value">2개</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">횟수</div>
-                        <div class="cell_value">20회</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">유효 기간</div>
-                        <div class="cell_value">3개월</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">가격</div>
-                        <div class="cell_value">600,000원</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">수강 종료된 회원</div>
-                        <div class="cell_value"></div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">수강권 이력</div>
-                        <div class="cell_value"></div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">수강권 비활성화</div>
-                        <div class="cell_value"></div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-            </ul>
+            
         </div>
 
         <div class="gap"></div>
@@ -121,46 +48,79 @@
 
 
     class Ticket_edit{
-        constructor(targetHTML, instance, data){
+        constructor(targetHTML, data, instance){
             this.targetHTML = targetHTML;
             this.instance = instance;
             this.data = data;
             
-            this.ticket_id;
-            this.ticket_name;
-            this.ticket_include_lectures;
-            this.ticket_count;
-            this.ticket_expiry;
-            this.ticekt_price;
+            this.ticket_id = this.data.package_id;
+            this.ticket_name = this.data.package_name;
+            this.ticket_description = "%수강권에 대한 자세한 설명";
+            this.ticket_include_lectures = this.data.package_group_list;
+            this.ticket_count = "% 100";
+            this.ticket_expiry = "% 3개월";
+            this.ticekt_price = "% 1,200,000원";
             
 
-            console.log(data);
+            this.items =    {    
+                                ticket_name: {visible: true, title:"수강권명", value:this.ticket_name},
+                                ticket_description: {visible: true, title:"수강권 설명", value: this.ticket_description},
+                                ticket_include_lectures: {visible: true, title:"포함된 수업", value: this.ticket_include_lectures.length},
+                                ticket_count: {visible: true, title:"횟수", value: this.ticket_count},
+                                ticket_expiry: {visible: true, title:"유효 기간", value: this.ticket_expiry},
+                                ticket_price: {visible: true, title:"가격", value: this.ticekt_price},
+                                ticket_finished_members: {visible: true, title:"수강 종료된 회원", value:""},
+                                ticket_history: {visible: true, title:"수강권 이력", value:""},
+                                ticket_deactivate: {visible: true, title:"수강권 비활성화", value:""}
+                            };
         }
 
-        render_setting_list(target){
+        init(){
+            this.render_setting_list();
+        }
 
+        render_setting_list(target, options){
+            if(target == undefined || target == ""){
+                target = this.targetHTML;
+            }
+            if(options != undefined){
+                for(let item in options){
+                    this.menu_items[item].visible = options[item].visible;
+                }
+            }
 
-            let html = 
-                        `<li class="">
-                            <div class="obj_table_raw">
-                                <div class="cell_title">수강권명</div>
-                                <div class="cell_value" onclick="open_user_input_popup(null, ${callback})">뜨거운 여름 준비</div>
-                                <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                            </div>
-                        </li>`;
+            let html_to_join = [];
+            for(let item in this.items){
+                let item_el = this.items[item];
+                if(item_el.visible == false){
+                    continue;
+                }
 
-
+                let html = 
+                            `<li class="">
+                                <div class="obj_table_raw">
+                                    <div class="cell_title">${item_el.title}</div>
+                                    <div class="cell_value" onclick="show_user_input_popup(event.target.innerText, '${this.instance}.send_data(this, \\'${item}\\' )' )">${item_el.value}</div>
+                                    <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                                </div>
+                            </li>`;
+                html_to_join.push(html);
+            }
             document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`; 
         }
 
-        send_data(ticket_id, data, callback){
-
+        send_data(data, item){
+            let user_input = $(data).parent().siblings('div').find('.popup_basic_user_input_full').val();
+            console.log(item+': '+user_input);
+           
+            this.render_setting_list();
         }
 
 
     }
 
-
+    var ticket_edit = new Ticket_edit("#wrapper_box_ticket_settings", ticket_info, "ticket_edit");
+    ticket_edit.init();
 
     func_set_webkit_overflow_scrolling('.popup_ticket_view');
 </script>

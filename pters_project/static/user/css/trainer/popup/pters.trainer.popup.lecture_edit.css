@@ -21,6 +21,10 @@
 	width: auto;
 	max-width: 150px;
 	text-align: right;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: #585858;
 }
 
 #wrapper_box_lecture_settings .cell_icon{
