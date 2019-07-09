@@ -45,7 +45,8 @@ from schedule.functions import func_refresh_group_status, func_refresh_lecture_c
 from stats.functions import get_sales_data
 from .functions import func_get_trainer_setting_list, func_add_lecture_info, func_delete_lecture_info, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
-    func_get_member_info, func_get_member_from_lecture_list, func_get_package_info, func_get_group_info
+    func_get_member_info, func_get_member_from_lecture_list, func_get_package_info, func_get_group_info, \
+    func_check_member_connection_info
 
 logger = logging.getLogger(__name__)
 
@@ -610,7 +611,6 @@ def delete_member_info_logic(request):
         error = '회원 ID를 확인해 주세요.'
 
     if error is None:
-
         try:
             member = MemberTb.objects.get(member_id=member_id)
         except ObjectDoesNotExist:
@@ -1805,7 +1805,7 @@ def add_lecture_info_logic(request):
     error = None
 
     if member_id is None or member_id == '':
-        error = '오류가 발생했습니다.[tr:1972]'
+        error = '오류가 발생했습니다.[tr:1808]'
 
     if counts == '':
         error = '등록 횟수를 입력해 주세요.'
@@ -1837,6 +1837,7 @@ def add_lecture_info_logic(request):
     return redirect(next_page)
 
 
+# 수강권 수정
 def update_lecture_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
     next_page = request.POST.get('next_page', '')
@@ -1866,21 +1867,21 @@ def update_lecture_info_logic(request):
         error = '수강 금액은 숫자만 입력 가능합니다.'
 
     try:
-        refund_price = int(refund_price)
-    except ValueError:
-        error = '환불 금액은 숫자만 입력 가능합니다.'
-
-    try:
         lecture_reg_count = int(lecture_reg_count)
     except ValueError:
         error = '등록 횟수는 숫자만 입력 가능합니다.'
-
-    try:
-        refund_date = datetime.datetime.strptime(refund_date, '%Y-%m-%d')
-    except ValueError:
-        error = '환불 날짜 오류가 발생했습니다.'
-    except TypeError:
-        error = '환불 날짜 오류가 발생했습니다.'
+    if refund_price != '' and refund_price is not None:
+        try:
+            refund_price = int(refund_price)
+        except ValueError:
+            error = '환불 금액은 숫자만 입력 가능합니다.'
+    if refund_date != '' and refund_date is not None:
+        try:
+            refund_date = datetime.datetime.strptime(refund_date, '%Y-%m-%d')
+        except ValueError:
+            error = '환불 날짜 오류가 발생했습니다.'
+        except TypeError:
+            error = '환불 날짜 오류가 발생했습니다.'
 
     finish_schedule_count = 0
     reserve_schedule_count = 0
@@ -1891,7 +1892,6 @@ def update_lecture_info_logic(request):
             reserve_schedule_count = schedule_list.count()
             finish_schedule_count = schedule_list.filter(Q(state_cd='PE') | Q(state_cd='PC')).count()
 
-    if error is None:
         if lecture_reg_count < reserve_schedule_count:
             error = '등록 횟수가 이미 등록한 일정의 횟수보다 적습니다.'
 
@@ -1917,6 +1917,7 @@ def update_lecture_info_logic(request):
     return redirect(next_page)
 
 
+# 회원 수강권 삭제
 def delete_lecture_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
     next_page = request.POST.get('next_page', '')
@@ -1936,11 +1937,14 @@ def delete_lecture_info_logic(request):
     return redirect(next_page)
 
 
-def finish_lecture_info_logic(request):
+def update_lecture_status_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
+    status_cd = request.POST.get('status_cd', '')
+    refund_price = request.POST.get('refund_price', 0)
+    refund_date = request.POST.get('refund_date', None)
     next_page = request.POST.get('next_page', '')
-    error = None
     lecture_info = None
+    error = None
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -1950,176 +1954,71 @@ def finish_lecture_info_logic(request):
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
-
-    # if error is None:
-    #     try:
-    #         group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
-    #     except ObjectDoesNotExist:
-    #         group_info = None
-
     if error is None:
-        now = timezone.now()
-        # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
-        # schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
-        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
-                                                  end_dt__lte=now, use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
-        schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
-                                                         end_dt__gt=now,
-                                                         use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
-        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
-        # func_refresh_lecture_count(lecture_id)
+        if status_cd == 'RF':
+            if refund_price is None or refund_price == 0:
+                error = '환불 금액을 입력해 주세요.'
+            if error is None:
+                try:
+                    refund_price = int(refund_price)
+                except ValueError:
+                    error = '환불 금액은 숫자만 입력 가능합니다.'
 
-        if len(schedule_data) > 0:
-            schedule_data.update(state_cd='PE')
-        if len(schedule_data_delete) > 0:
-            schedule_data_delete.delete()
-        if len(repeat_schedule_data) > 0:
-            repeat_schedule_data.delete()
-        lecture_info.lecture_avail_count = 0
-        lecture_info.lecture_rem_count = 0
-        lecture_info.state_cd = 'PE'
-        lecture_info.save()
+            if error is None:
+                if refund_price > lecture_info.price:
+                    error = '환불 금액이 등록 금액보다 많습니다.'
 
-        group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
-        group_lecture_data.update(fix_state_cd='')
+            if error is None:
+                try:
+                    refund_date = datetime.datetime.strptime(refund_date, '%Y-%m-%d')
+                except ValueError:
+                    error = '환불 날짜 오류가 발생했습니다.'
+                except TypeError:
+                    error = '환불 날짜 오류가 발생했습니다.'
 
-        package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
-        for package_group_info in package_group_data:
-            func_refresh_group_status(package_group_info.group_tb_id, None, None)
-
-    # if error is None:
-    #     if group_info is not None:
-    #         func_refresh_group_status(group_info.group_tb_id, None, None)
-
-    if error is not None:
-        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-
-    return redirect(next_page)
-
-
-def refund_lecture_info_logic(request):
-    lecture_id = request.POST.get('lecture_id', '')
-    refund_price = request.POST.get('refund_price', '')
-    refund_date = request.POST.get('refund_date', datetime.date.today())
-    next_page = request.POST.get('next_page', '')
-    input_refund_price = 0
-    error = None
-    lecture_info = None
-
-    if lecture_id is None or lecture_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
-
-    if error is None:
-        if refund_price is None or refund_price == 0:
-            error = '환불 금액을 입력해 주세요.'
-
-    if error is None:
-        try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-        except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
-
-    if error is None:
-        try:
-            input_refund_price = int(refund_price)
-        except ValueError:
-            error = '환불 금액은 숫자만 입력 가능합니다.'
-
-    if error is None:
-        if input_refund_price > lecture_info.price:
-            error = '환불 금액이 등록 금액보다 많습니다.'
-    #
-    # if error is None:
-    #     try:
-    #         group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
-    #     except ObjectDoesNotExist:
-    #         group_info = None
-    if error is None:
-        now = timezone.now()
-        # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
-        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
-                                                  end_dt__lte=now, use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
-        schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
-                                                         end_dt__gt=now,
-                                                         use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
-        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
-
-        if len(schedule_data) > 0:
-            schedule_data.update(state_cd='PE')
-        if len(schedule_data_delete) > 0:
-            schedule_data_delete.delete()
-        if len(repeat_schedule_data) > 0:
-            repeat_schedule_data.delete()
-        repeat_schedule_data.delete()
-        lecture_info.refund_price = input_refund_price
-        lecture_info.refund_date = refund_date
-        lecture_info.lecture_avail_count = 0
-
-        end_schedule_counter = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
-                                                         lecture_tb_id=lecture_id).count()
-        if lecture_info.lecture_reg_count >= end_schedule_counter:
-            lecture_info.lecture_rem_count = lecture_info.lecture_reg_count\
-                                               - end_schedule_counter
-        # func_refresh_lecture_count(lecture_id)
-        # lecture_info.lecture_rem_count = 0
-        lecture_info.state_cd = 'RF'
-        lecture_info.save()
-
-        group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
-        group_lecture_data.update(fix_state_cd='')
-
-        package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
-        for package_group_info in package_group_data:
-            func_refresh_group_status(package_group_info.group_tb_id, None, None)
-    # if error is None:
-    #     if group_info is not None:
-    #         func_refresh_group_status(group_info.group_tb_id, None, None)
-
-    if error is not None:
-        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-
-    return redirect(next_page)
-
-
-def progress_lecture_info_logic(request):
-    lecture_id = request.POST.get('lecture_id', '')
-    next_page = request.POST.get('next_page', '')
-    error = None
-    lecture_info = None
-
-    if lecture_id is None or lecture_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
-
-    if error is None:
-        try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-        except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
-
-    if error is None:
-        if lecture_info.package_tb.use == UN_USE:
-            error = '해당 수강권은 진행중 상태가 아닙니다.'
-        else:
-            if lecture_info.package_tb.state_cd != 'IP':
+        if status_cd == 'IP':
+            if lecture_info.package_tb.use == UN_USE or lecture_info.package_tb.state_cd != 'IP':
                 error = '해당 수강권은 진행중 상태가 아닙니다.'
 
     if error is None:
-        # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
+        now = timezone.now()
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
+                                                  end_dt__lte=now, use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+        schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
+                                                         end_dt__gt=now,
+                                                         use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
+
         schedule_data_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).count()
         schedule_data_finish_count = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
                                                                lecture_tb_id=lecture_info.lecture_id).count()
 
-        lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - schedule_data_count
-        lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - schedule_data_finish_count
-        lecture_info.refund_price = 0
-        lecture_info.refund_date = None
-        lecture_info.state_cd = 'IP'
+        if len(schedule_data) > 0:
+            schedule_data.update(state_cd='PE')
+        if len(schedule_data_delete) > 0:
+            schedule_data_delete.delete()
+        if len(repeat_schedule_data) > 0:
+            repeat_schedule_data.delete()
+
+        lecture_avail_count = 0
+        lecture_rem_count = 0
+        if status_cd == 'IP':
+            if lecture_info.lecture_reg_count >= schedule_data_count:
+                lecture_avail_count = lecture_info.lecture_reg_count - schedule_data_count
+
+        if status_cd != 'PE':
+            if lecture_info.lecture_reg_count >= schedule_data_finish_count:
+                lecture_rem_count = lecture_info.lecture_reg_count - schedule_data_finish_count
+
+        lecture_info.lecture_avail_count = lecture_avail_count
+        lecture_info.lecture_rem_count = lecture_rem_count
+        lecture_info.state_cd = status_cd
+        lecture_info.refund_price = refund_price
+        lecture_info.refund_date = refund_date
         lecture_info.save()
-        package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
-        for package_group_info in package_group_data:
-            func_refresh_group_status(package_group_info.group_tb_id, None, None)
+
+        group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
+        group_lecture_data.update(fix_state_cd='')
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -2128,46 +2027,46 @@ def progress_lecture_info_logic(request):
     return redirect(next_page)
 
 
-def update_lecture_connection_info_logic(request):
-    lecture_id = request.POST.get('lecture_id', '')
+# 회원 연결 관계 업데이트
+def update_member_connection_info_logic(request):
     member_id = request.POST.get('member_id', '')
-    auth_cd = request.POST.get('member_view_state_cd', '')
+    member_auth_cd = request.POST.get('member_view_state_cd', '')
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
     error = None
-    member_lecture_info = None
+    member = None
 
-    if lecture_id is None or lecture_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
-
-    if error is None:
-        if auth_cd != 'VIEW' and auth_cd != 'WAIT' and auth_cd != 'DELETE':
-            error = '수강정보를 불러오지 못했습니다.'
+    if member_id is None or member_id == '':
+        error = '회원 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
-            member_lecture_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_id)
+            member = MemberTb.objects.get(member_id=member_id)
         except ObjectDoesNotExist:
+            error = '회원 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if member_auth_cd != 'VIEW' and member_auth_cd != 'WAIT' and member_auth_cd != 'DELETE':
             error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=USE)
-        check_lecture_connection = 0
-        for class_lecture_info in class_lecture_list:
-            try:
-                MemberLectureTb.objects.get(member_id=member_id, auth_cd='VIEW',
-                                            lecture_tb_id=class_lecture_info.lecture_tb_id, use=USE)
-                check_lecture_connection = 1
-            except ObjectDoesNotExist:
-                check_lecture_connection = 0
-            if check_lecture_connection == 1:
-                break
 
-        if check_lecture_connection > 0:
-            if auth_cd == 'WAIT':
+        connection_check = func_check_member_connection_info(class_id, member_id)
+
+        class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW',
+                                                           lecture_tb__member_id=member_id, use=USE)
+        auth_cd = member_auth_cd
+
+        if member_auth_cd == 'VIEW':
+            # 연결이 안되어있는 경우 연결 요청 상태
+            if not connection_check:
+                auth_cd = 'WAIT'
+            # 회원이 인증을 안하고 내가 등록한 회원이면 무조건 연결상태로
+            if not member.user.is_active and str(member.reg_info) == str(request.user.id):
                 auth_cd = 'VIEW'
-        member_lecture_info.auth_cd = auth_cd
-        member_lecture_info.save()
+
+        for class_lecture_info in class_lecture_list:
+            class_lecture_info.lecture_tb.member_auth_cd = auth_cd
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)

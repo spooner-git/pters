@@ -58,35 +58,27 @@ urlpatterns = [
 
     # 회원 정보 수정 - refactoring - 확인 필요
     url(r'^update_member_info/$', views.update_member_info_logic, name='update_member_info'),
-    # 회원 정보 삭제 - refactoring - 진행중,  확인 필요
+    # 회원 정보 삭제 - refactoring - 확인 필요
     url(r'^delete_member_info/$', views.delete_member_info_logic, name='delete_member_info'),
     # 회원 리스트 엑셀 export 기능
     url(r'^export_excel_member_list/$', views.export_excel_member_list_logic, name='export_excel_member_list'),
     # 회원 정보 엑셀 export 기능
     url(r'^export_excel_member_info/$', views.export_excel_member_info_logic, name='export_excel_member_info'),
 
-
-
-    # 회원 수강 정보 기능 ##################################################################################################
-
-    # 수강정보 조회 - refactoring
+    # 회원 수강정보 조회 - refactoring
     url(r'^get_lecture_list/$', views.GetLectureListView.as_view(), name='get_lecture_list'),
-
-    # 수강정보 추가 - refactoring 진행중
+    # 회원 수강정보 추가 - refactoring
     url(r'^add_lecture_info/$', views.add_lecture_info_logic, name='add_lecture_info'),
-    # 수강정보 수정 - refactoring 진행중
+    # 회원 수강정보 수정 - refactoring - 확인 필요
     url(r'^update_lecture_info/$', views.update_lecture_info_logic, name='update_lecture_info'),
-    # 수강정보 삭제 - refactoring 진행중
+    # 회원 수강정보 삭제 - refactoring - 확인 필요
     url(r'^delete_lecture_info/$', views.delete_lecture_info_logic, name='delete_lecture_info'),
-    # 수강정보 종료 상태 변경
-    url(r'^finish_lecture_info/$', views.finish_lecture_info_logic, name='finish_lecture_info'),
-    # 수강정보 환불 상태 변경
-    url(r'^refund_lecture_info/$', views.refund_lecture_info_logic, name='refund_lecture_info'),
-    # 수강정보 진행중 상태 변경
-    url(r'^progress_lecture_info/$', views.progress_lecture_info_logic, name='progress_lecture_info'),
-    # 수강정보 연동 상태 변경
-    url(r'^update_lecture_connection_info/$', views.update_lecture_connection_info_logic,
-        name='update_lecture_connection_info'),
+
+    # 회원 수강정보 상태 변경 - refactoring - 확인 필요
+    url(r'^update_lecture_status_info/$', views.update_lecture_status_info_logic, name='update_lecture_status_info'),
+    # 회원 연동 상태 변경 - refactoring - 확인 필요
+    url(r'^update_member_connection_info/$', views.update_member_connection_info_logic,
+        name='update_member_connection_info'),
 
     # 그룹 기능 ##########################################################################################################
     # 그룹 추가

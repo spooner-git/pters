@@ -249,9 +249,8 @@ def func_add_lecture_info(user_id, class_id, package_id, counts, price,
 
             auth_cd = 'WAIT'
 
-            if member.reg_info == str(user_id):
-                if not member.user.is_active:
-                    auth_cd = 'VIEW'
+            if not member.user.is_active and member.reg_info == str(user_id):
+                auth_cd = 'VIEW'
 
             member_lecture_counts = ClassLectureTb.objects.select_related(
                 'lecture_tb__member').filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
@@ -330,7 +329,6 @@ def func_delete_lecture_info(user_id, class_id, lecture_id):
     if error is None:
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
         # group_data.update(fix_state_cd='')
-        member = class_lecture_info.lecture_tb.member
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
                                                   state_cd='NP', use=USE)
         schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'), class_tb_id=class_id,
@@ -350,6 +348,7 @@ def func_delete_lecture_info(user_id, class_id, lecture_id):
                     # 반복일정 삭제
                     repeat_schedule_data.delete()
 
+                # 강사에게 더이상 안보이도록
                 class_lecture_info.auth_cd = 'DELETE'
                 class_lecture_info.mod_member_id = user_id
                 class_lecture_info.save()
@@ -358,15 +357,6 @@ def func_delete_lecture_info(user_id, class_id, lecture_id):
                     lecture_info.lecture_avail_count = 0
                     lecture_info.state_cd = 'PE'
                     lecture_info.save()
-
-                if class_lecture_info.member_auth_cd != 'VIEW':
-                    class_lecture_count = ClassLectureTb.objects.select_related(
-                        'lecture_tb__member').get(class_tb_id=class_id, lecture_tb__member_id=member.member_id,
-                                                  auth_cd='VIEW', use=USE).count()
-                    if member.user.is_active == 0 and str(member.reg_info) == str(user_id) and class_lecture_count == 0:
-                        member.contents = member.user.username + ':' + str(member.member_id)
-                        member.use = UN_USE
-                        member.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
