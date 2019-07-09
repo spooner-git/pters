@@ -1735,30 +1735,6 @@ def export_excel_member_info_logic(request):
 # ############### ############### ############### ############### ############### ############### ##############
 # 회원 수강권 기능 ############### ############### ############### ############### ############### ############### ########
 
-class GetMemberGroupListView(LoginRequiredMixin, AccessTestMixin, View):
-
-    def get(self, request):
-        class_id = self.request.session.get('class_id', '')
-        member_id = request.GET.get('member_id', '')
-        error = None
-        group_list = {}
-
-        if class_id is None or class_id == '':
-            error = '오류가 발생했습니다.'
-
-        if member_id is None or member_id == '':
-            error = '회원 정보를 불러오지 못했습니다.'
-
-        if error is None:
-            group_list = func_get_member_group_list(class_id, member_id)
-
-        if error is not None:
-            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-            messages.error(request, error)
-
-        return JsonResponse(group_list, json_dumps_params={'ensure_ascii': True})
-
-
 class GetLectureListView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
@@ -1781,6 +1757,30 @@ class GetLectureListView(LoginRequiredMixin, AccessTestMixin, View):
             messages.error(request, error)
 
         return JsonResponse(lecture_list, json_dumps_params={'ensure_ascii': True})
+
+
+class GetMemberGroupListView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        member_id = request.GET.get('member_id', '')
+        error = None
+        group_list = {}
+
+        if class_id is None or class_id == '':
+            error = '오류가 발생했습니다.'
+
+        if member_id is None or member_id == '':
+            error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            group_list = func_get_member_group_list(class_id, member_id)
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse(group_list, json_dumps_params={'ensure_ascii': True})
 
 
 # 수강정보 추가
@@ -1834,6 +1834,13 @@ def update_lecture_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
     error = None
     lecture_info = None
+    note = request.POST.get('note', '')
+    start_date = request.POST.get('start_date', '')
+    end_date = request.POST.get('end_date', '')
+    price = request.POST.get('price', '')
+    refund_price = request.POST.get('refund_price', '')
+    refund_date = request.POST.get('refund_date', '')
+    lecture_reg_count = request.POST.get('lecture_reg_count', '')
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -1844,35 +1851,45 @@ def update_lecture_info_logic(request):
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
 
-    note = request.POST.get('note', lecture_info.note)
-    start_date = request.POST.get('start_date', lecture_info.start_date)
-    end_date = request.POST.get('end_date', lecture_info.end_date)
-    price = request.POST.get('price', lecture_info.price)
-    refund_price = request.POST.get('refund_price', lecture_info.refund_price)
-    refund_date = request.POST.get('refund_date', lecture_info.refund_date)
-    lecture_reg_count = request.POST.get('lecture_reg_count', lecture_info.lecture_reg_count)
+    if error is None:
+        if note is None or note == '':
+            note = lecture_info.note
+        if start_date is None or start_date == '':
+            start_date = lecture_info.start_date
+        if end_date is None or end_date == '':
+            end_date = lecture_info.end_date
+        if price is None or price == '':
+            price = lecture_info.price
+        if refund_price is None or refund_price == '':
+            refund_price = lecture_info.refund_price
+        if refund_date is None or refund_date == '':
+            refund_date = lecture_info.refund_date
+        if lecture_reg_count is None or lecture_reg_count == '':
+            lecture_reg_count = lecture_info.lecture_reg_count
 
-    try:
-        price = int(price)
-    except ValueError:
-        error = '수강 금액은 숫자만 입력 가능합니다.'
+        try:
+            price = int(price)
+        except ValueError:
+            error = '수강 금액은 숫자만 입력 가능합니다.'
 
-    try:
-        lecture_reg_count = int(lecture_reg_count)
-    except ValueError:
-        error = '등록 횟수는 숫자만 입력 가능합니다.'
-    if refund_price != '' and refund_price is not None:
         try:
-            refund_price = int(refund_price)
+            lecture_reg_count = int(lecture_reg_count)
         except ValueError:
-            error = '환불 금액은 숫자만 입력 가능합니다.'
-    if refund_date != '' and refund_date is not None:
-        try:
-            refund_date = datetime.datetime.strptime(refund_date, '%Y-%m-%d')
-        except ValueError:
-            error = '환불 날짜 오류가 발생했습니다.'
-        except TypeError:
-            error = '환불 날짜 오류가 발생했습니다.'
+            error = '등록 횟수는 숫자만 입력 가능합니다.'
+
+        if refund_price != '' and refund_price is not None:
+            try:
+                refund_price = int(refund_price)
+            except ValueError:
+                error = '환불 금액은 숫자만 입력 가능합니다.'
+
+        if refund_date != '' and refund_date is not None:
+            try:
+                refund_date = datetime.datetime.strptime(refund_date, '%Y-%m-%d')
+            except ValueError:
+                error = '환불 날짜 오류가 발생했습니다.'
+            except TypeError:
+                error = '환불 날짜 오류가 발생했습니다.'
 
     finish_schedule_count = 0
     reserve_schedule_count = 0
@@ -2252,6 +2269,144 @@ def update_group_info_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
+def update_group_status_info_logic(request):
+    class_id = request.session.get('class_id')
+    group_id = request.POST.get('group_id', '')
+    state_cd = request.POST.get('state_cd', '')
+
+    error = None
+    group_info = None
+    now = timezone.now()
+
+    try:
+        group_info = GroupTb.objects.get(class_tb_id=class_id, group_id=group_id)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다.'
+
+    package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id, group_tb_id=group_id, use=USE)
+    query_package_info = Q()
+    for package_group_info in package_group_data:
+        query_package_info |= Q(lecture_tb__package_tb_id=package_group_info.package_tb.package_id)
+
+    if error is None:
+        if state_cd == 'PE':
+            schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, group_tb_id=group_id,
+                                                      end_dt__lte=now, use=USE).exclude(Q(state_cd='PE')
+                                                                                        | Q(state_cd='PC'))
+            schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id, group_tb_id=group_id,
+                                                             end_dt__gt=now, use=USE).exclude(Q(state_cd='PE')
+                                                                                              | Q(state_cd='PC'))
+            repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, group_tb_id=group_id)
+
+            if len(schedule_data) > 0:
+                schedule_data.update(state_cd='PE')
+            if len(schedule_data_delete) > 0:
+                schedule_data_delete.delete()
+            if len(repeat_schedule_data) > 0:
+                repeat_schedule_data.delete()
+
+            # 관련 수간권 회원들 수강정보 업데이트
+            class_lecture_data = ClassLectureTb.objects.select_related(
+                'lecture_tb__package_tb').filter(query_package_info, class_tb_id=class_id,
+                                                 auth_cd='VIEW', lecture_tb__state_cd='IP',
+                                                 lecture_tb__use=USE, use=USE)
+
+            for class_lecture_info in class_lecture_data:
+                error = func_refresh_lecture_count(class_lecture_info.class_tb_id,
+                                                   class_lecture_info.lecture_tb_id)
+
+            if len(package_group_data) > 0:
+                package_group_data.delete()
+
+        group_info.state_cd = state_cd
+        group_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 그룹 회원 삭제
+def update_fix_group_member_logic(request):
+    json_data = request.body.decode('utf-8')
+    json_loading_data = None
+    error = None
+    group_lecture_data = None
+    group_info = None
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다. [1]'
+    except TypeError:
+        error = '오류가 발생했습니다. [2]'
+
+    group_id = json_loading_data['group_id']
+    try:
+        group_info = GroupTb.objects.get(group_id=group_id, use=USE)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다.'
+
+    if error is None:
+        # idx = 0
+        if error is None:
+            member_fix_data = []
+            fix_counter = 0
+            group_lecture_data = GroupLectureTb.objects.select_related(
+                'lecture_tb__member').filter(group_tb_id=group_id, use=USE)
+            for group_lecture_info in group_lecture_data:
+                check = 0
+                for member_fix_info in member_fix_data:
+                    if str(member_fix_info) == str(group_lecture_info.lecture_tb.member_id):
+                        check = 1
+                if check == 0:
+                    if group_lecture_info.fix_state_cd == 'FIX':
+                        member_fix_data.append(group_lecture_info.lecture_tb.member_id)
+
+            for json_info in json_loading_data['member_info']:
+                if json_info['fix_info'] == 'FIX':
+                    fix_counter += 1
+            if fix_counter != 0:
+                if len(member_fix_data) + fix_counter > group_info.member_num:
+                    error = '그룹 정원보다 고정 회원이 많습니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                for json_info in json_loading_data['member_info']:
+                    group_lecture_counter = GroupLectureTb.objects.select_related(
+                        'lecture_tb__member').filter(group_tb_id=group_id,
+                                                     lecture_tb__member_id=json_info['member_id'],
+                                                     lecture_tb__state_cd='IP', use=USE).count()
+                    if group_lecture_counter == 0:
+                        error = '이미 종료된 회원입니다.'
+
+                    if error is None and group_lecture_data is not None:
+                        for group_lecture_info in group_lecture_data:
+                            if str(group_lecture_info.lecture_tb.member_id) == str(json_info['member_id']):
+                                group_lecture_info.fix_state_cd = json_info['fix_info']
+                                group_lecture_info.save()
+
+        except ValueError:
+            error = '오류가 발생했습니다. [4]'
+        except IntegrityError:
+            error = '오류가 발생했습니다. [5]'
+        except TypeError:
+            error = '오류가 발생했습니다. [6]'
+        except ValidationError:
+            error = '오류가 발생했습니다. [7]'
+        except InternalError:
+            error = error
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
 class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
@@ -2407,122 +2562,6 @@ class GetGroupIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse({'group_ing_member_list': member_list}, json_dumps_params={'ensure_ascii': True})
 
 
-def update_group_status_info_logic(request):
-    class_id = request.session.get('class_id')
-    group_id = request.POST.get('group_id', '')
-    state_cd = request.POST.get('state_cd', '')
-
-    error = None
-    group_info = None
-    now = timezone.now()
-
-    try:
-        group_info = GroupTb.objects.get(class_tb_id=class_id, group_id=group_id)
-    except ObjectDoesNotExist:
-        error = '오류가 발생했습니다.'
-
-    if error is None:
-        schedule_data = ScheduleTb.objects.filter(group_tb_id=group_id,
-                                                  end_dt__lte=now, use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
-        schedule_data_delete = ScheduleTb.objects.filter(group_tb_id=group_id,
-                                                         end_dt__gt=now, use=USE).exclude(Q(state_cd='PE')
-                                                                                          | Q(state_cd='PC'))
-        repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id)
-
-        if len(schedule_data) > 0:
-            schedule_data.update(state_cd='PE')
-        if len(schedule_data_delete) > 0:
-            schedule_data_delete.delete()
-        if len(repeat_schedule_data) > 0:
-            repeat_schedule_data.delete()
-
-        group_info.state_cd = state_cd
-        group_info.save()
-
-    if error is not None:
-        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-
-    return render(request, 'ajax/trainer_error_ajax.html')
-
-
-# 그룹 회원 삭제
-def update_fix_group_member_logic(request):
-    json_data = request.body.decode('utf-8')
-    json_loading_data = None
-    error = None
-    group_lecture_data = None
-    group_info = None
-
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다. [1]'
-    except TypeError:
-        error = '오류가 발생했습니다. [2]'
-
-    group_id = json_loading_data['group_id']
-    try:
-        group_info = GroupTb.objects.get(group_id=group_id, use=USE)
-    except ObjectDoesNotExist:
-        error = '오류가 발생했습니다.'
-
-    if error is None:
-        # idx = 0
-        if error is None:
-            member_fix_data = []
-            fix_counter = 0
-            group_lecture_data = GroupLectureTb.objects.select_related(
-                'lecture_tb__member').filter(group_tb_id=group_id, use=USE)
-            for group_lecture_info in group_lecture_data:
-                check = 0
-                for member_fix_info in member_fix_data:
-                    if str(member_fix_info) == str(group_lecture_info.lecture_tb.member_id):
-                        check = 1
-                if check == 0:
-                    if group_lecture_info.fix_state_cd == 'FIX':
-                        member_fix_data.append(group_lecture_info.lecture_tb.member_id)
-
-            for json_info in json_loading_data['member_info']:
-                if json_info['fix_info'] == 'FIX':
-                    fix_counter += 1
-            if fix_counter != 0:
-                if len(member_fix_data) + fix_counter > group_info.member_num:
-                    error = '그룹 정원보다 고정 회원이 많습니다.'
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                for json_info in json_loading_data['member_info']:
-                    group_lecture_counter = GroupLectureTb.objects.select_related(
-                        'lecture_tb__member').filter(group_tb_id=group_id,
-                                                     lecture_tb__member_id=json_info['member_id'],
-                                                     lecture_tb__state_cd='IP', use=USE).count()
-                    if group_lecture_counter == 0:
-                        error = '이미 종료된 회원입니다.'
-
-                    if error is None and group_lecture_data is not None:
-                        for group_lecture_info in group_lecture_data:
-                            if str(group_lecture_info.lecture_tb.member_id) == str(json_info['member_id']):
-                                group_lecture_info.fix_state_cd = json_info['fix_info']
-                                group_lecture_info.save()
-
-        except ValueError:
-            error = '오류가 발생했습니다. [4]'
-        except IntegrityError:
-            error = '오류가 발생했습니다. [5]'
-        except TypeError:
-            error = '오류가 발생했습니다. [6]'
-        except ValidationError:
-            error = '오류가 발생했습니다. [7]'
-        except InternalError:
-            error = error
-
-    if error is not None:
-        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-
-    return render(request, 'ajax/trainer_error_ajax.html')
 
 
 # 패키지 추가
