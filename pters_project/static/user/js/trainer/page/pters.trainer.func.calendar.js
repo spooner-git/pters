@@ -484,7 +484,7 @@ class Calendar {
                     <div style="background-image:url('/static/user/res/PTERS_logo_pure.png');background-position:center;background-repeat:no-repeat;background-size:100px;height:30px;"></div>
                 </div>`
                 :
-                `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:0;background-color:#ffffff;z-index:10;height:30px;line-height:15px;font-size:20px` : ""}">
+                `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:0;background-color:#ffffff;z-index:10;height:25px;line-height:15px;font-size:20px` : ""}">
                     ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
                     <div class="${_color[0]} ${month_or_week == "week" ? "" : "no_border"} _week_row_1" data-row="1" onclick="${onclick_func}(event, ${_year[0]}, ${_month[0]}, ${_date[0]})">${_date[0]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[0]!=0?"has_schedule":""}">${schedule_num[0]!=0?schedule_num[0]:""}</div></div>
                     <div class="${_color[1]} _week_row_2" data-row="2" onclick="${onclick_func}(event, ${_year[1]}, ${_month[1]}, ${_date[1]})">${_date[1]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[1]!=0?"has_schedule":""}">${schedule_num[1]!=0?schedule_num[1]:""}</div></div>

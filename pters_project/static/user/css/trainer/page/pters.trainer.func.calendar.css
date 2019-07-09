@@ -57,7 +57,7 @@
 	}
 .pages{
 	position: absolute;
-	top: 85px;
+	top: 80px;
 	width: 100%;
 	transition: 0.2s ease-in-out;
 	background-color: #ffffff;
@@ -86,8 +86,8 @@
 	display: table;
 	width: 100%;
 	text-align: center;
-	height: 35px;
-	line-height: 35px;
+	height: 30px;
+	line-height: 30px;
 	border-bottom: 1px solid #cccccc;
 	background-color: #ffffff;
 	border-collapse: collapse;
