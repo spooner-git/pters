@@ -25,7 +25,7 @@
 
         <div id="wrapper_box_member_tickets">
             <div class="obj_box_full">
-                <div id="toggle_set_ticket">
+                <div id="toggle_set_ticket_in_member">
                     
                 </div>
             </div>
@@ -40,7 +40,7 @@
 
         <div id="wrapper_box_member_lectures">
             <div class="obj_box_full">
-                <div id="toggle_set_lecture">
+                <div id="toggle_set_lecture_in_member">
                         
                 </div>
             </div>
@@ -72,11 +72,12 @@
 <script>
 
     {% autoescape off %}
-    let member_info = {{ member_info }};
+    let member_basic_info = {{ member_info }};
     let member_ticket_list = {{ member_ticket_list }};
     let member_group_list = {{ member_group_list }};
+    let member_info = {basic_info: member_basic_info, ticket_info: member_ticket_list, lecture_info: member_group_list};
     {% endautoescape %}
-    
+
     function toggle_list(target_selector){
         let $target = $(target_selector);
         let status = $target.attr('data-toggle');
@@ -90,7 +91,7 @@
     }
 
     class Member_info{
-        constructor(targetHTML, instance, data){
+        constructor(targetHTML, data, instance){
             this.targetHTML = targetHTML;
             this.instance = instance;
             this.data = data;
@@ -101,39 +102,40 @@
             this.render_basic_info('#wrapper_box_member_info');
             this.render_member_name('#member_name_in_popup');
             this.render_member_edit_button('#member_edit_popup_show_button');
-            this.render_member_list_set();
             this.render_ticket_list_set();
+            this.render_lecture_list_set();
         }
 
         render_ticket_list_set(){
             this.render_static_component('#toggle_set_ticket_in_member', "toggle_set_ticket");
-            this.render_include_member_info('#wrapper_member_members_list');
+            this.render_include_ticket_info('#wrapper_member_tickets_list');
         }
 
         render_lecture_list_set(){
-            this.render_include_ticket_info('#wrapper_member_tickets_list');
             this.render_static_component('#toggle_set_lecture_in_member', "toggle_set_lecture");
+            this.render_include_lecture_info('#wrapper_member_lectures_list');
         }
 
         render_member_name(target){
-            document.querySelector(target).innerHTML = this.data.group_name;
+            document.querySelector(target).innerHTML = this.data.basic_info.member_name;
         }
 
         render_member_edit_button(target){
-            document.querySelector(target).onclick = () => {open_member_edit_popup(this.data.member_id)}
+            document.querySelector(target).onclick = () => {open_member_edit_popup(this.data.basic_info.member_id)}
         }
 
         render_basic_info(target){
             let html = `
                         <div class="obj_box_full">
                             <div id="wrapper_member_info_basic">
-                                <div style="position:relative;height:40px;">
-                                    <div class="member_tag_body" style="background-color:#fe4e65"></div>
-                                    <div class="member_tag_head" style="border-left-color:#fe4e65"></div>
+                                <div>
+                                    ${this.data.basic_info.member_connection_check == 0
+                                    ?"<img src='/static/common/icon/icon_link_off.png' class='obj_icon_basic icon_link'>(임시아이디)" 
+                                    :"<img src='/static/common/icon/icon_link_on.png' class='obj_icon_basic icon_link'>" }
+                                    ${this.data.basic_info.member_id}
                                 </div>
-                                <div>정원 - ${this.data.group_max_num} 명</div>
-                                <div>${'30회 - 900,000 원'}</div>
-                                <div>${this.data.group_note}</div>
+                                <div>${this.data.basic_info.member_sex == "None" ? "성별 미입력" : this.data.basic_info.member_sex}</div>
+                                <div>${this.data.basic_info.member_phone == "None" ? "전화번호 미입력" : this.data.basic_info.member_phone}</div>
                             </div>
                             <div id="wrapper_member_info_dates">
                                 <div>수정 <span>${'2019.06.24'}</span></div>
@@ -146,10 +148,11 @@
 
         render_include_ticket_info(target){
             let html_to_join = [];
-            let length = this.data.group_package_id_list.length;
-            for(var i=0; i<length; i++){
-                let ticket_id = this.data.group_package_id_list[i];
-                let ticket_name = this.data.group_package_list[i]
+            for(let ticket in this.data.ticket_info){
+                let this_data = this.data.ticket_info[ticket];
+                let ticket_id = this_data.lecture_package_id;
+                let ticket_name = this_data.lecture_package_name;
+                let ticket_end = this_data.lecture_end_date;
                 let html = 
                             `
                             <div class="swiper-slide" onclick="open_ticket_info_popup(${ticket_id})">
@@ -162,7 +165,7 @@
                                             <div class="obj_font_size_14_weight_normal">${ticket_name}</div>
                                         </div>
                                         <div>
-                                            <span class="obj_font_size_11_weight_normal obj_font_color_dark_grey">2019.06.21</span>
+                                            <span class="obj_font_size_11_weight_normal obj_font_color_dark_grey">${ticket_end}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -170,23 +173,32 @@
                             `
                 html_to_join.push(html);
             }
+
             document.querySelector(target).innerHTML = `<div class="swiper-wrapper">${html_to_join.join('')}</div>`;
         }
 
-        render_include_member_info(target){
+        render_include_lecture_info(target){
             let html_to_join = [];
-            for(var i=0; i<3; i++){
+            for(let lecture in this.data.lecture_info){
+                let this_data = this.data.lecture_info[lecture];
+                let lecture_id = this_data.group_id;
+                let lecture_name = this_data.group_name;
+                let lecture_max_num = this_data.group_max_num;
                 let html = 
                             `
-                            <li onclick="open_member_info_popup('123')">
-                                <div class="member_data_l">
-                                    <img src="/static/common/icon/icon_account.png">
-                                </div>                
-                                <div class="member_data_c">
-                                    <div class="member_name">회원명</div>
+                            <li onclick="open_lecture_info_popup(${lecture_id})">
+                                <div class="lecture_data_l">
+                                    <div class="lecture_tag_body" style="background:#fe4e65"></div>
+                                    <div class="lecture_tag_head" style="border-left-color:#fe4e65"></div>
                                 </div>
-                                <div class="member_data_r">
-                                    <div class="member_counts">10회</div>
+                                <div class="lecture_data_c">
+                                    <div class="lecture_name">${lecture_name}</div>
+                                </div>
+                                <div class="lecture_data_r">
+                                    <div class="lecture_member_number">정원 - ${lecture_max_num}명
+                                    </div>
+                                    <div class="lecture_member_number">참여중 - % ${lecture_max_num}명
+                                    </div>
                                 </div>
                             </li>
                             `
@@ -203,11 +215,11 @@
         static_component(){
             return {
                     toggle_set_ticket : `<div id="toggle_member_tickets_list" onclick="toggle_list('#wrapper_member_tickets_list')">
-                                            <span>진행중인 수강권 ${this.data.group_package_id_list.length}</span>
+                                            <span>진행중인 수강권 ${Object.keys(this.data.ticket_info).length}</span>
                                             <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
                                         </div>`,
-                    toggle_set_member: `<div id="toggle_member_members_list" onclick="toggle_list('#wrapper_member_members_list')">
-                                            <span>참여가능 수업 ${this.data.group_ing_member_num}</span>
+                    toggle_set_lecture: `<div id="toggle_member_lectures_list" onclick="toggle_list('#wrapper_member_lectures_list')">
+                                            <span>참여가능 수업 ${Object.keys(this.data.lecture_info).length}</span>
                                             <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
                                         </div>`
             }
@@ -216,8 +228,8 @@
     }
 
     let swiper, member_info_popup;
-    // member_info_popup = new Member_info('.popup_member_view', 'member_info_popup', member_info);
-    // member_info_popup.init();
+    member_info_popup = new Member_info('.popup_member_view', member_info, 'member_info_popup');
+    member_info_popup.init();
     swiper = new Swiper('.swiper-container', {
       slidesPerView: 2,
       spaceBetween: 0,
