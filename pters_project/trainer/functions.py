@@ -578,6 +578,7 @@ def func_get_package_info(class_id, package_id, user_id):
     package_group_id_list = []
     package_tb = None
     all_lecture_list = None
+    package_member_num_name = 'package_ing_member_num'
     for package_group_info in package_group_data:
         package_tb = package_group_info.package_tb
         group_tb = package_group_info.group_tb
@@ -603,6 +604,7 @@ def func_get_package_info(class_id, package_id, user_id):
                  lecture_tb__use=USE, use=USE).annotate(lecture_count=RawSQL(query_lecture_count,
                                                                              [])).order_by('lecture_tb__member_id',
                                                                                            'lecture_tb__end_date')
+        package_member_num_name = 'IP'
     elif package_tb.state_cd == 'PE':
 
         query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as A where A.LECTURE_TB_ID =" \
@@ -625,7 +627,7 @@ def func_get_package_info(class_id, package_id, user_id):
                                    lecture_ip_count=RawSQL(query_lecture_ip_count, [])
                                    ).filter(lecture_ip_count=0).order_by('lecture_tb__member_id',
                                                                          'lecture_tb__end_date')
-
+        package_member_num_name = 'PE'
     member_list = func_get_member_from_lecture_list(all_lecture_list, user_id)
 
     package_info = {'package_id': package_id,
@@ -636,7 +638,7 @@ def func_get_package_info(class_id, package_id, user_id):
                     'package_mod_dt': str(package_tb.mod_dt),
                     'package_group_list': package_group_list,
                     'package_group_id_list': package_group_id_list,
-                    'package_ing_member_num': len(member_list),
+                    package_member_num_name: len(member_list),
                     'package_member_list': member_list}
 
     return package_info

@@ -30,7 +30,6 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     GROUP_SCHEDULE
 
 from configs.views import AccessTestMixin
-from login.views import add_member_no_email_func
 
 from board.models import BoardTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
@@ -39,9 +38,9 @@ from trainee.models import LectureTb, MemberLectureTb
 from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb, \
     PackageTb, PackageGroupTb, CenterTrainerTb
 
-from schedule.functions import func_refresh_group_status, func_refresh_lecture_count, \
-    func_get_trainer_attend_schedule, func_get_group_lecture_id, func_check_group_available_member_before, \
-    func_add_schedule, func_check_group_available_member_after, func_get_trainer_schedule_all
+from schedule.functions import func_refresh_lecture_count, func_get_trainer_attend_schedule, \
+    func_get_group_lecture_id, func_check_group_available_member_before, func_add_schedule, \
+    func_check_group_available_member_after, func_get_trainer_schedule_all
 from stats.functions import get_sales_data
 from .functions import func_get_trainer_setting_list, func_add_lecture_info, func_delete_lecture_info, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
@@ -1930,7 +1929,7 @@ def delete_lecture_info_logic(request):
 
 def update_lecture_status_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
-    status_cd = request.POST.get('status_cd', '')
+    state_cd = request.POST.get('state_cd', '')
     refund_price = request.POST.get('refund_price', 0)
     refund_date = request.POST.get('refund_date', None)
     lecture_info = None
@@ -1945,7 +1944,7 @@ def update_lecture_status_info_logic(request):
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
     if error is None:
-        if status_cd == 'RF':
+        if state_cd == 'RF':
             if refund_price is None or refund_price == 0:
                 error = '환불 금액을 입력해 주세요.'
             if error is None:
@@ -1966,7 +1965,7 @@ def update_lecture_status_info_logic(request):
                 except TypeError:
                     error = '환불 날짜 오류가 발생했습니다.'
 
-        if status_cd == 'IP':
+        if state_cd == 'IP':
             if lecture_info.package_tb.use == UN_USE or lecture_info.package_tb.state_cd != 'IP':
                 error = '해당 수강권은 진행중 상태가 아닙니다.'
 
@@ -1992,17 +1991,17 @@ def update_lecture_status_info_logic(request):
 
         lecture_avail_count = 0
         lecture_rem_count = 0
-        if status_cd == 'IP':
+        if state_cd == 'IP':
             if lecture_info.lecture_reg_count >= schedule_data_count:
                 lecture_avail_count = lecture_info.lecture_reg_count - schedule_data_count
 
-        if status_cd != 'PE':
+        if state_cd != 'PE':
             if lecture_info.lecture_reg_count >= schedule_data_finish_count:
                 lecture_rem_count = lecture_info.lecture_reg_count - schedule_data_finish_count
 
         lecture_info.lecture_avail_count = lecture_avail_count
         lecture_info.lecture_rem_count = lecture_rem_count
-        lecture_info.state_cd = status_cd
+        lecture_info.state_cd = state_cd
         lecture_info.refund_price = refund_price
         lecture_info.refund_date = refund_date
         lecture_info.save()
@@ -2080,7 +2079,6 @@ def add_group_info_logic(request):
     end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
     ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
     end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
-    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     error = None
     try:
         with transaction.atomic():
@@ -2104,16 +2102,14 @@ def add_group_info_logic(request):
     if error is not None:
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
 def delete_group_info_logic(request):
     class_id = request.session.get('class_id', '')
     group_id = request.POST.get('group_id', '')
-    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     error = None
     group_info = None
-    group_data = []
     try:
         group_info = GroupTb.objects.get(group_id=group_id)
     except ObjectDoesNotExist:
@@ -2121,9 +2117,10 @@ def delete_group_info_logic(request):
 
     package_data = PackageGroupTb.objects.filter(group_tb_id=group_id, use=USE)
 
-    if error is None:
-        group_data = GroupLectureTb.objects.select_related(
-            'lecture_tb__package_tb', 'lecture_tb__member').filter(group_tb_id=group_id, use=USE)
+    query_package_info = Q()
+    for package_info in package_data:
+        query_package_info |= Q(lecture_tb__package_tb_id=package_info.package_tb.package_id)
+
     try:
         with transaction.atomic():
 
@@ -2134,7 +2131,6 @@ def delete_group_info_logic(request):
                                                           en_dis_type=ON_SCHEDULE_TYPE).exclude(Q(state_cd='PE')
                                                                                                 | Q(state_cd='PC'))
                 schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id, group_tb_id=group_id,
-                                                                 # lecture_tb__isnull=True,
                                                                  end_dt__gt=timezone.now(),
                                                                  en_dis_type=ON_SCHEDULE_TYPE
                                                                  ).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
@@ -2153,16 +2149,22 @@ def delete_group_info_logic(request):
                 if len(schedule_data_finish) > 0:
                     schedule_data_finish.update(use=UN_USE)
 
-            if error is None:
-                if len(group_data) > 0:
-                    group_data.update(use=UN_USE)
+                # 관련 수간권 회원들 수강정보 업데이트
+                class_lecture_data = ClassLectureTb.objects.select_related(
+                    'lecture_tb__package_tb').filter(query_package_info, class_tb_id=class_id,
+                                                     auth_cd='VIEW', lecture_tb__state_cd='IP',
+                                                     lecture_tb__use=USE, use=USE)
+
+                for class_lecture_info in class_lecture_data:
+                    error = func_refresh_lecture_count(class_lecture_info.class_tb_id,
+                                                       class_lecture_info.lecture_tb_id)
 
             if error is None:
                 group_info.state_cd = 'PE'
                 group_info.use = UN_USE
                 group_info.save()
                 if len(package_data) > 0:
-                    package_data.update(use=UN_USE)
+                    package_data.delete()
 
             if error is not None:
                 raise InternalError
@@ -2182,12 +2184,11 @@ def delete_group_info_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
 def update_group_info_logic(request):
     group_id = request.POST.get('group_id', '')
-    group_type_cd = request.POST.get('group_type_cd', '')
     member_num = request.POST.get('member_num', '')
     name = request.POST.get('name', '')
     note = request.POST.get('note', '')
@@ -2195,7 +2196,6 @@ def update_group_info_logic(request):
     end_color_cd = request.POST.get('end_color_cd', '')
     ing_font_color_cd = request.POST.get('ing_font_color_cd', '')
     end_font_color_cd = request.POST.get('end_font_color_cd', '')
-    next_page = request.POST.get('next_page', '/trainer/get_error_info/')
     group_info = None
     error = None
 
@@ -2205,10 +2205,6 @@ def update_group_info_logic(request):
         error = '오류가 발생했습니다.'
 
     if error is None:
-
-        if group_type_cd == '' or group_type_cd is None:
-            group_type_cd = group_info.group_type_cd
-
         if member_num == '' or member_num is None:
             member_num = group_info.member_num
 
@@ -2240,22 +2236,6 @@ def update_group_info_logic(request):
             error = '정원은 숫자만 입력 가능합니다.'
 
     if error is None:
-        member_fix_data = []
-        group_lecture_data = GroupLectureTb.objects.select_related(
-            'lecture_tb__member').filter(group_tb_id=group_id, use=USE)
-        for group_lecture_info in group_lecture_data:
-            check = 0
-            for member_fix_info in member_fix_data:
-                if str(member_fix_info) == str(group_lecture_info.lecture_tb.member_id):
-                    check = 1
-            if check == 0:
-                if group_lecture_info.fix_state_cd == 'FIX':
-                    member_fix_data.append(group_lecture_info.lecture_tb.member_id)
-        if int(member_num) < len(member_fix_data):
-            error = '정원보다 고정인원이 많습니다.'
-
-    if error is None:
-        group_info.group_type_cd = group_type_cd
         group_info.member_num = member_num
         group_info.name = name
         group_info.note = note
@@ -2269,7 +2249,7 @@ def update_group_info_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
 class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
@@ -2427,16 +2407,19 @@ class GetGroupIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse({'group_ing_member_list': member_list}, json_dumps_params={'ensure_ascii': True})
 
 
-def finish_group_info_logic(request):
+def update_group_status_info_logic(request):
+    class_id = request.session.get('class_id')
     group_id = request.POST.get('group_id', '')
+    state_cd = request.POST.get('state_cd', '')
+
     error = None
     group_info = None
     now = timezone.now()
-    if error is None:
-        try:
-            group_info = GroupTb.objects.get(group_id=group_id)
-        except ObjectDoesNotExist:
-            error = '오류가 발생했습니다.'
+
+    try:
+        group_info = GroupTb.objects.get(class_tb_id=class_id, group_id=group_id)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다.'
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(group_tb_id=group_id,
@@ -2453,27 +2436,7 @@ def finish_group_info_logic(request):
         if len(repeat_schedule_data) > 0:
             repeat_schedule_data.delete()
 
-        group_info.state_cd = 'PE'
-        group_info.save()
-
-    if error is not None:
-        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-
-    return render(request, 'ajax/trainer_error_ajax.html')
-
-
-def progress_group_info_logic(request):
-    group_id = request.POST.get('group_id', '')
-    error = None
-    group_info = None
-    if error is None:
-        try:
-            group_info = GroupTb.objects.get(group_id=group_id)
-        except ObjectDoesNotExist:
-            error = '그룹 정보를 불러오지 못했습니다.'
-
-        group_info.state_cd = 'IP'
+        group_info.state_cd = state_cd
         group_info.save()
 
     if error is not None:
@@ -2486,7 +2449,6 @@ def progress_group_info_logic(request):
 # 그룹 회원 삭제
 def update_fix_group_member_logic(request):
     json_data = request.body.decode('utf-8')
-    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     json_loading_data = None
     error = None
     group_lecture_data = None
@@ -2560,66 +2522,39 @@ def update_fix_group_member_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
 # 패키지 추가
 def add_package_info_logic(request):
     class_id = request.session.get('class_id', '')
-    json_data = request.body.decode('utf-8')
-    next_page = request.POST.get('next_page', '/trainer/get_error_info/')
-    json_loading_data = None
+    package_name = request.POST.get('package_name')
+    package_note = request.POST.get('package_note')
+    group_id_list = request.POST.getlist('package_list')
     error = None
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다. [0]'
-    except TypeError:
-        error = '오류가 발생했습니다. [1]'
 
     if error is None:
         try:
             with transaction.atomic():
 
-                package_name = json_loading_data['package_info']['package_name']
-                if package_name is None or package_name == '':
-                    error = '수강 이름을 입력하세요.'
-                    raise InternalError
-
-                if len(json_loading_data['new_package_group_data']) == 0:
-                    error = '수강권은 1가지 이상의 수업을 선택하셔야 합니다.'
-                    raise InternalError
-                # elif len(json_loading_data['new_package_group_data']) == 1:
-                #     group_id = json_loading_data['new_package_group_data'][0]['group_id']
-                else:
-                    error = '오류가 발생했습니다. [4]'
-
                 package_info = PackageTb(class_tb_id=class_id, name=package_name,
                                          state_cd='IP',
-                                         note=json_loading_data['package_info']['package_note'], use=USE)
+                                         note=package_note, use=USE)
                 package_info.save()
 
-                if json_loading_data['new_package_group_data'] != '[]':
-                    for json_info in json_loading_data['new_package_group_data']:
-                        if json_info['group_id'] is None or json_info['group_id'] == '':
-                            error = '오류가 발생했습니다. [5]'
-                            raise InternalError
-                        else:
-
-                            package_group_counter = PackageGroupTb.objects.filter(package_tb_id=package_info.package_id,
-                                                                                  group_tb_id=json_info['group_id'],
+                if group_id_list != '':
+                    for group_id in group_id_list:
+                        if group_id is not None and group_id != '':
+                            package_group_counter = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                                                                                  package_tb_id=package_info.package_id,
+                                                                                  group_tb_id=group_id,
                                                                                   use=USE).count()
-                            if package_group_counter > 0:
-                                error = '오류가 발생했습니다. [6]'
-                                raise InternalError
-
-                            if error is None:
+                            if package_group_counter == 0:
                                 package_group_info = PackageGroupTb(class_tb_id=class_id,
                                                                     package_tb_id=package_info.package_id,
-                                                                    group_tb_id=json_info['group_id'],
+                                                                    group_tb_id=group_id,
                                                                     use=USE)
                                 package_group_info.save()
-
         except InternalError:
             error = error
 
@@ -2627,16 +2562,17 @@ def add_package_info_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 패키지 삭제
+# 수강권 삭제
 def delete_package_info_logic(request):
     class_id = request.session.get('class_id', '')
     package_id = request.POST.get('package_id', '')
-    next_page = request.POST.get('next_page', '/trainer/get_error_info/')
     error = None
     package_info = None
+    now = timezone.now()
+
     try:
         package_info = PackageTb.objects.get(class_tb_id=class_id, package_id=package_id)
     except ObjectDoesNotExist:
@@ -2645,17 +2581,46 @@ def delete_package_info_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                if error is None:
-                    package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id, package_tb_id=package_id,
-                                                                       use=USE)
-                    for package_group_info in package_group_data:
-                        package_group_info.use = UN_USE
-                        package_group_info.save()
-                        func_refresh_group_status(package_group_info.group_tb_id, None, None)
+                package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id, package_tb_id=package_id,
+                                                                   use=USE)
+                package_group_data.delete()
 
                 package_info.state_cd = 'PE'
                 package_info.use = UN_USE
                 package_info.save()
+
+                package_lecture_data = ClassLectureTb.objects.select_related(
+                    'lecture_tb').filter(class_tb_id=class_id, lecture_tb__package_tb_id=package_id, auth_cd='VIEW',
+                                         use=USE)
+
+                if package_lecture_data is not None:
+                    for package_lecture_info in package_lecture_data:
+                        lecture_info = package_lecture_info.lecture_tb
+                        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                  end_dt__lte=now,
+                                                                  use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+                        schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                         end_dt__gt=now,
+                                                                         use=USE).exclude(
+                            Q(state_cd='PE') | Q(state_cd='PC'))
+                        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+
+                        if len(schedule_data) > 0:
+                            schedule_data.update(state_cd='PE')
+                        if len(schedule_data_delete) > 0:
+                            schedule_data_delete.delete()
+                        if len(repeat_schedule_data) > 0:
+                            repeat_schedule_data.delete()
+
+                        schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                         lecture_tb_id=lecture_info.lecture_id, use=USE)
+                        lecture_info.lecture_avail_count = 0
+                        if lecture_info.state_cd == 'RF':
+                            lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
+                        else:
+                            lecture_info.lecture_rem_count = 0
+                            lecture_info.state_cd = 'PE'
+                        lecture_info.save()
 
         except ValueError:
             error = '오류가 발생했습니다. [1]'
@@ -2670,16 +2635,15 @@ def delete_package_info_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 패키지 추가
+# 수강권 수정
 def update_package_info_logic(request):
     class_id = request.session.get('class_id', '')
     package_id = request.POST.get('package_id', '')
     package_name = request.POST.get('package_name', '')
     package_note = request.POST.get('package_note', '')
-    next_page = request.POST.get('next_page', '/trainer/get_error_info/')
     error = None
     package_info = None
     try:
@@ -2688,9 +2652,9 @@ def update_package_info_logic(request):
         error = '오류가 발생했습니다. [0]'
 
     if error is None:
-        if package_name is not None and package_name != '':
+        if package_name != '' and package_name is not None:
             package_info.name = package_name
-        if package_note is not None and package_note != '':
+        if package_note != '' and package_note is not None:
             package_info.note = package_note
         package_info.save()
 
@@ -2698,15 +2662,14 @@ def update_package_info_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 패키지에 그룹 추가
+# 수강권에 그룹 추가
 def add_package_group_info_logic(request):
     class_id = request.session.get('class_id', '')
     package_id = request.POST.get('package_id', '')
     group_id = request.POST.get('group_id', '')
-    next_page = request.POST.get('next_page', '/trainer/get_error_info/')
     error = None
     package_group_counter = PackageGroupTb.objects.filter(package_tb_id=package_id, group_tb_id=group_id,
                                                           use=USE).count()
@@ -2719,31 +2682,6 @@ def add_package_group_info_logic(request):
                 package_group_info = PackageGroupTb(class_tb_id=class_id, package_tb_id=package_id,
                                                     group_tb_id=group_id, use=USE)
                 package_group_info.save()
-                package_group_lecture_data = ClassLectureTb.objects.select_related(
-                    'lecture_tb__member').filter(class_tb_id=class_id, auth_cd='VIEW',
-                                                 lecture_tb__package_tb_id=package_id,
-                                                 lecture_tb__use=USE, use=USE)
-
-                query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
-                                    "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
-                                    " B.USE=1"
-                for package_group_lecture_info in package_group_lecture_data:
-
-                    group_lecture_counter = GroupLectureTb.objects.filter(
-                        group_tb_id=package_group_info.group_tb_id,
-                        lecture_tb__member_id=package_group_lecture_info.lecture_tb.member_id,
-                        lecture_tb__state_cd='IP', lecture_tb__use=USE, fix_state_cd='FIX',
-                        use=USE).annotate(class_count=RawSQL(query_class_count,
-                                                             [])).filter(class_count__gte=1).count()
-                    if group_lecture_counter > 0:
-                        fix_state_cd = 'FIX'
-                    else:
-                        fix_state_cd = ''
-                    group_lecture_info = GroupLectureTb(group_tb_id=package_group_info.group_tb_id,
-                                                        lecture_tb_id=package_group_lecture_info.lecture_tb_id,
-                                                        fix_state_cd=fix_state_cd, use=USE)
-                    group_lecture_info.save()
-                func_refresh_group_status(group_id, None, None)
 
         except ValueError:
             error = '오류가 발생했습니다.'
@@ -2760,7 +2698,7 @@ def add_package_group_info_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
 # 패키지에서 그룹 삭제
@@ -2768,7 +2706,6 @@ def delete_package_group_info_logic(request):
     class_id = request.session.get('class_id', '')
     package_id = request.POST.get('package_id', '')
     group_id = request.POST.get('group_id', '')
-    next_page = request.POST.get('next_page', '/trainer/get_error_info/')
     error = None
 
     if error is None:
@@ -2778,18 +2715,7 @@ def delete_package_group_info_logic(request):
                 package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id,
                                                                    package_tb_id=package_id, group_tb_id=group_id,
                                                                    use=USE)
-                package_group_data.update(use=UN_USE)
-
-                # 그룹이 회원의 수강권에서 제외되도록 설정
-                package_group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                                           lecture_tb__package_tb_id=package_id)
-                package_group_lecture_data.update(fix_state_cd='', use=UN_USE)
-
-                class_lecture_data = ClassLectureTb.objects.select_related(
-                    'lecture_tb__package_tb').filter(class_tb_id=class_id,
-                                                     lecture_tb__package_tb_id=package_id,
-                                                     auth_cd='VIEW', lecture_tb__state_cd='IP',
-                                                     lecture_tb__use=USE, use=USE)
+                package_group_data.delete()
 
                 schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                           lecture_tb__package_tb_id=package_id,
@@ -2797,14 +2723,15 @@ def delete_package_group_info_logic(request):
                                                           end_dt__lte=timezone.now(),
                                                           en_dis_type=ON_SCHEDULE_TYPE
                                                           ).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+
                 schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                  lecture_tb__package_tb_id=package_id,
                                                                  group_tb_id=group_id,
-                                                                 # lecture_tb__isnull=True,
                                                                  end_dt__gt=timezone.now(),
                                                                  en_dis_type=ON_SCHEDULE_TYPE
                                                                  ).exclude(Q(state_cd='PE')
                                                                            | Q(state_cd='PC'))
+
                 repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                        lecture_tb__package_tb_id=package_id,
                                                                        group_tb_id=group_id)
@@ -2814,11 +2741,17 @@ def delete_package_group_info_logic(request):
                     schedule_data_delete.delete()
                 if len(repeat_schedule_data) > 0:
                     repeat_schedule_data.delete()
+
+                # 해당 패키지의 회원들 수강정보 업데이트
+                class_lecture_data = ClassLectureTb.objects.select_related(
+                    'lecture_tb__package_tb').filter(class_tb_id=class_id,
+                                                     lecture_tb__package_tb_id=package_id,
+                                                     auth_cd='VIEW', lecture_tb__state_cd='IP',
+                                                     lecture_tb__use=USE, use=USE)
+
                 for class_lecture_info in class_lecture_data:
                     error = func_refresh_lecture_count(class_lecture_info.class_tb_id,
                                                        class_lecture_info.lecture_tb_id)
-
-                func_refresh_group_status(group_id, None, None)
 
                 if error is not None:
                     raise InternalError
@@ -2838,20 +2771,84 @@ def delete_package_group_info_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
-class GetPackageInfoViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/group_info_ajax.html'
+def update_package_status_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    package_id = request.POST.get('package_id', '')
+    state_cd = request.POST.get('state_cd')
 
-    def get_context_data(self, **kwargs):
-        context = super(GetPackageInfoViewAjax, self).get_context_data(**kwargs)
+    error = None
+    package_info = None
+    now = timezone.now()
+
+    if package_id is None or package_id == '':
+        error = '수강권 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            package_info = PackageTb.objects.get(package_id=package_id)
+        except ObjectDoesNotExist:
+            error = '수강권 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(
+            package_tb_id=package_id, group_tb__use=USE, use=USE)
+
+        if state_cd == 'PE':
+            package_group_data.delete()
+
+        package_lecture_data = ClassLectureTb.objects.select_related(
+            'lecture_tb').filter(class_tb_id=class_id, lecture_tb__package_tb_id=package_id, auth_cd='VIEW', use=USE)
+
+        if package_lecture_data is not None and state_cd == 'PE':
+            for package_lecture_info in package_lecture_data:
+                lecture_info = package_lecture_info.lecture_tb
+                schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                          end_dt__lte=now,
+                                                          use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+                schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                 end_dt__gt=now,
+                                                                 use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+                repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+
+                if len(schedule_data) > 0:
+                    schedule_data.update(state_cd='PE')
+                if len(schedule_data_delete) > 0:
+                    schedule_data_delete.delete()
+                if len(repeat_schedule_data) > 0:
+                    repeat_schedule_data.delete()
+
+                schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                 lecture_tb_id=lecture_info.lecture_id, use=USE)
+                lecture_info.lecture_avail_count = 0
+                if lecture_info.state_cd == 'RF':
+                    lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
+                else:
+                    lecture_info.lecture_rem_count = 0
+                    lecture_info.state_cd = 'PE'
+                lecture_info.save()
+
+        package_info.state_cd = state_cd
+        package_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetPackageInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
         class_id = self.request.session.get('class_id')
-        package_id = self.request.GET.get('ticket_id')
+        package_id = request.GET.get('ticket_id')
 
-        context['ticket_info'] = func_get_package_info(class_id, package_id, self.request.user.id)
+        package_info = func_get_package_info(class_id, package_id, self.request.user.id)
 
-        return context
+        return JsonResponse({'package_info': package_info}, json_dumps_params={'ensure_ascii': True})
 
 
 class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
@@ -3139,314 +3136,6 @@ class GetPackageEndMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View)
             messages.error(self.request, error)
 
         return JsonResponse({'package_end_member_list': member_list}, json_dumps_params={'ensure_ascii': True})
-
-
-def finish_package_info_logic(request):
-    # next_page = request.POST.get('next_page', '')
-    package_id = request.POST.get('package_id', '')
-    class_id = request.session.get('class_id', '')
-    error = None
-    package_info = None
-    package_lecture_data = None
-    package_group_data = []
-    now = timezone.now()
-
-    if error is None:
-        try:
-            package_info = PackageTb.objects.get(package_id=package_id)
-        except ObjectDoesNotExist:
-            error = '오류가 발생했습니다.'
-
-    if error is None:
-        package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(
-            package_tb_id=package_id, group_tb__use=USE, use=USE)
-
-        package_lecture_data = ClassLectureTb.objects.select_related(
-            'lecture_tb').filter(class_tb_id=class_id, lecture_tb__package_tb_id=package_id, auth_cd='VIEW', use=USE)
-
-    if error is None:
-
-        if package_lecture_data is not None:
-            for package_lecture_info in package_lecture_data:
-                lecture_info = package_lecture_info.lecture_tb
-                schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                          end_dt__lte=now,
-                                                          use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
-                schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                 end_dt__gt=now,
-                                                                 use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
-                repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-                # func_refresh_lecture_count(lecture_id)
-                if len(schedule_data) > 0:
-                    schedule_data.update(state_cd='PE')
-                if len(schedule_data_delete) > 0:
-                    schedule_data_delete.delete()
-                if len(repeat_schedule_data) > 0:
-                    repeat_schedule_data.delete()
-                schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
-                                                                 lecture_tb_id=lecture_info.lecture_id)
-                lecture_info.lecture_avail_count = 0
-                if lecture_info.state_cd == 'RF':
-                    lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
-                else:
-                    lecture_info.lecture_rem_count = 0
-                    lecture_info.state_cd = 'PE'
-                lecture_info.save()
-
-                group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=package_lecture_info.lecture_tb_id,
-                                                                   lecture_tb__state_cd='IP',
-                                                                   use=USE)
-                group_lecture_data.update(fix_state_cd='')
-
-    if error is None:
-        for package_group_info in package_group_data:
-            func_refresh_group_status(package_group_info.group_tb_id, None, None)
-
-    if error is None:
-        package_info.state_cd = 'PE'
-        package_info.save()
-
-    if error is None:
-        # log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
-        #                  from_member_name=request.user.last_name + request.user.first_name,
-        #                  class_tb_id=class_id,
-        #                  log_info=package_info.name + package_info.name + ' 수강권',
-        #                  log_how='완료 처리', use=USE)
-        #
-        # log_data.save()
-
-        return render(request, 'ajax/trainer_error_ajax.html')
-    else:
-        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-
-        return render(request, 'ajax/trainer_error_ajax.html')
-
-
-def progress_package_info_logic(request):
-    package_id = request.POST.get('package_id', '')
-    package_info = None
-    error = None
-    package_group_data = []
-    if error is None:
-        try:
-            package_info = PackageTb.objects.get(package_id=package_id)
-        except ObjectDoesNotExist:
-            error = '수강권 정보를 불러오지 못했습니다.'
-
-    if error is None:
-        package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(
-            package_tb_id=package_id, group_tb__state_cd='IP', group_tb__use=USE, use=USE)
-        if len(package_group_data) == 0:
-            error = '수강권에 소속된 진행중 그룹이 없어 재개할수 없습니다.'
-
-    if error is None:
-        for package_group_info in package_group_data:
-            # package_group_info.use = USE
-            # package_group_info.save()
-            func_refresh_group_status(package_group_info.group_tb_id, None, None)
-
-    if error is None:
-        package_info.state_cd = 'IP'
-        package_info.save()
-
-    if error is None:
-        # log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
-        #                  from_member_name=request.user.last_name + request.user.first_name,
-        #                  class_tb_id=class_id,
-        #                  log_info=package_info.name + package_info.name + ' 수강권',
-        #                  log_how='재개', use=USE)
-        #
-        # log_data.save()
-
-        return render(request, 'ajax/trainer_error_ajax.html')
-    else:
-        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-
-        return render(request, 'ajax/trainer_error_ajax.html')
-
-
-class GetPackageGroupListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/package_group_info_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(GetPackageGroupListViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        package_id = self.request.GET.get('package_id', '')
-        error = None
-
-        package_group_data = PackageGroupTb.objects.select_related(
-            'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='IP',
-                               package_tb_id=package_id, group_tb__use=USE,
-                               use=USE).order_by('-group_tb__group_type_cd', '-group_tb_id')
-
-        if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
-                self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
-
-        context['package_group_data'] = package_group_data
-
-        return context
-
-
-class GetEndPackageGroupListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/package_group_info_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(GetEndPackageGroupListViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        package_id = self.request.GET.get('package_id', '')
-        error = None
-        package_info = None
-        package_group_data = None
-        try:
-            package_info = PackageTb.objects.get(package_id=package_id)
-        except ObjectDoesNotExist:
-            error = '수강권 정보를 불러오지 못했습니다.'
-
-        if error is None:
-            if package_info.state_cd == 'IP':
-                package_group_data = PackageGroupTb.objects.select_related(
-                    'group_tb').filter(class_tb_id=class_id,
-                                       package_tb_id=package_id, group_tb__state_cd='IP',
-                                       use=USE).order_by('-group_tb__group_type_cd', '-group_tb_id')
-
-            else:
-                package_group_data = PackageGroupTb.objects.select_related(
-                    'group_tb').filter(class_tb_id=class_id,
-                                       package_tb_id=package_id, group_tb__use=USE,
-                                       use=USE).order_by('-group_tb__group_type_cd', '-group_tb_id')
-
-        if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
-                self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
-
-        context['package_group_data'] = package_group_data
-
-        return context
-
-
-def add_package_member_logic(request):
-    class_id = request.session.get('class_id', '')
-    json_data = request.body.decode('utf-8')
-    next_page = request.POST.get('next_page', '/trainer/get_package_ing_list/')
-    json_loading_data = None
-    error = None
-    user_db_id_list = []
-    user_name_list = []
-    package_id = None
-
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다.'
-    except TypeError:
-        error = '오류가 발생했습니다.'
-
-    if error is None:
-        package_id = json_loading_data['lecture_info']['package_id']
-
-    if error is None:
-        try:
-            with transaction.atomic():
-
-                if json_loading_data['new_member_data'] != '[]':
-                    for json_info in json_loading_data['new_member_data']:
-                        context = add_member_no_email_func(request.user.id,
-                                                           json_info['first_name'],
-                                                           json_info['phone'], json_info['sex'],
-                                                           json_info['birthday_dt'])
-
-                        if context['error'] is None:
-                            user_name_list.append(json_info['last_name'] + json_info['first_name'])
-                            user_db_id_list.append(context['user_db_id'])
-                        else:
-                            error = context['error']
-                            break
-
-                if error is None:
-                    if json_loading_data['old_member_data'] != '[]':
-                        for json_info in json_loading_data['old_member_data']:
-                            user_db_id_list.append(json_info['db_id'])
-
-                if error is None:
-                    for user_info in user_db_id_list:
-                        error = func_add_lecture_info(request.user.id, class_id, package_id,
-                                                      json_loading_data['lecture_info']['counts'],
-                                                      json_loading_data['lecture_info']['price'],
-                                                      json_loading_data['lecture_info']['start_date'],
-                                                      json_loading_data['lecture_info']['end_date'],
-                                                      json_loading_data['lecture_info']['memo'],
-                                                      user_info)
-                if error is not None:
-                    raise InternalError
-        except InternalError:
-            error = error
-
-    if error is not None:
-        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(
-            request.user.id) + ']' + error)
-        messages.error(request, error)
-
-    return redirect(next_page)
-
-
-# 패키지 회원 삭제
-def delete_package_member_info_logic(request):
-    class_id = request.session.get('class_id', '')
-    json_data = request.body.decode('utf-8')
-    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
-    json_loading_data = None
-    error = None
-
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다.'
-    except TypeError:
-        error = '오류가 발생했습니다.'
-
-    package_id = json_loading_data['package_id']
-
-    if error is None:
-        # idx = 0
-        for member_id_info in json_loading_data['ids']:
-            package_lecture_data = ClassLectureTb.objects.select_related(
-                'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
-                                                 lecture_tb__package_tb_id=package_id,
-                                                 lecture_tb__member_id=member_id_info,
-                                                 lecture_tb__use=USE,
-                                                 use=USE)
-            try:
-                with transaction.atomic():
-                    if package_lecture_data is not None:
-                        for package_lecture_info in package_lecture_data:
-                            error = func_delete_lecture_info(request.user.id, class_id,
-                                                             package_lecture_info.lecture_tb.lecture_id)
-                            if error is not None:
-                                break
-
-                    if error is not None:
-                        raise InternalError(str(error))
-
-            except ValueError:
-                error = '오류가 발생했습니다.'
-            except IntegrityError:
-                error = '오류가 발생했습니다.'
-            except TypeError:
-                error = '오류가 발생했습니다.'
-            except ValidationError:
-                error = '오류가 발생했습니다.'
-            except InternalError:
-                error = error
-    if error is not None:
-        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-
-    return redirect(next_page)
 
 
 class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -5043,6 +4732,8 @@ class PopupMemberEdit(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupMemberEdit, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        member_id = self.request.GET.get('member_id')
         member_result = func_get_member_info(class_id, self.request.user.id, member_id)
         context['member_info'] = member_result['member_info']
         return context
