@@ -1800,7 +1800,6 @@ def add_lecture_info_logic(request):
     end_date = request.POST.get('end_date')
     class_id = request.session.get('class_id', '')
     package_id = request.POST.get('package_id', '')
-    next_page = request.POST.get('next_page')
 
     error = None
 
@@ -1834,13 +1833,12 @@ def add_lecture_info_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
 # 수강권 수정
 def update_lecture_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
-    next_page = request.POST.get('next_page', '')
     error = None
     lecture_info = None
 
@@ -1914,13 +1912,12 @@ def update_lecture_info_logic(request):
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
 # 회원 수강권 삭제
 def delete_lecture_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
-    next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
     error = None
 
@@ -1934,7 +1931,7 @@ def delete_lecture_info_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
 def update_lecture_status_info_logic(request):
@@ -1942,7 +1939,6 @@ def update_lecture_status_info_logic(request):
     status_cd = request.POST.get('status_cd', '')
     refund_price = request.POST.get('refund_price', 0)
     refund_date = request.POST.get('refund_date', None)
-    next_page = request.POST.get('next_page', '')
     lecture_info = None
     error = None
 
@@ -2024,14 +2020,13 @@ def update_lecture_status_info_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
 # 회원 연결 관계 업데이트
 def update_member_connection_info_logic(request):
     member_id = request.POST.get('member_id', '')
-    member_auth_cd = request.POST.get('member_view_state_cd', '')
-    next_page = request.POST.get('next_page', '')
+    member_auth_cd = request.POST.get('member_auth_cd', '')
     class_id = request.session.get('class_id', '')
     error = None
     member = None
@@ -2066,13 +2061,19 @@ def update_member_connection_info_logic(request):
                 auth_cd = 'VIEW'
 
         for class_lecture_info in class_lecture_list:
-            class_lecture_info.lecture_tb.member_auth_cd = auth_cd
+            try:
+                member_lecture_info = MemberLectureTb.object.get(lecture_tb_id=class_lecture_info.lecture_tb_id,
+                                                                 member_id=member_id, use=USE)
+            except ObjectDoesNotExist:
+                member_lecture_info = None
+            if member_lecture_info is not None:
+                member_lecture_info.auth_cd = auth_cd
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
 def add_group_info_logic(request):
