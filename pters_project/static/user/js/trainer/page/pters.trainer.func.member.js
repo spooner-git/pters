@@ -120,8 +120,8 @@ class Member {
             let member_reg = data.lecture_reg_count;
             let member_rem = data.lecture_rem_count;
 
-            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'dbid':${member_id}});`;
-            let html = `<article class="member_wrapper" data-dbid="${member_id}" data-name="${member_name}" onclick="${onclick}">
+            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'member_id':${member_id}});`;
+            let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}">
                             <div class="member_data_l">
                                 <img src="/static/common/icon/icon_account.png">
                             </div>                

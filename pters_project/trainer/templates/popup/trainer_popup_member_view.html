@@ -72,8 +72,9 @@
 <script>
 
     {% autoescape off %}
-    // var member_info = {{ member_info }};
-    let member_info = null;
+    let member_info = {{ member_info }};
+    let member_ticket_list = {{ member_ticket_list }};
+    let member_group_list = {{ member_group_list }};
     {% endautoescape %}
     
     function toggle_list(target_selector){
@@ -119,7 +120,7 @@
         }
 
         render_member_edit_button(target){
-            document.querySelector(target).onclick = () => {open_member_edit_popup(this.data.db_id)}
+            document.querySelector(target).onclick = () => {open_member_edit_popup(this.data.member_id)}
         }
 
         render_basic_info(target){

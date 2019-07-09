@@ -46,7 +46,7 @@ from stats.functions import get_sales_data
 from .functions import func_get_trainer_setting_list, func_add_lecture_info, func_delete_lecture_info, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
     func_get_member_info, func_get_member_from_lecture_list, func_get_package_info, func_get_group_info, \
-    func_check_member_connection_info
+    func_check_member_connection_info, func_get_member_lecture_list, func_get_member_group_list
 
 logger = logging.getLogger(__name__)
 
@@ -392,13 +392,13 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             member_result = func_get_member_info(class_id, request.user.id, member_id)
-            error = member_result.error
+            error = member_result['error']
 
         if error is not None:
             logger.error(request.user.first_name + ' ' + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        return JsonResponse(member_result.member_info, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse(member_result['member_info'], json_dumps_params={'ensure_ascii': True})
 
 
 class SearchMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
@@ -1736,13 +1736,13 @@ def export_excel_member_info_logic(request):
 # ############### ############### ############### ############### ############### ############### ##############
 # 회원 수강권 기능 ############### ############### ############### ############### ############### ############### ########
 
-class GetLectureListView(LoginRequiredMixin, AccessTestMixin, View):
+class GetMemberGroupListView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
         member_id = request.GET.get('member_id', '')
         error = None
-        lecture_list = collections.OrderedDict()
+        group_list = {}
 
         if class_id is None or class_id == '':
             error = '오류가 발생했습니다.'
@@ -1751,37 +1751,31 @@ class GetLectureListView(LoginRequiredMixin, AccessTestMixin, View):
             error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
-            query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
-                                "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(member_id) + \
-                                "' and B.USE=1"
+            group_list = func_get_member_group_list(class_id, member_id)
 
-            lecture_data = ClassLectureTb.objects.select_related(
-                'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW', lecture_tb__member_id=member_id,
-                                                 lecture_tb__use=USE,
-                                                 use=USE).annotate(member_auth=RawSQL(query_member_auth, []),
-                                                                   ).order_by('-lecture_tb__start_date',
-                                                                              '-lecture_tb__reg_dt')
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
 
-            for lecture_info_data in lecture_data:
-                lecture_info = lecture_info_data.lecture_tb
-                package_info = lecture_info.package_tb
-                if '\r\n' in lecture_info.note:
-                    lecture_info.note = lecture_info.note.replace('\r\n', ' ')
+        return JsonResponse(group_list, json_dumps_params={'ensure_ascii': True})
 
-                member_lecture_info = {'lecture_id': lecture_info.lecture_id,
-                                       'lecture_package_name': package_info.name,
-                                       'lecture_package_id': package_info.package_id,
-                                       'lecture_state_cd': lecture_info.state_cd,
-                                       'lecture_reg_count': lecture_info.lecture_reg_count,
-                                       'lecture_rem_count': lecture_info.lecture_rem_count,
-                                       'lecture_avail_count': lecture_info.lecture_avail_count,
-                                       'lecture_start_date': lecture_info.start_date,
-                                       'lecture_end_date': lecture_info.end_date,
-                                       'lecture_price': lecture_info.price,
-                                       'lecture_refund_date': lecture_info.refund_date,
-                                       'lecture_refund_price': lecture_info.refund_price,
-                                       'lecture_note': lecture_info.note}
-                lecture_list[lecture_info.lecture_id] = member_lecture_info
+
+class GetLectureListView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        member_id = request.GET.get('member_id', '')
+        error = None
+        lecture_list = {}
+
+        if class_id is None or class_id == '':
+            error = '오류가 발생했습니다.'
+
+        if member_id is None or member_id == '':
+            error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            lecture_list = func_get_member_lecture_list(class_id, member_id)
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -5033,6 +5027,14 @@ class PopupMemberView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupMemberView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        member_id = self.request.GET.get('member_id')
+        member_result = func_get_member_info(class_id, self.request.user.id, member_id)
+        lecture_list = dict(func_get_member_lecture_list(class_id, member_id))
+        group_list = dict(func_get_member_group_list(class_id, member_id))
+        context['member_info'] = member_result['member_info']
+        context['member_group_list'] = group_list
+        context['member_ticket_list'] = lecture_list
         return context
 
 
@@ -5041,6 +5043,8 @@ class PopupMemberEdit(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupMemberEdit, self).get_context_data(**kwargs)
+        member_result = func_get_member_info(class_id, self.request.user.id, member_id)
+        context['member_info'] = member_result['member_info']
         return context
 
 

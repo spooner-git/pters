@@ -66,6 +66,7 @@ urlpatterns = [
     url(r'^export_excel_member_info/$', views.export_excel_member_info_logic, name='export_excel_member_info'),
 
     # 회원 수강정보 조회 - refactoring
+    url(r'^get_member_group_list/$', views.GetMemberGroupListView.as_view(), name='get_member_group_list'),
     url(r'^get_lecture_list/$', views.GetLectureListView.as_view(), name='get_lecture_list'),
     # 회원 수강정보 추가 - refactoring
     url(r'^add_lecture_info/$', views.add_lecture_info_logic, name='add_lecture_info'),
