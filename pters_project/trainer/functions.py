@@ -205,10 +205,10 @@ def func_get_member_info(class_id, user_id, member_id):
 
         member_info = {'member_id': member.member_id,
                        'member_name': member.name,
-                       'member_phone': member.phone,
-                       'member_email': member.user.email,
-                       'member_sex': member.sex,
-                       'member_birthday_dt': member.birthday_dt,
+                       'member_phone': str(member.phone),
+                       'member_email': str(member.user.email),
+                       'member_sex': str(member.sex),
+                       'member_birthday_dt': str(member.birthday_dt),
                        'member_connection_check': connection_check
                        }
 
@@ -216,7 +216,7 @@ def func_get_member_info(class_id, user_id, member_id):
 
 
 def func_check_member_connection_info(class_id, member_id):
-    connection_check = False
+    connection_check = 0
 
     query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
                         "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(member_id) + \
@@ -229,9 +229,81 @@ def func_check_member_connection_info(class_id, member_id):
                                      use=USE).annotate(member_auth=RawSQL(query_member_auth,
                                                                           [])).filter(member_auth='VIEW').count()
     if lecture_count > 0:
-        connection_check = True
+        connection_check = 1
 
     return connection_check
+
+
+# 회원의 수강정보 리스트 불러오기
+def func_get_member_group_list(class_id, member_id):
+    group_list = collections.OrderedDict()
+    query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                        "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(member_id) + \
+                        "' and B.USE=1"
+
+    lecture_data = ClassLectureTb.objects.select_related(
+        'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW', lecture_tb__member_id=member_id,
+                                         lecture_tb__use=USE,
+                                         use=USE).annotate(member_auth=RawSQL(query_member_auth, []),
+                                                           ).order_by('-lecture_tb__start_date',
+                                                                      '-lecture_tb__reg_dt')
+
+    query_package_list = Q()
+
+    for lecture_info_data in lecture_data:
+        package_info = lecture_info_data.lecture_tb.package_tb
+        query_package_list |= Q(package_tb_id=package_info.package_id)
+
+    package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(query_package_list,
+                                                                                  class_tb_id=class_id, use=USE)
+
+    for package_group_info in package_group_data:
+        group_tb = package_group_info.group_tb
+        group_info = {'group_id': group_tb.group_id,
+                      'group_name': group_tb.name,
+                      'group_note': group_tb.note,
+                      'group_max_num': group_tb.member_num
+        }
+        group_list[group_tb.group_id] = group_info
+
+    return group_list
+
+
+# 회원의 수강정보 리스트 불러오기
+def func_get_member_lecture_list(class_id, member_id):
+    lecture_list = collections.OrderedDict()
+    query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                        "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(member_id) + \
+                        "' and B.USE=1"
+
+    lecture_data = ClassLectureTb.objects.select_related(
+        'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW', lecture_tb__member_id=member_id,
+                                         lecture_tb__use=USE,
+                                         use=USE).annotate(member_auth=RawSQL(query_member_auth, []),
+                                                           ).order_by('-lecture_tb__start_date',
+                                                                      '-lecture_tb__reg_dt')
+
+    for lecture_info_data in lecture_data:
+        lecture_info = lecture_info_data.lecture_tb
+        package_info = lecture_info.package_tb
+        if '\r\n' in lecture_info.note:
+            lecture_info.note = lecture_info.note.replace('\r\n', ' ')
+
+        member_lecture_info = {'lecture_id': lecture_info.lecture_id,
+                               'lecture_package_name': package_info.name,
+                               'lecture_package_id': package_info.package_id,
+                               'lecture_state_cd': lecture_info.state_cd,
+                               'lecture_reg_count': lecture_info.lecture_reg_count,
+                               'lecture_rem_count': lecture_info.lecture_rem_count,
+                               'lecture_avail_count': lecture_info.lecture_avail_count,
+                               'lecture_start_date': str(lecture_info.start_date),
+                               'lecture_end_date': str(lecture_info.end_date),
+                               'lecture_price': lecture_info.price,
+                               'lecture_refund_date': str(lecture_info.refund_date),
+                               'lecture_refund_price': lecture_info.refund_price,
+                               'lecture_note': str(lecture_info.note)}
+        lecture_list[lecture_info.lecture_id] = member_lecture_info
+    return lecture_list
 
 
 # 회원의 수강권 추가하기
