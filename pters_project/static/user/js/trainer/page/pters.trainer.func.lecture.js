@@ -1,5 +1,5 @@
-class Lecture{
-    constructor(targetHTML, instance){
+class Lecture {
+    constructor (targetHTML, instance){
         this.page_name = 'lecture';
         this.targetHTML = targetHTML;
         this.instance = instance;
@@ -12,9 +12,9 @@ class Lecture{
         this.list_status_type = "ing"; //ing, end
     }
 
-    init(list_status_type){
+    init (list_status_type){
         let component = this.static_component();
-        document.querySelector(this.targetHTML).innerHTML = component.initial_page
+        document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 
         if(list_status_type==undefined){
             list_status_type = this.list_status_type;
@@ -32,7 +32,7 @@ class Lecture{
 
 
     //수강권 리스트 서버에서 불러오기
-    request_lecture_list(status ,callback){
+    request_lecture_list (status, callback){
         //sort_order_by : lecture_type_seq, lecture_name, lecture_member_many, lecture_member_few, lecture_create_new, lecture_create_old
         let url;
         if(status=='ing'){
@@ -52,13 +52,13 @@ class Lecture{
             data: {"page": 1, "sort_val": 0, "sort_order_by":0, "keyword":""},
             // dataType : 'html',
     
-            beforeSend:function(){
+            beforeSend:function (){
                 start_time = performance.now();
                 ajax_load_image(SHOW);
             },
     
             //통신성공시 처리
-            success:function(data){
+            success:function (data){
                 console.log(data);
                 // var jsondata = JSON.parse(data);
                 // if(jsondata.messageArray.length>0){
@@ -66,25 +66,25 @@ class Lecture{
                 // }else{
                 end_time = performance.now();
                 console.log((end_time-start_time)+'ms');
-                    callback(data);
-                    return data;
+                callback(data);
+                return data;
                 // }
             },
 
             //보내기후 팝업창 닫기
-            complete:function(){
+            complete:function (){
                 ajax_load_image(HIDE);
             },
     
             //통신 실패시 처리
-            error:function(){
+            error:function (){
                 console.log('server error');
             }
-        })
+        });
     }
 
     //상단을 렌더링
-    render_upper_box(){
+    render_upper_box (){
         if(current_page != this.page_name){
             return false;
         }
@@ -94,7 +94,7 @@ class Lecture{
     }
 
     //수강권 리스트를 렌더링
-    render_lecture_list(jsondata, list_status_type){
+    render_lecture_list (jsondata, list_status_type){
 
         if(current_page != this.page_name){
             return false;
@@ -125,9 +125,6 @@ class Lecture{
             let lecture_note = data.group_note != "" ? data.group_note : " - ";
             let lecture_max_member_number = data.group_max_num;
             let lecture_member_number = data.group_ing_member_num;
-            // let lecture_packages_included_name = data.group_package_list;
-            // let lecture_packages_included_id = data.group_package_id_list;
-            // let lecture_packages_included_name_html = lecture_packages_included_name.map(el => `<div>${el}</div>`).join('');
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'lecture_id':${lecture_id}});`;
             let html = `<article class="lecture_wrapper" data-lectureid="${lecture_id}" onclick="${onclick}">
@@ -143,7 +140,7 @@ class Lecture{
                                 <div class="lecture_member_number">${list_status_type == "ing" ? lecture_member_number+'명' : ""}
                                 </div>
                             </div>
-                        </article>`
+                        </article>`;
             html_temp.push(html);
         }
 
@@ -153,21 +150,22 @@ class Lecture{
 
 
     //리스트 타입을 스위치
-    switch_type(){
+    switch_type (){
         switch(this.list_status_type){
-            case "ing":
-                this.init("end");
+        case "ing":
+            this.init("end");
             break;
 
-            case "end":
-                this.init("ing");
+        case "end":
+            this.init("ing");
             break;
         }
     }
 
-    static_component(){
+    static_component (){
         return(
-            {    "lecture_upper_box":`   <div class="lecture_upper_box">
+            {    
+                lecture_upper_box:`   <div class="lecture_upper_box">
                                             <div style="display:inline-block;width:200px;">
                                                 <div style="display:inline-block;width:200px;">
                                                     <span style="font-size:20px;font-weight:bold;">수업 ${this.data_length}</span>
@@ -187,9 +185,16 @@ class Lecture{
                                             </div>
                                         </div>
                                             `
-                                ,
-                "initial_page":`<div id="${this.subtargetHTML}"><div id="lecture_display_panel"></div><div id="lecture_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div></div>`
+                ,
+                initial_page:`<div id="${this.subtargetHTML}"><div id="lecture_display_panel"></div><div id="lecture_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div></div>`
             }
-        )
+        );
     }
 }
+
+/* global $, 
+ajax_load_image, 
+SHOW, HIDE, 
+current_page, 
+POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, POPUP_FROM_RIGHT, POPUP_ADDRESS_LECTURE_ADD, POPUP_FROM_BOTTOM, 
+windowHeight*/ 

@@ -7,7 +7,7 @@ class Menu{
 
     init(){
         let component = this.static_component();
-        document.querySelector(this.targetHTML).innerHTML = component.initial_page
+        document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 
         this.menu_items = {    
                                 ticket: {visible: true, name:"수강권"},

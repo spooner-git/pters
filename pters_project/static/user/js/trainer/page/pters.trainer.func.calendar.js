@@ -1,7 +1,7 @@
 // 달력 관련
 
 class Calendar {
-    constructor(targetHTML, instance){
+    constructor (targetHTML, instance){
         this.page_name = "calendar";
         this.window_height = window.innerHeight;
         this.pages_height = this.window_height - 102-45;
@@ -26,107 +26,107 @@ class Calendar {
         this.worktime = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
     }
 
-    init(cal_type){
+    init (cal_type){
         let component = this.static_component();
-        document.querySelector(this.targetHTML).innerHTML = component.initial_page
+        document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 
         this.cal_type = cal_type;
         switch(cal_type){
-            case "month":
-                this.render_upper_box(cal_type);
-                this.render_month_cal( this.current_page_num ,this.current_year, this.current_month);
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-                    if(this.cal_type == cal_type){
-                        if(date == `${this.current_year}-${this.current_month}-01`){
-                            this.render_month_cal( this.current_page_num, this.current_year, this.current_month, jsondata);
-                        }
+        case "month":
+            this.render_upper_box(cal_type);
+            this.render_month_cal( this.current_page_num ,this.current_year, this.current_month);
+            this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                if(this.cal_type == cal_type){
+                    if(date == `${this.current_year}-${this.current_month}-01`){
+                        this.render_month_cal( this.current_page_num, this.current_year, this.current_month, jsondata);
                     }
-                })
-                this.toggle_touch_move('on', '#calendar_wrap');
+                }
+            });
+            this.toggle_touch_move('on', '#calendar_wrap');
             break;
 
-            case "week":
-                this.render_upper_box(cal_type);
-                this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-                    if(this.cal_type == cal_type){
-                        if(date == `${this.current_year}-${this.current_month}-01`){
-                            this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                            this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
-                        }
+        case "week":
+            this.render_upper_box(cal_type);
+            this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
+            this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                if(this.cal_type == cal_type){
+                    if(date == `${this.current_year}-${this.current_month}-01`){
+                        this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+                        this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
                     }
-                })
-                this.toggle_touch_move('on', '#calendar_wrap');
+                }
+            });
+            this.toggle_touch_move('on', '#calendar_wrap');
             break;
         }
     }
 
-    get_current_month(){
+    get_current_month (){
         return {
             "year": this.current_year, "month": this.current_month
-        }
+        };
     }
 
-    get_prev_month(){
+    get_prev_month (){
         let prev_month = this.current_month-1 < 1 ? 12 : this.current_month - 1;
         let year = this.current_month-1 < 1 ? this.current_year-1 : this.current_year;
         let week = this.current_week > this.get_week_number(year, prev_month) ? this.get_week_number(year, prev_month) : this.current_week;
         
         return {
             "year":year, "month": prev_month, "week":week
-        }
+        };
     }
 
-    get_next_month(){
+    get_next_month (){
         let next_month = this.current_month+1 > 12 ? 1 : this.current_month + 1;
         let year = this.current_month+1 > 12 ? this.current_year+1 : this.current_year;
         let week = this.current_week > this.get_week_number(year, next_month) ? this.get_week_number(year, next_month) : this.current_week;
 
         return {
             "year":year, "month": next_month, "week": week
-        }
+        };
     }
 
-    get_week_number(year, month){
+    get_week_number (year, month){
         let first_day = new Date(year, month-1, 1).getDay();
         let last_date = new Date(year, month, 0).getDate();
         let week_num_this_month = Math.ceil( (first_day + last_date)/7  ) - 1;
         return week_num_this_month;
     }
 
-    get_current_week(){
+    get_current_week (){
         return {
             "year":this.current_year, "month":this.current_month, "week":this.current_week
-        }
+        };
     }
 
-    get_prev_week(){
+    get_prev_week (){
         let year = this.current_year;
         let month = this.current_month;
         let week = this.current_week;
         let first_day = new Date(year, month-1, 1).getDay();
-        let last_date = new Date(year, month, 0).getDate();
+        // let last_date = new Date(year, month, 0).getDate();
 
         let prev_year = year - 1;
         let prev_month = month - 1 < 1 ? 12 : month-1;
 
         week = week - 1;
         if(week == -1 && first_day == 0){
-            week = Math.ceil( ( new Date(prev_month == 12 ? prev_year: year, prev_month-1, 1).getDay() + new Date(prev_month == 12 ? prev_year: year, prev_month, 0).getDate()  )/7 - 1  )
+            week = Math.ceil( ( new Date(prev_month == 12 ? prev_year: year, prev_month-1, 1).getDay() + new Date(prev_month == 12 ? prev_year: year, prev_month, 0).getDate()  )/7 - 1  );
             month = month - 1 < 1 ? 12  : month - 1;
             year = month == 12 ? year - 1 : year;   
         }else if(week == -1 && first_day !=0){
-            week = Math.ceil( ( new Date(prev_month == 12 ? prev_year: year, prev_month-1, 1).getDay() + new Date(prev_month == 12 ? prev_year: year, prev_month, 0).getDate()  )/7 - 2  )
+            week = Math.ceil( ( new Date(prev_month == 12 ? prev_year: year, prev_month-1, 1).getDay() + new Date(prev_month == 12 ? prev_year: year, prev_month, 0).getDate()  )/7 - 2  );
             month = month - 1 < 1 ? 12  : month - 1;
             year = month == 12 ? year - 1 : year;      
         }
 
         return {
             "year":year, "month":month, "week":week
-        }
+        };
     }
 
-    get_next_week(){
+    get_next_week (){
         let year = this.current_year;
         let month = this.current_month;
         let week = this.current_week;
@@ -134,8 +134,8 @@ class Calendar {
         let last_date = new Date(year, month, 0).getDate();
         let week_num_this_month = Math.ceil( (first_day + last_date)/7  );
 
-        let next_year = year + 1;
-        let next_month = month + 1 > 12 ? 1 : month + 1;
+        // let next_year = year + 1;
+        // let next_month = month + 1 > 12 ? 1 : month + 1;
 
         week = week + 1;
         if(week  == week_num_this_month && new Date(year, month, 0).getDay() != 6 ){
@@ -152,141 +152,141 @@ class Calendar {
         
         return {
             "year":year, "month":month, "week":week
-        }
+        };
     }
 
-    go_month(year, month){
+    go_month (year, month){
         this.current_year = year;
         this.current_month = month;
-        this.render_month_cal( this.current_page_num, this.current_year, this.current_month)
+        this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
         this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
             if(date == `${this.current_year}-${this.current_month}-01`){
                 this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
             }
-        })
+        });
     }
 
-    move_month(direction){
+    move_month (direction){
         switch(direction){
-            case "next":
-                let next = this.get_next_month();
-                this.current_year = next.year;
-                this.current_month = next.month;
-                this.current_week = next.week;
+        case "next":
+            let next = this.get_next_month();
+            this.current_year = next.year;
+            this.current_month = next.month;
+            this.current_week = next.week;
 
-                /*페이지 삽입*/
-                this.current_page_num = this.current_page_num + 1;
-                this.append_child(this.subtargetHTML, 'div', this.current_page_num)
-                /*페이지 삽입*/
+            /*페이지 삽입*/
+            this.current_page_num = this.current_page_num + 1;
+            this.append_child(this.subtargetHTML, 'div', this.current_page_num);
+            /*페이지 삽입*/
 
-                this.render_upper_box("month");
-                this.render_month_cal( this.current_page_num, this.current_year, this.current_month)
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-                    if(date == `${this.current_year}-${this.current_month}-01`){
-                        this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
-                    }
-                })
+            this.render_upper_box("month");
+            this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
+            this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                if(date == `${this.current_year}-${this.current_month}-01`){
+                    this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
+                }
+            });
             break;
 
-            case "prev":
-                let prev = this.get_prev_month();
-                this.current_year = prev.year;
-                this.current_month = prev.month;
-                this.current_week = prev.week;
+        case "prev":
+            let prev = this.get_prev_month();
+            this.current_year = prev.year;
+            this.current_month = prev.month;
+            this.current_week = prev.week;
 
-                /*페이지 삽입*/
-                this.current_page_num = this.current_page_num - 1;
-                this.prepend_child(this.subtargetHTML, 'div', this.current_page_num)
-                /*페이지 삽입*/
+            /*페이지 삽입*/
+            this.current_page_num = this.current_page_num - 1;
+            this.prepend_child(this.subtargetHTML, 'div', this.current_page_num);
+            /*페이지 삽입*/
 
-                this.render_upper_box("month");
-                this.render_month_cal(this.current_page_num, this.current_year, this.current_month)
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-                    if(date == `${this.current_year}-${this.current_month}-01`){
-                        this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
-                    }
-                })
+            this.render_upper_box("month");
+            this.render_month_cal(this.current_page_num, this.current_year, this.current_month);
+            this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                if(date == `${this.current_year}-${this.current_month}-01`){
+                    this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
+                }
+            });
             break;
         }
     }
 
-    move_week(direction){
+    move_week (direction){
         switch(direction){
-            case "next":
-                let next = this.get_next_week();
-                this.current_year = next.year;
-                this.current_month = next.month;
-                this.current_week = next.week;
-                
+        case "next":
+            let next = this.get_next_week();
+            this.current_year = next.year;
+            this.current_month = next.month;
+            this.current_week = next.week;
+            
 
-                /*페이지 삽입*/
-                this.current_page_num = this.current_page_num + 1;
-                this.append_child(this.subtargetHTML, 'div', this.current_page_num)
-                /*페이지 삽입*/
+            /*페이지 삽입*/
+            this.current_page_num = this.current_page_num + 1;
+            this.append_child(this.subtargetHTML, 'div', this.current_page_num);
+            /*페이지 삽입*/
 
-                this.render_upper_box("week");
-                this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-                    if(date == `${this.current_year}-${this.current_month}-01`){
-                        this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                        // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
-                    }
-                })
+            this.render_upper_box("week");
+            this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
+            this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                if(date == `${this.current_year}-${this.current_month}-01`){
+                    this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+                    // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                }
+            });
             break;
 
-            case "prev":
-                let prev = this.get_prev_week();
-                this.current_year = prev.year;
-                this.current_month = prev.month;
-                this.current_week = prev.week;
-                
+        case "prev":
+            let prev = this.get_prev_week();
+            this.current_year = prev.year;
+            this.current_month = prev.month;
+            this.current_week = prev.week;
+            
 
-                /*페이지 삽입*/
-                this.current_page_num = this.current_page_num - 1;
-                this.prepend_child(this.subtargetHTML, 'div', this.current_page_num)
-                /*페이지 삽입*/
+            /*페이지 삽입*/
+            this.current_page_num = this.current_page_num - 1;
+            this.prepend_child(this.subtargetHTML, 'div', this.current_page_num);
+            /*페이지 삽입*/
 
-                this.render_upper_box("week");
-                this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
-                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-                    if(date == `${this.current_year}-${this.current_month}-01`){
-                        this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                        // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
-                    }
-                })
+            this.render_upper_box("week");
+            this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
+            this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                if(date == `${this.current_year}-${this.current_month}-01`){
+                    this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+                    // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                }
+            });
             break;
         }
     }
 
-    switch_cal_type(){
+    switch_cal_type (){
         switch(this.cal_type){
-            case "month":
-                this.init("week");
+        case "month":
+            this.init("week");
             break;
 
-            case "week":
-                this.init("month");
+        case "week":
+            this.init("month");
             break;
         }
     }
 
-    render_upper_box(type){
+    render_upper_box (type){
         if(current_page != this.page_name){
             return false;
         }
 
         let component = this.static_component();
         switch(type){
-            case "month":
-                document.getElementById('cal_display_panel').innerHTML = component.month_cal_upper_box;
+        case "month":
+            document.getElementById('cal_display_panel').innerHTML = component.month_cal_upper_box;
             break;
-            case "week":
-                document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box;
+        case "week":
+            document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box;
             break;
         }
     }
     
-    render_month_cal(page, year, month, schedule_data){ //월간 달력 렌더링 (연, 월)
+    render_month_cal (page, year, month, schedule_data){ //월간 달력 렌더링 (연, 월)
         if(current_page != this.page_name){
             return false;
         }
@@ -303,7 +303,7 @@ class Calendar {
         func_set_webkit_overflow_scrolling(`#page${page}`);
     }
 
-    render_week_cal(page ,year, month, week, schedule_data){ //주간 달력 렌더링 (연, 월, 몇번째 주)
+    render_week_cal (page, year, month, week, schedule_data){ //주간 달력 렌더링 (연, 월, 몇번째 주)
         if(current_page != this.page_name){
             return false;
         }
@@ -314,11 +314,11 @@ class Calendar {
         func_set_webkit_overflow_scrolling(`#page${page}`);
     }
 
-    open_popup_plan_view(event, year, month, date){
+    open_popup_plan_view (event, year, month, date){
         layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, 90, POPUP_FROM_BOTTOM, {'select_date':`${year}-${month}-${date}`});
     }
 
-    zoom_week_cal(event){
+    zoom_week_cal (event){
         let clicked_number = event.target.dataset.row;
 
         if(clicked_number == undefined){
@@ -330,12 +330,12 @@ class Calendar {
                 if(i==clicked_number){
                     Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
                         el.style.width = "100%";
-                    })
+                    });
                     continue;
                 }
                 Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
                     el.style.display = "none";
-                })
+                });
                 
             }
             this.week_zoomed = true;
@@ -345,12 +345,12 @@ class Calendar {
                 if(i==clicked_number){
                     Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
                         el.style.width = "12.5%";
-                    })
+                    });
                     continue;
                 }
                 Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
                     el.style.display = "table-cell";
-                })
+                });
             }
             this.week_zoomed = false;
             this.toggle_touch_move('on', '#calendar_wrap');
@@ -358,15 +358,15 @@ class Calendar {
     }
 
 
-    get_week_dates(year, month, week){
+    get_week_dates (year, month, week){
         const firstday_this_month = (new Date(Number(year), Number(month)-1, 1)).getDay(); // 3
         const lastday_this_month = (new Date(Number(year), Number(month), 0)).getDate(); // 3
         const lastday_prev_month = (new Date(Number(year), Number(month)-1, 0)).getDate();
 
         const number_of_weeks_this_month = (
-                   Math.ceil(
-                        (new Date(year, Number(month)-1, 1).getDay() + new Date(year, Number(month), 0).getDate() ) / 7
-                   ) 
+            Math.ceil(
+                (new Date(year, Number(month)-1, 1).getDay() + new Date(year, Number(month), 0).getDate() ) / 7
+            ) 
         )
         if(week >= number_of_weeks_this_month){
             //해당 Week에 대한 정보가 없음
@@ -399,7 +399,7 @@ class Calendar {
                 }else if(date_cache > lastday_this_month || month_cache == month + 1){ // 마지막 날짜가 끝난 이후 처리
                     if(date_cache == lastday_this_month+1){
                         date_cache = 1;
-                        month_cache = month + 1
+                        month_cache = month + 1;
                         finished = true;
                     }
                     let _year = Number(month)+1 > 12 ? Number(year)+1 : year;
@@ -410,7 +410,7 @@ class Calendar {
                     monthCellsToJoin.push(_month);
                     dateCellsToJoin.push(_date);
                     dateColorClass.push(`${_year}-${_month}-${_date}` == this.today ? 'cal_font_color_pink cal_fw_bd' : 'cal_font_color_grey');
-                    date_cache++
+                    date_cache++;
                 }else{
                     let _year = Number(year);
                     let _month = Number(month);
@@ -437,19 +437,20 @@ class Calendar {
        
         
         return(
-               {"year" :  years_of_this_week[week],
+            {
+                "year" :  years_of_this_week[week],
                 "month" : months_of_this_week[week],
                 "date" : dates_of_this_week[week],
                 "color" : color_of_this_week[week],
                 "full_date" : [
-                                [year1, month1, date1], [year2, month2, date2], [year3, month3, date3], [year4, month4, date4], 
-                                [year5, month5, date5], [year6, month6, date6], [year7, month7, date7]
-                            ]
-               }
-            )
+                    [year1, month1, date1], [year2, month2, date2], [year3, month3, date3], [year4, month4, date4], 
+                    [year5, month5, date5], [year6, month6, date6], [year7, month7, date7]
+                ]
+            }
+        );
     }
 
-    draw_week_line(year, month, week, schedule_data, onclick_func, month_or_week){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
+    draw_week_line (year, month, week, schedule_data, onclick_func, month_or_week){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
@@ -471,33 +472,33 @@ class Calendar {
                 }
             }
         }else{
-            schedule_num = [0, 0, 0, 0, 0, 0, 0]
+            schedule_num = [0, 0, 0, 0, 0, 0, 0];
         }
 
         // let week_html_template = this.week_schedule_draw(year, month, week, schedule_data);
         
         return(
             week_dates_info == false 
-            ? 
-            `<div class="cal_week_line">
-                <div style="background-image:url('/static/user/res/PTERS_logo_pure.png');background-position:center;background-repeat:no-repeat;background-size:100px;height:30px;"></div>
-            </div>`
-            :
-            `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:0;background-color:#ffffff;z-index:10` : ""}">
-                ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
-                <div class="${_color[0]} _week_row_1" data-row="1" onclick="${onclick_func}(event, ${_year[0]}, ${_month[0]}, ${_date[0]})">${_date[0]}<div class="calendar_schedule_display_month ${schedule_num[0]!=0?"has_schedule":""}">${schedule_num[0]!=0?schedule_num[0]:""}</div></div>
-                <div class="${_color[1]} _week_row_2" data-row="2" onclick="${onclick_func}(event, ${_year[1]}, ${_month[1]}, ${_date[1]})">${_date[1]}<div class="calendar_schedule_display_month ${schedule_num[1]!=0?"has_schedule":""}">${schedule_num[1]!=0?schedule_num[1]:""}</div></div>
-                <div class="${_color[2]} _week_row_3" data-row="3" onclick="${onclick_func}(event, ${_year[2]}, ${_month[2]}, ${_date[2]})">${_date[2]}<div class="calendar_schedule_display_month ${schedule_num[2]!=0?"has_schedule":""}">${schedule_num[2]!=0?schedule_num[2]:""}</div></div>
-                <div class="${_color[3]} _week_row_4" data-row="4" onclick="${onclick_func}(event, ${_year[3]}, ${_month[3]}, ${_date[3]})">${_date[3]}<div class="calendar_schedule_display_month ${schedule_num[3]!=0?"has_schedule":""}">${schedule_num[3]!=0?schedule_num[3]:""}</div></div>
-                <div class="${_color[4]} _week_row_5" data-row="5" onclick="${onclick_func}(event, ${_year[4]}, ${_month[4]}, ${_date[4]})">${_date[4]}<div class="calendar_schedule_display_month ${schedule_num[4]!=0?"has_schedule":""}">${schedule_num[4]!=0?schedule_num[4]:""}</div></div>
-                <div class="${_color[5]} _week_row_6" data-row="6" onclick="${onclick_func}(event, ${_year[5]}, ${_month[5]}, ${_date[5]})">${_date[5]}<div class="calendar_schedule_display_month ${schedule_num[5]!=0?"has_schedule":""}">${schedule_num[5]!=0?schedule_num[5]:""}</div></div>
-                <div class="${_color[6]} _week_row_7" data-row="7" onclick="${onclick_func}(event, ${_year[6]}, ${_month[6]}, ${_date[6]})">${_date[6]}<div class="calendar_schedule_display_month ${schedule_num[6]!=0?"has_schedule":""}">${schedule_num[6]!=0?schedule_num[6]:""}</div></div>
-            </div>
+                ? 
+                `<div class="cal_week_line">
+                    <div style="background-image:url('/static/user/res/PTERS_logo_pure.png');background-position:center;background-repeat:no-repeat;background-size:100px;height:30px;"></div>
+                </div>`
+                :
+                `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:0;background-color:#ffffff;z-index:10` : ""}">
+                    ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
+                    <div class="${_color[0]} _week_row_1" data-row="1" onclick="${onclick_func}(event, ${_year[0]}, ${_month[0]}, ${_date[0]})">${_date[0]}<div class="calendar_schedule_display_month ${schedule_num[0]!=0?"has_schedule":""}">${schedule_num[0]!=0?schedule_num[0]:""}</div></div>
+                    <div class="${_color[1]} _week_row_2" data-row="2" onclick="${onclick_func}(event, ${_year[1]}, ${_month[1]}, ${_date[1]})">${_date[1]}<div class="calendar_schedule_display_month ${schedule_num[1]!=0?"has_schedule":""}">${schedule_num[1]!=0?schedule_num[1]:""}</div></div>
+                    <div class="${_color[2]} _week_row_3" data-row="3" onclick="${onclick_func}(event, ${_year[2]}, ${_month[2]}, ${_date[2]})">${_date[2]}<div class="calendar_schedule_display_month ${schedule_num[2]!=0?"has_schedule":""}">${schedule_num[2]!=0?schedule_num[2]:""}</div></div>
+                    <div class="${_color[3]} _week_row_4" data-row="4" onclick="${onclick_func}(event, ${_year[3]}, ${_month[3]}, ${_date[3]})">${_date[3]}<div class="calendar_schedule_display_month ${schedule_num[3]!=0?"has_schedule":""}">${schedule_num[3]!=0?schedule_num[3]:""}</div></div>
+                    <div class="${_color[4]} _week_row_5" data-row="5" onclick="${onclick_func}(event, ${_year[4]}, ${_month[4]}, ${_date[4]})">${_date[4]}<div class="calendar_schedule_display_month ${schedule_num[4]!=0?"has_schedule":""}">${schedule_num[4]!=0?schedule_num[4]:""}</div></div>
+                    <div class="${_color[5]} _week_row_6" data-row="6" onclick="${onclick_func}(event, ${_year[5]}, ${_month[5]}, ${_date[5]})">${_date[5]}<div class="calendar_schedule_display_month ${schedule_num[5]!=0?"has_schedule":""}">${schedule_num[5]!=0?schedule_num[5]:""}</div></div>
+                    <div class="${_color[6]} _week_row_7" data-row="7" onclick="${onclick_func}(event, ${_year[6]}, ${_month[6]}, ${_date[6]})">${_date[6]}<div class="calendar_schedule_display_month ${schedule_num[6]!=0?"has_schedule":""}">${schedule_num[6]!=0?schedule_num[6]:""}</div></div>
+                </div>
             ${month_or_week == "week" ? this.week_schedule_draw(year, month, week, schedule_data): ""}`
-        )
+        );
     }
 
-    week_schedule_draw(year, month, week, schedule_data){
+    week_schedule_draw (year, month, week, schedule_data){
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
@@ -536,8 +537,8 @@ class Calendar {
 
                             if(plan.state_cd != "NP"){
                                 plan_status_color = '#d2d1cf';
-                                plan_font_style = 'color:#282828;'
-                                plan_font_style+='text-decoration:line-through;'
+                                plan_font_style = 'color:#282828;';
+                                plan_font_style+='text-decoration:line-through;';
                             }
 
                             let tform_s = time_form(plan.start_time);
@@ -573,7 +574,7 @@ class Calendar {
         }
         let week_html_template = `
                                 <div class="week_row">
-                                    <div class="week_cal_time_text">${ (this.worktime.map( (t) => { return `<article>${t}:00</article>` } )).join('') }</div>
+                                    <div class="week_cal_time_text">${ (this.worktime.map( (t) => { return `<article>${t}:00</article>`; } )).join('') }</div>
                                     <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1">${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
                                     <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2">${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
                                     <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3">${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
@@ -586,7 +587,7 @@ class Calendar {
         return week_html_template;
     }
 
-    display_user_click(event, year, month, date){
+    display_user_click (event, year, month, date){
         $('.week_indicator').remove();
 
         let pos = event.offsetY;
@@ -597,18 +598,18 @@ class Calendar {
         let indicator = document.createElement('div');
         indicator.classList.add('week_indicator');
         indicator.style.top = offset_px+'px';
-        indicator.setAttribute('onclick', "event.stopPropagation();$('.week_indicator').remove()")
+        indicator.setAttribute('onclick', "event.stopPropagation();$('.week_indicator').remove()");
         event.target.appendChild(indicator);
 
         layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 95, POPUP_FROM_BOTTOM, {'select_date':`${year}-${month}-${date}`});
     }
 
 
-    request_schedule_data(date, days, callback){
+    request_schedule_data (date, days, callback){
         let date_ = date;
         let days_ = days;
-        if(date_ == undefined){date_ = `${this.current_year}-${this.current_month}-01`}
-        if(days_ == undefined){days_ = 31}
+        if(date_ == undefined){date_ = `${this.current_year}-${this.current_month}-01`;}
+        if(days_ == undefined){days_ = 31;}
 
         $.ajax({
             url: '/trainer/get_trainer_schedule_all/',
@@ -616,28 +617,28 @@ class Calendar {
             data : {"date":date_, "day":days_},
             dataType: "JSON",
 
-            beforeSend:function(){
+            beforeSend:function (){
                 ajax_load_image(SHOW);
             },
 
-            success:function(data){
+            success:function (data){
                 console.log(data);
                 callback(data, date_);
                 return data;
             },
 
-            complete:function(){
+            complete:function (){
                 ajax_load_image(HIDE);
             },
 
-            error:function(){
+            error:function (){
                 console.log('server error');
             }
         });
     }
 
 
-    static_component(){
+    static_component (){
         return(
             {
                 "month_cal_upper_box":` <div class="cal_upper_box">
@@ -692,7 +693,7 @@ class Calendar {
     }
 
 
-    toggle_touch_move(onoff, input_target_html){
+    toggle_touch_move (onoff, input_target_html){
         let ts;
         let tsy;
         let tm;
@@ -711,58 +712,58 @@ class Calendar {
         }
 
         switch(onoff){
-            case "on":
-                    selector_body.off("touchstart").on("touchstart", (e) => {
-                        ts = e.originalEvent.touches[0].clientX;
-                        tsy = e.originalEvent.touches[0].clientY;
+        case "on":
+            selector_body.off("touchstart").on("touchstart", (e) => {
+                ts = e.originalEvent.touches[0].clientX;
+                tsy = e.originalEvent.touches[0].clientY;
+            });
+
+            selector_body.off('touchmove').on('touchmove', (e) => {
+                tm = e.originalEvent.touches[0].clientX;
+                tmy = e.originalEvent.touches[0].clientY;
+                
+                // if( Math.abs(ts - tm) > x_threshold && Math.abs(ts - tm) > Math.abs(tsy - tmy)  ){
+                if( Math.abs(ts - tm) > Math.abs(tsy - tmy) && swiper_x == false ){
+                    $('#root_content').on('touchmove', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
                     });
+                    // root_content.style.overflowY = 'hidden';
+                    swiper_x = true;
+                }
+            });
 
-                    selector_body.off('touchmove').on('touchmove', (e) => {
-                        tm = e.originalEvent.touches[0].clientX;
-                        tmy = e.originalEvent.touches[0].clientY;
-                     
-                        // if( Math.abs(ts - tm) > x_threshold && Math.abs(ts - tm) > Math.abs(tsy - tmy)  ){
-                        if( Math.abs(ts - tm) > Math.abs(tsy - tmy) && swiper_x == false ){
-                            $('#root_content').on('touchmove', (e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                return false;
-                            })
-                            // root_content.style.overflowY = 'hidden';
-                            swiper_x = true;
-                        }
-                    })
+            selector_body.off("touchend").on("touchend", (e) => {
 
-                    selector_body.off("touchend").on("touchend", (e) => {
+                if(swiper_x == true){
+                    // root_content.style.overflowY = 'scroll';
+                    $('#root_content').off('touchmove');
+                    swiper_x = false;
+                }
+                
 
-                        if(swiper_x == true){
-                            // root_content.style.overflowY = 'scroll';
-                            $('#root_content').off('touchmove');
-                            swiper_x = false;
-                        }
-                        
-
-                        let te = e.originalEvent.changedTouches[0].clientX;
-                        let tey = e.originalEvent.changedTouches[0].clientY;
-                        // if(Math.abs(tsy - tey) < y_threshold){
-                        if( Math.abs(ts - te) > Math.abs(tsy - tey)){
-                           if(ts>te+x_threshold){
-                                if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
-                            }else if(ts<te-x_threshold){
-                                if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
-                            }
-                        }
-                        return true;
-                    });
+                let te = e.originalEvent.changedTouches[0].clientX;
+                let tey = e.originalEvent.changedTouches[0].clientY;
+                // if(Math.abs(tsy - tey) < y_threshold){
+                if( Math.abs(ts - te) > Math.abs(tsy - tey)){
+                    if(ts>te+x_threshold){
+                        if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
+                    }else if(ts<te-x_threshold){
+                        if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
+                    }
+                }
+                return true;
+            });
             break;
 
-            case "off":
-                    selector_body.off("touchstart").off("touchend").off('touchmove');
+        case "off":
+            selector_body.off("touchstart").off("touchend").off('touchmove');
             break;
         }
     }
 
-    append_child(target, type, page_num){
+    append_child (target, type, page_num){
         let el = document.createElement(type);
         el.id = `page${page_num}`;
         el.style.transform = 'translateX(100%)';
@@ -777,14 +778,14 @@ class Calendar {
             el_prev.style.transform = 'translateX(-100%)';
             setTimeout(() => {
                 this.toggle_touch_move('on', '#calendar_wrap');
-            },100)
+            }, 100);
             setTimeout(() => {
                 el_prev.parentNode.removeChild(el_prev);
-            }, 200)
-        }, 0)
+            }, 200);
+        }, 0);
     }
     
-    prepend_child(target, type, page_num){
+    prepend_child (target, type, page_num){
         let el = document.createElement(type);
         el.id = `page${page_num}`;
         el.style.transform = 'translateX(-100%)';
@@ -800,25 +801,25 @@ class Calendar {
             el_prev.style.transform = 'translateX(100%)';
             setTimeout(() => {
                 this.toggle_touch_move('on', '#calendar_wrap');
-            },100)
+            }, 100);
             setTimeout(() => {
                 el_prev.parentNode.removeChild(el_prev);
-            }, 200)
-        }, 0)
+            }, 200);
+        }, 0);
     }
 
 }
 
-function popup_alert_month(event, y, m, d){
-    alert(`월간 날짜 클릭 ${y} ${m} ${d}`)
+function popup_alert_month (event, y, m, d){
+    alert(`월간 날짜 클릭 ${y} ${m} ${d}`);
 }
 
-function popup_alert_week(event, y, m, d){
-    alert(`주간 날짜 클릭 ${y} ${m} ${d}`)
+function popup_alert_week (event, y, m, d){
+    alert(`주간 날짜 클릭 ${y} ${m} ${d}`);
 }
 
-function date_format(date){
-    let date_raw = date.replace(/[-_., ]/gi,"-").split('-');
+function date_format (date){
+    let date_raw = date.replace(/[-_., ]/gi, "-").split('-');
     let yyyy = date_raw[0];
     let m = Number(date_raw[1]);
     let d = Number(date_raw[2]);
@@ -826,41 +827,41 @@ function date_format(date){
     let dd = date_raw[2];
 
     if(m<10){
-        mm = '0'+m
+        mm = '0'+m;
     }
     if(d<10){
-        dd = '0'+d
+        dd = '0'+d;
     }
 
     return{
-            "yyyy-mm-dd":`${yyyy}-${mm}-${dd}`,
-            "yyyy-m-d":`${yyyy}-${m}-${d}`,
+        "yyyy-mm-dd":`${yyyy}-${mm}-${dd}`,
+        "yyyy-m-d":`${yyyy}-${m}-${d}`,
 
-            "yyyy.mm.dd":`${yyyy}.${mm}.${dd}`,
-            "yyyy.m.d":`${yyyy}.${m}.${d}`,
+        "yyyy.mm.dd":`${yyyy}.${mm}.${dd}`,
+        "yyyy.m.d":`${yyyy}.${m}.${d}`,
 
-            "yyyy_mm_dd":`${yyyy}_${mm}_${dd}`,
-            "yyyy_m_d":`${yyyy}_${m}_${d}`,
+        "yyyy_mm_dd":`${yyyy}_${mm}_${dd}`,
+        "yyyy_m_d":`${yyyy}_${m}_${d}`,
 
-            "yyyy/mm/dd":`${yyyy}/${mm}/${dd}`,
-            "yyyy/m/d":`${yyyy}/${m}/${d}`
+        "yyyy/mm/dd":`${yyyy}/${mm}/${dd}`,
+        "yyyy/m/d":`${yyyy}/${m}/${d}`
     };
 }
 
-function time_form(_time1){
+function time_form (_time1){
     let time1 = _time1.split(':');
 
     let hh1 = Number(time1[0]);
     let mm1 = Number(time1[1]);
 
     if(hh1 == 0 && mm1 == 0){
-        hh1 = 24
+        hh1 = 24;
     }
 
     return {hour: hh1, minute: mm1};
 }
 
-function time_diff(_time1, _time2){
+function time_diff (_time1, _time2){
     // _time2는 항상 _time1보다 뒤의 시간이어야 한다.
 
     let time1 = _time1.split(':');
@@ -984,7 +985,7 @@ function clear_duplicated_time(jsondata){
     return {"clear_start_array":resultStart_Array, "clear_end_array":resultEnd_Array};
 }
 
-function know_whether_plans_has_duplicates(starttime, endtime, starttime_compare, endtime_compare){
+function know_whether_plans_has_duplicates (starttime, endtime, starttime_compare, endtime_compare){
     if( compare_time(starttime_compare, starttime) && compare_time(endtime, endtime_compare)  ){  //비교대상 시간이 비교시간안에 쏙 들어갈때
         return 1;
     }else if( compare_time(starttime, starttime_compare) == false  && compare_time(endtime, starttime_compare) && compare_time(endtime, endtime_compare) == false){ //비교 대상 시간의 시작시간이 비교시간안에 들어가 있을때
@@ -996,27 +997,27 @@ function know_whether_plans_has_duplicates(starttime, endtime, starttime_compare
     }else if(starttime == starttime_compare && endtime == endtime_compare){
         return 5;
     }else{
-       return 0;
+        return 0;
     }
 }
 
-function compare_time(time1, time2){
-	var hour1 = time1.split(':')[0];
-	var min1  = time1.split(':')[1];
-	var hour2 = time2.split(':')[0];
-	var min2  = time2.split(':')[1];
+function compare_time (time1, time2){
+    var hour1 = time1.split(':')[0];
+    var min1  = time1.split(':')[1];
+    var hour2 = time2.split(':')[0];
+    var min2  = time2.split(':')[1];
 
-	var time1_num = hour1+min1;
-	var time2_num = hour2+min2;
+    var time1_num = hour1+min1;
+    var time2_num = hour2+min2;
 
-	if(Number(time1_num) > Number(time2_num) ){
-		return true;
-	}else{
-		return false;
-	}
+    if(Number(time1_num) > Number(time2_num) ){
+        return true;
+    }else{
+        return false;
+    }
 }
 
-function compare_times_to_merge_min_max(stime1, etime1, stime2, etime2){
+function compare_times_to_merge_min_max (stime1, etime1, stime2, etime2){
     var timearray = [stime1, stime2, etime1, etime2];
     var stime_new;
     var etime_new;
@@ -1028,7 +1029,7 @@ function compare_times_to_merge_min_max(stime1, etime1, stime2, etime2){
     return {"start":`${stime_new}`, "end":`${etime_new}`}
 }
 
-function array_element_count(array, wanted){
+function array_element_count (array, wanted){
     var counts = {};
     var len = array.length;
     for(var i=0; i<len; i++){
@@ -1040,7 +1041,7 @@ function array_element_count(array, wanted){
     return counts[wanted];
 }
 
-function duplicated_plans(jsondata){
+function duplicated_plans (jsondata){
     // 1:1 일정 / 그룹 일정 / OFF 일정 합치기
     // var testArray_start = jsondata.group_schedule_start_datetime.concat(jsondata.offTimeArray_start_date);
     // var testArray_end = jsondata.group_schedule_end_datetime.concat(jsondata.offTimeArray_end_date);
@@ -1058,7 +1059,7 @@ function duplicated_plans(jsondata){
     jsondata.forEach( (plan) => {
         testArray_start.push(plan.start_time);
         testArray_end.push(plan.end_time);
-    })
+    });
     var duplicate_dic = {};
 
     //중복일정을 큰 덩어리로 가져오기
@@ -1144,8 +1145,7 @@ function duplicated_plans(jsondata){
                 if(comp_end_time == "00:00"){
                     comp_end_time = "24:00";
                 }
-                var duplication_type = know_whether_plans_has_duplicates(ref_start_time, ref_end_time,
-                                                                         comp_start_time, comp_end_time);
+                var duplication_type = know_whether_plans_has_duplicates(ref_start_time, ref_end_time, comp_start_time, comp_end_time);
 
                 if(duplication_type > 0){ //겹칠때
                     check_duplication = true;
@@ -1176,8 +1176,7 @@ function duplicated_plans(jsondata){
                             if(comp_end_time == "00:00"){
                                 comp_end_time = "24:00";
                             }
-                            var duplication_type_ = know_whether_plans_has_duplicates(ref_start_time, ref_end_time,
-                                                                                      comp_start_time, comp_end_time);
+                            var duplication_type_ = know_whether_plans_has_duplicates(ref_start_time, ref_end_time, comp_start_time, comp_end_time);
                             if(duplication_type_ > 0){
                                 check_++;
                             }else{
@@ -1195,8 +1194,8 @@ function duplicated_plans(jsondata){
 
                 if(check_duplication == true){
                     var temp_array = [];
-                    for(var i=0; i<=r; i++){
-                        temp_array.push(temp_index[i]);
+                    for(var u=0; u<=r; u++){
+                        temp_array.push(temp_index[u]);
                     }
                     temp_index[t] = Math.max.apply(null, temp_array)+1;
                 }
@@ -1206,9 +1205,9 @@ function duplicated_plans(jsondata){
         temp_celldivide = Math.max.apply(null, temp_index) +1;
 
         for(let p=0; p<temp_index.length; p++){
-            result_data[pp].duplicated_index = temp_index[p]
-            result_data[pp].duplicated_cell = temp_celldivide
-            pp++
+            result_data[pp].duplicated_index = temp_index[p];
+            result_data[pp].duplicated_cell = temp_celldivide;
+            pp++;
         }
         
     }
