@@ -34,7 +34,7 @@ class Calendar {
         switch(cal_type){
         case "month":
             this.render_upper_box(cal_type);
-            this.render_month_cal( this.current_page_num ,this.current_year, this.current_month);
+            this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                 if(this.cal_type == cal_type){
                     if(date == `${this.current_year}-${this.current_month}-01`){
@@ -47,12 +47,12 @@ class Calendar {
 
         case "week":
             this.render_upper_box(cal_type);
-            this.render_week_cal(this.current_page_num , this.current_year, this.current_month, this.current_week);
+            this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                 if(this.cal_type == cal_type){
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                        this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                        this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata);
                     }
                 }
             });
@@ -317,7 +317,7 @@ class Calendar {
     open_popup_plan_view (event, year, month, date){
         layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, 90, POPUP_FROM_BOTTOM, {'select_date':`${year}-${month}-${date}`});
     }
-
+    
     zoom_week_cal (event){
         let clicked_number = event.target.dataset.row;
 
@@ -367,7 +367,7 @@ class Calendar {
             Math.ceil(
                 (new Date(year, Number(month)-1, 1).getDay() + new Date(year, Number(month), 0).getDate() ) / 7
             ) 
-        )
+        );
         if(week >= number_of_weeks_this_month){
             //해당 Week에 대한 정보가 없음
             return false;
@@ -484,15 +484,15 @@ class Calendar {
                     <div style="background-image:url('/static/user/res/PTERS_logo_pure.png');background-position:center;background-repeat:no-repeat;background-size:100px;height:30px;"></div>
                 </div>`
                 :
-                `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:0;background-color:#ffffff;z-index:10` : ""}">
+                `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:0;background-color:#ffffff;z-index:10;height:25px;line-height:15px;font-size:20px` : ""}">
                     ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
-                    <div class="${_color[0]} _week_row_1" data-row="1" onclick="${onclick_func}(event, ${_year[0]}, ${_month[0]}, ${_date[0]})">${_date[0]}<div class="calendar_schedule_display_month ${schedule_num[0]!=0?"has_schedule":""}">${schedule_num[0]!=0?schedule_num[0]:""}</div></div>
-                    <div class="${_color[1]} _week_row_2" data-row="2" onclick="${onclick_func}(event, ${_year[1]}, ${_month[1]}, ${_date[1]})">${_date[1]}<div class="calendar_schedule_display_month ${schedule_num[1]!=0?"has_schedule":""}">${schedule_num[1]!=0?schedule_num[1]:""}</div></div>
-                    <div class="${_color[2]} _week_row_3" data-row="3" onclick="${onclick_func}(event, ${_year[2]}, ${_month[2]}, ${_date[2]})">${_date[2]}<div class="calendar_schedule_display_month ${schedule_num[2]!=0?"has_schedule":""}">${schedule_num[2]!=0?schedule_num[2]:""}</div></div>
-                    <div class="${_color[3]} _week_row_4" data-row="4" onclick="${onclick_func}(event, ${_year[3]}, ${_month[3]}, ${_date[3]})">${_date[3]}<div class="calendar_schedule_display_month ${schedule_num[3]!=0?"has_schedule":""}">${schedule_num[3]!=0?schedule_num[3]:""}</div></div>
-                    <div class="${_color[4]} _week_row_5" data-row="5" onclick="${onclick_func}(event, ${_year[4]}, ${_month[4]}, ${_date[4]})">${_date[4]}<div class="calendar_schedule_display_month ${schedule_num[4]!=0?"has_schedule":""}">${schedule_num[4]!=0?schedule_num[4]:""}</div></div>
-                    <div class="${_color[5]} _week_row_6" data-row="6" onclick="${onclick_func}(event, ${_year[5]}, ${_month[5]}, ${_date[5]})">${_date[5]}<div class="calendar_schedule_display_month ${schedule_num[5]!=0?"has_schedule":""}">${schedule_num[5]!=0?schedule_num[5]:""}</div></div>
-                    <div class="${_color[6]} _week_row_7" data-row="7" onclick="${onclick_func}(event, ${_year[6]}, ${_month[6]}, ${_date[6]})">${_date[6]}<div class="calendar_schedule_display_month ${schedule_num[6]!=0?"has_schedule":""}">${schedule_num[6]!=0?schedule_num[6]:""}</div></div>
+                    <div class="${_color[0]} ${month_or_week == "week" ? "" : "no_border"} _week_row_1" data-row="1" onclick="${onclick_func}(event, ${_year[0]}, ${_month[0]}, ${_date[0]})">${_date[0]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[0]!=0?"has_schedule":""}">${schedule_num[0]!=0?schedule_num[0]:""}</div></div>
+                    <div class="${_color[1]} _week_row_2" data-row="2" onclick="${onclick_func}(event, ${_year[1]}, ${_month[1]}, ${_date[1]})">${_date[1]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[1]!=0?"has_schedule":""}">${schedule_num[1]!=0?schedule_num[1]:""}</div></div>
+                    <div class="${_color[2]} _week_row_3" data-row="3" onclick="${onclick_func}(event, ${_year[2]}, ${_month[2]}, ${_date[2]})">${_date[2]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[2]!=0?"has_schedule":""}">${schedule_num[2]!=0?schedule_num[2]:""}</div></div>
+                    <div class="${_color[3]} _week_row_4" data-row="4" onclick="${onclick_func}(event, ${_year[3]}, ${_month[3]}, ${_date[3]})">${_date[3]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[3]!=0?"has_schedule":""}">${schedule_num[3]!=0?schedule_num[3]:""}</div></div>
+                    <div class="${_color[4]} _week_row_5" data-row="5" onclick="${onclick_func}(event, ${_year[4]}, ${_month[4]}, ${_date[4]})">${_date[4]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[4]!=0?"has_schedule":""}">${schedule_num[4]!=0?schedule_num[4]:""}</div></div>
+                    <div class="${_color[5]} _week_row_6" data-row="6" onclick="${onclick_func}(event, ${_year[5]}, ${_month[5]}, ${_date[5]})">${_date[5]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[5]!=0?"has_schedule":""}">${schedule_num[5]!=0?schedule_num[5]:""}</div></div>
+                    <div class="${_color[6]} _week_row_7" data-row="7" onclick="${onclick_func}(event, ${_year[6]}, ${_month[6]}, ${_date[6]})">${_date[6]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[6]!=0?"has_schedule":""}">${schedule_num[6]!=0?schedule_num[6]:""}</div></div>
                 </div>
             ${month_or_week == "week" ? this.week_schedule_draw(year, month, week, schedule_data): ""}`
         );
@@ -620,7 +620,6 @@ class Calendar {
             beforeSend:function (){
                 ajax_load_image(SHOW);
             },
-
             success:function (data){
                 console.log(data);
                 callback(data, date_);
@@ -654,7 +653,8 @@ class Calendar {
                                             </div>
                                         </div>
                                         <div class="cal_week_line_dates">
-                                            <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
+                                            <div class="no_border">일</div><div class="no_border">월</div><div class="no_border">화</div>
+                                            <div class="no_border">수</div><div class="no_border">목</div><div class="no_border">금</div><div class="no_border">토</div>
                                         </div>`
                 ,
                 "week_cal_upper_box":`
@@ -673,7 +673,7 @@ class Calendar {
                                                 <div class="add_plan" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 95, POPUP_FROM_BOTTOM, {'select_date':'${this.current_year}-${this.current_month}-${this.current_date}'})"></div>
                                             </div>
                                         </div>
-                                        <div class="cal_week_line_dates" style="border-bottom:0">
+                                        <div class="cal_week_line_dates" style="border-bottom:0;font-size:13px;">
                                             <div class="week_cal_time_text"></div>
                                             <div class="_week_row_1">일</div><div class="_week_row_2">월</div><div class="_week_row_3">화</div>
                                             <div class="_week_row_4">수</div><div class="_week_row_5">목</div><div class="_week_row_6">금</div>
@@ -689,7 +689,7 @@ class Calendar {
                 ,
                 "initial_page":`<div id="${this.subtargetHTML}"><div id="cal_display_panel"><span></span></div><div id="page${this.current_page_num}" class="pages" style="left:0px;"></div></div>`
             }
-        )
+        );
     }
 
 
@@ -702,7 +702,6 @@ class Calendar {
         let x_threshold;
         let y_threshold;
         let swiper_x = false;
-        let root_content = document.getElementById(`root_content`);
         if(this.cal_type == "week"){
             x_threshold = 20;
             y_threshold = 200;
@@ -722,14 +721,12 @@ class Calendar {
                 tm = e.originalEvent.touches[0].clientX;
                 tmy = e.originalEvent.touches[0].clientY;
                 
-                // if( Math.abs(ts - tm) > x_threshold && Math.abs(ts - tm) > Math.abs(tsy - tmy)  ){
                 if( Math.abs(ts - tm) > Math.abs(tsy - tmy) && swiper_x == false ){
                     $('#root_content').on('touchmove', (e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         return false;
                     });
-                    // root_content.style.overflowY = 'hidden';
                     swiper_x = true;
                 }
             });
@@ -737,7 +734,6 @@ class Calendar {
             selector_body.off("touchend").on("touchend", (e) => {
 
                 if(swiper_x == true){
-                    // root_content.style.overflowY = 'scroll';
                     $('#root_content').off('touchmove');
                     swiper_x = false;
                 }
@@ -810,13 +806,6 @@ class Calendar {
 
 }
 
-function popup_alert_month (event, y, m, d){
-    alert(`월간 날짜 클릭 ${y} ${m} ${d}`);
-}
-
-function popup_alert_week (event, y, m, d){
-    alert(`주간 날짜 클릭 ${y} ${m} ${d}`);
-}
 
 function date_format (date){
     let date_raw = date.replace(/[-_., ]/gi, "-").split('-');
@@ -886,7 +875,7 @@ function time_diff (_time1, _time2){
 
 // 중복일정 관련 함수
 // 중복일정 관련 함수
-function clear_duplicated_time(jsondata){
+function clear_duplicated_time (jsondata){
     //중복 제거 (그룹 일정때문에 중복으로 들어오는 것들)
     // var all_start_date_time = jsondata.group_schedule_start_datetime.concat(jsondata.offTimeArray_start_date);
     // var all_end_date_time = jsondata.group_schedule_end_datetime.concat(jsondata.offTimeArray_end_date);
@@ -904,7 +893,7 @@ function clear_duplicated_time(jsondata){
     jsondata.forEach( (plan) => {
         all_start_date_time.push(plan.start_time);
         all_end_date_time.push(plan.end_time);
-    })
+    });
 
     var disable_time_array_start_date = all_start_date_time;
     var disable_time_array_end_date = all_end_date_time;
@@ -1026,7 +1015,7 @@ function compare_times_to_merge_min_max (stime1, etime1, stime2, etime2){
     stime_new = timearray[0];
     etime_new = timearray[3];
 
-    return {"start":`${stime_new}`, "end":`${etime_new}`}
+    return {"start":`${stime_new}`, "end":`${etime_new}`};
 }
 
 function array_element_count (array, wanted){
@@ -1217,5 +1206,7 @@ function duplicated_plans (jsondata){
 // 중복일정 관련 함수
 // 중복일정 관련 함수
 
+/* global $, ajax_load_image, SHOW, HIDE, current_page,  func_set_webkit_overflow_scrolling, 
+layer_popup, POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, POPUP_ADDRESS_PLAN_ADD, POPUP_FROM_BOTTOM*/
 
 
