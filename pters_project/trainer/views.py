@@ -5043,6 +5043,8 @@ class PopupMemberEdit(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupMemberEdit, self).get_context_data(**kwargs)
+        member_result = func_get_member_info(class_id, self.request.user.id, member_id)
+        context['member_info'] = member_result['member_info']
         return context
 
 
