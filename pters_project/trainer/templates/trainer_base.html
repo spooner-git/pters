@@ -364,10 +364,10 @@ onclick="layer_popup.all_close_layer_popup();"></div>
 
     // 회원, 수업, 수강권 정보 팝업 간단함수
     function open_member_info_popup(db_id){
-        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'db_id':db_id});
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':db_id});
     }
     function open_member_edit_popup(db_id){
-        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_EDIT, 100, POPUP_FROM_RIGHT, {'db_id':db_id});
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_EDIT, 100, POPUP_FROM_RIGHT, {'member_id':db_id});
     }
 
     function open_lecture_info_popup(lecture_id){
