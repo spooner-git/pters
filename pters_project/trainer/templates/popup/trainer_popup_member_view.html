@@ -95,10 +95,10 @@
             this.targetHTML = targetHTML;
             this.instance = instance;
             this.data = data;
-            console.log(data)
+            console.log(data);
         }
 
-        init(){
+        init (){
             this.render_basic_info('#wrapper_box_member_info');
             this.render_member_name('#member_name_in_popup');
             this.render_member_edit_button('#member_edit_popup_show_button');
@@ -106,25 +106,25 @@
             this.render_lecture_list_set();
         }
 
-        render_ticket_list_set(){
+        render_ticket_list_set (){
             this.render_static_component('#toggle_set_ticket_in_member', "toggle_set_ticket");
             this.render_include_ticket_info('#wrapper_member_tickets_list');
         }
 
-        render_lecture_list_set(){
+        render_lecture_list_set (){
             this.render_static_component('#toggle_set_lecture_in_member', "toggle_set_lecture");
             this.render_include_lecture_info('#wrapper_member_lectures_list');
         }
 
-        render_member_name(target){
+        render_member_name (target){
             document.querySelector(target).innerHTML = this.data.basic_info.member_name;
         }
 
-        render_member_edit_button(target){
+        render_member_edit_button (target){
             document.querySelector(target).onclick = () => {open_member_edit_popup(this.data.basic_info.member_id)}
         }
 
-        render_basic_info(target){
+        render_basic_info (target){
             let html = `
                         <div class="obj_box_full">
                             <div id="wrapper_member_info_basic">
@@ -132,7 +132,7 @@
                                     ${this.data.basic_info.member_connection_check == 0
                                     ?"<img src='/static/common/icon/icon_link_off.png' class='obj_icon_basic icon_link'>(임시아이디)" 
                                     :"<img src='/static/common/icon/icon_link_on.png' class='obj_icon_basic icon_link'>" }
-                                    ${this.data.basic_info.member_id}
+                                    ${this.data.basic_info.member_user_id}
                                 </div>
                                 <div>${this.data.basic_info.member_sex == "None" ? "성별 미입력" : this.data.basic_info.member_sex}</div>
                                 <div>${this.data.basic_info.member_phone == "None" ? "전화번호 미입력" : this.data.basic_info.member_phone}</div>
@@ -142,11 +142,12 @@
                                 <div>개설 <span>${'2019.06.21'}</span></div>
                             </div>
                         </div
-                        >`
+                        >
+                        `;
             document.querySelector(target).innerHTML = html;
         }
 
-        render_include_ticket_info(target){
+        render_include_ticket_info (target){
             let html_to_join = [];
             for(let ticket in this.data.ticket_info){
                 let this_data = this.data.ticket_info[ticket];
@@ -170,14 +171,14 @@
                                     </div>
                                 </div>
                             </div>
-                            `
+                            `;
                 html_to_join.push(html);
             }
 
             document.querySelector(target).innerHTML = `<div class="swiper-wrapper">${html_to_join.join('')}</div>`;
         }
 
-        render_include_lecture_info(target){
+        render_include_lecture_info (target){
             let html_to_join = [];
             for(let lecture in this.data.lecture_info){
                 let this_data = this.data.lecture_info[lecture];
@@ -201,18 +202,18 @@
                                     </div>
                                 </div>
                             </li>
-                            `
+                            `;
                 html_to_join.push(html);
             }
             document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`;           
         }
 
-        render_static_component(target, component_name){
+        render_static_component (target, component_name){
             document.querySelector(target).innerHTML = this.static_component()[component_name];
         }
 
 
-        static_component(){
+        static_component (){
             return {
                     toggle_set_ticket : `<div id="toggle_member_tickets_list" onclick="toggle_list('#wrapper_member_tickets_list')">
                                             <span>진행중인 수강권 ${Object.keys(this.data.ticket_info).length}</span>
@@ -222,7 +223,7 @@
                                             <span>참여가능 수업 ${Object.keys(this.data.lecture_info).length}</span>
                                             <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
                                         </div>`
-            }
+            };
         }
 
     }
