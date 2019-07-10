@@ -28,6 +28,7 @@ class Home{
         let time_select_popup = `layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
         {'popup_title':'', 'popup_comment':'시간을 선택해주세요',
         'onclick_function':null})`;
+        let user_select_multi_popup = `show_user_select_popup({'option1':'console.log(1)', 'option2':'console.log(2)', 'option3':'console.log(3)', 'option4':'console.log(4)'})`;
 
         html_temp.push(`<div>${class_center_name}</div>
                     <div>${class_type_name}</div>
@@ -35,7 +36,8 @@ class Home{
                     <div>총 회원수 ${total_member_num}명</div>
                     <div>이번달 신규 ${new_member_num}명</div>
                     <div>종료 임박 ${to_be_ended_member_num}명</div>
-                    <button onclick="event.preventDefault();${time_select_popup}">시간 선택 임시</button>`)
+                    <button onclick="event.preventDefault();${time_select_popup}">시간 선택 임시</button>
+                    <button onclick="event.preventDefault();${user_select_multi_popup}">유저 선택 팝업 임시</button>`);
         
         document.querySelector('#home_content_wrap').innerHTML = html_temp.join("");
     }

@@ -1,0 +1,230 @@
+{% load static_url %}
+
+<link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.basic.css" %}>
+<style>
+    .wrapper_popup_time_selector_function{
+        text-align: center;
+        /* background-image: linear-gradient(#8e8e8e, white 35%, white 65%, #8e8e8e); */
+    }
+    .select_wrapper{
+        display: inline-block;
+        width: 45%;
+        position: relative;
+        overflow: hidden;
+        height: 170px;
+    }
+    .selector_title{
+        position: absolute;
+        width: 100%;
+        top: 0px;
+        height: 20px;
+        line-height: 20px;
+        background-color: #ffffff;
+        z-index: 2;
+    }
+    .select_wrapper_child{
+        position: absolute;
+        top: 20px;
+        width: 100%;
+        height: 150px;
+        z-index: 1;
+        /* background-image: linear-gradient(#8e8e8e, transparent 35%, transparent 65%, #8e8e8e); */
+    }
+    .selector_indicator{
+        position: absolute;
+        top: 70px;
+        width: 100%;
+        height: 50px;
+        /* border-top: 1px solid #fe4e65;
+        border-bottom: 1px solid #fe4e65; */
+        box-shadow: 0px 0px 2px 0px #545454;
+    }
+
+    .select_wrapper ul{
+        /* color: #1e1e1e; */
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .select_wrapper ul > li{
+        color: #cccccc;
+        background-color: transparent;
+        height: 50px;
+        line-height: 50px;
+    }
+</style>
+
+<div class="popup_mobile popup_full" style="background-color:transparent;padding:0 20px;box-sizing: border-box;">
+    <div class="popup_basic_user_select_multi obj_font_size_15_weight_500">
+        <div class="wrapper_popup_basic_comment obj_font_size_18_weight_bold"></div>
+        <div class="wrapper_popup_basic_user_select_options" style="margin-bottom: 45px;">
+
+        </div>
+        <div class="wrapper_popup_basic_buttons obj_table_raw  obj_font_bg_black_white">
+            <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">취소</div>
+            <!-- <div class="popup_basic_confirm obj_table_cell_x2">확인</div> -->
+        </div>
+    </div>
+</div>
+
+<div class="popup_mobile popup_mobile_basic">
+    <div class="popup_basic_user_input obj_font_size_15_weight_500">
+        <div class="wrapper_popup_basic_comment obj_font_size_18_weight_bold"></div>
+        <div><input type="text" placeholder="입력 해주세요." class="popup_basic_user_input_full"></div>
+        <div class="wrapper_popup_basic_buttons obj_table_raw">
+            <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">취소</div>
+            <div class="popup_basic_confirm obj_table_cell_x2">확인</div>
+        </div>
+    </div>
+</div>
+
+<div class="popup_mobile popup_mobile_basic">
+	<div class="popup_basic_time_selector obj_font_size_15_weight_500">
+        <div class="wrapper_popup_basic_comment obj_font_size_13_weight_500" onclick='show_selected_time()'></div>
+
+        <div class="wrapper_popup_time_selector_function">
+
+            <div class="select_wrapper">
+                <div class="selector_title">시작 시간</div>
+                <div id="hour_wrap" class="select_wrapper_child">
+                    <ul>
+                        <li></li>
+                        <li data-spos=0>13:00</li>
+                        <li data-spos=50>13:05</li>
+                        <li data-spos=100>13:10</li>
+                        <li data-spos=150>13:15</li>
+                        <li data-spos=200>13:20</li>
+                        <li data-spos=250>13:25</li>
+                        <li data-spos=300>13:30</li>
+                        <li data-spos=350>13:35</li>
+                        <li data-spos=400>13:40</li>
+                        <li data-spos=450>13:45</li>
+                        <li data-spos=500>13:50</li>
+                        <li data-spos=550>13:55</li>
+                        <li></li>
+                    </ul>
+                </div>
+                <div class="selector_indicator"></div>
+            </div>
+
+            <div class="select_wrapper">
+                <div class="selector_title">종료 시간</div>
+                <div id="minute_wrap" class="select_wrapper_child">
+                    <ul>
+                        <li></li>
+                        <li data-epos=0>14:00</li>
+                        <li data-epos=50>14:05</li>
+                        <li data-epos=100>14:10</li>
+                        <li data-epos=150>14:15</li>
+                        <li data-epos=200>14:20</li>
+                        <li data-epos=250>14:25</li>
+                        <li data-epos=300>14:30</li>
+                        <li data-epos=350>14:35</li>
+                        <li data-epos=400>14:40</li>
+                        <li data-epos=450>14:45</li>
+                        <li data-epos=500>14:50</li>
+                        <li data-epos=550>14:55</li>
+                        <li></li>
+                    </ul>
+                </div>
+                <div class="selector_indicator"></div>
+            </div>
+
+        </div>
+
+        <div class="wrapper_popup_basic_buttons obj_table_raw">
+            <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">닫기</div>
+            <!-- <div class="popup_basic_confirm obj_table_cell_x2">확인</div> -->
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+// 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    var hour_scroll, minute_scroll;
+
+    hour_scroll = new IScroll('#hour_wrap',{
+                        mouseWheel : true,
+                        // snap: 'li'
+                    })
+
+    minute_scroll = new IScroll('#minute_wrap',{
+                        mouseWheel : true,
+                        // snap: 'li'
+    })
+
+    let user_scroll_hour = false;
+    hour_scroll.on('scrollEnd', function(){
+        if(user_scroll_hour == true){
+            user_scroll_hour = false;
+            let posY = this.y;
+            let min = posY-posY%50;
+            let max = min - 50;
+
+            let snap;
+            
+            if(Math.abs(posY - max) < Math.abs(posY - min)){
+                snap = max;
+            }else{
+                snap = min;
+            }
+            hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+            $(`li[data-spos="${Math.abs(hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+            $(`li[data-spos="${Math.abs(hour_scroll.y)}"]`).css('color', '#1e1e1e');
+        }
+    })
+
+    hour_scroll.on('beforeScrollStart', function(){
+        user_scroll_hour = true;
+    })
+
+    let user_scroll_minute = false;
+    minute_scroll.on('scrollEnd', function(){
+        if(user_scroll_minute == true){
+            user_scroll_minute = false;
+            let posY = this.y;
+            let min = posY-posY%50;
+            let max = min - 50;
+
+            let snap;
+            
+            if(Math.abs(posY - max) < Math.abs(posY - min)){
+                snap = max;
+            }else{
+                snap = min;
+            }
+            minute_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+            $(`li[data-epos="${Math.abs(minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+            $(`li[data-epos="${Math.abs(minute_scroll.y)}"]`).css('color', '#1e1e1e');
+        }
+    })
+
+    minute_scroll.on('beforeScrollStart', function(){
+        user_scroll_minute = true;
+    })
+
+    function show_selected_time(){
+        let start = $(`li[data-spos="${Math.abs(hour_scroll.y)}"]`);
+        let end = $(`li[data-epos="${Math.abs(minute_scroll.y)}"]`);
+
+        let start_text = start.text();
+        let end_text = end.text();
+
+        if(start_text == undefined || start_text == ''){
+            alert('시작시간 입력을 다시 해주세요.')
+        }
+        else if(end_text == undefined || end_text == ''){
+            alert('종료시간 입력을 다시 해주세요.')
+        }
+        else{
+            alert('시작:' + start_text + ' ~ ' + '종료:'+ end_text)
+        }
+        
+    }
+// 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+</script>
