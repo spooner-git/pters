@@ -221,7 +221,6 @@ class GroupLectureTb(TimeStampedModel):
     group_lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     group_tb = models.ForeignKey(GroupTb, on_delete=models.CASCADE, blank=True, null=True)
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, blank=True, null=True)
-    # package_tb = models.ForeignKey(PackageTb, on_delete=models.CASCADE, blank=True, null=True)
     fix_state_cd = models.CharField(db_column='FIX_STATE_CD', max_length=20, blank=True, null=True, default='')
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 

@@ -204,6 +204,7 @@ def func_get_member_info(class_id, user_id, member_id):
                 member.user.email = ''
 
         member_info = {'member_id': member.member_id,
+                       'member_user_id': member.user.username,
                        'member_name': member.name,
                        'member_phone': str(member.phone),
                        'member_email': str(member.user.email),

@@ -163,12 +163,6 @@ def get_setting_info(request):
 
             for class_lecture_info in class_lecture_data:
                 lecture_info = class_lecture_info.lecture_tb
-
-                # try:
-                #     group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
-                # except ObjectDoesNotExist:
-                #     group_info = None
-
                 schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                           end_dt__lte=now,
                                                           use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
@@ -273,7 +267,6 @@ def get_function_auth_type_cd(request):
             auth_info['limit_num'] = function_info.counts
             auth_info['limit_type'] = function_info.product_tb.name
             context[function_auth_type_cd_name] = auth_info
-            # merchandise_type_cd_list.append(function_info.function_auth_tb.function_auth_type_cd)
 
     return context
 
