@@ -542,7 +542,7 @@ class Calendar {
                             }
 
                             let tform_s = time_form(plan.start_time);
-                            let tform_e = time_form(plan.end_time);
+                            let tform_e = time_form(plan.end_time, 'end');
 
                             let start_hour = tform_s.hour;
                             let start_min = tform_s.minute;
@@ -837,13 +837,13 @@ function date_format (date){
     };
 }
 
-function time_form (_time1){
+function time_form (_time1, end){
     let time1 = _time1.split(':');
 
     let hh1 = Number(time1[0]);
     let mm1 = Number(time1[1]);
 
-    if(hh1 == 0 && mm1 == 0){
+    if(end == 'end' && hh1 == 0 && mm1 == 0){
         hh1 = 24;
     }
 

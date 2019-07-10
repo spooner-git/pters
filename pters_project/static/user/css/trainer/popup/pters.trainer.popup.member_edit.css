@@ -21,6 +21,9 @@
 	width: auto;
 	max-width: 150px;
 	text-align: right;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 #wrapper_box_member_settings .cell_icon{

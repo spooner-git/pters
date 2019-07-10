@@ -126,47 +126,91 @@
     }
 
 
-    class Ticket_edit{
-        constructor(targetHTML, instance, data){
+    class Lecture_edit{
+        constructor(targetHTML, data, instance){
             this.targetHTML = targetHTML;
             this.instance = instance;
             this.data = data;
             
-            this.ticket_id;
-            this.ticket_name;
-            this.ticket_include_lectures;
-            this.ticket_count;
-            this.ticket_expiry;
-            this.ticekt_price;
+            this.lecture_id = this.data.group_id;
+            this.lecture_name = this.data.group_name;
+            this.lecture_max_num = this.data.group_max_num;
+            this.lecture_operating_time = "% 90분";
+            this.lecture_color = "#fe4e65";
+            this.lecture_repeat_schedule = "% 반복 안함";
+            this.lecture_fixed_member = "% 1";
+
+            console.log('data', data)
             
 
-            console.log(data);
+            this.items =    {    
+                                lecture_name: {visible: true, title:"수업명", value:this.lecture_name},
+                                lecture_max_num: {visible: true, title:"정원", value: this.lecture_max_num},
+                                lecture_operating_time: {visible: true, title:"진행 시간", value: this.lecture_operating_time},
+                                lecture_color: {visible: true, title:"색상 태그", value: this.lecture_color},
+                                lecture_repeat_schedule: {visible: true, title:"반복 일정", value: this.lecture_repeat_schedule},
+                                lecture_fixed_member: {visible: true, title:"고정 회원", value: this.lecture_fixed_member},
+                                lecture_finished_members: {visible: true, title:"수업 종료된 회원", value:""},
+                                lecture_history: {visible: true, title:"수업 이력", value:""},
+                                lecture_deactivate: {visible: true, title:"수업 비활성화", value:""}
+                            };
         }
 
-        render_setting_list(target){
-
-
-            let html = 
-                        `<li class="">
-                            <div class="obj_table_raw">
-                                <div class="cell_title">수강권명</div>
-                                <div class="cell_value" onclick="open_user_input_popup(null, ${callback})">뜨거운 여름 준비</div>
-                                <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                            </div>
-                        </li>`;
-
-
-            document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`; 
+        init(){
+            this.render_setting_list();
         }
 
-        send_data(ticket_id, data, callback){
+        render_setting_list(target, options){
+            if(target == undefined || target == ""){
+                target = this.targetHTML;
+            }
+            if(options != undefined){
+                for(let item in options){
+                    this.menu_items[item].visible = options[item].visible;
+                }
+            }
 
+            let html_to_join = [];
+            for(let item in this.items){
+                let item_el = this.items[item];
+                if(item_el.visible == false){
+                    continue;
+                }
+
+                let title = item_el.title;
+                let content = item_el.value;
+
+                switch(item){
+                    case "lecture_color":
+                        content = `<div style="display:inline-block;width:25px;height:25px;border-radius: 3px;background-color:${item_el.value};vertical-align: middle;margin-bottom:4px;"></div>`
+                        break;
+                }
+
+                let html = 
+                            `<li class="">
+                                <div class="obj_table_raw">
+                                    <div class="cell_title">${title}</div>
+                                    <div class="cell_value" onclick="show_user_input_popup(event.target.innerText, '${this.instance}.send_data(this, \\'${item}\\' )' )">${content}</div>
+                                    <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                                </div>
+                            </li>`;
+                html_to_join.push(html);
+            }
+            document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`;
+        }
+
+        send_data(data, item){
+            let user_input = $(data).parent().siblings('div').find('.popup_basic_user_input_full').val();
+            console.log(item+': '+user_input);
+           
+            this.render_setting_list();
         }
 
 
     }
 
-
+    var lecture_edit = new Lecture_edit("#wrapper_box_lecture_settings", lecture_info, "lecture_edit");
+    lecture_edit.init();
 
     func_set_webkit_overflow_scrolling('.popup_ticket_view');
 </script>
