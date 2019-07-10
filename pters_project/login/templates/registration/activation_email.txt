@@ -1,9 +1,9 @@
-PTERS 계정 가입을 위한 인증 메일입니다. ( https://{{ site.domain }} )
+PTERS 계정 가입을 위한 인증 메일입니다. ( http{% if request.is_secure %}s{% endif %}://{{ site.domain }} )
 
 아래 링크를 클릭해주세요!
 
 id : {{user.username}}
 
-https://{{ site.domain }}{% url 'login:registration_activate' activation_key %}
+http{% if request.is_secure %}s{% endif %}://{{ site.domain }}{% url 'login:registration_activate' activation_key %}
 
 링크는 {{ expiration_days }}일동안 유효합니다.

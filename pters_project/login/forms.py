@@ -27,6 +27,7 @@ class MemberForm(forms.ModelForm):
 class MyRegistrationForm(RegistrationForm):
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
+        self.fields['email'].required = False
         self.fields['password1'].widget.attrs.update({
             'autocomplete': 'new-password'
         })

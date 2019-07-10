@@ -231,7 +231,7 @@
                 top: 0;
                 left: 0;
                 width: 100%;
-                height: 40px;
+                height: 25px;
                 background: red;
                 color: #ffffff;
                 font-size: 13px;
@@ -260,7 +260,11 @@
             <!-- <p class="_step1_label"><img src="/static/user/res/PTERS_logo_pure.png">ID 유형 선택
             <div class="registerbox_sublabel _step1_label">STEP 1<br>원하는 ID유형을 선택해주세요.<p style="font-size: 17px;">강사님께서 생성해주신 <span style="color: #fe4e65;text-decoration: underline;font-weight: 500">초기 ID와 비밀번호를 변경한 후</span> 계속 이용이 가능합니다.</p></div> -->
             <p class="_step2_label"><img src="/static/user/res/PTERS_logo_pure.png"><span></span>
-            <div class="registerbox_sublabel _step2_label"><br>회원정보를 입력해주세요.<p> <span style="color: #fe4e65;text-decoration: underline;font-weight: 500">초기 ID와 비밀번호를 변경한 후</span> 계속 이용이 가능합니다.</p></div>
+            <div class="registerbox_sublabel _step2_label">
+                <br>회원정보를 입력해주세요.
+                <p><span style="color: #fe4e65;text-decoration: underline;font-weight: 500;">초기 ID와 비밀번호를 변경한 후</span> 계속 이용이 가능합니다.</p>
+                <p style="font-size:11px;">* 회원가입 후 이메일 인증을 진행하지 않은 경우 강사 임의로 회원님의 정보가 수정될수 있습니다.</p>
+            </div>
             <p class="_step3_label"><img src="/static/user/res/PTERS_logo_pure.png"><span>가입 약관</span>
             <div class="registerbox_sublabel _step3_label">STEP 3<br>제공하는 서비스를 사용하기 위한 약관입니다.</div>
         </div>
@@ -666,13 +670,14 @@
 
 
     <div class="registerbox_add" data-view="init">
+            <div id="global_error_msg"></div>
 {#        <div class="outerbox_horizontal" data-view="init">#}
 {#            <div class="_type_trainee" style="width: 100%;">#}
 {#                <img src="/static/user/res/login/icon-reg-user.png">#}
 {#                <p><span class="font-pink">간편한 가입으로</span></p>#}
 {#                <p>PTERS를 이용해 보세요!</p>#}
                 <div id="submit_input">
-                    <form method="post" id="add-member-id-form" action="." style="padding-left: 10px;">
+                    <form method="post" id="add-member-id-form" action="{% url 'login:login' %}" style="padding-left: 10px;">
                         {% csrf_token %}
                         <input type="hidden" name="member_id" value="{{ request.session.user_id }}">
                         <input type="hidden" name="username" value="" id="id_username">
@@ -689,7 +694,7 @@
     {#                        <label>새 로그인 ID</label>#}
 
                         <div class="outerbox">
-                            <input type="text" name="id" placeholder="새 로그인 ID"  id="id_input">
+                            <input type="text" name="id" placeholder="새 로그인 ID"  id="id_input" style="autocomplete:off;">
     {#                        <span onclick="check_id()" class="button_duplicate_check">중복체크</span>#}
                             <span class="id_confirm"></span>
                             <p class="pw_notice">최소 4자이상 영문, 숫자 그리고 @/./-/_만 가능합니다.</p>
@@ -699,15 +704,16 @@
                         </div>
 
                         <div class="outerbox">
-                                    <input type="password" name="newpassword" id="pw_input" placeholder="새 비밀번호" title="비밀번호 입력">
+                                    <input type="password" name="newpassword" id="pw_input" placeholder="새 비밀번호" title="비밀번호 입력" autocomplete="new-password">
             {#                        <label>비밀번호 확인</label>#}
-                                    <input type="password" name="newpassword_check" id="pw_input_re" placeholder="비밀번호 확인" title="비밀번호 확인" style="margin-left: 10px;">
+                                    <input type="password" name="newpassword_check" id="pw_input_re" placeholder="비밀번호 확인" title="비밀번호 확인" autocomplete="new-password" style="margin-left: 10px;">
                                     <span class="pw_confirm"></span>
                                     <p class="pw_notice">비밀번호는 특수문자, 영문 대소문자, 숫자를 혼합하여 8자이상 입력해주세요.</p>
                         </div>
             {#                    </p>#}
             {#                    <p style="line-height: 25px;text-align:left;">#}
             {#                        <label>Email<span class="email_confirm" style="margin-left: 15px;"></span></label>#}
+                        <!--
                         <div class="outerbox">
                             <input type="text" name="" placeholder="이메일"  id="email_input" style="width:28%;"> @
                             <input type="text" name="" placeholder="이메일 뒷부분"  id="email_input_re" style="width:37%;" >
@@ -724,26 +730,30 @@
                             </div>
                             <span class="email_confirm" style="margin-top: 0;"></span>
                             <p class="pw_notice" style="margin-bottom:0;">이메일 인증을 하셔야 정상 가입이 되오니 정확한 이메일을 입력해주세요</p>
-                            
-                            <!--간편화 업로드시 숨김-->
+
                             <div class="pw_notice" style="font-size:12.5px;"><img src="/static/user/res/naver.png" style="width:65px;float:left;"><p style="display:inline-block;margin:0;">이메일을 입력하시면 <span style="color:#2DB400">인증 없이 바로 로그인</span>하실 수 있습니다.</p></div>
 
     {#                    </p>#}
                         </div>
+                        -->
                     </form>
                     <div id="send_email_button">
-                        <button class="submit_email_confirm member_reg_button" >인증 메일 보내기</button>
+                        <button class="submit_email_confirm member_reg_button" >회원가입 완료하기</button>
                         <button class="submit_go_home member_reg_button" onclick="goPrev(2)">뒤로</button>
                         <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC" id="ajaxloadingPC">
                     </div>
                 </div>
                 <div id="submit_complete">
+                    <p style="font-size: 14px;color:#fe4e65;text-decoration: underline;">회원가입이 정상적으로 완료되었습니다.</p>
+                    <button class="submit_go_home member_reg_button" onclick="goHome()">로그인 페이지</button>
+                    <!--
                     <p style="font-size: 14px;color:#fe4e65;text-decoration: underline;">입력하신 메일주소로 인증메일이 발송되었습니다.</p>
                     <p>메일 확인하여 계정을 활성화 해주세요.</p>
                     <p>최대 3분정도 소요될 수 있으며, 인증메일이 도착 하지</p>
                     <p>않을 시 메일 주소가 정확한지 확인 후 </p>
                     <p>다시 로그인하여 재발송 해주세요.</p>
                     <button class="submit_go_home member_reg_button" onclick="goHome()">로그인 페이지</button>
+                    -->
                 </div>
 {#            </div>#}
 {#        </div>#}
@@ -819,9 +829,9 @@
 
         $('button.submit_email_confirm').click(function(){
             var duplicate_check = $('#id_duplicate_check').val();
-            var duplicate_check_email = $('#email_duplicate_check').val();
+            //var duplicate_check_email = $('#email_duplicate_check').val();
             if(duplicate_check == 1){
-                if(duplicate_check_email == 1){
+                //if(duplicate_check_email == 1){
                     if(blank_input_check() == 1){
                         var $form2 = $('#add-member-id-form');
                         var serializeArray = $form2.serializeArray();
@@ -847,8 +857,11 @@
                                         $('#global_error_msg').fadeOut();
                                         //$('ul.errorlist').remove()
                                     },10000);
+                                    console.log('test1')
 
                                 }else{
+                                    console.log('test2');
+
                                     var $form = $('#add-member-id-form');
                                     $.ajax({
                                         url:'/login/new_member_resend_email_authentication/',
@@ -878,11 +891,11 @@
                                                     $('#global_error_msg').fadeOut();
                                                     //$('ul.errorlist').remove()
                                                 },10000);
-                                                {#                      $('#errorMessageBar').show()#}
-                                                {#                      $('#errorMessageText').text(jsondata.messageArray)#}
                                             }else{
-                                                $('#submit_complete').css('height','240px');
-                                                $('#submit_input').css('display','none');
+                                                alert('회원가입이 완료되었습니다.');
+                                                $form.submit();
+                                                //$('#submit_complete').css('height','240px');
+                                                //$('#submit_input').css('display','none');
                                             }
                                         },
 
@@ -890,7 +903,7 @@
                                         error:function(){
                                             alert("서버 통신 에러가 발생하였습니다. 잠시후 다시 시도해주세요");
                                         }
-                                    })
+                                    });
                                 }
                             },
 
@@ -908,11 +921,11 @@
                         console.log('test');
                         alert(blank_input_check());
                     }
-                }else if(duplicate_check_email == 0){
-                    alert('사용할 수 없는 email입니다.');
-                }else if(duplicate_check_email == 'none'){
-                    alert('email 정보를 확인해 주세요.');
-                }
+                //}else if(duplicate_check_email == 0){
+                //    alert('사용할 수 없는 email입니다.');
+                //}else if(duplicate_check_email == 'none'){
+                //    alert('email 정보를 확인해 주세요.');
+                //}
             }else if(duplicate_check == 0){
                 alert('사용할 수 없는 아이디입니다.');
             }else if(duplicate_check == 'none'){
@@ -957,7 +970,7 @@
     }
 
 
-
+        /*
         $('#email_input').keyup(function(){
             $('#email_duplicate_check').val('none');
 {#            $('.email_confirm').text('')#}
@@ -1016,7 +1029,7 @@
                 $('.email_confirm').text('');
             }
         });
-
+        */
         $('#id_input').keyup(function(){
             console.log('test1')
             $('.id_confirm').text('');
@@ -1114,7 +1127,7 @@
             }
         }
 
-
+        /*
         function check_email(){
             var $form = $('#add-member-id-form');
             var serializeArray = $form.serializeArray();
@@ -1153,6 +1166,7 @@
                 }
             })
         }
+        */
         function check_password(){
             var $form = $('#add-member-id-form');
             var serializeArray = $form.serializeArray();
