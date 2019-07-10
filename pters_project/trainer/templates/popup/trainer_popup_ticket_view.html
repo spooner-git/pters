@@ -118,7 +118,10 @@
         }
 
         render_ticket_edit_button(target){
-            document.querySelector(target).onclick = () => {open_ticket_edit_popup(this.data.package_id)};
+            document.querySelector(target).onclick = () => {
+                // open_ticket_edit_popup(this.data.package_id);
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_EDIT, 100, POPUP_FROM_RIGHT, {'ticket_id':this.data.package_id});
+            };
         }
 
         render_basic_info(target){
@@ -146,7 +149,7 @@
                 let lecture_name = this.data.package_group_list[i]
                 let html = 
                             `
-                            <li onclick="open_lecture_info_popup(${lecture_id})">
+                            <li onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':${lecture_id}})">
                                 <div class="lecture_data_l">
                                     <div class="lecture_tag_body" style="background:#fe4e65"></div>
                                     <div class="lecture_tag_head" style="border-left-color:#fe4e65"></div>
@@ -179,7 +182,7 @@
                 let member_reg = data.lecture_reg_count;
                 let html = 
                             `
-                            <li onclick="open_member_info_popup(${member_id})">
+                            <li onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':${member_id}});">
                                 <div class="member_data_l">
                                     <img src="/static/common/icon/icon_account.png">
                                 </div>                

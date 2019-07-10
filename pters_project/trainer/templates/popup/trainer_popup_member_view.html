@@ -121,7 +121,10 @@
         }
 
         render_member_edit_button (target){
-            document.querySelector(target).onclick = () => {open_member_edit_popup(this.data.basic_info.member_id)}
+            document.querySelector(target).onclick = () => {
+                // open_member_edit_popup(this.data.basic_info.member_id);
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_EDIT, 100, POPUP_FROM_RIGHT, {'member_id':this.data.basic_info.member_id});
+            }
         }
 
         render_basic_info (target){
@@ -156,7 +159,7 @@
                 let ticket_end = this_data.lecture_end_date;
                 let html = 
                             `
-                            <div class="swiper-slide" onclick="open_ticket_info_popup(${ticket_id})">
+                            <div class="swiper-slide" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':${ticket_id}})">
                                 <div class="ticket_swiper_element_wrap">
                                     <div class="ticket_swiper_element_wrap_inner">
                                         <div>
@@ -187,7 +190,7 @@
                 let lecture_max_num = this_data.group_max_num;
                 let html = 
                             `
-                            <li onclick="open_lecture_info_popup(${lecture_id})">
+                            <li onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':${lecture_id}})">
                                 <div class="lecture_data_l">
                                     <div class="lecture_tag_body" style="background:#fe4e65"></div>
                                     <div class="lecture_tag_head" style="border-left-color:#fe4e65"></div>
