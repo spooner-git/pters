@@ -17,32 +17,43 @@
                     {{ form.as_p }}
                 </div>
                 <article>
-                    <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">이름</div>
-                    <input type="text" name="first_name" class="obj_font_size_14_weight_500" placeholder="{{ member_info.name }}">
+                    <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">아이디</div>
+                    <input type="text" name="username" class="wrapper_password_change_input obj_font_size_14_weight_500" placeholder="{{ member_info.user.username }}" disabled>
+                    <div class="wrapper_password_change_button obj_button_gen obj_font_bg_coral_white" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_my_password_change', 90, POPUP_FROM_BOTTOM, {} )">비밀번호 재설정 하기</div>
                 </article>
                 <article>
-                    <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">아이디</div>
-                    <input type="text" name="id" class="obj_font_size_14_weight_500" placeholder="{{ member_info.user.username }}" style="" disabled>
+                    <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">이름</div>
+                    <input type="text" name="first_name" class="wrapper_my_info_change_input_box obj_font_size_14_weight_500" placeholder="{{ member_info.name }}">
                 </article>
                 <article>
                     <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">생년월일</div>
-                    <input type="date" name="birthday" class="obj_font_size_14_weight_500" value="{{ member_info.birthday_dt }}" max="2025-12-31" min="1919-01-01">
+                    <input type="date" name="birthday" class="wrapper_my_info_change_input_box obj_font_size_14_weight_500" value="{{ member_info.birthday_dt }}" max="2025-12-31" min="1919-01-01">
                 </article>
                 <article>
                     <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">연락처</div>
-                    <input type="tel" name="phone" class="obj_font_size_14_weight_500" placeholder="{{ member_info.phone }}">
+                    <input type="tel" name="phone" class="wrapper_my_info_change_input_box obj_font_size_14_weight_500" placeholder="{{ member_info.phone }}">
                 </article>
                 <article>
                     <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">이메일</div>
-                    <input type="email" name="email" class="obj_font_size_14_weight_500" placeholder="{{ member_info.user.email }}" disabled>
+                    <input type="email" name="email" id="id_email" class="wrapper_auth_input obj_font_size_14_weight_500"
+                           value="{{ member_info.user.email }}" {% if member_info.user.email != '' and request.user.is_active %} disabled {% endif %}>
+                    {% if member_info.user.email == '' and not request.user.is_active %}
+                    <div class="wrapper_auth_button obj_button_gen obj_font_bg_coral_white" onclick="func_send_activation_email()">인증하기</div>
+                    {% elif member_info.user.email != '' and not request.user.is_active %}
+                    <div class="wrapper_auth_button obj_button_gen obj_font_bg_coral_white" onclick="func_send_activation_email()">재인증 하기</div>
+                    {% else %}
+                    <div class="wrapper_auth_button obj_button_gen obj_font_bg_white_coral">인증완료</div>
+                    {% endif %}
                 </article>
+                <span class="email_confirm obj_font_size_11_weight_500"></span>
 
 
                 <!-- <input type="hidden" name="last_name" id="last_name" value="" >
                 <input type="hidden" name="sex" id="newsex" value="" >
                 <input type="hidden" name="contents" id="contents" value="" > -->
                 <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainee:get_trainee_info' %}">
-
+                <input type="hidden" name="member_id" value="{{ request.user.id }}">
+                <input type="hidden" name="email_duplicate_check" id="id_email_duplicate_check" value="0">
 
             </form>
         </div>
@@ -108,6 +119,104 @@
                 return false;
             }else{
                 return true;
+            }
+        }
+
+        $('#id_email').keyup(function(){
+            $('#id_email_duplicate_check').val('0');
+            let email_input = $('#id_email').val();
+            let email_data = email_input.split('@');
+            let email_domain_data;
+            if(email_data.length==2){
+                email_domain_data = email_data[1].split('.');
+            }
+
+            if(email_data.length==2 && email_domain_data.length>1){
+                check_email();
+            }else{
+                $('#id_email_duplicate_check').val('0');
+                $('.email_confirm').text('');
+            }
+        });
+
+        function check_email(){
+            var $form = $('#form_my_info');
+            var serializeArray = $form.serializeArray();
+            $.ajax({
+                url:'/login/check_member_email/',
+                type:'GET',
+                //data:{"email" : $('#id_email').val() },
+                data:serializeArray,
+                dataType : 'html',
+
+                beforeSend:function(){
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    var id_check_message = jsondata.id_check_result;
+                    if(id_check_message[0].length>0){
+                        var error_msg = id_check_message[0];
+                        $('.email_confirm').text(error_msg).css({'display':'block','color':'#fe4e65'});
+                        $form.find('#id_email_duplicate_check').val('0');
+                    }else{
+                        $('.email_confirm').text('사용 가능').css({'display':'block','color':'green'});
+                        $form.find('#id_email_duplicate_check').val('1');
+                    }
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                    alert("에러: 서버 통신 실패");
+                }
+            });
+        }
+
+        function func_send_activation_email(){
+            let email_duplication_check = $('#id_email_duplicate_check').val();
+            if(email_duplication_check == '1'){
+
+                var $form = $('#form_my_info');
+                var serializeArray = $form.serializeArray();
+                $.ajax({
+                    url:'/login/change_resend_email_authentication/',
+                    type:'POST',
+                    data:serializeArray,
+                    dataType : 'html',
+
+                    beforeSend:function(){
+                    },
+
+                    //통신성공시 처리
+                    success:function(data){
+                        let jsondata = JSON.parse(data);
+                        let id_check_message = jsondata.messageArray;
+                        if(id_check_message.length>0){
+                            let error_msg = id_check_message[0];
+                            alert(error_msg);
+                            $('#id_email_duplicate_check').val('0');
+                        }else{
+                            $('.wrapper_auth_button').text('재인증 하기');
+                            alert('인증 메일이 발송되었습니다.');
+                        }
+                    },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+
+                    },
+
+                    //통신 실패시 처리
+                    error:function(){
+                        alert("에러: 서버 통신 실패");
+                    }
+                });
             }
         }
 

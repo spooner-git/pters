@@ -1087,18 +1087,11 @@ def update_trainee_info_logic(request):
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
 
-    if error is None:
-        # log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
-        #                  from_member_name=request.user.first_name,
-        #                  log_info='회원 정보', log_how='수정', use=USE)
-        # log_data.save()
-
-        return redirect(next_page)
-    else:
+    if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-        return redirect(next_page)
+    return redirect(next_page)
 
 
 class GetTraineeGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -2019,6 +2012,24 @@ class PopupMyInfoChangeView(TemplateView):
                                     member_info.phone[7:11]
             if member_info.birthday_dt is None:
                 member_info.birthday_dt = ''
+            context['member_info'] = member_info
+        return context
+
+
+class PopupMyPasswordChangeView(TemplateView):
+    template_name = 'popup/trainee_popup_my_password_change.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupMyPasswordChangeView, self).get_context_data(**kwargs)
+        member_info = None
+        error = None
+
+        try:
+            member_info = MemberTb.objects.get(member_id=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
             context['member_info'] = member_info
         return context
 

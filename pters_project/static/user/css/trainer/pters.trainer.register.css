@@ -88,7 +88,7 @@ body{
 	background: rgba(40, 40, 40, 0.87);
 
 	-webkit-transform: translateX(250%);
-	margin-top: 160px;
+	margin-top: 200px;
 	transition: 1s;
 	-webkit-transition: 1s;
 	text-align: left;
@@ -490,7 +490,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 
 	.registerbox_add{
-		margin-top: 230px;
+		margin-top: 280px;
 	}
 	.outerbox{
 		margin-top: 30px;

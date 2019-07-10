@@ -5,6 +5,7 @@ import httplib2
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import password_reset_done, deprecate_current_app
@@ -773,7 +774,6 @@ class ChangeResendEmailAuthenticationView(MyReRegistrationView, View):
         user_id = request.POST.get('username', '')
         email = request.POST.get('email', '')
         member_id = request.POST.get('member_id', '')
-
         error = None
         user = None
         if member_id is None or member_id == '':
@@ -796,7 +796,6 @@ class ChangeResendEmailAuthenticationView(MyReRegistrationView, View):
                 error = '가입되지 않은 회원입니다.'
 
         if error is None:
-            # user = authenticate(username=username, password=password)
             if user is not None:
                 self.send_activation_email(user)
             else:
@@ -1193,7 +1192,6 @@ class CheckMemberPasswordValidationView(View):
 
     def post(self, request):
         context = {}
-        # context = super(CheckMemberValidationView, self).get_context_data(**kwargs)
         form = RegistrationForm(self.request.POST, self.request.FILES)
         if form.is_valid():
             self.error = ''
@@ -1202,10 +1200,10 @@ class CheckMemberPasswordValidationView(View):
                 if field.errors:
                     for err in field.errors:
                         if self.error is None or self.error == '':
-                            if field.name == 'password2':
+                            if field.name == 'password1':
                                 self.error = err
                         else:
-                            if field.name == 'password2':
+                            if field.name == 'password1':
                                 self.error += err
         if self.error != '':
             context['error'] = self.error
@@ -2007,3 +2005,38 @@ def password_change_done(request,
         sns_data.update(change_password_check=1)
 
     return TemplateResponse(request, template_name, context)
+
+
+# 회원가입 api
+class MemberPasswordChangeView(LoginRequiredMixin, View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request):
+        old_password = request.POST.get('old_password', '')
+        new_password1 = request.POST.get('password1', '')
+
+        error = None
+        user_info = None
+        if old_password == '' or new_password1 == '':
+            error = '비밀번호 변경에 실패했습니다.'
+
+        try:
+            user_info = User.objects.get(id=request.user.id)
+        except ObjectDoesNotExist:
+            error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            if user_info.check_password(old_password):
+                user_info.set_password(new_password1)
+                user_info.save()
+                update_session_auth_hash(request, user_info)
+            else:
+                error = '기존 비밀번호가 틀렸습니다.'
+
+        if error is not None:
+            logger.error(str(request.user.username) + '-> ' + str(error))
+            messages.error(request, error)
+        else:
+            logger.info(str(request.user.username) + '-> 비밀번호 변경 완료')
+
+        return render(request, self.template_name)
