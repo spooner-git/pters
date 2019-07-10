@@ -54,19 +54,6 @@
     }
 </style>
 
-<div class="popup_mobile popup_full" style="background-color:transparent;padding:0 20px;box-sizing: border-box;">
-    <div class="popup_basic_user_select_multi obj_font_size_15_weight_500">
-        <div class="wrapper_popup_basic_comment obj_font_size_18_weight_bold"></div>
-        <div class="wrapper_popup_basic_user_select_options" style="margin-bottom: 45px;">
-
-        </div>
-        <div class="wrapper_popup_basic_buttons obj_table_raw  obj_font_bg_black_white">
-            <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">취소</div>
-            <!-- <div class="popup_basic_confirm obj_table_cell_x2">확인</div> -->
-        </div>
-    </div>
-</div>
-
 <div class="popup_mobile popup_mobile_basic">
     <div class="popup_basic_user_input obj_font_size_15_weight_500">
         <div class="wrapper_popup_basic_comment obj_font_size_18_weight_bold"></div>
@@ -78,54 +65,36 @@
     </div>
 </div>
 
-<div class="popup_mobile popup_mobile_basic">
+<div class="popup_mobile popup_full" style="background-color:transparent;padding:0 20px;box-sizing: border-box;">
+        <div class="popup_basic_user_select_multi obj_font_size_15_weight_500">
+            <div class="wrapper_popup_basic_comment obj_font_size_18_weight_bold"></div>
+            <div class="wrapper_popup_basic_user_select_options" style="margin-bottom: 45px;">
+    
+            </div>
+            <div class="wrapper_popup_basic_buttons obj_table_raw  obj_font_bg_black_white" style="border-radius:5px;">
+                <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">취소</div>
+            </div>
+        </div>
+    </div>
+
+<div class="popup_mobile popup_full">
 	<div class="popup_basic_time_selector obj_font_size_15_weight_500">
-        <div class="wrapper_popup_basic_comment obj_font_size_13_weight_500" onclick='show_selected_time()'></div>
+        <div class="wrapper_popup_basic_comment obj_font_size_13_weight_500" onclick='time_select.show_selected_time()'></div>
 
         <div class="wrapper_popup_time_selector_function">
 
             <div class="select_wrapper">
                 <div class="selector_title">시작 시간</div>
                 <div id="hour_wrap" class="select_wrapper_child">
-                    <ul>
-                        <li></li>
-                        <li data-spos=0>13:00</li>
-                        <li data-spos=50>13:05</li>
-                        <li data-spos=100>13:10</li>
-                        <li data-spos=150>13:15</li>
-                        <li data-spos=200>13:20</li>
-                        <li data-spos=250>13:25</li>
-                        <li data-spos=300>13:30</li>
-                        <li data-spos=350>13:35</li>
-                        <li data-spos=400>13:40</li>
-                        <li data-spos=450>13:45</li>
-                        <li data-spos=500>13:50</li>
-                        <li data-spos=550>13:55</li>
-                        <li></li>
-                    </ul>
+                    
                 </div>
                 <div class="selector_indicator"></div>
             </div>
 
             <div class="select_wrapper">
                 <div class="selector_title">종료 시간</div>
-                <div id="minute_wrap" class="select_wrapper_child">
-                    <ul>
-                        <li></li>
-                        <li data-epos=0>14:00</li>
-                        <li data-epos=50>14:05</li>
-                        <li data-epos=100>14:10</li>
-                        <li data-epos=150>14:15</li>
-                        <li data-epos=200>14:20</li>
-                        <li data-epos=250>14:25</li>
-                        <li data-epos=300>14:30</li>
-                        <li data-epos=350>14:35</li>
-                        <li data-epos=400>14:40</li>
-                        <li data-epos=450>14:45</li>
-                        <li data-epos=500>14:50</li>
-                        <li data-epos=550>14:55</li>
-                        <li></li>
-                    </ul>
+                <div id="hour2_wrap" class="select_wrapper_child">
+                    
                 </div>
                 <div class="selector_indicator"></div>
             </div>
@@ -143,86 +112,173 @@
 
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    var hour_scroll, minute_scroll;
 
-    hour_scroll = new IScroll('#hour_wrap',{
-                        mouseWheel : true,
-                        // snap: 'li'
-                    })
+    class TwoTimeSelector{
+        constructor(target1, target2, instance){
+            this.target_time1 = target1;
+            this.target_time2 = target2;
+            this.data;
+            this.instance = instance;
+            this.hour_scroll;
+            this.hour2_scroll;
+            this.user_scroll_hour = false;
+            this.user_scroll_minute = false;
+            this.hour_scroll_snapped = 0;
+        }
 
-    minute_scroll = new IScroll('#minute_wrap',{
-                        mouseWheel : true,
-                        // snap: 'li'
-    })
+        init(){
+            this.render_time1_list();
+            this.render_time2_list();
+            this.set_iscroll();
+        }
 
-    let user_scroll_hour = false;
-    hour_scroll.on('scrollEnd', function(){
-        if(user_scroll_hour == true){
-            user_scroll_hour = false;
-            let posY = this.y;
-            let min = posY-posY%50;
-            let max = min - 50;
-
-            let snap;
-            
-            if(Math.abs(posY - max) < Math.abs(posY - min)){
-                snap = max;
-            }else{
-                snap = min;
+        render_time1_list(){
+            let html_to_join = [];
+            let pos = 0;
+            for(let i=0; i<24; i++){
+                for(let j=0; j<60; j=j+5){
+                    html_to_join.push(`<li data-spos=${pos}>${i < 10 ? '0'+i : i }:${j < 10 ? '0'+j : j}</li>`);
+                    pos = pos + 50;
+                }
             }
-            hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-            $(`li[data-spos="${Math.abs(hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-            $(`li[data-spos="${Math.abs(hour_scroll.y)}"]`).css('color', '#1e1e1e');
+            document.querySelector(this.target_time1).innerHTML = `<ul><li></li>${html_to_join.join('')}<li></li></ul>`;
         }
-    })
 
-    hour_scroll.on('beforeScrollStart', function(){
-        user_scroll_hour = true;
-    })
-
-    let user_scroll_minute = false;
-    minute_scroll.on('scrollEnd', function(){
-        if(user_scroll_minute == true){
-            user_scroll_minute = false;
-            let posY = this.y;
-            let min = posY-posY%50;
-            let max = min - 50;
-
-            let snap;
-            
-            if(Math.abs(posY - max) < Math.abs(posY - min)){
-                snap = max;
-            }else{
-                snap = min;
+        render_time2_list(){
+            let html_to_join = [];
+            let pos = 0;
+            for(let i=0; i<24; i++){
+                for(let j=0; j<60; j=j+5){
+                    html_to_join.push(`<li data-epos=${pos}>${i < 10 ? '0'+i : i }:${j < 10 ? '0'+j : j}</li>`);
+                    pos = pos + 50;
+                }
             }
-            minute_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-            $(`li[data-epos="${Math.abs(minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-            $(`li[data-epos="${Math.abs(minute_scroll.y)}"]`).css('color', '#1e1e1e');
-        }
-    })
 
-    minute_scroll.on('beforeScrollStart', function(){
-        user_scroll_minute = true;
-    })
-
-    function show_selected_time(){
-        let start = $(`li[data-spos="${Math.abs(hour_scroll.y)}"]`);
-        let end = $(`li[data-epos="${Math.abs(minute_scroll.y)}"]`);
-
-        let start_text = start.text();
-        let end_text = end.text();
-
-        if(start_text == undefined || start_text == ''){
-            alert('시작시간 입력을 다시 해주세요.')
+            document.querySelector(this.target_time2).innerHTML = `<ul><li></li>${html_to_join.join('')}<li></li></ul>`;
         }
-        else if(end_text == undefined || end_text == ''){
-            alert('종료시간 입력을 다시 해주세요.')
+
+
+        replace_data(data){
+
         }
-        else{
-            alert('시작:' + start_text + ' ~ ' + '종료:'+ end_text)
+
+        set_iscroll(){
+            this.hour_scroll = new IScroll('#hour_wrap',{
+                                mouseWheel : true,
+                                // snap: 'li'
+                            })
+
+            this.hour2_scroll = new IScroll('#hour2_wrap',{
+                                mouseWheel : true,
+                                // snap: 'li'
+            })
+            this.set_scroll_snap();
         }
-        
+
+        set_scroll_snap(){
+            let self = this;
+            
+            self.hour_scroll.on('scrollEnd', function (){
+                if(self.user_scroll_hour == true){
+                    self.user_scroll_hour = false;
+                    let posY = this.y;
+                    let min = posY-posY%50;
+                    let max = min - 50;
+
+                    let snap;
+                    
+                    if(Math.abs(posY - max) < Math.abs(posY - min)){
+                        snap = max;
+                    }else{
+                        snap = min;
+                    }
+                    self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                    $(`li[data-spos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`li[data-spos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+                    self.hour_scroll_snapped = snap;
+                    self.hour2_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                    $(`li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
+                }
+            })
+
+            self.hour_scroll.on('beforeScrollStart', function (){
+                self.user_scroll_hour = true;
+            })
+
+            
+            self.hour2_scroll.on('scrollEnd', function (){
+                if(self.user_scroll_minute == true){
+                    self.user_scroll_minute = false;
+                    let posY = this.y;
+                    let min = posY-posY%50;
+                    let max = min - 50;
+
+                    let snap;
+                    
+                    if(Math.abs(posY - max) < Math.abs(posY - min)){
+                        snap = max;
+                    }else{
+                        snap = min;
+                    }
+                    if(snap > self.hour_scroll_snapped){
+                        self.hour2_scroll.scrollTo(0, self.hour_scroll_snapped, 0, IScroll.utils.ease.bounce);
+                        show_error_message('종료시간이 시작시간보다 빠릅니다.')
+                    }else{
+                        self.hour2_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                    }
+                    
+                    $(`li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
+                    
+                }
+            })
+
+            self.hour2_scroll.on('beforeScrollStart', function (){
+                self.user_scroll_minute = true;
+            })
+        }
+
+        go_snap(hour, minute){
+            let initial_pos = -(Number(hour)*600 + Math.round(Number(minute)/5)*5*10);
+            this.hour_scroll.scrollTo(0, initial_pos, 0, IScroll.utils.ease.bounce);
+            this.hour2_scroll.scrollTo(0, initial_pos, 0, IScroll.utils.ease.bounce);
+
+            $(`li[data-spos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+            $(`li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
+        }
+
+        show_selected_time(){
+            let start = $(`li[data-spos="${Math.abs(this.hour_scroll.y)}"]`);
+            let end = $(`li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`);
+
+            let start_text = start.text();
+            let end_text = end.text();
+
+            if(start_text == undefined || start_text == ''){
+                alert('시작시간 입력을 다시 해주세요.')
+            }
+            else if(end_text == undefined || end_text == ''){
+                alert('종료시간 입력을 다시 해주세요.')
+            }
+            else{
+                alert('시작:' + start_text + ' ~ ' + '종료:'+ end_text)
+            }
+        }
+
+
     }
+
+    let time_select = new TwoTimeSelector('#hour_wrap', '#hour2_wrap', "time_select");
+    time_select.init();
+    let d = new Date();
+    let h = d.getHours();
+    let m = d.getMinutes();
+    time_select.go_snap(h, m);
+
+
+
+    
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

@@ -25,10 +25,8 @@ class Home{
 
     render_menu(){
         let html_temp = [];
-        let time_select_popup = `layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-        {'popup_title':'', 'popup_comment':'시간을 선택해주세요',
-        'onclick_function':null})`;
-        let user_select_multi_popup = `show_user_select_popup({'option1':'console.log(1)', 'option2':'console.log(2)', 'option3':'console.log(3)', 'option4':'console.log(4)'})`;
+        let time_select_popup = `show_user_select_time_popup()`;
+        let user_select_multi_popup = `show_user_select_multi_popup({'option1':'console.log(1)', 'option2':'console.log(2)', 'option3':'console.log(3)', 'option4':'console.log(4)'})`;
 
         html_temp.push(`<div>${class_center_name}</div>
                     <div>${class_type_name}</div>

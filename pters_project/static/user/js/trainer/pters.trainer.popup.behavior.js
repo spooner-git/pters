@@ -1,10 +1,10 @@
 /*슬라이드 팝업에 대한 동작*/
 /* global $, windowHeight, windowWidth */
 
-let layer_popup = (function(){
+let layer_popup = (function (){
     let popup_array = [];
 
-    function func_open_layer_popup(popup_name, popup_size, animation_type){
+    function func_open_layer_popup (popup_name, popup_size, animation_type){
         $('.content_page').css('overflow-y', 'hidden');
 
         let $popup_selector;
@@ -28,7 +28,7 @@ let layer_popup = (function(){
             }
 
             //팝업 height 지정
-           if(popup_size!=POPUP_SIZE_WINDOW) {
+           if(popup_size != POPUP_SIZE_WINDOW) {
                 $popup_name_selector.css({"height": popup_height + 'px', "overflow-y": "auto"});
             }
             $popup_selector.css({"z-index":100*popup_array.length});
@@ -42,7 +42,7 @@ let layer_popup = (function(){
         return popup_data;
     }
 
-    function func_close_layer_popup(popup_size){
+    function func_close_layer_popup (popup_size){
         let popup_data = {};
         //혹시 있을 pop 에러 방지
         if(popup_array.length > 0){
@@ -66,7 +66,7 @@ let layer_popup = (function(){
         return popup_data;
     }
 
-    function func_all_close_layer_popup(){
+    function func_all_close_layer_popup (){
         let popup_data = {};
         let popup_len = popup_array.length;
         for(let i=0; i<popup_len; i++){
@@ -77,7 +77,7 @@ let layer_popup = (function(){
 
             func_set_close_popup_animation($popup_selector, popup_data.animation_type);
 
-            setTimeout(function(){
+            setTimeout(function (){
                 //$popup_selector.css({"transform": "translateX(100%)", "z-index":-10});
                 //$(`#${popup_data.popup_name}`).remove();
                 $popup_selector_wrap.remove();
@@ -109,7 +109,7 @@ let layer_popup = (function(){
             }else if(call_method==POPUP_BASIC){
                 func_set_popup_basic(popup_name, data);
                 let func_animation_set = this.animation_set;
-                setTimeout(function(){
+                setTimeout(function (){
                     func_set_popup_position($(`.${popup_name}`).parents('.popup_mobile'), animation_type, popup_size);
 
                     let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
@@ -133,16 +133,16 @@ let layer_popup = (function(){
             // }, 10);
         },
 
-        "close_layer_popup": function(popup_size) {
+        "close_layer_popup": function (popup_size) {
             let popup_data = func_close_layer_popup(popup_size);
             this.animation_set(CLOSE, popup_data);
         },
-        "all_close_layer_popup": function() {
+        "all_close_layer_popup": function () {
             let popup_data = func_all_close_layer_popup();
             this.animation_set(CLOSE, popup_data);
         },
 
-        "animation_set": function(option, popup_data){
+        "animation_set": function (option, popup_data){
             //비어 있는 경우 동작 안되도록 설정;
             if(popup_data==undefined || !Object.keys(popup_data).length){
                 location.reload();
@@ -164,7 +164,7 @@ let layer_popup = (function(){
 
 
 //Ajax로 팝업 html을 통째로 들고온다.
-function func_get_popup_ajax(popup_name, data, callback){
+function func_get_popup_ajax (popup_name, data, callback){
     // ajax_load_image(SHOW);
     // setTimeout(function() {
         $.ajax({
@@ -197,7 +197,7 @@ function func_get_popup_ajax(popup_name, data, callback){
 
 
 
-function func_set_popup_position($popup_selector, animation_type, popup_size){
+function func_set_popup_position ($popup_selector, animation_type, popup_size){
     let translate_x = 0;
     let translate_y = 0;
     let width = 100;
@@ -253,7 +253,7 @@ function func_set_popup_position($popup_selector, animation_type, popup_size){
 
 }
 
-function func_set_open_popup_animation($popup_selector, animation_type, popup_size){
+function func_set_open_popup_animation ($popup_selector, animation_type, popup_size){
     let animation_info = "";
     if(animation_type != POPUP_FROM_PAGE){
         animation_info = "transform 0.3s ease-in-out";
@@ -284,7 +284,7 @@ function func_set_open_popup_animation($popup_selector, animation_type, popup_si
 
 }
 
-function func_set_close_popup_animation($popup_selector, animation_type){
+function func_set_close_popup_animation ($popup_selector, animation_type){
     let animation_info = "";
     if(animation_type != POPUP_FROM_PAGE){
         animation_info = "transform 0.3s ease-in-out";
@@ -316,7 +316,7 @@ function func_set_close_popup_animation($popup_selector, animation_type){
 
 }
 
-function func_set_shade(popup_array_length){
+function func_set_shade (popup_array_length){
     if(popup_array_length > 0){
         $('#shade_for_popup_basic').css({"display":'block',"z-index":100*popup_array_length-50});
     }
@@ -332,7 +332,7 @@ function func_set_shade(popup_array_length){
  * @param data.popup_comment    basic 팝업에 들어갈 내용.
  * @param data.onclick_function basic 팝업 확인 버튼에 연결되는 onclick 함수.
  */
-function func_set_popup_basic(popup_name, data){
+function func_set_popup_basic (popup_name, data){
     let $popup = $(`.${popup_name}`);
     if(data != undefined && data.popup_comment!=undefined){
         $popup.find('.wrapper_popup_basic_comment').html(`<p>${data.popup_comment}</p>`);
@@ -342,7 +342,7 @@ function func_set_popup_basic(popup_name, data){
     }
 }
 
-function show_error_message(message){
+function show_error_message (message){
     layer_popup.open_layer_popup(POPUP_BASIC,
                                  'popup_basic_user_confirm',
                                  POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
@@ -351,14 +351,14 @@ function show_error_message(message){
                                   'onclick_function':`layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
 }
 
-function show_user_input_popup(prev_value, callback_after_input){
+function show_user_input_popup (prev_value, callback_after_confirm){
     $(`.popup_basic_user_input input`).val('');
     layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_input', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
                                             {'popup_title':'', 'popup_comment':prev_value,
-                                            'onclick_function':`${callback_after_input};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
+                                            'onclick_function':`${callback_after_confirm};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
 }
 
-function show_user_select_popup(data){
+function show_user_select_multi_popup (data){
     //let datas = {"option1":"console.log(11)", "option2":"console.log(22)","option3":"console.log(11)", "option4":"console.log(22)","option5":"console.log(11)", "option6":"console.log(22)"}
     let length = Object.keys(data).length;
     let button_height = 45;
@@ -368,7 +368,7 @@ function show_user_select_popup(data){
         let option_name = option;
         let option_function = data[option];
         html_to_join.push(
-            `<div class="wrapper_popup_basic_buttons obj_font_bg_black_white" onclick="${option_function};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">
+            `<div class="wrapper_popup_basic_buttons obj_font_bg_black_white" style="border-radius:5px;margin-bottom:5px;" onclick="${option_function};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">
                 ${option_name}
             </div>`
         );
@@ -377,4 +377,16 @@ function show_user_select_popup(data){
     let popup_height = 100*(button_height*(length+4))/windowHeight;
 
     layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select_multi', popup_height, POPUP_FROM_BOTTOM);
+}
+
+function show_user_select_time_popup (){
+    let top_comment_height = 65;
+    let time_selector_height = 175;
+    let close_button_height = 46;
+    let sum = top_comment_height + time_selector_height + close_button_height;
+
+    let popup_height = 100*sum/windowHeight;
+
+    layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', popup_height, POPUP_FROM_BOTTOM,
+        {'popup_title':'', 'popup_comment':'시간을 선택해주세요'});
 }
