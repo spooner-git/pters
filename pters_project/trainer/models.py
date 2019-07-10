@@ -229,6 +229,19 @@ class GroupLectureTb(TimeStampedModel):
         db_table = 'GROUP_LECTURE_TB'
 
 
+class GroupMemberTb(TimeStampedModel):
+    group_member_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    package_tb = models.ForeignKey(PackageTb, on_delete=models.CASCADE, blank=True, null=True)
+    group_tb = models.ForeignKey(GroupTb, on_delete=models.CASCADE, blank=True, null=True)
+    member_tb = models.ForeignKey(MemberTb, on_delete=models.CASCADE, blank=True, null=True)
+    fix_state_cd = models.CharField(db_column='FIX_STATE_CD', max_length=20, blank=True, null=True, default='')
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'GROUP_MEMBER_TB'
+
+
 class PackageGroupTb(TimeStampedModel):
     package_group_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)
