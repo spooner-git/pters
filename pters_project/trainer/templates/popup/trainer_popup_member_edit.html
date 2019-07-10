@@ -126,54 +126,83 @@
     let member_info = {{ member_info }};
     {% endautoescape %}
 
-    function open_user_input_popup(prev_value, callback_after_input){
-        layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_input', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-                                                {'popup_title':'', 'popup_comment':prev_value,
-                                                'onclick_function':`${callback_after_input};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`})
-    }
 
-
-    class Ticket_edit{
-        constructor(targetHTML, instance, data){
+    class Member_edit{
+        constructor(targetHTML, data, instance){
             this.targetHTML = targetHTML;
             this.instance = instance;
             this.data = data;
-            
-            this.ticket_id;
-            this.ticket_name;
-            this.ticket_include_lectures;
-            this.ticket_count;
-            this.ticket_expiry;
-            this.ticekt_price;
-            
 
-            console.log(data);
+            console.log("this.data", this.data)
+            
+            this.member_name = this.data.member_name != "None" ? this.data.member_name: "미입력" ;
+            this.member_user_id = this.data.member_user_id != "None" ? this.data.member_user_id : "미입력";
+            this.member_phone = this.data.member_phone != "None" ? this.data.member_phone : "미입력";
+            this.member_birth = this.data.member_birthday_dt != "None" ? this.data.member_birthday_d : "미입력";
+            this.member_sex = this.data.member_sex != "None" ? this.data.member_sex : "미입력";
+            this.member_note = "% 회원 특이사항 특이사항 특이사항";
+            this.member_sync = this.data.member_connection_check;
+
+            this.items =    {    
+                                member_name: {visible: true, title:"회원명", value:this.member_name},
+                                member_user_id: {visible: true, title:"아이디", value: this.member_user_id},
+                                member_phone: {visible: true, title:"연락처", value: this.member_phone},
+                                member_birth: {visible: true, title:"생년월일", value: this.member_birth},
+                                member_sex: {visible: true, title:"성별", value: this.member_sex},
+                                member_note: {visible: true, title:"특이사항", value: this.member_note},
+                                member_ticket_history: {visible: true, title:"수강권 이력", value:""},
+                                member_lecture_history: {visible: true, title:"수업 이력", value:""},
+                                member_sync_request: {visible: this.member_sync == 0 ? true : false, title:"연결하기", value:""},
+                                member_sync_disconnect: {visible: this.member_sync == 2 ? true : false, title:"연결끊기", value:""},
+                                member_sync_wait: {visible: this.member_sync == 1 ? true : false, title:"연결대기", value:""},
+                                member_deactivate: {visible: true, title:"회원 비활성화", value:""}
+                            };
         }
 
-        render_setting_list(target){
+        init(){
+            this.render_setting_list();
+        }
 
+        render_setting_list(target, options){
+            if(target == undefined || target == ""){
+                target = this.targetHTML;
+            }
+            if(options != undefined){
+                for(let item in options){
+                    this.menu_items[item].visible = options[item].visible;
+                }
+            }
 
-            let html = 
-                        `<li class="">
-                            <div class="obj_table_raw">
-                                <div class="cell_title">수강권명</div>
-                                <div class="cell_value" onclick="open_user_input_popup(null, ${callback})">뜨거운 여름 준비</div>
-                                <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                            </div>
-                        </li>`;
+            let html_to_join = [];
+            for(let item in this.items){
+                let item_el = this.items[item];
+                if(item_el.visible == false){
+                    continue;
+                }
 
-
+                let html = 
+                            `<li class="">
+                                <div class="obj_table_raw">
+                                    <div class="cell_title">${item_el.title}</div>
+                                    <div class="cell_value" onclick="show_user_input_popup(event.target.innerText, '${this.instance}.send_data(this, \\'${item}\\' )' )">${item_el.value}</div>
+                                    <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                                </div>
+                            </li>`;
+                html_to_join.push(html);
+            }
             document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`; 
         }
 
-        send_data(ticket_id, data, callback){
-
+        send_data(data, item){
+            let user_input = $(data).parent().siblings('div').find('.popup_basic_user_input_full').val();
+            console.log(item+': '+user_input);
+           
+            this.render_setting_list();
         }
-
-
     }
 
-
+    var member_edit = new Member_edit("#wrapper_box_member_settings", member_info, "member_edit");
+    member_edit.init();
 
     func_set_webkit_overflow_scrolling('.popup_ticket_view');
 </script>

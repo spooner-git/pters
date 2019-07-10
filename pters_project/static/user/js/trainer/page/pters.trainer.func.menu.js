@@ -10,15 +10,15 @@ class Menu{
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 
         this.menu_items = {    
-                                ticket: {visible: true, name:"수강권"},
-                                lecture: {visible: true, name:"수업"},
-                                attend_mode: {visible: true, name:"출석체크 모드"},
-                                statistics: {visible: true, name:"통계"},
-                                settings: {visible: true, name:"설정"},
-                                pters_pass: {visible: true, name:"PTERS 패스"},
-                                store: {visible: true, name:"스토어"},
-                                notice: {visible: true, name:"PTERS 공지"}
-                            }
+                            ticket: {visible: true, name:"수강권"},
+                            lecture: {visible: true, name:"수업"},
+                            attend_mode: {visible: true, name:"출석체크 모드"},
+                            statistics: {visible: true, name:"통계"},
+                            settings: {visible: true, name:"설정"},
+                            pters_pass: {visible: true, name:"PTERS 패스"},
+                            store: {visible: true, name:"스토어"},
+                            notice: {visible: true, name:"PTERS 공지"}
+                        }
 
         let user_options = {store: {visible :false}, notice: {visible :false}};
         this.render_upper_box();
