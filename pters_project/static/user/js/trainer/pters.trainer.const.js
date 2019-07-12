@@ -83,3 +83,8 @@ const POPUP_ADDRESS_TICKET_EDIT = 'popup_ticket_edit';
 // ajax 팝업
 
 /* 팝업 주소 */
+
+/* input팝업 구분 */
+const AJAX = 0;
+const LOCAL = 1;
+/* input팝업 구분 */

@@ -200,3 +200,129 @@ class Ticket{
         )
     }
 }
+
+class Ticket_func{
+    static create(data, callback){
+        //데이터 형태 {"package_name":"", "package_note":"", "package_list":[""]};
+        $.ajax({
+            url:'/trainer/add_package_info/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                callback();
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+               
+            }
+        });
+    }
+
+    static read(data, callback){
+        //데이터 형태 {"ticket_id":""};
+        $.ajax({
+            url:'/trainer/get_package_info/',
+            type:'GET',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                callback();
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+               
+            }
+        });
+    }
+
+    static delete(data, callback){
+        //데이터 형태 {"package_id":""};
+        $.ajax({
+            url:'/trainer/delete_package_info/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                callback();
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+               
+            }
+        });
+    }
+
+    static update(data, callback){
+        //데이터 형태 {"package_id":"", "package_name":"", "package_note":""};
+        $.ajax({
+            url:'/trainer/update_package_info/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                callback();
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+               
+            }
+        });
+    }
+}
