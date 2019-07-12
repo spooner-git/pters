@@ -21,10 +21,11 @@ from django.core.files.base import ContentFile
 # Create your views here.
 from configs import settings
 from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, TO_TRAINEE_LESSON_ALARM_ON, \
-    TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, AUTO_ABSENCE_ON
+    TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, AUTO_ABSENCE_ON, SCHEDULE_DUPLICATION_ENABLE, \
+    OFF_SCHEDULE_TYPE
 
 from login.models import LogTb, MemberTb
-from trainer.models import GroupTb, ClassTb, PackageGroupTb
+from trainer.models import GroupTb, ClassTb
 from trainee.models import LectureTb, MemberLectureTb
 from .models import ScheduleTb, RepeatScheduleTb
 
@@ -47,16 +48,17 @@ class IndexView(TemplateView):
 
 # 일정 추가
 def add_schedule_logic(request):
-    member_id = request.POST.get('member_id')
-    schedule_date = request.POST.get('training_date')
-    schedule_time = request.POST.get('training_time')
-    schedule_end_date = request.POST.get('training_end_date')
-    schedule_end_time = request.POST.get('training_end_time')
-    en_dis_type = request.POST.get('en_dis_type')
+    member_id = request.POST.get('member_id', '')
+    schedule_date = request.POST.get('start_date')
+    schedule_time = request.POST.get('start_time')
+    schedule_end_date = request.POST.get('end_date')
+    schedule_end_time = request.POST.get('end_time')
+    en_dis_type = request.POST.get('en_dis_type', OFF_SCHEDULE_TYPE)
     note = request.POST.get('add_memo', '')
+    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_ENABLE)
+
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
-    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
@@ -68,38 +70,18 @@ def add_schedule_logic(request):
     push_lecture_id = []
     push_title = []
     push_message = []
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
-
-    if duplication_enable_flag is None or duplication_enable_flag == '':
-        duplication_enable_flag = SCHEDULE_DUPLICATION_DISABLE
+    context = {'push_lecture_id': '', 'push_title': '', 'push_message': ''}
 
     if en_dis_type == ON_SCHEDULE_TYPE:
         if member_id == '':
             error = '회원을 선택해 주세요.'
-
-    if schedule_date == '':
-        error = '시작 날짜를 선택해 주세요.'
-    elif schedule_end_date == '':
-        error = '종료 날짜를 선택해 주세요.'
-    elif schedule_time == '':
-        error = '시작 시각을 선택해 주세요.'
-    elif schedule_end_time == '':
-        error = '종료 시각을 선택해 주세요.'
 
     if schedule_date == schedule_end_date:
         if schedule_time == schedule_end_time:
             error = '일정을 다시 선택해주세요.'
 
     if error is None:
-        # 회원 정보 가져오기
-        if en_dis_type == ON_SCHEDULE_TYPE:
-            try:
-                member_info = MemberTb.objects.get(member_id=member_id)
-            except ObjectDoesNotExist:
-                error = '오류가 발생했습니다.'
-
-    if error is None:
-        # 최초 날짜 값 셋팅
+        # 날짜 값 셋팅
         end_time_check = 0
         if schedule_end_time == '24:00':
             schedule_end_time = '23:59'
@@ -110,16 +92,23 @@ def add_schedule_logic(request):
                                                                  '%Y-%m-%d %H:%M')
             schedule_end_datetime = datetime.datetime.strptime(schedule_end_date + ' ' + schedule_end_time,
                                                                '%Y-%m-%d %H:%M')
-            # schedule_end_datetime = schedule_start_datetime + datetime.timedelta(minutes=int(time_duration_temp))
-        except ValueError:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError:
-            error = '등록 값의 형태에 문제가 있습니다.'
+            if end_time_check == 1:
+                schedule_end_datetime = schedule_end_datetime + datetime.timedelta(minutes=1)
 
-        if end_time_check == 1:
-            schedule_end_datetime = schedule_end_datetime + datetime.timedelta(minutes=1)
+        except ValueError:
+            error = '날짜 선택에 문제가 있습니다.[0]'
+        except IntegrityError:
+            error = '날짜 선택에 문제가 있습니다.[1]'
+        except TypeError:
+            error = '날짜 선택에 문제가 있습니다.[2]'
+
+    if error is None:
+        # 회원 정보 가져오기
+        if en_dis_type == ON_SCHEDULE_TYPE:
+            try:
+                member_info = MemberTb.objects.get(member_id=member_id)
+            except ObjectDoesNotExist:
+                error = '오류가 발생했습니다.'
 
     if error is None:
         if en_dis_type == ON_SCHEDULE_TYPE:
@@ -137,22 +126,11 @@ def add_schedule_logic(request):
                         state_cd = 'PE'
                     elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
                         state_cd = 'PC'
+
                 schedule_result = func_add_schedule(class_id, lecture_id, None, None, None, schedule_start_datetime,
                                                     schedule_end_datetime, note, en_dis_type, request.user.id,
-                                                    permission_state_cd,
-                                                    state_cd)
+                                                    permission_state_cd, state_cd, duplication_enable_flag)
                 error = schedule_result['error']
-
-                if error is None:
-                    if lecture_id is not None and lecture_id != '':
-                        error = func_refresh_lecture_count(class_id, lecture_id)
-
-                if error is None:
-                    error = func_date_check(class_id, schedule_result['schedule_id'],
-                                            schedule_date, schedule_start_datetime, schedule_end_datetime,
-                                            duplication_enable_flag)
-                    if error is not None:
-                        error += ' 일정이 중복되었습니다.'
 
                 if error is not None:
                     raise InternalError()
@@ -168,6 +146,9 @@ def add_schedule_logic(request):
 
     if error is None:
 
+        push_info_schedule_start_date = str(schedule_start_datetime).split(':')
+        push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(':')
+
         if en_dis_type == ON_SCHEDULE_TYPE:
             member_name = member_info.name
 
@@ -175,27 +156,20 @@ def add_schedule_logic(request):
                              from_member_name=request.user.first_name,
                              to_member_name=member_name,
                              class_tb_id=class_id, lecture_tb_id=lecture_id,
-                             log_info='1:1 레슨', log_how='예약 완료',
+                             log_info='개인 레슨', log_how='예약 완료',
                              log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime), use=USE)
             log_data.save()
 
-        push_info_schedule_start_date = str(schedule_start_datetime).split(':')
-        push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(':')
+            if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
+                push_lecture_id.append(lecture_id)
+                push_title.append(class_type_name + ' - 예약 완료')
+                push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                                    + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] +
+                                    ' [개인 레슨] 수업이 예약 완료 되었습니다.')
 
-        if en_dis_type == ON_SCHEDULE_TYPE and setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
-            push_lecture_id.append(lecture_id)
-            push_title.append(class_type_name + ' 수업 - 예약 완료')
-            push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] +
-                                ' [1:1 레슨] 수업이 예약 완료 되었습니다.')
-
-            context['push_lecture_id'] = push_lecture_id
-            context['push_title'] = push_title
-            context['push_message'] = push_message
-        else:
-            context['push_lecture_id'] = ''
-            context['push_title'] = ''
-            context['push_message'] = ''
+                context['push_lecture_id'] = push_lecture_id
+                context['push_title'] = push_title
+                context['push_message'] = push_message
     else:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
@@ -205,77 +179,38 @@ def add_schedule_logic(request):
 
 # 일정 취소
 def delete_schedule_logic(request):
-    pt_schedule_id = request.POST.get('schedule_id', '')
-    off_schedule_id = request.POST.get('off_schedule_id', '')
-    member_id = request.POST.get('member_id')
-    en_dis_type = request.POST.get('en_dis_type', ON_SCHEDULE_TYPE)
+    schedule_id = request.POST.get('schedule_id', '')
     class_id = request.session.get('class_id', '')
-    next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
-    # auth_member_num = request.POST.get('auth_member_num', 20)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
     push_lecture_id = []
     push_title = []
     push_message = []
-    error = None
-    group_id = None
-    lecture_id = None
-    repeat_schedule_id = None
-    start_dt = None
-    end_dt = None
-    member_name = None
     schedule_info = None
-    # group_type_cd_name = ''
-    group_name = ''
-    # package_tb = None
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    error = None
 
-    if en_dis_type == ON_SCHEDULE_TYPE:
-        schedule_id = pt_schedule_id
-    else:
-        schedule_id = off_schedule_id
+    context = {'push_lecture_id': '', 'push_title': '', 'push_message': ''}
 
     if schedule_id == '':
         error = '일정 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
-            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+            schedule_info = ScheduleTb.objects.select_related('lecture_tb__member',
+                                                              'group_tb').get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
             error = '일정 정보를 불러오지 못했습니다.'
 
     if error is None:
-        if en_dis_type == ON_SCHEDULE_TYPE:
-            try:
-                member_info = MemberTb.objects.get(member_id=member_id)
-                member_name = member_info.name
-            except ObjectDoesNotExist:
-                error = '회원 정보를 불러오지 못했습니다.'
-            # package_tb = schedule_info.lecture_tb.package_tb
 
-    if error is None:
-        lecture_id = schedule_info.lecture_tb_id
-        repeat_schedule_id = schedule_info.repeat_schedule_tb_id
-        en_dis_type = schedule_info.en_dis_type
-        start_dt = schedule_info.start_dt
-        end_dt = schedule_info.end_dt
-        group_id = schedule_info.group_tb_id
-        if group_id is not None and group_id != '':
-            # group_type_cd_name = schedule_info.get_group_type_cd_name()
-            group_name = schedule_info.get_group_name()
-
-    if error is None:
         try:
             with transaction.atomic():
-                group_id = schedule_info.group_tb_id
-                schedule_result = func_delete_schedule(schedule_id, request.user.id)
+                schedule_result = func_delete_schedule(class_id, schedule_id, request.user.id)
                 error = schedule_result['error']
-                if en_dis_type == ON_SCHEDULE_TYPE:
-                    error = func_refresh_lecture_count(class_id, lecture_id)
 
-                    if repeat_schedule_id is not None and repeat_schedule_id != '':
-                        error = func_update_repeat_schedule(repeat_schedule_id)
+                if error is not None:
+                    raise InternalError()
 
         except TypeError:
             error = '등록 값에 문제가 있습니다.'
@@ -284,81 +219,56 @@ def delete_schedule_logic(request):
         except IntegrityError:
             error = '이미 취소된 일정입니다.'
         except InternalError:
-            error = '이미 취소된 일정입니다.'
+            error = error
         except ValidationError:
-            error = '예약 가능한 횟수를 확인해주세요.'
-
-    # if error is None:
-    #     if en_dis_type == ON_SCHEDULE_TYPE:
-    #         package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_tb.package_id))
-    #         package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_tb.package_id))
-    #         package_tb.save()
-    #
-    #         package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_tb.package_id, use=USE)
-    #         for package_group_info in package_group_data:
-    #             func_refresh_group_status(package_group_info.group_tb_id, None, None)
+            error = '남은 횟수를 확인해주세요.'
 
     if error is None:
-        if group_id is not None and group_id != '':
-            # func_save_log_data(start_dt, end_dt, class_id, lecture_id, request.user.last_name+request.user.first_name,
-            #                    member_name, en_dis_type, 'LS02', request)
+        start_dt = str(schedule_info.start_dt)
+        end_dt = str(schedule_info.end_dt)
+        lecture_info = schedule_info.lecture_tb
+        log_info = '[개인 레슨] 수업'
+
+        if schedule_info.group_tb is not None:
+            log_info = '['+schedule_info.group_tb.name+'] 수업'
+
+        push_info_schedule_start_date = start_dt.split(':')
+        push_info_schedule_end_date = end_dt.split(' ')[1].split(':')
+
+        if schedule_info.en_dis_type == ON_SCHEDULE_TYPE:
+
             log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                             from_member_name=request.user.first_name, to_member_name=member_name,
-                             class_tb_id=class_id, lecture_tb_id=lecture_id,
-                             log_info=group_name + ' 수업', log_how='예약 취소',
-                             log_detail=str(start_dt) + '/' + str(end_dt), use=USE)
+                             from_member_name=request.user.first_name,
+                             to_member_name=schedule_info.lecture_tb.member.name,
+                             class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                             log_info=log_info, log_how='예약 취소',
+                             log_detail=start_dt + '/' + end_dt, use=USE)
             log_data.save()
 
-        else:
-            # func_save_log_data(start_dt, end_dt, class_id, lecture_id, request.user.last_name+request.user.first_name,
-            #                    member_name, GROUP_SCHEDULE_TYPE, 'LS02', request)
-            log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                             from_member_name=request.user.first_name, to_member_name=member_name,
-                             class_tb_id=class_id, lecture_tb_id=lecture_id,
-                             log_info='1:1 레슨', log_how='예약 취소',
-                             log_detail=str(start_dt) + '/' + str(end_dt), use=USE)
-            log_data.save()
+            if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
+                push_lecture_id.append(lecture_info.lecture_id)
+                push_title.append(class_type_name + ' - 예약 취소')
+                push_info = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
+                            + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] \
+                            + log_info + '이 예약 취소 되었습니다.'
+                push_message.append(push_info)
 
-        # func_update_member_schedule_alarm(class_id)
+                context['push_lecture_id'] = push_lecture_id
+                context['push_title'] = push_title
+                context['push_message'] = push_message
 
-        push_info_schedule_start_date = str(start_dt).split(':')
-        push_info_schedule_end_date = str(end_dt).split(' ')[1].split(':')
-
-        if en_dis_type == ON_SCHEDULE_TYPE and setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
-            push_lecture_id.append(lecture_id)
-            push_title.append(class_type_name + ' - 예약 취소')
-            if group_id is not None and group_id != '':
-                push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                                    + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                    + ' ['+group_name + '] 수업이 예약 취소 되었습니다.')
-            else:
-                push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                                    + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                    + ' [1:1 레슨] 수업이 예약 취소 되었습니다.')
-            context['push_lecture_id'] = push_lecture_id
-            context['push_title'] = push_title
-            context['push_message'] = push_message
-
-        else:
-            context['push_lecture_id'] = ''
-            context['push_title'] = ''
-            context['push_message'] = ''
-        # return redirect(next_page)
-        return render(request, 'ajax/schedule_error_info.html', context)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
-        return redirect(next_page)
+    return render(request, 'ajax/schedule_error_info.html', context)
 
 
 # 일정 완료
-def finish_schedule_logic(request):
+def update_schedule_state_cd_logic(request):
     schedule_id = request.POST.get('schedule_id')
-    member_id = request.POST.get('member_id', '')
     class_id = request.session.get('class_id', '')
-    next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
-    schedule_state_cd = request.POST.get('schedule_state_cd', 'PE')
+    schedule_state_cd = request.POST.get('state_cd', 'PE')
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
@@ -373,14 +283,14 @@ def finish_schedule_logic(request):
     push_message = []
     start_date = None
     end_date = None
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_lecture_id': '', 'push_title': '', 'push_message': ''}
 
     if schedule_id == '':
         error = '일정을 선택하세요.'
 
     if error is None:
         try:
-            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+            schedule_info = ScheduleTb.objects.select_related('group_tb').get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
             error = '일정 정보를 불러오지 못했습니다.'
         if schedule_state_cd == 'PE':
@@ -389,27 +299,14 @@ def finish_schedule_logic(request):
             schedule_state_cd_name = '결석'
 
     if error is None:
-        if member_id is None or member_id == '':
-            if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
-                if schedule_info.lecture_tb.member is not None and schedule_info.lecture_tb.member != '':
-                    member_name = schedule_info.lecture_tb.member.name
-            else:
-                member_name = ''
-        else:
-            if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
-                if schedule_info.lecture_tb.member is not None and schedule_info.lecture_tb.member != '':
-                    member_name = schedule_info.lecture_tb.member.name
-            else:
-                member_name = ''
-
-    if error is None:
         start_date = schedule_info.start_dt
         end_date = schedule_info.end_dt
-        # if schedule_info.state_cd == 'PE' or schedule_info.state_cd == 'PC':
-        #     error = '완료된 스케쥴입니다.'
-
-    if error is None:
-        lecture_info = schedule_info.lecture_tb
+        if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
+            lecture_info = schedule_info.lecture_tb
+            if schedule_info.lecture_tb.member is not None and schedule_info.lecture_tb.member != '':
+                member_name = schedule_info.lecture_tb.member.name
+        else:
+            member_name = ''
 
     if error is None:
         try:
@@ -418,13 +315,10 @@ def finish_schedule_logic(request):
                 schedule_info.save()
                 # 남은 횟수 차감
                 error = func_refresh_lecture_count(class_id, lecture_info.lecture_id)
-                lecture_info.refresh_from_db()
 
                 lecture_repeat_schedule_data = None
-                if schedule_info.repeat_schedule_tb_id is not None and schedule_info.repeat_schedule_tb_id != '':
+                if schedule_info.repeat_schedule_tb is not None and schedule_info.repeat_schedule_tb != '':
                     lecture_repeat_schedule_data = schedule_info.repeat_schedule_tb
-
-                if lecture_repeat_schedule_data is not None:
                     if lecture_repeat_schedule_data.state_cd == 'NP':
                         lecture_repeat_schedule_data.state_cd = 'IP'
                         lecture_repeat_schedule_data.save()
@@ -434,11 +328,6 @@ def finish_schedule_logic(request):
                     if lecture_repeat_schedule_counter == 0:
                         lecture_repeat_schedule_data.state_cd = 'PE'
                         lecture_repeat_schedule_data.save()
-
-                if lecture_info.lecture_rem_count == 0:
-                    lecture_info.state_cd = 'PE'
-                lecture_info.schedule_check = 1
-                lecture_info.save()
 
         except TypeError:
             error = '등록 값에 문제가 있습니다.'
@@ -452,72 +341,50 @@ def finish_schedule_logic(request):
             error = '예약 가능 횟수를 확인해주세요.'
     # 그룹 스케쥴 종료 및 그룹 반복 일정 종료
     if error is None:
-        error = func_refresh_lecture_count(class_id, lecture_info.lecture_id)
-        # package_lecture_data = ClassLectureTb.objects.select_related(
-        #     'lecture_tb__package_tb').filter(auth_cd='VIEW',
-        #                                      lecture_tb__package_tb_id=lecture_info.package_tb_id, use=USE)
-        # package_ing_lecture_count = package_lecture_data.filter(lecture_tb__state_cd='IP').count()
-        # package_end_lecture_count = package_lecture_data.count() - package_ing_lecture_count
-        #
-        # package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
-
         if schedule_info.group_tb_id is not None and schedule_info.group_tb_id != '':
             group_repeat_schedule_id = None
             if lecture_repeat_schedule_data is not None and lecture_repeat_schedule_data != '':
                 group_repeat_schedule_id = lecture_repeat_schedule_data.group_schedule_id
             func_refresh_group_status(schedule_info.group_tb_id, schedule_info.group_schedule_id,
                                       group_repeat_schedule_id)
-        # for package_group_info in package_group_data:
-        #     func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     if error is None:
 
         push_info_schedule_start_date = str(start_date).split(':')
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
-        # func_save_log_data(start_date, end_date, class_id, '', request.user.last_name+request.user.first_name,
-        #                    member_name, ON_SCHEDULE_TYPE, 'LS03', request)
 
         push_lecture_id.append(schedule_info.lecture_tb_id)
         push_title.append(class_type_name + ' - '+schedule_state_cd_name)
+        log_info = '개인 레슨'
+        push_info = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
+                    + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] \
+                    + ' [개인 레슨] 수업이 '+schedule_state_cd_name+' 처리 되었습니다.'
+
         if schedule_info.group_tb_id is not None and schedule_info.group_tb_id != '':
-            log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name+request.user.first_name,
-                             to_member_name=member_name,
-                             class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                             log_info=schedule_info.get_group_name() + ' 수업', log_how=schedule_state_cd_name,
-                             log_detail=str(start_date) + '/' + str(end_date), use=USE)
-            log_data.save()
-            push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + ' ['+schedule_info.get_group_name()
-                                + '] 수업이 '+schedule_state_cd_name+' 처리 되었습니다.')
-        else:
-            log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name+request.user.first_name,
-                             to_member_name=member_name,
-                             class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                             log_info='1:1 레슨', log_how=schedule_state_cd_name,
-                             log_detail=str(start_date) + '/' + str(end_date), use=USE)
-            log_data.save()
-            push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + ' [1:1 레슨] 수업이 '+schedule_state_cd_name+' 처리 되었습니다.')
+            log_info = schedule_info.group_tb.name + ' 수업'
+            push_info = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
+                        + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] \
+                        + ' ['+schedule_info.group_tb.name\
+                        + '] 수업이 '+schedule_state_cd_name+' 처리 되었습니다.'
+
+        log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         to_member_name=member_name,
+                         class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         log_info=log_info, log_how=schedule_state_cd_name,
+                         log_detail=str(start_date) + '/' + str(end_date), use=USE)
+        log_data.save()
+        push_message.append(push_info)
 
         if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
             context['push_message'] = push_message
-        else:
-            context['push_lecture_id'] = ''
-            context['push_title'] = ''
-            context['push_message'] = ''
 
-    if error is None:
-        return render(request, 'ajax/schedule_error_info.html', context)
-    else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+    if error is not None:
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
-        return redirect(next_page)
+    return render(request, 'ajax/schedule_error_info.html', context)
 
 
 def upload_sign_image_logic(request):
@@ -556,8 +423,6 @@ def upload_sign_image_logic(request):
 def update_memo_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     note = request.POST.get('add_memo', '')
-    # next_page = request.POST.get('next_page')
-    # context = {'error': None}
     error = None
     schedule_info = None
     if schedule_id == '':
@@ -574,16 +439,13 @@ def update_memo_schedule_logic(request):
         if len(group_schedule_data) > 0:
             group_schedule_data.update(note=note)
 
-    if error is None:
         schedule_info.note = note
         schedule_info.save()
 
-    if error is None:
-        return render(request, 'ajax/schedule_error_info.html', None)
-    else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+    if error is not None:
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
-        return render(request, 'ajax/schedule_error_info.html', None)
+    return render(request, 'ajax/schedule_error_info.html', None)
 
 
 # 반복 일정 추가
@@ -659,8 +521,6 @@ def add_repeat_schedule_logic(request):
             error = '시작 시각을 선택해 주세요.'
         elif repeat_end_time == '':
             error = '종료 시각을 선택해 주세요.'
-        # elif repeat_schedule_time_duration == '':
-        #     error = '진행 시간을 선택해 주세요.'
 
     if error is None:
         if en_dis_type == ON_SCHEDULE_TYPE:
@@ -692,10 +552,8 @@ def add_repeat_schedule_logic(request):
         if repeat_schedule_result['error'] is None:
             if repeat_schedule_result['schedule_info'] is None:
                 context['repeat_schedule_id'] = ''
-                # request.session['repeat_schedule_id'] = ''
             else:
                 context['repeat_schedule_id'] = repeat_schedule_result['schedule_info'].repeat_schedule_id
-                # request.session['repeat_schedule_id'] = repeat_schedule_result['schedule_info'].repeat_schedule_id
                 repeat_schedule_info = repeat_schedule_result['schedule_info']
 
     if error is None:
@@ -738,23 +596,18 @@ def add_repeat_schedule_logic(request):
                                 schedule_check = 1
                         else:
                             schedule_check = 1
-                            # if lecture_id is None or lecture_id == '':
-                            #     error_date = str(repeat_schedule_date_info).split(' ')[0]
                         if error_date is None:
                             if schedule_check == 1:
 
                                 state_cd = 'NP'
                                 permission_state_cd = 'AP'
-                                # if setting_schedule_auto_finish == AUTO_FINISH_ON\
-                                #         and timezone.now() > schedule_end_datetime:
-                                #     state_cd = 'PE'
                                 schedule_result = func_add_schedule(class_id, lecture_id,
                                                                     repeat_schedule_info.repeat_schedule_id,
                                                                     None, None,
                                                                     schedule_start_datetime, schedule_end_datetime, '',
                                                                     en_dis_type, request.user.id,
                                                                     permission_state_cd,
-                                                                    state_cd)
+                                                                    state_cd, duplication_enable_flag)
 
                                 if schedule_result['error'] is not None:
                                     error_date = str(repeat_schedule_date_info).split(' ')[0]
@@ -816,7 +669,7 @@ def add_repeat_schedule_logic(request):
         context['repeat_duplication_date_data'] = repeat_duplication_date_data
         context['repeat_success_date_data'] = repeat_success_date_data
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     return render(request, 'ajax/repeat_schedule_result_ajax.html', context)
@@ -826,10 +679,7 @@ def add_repeat_schedule_confirm(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id')
     repeat_confirm = request.POST.get('repeat_confirm')
-    # date = request.POST.get('date', '')
-    # day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
-    next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
@@ -845,7 +695,7 @@ def add_repeat_schedule_confirm(request):
     push_lecture_id = []
     push_title = []
     push_message = []
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_lecture_id': '', 'push_title': '', 'push_message': ''}
 
     if repeat_schedule_id == '':
         error = '확인할 반복 일정을 선택해주세요.'
@@ -902,7 +752,7 @@ def add_repeat_schedule_confirm(request):
 
             # func_update_member_schedule_alarm(class_id)
             log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name + request.user.first_name,
+                             from_member_name=request.user.first_name,
                              to_member_name=member_name,
                              class_tb_id=class_id,
                              lecture_tb_id=lecture_id,
@@ -920,30 +770,22 @@ def add_repeat_schedule_confirm(request):
                 context['push_lecture_id'] = push_lecture_id
                 context['push_title'] = push_title
                 context['push_message'] = push_message
-            else:
-                context['push_lecture_id'] = ''
-                context['push_title'] = ''
-                context['push_message'] = ''
 
             information = '반복 일정 등록이 완료됐습니다.'
 
     if error is None:
-        if information is None:
-            return render(request, 'ajax/schedule_error_info.html', context)
-        else:
+        if information is not None:
             messages.info(request, information)
-            return render(request, 'ajax/schedule_error_info.html', context)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
-        return redirect(next_page)
+    return render(request, 'ajax/schedule_error_info.html', context)
 
 
 def delete_repeat_schedule_logic(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id', '')
     class_id = request.session.get('class_id', '')
-    next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
 
     error = None
@@ -960,9 +802,8 @@ def delete_repeat_schedule_logic(request):
     push_title = []
     push_message = []
     group_id = None
-    # group_type_cd_name = ''
     group_name = ''
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_lecture_id': '', 'push_title': '', 'push_message': ''}
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
@@ -1016,10 +857,6 @@ def delete_repeat_schedule_logic(request):
                                 old_lecture_id = current_lecture_id
                                 delete_lecture_id_list.append(old_lecture_id)
 
-                        # if en_dis_type == ON_SCHEDULE_TYPE:
-                        #     error = func_refresh_lecture_count(delete_lecture_id)
-                    # if error is not None:
-                    #     break
                 if en_dis_type == ON_SCHEDULE_TYPE:
                     for delete_lecture_id_info in delete_lecture_id_list:
                         error = func_refresh_lecture_count(class_id, delete_lecture_id_info)
@@ -1045,61 +882,46 @@ def delete_repeat_schedule_logic(request):
     if error is None:
 
         # func_update_member_schedule_alarm(class_id)
+        log_info = '개인 레슨 반복 일정'
+        if group_id is not None and group_id != '':
+            log_info = group_name + ' 반복 일정'
 
-        if group_id is None or group_id == '':
-            log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name + request.user.first_name,
-                             to_member_name=member_name,
-                             class_tb_id=class_id,
-                             lecture_tb_id=lecture_id,
-                             log_info='1:1 레슨 반복 일정',
-                             log_how='반복 일정 취소',
-                             log_detail=str(start_date) + '/' + str(end_date), use=USE)
-            log_data.save()
-        else:
-            log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name + request.user.first_name,
-                             to_member_name=member_name,
-                             class_tb_id=class_id,
-                             lecture_tb_id=lecture_id,
-                             log_info=group_name + ' 반복 일정',
-                             log_how='반복 일정 취소',
-                             log_detail=str(start_date) + '/' + str(end_date), use=USE)
-            log_data.save()
+        log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         to_member_name=member_name,
+                         class_tb_id=class_id,
+                         lecture_tb_id=lecture_id,
+                         log_info=log_info,
+                         log_how='반복 일정 취소',
+                         log_detail=str(start_date) + '/' + str(end_date), use=USE)
+        log_data.save()
 
         if en_dis_type == ON_SCHEDULE_TYPE and setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
             push_lecture_id.append(lecture_id)
             push_title.append(class_type_name + ' - 수업 알림')
-            if group_id is None or group_id == '':
-                push_message.append(request.user.first_name + '님이 ' + str(start_date)
-                                    + '~' + str(end_date) + ' [1:1 레슨] 반복 일정을 취소했습니다')
-            else:
-                push_message.append(request.user.first_name + '님이 ' + str(start_date)
-                                    + '~' + str(end_date)
-                                    + ' [' + group_name+'] 반복 일정을 취소했습니다')
+            push_message_info = request.user.first_name + '님이 ' + str(start_date)\
+                                + '~' + str(end_date) + ' [개인 레슨] 반복 일정을 취소했습니다'
+            if group_id is not None and group_id == '':
+                push_message_info = request.user.first_name + '님이 ' + str(start_date)\
+                                    + '~' + str(end_date)\
+                                    + ' [' + group_name+'] 반복 일정을 취소했습니다'
+            push_message.append(push_message_info)
 
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
             context['push_message'] = push_message
-        else:
-            context['push_lecture_id'] = ''
-            context['push_title'] = ''
-            context['push_message'] = ''
 
-        return render(request, 'ajax/schedule_error_info.html', context)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
-        return redirect(next_page)
+    return render(request, 'ajax/schedule_error_info.html', context)
 
 
 class CheckScheduleUpdateViewAjax(LoginRequiredMixin, View):
     template_name = 'ajax/data_change_check_ajax.html'
 
-    # def get_context_data(self, **kwargs):
     def get(self, request):
         context = {}
-        # context = super(CheckScheduleUpdateViewAjax, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         error = None
         class_info = None
@@ -1145,7 +967,7 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, View):
 
         context['data_changed'] = update_check
         if error is not None:
-            logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+            logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
             messages.error(request, error)
 
         return render(request, self.template_name, context)
@@ -1158,10 +980,7 @@ def add_group_schedule_logic(request):
     schedule_time = request.POST.get('training_time')
     schedule_end_date = request.POST.get('training_end_date')
     schedule_end_time = request.POST.get('training_end_time')
-    # schedule_time_duration = request.POST.get('time_duration', '')
     note = request.POST.get('add_memo', '')
-    # date = request.POST.get('date', '')
-    # day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
@@ -1185,8 +1004,7 @@ def add_group_schedule_logic(request):
     push_title = []
     push_message = []
     package_tb_list = []
-    # class_info = None
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_lecture_id': '', 'push_title': '', 'push_message': ''}
 
     if duplication_enable_flag is None or duplication_enable_flag == '':
         duplication_enable_flag = SCHEDULE_DUPLICATION_DISABLE
@@ -1200,8 +1018,6 @@ def add_group_schedule_logic(request):
         error = '시작 시각을 선택해 주세요.'
     elif schedule_end_time == '':
         error = '종료 시각을 선택해 주세요.'
-    # elif schedule_time_duration == '':
-    #     error = '진행 시간을 선택해 주세요.'
     if error is None:
         if schedule_date == schedule_end_date:
             if schedule_time == schedule_end_time:
@@ -1219,11 +1035,8 @@ def add_group_schedule_logic(request):
     if error is None:
         if len(group_member_ids) > group_info.member_num:
             error = '그룹 정원보다 등록하려는 회원수가 많습니다.'
-    # if error is None:
-    #     error = func_check_group_schedule_enable(group_id)
+
     if error is None:
-        # 최초 날짜 값 셋팅
-        # time_duration_temp = class_info.class_hour * int(schedule_time_duration)
 
         end_time_check = 0
         if schedule_end_time == '24:00':
@@ -1235,16 +1048,14 @@ def add_group_schedule_logic(request):
                                                                  '%Y-%m-%d %H:%M')
             schedule_end_datetime = datetime.datetime.strptime(schedule_end_date + ' ' + schedule_end_time,
                                                                '%Y-%m-%d %H:%M')
-            # schedule_end_datetime = schedule_start_datetime + datetime.timedelta(minutes=int(time_duration_temp))
+            if end_time_check == 1:
+                schedule_end_datetime = schedule_end_datetime + datetime.timedelta(minutes=1)
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
             error = '등록 값에 문제가 있습니다.'
-
-        if end_time_check == 1:
-            schedule_end_datetime = schedule_end_datetime + datetime.timedelta(minutes=1)
 
     if error is None:
         try:
@@ -1287,25 +1098,15 @@ def add_group_schedule_logic(request):
 
     if error is None:
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
+                         from_member_name=request.user.first_name,
                          class_tb_id=class_id,
                          log_info=group_info.name+' 일정', log_how='등록',
                          log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime), use=USE)
         log_data.save()
 
     if error is None:
-        # not_reg_member_list = func_get_not_available_group_member_list(group_id)
-        # member_list = func_get_available_group_member_list(group_id)
-
-        # for member_info in not_reg_member_list:
-        #     if info_message is None or info_message == '':
-        #         info_message = member_info.name
-        #     else:
-        #         info_message = info_message + ',' + member_info.name
-        # member_list = group_member_ids
         for group_member_id in group_member_ids:
             error_temp = None
-            # lecture_id = func_get_group_lecture_id(group_id, member_info.member_id)
             try:
                 member_info = MemberTb.objects.get(member_id=group_member_id)
             except ObjectDoesNotExist:
@@ -1314,7 +1115,6 @@ def add_group_schedule_logic(request):
             if member_info is not None:
                 lecture_id = func_get_group_lecture_id(group_id, member_info.member_id)
                 if lecture_id is not None and lecture_id != '':
-                    # error_temp = func_check_group_available_member_before(class_id, group_id, group_schedule_id)
                     try:
                         with transaction.atomic():
 
@@ -1338,10 +1138,6 @@ def add_group_schedule_logic(request):
                             if error_temp is None:
                                 error_temp = func_refresh_lecture_count(class_id, lecture_id)
 
-                            # if error_temp is None:
-                            #     error_temp = func_check_group_available_member_after(class_id, group_id,
-                            #                                                          group_schedule_id)
-
                             if error_temp is not None:
                                 raise InternalError
                             else:
@@ -1354,17 +1150,6 @@ def add_group_schedule_logic(request):
                                 if lecture_info is not None:
                                     if lecture_info.state_cd == 'PE':
                                         package_tb_list.append(lecture_info.package_tb)
-                                    # lecture_info.package_tb.ing_package_member_num = len(
-                                    #     func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-                                    # lecture_info.package_tb.end_package_member_num = len(
-                                    #     func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-                                    # lecture_info.package_tb.save()
-
-                                    # package_group_data = PackageGroupTb.objects.select_related(
-                                    #     'group_tb').filter(package_tb_id=lecture_info.package_tb_id, use=USE)
-                                    # for package_group_info in package_group_data:
-                                    #     func_refresh_group_status(package_group_info.group_tb_id, None, None)
-
                                 log_data = LogTb(
                                     log_type='LS02', auth_member_id=request.user.id,
                                     from_member_name=request.user.first_name, to_member_name=member_info.name,
@@ -1411,27 +1196,17 @@ def add_group_schedule_logic(request):
                 context['push_lecture_id'] = push_lecture_id
                 context['push_title'] = push_title
                 context['push_message'] = push_message
-            else:
-                context['push_lecture_id'] = ''
-                context['push_title'] = ''
-                context['push_message'] = ''
-
-        return render(request, 'ajax/schedule_error_info.html', context)
     else:
-        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
-        return render(request, 'ajax/schedule_error_info.html', context)
+    return render(request, 'ajax/schedule_error_info.html', context)
 
 
 # 그룹 일정 취소
 def delete_group_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id', '')
-    # date = request.POST.get('date', '')
-    # day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
-    next_page = request.POST.get('next_page')
-    # auth_member_num = request.POST.get('auth_member_num', 20)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
@@ -1441,7 +1216,7 @@ def delete_group_schedule_logic(request):
     push_title = []
     push_message = []
     group_info = None
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_lecture_id': '', 'push_title': '', 'push_message': ''}
 
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
@@ -1456,7 +1231,7 @@ def delete_group_schedule_logic(request):
         group_info = schedule_info.group_tb
 
     if error is None:
-        schedule_result = func_delete_schedule(schedule_id, request.user.id)
+        schedule_result = func_delete_schedule(class_id, schedule_id, request.user.id)
         error = schedule_result['error']
 
         if schedule_info.repeat_schedule_tb_id is not None and schedule_info.repeat_schedule_tb_id != '':
@@ -1484,7 +1259,7 @@ def delete_group_schedule_logic(request):
             if temp_error is None:
                 try:
                     with transaction.atomic():
-                        schedule_result = func_delete_schedule(schedule_id, request.user.id)
+                        schedule_result = func_delete_schedule(class_id, schedule_id, request.user.id)
                         temp_error = schedule_result['error']
                         if temp_error is None:
                             # temp_error = func_refresh_lecture_count_for_delete(class_id, lecture_id, auth_member_num)
@@ -1504,25 +1279,7 @@ def delete_group_schedule_logic(request):
                 except ValidationError:
                     temp_error = '예약 가능 횟수를 확인해주세요.'
 
-            # if temp_error is None:
-            #     if lecture_info is not None:
-            #         lecture_info.package_tb.ing_package_member_num = len(
-            #             func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-            #         lecture_info.package_tb.end_package_member_num = len(
-            #             func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-            #         lecture_info.package_tb.save()
-            #
-            #         package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id,
-            #                                                            use=USE)
-            #         for package_group_info in package_group_data:
-            #             func_refresh_group_status(package_group_info.group_tb_id, None, None)
-                # func_refresh_group_status(group_id, None, None)
-
             if temp_error is None:
-                # func_save_log_data(start_dt, end_dt, class_id, lecture_id,
-                #                    request.user.last_name+request.user.first_name,
-                #                    member_name, GROUP_SCHEDULE_TYPE, 'LS02', request)
-
                 push_info_schedule_start_date = str(start_dt).split(':')
                 push_info_schedule_end_date = str(end_dt).split(' ')[1].split(':')
 
@@ -1530,7 +1287,7 @@ def delete_group_schedule_logic(request):
                 push_title.append(class_type_name + ' - 수업 알림')
                 if group_id is not None and group_id != '':
                     log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                                     from_member_name=request.user.last_name + request.user.first_name,
+                                     from_member_name=request.user.first_name,
                                      to_member_name=member_name,
                                      class_tb_id=class_id, lecture_tb_id=member_group_schedule_info.lecture_tb_id,
                                      log_info=member_group_schedule_info.get_group_name() + ' 수업',
@@ -1555,31 +1312,25 @@ def delete_group_schedule_logic(request):
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
             context['push_message'] = push_message
-        else:
-            context['push_lecture_id'] = ''
-            context['push_title'] = ''
-            context['push_message'] = ''
 
         log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
+                         from_member_name=request.user.first_name,
                          class_tb_id=class_id,
                          log_info=group_info.name + ' 수업',
                          log_how='예약 취소',
                          log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt), use=USE)
         log_data.save()
 
-        return render(request, 'ajax/schedule_error_info.html', context)
     else:
-        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
-        return redirect(next_page)
+    return render(request, 'ajax/schedule_error_info.html', context)
 
 
 # 일정 완료
 def finish_group_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     class_id = request.session.get('class_id', '')
-    next_page = request.POST.get('next_page')
     schedule_state_cd = request.POST.get('schedule_state_cd', 'PE')
     schedule_state_cd_name = '완료'
     error = None
@@ -1594,7 +1345,7 @@ def finish_group_schedule_logic(request):
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_lecture_id': '', 'push_title': '', 'push_message': ''}
 
     if schedule_id == '':
         error = '일정을 선택하세요.'
@@ -1712,23 +1463,6 @@ def finish_group_schedule_logic(request):
             # 그룹 스케쥴 종료 및 그룹 반복 일정 종료
             if temp_error is None:
                 temp_error = func_refresh_lecture_count(class_id, lecture_info.lecture_id)
-                # package_lecture_data = ClassLectureTb.objects.select_related(
-                #     'lecture_tb__package_tb').filter(auth_cd='VIEW',
-                #                                      lecture_tb__package_tb_id=lecture_info.package_tb_id, use=USE)
-                # package_ing_lecture_count = package_lecture_data.filter(lecture_tb__state_cd='IP').count()
-                # package_end_lecture_count = package_lecture_data.count() - package_ing_lecture_count
-                # lecture_info.package_tb.ing_package_member_num = package_ing_lecture_count
-                # lecture_info.package_tb.end_package_member_num = package_end_lecture_count
-
-                # lecture_info.package_tb.ing_package_member_num = len(
-                #     func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-                # lecture_info.package_tb.end_package_member_num = len(
-                #     func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-                # lecture_info.package_tb.save()
-                #
-                # package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id,
-                #                                                    use=USE)
-
                 if member_group_schedule_info.group_tb_id is not None and member_group_schedule_info.group_tb_id != '':
                     group_repeat_schedule_id = None
                     if lecture_repeat_schedule is not None and lecture_repeat_schedule != '':
@@ -1736,9 +1470,6 @@ def finish_group_schedule_logic(request):
                     func_refresh_group_status(member_group_schedule_info.group_tb_id,
                                               member_group_schedule_info.group_schedule_id,
                                               group_repeat_schedule_id)
-
-                # for package_group_info in package_group_data:
-                #     func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
             if temp_error is None:
 
@@ -1749,7 +1480,7 @@ def finish_group_schedule_logic(request):
                 if member_group_schedule_info.group_tb_id is not None and member_group_schedule_info.group_tb_id != '':
 
                     log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
-                                     from_member_name=request.user.last_name + request.user.first_name,
+                                     from_member_name=request.user.first_name,
                                      to_member_name=member_name,
                                      class_tb_id=class_id, lecture_tb_id=member_group_schedule_info.lecture_tb_id,
                                      log_info=member_group_schedule_info.get_group_name() + ' 수업',
@@ -1764,7 +1495,7 @@ def finish_group_schedule_logic(request):
     if error is None:
 
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
+                         from_member_name=request.user.first_name,
                          class_tb_id=class_id,
                          log_info=group_info.name + ' 수업',
                          log_how=schedule_state_cd_name,
@@ -1776,16 +1507,10 @@ def finish_group_schedule_logic(request):
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
             context['push_message'] = push_message
-        else:
-            context['push_lecture_id'] = ''
-            context['push_title'] = ''
-            context['push_message'] = ''
-        return render(request, 'ajax/schedule_error_info.html', context)
     else:
-        logger.error(
-            request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
-        return redirect(next_page)
+    return render(request, 'ajax/schedule_error_info.html', context)
 
 
 # 일정 추가
@@ -1794,7 +1519,6 @@ def add_member_group_schedule_logic(request):
     group_schedule_id = request.POST.get('schedule_id')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
-    next_page = request.POST.get('next_page')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
@@ -1808,7 +1532,7 @@ def add_member_group_schedule_logic(request):
     push_lecture_id = []
     push_title = []
     push_message = []
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_lecture_id': '', 'push_title': '', 'push_message': ''}
 
     if group_schedule_id == '':
         error = '일정을 선택해 주세요.'
@@ -1893,24 +1617,8 @@ def add_member_group_schedule_logic(request):
             error = error
 
     if error is None:
-        # try:
-        #     lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-        # except ObjectDoesNotExist:
-        #     lecture_info = None
-        # if lecture_info is not None:
-        #     lecture_info.package_tb.ing_package_member_num = len(
-        #         func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-        #     lecture_info.package_tb.end_package_member_num = len(
-        #         func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-        #     lecture_info.package_tb.save()
-        #
-        #     package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id,
-        #                                                        use=USE)
-        #     for package_group_info in package_group_data:
-        #         func_refresh_group_status(package_group_info.group_tb_id, None, None)
-
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name+request.user.first_name,
+                         from_member_name=request.user.first_name,
                          to_member_name=member_info.name,
                          class_tb_id=class_id,
                          lecture_tb_id=lecture_id,
@@ -1932,17 +1640,11 @@ def add_member_group_schedule_logic(request):
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
             context['push_message'] = push_message
-        else:
-            context['push_lecture_id'] = ''
-            context['push_title'] = ''
-            context['push_message'] = ''
 
-        return render(request, 'ajax/schedule_error_info.html', context)
     else:
-        logger.error(
-            request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
-        return redirect(next_page)
+    return render(request, 'ajax/schedule_error_info.html', context)
 
 
 # 일정 추가
@@ -1952,7 +1654,6 @@ def add_other_member_group_schedule_logic(request):
     group_schedule_id = request.POST.get('schedule_id')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
-    next_page = request.POST.get('next_page')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
@@ -1967,7 +1668,7 @@ def add_other_member_group_schedule_logic(request):
     push_lecture_id = []
     push_title = []
     push_message = []
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_lecture_id': '', 'push_title': '', 'push_message': ''}
 
     if group_schedule_id == '':
         error = '일정을 선택해 주세요.'
@@ -2052,18 +1753,8 @@ def add_other_member_group_schedule_logic(request):
             error = error
 
     if error is None:
-        # try:
-        #     lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-        # except ObjectDoesNotExist:
-        #     lecture_info = None
-        # if lecture_info is not None:
-        #
-        #     package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
-        #     for package_group_info in package_group_data:
-        #         func_refresh_group_status(package_group_info.group_tb_id, None, None)
-
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
+                         from_member_name=request.user.first_name,
                          to_member_name=member_info.name,
                          class_tb_id=class_id,
                          lecture_tb_id=lecture_info.lecture_id,
@@ -2086,17 +1777,11 @@ def add_other_member_group_schedule_logic(request):
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
             context['push_message'] = push_message
-        else:
-            context['push_lecture_id'] = ''
-            context['push_title'] = ''
-            context['push_message'] = ''
-
-        return render(request, 'ajax/schedule_error_info.html', context)
     else:
-        logger.error(
-            request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
-        return redirect(next_page)
+
+    return render(request, 'ajax/schedule_error_info.html', context)
 
 
 # 그룹 반복 일정 추가
@@ -2339,7 +2024,7 @@ def add_group_repeat_schedule_logic(request):
         context['repeat_duplication_date_data'] = repeat_duplication_date_data
         context['repeat_success_date_data'] = repeat_success_date_data
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     return render(request, 'ajax/repeat_schedule_result_ajax.html', context)
@@ -2349,10 +2034,7 @@ def add_group_repeat_schedule_confirm(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id')
     repeat_confirm = request.POST.get('repeat_confirm')
-    # date = request.POST.get('date', '')
-    # day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
-    next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
     error = None
     repeat_schedule_info = None
@@ -2364,7 +2046,7 @@ def add_group_repeat_schedule_confirm(request):
     push_title = []
     push_message = []
     # error_message = None
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_lecture_id': '', 'push_title': '', 'push_message': ''}
     # setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
@@ -2416,7 +2098,7 @@ def add_group_repeat_schedule_confirm(request):
             # func_update_member_schedule_alarm(class_id)
 
             log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name + request.user.first_name,
+                             from_member_name=request.user.first_name,
                              class_tb_id=class_id,
                              log_info=group_info.name + ' 반복 일정',
                              log_how='반복 일정 등록',
@@ -2500,7 +2182,7 @@ def add_group_repeat_schedule_confirm(request):
                                     #     error_message = error_temp
                     if lecture_id is not None and lecture_id != '':
                         log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
-                                         from_member_name=request.user.last_name + request.user.first_name,
+                                         from_member_name=request.user.first_name,
                                          to_member_name=member_info.name,
                                          class_tb_id=class_id,
                                          lecture_tb_id=lecture_id,
@@ -2515,35 +2197,25 @@ def add_group_repeat_schedule_confirm(request):
 
             information = '반복 일정 등록이 완료됐습니다.'
     if error is None:
-        if information is None:
-            return redirect(next_page)
-        else:
+        if information is not None:
             if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
                 context['push_lecture_id'] = push_lecture_id
                 context['push_title'] = push_title
                 context['push_message'] = push_message
-            else:
-                context['push_lecture_id'] = ''
-                context['push_title'] = ''
-                context['push_message'] = ''
 
             messages.info(request, information)
-            return render(request, 'ajax/schedule_error_info.html', context)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
-        return render(request, 'ajax/schedule_error_info.html', context)
+    return render(request, 'ajax/schedule_error_info.html', context)
 
 
 # 그룹 반복 일정 취소
 def delete_group_repeat_schedule_logic(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id')
-    date = request.POST.get('date', '')
-    day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
-    next_page = request.POST.get('next_page')
     error = None
     schedule_data = None
     start_date = None
@@ -2553,9 +2225,7 @@ def delete_group_repeat_schedule_logic(request):
     push_lecture_id = []
     push_title = []
     push_message = []
-    request.session['date'] = date
-    request.session['day'] = day
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_lecture_id': '', 'push_title': '', 'push_message': ''}
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
@@ -2587,7 +2257,8 @@ def delete_group_repeat_schedule_logic(request):
                                                                      group_schedule_id=delete_schedule_info.schedule_id,
                                                                      use=USE).count()
                     if end_schedule_counter == 0:
-                        schedule_result = func_delete_schedule(delete_schedule_info.schedule_id, request.user.id)
+                        schedule_result = func_delete_schedule(class_id, delete_schedule_info.schedule_id,
+                                                               request.user.id)
                         error = schedule_result['error']
 
                 schedule_result = func_delete_repeat_schedule(group_repeat_schedule_info.repeat_schedule_id)
@@ -2667,12 +2338,8 @@ def delete_group_repeat_schedule_logic(request):
                     error_temp = '예약 가능 횟수를 확인해주세요.'
 
             if error_temp is None:
-                # func_save_log_data(start_date, end_date, class_id, lecture_id,
-                #                    request.user.last_name + request.user.first_name,
-                #                    member_name, GROUP_SCHEDULE_TYPE, 'LR02', request)
-
                 log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
-                                 from_member_name=request.user.last_name + request.user.first_name,
+                                 from_member_name=request.user.first_name,
                                  to_member_name=member_name,
                                  class_tb_id=class_id,
                                  lecture_tb_id=lecture_id,
@@ -2688,10 +2355,8 @@ def delete_group_repeat_schedule_logic(request):
 
     if error is None:
 
-        # func_update_member_schedule_alarm(class_id)
-
         log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
+                         from_member_name=request.user.first_name,
                          class_tb_id=class_id,
                          log_info=group_info.name + ' 반복 일정',
                          log_how='반복 일정 취소',
@@ -2701,16 +2366,11 @@ def delete_group_repeat_schedule_logic(request):
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
             context['push_message'] = push_message
-        else:
-            context['push_lecture_id'] = ''
-            context['push_title'] = ''
-            context['push_message'] = ''
 
-        return render(request, 'ajax/schedule_error_info.html', context)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+str(error))
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+str(error))
         messages.error(request, error)
-        return redirect(next_page)
+    return render(request, 'ajax/schedule_error_info.html', context)
 
 
 def send_push_to_trainer_logic(request):
@@ -2727,12 +2387,10 @@ def send_push_to_trainer_logic(request):
     if error is None:
         error = func_send_push_trainee(class_id, title, message)
 
-    if error is None:
-        return redirect(next_page)
-    else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+str(error))
+    if error is not None:
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+str(error))
         messages.error(request, error)
-        return redirect(next_page)
+    return redirect(next_page)
 
 
 def send_push_to_trainee_logic(request):
@@ -2748,9 +2406,7 @@ def send_push_to_trainee_logic(request):
     if error is None:
         error = func_send_push_trainer(lecture_id, title, message)
 
-    if error is None:
-        return redirect(next_page)
-    else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+str(error))
+    if error is not None:
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+str(error))
         messages.error(request, error)
-        return redirect(next_page)
+    return redirect(next_page)

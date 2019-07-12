@@ -19,12 +19,12 @@ from . import views
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     # 강사 일정 기능 #####################################################################################################
-    # 일정 등록
+    # 일정 등록 - refactoring 진행중
     url(r'^add_schedule/$', views.add_schedule_logic, name='add_schedule'),
-    # 일정 삭제
+    # 일정 삭제 - refactoring 진행중
     url(r'^delete_schedule/$', views.delete_schedule_logic, name='delete_schedule'),
     # 일정 완료
-    url(r'^finish_schedule/$', views.finish_schedule_logic, name='finish_schedule'),
+    url(r'^update_schedule_state_cd/$', views.update_schedule_state_cd_logic, name='update_schedule_state_cd'),
     # 사인 이미지 업로드
     url(r'^upload_sign_image/$', views.upload_sign_image_logic, name='upload_sign_image'),
     # 일정 메모 수정

@@ -186,10 +186,6 @@ def get_setting_info(request):
                     group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
                     group_lecture_data.update(fix_state_cd='')
 
-                    package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
-                    for package_group_info in package_group_data:
-                        func_refresh_group_status(package_group_info.group_tb_id, None, None)
-
     return context
 
 
