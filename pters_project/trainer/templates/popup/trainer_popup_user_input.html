@@ -133,7 +133,6 @@
         }
 
         reset(){
-            this.hour_scroll_snapped = 0;
             let d = new Date();
             let h = d.getHours();
             let m = d.getMinutes();
@@ -251,6 +250,7 @@
             let initial_pos = -(Number(hour)*600 + Math.round(Number(minute)/5)*5*10);
             this.hour_scroll.scrollTo(0, initial_pos, 0, IScroll.utils.ease.bounce);
             this.hour2_scroll.scrollTo(0, initial_pos, 0, IScroll.utils.ease.bounce);
+            this.hour_scroll_snapped = initial_pos;
 
             $(`li[data-spos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
             $(`li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
