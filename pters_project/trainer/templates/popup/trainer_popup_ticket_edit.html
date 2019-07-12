@@ -116,11 +116,11 @@
             let data_to_send = `{"package_id": ${this.ticket_id}, "${item_name}": ${user_input}}`;
             console.log(data_to_send);
 
-            // Ticket_func.update(data_to_send, () => {
+            Ticket_func.update(data_to_send, () => {
                 Ticket_func.read({"ticket_id":this.ticket_id}, ()=>{
                     this.render_setting_list();
                 })
-            // }) 
+            }) 
         }
     }
 
