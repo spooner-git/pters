@@ -379,7 +379,7 @@ function show_user_select_multi_popup (data){
     layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select_multi', popup_height, POPUP_FROM_BOTTOM);
 }
 
-function show_user_select_time_popup (){
+function show_user_select_time_popup (callback){
     let top_comment_height = 65;
     let time_selector_height = 175;
     let close_button_height = 46;
@@ -389,4 +389,6 @@ function show_user_select_time_popup (){
 
     layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', popup_height, POPUP_FROM_BOTTOM,
         {'popup_title':'', 'popup_comment':'시간을 선택해주세요'});
+
+    callback();
 }

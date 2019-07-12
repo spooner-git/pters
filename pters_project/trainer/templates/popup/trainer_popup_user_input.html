@@ -132,6 +132,14 @@
             this.set_iscroll();
         }
 
+        reset(){
+            this.hour_scroll_snapped = 0;
+            let d = new Date();
+            let h = d.getHours();
+            let m = d.getMinutes();
+            this.go_snap(h, m);
+        }
+
         render_time1_list(){
             let html_to_join = [];
             let pos = 0;
@@ -158,7 +166,7 @@
         }
 
 
-        replace_data(data){
+        check(data){
 
         }
 
@@ -246,6 +254,8 @@
 
             $(`li[data-spos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
             $(`li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
+            $(`li[data-spos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+            $(`li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
         }
 
         show_selected_time(){
@@ -269,12 +279,9 @@
 
     }
 
-    let time_select = new TwoTimeSelector('#hour_wrap', '#hour2_wrap', "time_select");
+    var time_select = new TwoTimeSelector('#hour_wrap', '#hour2_wrap', "time_select");
     time_select.init();
-    let d = new Date();
-    let h = d.getHours();
-    let m = d.getMinutes();
-    time_select.go_snap(h, m);
+    
 
 
 

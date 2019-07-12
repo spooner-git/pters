@@ -25,7 +25,7 @@ class Home{
 
     render_menu(){
         let html_temp = [];
-        let time_select_popup = `show_user_select_time_popup()`;
+        let time_select_popup = `show_user_select_time_popup(()=>{time_select.reset();})`;
         let user_select_multi_popup = `show_user_select_multi_popup({'option1':'console.log(1)', 'option2':'console.log(2)', 'option3':'console.log(3)', 'option4':'console.log(4)'})`;
 
         html_temp.push(`<div>${class_center_name}</div>

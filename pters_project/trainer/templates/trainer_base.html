@@ -320,10 +320,6 @@ onclick="layer_popup.all_close_layer_popup();"></div>
     function sideGoPage(page, context){
         current_page = page;
 
-        // Array.from(document.getElementsByClassName('nav_item')).forEach( (element) => {
-        //     element.style.background = 'unset';
-        // })
-        // context.style.background = 'linear-gradient(to left,#e664657d, #9198e57a)';
         try{
             let context_loc = document.getElementById(page).offsetLeft;
             // $('#nav_indicator').animate({'left':`${context_loc}px`},100);
@@ -332,8 +328,6 @@ onclick="layer_popup.all_close_layer_popup();"></div>
         catch(error){
 
         }
-            
-
 
         switch(page){
             case 'home':
@@ -354,6 +348,9 @@ onclick="layer_popup.all_close_layer_popup();"></div>
             break;
             case 'menu':
                 menu.init();
+            break;
+            case 'attend_mode':
+                location.href = '/trainer/attend_mode/';
             break;
         }
         $root_content.scrollTop(1);
