@@ -25,7 +25,7 @@ class Home{
 
     render_menu(){
         let html_temp = [];
-        let time_select_popup = `show_user_select_time_popup(()=>{time_select.reset();})`;
+        let time_select_popup = `show_user_select_time_popup(()=>{time_select_popup.reset('#temp_time_result1', '#temp_time_result2');})`;
         let user_select_multi_popup = `show_user_select_multi_popup({'option1':'console.log(1)', 'option2':'console.log(2)', 'option3':'console.log(3)', 'option4':'console.log(4)'})`;
 
         html_temp.push(`<div>${class_center_name}</div>
@@ -34,7 +34,9 @@ class Home{
                     <div>총 회원수 ${total_member_num}명</div>
                     <div>이번달 신규 ${new_member_num}명</div>
                     <div>종료 임박 ${to_be_ended_member_num}명</div>
+                    <div><span id="temp_time_result1"></span> ~ <span id="temp_time_result2"></span></div>
                     <button onclick="event.preventDefault();${time_select_popup}">시간 선택 임시</button>
+                    <div id="temp_user_select_value">-</div>
                     <button onclick="event.preventDefault();${user_select_multi_popup}">유저 선택 팝업 임시</button>`);
         
         document.querySelector('#home_content_wrap').innerHTML = html_temp.join("");

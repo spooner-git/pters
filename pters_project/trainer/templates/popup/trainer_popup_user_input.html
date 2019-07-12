@@ -68,7 +68,7 @@
 <div class="popup_mobile popup_full" style="background-color:transparent;padding:0 20px;box-sizing: border-box;">
         <div class="popup_basic_user_select_multi obj_font_size_15_weight_500">
             <div class="wrapper_popup_basic_comment obj_font_size_18_weight_bold"></div>
-            <div class="wrapper_popup_basic_user_select_options" style="margin-bottom: 45px;">
+            <div class="wrapper_popup_basic_user_select_options" style="margin-bottom: 30px;">
     
             </div>
             <div class="wrapper_popup_basic_buttons obj_table_raw  obj_font_bg_black_white" style="border-radius:5px;">
@@ -79,7 +79,7 @@
 
 <div class="popup_mobile popup_full">
 	<div class="popup_basic_time_selector obj_font_size_15_weight_500">
-        <div class="wrapper_popup_basic_comment obj_font_size_13_weight_500" onclick='time_select.show_selected_time()'></div>
+        <div class="wrapper_popup_basic_comment obj_font_size_13_weight_500" onclick='time_select_popup.show_selected_time()'></div>
 
         <div class="wrapper_popup_time_selector_function">
 
@@ -102,7 +102,7 @@
         </div>
 
         <div class="wrapper_popup_basic_buttons obj_table_raw">
-            <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">닫기</div>
+            <div class="popup_basic_cancel obj_table_cell_x2" onclick="time_select_popup.set_selected_data();layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">선택 완료</div>
             <!-- <div class="popup_basic_confirm obj_table_cell_x2">확인</div> -->
         </div>
     </div>
@@ -117,6 +117,8 @@
         constructor(target1, target2, instance){
             this.target_time1 = target1;
             this.target_time2 = target2;
+            this.result_target_time1;
+            this.result_target_time2;
             this.data;
             this.instance = instance;
             this.hour_scroll;
@@ -132,11 +134,13 @@
             this.set_iscroll();
         }
 
-        reset(){
+        reset(result_target1, result_target2, init_hour, init_minute){
+            this.result_target_time1 = result_target1;
+            this.result_target_time2 = result_target2;
             let d = new Date();
             let h = d.getHours();
             let m = d.getMinutes();
-            this.go_snap(h, m);
+            this.go_snap(init_hour == undefined? h : init_hour, init_minute == undefined? m : init_minute);
         }
 
         render_time1_list(){
@@ -276,15 +280,87 @@
             }
         }
 
+        get_selected_data(){
+            let start = $(`li[data-spos="${Math.abs(this.hour_scroll.y)}"]`);
+            let end = $(`li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`);
+
+            let start_text = start.text();
+            let end_text = end.text();
+
+            return {
+                start : start_text,
+                end : end_text
+            };
+        }
+
+        set_selected_data(){
+            let $target1 = $(this.result_target_time1);
+            let $target2 = $(this.result_target_time2);
+
+            let result = this.get_selected_data();
+
+            $target1.val(result.start).text(result.start);
+            $target2.val(result.end).text(result.end);
+        }
 
     }
 
-    var time_select = new TwoTimeSelector('#hour_wrap', '#hour2_wrap', "time_select");
-    time_select.init();
-    
+    var time_select_popup = new TwoTimeSelector('#hour_wrap', '#hour2_wrap', "time_select_popup");
+    time_select_popup.init();
 
 
+    class OptionSelector{
+        constructor(target, instance){
+            this.html_target = target;
+            this.instance = instance;
+            this.data;
+            this.ajax_data;
+            this.ajax_url;
+            this.type;
+        }
 
+        init(){
+
+        }
+
+        reset(type, option_data, ajax_url, ajax_data){
+            this.data = data;
+            this.ajax_url = ajax_url != undefined ? ajax_url : "";
+            this.ajax_data = ajax_data != undefined ? ajax_data : "";
+            this.type = type; // AJAX(0) or LOCAL(1)
+            
+            render_option_list();
+        }
+
+        render_option_list(){
+            let length = Object.keys(this.data).length;
+            let $target = $(this.html_target);
+            let html_to_join = [];
+            for(let option in this.data){
+                let option_name = option;
+                let option_function = this.data[option];
+                html_to_join.push(
+                    `
+                    <div class="wrapper_popup_basic_buttons obj_font_bg_black_white" style="border-radius:5px;margin-bottom:5px;" onclick="${option_function};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">
+                        ${option_name}
+                    </div>
+                    `
+                );
+            }
+
+            document.querySelector(this.html_target).innerHTML = html_to_join.join('');
+            
+        }
+
+        set_selected_data(){
+
+        }
+
+        get_option_length(){
+            return Object.keys(this.data);
+        }
+
+    }
     
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

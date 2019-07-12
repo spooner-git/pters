@@ -55,20 +55,21 @@
             
             this.ticket_id = this.data.package_id;
             this.ticket_name = this.data.package_name;
-            this.ticket_description = "%수강권에 대한 자세한 설명";
+            this.ticket_description = this.data.package_note;
             this.ticket_include_lectures = this.data.package_group_list;
             this.ticket_count = "% 100";
             this.ticket_expiry = "% 3개월";
-            this.ticekt_price = "% 1,200,000원";
+            this.ticket_price = "% 1,200,000원";
             
 
             this.items =    {    
                                 ticket_name: {visible: true, title:"수강권명", value:this.ticket_name},
-                                ticket_description: {visible: true, title:"수강권 설명", value: this.ticket_description},
+                                // ticket_description: {visible: true, title:"수강권 설명", value: this.ticket_description},
+                                package_note: {visible: true, title:"수강권 설명", value: this.ticket_description},
                                 ticket_include_lectures: {visible: true, title:"포함된 수업", value: this.ticket_include_lectures.length},
                                 ticket_count: {visible: true, title:"횟수", value: this.ticket_count},
                                 ticket_expiry: {visible: true, title:"유효 기간", value: this.ticket_expiry},
-                                ticket_price: {visible: true, title:"가격", value: this.ticekt_price},
+                                ticket_price: {visible: true, title:"가격", value: this.ticket_price},
                                 ticket_finished_members: {visible: true, title:"수강 종료된 회원", value:""},
                                 ticket_history: {visible: true, title:"수강권 이력", value:""},
                                 ticket_deactivate: {visible: true, title:"수강권 비활성화", value:""}
@@ -95,12 +96,13 @@
                 if(item_el.visible == false){
                     continue;
                 }
-
+                let item_name = String(item);
+                let onclick = `show_user_input_popup(event.target.innerText, '${this.instance}.send_data(this, \\'${item_name}\\' )')`
                 let html = 
                             `<li class="">
                                 <div class="obj_table_raw">
                                     <div class="cell_title">${item_el.title}</div>
-                                    <div class="cell_value" onclick="show_user_input_popup(event.target.innerText, '${this.instance}.send_data(this, \\'${item}\\' )' )">${item_el.value}</div>
+                                    <div class="cell_value" onclick="${onclick}">${item_el.value}</div>
                                     <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
                                 </div>
                             </li>`;
@@ -109,11 +111,16 @@
             document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`; 
         }
 
-        send_data(data, item){
-            let user_input = $(data).parent().siblings('div').find('.popup_basic_user_input_full').val();
-            console.log(item+': '+user_input);
-           
-            this.render_setting_list();
+        send_data(context, item_name){
+            let user_input = $(context).parent().siblings('div').find('.popup_basic_user_input_full').val();
+            let data_to_send = `{"package_id": ${this.ticket_id}, "${item_name}": ${user_input}}`;
+            console.log(data_to_send);
+
+            // Ticket_func.update(data_to_send, () => {
+                Ticket_func.read({"ticket_id":this.ticket_id}, ()=>{
+                    this.render_setting_list();
+                })
+            // }) 
         }
     }
 
