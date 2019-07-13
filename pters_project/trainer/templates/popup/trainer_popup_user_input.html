@@ -68,7 +68,7 @@
 <div class="popup_mobile popup_full" style="background-color:transparent;padding:0 20px;box-sizing: border-box;">
         <div class="popup_basic_user_select_multi obj_font_size_15_weight_500">
             <div class="wrapper_popup_basic_comment obj_font_size_18_weight_bold"></div>
-            <div class="wrapper_popup_basic_user_select_options" style="margin-bottom: 30px;">
+            <div id="option_wrap" class="wrapper_popup_basic_user_select_options" style="margin-bottom: 30px;">
     
             </div>
             <div class="wrapper_popup_basic_buttons obj_table_raw  obj_font_bg_black_white" style="border-radius:5px;">
@@ -324,21 +324,24 @@
         }
 
         reset(type, option_data, ajax_url, ajax_data){
-            this.data = data;
+            this.data = option_data;
             this.ajax_url = ajax_url != undefined ? ajax_url : "";
             this.ajax_data = ajax_data != undefined ? ajax_data : "";
             this.type = type; // AJAX(0) or LOCAL(1)
             
-            render_option_list();
+            this.render_option_list();
         }
 
         render_option_list(){
-            let length = Object.keys(this.data).length;
+            // let length = Object.keys(this.data).length;
             let $target = $(this.html_target);
             let html_to_join = [];
             for(let option in this.data){
                 let option_name = option;
-                let option_function = this.data[option];
+                let option_value = this.data[option];
+
+                let option_function = this.type == AJAX ? `${this.instance}.send_selected_data('${option_value}')` : `${this.instance}.set_selected_data('${option_value}')`;
+
                 html_to_join.push(
                     `
                     <div class="wrapper_popup_basic_buttons obj_font_bg_black_white" style="border-radius:5px;margin-bottom:5px;" onclick="${option_function};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">
@@ -352,16 +355,18 @@
             
         }
 
-        set_selected_data(){
-
+        set_selected_data(option_value, callback){
+            console.log(option_value)
         }
 
-        get_option_length(){
-            return Object.keys(this.data);
+        send_selected_data(option_value, callback){
+            console.log(option_value)
         }
 
     }
     
+    var option_select_popup = new OptionSelector('#option_wrap', 'option_select_popup');
+
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

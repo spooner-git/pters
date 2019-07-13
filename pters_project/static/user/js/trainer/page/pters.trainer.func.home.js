@@ -26,7 +26,9 @@ class Home{
     render_menu(){
         let html_temp = [];
         let time_select_popup = `show_user_select_time_popup(()=>{time_select_popup.reset('#temp_time_result1', '#temp_time_result2');})`;
-        let user_select_multi_popup = `show_user_select_multi_popup({'option1':'console.log(1)', 'option2':'console.log(2)', 'option3':'console.log(3)', 'option4':'console.log(4)'})`;
+
+        let option_data = `{'사과':'apple', '수박':'water melon', '바나나':'banana'}`;
+        let user_select_multi_popup = `show_user_select_multi_popup(${option_data}, ()=>{option_select_popup.reset(${LOCAL}, ${option_data})})`;
 
         html_temp.push(`<div>${class_center_name}</div>
                     <div>${class_type_name}</div>

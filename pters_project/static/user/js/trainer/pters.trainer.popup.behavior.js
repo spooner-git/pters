@@ -38,7 +38,7 @@ let layer_popup = (function (){
             $popup_name_selector.remove();
             popup_data = {};
         }
-        console.log("popup_data",popup_data)
+        // console.log("popup_data",popup_data)
         return popup_data;
     }
 
@@ -358,31 +358,15 @@ function show_user_input_popup (prev_value, callback_after_confirm){
                                             'onclick_function':`${callback_after_confirm};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
 }
 
-// function show_user_select_multi_popup (data){
-//     //let datas = {"option1":"console.log(11)", "option2":"console.log(22)","option3":"console.log(11)", "option4":"console.log(22)","option5":"console.log(11)", "option6":"console.log(22)"}
-//     let length = Object.keys(data).length;
-//     let button_height = 45;
-//     let $target = $(".popup_basic_user_select_multi .wrapper_popup_basic_user_select_options");
-//     let html_to_join = [];
-//     for(let option in data){
-//         let option_name = option;
-//         let option_function = data[option];
-//         html_to_join.push(
-//             `<div class="wrapper_popup_basic_buttons obj_font_bg_black_white" style="border-radius:5px;margin-bottom:5px;" onclick="${option_function};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">
-//                 ${option_name}
-//             </div>`
-//         );
-//     }
-//     $target.html(html_to_join.join(''));
-//     let popup_height = 100*(button_height*(length+4))/windowHeight;
 
-//     layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select_multi', popup_height, POPUP_FROM_BOTTOM);
-// }
-
-function show_user_select_multi_popup (option_length){
+function show_user_select_multi_popup (option_data, callback){
+    let option_length = Object.keys(option_data).length;
+    callback();
     let button_height = 45;
     let popup_height = 100*(button_height*(option_length+4))/windowHeight;
     layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select_multi', popup_height, POPUP_FROM_BOTTOM);
+
+    
 }
 
 function show_user_select_time_popup (callback){
