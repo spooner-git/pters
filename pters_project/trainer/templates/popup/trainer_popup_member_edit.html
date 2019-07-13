@@ -133,8 +133,26 @@
             this.instance = instance;
             this.data = data;
 
-            console.log("this.data", this.data)
-            
+            this.member_id;
+            this.member_name;
+            this.member_user_id;
+            this.member_phone;
+            this.member_birth;
+            this.member_sex;
+            this.member_note;
+            this.member_sync;
+
+            this.items;
+        }
+
+        init(){
+            this.reform_data(this.data);
+            this.render_setting_list();
+        }
+        
+        reform_data(data){
+            this.data = data;
+            this.member_id = this.data.member_id;
             this.member_name = this.data.member_name != "None" ? this.data.member_name: "미입력" ;
             this.member_user_id = this.data.member_user_id != "None" ? this.data.member_user_id : "미입력";
             this.member_phone = this.data.member_phone != "None" ? this.data.member_phone : "미입력";
@@ -144,7 +162,7 @@
             this.member_sync = this.data.member_connection_check;
 
             this.items =    {    
-                                member_name: {visible: true, title:"회원명", value:this.member_name},
+                                member_first_name: {visible: true, title:"회원명", value:this.member_name},
                                 member_user_id: {visible: true, title:"아이디", value: this.member_user_id},
                                 member_phone: {visible: true, title:"연락처", value: this.member_phone},
                                 member_birth: {visible: true, title:"생년월일", value: this.member_birth},
@@ -159,9 +177,6 @@
                             };
         }
 
-        init(){
-            this.render_setting_list();
-        }
 
         render_setting_list(target, options){
             if(target == undefined || target == ""){
@@ -193,11 +208,22 @@
             document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`; 
         }
 
-        send_data(data, item){
-            let user_input = $(data).parent().siblings('div').find('.popup_basic_user_input_full').val();
-            console.log(item+': '+user_input);
-           
-            this.render_setting_list();
+        
+        send_data(context, item_name){
+            //데이터 형태 {"member_id":"", "first_name":"", "phone":"", "sex":"", "birthday":"", "phone":"", "phone":""};
+            let user_input = $(context).parent().siblings('div').find('.popup_basic_user_input_full').val();
+            let data_to_send = {};
+            data_to_send["member_id"] = this.member_id;
+            data_to_send[item_name.replace(/member_/gi,"")] = user_input;
+
+            console.log(data_to_send)
+            
+            Member_func.update(data_to_send, () => {
+                Member_func.read({"member_id":this.member_id}, (data)=>{
+                    this.reform_data(data);
+                    this.render_setting_list();
+                })
+            }) 
         }
     }
 
