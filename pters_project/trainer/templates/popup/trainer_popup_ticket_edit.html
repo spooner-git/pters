@@ -53,6 +53,23 @@
             this.instance = instance;
             this.data = data;
             
+            this.ticket_id
+            this.ticket_name;
+            this.ticket_description;
+            this.ticket_include_lectures;
+            this.ticket_count;
+            this.ticket_expiry;
+            this.ticket_price;
+            this.items;
+        }
+
+        init(){
+            this.reform_data(this.data);
+            this.render_setting_list();
+        }
+
+        reform_data(data){
+            this.data = data;
             this.ticket_id = this.data.package_id;
             this.ticket_name = this.data.package_name;
             this.ticket_description = this.data.package_note;
@@ -60,10 +77,8 @@
             this.ticket_count = "% 100";
             this.ticket_expiry = "% 3개월";
             this.ticket_price = "% 1,200,000원";
-            
-
             this.items =    {    
-                                ticket_name: {visible: true, title:"수강권명", value:this.ticket_name},
+                                package_name: {visible: true, title:"수강권명", value:this.ticket_name},
                                 // ticket_description: {visible: true, title:"수강권 설명", value: this.ticket_description},
                                 package_note: {visible: true, title:"수강권 설명", value: this.ticket_description},
                                 ticket_include_lectures: {visible: true, title:"포함된 수업", value: this.ticket_include_lectures.length},
@@ -76,11 +91,8 @@
                             };
         }
 
-        init(){
-            this.render_setting_list();
-        }
-
         render_setting_list(target, options){
+            
             if(target == undefined || target == ""){
                 target = this.targetHTML;
             }
@@ -113,11 +125,14 @@
 
         send_data(context, item_name){
             let user_input = $(context).parent().siblings('div').find('.popup_basic_user_input_full').val();
-            let data_to_send = `{"package_id": ${this.ticket_id}, "${item_name}": ${user_input}}`;
-            console.log(data_to_send);
-
+            // let data_to_send = `'{"package_id": ${this.ticket_id}, "${item_name}": ${user_input}}`;
+            let data_to_send = {};
+            data_to_send["package_id"] = this.ticket_id;
+            data_to_send[item_name] = user_input;
+            
             Ticket_func.update(data_to_send, () => {
-                Ticket_func.read({"ticket_id":this.ticket_id}, ()=>{
+                Ticket_func.read({"ticket_id":this.ticket_id}, (data)=>{
+                    this.reform_data(data.package_info);
                     this.render_setting_list();
                 })
             }) 

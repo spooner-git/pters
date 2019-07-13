@@ -365,8 +365,6 @@ function show_user_select_multi_popup (option_data, callback){
     let button_height = 45;
     let popup_height = 100*(button_height*(option_length+4))/windowHeight;
     layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select_multi', popup_height, POPUP_FROM_BOTTOM);
-
-    
 }
 
 function show_user_select_time_popup (callback){

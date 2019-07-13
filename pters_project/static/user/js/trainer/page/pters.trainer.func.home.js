@@ -25,10 +25,16 @@ class Home{
 
     render_menu(){
         let html_temp = [];
-        let time_select_popup = `show_user_select_time_popup(()=>{time_select_popup.reset('#temp_time_result1', '#temp_time_result2');})`;
 
-        let option_data = `{'사과':'apple', '수박':'water melon', '바나나':'banana'}`;
-        let user_select_multi_popup = `show_user_select_multi_popup(${option_data}, ()=>{option_select_popup.reset(${LOCAL}, ${option_data})})`;
+        let targets = `'#temp_time_result1', '#temp_time_result2'`; 
+        let time_select_popup = `time_select_popup.open(${targets});`;
+
+        let option_data = `{
+                                사과:{value: 'apple', callback: ()=>{console.log('사과 Apple')} }, 
+                                수박:{value: 'water_melon', callback: ()=>{console.log('수박 Water melon')} }, 
+                                바나나:{value: 'banana', callback: ()=>{console.log('바나나 Banana')} }
+                            }`;
+        let user_select_multi_popup = `option_select_popup.open(${option_data})`;
 
         html_temp.push(`<div>${class_center_name}</div>
                     <div>${class_type_name}</div>
