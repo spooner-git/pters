@@ -39,6 +39,7 @@
     border-top: 1px solid #cccccc;
     height: 45px;
     line-height: 45px;
+    cursor: pointer;
 }
 
     .wrapper_popup_basic_buttons .popup_basic_cancel{
