@@ -19,18 +19,18 @@ from .models import ClassLectureTb, GroupTb, SettingTb, PackageGroupTb, PackageT
 
 # 전체 회원 id 정보 가져오기
 def func_get_class_member_id_list(class_id):
-    class_lecture_data = ClassLectureTb.objects.select_related(
+    class_member_ticket_data = ClassLectureTb.objects.select_related(
         'lecture_tb__member__user').filter(class_tb_id=class_id, auth_cd='VIEW',
                                            lecture_tb__use=USE,
                                            use=USE
                                            ).values('lecture_tb__member_id').order_by('lecture_tb__member').distinct()
-    return class_lecture_data
+    return class_member_ticket_data
 
 
 # 진행중 회원 id 정보 가져오기
 def func_get_class_member_ing_list(class_id, keyword):
     # all_member = []
-    class_lecture_data = ClassLectureTb.objects.select_related(
+    class_member_ticket_data = ClassLectureTb.objects.select_related(
         'lecture_tb__member').filter(Q(lecture_tb__member__name__contains=keyword) |
                                      Q(lecture_tb__member__user__username__contains=keyword),
                                      class_tb_id=class_id, auth_cd='VIEW',
@@ -38,7 +38,7 @@ def func_get_class_member_ing_list(class_id, keyword):
                                      lecture_tb__member__use=USE,
                                      use=USE).values('lecture_tb__member_id').order_by('lecture_tb__member').distinct()
 
-    return class_lecture_data
+    return class_member_ticket_data
 
 
 # 종료된 회원 id 정보 가져오기
@@ -51,7 +51,7 @@ def func_get_class_member_end_list(class_id, keyword):
                              "where D.CLASS_TB_ID=`CLASS_LECTURE_TB`.`CLASS_TB_ID`" \
                              "and D.LECTURE_TB_ID=B.ID " \
                              "and D.AUTH_CD=\'VIEW\') > 0 "
-    class_lecture_data = ClassLectureTb.objects.select_related(
+    class_member_ticket_data = ClassLectureTb.objects.select_related(
         'lecture_tb__member__user'
     ).filter(Q(lecture_tb__member__name__contains=keyword) |
              Q(lecture_tb__member__user__username__contains=keyword),
@@ -63,7 +63,7 @@ def func_get_class_member_end_list(class_id, keyword):
                                   ).filter(ip_lecture_count=0
                                            ).values('lecture_tb__member_id').order_by('lecture_tb__member').distinct()
 
-    return class_lecture_data
+    return class_member_ticket_data
 
 
 # 진행중 회원 리스트 가져오기
@@ -83,7 +83,7 @@ def func_get_member_ing_list(class_id, user_id, keyword):
                                            use=USE).annotate(lecture_count=RawSQL(query_lecture_count,
                                                                                   [])).order_by('lecture_tb__member_id',
                                                                                                 'lecture_tb__end_date')
-    return func_get_member_from_lecture_list(all_lecture_list, user_id)
+    return func_get_member_from_member_ticket_list(all_lecture_list, user_id)
 
 
 # 종료된 회원 리스트 가져오기
@@ -110,11 +110,11 @@ def func_get_member_end_list(class_id, user_id, keyword):
                           lecture_ip_count=RawSQL(query_lecture_ip_count, [])
                           ).filter(lecture_ip_count=0).order_by('lecture_tb__member_id', 'lecture_tb__end_date')
 
-    return func_get_member_from_lecture_list(all_lecture_list, user_id)
+    return func_get_member_from_member_ticket_list(all_lecture_list, user_id)
 
 
 # 회원 리스트 가져오기
-def func_get_member_from_lecture_list(all_lecture_list, user_id):
+def func_get_member_from_member_ticket_list(all_lecture_list, user_id):
     ordered_member_dict = collections.OrderedDict()
     temp_member_id = None
     lecture_reg_count = 0
@@ -235,9 +235,9 @@ def func_check_member_connection_info(class_id, member_id):
     return connection_check
 
 
-# 회원의 수강정보 리스트 불러오기
-def func_get_member_group_list(class_id, member_id):
-    group_list = collections.OrderedDict()
+# 회원의 수업정보 리스트 불러오기
+def func_get_member_lecture_list(class_id, member_id):
+    member_lecture_list = collections.OrderedDict()
     query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
                         "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(member_id) + \
                         "' and B.USE=1"
@@ -249,13 +249,13 @@ def func_get_member_group_list(class_id, member_id):
                                                            ).order_by('-lecture_tb__start_date',
                                                                       '-lecture_tb__reg_dt')
 
-    query_package_list = Q()
+    query_ticket_list = Q()
 
     for lecture_info_data in lecture_data:
         package_info = lecture_info_data.lecture_tb.package_tb
-        query_package_list |= Q(package_tb_id=package_info.package_id)
+        query_ticket_list |= Q(package_tb_id=package_info.package_id)
 
-    package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(query_package_list,
+    package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(query_ticket_list,
                                                                                   class_tb_id=class_id, use=USE)
 
     for package_group_info in package_group_data:
@@ -265,51 +265,51 @@ def func_get_member_group_list(class_id, member_id):
                       'lecture_note': group_tb.note,
                       'lecture_max_num': group_tb.member_num
         }
-        group_list[group_tb.group_id] = group_info
+        member_lecture_list[group_tb.group_id] = group_info
 
-    return group_list
+    return member_lecture_list
 
 
 # 회원의 수강정보 리스트 불러오기
-def func_get_member_lecture_list(class_id, member_id):
-    lecture_list = collections.OrderedDict()
+def func_get_member_ticket_list(class_id, member_id):
+    member_ticket_list = collections.OrderedDict()
     query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
                         "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(member_id) + \
                         "' and B.USE=1"
 
-    lecture_data = ClassLectureTb.objects.select_related(
+    member_ticket_data = ClassLectureTb.objects.select_related(
         'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW', lecture_tb__member_id=member_id,
                                          lecture_tb__use=USE,
                                          use=USE).annotate(member_auth=RawSQL(query_member_auth, []),
                                                            ).order_by('-lecture_tb__start_date',
                                                                       '-lecture_tb__reg_dt')
 
-    for lecture_info_data in lecture_data:
-        lecture_info = lecture_info_data.lecture_tb
+    for member_ticket_info in member_ticket_data:
+        lecture_info = member_ticket_info.lecture_tb
         package_info = lecture_info.package_tb
         if '\r\n' in lecture_info.note:
             lecture_info.note = lecture_info.note.replace('\r\n', ' ')
 
-        member_lecture_info = {'member_ticket_id': lecture_info.lecture_id,
-                               'member_ticket_name': package_info.name,
-                               'member_ticket_ticket_id': package_info.package_id,
-                               'member_ticket_state_cd': lecture_info.state_cd,
-                               'member_ticket_reg_count': lecture_info.lecture_reg_count,
-                               'member_ticket_rem_count': lecture_info.lecture_rem_count,
-                               'member_ticket_avail_count': lecture_info.lecture_avail_count,
-                               'member_ticket_start_date': str(lecture_info.start_date),
-                               'member_ticket_end_date': str(lecture_info.end_date),
-                               'member_ticket_price': lecture_info.price,
-                               'member_ticket_refund_date': str(lecture_info.refund_date),
-                               'member_ticket_refund_price': lecture_info.refund_price,
-                               'member_ticket_note': str(lecture_info.note)}
-        lecture_list[lecture_info.lecture_id] = member_lecture_info
-    return lecture_list
+        member_ticket_info = {'member_ticket_id': lecture_info.lecture_id,
+                              'member_ticket_name': package_info.name,
+                              'member_ticket_ticket_id': package_info.package_id,
+                              'member_ticket_state_cd': lecture_info.state_cd,
+                              'member_ticket_reg_count': lecture_info.lecture_reg_count,
+                              'member_ticket_rem_count': lecture_info.lecture_rem_count,
+                              'member_ticket_avail_count': lecture_info.lecture_avail_count,
+                              'member_ticket_start_date': str(lecture_info.start_date),
+                              'member_ticket_end_date': str(lecture_info.end_date),
+                              'member_ticket_price': lecture_info.price,
+                              'member_ticket_refund_date': str(lecture_info.refund_date),
+                              'member_ticket_refund_price': lecture_info.refund_price,
+                              'member_ticket_note': str(lecture_info.note)}
+        member_ticket_list[lecture_info.lecture_id] = member_ticket_info
+    return member_ticket_list
 
 
 # 회원의 수강권 추가하기
-def func_add_lecture_info(user_id, class_id, package_id, counts, price,
-                          start_date, end_date, contents, member_id):
+def func_add_member_ticket_info(user_id, class_id, package_id, counts, price,
+                                start_date, end_date, contents, member_id):
     error = None
     member = None
     try:
@@ -385,7 +385,7 @@ def func_add_lecture_info(user_id, class_id, package_id, counts, price,
 
 
 # 회원의 수강권 삭제하기
-def func_delete_lecture_info(user_id, class_id, lecture_id):
+def func_delete_member_ticket_info(user_id, class_id, lecture_id):
     error = None
     class_lecture_info = None
     try:
@@ -569,7 +569,7 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     return context
 
 
-def func_get_package_info(class_id, package_id, user_id):
+def func_get_ticket_info(class_id, package_id, user_id):
     package_group_data = PackageGroupTb.objects.select_related(
         'package_tb', 'group_tb').filter(class_tb_id=class_id, package_tb_id=package_id,
                                          package_tb__state_cd='IP', package_tb__use=USE,
@@ -629,23 +629,25 @@ def func_get_package_info(class_id, package_id, user_id):
                                    ).filter(lecture_ip_count=0).order_by('lecture_tb__member_id',
                                                                          'lecture_tb__end_date')
         package_member_num_name = 'PE'
-    member_list = func_get_member_from_lecture_list(all_lecture_list, user_id)
+    member_list = func_get_member_from_member_ticket_list(all_lecture_list, user_id)
+    if package_tb is not None:
+        ticket_info = {'ticket_id': package_id,
+                       'ticket_name': package_tb.name,
+                       'ticket_note': package_tb.note,
+                       'ticket_state_cd': package_tb.state_cd,
+                       'ticket_reg_dt': str(package_tb.reg_dt),
+                       'ticket_mod_dt': str(package_tb.mod_dt),
+                       'ticket_lecture_list': package_group_list,
+                       'ticket_lecture_id_list': package_group_id_list,
+                       package_member_num_name: len(member_list),
+                       'ticket_member_list': member_list}
+    else:
+        ticket_info = None
 
-    package_info = {'ticket_id': package_id,
-                    'ticket_name': package_tb.name,
-                    'ticket_note': package_tb.note,
-                    'ticket_state_cd': package_tb.state_cd,
-                    'ticket_reg_dt': str(package_tb.reg_dt),
-                    'ticket_mod_dt': str(package_tb.mod_dt),
-                    'ticket_lecture_list': package_group_list,
-                    'ticket_lecture_id_list': package_group_id_list,
-                    package_member_num_name: len(member_list),
-                    'ticket_member_list': member_list}
-
-    return package_info
+    return ticket_info
 
 
-def func_get_group_info(class_id, group_id, user_id):
+def func_get_lecture_info(class_id, group_id, user_id):
     group_package_data = PackageGroupTb.objects.select_related(
         'package_tb', 'group_tb').filter(class_tb_id=class_id, group_tb_id=group_id,
                                          group_tb__state_cd='IP', group_tb__use=USE,
@@ -654,24 +656,24 @@ def func_get_group_info(class_id, group_id, user_id):
     query_package_list = Q()
     group_package_list = []
     group_package_id_list = []
-    group_tb = None
+    lecture_tb = None
     all_lecture_list = None
     for group_package_info in group_package_data:
-        group_tb = group_package_info.group_tb
-        package_tb = group_package_info.package_tb
+        lecture_tb = group_package_info.group_tb
+        ticket_tb = group_package_info.package_tb
 
         query_package_list |= Q(lecture_tb__package_tb_id=group_package_info.package_tb_id)
-        if package_tb.state_cd == 'IP' and package_tb.use == USE:
-            group_package_list.append(package_tb.name)
-            group_package_id_list.append(package_tb.package_id)
+        if ticket_tb.state_cd == 'IP' and ticket_tb.use == USE:
+            group_package_list.append(ticket_tb.name)
+            group_package_id_list.append(ticket_tb.package_id)
 
-    if group_tb is None:
+    if lecture_tb is None:
         try:
             group_tb = GroupTb.objects.get(class_tb_id=class_id, group_id=group_id)
         except ObjectDoesNotExist:
             group_tb = None
 
-    if group_tb.state_cd == 'IP':
+    if lecture_tb.state_cd == 'IP':
         # 수업에 속한 수강권을 가지고 있는 회원들을 가지고 오기 위한 작업
         query_package_list = Q()
         for group_package_info in group_package_data:
@@ -691,17 +693,16 @@ def func_get_group_info(class_id, group_id, user_id):
                                                                                 [])).order_by('lecture_tb__member_id',
                                                                                               'lecture_tb__end_date')
 
-    member_list = func_get_member_from_lecture_list(all_lecture_list, user_id)
+    member_list = func_get_member_from_member_ticket_list(all_lecture_list, user_id)
 
-    if group_tb is not None:
-        group_info = {'lecture_id': group_id, 'lecture_name': group_tb.name, 'lecture_note': group_tb.note,
-                      'lecture_state_cd': group_tb.state_cd, 'lecture_max_num': group_tb.member_num,
-                      'lecture_reg_dt': str(group_tb.reg_dt),
-                      'lecture_mod_dt': str(group_tb.mod_dt),
-                      'lecture_ticket_list': group_package_list,
-                      'lecture_ticket_id_list': group_package_id_list,
-                      'lecture_ing_member_num': len(member_list),
-                      'lecture_member_list': member_list}
+    if lecture_tb is not None:
+        lecture_info = {'lecture_id': group_id, 'lecture_name': lecture_tb.name, 'lecture_note': lecture_tb.note,
+                        'lecture_state_cd': lecture_tb.state_cd, 'lecture_max_num': lecture_tb.member_num,
+                        'lecture_reg_dt': str(lecture_tb.reg_dt), 'lecture_mod_dt': str(lecture_tb.mod_dt),
+                        'lecture_ticket_list': group_package_list,
+                        'lecture_ticket_id_list': group_package_id_list,
+                        'lecture_ing_member_num': len(member_list),
+                        'lecture_member_list': member_list}
     else:
-        group_info = None
-    return group_info
+        lecture_info = None
+    return lecture_info

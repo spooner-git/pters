@@ -42,10 +42,12 @@ from schedule.functions import func_refresh_lecture_count, func_get_trainer_atte
     func_get_group_lecture_id, func_check_group_available_member_before, func_add_schedule, \
     func_check_group_available_member_after, func_get_trainer_schedule_all
 from stats.functions import get_sales_data
-from .functions import func_get_trainer_setting_list, func_add_lecture_info, func_delete_lecture_info, \
+from .functions import func_get_trainer_setting_list, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
-    func_get_member_info, func_get_member_from_lecture_list, func_get_package_info, func_get_group_info, \
-    func_check_member_connection_info, func_get_member_lecture_list, func_get_member_group_list
+    func_get_member_info, func_get_member_from_member_ticket_list, \
+    func_check_member_connection_info, func_get_member_lecture_list, \
+    func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info, func_get_ticket_info, \
+    func_delete_member_ticket_info
 
 logger = logging.getLogger(__name__)
 
@@ -119,11 +121,11 @@ class GetTrainerScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse(all_schedule_data, json_dumps_params={'ensure_ascii': True})
 
 
-class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+class GetLectureMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
-        group_schedule_id = request.GET.get('group_schedule_id', '')
+        group_schedule_id = request.GET.get('lecture_schedule_id', '')
         error = None
         group_schedule_list = []
         if group_schedule_id is None or group_schedule_id == '':
@@ -149,7 +151,7 @@ class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Vi
             logger.error(request.user.first_name + ' ' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        return JsonResponse({'group_member_schedule_data': group_schedule_list},
+        return JsonResponse({'lecture_member_schedule_data': group_schedule_list},
                             json_dumps_params={'ensure_ascii': True})
 
 
@@ -220,7 +222,7 @@ class GetMemberScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse(ordered_schedule_dict, json_dumps_params={'ensure_ascii': True})
 
 
-class GetGroupScheduleListView(LoginRequiredMixin, AccessTestMixin, View):
+class GetLectureScheduleListView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
@@ -272,7 +274,7 @@ class GetGroupScheduleListView(LoginRequiredMixin, AccessTestMixin, View):
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        return JsonResponse({'group_schedule_list': group_schedule_list}, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse({'lecture_schedule_list': group_schedule_list}, json_dumps_params={'ensure_ascii': True})
 
 
 class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
@@ -299,7 +301,7 @@ class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                             json_dumps_params={'ensure_ascii': True})
 
 
-class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = request.session.get('class_id', '')
@@ -319,10 +321,10 @@ class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Vi
                                      'end_time': group_repeat_schedule_info.end_time,
                                      'time_duration': group_repeat_schedule_info.time_duration,
                                      'state_cd': group_repeat_schedule_info.state_cd,
-                                     'group_repeat_schedule_id': group_repeat_schedule_info.group_repeat_schedule_id}
+                                     'lecture_repeat_schedule_id': group_repeat_schedule_info.group_repeat_schedule_id}
             group_repeat_schedule_list.append(group_repeat_schedule)
 
-        return JsonResponse({'group_repeat_schedule_data': group_repeat_schedule_list},
+        return JsonResponse({'lecture_repeat_schedule_data': group_repeat_schedule_list},
                             json_dumps_params={'ensure_ascii': True})
 
 
@@ -1737,13 +1739,13 @@ def export_excel_member_info_logic(request):
 # ############### ############### ############### ############### ############### ############### ##############
 # 회원 수강권 기능 ############### ############### ############### ############### ############### ############### ########
 
-class GetLectureListView(LoginRequiredMixin, AccessTestMixin, View):
+class GetMemberTicketListView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
         member_id = request.GET.get('member_id', '')
         error = None
-        lecture_list = {}
+        member_ticket_list = {}
 
         if class_id is None or class_id == '':
             error = '오류가 발생했습니다.'
@@ -1752,22 +1754,22 @@ class GetLectureListView(LoginRequiredMixin, AccessTestMixin, View):
             error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
-            lecture_list = func_get_member_lecture_list(class_id, member_id)
+            member_ticket_list = func_get_member_ticket_list(class_id, member_id)
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        return JsonResponse(lecture_list, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse(member_ticket_list, json_dumps_params={'ensure_ascii': True})
 
 
-class GetMemberGroupListView(LoginRequiredMixin, AccessTestMixin, View):
+class GetMemberLectureListView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
         member_id = request.GET.get('member_id', '')
         error = None
-        group_list = {}
+        member_lecture_list = {}
 
         if class_id is None or class_id == '':
             error = '오류가 발생했습니다.'
@@ -1776,13 +1778,13 @@ class GetMemberGroupListView(LoginRequiredMixin, AccessTestMixin, View):
             error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
-            group_list = func_get_member_group_list(class_id, member_id)
+            member_lecture_list = func_get_member_lecture_list(class_id, member_id)
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        return JsonResponse(group_list, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse(member_lecture_list, json_dumps_params={'ensure_ascii': True})
 
 
 # 수강정보 추가
@@ -1793,8 +1795,8 @@ def add_member_ticket_info_logic(request):
     price = request.POST.get('price')
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
-    class_id = request.session.get('class_id', '')
     package_id = request.POST.get('ticket_id', '')
+    class_id = request.session.get('class_id', '')
 
     error = None
 
@@ -1822,8 +1824,8 @@ def add_member_ticket_info_logic(request):
             error = '가입되지 않은 회원입니다.'
 
     if error is None:
-        error = func_add_lecture_info(request.user.id, class_id, package_id, counts, price, start_date, end_date,
-                                      contents, member_id)
+        error = func_add_member_ticket_info(request.user.id, class_id, package_id, counts, price, start_date, end_date,
+                                            contents, member_id)
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
@@ -1937,7 +1939,7 @@ def delete_member_ticket_info_logic(request):
         error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        error = func_delete_lecture_info(request.user.id, class_id, lecture_id)
+        error = func_delete_member_ticket_info(request.user.id, class_id, lecture_id)
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -2100,12 +2102,12 @@ def add_lecture_info_logic(request):
     error = None
     try:
         with transaction.atomic():
-            group_info = GroupTb(class_tb_id=class_id, member_num=member_num,
-                                 name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
-                                 ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
-                                 state_cd='IP', use=USE)
+            lecture_info = GroupTb(class_tb_id=class_id, member_num=member_num,
+                                   name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                   ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                   state_cd='IP', use=USE)
 
-            group_info.save()
+            lecture_info.save()
     except ValueError:
         error = '오류가 발생했습니다. [1]'
     except IntegrityError:
@@ -2124,20 +2126,20 @@ def add_lecture_info_logic(request):
 
 
 def delete_lecture_info_logic(request):
-    class_id = request.session.get('class_id', '')
     group_id = request.POST.get('lecture_id', '')
+    class_id = request.session.get('class_id', '')
     error = None
-    group_info = None
+    lecture_info = None
     try:
-        group_info = GroupTb.objects.get(group_id=group_id)
+        lecture_info = GroupTb.objects.get(group_id=group_id)
     except ObjectDoesNotExist:
         error = '오류가 발생했습니다.'
 
-    package_data = PackageGroupTb.objects.filter(group_tb_id=group_id, use=USE)
+    ticket_data = PackageGroupTb.objects.filter(group_tb_id=group_id, use=USE)
 
-    query_package_info = Q()
-    for package_info in package_data:
-        query_package_info |= Q(lecture_tb__package_tb_id=package_info.package_tb.package_id)
+    query_ticket_info = Q()
+    for ticket_info in ticket_data:
+        query_ticket_info |= Q(lecture_tb__package_tb_id=ticket_info.package_tb.package_id)
 
     try:
         with transaction.atomic():
@@ -2169,7 +2171,7 @@ def delete_lecture_info_logic(request):
 
                 # 관련 수간권 회원들 수강정보 업데이트
                 class_lecture_data = ClassLectureTb.objects.select_related(
-                    'lecture_tb__package_tb').filter(query_package_info, class_tb_id=class_id,
+                    'lecture_tb__package_tb').filter(query_ticket_info, class_tb_id=class_id,
                                                      auth_cd='VIEW', lecture_tb__state_cd='IP',
                                                      lecture_tb__use=USE, use=USE)
 
@@ -2178,11 +2180,11 @@ def delete_lecture_info_logic(request):
                                                        class_lecture_info.lecture_tb_id)
 
             if error is None:
-                group_info.state_cd = 'PE'
-                group_info.use = UN_USE
-                group_info.save()
-                if len(package_data) > 0:
-                    package_data.delete()
+                lecture_info.state_cd = 'PE'
+                lecture_info.use = UN_USE
+                lecture_info.save()
+                if len(ticket_data) > 0:
+                    ticket_data.delete()
 
             if error is not None:
                 raise InternalError
@@ -2408,17 +2410,17 @@ def update_fix_lecture_member_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+class GetLectureInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
         group_id = request.GET.get('lecture_id', '')
 
-        return JsonResponse(func_get_group_info(class_id, group_id, request.user.id),
+        return JsonResponse(func_get_lecture_info(class_id, group_id, request.user.id),
                             json_dumps_params={'ensure_ascii': True})
 
 
-class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
@@ -2477,7 +2479,7 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse({'current_lecture_data': group_list}, json_dumps_params={'ensure_ascii': True})
 
 
-class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
@@ -2520,10 +2522,10 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        return JsonResponse({'finish_group_data': group_list}, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse({'finish_lecture_data': group_list}, json_dumps_params={'ensure_ascii': True})
 
 
-class GetGroupIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+class GetLectureIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
@@ -2554,13 +2556,13 @@ class GetGroupIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                                                 [])).order_by('lecture_tb__member_id',
                                                                                               'lecture_tb__end_date')
 
-        member_list = func_get_member_from_lecture_list(all_lecture_list, request.user.id)
+        member_list = func_get_member_from_member_ticket_list(all_lecture_list, request.user.id)
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        return JsonResponse({'group_ing_member_list': member_list}, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse({'lecture_ing_member_list': member_list}, json_dumps_params={'ensure_ascii': True})
 
 
 # 패키지 추가
@@ -2878,18 +2880,18 @@ def update_ticket_status_info_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-class GetPackageInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+class GetTicketInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id')
         package_id = request.GET.get('ticket_id')
 
-        package_info = func_get_package_info(class_id, package_id, self.request.user.id)
+        package_info = func_get_ticket_info(class_id, package_id, self.request.user.id)
 
-        return JsonResponse({'package_info': package_info}, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse({'ticket_info': package_info}, json_dumps_params={'ensure_ascii': True})
 
 
-class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
@@ -2996,10 +2998,10 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         # context['package_data'] = package_data
 
         # end_time = timezone.now()
-        return JsonResponse({'current_package_data': package_list}, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse({'current_ticket_data': package_list}, json_dumps_params={'ensure_ascii': True})
 
 
-class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
@@ -3104,10 +3106,10 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             messages.error(request, error)
 
         # context['package_data'] = package_data
-        return JsonResponse({'finish_package_data': package_list}, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse({'finish_ticket_data': package_list}, json_dumps_params={'ensure_ascii': True})
 
 
-class GetPackageIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+class GetTicketIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         # context = {}
@@ -3127,17 +3129,16 @@ class GetPackageIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View)
                  lecture_tb__use=USE, use=USE).annotate(lecture_count=RawSQL(query_lecture_count,
                                                                              [])).order_by('lecture_tb__member_id',
                                                                                            'lecture_tb__end_date')
-        member_list = func_get_member_from_lecture_list(all_lecture_list, request.user.id)
+        member_list = func_get_member_from_member_ticket_list(all_lecture_list, request.user.id)
 
         if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
-                self.request.user.id) + ']' + error)
+            logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        return JsonResponse({'package_ing_member_list': member_list}, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse({'ticket_ing_member_list': member_list}, json_dumps_params={'ensure_ascii': True})
 
 
-class GetPackageEndMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+class GetTicketEndMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         # context = {}
@@ -3166,14 +3167,13 @@ class GetPackageEndMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View)
                                    ).filter(lecture_ip_count=0).order_by('lecture_tb__member_id',
                                                                          'lecture_tb__end_date')
 
-        member_list = func_get_member_from_lecture_list(all_lecture_list, request.user.id)
+        member_list = func_get_member_from_member_ticket_list(all_lecture_list, request.user.id)
 
         if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
-                self.request.user.id) + ']' + error)
+            logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        return JsonResponse({'package_end_member_list': member_list}, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse({'ticket_end_member_list': member_list}, json_dumps_params={'ensure_ascii': True})
 
 
 class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -4757,11 +4757,11 @@ class PopupMemberView(TemplateView):
         class_id = self.request.session.get('class_id')
         member_id = self.request.GET.get('member_id')
         member_result = func_get_member_info(class_id, self.request.user.id, member_id)
-        lecture_list = dict(func_get_member_lecture_list(class_id, member_id))
-        group_list = dict(func_get_member_group_list(class_id, member_id))
+        member_ticket_list = dict(func_get_member_ticket_list(class_id, member_id))
+        member_lecture_list = dict(func_get_member_lecture_list(class_id, member_id))
         context['member_info'] = member_result['member_info']
-        context['member_group_list'] = group_list
-        context['member_ticket_list'] = lecture_list
+        context['member_lecture_list'] = member_lecture_list
+        context['member_ticket_list'] = member_ticket_list
         return context
 
 
@@ -4792,7 +4792,7 @@ class PopupLectureView(TemplateView):
         context = super(PopupLectureView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
         group_id = self.request.GET.get('lecture_id')
-        context['lecture_info'] = func_get_group_info(class_id, group_id, self.request.user.id)
+        context['lecture_info'] = func_get_lecture_info(class_id, group_id, self.request.user.id)
         return context
 
 
@@ -4803,7 +4803,7 @@ class PopupLectureEdit(TemplateView):
         context = super(PopupLectureEdit, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
         group_id = self.request.GET.get('lecture_id')
-        context['lecture_info'] = func_get_group_info(class_id, group_id, self.request.user.id)
+        context['lecture_info'] = func_get_lecture_info(class_id, group_id, self.request.user.id)
         return context
 
 
@@ -4823,7 +4823,7 @@ class PopupTicketView(TemplateView):
         class_id = self.request.session.get('class_id')
         package_id = self.request.GET.get('ticket_id')
 
-        context['ticket_info'] = func_get_package_info(class_id, package_id, self.request.user.id)
+        context['ticket_info'] = func_get_ticket_info(class_id, package_id, self.request.user.id)
         return context
 
 
@@ -4835,5 +4835,5 @@ class PopupTicketEdit(TemplateView):
         class_id = self.request.session.get('class_id')
         package_id = self.request.GET.get('ticket_id')
 
-        context['ticket_info'] = func_get_package_info(class_id, package_id, self.request.user.id)
+        context['ticket_info'] = func_get_ticket_info(class_id, package_id, self.request.user.id)
         return context
