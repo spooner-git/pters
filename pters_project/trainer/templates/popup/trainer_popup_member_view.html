@@ -74,8 +74,8 @@
     {% autoescape off %}
     let member_basic_info = {{ member_info }};
     let member_ticket_list = {{ member_ticket_list }};
-    let member_group_list = {{ member_group_list }};
-    let member_info = {basic_info: member_basic_info, ticket_info: member_ticket_list, lecture_info: member_group_list};
+    let member_lecture_list = {{ member_lecture_list }};
+    let member_info = {basic_info: member_basic_info, ticket_info: member_ticket_list, lecture_info: member_lecture_list};
     {% endautoescape %}
 
     function toggle_list(target_selector){
