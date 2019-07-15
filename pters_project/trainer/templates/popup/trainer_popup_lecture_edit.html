@@ -139,6 +139,7 @@
             this.lecture_color;
             this.lecture_repeat_schedule;
             this.lecture_fixed_member;
+            this.lecture_status_cd;
 
             console.log('data', data)
             
@@ -162,6 +163,7 @@
             this.lecture_color = "#fe4e65";
             this.lecture_repeat_schedule = "% 반복 안함";
             this.lecture_fixed_member = "% 1";
+            this.lecture_status_cd = this.data.lecture_state_cd;
 
             this.items =    {    
                                 lecture_name: {visible: true, title:"수업명", value:this.lecture_name, input_type:"text"},
@@ -173,8 +175,11 @@
                                 lecture_fixed_member: {visible: true, title:"고정 회원", value: this.lecture_fixed_member, input_type:"link"},
                                 lecture_finished_members: {visible: true, title:"수업 종료된 회원", value:"", input_type:"link"},
                                 lecture_history: {visible: true, title:"수업 이력", value:"", input_type:"link"},
-                                lecture_deactivate: {visible: true, title:"수업 비활성화", value:"", input_type:"option", option_data:
-                                    {비활성화:{value: 0, callback: ()=>{}}}
+                                lecture_deactivate: {visible: this.lecture_status_cd == "IP" ? true : false, title:"수업 비활성화", value:"", input_type:"option", option_data:
+                                    {비활성화:{value: 0, callback: ()=>{this.send_state_change_data(this, 'lecture_state_cd', 'PE')}}}
+                                },
+                                lecture_activate: {visible: this.lecture_status_cd != "IP" ? true : false, title:"수업 비활성화", value:"", input_type:"option", option_data:
+                                    {활성화:{value: 0, callback: ()=>{this.send_state_change_data(this, 'lecture_state_cd', 'IP')}}}
                                 }
                             };
         }
@@ -268,6 +273,22 @@
 
             
             Lecture_func.update(data_to_send, () => {
+                Lecture_func.read({"lecture_id":this.lecture_id}, (data)=>{
+                    this.reform_data(data);
+                    this.render_setting_list();
+                    lecture_info_popup.refresh(data);
+                    lecture.init();
+                })
+            }) 
+        }
+
+        send_state_change_data(context, item_name, external_input){
+            let data_to_send = {};
+            data_to_send["lecture_id"] = this.lecture_id;
+            data_to_send[item_name.replace(/lecture_/gi,"")] = external_input;
+            
+            console.log(data_to_send)
+            Lecture_func.status(data_to_send, () => {
                 Lecture_func.read({"lecture_id":this.lecture_id}, (data)=>{
                     this.reform_data(data);
                     this.render_setting_list();
