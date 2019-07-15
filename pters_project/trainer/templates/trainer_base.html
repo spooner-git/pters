@@ -137,8 +137,11 @@
 {% endblock %}
 <div id="debug_toolbar" style="position:fixed;top:0;font-size:13px;background-color:#1e1e1e85;color:#ffffff;width:100%;left:0;z-index:1500" hidden></div>
 
+<!-- <div id="shade_for_popup_basic" style="position:fixed;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
+onclick="layer_popup.all_close_layer_popup();"></div> -->
 <div id="shade_for_popup_basic" style="position:fixed;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
-onclick="layer_popup.all_close_layer_popup();"></div>
+onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
+
 
 <div id="root_progress">
     <progress id="progress_bar" value="0" max="100"></progress>

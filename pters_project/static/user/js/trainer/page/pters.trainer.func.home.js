@@ -45,7 +45,9 @@ class Home{
                     <div><span id="temp_time_result1"></span> ~ <span id="temp_time_result2"></span></div>
                     <button onclick="event.preventDefault();${time_select_popup}">시간 선택 임시</button>
                     <div id="temp_user_select_value">-</div>
-                    <button onclick="event.preventDefault();${user_select_multi_popup}">유저 선택 팝업 임시</button>`);
+                    <button onclick="event.preventDefault();${user_select_multi_popup}">유저 선택 팝업 임시</button>
+                    <button onclick="show_user_input_popup ('text', 'TEST', console.log(123))">입력팝업</button>
+                    `);
         
         document.querySelector('#home_content_wrap').innerHTML = html_temp.join("");
     }
