@@ -238,6 +238,135 @@ class Member {
     }
 }
 
+class Member_func{
+    static create(data, callback){
+        //데이터 형태 {"member_id":"", "contents":"", "counts":"", "price":"", "start_date":"", "end_date":"", "class_id":"", "package_id":""};
+
+        $.ajax({
+            url:'/trainer/add_lecture_info/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                callback();
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+               
+            }
+        });
+    }
+
+    static read(data, callback){
+        //데이터 형태 {"member_id":""};
+        $.ajax({
+            url:'/trainer/get_member_info/',
+            type:'GET',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                let json = JSON.parse(data);
+                callback(json);
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+               
+            }
+        });
+    }
+
+    static delete(data, callback){
+        //데이터 형태 {"member_id":""};
+        $.ajax({
+            url:'/trainer/delete_member_info/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                callback();
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+               
+            }
+        });
+    }
+
+    static update(data, callback){
+        //데이터 형태 {"member_id":"", "first_name":"", "phone":"", "sex":"", "birthday":""};
+
+        $.ajax({
+            url:'/trainer/update_member_info/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                callback();
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+               
+            }
+        });
+    }
+}
+
 /* global $, 
 ajax_load_image, 
 SHOW, HIDE, 

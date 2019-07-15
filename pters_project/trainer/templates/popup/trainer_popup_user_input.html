@@ -68,7 +68,7 @@
 <div class="popup_mobile popup_full" style="background-color:transparent;padding:0 20px;box-sizing: border-box;">
         <div class="popup_basic_user_select_multi obj_font_size_15_weight_500">
             <div class="wrapper_popup_basic_comment obj_font_size_18_weight_bold"></div>
-            <div class="wrapper_popup_basic_user_select_options" style="margin-bottom: 30px;">
+            <div id="option_wrap" class="wrapper_popup_basic_user_select_options" style="margin-bottom: 30px;">
     
             </div>
             <div class="wrapper_popup_basic_buttons obj_table_raw  obj_font_bg_black_white" style="border-radius:5px;">
@@ -126,6 +126,8 @@
             this.user_scroll_hour = false;
             this.user_scroll_minute = false;
             this.hour_scroll_snapped = 0;
+
+            this.init();
         }
 
         init(){
@@ -303,10 +305,23 @@
             $target2.val(result.end).text(result.end);
         }
 
+        open(target1, target2){
+            let top_comment_height = 65;
+            let time_selector_height = 175;
+            let close_button_height = 46;
+            let sum = top_comment_height + time_selector_height + close_button_height;
+
+            let popup_height = 100*sum/windowHeight;
+
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', popup_height, POPUP_FROM_BOTTOM,
+                {'popup_title':'', 'popup_comment':'시간을 선택해주세요'});
+
+            time_select_popup.reset(target1, target2);
+        }
     }
 
     var time_select_popup = new TwoTimeSelector('#hour_wrap', '#hour2_wrap', "time_select_popup");
-    time_select_popup.init();
+    // time_select_popup.init();
 
 
     class OptionSelector{
@@ -314,54 +329,73 @@
             this.html_target = target;
             this.instance = instance;
             this.data;
-            this.ajax_data;
-            this.ajax_url;
-            this.type;
         }
 
         init(){
 
         }
 
-        reset(type, option_data, ajax_url, ajax_data){
-            this.data = data;
-            this.ajax_url = ajax_url != undefined ? ajax_url : "";
-            this.ajax_data = ajax_data != undefined ? ajax_data : "";
-            this.type = type; // AJAX(0) or LOCAL(1)
-            
-            render_option_list();
+        reset(option_data){
+            this.data = option_data;
+            this.render_option_list();
         }
 
         render_option_list(){
-            let length = Object.keys(this.data).length;
+            // let length = Object.keys(this.data).length;
             let $target = $(this.html_target);
             let html_to_join = [];
             for(let option in this.data){
                 let option_name = option;
-                let option_function = this.data[option];
-                html_to_join.push(
-                    `
-                    <div class="wrapper_popup_basic_buttons obj_font_bg_black_white" style="border-radius:5px;margin-bottom:5px;" onclick="${option_function};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">
-                        ${option_name}
-                    </div>
-                    `
-                );
+                let option_value = this.data[option].value;
+                    html_to_join.push(
+
+                        `
+                        <div id="option_select_${option_value}" class="wrapper_popup_basic_buttons obj_font_bg_black_white option_select" style="border-radius:5px;margin-bottom:5px;">
+                            ${option_name}
+                        </div>
+                        `
+                    );
             }
-
+            this.attach_events();
             document.querySelector(this.html_target).innerHTML = html_to_join.join('');
-            
         }
 
-        set_selected_data(){
+        attach_events(){
+            // $("option_select").off('click');
+            for(let option in this.data){
+                let option_name = option;
+                let option_value = this.data[option].value;
+                let option_callback = this.data[option].callback;
 
+                $(document).off('click', `#option_select_${option_value}`).on('click', `#option_select_${option_value}`, function (){
+                    option_callback();
+                    layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);
+                })
+
+            }
         }
 
-        get_option_length(){
-            return Object.keys(this.data);
+
+        open(option_data){
+            this.reset(option_data);
+            let option_length = Object.keys(this.data).length;
+            let button_height = 45;
+            let popup_height = 100*(button_height*(option_length+4))/windowHeight;
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select_multi', popup_height, POPUP_FROM_BOTTOM);
         }
+
+        //data 형태
+        // `{
+        //     사과:{value: 'apple', callback: ()=>{console.log('사과 Apple')} }, 
+        //     수박:{value: 'water_melon', callback: ()=>{console.log('수박 Water melon')} }, 
+        //     바나나:{value: 'banana', callback: ()=>{console.log('바나나 Banana')} }
+        // }`;
+
 
     }
     
+    var option_select_popup = new OptionSelector('#option_wrap', 'option_select_popup');
+
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

@@ -254,7 +254,8 @@ class Ticket_func{
     
             //통신성공시 처리
             success:function(data){
-                callback();
+                let json = JSON.parse(data);
+                callback(json);
             },
     
             //통신 실패시 처리

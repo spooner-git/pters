@@ -132,6 +132,28 @@
             this.instance = instance;
             this.data = data;
             
+            this.lecture_id;
+            this.lecture_name;
+            this.lecture_max_num;
+            this.lecture_operating_time;
+            this.lecture_color;
+            this.lecture_repeat_schedule;
+            this.lecture_fixed_member;
+
+            console.log('data', data)
+            
+
+            this.items;
+        }
+
+        init(){
+            this.reform_data(this.data);
+            this.render_setting_list();
+        }
+
+        reform_data(data){
+            this.data = data;
+            
             this.lecture_id = this.data.group_id;
             this.lecture_name = this.data.group_name;
             this.lecture_max_num = this.data.group_max_num;
@@ -139,9 +161,6 @@
             this.lecture_color = "#fe4e65";
             this.lecture_repeat_schedule = "% 반복 안함";
             this.lecture_fixed_member = "% 1";
-
-            console.log('data', data)
-            
 
             this.items =    {    
                                 lecture_name: {visible: true, title:"수업명", value:this.lecture_name},
@@ -154,10 +173,6 @@
                                 lecture_history: {visible: true, title:"수업 이력", value:""},
                                 lecture_deactivate: {visible: true, title:"수업 비활성화", value:""}
                             };
-        }
-
-        init(){
-            this.render_setting_list();
         }
 
         render_setting_list(target, options){
@@ -199,11 +214,21 @@
             document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`;
         }
 
-        send_data(data, item){
-            let user_input = $(data).parent().siblings('div').find('.popup_basic_user_input_full').val();
-            console.log(item+': '+user_input);
-           
-            this.render_setting_list();
+        send_data(context, item_name){
+            //데이터 형태 {"group_id":"", "member_num":"", "name":"", "note":"", "ing_color_cd":"", "end_color_cd":"", "ing_font_color_cd":"", "end_font_color_cd":""};
+            let user_input = $(context).parent().siblings('div').find('.popup_basic_user_input_full').val();
+            let data_to_send = {};
+            data_to_send["group_id"] = this.lecture_id;
+            data_to_send[item_name.replace(/lecture_/gi,"")] = user_input;
+
+            console.log(data_to_send)
+            
+            Lecture_func.update(data_to_send, () => {
+                Lecture_func.read({"group_id":this.lecture_id}, (data)=>{
+                    this.reform_data(data);
+                    this.render_setting_list();
+                })
+            }) 
         }
 
 
