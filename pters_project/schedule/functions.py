@@ -4,6 +4,7 @@ import httplib2
 import collections
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import InternalError
 from django.db import transaction
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
@@ -118,13 +119,6 @@ def func_refresh_lecture_count(class_id, lecture_id):
                 group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
                 group_lecture_data.update(fix_state_cd='')
 
-            package_group_data = PackageGroupTb.objects.select_related(
-                'group_tb__class_tb__member').filter(class_tb_id=class_id, group_tb__use=USE, package_tb__use=USE,
-                                                     package_tb_id=lecture_info.package_tb_id,
-                                                     use=USE)
-            for package_group_info in package_group_data:
-                func_refresh_group_status(package_group_info.group_tb_id, '', '')
-
     return error
 
 
@@ -195,14 +189,6 @@ def func_refresh_lecture_count_for_delete(class_id, lecture_id, auth_member_num)
                 group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
                 group_lecture_data.update(fix_state_cd='')
 
-            package_group_data = PackageGroupTb.objects.select_related(
-                'group_tb__class_tb__member').filter(group_tb__use=USE,
-                                                     package_tb__use=USE,
-                                                     package_tb_id=lecture_info.package_tb_id,
-                                                     use=USE)
-            for package_group_info in package_group_data:
-                func_refresh_group_status(package_group_info.group_tb_id, '', '')
-
     return error
 
 
@@ -248,7 +234,7 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
 def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
                       group_id, group_schedule_id,
                       start_datetime, end_datetime,
-                      note, en_dis_type, user_id, permission_state_cd, state_cd):
+                      note, en_dis_type, user_id, permission_state_cd, state_cd, duplication_enable_flag):
     error = None
     context = {'error': None, 'schedule_id': ''}
 
@@ -273,11 +259,22 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
                                            note=note, member_note='', en_dis_type=en_dis_type,
                                            reg_member_id=user_id)
             add_schedule_info.save()
+
+            if lecture_id is not None:
+                error = func_refresh_lecture_count(class_id, lecture_id)
+
+            if error is None:
+                error = func_date_check(class_id, add_schedule_info.schedule_id,
+                                        start_datetime.split(' ')[0], start_datetime, end_datetime,
+                                        duplication_enable_flag)
+                if error is not None:
+                    error += ' 일정이 중복되었습니다.'
+
             context['schedule_id'] = add_schedule_info.schedule_id
     except TypeError:
-        error = '등록 값에 문제가 있습니다.'
+        error = '일정 추가중 오류가 발생했습니다.'
     except ValueError:
-        error = '등록 값에 문제가 있습니다.'
+        error = '일정 추가중 오류가 발생했습니다.'
     context['error'] = error
 
     return context
@@ -318,7 +315,7 @@ def func_add_repeat_schedule(class_id, lecture_id, group_id, group_schedule_id, 
 
 
 # 일정 취소
-def func_delete_schedule(schedule_id,  user_id):
+def func_delete_schedule(class_id, schedule_id,  user_id):
     error = None
     context = {'error': None, 'schedule_id': ''}
     schedule_info = None
@@ -351,12 +348,29 @@ def func_delete_schedule(schedule_id,  user_id):
 
             delete_schedule_info.save()
             schedule_info.delete()
+
+            if delete_schedule_info.en_dis_type == ON_SCHEDULE_TYPE:
+                if delete_schedule_info.lecture_tb is not None:
+                    error = func_refresh_lecture_count(class_id, delete_schedule_info.lecture_tb_id)
+                    if error is not None:
+                        raise InternalError()
+
+                repeat_schedule_id = delete_schedule_info.delete_repeat_schedule_tb
+                if repeat_schedule_id is not None and repeat_schedule_id != '':
+                    error = func_update_repeat_schedule(repeat_schedule_id)
+                    if error is not None:
+                        raise InternalError()
             context['schedule_id'] = delete_schedule_info.delete_schedule_id
+
     except TypeError:
-        error = '등록 값에 문제가 있습니다.'
+        error = '일정 취소중 오류가 발생했습니다.[0]'
     except ValueError:
-        error = '등록 값에 문제가 있습니다.'
+        error = '일정 취소중 오류가 발생했습니다.[1]'
+    except InternalError:
+        error = error
+
     context['error'] = error
+
     return context
 
 
@@ -481,8 +495,8 @@ def func_check_group_available_member_after(class_id, group_id, group_schedule_i
 def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_end_dt, duplication_enable_flag):
     error = None
     if int(duplication_enable_flag) == SCHEDULE_DUPLICATION_DISABLE:
-        seven_days_ago = add_start_dt - datetime.timedelta(days=2)
-        seven_days_after = add_end_dt + datetime.timedelta(days=2)
+        seven_days_ago = add_start_dt - datetime.timedelta(days=1)
+        seven_days_after = add_end_dt + datetime.timedelta(days=1)
 
         schedule_data = ScheduleTb.objects.filter(~Q(state_cd='PC'), class_tb_id=class_id,
                                                   start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after,
@@ -787,10 +801,10 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
                                    'schedule_type': schedule_type,
                                    'note': schedule_info.note,
                                    'member_name': member_name,
-                                   'group_id': group_id,
-                                   'group_name': group_name,
-                                   'group_max_member_num': group_max_member_num,
-                                   'group_current_member_num': group_current_member_num})
+                                   'lecture_id': group_id,
+                                   'lecture_name': group_name,
+                                   'lecture_max_member_num': group_max_member_num,
+                                   'lecture_current_member_num': group_current_member_num})
 
         ordered_schedule_dict[schedule_start_date[0]] = date_schedule_list
 

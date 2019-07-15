@@ -25,20 +25,20 @@ urlpatterns = [
     # 강사 전체 스케쥴 조회(1:1/수업/OFF) - refactoring
     url(r'^get_trainer_schedule_all/$', views.GetTrainerScheduleAllView.as_view(), name='get_trainer_schedule_all'),
     # 수업 일정에 속하는 회원의 일정 조회 - refactoring
-    url(r'^get_group_member_schedule_list/$', views.GetGroupMemberScheduleListViewAjax.as_view(),
-        name='get_group_member_schedule_list'),
+    url(r'^get_lecture_member_schedule_list/$', views.GetGroupMemberScheduleListViewAjax.as_view(),
+        name='get_lecture_member_schedule_list'),
 
     # 회원 스케쥴 조회 - 수업 - refactoring
     url(r'^get_member_schedule_all/$', views.GetMemberScheduleAllView.as_view(), name='get_member_schedule_all'),
 
     # 수업 스케쥴 조회 - refactoring
-    url(r'^get_group_schedule_list/$', views.GetGroupScheduleListView.as_view(), name='get_group_schedule_list'),
+    url(r'^get_lecture_schedule_list/$', views.GetGroupScheduleListView.as_view(), name='get_lecture_schedule_list'),
 
     # OFF 반복 일정 조회 - refactoring
     url(r'^get_off_repeat_schedule/$', views.GetOffRepeatScheduleView.as_view(), name='get_off_repeat_schedule'),
     # 수업 반복 일정 조회 - refactoring
-    url(r'^get_group_repeat_schedule_list/$', views.GetGroupRepeatScheduleListViewAjax.as_view(),
-        name='get_group_repeat_schedule_list'),
+    url(r'^get_lecture_repeat_schedule_list/$', views.GetGroupRepeatScheduleListViewAjax.as_view(),
+        name='get_lecture_repeat_schedule_list'),
     # 회원 반복 일정 조회 - refactoring
     url(r'^get_member_repeat_schedule/$', views.GetMemberRepeatScheduleView.as_view(),
         name='get_member_repeat_schedule'),
@@ -57,9 +57,9 @@ urlpatterns = [
     url(r'^get_member_end_list/$', views.GetMemberEndListViewAjax.as_view(), name='get_member_end_list'),
 
     # 회원 수강정보 조회 - refactoring
-    url(r'^get_lecture_list/$', views.GetLectureListView.as_view(), name='get_lecture_list'),
+    url(r'^get_member_ticket_list/$', views.GetLectureListView.as_view(), name='get_member_ticket_list'),
     # 회원이 들을수 있는 수업 조회
-    url(r'^get_member_group_list/$', views.GetMemberGroupListView.as_view(), name='get_member_group_list'),
+    url(r'^get_member_lecture_list/$', views.GetMemberGroupListView.as_view(), name='get_member_lecture_list'),
 
 
     # 회원 정보 수정 - refactoring - 확인 필요
@@ -72,13 +72,14 @@ urlpatterns = [
     url(r'^export_excel_member_info/$', views.export_excel_member_info_logic, name='export_excel_member_info'),
 
     # 회원 수강정보 추가 - refactoring
-    url(r'^add_lecture_info/$', views.add_lecture_info_logic, name='add_lecture_info'),
+    url(r'^add_member_ticket_info/$', views.add_member_ticket_info_logic, name='add_lecture_info'),
     # 회원 수강정보 수정 - refactoring - 확인 필요
-    url(r'^update_lecture_info/$', views.update_lecture_info_logic, name='update_lecture_info'),
+    url(r'^update_member_ticket_info/$', views.update_member_ticket_info_logic, name='update_member_ticket_info'),
     # 회원 수강정보 삭제 - refactoring - 확인 필요
-    url(r'^delete_lecture_info/$', views.delete_lecture_info_logic, name='delete_lecture_info'),
+    url(r'^delete_member_ticket_info/$', views.delete_member_ticket_info_logic, name='delete_member_ticket_info'),
     # 회원 수강정보 상태 변경 - refactoring - 확인 필요
-    url(r'^update_lecture_status_info/$', views.update_lecture_status_info_logic, name='update_lecture_status_info'),
+    url(r'^update_member_ticket_status_info/$', views.update_member_ticket_status_info_logic,
+        name='update_member_ticket_status_info'),
     # 회원 연동 상태 변경 - refactoring - 확인 필요
     url(r'^update_member_connection_info/$', views.update_member_connection_info_logic,
         name='update_member_connection_info'),
@@ -87,55 +88,55 @@ urlpatterns = [
 
     # 수업 기능 ##########################################################################################################
     # 수업 추가 - refactoring
-    url(r'^add_group_info/$', views.add_group_info_logic, name='add_group_info'),
+    url(r'^add_lecture_info/$', views.add_lecture_info_logic, name='add_lecture_info'),
     # 수업 삭제 - refactoring - 내부 회원 삭제 x
-    url(r'^delete_group_info/$', views.delete_group_info_logic, name='delete_group_info'),
+    url(r'^delete_lecture_info/$', views.delete_lecture_info_logic, name='delete_lecture_info'),
     # 수업 수정 - refactoring - 내부 회원 수정 x
-    url(r'^update_group_info/$', views.update_group_info_logic, name='update_group_info'),
+    url(r'^update_lecture_info/$', views.update_lecture_info_logic, name='update_lecture_info'),
 
     # 수업 종료 상태 변경 - refactoring
-    url(r'^update_group_status_info/$', views.update_group_status_info_logic, name='update_group_status_info'),
+    url(r'^update_lecture_status_info/$', views.update_lecture_status_info_logic, name='update_lecture_status_info'),
     # 수업 고정 맴버 변경
-    url(r'^update_fix_group_member/$', views.update_fix_group_member_logic, name='update_fix_group_member'),
+    url(r'^update_fix_lecture_member/$', views.update_fix_lecture_member_logic, name='update_fix_lecture_member'),
 
     # 수업 정보 조회 - refactoring
-    url(r'^get_group_info/$', views.GetGroupInfoViewAjax.as_view(), name='get_group_info'),
+    url(r'^get_lecture_info/$', views.GetGroupInfoViewAjax.as_view(), name='get_lecture_info'),
     # 진행중 수업 list 조회 - refactoring
-    url(r'^get_group_ing_list/$', views.GetGroupIngListViewAjax.as_view(), name='get_group_ing_list'),
+    url(r'^get_lecture_ing_list/$', views.GetGroupIngListViewAjax.as_view(), name='get_lecture_ing_list'),
     # 완료된 수업 list 조회 - refactoring
-    url(r'^get_group_end_list/$', views.GetGroupEndListViewAjax.as_view(), name='get_group_end_list'),
+    url(r'^get_lecture_end_list/$', views.GetGroupEndListViewAjax.as_view(), name='get_lecture_end_list'),
     # 수업 회원 조회 - refactoring
-    url(r'^get_group_ing_member_list/$', views.GetGroupIngMemberListViewAjax.as_view(),
-        name='get_group_ing_member_list'),
+    url(r'^get_lecture_ing_member_list/$', views.GetGroupIngMemberListViewAjax.as_view(),
+        name='get_lecture_ing_member_list'),
 
 
 
     # 수강권 기능 #########################################################################################################
     # 수강권 추가 - refactoring
-    url(r'^add_package_info/$', views.add_package_info_logic, name='add_package_info'),
+    url(r'^add_ticket_info/$', views.add_ticket_info_logic, name='add_ticket_info'),
     # 수강권 삭제 - refactoring
-    url(r'^delete_package_info/$', views.delete_package_info_logic, name='delete_package_info'),
+    url(r'^delete_ticket_info/$', views.delete_ticket_info_logic, name='delete_ticket_info'),
     # 수강권 수정 - refactoring
-    url(r'^update_package_info/$', views.update_package_info_logic, name='update_package_info'),
+    url(r'^update_ticket_info/$', views.update_ticket_info_logic, name='update_ticket_info'),
     # 수강권에 수업 추가 - refactoring
-    url(r'^add_package_group_info/$', views.add_package_group_info_logic, name='add_package_group_info'),
+    url(r'^add_ticket_lecture_info/$', views.add_ticket_lecture_info_logic, name='add_ticket_lecture_info'),
     # 수강권에 수업 삭제 - refactoring
-    url(r'^delete_package_group_info/$', views.delete_package_group_info_logic, name='delete_package_group_info'),
+    url(r'^delete_ticket_lecture_info/$', views.delete_ticket_lecture_info_logic, name='delete_ticket_lecture_info'),
     # 수강권 상태 변경 - refactoring
-    url(r'^update_package_status_info/$', views.update_package_status_info_logic, name='update_package_status_info'),
+    url(r'^update_ticket_status_info/$', views.update_ticket_status_info_logic, name='update_ticket_status_info'),
 
     # 수강권 정보 조회 - refactoring
-    url(r'^get_package_info/$', views.GetPackageInfoViewAjax.as_view(), name='get_package_info'),
+    url(r'^get_ticket_info/$', views.GetPackageInfoViewAjax.as_view(), name='get_ticket_info'),
     # 진행중 수강권 list 조회 - refactoring
-    url(r'^get_package_ing_list/$', views.GetPackageIngListViewAjax.as_view(), name='get_package_ing_list'),
+    url(r'^get_ticket_ing_list/$', views.GetPackageIngListViewAjax.as_view(), name='get_ticket_ing_list'),
     # 완료된 수강권 list 조회 - refactoring
-    url(r'^get_package_end_list/$', views.GetPackageEndListViewAjax.as_view(), name='get_package_end_list'),
+    url(r'^get_ticket_end_list/$', views.GetPackageEndListViewAjax.as_view(), name='get_ticket_end_list'),
     # 수강권 회원 조회 - refactoring
-    url(r'^get_package_ing_member_list/$', views.GetPackageIngMemberListViewAjax.as_view(),
-        name='get_package_ing_member_list'),
+    url(r'^get_ticket_ing_member_list/$', views.GetPackageIngMemberListViewAjax.as_view(),
+        name='get_ticket_ing_member_list'),
     # 수강권 종료 회원 조회 - refactoring
-    url(r'^get_package_end_member_list/$', views.GetPackageEndMemberListViewAjax.as_view(),
-        name='get_package_end_member_list'),
+    url(r'^get_ticket_end_member_list/$', views.GetPackageEndMemberListViewAjax.as_view(),
+        name='get_ticket_end_member_list'),
 
 
 

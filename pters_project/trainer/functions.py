@@ -165,9 +165,9 @@ def func_get_member_from_lecture_list(all_lecture_list, user_id):
                            'member_email': str(member_info.user.email),
                            'member_sex': str(member_info.sex),
                            'member_birthday_dt': str(member_info.birthday_dt),
-                           'lecture_reg_count': lecture_reg_count,
-                           'lecture_rem_count': lecture_rem_count,
-                           'lecture_avail_count': lecture_avail_count,
+                           'member_ticket_reg_count': lecture_reg_count,
+                           'member_ticket_rem_count': lecture_rem_count,
+                           'member_ticket_avail_count': lecture_avail_count,
                            'start_date': str(start_date),
                            'end_date': str(end_date)}
 
@@ -260,10 +260,10 @@ def func_get_member_group_list(class_id, member_id):
 
     for package_group_info in package_group_data:
         group_tb = package_group_info.group_tb
-        group_info = {'group_id': group_tb.group_id,
-                      'group_name': group_tb.name,
-                      'group_note': group_tb.note,
-                      'group_max_num': group_tb.member_num
+        group_info = {'lecture_id': group_tb.group_id,
+                      'lecture_name': group_tb.name,
+                      'lecture_note': group_tb.note,
+                      'lecture_max_num': group_tb.member_num
         }
         group_list[group_tb.group_id] = group_info
 
@@ -290,19 +290,19 @@ def func_get_member_lecture_list(class_id, member_id):
         if '\r\n' in lecture_info.note:
             lecture_info.note = lecture_info.note.replace('\r\n', ' ')
 
-        member_lecture_info = {'lecture_id': lecture_info.lecture_id,
-                               'lecture_package_name': package_info.name,
-                               'lecture_package_id': package_info.package_id,
-                               'lecture_state_cd': lecture_info.state_cd,
-                               'lecture_reg_count': lecture_info.lecture_reg_count,
-                               'lecture_rem_count': lecture_info.lecture_rem_count,
-                               'lecture_avail_count': lecture_info.lecture_avail_count,
-                               'lecture_start_date': str(lecture_info.start_date),
-                               'lecture_end_date': str(lecture_info.end_date),
-                               'lecture_price': lecture_info.price,
-                               'lecture_refund_date': str(lecture_info.refund_date),
-                               'lecture_refund_price': lecture_info.refund_price,
-                               'lecture_note': str(lecture_info.note)}
+        member_lecture_info = {'member_ticket_id': lecture_info.lecture_id,
+                               'member_ticket_name': package_info.name,
+                               'member_ticket_ticket_id': package_info.package_id,
+                               'member_ticket_state_cd': lecture_info.state_cd,
+                               'member_ticket_reg_count': lecture_info.lecture_reg_count,
+                               'member_ticket_rem_count': lecture_info.lecture_rem_count,
+                               'member_ticket_avail_count': lecture_info.lecture_avail_count,
+                               'member_ticket_start_date': str(lecture_info.start_date),
+                               'member_ticket_end_date': str(lecture_info.end_date),
+                               'member_ticket_price': lecture_info.price,
+                               'member_ticket_refund_date': str(lecture_info.refund_date),
+                               'member_ticket_refund_price': lecture_info.refund_price,
+                               'member_ticket_note': str(lecture_info.note)}
         lecture_list[lecture_info.lecture_id] = member_lecture_info
     return lecture_list
 
@@ -631,16 +631,16 @@ def func_get_package_info(class_id, package_id, user_id):
         package_member_num_name = 'PE'
     member_list = func_get_member_from_lecture_list(all_lecture_list, user_id)
 
-    package_info = {'package_id': package_id,
-                    'package_name': package_tb.name,
-                    'package_note': package_tb.note,
-                    'package_state_cd': package_tb.state_cd,
-                    'package_reg_dt': str(package_tb.reg_dt),
-                    'package_mod_dt': str(package_tb.mod_dt),
-                    'package_group_list': package_group_list,
-                    'package_group_id_list': package_group_id_list,
+    package_info = {'ticket_id': package_id,
+                    'ticket_name': package_tb.name,
+                    'ticket_note': package_tb.note,
+                    'ticket_state_cd': package_tb.state_cd,
+                    'ticket_reg_dt': str(package_tb.reg_dt),
+                    'ticket_mod_dt': str(package_tb.mod_dt),
+                    'ticket_lecture_list': package_group_list,
+                    'ticket_lecture_id_list': package_group_id_list,
                     package_member_num_name: len(member_list),
-                    'package_member_list': member_list}
+                    'ticket_member_list': member_list}
 
     return package_info
 
@@ -694,14 +694,14 @@ def func_get_group_info(class_id, group_id, user_id):
     member_list = func_get_member_from_lecture_list(all_lecture_list, user_id)
 
     if group_tb is not None:
-        group_info = {'group_id': group_id, 'group_name': group_tb.name, 'group_note': group_tb.note,
-                      'group_state_cd': group_tb.state_cd, 'group_max_num': group_tb.member_num,
-                      'group_reg_dt': str(group_tb.reg_dt),
-                      'group_mod_dt': str(group_tb.mod_dt),
-                      'group_package_list': group_package_list,
-                      'group_package_id_list': group_package_id_list,
-                      'group_ing_member_num': len(member_list),
-                      'group_member_list': member_list}
+        group_info = {'lecture_id': group_id, 'lecture_name': group_tb.name, 'lecture_note': group_tb.note,
+                      'lecture_state_cd': group_tb.state_cd, 'lecture_max_num': group_tb.member_num,
+                      'lecture_reg_dt': str(group_tb.reg_dt),
+                      'lecture_mod_dt': str(group_tb.mod_dt),
+                      'lecture_ticket_list': group_package_list,
+                      'lecture_ticket_id_list': group_package_id_list,
+                      'lecture_ing_member_num': len(member_list),
+                      'lecture_member_list': member_list}
     else:
         group_info = None
     return group_info
