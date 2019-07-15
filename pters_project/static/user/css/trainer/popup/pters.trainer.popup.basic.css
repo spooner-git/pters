@@ -60,7 +60,7 @@
 .popup_basic_user_input_text, .popup_basic_user_input_number{
     text-align: center;
 }
-    .popup_basic_user_input_full{
+    .popup_basic_user_input_data{
         -webkit-appearance: none;
         width: 85%;
         height: 40px;
