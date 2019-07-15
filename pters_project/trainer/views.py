@@ -201,9 +201,9 @@ class GetMemberScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                     group_max_member_num = ''
 
                 schedule_info = {'schedule_id': member_schedule_info.schedule_id,
-                                 'group_id': group_id,
-                                 'group_name': group_name,
-                                 'group_max_member_num': group_max_member_num,
+                                 'lecture_id': group_id,
+                                 'lecture_name': group_name,
+                                 'lecture_max_member_num': group_max_member_num,
                                  'schedule_type': schedule_type,
                                  'start_dt': str(member_schedule_info.start_dt),
                                  'end_dt': str(member_schedule_info.end_dt),
@@ -263,10 +263,10 @@ class GetGroupScheduleListView(LoginRequiredMixin, AccessTestMixin, View):
                                             'state_cd': schedule_info.state_cd,
                                             'schedule_type': schedule_type,
                                             'note': schedule_info.note,
-                                            'group_id': group_id,
-                                            'group_name': group_name,
-                                            'group_max_member_num': group_max_member_num,
-                                            'group_current_member_num': group_current_member_num})
+                                            'lecture_id': group_id,
+                                            'lecture_name': group_name,
+                                            'lecture_max_member_num': group_max_member_num,
+                                            'lecture_current_member_num': group_current_member_num})
 
         else:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -362,11 +362,11 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                                           'end_time': member_repeat_schedule_info.end_time,
                                           'time_duration': member_repeat_schedule_info.time_duration,
                                           'state_cd': member_repeat_schedule_info.state_cd,
-                                          'group_repeat_schedule_id':
+                                          'lecture_repeat_schedule_id':
                                               member_repeat_schedule_info.group_repeat_schedule_id,
-                                          'group_id': group_id,
-                                          'group_name': group_name,
-                                          'group_max_member_num': group_max_member_num,
+                                          'lecture_id': group_id,
+                                          'lecture_name': group_name,
+                                          'lecture_max_member_num': group_max_member_num,
                                           'schedule_type': schedule_type}
                 member_repeat_schedule_list.append(member_repeat_schedule)
         else:
@@ -461,13 +461,13 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             current_member_data = sorted(current_member_data, key=lambda elem: elem['member_name'],
                                          reverse=int(sort_order_by))
         elif sort_info == SORT_REMAIN_COUNT:
-            current_member_data = sorted(current_member_data, key=lambda elem: elem['lecture_rem_count'],
+            current_member_data = sorted(current_member_data, key=lambda elem: elem['member_ticket_rem_count'],
                                          reverse=int(sort_order_by))
         elif sort_info == SORT_START_DATE:
             current_member_data = sorted(current_member_data, key=lambda elem: elem['start_date'],
                                          reverse=int(sort_order_by))
         elif sort_info == SORT_REG_COUNT:
-            current_member_data = sorted(current_member_data, key=lambda elem: elem['lecture_reg_count'],
+            current_member_data = sorted(current_member_data, key=lambda elem: elem['member_ticket_reg_count'],
                                          reverse=int(sort_order_by))
         # context['total_member_num'] = len(member_data)
         # if page != 0:
@@ -501,13 +501,13 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             finish_member_data = sorted(finish_member_data, key=lambda elem: elem['member_name'],
                                         reverse=int(sort_order_by))
         elif sort_info == SORT_REMAIN_COUNT:
-            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['lecture_rem_count'],
+            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['member_ticket_rem_count'],
                                         reverse=int(sort_order_by))
         elif sort_info == SORT_START_DATE:
             finish_member_data = sorted(finish_member_data, key=lambda elem: elem['start_date'],
                                         reverse=int(sort_order_by))
         elif sort_info == SORT_REG_COUNT:
-            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['lecture_reg_count'],
+            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['member_ticket_reg_count'],
                                         reverse=int(sort_order_by))
 
         # context['total_member_num'] = len(member_data)
@@ -937,7 +937,7 @@ class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, View):
                     group_schedule_info = ScheduleTb.objects.get(group_schedule_id=schedule_id,
                                                                  group_tb_id=schedule_info.group_tb_id,
                                                                  lecture_tb__member_id=member_id)
-                    context['lecture_info'] = group_schedule_info.lecture_tb
+                    context['member_ticket_info'] = group_schedule_info.lecture_tb
 
                 except ObjectDoesNotExist:
                     lecture_id = func_get_group_lecture_id(schedule_info.group_tb_id, member_id)
@@ -950,13 +950,14 @@ class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, View):
                             error = '수강정보를 불러오지 못했습니다.'
             else:
                 if schedule_info.lecture_tb.member_id == member_id:
-                    context['lecture_info'] = schedule_info.lecture_tb
+                    context['member_ticket_info'] = schedule_info.lecture_tb
                 else:
                     error = '번호와 수업이 일치하지 않습니다.'
 
         if schedule_info is not None:
             context['schedule_info'] = schedule_info
             context['schedule_id'] = schedule_id
+
         if error is not None:
             logger.error('class_id:'+str(class_id) + '/phone_number:' + str(phone_number) + '/schedule_id:'
                          + str(schedule_id) + '/' + error)
@@ -1431,11 +1432,11 @@ def export_excel_member_list_logic(request):
         if sort_info == SORT_MEMBER_NAME:
             member_list = sorted(member_list, key=attrgetter('name'), reverse=int(sort_order_by))
         elif sort_info == SORT_REMAIN_COUNT:
-            member_list = sorted(member_list, key=attrgetter('lecture_rem_count'), reverse=int(sort_order_by))
+            member_list = sorted(member_list, key=attrgetter('member_ticket_rem_count'), reverse=int(sort_order_by))
         elif sort_info == SORT_START_DATE:
             member_list = sorted(member_list, key=attrgetter('start_date'), reverse=int(sort_order_by))
         elif sort_info == SORT_REG_COUNT:
-            member_list = sorted(member_list, key=attrgetter('lecture_reg_count'), reverse=int(sort_order_by))
+            member_list = sorted(member_list, key=attrgetter('member_ticket_reg_count'), reverse=int(sort_order_by))
 
         filename_temp += '진행중_회원목록'
         ws1.title = "진행중 회원"
@@ -1465,12 +1466,13 @@ def export_excel_member_list_logic(request):
         if sort_info == SORT_MEMBER_NAME:
             member_finish_list = sorted(member_finish_list, key=attrgetter('name'), reverse=int(sort_order_by))
         elif sort_info == SORT_REMAIN_COUNT:
-            member_finish_list = sorted(member_finish_list, key=attrgetter('lecture_rem_count'),
+            member_finish_list = sorted(member_finish_list, key=attrgetter('member_ticket_rem_count'),
                                         reverse=int(sort_order_by))
         elif sort_info == SORT_START_DATE:
             member_finish_list = sorted(member_finish_list, key=attrgetter('start_date'), reverse=int(sort_order_by))
         elif sort_info == SORT_REG_COUNT:
-            member_finish_list = sorted(member_list, key=attrgetter('lecture_reg_count'), reverse=int(sort_order_by))
+            member_finish_list = sorted(member_list, key=attrgetter('member_ticket_reg_count'),
+                                        reverse=int(sort_order_by))
 
         ws1.title = "종료된 회원"
         filename_temp += '종료된_회원목록'
@@ -1784,7 +1786,7 @@ class GetMemberGroupListView(LoginRequiredMixin, AccessTestMixin, View):
 
 
 # 수강정보 추가
-def add_lecture_info_logic(request):
+def add_member_ticket_info_logic(request):
     member_id = request.POST.get('member_id')
     contents = request.POST.get('contents', '')
     counts = request.POST.get('counts')
@@ -1792,7 +1794,7 @@ def add_lecture_info_logic(request):
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
     class_id = request.session.get('class_id', '')
-    package_id = request.POST.get('package_id', '')
+    package_id = request.POST.get('ticket_id', '')
 
     error = None
 
@@ -1830,8 +1832,8 @@ def add_lecture_info_logic(request):
 
 
 # 수강권 수정
-def update_lecture_info_logic(request):
-    lecture_id = request.POST.get('lecture_id', '')
+def update_member_ticket_info_logic(request):
+    lecture_id = request.POST.get('member_ticket_id', '')
     error = None
     lecture_info = None
     note = request.POST.get('note', '')
@@ -1840,7 +1842,7 @@ def update_lecture_info_logic(request):
     price = request.POST.get('price', '')
     refund_price = request.POST.get('refund_price', '')
     refund_date = request.POST.get('refund_date', '')
-    lecture_reg_count = request.POST.get('lecture_reg_count', '')
+    lecture_reg_count = request.POST.get('member_ticket_reg_count', '')
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -1926,8 +1928,8 @@ def update_lecture_info_logic(request):
 
 
 # 회원 수강권 삭제
-def delete_lecture_info_logic(request):
-    lecture_id = request.POST.get('lecture_id', '')
+def delete_member_ticket_info_logic(request):
+    lecture_id = request.POST.get('member_ticket_id', '')
     class_id = request.session.get('class_id', '')
     error = None
 
@@ -1944,8 +1946,8 @@ def delete_lecture_info_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-def update_lecture_status_info_logic(request):
-    lecture_id = request.POST.get('lecture_id', '')
+def update_member_ticket_status_info_logic(request):
+    lecture_id = request.POST.get('member_ticket_id', '')
     state_cd = request.POST.get('state_cd', '')
     refund_price = request.POST.get('refund_price', 0)
     refund_date = request.POST.get('refund_date', None)
@@ -2086,9 +2088,8 @@ def update_member_connection_info_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-def add_group_info_logic(request):
+def add_lecture_info_logic(request):
     class_id = request.session.get('class_id', '')
-    group_type_cd = request.POST.get('group_type_cd', '')
     member_num = request.POST.get('member_num', '')
     name = request.POST.get('name', '')
     note = request.POST.get('note', '')
@@ -2099,7 +2100,7 @@ def add_group_info_logic(request):
     error = None
     try:
         with transaction.atomic():
-            group_info = GroupTb(class_tb_id=class_id, group_type_cd=group_type_cd, member_num=member_num,
+            group_info = GroupTb(class_tb_id=class_id, member_num=member_num,
                                  name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                  ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
                                  state_cd='IP', use=USE)
@@ -2122,9 +2123,9 @@ def add_group_info_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-def delete_group_info_logic(request):
+def delete_lecture_info_logic(request):
     class_id = request.session.get('class_id', '')
-    group_id = request.POST.get('group_id', '')
+    group_id = request.POST.get('lecture_id', '')
     error = None
     group_info = None
     try:
@@ -2204,8 +2205,8 @@ def delete_group_info_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-def update_group_info_logic(request):
-    group_id = request.POST.get('group_id', '')
+def update_lecture_info_logic(request):
+    group_id = request.POST.get('lecture_id', '')
     member_num = request.POST.get('member_num', '')
     name = request.POST.get('name', '')
     note = request.POST.get('note', '')
@@ -2269,9 +2270,9 @@ def update_group_info_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-def update_group_status_info_logic(request):
+def update_lecture_status_info_logic(request):
     class_id = request.session.get('class_id')
-    group_id = request.POST.get('group_id', '')
+    group_id = request.POST.get('lecture_id', '')
     state_cd = request.POST.get('state_cd', '')
 
     error = None
@@ -2329,7 +2330,7 @@ def update_group_status_info_logic(request):
 
 
 # 그룹 회원 삭제
-def update_fix_group_member_logic(request):
+def update_fix_lecture_member_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None
     error = None
@@ -2343,7 +2344,7 @@ def update_fix_group_member_logic(request):
     except TypeError:
         error = '오류가 발생했습니다. [2]'
 
-    group_id = json_loading_data['group_id']
+    group_id = json_loading_data['lecture_id']
     try:
         group_info = GroupTb.objects.get(group_id=group_id, use=USE)
     except ObjectDoesNotExist:
@@ -2411,7 +2412,7 @@ class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
-        group_id = request.GET.get('group_id', '')
+        group_id = request.GET.get('lecture_id', '')
 
         return JsonResponse(func_get_group_info(class_id, group_id, request.user.id),
                             json_dumps_params={'ensure_ascii': True})
@@ -2444,12 +2445,12 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 group_package_list.append(package_tb.name)
                 group_package_id_list.append(package_tb.package_id)
 
-            group_data[group_id] = {'group_id': group_id,
-                                    'group_name': group_tb.name,
-                                    'group_note': group_tb.note,
-                                    'group_max_num': group_tb.member_num,
-                                    'group_package_list': group_package_list,
-                                    'group_package_id_list': group_package_id_list}
+            group_data[group_id] = {'lecture_id': group_id,
+                                    'lecture_name': group_tb.name,
+                                    'lecture_note': group_tb.note,
+                                    'lecture_max_num': group_tb.member_num,
+                                    'lecture_ticket_list': group_package_list,
+                                    'lecture_ticket_id_list': group_package_id_list}
         group_list = []
 
         class_lecture_list = ClassLectureTb.objects.select_related(
@@ -2463,17 +2464,17 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         for group_info in group_data:
             member_list = {}
             for lecture_info in class_lecture_list:
-                for package_info in group_data[group_info]['group_package_id_list']:
+                for package_info in group_data[group_info]['lecture_ticket_id_list']:
                     if lecture_info.lecture_tb.package_tb.package_id == package_info:
                         member_list[lecture_info.lecture_tb.member_id] = lecture_info.lecture_tb.member_id
-            group_data[group_info]['group_ing_member_num'] = len(member_list)
+            group_data[group_info]['lecture_ing_member_num'] = len(member_list)
             group_list.append(group_data[group_info])
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        return JsonResponse({'current_group_data': group_list}, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse({'current_lecture_data': group_list}, json_dumps_params={'ensure_ascii': True})
 
 
 class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
@@ -2504,12 +2505,12 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 group_package_list.append(package_tb.name)
                 group_package_id_list.append(package_tb.package_id)
 
-            group_data[group_id] = {'group_id': group_id,
-                                    'group_name': group_tb.name,
-                                    'group_note': group_tb.note,
-                                    'group_max_num': group_tb.member_num,
-                                    'group_package_list': group_package_list,
-                                    'group_package_id_list': group_package_id_list}
+            group_data[group_id] = {'lecture_id': group_id,
+                                    'lecture_name': group_tb.name,
+                                    'lecture_note': group_tb.note,
+                                    'lecture_max_num': group_tb.member_num,
+                                    'lecture_ticket_list': group_package_list,
+                                    'lecture_ticket_id_list': group_package_id_list}
         group_list = []
 
         for group_info in group_data:
@@ -2526,7 +2527,7 @@ class GetGroupIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
-        group_id = request.GET.get('group_id', '')
+        group_id = request.GET.get('lecture_id', '')
         error = None
 
         group_package_data = PackageGroupTb.objects.select_related(
@@ -2562,14 +2563,12 @@ class GetGroupIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse({'group_ing_member_list': member_list}, json_dumps_params={'ensure_ascii': True})
 
 
-
-
 # 패키지 추가
-def add_package_info_logic(request):
+def add_ticket_info_logic(request):
     class_id = request.session.get('class_id', '')
-    package_name = request.POST.get('package_name')
-    package_note = request.POST.get('package_note')
-    group_id_list = request.POST.getlist('package_list')
+    package_name = request.POST.get('ticket_name')
+    package_note = request.POST.get('ticket_note')
+    group_id_list = request.POST.getlist('ticket_list')
     error = None
 
     if error is None:
@@ -2605,9 +2604,9 @@ def add_package_info_logic(request):
 
 
 # 수강권 삭제
-def delete_package_info_logic(request):
+def delete_ticket_info_logic(request):
     class_id = request.session.get('class_id', '')
-    package_id = request.POST.get('package_id', '')
+    package_id = request.POST.get('ticket_id', '')
     error = None
     package_info = None
     now = timezone.now()
@@ -2678,11 +2677,11 @@ def delete_package_info_logic(request):
 
 
 # 수강권 수정
-def update_package_info_logic(request):
+def update_ticket_info_logic(request):
     class_id = request.session.get('class_id', '')
-    package_id = request.POST.get('package_id', '')
-    package_name = request.POST.get('package_name', '')
-    package_note = request.POST.get('package_note', '')
+    package_id = request.POST.get('ticket_id', '')
+    package_name = request.POST.get('ticket_name', '')
+    package_note = request.POST.get('ticket_note', '')
     error = None
     package_info = None
     try:
@@ -2705,10 +2704,10 @@ def update_package_info_logic(request):
 
 
 # 수강권에 그룹 추가
-def add_package_group_info_logic(request):
+def add_ticket_lecture_info_logic(request):
     class_id = request.session.get('class_id', '')
-    package_id = request.POST.get('package_id', '')
-    group_id = request.POST.get('group_id', '')
+    package_id = request.POST.get('ticket_id', '')
+    group_id = request.POST.get('lecture_id', '')
     error = None
     package_group_counter = PackageGroupTb.objects.filter(package_tb_id=package_id, group_tb_id=group_id,
                                                           use=USE).count()
@@ -2741,10 +2740,10 @@ def add_package_group_info_logic(request):
 
 
 # 패키지에서 그룹 삭제
-def delete_package_group_info_logic(request):
+def delete_ticket_lecture_info_logic(request):
     class_id = request.session.get('class_id', '')
-    package_id = request.POST.get('package_id', '')
-    group_id = request.POST.get('group_id', '')
+    package_id = request.POST.get('ticket_id', '')
+    group_id = request.POST.get('lecture_id', '')
     error = None
 
     if error is None:
@@ -2813,9 +2812,9 @@ def delete_package_group_info_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-def update_package_status_info_logic(request):
+def update_ticket_status_info_logic(request):
     class_id = request.session.get('class_id', '')
-    package_id = request.POST.get('package_id', '')
+    package_id = request.POST.get('ticket_id', '')
     state_cd = request.POST.get('state_cd')
 
     error = None
@@ -2921,11 +2920,11 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             if group_tb.state_cd == 'IP' and group_tb.use == USE:
                 package_group_list.append(group_tb.name)
                 package_group_id_list.append(group_tb.group_id)
-            package_data[package_id] = {'package_id': package_id,
-                                        'package_name': package_tb.name,
-                                        'package_note': package_tb.note,
-                                        'package_group_list': package_group_list,
-                                        'package_group_id_list': package_group_id_list}
+            package_data[package_id] = {'ticket_id': package_id,
+                                        'ticket_name': package_tb.name,
+                                        'ticket_note': package_tb.note,
+                                        'ticket_lecture_list': package_group_list,
+                                        'ticket_lecture_id_list': package_group_id_list}
         package_list = []
         class_lecture_list = ClassLectureTb.objects.select_related(
             'lecture_tb__package_tb',
@@ -2942,7 +2941,7 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 if package_id == package_info:
                     member_id = lecture_info.lecture_tb.member_id
                     member_list[member_id] = member_id
-            package_data[package_info]['package_ing_member_num'] = len(member_list)
+            package_data[package_info]['ticket_ing_member_num'] = len(member_list)
             package_list.append(package_data[package_info])
         # package_data = PackageTb.objects.filter(class_tb_id=class_id, state_cd='IP',
         #                                         use=USE).filter(name__contains=keyword).order_by('name')
@@ -3033,11 +3032,11 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             if group_tb.use == USE:
                 package_group_list.append(group_tb.name)
                 package_group_id_list.append(group_tb.group_id)
-            package_data[package_id] = {'package_id': package_id,
-                                        'package_name': package_tb.name,
-                                        'package_note': package_tb.note,
-                                        'package_group_list': package_group_list,
-                                        'package_group_id_list': package_group_id_list}
+            package_data[package_id] = {'ticket_id': package_id,
+                                        'ticket_name': package_tb.name,
+                                        'ticket_note': package_tb.note,
+                                        'ticket_lecture_list': package_group_list,
+                                        'ticket_lecture_id_list': package_group_id_list}
         package_list = []
         class_lecture_list = ClassLectureTb.objects.select_related(
             'lecture_tb__package_tb',
@@ -3054,7 +3053,7 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 if package_id == package_info:
                     member_id = lecture_info.lecture_tb.member_id
                     member_list[member_id] = member_id
-            package_data[package_info]['package_end_member_num'] = len(member_list)
+            package_data[package_info]['ticket_end_member_num'] = len(member_list)
             package_list.append(package_data[package_info])
 
         # if keyword == '' or keyword is None:
@@ -3113,7 +3112,7 @@ class GetPackageIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View)
     def get(self, request):
         # context = {}
         class_id = self.request.session.get('class_id', '')
-        package_id = self.request.GET.get('package_id', '')
+        package_id = self.request.GET.get('ticket_id', '')
         error = None
         # member_data = []
 
@@ -3143,7 +3142,7 @@ class GetPackageEndMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View)
     def get(self, request):
         # context = {}
         class_id = self.request.session.get('class_id', '')
-        package_id = self.request.GET.get('package_id', '')
+        package_id = self.request.GET.get('ticket_id', '')
         error = None
 
         query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as A where A.LECTURE_TB_ID =" \

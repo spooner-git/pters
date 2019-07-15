@@ -801,10 +801,10 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
                                    'schedule_type': schedule_type,
                                    'note': schedule_info.note,
                                    'member_name': member_name,
-                                   'group_id': group_id,
-                                   'group_name': group_name,
-                                   'group_max_member_num': group_max_member_num,
-                                   'group_current_member_num': group_current_member_num})
+                                   'lecture_id': group_id,
+                                   'lecture_name': group_name,
+                                   'lecture_max_member_num': group_max_member_num,
+                                   'lecture_current_member_num': group_current_member_num})
 
         ordered_schedule_dict[schedule_start_date[0]] = date_schedule_list
 
