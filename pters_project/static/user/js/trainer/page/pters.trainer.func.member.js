@@ -117,8 +117,8 @@ class Member {
             let member_id = data.member_id;
             let member_name = data.member_name;
             let member_phone = data.member_phone;
-            let member_reg = data.lecture_reg_count;
-            let member_rem = data.lecture_rem_count;
+            let member_reg = data.member_ticket_reg_count;
+            let member_rem = data.member_ticket_rem_count;
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'member_id':${member_id}});`;
             let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}">

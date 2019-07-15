@@ -107,6 +107,12 @@
             this.render_ticket_list_set();
         }
 
+        refresh(data){
+            this.reform_data(data);
+            this.render_lecture_name();
+            this.render_basic_info();
+        }
+
         reform_data(data){
             this.data = data;
         }
@@ -125,13 +131,12 @@
             if(target == undefined){
                 target = this.target_name;
             }
-            document.querySelector(target).innerHTML = this.data.group_name;
+            document.querySelector(target).innerHTML = this.data.lecture_name;
         }
 
         render_lecture_edit_button(target){
             document.querySelector(target).onclick =  () => {
-                // open_lecture_edit_popup(this.data.group_id)
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_EDIT, 100, POPUP_FROM_RIGHT, {'lecture_id':this.data.group_id})
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_EDIT, 100, POPUP_FROM_RIGHT, {'lecture_id':this.data.lecture_id})
             };
         }
 
@@ -146,13 +151,13 @@
                                     <div class="lecture_tag_body" style="background-color:#fe4e65"></div>
                                     <div class="lecture_tag_head" style="border-left-color:#fe4e65"></div>
                                 </div>
-                                <div>정원 - ${this.data.group_max_num} 명</div>
+                                <div>정원 - ${this.data.lecture_max_num} 명</div>
                                 <div>${'30회 - 900,000 원'}</div>
-                                <div>${this.data.group_note}</div>
+                                <div>${this.data.lecture_note}</div>
                             </div>
                             <div id="wrapper_lecture_info_dates">
-                                <div>수정 <span>${'2019.06.24'}</span></div>
-                                <div>개설 <span>${'2019.06.21'}</span></div>
+                                <div>수정 <span>${this.data.lecture_mod_dt}</span></div>
+                                <div>개설 <span>${this.data.lecture_reg_dt}</span></div>
                             </div>
                         </div
                         >`
@@ -164,10 +169,10 @@
                 target = this.target_ticket_list;
             }
             let html_to_join = [];
-            let length = this.data.group_package_id_list.length;
+            let length = this.data.lecture_ticket_id_list.length;
             for(var i=0; i<length; i++){
-                let ticket_id = this.data.group_package_id_list[i];
-                let ticket_name = this.data.group_package_list[i]
+                let ticket_id = this.data.lecture_ticket_id_list[i];
+                let ticket_name = this.data.lecture_ticket_list[i]
                 let html = 
                             `
                             <div class="swiper-slide" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':${ticket_id}})">
@@ -196,14 +201,14 @@
                 target = this.target_member_list;
             }
             let html_to_join = [];
-            let length = this.data.group_member_list.length;
+            let length = this.data.lecture_member_list.length;
             for(var i=0; i<length; i++){
-                let data = this.data.group_member_list[i];
+                let data = this.data.lecture_member_list[i];
                 let member_id = data.member_id;
                 let member_name = data.member_name;
                 let member_sex = data.member_sex;
-                let member_rem = data.lecture_rem_count;
-                let member_reg = data.lecture_reg_count;
+                let member_rem = data.member_ticket_rem_count;
+                let member_reg = data.member_ticket_reg_count;
                 let html = 
                             `
                             <li onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':${member_id}});">
@@ -231,11 +236,11 @@
         static_component(){
             return {
                     toggle_set_ticket : `<div id="toggle_lecture_tickets_list" onclick="toggle_list('#wrapper_lecture_tickets_list')">
-                                            <span>포함된 수강권 ${this.data.group_package_id_list.length}</span>
+                                            <span>포함된 수강권 ${this.data.lecture_ticket_id_list.length}</span>
                                             <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
                                         </div>`,
                     toggle_set_member: `<div id="toggle_lecture_members_list" onclick="toggle_list('#wrapper_lecture_members_list')">
-                                            <span>진행중인 회원 ${this.data.group_member_list.length}</span>
+                                            <span>진행중인 회원 ${this.data.lecture_member_list.length}</span>
                                             <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
                                         </div>`
             }
@@ -243,7 +248,7 @@
 
     }
 
-    let swiper, lecture_info_popup;
+    let swiper;
     var lecture_info_popup = new Lecture_info('.popup_lecture_view', 'lecture_info_popup', lecture_info);
     lecture_info_popup.init();
     swiper = new Swiper('.swiper-container', {

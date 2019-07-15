@@ -36,13 +36,10 @@ class Ticket{
         //sort_order_by : ticket_type_seq, ticket_name, ticket_member_many, ticket_member_few, ticket_create_new, ticket_create_old
         let url;
         if(status=='ing'){
-            url = '/trainer/get_package_ing_list/';
+            url = '/trainer/get_ticket_ing_list/';
         }else if (status=='end'){
-            url = '/trainer/get_package_end_list/';
+            url = '/trainer/get_ticket_end_list/';
         }
-        // else{
-        //     url = '/trainer/get_package_list/';
-        // }
         let start_time;
         let end_time;
         $.ajax({
@@ -120,13 +117,12 @@ class Ticket{
         let html_temp = [];
         for(let i=0; i<length; i++){
             let data = whole_data[i];
-            let ticket_id = data.package_id;
-            let ticket_name = data.package_name;
-            let ticket_note = data.package_note != undefined ? data.package_note : "";
-            let ticket_member_number = data.package_ing_member_num;
-            let ticket_end_member_number = data.package_end_member_num;
-            let ticket_lectures_included_name = data.package_group_list;
-            // let ticket_lectures_included_id = data.package_group_id_list;
+            let ticket_id = data.ticket_id;
+            let ticket_name = data.ticket_name;
+            let ticket_note = data.ticket_note != undefined ? data.ticket_note : "";
+            let ticket_member_number = data.ticket_ing_member_num;
+            let ticket_end_member_number = data.ticket_end_member_num;
+            let ticket_lectures_included_name = data.ticket_lecture_list;
             let ticket_lectures_included_name_html = ticket_lectures_included_name.map(el => `<div>${el}</div>`).join('');
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'ticket_id':${ticket_id}});`;
@@ -203,9 +199,9 @@ class Ticket{
 
 class Ticket_func{
     static create(data, callback){
-        //데이터 형태 {"package_name":"", "package_note":"", "package_list":[""]};
+        //데이터 형태 {"ticket_name":"", "ticket_note":"", "ticket_list":[""]};
         $.ajax({
-            url:'/trainer/add_package_info/',
+            url:'/trainer/add_ticket_info/',
             type:'POST',
             data: data,
             dataType : 'html',
@@ -236,7 +232,7 @@ class Ticket_func{
     static read(data, callback){
         //데이터 형태 {"ticket_id":""};
         $.ajax({
-            url:'/trainer/get_package_info/',
+            url:'/trainer/get_ticket_info/',
             type:'GET',
             data: data,
             dataType : 'html',
@@ -266,9 +262,9 @@ class Ticket_func{
     }
 
     static delete(data, callback){
-        //데이터 형태 {"package_id":""};
+        //데이터 형태 {"ticket_id":""};
         $.ajax({
-            url:'/trainer/delete_package_info/',
+            url:'/trainer/delete_ticket_info/',
             type:'POST',
             data: data,
             dataType : 'html',
@@ -297,9 +293,9 @@ class Ticket_func{
     }
 
     static update(data, callback){
-        //데이터 형태 {"package_id":"", "package_name":"", "package_note":""};
+        //데이터 형태 {"ticket_id":"", "ticket_name":"", "ticket_note":""};
         $.ajax({
-            url:'/trainer/update_package_info/',
+            url:'/trainer/update_ticket_info/',
             type:'POST',
             data: data,
             dataType : 'html',

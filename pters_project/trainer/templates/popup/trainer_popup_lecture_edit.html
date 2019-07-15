@@ -154,9 +154,10 @@
         reform_data(data){
             this.data = data;
             
-            this.lecture_id = this.data.group_id;
-            this.lecture_name = this.data.group_name;
-            this.lecture_max_num = this.data.group_max_num;
+            this.lecture_id = this.data.lecture_id;
+            this.lecture_name = this.data.lecture_name;
+            this.lecture_note = this.data.lecture_note;
+            this.lecture_max_num = this.data.lecture_max_num;
             this.lecture_operating_time = "% 90분";
             this.lecture_color = "#fe4e65";
             this.lecture_repeat_schedule = "% 반복 안함";
@@ -164,9 +165,10 @@
 
             this.items =    {    
                                 lecture_name: {visible: true, title:"수업명", value:this.lecture_name, input_type:"text"},
-                                lecture_max_num: {visible: true, title:"정원", value: this.lecture_max_num, input_type:"number"},
+                                lecture_note: {visible: true, title:"수업 설명", value: this.lecture_note, input_type:"text"},
+                                lecture_member_num: {visible: true, title:"정원", value: this.lecture_max_num, input_type:"number"},
                                 lecture_operating_time: {visible: true, title:"진행 시간", value: this.lecture_operating_time, input_type:"time"},
-                                lecture_color: {visible: true, title:"색상 태그", value: this.lecture_color, input_type:"color"},
+                                lecture_ing_color_cd: {visible: true, title:"색상 태그", value: this.lecture_color, input_type:"color"},
                                 lecture_repeat_schedule: {visible: true, title:"반복 일정", value: this.lecture_repeat_schedule, input_type:"link"},
                                 lecture_fixed_member: {visible: true, title:"고정 회원", value: this.lecture_fixed_member, input_type:"link"},
                                 lecture_finished_members: {visible: true, title:"수업 종료된 회원", value:"", input_type:"link"},
@@ -222,40 +224,46 @@
                 let click_type = document.getElementById(`${item}`).dataset.click;
                 switch(click_type){
                     case "text":
-                        onclick = function(){show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
                         break;
                     case "number":
-                        onclick = function(){show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
                         break;
                     case "date":
-                        onclick = function(){time_select_popup.open()};
+                        onclick = ()=>{time_select_popup.open()};
                         break;
                     case "option":
                         let option_data = item_el.option_data
-                        onclick = function(){option_select_popup.open(option_data)};
+                        onclick = ()=>{option_select_popup.open(option_data)};
                         break;
                     case "time":
-                        onclick = function(){time_select_popup.open()};
+                        onclick = ()=>{time_select_popup.open()};
                         break;
                     case "color":
-                        onclick = function(){show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
+                        break;
+                    case "disabled":
+                        onclick = ()=>{show_error_message("수정 할 수 없는 항목입니다.")}
+                        break;    
                 }
                 document.getElementById(`${item}`).onclick = onclick;
             }
         }
 
         send_data(context, item_name){
-            //데이터 형태 {"group_id":"", "member_num":"", "name":"", "note":"", "ing_color_cd":"", "end_color_cd":"", "ing_font_color_cd":"", "end_font_color_cd":""};
+            //데이터 형태 {"lecture_id":"", "member_num":"", "name":"", "note":"", "ing_color_cd":"", "end_color_cd":"", "ing_font_color_cd":"", "end_font_color_cd":""};
             let user_input = $(context).parent().siblings('div').find('.popup_basic_user_input_full').val();
             let data_to_send = {};
-            data_to_send["group_id"] = this.lecture_id;
+            data_to_send["lecture_id"] = this.lecture_id;
             data_to_send[item_name.replace(/lecture_/gi,"")] = user_input;
 
             
             Lecture_func.update(data_to_send, () => {
-                Lecture_func.read({"group_id":this.lecture_id}, (data)=>{
+                Lecture_func.read({"lecture_id":this.lecture_id}, (data)=>{
                     this.reform_data(data);
                     this.render_setting_list();
+                    lecture_info_popup.refresh(data);
+                    lecture.init();
                 })
             }) 
         }

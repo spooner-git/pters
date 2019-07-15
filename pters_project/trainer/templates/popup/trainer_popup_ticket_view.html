@@ -97,6 +97,8 @@
             this.target_ticket_name = '#ticket_name_in_popup';
             this.target_ticket_lecture_list = '#wrapper_ticket_lectures_list';
             this.target_ticket_member_list = '#wrapper_ticket_members_list';
+
+            console.log(this.data)
         }
 
         init(){
@@ -105,6 +107,12 @@
             this.render_ticket_edit_button('#ticket_edit_popup_show_button');
             this.render_lecture_list_set();
             this.render_member_list_set();
+        }
+
+        refresh(data){
+            this.reform_data(data);
+            this.render_ticket_name();
+            this.render_basic_info();
         }
 
         reform_data(data){
@@ -125,13 +133,12 @@
             if(target == undefined){
                 target = this.target_ticket_name;
             }
-            document.querySelector(target).innerHTML = this.data.package_name;
+            document.querySelector(target).innerHTML = this.data.ticket_name;
         }
 
         render_ticket_edit_button(target){
             document.querySelector(target).onclick = () => {
-                // open_ticket_edit_popup(this.data.package_id);
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_EDIT, 100, POPUP_FROM_RIGHT, {'ticket_id':this.data.package_id});
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_EDIT, 100, POPUP_FROM_RIGHT, {'ticket_id':this.data.ticket_id});
             };
         }
 
@@ -144,11 +151,11 @@
                             <div id="wrapper_ticket_info_basic">
                                 <div class="obj_tag obj_font_bg_grey_trans" style="line-height: 20px;">${'횟수제'}</div>
                                 <div>${'30회 - 900,000 원'}</div>
-                                <div>${this.data.package_note}</div>
+                                <div>${this.data.ticket_note}</div>
                             </div>
                             <div id="wrapper_ticket_info_dates">
-                                <div>수정 <span>${this.data.package_mod_dt.split(' ')[0]}</span></div>
-                                <div>개설 <span>${this.data.package_reg_dt.split(' ')[0]}</span></div>
+                                <div>수정 <span>${this.data.ticket_mod_dt.split(' ')[0]}</span></div>
+                                <div>개설 <span>${this.data.ticket_reg_dt.split(' ')[0]}</span></div>
                             </div>
                         </div
                         >`
@@ -160,10 +167,10 @@
                 target = this.target_ticket_lecture_list;
             }
             let html_to_join = [];
-            let length = this.data.package_group_id_list.length;
+            let length = this.data.ticket_lecture_id_list.length;
             for(var i=0; i<length; i++){
-                let lecture_id = this.data.package_group_id_list[i];
-                let lecture_name = this.data.package_group_list[i]
+                let lecture_id = this.data.ticket_lecture_id_list[i];
+                let lecture_name = this.data.ticket_lecture_list[i]
                 let html = 
                             `
                             <li onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':${lecture_id}})">
@@ -189,17 +196,17 @@
 
         render_include_member_info(target){
             if(target == undefined){
-                target = target_ticket_member_list;
+                target = this.target_ticket_member_list;
             }
             let html_to_join = [];
-            let length = this.data.package_member_list.length;
+            let length = this.data.ticket_member_list.length;
             for(var i=0; i<length; i++){
-                let data = this.data.package_member_list[i];
+                let data = this.data.ticket_member_list[i];
                 let member_id = data.member_id;
                 let member_name = data.member_name;
                 let member_sex = data.member_sex;
-                let member_rem = data.lecture_rem_count;
-                let member_reg = data.lecture_reg_count;
+                let member_rem = data.member_ticket_rem_count;
+                let member_reg = data.member_ticket_reg_count;
                 let html = 
                             `
                             <li onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':${member_id}});">
@@ -226,11 +233,11 @@
         static_component(){
             return {
                     toggle_set_lecture : `<div id="toggle_ticket_lectures_list" onclick="toggle_list('#wrapper_ticket_lectures_list')">
-                                            <span>포함된 수업 ${this.data.package_group_id_list.length}</span>
+                                            <span>포함된 수업 ${this.data.ticket_lecture_id_list.length}</span>
                                             <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
                                         </div>`,
                     toggle_set_member: `<div id="toggle_ticket_members_list" onclick="toggle_list('#wrapper_ticket_members_list')">
-                                            <span>진행중인 회원 ${this.data.package_member_list.length}</span>
+                                            <span>진행중인 회원 ${this.data.ticket_member_list.length}</span>
                                             <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
                                         </div>`
             }

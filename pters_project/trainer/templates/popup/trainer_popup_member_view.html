@@ -101,6 +101,7 @@
             this.target_ticket_list = '#wrapper_member_tickets_list';
             this.target_lecture_list = '#wrapper_member_lectures_list';
 
+            console.log(data)
         }
 
         init (){
@@ -109,6 +110,12 @@
             this.render_member_edit_button('#member_edit_popup_show_button');
             this.render_ticket_list_set();
             this.render_lecture_list_set();
+        }
+
+        refresh(data){
+            this.reform_data(data);
+            this.render_member_name();
+            this.render_basic_info();
         }
 
         reform_data(data){
@@ -127,7 +134,7 @@
 
         render_member_name (target){
             if(target == undefined){
-                target = this.this.target_name;
+                target = this.target_name;
             }
             document.querySelector(target).innerHTML = this.data.basic_info.member_name;
         }
@@ -172,9 +179,11 @@
             let html_to_join = [];
             for(let ticket in this.data.ticket_info){
                 let this_data = this.data.ticket_info[ticket];
-                let ticket_id = this_data.lecture_package_id;
-                let ticket_name = this_data.lecture_package_name;
-                let ticket_end = this_data.lecture_end_date;
+                let ticket_id = this_data.member_ticket_ticket_id;
+                let ticket_name = this_data.member_ticket_name;
+                let ticket_reg_count = this_data.member_ticket_reg_count;
+                let ticket_rem_count = this_data.member_ticket_rem_count
+                let ticket_end = this_data.member_ticket_end_date;
                 let html = 
                             `
                             <div class="swiper-slide" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':${ticket_id}})">
@@ -206,9 +215,9 @@
             let html_to_join = [];
             for(let lecture in this.data.lecture_info){
                 let this_data = this.data.lecture_info[lecture];
-                let lecture_id = this_data.group_id;
-                let lecture_name = this_data.group_name;
-                let lecture_max_num = this_data.group_max_num;
+                let lecture_id = this_data.lecture_id;
+                let lecture_name = this_data.lecture_name;
+                let lecture_max_num = this_data.lecture_max_num;
                 let html = 
                             `
                             <li onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':${lecture_id}})">
@@ -252,7 +261,7 @@
 
     }
 
-    let swiper, member_info_popup;
+    let swiper;
     var member_info_popup = new Member_info('.popup_member_view', member_info, 'member_info_popup');
     member_info_popup.init();
     swiper = new Swiper('.swiper-container', {

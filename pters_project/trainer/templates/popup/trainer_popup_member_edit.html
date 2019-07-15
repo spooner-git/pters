@@ -163,9 +163,9 @@
 
             this.items =    {    
                                 member_first_name: {visible: true, title:"회원명", value:this.member_name, input_type:"text"},
-                                member_user_id: {visible: true, title:"아이디", value: this.member_user_id, input_type:"text"},
+                                member_user_id: {visible: true, title:"아이디", value: this.member_user_id, input_type:"disabled"},
                                 member_phone: {visible: true, title:"연락처", value: this.member_phone, input_type:"number"},
-                                member_birth: {visible: true, title:"생년월일", value: this.member_birth, input_type:"date"},
+                                member_birthday: {visible: true, title:"생년월일", value: this.member_birth, input_type:"date"},
                                 member_sex: {visible: true, title:"성별", value: this.member_sex, input_type:"option", option_data:
                                    {남성:{value: 0, callback: ()=>{}}, 여성:{value: 1, callback: ()=>{}}}
                                 },
@@ -227,23 +227,27 @@
                 let click_type = document.getElementById(`${item}`).dataset.click;
                 switch(click_type){
                     case "text":
-                        onclick = function(){show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
                         break;
                     case "number":
-                        onclick = function(){show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
                         break;
                     case "date":
-                        onclick = function(){time_select_popup.open()};
+                        onclick = ()=>{time_select_popup.open()};
                         break;
                     case "option":
                         let option_data = item_el.option_data
-                        onclick = function(){option_select_popup.open(option_data)};
+                        onclick = ()=>{option_select_popup.open(option_data)};
                         break;
                     case "time":
-                        onclick = function(){time_select_popup.open()};
+                        onclick = ()=>{time_select_popup.open()};
                         break;
                     case "color":
-                        onclick = function(){show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
+                        break;
+                    case "disabled":
+                        onclick = ()=>{show_error_message("수정 할 수 없는 항목입니다.")}
+                        break;
                 }
                 document.getElementById(`${item}`).onclick = onclick;
             }
@@ -255,13 +259,13 @@
             let data_to_send = {};
             data_to_send["member_id"] = this.member_id;
             data_to_send[item_name.replace(/member_/gi,"")] = user_input;
-
-            console.log(data_to_send)
             
             Member_func.update(data_to_send, () => {
                 Member_func.read({"member_id":this.member_id}, (data)=>{
                     this.reform_data(data);
                     this.render_setting_list();
+                    member_info_popup.refresh(data);
+                    member.init();
                 })
             }) 
         }

@@ -36,9 +36,9 @@ class Lecture {
         //sort_order_by : lecture_type_seq, lecture_name, lecture_member_many, lecture_member_few, lecture_create_new, lecture_create_old
         let url;
         if(status=='ing'){
-            url = '/trainer/get_group_ing_list/';
+            url = '/trainer/get_lecture_ing_list/';
         }else if (status=='end'){
-            url = '/trainer/get_group_end_list/';
+            url = '/trainer/get_lecture_end_list/';
         }
         // else{
         //     url = '/trainer/get_package_list/';
@@ -103,12 +103,12 @@ class Lecture {
         let whole_data, length;
 
         if(list_status_type == "ing"){
-            whole_data = jsondata.current_group_data;
+            whole_data = jsondata.current_lecture_data;
             length = whole_data.length;
             this.lecture_ing_length = length;
             this.list_status_type_text = "진행중";
         }else if(list_status_type == "end"){
-            whole_data = jsondata.finish_group_data;
+            whole_data = jsondata.finish_lecture_data;
             length = whole_data.length;
             this.lecture_end_length = length;
             this.list_status_type_text = "종료";
@@ -120,11 +120,11 @@ class Lecture {
         let html_temp = [];
         for(let i=0; i<length; i++){
             let data = whole_data[i];
-            let lecture_id = data.group_id;
-            let lecture_name = data.group_name;
-            let lecture_note = data.group_note != "" ? data.group_note : " - ";
-            let lecture_max_member_number = data.group_max_num;
-            let lecture_member_number = data.group_ing_member_num;
+            let lecture_id = data.lecture_id;
+            let lecture_name = data.lecture_name;
+            let lecture_note = data.lecture_note != "" ? data.lecture_note : " - ";
+            let lecture_max_member_number = data.lecture_max_num;
+            let lecture_member_number = data.lecture_ing_member_num;
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'lecture_id':${lecture_id}});`;
             let html = `<article class="lecture_wrapper" data-lectureid="${lecture_id}" onclick="${onclick}">
@@ -194,10 +194,11 @@ class Lecture {
 
 class Lecture_func{
     static create(data, callback){
-        //데이터 형태 {"group_type_cd":"", "member_num":"", "name":"", "note":"", "ing_color_cd":"", "end_color_cd":"", "ing_font_color_cd":"", "end_font_color_cd":""};
+        //데이터 형태 {"member_num":"", "name":"", "note":"", "ing_color_cd":"", "end_color_cd":"", "ing_font_color_cd":"", "end_font_color_cd":""};
 
+        
         $.ajax({
-            url:'/trainer/add_group_info/',
+            url:'/trainer/add_lecture_info/',
             type:'POST',
             data: data,
             dataType : 'html',
@@ -226,9 +227,9 @@ class Lecture_func{
     }
 
     static read(data, callback){
-        //데이터 형태 {"group_id":""};
+        //데이터 형태 {"lecture_id":""};
         $.ajax({
-            url:'/trainer/get_group_info/',
+            url:'/trainer/get_lecture_info/',
             type:'GET',
             data: data,
             dataType : 'html',
@@ -258,9 +259,9 @@ class Lecture_func{
     }
 
     static delete(data, callback){
-        //데이터 형태 {"group_id":""};
+        //데이터 형태 {"lecture_id":""};
         $.ajax({
-            url:'/trainer/delete_group_info/',
+            url:'/trainer/delete_lecture_info/',
             type:'POST',
             data: data,
             dataType : 'html',
@@ -289,11 +290,11 @@ class Lecture_func{
     }
 
     static update(data, callback){
-        //데이터 형태 {"group_id":"", "member_num":"", "name":"", "note":"", "ing_color_cd":"", "end_color_cd":"", "ing_font_color_cd":"", "end_font_color_cd":""};
+        //데이터 형태 {"lecture_id":"", "member_num":"", "name":"", "note":"", "ing_color_cd":"", "end_color_cd":"", "ing_font_color_cd":"", "end_font_color_cd":""};
 
 
         $.ajax({
-            url:'/trainer/update_group_info/',
+            url:'/trainer/update_lecture_info/',
             type:'POST',
             data: data,
             dataType : 'html',

@@ -61,6 +61,8 @@
             this.ticket_expiry;
             this.ticket_price;
             this.items;
+
+            console.log('123', data)
         }
 
         init(){
@@ -70,10 +72,10 @@
 
         reform_data(data){
             this.data = data;
-            this.ticket_id = this.data.package_id;
-            this.ticket_name = this.data.package_name;
-            this.ticket_description = this.data.package_note;
-            this.ticket_include_lectures = this.data.package_group_list;
+            this.ticket_id = this.data.ticket_id;
+            this.ticket_name = this.data.ticket_name;
+            this.ticket_description = this.data.ticket_note;
+            this.ticket_include_lectures = this.data.ticket_lecture_list;
             this.ticket_count = "% 100";
             this.ticket_expiry = "% 3개월";
             this.ticket_price = "% 1,200,000원";
@@ -132,10 +134,10 @@
                 let click_type = document.getElementById(`${item}`).dataset.click;
                 switch(click_type){
                     case "text":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
                         break;
                     case "number":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
                         break;
                     case "date":
                         onclick = ()=>{time_select_popup.open()};
@@ -148,7 +150,11 @@
                         onclick = ()=>{time_select_popup.open()};
                         break;
                     case "color":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
+                        break;
+                    case "disabled":
+                        onclick = ()=>{show_error_message("수정 할 수 없는 항목입니다.")}
+                        break;
                 }
                 document.getElementById(`${item}`).onclick = onclick;
             }
@@ -156,18 +162,16 @@
 
         send_data(context, item_name){
             let user_input = $(context).parent().siblings('div').find('.popup_basic_user_input_full').val();
-            // let data_to_send = `'{"package_id": ${this.ticket_id}, "${item_name}": ${user_input}}`;
             let data_to_send = {};
-            data_to_send["package_id"] = this.ticket_id;
+            data_to_send["ticket_id"] = this.ticket_id;
             data_to_send[item_name] = user_input;
             
             Ticket_func.update(data_to_send, () => {
                 Ticket_func.read({"ticket_id":this.ticket_id}, (data)=>{
                     this.reform_data(data.package_info);
                     this.render_setting_list();
-                    ticket_info_popup.reform_data(data);
-                    ticket_info_popup.render_ticket_name();
-                    ticket_info_popup.render_basic_info();
+                    ticket_info_popup.refresh(data);
+                    ticket.init();
                 })
             }) 
         }
