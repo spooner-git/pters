@@ -234,10 +234,12 @@
                         onclick = ()=>{option_select_popup.open(option_data)};
                         break;
                     case "time":
-                        onclick = ()=>{time_select_popup.open()};
+                        // onclick = ()=>{time_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
+                        onclick = ()=>{time_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
                         break;
                     case "date":
-                        onclick = ()=>{date_select_popup.open()};
+                        // onclick = ()=>{date_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
+                        onclick = ()=>{date_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
                         break;
                     case "datepicker":
                         onclick = function(event){

@@ -27,8 +27,8 @@ class Home{
         let html_temp = [];
 
         // let targets = `'#temp_time_result1', '#temp_time_result2'`; 
-        let time_select_popup = `time_select_popup.open('#temp_time_result1', '#temp_time_result2');`;
-        let date_select_popup = `date_select_popup.open('#temp_date_result');`;
+        let time_select_popup = `time_select_popup.open('console.log(123)', '#temp_time_result1', '#temp_time_result2');`;
+        let date_select_popup = `date_select_popup.open('console.log(123)');`;
 
         let option_data = `{
                                 사과:{value: 'apple', callback: ()=>{console.log('사과 Apple')} }, 

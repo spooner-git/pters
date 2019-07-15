@@ -66,7 +66,8 @@
 <div class="popup_mobile popup_mobile_basic">
     <div class="popup_basic_user_input popup_basic_user_input_text obj_font_size_15_weight_500">
         <div class="wrapper_popup_basic_comment obj_font_size_18_weight_bold"></div>
-        <div><input type="text" placeholder="입력 해주세요." class="popup_basic_user_input_full"></div>
+        <!-- <div><input type="text" placeholder="입력 해주세요." class="popup_basic_user_input_full"></div> -->
+        <div><input type="text" placeholder="입력 해주세요." class="popup_basic_user_input_data"></div>
         <div class="wrapper_popup_basic_buttons obj_table_raw">
             <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">취소</div>
             <div class="popup_basic_confirm obj_table_cell_x2">확인</div>
@@ -77,7 +78,8 @@
 <div class="popup_mobile popup_mobile_basic">
     <div class="popup_basic_user_input popup_basic_user_input_number obj_font_size_15_weight_500">
         <div class="wrapper_popup_basic_comment obj_font_size_18_weight_bold"></div>
-        <div><input type="tel" placeholder="입력 해주세요." class="popup_basic_user_input_full"></div>
+        <!-- <div><input type="tel" placeholder="입력 해주세요." class="popup_basic_user_input_full"></div> -->
+        <div><input type="text" placeholder="입력 해주세요." class="popup_basic_user_input_data"></div>
         <div class="wrapper_popup_basic_buttons obj_table_raw">
             <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">취소</div>
             <div class="popup_basic_confirm obj_table_cell_x2">확인</div>
@@ -121,9 +123,10 @@
 
         </div>
 
+        <div><input type="hidden" placeholder="" class="popup_basic_user_input_data"></div>
         <div class="wrapper_popup_basic_buttons obj_table_raw">
-            <div class="popup_basic_cancel obj_table_cell_x2" onclick="time_select_popup.set_selected_data();layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">선택 완료</div>
-            <!-- <div class="popup_basic_confirm obj_table_cell_x2">확인</div> -->
+            <!-- <div class="popup_basic_cancel obj_table_cell_x2" onclick="time_select_popup.set_selected_data();layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">선택 완료</div> -->
+            <div class="popup_basic_confirm obj_table_cell_x2">확인</div>
         </div>
     </div>
 </div>
@@ -161,9 +164,10 @@
 
         </div>
 
+        <div><input type="hidden" placeholder="" class="popup_basic_user_input_data"></div>
         <div class="wrapper_popup_basic_buttons obj_table_raw">
-            <div class="popup_basic_cancel obj_table_cell_x2" onclick="date_select_popup.set_selected_data();layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">선택 완료</div>
-            <!-- <div class="popup_basic_confirm obj_table_cell_x2">확인</div> -->
+            <!-- <div class="popup_basic_cancel obj_table_cell_x2" onclick="date_select_popup.set_selected_data();layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">선택 완료</div> -->
+            <div class="popup_basic_confirm obj_table_cell_x2">확인</div>
         </div>
     </div>
 </div>
@@ -182,6 +186,9 @@
             this.target_time2 = target2;
             this.result_target_time1;
             this.result_target_time2;
+
+            this.result_target_for_send = '.popup_basic_time_selector .popup_basic_user_input_data';
+
             this.data;
             this.instance = instance;
             this.hour_scroll;
@@ -359,16 +366,11 @@
         }
 
         set_selected_data(){
-            let $target1 = $(this.result_target_time1);
-            let $target2 = $(this.result_target_time2);
-
             let result = this.get_selected_data();
-
-            $target1.val(result.start).text(result.start);
-            $target2.val(result.end).text(result.end);
+            $(this.result_target_for_send).val(result.start + ' ~ ' + result.end);
         }
 
-        open(target1, target2){
+        open(callback_after_confirm, target1, target2){
             let top_comment_height = 65;
             let time_selector_height = 175;
             let close_button_height = 46;
@@ -376,8 +378,11 @@
 
             let popup_height = 100*sum/windowHeight;
 
+            let set_data = `${this.instance}.set_selected_data()`;
+            
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', popup_height, POPUP_FROM_BOTTOM,
-                {'popup_title':'', 'popup_comment':'시간을 선택해주세요'});
+                                    {'popup_title':'', 'popup_comment':'시간을 선택해주세요',
+                                    'onclick_function':`${set_data};${callback_after_confirm};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
 
             this.reset(target1, target2);
         }
@@ -468,6 +473,7 @@
             this.target_date = date_target;
 
             this.result_target;
+            this.result_target_for_send = '.popup_basic_date_selector .popup_basic_user_input_data';
 
             this.data;
             this.instance = instance;
@@ -493,11 +499,18 @@
             this.set_iscroll();
         }
 
-        reset(){
-            // this.result_target_time1 = result_target1;
-            // this.result_target_time2 = result_target2;
+        reset(year, month, date){
+            if(year == undefined){
+                year = 1986;
+            }
+            if(month == undefined){
+                month = 2;
+            }
+            if(date == undefined){
+                date = 24;
+            }
             
-            this.go_snap(1986, 2, 24);
+            this.go_snap(year, month, date);
         }
 
         render_year_list(){
@@ -644,8 +657,6 @@
             let initial_pos_month = (1-month)*50;
             let initial_pos_date = (1-date)*50;
 
-            console.log(initial_pos_year, initial_pos_month, initial_pos_date)
-
             this.year_scroll.scrollTo(0, initial_pos_year, 0, IScroll.utils.ease.bounce);
             this.month_scroll.scrollTo(0, initial_pos_month, 0, IScroll.utils.ease.bounce);
             this.date_scroll.scrollTo(0, initial_pos_date, 0, IScroll.utils.ease.bounce);
@@ -698,18 +709,16 @@
         }
 
         set_selected_data(){
-            if(this.result_target == undefined){
-                return false;
-            }
-            let $result_target = $(this.result_target);
             let result = this.get_selected_data();
             let data = `${result.year}.${result.month}.${result.date}`;
 
-            $result_target.val(data).text(data);
+            $(this.result_target_for_send).val(data);
         }
 
-        open(result_target){
-            this.result_target = result_target;
+        open(callback_after_confirm, result_target, year, month, date){
+            if(result_target != undefined || result_target != "" || result_target != ''){
+                this.result_target = result_target;
+            }
             let top_comment_height = 65;
             let date_selector_height = 175;
             let close_button_height = 46;
@@ -717,10 +726,13 @@
 
             let popup_height = 100*sum/windowHeight;
 
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', popup_height, POPUP_FROM_BOTTOM,
-                {'popup_title':'', 'popup_comment':'날짜를 선택해주세요'});
+            let set_data = `${this.instance}.set_selected_data()`;
 
-            this.reset();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', popup_height, POPUP_FROM_BOTTOM,
+                                        {'popup_title':'', 'popup_comment':'날짜를 선택해주세요',
+                                        'onclick_function':`${set_data};${callback_after_confirm};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
+
+            this.reset(year, month, date);
         }
     }
 
@@ -728,6 +740,4 @@
 
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
 </script>
