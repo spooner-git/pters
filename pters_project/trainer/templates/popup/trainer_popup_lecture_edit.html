@@ -19,80 +19,7 @@
     <div class="popup_lecture_edit">
     
         <div id="wrapper_box_lecture_settings" class="obj_box_full">
-            <ul>
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">수업명</div>
-                        <div class="cell_value" onclick="show_user_input_popup(event.target.innerText, 'console.log(11)')">기초 가슴 운동</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">정원</div>
-                        <div class="cell_value">3명</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">진행 시간</div>
-                        <div class="cell_value">90분</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">색상 태그</div>
-                        <div class="cell_value"><div style="display:inline-block;width:25px;height:25px;border-radius: 3px;background-color:#fe4e65;vertical-align: middle;margin-bottom:4px;"></div></div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">반복 일정</div>
-                        <div class="cell_value">반복 안함</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">고정 회원 설정</div>
-                        <div class="cell_value">1명</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">수업 종료된 회원</div>
-                        <div class="cell_value"></div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">수업 이력</div>
-                        <div class="cell_value"></div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">수업 비활성화</div>
-                        <div class="cell_value"></div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-            </ul>
+            
         </div>
 
         <div class="gap"></div>
@@ -140,9 +67,6 @@
             this.lecture_repeat_schedule;
             this.lecture_fixed_member;
             this.lecture_status_cd;
-
-            console.log('data', data)
-            
 
             this.items;
         }
@@ -287,7 +211,6 @@
             data_to_send["lecture_id"] = this.lecture_id;
             data_to_send[item_name.replace(/lecture_/gi,"")] = external_input;
             
-            console.log(data_to_send)
             Lecture_func.status(data_to_send, () => {
                 Lecture_func.read({"lecture_id":this.lecture_id}, (data)=>{
                     this.reform_data(data);
