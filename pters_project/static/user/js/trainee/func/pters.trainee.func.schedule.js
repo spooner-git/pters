@@ -90,18 +90,18 @@ function func_schedule(data, call_method, type){
      * @param jsondata.offTimeArray_end_date    off 종료 시각.
      * @param jsondata.classTimeArray_start_date    시작 시각.
      * @param jsondata.classTimeArray_end_date    종료 시각.
-     * @param jsondata.group_schedule_start_datetime 그룹 스케쥴 시작 시각
-     * @param jsondata.group_schedule_end_datetime 그룹 스케쥴 종료 시각
-     * @param jsondata.class_group_schedule_id 그룹 스케쥴 ID
+     * @param jsondata.lecture_schedule_start_datetime 그룹 스케쥴 시작 시각
+     * @param jsondata.lecture_schedule_end_datetime 그룹 스케쥴 종료 시각
+     * @param jsondata.class_lecture_schedule_id 그룹 스케쥴 ID
      */
 //예약 팝업 드랍다운을 채워주기 위해 들어온 예전 함수들
     function clear_duplicated_date_time(jsondata, selecteddate){
         //중복 제거 (그룹 일정때문에 중복으로 들어오는 것들)
-        let all_start_date_time = jsondata.group_schedule_start_datetime.concat(jsondata.offTimeArray_start_date);
-        let all_end_date_time = jsondata.group_schedule_end_datetime.concat(jsondata.offTimeArray_end_date);
+        let all_start_date_time = jsondata.lecture_schedule_start_datetime.concat(jsondata.offTimeArray_start_date);
+        let all_end_date_time = jsondata.lecture_schedule_end_datetime.concat(jsondata.offTimeArray_end_date);
         let classlen = jsondata.classTimeArray_start_date.length;
         for(let i=0; i<classlen; i++){
-            if(jsondata.class_group_schedule_id[i] == "None"){
+            if(jsondata.class_lecture_schedule_id[i] == "None"){
                 all_start_date_time.push(jsondata.classTimeArray_start_date[i]);
                 all_end_date_time.push(jsondata.classTimeArray_end_date[i]);
             }

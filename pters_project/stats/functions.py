@@ -6,7 +6,7 @@ from django.db.models import Q
 from configs.const import USE, ON_SCHEDULE_TYPE, STATS_RE_REG, STATS_NEW_REG, STATS_PART_REFUND, STATS_ALL_REFUND
 
 from schedule.models import ScheduleTb
-from trainer.models import ClassLectureTb
+from trainer.models import ClassMemberTicketTb
 
 
 def get_sales_data(class_id, month_first_day, finish_date):
@@ -44,7 +44,7 @@ def get_sales_data(class_id, month_first_day, finish_date):
             month_last_day = next_month_first_day - datetime.timedelta(days=1)
 
             # try:
-            #     price_info = ClassLectureTb.objects.filter(
+            #     price_info = ClassMemberTicketTb.objects.filter(
             #                             Q(lecture_tb__start_date__gte=month_first_day)
             #                             & Q(lecture_tb__start_date__lte=month_last_day),
             #                             class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
@@ -54,7 +54,7 @@ def get_sales_data(class_id, month_first_day, finish_date):
             #     new_reg_price = 0
 
             # 결제 정보 가져오기
-            price_data = ClassLectureTb.objects.select_related(
+            price_data = ClassMemberTicketTb.objects.select_related(
                 'lecture_tb__member').filter(Q(lecture_tb__start_date__gte=month_first_day)
                                              & Q(lecture_tb__start_date__lte=month_last_day),
                                              class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
@@ -62,7 +62,7 @@ def get_sales_data(class_id, month_first_day, finish_date):
 
             for price_info in price_data:
                 try:
-                    price_lecture_info = ClassLectureTb.objects.select_related(
+                    price_lecture_info = ClassMemberTicketTb.objects.select_related(
                         'lecture_tb').filter(~Q(lecture_tb_id=price_info.lecture_tb_id), class_tb_id=class_id,
                                              lecture_tb__member_id=price_info.lecture_tb.member_id,
                                              lecture_tb__start_date__lte=price_info.lecture_tb.start_date,
@@ -80,7 +80,7 @@ def get_sales_data(class_id, month_first_day, finish_date):
 
             # 환불 정보 가져오기
             # try:
-            #     refund_price_info = ClassLectureTb.objects.filter(
+            #     refund_price_info = ClassMemberTicketTb.objects.filter(
             #                             Q(lecture_tb__refund_date__gte=month_first_day)
             #                             & Q(lecture_tb__refund_date__lte=month_last_day),
             #                             class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
@@ -88,7 +88,7 @@ def get_sales_data(class_id, month_first_day, finish_date):
             #     all_refund_price = int(refund_price_info['lecture_tb__refund_price__sum'])
             # except TypeError:
             #     all_refund_price = 0
-            refund_price_data = ClassLectureTb.objects.select_related('lecture_tb').filter(
+            refund_price_data = ClassMemberTicketTb.objects.select_related('lecture_tb').filter(
                                     Q(lecture_tb__refund_date__gte=month_first_day)
                                     & Q(lecture_tb__refund_date__lte=month_last_day),
                                     class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
@@ -140,7 +140,7 @@ def get_sales_info(class_id, month_first_day):
         month_last_day = next_month_first_day - datetime.timedelta(days=1)
 
         # 결제 정보 가져오기
-        price_data = ClassLectureTb.objects.select_related('lecture_tb__member', 'lecture_tb__package_tb').filter(
+        price_data = ClassMemberTicketTb.objects.select_related('lecture_tb__member', 'lecture_tb__package_tb').filter(
                                 Q(lecture_tb__start_date__gte=month_first_day)
                                 & Q(lecture_tb__start_date__lte=month_last_day),
                                 class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
@@ -148,7 +148,7 @@ def get_sales_info(class_id, month_first_day):
 
         for price_info in price_data:
             try:
-                price_lecture_info = ClassLectureTb.objects.select_related(
+                price_lecture_info = ClassMemberTicketTb.objects.select_related(
                     'lecture_tb__member').filter(~Q(lecture_tb_id=price_info.lecture_tb_id),
                                                  class_tb_id=class_id,
                                                  lecture_tb__member_id=price_info.lecture_tb.member_id,
@@ -178,7 +178,7 @@ def get_sales_info(class_id, month_first_day):
             price_list.append(price_info)
 
         # 환불 정보 가져오기
-        refund_price_data = ClassLectureTb.objects.select_related(
+        refund_price_data = ClassMemberTicketTb.objects.select_related(
             'lecture_tb__member',
             'lecture_tb__package_tb').filter(Q(lecture_tb__refund_date__gte=month_first_day)
                                              & Q(lecture_tb__refund_date__lte=month_last_day),
@@ -245,7 +245,7 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
             month_last_day = next_month_first_day - datetime.timedelta(days=1)
 
             # 결제 정보 가져오기
-            price_data = ClassLectureTb.objects.select_related(
+            price_data = ClassMemberTicketTb.objects.select_related(
                 'lecture_tb').filter(Q(lecture_tb__start_date__gte=month_first_day)
                                      & Q(lecture_tb__start_date__lte=month_last_day),
                                      class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
@@ -253,7 +253,7 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
 
             for price_info in price_data:
                 try:
-                    price_lecture_info = ClassLectureTb.objects.select_related(
+                    price_lecture_info = ClassMemberTicketTb.objects.select_related(
                         'lecture_tb').filter(~Q(lecture_tb_id=price_info.lecture_tb_id),
                                              class_tb_id=class_id,
                                              lecture_tb__member_id=price_info.lecture_tb.member_id,
@@ -271,7 +271,7 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
                     month_new_reg_member += 1
 
             # 환불 정보 가져오기
-            refund_price_data = ClassLectureTb.objects.select_related(
+            refund_price_data = ClassMemberTicketTb.objects.select_related(
                 'lecture_tb').filter(Q(lecture_tb__refund_date__gte=month_first_day)
                                      & Q(lecture_tb__refund_date__lte=month_last_day),
                                      class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
@@ -284,7 +284,7 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
                     month_all_refund_member += 1
 
             # 완료 수강 이력 가져오기
-            class_lecture_list = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
+            class_lecture_list = ClassMemberTicketTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
                                                                                             lecture_tb__use=USE,
                                                                                             auth_cd='VIEW', use=USE)
             finish_schedule_num = 0

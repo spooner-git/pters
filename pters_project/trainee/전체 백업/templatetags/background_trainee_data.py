@@ -8,7 +8,7 @@ from django.utils import timezone
 from configs.const import USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb, ProductFunctionAuthTb
-from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
+from schedule.functions import func_refresh_member_ticket_count, func_refresh_group_status
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.views import get_trainee_setting_data
 from trainer.models import ClassLectureTb, ClassTb, PackageGroupTb, GroupLectureTb
@@ -88,7 +88,7 @@ def get_setting_info(request):
             for not_finish_schedule_info in not_finish_schedule_data:
                 not_finish_schedule_info.state_cd = 'PE'
                 not_finish_schedule_info.save()
-                func_refresh_lecture_count(class_id, not_finish_schedule_info.lecture_tb_id)
+                func_refresh_member_ticket_count(class_id, not_finish_schedule_info.lecture_tb_id)
 
         if context['lt_lecture_auto_finish'] == AUTO_FINISH_ON:
             class_lecture_data = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
@@ -138,7 +138,6 @@ def get_setting_info(request):
                             group_lecture_data.update(fix_state_cd='FIX')
                         else:
                             group_lecture_data.update(fix_state_cd='')
-                        func_refresh_group_status(package_group_info.group_tb_id, None, None)
     return context
 
 

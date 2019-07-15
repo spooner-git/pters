@@ -37,7 +37,7 @@ from configs import settings
 from configs.const import USE, UN_USE
 from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
-from trainee.models import MemberLectureTb
+from trainee.models import MemberMemberTicketTb
 
 from .forms import MyPasswordResetForm, MyPasswordChangeForm, MyRegistrationForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb
@@ -165,14 +165,14 @@ class ServiceTestLoginView(TemplateView):
         # class_data = ClassTb.objects.filter()
         # for class_info in class_data:
         #     # 프로그램에 속한 그룹 불러오기
-        #     group_data = GroupTb.objects.filter(class_tb_id=class_info.class_id)
+        #     group_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
         #     if len(group_data) == 0:
         #         group_data = None
         #     else:
         #         for group_info in group_data:
         #
         #             if group_info.group_type_cd == 'NORMAL':
-        #                 group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id,
+        #                 group_lecture_data = GroupMemberTicketTb.objects.filter(group_tb_id=group_info.group_id,
         #                                                                    lecture_tb__state_cd='IP',
         #                                                                    lecture_tb__use=USE,
         #                                                                    use=USE)
@@ -185,10 +185,10 @@ class ServiceTestLoginView(TemplateView):
         # class_data = ClassTb.objects.filter(class_id__gte='502')
         # for class_info in class_data:
         #     # 그룹중에 1:1 그룹 불러오기
-        #     check_group = GroupTb.objects.filter(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE')
+        #     check_group = LectureTb.objects.filter(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE')
         #     # 1개도 없는 경우 생성
         #     if len(check_group) == 0:
-        #         group_info = GroupTb(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE', member_num=1,
+        #         group_info = LectureTb(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE', member_num=1,
         #                              name='1:1레슨',
         #                              # ing_group_member_num=ing_group_member_num,
         #                              # end_group_member_num=end_group_member_num,
@@ -199,15 +199,15 @@ class ServiceTestLoginView(TemplateView):
         #         group_info.save()
         #     else:
         #         group_info = check_group[0]
-        #     class_lecture_data = ClassLectureTb.objects.select_related(
+        #     class_lecture_data = ClassMemberTicketTb.objects.select_related(
         # 'lecture_tb').filter(class_tb_id=class_info.class_id)
         #     if len(class_lecture_data) > 0:
         #         for class_lecture_info in class_lecture_data:
         #             if class_lecture_info.lecture_tb is not None and class_lecture_info.lecture_tb != '':
-        #                 check_group = GroupLectureTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id)
+        #                 check_group = GroupMemberTicketTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id)
         #                 # 1:1 그룹인 경우 GroupLecture가 없음. 1:1에 대한 GroupLecture 생성
         #                 if len(check_group) == 0:
-        #                     lecture_info = GroupLectureTb(group_tb_id=group_info.group_id,
+        #                     lecture_info = GroupMemberTicketTb(group_tb_id=group_info.group_id,
         #                                                   lecture_tb_id=class_lecture_info.lecture_tb_id,
         #                                                   reg_dt=class_lecture_info.lecture_tb.reg_dt,
         #                                                   mod_dt=class_lecture_info.lecture_tb.mod_dt,
@@ -218,15 +218,15 @@ class ServiceTestLoginView(TemplateView):
         # 그룹 숫자 업데이트 패키지 정보 업데이트
         # class_data = ClassTb.objects.filter()
         # for class_info in class_data:
-        #     group_data = GroupTb.objects.filter(class_tb_id=class_info.class_id)
+        #     group_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
         #     if len(group_data) == 0:
         #         group_data = None
         #     else:
         #         for group_info in group_data:
         #
-        #             package_group_test = PackageGroupTb.objects.filter(group_tb_id=group_info.group_id)
+        #             package_group_test = PackageLectureTb.objects.filter(group_tb_id=group_info.group_id)
         #             if len(package_group_test) == 0:
-        #                 package_info = PackageTb(class_tb_id=group_info.class_tb_id, name=group_info.name,
+        #                 package_info = TicketTb(class_tb_id=group_info.class_tb_id, name=group_info.name,
         #                                          state_cd=group_info.state_cd,
         #                                          package_type_cd=group_info.group_type_cd,
         #                                          ing_package_member_num=group_info.ing_group_member_num,
@@ -236,7 +236,7 @@ class ServiceTestLoginView(TemplateView):
         #                                          mod_dt=group_info.mod_dt,
         #                                          use=group_info.use)
         #                 package_info.save()
-        #                 package_group_info = PackageGroupTb(class_tb_id=group_info.class_tb_id,
+        #                 package_group_info = PackageLectureTb(class_tb_id=group_info.class_tb_id,
         #                                                     package_tb_id=package_info.package_id,
         #                                                     group_tb_id=group_info.group_id,
         #                                                     reg_dt=group_info.reg_dt,
@@ -244,13 +244,13 @@ class ServiceTestLoginView(TemplateView):
         #                                                     use=group_info.use)
         #                 package_group_info.save()
         #
-        #                 group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id)
+        #                 group_lecture_data = GroupMemberTicketTb.objects.filter(group_tb_id=group_info.group_id)
         #                 for group_lecture_info in group_lecture_data:
         #                     group_lecture_info.lecture_tb.package_tb_id = package_info.package_id
         #                     group_lecture_info.lecture_tb.save()
-        # group_data = GroupTb.objects.filter()
+        # group_data = LectureTb.objects.filter()
         # for group_info in group_data:
-        #     package_info = PackageTb(class_tb_id=group_info.class_tb_id, name=group_info.name,
+        #     package_info = TicketTb(class_tb_id=group_info.class_tb_id, name=group_info.name,
         #                              state_cd=group_info.state_cd, package_type_cd=group_info.group_type_cd,
         #                              package_group_num=1, use=group_info.use)
         #     package_info.save()
@@ -1026,7 +1026,7 @@ class AddMemberNoEmailView(View):
         # group_id = request.POST.get('group_id', '')
         # error_count = 0
         # if package_id is not None and package_id != '':
-        #     package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_id, use=USE)
+        #     package_group_data = PackageLectureTb.objects.filter(package_tb_id=package_id, use=USE)
         #     for package_group_info in package_group_data:
         #         if package_group_info.group_tb.group_type_cd == 'NORMAL':
         #
@@ -1278,9 +1278,9 @@ def out_member_logic(request):
                 #     user.save()
                 # else:
                 if group_name == 'trainee':
-                    member_lecture_data = MemberLectureTb.objects.filter(member_id=member_id, auth_cd='VIEW', use=USE)
-                    if len(member_lecture_data) > 0:
-                        member_lecture_data.update(auth_cd='WAIT')
+                    member_member_ticket_data = MemberMemberTicketTb.objects.filter(member_id=member_id, auth_cd='VIEW', use=USE)
+                    if len(member_member_ticket_data) > 0:
+                        member_member_ticket_data.update(auth_cd='WAIT')
                 # elif group_name == 'trainer':
                 #     member_class_data = MemberClassTb.objects.filter(member_id=member_id, auth_cd='VIEW', use=USE)
                 #     if len(member_class_data) > 0:

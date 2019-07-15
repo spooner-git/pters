@@ -146,7 +146,9 @@
 		padding: 15px;
         border: 0;
     }
-
+    .wrapper_member_ticket_title{
+        text-align: center;
+    }
     .wrapper_img_lesson_type{
         text-align: center;
     }

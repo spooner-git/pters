@@ -12,9 +12,9 @@ from board.models import QATb
 from configs.const import USE, UN_USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE, AUTO_ABSENCE_ON, AUTO_CANCEL_ON
 from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb, ProductFunctionAuthTb
-from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
+from schedule.functions import func_refresh_member_ticket_count, func_refresh_lecture_status
 from schedule.models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb
-from trainer.models import ClassLectureTb, BackgroundImgTb, ClassTb, PackageGroupTb, GroupLectureTb
+from trainer.models import ClassMemberTicketTb, BackgroundImgTb, ClassTb, TicketLectureTb, LectureMemberTicketTb
 from trainer.functions import func_get_trainer_setting_list
 
 register = template.Library()
@@ -105,7 +105,7 @@ def get_setting_info(request):
         request.session['setting_member_time_duration'] = context['lt_res_member_time_duration']
         request.session['setting_member_start_time'] = context['lt_res_member_start_time']
         request.session['setting_schedule_auto_finish'] = context['lt_schedule_auto_finish']
-        request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
+        request.session['setting_member_ticket_auto_finish'] = context['lt_member_ticket_auto_finish']
         request.session['setting_to_trainee_lesson_alarm'] = context['lt_pus_to_trainee_lesson_alarm']
         request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
         request.session['setting_language'] = context['lt_lan_01']
@@ -118,7 +118,7 @@ def get_setting_info(request):
             for not_finish_schedule_info in not_finish_schedule_data:
                 not_finish_schedule_info.state_cd = 'PE'
                 not_finish_schedule_info.save()
-                func_refresh_lecture_count(class_id, not_finish_schedule_info.lecture_tb_id)
+                func_refresh_member_ticket_count(class_id, not_finish_schedule_info.member_ticket_tb_id)
         elif context['lt_schedule_auto_finish'] == AUTO_ABSENCE_ON:
             not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, state_cd='NP',
                                                                  en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now,
@@ -126,7 +126,7 @@ def get_setting_info(request):
             for not_finish_schedule_info in not_finish_schedule_data:
                 not_finish_schedule_info.state_cd = 'PC'
                 not_finish_schedule_info.save()
-                func_refresh_lecture_count(class_id, not_finish_schedule_info.lecture_tb_id)
+                func_refresh_member_ticket_count(class_id, not_finish_schedule_info.member_ticket_tb_id)
         elif context['lt_schedule_auto_finish'] == AUTO_CANCEL_ON:
             not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, state_cd='NP',
                                                                  en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now,
@@ -134,9 +134,9 @@ def get_setting_info(request):
             for not_finish_schedule_info in not_finish_schedule_data:
                 delete_schedule_info = DeleteScheduleTb(schedule_id=not_finish_schedule_info.schedule_id,
                                                         class_tb_id=not_finish_schedule_info.class_tb_id,
-                                                        group_tb_id=not_finish_schedule_info.group_tb_id,
                                                         lecture_tb_id=not_finish_schedule_info.lecture_tb_id,
-                                                        group_schedule_id=not_finish_schedule_info.group_schedule_id,
+                                                        member_ticket_tb_id=not_finish_schedule_info.member_ticket_tb_id,
+                                                        lecture_schedule_id=not_finish_schedule_info.lecture_schedule_id,
                                                         delete_repeat_schedule_tb
                                                         =not_finish_schedule_info.repeat_schedule_tb_id,
                                                         start_dt=not_finish_schedule_info.start_dt,
@@ -152,39 +152,39 @@ def get_setting_info(request):
                                                         use=UN_USE)
                 delete_schedule_info.save()
                 not_finish_schedule_info.delete()
-                func_refresh_lecture_count(class_id, delete_schedule_info.lecture_tb_id)
+                func_refresh_member_ticket_count(class_id, delete_schedule_info.member_ticket_tb_id)
 
-        if context['lt_lecture_auto_finish'] == AUTO_FINISH_ON:
-            class_lecture_data = ClassLectureTb.objects.select_related(
-                'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
-                                                 lecture_tb__end_date__lt=datetime.date.today(),
-                                                 lecture_tb__state_cd='IP', lecture_tb__use=USE,
+        if context['lt_member_ticket_auto_finish'] == AUTO_FINISH_ON:
+            class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
+                'member_ticket_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                                 member_ticket_tb__end_date__lt=datetime.date.today(),
+                                                 member_ticket_tb__state_cd='IP', member_ticket_tb__use=USE,
                                                  use=USE)
 
-            for class_lecture_info in class_lecture_data:
-                lecture_info = class_lecture_info.lecture_tb
-                schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+            for class_member_ticket_info in class_member_ticket_data:
+                member_ticket_info = class_member_ticket_info.member_ticket_tb
+                schedule_data = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_info.member_ticket_id,
                                                           end_dt__lte=now,
                                                           use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
-                schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                schedule_data_delete = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_info.member_ticket_id,
                                                                  end_dt__gt=now,
                                                                  use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
-                repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+                repeat_schedule_data = RepeatScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_info.member_ticket_id)
                 if len(schedule_data) > 0:
                     schedule_data.update(state_cd='PE')
                 if len(schedule_data_delete) > 0:
                     schedule_data_delete.delete()
                 if len(repeat_schedule_data) > 0:
                     repeat_schedule_data.delete()
-                lecture_info.lecture_avail_count = 0
-                lecture_info.lecture_rem_count = 0
-                lecture_info.state_cd = 'PE'
-                lecture_info.save()
+                member_ticket_info.member_ticket_avail_count = 0
+                member_ticket_info.member_ticket_rem_count = 0
+                member_ticket_info.state_cd = 'PE'
+                member_ticket_info.save()
 
-                if lecture_info is not None and lecture_info != '':
+                if member_ticket_info is not None and member_ticket_info != '':
 
-                    group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
-                    group_lecture_data.update(fix_state_cd='')
+                    lecture_member_ticket_data = LectureMemberTicketTb.objects.filter(member_ticket_tb_id=member_ticket_info.member_ticket_id, use=USE)
+                    lecture_member_ticket_data.update(fix_state_cd='')
 
     return context
 

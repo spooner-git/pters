@@ -1,0 +1,40 @@
+    {
+      "member_ticketIdArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.member_ticket_tb.member_ticket_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "startArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.member_ticket_tb.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "endArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.member_ticket_tb.end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "countArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.member_ticket_tb.member_ticket_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "remCountArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.member_ticket_tb.member_ticket_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "availCountArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.member_ticket_tb.member_ticket_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "member_ticketStateArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.member_ticket_tb.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "member_ticketStateNameArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.member_ticket_tb.state_cd_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "memberViewStateArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.auth_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "memberViewStateNameArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.auth_cd_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "lectureNameArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.lecture_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lectureTypeCdArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.lecture_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lectureTypeCdNameArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.lecture_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lectureMemberNumArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.lecture_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lectureStateCdArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.lecture_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+{#      "lectureStateCdNmArray":#}
+{#      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.lecture_state_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],#}
+      "lectureNoteArray":
+      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.lecture_note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "messageArray" :
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }

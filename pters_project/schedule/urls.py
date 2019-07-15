@@ -40,24 +40,24 @@ urlpatterns = [
 
     # 그룹 일정 기능 #####################################################################################################
     # 그룹 일정 등록
-    url(r'^add_group_schedule/$', views.add_group_schedule_logic, name='add_group_schedule'),
+    url(r'^add_lecture_schedule/$', views.add_lecture_schedule_logic, name='add_lecture_schedule'),
     # 그룹 일정 취소
-    url(r'^delete_group_schedule/$', views.delete_group_schedule_logic, name='delete_group_schedule'),
+    url(r'^delete_lecture_schedule/$', views.delete_lecture_schedule_logic, name='delete_lecture_schedule'),
     # 그룹 일정 완료
-    url(r'^finish_group_schedule/$', views.finish_group_schedule_logic, name='finish_group_schedule'),
+    url(r'^finish_lecture_schedule/$', views.finish_lecture_schedule_logic, name='finish_lecture_schedule'),
     # 그룹 일정에 그룹회원 일정 등록
-    url(r'^add_member_group_schedule/$', views.add_member_group_schedule_logic, name='add_member_group_schedule'),
+    url(r'^add_member_lecture_schedule/$', views.add_member_lecture_schedule_logic, name='add_member_lecture_schedule'),
     # 그룹 일정에 다른 그룹회원 일정 등록
-    url(r'^add_other_member_group_schedule/$', views.add_other_member_group_schedule_logic,
-        name='add_other_member_group_schedule'),
+    url(r'^add_other_member_lecture_schedule/$', views.add_other_member_lecture_schedule_logic,
+        name='add_other_member_lecture_schedule'),
     # 그룹 반복일정 등록
-    url(r'^add_group_repeat_schedule/$', views.add_group_repeat_schedule_logic, name='add_group_repeat_schedule'),
+    url(r'^add_lecture_repeat_schedule/$', views.add_lecture_repeat_schedule_logic, name='add_lecture_repeat_schedule'),
     # 그룹 반복일정 확인
-    url(r'^add_group_repeat_schedule_confirm/$', views.add_group_repeat_schedule_confirm,
-        name='add_group_repeat_schedule_confirm'),
+    url(r'^add_lecture_repeat_schedule_confirm/$', views.add_lecture_repeat_schedule_confirm,
+        name='add_lecture_repeat_schedule_confirm'),
     # 그룹 반복일정 취소
-    url(r'^delete_group_repeat_schedule/$', views.delete_group_repeat_schedule_logic,
-        name='delete_group_repeat_schedule'),
+    url(r'^delete_lecture_repeat_schedule/$', views.delete_lecture_repeat_schedule_logic,
+        name='delete_lecture_repeat_schedule'),
 
 
     # 푸시 알림 기능 #####################################################################################################

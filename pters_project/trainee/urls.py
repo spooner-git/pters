@@ -40,10 +40,10 @@ urlpatterns = [
 
 
     # 수강 정보 list 조회 - auth_cd(연결상태) 종류별
-    url(r'^get_trainee_lecture_list/$', views.GetTraineeLectureListView.as_view(), name='get_trainee_lecture_list'),
+    url(r'^get_trainee_member_ticket_list/$', views.GetTraineeMemberTicketListView.as_view(), name='get_trainee_member_ticket_list'),
     # 수강 정보 연결 안된 정보 조회
-    url(r'^get_trainee_lecture_connection_list/$', views.GetTraineeLectureConnectionListView.as_view(),
-        name='get_trainee_lecture_connection_list'),
+    url(r'^get_trainee_member_ticket_connection_list/$', views.GetTraineeMemberTicketConnectionListView.as_view(),
+        name='get_trainee_member_ticket_connection_list'),
     # 수강 횟수 정보 가져오기
     url(r'^get_trainee_count/$', views.GetTraineeCountView.as_view(), name='get_trainee_count'),
 
@@ -55,10 +55,10 @@ urlpatterns = [
 
     # 그룹 기능 #####################################################################################################
     # 회원이 자신이 속한 그룹중 진행중 상태인 그룹 list 조회
-    url(r'^get_trainee_group_ing_list/$', views.GetTraineeGroupIngListViewAjax.as_view(),
-        name='get_trainee_group_ing_list'),
-    url(r'^get_trainee_group_end_list/$', views.GetTraineeGroupEndListViewAjax.as_view(),
-        name='get_trainee_group_end_list'),
+    url(r'^get_trainee_lecture_ing_list/$', views.GetTraineeLectureIngListViewAjax.as_view(),
+        name='get_trainee_lecture_ing_list'),
+    url(r'^get_trainee_lecture_end_list/$', views.GetTraineeLectureEndListViewAjax.as_view(),
+        name='get_trainee_lecture_end_list'),
 
     # 알람 기능 #####################################################################################################
     url(r'^trainee_alarm/$', views.AlarmView.as_view(), name='trainee_alarm'),
@@ -104,8 +104,8 @@ urlpatterns = [
     url(r'^popup_calendar_plan_reserve_complete/$', views.PopupCalendarPlanReserveCompleteView.as_view(),
         name='popup_calendar_plan_reserve_complete'),
     # 회원 수강권 정보 팝업 페이지
-    url(r'^popup_group_ticket_info/$', views.PopupGroupTicketInfoView.as_view(),
-        name='popup_group_ticket_info'),
+    url(r'^popup_lecture_ticket_info/$', views.PopupLectureTicketInfoView.as_view(),
+        name='popup_lecture_ticket_info'),
     url(r'^popup_ticket_info/$', views.PopupTicketInfoView.as_view(),
         name='popup_ticket_info'),
 

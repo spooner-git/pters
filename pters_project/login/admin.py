@@ -16,7 +16,7 @@ class CommonCdTbAdmin(admin.ModelAdmin):
 @admin.register(LogTb)
 class LogTbAdmin(admin.ModelAdmin):
     list_display = ('log_id', 'log_type', 'auth_member_id', 'from_member_name', 'to_member_name',
-                    'class_tb_id', 'lecture_tb_id',
+                    'class_tb_id', 'member_ticket_tb_id',
                     'log_info', 'log_how', 'log_detail', 'ip',
                     'reg_dt', 'read', 'use')
     search_fields = ['class_tb_id']

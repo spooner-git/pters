@@ -1,0 +1,161 @@
+	.popup_mobile{
+		border-radius: 8px 8px 0px 0px;
+		background-color: #f2f2f2;
+		box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
+	}
+	.popup_ticket_info .obj_font_size_18_weight_bold{
+		height: 30px;
+		line-height: 30px;
+	}
+	.popup_lecture_ticket_info{
+		/*-webkit-overflow-scrolling: touch;*/
+		/*background-color: #000000;*/
+		/*border-radius: 8px 8px 0px 0px;*/
+	}
+
+
+	.popup_lecture_ticket_info .obj_box_full{
+		margin-top: 5px;
+		padding: 10px 20px;
+	}
+	.popup_lecture_ticket_info .wrapper_my_ticket_tab{
+		margin-top: 15px;
+		height: 35px;
+
+	}
+		.popup_lecture_ticket_info .wrapper_my_ticket_tab >  div{
+			display:inline-block;
+			text-align: center;
+			width:60px;
+			line-height: 32px;
+			border-bottom: 3px solid transparent;
+			margin-right:10px;
+		}
+
+		.popup_lecture_ticket_info .wrapper_my_ticket_tab .ticket_info_selected{
+			border-bottom-color: #ffffff;
+			color: #ffffff;
+			font-weight: bold;
+		}
+
+	.popup_lecture_ticket_info .wrapper_my_ticket_title{
+		margin-bottom: 10px;
+	}
+	.popup_lecture_ticket_info .wrapper_my_ticket_title > img{
+		filter: invert(90);
+		width: 20px;
+		vertical-align: middle;
+	}
+	.popup_lecture_ticket_info .wrapper_my_ticket_title > div{
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.popup_lecture_ticket_info .wrapper_my_ticket_detail .obj_box_full{
+		border-left: 0;
+		border-right: 0;
+	}
+
+	.popup_lecture_ticket_info .wrapper_my_ticket_detail_date{
+		height: 60px;
+	}
+		.popup_lecture_ticket_info .wrapper_my_ticket_detail_date .obj_table_raw{
+			height: 30px;
+			line-height: 30px;
+		}
+	.popup_lecture_ticket_info .wrapper_my_ticket_detail_date_title{
+		display: inline-block;
+		width: 70px;
+		height: auto;
+	}
+	.popup_lecture_ticket_info .wrapper_my_ticket_detail_date_info{
+		display: inline-block;
+		width: 100px;
+		height: auto;
+	}
+
+	.popup_lecture_ticket_info .wrapper_my_ticket_detail_count{
+		border-top: 1px solid #eeeeee;
+		border-bottom: 1px solid #eeeeee;
+		height: 120px;
+	}
+		.popup_lecture_ticket_info .wrapper_my_ticket_detail_count .obj_table_raw{
+			height: 30px;
+			line-height: 30px;
+		}
+	.popup_lecture_ticket_info .wrapper_my_ticket_detail_count_title{
+		display: inline-block;
+		width: 70px;
+		height: auto;
+	}
+	.popup_lecture_ticket_info .wrapper_my_ticket_detail_count_info{
+		display: inline-block;
+		width: 50px;
+		height: auto;
+	}
+
+	.popup_lecture_ticket_info .wrapper_my_ticket_detail_teacher{
+		height: 36px;
+		box-sizing: border-box;
+	}
+		.popup_lecture_ticket_info .wrapper_my_ticket_detail_teacher .obj_table_cell_x3{
+			width: auto;
+		}
+		.popup_lecture_ticket_info .wrapper_my_ticket_detail_teacher .obj_box_photo{
+			width: 30px;
+		}
+		.popup_lecture_ticket_info .wrapper_my_ticket_detail_teacher .wrapper_teacher_name{
+			padding-left: 10px;
+		}
+		.popup_lecture_ticket_info .wrapper_my_ticket_detail_teacher .wrapper_teacher_name .obj_font_size_12_weight_500{
+			height: 20px;
+			line-height: 20px;
+		}
+		.popup_lecture_ticket_info .wrapper_my_ticket_detail_teacher .wrapper_teacher_name .obj_font_size_11_weight_normal{
+			height: 16px;
+			line-height: 16px;
+		}
+		.popup_lecture_ticket_info .wrapper_my_ticket_detail_teacher .text_button_phone{
+			text-align: right;
+			height: 36px;
+			line-height: 36px;
+		}
+
+	.popup_lecture_ticket_info #wrapper_my_history_detail{
+		background-color: #ffffff;
+	}
+	.popup_lecture_ticket_info .wrapper_my_history_detail_title{
+		height: 20px;
+		padding: 10px 0;
+		margin-top: 10px;
+		text-align: center;
+		position: sticky;
+		position: -webkit-sticky;
+		top: 0;
+		z-index: 1;
+		background-color: #ffffff;
+	}
+
+	.popup_lecture_ticket_info .wrapper_my_history_detail_info{
+		height: 30px;
+		text-align: center;
+	}
+
+	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_count{
+		width: 30px;
+	}
+	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_date{
+		width: 70px;
+	}
+	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_week{
+		width: 40px;
+	}
+	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_time{
+		width: 75px;
+	}
+	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_memo{
+		width: 90px;
+	}
+	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_status{
+		width: 30px;
+	}

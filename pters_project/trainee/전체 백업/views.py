@@ -31,9 +31,9 @@ from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb
 from .models import LectureTb, MemberLectureTb
 
-from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
-    func_check_group_available_member_before, func_check_group_available_member_after, func_add_schedule, \
-    func_date_check, func_refresh_lecture_count
+from schedule.functions import func_get_member_ticket_id, func_get_lecture_member_ticket_id, \
+    func_check_lecture_available_member_before, func_check_lecture_available_member_after, func_add_schedule, \
+    func_date_check, func_refresh_member_ticket_count
 from .functions import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_schedule_setting, \
@@ -314,9 +314,9 @@ def add_trainee_schedule_logic(request):
     push_class_id = []
     push_title = []
     push_message = []
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_member_ticket_id': None, 'push_title': None, 'push_message': None}
     schedule_info = None
-    lecture_id = None
+    member_ticket_id = None
     lt_res_member_time_duration = 1
 
     if class_id is None or class_id == '':
@@ -364,7 +364,7 @@ def add_trainee_schedule_logic(request):
 
     if error is None:
         if group_schedule_id == '' or group_schedule_id is None:
-            lecture_id = func_get_lecture_id(class_id, request.user.id)
+            member_ticket_id = func_get_member_ticket_id(class_id, request.user.id)
         # 그룹 Lecture Id 조회
         else:
             try:
@@ -388,17 +388,17 @@ def add_trainee_schedule_logic(request):
                                                                     group_schedule_id=group_schedule_id,
                                                                     lecture_tb__member_id=request.user.id)
                     if len(group_schedule_data) == 0:
-                        lecture_id = func_get_group_lecture_id(group_schedule_info.group_tb_id, request.user.id)
+                        lecture_id = func_get_lecture_member_ticket_id(group_schedule_info.group_tb_id, request.user.id)
                     else:
                         lecture_id = None
                         error = '이미 일정에 포함되어있습니다.'
 
     if error is None:
-        if lecture_id is None:
+        if member_ticket_id is None:
             error = '예약 가능 횟수를 확인해주세요.'
 
     if error is None:
-        error = pt_add_logic_func(training_date, start_date, end_date, request.user.id, lecture_id, class_id,
+        error = pt_add_logic_func(training_date, start_date, end_date, request.user.id, member_ticket_id, class_id,
                                   request, group_schedule_id)
 
     if error is None:
@@ -532,7 +532,7 @@ def delete_trainee_schedule_logic(request):
                 schedule_info.delete()
 
                 if error is None:
-                    error = func_refresh_lecture_count(class_id, lecture_id)
+                    error = func_refresh_member_ticket_count(class_id, lecture_id)
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -1236,7 +1236,7 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
 
     if error is None:
         if group_schedule_info is not None and group_schedule_info != '':
-            error = func_check_group_available_member_before(class_id, group_schedule_info.group_tb_id,
+            error = func_check_lecture_available_member_before(class_id, group_schedule_info.group_tb_id,
                                                              group_schedule_id)
 
     if error is None:
@@ -1247,15 +1247,15 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
                                                     group_id, group_schedule_id,
                                                     start_date, end_date, note, ON_SCHEDULE_TYPE, request.user.id,
                                                     permission_state_cd,
-                                                    'NP')
+                                                    'NP', SCHEDULE_DUPLICATION_DISABLE)
                 error = schedule_result['error']
 
                 if error is None:
-                    error = func_refresh_lecture_count(class_id, lecture_id)
+                    error = func_refresh_member_ticket_count(class_id, lecture_id)
 
                 if error is None:
                     if group_schedule_info is not None and group_schedule_info != '':
-                        error = func_check_group_available_member_after(class_id, group_id, group_schedule_id)
+                        error = func_check_lecture_available_member_after(class_id, group_id, group_schedule_id)
                     else:
                         error = func_date_check(class_id, schedule_result['schedule_id'],
                                                 pt_schedule_date, start_date, end_date, SCHEDULE_DUPLICATION_DISABLE)
