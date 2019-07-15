@@ -18,17 +18,19 @@
 
 .wrapper_popup_basic_comment{
     position: relative;
-    height: 65px;
-    /*line-height: 65px;*/
+    /* height: 65px; */
+    height: auto;
+    /* 아래  .wrapper_popup_basic_comment > p 주석처리랑 쌍으로 묶임, 아래 주석지우면 height 65px로 */
+    
     text-align: center;
     
 }
 .wrapper_popup_basic_comment > p{
     margin: 0;
-    position: absolute;
+    /* position: absolute;
     top: 50%;
     left:  50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); */
     width:  100%;
     padding: 0 15px;
     box-sizing: border-box;
