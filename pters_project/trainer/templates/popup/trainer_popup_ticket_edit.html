@@ -168,7 +168,7 @@
             
             Ticket_func.update(data_to_send, () => {
                 Ticket_func.read({"ticket_id":this.ticket_id}, (data)=>{
-                    this.reform_data(data.package_info);
+                    this.reform_data(data.ticket_info);
                     this.render_setting_list();
                     ticket_info_popup.refresh(data);
                     ticket.init();

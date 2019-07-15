@@ -93,6 +93,8 @@ class Ticket{
     //수강권 리스트를 렌더링
     render_ticket_list(jsondata, list_status_type){
 
+        console.log(jsondata)
+
         if(current_page != this.page_name){
             return false;
         }
@@ -100,12 +102,12 @@ class Ticket{
         let whole_data, length;
 
         if(list_status_type == "ing"){
-            whole_data = jsondata.current_package_data;
+            whole_data = jsondata.current_ticket_data;
             length = whole_data.length;
             this.ticket_ing_length = length;
             this.list_status_type_text = "진행중";
         }else if(list_status_type == "end"){
-            whole_data = jsondata.finish_package_data;
+            whole_data = jsondata.finish_ticket_data;
             length = whole_data.length;
             this.ticket_end_length = length;
             this.list_status_type_text = "종료";
