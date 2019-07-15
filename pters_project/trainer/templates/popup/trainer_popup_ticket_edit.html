@@ -170,7 +170,7 @@
         }
 
         send_data(context, item_name){
-            let user_input = $(context).parent().siblings('div').find('.popup_basic_user_input_full').val();
+            let user_input = $(context).parent().siblings('div').find('.popup_basic_user_input_data').val();
             let data_to_send = {};
             data_to_send["ticket_id"] = this.ticket_id;
             data_to_send[item_name] = user_input;
