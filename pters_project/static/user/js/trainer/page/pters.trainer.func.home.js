@@ -26,8 +26,9 @@ class Home{
     render_menu(){
         let html_temp = [];
 
-        let targets = `'#temp_time_result1', '#temp_time_result2'`; 
-        let time_select_popup = `time_select_popup.open(${targets});`;
+        // let targets = `'#temp_time_result1', '#temp_time_result2'`; 
+        let time_select_popup = `time_select_popup.open('#temp_time_result1', '#temp_time_result2');`;
+        let date_select_popup = `date_select_popup.open('#temp_date_result');`;
 
         let option_data = `{
                                 사과:{value: 'apple', callback: ()=>{console.log('사과 Apple')} }, 
@@ -46,7 +47,10 @@ class Home{
                     <button onclick="event.preventDefault();${time_select_popup}">시간 선택 임시</button>
                     <div id="temp_user_select_value">-</div>
                     <button onclick="event.preventDefault();${user_select_multi_popup}">유저 선택 팝업 임시</button>
+                    <div id="temp_user_input"></div>
                     <button onclick="show_user_input_popup ('text', 'TEST', console.log(123))">입력팝업</button>
+                    <div id="temp_date_result"></div>
+                    <button onclick="${date_select_popup}">날짜 선택 임시</button>
                     `);
         
         document.querySelector('#home_content_wrap').innerHTML = html_temp.join("");

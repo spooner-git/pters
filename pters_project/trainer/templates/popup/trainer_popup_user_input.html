@@ -2,7 +2,7 @@
 
 <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.basic.css" %}>
 <style>
-    .wrapper_popup_time_selector_function{
+    .wrapper_popup_time_selector_function, .wrapper_popup_date_selector_function{
         text-align: center;
         /* background-image: linear-gradient(#8e8e8e, white 35%, white 65%, #8e8e8e); */
     }
@@ -13,6 +13,15 @@
         overflow: hidden;
         height: 170px;
     }
+    .wrapper_popup_date_selector_function .select_wrapper{
+        display: inline-block;
+        width: 30%;
+        margin-left: 2%;
+        position: relative;
+        overflow: hidden;
+        height: 170px;
+    }
+
     .selector_title{
         position: absolute;
         width: 100%;
@@ -118,6 +127,49 @@
         </div>
     </div>
 </div>
+
+
+<div class="popup_mobile popup_full">
+	<div class="popup_basic_date_selector obj_font_size_15_weight_500">
+        <div class="wrapper_popup_basic_comment obj_font_size_13_weight_500" onclick='date_select_popup.show_selected_date()'></div>
+
+        <div class="wrapper_popup_date_selector_function">
+
+            <div class="select_wrapper">
+                <div class="selector_title">연도</div>
+                <div id="year_wrap" class="select_wrapper_child">
+                    
+                </div>
+                <div class="selector_indicator"></div>
+            </div>
+
+            <div class="select_wrapper">
+                <div class="selector_title">월</div>
+                <div id="month_wrap" class="select_wrapper_child">
+                    
+                </div>
+                <div class="selector_indicator"></div>
+            </div>
+
+            <div class="select_wrapper">
+                <div class="selector_title">일</div>
+                <div id="date_wrap" class="select_wrapper_child">
+                    
+                </div>
+                <div class="selector_indicator"></div>
+            </div>
+
+        </div>
+
+        <div class="wrapper_popup_basic_buttons obj_table_raw">
+            <div class="popup_basic_cancel obj_table_cell_x2" onclick="date_select_popup.set_selected_data();layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">선택 완료</div>
+            <!-- <div class="popup_basic_confirm obj_table_cell_x2">확인</div> -->
+        </div>
+    </div>
+</div>
+
+
+
 
 <script type="text/javascript">
 
@@ -327,7 +379,7 @@
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', popup_height, POPUP_FROM_BOTTOM,
                 {'popup_title':'', 'popup_comment':'시간을 선택해주세요'});
 
-            time_select_popup.reset(target1, target2);
+            this.reset(target1, target2);
         }
     }
 
@@ -406,6 +458,273 @@
     }
     
     var option_select_popup = new OptionSelector('#option_wrap', 'option_select_popup');
+
+
+
+    class DateSelector{
+        constructor(year_target, month_target, date_target, instance){
+            this.target_year = year_target;
+            this.target_month = month_target;
+            this.target_date = date_target;
+
+            this.result_target;
+
+            this.data;
+            this.instance = instance;
+            this.year_scroll;
+            this.month_scroll;
+            this.date_scroll;
+            this.user_scroll_year = false;
+            this.user_scroll_month = false;
+            this.user_scroll_date = false;
+            // this.hour_scroll_snapped = 0;
+            let d = new Date();
+            this.current_year = d.getFullYear();
+            this.current_month = d.getMonth();
+            this.current_date = d.getDate();
+
+            this.init();
+        }
+
+        init(){
+            this.render_year_list();
+            this.render_month_list();
+            this.render_date_list();
+            this.set_iscroll();
+        }
+
+        reset(){
+            // this.result_target_time1 = result_target1;
+            // this.result_target_time2 = result_target2;
+            
+            this.go_snap(1986, 2, 24);
+        }
+
+        render_year_list(){
+            let html_to_join = [];
+            let pos = 0;
+            for(let i=1910; i<this.current_year; i++){
+                html_to_join.push(`<li data-ypos=${pos}>${i}</li>`);
+                pos = pos + 50;
+                           
+            }
+            document.querySelector(this.target_year).innerHTML = `<ul><li></li>${html_to_join.join('')}<li></li></ul>`;
+        }
+
+        render_month_list(){
+            let html_to_join = [];
+            let pos = 0;
+            for(let i=1; i<=12; i++){
+                    html_to_join.push(`<li data-mpos=${pos}>${i}</li>`);
+                    pos = pos + 50;
+            }
+            document.querySelector(this.target_month).innerHTML = `<ul><li></li>${html_to_join.join('')}<li></li></ul>`;
+        }
+
+        render_date_list(){
+            let html_to_join = [];
+            let pos = 0;
+            for(let i=1; i<=31; i++){
+                    html_to_join.push(`<li data-dpos=${pos}>${i}</li>`);
+                    pos = pos + 50; 
+            }
+            document.querySelector(this.target_date).innerHTML = `<ul><li></li>${html_to_join.join('')}<li></li></ul>`;
+        }
+
+
+        check(data){
+
+        }
+
+        set_iscroll(){
+            this.year_scroll = new IScroll('#year_wrap',{
+                                mouseWheel : true,
+                                // snap: 'li'
+                            })
+
+            this.month_scroll = new IScroll('#month_wrap',{
+                                mouseWheel : true,
+                                // snap: 'li'
+            })
+            this.date_scroll = new IScroll('#date_wrap',{
+                                mouseWheel : true,
+                                // snap: 'li'
+            })
+            this.set_scroll_snap();
+        }
+
+        set_scroll_snap(){
+            let self = this;
+            
+            self.year_scroll.on('scrollEnd', function (){
+                if(self.user_scroll_year == true){
+                    self.user_scroll_year = false;
+                    let posY = this.y;
+                    let min = posY-posY%50;
+                    let max = min - 50;
+
+                    let snap;
+                    
+                    if(Math.abs(posY - max) < Math.abs(posY - min)){
+                        snap = max;
+                    }else{
+                        snap = min;
+                    }
+                    self.year_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                    $(`li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).css('color', '#1e1e1e');
+                    self.year_scroll_snapped = snap;
+                }
+            })
+
+            self.year_scroll.on('beforeScrollStart', function (){
+                self.user_scroll_year = true;
+            })
+
+            
+            self.month_scroll.on('scrollEnd', function (){
+                if(self.user_scroll_month == true){
+                    self.user_scroll_month = false;
+                    let posY = this.y;
+                    let min = posY-posY%50;
+                    let max = min - 50;
+
+                    let snap;
+                    
+                    if(Math.abs(posY - max) < Math.abs(posY - min)){
+                        snap = max;
+                    }else{
+                        snap = min;
+                    }
+                    
+                        
+                    self.month_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                    $(`li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).css('color', '#1e1e1e');
+                    
+                }
+            })
+
+            self.month_scroll.on('beforeScrollStart', function (){
+                self.user_scroll_month = true;
+            })
+
+            self.date_scroll.on('scrollEnd', function (){
+                if(self.user_scroll_date == true){
+                    self.user_scroll_date = false;
+                    let posY = this.y;
+                    let min = posY-posY%50;
+                    let max = min - 50;
+
+                    let snap;
+                    
+                    if(Math.abs(posY - max) < Math.abs(posY - min)){
+                        snap = max;
+                    }else{
+                        snap = min;
+                    }
+                    
+                        
+                    self.date_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                    $(`li[data-dpos="${Math.abs(self.date_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`li[data-dpos="${Math.abs(self.date_scroll.y)}"]`).css('color', '#1e1e1e');
+                    
+                }
+            })
+
+            self.date_scroll.on('beforeScrollStart', function (){
+                self.user_scroll_date = true;
+            })
+        }
+
+        go_snap(year, month, date){
+            // let initial_pos = -(Number(hour)*600 + Math.round(Number(minute)/5)*5*10);
+
+            let initial_pos_year = (1910-year)*50;
+            let initial_pos_month = (1-month)*50;
+            let initial_pos_date = (1-date)*50;
+
+            console.log(initial_pos_year, initial_pos_month, initial_pos_date)
+
+            this.year_scroll.scrollTo(0, initial_pos_year, 0, IScroll.utils.ease.bounce);
+            this.month_scroll.scrollTo(0, initial_pos_month, 0, IScroll.utils.ease.bounce);
+            this.date_scroll.scrollTo(0, initial_pos_date, 0, IScroll.utils.ease.bounce);
+            // this.hour_scroll_snapped = initial_pos;
+
+            $(`li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).css('color', '#1e1e1e');
+            $(`li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).css('color', '#1e1e1e');
+            $(`li[data-dpos="${Math.abs(this.date_scroll.y)}"]`).css('color', '#1e1e1e');
+            $(`li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+            $(`li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+            $(`li[data-dpos="${Math.abs(this.date_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        }
+
+        show_selected_date(){
+            let year = $(`li[data-ypos="${Math.abs(this.year_scroll.y)}"]`);
+            let month = $(`li[data-mpos="${Math.abs(this.month_scroll.y)}"]`);
+            let date = $(`li[data-dpos="${Math.abs(this.date_scroll.y)}"]`);
+
+            let year_text = year.text();
+            let month_text = month.text();
+            let date_text = date.text();
+
+            if(year_text == undefined || year_text == ''){
+                show_error_message('[연도]를 다시 선택 해주세요.')
+            }
+            else if(month_text == undefined || month_text == ''){
+                show_error_message('[월]을 다시 선택 해주세요.')
+            }else if(date_text == undefined || date_text == ''){
+                show_error_message('[일자]를 다시 선택 해주세요.')
+            }
+            else{
+                show_error_message(`${year_text}년 ${month_text}월 ${date_text}일`)
+            }
+        }
+
+        get_selected_data(){
+            let year = $(`li[data-ypos="${Math.abs(this.year_scroll.y)}"]`);
+            let month = $(`li[data-mpos="${Math.abs(this.month_scroll.y)}"]`);
+            let date = $(`li[data-dpos="${Math.abs(this.date_scroll.y)}"]`);
+
+            let year_text = year.text();
+            let month_text = month.text();
+            let date_text = date.text();
+
+            return {
+                year : year_text,
+                month : month_text,
+                date: date_text
+            };
+        }
+
+        set_selected_data(){
+            if(this.result_target == undefined){
+                return false;
+            }
+            let $result_target = $(this.result_target);
+            let result = this.get_selected_data();
+            let data = `${result.year}.${result.month}.${result.date}`;
+
+            $result_target.val(data).text(data);
+        }
+
+        open(result_target){
+            this.result_target = result_target;
+            let top_comment_height = 65;
+            let date_selector_height = 175;
+            let close_button_height = 46;
+            let sum = top_comment_height + date_selector_height + close_button_height;
+
+            let popup_height = 100*sum/windowHeight;
+
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', popup_height, POPUP_FROM_BOTTOM,
+                {'popup_title':'', 'popup_comment':'날짜를 선택해주세요'});
+
+            this.reset();
+        }
+    }
+
+    var date_select_popup = new DateSelector('#year_wrap', '#month_wrap', '#date_wrap', "date_select_popup");
 
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

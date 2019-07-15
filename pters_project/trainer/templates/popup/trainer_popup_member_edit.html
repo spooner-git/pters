@@ -19,88 +19,7 @@
     <div class="popup_member_edit">
     
         <div id="wrapper_box_member_settings" class="obj_box_full">
-            <ul>
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">회원명</div>
-                        <div class="cell_value" onclick="show_user_input_popup(event.target.innerText, 'console.log(11)')">피터</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">회원아이디</div>
-                        <div class="cell_value">support@pters.co.kr</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">연락처</div>
-                        <div class="cell_value">000-0000-1111</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">생년월일</div>
-                        <div class="cell_value">1990.01.23</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">성별</div>
-                        <div class="cell_value">남자</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">특이사항</div>
-                        <div class="cell_value">특이사항 내용...</div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">수강권 이력</div>
-                        <div class="cell_value"></div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">수업 이력</div>
-                        <div class="cell_value"></div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">연결하기</div>
-                        <div class="cell_value"></div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-
-                <li class="">
-                    <div class="obj_table_raw">
-                        <div class="cell_title">회원 비활성화</div>
-                        <div class="cell_value"></div>
-                        <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                    </div>
-                </li>
-            </ul>
+            
         </div>
 
         <div class="gap"></div>
@@ -232,15 +151,22 @@
                     case "number":
                         onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
                         break;
-                    case "date":
-                        onclick = ()=>{time_select_popup.open()};
-                        break;
                     case "option":
                         let option_data = item_el.option_data
                         onclick = ()=>{option_select_popup.open(option_data)};
                         break;
                     case "time":
                         onclick = ()=>{time_select_popup.open()};
+                        break;
+                    case "date":
+                        onclick = ()=>{date_select_popup.open()};
+                        break;
+                    case "datepicker":
+                        onclick = function(event){
+                            if($(`#${event.target.id} input`).length == 0){
+                                $(`#${event.target.id}`).append('<input type="text" readonly>')
+                            }
+                            $(`#${event.target.id} input`).datepicker();$(`#${event.target.id} input`).datepicker('show'); }
                         break;
                     case "color":
                         onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};

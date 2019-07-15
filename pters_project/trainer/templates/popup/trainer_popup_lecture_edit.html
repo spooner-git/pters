@@ -229,15 +229,22 @@
                     case "number":
                         onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
                         break;
-                    case "date":
-                        onclick = ()=>{time_select_popup.open()};
-                        break;
                     case "option":
                         let option_data = item_el.option_data
                         onclick = ()=>{option_select_popup.open(option_data)};
                         break;
                     case "time":
                         onclick = ()=>{time_select_popup.open()};
+                        break;
+                    case "date":
+                        onclick = ()=>{date_select_popup.open()};
+                        break;
+                    case "datepicker":
+                        onclick = function(event){
+                            if($(`#${event.target.id} input`).length == 0){
+                                $(`#${event.target.id}`).append('<input type="text" readonly>')
+                            }
+                            $(`#${event.target.id} input`).datepicker();$(`#${event.target.id} input`).datepicker('show'); }
                         break;
                     case "color":
                         onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
