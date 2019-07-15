@@ -154,8 +154,8 @@
                                 <div>${this.data.ticket_note}</div>
                             </div>
                             <div id="wrapper_ticket_info_dates">
-                                <div>수정 <span>${this.data.ticket_mod_dt.split(' ')[0]}</span></div>
-                                <div>개설 <span>${this.data.ticket_reg_dt.split(' ')[0]}</span></div>
+                                <div>수정 <span>${this.data.ticket_mod_dt}</span></div>
+                                <div>개설 <span>${this.data.ticket_reg_dt}</span></div>
                             </div>
                         </div
                         >`
@@ -182,9 +182,7 @@
                                     <div class="lecture_name">${lecture_name}</div>
                                 </div>
                                 <div class="lecture_data_r">
-                                    <div class="lecture_member_number">정원 - 0명
-                                    </div>
-                                    <div class="lecture_member_number">참여중 - 0명
+                                    <div class="lecture_member_number">정원 - %0명
                                     </div>
                                 </div>
                             </li>
