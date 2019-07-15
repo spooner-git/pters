@@ -324,4 +324,35 @@ class Ticket_func{
             }
         });
     }
+
+    static status(data, callback){
+        //데이터 형태 {"ticket_id":"", "state_cd":""};
+        $.ajax({
+            url:'/trainer/update_ticket_status_info/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                callback(data);
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+               
+            }
+        });
+    }
 }

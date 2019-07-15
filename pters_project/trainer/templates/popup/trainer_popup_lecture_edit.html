@@ -178,7 +178,7 @@
                                 lecture_deactivate: {visible: this.lecture_status_cd == "IP" ? true : false, title:"수업 비활성화", value:"", input_type:"option", option_data:
                                     {비활성화:{value: 0, callback: ()=>{this.send_state_change_data(this, 'lecture_state_cd', 'PE')}}}
                                 },
-                                lecture_activate: {visible: this.lecture_status_cd != "IP" ? true : false, title:"수업 비활성화", value:"", input_type:"option", option_data:
+                                lecture_activate: {visible: this.lecture_status_cd != "IP" ? true : false, title:"수업 활성화", value:"", input_type:"option", option_data:
                                     {활성화:{value: 0, callback: ()=>{this.send_state_change_data(this, 'lecture_state_cd', 'IP')}}}
                                 }
                             };
