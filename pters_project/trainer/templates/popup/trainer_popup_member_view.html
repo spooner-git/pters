@@ -95,28 +95,40 @@
             this.targetHTML = targetHTML;
             this.instance = instance;
             this.data = data;
-            console.log(data);
+            
+            this.target_basic_info = '#wrapper_box_member_info';
+            this.target_name = '#member_name_in_popup';
+            this.target_ticket_list = '#wrapper_member_tickets_list';
+            this.target_lecture_list = '#wrapper_member_lectures_list';
+
         }
 
         init (){
-            this.render_basic_info('#wrapper_box_member_info');
-            this.render_member_name('#member_name_in_popup');
+            this.render_basic_info();
+            this.render_member_name();
             this.render_member_edit_button('#member_edit_popup_show_button');
             this.render_ticket_list_set();
             this.render_lecture_list_set();
         }
 
+        reform_data(data){
+            this.data = data;
+        }
+
         render_ticket_list_set (){
             this.render_static_component('#toggle_set_ticket_in_member', "toggle_set_ticket");
-            this.render_include_ticket_info('#wrapper_member_tickets_list');
+            this.render_include_ticket_info();
         }
 
         render_lecture_list_set (){
             this.render_static_component('#toggle_set_lecture_in_member', "toggle_set_lecture");
-            this.render_include_lecture_info('#wrapper_member_lectures_list');
+            this.render_include_lecture_info();
         }
 
         render_member_name (target){
+            if(target == undefined){
+                target = this.this.target_name;
+            }
             document.querySelector(target).innerHTML = this.data.basic_info.member_name;
         }
 
@@ -128,6 +140,9 @@
         }
 
         render_basic_info (target){
+            if(target == undefined){
+                target = this.target_basic_info;
+            }
             let html = `
                         <div class="obj_box_full">
                             <div id="wrapper_member_info_basic">
@@ -151,6 +166,9 @@
         }
 
         render_include_ticket_info (target){
+            if(target == undefined){
+                target = this.target_ticket_list;
+            }
             let html_to_join = [];
             for(let ticket in this.data.ticket_info){
                 let this_data = this.data.ticket_info[ticket];
@@ -182,6 +200,9 @@
         }
 
         render_include_lecture_info (target){
+            if(target == undefined){
+                target = this.target_lecture_list;
+            }
             let html_to_join = [];
             for(let lecture in this.data.lecture_info){
                 let this_data = this.data.lecture_info[lecture];
@@ -232,7 +253,7 @@
     }
 
     let swiper, member_info_popup;
-    member_info_popup = new Member_info('.popup_member_view', member_info, 'member_info_popup');
+    var member_info_popup = new Member_info('.popup_member_view', member_info, 'member_info_popup');
     member_info_popup.init();
     swiper = new Swiper('.swiper-container', {
       slidesPerView: 2,

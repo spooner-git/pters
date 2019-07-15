@@ -351,9 +351,9 @@ function show_error_message (message){
                                   'onclick_function':`layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
 }
 
-function show_user_input_popup (prev_value, callback_after_confirm){
+function show_user_input_popup (type, prev_value, callback_after_confirm){
     $(`.popup_basic_user_input input`).val('');
-    layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_input', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
+    layer_popup.open_layer_popup(POPUP_BASIC, `popup_basic_user_input_${type}`, POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
                                             {'popup_title':'', 'popup_comment':prev_value,
                                             'onclick_function':`${callback_after_confirm};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
 }

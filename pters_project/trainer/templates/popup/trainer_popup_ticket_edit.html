@@ -78,16 +78,18 @@
             this.ticket_expiry = "% 3개월";
             this.ticket_price = "% 1,200,000원";
             this.items =    {    
-                                package_name: {visible: true, title:"수강권명", value:this.ticket_name},
+                                ticket_name: {visible: true, title:"수강권명", value:this.ticket_name, input_type:"text"},
                                 // ticket_description: {visible: true, title:"수강권 설명", value: this.ticket_description},
-                                package_note: {visible: true, title:"수강권 설명", value: this.ticket_description},
-                                ticket_include_lectures: {visible: true, title:"포함된 수업", value: this.ticket_include_lectures.length},
-                                ticket_count: {visible: true, title:"횟수", value: this.ticket_count},
-                                ticket_expiry: {visible: true, title:"유효 기간", value: this.ticket_expiry},
-                                ticket_price: {visible: true, title:"가격", value: this.ticket_price},
-                                ticket_finished_members: {visible: true, title:"수강 종료된 회원", value:""},
-                                ticket_history: {visible: true, title:"수강권 이력", value:""},
-                                ticket_deactivate: {visible: true, title:"수강권 비활성화", value:""}
+                                ticket_note: {visible: true, title:"수강권 설명", value: this.ticket_description, input_type:"text"},
+                                ticket_include_lectures: {visible: true, title:"포함된 수업", value: this.ticket_include_lectures.length, input_type:"link"},
+                                ticket_count: {visible: true, title:"횟수", value: this.ticket_count, input_type:"number"},
+                                ticket_expiry: {visible: true, title:"유효 기간", value: this.ticket_expiry, input_type:"date"},
+                                ticket_price: {visible: true, title:"가격", value: this.ticket_price, input_type:"number"},
+                                ticket_finished_members: {visible: true, title:"수강 종료된 회원", value:"", input_type:"link"},
+                                ticket_history: {visible: true, title:"수강권 이력", value:"", input_type:"link"},
+                                ticket_deactivate: {visible: true, title:"수강권 비활성화", value:"", input_type:"option", option_data:
+                                    {비활성화:{value: 0, callback: ()=>{}}}
+                                }
                             };
         }
 
@@ -108,19 +110,48 @@
                 if(item_el.visible == false){
                     continue;
                 }
-                let item_name = String(item);
-                let onclick = `show_user_input_popup(event.target.innerText, '${this.instance}.send_data(this, \\'${item_name}\\' )')`
-                let html = 
-                            `<li class="">
-                                <div class="obj_table_raw">
-                                    <div class="cell_title">${item_el.title}</div>
-                                    <div class="cell_value" onclick="${onclick}">${item_el.value}</div>
-                                    <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                                </div>
-                            </li>`;
+                if(item_el.value == ""){
+                    item_el.value = "&nbsp;"
+                }
+
+                let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, item_el.input_type); 
                 html_to_join.push(html);
             }
             document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`; 
+            this.attach_events();
+        }
+
+        attach_events(){
+            for(let item in this.items){
+                let item_el = this.items[item];
+                if(item_el.visible == false){
+                    continue;
+                }
+                
+                let onclick;
+                let click_type = document.getElementById(`${item}`).dataset.click;
+                switch(click_type){
+                    case "text":
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                        break;
+                    case "number":
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                        break;
+                    case "date":
+                        onclick = ()=>{time_select_popup.open()};
+                        break;
+                    case "option":
+                        let option_data = item_el.option_data
+                        onclick = ()=>{option_select_popup.open(option_data)};
+                        break;
+                    case "time":
+                        onclick = ()=>{time_select_popup.open()};
+                        break;
+                    case "color":
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                }
+                document.getElementById(`${item}`).onclick = onclick;
+            }
         }
 
         send_data(context, item_name){
@@ -134,6 +165,9 @@
                 Ticket_func.read({"ticket_id":this.ticket_id}, (data)=>{
                     this.reform_data(data.package_info);
                     this.render_setting_list();
+                    ticket_info_popup.reform_data(data);
+                    ticket_info_popup.render_ticket_name();
+                    ticket_info_popup.render_basic_info();
                 })
             }) 
         }

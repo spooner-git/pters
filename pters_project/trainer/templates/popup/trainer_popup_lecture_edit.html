@@ -163,15 +163,17 @@
             this.lecture_fixed_member = "% 1";
 
             this.items =    {    
-                                lecture_name: {visible: true, title:"수업명", value:this.lecture_name},
-                                lecture_max_num: {visible: true, title:"정원", value: this.lecture_max_num},
-                                lecture_operating_time: {visible: true, title:"진행 시간", value: this.lecture_operating_time},
-                                lecture_color: {visible: true, title:"색상 태그", value: this.lecture_color},
-                                lecture_repeat_schedule: {visible: true, title:"반복 일정", value: this.lecture_repeat_schedule},
-                                lecture_fixed_member: {visible: true, title:"고정 회원", value: this.lecture_fixed_member},
-                                lecture_finished_members: {visible: true, title:"수업 종료된 회원", value:""},
-                                lecture_history: {visible: true, title:"수업 이력", value:""},
-                                lecture_deactivate: {visible: true, title:"수업 비활성화", value:""}
+                                lecture_name: {visible: true, title:"수업명", value:this.lecture_name, input_type:"text"},
+                                lecture_max_num: {visible: true, title:"정원", value: this.lecture_max_num, input_type:"number"},
+                                lecture_operating_time: {visible: true, title:"진행 시간", value: this.lecture_operating_time, input_type:"time"},
+                                lecture_color: {visible: true, title:"색상 태그", value: this.lecture_color, input_type:"color"},
+                                lecture_repeat_schedule: {visible: true, title:"반복 일정", value: this.lecture_repeat_schedule, input_type:"link"},
+                                lecture_fixed_member: {visible: true, title:"고정 회원", value: this.lecture_fixed_member, input_type:"link"},
+                                lecture_finished_members: {visible: true, title:"수업 종료된 회원", value:"", input_type:"link"},
+                                lecture_history: {visible: true, title:"수업 이력", value:"", input_type:"link"},
+                                lecture_deactivate: {visible: true, title:"수업 비활성화", value:"", input_type:"option", option_data:
+                                    {비활성화:{value: 0, callback: ()=>{}}}
+                                }
                             };
         }
 
@@ -191,27 +193,55 @@
                 if(item_el.visible == false){
                     continue;
                 }
+                if(item_el.value == ""){
+                    item_el.value = "&nbsp;"
+                }
 
-                let title = item_el.title;
-                let content = item_el.value;
-
+                let if_it_is_color;
                 switch(item){
                     case "lecture_color":
-                        content = `<div style="display:inline-block;width:25px;height:25px;border-radius: 3px;background-color:${item_el.value};vertical-align: middle;margin-bottom:4px;"></div>`
+                        if_it_is_color = true;
                         break;
                 }
 
-                let html = 
-                            `<li class="">
-                                <div class="obj_table_raw">
-                                    <div class="cell_title">${title}</div>
-                                    <div class="cell_value" onclick="show_user_input_popup(event.target.innerText, '${this.instance}.send_data(this, \\'${item}\\' )' )">${content}</div>
-                                    <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                                </div>
-                            </li>`;
+                let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, item_el.input_type, if_it_is_color); 
                 html_to_join.push(html);
             }
             document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`;
+            this.attach_events();
+        }
+
+        attach_events(){
+            for(let item in this.items){
+                let item_el = this.items[item];
+                if(item_el.visible == false){
+                    continue;
+                }
+                
+                let onclick;
+                let click_type = document.getElementById(`${item}`).dataset.click;
+                switch(click_type){
+                    case "text":
+                        onclick = function(){show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                        break;
+                    case "number":
+                        onclick = function(){show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                        break;
+                    case "date":
+                        onclick = function(){time_select_popup.open()};
+                        break;
+                    case "option":
+                        let option_data = item_el.option_data
+                        onclick = function(){option_select_popup.open(option_data)};
+                        break;
+                    case "time":
+                        onclick = function(){time_select_popup.open()};
+                        break;
+                    case "color":
+                        onclick = function(){show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                }
+                document.getElementById(`${item}`).onclick = onclick;
+            }
         }
 
         send_data(context, item_name){
@@ -221,7 +251,6 @@
             data_to_send["group_id"] = this.lecture_id;
             data_to_send[item_name.replace(/lecture_/gi,"")] = user_input;
 
-            console.log(data_to_send)
             
             Lecture_func.update(data_to_send, () => {
                 Lecture_func.read({"group_id":this.lecture_id}, (data)=>{

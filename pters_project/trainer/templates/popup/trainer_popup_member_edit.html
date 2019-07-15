@@ -162,18 +162,28 @@
             this.member_sync = this.data.member_connection_check;
 
             this.items =    {    
-                                member_first_name: {visible: true, title:"회원명", value:this.member_name},
-                                member_user_id: {visible: true, title:"아이디", value: this.member_user_id},
-                                member_phone: {visible: true, title:"연락처", value: this.member_phone},
-                                member_birth: {visible: true, title:"생년월일", value: this.member_birth},
-                                member_sex: {visible: true, title:"성별", value: this.member_sex},
-                                member_note: {visible: true, title:"특이사항", value: this.member_note},
-                                member_ticket_history: {visible: true, title:"수강권 이력", value:""},
-                                member_lecture_history: {visible: true, title:"수업 이력", value:""},
-                                member_sync_request: {visible: this.member_sync == 0 ? true : false, title:"연결하기", value:""},
-                                member_sync_disconnect: {visible: this.member_sync == 2 ? true : false, title:"연결끊기", value:""},
-                                member_sync_wait: {visible: this.member_sync == 1 ? true : false, title:"연결대기", value:""},
-                                member_deactivate: {visible: true, title:"회원 비활성화", value:""}
+                                member_first_name: {visible: true, title:"회원명", value:this.member_name, input_type:"text"},
+                                member_user_id: {visible: true, title:"아이디", value: this.member_user_id, input_type:"text"},
+                                member_phone: {visible: true, title:"연락처", value: this.member_phone, input_type:"number"},
+                                member_birth: {visible: true, title:"생년월일", value: this.member_birth, input_type:"date"},
+                                member_sex: {visible: true, title:"성별", value: this.member_sex, input_type:"option", option_data:
+                                   {남성:{value: 0, callback: ()=>{}}, 여성:{value: 1, callback: ()=>{}}}
+                                },
+                                member_note: {visible: true, title:"특이사항", value: this.member_note, input_type:"text"},
+                                member_ticket_history: {visible: true, title:"수강권 이력", value:"", input_type:"link"},
+                                member_lecture_history: {visible: true, title:"수업 이력", value:"", input_type:"link"},
+                                member_sync_request: {visible: this.member_sync == 0 ? true : false, title:"연결하기", value:"", input_type:"option", option_data:
+                                   {연결요청:{value: 0, callback: ()=>{}}}
+                                },
+                                member_sync_disconnect: {visible: this.member_sync == 2 ? true : false, title:"연결끊기", value:"", input_type:"option", option_data:
+                                   {연결끊기:{value: 0, callback: ()=>{}}}
+                                },
+                                member_sync_wait: {visible: this.member_sync == 1 ? true : false, title:"연결대기", value:"", input_type:"option", option_data:
+                                    {연결요청취소:{value: 0, callback: ()=>{}}}
+                                },
+                                member_deactivate: {visible: true, title:"회원 비활성화", value:"", input_type:"option", option_data:
+                                    {비활성화:{value: 0, callback: ()=>{}}}
+                                }
                             };
         }
 
@@ -194,21 +204,51 @@
                 if(item_el.visible == false){
                     continue;
                 }
+                if(item_el.value == ""){
+                    item_el.value = "&nbsp;"
+                }
 
-                let html = 
-                            `<li class="">
-                                <div class="obj_table_raw">
-                                    <div class="cell_title">${item_el.title}</div>
-                                    <div class="cell_value" onclick="show_user_input_popup(event.target.innerText, '${this.instance}.send_data(this, \\'${item}\\' )' )">${item_el.value}</div>
-                                    <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
-                                </div>
-                            </li>`;
+                let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, item_el.input_type); 
                 html_to_join.push(html);
             }
             document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`; 
+            this.attach_events();
         }
 
         
+        attach_events(){
+            for(let item in this.items){
+                let item_el = this.items[item];
+                if(item_el.visible == false){
+                    continue;
+                }
+                
+                let onclick;
+                let click_type = document.getElementById(`${item}`).dataset.click;
+                switch(click_type){
+                    case "text":
+                        onclick = function(){show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                        break;
+                    case "number":
+                        onclick = function(){show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                        break;
+                    case "date":
+                        onclick = function(){time_select_popup.open()};
+                        break;
+                    case "option":
+                        let option_data = item_el.option_data
+                        onclick = function(){option_select_popup.open(option_data)};
+                        break;
+                    case "time":
+                        onclick = function(){time_select_popup.open()};
+                        break;
+                    case "color":
+                        onclick = function(){show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, ${item})`)};
+                }
+                document.getElementById(`${item}`).onclick = onclick;
+            }
+        }
+
         send_data(context, item_name){
             //데이터 형태 {"member_id":"", "first_name":"", "phone":"", "sex":"", "birthday":"", "phone":"", "phone":""};
             let user_input = $(context).parent().siblings('div').find('.popup_basic_user_input_full').val();

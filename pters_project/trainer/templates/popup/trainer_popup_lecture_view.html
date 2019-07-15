@@ -92,30 +92,40 @@
             this.targetHTML = targetHTML;
             this.instance = instance;
             this.data = data;
-            console.log(data)
+            
+            this.target_basic_info = '#wrapper_box_lecture_info';
+            this.target_name = '#lecture_name_in_popup';
+            this.target_member_list = '#wrapper_lecture_members_list';
+            this.target_ticket_list = '#wrapper_lecture_tickets_list';
         }
 
         init(){
-            this.render_basic_info('#wrapper_box_lecture_info');
-            this.render_lecture_name('#lecture_name_in_popup');
+            this.render_basic_info();
+            this.render_lecture_name();
             this.render_lecture_edit_button('#lecture_edit_popup_show_button');
             this.render_member_list_set();
             this.render_ticket_list_set();
         }
 
+        reform_data(data){
+            this.data = data;
+        }
+
         render_member_list_set(){
             this.render_static_component('#toggle_set_member', "toggle_set_member");
-            this.render_include_member_info('#wrapper_lecture_members_list');
+            this.render_include_member_info();
         }
 
         render_ticket_list_set(){
-            this.render_include_ticket_info('#wrapper_lecture_tickets_list');
             this.render_static_component('#toggle_set_ticket', "toggle_set_ticket");
+            this.render_include_ticket_info();
         }
 
         render_lecture_name(target){
+            if(target == undefined){
+                target = this.target_name;
+            }
             document.querySelector(target).innerHTML = this.data.group_name;
-            document.querySelector(target).onclick = function(){alert(123)}
         }
 
         render_lecture_edit_button(target){
@@ -126,6 +136,9 @@
         }
 
         render_basic_info(target){
+            if(target == undefined){
+                target = this.target_basic_info;
+            }
             let html = `
                         <div class="obj_box_full">
                             <div id="wrapper_lecture_info_basic">
@@ -147,6 +160,9 @@
         }
 
         render_include_ticket_info(target){
+            if(target == undefined){
+                target = this.target_ticket_list;
+            }
             let html_to_join = [];
             let length = this.data.group_package_id_list.length;
             for(var i=0; i<length; i++){
@@ -176,6 +192,9 @@
         }
 
         render_include_member_info(target){
+            if(target == undefined){
+                target = this.target_member_list;
+            }
             let html_to_join = [];
             let length = this.data.group_member_list.length;
             for(var i=0; i<length; i++){
@@ -225,7 +244,7 @@
     }
 
     let swiper, lecture_info_popup;
-    lecture_info_popup = new Lecture_info('.popup_lecture_view', 'lecture_info_popup', lecture_info);
+    var lecture_info_popup = new Lecture_info('.popup_lecture_view', 'lecture_info_popup', lecture_info);
     lecture_info_popup.init();
     swiper = new Swiper('.swiper-container', {
       slidesPerView: 2,

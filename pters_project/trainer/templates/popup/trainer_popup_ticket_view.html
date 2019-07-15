@@ -92,28 +92,39 @@
             this.targetHTML = targetHTML;
             this.instance = instance;
             this.data = data;
-            console.log(data)
+            
+            this.target_basic_info = '#wrapper_box_ticket_info';
+            this.target_ticket_name = '#ticket_name_in_popup';
+            this.target_ticket_lecture_list = '#wrapper_ticket_lectures_list';
+            this.target_ticket_member_list = '#wrapper_ticket_members_list';
         }
 
         init(){
-            this.render_basic_info('#wrapper_box_ticket_info');
-            this.render_ticket_name('#ticket_name_in_popup');
+            this.render_basic_info();
+            this.render_ticket_name();
             this.render_ticket_edit_button('#ticket_edit_popup_show_button');
             this.render_lecture_list_set();
             this.render_member_list_set();
         }
 
-        render_member_list_set(){
-            this.render_static_component('#toggle_set_members_in_ticket', "toggle_set_member");
-            this.render_include_member_info('#wrapper_ticket_members_list');
+        reform_data(data){
+            this.data = data.package_info;
         }
 
-        render_lecture_list_set(){
+        render_member_list_set(target){
+            this.render_static_component('#toggle_set_members_in_ticket', "toggle_set_member");
+            this.render_include_member_info(target);
+        }
+
+        render_lecture_list_set(target){
             this.render_static_component('#toggle_set_lectures_in_ticket', "toggle_set_lecture");
-            this.render_include_lecture_info('#wrapper_ticket_lectures_list');
+            this.render_include_lecture_info(target);
         }
 
         render_ticket_name(target){
+            if(target == undefined){
+                target = this.target_ticket_name;
+            }
             document.querySelector(target).innerHTML = this.data.package_name;
         }
 
@@ -125,6 +136,9 @@
         }
 
         render_basic_info(target){
+            if(target == undefined){
+                target = this.target_basic_info;
+            }
             let html = `
                         <div class="obj_box_full">
                             <div id="wrapper_ticket_info_basic">
@@ -133,8 +147,8 @@
                                 <div>${this.data.package_note}</div>
                             </div>
                             <div id="wrapper_ticket_info_dates">
-                                <div>수정 <span>${'2019.06.24'}</span></div>
-                                <div>개설 <span>${'2019.06.21'}</span></div>
+                                <div>수정 <span>${this.data.package_mod_dt.split(' ')[0]}</span></div>
+                                <div>개설 <span>${this.data.package_reg_dt.split(' ')[0]}</span></div>
                             </div>
                         </div
                         >`
@@ -142,6 +156,9 @@
         }
 
         render_include_lecture_info(target){
+            if(target == undefined){
+                target = this.target_ticket_lecture_list;
+            }
             let html_to_join = [];
             let length = this.data.package_group_id_list.length;
             for(var i=0; i<length; i++){
@@ -171,6 +188,9 @@
         }
 
         render_include_member_info(target){
+            if(target == undefined){
+                target = target_ticket_member_list;
+            }
             let html_to_join = [];
             let length = this.data.package_member_list.length;
             for(var i=0; i<length; i++){
@@ -217,7 +237,7 @@
         }
     }
 
-    let ticket_info_popup = new Ticket_info('.popup_ticket_view', 'ticket_info_popup', ticket_info);
+    var ticket_info_popup = new Ticket_info('.popup_ticket_view', 'ticket_info_popup', ticket_info);
     ticket_info_popup.init();
 
 

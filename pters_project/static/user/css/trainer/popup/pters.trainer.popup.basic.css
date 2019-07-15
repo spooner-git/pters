@@ -51,7 +51,7 @@
         cursor: pointer;
     }
 
-.popup_basic_user_input{
+.popup_basic_user_input_text, .popup_basic_user_input_number{
     text-align: center;
 }
     .popup_basic_user_input_full{
