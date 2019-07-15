@@ -1850,7 +1850,7 @@ class PopupTicketInfoView(TemplateView):
 
         if error is None:
             query_lecture_type = "select COMMON_CD_NM from COMMON_CD_TB as B " \
-                               "where B.COMMON_CD = `GROUP_TB`.`lecture_type_cd`"
+                               "where B.COMMON_CD = `GROUP_TB`.`group_type_cd`"
             ticket_info.ticket_lecture_data = TicketLectureTb.objects.select_related(
                 'lecture_tb').filter(ticket_tb_id=ticket_id,
                                    lecture_tb__use=USE,
