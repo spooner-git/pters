@@ -45,7 +45,8 @@ from stats.functions import get_sales_data
 from .functions import func_get_trainer_setting_list, func_add_lecture_info, func_delete_lecture_info, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
     func_get_member_info, func_get_member_from_lecture_list, func_get_package_info, func_get_group_info, \
-    func_check_member_connection_info, func_get_member_lecture_list, func_get_member_group_list
+    func_check_member_connection_info, func_get_member_lecture_list, func_get_member_group_list, \
+    func_get_member_ticket_list
 
 logger = logging.getLogger(__name__)
 
@@ -1752,7 +1753,7 @@ class GetLectureListView(LoginRequiredMixin, AccessTestMixin, View):
             error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
-            lecture_list = func_get_member_lecture_list(class_id, member_id)
+            lecture_list = func_get_member_ticket_list(class_id, member_id)
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -1776,7 +1777,7 @@ class GetMemberGroupListView(LoginRequiredMixin, AccessTestMixin, View):
             error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
-            group_list = func_get_member_group_list(class_id, member_id)
+            group_list = func_get_member_lecture_list(class_id, member_id)
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -4757,10 +4758,10 @@ class PopupMemberView(TemplateView):
         class_id = self.request.session.get('class_id')
         member_id = self.request.GET.get('member_id')
         member_result = func_get_member_info(class_id, self.request.user.id, member_id)
-        lecture_list = dict(func_get_member_lecture_list(class_id, member_id))
-        group_list = dict(func_get_member_group_list(class_id, member_id))
+        lecture_list = dict(func_get_member_ticket_list(class_id, member_id))
+        group_list = dict(func_get_member_lecture_list(class_id, member_id))
         context['member_info'] = member_result['member_info']
-        context['member_group_list'] = group_list
+        context['member_lecture_list'] = group_list
         context['member_ticket_list'] = lecture_list
         return context
 

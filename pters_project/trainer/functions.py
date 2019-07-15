@@ -271,7 +271,7 @@ def func_get_member_group_list(class_id, member_id):
 
 
 # 회원의 수강정보 리스트 불러오기
-def func_get_member_lecture_list(class_id, member_id):
+def func_get_member_ticket_list(class_id, member_id):
     lecture_list = collections.OrderedDict()
     query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
                         "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(member_id) + \
