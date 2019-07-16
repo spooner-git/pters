@@ -139,6 +139,7 @@ let layer_popup = (function (){
         },
         "all_close_layer_popup": function () {
             let popup_data = func_all_close_layer_popup();
+            console.log(popup_data)
             this.animation_set(CLOSE, popup_data);
         },
 
