@@ -210,7 +210,7 @@
         data_state(item_name, external_input){
             let data_to_send = {};
             data_to_send["member_id"] = this.member_id;
-            data_to_send[item_name.replace(/ticket_/gi,"")] = external_input;
+            data_to_send[item_name.replace(/member_/gi,"")] = external_input;
             
             Member_func.status(data_to_send, () => {
                 this.data_refresh();
@@ -222,7 +222,9 @@
             data_to_send["member_id"] = this.member_id;
             
             Member_func.delete(data_to_send, () => {
-                this.data_refresh();
+                // this.data_refresh();
+                layer_popup.all_close_layer_popup();
+                member.init();
             }) 
         }
 

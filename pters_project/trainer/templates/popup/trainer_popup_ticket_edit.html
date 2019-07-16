@@ -209,7 +209,9 @@
             data_to_send["ticket_id"] = this.ticket_id;
             
             Ticket_func.delete(data_to_send, () => {
-                this.data_refresh();
+                // this.data_refresh();
+                layer_popup.all_close_layer_popup();
+                ticket.init();
             }) 
         }
 
