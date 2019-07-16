@@ -3374,6 +3374,7 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
 def select_class_processing_logic(request):
     class_id = request.POST.get('class_id', '')
+    next_page = request.POST.get('next_page', '')
 
     error = None
     class_info = None
@@ -3397,7 +3398,7 @@ def select_class_processing_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
-    return render(request, 'ajax/trainer_error_ajax.html')
+    return redirect(next_page)
 
 
 class GetBackgroundImgTypeListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
