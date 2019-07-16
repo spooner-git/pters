@@ -172,6 +172,9 @@
     .obj_font_color_light_blue{
         color: #509cf2;
     }
+    .obj_font_color_saturday_blue{
+        color: #0076ff;
+    }
     .obj_font_color_pters_dark_red{
         color: #f25050;
     }
@@ -180,6 +183,9 @@
     }
     .obj_font_color_coral{
         color: #ff3b44;
+    }
+    .obj_font_color_sunday_red{
+        color: #ff0000
     }
 
 /* 버튼 */

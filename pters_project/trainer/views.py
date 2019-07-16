@@ -4594,7 +4594,7 @@ class GetAttendModeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateVie
 
 # 리뉴얼
 class PopupCalendarPlanView(TemplateView):
-    template_name = 'popup/trainer_popup_calendar_plan_view.html'
+    template_name = 'popup/trainer_popup_plan_view.html'
 
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanView, self).get_context_data(**kwargs)
@@ -4602,7 +4602,7 @@ class PopupCalendarPlanView(TemplateView):
 
 
 class PopupCalendarPlanAdd(TemplateView):
-    template_name = 'popup/trainer_popup_calendar_plan_add.html'
+    template_name = 'popup/trainer_popup_plan_add.html'
 
     def get_context_data(self, **kwargs):
         context = super(PopupCalendarPlanAdd, self).get_context_data(**kwargs)
