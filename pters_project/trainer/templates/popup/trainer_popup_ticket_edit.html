@@ -148,10 +148,10 @@
                 let click_type = document.getElementById(`${item}`).dataset.click;
                 switch(click_type){
                     case "text":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, ()=>{ticket_edit.data_update(event, item)} )};
                         break;
                     case "number":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, ()=>{ticket_edit.data_update(event, item)} )};
                         break;
                     case "option":
                         let option_data = item_el.option_data
@@ -184,7 +184,7 @@
         }
 
         data_update(context, item_name){
-            let user_input = $(context).parent().siblings('div').find('.popup_basic_user_input_data').val();
+            let user_input = $(context.target).parent().siblings('div').find('.popup_basic_user_input_data').val();
             let data_to_send = {};
             data_to_send["ticket_id"] = this.ticket_id;
             data_to_send[item_name] = user_input;

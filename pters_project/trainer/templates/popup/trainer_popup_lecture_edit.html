@@ -164,10 +164,10 @@
                 let click_type = document.getElementById(`${item}`).dataset.click;
                 switch(click_type){
                     case "text":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, ()=>{lecture_edit.data_update(event, item)} )};
                         break;
                     case "number":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, ()=>{lecture_edit.data_update(event, item)} )};
                         break;
                     case "option":
                         let option_data = item_el.option_data
@@ -201,12 +201,11 @@
 
         data_update(context, item_name){
             //데이터 형태 {"lecture_id":"", "member_num":"", "name":"", "note":"", "ing_color_cd":"", "end_color_cd":"", "ing_font_color_cd":"", "end_font_color_cd":""};
-            let user_input = $(context).parent().siblings('div').find('.popup_basic_user_input_data').val();
+            let user_input = $(context.target).parent().siblings('div').find('.popup_basic_user_input_data').val();
             let data_to_send = {};
             data_to_send["lecture_id"] = this.lecture_id;
             data_to_send[item_name.replace(/lecture_/gi,"")] = user_input;
 
-            
             Lecture_func.update(data_to_send, () => {
                 this.data_refresh();
             }) 

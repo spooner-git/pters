@@ -380,9 +380,14 @@
 
             let set_data = `${this.instance}.set_selected_data()`;
             
+            // layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', popup_height, POPUP_FROM_BOTTOM,
+            //                         {'popup_title':'', 'popup_comment':'시간을 선택해주세요',
+            //                         'onclick_function':`${set_data};${callback_after_confirm};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
+
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', popup_height, POPUP_FROM_BOTTOM,
                                     {'popup_title':'', 'popup_comment':'시간을 선택해주세요',
                                     'onclick_function':`${set_data};${callback_after_confirm};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
+
 
             this.reset(target1, target2);
         }
@@ -737,6 +742,7 @@
     }
 
     var date_select_popup = new DateSelector('#year_wrap', '#month_wrap', '#date_wrap', "date_select_popup");
+
 
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -1,6 +1,6 @@
 class CComponent{
 
-    static setting_row (id, title, value, click_type, color, delete_highlight){
+    static setting_row (id, title, value, click_type, color, delete_highlight, onclick){
         if(color == true){
             value = `<div style="display:inline-block;width:25px;height:25px;border-radius: 3px;background-color:${value};vertical-align: middle;margin-bottom:4px;"></div>`;
         }
@@ -10,7 +10,6 @@ class CComponent{
             button_style = "obj_font_bg_coral_white";
         }
 
-
         let html = `<li class="${button_style}">
                         <div class="obj_table_raw">
                             <div class="cell_title">${title}</div>
@@ -18,6 +17,12 @@ class CComponent{
                             <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
                         </div>
                     </li>`;
+        
+        // $(document).off('click', `#${id}`).on('click', `#${id}`, function(e){
+        //     // let cell_value = $(this).find('.cell_value').text();
+        //     console.log('클릭setting_row');
+        //     onclick('clicked_crea_row_from_common_component');
+        // });
 
         return html;
     }

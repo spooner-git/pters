@@ -339,7 +339,10 @@ function func_set_popup_basic (popup_name, data){
         $popup.find('.wrapper_popup_basic_comment').html(`<p>${data.popup_comment}</p>`);
     }
     if(data != undefined && data.onclick_function!=undefined){
-        $popup.find('.popup_basic_confirm').attr('onclick', data.onclick_function);
+        // $popup.find('.popup_basic_confirm').attr('onclick', data.onclick_function);
+        $popup.find('.popup_basic_confirm').off('click').click(function(){
+            data.onclick_function();
+        });
     }
 }
 
@@ -349,14 +352,14 @@ function show_error_message (message){
                                  POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
                                  {'popup_title':'',
                                   'popup_comment':`${message}`,
-                                  'onclick_function':`layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
+                                  'onclick_function':()=>{layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);}});
 }
 
 function show_user_input_popup (type, prev_value, callback_after_confirm){
     $(`.popup_basic_user_input input`).val('');
     layer_popup.open_layer_popup(POPUP_BASIC, `popup_basic_user_input_${type}`, POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
                                             {'popup_title':'', 'popup_comment':prev_value,
-                                            'onclick_function':`${callback_after_confirm};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
+                                            'onclick_function': ()=>{callback_after_confirm();layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)} });
 }
 
 
