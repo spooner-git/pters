@@ -388,7 +388,8 @@ def add_trainee_schedule_logic(request):
                                                                     group_schedule_id=group_schedule_id,
                                                                     lecture_tb__member_id=request.user.id)
                     if len(group_schedule_data) == 0:
-                        lecture_id = func_get_lecture_member_ticket_id(group_schedule_info.group_tb_id, request.user.id)
+                        lecture_id = func_get_lecture_member_ticket_id(class_id, group_schedule_info.group_tb_id,
+                                                                       request.user.id)
                     else:
                         lecture_id = None
                         error = '이미 일정에 포함되어있습니다.'

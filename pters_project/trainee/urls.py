@@ -53,13 +53,6 @@ urlpatterns = [
     # 회원 정보 수정
     url(r'^update_trainee_info/$', views.update_trainee_info_logic, name='update_trainee_info'),
 
-    # 그룹 기능 #####################################################################################################
-    # 회원이 자신이 속한 그룹중 진행중 상태인 그룹 list 조회
-    url(r'^get_trainee_lecture_ing_list/$', views.GetTraineeLectureIngListViewAjax.as_view(),
-        name='get_trainee_lecture_ing_list'),
-    url(r'^get_trainee_lecture_end_list/$', views.GetTraineeLectureEndListViewAjax.as_view(),
-        name='get_trainee_lecture_end_list'),
-
     # 알람 기능 #####################################################################################################
     url(r'^trainee_alarm/$', views.AlarmView.as_view(), name='trainee_alarm'),
     url(r'^get_alarm_ajax/$', views.AlarmViewAjax.as_view(), name='get_alarm_ajax'),

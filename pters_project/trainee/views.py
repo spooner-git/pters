@@ -24,7 +24,7 @@ from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.models import ScheduleTb, DeleteScheduleTb
 from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassMemberTicketTb, LectureMemberTicketTb, ClassTb, SettingTb, LectureTb, TicketLectureTb,\
-    TicketTb
+    TicketTb, LectureMemberTb
 from .models import MemberTicketTb, MemberMemberTicketTb
 
 from schedule.functions import func_get_member_ticket_id, func_get_lecture_member_ticket_id, \
@@ -54,17 +54,11 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
     def get(self, request, **kwargs):
 
-        query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
-                             " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = "+str(request.user.id)+" and" \
-                             " B.USE=1"
-
         class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
             'class_tb',
             'member_ticket_tb__member').filter(
             member_ticket_tb__member_id=request.user.id,
-            use=USE).annotate(auth_type_cd=RawSQL(query_auth_type_cd,
-                                                  [])).exclude(auth_type_cd='DELETE'
-                                                               ).order_by('-member_ticket_tb__start_date')
+            use=USE).exclude(member_ticket_tb__member_auth_cd='DELETE').order_by('-member_ticket_tb__start_date')
         if class_member_ticket_data is None or len(class_member_ticket_data) == 0:
             # self.url = '/trainee/cal_month_blank/'
             self.url = '/trainee/trainee_main/'
@@ -74,10 +68,10 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 request.session['class_id'] = class_member_ticket_info.class_tb_id
                 request.session['member_ticket_id'] = class_member_ticket_info.member_ticket_tb_id
                 request.session['trainer_id'] = class_member_ticket_info.class_tb.member_id
-                if class_member_ticket_info.auth_type_cd == 'WAIT':
+                if class_member_ticket_info.member_ticket_tb.member_auth_cd == 'WAIT':
                     # self.url = '/trainee/member_ticket_select/'
                     self.url = '/trainee/trainee_main/'
-                elif class_member_ticket_info.auth_type_cd == 'DELETE':
+                elif class_member_ticket_info.member_ticket_tb.member_auth_cd == 'DELETE':
                     # self.url = '/trainee/cal_month_blank/'
                     self.url = '/trainee/trainee_main/'
                 else:
@@ -155,6 +149,28 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         class_id = self.request.session.get('class_id')
         context['error'] = None
         context = func_get_class_list_only_view(context, self.request.user.id)
+        # db 업데이트용
+        # group_lecture_list = LectureMemberTicketTb.objects.filter(fix_state_cd='FIX', use=USE)
+        #
+        # for group_lecture_info in group_lecture_list:
+        #     lecture_member_count = LectureMemberTb.objects.filter(lecture_tb_id=group_lecture_info.lecture_tb_id,
+        #                                                           member_id=group_lecture_info.member_ticket_tb.member_id,
+        #                                                           use=USE).count()
+        #     if lecture_member_count == 0:
+        #         group_member_info = LectureMemberTb(class_tb_id=group_lecture_info.lecture_tb.class_tb_id,
+        #                                             fix_state_cd='FIX',
+        #                                             lecture_tb_id=group_lecture_info.lecture_tb_id,
+        #                                             member_id=group_lecture_info.member_ticket_tb.member_id, use=USE)
+        #         group_member_info.save()
+        # member_lecture_data = MemberMemberTicketTb.objects.filter().order_by('member_id')
+        # for member_lecture_info in member_lecture_data:
+        #     try:
+        #         member_lecture = MemberTicketTb.objects.get(member_ticket_id=member_lecture_info.member_ticket_tb_id)
+        #         member_lecture.member_auth_cd = member_lecture_info.auth_cd
+        #         member_lecture.save()
+        #     except ObjectDoesNotExist:
+        #         member_lecture = None
+
         if class_id is not None and class_id != '':
             context = func_get_trainee_next_schedule_by_class_id(context, class_id, self.request.user.id)
             context = func_get_trainee_ing_member_ticket_list(context, class_id, self.request.user.id)
@@ -298,16 +314,7 @@ class ProgramSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-# class DeleteTraineeAccountView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-#     template_name = 'delete_trainee_account_form.html'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(DeleteTraineeAccountView, self).get_context_data(**kwargs)
-#
-#         return context
-
-
-# pt 일정 추가
+# 일정 추가
 def add_trainee_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     lecture_schedule_id = request.POST.get('lecture_schedule_id', None)
@@ -402,7 +409,8 @@ def add_trainee_schedule_logic(request):
                                                                       lecture_schedule_id=lecture_schedule_id,
                                                                       member_ticket_tb__member_id=request.user.id)
                     if len(lecture_schedule_data) == 0:
-                        member_ticket_id = func_get_lecture_member_ticket_id(lecture_schedule_info.lecture_tb_id,
+                        member_ticket_id = func_get_lecture_member_ticket_id(class_id,
+                                                                             lecture_schedule_info.lecture_tb_id,
                                                                              request.user.id)
                     else:
                         member_ticket_id = None
@@ -663,23 +671,6 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             context = func_get_trainee_lecture_schedule(context, self.request.user.id, class_id, start_date, end_date)
             context = func_get_class_member_ticket_count(context, class_id, self.request.user.id)
 
-            for lecture_schedule_info in context['lecture_schedule_data']:
-                lecture_member_ticket_avail_count = 0
-                query_member_auth_cd = "select `AUTH_CD` from MEMBER_LECTURE_TB as B" \
-                                       " where B.USE=1" \
-                                       " and B.LECTURE_TB_ID = `GROUP_LECTURE_TB`.`LECTURE_TB_ID`"
-                lecture_member_ticket_data = LectureMemberTicketTb.objects.select_related(
-                    'member_ticket_tb__member'
-                ).filter(lecture_tb_id=lecture_schedule_info.lecture_tb_id,
-                         member_ticket_tb__member_id=self.request.user.id,
-                         member_ticket_tb__use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd,
-                                                                                   [])).filter(member_auth_cd='VIEW')
-
-                for lecture_member_ticket_info in lecture_member_ticket_data:
-                    lecture_member_ticket_avail_count \
-                        += lecture_member_ticket_info.member_ticket_tb.member_ticket_avail_count
-                lecture_schedule_info.lecture_member_ticket_avail_count = lecture_member_ticket_avail_count
-
             if trainer_id != '' and trainer_id is not None:
                 context = func_get_trainer_setting_list(context, trainer_id, class_id)
 
@@ -795,16 +786,10 @@ def program_select_logic(request):
     if error is None:
         if member_ticket_connection_check == PROGRAM_LECTURE_CONNECT_DELETE:
             # 선택한 프로그램의 연결 대기중인 수강권 전부 삭제
-            query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
-                                 " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = " + str(request.user.id) \
-                                 + " and B.USE=1"
-
             member_ticket_data = ClassMemberTicketTb.objects.select_related(
                 'class_tb', 'member_ticket_tb__member'
             ).filter(class_tb_id=class_id, member_ticket_tb__member_id=request.user.id,
-                     use=USE).annotate(member_auth_cd=RawSQL(query_auth_type_cd,
-                                                             [])).filter(member_auth_cd='WAIT'
-                                                                         ).order_by('-member_ticket_tb__start_date')
+                     member_ticket_tb__member_auth_cd='WAIT', use=USE).order_by('-member_ticket_tb__start_date')
             for member_ticket_info in member_ticket_data:
                 try:
                     member_member_ticket = MemberMemberTicketTb.objects.get(
@@ -839,16 +824,11 @@ def program_select_logic(request):
 
         elif member_ticket_connection_check == PROGRAM_LECTURE_CONNECT_ACCEPT:
             # 선택한 프로그램의 연결 대기중인 수강권 전부 연결
-            query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
-                                 " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = " + str(request.user.id) \
-                                 + " and B.USE=1"
-
             member_ticket_data = ClassMemberTicketTb.objects.select_related(
                 'class_tb', 'member_ticket_tb__member'
             ).filter(class_tb_id=class_id, member_ticket_tb__member_id=request.user.id,
-                     use=USE).annotate(member_auth_cd=RawSQL(query_auth_type_cd,
-                                                             [])).filter(member_auth_cd='WAIT'
-                                                                         ).order_by('-member_ticket_tb__start_date')
+                     member_ticket_tb__member_auth_cd='WAIT',
+                     use=USE).order_by('-member_ticket_tb__start_date')
             for member_ticket_info in member_ticket_data:
                 try:
                     member_member_ticket = MemberMemberTicketTb.objects.get(
@@ -1049,104 +1029,6 @@ def update_trainee_info_logic(request):
     return render(request, 'ajax/trainee_error_info.html')
 
 
-class GetTraineeLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/trainee_lecture_info_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(GetTraineeLectureIngListViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        error = None
-        lecture_list = []
-
-        member_ticket_data = MemberMemberTicketTb.objects.filter(
-            member_id=self.request.user.id, member_ticket_tb__state_cd='IP',
-            auth_cd='VIEW').order_by('-member_ticket_tb__start_date')
-
-        for member_ticket_info in member_ticket_data:
-            lecture_member_ticket_check = 0
-            try:
-                lecture_member_ticket_info = LectureMemberTicketTb.objects.get(
-                    lecture_tb__class_tb_id=class_id, member_ticket_tb_id=member_ticket_info.member_ticket_id)
-            except ObjectDoesNotExist:
-                lecture_member_ticket_check = 1
-
-            if lecture_member_ticket_check == 0:
-                check = 0
-
-                try:
-                    state_cd_nm = CommonCdTb.objects.get(common_cd=lecture_member_ticket_info.lecture_tb.state_cd)
-                    lecture_member_ticket_info.lecture_tb.state_cd_nm = state_cd_nm.common_cd_nm
-                except ObjectDoesNotExist:
-                    error = '회원 정보를 불러오지 못했습니다.'
-
-                if len(lecture_list) == 0:
-                    lecture_list.append(lecture_member_ticket_info)
-
-                for lecture_info in lecture_list:
-
-                    if lecture_info.lecture_tb_id == lecture_member_ticket_info.lecture_tb_id:
-                        check = 1
-                if check == 0:
-                    lecture_list.append(lecture_member_ticket_info)
-
-        if error is not None:
-            logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
-
-        context['lecture_data'] = lecture_list
-
-        return context
-
-
-class GetTraineeLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/trainee_lecture_info_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(GetTraineeLectureEndListViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        error = None
-        lecture_list = []
-
-        member_ticket_data = MemberMemberTicketTb.objects.filter(
-            member_id=self.request.user.id, member_ticket_tb__state_cd='IP').exclude(auth_cd='DELETE')
-        member_ticket_data = member_ticket_data.order_by('-member_ticket_tb__start_date')
-
-        for member_ticket_info in member_ticket_data:
-            lecture_member_ticket_check = 0
-            try:
-                lecture_member_ticket_info = LectureMemberTicketTb.objects.get(
-                    lecture_tb__class_tb_id=class_id, member_ticket_tb_id=member_ticket_info.member_ticket_id)
-            except ObjectDoesNotExist:
-                lecture_member_ticket_check = 1
-
-            if lecture_member_ticket_check == 0:
-                check = 0
-
-                try:
-                    state_cd_nm = CommonCdTb.objects.get(common_cd=lecture_member_ticket_info.lecture_tb.state_cd)
-                    lecture_member_ticket_info.lecture_tb.state_cd_nm = state_cd_nm.common_cd_nm
-                except ObjectDoesNotExist:
-                    error = '회원 정보를 불러오지 못했습니다.'
-
-                if len(lecture_list) == 0:
-                    lecture_list.append(lecture_member_ticket_info)
-
-                for lecture_info in lecture_list:
-
-                    if lecture_info.lecture_tb_id == lecture_member_ticket_info.lecture_tb_id:
-                        check = 1
-                if check == 0:
-                    lecture_list.append(lecture_member_ticket_info)
-
-        if error is not None:
-            logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
-
-        context['lecture_data'] = lecture_list
-
-        return context
-
-
 class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     # context_object_name = "log_data"
     template_name = "trainee_alarm.html"
@@ -1170,8 +1052,8 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=USE).order_by('-reg_dt')
 
             query_member_auth_cd \
-                = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
-                  " where D.LECTURE_TB_ID = `LOG_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " + str(self.request.user.id)
+                = "select `MEMBER_AUTH_CD` from LECTURE_TB as D" \
+                  " where D.ID = `LOG_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " + str(self.request.user.id)
 
             log_data = LogTb.objects.filter(
                 class_tb_id=class_id, reg_dt__gte=three_days_ago,
@@ -1523,18 +1405,13 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
     if class_id is None or class_id == '':
         error = '수강정보를 불러오지 못했습니다.'
 
-    query_member_auth_cd \
-        = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
-          " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = "+str(user_id)
-
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
         member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb'
-        ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id,
+        ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id, member_ticket_tb__member_auth_cd='VIEW',
                  member_ticket_tb__use=USE
-                 ).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
-                            ).filter(member_auth_cd='VIEW').order_by('member_ticket_tb__start_date')
+                 ).order_by('member_ticket_tb__start_date')
     if error is None:
         if len(member_ticket_list) > 0:
             for idx, member_ticket_list_info in enumerate(member_ticket_list):
@@ -1568,21 +1445,17 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
                     error = None
     if error is None:
 
-        query_member_auth_cd \
-            = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
-              " where D.LECTURE_TB_ID = `SCHEDULE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " + str(user_id)
-
         member_ticket_finish_count = ScheduleTb.objects.select_related(
             'member_ticket_tb__member', 'lecture_tb'
-        ).filter(Q(state_cd='PE'), class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE
-                 ).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
-                            ).filter(member_auth_cd='VIEW').order_by('member_ticket_tb__start_date', 'start_dt').count()
+        ).filter(Q(state_cd='PE'), class_tb_id=class_id, member_ticket_tb__member_auth_cd='VIEW',
+                 en_dis_type=ON_SCHEDULE_TYPE
+                 ).order_by('member_ticket_tb__start_date', 'start_dt').count()
 
         member_ticket_absence_count = ScheduleTb.objects.select_related(
             'member_ticket_tb__member', 'lecture_tb'
-        ).filter(Q(state_cd='PC'), class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE
-                 ).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
-                            ).filter(member_auth_cd='VIEW').order_by('member_ticket_tb__start_date', 'start_dt').count()
+        ).filter(Q(state_cd='PC'), class_tb_id=class_id, member_ticket_tb__member_auth_cd='VIEW',
+                 en_dis_type=ON_SCHEDULE_TYPE
+                 ).order_by('member_ticket_tb__start_date', 'start_dt').count()
 
     if error is not None:
         context['error'] = error
@@ -1646,36 +1519,37 @@ class PopupCalendarPlanReserveView(TemplateView):
 
         # 선택한날에 오픈되어 있는 그룹수업의 예약 가능 횟수 호출
         # 회원과 연결되어있는 수강권중에서 해당 그룹 수업이 포함되어 있는 경우 count
-        # context = func_get_trainee_lecture_schedule(context, self.request.user.id, class_id, select_date, select_date)
         context = func_get_class_member_ticket_count(context, class_id, self.request.user.id)
 
         context['error'] = None
         context['select_date'] = datetime.datetime.strptime(select_date, '%Y-%m-%d')
         start_date = datetime.datetime.strptime(select_date + ' 00:00', '%Y-%m-%d %H:%M')
         end_date = datetime.datetime.strptime(select_date + ' 23:59', '%Y-%m-%d %H:%M')
-        # context = func_get_holiday_schedule(context, start_date, end_date)
-        # context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, start_date, end_date)
-        # context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
+
         # 그룹 스케쥴과 예약 가능 횟수 동시에 들고 와야할듯
         context = func_get_trainee_lecture_schedule(context, self.request.user.id, class_id, start_date, end_date)
-        # context = func_get_class_member_ticket_count(context, class_id, self.request.user.id)
         lecture_data = []
         lecture_id_list = []
         for lecture_schedule_info in context['lecture_schedule_data']:
-            lecture_member_ticket_avail_count = 0
-            query_member_auth_cd = "select `AUTH_CD` from MEMBER_LECTURE_TB as B" \
-                                   " where B.USE=1" \
-                                   " and B.LECTURE_TB_ID = `GROUP_LECTURE_TB`.`LECTURE_TB_ID`"
-            lecture_member_ticket_data = LectureMemberTicketTb.objects.select_related(
-                'member_ticket_tb__member'
-            ).filter(lecture_tb_id=lecture_schedule_info.lecture_tb_id,
-                     member_ticket_tb__member_id=self.request.user.id,
-                     member_ticket_tb__use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd,
-                                                                               [])).filter(member_auth_cd='VIEW')
 
-            for lecture_member_ticket_info in lecture_member_ticket_data:
+            ticket_lecture_data = TicketLectureTb.objects.select_related(
+                'ticket_tb').filter(class_tb_id=class_id, ticket_tb__state_cd='IP', ticket_tb__use=USE,
+                                    lecture_tb_id=lecture_schedule_info.lecture_tb_id, lecture_tb__state_cd='IP',
+                                    lecture_tb__use=USE, use=USE)
+
+            query_ticket_data = Q()
+            for ticket_lecture_info in ticket_lecture_data:
+                query_ticket_data |= Q(member_ticket_tb__ticket_tb_id=ticket_lecture_info.ticket_tb_id)
+
+            class_member_ticket_data = ClassMemberTicketTb.objects.select_related('member_ticket_tb__member').filter(
+                query_ticket_data, member_ticket_tb__member_id=self.request.user.id, member_ticket_tb__state_cd='IP',
+                use=USE)
+            # member_ticket_tb__member_auth_cd='VIEW',
+
+            lecture_member_ticket_avail_count = 0
+            for class_member_ticket_info in class_member_ticket_data:
                 lecture_member_ticket_avail_count \
-                    += lecture_member_ticket_info.member_ticket_tb.member_ticket_avail_count
+                    += class_member_ticket_info.member_ticket_tb.member_ticket_avail_count
             lecture_schedule_info.lecture_member_ticket_avail_count = lecture_member_ticket_avail_count
 
             if lecture_id_list.count(lecture_schedule_info.lecture_tb.lecture_id) == 0:
@@ -1684,9 +1558,9 @@ class PopupCalendarPlanReserveView(TemplateView):
                                 'lecture_name': lecture_schedule_info.lecture_tb.name,
                                 'lecture_member_ticket_avail_count': lecture_member_ticket_avail_count}
                 lecture_data.append(lecture_info)
+
         context['lecture_data'] = lecture_data
-        # if trainer_id != '' and trainer_id is not None:
-        #     context = func_get_trainer_setting_list(context, trainer_id, class_id)
+
         return context
 
 
@@ -1747,14 +1621,9 @@ class PopupLectureTicketInfoView(TemplateView):
         lecture_info = None
         schedule_list = None
 
-        query_member_auth_cd \
-            = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
-              " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " \
-              + str(self.request.user.id)
         class_list = ClassMemberTicketTb.objects.select_related(
-            'class_tb__member').filter(member_ticket_tb_id=member_ticket_id,
-                                       use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd,
-                                                                               [])).filter(member_auth_cd='VIEW')
+            'class_tb__member').filter(member_ticket_tb_id=member_ticket_id, member_ticket_tb__member_auth_cd='VIEW',
+                                       use=USE)
 
         for class_info in class_list:
             if class_info.class_tb.member.phone is not None and class_info.class_tb.member.phone != '':
@@ -1809,16 +1678,11 @@ class PopupTicketInfoView(TemplateView):
         error = None
         ticket_info = None
 
-        query_member_auth_cd \
-            = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
-              " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " \
-              + str(self.request.user.id)
         member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'class_tb__member',
             'member_ticket_tb__ticket_tb'
-        ).filter(member_ticket_tb__ticket_tb__ticket_id=ticket_id,
-                 use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd,
-                                                         [])).filter(member_auth_cd='VIEW')
+        ).filter(member_ticket_tb__ticket_tb__ticket_id=ticket_id, member_ticket_tb__member_auth_cd='VIEW',
+                 use=USE)
 
         for member_ticket_info in member_ticket_list:
             if member_ticket_info.class_tb.member.phone is not None and member_ticket_info.class_tb.member.phone != '':

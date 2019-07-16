@@ -15,9 +15,9 @@ from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE
     SCHEDULE_DUPLICATION_DISABLE, ING_MEMBER_FALSE, ING_MEMBER_TRUE
 
 from login.models import LogTb, PushInfoTb
-from trainer.models import MemberClassTb, LectureMemberTicketTb, ClassMemberTicketTb, LectureTb
+from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, TicketLectureTb
 from trainee.models import MemberTicketTb, MemberMemberTicketTb
-from trainer.functions import func_get_class_member_ing_list
+from trainer.functions import func_get_class_member_ing_list, func_update_lecture_member_fix_status_cd
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
 
 
@@ -34,32 +34,36 @@ def func_get_member_ticket_id(class_id, member_id):
                                                                        'member_ticket_tb__reg_dt')
 
     for class_member_ticket_info in class_member_ticket_data:
-        try:
-            LectureMemberTicketTb.objects.get(
-                lecture_tb__state_cd='IP', lecture_tb__lecture_type_cd='ONE_TO_ONE',
-                member_ticket_tb_id=class_member_ticket_info.member_ticket_tb.member_ticket_id, use=USE)
+        ticket_single_lecture_count = TicketLectureTb.objects.filter(
+            ticket_tb_id=class_member_ticket_info.member_ticket_tb.member_ticket_id, ticket_tb__state_cd='IP',
+            lecture_tb__state_cd='IP', lecture_tb__member_num=1, use=USE).count()
+
+        if ticket_single_lecture_count > 0:
             member_ticket_id = class_member_ticket_info.member_ticket_tb.member_ticket_id
             break
-        except ObjectDoesNotExist:
-            member_ticket_id = None
 
     return member_ticket_id
 
 
 # 그룹 Lecture Id 조회
-def func_get_lecture_member_ticket_id(lecture_id, member_id):
+def func_get_lecture_member_ticket_id(class_id, lecture_id, member_id):
 
     member_ticket_id = None
-
-    lecture_member_ticket_data = LectureMemberTicketTb.objects.select_related(
-        'lecture_tb',
-        'member_ticket_tb').filter(lecture_tb_id=lecture_id, lecture_tb__state_cd='IP', lecture_tb__use=USE,
+    class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
+        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd='VIEW',
                                    member_ticket_tb__member_id=member_id, member_ticket_tb__state_cd='IP',
-                                   member_ticket_tb__member_ticket_avail_count__gt=0, member_ticket_tb__use=USE,
-                                   use=USE).order_by('member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
+                                   member_ticket_tb__member_ticket_avail_count__gt=0,
+                                   member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
+                                                                       'member_ticket_tb__reg_dt')
 
-    if len(lecture_member_ticket_data) > 0:
-        member_ticket_id = lecture_member_ticket_data[0].member_ticket_tb.member_ticket_id
+    for class_member_ticket_info in class_member_ticket_data:
+        ticket_lecture_count = TicketLectureTb.objects.filter(
+            ticket_tb_id=class_member_ticket_info.member_ticket_tb.member_ticket_id, ticket_tb__state_cd='IP',
+            lecture_tb__state_cd='IP', lecture_tb_id=lecture_id, use=USE).count()
+
+        if ticket_lecture_count > 0:
+            member_ticket_id = class_member_ticket_info.member_ticket_tb.member_ticket_id
+            break
 
     return member_ticket_id
 
@@ -76,8 +80,7 @@ def func_refresh_member_ticket_count(class_id, member_ticket_id):
 
     if error is None:
         try:
-            member_ticket_info = MemberTicketTb.objects.select_related(
-                'ticket_tb').get(member_ticket_id=member_ticket_id, use=USE)
+            member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id, use=USE)
             check_member_ticket_state_cd = member_ticket_info.state_cd
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
@@ -99,10 +102,6 @@ def func_refresh_member_ticket_count(class_id, member_ticket_id):
                                                - end_schedule_counter
             if member_ticket_info.member_ticket_rem_count == 0:
                 member_ticket_info.state_cd = 'PE'
-            # elif member_ticket_info.member_ticket_rem_count > 0:
-            #     if member_ticket_info.state_cd != 'RF':
-            #         if member_ticket_info.ticket_tb.state_cd == 'IP':
-            #             member_ticket_info.state_cd = 'IP'
 
             if member_ticket_info.state_cd == 'PE':
                 member_ticket_info.member_ticket_rem_count = 0
@@ -114,9 +113,7 @@ def func_refresh_member_ticket_count(class_id, member_ticket_id):
     if error is None:
         if member_ticket_info.state_cd != check_member_ticket_state_cd:
             if member_ticket_info.state_cd == 'PE' or member_ticket_info.state_cd == 'RF':
-                lecture_member_ticket_data = LectureMemberTicketTb.objects.filter(
-                    member_ticket_tb_id=member_ticket_info.member_ticket_id, use=USE)
-                lecture_member_ticket_data.update(fix_state_cd='')
+                func_update_lecture_member_fix_status_cd(class_id, member_ticket_info.member_id)
 
     return error
 
@@ -134,8 +131,7 @@ def func_refresh_member_ticket_count_for_delete(class_id, member_ticket_id, auth
 
     if error is None and check_info is None:
         try:
-            member_ticket_info = MemberTicketTb.objects.select_related(
-                'ticket_tb').get(member_ticket_id=member_ticket_id, use=USE)
+            member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
             check_member_ticket_state_cd = member_ticket_info.state_cd
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
@@ -186,9 +182,7 @@ def func_refresh_member_ticket_count_for_delete(class_id, member_ticket_id, auth
     if error is None and check_info is None:
         if member_ticket_info.state_cd != check_member_ticket_state_cd:
             if member_ticket_info.state_cd == 'PE' or member_ticket_info.state_cd == 'RF':
-                lecture_member_ticket_data = LectureMemberTicketTb.objects.filter(
-                    member_ticket_tb_id=member_ticket_info.member_ticket_id, use=USE)
-                lecture_member_ticket_data.update(fix_state_cd='')
+                func_update_lecture_member_fix_status_cd(class_id, member_ticket_info.member_id)
 
     return error
 
@@ -575,93 +569,6 @@ def func_save_log_data(start_date, end_date, class_id, member_ticket_id, user_na
                          log_info='[그룹]'+log_type_name, log_how=log_type_detail,
                          log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
-
-
-# 그룹 스케쥴 등록 가능 여부 확인
-def func_check_lecture_schedule_enable(lecture_id):
-
-    error = None
-    lecture_info = None
-    try:
-        lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-    except ObjectDoesNotExist:
-        error = '오류가 발생했습니다.'
-
-    if lecture_info.lecture_type_cd == 'NORMAL':
-        lecture_member_ticket_data_count = LectureMemberTicketTb.objects.filter(
-            lecture_tb_id=lecture_id, lecture_tb__use=USE, member_ticket_tb__state_cd='IP',
-            member_ticket_tb__member_ticket_avail_count__gt=0, member_ticket_tb__use=USE, use=USE).count()
-
-        if lecture_member_ticket_data_count == 0:
-            error = '그룹 회원들의 예약 가능 횟수가 없습니다.'
-
-    return error
-
-
-def func_get_lecture_member_list(lecture_id):
-    member_list = []
-    lecture_member_ticket_data = LectureMemberTicketTb.objects.filter(lecture_tb_id=lecture_id, lecture_tb__use=USE,
-                                                                      member_ticket_tb__state_cd='IP',
-                                                                      member_ticket_tb__use=USE,
-                                                                      fix_state_cd='FIX',
-                                                                      use=USE)
-
-    for lecture_member_ticket_info in lecture_member_ticket_data:
-        if len(member_list) == 0:
-            member_list.append(lecture_member_ticket_info.member_ticket_tb.member)
-        check_info = 0
-        for member_info in member_list:
-            if lecture_member_ticket_info.member_ticket_tb.member.member_id == member_info.member_id:
-                check_info = 1
-
-        if check_info == 0:
-            member_list.append(lecture_member_ticket_info.member_ticket_tb.member)
-
-    return member_list
-
-
-def func_get_available_lecture_member_list(lecture_id):
-    member_list = []
-    lecture_member_ticket_data = LectureMemberTicketTb.objects.filter(lecture_tb_id=lecture_id, lecture_tb__use=USE,
-                                                                      member_ticket_tb__state_cd='IP',
-                                                                      member_ticket_tb__use=USE,
-                                                                      member_ticket_tb__member_ticket_avail_count__gt=0,
-                                                                      fix_state_cd='FIX', use=USE)
-
-    for lecture_member_ticket_info in lecture_member_ticket_data:
-        if len(member_list) == 0:
-            member_list.append(lecture_member_ticket_info.member_ticket_tb.member)
-        check_info = 0
-        for member_info in member_list:
-            if str(lecture_member_ticket_info.member_ticket_tb.member.member_id) == str(member_info.member_id):
-                check_info = 1
-
-        if check_info == 0:
-            member_list.append(lecture_member_ticket_info.member_ticket_tb.member)
-
-    return member_list
-
-
-# 그룹회원중 예약 가능하지 않은 회원들의 리스트
-def func_get_not_available_lecture_member_list(lecture_id):
-    member_list = []
-    lecture_member_ticket_data = LectureMemberTicketTb.objects.filter(Q(member_ticket_tb__member_ticket_avail_count=0)
-                                                                      | ~Q(fix_state_cd='FIX'),
-                                                                      lecture_tb_id=lecture_id, lecture_tb__use=USE,
-                                                                      member_ticket_tb__use=USE, use=USE)
-
-    for lecture_member_ticket_info in lecture_member_ticket_data:
-        if len(member_list) == 0:
-            member_list.append(lecture_member_ticket_info.member_ticket_tb.member)
-        check_info = 0
-        for member_info in member_list:
-            if lecture_member_ticket_info.member_ticket_tb.member.member_id == member_info.member_id:
-                check_info = 1
-
-        if check_info == 0:
-            member_list.append(lecture_member_ticket_info.member_ticket_tb.member)
-
-    return member_list
 
 
 # 강사 -> 회원 push 메시지 전달

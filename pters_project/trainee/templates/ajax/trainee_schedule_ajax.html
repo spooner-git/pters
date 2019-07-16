@@ -66,20 +66,11 @@
 {#      [{% for ticket_info in ticket_data %}"{{ ticket_info.ticket_tb.ticket_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],#}
       "ticket_name":
       [{% for ticket_info in ticket_data %}"{{ ticket_info.ticket_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "ticket_member_ticket_reg_count":
-      [{% for ticket_info in ticket_data %}"{{ ticket_info.member_ticket_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "ticket_member_ticket_rem_count":
-      [{% for ticket_info in ticket_data %}"{{ ticket_info.member_ticket_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "ticket_member_ticket_avail_count":
-      [{% for ticket_info in ticket_data %}"{{ ticket_info.member_ticket_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-
       "avail_date_data":
       [{% for avail_date_info in avail_date_data %}"{{ avail_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "member_ticket_flag":
       ["{{ member_ticket_flag }}"],
-      "lecture_member_ticket_flag":
-      ["{{ lecture_member_ticket_flag }}"],
       "class_member_ticket_flag":
       ["{{ class_member_ticket_flag }}"],
 
@@ -89,12 +80,7 @@
       [{{ member_ticket_reg_count }}],
       "member_ticket_finish_count" :
       [{{ member_ticket_finish_count }}],
-{#      "lecture_member_ticket_avail_count" :#}
-{#      [{{ lecture_member_ticket_avail_count }}],#}
-{#      "lecture_member_ticket_reg_count" :#}
-{#      [{{ lecture_member_ticket_reg_count }}],#}
-{#      "lecture_member_ticket_finish_count" :#}
-{#      [{{ lecture_member_ticket_finish_count }}],#}
+
       "class_member_ticket_avail_count" :
       [{{ class_member_ticket_avail_count }}],
       "class_member_ticket_reg_count" :

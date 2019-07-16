@@ -14,7 +14,7 @@ from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALAR
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.models import MemberTicketTb
-from .models import ClassMemberTicketTb, LectureTb, SettingTb, TicketLectureTb, TicketTb
+from .models import ClassMemberTicketTb, LectureTb, SettingTb, TicketLectureTb, TicketTb, LectureMemberTb
 
 
 # 전체 회원 id 정보 가져오기
@@ -229,6 +229,7 @@ def func_get_member_lecture_list(class_id, member_id):
     member_lecture_list = collections.OrderedDict()
     member_ticket_data = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__ticket_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                              member_ticket_tb__state_cd='IP',
                                               member_ticket_tb__member_id=member_id,
                                               member_ticket_tb__use=USE,
                                               use=USE).order_by('-member_ticket_tb__start_date',
@@ -643,3 +644,18 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
     else:
         lecture_info = None
     return lecture_info
+
+
+def func_update_lecture_member_fix_status_cd(class_id, member_id):
+    error = None
+    member_lecture_list = func_get_member_lecture_list(class_id, member_id)
+    member_lecture_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
+                                                             member_id=member_id,
+                                                             fix_state_cd='FIX', use=USE)
+
+    for member_lecture_fix_info in member_lecture_fix_data:
+        try:
+            member_lecture_list[member_lecture_fix_info.lecture_tb_id]
+        except KeyError:
+            member_lecture_fix_info.delete()
+    return error

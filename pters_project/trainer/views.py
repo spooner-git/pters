@@ -35,8 +35,8 @@ from board.models import BoardTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainee.models import MemberTicketTb, MemberMemberTicketTb
-from .models import ClassMemberTicketTb, LectureTb, LectureMemberTicketTb, ClassTb, MemberClassTb, BackgroundImgTb, \
-    SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb
+from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
+    SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb
 
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
     func_get_lecture_member_ticket_id, func_check_lecture_available_member_before, func_add_schedule, \
@@ -47,7 +47,7 @@ from .functions import func_get_trainer_setting_list, \
     func_get_member_info, func_get_member_from_member_ticket_list, \
     func_check_member_connection_info, func_get_member_lecture_list, \
     func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info, func_get_ticket_info, \
-    func_delete_member_ticket_info
+    func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd
 
 logger = logging.getLogger(__name__)
 
@@ -697,6 +697,9 @@ def delete_member_info_logic(request):
                         member.use = UN_USE
                         member.save()
 
+                lecture_member_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
+                                                                         member_id=member_id, use=USE)
+                lecture_member_fix_data.delete()
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
@@ -960,7 +963,8 @@ class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, View):
                     context['member_ticket_info'] = member_ticket_schedule_info.member_ticket_tb
 
                 except ObjectDoesNotExist:
-                    member_ticket_id = func_get_lecture_member_ticket_id(schedule_info.lecture_tb_id, member_id)
+                    member_ticket_id = func_get_lecture_member_ticket_id(class_id, schedule_info.lecture_tb_id,
+                                                                         member_id)
                     if member_ticket_id is None or member_ticket_id == '':
                         error = '예약 가능한 횟수가 없습니다.'
                     else:
@@ -1488,15 +1492,10 @@ def export_excel_member_info_logic(request):
 
     # 수강 정보 불러 오기
     if error is None:
-        query_member_ticket_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
-                                    "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
-                                    "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
-
         class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb'
         ).filter(class_tb_id=class_id, auth_cd='VIEW', member_ticket_tb__member_id=member_id, member_ticket_tb__use=USE,
-                 use=USE).annotate(member_ticket_count=RawSQL(query_member_ticket_count, [])
-                                   ).order_by('-member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
+                 use=USE).order_by('-member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
@@ -1870,12 +1869,22 @@ def delete_member_ticket_info_logic(request):
     member_ticket_id = request.POST.get('member_ticket_id', '')
     class_id = request.session.get('class_id', '')
     error = None
-
+    member_ticket_info = None
     if member_ticket_id is None or member_ticket_id == '':
         error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
+        try:
+            member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
+        except ObjectDoesNotExist:
+            error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
         error = func_delete_member_ticket_info(request.user.id, class_id, member_ticket_id)
+
+    if error is None:
+        # 회원의 고정 수업 정리
+        func_update_lecture_member_fix_status_cd(class_id, member_ticket_info.member_id)
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -1885,6 +1894,7 @@ def delete_member_ticket_info_logic(request):
 
 
 def update_member_ticket_status_info_logic(request):
+    class_id = request.session.get('class_id', '')
     member_ticket_id = request.POST.get('member_ticket_id', '')
     state_cd = request.POST.get('state_cd', '')
     refund_price = request.POST.get('refund_price', 0)
@@ -1897,8 +1907,7 @@ def update_member_ticket_status_info_logic(request):
 
     if error is None:
         try:
-            member_ticket_info = MemberTicketTb.objects.select_related('ticket_tb'
-                                                                       ).get(member_ticket_id=member_ticket_id)
+            member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
     if error is None:
@@ -1963,6 +1972,9 @@ def update_member_ticket_status_info_logic(request):
         member_ticket_info.refund_price = refund_price
         member_ticket_info.refund_date = refund_date
         member_ticket_info.save()
+
+        if state_cd != 'IP':
+            func_update_lecture_member_fix_status_cd(class_id, member_ticket_info.member_id)
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -2119,6 +2131,10 @@ def delete_lecture_info_logic(request):
                 if len(ticket_lecture_data) > 0:
                     ticket_lecture_data.delete()
 
+                lecture_member_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
+                                                                         lecture_tb_id=lecture_id, use=USE)
+                lecture_member_fix_data.delete()
+
             if error is not None:
                 raise InternalError
 
@@ -2254,6 +2270,10 @@ def update_lecture_status_info_logic(request):
             if len(ticket_lecture_data) > 0:
                 ticket_lecture_data.update(use=UN_USE)
 
+            lecture_member_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
+                                                                     lecture_tb_id=lecture_id, use=USE)
+            lecture_member_fix_data.delete()
+
         lecture_info.state_cd = state_cd
         lecture_info.save()
 
@@ -2266,65 +2286,51 @@ def update_lecture_status_info_logic(request):
 
 # 그룹 고정 회원 기능
 def update_fix_lecture_member_logic(request):
-    json_data = request.body.decode('utf-8')
-    json_loading_data = None
+    class_id = request.POST.get('class_id', '')
+    lecture_id = request.POST.get('lecture_id', '')
+    member_id = request.POST.get('member_id', '')
+
     error = None
-    lecture_member_ticket_data = None
     lecture_info = None
 
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다. [1]'
-    except TypeError:
-        error = '오류가 발생했습니다. [2]'
-
-    lecture_id = json_loading_data['lecture_id']
-    try:
-        lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=USE)
-    except ObjectDoesNotExist:
-        error = '오류가 발생했습니다.'
+    if lecture_id == '':
+        error = '수업 정보를 불러오지 못했습니다.'
 
     if error is None:
-        # idx = 0
-        if error is None:
-            member_fix_data = []
-            fix_counter = 0
-            lecture_member_ticket_data = LectureMemberTicketTb.objects.select_related(
-                'member_ticket_tb__member').filter(lecture_tb_id=lecture_id, use=USE)
-            for lecture_member_ticket_info in lecture_member_ticket_data:
-                check = 0
-                for member_fix_info in member_fix_data:
-                    if str(member_fix_info) == str(lecture_member_ticket_info.member_ticket_tb.member_id):
-                        check = 1
-                if check == 0:
-                    if lecture_member_ticket_info.fix_state_cd == 'FIX':
-                        member_fix_data.append(lecture_member_ticket_info.member_ticket_tb.member_id)
+        # 수업 정보 가져오기
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=USE)
+        except ObjectDoesNotExist:
+            error = '오류가 발생했습니다.'
 
-            for json_info in json_loading_data['member_info']:
-                if json_info['fix_info'] == 'FIX':
-                    fix_counter += 1
-            if fix_counter != 0:
-                if len(member_fix_data) + fix_counter > lecture_info.member_num:
-                    error = '그룹 정원보다 고정 회원이 많습니다.'
+    if error is None:
+        member_lecture_list = func_get_member_lecture_list(class_id, member_id)
+        try:
+            member_lecture_list[lecture_id]
+        except KeyError:
+            error = '해당 회원님은 수업에 참여할 수 있는 수강권이 없습니다.'
 
     if error is None:
         try:
             with transaction.atomic():
-                for json_info in json_loading_data['member_info']:
-                    lecture_member_ticket_counter = LectureMemberTicketTb.objects.select_related(
-                        'member_ticket_tb__member').filter(lecture_tb_id=lecture_id,
-                                                           member_ticket_tb__member_id=json_info['member_id'],
-                                                           member_ticket_tb__state_cd='IP', use=USE).count()
-                    if lecture_member_ticket_counter == 0:
-                        error = '이미 종료된 회원입니다.'
+                lecture_member_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
+                                                                         lecture_tb_id=lecture_id, use=USE)
+                # 이미 고정 회원의 경우 제거하기
+                try:
+                    lecture_member_fix = LectureMemberTb.objects.get(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                                                     member_id=member_id, use=USE)
+                    lecture_member_fix.delete()
+                except ObjectDoesNotExist:
 
-                    if error is None and lecture_member_ticket_data is not None:
-                        for lecture_member_ticket_info in lecture_member_ticket_data:
-                            if str(lecture_member_ticket_info.member_ticket_tb.member_id)\
-                                    == str(json_info['member_id']):
-                                lecture_member_ticket_info.fix_state_cd = json_info['fix_info']
-                                lecture_member_ticket_info.save()
+                    # 수업에 고정회원 가능 여부 체크
+                    if len(lecture_member_fix_data) + 1 > lecture_info.member_num:
+                        error = '정원보다 고정 회원이 많습니다.'
+                        raise InternalError()
+
+                    # 수업에 고정회원 추가하기
+                    lecture_member_fix = LectureMemberTb(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                                         member_id=member_id, fix_state_cd='FIX', use=USE)
+                    lecture_member_fix.save()
 
         except ValueError:
             error = '오류가 발생했습니다. [4]'
@@ -4361,7 +4367,8 @@ def attend_mode_check_logic(request):
                         error = '이미 출석 처리된 수업입니다.'
 
                 except ObjectDoesNotExist:
-                    member_ticket_id = func_get_lecture_member_ticket_id(schedule_info.lecture_tb_id, member_id)
+                    member_ticket_id = func_get_lecture_member_ticket_id(class_id, schedule_info.lecture_tb_id,
+                                                                         member_id)
                     if member_ticket_id is None or member_ticket_id == '':
                         error = '예약 가능한 횟수가 없습니다. 수강권을 확인해주세요.'
                     else:
@@ -4414,7 +4421,8 @@ def attend_mode_finish_logic(request):
                                                                      lecture_schedule_info.member_ticket_tb_id)
 
                     except ObjectDoesNotExist:
-                        member_ticket_id = func_get_lecture_member_ticket_id(schedule_info.lecture_tb_id, member_id)
+                        member_ticket_id = func_get_lecture_member_ticket_id(class_id, schedule_info.lecture_tb_id,
+                                                                             member_id)
                         if member_ticket_id is None or member_ticket_id == '':
                             error = '예약 가능한 횟수가 없습니다.'
                         else:

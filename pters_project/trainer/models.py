@@ -210,13 +210,13 @@ class LectureMemberTb(TimeStampedModel):
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, db_column='class_tb_id', blank=True, null=True)
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, db_column='group_tb_id', blank=True,
                                    null=True)
-    member_tb = models.ForeignKey(MemberTb, on_delete=models.CASCADE, blank=True, null=True)
-    fix_state_cd = models.CharField(db_column='FIX_STATE_CD', max_length=20, blank=True, null=True, default='')
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, db_column='member_id', blank=True, null=True)
+    fix_state_cd = models.CharField(db_column='FIX_STATE_CD', max_length=20, blank=True, null=True, default='FIX')
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
-        db_table = 'LECTURE_MEMBER_TB'
+        db_table = 'GROUP_MEMBER_TB'
 
 
 class TicketLectureTb(TimeStampedModel):

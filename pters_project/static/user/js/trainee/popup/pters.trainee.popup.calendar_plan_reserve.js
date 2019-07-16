@@ -350,7 +350,7 @@ function func_start_time_dom_draw(target_html, selected_date, schedule_json, set
 //     }
 //     $target_html.html(html_to_join.join(''));
 // }
-
+/*
 function func_lecture_time_dom_draw(target_html, selected_date, schedule_json, setting_info){
 
     console.log(schedule_json);
@@ -415,4 +415,4 @@ function func_lecture_time_dom_draw(target_html, selected_date, schedule_json, s
 
     $target_html.html(html_to_join_final.join(''));
 }
-
+*/

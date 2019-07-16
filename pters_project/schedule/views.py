@@ -1118,7 +1118,7 @@ def add_lecture_schedule_logic(request):
                 member_info = None
 
             if member_info is not None:
-                member_ticket_id = func_get_lecture_member_ticket_id(lecture_id, member_info.member_id)
+                member_ticket_id = func_get_lecture_member_ticket_id(class_id, lecture_id, member_info.member_id)
                 if member_ticket_id is not None and member_ticket_id != '':
                     try:
                         with transaction.atomic():
@@ -1573,7 +1573,7 @@ def add_member_lecture_schedule_logic(request):
             error = '회원 정보를 불러오지 못했습니다.'
 
     if error is None:
-        member_ticket_id = func_get_lecture_member_ticket_id(lecture_id, member_info.member_id)
+        member_ticket_id = func_get_lecture_member_ticket_id(class_id, lecture_id, member_info.member_id)
         if member_ticket_id is None or member_ticket_id == '':
             error = '예약 가능한 횟수가 없습니다.'
 
@@ -2098,7 +2098,8 @@ def add_lecture_repeat_schedule_confirm(request):
                 except ObjectDoesNotExist:
                     member_info = None
                 if member_info is not None:
-                    member_ticket_id = func_get_lecture_member_ticket_id(lecture_info.lecture_id, member_info.member_id)
+                    member_ticket_id = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
+                                                                         member_info.member_id)
                     if member_ticket_id is not None and member_ticket_id != '':
                         repeat_schedule_result = func_add_repeat_schedule(repeat_schedule_info.class_tb_id,
                                                                           member_ticket_id,
@@ -2115,7 +2116,7 @@ def add_lecture_repeat_schedule_confirm(request):
                                                                           request.user.id)
                         member_repeat_schedule_info = repeat_schedule_result['schedule_info']
                         for schedule_info in schedule_data:
-                            member_ticket_id = func_get_lecture_member_ticket_id(lecture_info.lecture_id,
+                            member_ticket_id = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
                                                                                  member_info.member_id)
                             if member_ticket_id is not None and member_ticket_id != '':
                                 error_temp = func_check_lecture_available_member_before(class_id,
