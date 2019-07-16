@@ -126,7 +126,7 @@
         render_middle(del){
             let html_date_select = CComponent.create_row('select_date', '날짜', '&nbsp;', (data)=>{ console.log(data);}, '/static/common/icon/icon_lecture.png');
             let html_start_select = CComponent.create_row('select_start', '시작 시간', '&nbsp;', (data)=>{ 
-                    time_select_popup.open('console.log(123)');
+                    time_select_popup.open(()=>{alert('hello')});
                 }, '/static/common/icon/icon_lecture.png');
             let html_end_select = CComponent.create_row('select_end', '종료 시간', '&nbsp;', (data)=>{ 
                 console.log(data);}, '/static/common/icon/icon_lecture.png');

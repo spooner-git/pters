@@ -6,14 +6,14 @@
         text-align: center;
         /* background-image: linear-gradient(#8e8e8e, white 35%, white 65%, #8e8e8e); */
     }
-    .select_wrapper{
+    .time_selector .select_wrapper{
         display: inline-block;
         width: 45%;
         position: relative;
         overflow: hidden;
         height: 170px;
     }
-    .wrapper_popup_date_selector_function .select_wrapper{
+    .date_selector .select_wrapper{
         display: inline-block;
         width: 30%;
         margin-left: 2%;
@@ -105,7 +105,7 @@
 
         <div class="wrapper_popup_time_selector_function">
 
-            <div class="select_wrapper">
+            <!-- <div class="select_wrapper">
                 <div class="selector_title">시작 시간</div>
                 <div id="hour_wrap" class="select_wrapper_child">
                     
@@ -119,7 +119,7 @@
                     
                 </div>
                 <div class="selector_indicator"></div>
-            </div>
+            </div> -->
 
         </div>
 
@@ -137,31 +137,6 @@
         <div class="wrapper_popup_basic_comment obj_font_size_13_weight_500" onclick='date_select_popup.show_selected_date()'></div>
 
         <div class="wrapper_popup_date_selector_function">
-
-            <div class="select_wrapper">
-                <div class="selector_title">연도</div>
-                <div id="year_wrap" class="select_wrapper_child">
-                    
-                </div>
-                <div class="selector_indicator"></div>
-            </div>
-
-            <div class="select_wrapper">
-                <div class="selector_title">월</div>
-                <div id="month_wrap" class="select_wrapper_child">
-                    
-                </div>
-                <div class="selector_indicator"></div>
-            </div>
-
-            <div class="select_wrapper">
-                <div class="selector_title">일</div>
-                <div id="date_wrap" class="select_wrapper_child">
-                    
-                </div>
-                <div class="selector_indicator"></div>
-            </div>
-
         </div>
 
         <div><input type="hidden" placeholder="" class="popup_basic_user_input_data"></div>
@@ -181,9 +156,8 @@
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     class TwoTimeSelector{
-        constructor(target1, target2, instance){
-            this.target_time1 = target1;
-            this.target_time2 = target2;
+        constructor(target, instance){
+            this.targetHTML = target;
             this.result_target_time1;
             this.result_target_time2;
 
@@ -197,6 +171,8 @@
             this.user_scroll_minute = false;
             this.hour_scroll_snapped = 0;
 
+            document.querySelector(this.targetHTML).innerHTML = this.static_component().initial_html;
+
             this.init();
         }
 
@@ -204,6 +180,7 @@
             this.render_time1_list();
             this.render_time2_list();
             this.set_iscroll();
+            this.reset();
         }
 
         reset(result_target1, result_target2, init_hour, init_minute){
@@ -224,7 +201,19 @@
                     pos = pos + 50;
                 }
             }
-            document.querySelector(this.target_time1).innerHTML = `<ul><li></li>${html_to_join.join('')}<li></li></ul>`;
+
+            let html = `
+                            <div class="selector_title">시작 시간</div>
+                            <div id="hour_wrap_${this.instance}" class="select_wrapper_child">
+                                <ul>
+                                    <li></li>
+                                    ${html_to_join.join('')}
+                                    <li></li>
+                                </ul>
+                            </div>
+                            <div class="selector_indicator"></div>
+                        `
+            document.querySelector(`${this.targetHTML} .date_selector_time1_wrap`).innerHTML = html;
         }
 
         render_time2_list(){
@@ -237,21 +226,28 @@
                 }
             }
 
-            document.querySelector(this.target_time2).innerHTML = `<ul><li></li>${html_to_join.join('')}<li></li></ul>`;
-        }
+            let html = `
+                            <div class="selector_title">종료 시간</div>
+                            <div id="hour2_wrap_${this.instance}" class="select_wrapper_child">
+                                <ul>
+                                    <li></li>
+                                    ${html_to_join.join('')}
+                                    <li></li>
+                                </ul>
+                            </div>
+                            <div class="selector_indicator"></div>
+                        `
 
-
-        check(data){
-
+            document.querySelector(`${this.targetHTML} .date_selector_time2_wrap`).innerHTML = html;
         }
 
         set_iscroll(){
-            this.hour_scroll = new IScroll('#hour_wrap',{
+            this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`,{
                                 mouseWheel : true,
                                 // snap: 'li'
                             })
 
-            this.hour2_scroll = new IScroll('#hour2_wrap',{
+            this.hour2_scroll = new IScroll(`#hour2_wrap_${this.instance}`,{
                                 mouseWheel : true,
                                 // snap: 'li'
             })
@@ -276,12 +272,12 @@
                         snap = min;
                     }
                     self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                    $(`li[data-spos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                    $(`li[data-spos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+                    $(`${self.targetHTML} li[data-spos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`${self.targetHTML} li[data-spos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
                     self.hour_scroll_snapped = snap;
                     self.hour2_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                    $(`li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                    $(`li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
+                    $(`${self.targetHTML} li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`${self.targetHTML} li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
                 }
             })
 
@@ -311,8 +307,8 @@
                         self.hour2_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
                     }
                     
-                    $(`li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                    $(`li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
+                    $(`${self.targetHTML} li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`${self.targetHTML} li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
                     
                 }
             })
@@ -328,10 +324,10 @@
             this.hour2_scroll.scrollTo(0, initial_pos, 0, IScroll.utils.ease.bounce);
             this.hour_scroll_snapped = initial_pos;
 
-            $(`li[data-spos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
-            $(`li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
-            $(`li[data-spos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-            $(`li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+            $(`${this.targetHTML} li[data-spos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+            $(`${this.targetHTML} li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
+            $(`${this.targetHTML} li[data-spos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+            $(`${this.targetHTML} li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
         }
 
         show_selected_time(){
@@ -370,6 +366,15 @@
             $(this.result_target_for_send).val(result.start + ' ~ ' + result.end);
         }
 
+        static_component(){
+            return{
+                "initial_html":`<div class="time_selector">
+                                    <div class="date_selector_time1_wrap select_wrapper"></div>
+                                    <div class="date_selector_time2_wrap select_wrapper"></div>
+                                </div>`
+            }
+        }
+
         open(callback_after_confirm, target1, target2){
             let top_comment_height = 65;
             let time_selector_height = 175;
@@ -386,14 +391,14 @@
 
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', popup_height, POPUP_FROM_BOTTOM,
                                     {'popup_title':'', 'popup_comment':'시간을 선택해주세요',
-                                    'onclick_function':`${set_data};${callback_after_confirm};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
+                                    'onclick_function': ()=>{time_select_popup.set_selected_data();callback_after_confirm();layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)} });
 
 
             this.reset(target1, target2);
         }
     }
 
-    var time_select_popup = new TwoTimeSelector('#hour_wrap', '#hour2_wrap', "time_select_popup");
+    var time_select_popup = new TwoTimeSelector('.wrapper_popup_time_selector_function', "time_select_popup");
     // time_select_popup.init();
 
 
@@ -472,10 +477,8 @@
 
 
     class DateSelector{
-        constructor(year_target, month_target, date_target, instance){
-            this.target_year = year_target;
-            this.target_month = month_target;
-            this.target_date = date_target;
+        constructor(target, instance){
+            this.targetHTML = target;
 
             this.result_target;
             this.result_target_for_send = '.popup_basic_date_selector .popup_basic_user_input_data';
@@ -494,6 +497,8 @@
             this.current_month = d.getMonth();
             this.current_date = d.getDate();
 
+            document.querySelector(this.targetHTML).innerHTML = this.static_component().initial_html;
+            
             this.init();
         }
 
@@ -502,6 +507,7 @@
             this.render_month_list();
             this.render_date_list();
             this.set_iscroll();
+            this.reset();
         }
 
         reset(year, month, date){
@@ -526,7 +532,21 @@
                 pos = pos + 50;
                            
             }
-            document.querySelector(this.target_year).innerHTML = `<ul><li></li>${html_to_join.join('')}<li></li></ul>`;
+
+            let html = `
+                            <div class="selector_title">연도</div>
+                            <div id="year_wrap_${this.instance}" class="select_wrapper_child">
+                                <ul>
+                                    <li></li>
+                                    ${html_to_join.join('')}
+                                    <li></li>
+                                </ul>
+                            </div>
+                            <div class="selector_indicator"></div>
+                        `
+
+
+            document.querySelector(`${this.targetHTML} .date_selector_year_wrap`).innerHTML = html;
         }
 
         render_month_list(){
@@ -536,7 +556,20 @@
                     html_to_join.push(`<li data-mpos=${pos}>${i}</li>`);
                     pos = pos + 50;
             }
-            document.querySelector(this.target_month).innerHTML = `<ul><li></li>${html_to_join.join('')}<li></li></ul>`;
+
+            let html = `
+                            <div class="selector_title">월</div>
+                            <div id="month_wrap_${this.instance}" class="select_wrapper_child">
+                                <ul>
+                                    <li></li>
+                                    ${html_to_join.join('')}
+                                    <li></li>
+                                </ul>
+                            </div>
+                            <div class="selector_indicator"></div>
+                        `;
+
+            document.querySelector(`${this.targetHTML} .date_selector_month_wrap`).innerHTML = html;
         }
 
         render_date_list(){
@@ -546,25 +579,34 @@
                     html_to_join.push(`<li data-dpos=${pos}>${i}</li>`);
                     pos = pos + 50; 
             }
-            document.querySelector(this.target_date).innerHTML = `<ul><li></li>${html_to_join.join('')}<li></li></ul>`;
+
+            let html = `
+                            <div class="selector_title">일</div>
+                            <div id="date_wrap_${this.instance}" class="select_wrapper_child">
+                                <ul>
+                                    <li></li>
+                                    ${html_to_join.join('')}
+                                    <li></li>
+                                </ul>
+                            </div>
+                            <div class="selector_indicator"></div>
+                        `
+
+            document.querySelector(`${this.targetHTML} .date_selector_date_wrap`).innerHTML = html;
         }
 
-
-        check(data){
-
-        }
 
         set_iscroll(){
-            this.year_scroll = new IScroll('#year_wrap',{
+            this.year_scroll = new IScroll(`#year_wrap_${this.instance}`,{
                                 mouseWheel : true,
                                 // snap: 'li'
                             })
 
-            this.month_scroll = new IScroll('#month_wrap',{
+            this.month_scroll = new IScroll(`#month_wrap_${this.instance}`,{
                                 mouseWheel : true,
                                 // snap: 'li'
             })
-            this.date_scroll = new IScroll('#date_wrap',{
+            this.date_scroll = new IScroll(`#date_wrap_${this.instance}`,{
                                 mouseWheel : true,
                                 // snap: 'li'
             })
@@ -589,8 +631,8 @@
                         snap = min;
                     }
                     self.year_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                    $(`li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                    $(`li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).css('color', '#1e1e1e');
+                    $(`${self.targetHTML} li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`${self.targetHTML} li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).css('color', '#1e1e1e');
                     self.year_scroll_snapped = snap;
                 }
             })
@@ -617,8 +659,8 @@
                     
                         
                     self.month_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                    $(`li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                    $(`li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).css('color', '#1e1e1e');
+                    $(`${self.targetHTML} li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`${self.targetHTML} li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).css('color', '#1e1e1e');
                     
                 }
             })
@@ -644,8 +686,8 @@
                     
                         
                     self.date_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                    $(`li[data-dpos="${Math.abs(self.date_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                    $(`li[data-dpos="${Math.abs(self.date_scroll.y)}"]`).css('color', '#1e1e1e');
+                    $(`${self.targetHTML} li[data-dpos="${Math.abs(self.date_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`${self.targetHTML} li[data-dpos="${Math.abs(self.date_scroll.y)}"]`).css('color', '#1e1e1e');
                     
                 }
             })
@@ -667,18 +709,18 @@
             this.date_scroll.scrollTo(0, initial_pos_date, 0, IScroll.utils.ease.bounce);
             // this.hour_scroll_snapped = initial_pos;
 
-            $(`li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).css('color', '#1e1e1e');
-            $(`li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).css('color', '#1e1e1e');
-            $(`li[data-dpos="${Math.abs(this.date_scroll.y)}"]`).css('color', '#1e1e1e');
-            $(`li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-            $(`li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-            $(`li[data-dpos="${Math.abs(this.date_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+            $(`${this.targetHTML} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).css('color', '#1e1e1e');
+            $(`${this.targetHTML} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).css('color', '#1e1e1e');
+            $(`${this.targetHTML} li[data-dpos="${Math.abs(this.date_scroll.y)}"]`).css('color', '#1e1e1e');
+            $(`${this.targetHTML} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+            $(`${this.targetHTML} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+            $(`${this.targetHTML} li[data-dpos="${Math.abs(this.date_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
         }
 
         show_selected_date(){
-            let year = $(`li[data-ypos="${Math.abs(this.year_scroll.y)}"]`);
-            let month = $(`li[data-mpos="${Math.abs(this.month_scroll.y)}"]`);
-            let date = $(`li[data-dpos="${Math.abs(this.date_scroll.y)}"]`);
+            let year = $(`${this.targetHTML} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`);
+            let month = $(`${this.targetHTML} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`);
+            let date = $(`${this.targetHTML} li[data-dpos="${Math.abs(this.date_scroll.y)}"]`);
 
             let year_text = year.text();
             let month_text = month.text();
@@ -698,9 +740,9 @@
         }
 
         get_selected_data(){
-            let year = $(`li[data-ypos="${Math.abs(this.year_scroll.y)}"]`);
-            let month = $(`li[data-mpos="${Math.abs(this.month_scroll.y)}"]`);
-            let date = $(`li[data-dpos="${Math.abs(this.date_scroll.y)}"]`);
+            let year = $(`${this.targetHTML} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`);
+            let month = $(`${this.targetHTML} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`);
+            let date = $(`${this.targetHTML} li[data-dpos="${Math.abs(this.date_scroll.y)}"]`);
 
             let year_text = year.text();
             let month_text = month.text();
@@ -718,6 +760,16 @@
             let data = `${result.year}.${result.month}.${result.date}`;
 
             $(this.result_target_for_send).val(data);
+        }
+
+        static_component(){
+            return{
+                "initial_html":`<div class="date_selector">
+                                    <div class="date_selector_year_wrap select_wrapper"></div>
+                                    <div class="date_selector_month_wrap select_wrapper"></div>
+                                    <div class="date_selector_date_wrap select_wrapper"></div>
+                                </div>`
+            }
         }
 
         open(callback_after_confirm, result_target, year, month, date){
@@ -741,8 +793,7 @@
         }
     }
 
-    var date_select_popup = new DateSelector('#year_wrap', '#month_wrap', '#date_wrap', "date_select_popup");
-
+    var date_select_popup = new DateSelector('.wrapper_popup_date_selector_function', "date_select_popup");
 
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

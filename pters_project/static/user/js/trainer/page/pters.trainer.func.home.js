@@ -27,8 +27,8 @@ class Home{
         let html_temp = [];
 
         // let targets = `'#temp_time_result1', '#temp_time_result2'`; 
-        let time_select_popup = `time_select_popup.open('console.log(123)', '#temp_time_result1', '#temp_time_result2');`;
-        let date_select_popup = `date_select_popup.open('console.log(123)');`;
+        let time_select_popup = `time_select_popup.open();`;
+        let date_select_popup = `date_select_popup.open();`;
 
         let option_data = `{
                                 사과:{value: 'apple', callback: ()=>{console.log('사과 Apple')} }, 
@@ -43,13 +43,13 @@ class Home{
                     <div>총 회원수 ${total_member_num}명</div>
                     <div>이번달 신규 ${new_member_num}명</div>
                     <div>종료 임박 ${to_be_ended_member_num}명</div>
-                    <div><span id="temp_time_result1"></span> ~ <span id="temp_time_result2"></span></div>
+                    <div id="temp_time_on_page"></div>
                     <button onclick="event.preventDefault();${time_select_popup}">시간 선택 임시</button>
                     <div id="temp_user_select_value">-</div>
                     <button onclick="event.preventDefault();${user_select_multi_popup}">유저 선택 팝업 임시</button>
                     <div id="temp_user_input"></div>
                     <button onclick="show_user_input_popup ('text', 'TEST', console.log(123))">입력팝업</button>
-                    <div id="temp_date_result"></div>
+                    <div id="temp_date_on_page"></div>
                     <button onclick="${date_select_popup}">날짜 선택 임시</button>
                     `);
         
