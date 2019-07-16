@@ -436,8 +436,8 @@
                 let option_callback = this.data[option].callback;
 
                 $(document).off('click', `#option_select_${option_value}`).on('click', `#option_select_${option_value}`, function (){
-                    option_callback();
                     layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);
+                    option_callback();
                 })
 
             }

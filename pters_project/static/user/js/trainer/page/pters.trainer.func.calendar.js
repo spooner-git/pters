@@ -294,9 +294,13 @@ class Calendar {
         if(schedule_data == undefined){
             schedule_data = false;
         }
-        let weeks_div = [];
+        let weeks_div = [`<div style="margin-top:30px;"></div>`];
+
+        let margin = 10;
+        let row_height = (this.window_height - 60 - 31 - 45 - margin)/6;
+
         for(let i=0; i<6; i++){
-            weeks_div = [...weeks_div, this.draw_week_line(year, month, i, schedule_data, `${this.instance}.open_popup_plan_view`)];
+            weeks_div = [...weeks_div, this.draw_week_line(year, month, i, schedule_data, `${this.instance}.open_popup_plan_view`, 'month', row_height)];
         }
         document.getElementById(`page${page}`).innerHTML = weeks_div.join('');
         // document.getElementById('cal_display_panel').innerHTML = component.month_cal_upper_box;
@@ -307,9 +311,11 @@ class Calendar {
         if(current_page != this.page_name){
             return false;
         }
+        let week_date_name_data = this.static_component().week_cal_upper_box_date_tool;
         let data = this.draw_week_line(year, month, week, schedule_data, `${this.instance}.zoom_week_cal`, "week");
         
-        document.getElementById(`page${page}`).innerHTML = data;
+
+        document.getElementById(`page${page}`).innerHTML = week_date_name_data + data;
         // document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box;
         func_set_webkit_overflow_scrolling(`#page${page}`);
     }
@@ -450,7 +456,7 @@ class Calendar {
         );
     }
 
-    draw_week_line (year, month, week, schedule_data, onclick_func, month_or_week){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
+    draw_week_line (year, month, week, schedule_data, onclick_func, month_or_week, row_height){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
@@ -475,24 +481,58 @@ class Calendar {
             schedule_num = [0, 0, 0, 0, 0, 0, 0];
         }
 
+        let height_style = row_height == undefined ? "" : `style='height:${row_height}px'`;
+        
         // let week_html_template = this.week_schedule_draw(year, month, week, schedule_data);
         
-        return(
-            week_dates_info == false 
-                ? 
+        
+
+        let dates_to_join = [];
+
+        if(week_dates_info == false){
+            dates_to_join.push(
                 `<div class="cal_week_line">
                     <div style="background-image:url('/static/user/res/PTERS_logo_pure.png');background-position:center;background-repeat:no-repeat;background-size:100px;height:30px;"></div>
                 </div>`
+            );
+        }else{
+            for(let i=0; i<7; i++){
+            
+                let schedule_number_display = month_or_week == "week" ? "no_display" : "calendar_schedule_display_month";
+                let has_schedule = schedule_num[i]!=0 ? "has_schedule" : "";
+                let schedule_date = schedule_num[i]!=0?schedule_num[i]:"";
+    
+                let border_style, today_marking = "";
+                if(i == 0){
+                    border_style = month_or_week == "week" ? "" : "no_border";
+                }
+    
+                if(`${_year[i]}/${_month[i]}/${_date[i]}` == `${this.current_year}/${this.current_month}/${this.current_date}`){
+                    today_marking = `<div style="position: absolute;width: 100%;height: 3px;top: ${month_or_week == "week" ? '-30px' : 0} ;background: #fe4e65;left: 0;"></div>`;
+                }
+    
+                dates_to_join.push(
+                    `
+                    <div ${height_style} class="${_color[i]} ${border_style} _week_row_2" data-row="2" onclick="${onclick_func}(event, ${_year[i]}, ${_month[i]}, ${_date[i]})">
+                        ${_date[i]}
+                        <div class="${schedule_number_display} ${has_schedule}">${schedule_date}</div>
+                        ${today_marking}
+                    </div>
+                    `
+                );
+            }
+        }
+
+        let result_html = dates_to_join.join("");
+
+        return(
+            week_dates_info == false 
+                ? 
+                    result_html
                 :
-                `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:0;background-color:#ffffff;z-index:10;height:25px;line-height:15px;font-size:20px` : ""}">
+                `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:27px;background-color:#ffffff;z-index:10;height:25px;line-height:15px;font-size:20px` : ""}">
                     ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
-                    <div class="${_color[0]} ${month_or_week == "week" ? "" : "no_border"} _week_row_1" data-row="1" onclick="${onclick_func}(event, ${_year[0]}, ${_month[0]}, ${_date[0]})">${_date[0]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[0]!=0?"has_schedule":""}">${schedule_num[0]!=0?schedule_num[0]:""}</div></div>
-                    <div class="${_color[1]} _week_row_2" data-row="2" onclick="${onclick_func}(event, ${_year[1]}, ${_month[1]}, ${_date[1]})">${_date[1]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[1]!=0?"has_schedule":""}">${schedule_num[1]!=0?schedule_num[1]:""}</div></div>
-                    <div class="${_color[2]} _week_row_3" data-row="3" onclick="${onclick_func}(event, ${_year[2]}, ${_month[2]}, ${_date[2]})">${_date[2]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[2]!=0?"has_schedule":""}">${schedule_num[2]!=0?schedule_num[2]:""}</div></div>
-                    <div class="${_color[3]} _week_row_4" data-row="4" onclick="${onclick_func}(event, ${_year[3]}, ${_month[3]}, ${_date[3]})">${_date[3]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[3]!=0?"has_schedule":""}">${schedule_num[3]!=0?schedule_num[3]:""}</div></div>
-                    <div class="${_color[4]} _week_row_5" data-row="5" onclick="${onclick_func}(event, ${_year[4]}, ${_month[4]}, ${_date[4]})">${_date[4]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[4]!=0?"has_schedule":""}">${schedule_num[4]!=0?schedule_num[4]:""}</div></div>
-                    <div class="${_color[5]} _week_row_6" data-row="6" onclick="${onclick_func}(event, ${_year[5]}, ${_month[5]}, ${_date[5]})">${_date[5]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[5]!=0?"has_schedule":""}">${schedule_num[5]!=0?schedule_num[5]:""}</div></div>
-                    <div class="${_color[6]} _week_row_7" data-row="7" onclick="${onclick_func}(event, ${_year[6]}, ${_month[6]}, ${_date[6]})">${_date[6]}<div class="${month_or_week == "week" ? "no_display" : "calendar_schedule_display_month"} ${schedule_num[6]!=0?"has_schedule":""}">${schedule_num[6]!=0?schedule_num[6]:""}</div></div>
+                    ${result_html}
                 </div>
             ${month_or_week == "week" ? this.week_schedule_draw(year, month, week, schedule_data): ""}`
         );
@@ -673,14 +713,16 @@ class Calendar {
                                                 <div class="add_plan" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 95, POPUP_FROM_BOTTOM, {'select_date':'${this.current_year}-${this.current_month}-${this.current_date}'})"></div>
                                             </div>
                                         </div>
-                                        <div class="cal_week_line_dates" style="border-bottom:0;font-size:13px;">
-                                            <div class="week_cal_time_text"></div>
-                                            <div class="_week_row_1">일</div><div class="_week_row_2">월</div><div class="_week_row_3">화</div>
-                                            <div class="_week_row_4">수</div><div class="_week_row_5">목</div><div class="_week_row_6">금</div>
-                                            <div class="_week_row_7">토</div>
-                                        </div>
-                                        `
-                                        
+                                        `             
+                ,
+                "week_cal_upper_box_date_tool":`
+                    <div class="cal_week_line_dates" style="border-bottom:0;font-size:13px;">
+                        <div class="week_cal_time_text"></div>
+                        <div class="_week_row_1">일</div><div class="_week_row_2">월</div><div class="_week_row_3">화</div>
+                        <div class="_week_row_4">수</div><div class="_week_row_5">목</div><div class="_week_row_6">금</div>
+                        <div class="_week_row_7">토</div>
+                    </div>
+                    `
                 ,
                 "week_time_line":`<div class="week_time_line>
                                     <div>시간</div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
