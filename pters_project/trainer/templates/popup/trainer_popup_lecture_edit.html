@@ -100,10 +100,13 @@
                                 lecture_finished_members: {visible: true, title:"수업 종료된 회원", value:"", input_type:"link"},
                                 lecture_history: {visible: true, title:"수업 이력", value:"", input_type:"link"},
                                 lecture_deactivate: {visible: this.lecture_status_cd == "IP" ? true : false, title:"수업 비활성화", value:"", input_type:"option", option_data:
-                                    {비활성화:{value: 0, callback: ()=>{this.send_state_change_data(this, 'lecture_state_cd', 'PE')}}}
+                                    {"비활성화":{value: 0, callback: ()=>{this.data_state('lecture_state_cd', 'PE')}}}
                                 },
                                 lecture_activate: {visible: this.lecture_status_cd != "IP" ? true : false, title:"수업 활성화", value:"", input_type:"option", option_data:
-                                    {활성화:{value: 0, callback: ()=>{this.send_state_change_data(this, 'lecture_state_cd', 'IP')}}}
+                                    {"활성화":{value: 0, callback: ()=>{this.data_state('lecture_state_cd', 'IP')}}}
+                                },
+                                lecture_delete: {visible: this.lecture_status_cd != "IP" ? true : false, title:"수업 삭제", value:"", input_type:"option", option_data:
+                                    {"완전 삭제":{value: 0, callback: ()=>{this.data_delete()}}}
                                 }
                             };
         }
@@ -128,14 +131,22 @@
                     item_el.value = "&nbsp;"
                 }
 
-                let if_it_is_color;
+                let if_it_is_color = false;
+                let if_it_is_delete =false;
                 switch(item){
+                    //색상이 값인 경우 색상 표기를 위해
                     case "lecture_ing_color_cd":
                         if_it_is_color = true;
                         break;
+
+                    //삭제 버튼의 경우 빨간색으로 글자 표기를 위해서
+                    case "lecture_delete":
+                        if_it_is_delete = true;
+                        break;
                 }
 
-                let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, item_el.input_type, if_it_is_color); 
+
+                let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, item_el.input_type, if_it_is_color, if_it_is_delete); 
                 html_to_join.push(html);
             }
             document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`;
@@ -153,22 +164,22 @@
                 let click_type = document.getElementById(`${item}`).dataset.click;
                 switch(click_type){
                     case "text":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
                         break;
                     case "number":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
                         break;
                     case "option":
                         let option_data = item_el.option_data
                         onclick = ()=>{option_select_popup.open(option_data)};
                         break;
                     case "time":
-                        // onclick = ()=>{time_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
-                        onclick = ()=>{time_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
+                        // onclick = ()=>{time_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
+                        onclick = ()=>{time_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
                         break;
                     case "date":
-                        // onclick = ()=>{date_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
-                        onclick = ()=>{date_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
+                        // onclick = ()=>{date_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
+                        onclick = ()=>{date_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
                         break;
                     case "datepicker":
                         onclick = function(event){
@@ -178,7 +189,7 @@
                             $(`#${event.target.id} input`).datepicker();$(`#${event.target.id} input`).datepicker('show'); }
                         break;
                     case "color":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
                         break;
                     case "disabled":
                         onclick = ()=>{show_error_message("수정 할 수 없는 항목입니다.")}
@@ -188,7 +199,7 @@
             }
         }
 
-        send_data(context, item_name){
+        data_update(context, item_name){
             //데이터 형태 {"lecture_id":"", "member_num":"", "name":"", "note":"", "ing_color_cd":"", "end_color_cd":"", "ing_font_color_cd":"", "end_font_color_cd":""};
             let user_input = $(context).parent().siblings('div').find('.popup_basic_user_input_data').val();
             let data_to_send = {};
@@ -197,30 +208,39 @@
 
             
             Lecture_func.update(data_to_send, () => {
-                Lecture_func.read({"lecture_id":this.lecture_id}, (data)=>{
-                    this.reform_data(data);
-                    this.render_setting_list();
-                    lecture_info_popup.refresh(data);
-                    lecture.init();
-                })
+                this.data_refresh();
             }) 
         }
 
-        send_state_change_data(context, item_name, external_input){
+        data_state(item_name, external_input){
             let data_to_send = {};
             data_to_send["lecture_id"] = this.lecture_id;
             data_to_send[item_name.replace(/lecture_/gi,"")] = external_input;
             
             Lecture_func.status(data_to_send, () => {
-                Lecture_func.read({"lecture_id":this.lecture_id}, (data)=>{
-                    this.reform_data(data);
-                    this.render_setting_list();
-                    lecture_info_popup.refresh(data);
-                    lecture.init();
-                })
+                this.data_refresh();
             }) 
         }
 
+        data_delete(){
+            let data_to_send = {};
+            data_to_send["lecture_id"] = this.lecture_id;
+
+            Lecture_func.delete(data_to_send, () => {
+                // this.data_refresh();
+                layer_popup.all_close_layer_popup();
+                lecture.init();
+            }) 
+        }
+
+        data_refresh(){
+            Lecture_func.read({"lecture_id":this.lecture_id}, (data)=>{
+                this.reform_data(data);
+                this.render_setting_list();
+                lecture_info_popup.refresh(data);
+                lecture.init();
+            })
+        }
 
     }
 

@@ -90,10 +90,13 @@
                                 ticket_finished_members: {visible: true, title:"수강 종료된 회원", value:"", input_type:"link"},
                                 ticket_history: {visible: true, title:"수강권 이력", value:"", input_type:"link"},
                                 ticket_deactivate: {visible: this.ticket_status_cd == "IP" ? true : false, title:"수강권 비활성화", value:"", input_type:"option", option_data:
-                                    {비활성화:{value: 0, callback: ()=>{this.send_state_change_data(this, 'ticket_state_cd', 'PE')}}}
+                                    {"비활성화":{value: 0, callback: ()=>{this.data_state('ticket_state_cd', 'PE')}}}
                                 },
                                 ticket_activate: {visible: this.ticket_status_cd != "IP" ? true : false, title:"수강권 활성화", value:"", input_type:"option", option_data:
-                                    {활성화:{value: 0, callback: ()=>{this.send_state_change_data(this, 'ticket_state_cd', 'IP')}}}
+                                    {"활성화":{value: 0, callback: ()=>{this.data_state('ticket_state_cd', 'IP')}}}
+                                },
+                                ticket_delete: {visible: this.ticket_status_cd != "IP" ? true : false, title:"수강권 삭제", value:"", input_type:"option", option_data:
+                                    {"완전 삭제":{value: 0, callback: ()=>{this.data_delete()}}}
                                 }
                             };
         }
@@ -119,7 +122,15 @@
                     item_el.value = "&nbsp;"
                 }
 
-                let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, item_el.input_type); 
+                let if_it_is_delete =false;
+                switch(item){
+                    //삭제 버튼의 경우 빨간색으로 글자 표기를 위해서
+                    case "ticket_delete":
+                        if_it_is_delete = true;
+                        break;
+                }
+
+                let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, item_el.input_type, false, if_it_is_delete); 
                 html_to_join.push(html);
             }
             document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`; 
@@ -137,22 +148,22 @@
                 let click_type = document.getElementById(`${item}`).dataset.click;
                 switch(click_type){
                     case "text":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
                         break;
                     case "number":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
                         break;
                     case "option":
                         let option_data = item_el.option_data
                         onclick = ()=>{option_select_popup.open(option_data)};
                         break;
                     case "time":
-                        // onclick = ()=>{time_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
-                        onclick = ()=>{time_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
+                        // onclick = ()=>{time_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
+                        onclick = ()=>{time_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
                         break;
                     case "date":
-                        // onclick = ()=>{date_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
-                        onclick = ()=>{date_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
+                        // onclick = ()=>{date_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
+                        onclick = ()=>{date_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
                         break;
                     case "datepicker":
                         onclick = function(event){
@@ -162,7 +173,7 @@
                             $(`#${event.target.id} input`).datepicker();$(`#${event.target.id} input`).datepicker('show'); }
                         break;
                     case "color":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
                         break;
                     case "disabled":
                         onclick = ()=>{show_error_message("수정 할 수 없는 항목입니다.")}
@@ -172,36 +183,47 @@
             }
         }
 
-        send_data(context, item_name){
+        data_update(context, item_name){
             let user_input = $(context).parent().siblings('div').find('.popup_basic_user_input_data').val();
             let data_to_send = {};
             data_to_send["ticket_id"] = this.ticket_id;
             data_to_send[item_name] = user_input;
             
             Ticket_func.update(data_to_send, () => {
-                Ticket_func.read({"ticket_id":this.ticket_id}, (data)=>{
-                    this.reform_data(data.ticket_info);
-                    this.render_setting_list();
-                    ticket_info_popup.refresh(data);
-                    ticket.init();
-                })
+                this.data_refresh();
             }) 
         }
 
-        send_state_change_data(context, item_name, external_input){
+        data_state(item_name, external_input){
             let data_to_send = {};
             data_to_send["ticket_id"] = this.ticket_id;
             data_to_send[item_name.replace(/ticket_/gi,"")] = external_input;
             
             Ticket_func.status(data_to_send, () => {
-                Ticket_func.read({"ticket_id":this.ticket_id}, (data)=>{
-                    this.reform_data(data.ticket_info);
-                    this.render_setting_list();
-                    ticket_info_popup.refresh(data);
-                    ticket.init();
-                })
+                this.data_refresh();
             }) 
         }
+
+        data_delete(){
+            let data_to_send = {};
+            data_to_send["ticket_id"] = this.ticket_id;
+            
+            Ticket_func.delete(data_to_send, () => {
+                // this.data_refresh();
+                layer_popup.all_close_layer_popup();
+                ticket.init();
+            }) 
+        }
+
+        data_refresh(){
+            Ticket_func.read({"ticket_id":this.ticket_id}, (data)=>{
+                this.reform_data(data.ticket_info);
+                this.render_setting_list();
+                ticket_info_popup.refresh(data);
+                ticket.init();
+            }) 
+        }
+
     }
 
     var ticket_edit = new Ticket_edit("#wrapper_box_ticket_settings", ticket_info, "ticket_edit");

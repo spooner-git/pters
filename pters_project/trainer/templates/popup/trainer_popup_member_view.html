@@ -101,7 +101,6 @@
             this.target_ticket_list = '#wrapper_member_tickets_list';
             this.target_lecture_list = '#wrapper_member_lectures_list';
 
-            console.log(data)
         }
 
         init (){
@@ -119,7 +118,8 @@
         }
 
         reform_data(data){
-            this.data = data;
+            //basic_info 만 reform
+            this.data.basic_info = data;
         }
 
         render_ticket_list_set (){
@@ -136,6 +136,7 @@
             if(target == undefined){
                 target = this.target_name;
             }
+            console.log("123", this.data)
             document.querySelector(target).innerHTML = this.data.basic_info.member_name;
         }
 

@@ -221,7 +221,7 @@ class Lecture_func{
     
             //통신 실패시 처리
             error:function(){
-               
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
@@ -253,7 +253,7 @@ class Lecture_func{
     
             //통신 실패시 처리
             error:function(){
-               
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
@@ -273,8 +273,8 @@ class Lecture_func{
             },
     
             //보내기후 팝업창 닫기
-            complete:function(){
-                
+            complete:function(data){
+                callback(data)
             },
     
             //통신성공시 처리
@@ -284,7 +284,7 @@ class Lecture_func{
     
             //통신 실패시 처리
             error:function(){
-               
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
@@ -317,7 +317,7 @@ class Lecture_func{
     
             //통신 실패시 처리
             error:function(){
-               
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
@@ -349,7 +349,7 @@ class Lecture_func{
     
             //통신 실패시 처리
             error:function(){
-               
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }

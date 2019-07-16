@@ -226,7 +226,7 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
-               
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
@@ -258,7 +258,7 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
-               
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
@@ -289,7 +289,7 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
-               
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
@@ -320,7 +320,7 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
-               
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
@@ -351,7 +351,7 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
-               
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
