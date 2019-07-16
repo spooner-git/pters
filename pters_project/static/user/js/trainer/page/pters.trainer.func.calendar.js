@@ -621,7 +621,7 @@ class Calendar {
                 ajax_load_image(SHOW);
             },
             success:function (data){
-                console.log(data);
+                // console.log(data);
                 callback(data, date_);
                 return data;
             },

@@ -134,9 +134,12 @@
                 let if_it_is_color = false;
                 let if_it_is_delete =false;
                 switch(item){
+                    //색상이 값인 경우 색상 표기를 위해
                     case "lecture_ing_color_cd":
                         if_it_is_color = true;
                         break;
+
+                    //삭제 버튼의 경우 빨간색으로 글자 표기를 위해서
                     case "lecture_delete":
                         if_it_is_delete = true;
                         break;
