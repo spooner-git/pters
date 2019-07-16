@@ -244,11 +244,14 @@
         set_iscroll(){
             this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`,{
                                 mouseWheel : true,
+                                deceleration:0.002
                                 // snap: 'li'
                             })
+                            //default : 0.0006, 0.01 (no momentum);
 
             this.hour2_scroll = new IScroll(`#hour2_wrap_${this.instance}`,{
                                 mouseWheel : true,
+                                deceleration:0.002
                                 // snap: 'li'
             })
             this.set_scroll_snap();
@@ -599,15 +602,18 @@
         set_iscroll(){
             this.year_scroll = new IScroll(`#year_wrap_${this.instance}`,{
                                 mouseWheel : true,
+                                deceleration:0.002
                                 // snap: 'li'
                             })
 
             this.month_scroll = new IScroll(`#month_wrap_${this.instance}`,{
                                 mouseWheel : true,
+                                deceleration:0.003
                                 // snap: 'li'
             })
             this.date_scroll = new IScroll(`#date_wrap_${this.instance}`,{
                                 mouseWheel : true,
+                                deceleration:0.003
                                 // snap: 'li'
             })
             this.set_scroll_snap();
