@@ -86,22 +86,28 @@
                                 member_phone: {visible: true, title:"연락처", value: this.member_phone, input_type:"number"},
                                 member_birthday: {visible: true, title:"생년월일", value: this.member_birth, input_type:"date"},
                                 member_sex: {visible: true, title:"성별", value: this.member_sex, input_type:"option", option_data:
-                                   {남성:{value: 0, callback: ()=>{}}, 여성:{value: 1, callback: ()=>{}}}
+                                   {"남성":{value: 0, callback: ()=>{}}, "여성":{value: 1, callback: ()=>{}}}
                                 },
                                 member_note: {visible: true, title:"특이사항", value: this.member_note, input_type:"text"},
                                 member_ticket_history: {visible: true, title:"수강권 이력", value:"", input_type:"link"},
                                 member_lecture_history: {visible: true, title:"수업 이력", value:"", input_type:"link"},
                                 member_sync_request: {visible: this.member_sync == 0 ? true : false, title:"연결하기", value:"", input_type:"option", option_data:
-                                   {연결요청:{value: 0, callback: ()=>{}}}
+                                   {"연결 요청":{value: 0, callback: ()=>{}}}
                                 },
-                                member_sync_disconnect: {visible: this.member_sync == 2 ? true : false, title:"연결끊기", value:"", input_type:"option", option_data:
-                                   {연결끊기:{value: 0, callback: ()=>{}}}
+                                member_sync_disconnect: {visible: this.member_sync == 1 ? true : false, title:"연결끊기", value:"", input_type:"option", option_data:
+                                   {"연결 해제":{value: 0, callback: ()=>{}}}
                                 },
-                                member_sync_wait: {visible: this.member_sync == 1 ? true : false, title:"연결대기", value:"", input_type:"option", option_data:
-                                    {연결요청취소:{value: 0, callback: ()=>{}}}
+                                member_sync_wait: {visible: this.member_sync == 2 ? true : false, title:"연결대기", value:"", input_type:"option", option_data:
+                                    {"연결요청 취소":{value: 0, callback: ()=>{}}}
                                 },
-                                member_deactivate: {visible: true, title:"회원 비활성화", value:"", input_type:"option", option_data:
-                                    {비활성화:{value: 0, callback: ()=>{}}}
+                                member_deactivate: {visible: true, title:"(임시)회원 비활성화", value:"", input_type:"option", option_data:
+                                    {"비활성화":{value: 0, callback: ()=>{this.data_state('member_state_cd', 'PE')}}}
+                                },
+                                member_activate: {visible: true, title:"(임시)회원 활성화", value:"", input_type:"option", option_data:
+                                    {"활성화":{value: 0, callback: ()=>{this.data_state('member_state_cd', 'IP')}}}
+                                },
+                                member_delete: {visible: true, title:"회원 삭제", value:"", input_type:"option", option_data:
+                                    {"완전 삭제":{value: 0, callback: ()=>{this.data_delete();}}}
                                 }
                             };
         }
@@ -127,7 +133,14 @@
                     item_el.value = "&nbsp;"
                 }
 
-                let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, item_el.input_type); 
+                let if_it_is_delete =false;
+                switch(item){
+                    case "ticket_delete":
+                        if_it_is_delete = true;
+                        break;
+                }
+
+                let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, item_el.input_type, false, if_it_is_delete); 
                 html_to_join.push(html);
             }
             document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`; 
@@ -146,22 +159,22 @@
                 let click_type = document.getElementById(`${item}`).dataset.click;
                 switch(click_type){
                     case "text":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
                         break;
                     case "number":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
                         break;
                     case "option":
                         let option_data = item_el.option_data
                         onclick = ()=>{option_select_popup.open(option_data)};
                         break;
                     case "time":
-                        // onclick = ()=>{time_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
-                        onclick = ()=>{time_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
+                        // onclick = ()=>{time_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
+                        onclick = ()=>{time_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
                         break;
                     case "date":
-                        // onclick = ()=>{date_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
-                        onclick = ()=>{date_select_popup.open(`${this.instance}.send_data(this, '${item}')`)};
+                        // onclick = ()=>{date_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
+                        onclick = ()=>{date_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
                         break;
                     case "datepicker":
                         onclick = function(event){
@@ -171,7 +184,7 @@
                             $(`#${event.target.id} input`).datepicker();$(`#${event.target.id} input`).datepicker('show'); }
                         break;
                     case "color":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.send_data(this, '${item}')`)};
+                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
                         break;
                     case "disabled":
                         onclick = ()=>{show_error_message("수정 할 수 없는 항목입니다.")}
@@ -181,21 +194,44 @@
             }
         }
 
-        send_data(context, item_name){
-            //데이터 형태 {"member_id":"", "first_name":"", "phone":"", "sex":"", "birthday":"", "phone":"", "phone":""};
+        data_update(context, item_name){
+            //데이터 형태 {"member_id":"", "first_name":"", "phone":"", "sex":"", "birthday":"", "phone":""};
             let user_input = $(context).parent().siblings('div').find('.popup_basic_user_input_data').val();
             let data_to_send = {};
             data_to_send["member_id"] = this.member_id;
             data_to_send[item_name.replace(/member_/gi,"")] = user_input;
             
             Member_func.update(data_to_send, () => {
-                Member_func.read({"member_id":this.member_id}, (data)=>{
-                    this.reform_data(data);
-                    this.render_setting_list();
-                    member_info_popup.refresh(data);
-                    member.init();
-                })
+                this.data_refresh();
             }) 
+        }
+
+        data_state(item_name, external_input){
+            let data_to_send = {};
+            data_to_send["member_id"] = this.member_id;
+            data_to_send[item_name.replace(/ticket_/gi,"")] = external_input;
+            
+            Member_func.status(data_to_send, () => {
+                this.data_refresh();
+            }) 
+        }
+
+        data_delete(){
+            let data_to_send = {};
+            data_to_send["member_id"] = this.member_id;
+            
+            Member_func.delete(data_to_send, () => {
+                this.data_refresh();
+            }) 
+        }
+
+        data_refresh(){
+            Member_func.read({"member_id":this.member_id}, (data)=>{
+                this.reform_data(data);
+                this.render_setting_list();
+                member_info_popup.refresh(data);
+                member.init();
+            })
         }
     }
 

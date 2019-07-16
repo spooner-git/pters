@@ -273,8 +273,8 @@ class Lecture_func{
             },
     
             //보내기후 팝업창 닫기
-            complete:function(){
-                
+            complete:function(data){
+                callback(data)
             },
     
             //통신성공시 처리
