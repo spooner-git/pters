@@ -4,7 +4,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from configs.const import USE
 from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
 from trainee.models import MemberMemberTicketTb, MemberTicketTb
@@ -208,15 +207,16 @@ class LectureMemberTicketTb(TimeStampedModel):
 
 class LectureMemberTb(TimeStampedModel):
     lecture_member_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    ticket_tb = models.ForeignKey(TicketTb, on_delete=models.CASCADE, db_column='package_tb_id', blank=True, null=True)
-    lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, db_column='lecture_tb_id', blank=True, null=True)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, db_column='class_tb_id', blank=True, null=True)
+    lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, db_column='group_tb_id', blank=True,
+                                   null=True)
     member_tb = models.ForeignKey(MemberTb, on_delete=models.CASCADE, blank=True, null=True)
     fix_state_cd = models.CharField(db_column='FIX_STATE_CD', max_length=20, blank=True, null=True, default='')
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
-        db_table = 'GROUP_MEMBER_TB'
+        db_table = 'LECTURE_MEMBER_TB'
 
 
 class TicketLectureTb(TimeStampedModel):

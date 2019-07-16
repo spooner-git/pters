@@ -22,9 +22,9 @@ urlpatterns = [
     url(r'^get_error_info/$', views.GetErrorInfoView.as_view(), name='get_error_info'),
 
     # 일정 기능 #####################################################################################################
-    # 강사 전체 스케쥴 조회(1:1/수업/OFF) - refactoring
+    # 강사 전체 스케쥴 조회(OFF/개인/그룹) - refactoring
     url(r'^get_trainer_schedule_all/$', views.GetTrainerScheduleAllView.as_view(), name='get_trainer_schedule_all'),
-    # 수업 일정에 속하는 회원의 일정 조회 - refactoring
+    # 그룹 수업 일정에 속하는 회원의 일정 조회 - refactoring
     url(r'^get_lecture_member_schedule_list/$', views.GetLectureMemberScheduleListViewAjax.as_view(),
         name='get_lecture_member_schedule_list'),
 

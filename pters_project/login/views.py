@@ -106,7 +106,6 @@ def login_trainer(request):
                         login(request, user)
                         if auto_login_check == '0':
                             request.session.set_expiry(0)
-                        return redirect(next_page)
                     else:
                         group_list = user.groups.filter(user=user.id)
                         group_name = 'trainer'
@@ -123,8 +122,6 @@ def login_trainer(request):
                                 next_page = '/login/send_email_member/'
                             else:
                                 next_page = '/login/resend_email_member/'
-
-                        return redirect(next_page)
                 else:
                     error = '이미 탈퇴한 회원입니다.'
         else:
@@ -132,11 +129,9 @@ def login_trainer(request):
             next_page = '/'
             # logger.error(error)
 
-    if error is None:
-        return redirect(next_page)
-    else:
+    if error is not None:
         messages.error(request, error)
-        return redirect(next_page)
+    return redirect(next_page)
 
 
 class ServiceInfoView(TemplateView):
@@ -204,7 +199,7 @@ class ServiceTestLoginView(TemplateView):
         #     if len(class_lecture_data) > 0:
         #         for class_lecture_info in class_lecture_data:
         #             if class_lecture_info.lecture_tb is not None and class_lecture_info.lecture_tb != '':
-        #                 check_group = GroupMemberTicketTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id)
+    #                 check_group = GroupMemberTicketTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id)
         #                 # 1:1 그룹인 경우 GroupLecture가 없음. 1:1에 대한 GroupLecture 생성
         #                 if len(check_group) == 0:
         #                     lecture_info = GroupMemberTicketTb(group_tb_id=group_info.group_id,
@@ -865,7 +860,6 @@ def add_member_info_logic_test(request):
     sex = request.POST.get('sex', '')
     group_type = request.POST.get('group_type', 'trainee')
     birthday_dt = request.POST.get('birthday', '')
-    next_page = request.POST.get('next_page', '')
 
     error = None
     member = None
@@ -921,11 +915,10 @@ def add_member_info_logic_test(request):
     if error is None:
         logger.info(member.name + ' 회원 가입 완료')
         messages.info(request, '회원가입이 정상적으로 완료됐습니다.')
-        return redirect(next_page)
     else:
         logger.error(name + '[' + str(user_id) + ']' + error)
         messages.error(request, error)
-        return redirect(next_page)
+    return render(request, 'ajax/registration_error_ajax.html')
 
 
 class AddMemberView(RegistrationView, View):
@@ -1278,7 +1271,8 @@ def out_member_logic(request):
                 #     user.save()
                 # else:
                 if group_name == 'trainee':
-                    member_member_ticket_data = MemberMemberTicketTb.objects.filter(member_id=member_id, auth_cd='VIEW', use=USE)
+                    member_member_ticket_data = MemberMemberTicketTb.objects.filter(member_id=member_id, auth_cd='VIEW',
+                                                                                    use=USE)
                     if len(member_member_ticket_data) > 0:
                         member_member_ticket_data.update(auth_cd='WAIT')
                 # elif group_name == 'trainer':
@@ -1330,13 +1324,11 @@ def out_member_logic(request):
 
                 error = None
 
-    if error is None:
-        return redirect(next_page)
-    else:
+    if error is not None:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-        return redirect(next_page)
+    return redirect(next_page)
 
 
 class AddPushTokenView(View):
