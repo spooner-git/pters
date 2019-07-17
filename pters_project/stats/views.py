@@ -53,8 +53,7 @@ class GetSalesListViewAjax(LoginRequiredMixin, TemplateView):
             error = sales_data_result['error']
 
         if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + error)
+            logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
         return context
@@ -86,8 +85,7 @@ class GetSalesInfoViewAjax(LoginRequiredMixin, TemplateView):
             error = sales_data_result['error']
 
         if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + error)
+            logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
         return context
@@ -119,7 +117,6 @@ class GetStatsMemberListViewAjax(LoginRequiredMixin, TemplateView):
         if error is None:
             error = context['error']
         if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + error)
+            logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + error)
             messages.error(self.request, error)
         return context

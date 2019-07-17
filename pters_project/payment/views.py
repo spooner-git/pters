@@ -170,7 +170,7 @@ def check_before_billing_logic(request):
             error = '오류가 발생했습니다.[7]'
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     return render(request, 'ajax/payment_error_info.html', context)
@@ -407,7 +407,7 @@ def cancel_period_billing_logic(request):
             payment_data.update(status='cancelled', use=UN_USE)
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -466,12 +466,9 @@ def restart_period_billing_logic(request):
     context['error'] = error
     if error is not None:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 재결제 신청 오류:'
-                     + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 오류:' + str(error))
     else:
-        logger.info(str(request.user.last_name)+str(request.user.first_name)
-                    + '(' + str(request.user.id) + ')님 재결제 신청 완료')
+        logger.info(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 완료')
 
     context['error'] = error
     return redirect(next_page)
@@ -530,12 +527,9 @@ def clear_pause_period_billing_logic(request):
     context['error'] = error
     if error is not None:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 재결제 신청 오류:'
-                     + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 오류:' + str(error))
     else:
-        logger.info(str(request.user.last_name)+str(request.user.first_name)
-                    + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
+        logger.info(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
 
     context['error'] = error
     return redirect(next_page)
@@ -563,9 +557,7 @@ def delete_period_billing_logic(request):
 
     if error is not None:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 정기 결제 카드 삭제 신청 :'
-                     + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 정기 결제 카드 삭제 신청 :' + str(error))
 
     return redirect(next_page)
 
@@ -612,7 +604,7 @@ def update_period_billing_logic(request):
             payment_data.update(status='cancelled', use=UN_USE)
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -653,7 +645,7 @@ def update_reserve_product_info_logic(request):
         billing_info.save()
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -728,7 +720,7 @@ def check_update_period_billing_logic(request):
         except ValueError:
             error = '오류가 발생했습니다.[7]'
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -1052,12 +1044,11 @@ def payment_for_ios_logic(request):
         payment_info.save()
 
     if error is None:
-        logger.error(str(request.user.last_name) + str(request.user.first_name)
+        logger.error(str(request.user.first_name)
                      + '(' + str(request.user.id) + ')님 ios 결제 완료:' + str(product_id) + ':'+' '+str(start_date))
     else:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
 
     return render(request, 'ajax/payment_error_info.html', context)
 
@@ -1091,12 +1082,9 @@ def resend_period_billing_logic(request):
     context['error'] = error
     if error is not None:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 재결제 신청 오류:'
-                     + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 오류:' + str(error))
     else:
-        logger.info(str(request.user.last_name)+str(request.user.first_name)
-                    + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
+        logger.info(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
 
     context['error'] = error
     return render(request, 'ajax/payment_error_info.html', context)
@@ -1131,7 +1119,7 @@ def delete_billing_info_logic(request):
             payment_user_info.save()
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -1175,7 +1163,7 @@ def delete_billing_logic(request):
             billing_user_info.delete()
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error

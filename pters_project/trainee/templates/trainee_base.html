@@ -49,8 +49,8 @@
 
             {% load background_trainee_data %}
             {% autoescape off %}
-            let get_setting = {% get_setting_info request %};
-            let auth_type_cd = {% get_function_auth_type_cd request %};
+{#            let get_setting = {% get_setting_info request %};#}
+{#            let auth_type_cd = {% get_function_auth_type_cd request %};#}
             let auth_product_type_name = '{{ request.session.product_type_name }}';
             {% endautoescape %}
 
