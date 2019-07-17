@@ -203,7 +203,8 @@ def func_get_member_info(class_id, user_id, member_id):
                        'member_email': str(member.user.email),
                        'member_sex': str(member.sex),
                        'member_birthday_dt': str(member.birthday_dt),
-                       'member_connection_check': connection_check
+                       'member_connection_check': connection_check,
+                       'member_is_active': str(member.user.is_active)
                        }
 
     return {'member_info': member_info, 'error': error}
