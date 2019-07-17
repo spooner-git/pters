@@ -4,49 +4,66 @@
 <style>
     .wrapper_popup_time_selector_function, .wrapper_popup_date_selector_function{
         text-align: center;
-        /* background-image: linear-gradient(#8e8e8e, white 35%, white 65%, #8e8e8e); */
+    }
+    .time_selector{
+        position: relative;
+        text-align: center;
+    }
+    .date_selector{
+        position: relative;
+        text-align: center;
     }
     .time_selector .select_wrapper{
         display: inline-block;
-        width: 45%;
+        width: 30%;
         position: relative;
         overflow: hidden;
-        height: 170px;
+        height: 150px;
+        max-width: 90px;
     }
     .date_selector .select_wrapper{
         display: inline-block;
         width: 30%;
-        margin-left: 2%;
         position: relative;
         overflow: hidden;
-        height: 170px;
+        height: 150px;
+        max-width: 90px;
     }
 
-    .selector_title{
-        position: absolute;
-        width: 100%;
-        top: 0px;
-        height: 20px;
-        line-height: 20px;
-        background-color: #ffffff;
-        z-index: 2;
+    .time_selector_confirm, .date_selector_confirm{
+        text-align: right;
+        font-size: 13px;
+        font-weight: 500;
+        height: 30px;
+        line-height: 40px;
+        padding: 0 16px;
     }
+
     .select_wrapper_child{
         position: absolute;
-        top: 20px;
+        top: 0px;
         width: 100%;
         height: 150px;
         z-index: 1;
         /* background-image: linear-gradient(#8e8e8e, transparent 35%, transparent 65%, #8e8e8e); */
     }
-    .selector_indicator{
+    
+    .selector_unit{
         position: absolute;
-        top: 70px;
+        top: 50px;
         width: 100%;
         height: 50px;
-        /* border-top: 1px solid #fe4e65;
-        border-bottom: 1px solid #fe4e65; */
-        box-shadow: 0px 0px 2px 0px #545454;
+        line-height: 50px;
+        text-align: right;
+        font-size: 11px;
+    }
+
+    .selector_indicator{
+        position: absolute;
+        top: 80px;
+        width: 100%;
+        height: 50px;
+        box-shadow: 0 1px 5px 0 #cfcfcf;
     }
 
     .select_wrapper ul{
@@ -60,6 +77,8 @@
         background-color: transparent;
         height: 50px;
         line-height: 50px;
+        font-size: 15px;
+        font-weight: 500;
     }
 </style>
 
@@ -100,27 +119,10 @@
     </div>
 
 <div class="popup_mobile popup_full">
-	<div class="popup_basic_time_selector obj_font_size_15_weight_500">
+	<div class="popup_basic_time_selector obj_font_size_15_weight_500"  style="background-color:#ffffff;">
         <div class="wrapper_popup_basic_comment obj_font_size_13_weight_500" onclick='time_select_popup.show_selected_time()'></div>
 
         <div class="wrapper_popup_time_selector_function">
-
-            <!-- <div class="select_wrapper">
-                <div class="selector_title">시작 시간</div>
-                <div id="hour_wrap" class="select_wrapper_child">
-                    
-                </div>
-                <div class="selector_indicator"></div>
-            </div>
-
-            <div class="select_wrapper">
-                <div class="selector_title">종료 시간</div>
-                <div id="hour2_wrap" class="select_wrapper_child">
-                    
-                </div>
-                <div class="selector_indicator"></div>
-            </div> -->
-
         </div>
 
         <div><input type="hidden" placeholder="" class="popup_basic_user_input_data"></div>
@@ -133,7 +135,7 @@
 
 
 <div class="popup_mobile popup_full">
-	<div class="popup_basic_date_selector obj_font_size_15_weight_500">
+	<div class="popup_basic_date_selector obj_font_size_15_weight_500" style="background-color:#ffffff;">
         <div class="wrapper_popup_basic_comment obj_font_size_13_weight_500" onclick='date_select_popup.show_selected_date()'></div>
 
         <div class="wrapper_popup_date_selector_function">
@@ -156,12 +158,9 @@
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     class TwoTimeSelector{
-        constructor(target, instance){
+        constructor(target, instance, user_option){
             this.targetHTML = target;
-            this.result_target_time1;
-            this.result_target_time2;
-
-            this.result_target_for_send = '.popup_basic_time_selector .popup_basic_user_input_data';
+            this.result_target;
 
             this.data;
             this.instance = instance;
@@ -172,6 +171,19 @@
             this.hour_scroll_snapped = 0;
 
             document.querySelector(this.targetHTML).innerHTML = this.static_component().initial_html;
+
+            this.default_option = {
+                                    time_start : this.current_year - 100,
+                                    time_end : this.current_year,
+                                    init_time1 : 1986,
+                                    init_time2 : 2
+                                }
+            if(user_option != undefined){
+                //user_option이 들어왔을경우 default_option의 값을 user_option값으로 바꿔준다.
+                for(let option in user_option){
+                    this.default_option[option] = user_option[option];
+                }
+            }
 
             this.init();
         }
@@ -184,8 +196,6 @@
         }
 
         reset(result_target1, result_target2, init_hour, init_minute){
-            this.result_target_time1 = result_target1;
-            this.result_target_time2 = result_target2;
             let d = new Date();
             let h = d.getHours();
             let m = d.getMinutes();
@@ -203,7 +213,6 @@
             }
 
             let html = `
-                            <div class="selector_title">시작 시간</div>
                             <div id="hour_wrap_${this.instance}" class="select_wrapper_child">
                                 <ul>
                                     <li></li>
@@ -211,9 +220,9 @@
                                     <li></li>
                                 </ul>
                             </div>
-                            <div class="selector_indicator"></div>
+                            <div class="selector_unit">시작</div>
                         `
-            document.querySelector(`${this.targetHTML} .date_selector_time1_wrap`).innerHTML = html;
+            document.querySelector(`${this.targetHTML} .time_selector_time1_wrap`).innerHTML = html;
         }
 
         render_time2_list(){
@@ -227,7 +236,6 @@
             }
 
             let html = `
-                            <div class="selector_title">종료 시간</div>
                             <div id="hour2_wrap_${this.instance}" class="select_wrapper_child">
                                 <ul>
                                     <li></li>
@@ -235,10 +243,10 @@
                                     <li></li>
                                 </ul>
                             </div>
-                            <div class="selector_indicator"></div>
+                            <div class="selector_unit">종료</div>
                         `
 
-            document.querySelector(`${this.targetHTML} .date_selector_time2_wrap`).innerHTML = html;
+            document.querySelector(`${this.targetHTML} .time_selector_time2_wrap`).innerHTML = html;
         }
 
         set_iscroll(){
@@ -333,27 +341,9 @@
             $(`${this.targetHTML} li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
         }
 
-        show_selected_time(){
-            let start = $(`li[data-spos="${Math.abs(this.hour_scroll.y)}"]`);
-            let end = $(`li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`);
-
-            let start_text = start.text();
-            let end_text = end.text();
-
-            if(start_text == undefined || start_text == ''){
-                alert('시작시간 입력을 다시 해주세요.')
-            }
-            else if(end_text == undefined || end_text == ''){
-                alert('종료시간 입력을 다시 해주세요.')
-            }
-            else{
-                alert('시작:' + start_text + ' ~ ' + '종료:'+ end_text)
-            }
-        }
-
         get_selected_data(){
-            let start = $(`li[data-spos="${Math.abs(this.hour_scroll.y)}"]`);
-            let end = $(`li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`);
+            let start = $(`${this.targetHTML} li[data-spos="${Math.abs(this.hour_scroll.y)}"]`);
+            let end = $(`${this.targetHTML} li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`);
 
             let start_text = start.text();
             let end_text = end.text();
@@ -364,23 +354,39 @@
             };
         }
 
+        show_selected_time(){
+            let result = this.get_selected_data();
+
+            if(result.start == undefined || result.start == ''){
+                show_error_message('시작시간 입력을 다시 해주세요.')
+            }
+            else if(result.end == undefined || result.end == ''){
+                show_error_message('종료시간 입력을 다시 해주세요.')
+            }
+            else{
+                show_error_message('시작:' + result.start + ' ~ ' + '종료:'+ result.end)
+            }
+        }
+
         set_selected_data(){
             let result = this.get_selected_data();
-            $(this.result_target_for_send).val(result.start + ' ~ ' + result.end);
+            $(this.result_target).val(result.start + ' - ' + result.end);
         }
 
         static_component(){
             return{
                 "initial_html":`<div class="time_selector">
-                                    <div class="date_selector_time1_wrap select_wrapper"></div>
-                                    <div class="date_selector_time2_wrap select_wrapper"></div>
+                                    <div class="time_selector_confirm"><span onclick="${this.instance}.set_selected_data()">확인</span></div>
+                                    <div class="time_selector_time1_wrap select_wrapper"></div>
+                                    <div class="time_selector_time2_wrap select_wrapper"></div>
+                                    <div class="selector_indicator"></div>
                                 </div>`
             }
         }
 
         open(callback_after_confirm, target1, target2){
             let top_comment_height = 65;
-            let time_selector_height = 175;
+            let time_selector_height = 155;
             let close_button_height = 46;
             let sum = top_comment_height + time_selector_height + close_button_height;
 
@@ -401,7 +407,7 @@
         }
     }
 
-    var time_select_popup = new TwoTimeSelector('.wrapper_popup_time_selector_function', "time_select_popup");
+    // var time_select_popup = new TwoTimeSelector('.wrapper_popup_time_selector_function', "time_select_popup");
     // time_select_popup.init();
 
 
@@ -480,11 +486,10 @@
 
 
     class DateSelector{
-        constructor(target, instance){
-            this.targetHTML = target;
-
-            this.result_target;
-            this.result_target_for_send = '.popup_basic_date_selector .popup_basic_user_input_data';
+        constructor(install_target, result_target, instance, user_option){
+            this.targetHTML = install_target;
+            this.result_target = result_target;
+            this.open_type = "onpage";
 
             this.data;
             this.instance = instance;
@@ -494,18 +499,32 @@
             this.user_scroll_year = false;
             this.user_scroll_month = false;
             this.user_scroll_date = false;
-            // this.hour_scroll_snapped = 0;
+
             let d = new Date();
             this.current_year = d.getFullYear();
             this.current_month = d.getMonth();
             this.current_date = d.getDate();
 
-            document.querySelector(this.targetHTML).innerHTML = this.static_component().initial_html;
-            
+            this.default_option = {
+                                    year_start : this.current_year - 100,
+                                    year_end : this.current_year,
+                                    init_year : 1986,
+                                    init_month : 2,
+                                    init_date : 24
+                                }
+            if(user_option != undefined){
+                //user_option이 들어왔을경우 default_option의 값을 user_option값으로 바꿔준다.
+                for(let option in user_option){
+                    this.default_option[option] = user_option[option];
+                }
+            }
             this.init();
         }
 
+        
+
         init(){
+            this.init_html();
             this.render_year_list();
             this.render_month_list();
             this.render_date_list();
@@ -513,15 +532,32 @@
             this.reset();
         }
 
+        init_html(){
+            //초기 html 생성
+            document.querySelector(this.targetHTML).innerHTML = this.static_component().initial_html;
+
+            //확인 버튼 이벤트 연결
+            $(document).off('click', `#date_selector_confirm_${this.instance}`).on('click', `#date_selector_confirm_${this.instance}`, ()=>{
+                this.set_selected_data();
+                if(this.open_type == "onpage"){
+                    this.delete();
+                }
+            });
+        }
+
+        delete(){
+            document.querySelector(this.targetHTML).innerHTML = "";
+        }
+
         reset(year, month, date){
             if(year == undefined){
-                year = 1986;
+                year = this.default_option.init_year;
             }
             if(month == undefined){
-                month = 2;
+                month = this.default_option.init_month;
             }
             if(date == undefined){
-                date = 24;
+                date = this.default_option.init_date;
             }
             
             this.go_snap(year, month, date);
@@ -530,14 +566,13 @@
         render_year_list(){
             let html_to_join = [];
             let pos = 0;
-            for(let i=1910; i<this.current_year; i++){
+            for(let i=this.default_option.year_start; i<this.default_option.year_end; i++){
                 html_to_join.push(`<li data-ypos=${pos}>${i}</li>`);
                 pos = pos + 50;
                            
             }
 
             let html = `
-                            <div class="selector_title">연도</div>
                             <div id="year_wrap_${this.instance}" class="select_wrapper_child">
                                 <ul>
                                     <li></li>
@@ -545,7 +580,7 @@
                                     <li></li>
                                 </ul>
                             </div>
-                            <div class="selector_indicator"></div>
+                            <div class="selector_unit">년</div>
                         `
 
 
@@ -561,7 +596,6 @@
             }
 
             let html = `
-                            <div class="selector_title">월</div>
                             <div id="month_wrap_${this.instance}" class="select_wrapper_child">
                                 <ul>
                                     <li></li>
@@ -569,7 +603,7 @@
                                     <li></li>
                                 </ul>
                             </div>
-                            <div class="selector_indicator"></div>
+                            <div class="selector_unit">월</div>
                         `;
 
             document.querySelector(`${this.targetHTML} .date_selector_month_wrap`).innerHTML = html;
@@ -584,7 +618,6 @@
             }
 
             let html = `
-                            <div class="selector_title">일</div>
                             <div id="date_wrap_${this.instance}" class="select_wrapper_child">
                                 <ul>
                                     <li></li>
@@ -592,7 +625,7 @@
                                     <li></li>
                                 </ul>
                             </div>
-                            <div class="selector_indicator"></div>
+                            <div class="selector_unit">일</div>
                         `
 
             document.querySelector(`${this.targetHTML} .date_selector_date_wrap`).innerHTML = html;
@@ -704,9 +737,7 @@
         }
 
         go_snap(year, month, date){
-            // let initial_pos = -(Number(hour)*600 + Math.round(Number(minute)/5)*5*10);
-
-            let initial_pos_year = (1910-year)*50;
+            let initial_pos_year = (this.default_option.year_start-year)*50;
             let initial_pos_month = (1-month)*50;
             let initial_pos_date = (1-date)*50;
 
@@ -763,27 +794,38 @@
 
         set_selected_data(){
             let result = this.get_selected_data();
+            let data_text = `${result.year}년 ${result.month}월 ${result.date}일`;
             let data = `${result.year}.${result.month}.${result.date}`;
 
-            $(this.result_target_for_send).val(data);
+            let d = new Date(result.year, result.month+1, result.date);
+            let day = d.getDay();
+            let day_name = ['월', '화', '수', '목', '금', '토', '일'];
+            
+            $(this.result_target).text(`${data_text} (${day_name[day]})`);
+            $(this.result_target).siblings('input').val(data);
         }
 
         static_component(){
             return{
                 "initial_html":`<div class="date_selector">
+                                    <div class="date_selector_confirm"><span id="date_selector_confirm_${this.instance}" style="cursor:pointer;padding:10px;">확인</span></div>
                                     <div class="date_selector_year_wrap select_wrapper"></div>
                                     <div class="date_selector_month_wrap select_wrapper"></div>
                                     <div class="date_selector_date_wrap select_wrapper"></div>
+                                    <div class="selector_indicator"></div>
                                 </div>`
             }
         }
 
+        //하단 팝업형식으로 열때 사용
         open(callback_after_confirm, result_target, year, month, date){
+            this.open_type = "popup";
+
             if(result_target != undefined || result_target != "" || result_target != ''){
                 this.result_target = result_target;
             }
             let top_comment_height = 65;
-            let date_selector_height = 175;
+            let date_selector_height = 155;
             let close_button_height = 46;
             let sum = top_comment_height + date_selector_height + close_button_height;
 
@@ -800,6 +842,334 @@
     }
 
     var date_select_popup = new DateSelector('.wrapper_popup_date_selector_function', "date_select_popup");
+
+
+
+    class TimeSelector{
+        constructor(install_target, result_target, instance, user_option){
+            console.log("install_target", install_target)
+            this.targetHTML = install_target;
+            this.result_target = result_target;
+            this.open_type = "onpage";
+
+            this.data;
+            this.instance = instance;
+            this.zone_scroll;
+            this.hour_scroll;
+            this.minute_scroll;
+            this.user_scroll_zone = false;
+            this.user_scroll_hour = false;
+            this.user_scroll_minute = false;
+
+            let d = new Date();
+            this.current_hour = d.getHours() > 12 ? d.getHours() - 12 : d.getHours();
+            this.current_minute = Math.round(d.getMinutes()/5)*5
+            this.current_zone = d.getHours() > 12 ? 1 : 0;
+
+            this.default_option = {
+                                    // year_start : this.current_year - 100,
+                                    // year_end : this.current_year,
+                                    init_zone : this.current_zone,
+                                    init_hour : this.current_hour,
+                                    init_minute : this.current_minute
+                                }
+            if(user_option != undefined){
+                //user_option이 들어왔을경우 default_option의 값을 user_option값으로 바꿔준다.
+                for(let option in user_option){
+                    this.default_option[option] = user_option[option];
+                }
+            }
+            this.init();
+        }
+
+        
+
+        init(){
+            this.init_html();
+            this.render_zone_list();
+            this.render_hour_list();
+            this.render_minute_list();
+            this.set_iscroll();
+            this.reset();
+        }
+
+        init_html(){
+            //초기 html 생성
+            document.querySelector(this.targetHTML).innerHTML = this.static_component().initial_html;
+
+            //확인 버튼 이벤트 연결
+            $(document).off('click', `#time_selector_confirm_${this.instance}`).on('click', `#time_selector_confirm_${this.instance}`, ()=>{
+                this.set_selected_data();
+                if(this.open_type == "onpage"){
+                    this.delete();
+                }
+            });
+        }
+
+        delete(){
+            document.querySelector(this.targetHTML).innerHTML = "";
+        }
+
+        reset(zone, hour, minute){
+            if(zone == undefined){
+                zone = this.default_option.init_zone;
+            }
+            if(hour == undefined){
+                hour = this.default_option.init_hour;
+            }
+            if(minute == undefined){
+                minute = this.default_option.init_minute;
+            }
+            
+            this.go_snap(zone, hour, minute);
+        }
+
+        render_zone_list(){
+            let html = `
+                            <div id="zone_wrap_${this.instance}" class="select_wrapper_child">
+                                <ul>
+                                    <li></li>
+                                    <li data-zpos=${0} data-zone="0">오전</li>
+                                    <li data-zpos=${50} data-zone="1">오후</li>
+                                    <li></li>
+                                </ul>
+                            </div>
+                            <div class="selector_unit"></div>
+                        `
+
+
+            document.querySelector(`${this.targetHTML} .time_selector_zone_wrap`).innerHTML = html;
+        }
+
+        render_hour_list(){
+            let html_to_join = [];
+            let pos = 0;
+            for(let i=1; i<=12; i++){
+                    html_to_join.push(`<li data-hpos=${pos}>${i}</li>`);
+                    pos = pos + 50;
+            }
+
+            let html = `
+                            <div id="hour_wrap_${this.instance}" class="select_wrapper_child">
+                                <ul>
+                                    <li></li>
+                                    ${html_to_join.join('')}
+                                    <li></li>
+                                </ul>
+                            </div>
+                            <div class="selector_unit">시</div>
+                        `;
+
+            document.querySelector(`${this.targetHTML} .time_selector_hour_wrap`).innerHTML = html;
+        }
+
+        render_minute_list(){
+            let html_to_join = [];
+            let pos = 0;
+            for(let i=0; i<=55; i=i+5){
+                    html_to_join.push(`<li data-mpos=${pos}>${i}</li>`);
+                    pos = pos + 50; 
+            }
+
+            let html = `
+                            <div id="minute_wrap_${this.instance}" class="select_wrapper_child">
+                                <ul>
+                                    <li></li>
+                                    ${html_to_join.join('')}
+                                    <li></li>
+                                </ul>
+                            </div>
+                            <div class="selector_unit">분</div>
+                        `
+
+            document.querySelector(`${this.targetHTML} .time_selector_minute_wrap`).innerHTML = html;
+        }
+
+
+        set_iscroll(){
+            this.zone_scroll = new IScroll(`#zone_wrap_${this.instance}`,{
+                                mouseWheel : true,
+                                deceleration:0.002
+                                // snap: 'li'
+                            })
+
+            this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`,{
+                                mouseWheel : true,
+                                deceleration:0.003
+                                // snap: 'li'
+            })
+            this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`,{
+                                mouseWheel : true,
+                                deceleration:0.003
+                                // snap: 'li'
+            })
+            this.set_scroll_snap();
+        }
+
+        set_scroll_snap(){
+            let self = this;
+            
+            self.zone_scroll.on('scrollEnd', function (){
+                if(self.user_scroll_year == true){
+                    self.user_scroll_year = false;
+                    let posY = this.y;
+                    let min = posY-posY%50;
+                    let max = min - 50;
+
+                    let snap;
+                    
+                    if(Math.abs(posY - max) < Math.abs(posY - min)){
+                        snap = max;
+                    }else{
+                        snap = min;
+                    }
+                    self.zone_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                    $(`${self.targetHTML} li[data-zpos="${Math.abs(self.zone_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`${self.targetHTML} li[data-zpos="${Math.abs(self.zone_scroll.y)}"]`).css('color', '#1e1e1e');
+                    // self.zone_scroll_snapped = snap;
+                }
+            })
+
+            self.zone_scroll.on('beforeScrollStart', function (){
+                self.user_scroll_year = true;
+            })
+
+            
+            self.hour_scroll.on('scrollEnd', function (){
+                if(self.user_scroll_month == true){
+                    self.user_scroll_month = false;
+                    let posY = this.y;
+                    let min = posY-posY%50;
+                    let max = min - 50;
+
+                    let snap;
+                    
+                    if(Math.abs(posY - max) < Math.abs(posY - min)){
+                        snap = max;
+                    }else{
+                        snap = min;
+                    }
+                    
+                        
+                    self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                    $(`${self.targetHTML} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`${self.targetHTML} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+                }
+            })
+
+            self.hour_scroll.on('beforeScrollStart', function (){
+                self.user_scroll_month = true;
+            })
+
+            self.minute_scroll.on('scrollEnd', function (){
+                if(self.user_scroll_date == true){
+                    self.user_scroll_date = false;
+                    let posY = this.y;
+                    let min = posY-posY%50;
+                    let max = min - 50;
+
+                    let snap;
+                    
+                    if(Math.abs(posY - max) < Math.abs(posY - min)){
+                        snap = max;
+                    }else{
+                        snap = min;
+                    }
+                    
+                        
+                    self.minute_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                    $(`${self.targetHTML} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`${self.targetHTML} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).css('color', '#1e1e1e');
+                    
+                }
+            })
+
+            self.minute_scroll.on('beforeScrollStart', function (){
+                self.user_scroll_date = true;
+            })
+        }
+
+        go_snap(zone, hour, minute){
+            let initial_pos_zone = (-zone)*50;
+            let initial_pos_hour = (1-hour)*50;
+            let initial_pos_minute = -(minute)*10;
+
+            this.zone_scroll.scrollTo(0, initial_pos_zone, 0, IScroll.utils.ease.bounce);
+            this.hour_scroll.scrollTo(0, initial_pos_hour, 0, IScroll.utils.ease.bounce);
+            this.minute_scroll.scrollTo(0, initial_pos_minute, 0, IScroll.utils.ease.bounce);
+
+            $(`${this.targetHTML} li[data-zpos="${Math.abs(this.zone_scroll.y)}"]`).css('color', '#1e1e1e');
+            $(`${this.targetHTML} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+            $(`${this.targetHTML} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).css('color', '#1e1e1e');
+            $(`${this.targetHTML} li[data-zpos="${Math.abs(this.zone_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+            $(`${this.targetHTML} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+            $(`${this.targetHTML} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        }
+
+        get_selected_data(){
+            let zone = $(`${this.targetHTML} li[data-zpos="${Math.abs(this.zone_scroll.y)}"]`);
+            let hour = $(`${this.targetHTML} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`);
+            let minute = $(`${this.targetHTML} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`);
+
+            let zone_value = zone.attr('data-zone');
+            let zone_text = zone.text();
+            let hour_text = hour.text();
+            let minute_text = minute.text();
+
+            return {
+                zone_value : zone_value,
+                zone_text : zone_text,
+                hour_text : hour_text,
+                minute_text: minute_text
+            };
+        }
+
+        set_selected_data(){
+            let result = this.get_selected_data();
+            let data_text = `${result.zone_text} ${result.hour_text}시 ${result.minute_text}분`;
+            let data = `${result.zone_value}.${result.hour_text}.${result.minute_text}`;
+            
+            $(this.result_target).text(data_text);
+            $(this.result_target).siblings('input').val(data);
+        }
+
+        static_component(){
+            return{
+                "initial_html":`<div class="time_selector">
+                                    <div class="time_selector_confirm"><span id="time_selector_confirm_${this.instance}" style="cursor:pointer;padding:10px;">확인</span></div>
+                                    <div class="time_selector_zone_wrap select_wrapper"></div>
+                                    <div class="time_selector_hour_wrap select_wrapper"></div>
+                                    <div class="time_selector_minute_wrap select_wrapper"></div>
+                                    <div class="selector_indicator"></div>
+                                </div>`
+            }
+        }
+
+        //하단 팝업형식으로 열때 사용
+        open(callback_after_confirm, result_target, zone, hour, minute){
+            this.open_type = "popup";
+
+            if(result_target != undefined || result_target != "" || result_target != ''){
+                this.result_target = result_target;
+            }
+            let top_comment_height = 65;
+            let time_selector_height = 155;
+            let close_button_height = 46;
+            let sum = top_comment_height + date_selector_height + close_button_height;
+
+            let popup_height = 100*sum/windowHeight;
+
+            let set_data = `${this.instance}.set_selected_data()`;
+
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', popup_height, POPUP_FROM_BOTTOM,
+                                        {'popup_title':'', 'popup_comment':'날짜를 선택해주세요',
+                                        'onclick_function':`${set_data};${callback_after_confirm};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
+
+            this.reset(zone, hour, minute);
+        }
+    }
+
+    // var time_select_popup = new TimeSelector('.wrapper_popup_time_selector_function', "time_select_popup");
 
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
