@@ -236,23 +236,23 @@ def func_get_member_lecture_list(class_id, member_id):
                                               use=USE).order_by('-member_ticket_tb__start_date',
                                                                 '-member_ticket_tb__reg_dt')
 
-    query_ticket_list = Q()
+    if len(member_ticket_data) > 0:
+        query_ticket_list = Q()
 
-    for member_ticket_info in member_ticket_data:
-        ticket_info = member_ticket_info.member_ticket_tb.ticket_tb
-        query_ticket_list |= Q(ticket_tb_id=ticket_info.ticket_id)
+        for member_ticket_info in member_ticket_data:
+            ticket_info = member_ticket_info.member_ticket_tb.ticket_tb
+            query_ticket_list |= Q(ticket_tb_id=ticket_info.ticket_id)
+        ticket_lecture_data = TicketLectureTb.objects.select_related('lecture_tb').filter(query_ticket_list,
+                                                                                          class_tb_id=class_id, use=USE)
 
-    ticket_lecture_data = TicketLectureTb.objects.select_related('lecture_tb').filter(query_ticket_list,
-                                                                                      class_tb_id=class_id, use=USE)
-
-    for ticket_lecture_info in ticket_lecture_data:
-        lecture_tb = ticket_lecture_info.lecture_tb
-        lecture_info = {'lecture_id': lecture_tb.lecture_id,
-                        'lecture_name': lecture_tb.name,
-                        'lecture_note': lecture_tb.note,
-                        'lecture_max_num': lecture_tb.member_num
-                        }
-        member_lecture_list[lecture_tb.lecture_id] = lecture_info
+        for ticket_lecture_info in ticket_lecture_data:
+            lecture_tb = ticket_lecture_info.lecture_tb
+            lecture_info = {'lecture_id': lecture_tb.lecture_id,
+                            'lecture_name': lecture_tb.name,
+                            'lecture_note': lecture_tb.note,
+                            'lecture_max_num': lecture_tb.member_num
+                            }
+            member_lecture_list[lecture_tb.lecture_id] = lecture_info
 
     return member_lecture_list
 
