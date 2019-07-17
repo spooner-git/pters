@@ -32,7 +32,7 @@ class Member {
 
 
     //회원 리스트 서버에서 불러오기
-    static request_member_list (list_type, callback){
+    request_member_list (list_type, callback){
         var start_time;
         var end_time;
         var url;

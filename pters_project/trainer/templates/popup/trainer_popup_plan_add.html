@@ -245,7 +245,7 @@
 
         request_member(callback){
             let data_reproduced;
-            Member.request_member_list("ing", (data)=>{
+            member.request_member_list("ing", (data)=>{
                 data_reproduced = this.data_reproduce(data.current_member_data);
                 callback(data_reproduced);
             })
@@ -254,7 +254,7 @@
 
         request_lecture(callback){
             let data_reproduced;
-            Lecture.request_lecture_list("ing", (data)=>{
+            lecture.request_lecture_list("ing", (data)=>{
                 data_reproduced = this.data_reproduce(data.current_lecture_data);
                 callback(data_reproduced);
             })
