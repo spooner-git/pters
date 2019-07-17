@@ -43,7 +43,7 @@ def add_question_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
         messages.info(request, qa_type_cd+'/'+title+'/'+contents)
 

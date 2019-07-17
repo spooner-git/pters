@@ -577,7 +577,7 @@ class Calendar {
                                 plan_font_style = 'color:#ffffff;';
                             }else if(plan.schedule_type == 2){
                                 plan_status_color = '#fe4e65';
-                                plan_name = plan.group_name;
+                                plan_name = plan.lecture_name;
                                 plan_font_style = 'color:#ffffff;';
                             }
 

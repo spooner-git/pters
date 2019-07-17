@@ -1,6 +1,5 @@
 # Create your views here.
 import datetime
-import json
 import logging
 import random
 import urllib
@@ -4602,7 +4601,7 @@ class GetAttendModeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateVie
 
 
 # 리뉴얼
-class PopupCalendarPlanView(TemplateView):
+class PopupCalendarPlanView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_plan_view.html'
 
     def get_context_data(self, **kwargs):
@@ -4610,7 +4609,7 @@ class PopupCalendarPlanView(TemplateView):
         return context
 
 
-class PopupCalendarPlanAdd(TemplateView):
+class PopupCalendarPlanAdd(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_plan_add.html'
 
     def get_context_data(self, **kwargs):
@@ -4618,7 +4617,7 @@ class PopupCalendarPlanAdd(TemplateView):
         return context
 
 
-class PopupMemberAdd(TemplateView):
+class PopupMemberAdd(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_member_add.html'
 
     def get_context_data(self, **kwargs):
@@ -4626,7 +4625,7 @@ class PopupMemberAdd(TemplateView):
         return context
 
 
-class PopupMemberView(TemplateView):
+class PopupMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_member_view.html'
 
     def get_context_data(self, **kwargs):
@@ -4642,7 +4641,7 @@ class PopupMemberView(TemplateView):
         return context
 
 
-class PopupMemberEdit(TemplateView):
+class PopupMemberEdit(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_member_edit.html'
 
     def get_context_data(self, **kwargs):
@@ -4654,7 +4653,7 @@ class PopupMemberEdit(TemplateView):
         return context
 
 
-class PopupLectureAdd(TemplateView):
+class PopupLectureAdd(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_lecture_add.html'
 
     def get_context_data(self, **kwargs):
@@ -4662,7 +4661,7 @@ class PopupLectureAdd(TemplateView):
         return context
 
 
-class PopupLectureView(TemplateView):
+class PopupLectureView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_lecture_view.html'
 
     def get_context_data(self, **kwargs):
@@ -4673,7 +4672,7 @@ class PopupLectureView(TemplateView):
         return context
 
 
-class PopupLectureEdit(TemplateView):
+class PopupLectureEdit(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_lecture_edit.html'
 
     def get_context_data(self, **kwargs):
@@ -4684,7 +4683,7 @@ class PopupLectureEdit(TemplateView):
         return context
 
 
-class PopupTicketAdd(TemplateView):
+class PopupTicketAdd(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_ticket_add.html'
 
     def get_context_data(self, **kwargs):
@@ -4692,7 +4691,7 @@ class PopupTicketAdd(TemplateView):
         return context
 
 
-class PopupTicketView(TemplateView):
+class PopupTicketView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_ticket_view.html'
 
     def get_context_data(self, **kwargs):
@@ -4704,7 +4703,7 @@ class PopupTicketView(TemplateView):
         return context
 
 
-class PopupTicketEdit(TemplateView):
+class PopupTicketEdit(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_ticket_edit.html'
 
     def get_context_data(self, **kwargs):

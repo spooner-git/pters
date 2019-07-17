@@ -88,10 +88,10 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
             class_tb_selected = None
             class_member_ticket_id_select = None
             for class_member_ticket_info in class_member_ticket_data:
-                if class_member_ticket_info.auth_type_cd == 'WAIT':
+                if class_member_ticket_info.member_ticket_tb.member_auth_cd == 'WAIT':
                     member_ticket_np_counter += 1
 
-                if class_member_ticket_info.auth_type_cd == 'VIEW' and class_tb_selected is None:
+                if class_member_ticket_info.member_ticket_tb.member_auth_cd == 'VIEW' and class_tb_selected is None:
                     class_tb_selected = class_member_ticket_info.class_tb
                     class_member_ticket_id_select = class_member_ticket_info.member_ticket_tb_id
                 if class_tb_comp is not None:
@@ -1507,7 +1507,7 @@ class PopupCalendarPlanView(TemplateView):
         return context
 
 
-class PopupCalendarPlanReserveView(TemplateView):
+class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainee_popup_calendar_plan_reserve.html'
 
     def get_context_data(self, **kwargs):
@@ -1564,7 +1564,7 @@ class PopupCalendarPlanReserveView(TemplateView):
         return context
 
 
-class PopupCalendarPlanReserveCompleteView(TemplateView):
+class PopupCalendarPlanReserveCompleteView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainee_popup_calendar_plan_reserve_complete.html'
 
     def get_context_data(self, **kwargs):
@@ -1608,7 +1608,7 @@ class PopupCalendarPlanReserveCompleteView(TemplateView):
         return context
 
 
-class PopupLectureTicketInfoView(TemplateView):
+class PopupLectureTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainee_popup_lecture_ticket_info.html'
 
     def get_context_data(self, **kwargs):
@@ -1669,7 +1669,7 @@ class PopupLectureTicketInfoView(TemplateView):
         return context
 
 
-class PopupTicketInfoView(TemplateView):
+class PopupTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainee_popup_ticket_info.html'
 
     def get_context_data(self, **kwargs):
@@ -1716,7 +1716,7 @@ class PopupTicketInfoView(TemplateView):
         return context
 
 
-class PopupMyInfoChangeView(TemplateView):
+class PopupMyInfoChangeView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainee_popup_my_info_change.html'
 
     def get_context_data(self, **kwargs):

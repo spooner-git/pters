@@ -360,8 +360,7 @@ def logout_trainer(request):
 
     logout(request)
     if error is not None:
-        logger.error(request.user.last_name + ' ' + request.user.first_name
-                     + '[' + str(request.user.id) + ']' + error)
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
     return redirect('/')
 
 
@@ -1325,7 +1324,7 @@ def out_member_logic(request):
                 error = None
 
     if error is not None:
-        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
     return redirect(next_page)
@@ -1393,9 +1392,6 @@ class ClearBadgeCounterView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ClearBadgeCounterView, self).get_context_data(**kwargs)
-
-        # logger.error(self.request.user.last_name+' '+self.request.user.first_name+
-        # '['+str(self.request.user.id)+']'+push_token)
 
         return context
 
