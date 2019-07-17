@@ -24,19 +24,18 @@ class Member {
         this.list_type = list_type;
 
         this.render_upper_box();
-        this.request_member_list((jsondata) => {
+        this.request_member_list(list_type, (jsondata) => {
             this.render_member_list(jsondata, list_type);
             this.render_upper_box();
-        }, list_type);
+        });
     }
 
 
     //회원 리스트 서버에서 불러오기
-    request_member_list (callback, list_type){
+    static request_member_list (list_type, callback){
         var start_time;
         var end_time;
         var url;
-        console.log(list_type);
         if(list_type == 'ing'){
             url = '/trainer/get_member_ing_list/';
         }else if(list_type == 'end'){

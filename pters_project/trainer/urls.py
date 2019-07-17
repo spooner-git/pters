@@ -270,5 +270,10 @@ urlpatterns = [
     # 수강권추가 팝업 페이지
     url(r'^popup_ticket_add/$', views.PopupTicketAdd.as_view(), name='popup_ticket_add'),
     # 수강권설정 팝업 페이지
-    url(r'^popup_ticket_edit/$', views.PopupTicketEdit.as_view(), name='popup_ticket_edit')
+    url(r'^popup_ticket_edit/$', views.PopupTicketEdit.as_view(), name='popup_ticket_edit'),
+
+    # 회원 선택 팝업 페이지
+    url(r'^popup_member_select/$', views.PopupMemberSelect.as_view(), name='popup_member_select'),
+    # 수업 선택 팝업 페이지
+    url(r'^popup_lecture_select/$', views.PopupLectureSelect.as_view(), name='popup_lecture_select')
 ]

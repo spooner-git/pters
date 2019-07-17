@@ -92,7 +92,6 @@
                     memo:""
             };
 
-            
             this.init();
         }
 
@@ -109,6 +108,11 @@
             }else if(type == "lecture"){
                 this.render_lecture_add_set();
             }
+
+            
+            this.request_lecture(()=>{
+
+            })
         }
 
         render_toolbox(){
@@ -134,9 +138,13 @@
         render_upper(del){
             // html = CComponent.create_row(id, title, value, onclick);
             
-            let html_lecture_select = CComponent.create_row('select_lecture', '수업', '/static/common/icon/icon_lecture.png', SHOW, (data)=>{ console.log(data);});
-            let html_member_select = CComponent.create_row('select_member', '회원', '/static/common/icon/icon_lecture.png', SHOW, (data)=>{ console.log(data);});
-
+            let html_lecture_select = CComponent.create_row('select_lecture', '수업', '/static/common/icon/icon_lecture.png', SHOW, (data)=>{ 
+                // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':this.data.basic_info.member_id});
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null});
+            });
+            let html_member_select = CComponent.create_row('select_member', '회원', '/static/common/icon/icon_lecture.png', SHOW, (data)=>{
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null});
+            });
             let html = html_lecture_select + html_member_select;
 
             if(del != undefined){
@@ -163,8 +171,7 @@
                                                                             this.data_to_send.date = data;
                                                                         }
                                                                     });
-            })
-                +`<div id="date_select_on_plan_add"></div>`;
+            }) +`<div id="date_select_on_plan_add"></div>`;
             let html_start_select = CComponent.create_row('select_start', '시작 시간', '/static/common/icon/icon_lecture.png', HIDE, (data)=>{ 
                 let time_start_select_on_plan_add = new TimeSelector('#time_start_select_on_plan_add', '#select_start .cell_text', "time_start_select_on_plan_add", {
                                                                         init_zone : data != undefined ? data.split('.')[0] : this.current_zone,
@@ -176,8 +183,7 @@
                                                                             this.data_to_send.start_time = `${selected_hour}:${selected_min}`;
                                                                         }
                                                                     });
-                })
-                    +`<div id="time_start_select_on_plan_add"></div>`;
+                })  +`<div id="time_start_select_on_plan_add"></div>`;
             let html_end_select = CComponent.create_row('select_end', '종료 시간', '/static/common/icon/icon_lecture.png', HIDE, (data)=>{ 
                 let time_end_select_on_plan_add = new TimeSelector('#time_end_select_on_plan_add', '#select_end .cell_text', "time_end_select_on_plan_add", {
                                                                         init_zone : data != undefined ? data.split('.')[0] : this.current_zone,
@@ -189,8 +195,7 @@
                                                                             this.data_to_send.end_time = `${selected_hour}:${selected_min}`;
                                                                         }
                                                                     });
-            })
-                +`<div id="time_end_select_on_plan_add"></div>`;
+            })  +`<div id="time_end_select_on_plan_add"></div>`;
             let html_repeat_select = CComponent.create_row('select_repeat', '반복 일정', '/static/common/icon/icon_lecture.png', SHOW, (data)=>{ console.log(data);});
 
             let html = html_date_select + html_start_select + html_end_select + html_repeat_select;
@@ -237,6 +242,39 @@
                 break;
             }
         }
+
+        request_member(callback){
+            let data_reproduced;
+            Member.request_member_list("ing", (data)=>{
+                data_reproduced = this.data_reproduce(data.current_member_data);
+                callback(data_reproduced);
+            })
+            
+        }
+
+        request_lecture(callback){
+            let data_reproduced;
+            Lecture.request_lecture_list("ing", (data)=>{
+                data_reproduced = this.data_reproduce(data.current_lecture_data);
+                callback(data_reproduced);
+            })
+            
+        }
+
+        data_reproduce(ajax_json_data){
+            let length = ajax_json_data.length;
+            for(let i=0; i<length; i++){
+                let data = ajax_json_data[i];
+                Object.keys(ajax_json_data[i]).forEach(function(key) {
+                    var newkey = key.replace(/member_/gi, "").replace(/lecture_/gi, "").replace(/id/gi, "value");
+                    data[newkey] = data[key];
+                    delete data[key];
+                });
+            }
+            return ajax_json_data;
+        }
+
+
         static_component(){
             return {
                 "plan_add_upper_box":`   <div class="plan_add_upper_box">

@@ -4714,3 +4714,18 @@ class PopupTicketEdit(TemplateView):
 
         context['ticket_info'] = func_get_ticket_info(class_id, ticket_id, self.request.user.id)
         return context
+
+
+class PopupMemberSelect(TemplateView):
+    template_name = 'popup/trainer_popup_member_select.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupMemberSelect, self).get_context_data(**kwargs)
+        return context
+
+class PopupLectureSelect(TemplateView):
+    template_name = 'popup/trainer_popup_lecture_select.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupLectureSelect, self).get_context_data(**kwargs)
+        return context

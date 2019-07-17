@@ -80,6 +80,9 @@ const POPUP_ADDRESS_LECTURE_EDIT = 'popup_lecture_edit';
 const POPUP_ADDRESS_TICKET_VIEW = 'popup_ticket_view';
 const POPUP_ADDRESS_TICKET_ADD = 'popup_ticket_add';
 const POPUP_ADDRESS_TICKET_EDIT = 'popup_ticket_edit';
+
+const POPUP_ADDRESS_MEMBER_SELECT = 'popup_member_select';
+const POPUP_ADDRESS_LECTURE_SELECT = 'popup_lecture_select';
 // ajax 팝업
 
 /* 팝업 주소 */

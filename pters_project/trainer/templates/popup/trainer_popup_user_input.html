@@ -5,14 +5,11 @@
     .wrapper_popup_time_selector_function, .wrapper_popup_date_selector_function{
         text-align: center;
     }
-    .time_selector{
+    .time_selector, .date_selector, .spin_selector{
         position: relative;
         text-align: center;
     }
-    .date_selector{
-        position: relative;
-        text-align: center;
-    }
+    
     .time_selector .select_wrapper{
         display: inline-block;
         width: 30%;
@@ -30,7 +27,16 @@
         max-width: 90px;
     }
 
-    .time_selector_confirm, .date_selector_confirm{
+    .spin_selector .select_wrapper{
+        display: inline-block;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        height: 150px;
+        max-width: 400px;
+    }
+
+    .time_selector_confirm, .date_selector_confirm, .spin_selector_confirm{
         text-align: right;
         font-size: 13px;
         font-weight: 500;
@@ -1104,6 +1110,171 @@
                                     <div class="time_selector_zone_wrap select_wrapper"></div>
                                     <div class="time_selector_hour_wrap select_wrapper"></div>
                                     <div class="time_selector_minute_wrap select_wrapper"></div>
+                                    <div class="selector_indicator"></div>
+                                </div>`
+            }
+        }
+    }
+
+
+    class SpinSelector{
+        constructor(install_target, result_target, instance, data, user_option){
+            this.targetHTML = install_target;
+            this.result_target = result_target;
+            this.open_type = "onpage";
+
+            this.data = data;
+
+            this.instance = instance;
+            this.zone_scroll;
+            this.user_scroll_zone = false;
+
+            this.default_option = {
+                                    init_zone : 0,
+                                    callback_when_set : function(){
+                                        return false;
+                                    }
+                                }
+            if(user_option != undefined){
+                //user_option이 들어왔을경우 default_option의 값을 user_option값으로 바꿔준다.
+                for(let option in user_option){
+                    this.default_option[option] = user_option[option];
+                }
+            }
+            this.init();
+        }
+
+        init(){
+            this.init_html();
+            this.render_zone_list();
+            this.set_iscroll();
+            this.reset();
+        }
+
+        init_html(){
+            //초기 html 생성
+            document.querySelector(this.targetHTML).innerHTML = this.static_component().initial_html;
+
+            //확인 버튼 이벤트 연결
+            $(document).off('click', `#spin_selector_confirm_${this.instance}`).on('click', `#spin_selector_confirm_${this.instance}`, ()=>{
+                this.set_selected_data();
+                if(this.open_type == "onpage"){
+                    this.delete();
+                }
+            });
+        }
+
+        delete(){
+            document.querySelector(this.targetHTML).innerHTML = "";
+        }
+
+        reset(zone){
+            if(zone == undefined){
+                zone = this.default_option.init_zone;
+            }
+            this.go_snap(zone);
+        }
+
+        render_zone_list(){
+            let html_to_join = [];
+            let pos = 0;
+            let length = this.data.length;
+            for(let i=0; i<length; i++){
+                    html_to_join.push(`<li data-zpos=${pos} data-value="${this.data[i].value}">${this.data[i].name}</li>`);
+                    pos = pos + 50; 
+            }
+
+            let html = `
+                            <div id="zone_wrap_${this.instance}" class="select_wrapper_child">
+                                <ul>
+                                    <li></li>
+                                    ${html_to_join.join('')}
+                                    <li></li>
+                                </ul>
+                            </div>
+                            <div class="selector_unit"></div>
+                        `
+
+
+            document.querySelector(`${this.targetHTML} .spin_selector_zone_wrap`).innerHTML = html;
+        }
+
+
+        set_iscroll(){
+            this.zone_scroll = new IScroll(`#zone_wrap_${this.instance}`,{
+                                mouseWheel : true,
+                                deceleration:0.002
+                                // snap: 'li'
+                            })
+
+            this.set_scroll_snap();
+        }
+
+        set_scroll_snap(){
+            let self = this;
+            
+            self.zone_scroll.on('scrollEnd', function (){
+                if(self.user_scroll_year == true){
+                    self.user_scroll_year = false;
+                    let posY = this.y;
+                    let min = posY-posY%50;
+                    let max = min - 50;
+
+                    let snap;
+                    
+                    if(Math.abs(posY - max) < Math.abs(posY - min)){
+                        snap = max;
+                    }else{
+                        snap = min;
+                    }
+                    self.zone_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                    $(`${self.targetHTML} li[data-zpos="${Math.abs(self.zone_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                    $(`${self.targetHTML} li[data-zpos="${Math.abs(self.zone_scroll.y)}"]`).css('color', '#1e1e1e');
+                    // self.zone_scroll_snapped = snap;
+                }
+            })
+
+            self.zone_scroll.on('beforeScrollStart', function (){
+                self.user_scroll_year = true;
+            })
+        }
+
+        go_snap(zone){
+            let initial_pos_zone = (-zone)*50;
+
+            this.zone_scroll.scrollTo(0, initial_pos_zone, 0, IScroll.utils.ease.bounce);
+
+            $(`${this.targetHTML} li[data-zpos="${Math.abs(this.zone_scroll.y)}"]`).css('color', '#1e1e1e');
+            $(`${this.targetHTML} li[data-zpos="${Math.abs(this.zone_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        }
+
+        get_selected_data(){
+            let zone = $(`${this.targetHTML} li[data-zpos="${Math.abs(this.zone_scroll.y)}"]`);
+
+            let zone_value = zone.attr('data-value');
+            let zone_text = zone.text();
+
+            return {
+                zone_value : zone_value,
+                zone_text : zone_text
+            };
+        }
+
+        set_selected_data(){
+            let result = this.get_selected_data();
+            let data_text = `${result.zone_text}`;
+            let data = `${result.zone_value}`;
+            
+            $(this.result_target).text(data_text);
+            $(this.result_target).siblings('input').val(data);
+            this.default_option.callback_when_set(data);
+        }
+
+        static_component(){
+            return{
+                "initial_html":`<div class="spin_selector">
+                                    <div class="spin_selector_confirm"><span id="spin_selector_confirm_${this.instance}" style="cursor:pointer;padding:10px;">확인</span></div>
+                                    <div class="spin_selector_zone_wrap select_wrapper"></div>
                                     <div class="selector_indicator"></div>
                                 </div>`
             }
