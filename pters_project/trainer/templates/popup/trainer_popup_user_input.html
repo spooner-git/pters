@@ -106,7 +106,7 @@
     </div>
 </div>
 
-<div class="popup_mobile popup_full" style="background-color:transparent;padding:0 20px;box-sizing: border-box;">
+<!-- <div class="popup_mobile popup_full" style="background-color:transparent;padding:0 20px;box-sizing: border-box;">
         <div class="popup_basic_user_select_multi obj_font_size_15_weight_500">
             <div class="wrapper_popup_basic_comment obj_font_size_18_weight_bold"></div>
             <div id="option_wrap" class="wrapper_popup_basic_user_select_options" style="margin-bottom: 30px;">
@@ -116,9 +116,9 @@
                 <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">취소</div>
             </div>
         </div>
-    </div>
+    </div> -->
 
-<div class="popup_mobile popup_full">
+<!-- <div class="popup_mobile popup_full">
 	<div class="popup_basic_time_selector obj_font_size_15_weight_500"  style="background-color:#ffffff;">
         <div class="wrapper_popup_basic_comment obj_font_size_13_weight_500" onclick='time_select_popup.show_selected_time()'></div>
 
@@ -148,7 +148,7 @@
         </div>
     </div>
 </div>
-
+ -->
 
 
 
@@ -383,28 +383,6 @@
                                 </div>`
             }
         }
-
-        open(callback_after_confirm, target1, target2){
-            let top_comment_height = 65;
-            let time_selector_height = 155;
-            let close_button_height = 46;
-            let sum = top_comment_height + time_selector_height + close_button_height;
-
-            let popup_height = 100*sum/windowHeight;
-
-            let set_data = `${this.instance}.set_selected_data()`;
-            
-            // layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', popup_height, POPUP_FROM_BOTTOM,
-            //                         {'popup_title':'', 'popup_comment':'시간을 선택해주세요',
-            //                         'onclick_function':`${set_data};${callback_after_confirm};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
-
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', popup_height, POPUP_FROM_BOTTOM,
-                                    {'popup_title':'', 'popup_comment':'시간을 선택해주세요',
-                                    'onclick_function': ()=>{time_select_popup.set_selected_data();callback_after_confirm();layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)} });
-
-
-            this.reset(target1, target2);
-        }
     }
 
     // var time_select_popup = new TwoTimeSelector('.wrapper_popup_time_selector_function', "time_select_popup");
@@ -510,7 +488,10 @@
                                     year_end : this.current_year,
                                     init_year : 1986,
                                     init_month : 2,
-                                    init_date : 24
+                                    init_date : 24,
+                                    callback_when_set : function(){
+                                        return false;
+                                    }
                                 }
             if(user_option != undefined){
                 //user_option이 들어왔을경우 default_option의 값을 user_option값으로 바꿔준다.
@@ -803,6 +784,8 @@
             
             $(this.result_target).text(`${data_text} (${day_name[day]})`);
             $(this.result_target).siblings('input').val(data);
+
+            this.default_option.callback_when_set(data);
         }
 
         static_component(){
@@ -816,29 +799,6 @@
                                 </div>`
             }
         }
-
-        //하단 팝업형식으로 열때 사용
-        open(callback_after_confirm, result_target, year, month, date){
-            this.open_type = "popup";
-
-            if(result_target != undefined || result_target != "" || result_target != ''){
-                this.result_target = result_target;
-            }
-            let top_comment_height = 65;
-            let date_selector_height = 155;
-            let close_button_height = 46;
-            let sum = top_comment_height + date_selector_height + close_button_height;
-
-            let popup_height = 100*sum/windowHeight;
-
-            let set_data = `${this.instance}.set_selected_data()`;
-
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', popup_height, POPUP_FROM_BOTTOM,
-                                        {'popup_title':'', 'popup_comment':'날짜를 선택해주세요',
-                                        'onclick_function':`${set_data};${callback_after_confirm};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
-
-            this.reset(year, month, date);
-        }
     }
 
     var date_select_popup = new DateSelector('.wrapper_popup_date_selector_function', "date_select_popup");
@@ -847,7 +807,6 @@
 
     class TimeSelector{
         constructor(install_target, result_target, instance, user_option){
-            console.log("install_target", install_target)
             this.targetHTML = install_target;
             this.result_target = result_target;
             this.open_type = "onpage";
@@ -871,7 +830,10 @@
                                     // year_end : this.current_year,
                                     init_zone : this.current_zone,
                                     init_hour : this.current_hour,
-                                    init_minute : this.current_minute
+                                    init_minute : this.current_minute,
+                                    callback_when_set : function(){
+                                        return false;
+                                    }
                                 }
             if(user_option != undefined){
                 //user_option이 들어왔을경우 default_option의 값을 user_option값으로 바꿔준다.
@@ -1127,10 +1089,12 @@
         set_selected_data(){
             let result = this.get_selected_data();
             let data_text = `${result.zone_text} ${result.hour_text}시 ${result.minute_text}분`;
+            // let data = `${result.zone_value == 1 ? Number(result.hour_text)+12 : result.hour_text}:${result.minute_text}`;
             let data = `${result.zone_value}.${result.hour_text}.${result.minute_text}`;
             
             $(this.result_target).text(data_text);
             $(this.result_target).siblings('input').val(data);
+            this.default_option.callback_when_set(data);
         }
 
         static_component(){
@@ -1144,32 +1108,8 @@
                                 </div>`
             }
         }
-
-        //하단 팝업형식으로 열때 사용
-        open(callback_after_confirm, result_target, zone, hour, minute){
-            this.open_type = "popup";
-
-            if(result_target != undefined || result_target != "" || result_target != ''){
-                this.result_target = result_target;
-            }
-            let top_comment_height = 65;
-            let time_selector_height = 155;
-            let close_button_height = 46;
-            let sum = top_comment_height + date_selector_height + close_button_height;
-
-            let popup_height = 100*sum/windowHeight;
-
-            let set_data = `${this.instance}.set_selected_data()`;
-
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', popup_height, POPUP_FROM_BOTTOM,
-                                        {'popup_title':'', 'popup_comment':'날짜를 선택해주세요',
-                                        'onclick_function':`${set_data};${callback_after_confirm};layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
-
-            this.reset(zone, hour, minute);
-        }
     }
 
-    // var time_select_popup = new TimeSelector('.wrapper_popup_time_selector_function', "time_select_popup");
 
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
