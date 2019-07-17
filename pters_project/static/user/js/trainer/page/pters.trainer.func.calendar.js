@@ -855,6 +855,169 @@ class Calendar {
 }
 
 
+class Plan_func{
+    static create(data, callback){
+        //데이터 형태 {"member_id":"", "contents":"", "counts":"", "price":"", "start_date":"", "end_date":"", "class_id":"", "package_id":""};
+
+        $.ajax({
+            url:'/trainer/add_lecture_info/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                callback();
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static read(data, callback){
+        //데이터 형태 {"member_id":""};
+        $.ajax({
+            url:'/trainer/get_member_info/',
+            type:'GET',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                let json = JSON.parse(data);
+                callback(json);
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static delete(data, callback){
+        //데이터 형태 {"member_id":""};
+        $.ajax({
+            url:'/trainer/delete_member_info/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                callback();
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+               show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static update(data, callback){
+        //데이터 형태 {"member_id":"", "first_name":"", "phone":"", "sex":"", "birthday":""};
+
+        $.ajax({
+            url:'/trainer/update_member_info/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                callback();
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static status(data, callback){
+        //데이터 형태 {"ticket_id":"", "state_cd":""};
+        $.ajax({
+            url:'/trainer/update_member_status_info/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                callback(data);
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+               
+            }
+        });
+    }
+}
+
+
+
+
 function date_format (date){
     let date_raw = date.replace(/[-_., ]/gi, "-").split('-');
     let yyyy = date_raw[0];
@@ -919,8 +1082,6 @@ function time_diff (_time1, _time2){
 
     return {hour: hh_diff, minute: mm_diff};
 }
-
-
 // 중복일정 관련 함수
 // 중복일정 관련 함수
 function clear_duplicated_time (jsondata){
@@ -1253,6 +1414,10 @@ function duplicated_plans (jsondata){
 }
 // 중복일정 관련 함수
 // 중복일정 관련 함수
+
+
+
+
 
 /* global $, ajax_load_image, SHOW, HIDE, current_page,  func_set_webkit_overflow_scrolling, 
 layer_popup, POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, POPUP_ADDRESS_PLAN_ADD, POPUP_FROM_BOTTOM*/

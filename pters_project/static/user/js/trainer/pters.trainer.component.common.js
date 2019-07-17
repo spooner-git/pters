@@ -27,25 +27,30 @@ class CComponent{
         return html;
     }
 
-    static create_row (id, title, value, onclick, icon){
+    static create_row (id, title, icon, icon_r_visible, onclick){
         
         let html = `<li class="create_row" id="${id}">
                         <div class="obj_table_raw">
                             <div class="cell_title">
-                                ${icon != undefined ? `<img class="obj_icon_basic" src="${icon}">` : ""} 
+                                ${icon != "" ? `<img class="obj_icon_basic" src="${icon}">` : ""} 
                                 <span class="cell_text">${title}</span>
                                 <input type="hidden">
                             </div>
-                            <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
                         </div>
                     </li>`;
 
 
         $(document).off('click', `#${id}`).on('click', `#${id}`, function(e){
             let prev_data = $(this).find('input').val();
-            if(prev_data.length == 0){
-                prev_data = undefined;
+            try{
+                if(prev_data.length == 0){
+                    prev_data = undefined;
+                }
+            }catch{
+
             }
+    
             onclick(prev_data);
         });
         return html;

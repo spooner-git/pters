@@ -75,6 +75,23 @@
             this.current_hour = d.getHours() > 12 ? d.getHours() - 12 : d.getHours();
             this.current_minute = Math.round(d.getMinutes()/5)*5
             this.current_zone = d.getHours() > 12 ? 1 : 0;
+
+
+            this.data_to_send = {
+                    lecture_id:"",
+                    member_id:"",
+                    date:"",
+                    start_time:"",
+                    end_time:"",
+                    repeat:{
+                                day:"",
+                                time:"",
+                                repeat_start:"",
+                                repeat_end:""
+                    },
+                    memo:""
+            };
+
             
             this.init();
         }
@@ -117,8 +134,8 @@
         render_upper(del){
             // html = CComponent.create_row(id, title, value, onclick);
             
-            let html_lecture_select = CComponent.create_row('select_lecture', '수업', '&nbsp;', (data)=>{ console.log(data);}, '/static/common/icon/icon_lecture.png');
-            let html_member_select = CComponent.create_row('select_member', '회원', '&nbsp;', (data)=>{ console.log(data);}, '/static/common/icon/icon_lecture.png');
+            let html_lecture_select = CComponent.create_row('select_lecture', '수업', '/static/common/icon/icon_lecture.png', SHOW, (data)=>{ console.log(data);});
+            let html_member_select = CComponent.create_row('select_member', '회원', '/static/common/icon/icon_lecture.png', SHOW, (data)=>{ console.log(data);});
 
             let html = html_lecture_select + html_member_select;
 
@@ -130,33 +147,51 @@
         }
 
         render_middle(del){
-            let html_date_select = CComponent.create_row('select_date', '날짜', '&nbsp;', (data)=>{ 
+            //등록하는 행을 만든다.
+            let html_date_select = CComponent.create_row('select_date', '날짜', '/static/common/icon/icon_lecture.png', HIDE, (data)=>{ 
+                //행을 클릭했을때 실행할 내용
                 let date_select_on_plan_add = new DateSelector('#date_select_on_plan_add', '#select_date .cell_text', "date_select_on_plan_add", {
                                                                         year_start : this.current_year - 5,
                                                                         year_end : this.current_year + 5,
                                                                         init_year : data != undefined ? data.split('.')[0] : this.current_year,
                                                                         init_month : data != undefined ? data.split('.')[1] : this.current_month + 1,
-                                                                        init_date : data != undefined ? data.split('.')[2] : this.current_date
+                                                                        init_date : data != undefined ? data.split('.')[2] : this.current_date,
+                                                                        //DateSelector에서 값을 정했을때 실행할 함수
+                                                                        callback_when_set : (data)=>{
+                                                                            //data는 DateSelector의 set_selected_data로부터 넘어온 유저의 선택값
+                                                                            //DateSelector에서 선택된 값을 서버에 보낼 값에 저장한다.
+                                                                            this.data_to_send.date = data;
+                                                                        }
                                                                     });
-            }, '/static/common/icon/icon_lecture.png')
+            })
                 +`<div id="date_select_on_plan_add"></div>`;
-            let html_start_select = CComponent.create_row('select_start', '시작 시간', '&nbsp;', (data)=>{ 
+            let html_start_select = CComponent.create_row('select_start', '시작 시간', '/static/common/icon/icon_lecture.png', HIDE, (data)=>{ 
                 let time_start_select_on_plan_add = new TimeSelector('#time_start_select_on_plan_add', '#select_start .cell_text', "time_start_select_on_plan_add", {
                                                                         init_zone : data != undefined ? data.split('.')[0] : this.current_zone,
                                                                         init_hour : data != undefined ? data.split('.')[1] : this.current_hour,
-                                                                        init_minute : data != undefined ? data.split('.')[2] : this.current_minute
+                                                                        init_minute : data != undefined ? data.split('.')[2] : this.current_minute,
+                                                                        callback_when_set : (data)=>{
+                                                                            let selected_hour = Number(data.split('.')[0])*12 + Number(data.split('.')[1]);
+                                                                            let selected_min = Number(data.split('.')[2])
+                                                                            this.data_to_send.start_time = `${selected_hour}:${selected_min}`;
+                                                                        }
                                                                     });
-                }, '/static/common/icon/icon_lecture.png')
+                })
                     +`<div id="time_start_select_on_plan_add"></div>`;
-            let html_end_select = CComponent.create_row('select_end', '종료 시간', '&nbsp;', (data)=>{ 
+            let html_end_select = CComponent.create_row('select_end', '종료 시간', '/static/common/icon/icon_lecture.png', HIDE, (data)=>{ 
                 let time_end_select_on_plan_add = new TimeSelector('#time_end_select_on_plan_add', '#select_end .cell_text', "time_end_select_on_plan_add", {
                                                                         init_zone : data != undefined ? data.split('.')[0] : this.current_zone,
                                                                         init_hour : data != undefined ? data.split('.')[1] : this.current_hour,
-                                                                        init_minute : data != undefined ? data.split('.')[2] : this.current_minute
+                                                                        init_minute : data != undefined ? data.split('.')[2] : this.current_minute,
+                                                                        callback_when_set : (data)=>{
+                                                                            let selected_hour = Number(data.split('.')[0])*12 + Number(data.split('.')[1]);
+                                                                            let selected_min = Number(data.split('.')[2])
+                                                                            this.data_to_send.end_time = `${selected_hour}:${selected_min}`;
+                                                                        }
                                                                     });
-            }, '/static/common/icon/icon_lecture.png')
+            })
                 +`<div id="time_end_select_on_plan_add"></div>`;
-            let html_repeat_select = CComponent.create_row('select_repeat', '반복 일정', '&nbsp;', (data)=>{ console.log(data);}, '/static/common/icon/icon_lecture.png');
+            let html_repeat_select = CComponent.create_row('select_repeat', '반복 일정', '/static/common/icon/icon_lecture.png', SHOW, (data)=>{ console.log(data);});
 
             let html = html_date_select + html_start_select + html_end_select + html_repeat_select;
 
@@ -168,7 +203,18 @@
         }
 
         render_bottom(del){
-            let html_memo_select = CComponent.create_row('select_memo', '메모', '&nbsp;', (data)=>{ console.log(data);}, '/static/common/icon/icon_lecture.png');
+            //메모 입력 행을 생성한다. 메모입력 행을 클릭했을때 실행할 함수를 전달한다.
+            let html_memo_select = CComponent.create_row('select_memo', '메모', '/static/common/icon/icon_lecture.png', HIDE, (data)=>{ 
+                let memo_row = event.target; //event.target은 메모 행
+                show_user_input_popup("text", memo_row.innerText, ()=>{  //메모행을 클릭했을때 실행될 함수. 메모행에서 입력후 확인을 눌렀을때 실행할 함수를 전달한다.
+                    //메모행에서 입력후 확인을 눌렀을때, 입력값을 저장한다. 
+                    let user_input = $(event.target).parent().siblings('div').find('.popup_basic_user_input_data').val(); //event.target은 메모행의 확인버튼
+                    $(memo_row).find('.cell_text').text(user_input);
+                    $(memo_row).find('.cell_text').siblings('input').val(user_input);
+
+                    this.data_to_send.memo = user_input;
+                })
+            });
 
             let html = html_memo_select;
 
@@ -209,8 +255,6 @@
                                             `
             }
         }
-
-
 
     }
 
