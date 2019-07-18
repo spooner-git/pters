@@ -175,6 +175,15 @@ def func_data_update(request, group):
     now = timezone.now()
     class_id = request.session.get('class_id', '')
     device_id = request.session.get('device_id', 'pc')
+    trainer_id = request.session.get('trainer_id', '')
+    if trainer_id is None or trainer_id == '':
+        if class_id is not None and class_id != '':
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+                trainer_id = class_info.member_id
+                request.session['trainer_id'] = trainer_id
+            except ObjectDoesNotExist:
+                trainer_id = ''
     if device_id == 'pc':
         request.session['device_info'] = 'web'
     else:
@@ -207,7 +216,7 @@ def func_data_update(request, group):
             request.session['class_type_name'] = class_info.get_class_type_cd_name()
             request.session['class_center_name'] = class_info.get_center_name()
 
-        context = func_get_trainer_setting_list(context, request.user.id, class_id)
+        context = func_get_trainer_setting_list(context, trainer_id, class_id)
 
         request.session['setting_member_reserve_time_available'] = context['lt_res_01']
         request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']

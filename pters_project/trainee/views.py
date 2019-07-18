@@ -16,7 +16,8 @@ from django.views.generic import TemplateView, RedirectView
 # Create your views here.
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
-    SCHEDULE_DUPLICATION_DISABLE, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, PROGRAM_LECTURE_CONNECT_ACCEPT
+    SCHEDULE_DUPLICATION_DISABLE, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, PROGRAM_LECTURE_CONNECT_ACCEPT, \
+    SCHEDULE_DUPLICATION_ENABLE
 
 from configs.views import AccessTestMixin
 
@@ -1154,6 +1155,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
     lecture_schedule_info = None
     lecture_id = None
     note = ''
+    schedule_duplication = SCHEDULE_DUPLICATION_DISABLE
     schedule_result = {'error': None, 'schedule_id': ''}
     # start_date = None
     # end_date = None
@@ -1161,19 +1163,10 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
         error = '수강정보를 불러오지 못했습니다.'
     elif schedule_date == '':
         error = '날짜를 선택해 주세요.'
-    # elif schedule_time_duration == '':
-    #     error = '진행 시간을 선택해 주세요.'
-    # elif schedule_time == '':
-    #     error = '시작 시간을 선택해 주세요.'
-
-    # if error is None:
-    #     try:
-    #         class_info = ClassTb.objects.get(class_id=class_id)
-    #     except ObjectDoesNotExist:
-    #         error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
         if lecture_schedule_id is not None and lecture_schedule_id != '':
+            schedule_duplication = SCHEDULE_DUPLICATION_ENABLE
             try:
                 lecture_schedule_info = ScheduleTb.objects.get(schedule_id=lecture_schedule_id)
                 lecture_id = lecture_schedule_info.lecture_tb_id
@@ -1224,18 +1217,12 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
                                                     lecture_id, lecture_schedule_id,
                                                     start_date, end_date, note, ON_SCHEDULE_TYPE, request.user.id,
                                                     permission_state_cd,
-                                                    'NP', SCHEDULE_DUPLICATION_DISABLE)
+                                                    'NP', schedule_duplication)
                 error = schedule_result['error']
-
-                if error is None:
-                    error = func_refresh_member_ticket_count(class_id, member_ticket_id)
 
                 if error is None:
                     if lecture_schedule_info is not None and lecture_schedule_info != '':
                         error = func_check_lecture_available_member_after(class_id, lecture_id, lecture_schedule_id)
-                    else:
-                        error = func_date_check(class_id, schedule_result['schedule_id'],
-                                                schedule_date, start_date, end_date, SCHEDULE_DUPLICATION_DISABLE)
 
                         if error is not None:
                             error += ' 일정이 중복됐습니다.'

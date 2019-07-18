@@ -23,21 +23,22 @@ from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeat
 
 # 1:1 member_ticket id 조회
 def func_get_member_ticket_id(class_id, member_id):
-
+    today = datetime.date.today()
     member_ticket_id = None
     # 강좌에 해당하는 수강/회원 정보 가져오기
     class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd='VIEW',
                                    member_ticket_tb__member_id=member_id, member_ticket_tb__state_cd='IP',
                                    member_ticket_tb__member_ticket_avail_count__gt=0,
+                                   member_ticket_tb__member_auth_cd='VIEW',
+                                   member_ticket_tb__end_date__gte=today,
                                    member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
                                                                        'member_ticket_tb__reg_dt')
 
     for class_member_ticket_info in class_member_ticket_data:
         ticket_single_lecture_count = TicketLectureTb.objects.filter(
-            ticket_tb_id=class_member_ticket_info.member_ticket_tb.member_ticket_id, ticket_tb__state_cd='IP',
+            ticket_tb_id=class_member_ticket_info.member_ticket_tb.ticket_tb_id, ticket_tb__state_cd='IP',
             lecture_tb__state_cd='IP', lecture_tb__member_num=1, use=USE).count()
-
         if ticket_single_lecture_count > 0:
             member_ticket_id = class_member_ticket_info.member_ticket_tb.member_ticket_id
             break
@@ -48,17 +49,19 @@ def func_get_member_ticket_id(class_id, member_id):
 # 그룹 Lecture Id 조회
 def func_get_lecture_member_ticket_id(class_id, lecture_id, member_id):
 
+    today = datetime.date.today()
     member_ticket_id = None
     class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd='VIEW',
                                    member_ticket_tb__member_id=member_id, member_ticket_tb__state_cd='IP',
                                    member_ticket_tb__member_ticket_avail_count__gt=0,
+                                   member_ticket_tb__end_date__gte=today,
                                    member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
                                                                        'member_ticket_tb__reg_dt')
 
     for class_member_ticket_info in class_member_ticket_data:
         ticket_lecture_count = TicketLectureTb.objects.filter(
-            ticket_tb_id=class_member_ticket_info.member_ticket_tb.member_ticket_id, ticket_tb__state_cd='IP',
+            ticket_tb_id=class_member_ticket_info.member_ticket_tb.ticket_tb_id, ticket_tb__state_cd='IP',
             lecture_tb__state_cd='IP', lecture_tb_id=lecture_id, use=USE).count()
 
         if ticket_lecture_count > 0:
@@ -239,7 +242,6 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
         lecture_schedule_id = None
     if repeat_schedule_id == '':
         repeat_schedule_id = None
-
     try:
         with transaction.atomic():
             add_schedule_info = ScheduleTb(class_tb_id=class_id,

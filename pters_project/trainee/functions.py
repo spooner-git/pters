@@ -602,7 +602,7 @@ def func_get_trainee_ing_member_ticket_list(context, class_id, user_id):
         'member_ticket_tb__ticket_tb'
     ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id, member_ticket_tb__state_cd='IP',
              member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd='VIEW'
-             ).order_by('member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
+             ).order_by('-member_ticket_tb__end_date', 'member_ticket_tb__reg_dt')
 
     for member_ticket_info in member_ticket_list:
         member_ticket_info_ticket_tb = member_ticket_info.member_ticket_tb.ticket_tb
