@@ -608,13 +608,6 @@ def func_get_trainee_ing_member_ticket_list(context, class_id, user_id):
         member_ticket_info_ticket_tb = member_ticket_info.member_ticket_tb.ticket_tb
         member_ticket_info.ticket_lecture_data = TicketLectureTb.objects.filter(
             ticket_tb_id=member_ticket_info_ticket_tb.ticket_id, use=USE)
-        try:
-            member_ticket_info_ticket_tb.ticket_type_cd_nm \
-                = CommonCdTb.objects.get(common_cd=member_ticket_info_ticket_tb.ticket_type_cd).common_cd_nm
-            if member_ticket_info_ticket_tb.ticket_type_cd_nm == '1:1':
-                member_ticket_info_ticket_tb.ticket_type_cd_nm = '개인'
-        except ObjectDoesNotExist:
-            member_ticket_info_ticket_tb.ticket_type_cd_nm = ''
 
     context['ing_member_ticket_data'] = member_ticket_list
     return context

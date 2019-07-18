@@ -2526,7 +2526,7 @@ class GetLectureIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View)
                                                use=USE).order_by('member_ticket_tb__member_id',
                                                                  'member_ticket_tb__end_date')
 
-        member_list = func_get_member_from_member_ticket_list(all_class_member_ticket_list, request.user.id)
+        member_list = func_get_member_from_member_ticket_list(all_class_member_ticket_list, lecture_id, request.user.id)
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -3090,7 +3090,7 @@ class GetTicketIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                  member_ticket_tb__state_cd='IP',
                  member_ticket_tb__use=USE, use=USE).order_by('member_ticket_tb__member_id',
                                                               'member_ticket_tb__end_date')
-        member_list = func_get_member_from_member_ticket_list(all_class_member_ticket_list, request.user.id)
+        member_list = func_get_member_from_member_ticket_list(all_class_member_ticket_list, None, request.user.id)
 
         if error is not None:
             logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + error)
@@ -3135,7 +3135,7 @@ class GetTicketEndMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                    ).filter(member_ticket_ip_count=0).order_by('member_ticket_tb__member_id',
                                                                                'member_ticket_tb__end_date')
 
-        member_list = func_get_member_from_member_ticket_list(all_class_member_ticket_list, request.user.id)
+        member_list = func_get_member_from_member_ticket_list(all_class_member_ticket_list, None, request.user.id)
 
         if error is not None:
             logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + error)
