@@ -90,7 +90,7 @@ let layer_popup = (function (){
     }
 
     return {
-        "open_layer_popup":function(call_method, popup_name, popup_size, animation_type, data){
+        "open_layer_popup":function(call_method, popup_name, popup_size, animation_type, data, callback){
             // if(func_prevent_double_click_set()) return;
 
             if(call_method == POPUP_AJAX_CALL){
@@ -103,6 +103,10 @@ let layer_popup = (function (){
                         if(popup_data!=undefined && Object.keys(popup_data).length > 0){
                             func_animation_set(OPEN, popup_data);
                         }
+                        if(callback != undefined){
+                            callback();
+                        }
+                        
                         // func_prevent_double_click_free();
                     }, 10);
                 });
@@ -115,6 +119,9 @@ let layer_popup = (function (){
                     let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
                     if(popup_data!=undefined && Object.keys(popup_data).length > 0){
                         func_animation_set(OPEN, popup_data);
+                    }
+                    if(callback != undefined){
+                        callback();
                     }
                       // func_prevent_double_click_free();
                 }, 10);

@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block popup_base_wrapper_top_center %}
-<span id="plan_name_in_popup">&nbsp;</span>
+<span id="plan_name_in_popup">수업 선택</span>
 {% endblock %}
 
 {% block popup_base_wrapper_top_right %}
@@ -18,7 +18,7 @@
 {% block popup_base_contents %}
     <div class="popup_lecture_select">
     
-        <div id="wrapper_box_member_settings" class="obj_box_full">
+        <div id="wrapper_box_lecture_select" class="obj_box_full">
             
         </div>
 
@@ -45,13 +45,7 @@
     let member_info;
     {% endautoescape %}
 
-    class Plan_view{
-        constructor(targetHTML, data, instance){
-            this.targetHTML = targetHTML;
-            this.instance = instance;
-            this.data = data;
-        }
-    }
+    // var lecture_select = new LectureSelector('#wrapper_box_lecture_select', "lecture_select", plan_add, false);
     
 
     func_set_webkit_overflow_scrolling('.popup_lecture_select');
