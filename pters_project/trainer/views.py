@@ -2540,15 +2540,48 @@ def add_ticket_info_logic(request):
     class_id = request.session.get('class_id', '')
     ticket_name = request.POST.get('ticket_name')
     ticket_note = request.POST.get('ticket_note')
+    ticket_effective_days = request.POST.get('ticket_effective_days', 30)
+    ticket_price = request.POST.get('ticket_price', 0)
+    ticket_week_schedule_enable = request.POST.get('ticket_week_schedule_enable', 7)
+    ticket_day_schedule_enable = request.POST.get('ticket_day_schedule_enable', 1)
+    ticket_reg_count = request.POST.get('ticket_reg_count', 0)
     lecture_id_list = request.POST.getlist('lecture_id_list')
     error = None
+
+    try:
+        ticket_effective_days = int(ticket_effective_days)
+    except ValueError:
+        error = '유효 기간은 숫자만 입력 가능합니다.'
+
+    try:
+        ticket_price = int(ticket_price)
+    except ValueError:
+        error = '수강 금액은 숫자만 입력 가능합니다.'
+
+    try:
+        ticket_week_schedule_enable = int(ticket_week_schedule_enable)
+    except ValueError:
+        error = '주간 수강 제한 횟수는 숫자만 입력 가능합니다.'
+
+    try:
+        ticket_day_schedule_enable = int(ticket_day_schedule_enable)
+    except ValueError:
+        error = '일일 수강 제한 횟수는 숫자만 입력 가능합니다.'
+
+    try:
+        ticket_reg_count = int(ticket_reg_count)
+    except ValueError:
+        error = '등록 횟수는 숫자만 입력 가능합니다.'
 
     if error is None:
         try:
             with transaction.atomic():
 
                 ticket_info = TicketTb(class_tb_id=class_id, name=ticket_name, state_cd='IP',
-                                       note=ticket_note, use=USE)
+                                       effective_days=ticket_effective_days, price=ticket_price,
+                                       week_schedule_enable=ticket_week_schedule_enable,
+                                       day_schedule_enable=ticket_day_schedule_enable,
+                                       reg_count=ticket_reg_count, note=ticket_note, use=USE)
                 ticket_info.save()
 
                 if lecture_id_list != '':
@@ -2651,8 +2684,14 @@ def update_ticket_info_logic(request):
     ticket_id = request.POST.get('ticket_id', '')
     ticket_name = request.POST.get('ticket_name', '')
     ticket_note = request.POST.get('ticket_note', '')
+    ticket_effective_days = request.POST.get('ticket_effective_days', '')
+    ticket_price = request.POST.get('ticket_price', '')
+    ticket_week_schedule_enable = request.POST.get('ticket_week_schedule_enable', '')
+    ticket_day_schedule_enable = request.POST.get('ticket_day_schedule_enable', '')
+    ticket_reg_count = request.POST.get('ticket_reg_count', '')
     error = None
     ticket_info = None
+
     try:
         ticket_info = TicketTb.objects.get(class_tb_id=class_id, ticket_id=ticket_id)
     except ObjectDoesNotExist:
@@ -2663,6 +2702,16 @@ def update_ticket_info_logic(request):
             ticket_info.name = ticket_name
         if ticket_note != '' and ticket_note is not None:
             ticket_info.note = ticket_note
+        if ticket_effective_days != '' and ticket_effective_days is not None:
+            ticket_info.effective_days = ticket_effective_days
+        if ticket_price != '' and ticket_price is not None:
+            ticket_info.price = ticket_price
+        if ticket_week_schedule_enable != '' and ticket_week_schedule_enable is not None:
+            ticket_info.week_schedule_enable = ticket_week_schedule_enable
+        if ticket_day_schedule_enable != '' and ticket_day_schedule_enable is not None:
+            ticket_info.day_schedule_enable = ticket_day_schedule_enable
+        if ticket_reg_count != '' and ticket_reg_count is not None:
+            ticket_info.reg_count = ticket_reg_count
         ticket_info.save()
 
     if error is not None:
@@ -2893,6 +2942,11 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             ticket_data_dict[ticket_id] = {'ticket_id': ticket_id,
                                            'ticket_name': ticket_tb.name,
                                            'ticket_note': ticket_tb.note,
+                                           'ticket_effective_days': ticket_tb.effective_days,
+                                           'ticket_price': ticket_tb.price,
+                                           'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
+                                           'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
+                                           'ticket_reg_count': ticket_tb.reg_count,
                                            'ticket_lecture_list': ticket_lecture_list,
                                            'ticket_lecture_id_list': ticket_lecture_id_list}
         if len(ticket_data) != len(ticket_data_dict):
@@ -2904,6 +2958,11 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                     ticket_data_dict[ticket_id] = {'ticket_id': ticket_id,
                                                    'ticket_name': ticket_info.name,
                                                    'ticket_note': ticket_info.note,
+                                                   'ticket_effective_days': ticket_info.effective_days,
+                                                   'ticket_price': ticket_info.price,
+                                                   'ticket_week_schedule_enable': ticket_info.week_schedule_enable,
+                                                   'ticket_day_schedule_enable': ticket_info.day_schedule_enable,
+                                                   'ticket_reg_count': ticket_info.reg_count,
                                                    'ticket_lecture_list': [],
                                                    'ticket_lecture_id_list': []}
         ticket_list = []
@@ -3012,6 +3071,11 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             ticket_data_dict[ticket_id] = {'ticket_id': ticket_id,
                                            'ticket_name': ticket_tb.name,
                                            'ticket_note': ticket_tb.note,
+                                           'ticket_effective_days': ticket_tb.effective_days,
+                                           'ticket_price': ticket_tb.price,
+                                           'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
+                                           'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
+                                           'ticket_reg_count': ticket_tb.reg_count,
                                            'ticket_lecture_list': ticket_lecture_list,
                                            'ticket_lecture_id_list': ticket_lecture_id_list}
         if len(ticket_data) != len(ticket_data_dict):
@@ -3023,6 +3087,11 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                     ticket_data_dict[ticket_id] = {'ticket_id': ticket_id,
                                                    'ticket_name': ticket_info.name,
                                                    'ticket_note': ticket_info.note,
+                                                   'ticket_effective_days': ticket_info.effective_days,
+                                                   'ticket_price': ticket_info.price,
+                                                   'ticket_week_schedule_enable': ticket_info.week_schedule_enable,
+                                                   'ticket_day_schedule_enable': ticket_info.day_schedule_enable,
+                                                   'ticket_reg_count': ticket_info.reg_count,
                                                    'ticket_lecture_list': [],
                                                    'ticket_lecture_id_list': []}
         ticket_list = []

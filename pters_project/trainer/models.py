@@ -184,6 +184,7 @@ class TicketTb(TimeStampedModel):
     price = models.IntegerField(db_column='PRICE', default=0)
     week_schedule_enable = models.IntegerField(db_column='WEEK_SCHEDULE_ENABLE', default=7)
     day_schedule_enable = models.IntegerField(db_column='DAY_SCHEDULE_ENABLE', default=1)
+    reg_count = models.IntegerField(db_column='REG_COUNT', default=0)
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)
     note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True, default='')
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
