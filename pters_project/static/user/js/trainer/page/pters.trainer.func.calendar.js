@@ -336,7 +336,7 @@ class Calendar {
             for(let i=1; i<=7; i++){
                 if(i==clicked_number){
                     Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
-                        el.style.width = "100%";
+                        el.style.width = "87.5%";
                     });
                     continue;
                 }
@@ -519,7 +519,7 @@ class Calendar {
     
                 dates_to_join.push(
                     `
-                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_2" data-row="2" onclick="${onclick_func}(event, ${_year[i]}, ${_month[i]}, ${_date[i]})">
+                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" onclick="${onclick_func}(event, ${_year[i]}, ${_month[i]}, ${_date[i]})">
                         ${_date[i]}
                         <div class="${schedule_number_display} ${has_schedule}">${schedule_date}</div>
                         ${today_marking}
@@ -536,7 +536,7 @@ class Calendar {
                 ? 
                     result_html
                 :
-                `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:27px;background-color:#ffffff;z-index:10;height:25px;line-height:15px;font-size:20px` : ""}">
+                `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:30px;background-color:#ffffff;z-index:10;height:25px;line-height:15px;font-size:20px` : ""}">
                     ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
                     ${result_html}
                 </div>

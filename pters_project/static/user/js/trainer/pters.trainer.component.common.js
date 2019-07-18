@@ -1,5 +1,6 @@
 class CComponent{
 
+    //설정 페이지들에서 자주 사용되는 row 스타일
     static setting_row (id, title, value, onclick){
  
         let html = `<li>
@@ -18,6 +19,7 @@ class CComponent{
         return html;
     }
 
+    //추가 페이지들에서 자주 사용되는 row 스타일
     static create_row (id, title, icon, icon_r_visible, onclick){
         
         let html = `<li class="create_row" id="${id}">
