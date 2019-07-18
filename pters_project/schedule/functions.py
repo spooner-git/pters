@@ -752,7 +752,6 @@ def func_get_trainer_attend_lecture_schedule(context, class_id, start_date, end_
             "AND B.STATE_CD != \'PC\' AND B.USE=1"
     finish_member_query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
                           "AND B.STATE_CD = \'PE\' AND B.USE=1"
-    query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as C where C.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
     lecture_schedule_data = ScheduleTb.objects.select_related('lecture_tb').filter(Q(start_dt__lte=now,
                                                                                      end_dt__gte=now) |
                                                                                    Q(start_dt__gte=now,
@@ -767,15 +766,13 @@ def func_get_trainer_attend_lecture_schedule(context, class_id, start_date, end_
     if lecture_id is None or lecture_id == '':
         lecture_schedule_data = lecture_schedule_data.annotate(
             lecture_current_member_num=RawSQL(query, []),
-            lecture_current_finish_member_num=RawSQL(finish_member_query, []),
-            lecture_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
+            lecture_current_finish_member_num=RawSQL(finish_member_query, [])).order_by('start_dt')
 
     else:
         lecture_schedule_data = lecture_schedule_data.filter(
             lecture_tb_id=lecture_id
         ).annotate(lecture_current_member_num=RawSQL(query, []),
-                   lecture_current_finish_member_num=RawSQL(finish_member_query, []),
-                   lecture_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
+                   lecture_current_finish_member_num=RawSQL(finish_member_query, [])).order_by('start_dt')
 
     context['lecture_schedule_data'] = lecture_schedule_data
 

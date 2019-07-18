@@ -30,7 +30,7 @@
                         <div class="obj_table_raw">수업명</div>
                     </div>
                     <div class="wrapper_my_ticket_detail_date_info obj_font_size_14_weight_500">
-                        <div class="obj_table_raw">{{ ticket_lecture_info.lecture_type_cd_nm }}</div>
+                        <div class="obj_table_raw">{% if ticket_lecture_info.lecture_tb.member_num == 1 %}개인 수업{% else %}그룹 수업{% endif %}</div>
                         <div class="obj_table_raw">{{ ticket_lecture_info.lecture_tb.name }}</div>
                     </div>
                 </div>

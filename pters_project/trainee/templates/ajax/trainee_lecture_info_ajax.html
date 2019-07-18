@@ -1,8 +1,6 @@
     {
       "lecture_id":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "lecture_type_cd":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "member_num":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.member_num  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "name":

@@ -22,10 +22,6 @@
 
       "lectureNameArray":
       [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.lecture_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "lectureTypeCdArray":
-      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.lecture_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "lectureTypeCdNameArray":
-      [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.lecture_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lectureMemberNumArray":
       [{% for member_ticket_info in member_ticket_data %}"{{ member_ticket_info.lecture_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lectureStateCdArray":

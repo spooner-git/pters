@@ -1572,18 +1572,6 @@ class PopupCalendarPlanReserveCompleteView(LoginRequiredMixin, AccessTestMixin, 
                 schedule_info = None
 
         if schedule_info is not None:
-            try:
-                lecture_type_name = CommonCdTb.objects.get(
-                    common_cd=schedule_info.lecture_tb.lecture_type_cd).common_cd_nm
-                lecture_name = schedule_info.lecture_tb.name
-            except ObjectDoesNotExist:
-                lecture_type_name = '개인'
-                lecture_name = '개인 레슨'
-            except AttributeError:
-                lecture_type_name = '개인'
-                lecture_name = '개인 레슨'
-            schedule_info.lecture_name = lecture_name
-            schedule_info.lecture_type_name = lecture_type_name
 
             context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
             cancel_prohibition_time = context['lt_res_cancel_time']
@@ -1635,7 +1623,7 @@ class PopupLectureTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVi
             member_ticket_info.member_ticket_abs_count = member_ticket_abs_count
         if error is None:
             query_status = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `SCHEDULE_TB`.`STATE_CD`"
-            if lecture_info.lecture_type_cd != 'ONE_TO_ONE':
+            if lecture_info.member_num > 1:
                 schedule_list = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_id,
                                                           lecture_tb_id=lecture_id,
                                                           use=USE).annotate(status=RawSQL(query_status,
@@ -1689,14 +1677,10 @@ class PopupTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 error = '수강권 정보를 불러오지 못했습니다.'
 
         if error is None:
-            query_lecture_type = "select COMMON_CD_NM from COMMON_CD_TB as B " \
-                               "where B.COMMON_CD = `GROUP_TB`.`group_type_cd`"
             ticket_info.ticket_lecture_data = TicketLectureTb.objects.select_related(
                 'lecture_tb'
             ).filter(ticket_tb_id=ticket_id, lecture_tb__use=USE,
-                     use=USE).annotate(lecture_type_cd_nm=RawSQL(query_lecture_type,
-                                                                 [])).order_by('-lecture_tb__lecture_type_cd',
-                                                                               'lecture_tb__reg_dt')
+                     use=USE).order_by('lecture_tb__reg_dt')
 
         context['ticket_info'] = ticket_info
         context['member_ticket_data'] = member_ticket_list

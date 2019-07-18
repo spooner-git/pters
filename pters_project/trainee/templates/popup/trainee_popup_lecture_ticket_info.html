@@ -12,7 +12,7 @@
         <div class="obj_box_popup_topper">
 {#            <div class="obj_font_size_12_weight_500 obj_font_color_white">{{ member_ticket_info.ticket_tb.ticket_type_cd_nm }}</div>#}
             <div class="wrapper_my_ticket_title">
-            {% if lecture_info.lecture_type_cd == "ONE_TO_ONE" %}
+            {% if lecture_info.member_num == 1 %}
                 <img src="{% static_url "common/icon/person_black.png" %}">
             {% else %}
                 <img src="{% static_url "common/icon/people_black.png" %}">

@@ -39,10 +39,14 @@
                                 <div class="obj_tag obj_font_bg_white_black">예약완료</div>
                             </div> -->
                             <div  class="wrapper_img_lesson_type">
+                                {% if schedule_info.lecture_tb %}
                                 <img src="{% static_url "common/icon/people_black.png" %}">
+                                {% else %}
+                                <img src="{% static_url "common/icon/person_black.png" %}">
+                                {% endif %}
                             </div>
                             <div class="wrapper_member_ticket_title obj_font_size_15_weight_500">
-                                ({{ next_schedule_info.lecture_type_name }}) {{ next_schedule_info.lecture_name }}
+                                {% if next_schedule_info.lecture_tb %}(그룹) {{ next_schedule_info.lecture_tb.name }}{% else %}(개인) 개인 레슨{% endif %}
                             </div>
                             <div class="wrapper_plan_info">
                                 <div class="obj_table_raw obj_font_size_10_weight_500 obj_font_color_light_grey">
@@ -139,7 +143,7 @@
                         <div class="obj_box_card obj_table_raw" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_lecture_ticket_info', 90, POPUP_FROM_BOTTOM, {'member_ticket_id':'{{ing_member_ticket_info.member_ticket_tb_id}}', 'lecture_id':'{{ ing_lecture_info.lecture_tb_id }}' } )">
                             <div class="wrapper_my_ticket_type obj_table_cell_x3">
 {#                                <div class="obj_font_size_12_weight_bold">{{ ing_member_ticket_info.member_ticket_tb.ticket_tb.ticket_type_cd_nm }}</div>#}
-                                {% if ing_lecture_info.lecture_tb.lecture_type_cd == "ONE_TO_ONE" %}
+                                {% if ing_lecture_info.lecture_tb.member_num == 1 %}
                                     <img src="{% static_url "common/icon/person_black.png" %}">
                                 {% else %}
                                     <img src="{% static_url "common/icon/people_black.png" %}">

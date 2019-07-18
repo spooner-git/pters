@@ -140,7 +140,6 @@ class ClassMemberTicketTb(TimeStampedModel):
 class LectureTb(TimeStampedModel):
     lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)
-    lecture_type_cd = models.CharField(db_column='GROUP_TYPE_CD', max_length=45, blank=True, null=True)
     ing_color_cd = models.CharField(db_column='ING_COLOR_CD', max_length=20, default='#ffd3d9')
     end_color_cd = models.CharField(db_column='END_COLOR_CD', max_length=20, default='#d2d1cf')
     ing_font_color_cd = models.CharField(db_column='ING_FONT_COLOR_CD', max_length=20, default='#282828')
@@ -157,14 +156,6 @@ class LectureTb(TimeStampedModel):
 
     def __str__(self):
         return self.name.__str__()+'_lecture'
-
-    def get_lecture_type_cd_name(self):
-        try:
-            lecture_type_cd_name = CommonCdTb.objects.get(common_cd=self.lecture_type_cd).common_cd_nm
-        except ObjectDoesNotExist:
-            lecture_type_cd_name = ''
-
-        return lecture_type_cd_name
 
     def get_state_cd_name(self):
         try:

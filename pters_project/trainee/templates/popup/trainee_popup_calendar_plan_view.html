@@ -22,11 +22,15 @@
                         <div class="obj_tag obj_font_bg_white_black">예약완료</div>
                     </div> -->
                     <div  class="wrapper_img_lesson_type">
+                        {% if schedule_info.lecture_tb %}
                         <img src="{% static_url "common/icon/people_black.png" %}">
+                        {% else %}
+                        <img src="{% static_url "common/icon/person_black.png" %}">
+                        {% endif %}
                     </div>
                     
                     <div class="wrapper_member_ticket_title obj_font_size_15_weight_500">
-                        ({{ schedule_info.lecture_type_name }}) {{ schedule_info.lecture_name }}
+                        {% if schedule_info.lecture_tb %}(그룹) {{ schedule_info.lecture_tb.name }}{% else %}(개인) 개인 레슨{% endif %}
                     </div>
                     <div class="wrapper_plan_info">
                         <div class="obj_table_raw obj_font_size_10_weight_500 obj_font_color_light_grey">
