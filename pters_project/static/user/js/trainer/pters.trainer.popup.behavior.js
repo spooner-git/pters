@@ -103,7 +103,10 @@ let layer_popup = (function (){
                         if(popup_data!=undefined && Object.keys(popup_data).length > 0){
                             func_animation_set(OPEN, popup_data);
                         }
-                        callback();
+                        if(callback != undefined){
+                            callback();
+                        }
+                        
                         // func_prevent_double_click_free();
                     }, 10);
                 });
@@ -117,7 +120,9 @@ let layer_popup = (function (){
                     if(popup_data!=undefined && Object.keys(popup_data).length > 0){
                         func_animation_set(OPEN, popup_data);
                     }
-                    callback();
+                    if(callback != undefined){
+                        callback();
+                    }
                       // func_prevent_double_click_free();
                 }, 10);
             }else if(call_method==POPUP_INNER_HTML){
