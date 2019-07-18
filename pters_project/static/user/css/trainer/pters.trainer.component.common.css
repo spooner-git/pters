@@ -36,6 +36,79 @@
 }
 
 
+.select_lecture_row{
+	list-style: none;
+	line-height: 50px;
+	height: 50px;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 500;
+
+	border-bottom: 1px solid #cccccc;
+	padding: 0 16px;
+}
+
+.select_lecture_row .cell_lecture_color{
+	display: table-cell;
+	width: 30px;
+	vertical-align: middle;
+}
+
+.select_lecture_row .cell_lecture_color .lecture_color_bar{
+	width: 3px;
+	height: 30px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.select_lecture_row .cell_lecture_info{
+	display: table-cell;
+	width: auto;
+	vertical-align: middle;
+}
+
+.select_lecture_row .cell_lecture_info > div{
+	height: 25px;
+	line-height: 25px;
+}
+
+.select_lecture_row .cell_lecture_selected{
+	display: table-cell;
+	width: 30px;
+	vertical-align: middle;
+}
+
+.select_member_row{
+	list-style: none;
+	line-height: 50px;
+	height: 50px;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 500;
+
+	border-bottom: 1px solid #cccccc;
+	padding: 0 16px;
+}
+
+.select_member_row .cell_member_name{
+	display: table-cell;
+	width: 100px;
+	vertical-align: middle;
+}
+
+.select_member_row .cell_member_info{
+	display: table-cell;
+	width: auto;
+	vertical-align: middle;
+}
+
+.select_member_row .cell_member_selected{
+	display: table-cell;
+	width: 30px;
+	vertical-align: middle;
+}
+
+
 
 /* 탭 */
 .list_type_tab_wrap{

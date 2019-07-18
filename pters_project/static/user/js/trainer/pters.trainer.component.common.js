@@ -53,7 +53,7 @@ class CComponent{
                     <li class="select_lecture_row" id="select_lecture_row_${lecture_id}">
                         <div class="obj_table_raw">
                             <div class="cell_lecture_color">
-                                <div style="color:${color_code}" class="lecture_color_bar">
+                                <div style="background-color:${color_code}" class="lecture_color_bar">
                                 </div>
                             </div>
                             <div class="cell_lecture_info">
