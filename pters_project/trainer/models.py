@@ -180,6 +180,11 @@ class TicketTb(TimeStampedModel):
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True, default='')
     ticket_type_cd = models.CharField(db_column='PACKAGE_TYPE_CD', max_length=20, blank=True, null=True, default='')
+    effective_days = models.IntegerField(db_column='EFFECTIVE_DAYS', default=30)
+    price = models.IntegerField(db_column='PRICE', default=0)
+    week_schedule_enable = models.IntegerField(db_column='WEEK_SCHEDULE_ENABLE', default=7)
+    day_schedule_enable = models.IntegerField(db_column='DAY_SCHEDULE_ENABLE', default=1)
+    reg_count = models.IntegerField(db_column='REG_COUNT', default=0)
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)
     note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True, default='')
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.

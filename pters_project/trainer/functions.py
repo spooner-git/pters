@@ -78,7 +78,7 @@ def func_get_member_ing_list(class_id, user_id, keyword):
              class_tb_id=class_id, auth_cd='VIEW', member_ticket_tb__state_cd='IP', member_ticket_tb__use=USE,
              use=USE).order_by('member_ticket_tb__member_id', 'member_ticket_tb__end_date')
 
-    return func_get_member_from_member_ticket_list(all_member_ticket_list, user_id)
+    return func_get_member_from_member_ticket_list(all_member_ticket_list, None, user_id)
 
 
 # 종료된 회원 리스트 가져오기
@@ -103,11 +103,11 @@ def func_get_member_end_list(class_id, user_id, keyword):
                           ).filter(member_ticket_ip_count=0).order_by('member_ticket_tb__member_id',
                                                                       'member_ticket_tb__end_date')
 
-    return func_get_member_from_member_ticket_list(all_member_ticket_list, user_id)
+    return func_get_member_from_member_ticket_list(all_member_ticket_list, None, user_id)
 
 
 # 회원 리스트 가져오기
-def func_get_member_from_member_ticket_list(all_member_ticket_list, user_id):
+def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, user_id):
     ordered_member_dict = collections.OrderedDict()
     temp_member_id = None
     member_ticket_reg_count = 0
@@ -115,11 +115,18 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, user_id):
     member_ticket_avail_count = 0
     start_date = None
     end_date = None
+    lecture_member_data = None
+
+    if lecture_id is not None:
+        lecture_member_data = LectureMemberTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
+
     if all_member_ticket_list is not None:
         for all_member_ticket_info in all_member_ticket_list:
             member_ticket_info = all_member_ticket_info.member_ticket_tb
             member_info = member_ticket_info.member
             member_id = str(member_info.member_id)
+            fix_state_cd = ''
+
             if temp_member_id != member_id:
                 temp_member_id = member_id
                 member_ticket_reg_count = 0
@@ -151,6 +158,11 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, user_id):
                 if end_date < member_ticket_info.end_date:
                     end_date = member_ticket_info.end_date
 
+            if lecture_member_data is not None:
+                for lecture_member_info in lecture_member_data:
+                    if lecture_member_info.member_id == member_id:
+                        fix_state_cd = lecture_member_info.fix_state_cd
+
             member_data = {'member_id': member_id,
                            'member_user_id': member_info.user.username,
                            'member_name': member_info.name,
@@ -161,6 +173,7 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, user_id):
                            'member_ticket_reg_count': member_ticket_reg_count,
                            'member_ticket_rem_count': member_ticket_rem_count,
                            'member_ticket_avail_count': member_ticket_avail_count,
+                           'member_fix_state_cd': fix_state_cd,
                            'start_date': str(start_date),
                            'end_date': str(end_date)}
 
@@ -576,12 +589,17 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
                                    ).filter(member_ticket_ip_count=0).order_by('member_ticket_tb__member_id',
                                                                                'member_ticket_tb__end_date')
         ticket_member_num_name = 'ticket_end_member_num'
-    member_list = func_get_member_from_member_ticket_list(all_member_ticket_list, user_id)
+    member_list = func_get_member_from_member_ticket_list(all_member_ticket_list, None, user_id)
     if ticket_tb is not None:
         ticket_info = {'ticket_id': ticket_id,
                        'ticket_name': ticket_tb.name,
                        'ticket_note': ticket_tb.note,
                        'ticket_state_cd': ticket_tb.state_cd,
+                       'ticket_effective_days': ticket_tb.effective_days,
+                       'ticket_price': ticket_tb.price,
+                       'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
+                       'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
+                       'ticket_reg_count': ticket_tb.reg_count,
                        'ticket_reg_dt': str(ticket_tb.reg_dt),
                        'ticket_mod_dt': str(ticket_tb.mod_dt),
                        'ticket_lecture_list': ticket_lecture_list,
@@ -624,7 +642,6 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
 
     if lecture_tb.state_cd == 'IP':
         # 수업에 속한 수강권을 가지고 있는 회원들을 가지고 오기 위한 작업
-
         all_member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb',
             'member_ticket_tb__member').filter(
@@ -632,7 +649,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
             member_ticket_tb__ticket_tb__use=USE, member_ticket_tb__state_cd='IP', member_ticket_tb__use=USE,
             use=USE).order_by('member_ticket_tb__member_id', 'member_ticket_tb__end_date')
 
-    member_list = func_get_member_from_member_ticket_list(all_member_ticket_list, user_id)
+    member_list = func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, user_id)
 
     if lecture_tb is not None:
         lecture_info = {'lecture_id': lecture_id, 'lecture_name': lecture_tb.name, 'lecture_note': lecture_tb.note,
