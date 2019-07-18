@@ -146,10 +146,14 @@
             
             let html_lecture_select = CComponent.create_row('select_lecture', this.data_to_send.lecture_name == "" ? '수업' : this.data_to_send.lecture_name , '/static/common/icon/icon_lecture.png', SHOW, (data)=>{ 
                 // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':this.data.basic_info.member_id});
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null});
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, function(){
+                    var lecture_select = new LectureSelector('#wrapper_box_lecture_select', "lecture_select", plan_add, false);
+                });
             });
             let html_member_select = CComponent.create_row('select_member', this.data_to_send.member_name == "" ? '회원' : this.data_to_send.member_name, '/static/common/icon/icon_lecture.png', SHOW, (data)=>{
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null});
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, function(){
+                    var member_select = new MemberSelector('#wrapper_box_member_select', "member_select", plan_add, true);
+                });
             });
             let html = html_lecture_select + html_member_select;
 
