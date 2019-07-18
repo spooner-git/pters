@@ -4,7 +4,12 @@
 
 {% block popup_base_css %}
     <!-- pters.trainee.popup.plan_view.css -->
-    <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.plan_view.css" %}>
+    <!-- <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.plan_view.css" %}> -->
+    <style>
+        .popup_member_select{
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
 {% endblock %}
 
 {% block popup_base_wrapper_top_center %}
