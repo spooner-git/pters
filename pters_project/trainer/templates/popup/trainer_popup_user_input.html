@@ -259,14 +259,16 @@
         set_iscroll(){
             this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`,{
                                 mouseWheel : true,
-                                deceleration:0.002
+                                deceleration:0.002,
+                                bounce: false
                                 // snap: 'li'
                             })
                             //default : 0.0006, 0.01 (no momentum);
 
             this.hour2_scroll = new IScroll(`#hour2_wrap_${this.instance}`,{
                                 mouseWheel : true,
-                                deceleration:0.002
+                                deceleration:0.002,
+                                bounce: false
                                 // snap: 'li'
             })
             this.set_scroll_snap();
@@ -623,18 +625,21 @@
         set_iscroll(){
             this.year_scroll = new IScroll(`#year_wrap_${this.instance}`,{
                                 mouseWheel : true,
-                                deceleration:0.002
+                                deceleration:0.002,
+                                bounce: false
                                 // snap: 'li'
                             })
 
             this.month_scroll = new IScroll(`#month_wrap_${this.instance}`,{
                                 mouseWheel : true,
-                                deceleration:0.003
+                                deceleration:0.003,
+                                bounce: false
                                 // snap: 'li'
             })
             this.date_scroll = new IScroll(`#date_wrap_${this.instance}`,{
                                 mouseWheel : true,
-                                deceleration:0.003
+                                deceleration:0.003,
+                                bounce: false
                                 // snap: 'li'
             })
             this.set_scroll_snap();
@@ -782,17 +787,24 @@
 
         set_selected_data(){
             let result = this.get_selected_data();
-            let data_text = `${result.year}년 ${result.month}월 ${result.date}일`;
+            let data_text_temp = `${result.year}년 ${result.month}월 ${result.date}일`;
             let data = `${result.year}.${result.month}.${result.date}`;
 
             let d = new Date(result.year, result.month+1, result.date);
             let day = d.getDay();
             let day_name = ['월', '화', '수', '목', '금', '토', '일'];
+
+            let data_text = `${data_text_temp} (${day_name[day]})`;
             
-            $(this.result_target).text(`${data_text} (${day_name[day]})`);
+            $(this.result_target).text(data_text);
             $(this.result_target).siblings('input').val(data);
 
-            this.default_option.callback_when_set(data);
+            let data_return = {
+                                data: data, data_text: data_text
+            }
+
+            // this.default_option.callback_when_set(data, data_text);
+            this.default_option.callback_when_set(data_return);
         }
 
         static_component(){
@@ -956,18 +968,21 @@
         set_iscroll(){
             this.zone_scroll = new IScroll(`#zone_wrap_${this.instance}`,{
                                 mouseWheel : true,
-                                deceleration:0.002
+                                deceleration:0.002,
+                                bounce: false
                                 // snap: 'li'
                             })
 
             this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`,{
                                 mouseWheel : true,
-                                deceleration:0.003
+                                deceleration:0.003,
+                                bounce: false
                                 // snap: 'li'
             })
             this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`,{
                                 mouseWheel : true,
-                                deceleration:0.003
+                                deceleration:0.003,
+                                bounce: false
                                 // snap: 'li'
             })
             this.set_scroll_snap();
@@ -1098,7 +1113,12 @@
             
             $(this.result_target).text(data_text);
             $(this.result_target).siblings('input').val(data);
-            this.default_option.callback_when_set(data);
+
+            let data_return = {
+                                data : data, data_text: data_text
+            }
+
+            this.default_option.callback_when_set(data_return);
         }
 
         static_component(){
@@ -1203,7 +1223,8 @@
         set_iscroll(){
             this.zone_scroll = new IScroll(`#zone_wrap_${this.instance}`,{
                                 mouseWheel : true,
-                                deceleration:0.002
+                                deceleration:0.002,
+                                bounce: false
                                 // snap: 'li'
                             })
 
