@@ -23,7 +23,7 @@ class Calendar {
         this.current_date = d.getDate();
         this.current_week = Math.ceil( (this.current_date + new Date(this.current_year, this.current_month-1, 1).getDay() )/7 ) - 1;
         this.current_hour = d.getHours() > 12 ? d.getHours() - 12 : d.getHours();
-        this.current_minute = Math.round(d.getMinutes()/5)*5;
+        this.current_minute = Math.floor(d.getMinutes()/5)*5;
         
         this.worktime = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 

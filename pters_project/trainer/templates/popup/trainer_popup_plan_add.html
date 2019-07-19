@@ -71,9 +71,9 @@
             this.current_year = d.getFullYear();
             this.current_month = d.getMonth();
             this.current_date = d.getDate();
-            this.current_hour = d.getHours() > 12 ? d.getHours() - 12 : d.getHours();
-            this.current_minute = Math.round(d.getMinutes()/5)*5
-            this.current_zone = d.getHours() > 12 ? 1 : 0;
+            this.current_hour = TimeRobot.to_zone(d.getHours(), d.getMinutes()).hour;
+            this.current_minute = TimeRobot.to_zone(d.getHours(), d.getMinutes()).minute;
+            this.current_zone = TimeRobot.to_zone(d.getHours(), d.getMinutes()).zone;
 
             this.data_to_send = {
                     lecture_id:"",
@@ -102,14 +102,15 @@
             };
 
             this.user_data = data_from_external;
-            this.data_to_send.date = `${this.user_data.user_selected_date.year}.${this.user_data.user_selected_date.month}.${this.user_data.user_selected_date.date}`;
-            this.data_to_send.date_text = this.user_data.user_selected_date.text;
+            let user_data_date = this.user_data.user_selected_date;
+            this.data_to_send.date = user_data_date.year == null ? null : `${user_data_date.year}.${user_data_date.month}.${user_data_datee.date}`;
+            this.data_to_send.date_text = user_data_date.text;
             
-            this.data_to_send.start_time = `${this.user_data.user_selected_time.hour}:${this.user_data.user_selected_time.minute}`;
-            this.data_to_send.start_time_text = this.user_data.user_selected_time.text;
-
-            this.data_to_send.end_time = `${this.user_data.user_selected_time.hour2}:${this.user_data.user_selected_time.minute2}`;
-            this.data_to_send.end_time_text = this.user_data.user_selected_time.text2;
+            let user_data_time = this.user_data.user_selected_time;
+            this.data_to_send.start_time = user_data_time.hour == null ? null : `${user_data_time.hour}:${user_data_time.minute}`;
+            this.data_to_send.start_time_text = user_data_time.text;
+            this.data_to_send.end_time = user_data_time.hour2 == null ? null : `${user_data_time.hour2}:${user_data_time.minute2}`;
+            this.data_to_send.end_time_text = user_data_time.text2;
             
 
             this.init();
@@ -198,40 +199,39 @@
 
             let start_time_text = this.data_to_send.start_time_text == null ? '시작 시간*' : this.data_to_send.start_time_text;
             let html_start_select = CComponent.create_row('select_start', start_time_text, '/static/common/icon/icon_clock.png', HIDE, (data)=>{ //data : 직전 셋팅값
+                let user_selected_time = this.user_data.user_selected_time;
+                let init_zone = data != undefined ? data.split('.')[0] : TimeRobot.to_zone(user_selected_time.hour, user_selected_time.minute).zone;
+                let init_hour = data != undefined ? data.split('.')[1] : TimeRobot.to_zone(user_selected_time.hour, user_selected_time.minute).hour;
+                let init_minute = data != undefined ? data.split('.')[2] : TimeRobot.to_zone(user_selected_time.hour, user_selected_time.minute).minute;
                 let time_start_select_on_plan_add = new TimeSelector('#time_start_select_on_plan_add', '#select_start .cell_text', "time_start_select_on_plan_add", {
-                                                                        init_zone : data != undefined ? data.split('.')[0] : TimeRobot.to_zone(this.user_data.user_selected_time.hour, this.user_data.user_selected_time.minute).zone,
-                                                                        init_hour : data != undefined ? data.split('.')[1] : TimeRobot.to_zone(this.user_data.user_selected_time.hour, this.user_data.user_selected_time.minute).hour,
-                                                                        init_minute : data != undefined ? data.split('.')[2] : TimeRobot.to_zone(this.user_data.user_selected_time.hour, this.user_data.user_selected_time.minute).minute,
+                                                                        init_zone : init_zone,
+                                                                        init_hour : init_hour,
+                                                                        init_minute : init_minute,
                                                                         callback_when_set : (data)=>{
-                                                                            let selected_zone = Number(data.data.split('.')[0]);
-                                                                            let selected_hour = Number(data.data.split('.')[1]);
-                                                                            let selected_minute = Number(data.data.split('.')[2]);
-                                                                            let hour = selected_zone*12 + selected_hour
-                                                                            if(selected_hour == 12){
-                                                                                hour = selected_zone*selected_hour;
-                                                                            }
-                                                                            let min = selected_minute;
-                                                                            let result = `${hour}:${min}`;
+                                                                            let prev_zone = Number(data.data.split('.')[0]);
+                                                                            let prev_hour = Number(data.data.split('.')[1]);
+                                                                            let prev_minute = Number(data.data.split('.')[2]);
+                                                                            let result = TimeRobot.to_data(prev_zone, prev_hour, prev_minute);
 
-                                                                            if(this.data_to_send.end_time != 0){
+                                                                            if(this.data_to_send.end_time != null){
                                                                                 let end_hour = this.data_to_send.end_time.split(':')[0];
                                                                                 let end_min = this.data_to_send.end_time.split(':')[1];
-                                                                                if(hour > end_hour){
+                                                                                if(result.hour > end_hour){
                                                                                     show_error_message('시작시각은 종료시각보다 클 수 없습니다.1');
-                                                                                    time_start_select_on_plan_add.go_snap(this.current_zone, this.current_hour, this.current_minute);
+                                                                                    time_start_select_on_plan_add.reset(init_zone, init_hour, init_minute);
                                                                                     return false;
                                                                                 }
-                                                                                if(hour == end_hour){
-                                                                                    if(min >= end_min){
+                                                                                if(result.hour == end_hour){
+                                                                                    if(result.minute >= end_min){
                                                                                         show_error_message('시작시각은 종료시각보다 클 수 없습니다.2');
-                                                                                        time_start_select_on_plan_add.go_snap(this.current_zone, this.current_hour, this.current_minute);
+                                                                                        time_start_select_on_plan_add.reset(init_zone, init_hour, init_minute);
                                                                                         return false;
                                                                                     }
                                                                                 }
                                                                             }
 
                                                                             time_start_select_on_plan_add.delete();
-                                                                            this.data_to_send.start_time = result;
+                                                                            this.data_to_send.start_time = result.complete;
                                                                             this.data_to_send.start_time_text = data.data_text;
                                                                         }
                                                                     });
@@ -239,39 +239,38 @@
 
             let end_time_text = this.data_to_send.end_time_text == null ? '종료 시간*' : this.data_to_send.end_time_text;
             let html_end_select = CComponent.create_row('select_end', end_time_text, '/static/common/icon/icon_clock_white.png', HIDE, (data)=>{ //data : 직전 셋팅값
+                let user_selected_time = this.user_data.user_selected_time;
+                let init_zone = data != undefined ? data.split('.')[0] : TimeRobot.to_zone(user_selected_time.hour2, user_selected_time.minute2).zone;
+                let init_hour = data != undefined ? data.split('.')[1] : TimeRobot.to_zone(user_selected_time.hour2, user_selected_time.minute2).hour;
+                let init_minute = data != undefined ? data.split('.')[2] : TimeRobot.to_zone(user_selected_time.hour2, user_selected_time.minute2).minute;
                 let time_end_select_on_plan_add = new TimeSelector('#time_end_select_on_plan_add', '#select_end .cell_text', "time_end_select_on_plan_add", {
-                                                                        init_zone : data != undefined ? data.split('.')[0] : TimeRobot.to_zone(this.user_data.user_selected_time.hour2, this.user_data.user_selected_time.minute2).zone,
-                                                                        init_hour : data != undefined ? data.split('.')[1] : TimeRobot.to_zone(this.user_data.user_selected_time.hour2, this.user_data.user_selected_time.minute2).hour,
-                                                                        init_minute : data != undefined ? data.split('.')[2] : TimeRobot.to_zone(this.user_data.user_selected_time.hour2, this.user_data.user_selected_time.minute2).minute,
+                                                                        init_zone : init_zone,
+                                                                        init_hour : init_hour,
+                                                                        init_minute : init_minute,
                                                                         callback_when_set : (data)=>{
-                                                                            let selected_zone = Number(data.data.split('.')[0]);
-                                                                            let selected_hour = Number(data.data.split('.')[1]);
-                                                                            let selected_minute = Number(data.data.split('.')[2]);
-                                                                            let hour = selected_zone*12 + selected_hour
-                                                                            if(selected_hour == 12){
-                                                                                hour = selected_zone*selected_hour;
-                                                                            }
-                                                                            let min = selected_minute;
-                                                                            let result = `${hour}:${min}`;
+                                                                            let prev_zone = Number(data.data.split('.')[0]);
+                                                                            let prev_hour = Number(data.data.split('.')[1]);
+                                                                            let prev_minute = Number(data.data.split('.')[2]);
+                                                                            let result = TimeRobot.to_data(prev_zone, prev_hour, prev_minute);
 
-                                                                            if(this.data_to_send.start_time != 0){
+                                                                            if(this.data_to_send.start_time != null){
                                                                                 let start_hour = this.data_to_send.start_time.split(':')[0];
                                                                                 let start_min = this.data_to_send.start_time.split(':')[1];
-                                                                                if(hour < start_hour){
+                                                                                if(result.hour < start_hour){
                                                                                     show_error_message('종료시각은 시작시각보다 작을 수 없습니다.');
-                                                                                    time_end_select_on_plan_add.go_snap(this.current_zone, this.current_hour, this.current_minute);
+                                                                                    time_end_select_on_plan_add.reset(init_zone, init_hour, init_minute);
                                                                                     return false;
                                                                                 }
-                                                                                if(hour == start_hour){
-                                                                                    if(min <= start_min){
+                                                                                if(result.hour == start_hour){
+                                                                                    if(result.minute <= start_min){
                                                                                         show_error_message('종료시각은 시작시각보다 작을 수 없습니다.');
-                                                                                        time_end_select_on_plan_add.go_snap(this.current_zone, this.current_hour, this.current_minute);
+                                                                                        time_end_select_on_plan_add.reset(init_zone, init_hour, init_minute);
                                                                                         return false;
                                                                                     }
                                                                                 }
                                                                             }
                                                                             time_end_select_on_plan_add.delete();
-                                                                            this.data_to_send.end_time = result == "0:0" ? "23:59" : result;
+                                                                            this.data_to_send.end_time = result.complete == "0:0" ? "23:59" : result.complete;
                                                                             this.data_to_send.end_time_text = data.data_text;
                                                                         }
                                                                     });
@@ -334,7 +333,6 @@
             };
             //en_dis_type 0: off일정, 1:레슨일정
             //duplication_enable_flag 0: 중복불허 1:중복허용
-            console.log(data);
             let url;
             url ='/schedule/add_schedule/';
             /*switch(this.list_type){

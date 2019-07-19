@@ -508,7 +508,6 @@
                     if(user_option[option] != null){
                         this.default_option[option] = user_option[option];
                     }
-                    
                 }
             }
             this.init();
@@ -832,10 +831,10 @@
             this.user_scroll_hour = false;
             this.user_scroll_minute = false;
 
-            let d = new Date();
-            this.current_hour = d.getHours() > 12 ? d.getHours() - 12 : d.getHours();
-            this.current_minute = Math.round(d.getMinutes()/5)*5
-            this.current_zone = d.getHours() > 12 ? 1 : 0;
+            this.current_time = TimeRobot.to_zone(new Date().getHours(), new Date().getMinutes());
+            this.current_zone = this.current_time.zone;
+            this.current_hour = this.current_time.hour;
+            this.current_minute = this.current_time.minute;
 
             this.default_option = {
                                     init_zone : this.current_zone,
@@ -848,9 +847,12 @@
             if(user_option != undefined){
                 //user_option이 들어왔을경우 default_option의 값을 user_option값으로 바꿔준다.
                 for(let option in user_option){
-                    this.default_option[option] = user_option[option];
+                    if(user_option[option] != null){
+                        this.default_option[option] = user_option[option];
+                    }
                 }
             }
+            
             this.init();
         }
 
@@ -881,13 +883,13 @@
         }
 
         reset(zone, hour, minute){
-            if(zone == undefined){
+            if(zone == undefined || zone == null){
                 zone = this.default_option.init_zone;
             }
-            if(hour == undefined){
+            if(hour == undefined || zone == null){
                 hour = this.default_option.init_hour;
             }
-            if(minute == undefined){
+            if(minute == undefined || zone == null){
                 minute = this.default_option.init_minute;
             }
             

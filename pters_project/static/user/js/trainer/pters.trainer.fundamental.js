@@ -113,8 +113,12 @@ class DateRobot{
 
 class TimeRobot{
     static to_zone(hour, minute){
+        if(hour == null && minute == null){
+            return {zone:null, hour:null, minute:null};
+        }
         let zone;
         let hour_new;
+        let minute_new;
         
         hour_new = hour > 12 ? hour - 12 : hour;
         zone = hour >= 12 ? 1 : 0;
@@ -124,7 +128,20 @@ class TimeRobot{
             hour_new = 12;
         }
         
-        return {zone:zone, hour:hour_new, minute:minute};
+        minute_new = Math.floor(minute/5)*5;
+
+        return {zone:zone, hour:hour_new, minute:minute_new};
+    }
+
+    static to_data(zone, hour, minute){
+        let hh = zone*12 + hour;
+        if(hour == 12){
+            hh = zone*hour;
+        }
+        let mm = minute;
+        let result = `${hh}:${mm}`;
+
+        return {complete: result, hour:hh, minute:mm};
     }
 
     static to_text(hour, minute){
