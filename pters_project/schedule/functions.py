@@ -123,29 +123,31 @@ def func_refresh_member_ticket_count(class_id, member_ticket_id):
             error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id, use=USE)
+        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
+                                                  use=USE)
         if member_ticket_info.member_ticket_reg_count >= len(schedule_data):
             member_ticket_info.member_ticket_avail_count = member_ticket_info.member_ticket_reg_count\
-                                               - len(schedule_data)
-            member_ticket_info.save()
+                                                           - len(schedule_data)
         else:
             error = '오류가 발생했습니다.'
 
-    if error is None:
         end_schedule_counter = schedule_data.filter(Q(state_cd='PE') | Q(state_cd='PC'), class_tb_id=class_id,
                                                     use=USE).count()
+
         if member_ticket_info.member_ticket_reg_count >= end_schedule_counter:
             member_ticket_info.member_ticket_rem_count = member_ticket_info.member_ticket_reg_count\
-                                               - end_schedule_counter
+                                                         - end_schedule_counter
             if member_ticket_info.member_ticket_rem_count == 0:
                 member_ticket_info.state_cd = 'PE'
 
             if member_ticket_info.state_cd == 'PE':
                 member_ticket_info.member_ticket_rem_count = 0
 
-                member_ticket_info.save()
         else:
             error = '오류가 발생했습니다.'
+
+    if error is None:
+        member_ticket_info.save()
 
     if error is None:
         if member_ticket_info.state_cd != check_member_ticket_state_cd:

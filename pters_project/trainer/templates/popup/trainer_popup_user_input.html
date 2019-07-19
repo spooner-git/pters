@@ -1409,6 +1409,7 @@
                 let member_id = data.member_id;
                 let member_name = data.member_name;
                 let member_rem_count = data.member_ticket_rem_count;
+                let member_avail_count = data.member_ticket_avail_count;
                 let member_expiry = data.end_date;
                 let checked = this.target_instance.data_to_send.member_ids.indexOf(member_id) >= 0 ? 1 : 0;
                 let html = CComponent.select_member_row (

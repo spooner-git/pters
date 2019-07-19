@@ -40,7 +40,6 @@ urlpatterns = [
 
     # 그룹 일정 기능 #####################################################################################################
     # 그룹 일정 등록
-    url(r'^add_lecture_schedule/$', views.add_lecture_schedule_logic, name='add_lecture_schedule'),
     # 그룹 일정 취소
     url(r'^delete_lecture_schedule/$', views.delete_lecture_schedule_logic, name='delete_lecture_schedule'),
     # 그룹 일정 완료
