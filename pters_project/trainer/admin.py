@@ -32,7 +32,7 @@ class ClassMemberTicketTbAdmin(admin.ModelAdmin):
 class LectureTbAdmin(admin.ModelAdmin):
     list_display = ('lecture_id', 'class_tb', 'name', 'member_num', 'state_cd',
                     'ing_color_cd', 'end_color_cd', 'ing_font_color_cd', 'end_font_color_cd',
-                    'note', 'reg_dt', 'mod_dt', 'use')
+                    'lecture_type_cd', 'note', 'reg_dt', 'mod_dt', 'use')
     search_fields = ['class_tb__member__name']
 
 

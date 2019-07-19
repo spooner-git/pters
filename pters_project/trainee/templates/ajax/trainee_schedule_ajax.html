@@ -65,22 +65,12 @@
 
       "member_ticket_flag":
       ["{{ member_ticket_flag }}"],
-      "class_member_ticket_flag":
-      ["{{ class_member_ticket_flag }}"],
-
       "member_ticket_avail_count" :
       [{{ member_ticket_avail_count }}],
       "member_ticket_reg_count" :
       [{{ member_ticket_reg_count }}],
       "member_ticket_finish_count" :
       [{{ member_ticket_finish_count }}],
-
-      "class_member_ticket_avail_count" :
-      [{{ class_member_ticket_avail_count }}],
-      "class_member_ticket_reg_count" :
-      [{{ class_member_ticket_reg_count }}],
-      "class_member_ticket_finish_count" :
-      [{{ class_member_ticket_finish_count }}],
 
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]

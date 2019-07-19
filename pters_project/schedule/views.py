@@ -1118,73 +1118,80 @@ def add_lecture_schedule_logic(request):
                 member_info = None
 
             if member_info is not None:
-                member_ticket_id = func_get_lecture_member_ticket_id(class_id, lecture_id, member_info.member_id)
-                if member_ticket_id is not None and member_ticket_id != '':
-                    try:
-                        with transaction.atomic():
-
-                            if error_temp is None:
-
-                                state_cd = 'NP'
-                                permission_state_cd = 'AP'
-                                if timezone.now() > schedule_end_datetime:
-                                    if setting_schedule_auto_finish == AUTO_FINISH_ON:
-                                        state_cd = 'PE'
-                                    elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
-                                        state_cd = 'PC'
-                                schedule_result = func_add_schedule(class_id, member_ticket_id, None,
-                                                                    lecture_id, lecture_schedule_id,
-                                                                    schedule_start_datetime, schedule_end_datetime,
-                                                                    note, ON_SCHEDULE_TYPE, request.user.id,
-                                                                    permission_state_cd,
-                                                                    state_cd, duplication_enable_flag)
-                                error_temp = schedule_result['error']
-
-                            if error_temp is None:
-                                error_temp = func_refresh_member_ticket_count(class_id, member_ticket_id)
-
-                            if error_temp is not None:
-                                raise InternalError
-                            else:
-                                try:
-                                    member_ticket_info = MemberTicketTb.objects.select_related(
-                                        'ticket_tb').get(member_ticket_id=member_ticket_id)
-                                except ObjectDoesNotExist:
-                                    member_ticket_info = None
-
-                                if member_ticket_info is not None:
-                                    if member_ticket_info.state_cd == 'PE':
-                                        ticket_tb_list.append(member_ticket_info.ticket_tb)
-                                log_data = LogTb(
-                                    log_type='LS02', auth_member_id=request.user.id,
-                                    from_member_name=request.user.first_name, to_member_name=member_info.name,
-                                    class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
-                                    log_info=lecture_info.name + ' 수업', log_how='예약 완료',
-                                    log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime), use=USE)
-                                log_data.save()
-
-                                push_info_schedule_start_date = str(schedule_start_datetime).split(':')
-                                push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(':')
-                                push_member_ticket_id.append(member_ticket_id)
-                                push_title.append(class_type_name + ' - 수업 알림')
-                                push_message.append(request.user.first_name + '님이 '
-                                                    + push_info_schedule_start_date[0] + ':'
-                                                    + push_info_schedule_start_date[1] + '~'
-                                                    + push_info_schedule_end_date[0] + ':'
-                                                    + push_info_schedule_end_date[1]
-                                                    + ' [' + lecture_info.name + '] 수업을 등록했습니다')
-
-                    except TypeError:
-                        error_temp = '오류가 발생했습니다. [1]'
-                    except ValueError:
-                        error_temp = '오류가 발생했습니다. [2]'
-                    except IntegrityError:
-                        error_temp = '오류가 발생했습니다. [3]'
-                    except InternalError:
-                        error_temp = error_temp
-
+                member_ticket_id = None
+                member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_id, member_info.member_id)
+                if member_ticket_result['error'] is not None:
+                    error_temp = member_ticket_result['error']
                 else:
-                    error_temp = member_info.name + '님의 예약가능한 횟수가 없습니다.'
+                    member_ticket_id = member_ticket_result['member_ticket_id']
+
+                if error_temp is None:
+                    if member_ticket_id is not None and member_ticket_id != '':
+                        try:
+                            with transaction.atomic():
+
+                                if error_temp is None:
+
+                                    state_cd = 'NP'
+                                    permission_state_cd = 'AP'
+                                    if timezone.now() > schedule_end_datetime:
+                                        if setting_schedule_auto_finish == AUTO_FINISH_ON:
+                                            state_cd = 'PE'
+                                        elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
+                                            state_cd = 'PC'
+                                    schedule_result = func_add_schedule(class_id, member_ticket_id, None,
+                                                                        lecture_id, lecture_schedule_id,
+                                                                        schedule_start_datetime, schedule_end_datetime,
+                                                                        note, ON_SCHEDULE_TYPE, request.user.id,
+                                                                        permission_state_cd,
+                                                                        state_cd, duplication_enable_flag)
+                                    error_temp = schedule_result['error']
+
+                                if error_temp is None:
+                                    error_temp = func_refresh_member_ticket_count(class_id, member_ticket_id)
+
+                                if error_temp is not None:
+                                    raise InternalError
+                                else:
+                                    try:
+                                        member_ticket_info = MemberTicketTb.objects.select_related(
+                                            'ticket_tb').get(member_ticket_id=member_ticket_id)
+                                    except ObjectDoesNotExist:
+                                        member_ticket_info = None
+
+                                    if member_ticket_info is not None:
+                                        if member_ticket_info.state_cd == 'PE':
+                                            ticket_tb_list.append(member_ticket_info.ticket_tb)
+                                    log_data = LogTb(
+                                        log_type='LS02', auth_member_id=request.user.id,
+                                        from_member_name=request.user.first_name, to_member_name=member_info.name,
+                                        class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
+                                        log_info=lecture_info.name + ' 수업', log_how='예약 완료',
+                                        log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime), use=USE)
+                                    log_data.save()
+
+                                    push_info_schedule_start_date = str(schedule_start_datetime).split(':')
+                                    push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(':')
+                                    push_member_ticket_id.append(member_ticket_id)
+                                    push_title.append(class_type_name + ' - 수업 알림')
+                                    push_message.append(request.user.first_name + '님이 '
+                                                        + push_info_schedule_start_date[0] + ':'
+                                                        + push_info_schedule_start_date[1] + '~'
+                                                        + push_info_schedule_end_date[0] + ':'
+                                                        + push_info_schedule_end_date[1]
+                                                        + ' [' + lecture_info.name + '] 수업을 등록했습니다')
+
+                        except TypeError:
+                            error_temp = '오류가 발생했습니다. [1]'
+                        except ValueError:
+                            error_temp = '오류가 발생했습니다. [2]'
+                        except IntegrityError:
+                            error_temp = '오류가 발생했습니다. [3]'
+                        except InternalError:
+                            error_temp = error_temp
+
+                    else:
+                        error_temp = member_info.name + '님의 예약가능한 횟수가 없습니다.'
 
                 if error_temp is not None:
                     if info_message is None or info_message == '':
@@ -1573,9 +1580,14 @@ def add_member_lecture_schedule_logic(request):
             error = '회원 정보를 불러오지 못했습니다.'
 
     if error is None:
-        member_ticket_id = func_get_lecture_member_ticket_id(class_id, lecture_id, member_info.member_id)
-        if member_ticket_id is None or member_ticket_id == '':
-            error = '예약 가능한 횟수가 없습니다.'
+        member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_id, member_info.member_id)
+        if member_ticket_result['error'] is not None:
+            error = member_ticket_result['error']
+        else:
+            member_ticket_id = member_ticket_result['member_ticket_id']
+
+            if member_ticket_id is None or member_ticket_id == '':
+                error = '예약 가능한 횟수가 없습니다.'
 
     if error is None:
         lecture_schedule_data = ScheduleTb.objects.filter(lecture_schedule_id=lecture_schedule_id,
@@ -2098,75 +2110,86 @@ def add_lecture_repeat_schedule_confirm(request):
                 except ObjectDoesNotExist:
                     member_info = None
                 if member_info is not None:
-                    member_ticket_id = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
-                                                                         member_info.member_id)
-                    if member_ticket_id is not None and member_ticket_id != '':
-                        repeat_schedule_result = func_add_repeat_schedule(repeat_schedule_info.class_tb_id,
-                                                                          member_ticket_id,
-                                                                          repeat_schedule_info.lecture_tb_id,
-                                                                          repeat_schedule_info.repeat_schedule_id,
-                                                                          repeat_schedule_info.repeat_type_cd,
-                                                                          repeat_schedule_info.week_info,
-                                                                          repeat_schedule_info.start_date,
-                                                                          repeat_schedule_info.end_date,
-                                                                          repeat_schedule_info.start_time,
-                                                                          repeat_schedule_info.end_time,
-                                                                          repeat_schedule_info.time_duration,
-                                                                          repeat_schedule_info.en_dis_type,
-                                                                          request.user.id)
-                        member_repeat_schedule_info = repeat_schedule_result['schedule_info']
-                        for schedule_info in schedule_data:
-                            member_ticket_id = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
-                                                                                 member_info.member_id)
-                            if member_ticket_id is not None and member_ticket_id != '':
-                                error_temp = func_check_lecture_available_member_before(class_id,
-                                                                                        lecture_info.lecture_id,
-                                                                                        schedule_info.schedule_id)
-                                if error_temp is None:
-                                    try:
-                                        with transaction.atomic():
-                                            if error_temp is None:
+                    member_ticket_id = None
+                    member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
+                                                                             member_info.member_id)
+                    if member_ticket_result['error'] is not None:
+                        error = member_ticket_result['error']
+                    else:
+                        member_ticket_id = member_ticket_result['member_ticket_id']
 
-                                                state_cd = 'NP'
-                                                permission_state_cd = 'AP'
-                                                # if setting_schedule_auto_finish == AUTO_FINISH_ON \
-                                                #         and timezone.now() > schedule_info.end_dt:
-                                                #     state_cd = 'PE'
-                                                schedule_result = \
-                                                    func_add_schedule(class_id, member_ticket_id,
-                                                                      member_repeat_schedule_info.repeat_schedule_id,
-                                                                      lecture_info.lecture_id,
-                                                                      schedule_info.schedule_id,
-                                                                      schedule_info.start_dt, schedule_info.end_dt,
-                                                                      '', ON_SCHEDULE_TYPE, request.user.id,
-                                                                      permission_state_cd,
-                                                                      state_cd, SCHEDULE_DUPLICATION_DISABLE)
-                                                error_temp = schedule_result['error']
+                    if error is None:
+                        if member_ticket_id is not None and member_ticket_id != '':
+                            repeat_schedule_result = func_add_repeat_schedule(repeat_schedule_info.class_tb_id,
+                                                                              member_ticket_id,
+                                                                              repeat_schedule_info.lecture_tb_id,
+                                                                              repeat_schedule_info.repeat_schedule_id,
+                                                                              repeat_schedule_info.repeat_type_cd,
+                                                                              repeat_schedule_info.week_info,
+                                                                              repeat_schedule_info.start_date,
+                                                                              repeat_schedule_info.end_date,
+                                                                              repeat_schedule_info.start_time,
+                                                                              repeat_schedule_info.end_time,
+                                                                              repeat_schedule_info.time_duration,
+                                                                              repeat_schedule_info.en_dis_type,
+                                                                              request.user.id)
+                            member_repeat_schedule_info = repeat_schedule_result['schedule_info']
+                            for schedule_info in schedule_data:
+                                member_ticket_id = None
+                                member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
+                                                                                         member_info.member_id)
+                                if member_ticket_result['error'] is None:
+                                    member_ticket_id = member_ticket_result['member_ticket_id']
 
-                                            if error_temp is None:
-                                                error_temp = func_refresh_member_ticket_count(class_id,
-                                                                                              member_ticket_id)
+                                if member_ticket_id is not None and member_ticket_id != '':
+                                    error_temp = func_check_lecture_available_member_before(class_id,
+                                                                                            lecture_info.lecture_id,
+                                                                                            schedule_info.schedule_id)
+                                    if error_temp is None:
+                                        try:
+                                            with transaction.atomic():
+                                                if error_temp is None:
 
-                                            if error_temp is None:
-                                                error_temp = \
-                                                    func_check_lecture_available_member_after(class_id,
-                                                                                              lecture_info.lecture_id,
-                                                                                              schedule_info.schedule_id)
+                                                    state_cd = 'NP'
+                                                    permission_state_cd = 'AP'
+                                                    # if setting_schedule_auto_finish == AUTO_FINISH_ON \
+                                                    #         and timezone.now() > schedule_info.end_dt:
+                                                    #     state_cd = 'PE'
+                                                    schedule_result = \
+                                                        func_add_schedule(class_id, member_ticket_id,
+                                                                          member_repeat_schedule_info.repeat_schedule_id,
+                                                                          lecture_info.lecture_id,
+                                                                          schedule_info.schedule_id,
+                                                                          schedule_info.start_dt, schedule_info.end_dt,
+                                                                          '', ON_SCHEDULE_TYPE, request.user.id,
+                                                                          permission_state_cd,
+                                                                          state_cd, SCHEDULE_DUPLICATION_DISABLE)
+                                                    error_temp = schedule_result['error']
 
-                                            if error_temp is not None:
-                                                raise InternalError
+                                                if error_temp is None:
+                                                    error_temp = func_refresh_member_ticket_count(class_id,
+                                                                                                  member_ticket_id)
 
-                                    except TypeError:
-                                        error = 'TypeError'
-                                    except ValueError:
-                                        error = 'ValueError'
-                                    except IntegrityError:
-                                        error = 'IntegrityError'
-                                    except InternalError:
-                                        error = 'InternalError'
+                                                if error_temp is None:
+                                                    error_temp = \
+                                                        func_check_lecture_available_member_after(class_id,
+                                                                                                  lecture_info.lecture_id,
+                                                                                                  schedule_info.schedule_id)
 
-                                    # if error_temp is not None:
-                                    #     error_message = error_temp
+                                                if error_temp is not None:
+                                                    raise InternalError
+
+                                        except TypeError:
+                                            error = 'TypeError'
+                                        except ValueError:
+                                            error = 'ValueError'
+                                        except IntegrityError:
+                                            error = 'IntegrityError'
+                                        except InternalError:
+                                            error = 'InternalError'
+
+                                        # if error_temp is not None:
+                                        #     error_message = error_temp
                     if member_ticket_id is not None and member_ticket_id != '':
                         log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
                                          from_member_name=request.user.first_name,
