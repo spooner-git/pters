@@ -1,3 +1,7 @@
+.setting_row{
+	cursor: pointer;
+}
+
 
 .create_row{
 	list-style: none;

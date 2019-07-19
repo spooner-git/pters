@@ -3,7 +3,7 @@ class CComponent{
     //설정 페이지들에서 자주 사용되는 row 스타일
     static setting_row (id, title, value, onclick){
  
-        let html = `<li>
+        let html = `<li class="setting_row">
                         <div class="obj_table_raw" id="${id}">
                             <div class="cell_title">${title}</div>
                             <div class="cell_value">${value}</div>
