@@ -58,13 +58,12 @@
     {% endautoescape %}
 
     class Plan_add{
-        constructor(targetHTML_toolbox, targetHTML_u, targetHTML_m, targetHTML_b, data, instance){
+        constructor(targetHTML_toolbox, targetHTML_u, targetHTML_m, targetHTML_b, data_from_external, instance){
             this.targetHTML_toolbox = targetHTML_toolbox;
             this.targetHTML_upper = targetHTML_u;
             this.targetHTML_middle = targetHTML_m;
             this.targetHTML_bottom = targetHTML_b;
             this.instance = instance;
-            this.data = data;
 
             this.list_type = "lesson";
 
@@ -76,7 +75,6 @@
             this.current_minute = Math.round(d.getMinutes()/5)*5
             this.current_zone = d.getHours() > 12 ? 1 : 0;
 
-            
             this.data_to_send = {
                     lecture_id:"",
                     lecture_ids:[],
@@ -89,11 +87,11 @@
                     member_name:"",
                     member_names:[],
                     date:"",
-                    date_text:"",
+                    date_text: null,
                     start_time:"",
-                    start_time_text:"",
+                    start_time_text: null,
                     end_time:"",
-                    end_time_text:"",
+                    end_time_text: null,
                     repeat:{
                                 day:"",
                                 time:"",
@@ -102,6 +100,17 @@
                     },
                     memo:""
             };
+
+            this.user_data = data_from_external;
+            this.data_to_send.date = `${this.user_data.user_selected_date.year}.${this.user_data.user_selected_date.month}.${this.user_data.user_selected_date.date}`;
+            this.data_to_send.date_text = this.user_data.user_selected_date.text;
+            
+            this.data_to_send.start_time = `${this.user_data.user_selected_time.hour}:${this.user_data.user_selected_time.minute}`;
+            this.data_to_send.start_time_text = this.user_data.user_selected_time.text;
+
+            this.data_to_send.end_time = `${this.user_data.user_selected_time.hour2}:${this.user_data.user_selected_time.minute2}`;
+            this.data_to_send.end_time_text = this.user_data.user_selected_time.text2;
+            
 
             this.init();
         }
@@ -140,18 +149,15 @@
             this.render_bottom();
         }
 
-
-
         render_upper(del){
-            // html = CComponent.create_row(id, title, value, onclick);
-            
-            let html_lecture_select = CComponent.create_row('select_lecture', this.data_to_send.lecture_name == "" ? '수업' : this.data_to_send.lecture_name , '/static/common/icon/icon_book.png', SHOW, (data)=>{ 
-                // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':this.data.basic_info.member_id});
+            let lecture_text = this.data_to_send.lecture_name == "" ? '수업*' : this.data_to_send.lecture_name;
+            let html_lecture_select = CComponent.create_row('select_lecture', lecture_text, '/static/common/icon/icon_book.png', SHOW, (data)=>{ 
                 layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
                     var lecture_select = new LectureSelector('#wrapper_box_lecture_select', "lecture_select", plan_add, 1);
                 });
             });
-            let html_member_select = CComponent.create_row('select_member', this.data_to_send.member_name == "" ? '회원' : this.data_to_send.member_name, '/static/common/icon/icon_member.png', SHOW, (data)=>{
+            let member_text = this.data_to_send.member_name == "" ? '회원*' : this.data_to_send.member_name;
+            let html_member_select = CComponent.create_row('select_member', member_text, '/static/common/icon/icon_member.png', SHOW, (data)=>{
                 if(this.data_to_send.lecture_id != ""){
                     layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
                         var member_select = new MemberSelector('#wrapper_box_member_select', "member_select", plan_add, this.data_to_send.lecture_max_num, {'lecture_id':this.data_to_send.lecture_id});
@@ -159,7 +165,6 @@
                 }else{
                     show_error_message('수업을 먼저 선택해주세요.');
                 }
-                
             });
             let html = html_lecture_select + html_member_select;
 
@@ -172,14 +177,18 @@
 
         render_middle(del){
             //등록하는 행을 만든다.
-            let html_date_select = CComponent.create_row('select_date', this.data_to_send.date_text == "" ? '날짜' : this.data_to_send.date_text, '/static/common/icon/icon_cal.png', HIDE, (data)=>{ 
+            let date_text = this.data_to_send.date_text == null ? '날짜*' : this.data_to_send.date_text;
+            let html_date_select = CComponent.create_row('select_date', date_text, '/static/common/icon/icon_cal.png', HIDE, (data)=>{ 
                 //행을 클릭했을때 실행할 내용
                 let date_select_on_plan_add = new DateSelector('#date_select_on_plan_add', '#select_date .cell_text', "date_select_on_plan_add", {
                                                                         year_start : this.current_year - 5,
                                                                         year_end : this.current_year + 5,
-                                                                        init_year : data != undefined ? data.split('.')[0] : this.current_year,
-                                                                        init_month : data != undefined ? data.split('.')[1] : this.current_month + 1,
-                                                                        init_date : data != undefined ? data.split('.')[2] : this.current_date,
+                                                                        // init_year : data != undefined ? data.split('.')[0] : this.current_year,
+                                                                        // init_month : data != undefined ? data.split('.')[1] : this.current_month + 1,
+                                                                        // init_date : data != undefined ? data.split('.')[2] : this.current_date,
+                                                                        init_year : data != undefined ? data.split('.')[0] : this.user_data.user_selected_date.year,
+                                                                        init_month : data != undefined ? data.split('.')[1] : this.user_data.user_selected_date.month,
+                                                                        init_date : data != undefined ? data.split('.')[2] : this.user_data.user_selected_date.date,
                                                                         //DateSelector에서 값을 정했을때 실행할 함수
                                                                         callback_when_set : (data)=>{
                                                                             //data는 DateSelector의 set_selected_data로부터 넘어온 유저의 선택값
@@ -189,11 +198,13 @@
                                                                         }
                                                                     });
             }) +`<div id="date_select_on_plan_add"></div>`;
-            let html_start_select = CComponent.create_row('select_start', this.data_to_send.start_time_text == "" ? '시작 시간' : this.data_to_send.start_time_text, '/static/common/icon/icon_clock.png', HIDE, (data)=>{ //data : 직전 셋팅값
+
+            let start_time_text = this.data_to_send.start_time_text == null ? '시작 시간*' : this.data_to_send.start_time_text;
+            let html_start_select = CComponent.create_row('select_start', start_time_text, '/static/common/icon/icon_clock.png', HIDE, (data)=>{ //data : 직전 셋팅값
                 let time_start_select_on_plan_add = new TimeSelector('#time_start_select_on_plan_add', '#select_start .cell_text', "time_start_select_on_plan_add", {
-                                                                        init_zone : data != undefined ? data.split('.')[0] : this.current_zone,
-                                                                        init_hour : data != undefined ? data.split('.')[1] : this.current_hour,
-                                                                        init_minute : data != undefined ? data.split('.')[2] : this.current_minute,
+                                                                        init_zone : data != undefined ? data.split('.')[0] : TimeRobot.to_zone(this.user_data.user_selected_time.hour, this.user_data.user_selected_time.minute).zone,
+                                                                        init_hour : data != undefined ? data.split('.')[1] : TimeRobot.to_zone(this.user_data.user_selected_time.hour, this.user_data.user_selected_time.minute).hour,
+                                                                        init_minute : data != undefined ? data.split('.')[2] : TimeRobot.to_zone(this.user_data.user_selected_time.hour, this.user_data.user_selected_time.minute).minute,
                                                                         callback_when_set : (data)=>{
                                                                             let selected_zone = Number(data.data.split('.')[0]);
                                                                             let selected_hour = Number(data.data.split('.')[1]);
@@ -228,11 +239,13 @@
                                                                         }
                                                                     });
                 })  +`<div id="time_start_select_on_plan_add"></div>`;
-            let html_end_select = CComponent.create_row('select_end', this.data_to_send.end_time_text == "" ? '종료 시간' : this.data_to_send.end_time_text, '/static/common/icon/icon_clock_white.png', HIDE, (data)=>{ //data : 직전 셋팅값
+
+            let end_time_text = this.data_to_send.end_time_text == null ? '종료 시간*' : this.data_to_send.end_time_text;
+            let html_end_select = CComponent.create_row('select_end', end_time_text, '/static/common/icon/icon_clock_white.png', HIDE, (data)=>{ //data : 직전 셋팅값
                 let time_end_select_on_plan_add = new TimeSelector('#time_end_select_on_plan_add', '#select_end .cell_text', "time_end_select_on_plan_add", {
-                                                                        init_zone : data != undefined ? data.split('.')[0] : this.current_zone,
-                                                                        init_hour : data != undefined ? data.split('.')[1] : this.current_hour,
-                                                                        init_minute : data != undefined ? data.split('.')[2] : this.current_minute,
+                                                                        init_zone : data != undefined ? data.split('.')[0] : TimeRobot.to_zone(this.user_data.user_selected_time.hour2, this.user_data.user_selected_time.minute2).zone,
+                                                                        init_hour : data != undefined ? data.split('.')[1] : TimeRobot.to_zone(this.user_data.user_selected_time.hour2, this.user_data.user_selected_time.minute2).hour,
+                                                                        init_minute : data != undefined ? data.split('.')[2] : TimeRobot.to_zone(this.user_data.user_selected_time.hour2, this.user_data.user_selected_time.minute2).minute,
                                                                         callback_when_set : (data)=>{
                                                                             let selected_zone = Number(data.data.split('.')[0]);
                                                                             let selected_hour = Number(data.data.split('.')[1]);
@@ -369,7 +382,12 @@
 
     }
 
-    var plan_add = new Plan_add('#wrapper_box_plan_add_toolbox', '#wrapper_box_plan_add_upper', '#wrapper_box_plan_add_middle', '#wrapper_box_plan_add_bottom', "", "plan_add");
+    let data;
+    if(current_page == "calendar"){
+        data = calendar.user_data;
+    }
+
+    var plan_add = new Plan_add('#wrapper_box_plan_add_toolbox', '#wrapper_box_plan_add_upper', '#wrapper_box_plan_add_middle', '#wrapper_box_plan_add_bottom', data, "plan_add");
     
 
     func_set_webkit_overflow_scrolling('.popup_plan_add');

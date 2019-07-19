@@ -22,8 +22,15 @@ class Calendar {
         this.current_month = d.getMonth()+1;
         this.current_date = d.getDate();
         this.current_week = Math.ceil( (this.current_date + new Date(this.current_year, this.current_month-1, 1).getDay() )/7 ) - 1;
-
+        this.current_hour = d.getHours() > 12 ? d.getHours() - 12 : d.getHours();
+        this.current_minute = Math.round(d.getMinutes()/5)*5;
+        
         this.worktime = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+
+        this.user_data = {
+            user_selected_date: {year:this.current_year, month:this.current_month, date:this.current_date},
+            user_selected_time: {hour:this.current_hour, minute:this.current_minute, hour2:this.current_hour, minute2:this.current_minute}
+        };
     }
 
     init (cal_type){
@@ -637,20 +644,52 @@ class Calendar {
     }
 
     display_user_click (event, year, month, date){
+        
         $('.week_indicator').remove();
 
         let pos = event.offsetY;
         let pos_hour = pos/60;
         let offset_hour = pos_hour > Math.floor(pos_hour)+0.5 ? Math.floor(pos_hour) + 0.5 : Math.floor(pos_hour);
         let offset_px = offset_hour * 60;
-
         let indicator = document.createElement('div');
         indicator.classList.add('week_indicator');
         indicator.style.top = offset_px+'px';
         indicator.setAttribute('onclick', "event.stopPropagation();$('.week_indicator').remove()");
         event.target.appendChild(indicator);
 
-        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_RIGHT, {'select_date':`${year}-${month}-${date}`});
+        let hour = Math.floor(offset_hour);
+        let minute = 60*(offset_hour - hour);
+
+        //현재 클릭한 곳의 연월일, 시분 데이터
+        this.user_data.user_selected_date.year = year;
+        this.user_data.user_selected_date.month = month;
+        this.user_data.user_selected_date.date = date;
+        this.user_data.user_selected_date.day = DAYNAME_KR[new Date(year, month, date).getDay()];
+        this.user_data.user_selected_date.text = DateRobot.to_text(year, month, date);
+        this.user_data.user_selected_time.hour = hour;
+        this.user_data.user_selected_time.minute = minute;
+        this.user_data.user_selected_time.hour2 = TimeRobot.add_time(hour, minute, 0, 30).hour;
+        this.user_data.user_selected_time.minute2 = TimeRobot.add_time(hour, minute, 0, 30).minute;
+        this.user_data.user_selected_time.text = TimeRobot.to_text(hour, minute);
+        this.user_data.user_selected_time.text2 = TimeRobot.to_text(this.user_data.user_selected_time.hour2, this.user_data.user_selected_time.minute2);
+
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null});
+    }
+
+    add_plan_button (){
+        //현재 클릭한 곳의 연월일, 시분 데이터
+        this.user_data.user_selected_date.year = null;
+        this.user_data.user_selected_date.month = null;
+        this.user_data.user_selected_date.date = null;
+        this.user_data.user_selected_date.text = null;
+        this.user_data.user_selected_time.hour = null;
+        this.user_data.user_selected_time.minute = null;
+        this.user_data.user_selected_time.hour2 = null;
+        this.user_data.user_selected_time.minute2 = null;
+        this.user_data.user_selected_time.text = null;
+        this.user_data.user_selected_time.text2 = null;
+
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null});
     }
 
 
@@ -698,7 +737,7 @@ class Calendar {
                                             <button onclick="${this.instance}.move_month('next')" style="vertical-align:middle;" hidden>다음</button>
                                             <div class="cal_tools_wrap">
                                                 <div class="swap_cal" onclick="${this.instance}.switch_cal_type()"></div>
-                                                <div class="add_plan" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_RIGHT, {'select_date':'${this.current_year}-${this.current_month}-${this.current_date}'})"></div>
+                                                <div class="add_plan" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':'${this.current_year}-${this.current_month}-${this.current_date}'})"></div>
                                             </div>
                                         </div>
                                         <div class="cal_week_line_dates">
@@ -719,7 +758,7 @@ class Calendar {
                                             <button onclick="${this.instance}.move_week('next')" style="vertical-align:middle;" hidden>다음</button>
                                             <div class="cal_tools_wrap">
                                                 <div class="swap_cal"  onclick="${this.instance}.switch_cal_type()"></div>
-                                                <div class="add_plan" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_RIGHT, {'select_date':'${this.current_year}-${this.current_month}-${this.current_date}'})"></div>
+                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()"></div>
                                             </div>
                                         </div>
                                         `             

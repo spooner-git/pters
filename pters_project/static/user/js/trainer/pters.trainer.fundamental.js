@@ -102,3 +102,87 @@ function func_ajax_after_send(ajax_name, ajax_data){
     ajax_load_image(HIDE);
 }
 
+
+class DateRobot{
+    static to_text(year, month, date){
+        let day = DAYNAME_KR[new Date(year, month, date).getDay()];
+
+        return `${year}년 ${month}월 ${date}일 (${day})`;
+    }
+}
+
+class TimeRobot{
+    static to_zone(hour, minute){
+        let zone;
+        let hour_new;
+        
+        hour_new = hour > 12 ? hour - 12 : hour;
+        zone = hour >= 12 ? 1 : 0;
+
+        if(hour == 24 || hour == 0){
+            zone = 0;
+            hour_new = 12;
+        }
+        
+        return {zone:zone, hour:hour_new, minute:minute};
+    }
+
+    static to_text(hour, minute){
+        let time = TimeRobot.to_zone(hour, minute);
+        let zone = time.zone;
+        let hh = time.hour;
+        let mm = time.minute;
+        
+        zone = zone == 0 ? "오전" : "오후";
+
+        return `${zone} ${hh}시 ${mm}분`;
+    }
+
+    static add_time(hour, minute, plus_hour, plus_minute){
+        var shour = hour;
+        var smin = minute;
+        var addhour = plus_hour;
+        var addmin = plus_minute;
+        var resultHour;
+        var resultMin;
+        var hourplus;
+        
+
+        if(smin + addmin >= 60){
+            if(shour + addhour >= 24){  // 23 + 4 --> 3
+                if(shour + addhour == 24){
+                    resultHour = 25;
+                }else{
+                    resultHour = addhour - (24-shour);
+                }
+                resultMin = smin + addmin - 60;
+            }else if(shour + addhour < 24){
+                hourplus = parseInt((smin + addmin)/60);
+                resultHour = shour + addhour + hourplus;
+                resultMin = (smin + addmin)%60;
+            }
+        }else if(smin + addmin < 60){
+            if(shour + addhour >= 24){  //23 + 1 --> 00
+                if(shour + addhour == 24){
+                    resultHour = 24;
+                }else{
+                    resultHour = (shour + addhour) - 24;
+                }
+                resultMin = smin + addmin;
+            }else if(shour + addhour < 24){
+                resultHour = shour + addhour;
+                resultMin = smin + addmin;
+            }
+        }
+
+        if(resultHour<10){
+            resultHour = '0' + resultHour;
+        }
+        if(resultMin<10){
+            resultMin = '0' + resultMin;
+        }
+
+
+        return {hour:resultHour, minute:resultMin}
+    }
+}

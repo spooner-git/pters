@@ -495,9 +495,9 @@
             this.default_option = {
                                     year_start : this.current_year - 100,
                                     year_end : this.current_year,
-                                    init_year : 1986,
-                                    init_month : 2,
-                                    init_date : 24,
+                                    init_year : this.current_year,
+                                    init_month : this.current_month+1,
+                                    init_date : this.current_date,
                                     callback_when_set : function(){
                                         return false;
                                     }
@@ -505,7 +505,10 @@
             if(user_option != undefined){
                 //user_option이 들어왔을경우 default_option의 값을 user_option값으로 바꿔준다.
                 for(let option in user_option){
-                    this.default_option[option] = user_option[option];
+                    if(user_option[option] != null){
+                        this.default_option[option] = user_option[option];
+                    }
+                    
                 }
             }
             this.init();
@@ -540,13 +543,13 @@
         }
 
         reset(year, month, date){
-            if(year == undefined){
+            if(year == undefined || year == "" || year.length == 0 || year == null){
                 year = this.default_option.init_year;
             }
-            if(month == undefined){
+            if(month == undefined || month == "" || month.length == 0 || month == null){
                 month = this.default_option.init_month;
             }
-            if(date == undefined){
+            if(date == undefined || date == "" || date.length == 0 || date == null){
                 date = this.default_option.init_date;
             }
             
@@ -787,14 +790,8 @@
 
         set_selected_data(){
             let result = this.get_selected_data();
-            let data_text_temp = `${result.year}년 ${result.month}월 ${result.date}일`;
             let data = `${result.year}.${result.month}.${result.date}`;
-
-            let d = new Date(result.year, result.month+1, result.date);
-            let day = d.getDay();
-            let day_name = ['월', '화', '수', '목', '금', '토', '일'];
-
-            let data_text = `${data_text_temp} (${day_name[day]})`;
+            let data_text = DateRobot.to_text(result.year, result.month, result.date);
             
             $(this.result_target).text(data_text);
             $(this.result_target).siblings('input').val(data);
@@ -803,7 +800,6 @@
                                 data: data, data_text: data_text
             }
 
-            // this.default_option.callback_when_set(data, data_text);
             this.default_option.callback_when_set(data_return);
         }
 
