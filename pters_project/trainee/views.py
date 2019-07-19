@@ -410,9 +410,14 @@ def add_trainee_schedule_logic(request):
                                                                       lecture_schedule_id=lecture_schedule_id,
                                                                       member_ticket_tb__member_id=request.user.id)
                     if len(lecture_schedule_data) == 0:
-                        member_ticket_id = func_get_lecture_member_ticket_id(class_id,
-                                                                             lecture_schedule_info.lecture_tb_id,
-                                                                             request.user.id)
+                        member_ticket_result = func_get_lecture_member_ticket_id(class_id,
+                                                                                 lecture_schedule_info.lecture_tb_id,
+                                                                                 request.user.id)
+
+                        if member_ticket_result['error'] is not None:
+                            error = member_ticket_result['error']
+                        else:
+                            member_ticket_id = member_ticket_result['member_ticket_id']
                     else:
                         member_ticket_id = None
                         error = '이미 일정에 포함되어있습니다.'
@@ -1623,7 +1628,8 @@ class PopupLectureTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVi
             member_ticket_info.member_ticket_abs_count = member_ticket_abs_count
         if error is None:
             query_status = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `SCHEDULE_TB`.`STATE_CD`"
-            if lecture_info.member_num > 1:
+            # 자유형 문제
+            if lecture_info.lecture_type_cd != 'ONE_TO_ONE':
                 schedule_list = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_id,
                                                           lecture_tb_id=lecture_id,
                                                           use=USE).annotate(status=RawSQL(query_status,
@@ -1657,7 +1663,8 @@ class PopupTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             'class_tb__member',
             'member_ticket_tb__ticket_tb'
         ).filter(member_ticket_tb__ticket_tb__ticket_id=ticket_id, member_ticket_tb__member_auth_cd='VIEW',
-                 use=USE)
+                 use=USE).order_by('-member_ticket_tb__state_cd', '-member_ticket_tb__start_date',
+                                   '-member_ticket_tb__reg_dt')
 
         for member_ticket_info in member_ticket_list:
             if member_ticket_info.class_tb.member.phone is not None and member_ticket_info.class_tb.member.phone != '':
@@ -1679,7 +1686,7 @@ class PopupTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if error is None:
             ticket_info.ticket_lecture_data = TicketLectureTb.objects.select_related(
                 'lecture_tb'
-            ).filter(ticket_tb_id=ticket_id, lecture_tb__use=USE,
+            ).filter(ticket_tb_id=ticket_id, ticket_tb__state_cd='IP', lecture_tb__state_cd='IP', lecture_tb__use=USE,
                      use=USE).order_by('lecture_tb__reg_dt')
 
         context['ticket_info'] = ticket_info

@@ -256,7 +256,9 @@ def func_get_member_lecture_list(class_id, member_id):
             ticket_info = member_ticket_info.member_ticket_tb.ticket_tb
             query_ticket_list |= Q(ticket_tb_id=ticket_info.ticket_id)
         ticket_lecture_data = TicketLectureTb.objects.select_related('lecture_tb').filter(query_ticket_list,
-                                                                                          class_tb_id=class_id, use=USE)
+                                                                                          class_tb_id=class_id,
+                                                                                          lecture_tb__state_cd='IP',
+                                                                                          use=USE)
 
         for ticket_lecture_info in ticket_lecture_data:
             lecture_tb = ticket_lecture_info.lecture_tb
@@ -544,6 +546,7 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
                                           use=USE).order_by('ticket_tb_id', 'lecture_tb_id')
 
     ticket_lecture_list = []
+    ticket_lecture_state_cd_list = []
     ticket_lecture_id_list = []
     ticket_tb = None
     all_member_ticket_list = None
@@ -551,8 +554,9 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
     for ticket_lecture_info in ticket_lecture_data:
         ticket_tb = ticket_lecture_info.ticket_tb
         lecture_tb = ticket_lecture_info.lecture_tb
-        if lecture_tb.state_cd == 'IP' and lecture_tb.use == USE:
+        if lecture_tb.use == USE:
             ticket_lecture_list.append(lecture_tb.name)
+            ticket_lecture_state_cd_list.append(lecture_tb.state_cd)
             ticket_lecture_id_list.append(lecture_tb.lecture_id)
 
     if ticket_tb is None:
@@ -603,6 +607,7 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
                        'ticket_reg_dt': str(ticket_tb.reg_dt),
                        'ticket_mod_dt': str(ticket_tb.mod_dt),
                        'ticket_lecture_list': ticket_lecture_list,
+                       'ticket_lecture_state_cd_list': ticket_lecture_state_cd_list,
                        'ticket_lecture_id_list': ticket_lecture_id_list,
                        ticket_member_num_name: len(member_list),
                        'ticket_member_list': member_list}
@@ -620,6 +625,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
 
     query_ticket_list = Q()
     lecture_ticket_list = []
+    lecture_ticket_state_cd_list = []
     lecture_ticket_id_list = []
 
     lecture_tb = None
@@ -630,8 +636,9 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
         ticket_tb = lecture_ticket_info.ticket_tb
 
         query_ticket_list |= Q(member_ticket_tb__ticket_tb_id=lecture_ticket_info.ticket_tb_id)
-        if ticket_tb.state_cd == 'IP' and ticket_tb.use == USE:
+        if ticket_tb.use == USE:
             lecture_ticket_list.append(ticket_tb.name)
+            lecture_ticket_state_cd_list.append(ticket_tb.state_cd)
             lecture_ticket_id_list.append(ticket_tb.ticket_id)
 
     if lecture_tb is None:
@@ -656,6 +663,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
                         'lecture_state_cd': lecture_tb.state_cd, 'lecture_max_num': lecture_tb.member_num,
                         'lecture_reg_dt': str(lecture_tb.reg_dt), 'lecture_mod_dt': str(lecture_tb.mod_dt),
                         'lecture_ticket_list': lecture_ticket_list,
+                        'lecture_ticket_state_cd_list': lecture_ticket_state_cd_list,
                         'lecture_ticket_id_list': lecture_ticket_id_list,
                         'lecture_ing_member_num': len(member_list),
                         'lecture_member_list': member_list}

@@ -31,7 +31,7 @@
                     </div>
                     
                     <div class="wrapper_member_ticket_title obj_font_size_15_weight_500">
-                        ({{ schedule_info.lecture_type_name }}) {{ schedule_info.lecture_name }}
+                        ({% if schedule_info.lecture_tb.member_num == 1 %}개인{% else %}그룹{% endif %}) {{ schedule_info.lecture_tb.name }}
                     </div>
                     <div class="wrapper_plan_info">
                         <div class="obj_table_raw obj_font_size_10_weight_500 obj_font_color_light_grey">

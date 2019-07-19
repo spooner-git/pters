@@ -962,16 +962,23 @@ class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, View):
                     context['member_ticket_info'] = member_ticket_schedule_info.member_ticket_tb
 
                 except ObjectDoesNotExist:
-                    member_ticket_id = func_get_lecture_member_ticket_id(class_id, schedule_info.lecture_tb_id,
-                                                                         member_id)
-                    if member_ticket_id is None or member_ticket_id == '':
-                        error = '예약 가능한 횟수가 없습니다.'
+                    member_ticket_id = None
+                    member_ticket_result = func_get_lecture_member_ticket_id(class_id, schedule_info.lecture_tb_id,
+                                                                             member_id)
+                    if member_ticket_result['error'] is not None:
+                        error = member_ticket_result['error']
                     else:
-                        try:
-                            context['member_ticket_info'] =\
-                                MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
-                        except ObjectDoesNotExist:
-                            error = '수강정보를 불러오지 못했습니다.'
+                        member_ticket_id = member_ticket_result['member_ticket_id']
+
+                    if error is None:
+                        if member_ticket_id is None or member_ticket_id == '':
+                            error = '예약 가능한 횟수가 없습니다.'
+                        else:
+                            try:
+                                context['member_ticket_info'] =\
+                                    MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
+                            except ObjectDoesNotExist:
+                                error = '수강정보를 불러오지 못했습니다.'
             else:
                 if schedule_info.member_ticket_tb.member_id == member_id:
                     context['member_ticket_info'] = schedule_info.member_ticket_tb
@@ -2266,9 +2273,6 @@ def update_lecture_status_info_logic(request):
                 error = func_refresh_member_ticket_count(class_member_ticket_info.class_tb_id,
                                                          class_member_ticket_info.member_ticket_tb_id)
 
-            if len(ticket_lecture_data) > 0:
-                ticket_lecture_data.update(use=UN_USE)
-
             lecture_member_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
                                                                      lecture_tb_id=lecture_id, use=USE)
             lecture_member_fix_data.delete()
@@ -2374,6 +2378,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         lecture_data_dict = collections.OrderedDict()
         temp_lecture_id = None
         lecture_ticket_list = []
+        lecture_ticket_state_cd_list = []
         lecture_ticket_id_list = []
 
         for lecture_ticket_info in lecture_ticket_data:
@@ -2384,10 +2389,12 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             if temp_lecture_id != lecture_id:
                 temp_lecture_id = lecture_id
                 lecture_ticket_list = []
+                lecture_ticket_state_cd_list = []
                 lecture_ticket_id_list = []
 
             if ticket_tb.state_cd == 'IP' and ticket_tb.use == USE:
                 lecture_ticket_list.append(ticket_tb.name)
+                lecture_ticket_state_cd_list.append(ticket_tb.state_cd)
                 lecture_ticket_id_list.append(ticket_tb.ticket_id)
 
             lecture_data_dict[lecture_id] = {'lecture_id': lecture_id,
@@ -2395,6 +2402,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                              'lecture_note': lecture_tb.note,
                                              'lecture_max_num': lecture_tb.member_num,
                                              'lecture_ticket_list': lecture_ticket_list,
+                                             'lecture_ticket_state_cd_list': lecture_ticket_state_cd_list,
                                              'lecture_ticket_id_list': lecture_ticket_id_list}
         if len(lecture_data) != len(lecture_data_dict):
             for lecture_info in lecture_data:
@@ -2407,6 +2415,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_note': lecture_info.note,
                                                      'lecture_max_num': lecture_info.member_num,
                                                      'lecture_ticket_list': [],
+                                                     'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}
 
         lecture_list = []
@@ -2454,6 +2463,7 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         lecture_data_dict = collections.OrderedDict()
         temp_lecture_id = None
         lecture_ticket_list = []
+        lecture_ticket_state_cd_list = []
         lecture_ticket_id_list = []
         for lecture_ticket_info in lecture_ticket_data:
             lecture_tb = lecture_ticket_info.lecture_tb
@@ -2464,9 +2474,11 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 temp_lecture_id = lecture_id
                 lecture_ticket_list = []
                 lecture_ticket_id_list = []
+                lecture_ticket_state_cd_list = []
 
             if ticket_tb.use == USE:
                 lecture_ticket_list.append(ticket_tb.name)
+                lecture_ticket_state_cd_list.append(ticket_tb.state_cd)
                 lecture_ticket_id_list.append(ticket_tb.ticket_id)
 
             lecture_data_dict[lecture_id] = {'lecture_id': lecture_id,
@@ -2474,6 +2486,7 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                              'lecture_note': lecture_tb.note,
                                              'lecture_max_num': lecture_tb.member_num,
                                              'lecture_ticket_list': lecture_ticket_list,
+                                             'lecture_ticket_state_cd_list': lecture_ticket_state_cd_list,
                                              'lecture_ticket_id_list': lecture_ticket_id_list}
         if len(lecture_data) != len(lecture_data_dict):
             for lecture_info in lecture_data:
@@ -2486,6 +2499,7 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_note': lecture_info.note,
                                                      'lecture_max_num': lecture_info.member_num,
                                                      'lecture_ticket_list': [],
+                                                     'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}
 
         lecture_list = []
@@ -2849,11 +2863,6 @@ def update_ticket_status_info_logic(request):
             error = '수강권 정보를 불러오지 못했습니다.'
 
     if error is None:
-        ticket_lecture_data = TicketLectureTb.objects.select_related('lecture_tb').filter(
-            ticket_tb_id=ticket_id, lecture_tb__use=USE, use=USE)
-
-        if state_cd == 'PE':
-            ticket_lecture_data.delete()
 
         class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb').filter(class_tb_id=class_id, member_ticket_tb__ticket_tb_id=ticket_id, auth_cd='VIEW',
@@ -2927,6 +2936,7 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         ticket_data_dict = collections.OrderedDict()
         temp_ticket_id = None
         ticket_lecture_list = []
+        ticket_lecture_state_cd_list = []
         ticket_lecture_id_list = []
         for ticket_lecture_info in ticket_lecture_data:
             ticket_tb = ticket_lecture_info.ticket_tb
@@ -2935,9 +2945,11 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             if temp_ticket_id != ticket_id:
                 temp_ticket_id = ticket_id
                 ticket_lecture_list = []
+                ticket_lecture_state_cd_list = []
                 ticket_lecture_id_list = []
-            if lecture_tb.state_cd == 'IP' and lecture_tb.use == USE:
+            if lecture_tb.use == USE:
                 ticket_lecture_list.append(lecture_tb.name)
+                ticket_lecture_state_cd_list.append(lecture_tb.state_cd)
                 ticket_lecture_id_list.append(lecture_tb.lecture_id)
             ticket_data_dict[ticket_id] = {'ticket_id': ticket_id,
                                            'ticket_name': ticket_tb.name,
@@ -2948,6 +2960,7 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                            'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
                                            'ticket_reg_count': ticket_tb.reg_count,
                                            'ticket_lecture_list': ticket_lecture_list,
+                                           'ticket_lecture_state_cd_list': ticket_lecture_state_cd_list,
                                            'ticket_lecture_id_list': ticket_lecture_id_list}
         if len(ticket_data) != len(ticket_data_dict):
             for ticket_info in ticket_data:
@@ -2964,6 +2977,7 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_day_schedule_enable': ticket_info.day_schedule_enable,
                                                    'ticket_reg_count': ticket_info.reg_count,
                                                    'ticket_lecture_list': [],
+                                                   'ticket_lecture_state_cd_list': [],
                                                    'ticket_lecture_id_list': []}
         ticket_list = []
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
@@ -3055,6 +3069,7 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         ticket_data_dict = collections.OrderedDict()
         temp_ticket_id = None
         ticket_lecture_list = []
+        ticket_lecture_state_cd_list = []
         ticket_lecture_id_list = []
         for ticket_lecture_info in ticket_lecture_data:
             ticket_tb = ticket_lecture_info.ticket_tb
@@ -3063,10 +3078,12 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             if temp_ticket_id != ticket_id:
                 temp_ticket_id = ticket_id
                 ticket_lecture_list = []
+                ticket_lecture_state_cd_list = []
                 ticket_lecture_id_list = []
 
             if lecture_tb.use == USE:
                 ticket_lecture_list.append(lecture_tb.name)
+                ticket_lecture_state_cd_list.append(lecture_tb.state_cd)
                 ticket_lecture_id_list.append(lecture_tb.lecture_id)
             ticket_data_dict[ticket_id] = {'ticket_id': ticket_id,
                                            'ticket_name': ticket_tb.name,
@@ -3077,6 +3094,7 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                            'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
                                            'ticket_reg_count': ticket_tb.reg_count,
                                            'ticket_lecture_list': ticket_lecture_list,
+                                           'ticket_lecture_state_cd_list': ticket_lecture_state_cd_list,
                                            'ticket_lecture_id_list': ticket_lecture_id_list}
         if len(ticket_data) != len(ticket_data_dict):
             for ticket_info in ticket_data:
@@ -3093,6 +3111,7 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_day_schedule_enable': ticket_info.day_schedule_enable,
                                                    'ticket_reg_count': ticket_info.reg_count,
                                                    'ticket_lecture_list': [],
+                                                   'ticket_lecture_state_cd_list': [],
                                                    'ticket_lecture_id_list': []}
         ticket_list = []
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
@@ -3297,7 +3316,8 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
                     one_to_one_lecture_info = LectureTb(class_tb_id=class_info.class_id, name='1:1 레슨',
                                                         ing_color_cd='#fbf3bd', end_color_cd='#d2d1cf',
-                                                        state_cd='IP', member_num=1, use=USE)
+                                                        state_cd='IP', lecture_type_cd='ONE_TO_ONE',
+                                                        member_num=1, use=USE)
                     one_to_one_lecture_info.save()
 
                     ticket_info = TicketTb(class_tb_id=class_info.class_id, name='1:1 레슨',
@@ -4436,15 +4456,23 @@ def attend_mode_check_logic(request):
                         error = '이미 출석 처리된 수업입니다.'
 
                 except ObjectDoesNotExist:
-                    member_ticket_id = func_get_lecture_member_ticket_id(class_id, schedule_info.lecture_tb_id,
-                                                                         member_id)
-                    if member_ticket_id is None or member_ticket_id == '':
-                        error = '예약 가능한 횟수가 없습니다. 수강권을 확인해주세요.'
+                    member_ticket_id = None
+                    member_ticket_result = func_get_lecture_member_ticket_id(class_id, schedule_info.lecture_tb_id,
+                                                                             member_id)
+
+                    if member_ticket_result['error'] is not None:
+                        error = member_ticket_result['error']
                     else:
-                        try:
-                            MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
-                        except ObjectDoesNotExist:
-                            error = '수강정보를 불러오지 못했습니다.'
+                        member_ticket_id = member_ticket_result['member_ticket_id']
+
+                    if error is None:
+                        if member_ticket_id is None or member_ticket_id == '':
+                            error = '예약 가능한 횟수가 없습니다. 수강권을 확인해주세요.'
+                        else:
+                            try:
+                                MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
+                            except ObjectDoesNotExist:
+                                error = '수강정보를 불러오지 못했습니다.'
             else:
                 if schedule_info.state_cd == 'PE':
                     error = '이미 출석 처리된 수업입니다.'
@@ -4490,13 +4518,20 @@ def attend_mode_finish_logic(request):
                                                                      lecture_schedule_info.member_ticket_tb_id)
 
                     except ObjectDoesNotExist:
-                        member_ticket_id = func_get_lecture_member_ticket_id(class_id, schedule_info.lecture_tb_id,
-                                                                             member_id)
-                        if member_ticket_id is None or member_ticket_id == '':
-                            error = '예약 가능한 횟수가 없습니다.'
+                        member_ticket_id = None
+                        member_ticket_result = func_get_lecture_member_ticket_id(class_id, schedule_info.lecture_tb_id,
+                                                                                 member_id)
+                        if member_ticket_result['error'] is not None:
+                            error = member_ticket_result['error']
                         else:
-                            error = func_check_lecture_available_member_before(class_id, schedule_info.lecture_tb_id,
-                                                                               schedule_id)
+                            member_ticket_id = member_ticket_result['member_ticket_id']
+
+                        if error is None:
+                            if member_ticket_id is None or member_ticket_id == '':
+                                error = '예약 가능한 횟수가 없습니다.'
+                            else:
+                                error = func_check_lecture_available_member_before(class_id, schedule_info.lecture_tb_id,
+                                                                                   schedule_id)
 
                         if error is None:
                             schedule_result = func_add_schedule(class_id, member_ticket_id, None,
@@ -4790,6 +4825,7 @@ class PopupMemberSelect(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupMemberSelect, self).get_context_data(**kwargs)
         return context
+
 
 class PopupLectureSelect(TemplateView):
     template_name = 'popup/trainer_popup_lecture_select.html'
