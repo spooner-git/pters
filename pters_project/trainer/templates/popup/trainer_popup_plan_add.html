@@ -183,9 +183,6 @@
                 let date_select_on_plan_add = new DateSelector('#date_select_on_plan_add', '#select_date .cell_text', "date_select_on_plan_add", {
                                                                         year_start : this.current_year - 5,
                                                                         year_end : this.current_year + 5,
-                                                                        // init_year : data != undefined ? data.split('.')[0] : this.current_year,
-                                                                        // init_month : data != undefined ? data.split('.')[1] : this.current_month + 1,
-                                                                        // init_date : data != undefined ? data.split('.')[2] : this.current_date,
                                                                         init_year : data != undefined ? data.split('.')[0] : this.user_data.user_selected_date.year,
                                                                         init_month : data != undefined ? data.split('.')[1] : this.user_data.user_selected_date.month,
                                                                         init_date : data != undefined ? data.split('.')[2] : this.user_data.user_selected_date.date,
