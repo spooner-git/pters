@@ -634,8 +634,8 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
     for lecture_ticket_info in lecture_ticket_data:
         lecture_tb = lecture_ticket_info.lecture_tb
         ticket_tb = lecture_ticket_info.ticket_tb
-
-        query_ticket_list |= Q(member_ticket_tb__ticket_tb_id=lecture_ticket_info.ticket_tb_id)
+        if ticket_tb.state_cd == 'IP' and ticket_tb.use == USE:
+            query_ticket_list |= Q(member_ticket_tb__ticket_tb_id=lecture_ticket_info.ticket_tb_id)
         if ticket_tb.use == USE:
             lecture_ticket_list.append(ticket_tb.name)
             lecture_ticket_state_cd_list.append(ticket_tb.state_cd)
@@ -646,15 +646,15 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
             lecture_tb = LectureTb.objects.get(class_tb_id=class_id, lecture_id=lecture_id)
         except ObjectDoesNotExist:
             lecture_tb = None
-
-    if lecture_tb.state_cd == 'IP':
-        # 수업에 속한 수강권을 가지고 있는 회원들을 가지고 오기 위한 작업
-        all_member_ticket_list = ClassMemberTicketTb.objects.select_related(
-            'member_ticket_tb__ticket_tb',
-            'member_ticket_tb__member').filter(
-            query_ticket_list, class_tb_id=class_id, auth_cd='VIEW', member_ticket_tb__ticket_tb__state_cd='IP',
-            member_ticket_tb__ticket_tb__use=USE, member_ticket_tb__state_cd='IP', member_ticket_tb__use=USE,
-            use=USE).order_by('member_ticket_tb__member_id', 'member_ticket_tb__end_date')
+    else:
+        if lecture_tb.state_cd == 'IP':
+            # 수업에 속한 수강권을 가지고 있는 회원들을 가지고 오기 위한 작업
+            all_member_ticket_list = ClassMemberTicketTb.objects.select_related(
+                'member_ticket_tb__ticket_tb',
+                'member_ticket_tb__member').filter(
+                query_ticket_list, class_tb_id=class_id, auth_cd='VIEW', member_ticket_tb__ticket_tb__state_cd='IP',
+                member_ticket_tb__ticket_tb__use=USE, member_ticket_tb__state_cd='IP', member_ticket_tb__use=USE,
+                use=USE).order_by('member_ticket_tb__member_id', 'member_ticket_tb__end_date')
 
     member_list = func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, user_id)
 
