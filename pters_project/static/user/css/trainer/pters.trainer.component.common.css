@@ -77,6 +77,12 @@
 	width: 30px;
 	vertical-align: middle;
 }
+.select_lecture_row .cell_lecture_selected img{
+	display: none;
+}
+.select_lecture_row .cell_lecture_selected .lecture_selected{
+	display: block !important;
+}
 
 .select_member_row{
 	list-style: none;
@@ -106,6 +112,12 @@
 	display: table-cell;
 	width: 30px;
 	vertical-align: middle;
+}
+.select_member_row .cell_member_selected img{
+	display: none;
+}
+.select_member_row .cell_member_selected .member_selected{
+	display: block !important;
 }
 
 

@@ -1294,7 +1294,8 @@
             this.data;
             this.callback;
 
-            this.multiple_select = multiple_select == undefined ? false : multiple_select;
+            // this.multiple_select = multiple_select == undefined ? false : multiple_select;
+            this.multiple_select = multiple_select;
 
             this.request_list(()=>{
                 this.render_list();
@@ -1321,10 +1322,11 @@
                         }else if(add_or_substract == "substract"){
                             this.target_instance.data_to_send.lecture_ids.splice(this.target_instance.data_to_send.lecture_ids.indexOf(lecture_id), 1);
                             this.target_instance.data_to_send.lecture_names.splice(this.target_instance.data_to_send.lecture_names.indexOf(lecture_name), 1);
-                            this.target_instance.data_to_send.lecture_max_nums.splice(this.target_instance.data_to_send.lecture_max_nums.indexOf(lecture_max_num), 1);
+                            this.target_instance.data_to_send.lecture_max_nums.splice(this.target_instance.data_to_send.lecture_names.indexOf(lecture_name), 1);
                         }else if(add_or_substract == "add_single"){
                             this.target_instance.data_to_send.lecture_ids = [];
                             this.target_instance.data_to_send.lecture_names = [];
+                            this.target_instance.data_to_send.lecture_max_nums = [];
                             this.target_instance.data_to_send.lecture_ids.push(lecture_id);
                             this.target_instance.data_to_send.lecture_names.push(lecture_name);
                             this.target_instance.data_to_send.lecture_max_nums.push(lecture_max_num);
@@ -1333,9 +1335,15 @@
                         this.target_instance.data_to_send.lecture_id = this.target_instance.data_to_send.lecture_ids.join('/');
                         this.target_instance.data_to_send.lecture_name = this.target_instance.data_to_send.lecture_names.join(', ');
                         this.target_instance.data_to_send.lecture_max_num = this.target_instance.data_to_send.lecture_max_nums.join(', ');
+
+                        this.target_instance.data_to_send.member_ids = [];
+                        this.target_instance.data_to_send.member_names = [];
+                        this.target_instance.data_to_send.member_id = "";
+                        this.target_instance.data_to_send.member_name = "";
+
                         this.target_instance.render_upper();
 
-                        if(this.multiple_select == false){
+                        if(this.multiple_select == 1){
                             layer_popup.close_layer_popup();
                         }
                     }  
@@ -1358,14 +1366,16 @@
 
     //회원 선택 팝업
     class MemberSelector{
-        constructor(install_target, instance, target_instance, multiple_select){
+        constructor(install_target, instance, target_instance, multiple_select, appendix){
             this.targetHTML = install_target;
             this.instance = instance;
             this.target_instance = target_instance;
             this.data;
+            this.appendix = appendix;
             this.callback;
 
-            this.multiple_select = multiple_select == undefined ? false : multiple_select;
+            // this.multiple_select = multiple_select == undefined ? false : multiple_select;
+            this.multiple_select = multiple_select;
 
             this.request_list(()=>{
                 this.render_list();
@@ -1402,8 +1412,9 @@
 
                         this.target_instance.data_to_send.member_id = this.target_instance.data_to_send.member_ids.join('/');
                         this.target_instance.data_to_send.member_name = this.target_instance.data_to_send.member_names.join(', ');
+
                         this.target_instance.render_upper();
-                        if(this.multiple_select == false){
+                        if(this.multiple_select == 1){
                             layer_popup.close_layer_popup();
                         }
                             
@@ -1416,10 +1427,22 @@
         }
 
         request_list(callback){
-            member.request_member_list("ing", (data)=>{
-                this.data = data.current_member_data;
-                callback();
-            });
+            
+            //Lecture_id를 클래스가 전달받은 경우, 해당 lecture에 속한 회원 리스트를 받아온다.
+            //Lecture_id를 클래스가 받지 못한 경우, 모든 진행 회원 리스트를 받아온다.
+            if(this.appendix.lecture_id == undefined){
+                member.request_member_list("ing", (data)=>{
+                    this.data = data.current_member_data;
+                    callback();
+                });
+            }else{
+                //164 1876
+                let data = {"lecture_id": this.appendix.lecture_id};
+                Lecture_func.read_lecture_members(data, (data)=>{
+                    this.data = data.lecture_ing_member_list;
+                    callback();
+                })
+            }
         }
     }
 // 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -144,14 +144,19 @@
             
             let html_lecture_select = CComponent.create_row('select_lecture', this.data_to_send.lecture_name == "" ? '수업' : this.data_to_send.lecture_name , '/static/common/icon/icon_lecture.png', SHOW, (data)=>{ 
                 // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':this.data.basic_info.member_id});
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, function(){
-                    var lecture_select = new LectureSelector('#wrapper_box_lecture_select', "lecture_select", plan_add, false);
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
+                    var lecture_select = new LectureSelector('#wrapper_box_lecture_select', "lecture_select", plan_add, 1);
                 });
             });
             let html_member_select = CComponent.create_row('select_member', this.data_to_send.member_name == "" ? '회원' : this.data_to_send.member_name, '/static/common/icon/icon_lecture.png', SHOW, (data)=>{
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, function(){
-                    var member_select = new MemberSelector('#wrapper_box_member_select', "member_select", plan_add, true);
-                });
+                if(this.data_to_send.lecture_id != ""){
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
+                        var member_select = new MemberSelector('#wrapper_box_member_select', "member_select", plan_add, this.data_to_send.lecture_max_num, {'lecture_id':this.data_to_send.lecture_id});
+                    });
+                }else{
+                    show_error_message('수업을 먼저 선택해주세요.');
+                }
+                
             });
             let html = html_lecture_select + html_member_select;
 
@@ -261,7 +266,7 @@
             };
             //en_dis_type 0: off일정, 1:레슨일정
             //duplication_enable_flag 0: 중복불허 1:중복허용
-
+            console.log("data", data)
             let url;
             switch(this.list_type){
                 case "lesson":
@@ -271,7 +276,7 @@
                         url ='/schedule/add_lecture_schedule/'
                     }
                     break;
-                    
+
                 case "off":
                     url = '/schedule/add_schedule/'
                     break;
