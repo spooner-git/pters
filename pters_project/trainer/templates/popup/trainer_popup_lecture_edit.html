@@ -53,6 +53,200 @@
     }
 
 
+    // class Lecture_edit{
+    //     constructor(targetHTML, data, instance){
+    //         this.targetHTML = targetHTML;
+    //         this.instance = instance;
+    //         this.data = data;
+            
+    //         this.lecture_id;
+    //         this.lecture_name;
+    //         this.lecture_max_num;
+    //         this.lecture_operating_time;
+    //         this.lecture_color;
+    //         this.lecture_repeat_schedule;
+    //         this.lecture_fixed_member;
+    //         this.lecture_status_cd;
+
+    //         this.items;
+    //     }
+
+    //     init(){
+    //         this.reform_data(this.data);
+    //         this.render_setting_list();
+    //     }
+
+    //     reform_data(data){
+    //         this.data = data;
+            
+    //         this.lecture_id = this.data.lecture_id;
+    //         this.lecture_name = this.data.lecture_name;
+    //         this.lecture_note = this.data.lecture_note;
+    //         this.lecture_max_num = this.data.lecture_max_num;
+    //         this.lecture_operating_time = "% 90분";
+    //         this.lecture_color = "#fe4e65";
+    //         this.lecture_repeat_schedule = "% 반복 안함";
+    //         this.lecture_fixed_member = "% 1";
+    //         this.lecture_status_cd = this.data.lecture_state_cd;
+
+    //         this.items =    {    
+    //                             lecture_name: {visible: true, title:"수업명", value:this.lecture_name, input_type:"text"},
+    //                             lecture_note: {visible: true, title:"수업 설명", value: this.lecture_note, input_type:"text"},
+    //                             lecture_member_num: {visible: true, title:"정원", value: this.lecture_max_num, input_type:"number"},
+    //                             lecture_operating_time: {visible: true, title:"진행 시간", value: this.lecture_operating_time, input_type:"time"},
+    //                             lecture_ing_color_cd: {visible: true, title:"색상 태그", value: this.lecture_color, input_type:"color"},
+    //                             lecture_repeat_schedule: {visible: true, title:"반복 일정", value: this.lecture_repeat_schedule, input_type:"link"},
+    //                             lecture_fixed_member: {visible: true, title:"고정 회원", value: this.lecture_fixed_member, input_type:"link"},
+    //                             lecture_finished_members: {visible: true, title:"수업 종료된 회원", value:"", input_type:"link"},
+    //                             lecture_history: {visible: true, title:"수업 이력", value:"", input_type:"link"},
+    //                             lecture_deactivate: {visible: this.lecture_status_cd == "IP" ? true : false, title:"수업 비활성화", value:"", input_type:"option", option_data:
+    //                                 {"비활성화":{value: 0, callback: ()=>{this.data_state('lecture_state_cd', 'PE')}}}
+    //                             },
+    //                             lecture_activate: {visible: this.lecture_status_cd != "IP" ? true : false, title:"수업 활성화", value:"", input_type:"option", option_data:
+    //                                 {"활성화":{value: 0, callback: ()=>{this.data_state('lecture_state_cd', 'IP')}}}
+    //                             },
+    //                             lecture_delete: {visible: this.lecture_status_cd != "IP" ? true : false, title:"수업 삭제", value:"", input_type:"option", option_data:
+    //                                 {"완전 삭제":{value: 0, callback: ()=>{this.data_delete()}}}
+    //                             }
+    //                         };
+    //     }
+
+    //     render_setting_list(target, options){
+    //         if(target == undefined || target == ""){
+    //             target = this.targetHTML;
+    //         }
+    //         if(options != undefined){
+    //             for(let item in options){
+    //                 this.menu_items[item].visible = options[item].visible;
+    //             }
+    //         }
+
+    //         let html_to_join = [];
+    //         for(let item in this.items){
+    //             let item_el = this.items[item];
+    //             if(item_el.visible == false){
+    //                 continue;
+    //             }
+    //             if(item_el.value == ""){
+    //                 item_el.value = "&nbsp;"
+    //             }
+
+    //             let if_it_is_color = false;
+    //             let if_it_is_delete =false;
+    //             switch(item){
+    //                 //색상이 값인 경우 색상 표기를 위해
+    //                 case "lecture_ing_color_cd":
+    //                     if_it_is_color = true;
+    //                     break;
+
+    //                 //삭제 버튼의 경우 빨간색으로 글자 표기를 위해서
+    //                 case "lecture_delete":
+    //                     if_it_is_delete = true;
+    //                     break;
+    //             }
+
+
+    //             let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, item_el.input_type, if_it_is_color, if_it_is_delete); 
+    //             html_to_join.push(html);
+    //         }
+    //         document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`;
+    //         this.attach_events();
+    //     }
+
+    //     attach_events(){
+    //         for(let item in this.items){
+    //             let item_el = this.items[item];
+    //             if(item_el.visible == false){
+    //                 continue;
+    //             }
+                
+    //             let onclick;
+    //             let click_type = document.getElementById(`${item}`).dataset.click;
+    //             switch(click_type){
+    //                 case "text":
+    //                     onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, ()=>{lecture_edit.data_update(event, item)} )};
+    //                     break;
+    //                 case "number":
+    //                     onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, ()=>{lecture_edit.data_update(event, item)} )};
+    //                     break;
+    //                 case "option":
+    //                     let option_data = item_el.option_data
+    //                     onclick = ()=>{option_select_popup.open(option_data)};
+    //                     break;
+    //                 case "time":
+    //                     // onclick = ()=>{time_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
+    //                     onclick = ()=>{time_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
+    //                     break;
+    //                 case "date":
+    //                     // onclick = ()=>{date_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
+    //                     onclick = ()=>{date_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
+    //                     break;
+    //                 case "datepicker":
+    //                     onclick = function(event){
+    //                         if($(`#${event.target.id} input`).length == 0){
+    //                             $(`#${event.target.id}`).append('<input type="text" readonly>')
+    //                         }
+    //                         $(`#${event.target.id} input`).datepicker();$(`#${event.target.id} input`).datepicker('show'); }
+    //                     break;
+    //                 case "color":
+    //                     onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
+    //                     break;
+    //                 case "disabled":
+    //                     onclick = ()=>{show_error_message("수정 할 수 없는 항목입니다.")}
+    //                     break;    
+    //             }
+    //             document.getElementById(`${item}`).onclick = onclick;
+    //         }
+    //     }
+
+    //     data_update(context, item_name){
+    //         //데이터 형태 {"lecture_id":"", "member_num":"", "name":"", "note":"", "ing_color_cd":"", "end_color_cd":"", "ing_font_color_cd":"", "end_font_color_cd":""};
+    //         let user_input = $(context.target).parent().siblings('div').find('.popup_basic_user_input_data').val();
+    //         let data_to_send = {};
+    //         data_to_send["lecture_id"] = this.lecture_id;
+    //         data_to_send[item_name.replace(/lecture_/gi,"")] = user_input;
+
+    //         Lecture_func.update(data_to_send, () => {
+    //             this.data_refresh();
+    //         }) 
+    //     }
+
+    //     data_state(item_name, external_input){
+    //         let data_to_send = {};
+    //         data_to_send["lecture_id"] = this.lecture_id;
+    //         data_to_send[item_name.replace(/lecture_/gi,"")] = external_input;
+            
+    //         Lecture_func.status(data_to_send, () => {
+    //             this.data_refresh();
+    //         }) 
+    //     }
+
+    //     data_delete(){
+    //         let data_to_send = {};
+    //         data_to_send["lecture_id"] = this.lecture_id;
+
+    //         Lecture_func.delete(data_to_send, () => {
+    //             // this.data_refresh(); 
+    //             layer_popup.all_close_layer_popup();
+    //             lecture.init();
+    //         }) 
+    //     }
+
+    //     data_refresh(){
+    //         Lecture_func.read({"lecture_id":this.lecture_id}, (data)=>{
+    //             this.reform_data(data);
+    //             this.render_setting_list();
+    //             lecture_info_popup.refresh(data);
+    //             lecture.init();
+    //         })
+    //     }
+
+    // }
+
+    // var lecture_edit = new Lecture_edit("#wrapper_box_lecture_settings", lecture_info, "lecture_edit");
+    // lecture_edit.init();
+
+
     class Lecture_edit{
         constructor(targetHTML, data, instance){
             this.targetHTML = targetHTML;
@@ -90,22 +284,22 @@
             this.lecture_status_cd = this.data.lecture_state_cd;
 
             this.items =    {    
-                                lecture_name: {visible: true, title:"수업명", value:this.lecture_name, input_type:"text"},
-                                lecture_note: {visible: true, title:"수업 설명", value: this.lecture_note, input_type:"text"},
-                                lecture_member_num: {visible: true, title:"정원", value: this.lecture_max_num, input_type:"number"},
-                                lecture_operating_time: {visible: true, title:"진행 시간", value: this.lecture_operating_time, input_type:"time"},
-                                lecture_ing_color_cd: {visible: true, title:"색상 태그", value: this.lecture_color, input_type:"color"},
-                                lecture_repeat_schedule: {visible: true, title:"반복 일정", value: this.lecture_repeat_schedule, input_type:"link"},
-                                lecture_fixed_member: {visible: true, title:"고정 회원", value: this.lecture_fixed_member, input_type:"link"},
-                                lecture_finished_members: {visible: true, title:"수업 종료된 회원", value:"", input_type:"link"},
-                                lecture_history: {visible: true, title:"수업 이력", value:"", input_type:"link"},
-                                lecture_deactivate: {visible: this.lecture_status_cd == "IP" ? true : false, title:"수업 비활성화", value:"", input_type:"option", option_data:
+                                lecture_name: {visible: true, title:"수업명", value:this.lecture_name, user_input_type:"text"},
+                                lecture_note: {visible: true, title:"수업 설명", value: this.lecture_note, user_input_type:"text"},
+                                lecture_member_num: {visible: true, title:"정원", value: this.lecture_max_num, user_input_type:"number"},
+                                lecture_operating_time: {visible: true, title:"진행 시간", value: this.lecture_operating_time, user_input_type:"time"},
+                                lecture_ing_color_cd: {visible: true, title:"색상 태그", value: this.lecture_color, user_input_type:"color"},
+                                lecture_repeat_schedule: {visible: true, title:"반복 일정", value: this.lecture_repeat_schedule, user_input_type:"link"},
+                                lecture_fixed_member: {visible: true, title:"고정 회원", value: this.lecture_fixed_member, user_input_type:"link"},
+                                lecture_finished_members: {visible: true, title:"수업 종료된 회원", value:"", user_input_type:"link"},
+                                lecture_history: {visible: true, title:"수업 이력", value:"", user_input_type:"link"},
+                                lecture_deactivate: {visible: this.lecture_status_cd == "IP" ? true : false, title:"수업 비활성화", value:"", user_input_type:"option", option_data:
                                     {"비활성화":{value: 0, callback: ()=>{this.data_state('lecture_state_cd', 'PE')}}}
                                 },
-                                lecture_activate: {visible: this.lecture_status_cd != "IP" ? true : false, title:"수업 활성화", value:"", input_type:"option", option_data:
+                                lecture_activate: {visible: this.lecture_status_cd != "IP" ? true : false, title:"수업 활성화", value:"", user_input_type:"option", option_data:
                                     {"활성화":{value: 0, callback: ()=>{this.data_state('lecture_state_cd', 'IP')}}}
                                 },
-                                lecture_delete: {visible: this.lecture_status_cd != "IP" ? true : false, title:"수업 삭제", value:"", input_type:"option", option_data:
+                                lecture_delete: {visible: this.lecture_status_cd != "IP" ? true : false, title:"수업 삭제", value:"", user_input_type:"option", option_data:
                                     {"완전 삭제":{value: 0, callback: ()=>{this.data_delete()}}}
                                 }
                             };
@@ -127,76 +321,51 @@
                 if(item_el.visible == false){
                     continue;
                 }
-                if(item_el.value == ""){
+                if(item_el.value == "" || item_el.value == undefined){
                     item_el.value = "&nbsp;"
                 }
 
-                let if_it_is_color = false;
-                let if_it_is_delete =false;
-                switch(item){
-                    //색상이 값인 경우 색상 표기를 위해
-                    case "lecture_ing_color_cd":
-                        if_it_is_color = true;
-                        break;
-
-                    //삭제 버튼의 경우 빨간색으로 글자 표기를 위해서
-                    case "lecture_delete":
-                        if_it_is_delete = true;
-                        break;
-                }
-
-
-                let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, item_el.input_type, if_it_is_color, if_it_is_delete); 
+                let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, ()=>{
+                    this.attach_events(item_el.user_input_type, item_el.title, item_el.value, item, item_el.option_data)
+                }); 
                 html_to_join.push(html);
             }
             document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`;
-            this.attach_events();
         }
 
-        attach_events(){
-            for(let item in this.items){
-                let item_el = this.items[item];
-                if(item_el.visible == false){
-                    continue;
-                }
-                
-                let onclick;
-                let click_type = document.getElementById(`${item}`).dataset.click;
-                switch(click_type){
-                    case "text":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, ()=>{lecture_edit.data_update(event, item)} )};
-                        break;
-                    case "number":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, ()=>{lecture_edit.data_update(event, item)} )};
-                        break;
-                    case "option":
-                        let option_data = item_el.option_data
-                        onclick = ()=>{option_select_popup.open(option_data)};
-                        break;
-                    case "time":
-                        // onclick = ()=>{time_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
-                        onclick = ()=>{time_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
-                        break;
-                    case "date":
-                        // onclick = ()=>{date_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
-                        onclick = ()=>{date_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
-                        break;
-                    case "datepicker":
-                        onclick = function(event){
-                            if($(`#${event.target.id} input`).length == 0){
-                                $(`#${event.target.id}`).append('<input type="text" readonly>')
-                            }
-                            $(`#${event.target.id} input`).datepicker();$(`#${event.target.id} input`).datepicker('show'); }
-                        break;
-                    case "color":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
-                        break;
-                    case "disabled":
-                        onclick = ()=>{show_error_message("수정 할 수 없는 항목입니다.")}
-                        break;    
-                }
-                document.getElementById(`${item}`).onclick = onclick;
+
+        attach_events(type, title, value, item, appendix_data){
+            let onclick;
+            switch(type){
+                case "text":
+                    onclick = show_user_input_popup(type, value, ()=>{this.data_update(event, item)} );
+                    break;
+                case "number":
+                    onclick = show_user_input_popup(type, value, ()=>{this.data_update(event, item)} );
+                    break;
+                case "option":
+                    let option_data = appendix_data;
+                    onclick = option_select_popup.open(option_data);
+                    break;
+                case "time":
+                    // onclick = ()=>{time_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
+                    onclick = time_select_popup.open(`${this.instance}.data_update(this, '${item}')`);
+                    break;
+                case "date":
+                    // onclick = ()=>{date_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
+                    onclick = date_select_popup.open(`${this.instance}.data_update(this, '${item}')`);
+                    break;
+                case "datepicker":
+                    onclick;
+                    break;
+                case "color":
+                    onclick = show_user_input_popup(type, value, `${this.instance}.data_update(this, '${item}')`);
+                    break;
+                case "disabled":
+                    onclick = show_error_message("수정 할 수 없는 항목입니다.");
+                    break;    
             }
+            return onclick;
         }
 
         data_update(context, item_name){

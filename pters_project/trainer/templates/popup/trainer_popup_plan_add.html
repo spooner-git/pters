@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block popup_base_wrapper_top_right %}
-<img src="/static/common/icon/icon_done.png" alt="" class="obj_icon_basic">
+<img src="/static/common/icon/icon_done.png" alt="" class="obj_icon_basic" onclick="plan_add.send_data()">
 {% endblock %}
 
 {% block popup_base_contents %}
@@ -66,7 +66,7 @@
             this.instance = instance;
             this.data = data;
 
-            this.list_type = "lecture";
+            this.list_type = "lesson";
 
             let d = new Date();
             this.current_year = d.getFullYear();
@@ -76,12 +76,14 @@
             this.current_minute = Math.round(d.getMinutes()/5)*5
             this.current_zone = d.getHours() > 12 ? 1 : 0;
 
-
+            
             this.data_to_send = {
                     lecture_id:"",
                     lecture_ids:[],
                     lecture_name:"",
                     lecture_names:[],
+                    lecture_max_num:"",
+                    lecture_max_nums:[],
                     member_id:"",
                     member_ids:[],
                     member_name:"",
@@ -111,14 +113,10 @@
 
             if(type == "off"){
                 this.render_off_add_set();
-            }else if(type == "lecture"){
+            }else if(type == "lesson"){
                 this.render_lecture_add_set();
             }
 
-            
-            this.request_lecture(()=>{
-
-            })
         }
 
         render_toolbox(){
@@ -146,14 +144,19 @@
             
             let html_lecture_select = CComponent.create_row('select_lecture', this.data_to_send.lecture_name == "" ? '수업' : this.data_to_send.lecture_name , '/static/common/icon/icon_lecture.png', SHOW, (data)=>{ 
                 // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':this.data.basic_info.member_id});
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, function(){
-                    var lecture_select = new LectureSelector('#wrapper_box_lecture_select', "lecture_select", plan_add, false);
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
+                    var lecture_select = new LectureSelector('#wrapper_box_lecture_select', "lecture_select", plan_add, 1);
                 });
             });
             let html_member_select = CComponent.create_row('select_member', this.data_to_send.member_name == "" ? '회원' : this.data_to_send.member_name, '/static/common/icon/icon_lecture.png', SHOW, (data)=>{
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, function(){
-                    var member_select = new MemberSelector('#wrapper_box_member_select', "member_select", plan_add, true);
-                });
+                if(this.data_to_send.lecture_id != ""){
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
+                        var member_select = new MemberSelector('#wrapper_box_member_select', "member_select", plan_add, this.data_to_send.lecture_max_num, {'lecture_id':this.data_to_send.lecture_id});
+                    });
+                }else{
+                    show_error_message('수업을 먼저 선택해주세요.');
+                }
+                
             });
             let html = html_lecture_select + html_member_select;
 
@@ -243,45 +246,47 @@
 
         switch_type(){
             switch(this.list_type){
-                case "lecture":
+                case "lesson":
                     this.init("off");
                 break;
 
                 case "off":
-                    this.init("lecture");
+                    this.init("lesson");
                 break;
+            };
+        }
+
+        send_data(){
+
+            let data = {"member_id":this.data_to_send.member_id, "lecture_id":this.data_to_send.lecture_id, 
+                        "start_date":this.data_to_send.date.replace(/\./gi,"-"), "start_time":this.data_to_send.start_time, 
+                        "end_date":this.data_to_send.date.replace(/\./gi,"-"), "end_time":this.data_to_send.end_time, 
+                        "add_memo":this.data_to_send.memo, "duplication_enable_flag": 1, 
+                        "en_dis_type":this.list_type == "off" ? 0 : 1, "lecture_member_ids":this.data_to_send.member_ids.join('/')
+            };
+            //en_dis_type 0: off일정, 1:레슨일정
+            //duplication_enable_flag 0: 중복불허 1:중복허용
+            console.log("data", data)
+            let url;
+            switch(this.list_type){
+                case "lesson":
+                    if(this.data_to_send.lecture_max_num == 1){
+                        url = '/schedule/add_schedule/'
+                    }else if(this.data_to_send.lecture_max_num > 1){
+                        url ='/schedule/add_lecture_schedule/'
+                    }
+                    break;
+
+                case "off":
+                    url = '/schedule/add_schedule/'
+                    break;
             }
-        }
 
-        request_member(callback){
-            let data_reproduced;
-            member.request_member_list("ing", (data)=>{
-                data_reproduced = this.data_reproduce(data.current_member_data);
-                callback(data_reproduced);
-            })
-            
-        }
+            Plan_func.create(url, data, ()=>{
+                layer_popup.close_layer_popup();
+                calendar.init();
+            });
 
-        request_lecture(callback){
-            let data_reproduced;
-            lecture.request_lecture_list("ing", (data)=>{
-                data_reproduced = this.data_reproduce(data.current_lecture_data);
-                callback(data_reproduced);
-            })
-            
-        }
-
-        data_reproduce(ajax_json_data){
-            let length = ajax_json_data.length;
-            for(let i=0; i<length; i++){
-                let data = ajax_json_data[i];
-                Object.keys(ajax_json_data[i]).forEach(function(key) {
-                    var newkey = key.replace(/member_/gi, "").replace(/lecture_/gi, "").replace(/id/gi, "value");
-                    data[newkey] = data[key];
-                    delete data[key];
-                });
-            }
-            return ajax_json_data;
         }
 
 
@@ -296,7 +301,7 @@
                                         </div>
                                         <div class="plan_add_bottom_tools_wrap">
                                             <div class="list_type_tab_wrap">
-                                                <div onclick="${this.instance}.switch_type();" class="${this.list_type == "lecture" ? "tab_selected" : ""}">수업</div>
+                                                <div onclick="${this.instance}.switch_type();" class="${this.list_type == "lesson" ? "tab_selected" : ""}">수업</div>
                                                 <div onclick="${this.instance}.switch_type();" class="${this.list_type == "off" ? "tab_selected" : ""}">OFF</div>
                                             </div>
                                         </div>

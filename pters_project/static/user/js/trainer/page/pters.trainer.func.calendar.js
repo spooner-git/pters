@@ -30,6 +30,9 @@ class Calendar {
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 
+        if(cal_type == undefined){
+            cal_type = this.cal_type;
+        }
         this.cal_type = cal_type;
         switch(cal_type){
         case "month":
@@ -336,7 +339,7 @@ class Calendar {
             for(let i=1; i<=7; i++){
                 if(i==clicked_number){
                     Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
-                        el.style.width = "100%";
+                        el.style.width = "87.5%";
                     });
                     continue;
                 }
@@ -519,7 +522,7 @@ class Calendar {
     
                 dates_to_join.push(
                     `
-                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_2" data-row="2" onclick="${onclick_func}(event, ${_year[i]}, ${_month[i]}, ${_date[i]})">
+                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" onclick="${onclick_func}(event, ${_year[i]}, ${_month[i]}, ${_date[i]})">
                         ${_date[i]}
                         <div class="${schedule_number_display} ${has_schedule}">${schedule_date}</div>
                         ${today_marking}
@@ -536,7 +539,7 @@ class Calendar {
                 ? 
                     result_html
                 :
-                `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:27px;background-color:#ffffff;z-index:10;height:25px;line-height:15px;font-size:20px` : ""}">
+                `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:30px;background-color:#ffffff;z-index:10;height:25px;line-height:15px;font-size:20px` : ""}">
                     ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
                     ${result_html}
                 </div>
@@ -856,11 +859,12 @@ class Calendar {
 
 
 class Plan_func{
-    static create(data, callback){
+    static create(url, data, callback){
         //데이터 형태 {"member_id":"", "contents":"", "counts":"", "price":"", "start_date":"", "end_date":"", "class_id":"", "package_id":""};
 
         $.ajax({
-            url:'/trainer/add_lecture_info/',
+            // url:'/schedule/add_schedule/',
+            url : url,
             type:'POST',
             data: data,
             dataType : 'html',

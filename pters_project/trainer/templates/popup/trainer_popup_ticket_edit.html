@@ -80,22 +80,22 @@
             this.ticket_price = "% 1,200,000원";
             this.ticket_status_cd = this.data.ticket_state_cd;
             this.items =    {    
-                                ticket_name: {visible: true, title:"수강권명", value:this.ticket_name, input_type:"text"},
+                                ticket_name: {visible: true, title:"수강권명", value:this.ticket_name, user_input_type:"text"},
                                 // ticket_description: {visible: true, title:"수강권 설명", value: this.ticket_description},
-                                ticket_note: {visible: true, title:"수강권 설명", value: this.ticket_description, input_type:"text"},
-                                ticket_include_lectures: {visible: true, title:"포함된 수업", value: this.ticket_include_lectures.length, input_type:"link"},
-                                ticket_count: {visible: true, title:"횟수", value: this.ticket_count, input_type:"number"},
-                                ticket_expiry: {visible: true, title:"유효 기간", value: this.ticket_expiry, input_type:"date"},
-                                ticket_price: {visible: true, title:"가격", value: this.ticket_price, input_type:"number"},
-                                ticket_finished_members: {visible: true, title:"수강 종료된 회원", value:"", input_type:"link"},
-                                ticket_history: {visible: true, title:"수강권 이력", value:"", input_type:"link"},
-                                ticket_deactivate: {visible: this.ticket_status_cd == "IP" ? true : false, title:"수강권 비활성화", value:"", input_type:"option", option_data:
+                                ticket_note: {visible: true, title:"수강권 설명", value: this.ticket_description, user_input_type:"text"},
+                                ticket_include_lectures: {visible: true, title:"포함된 수업", value: this.ticket_include_lectures.length, user_input_type:"link"},
+                                ticket_count: {visible: true, title:"횟수", value: this.ticket_count, user_input_type:"number"},
+                                ticket_expiry: {visible: true, title:"유효 기간", value: this.ticket_expiry, user_input_type:"date"},
+                                ticket_price: {visible: true, title:"가격", value: this.ticket_price, user_input_type:"number"},
+                                ticket_finished_members: {visible: true, title:"수강 종료된 회원", value:"", user_input_type:"link"},
+                                ticket_history: {visible: true, title:"수강권 이력", value:"", user_input_type:"link"},
+                                ticket_deactivate: {visible: this.ticket_status_cd == "IP" ? true : false, title:"수강권 비활성화", value:"", user_input_type:"option", option_data:
                                     {"비활성화":{value: 0, callback: ()=>{this.data_state('ticket_state_cd', 'PE')}}}
                                 },
-                                ticket_activate: {visible: this.ticket_status_cd != "IP" ? true : false, title:"수강권 활성화", value:"", input_type:"option", option_data:
+                                ticket_activate: {visible: this.ticket_status_cd != "IP" ? true : false, title:"수강권 활성화", value:"", user_input_type:"option", option_data:
                                     {"활성화":{value: 0, callback: ()=>{this.data_state('ticket_state_cd', 'IP')}}}
                                 },
-                                ticket_delete: {visible: this.ticket_status_cd != "IP" ? true : false, title:"수강권 삭제", value:"", input_type:"option", option_data:
+                                ticket_delete: {visible: this.ticket_status_cd != "IP" ? true : false, title:"수강권 삭제", value:"", user_input_type:"option", option_data:
                                     {"완전 삭제":{value: 0, callback: ()=>{this.data_delete()}}}
                                 }
                             };
@@ -121,66 +121,45 @@
                 if(item_el.value == ""){
                     item_el.value = "&nbsp;"
                 }
-
-                let if_it_is_delete =false;
-                switch(item){
-                    //삭제 버튼의 경우 빨간색으로 글자 표기를 위해서
-                    case "ticket_delete":
-                        if_it_is_delete = true;
-                        break;
-                }
-
-                let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, item_el.input_type, false, if_it_is_delete); 
+               
+                let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, ()=>{
+                    this.attach_events(item_el.user_input_type, item_el.title, item_el.value, item, item_el.option_data)
+                });
                 html_to_join.push(html);
             }
             document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`; 
-            this.attach_events();
         }
 
-        attach_events(){
-            for(let item in this.items){
-                let item_el = this.items[item];
-                if(item_el.visible == false){
-                    continue;
-                }
-                
-                let onclick;
-                let click_type = document.getElementById(`${item}`).dataset.click;
-                switch(click_type){
-                    case "text":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, ()=>{ticket_edit.data_update(event, item)} )};
-                        break;
-                    case "number":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, ()=>{ticket_edit.data_update(event, item)} )};
-                        break;
-                    case "option":
-                        let option_data = item_el.option_data
-                        onclick = ()=>{option_select_popup.open(option_data)};
-                        break;
-                    case "time":
-                        // onclick = ()=>{time_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
-                        onclick = ()=>{time_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
-                        break;
-                    case "date":
-                        // onclick = ()=>{date_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
-                        onclick = ()=>{date_select_popup.open(`${this.instance}.data_update(this, '${item}')`)};
-                        break;
-                    case "datepicker":
-                        onclick = function(event){
-                            if($(`#${event.target.id} input`).length == 0){
-                                $(`#${event.target.id}`).append('<input type="text" readonly>')
-                            }
-                            $(`#${event.target.id} input`).datepicker();$(`#${event.target.id} input`).datepicker('show'); }
-                        break;
-                    case "color":
-                        onclick = ()=>{show_user_input_popup(click_type, event.target.innerText, `${this.instance}.data_update(this, '${item}')`)};
-                        break;
-                    case "disabled":
-                        onclick = ()=>{show_error_message("수정 할 수 없는 항목입니다.")}
-                        break;
-                }
-                document.getElementById(`${item}`).onclick = onclick;
+        attach_events(type, title, value, item, appendix_data){
+            let onclick;
+            switch(type){
+                case "text":
+                    onclick = show_user_input_popup(type, value, ()=>{this.data_update(event, item)} );
+                    break;
+                case "number":
+                    onclick = show_user_input_popup(type, value, ()=>{this.data_update(event, item)} );
+                    break;
+                case "option":
+                    let option_data = appendix_data;
+                    onclick = option_select_popup.open(option_data);
+                    break;
+                case "time":
+                    onclick = time_select_popup.open(`${this.instance}.data_update(this, '${item}')`);
+                    break;
+                case "date":
+                    onclick = date_select_popup.open(`${this.instance}.data_update(this, '${item}')`);
+                    break;
+                case "datepicker":
+                    onclick;
+                    break;
+                case "color":
+                    onclick = show_user_input_popup(type, value, `${this.instance}.data_update(this, '${item}')`);
+                    break;
+                case "disabled":
+                    onclick = show_error_message("수정 할 수 없는 항목입니다.");
+                    break;    
             }
+            return onclick;
         }
 
         data_update(context, item_name){

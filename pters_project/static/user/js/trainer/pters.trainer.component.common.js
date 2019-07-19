@@ -1,32 +1,25 @@
 class CComponent{
 
-    static setting_row (id, title, value, click_type, color, delete_highlight, onclick){
-        if(color == true){
-            value = `<div style="display:inline-block;width:25px;height:25px;border-radius: 3px;background-color:${value};vertical-align: middle;margin-bottom:4px;"></div>`;
-        }
-
-        let button_style = "";
-        if(delete_highlight == true){
-            button_style = "obj_font_bg_coral_white";
-        }
-
-        let html = `<li class="${button_style}">
-                        <div class="obj_table_raw">
+    //설정 페이지들에서 자주 사용되는 row 스타일
+    static setting_row (id, title, value, onclick){
+ 
+        let html = `<li>
+                        <div class="obj_table_raw" id="${id}">
                             <div class="cell_title">${title}</div>
-                            <div class="cell_value" id="${id}" data-click="${click_type}">${value}</div>
+                            <div class="cell_value">${value}</div>
+                            <input type="hidden">
                             <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
                         </div>
                     </li>`;
         
-        // $(document).off('click', `#${id}`).on('click', `#${id}`, function(e){
-        //     // let cell_value = $(this).find('.cell_value').text();
-        //     console.log('클릭setting_row');
-        //     onclick('clicked_crea_row_from_common_component');
-        // });
+        $(document).off('click', `#${id}`).on('click', `#${id}`, function(e){
+            onclick();
+        });
 
         return html;
     }
 
+    //추가 페이지들에서 자주 사용되는 row 스타일
     static create_row (id, title, icon, icon_r_visible, onclick){
         
         let html = `<li class="create_row" id="${id}">
@@ -60,7 +53,7 @@ class CComponent{
                     <li class="select_lecture_row" id="select_lecture_row_${lecture_id}">
                         <div class="obj_table_raw">
                             <div class="cell_lecture_color">
-                                <div style="color:${color_code}" class="lecture_color_bar">
+                                <div style="background-color:${color_code}" class="lecture_color_bar">
                                 </div>
                             </div>
                             <div class="cell_lecture_info">
@@ -68,23 +61,27 @@ class CComponent{
                                 <div>정원 - ${max_member_num} 명</div>
                             </div>
                             <div class="cell_lecture_selected">
-                                <img src="/static/common/icon/icon_done.png" class="obj_icon_basic lecture_selected" style="display:${checked == 0 ? 'none' : 'block'}">
+                                <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? 'none' : 'lecture_selected'}">
                             </div>
                         </div>
                     </li>
                     `;
 
-        if(multiple_select == true){
+        if(multiple_select > 1){
             $(document).off('click', `#select_lecture_row_${lecture_id}`).on('click', `#select_lecture_row_${lecture_id}`, function(e){
-                if($(this).find('.lecture_selected').css('display') == 'none'){
-                    $(this).find('.lecture_selected').css('display', 'block');
+                if(!$(this).find('.cell_lecture_selected img').hasClass('lecture_selected')){
+                    if($('.lecture_selected').length >= multiple_select){
+                        show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
+                        return false;
+                    }
+                    $(this).find('.cell_lecture_selected img').addClass('lecture_selected');
                     onclick('add');
                 }else{
-                    $(this).find('.lecture_selected').css('display', 'none');
+                    $(this).find('.cell_lecture_selected img').removeClass('lecture_selected');
                     onclick('substract');
                 }
             });
-        }else if(multiple_select == false){
+        }else if(multiple_select == 1){
             $(document).off('click', `#select_lecture_row_${lecture_id}`).on('click', `#select_lecture_row_${lecture_id}`, function(e){
                 
                 onclick('add_single');
@@ -95,6 +92,7 @@ class CComponent{
     }
 
     static select_member_row (multiple_select, checked, member_id, member_name, member_rem_count, member_expiry, onclick){
+
         let html = `
                     <li class="select_member_row" id="select_member_row_${member_id}">
                         <div class="obj_table_raw">
@@ -105,23 +103,27 @@ class CComponent{
                                 잔여 ${member_rem_count}회 / ${member_expiry}까지
                             </div>
                             <div class="cell_member_selected">
-                                <img src="/static/common/icon/icon_done.png" class="obj_icon_basic member_selected" style="display:${checked == 0 ? 'none' : 'block'}">
+                                <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? '' : 'member_selected'}">
                             </div>
                         </div>
                     </li>
                     `;
 
-        if(multiple_select == true){
+        if(multiple_select > 1){
             $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
-                if($(this).find('.member_selected').css('display') == 'none'){
-                    $(this).find('.member_selected').css('display', 'block');
+                if(!$(this).find('.cell_member_selected img').hasClass('member_selected')){
+                    if($('.member_selected').length >= multiple_select){
+                        show_error_message(`${multiple_select} 명까지 선택할 수 있습니다.`);
+                        return false;
+                    }
+                    $(this).find('.cell_member_selected img').addClass('member_selected');
                     onclick('add');
                 }else{
-                    $(this).find('.member_selected').css('display', 'none');
+                    $(this).find('.cell_member_selected img').removeClass('member_selected');
                     onclick('substract');
                 }
             });
-        }else if(multiple_select == false){
+        }else if(multiple_select == 1){
             $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
                 
                 onclick('add_single');

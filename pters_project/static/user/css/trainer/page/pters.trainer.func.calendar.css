@@ -1,6 +1,7 @@
 #cal_display_panel{
 	position: absolute;
-	height: 102px;
+	/* height: 102px; */
+	height: auto;
 	z-index: 10;
 	width: 100%;
 	/* text-align: center; */
