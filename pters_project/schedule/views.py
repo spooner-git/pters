@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError, InternalError, transaction
 from django.db.models import Q
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView
@@ -222,9 +222,6 @@ def add_schedule_logic(request):
                                                                         permission_state_cd,
                                                                         state_cd, duplication_enable_flag)
                                     error_temp = schedule_result['error']
-
-                                # if error_temp is None:
-                                #     error_temp = func_refresh_member_ticket_count(class_id, member_ticket_id)
 
                                 if error_temp is not None:
                                     raise InternalError
@@ -1932,15 +1929,14 @@ def add_lecture_repeat_schedule_confirm(request):
                                                     # if setting_schedule_auto_finish == AUTO_FINISH_ON \
                                                     #         and timezone.now() > schedule_info.end_dt:
                                                     #     state_cd = 'PE'
-                                                    schedule_result = \
-                                                        func_add_schedule(class_id, member_ticket_id,
-                                                                          member_repeat_schedule_info.repeat_schedule_id,
-                                                                          lecture_info.lecture_id,
-                                                                          schedule_info.schedule_id,
-                                                                          schedule_info.start_dt, schedule_info.end_dt,
-                                                                          '', ON_SCHEDULE_TYPE, request.user.id,
-                                                                          permission_state_cd,
-                                                                          state_cd, SCHEDULE_DUPLICATION_DISABLE)
+                                                    schedule_result = func_add_schedule(
+                                                        class_id, member_ticket_id,
+                                                        member_repeat_schedule_info.repeat_schedule_id,
+                                                        lecture_info.lecture_id, schedule_info.schedule_id,
+                                                        schedule_info.start_dt, schedule_info.end_dt,
+                                                        '', ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
+                                                        state_cd, SCHEDULE_DUPLICATION_DISABLE)
+
                                                     error_temp = schedule_result['error']
 
                                                 if error_temp is None:
@@ -1949,9 +1945,9 @@ def add_lecture_repeat_schedule_confirm(request):
 
                                                 if error_temp is None:
                                                     error_temp = \
-                                                        func_check_lecture_available_member_after(class_id,
-                                                                                                  lecture_info.lecture_id,
-                                                                                                  schedule_info.schedule_id)
+                                                        func_check_lecture_available_member_after(
+                                                            class_id, lecture_info.lecture_id,
+                                                            schedule_info.schedule_id)
 
                                                 if error_temp is not None:
                                                     raise InternalError
