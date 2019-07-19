@@ -175,12 +175,12 @@ class TimeRobot{
             }
         }
 
-        if(resultHour<10){
-            resultHour = '0' + resultHour;
-        }
-        if(resultMin<10){
-            resultMin = '0' + resultMin;
-        }
+        // if(resultHour<10){
+        //     resultHour = '0' + resultHour;
+        // }
+        // if(resultMin<10){
+        //     resultMin = '0' + resultMin;
+        // }
 
 
         return {hour:resultHour, minute:resultMin}
