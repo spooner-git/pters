@@ -45,7 +45,7 @@
 	font-weight: 500;
 
 	border-bottom: 1px solid #cccccc;
-	padding: 0 16px;
+	padding: 5px 16px;
 }
 
 .select_lecture_row .cell_lecture_color{
@@ -87,7 +87,7 @@
 	font-weight: 500;
 
 	border-bottom: 1px solid #cccccc;
-	padding: 0 16px;
+	padding: 5px 16px;
 }
 
 .select_member_row .cell_member_name{

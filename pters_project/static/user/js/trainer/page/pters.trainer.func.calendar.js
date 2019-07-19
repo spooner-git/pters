@@ -30,6 +30,9 @@ class Calendar {
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 
+        if(cal_type == undefined){
+            cal_type = this.cal_type;
+        }
         this.cal_type = cal_type;
         switch(cal_type){
         case "month":
@@ -856,11 +859,12 @@ class Calendar {
 
 
 class Plan_func{
-    static create(data, callback){
+    static create(url, data, callback){
         //데이터 형태 {"member_id":"", "contents":"", "counts":"", "price":"", "start_date":"", "end_date":"", "class_id":"", "package_id":""};
 
         $.ajax({
-            url:'/trainer/add_lecture_info/',
+            // url:'/schedule/add_schedule/',
+            url : url,
             type:'POST',
             data: data,
             dataType : 'html',
