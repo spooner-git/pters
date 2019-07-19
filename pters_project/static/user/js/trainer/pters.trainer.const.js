@@ -93,4 +93,4 @@ const LOCAL = 1;
 /* input팝업 구분 */
 
 /*기타 */
-const DAYNAME_KR = ['월', '화', '수', '목', '금', '토', '일'];
+const DAYNAME_KR = ['일', '월', '화', '수', '목', '금', '토'];
