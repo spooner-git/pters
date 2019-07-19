@@ -21,7 +21,7 @@ urlpatterns = [
     # 강사 일정 기능 #####################################################################################################
     # 일정 등록 - refactoring 진행중
     url(r'^add_schedule/$', views.add_schedule_logic, name='add_schedule'),
-    # 일정 삭제 - refactoring 진행중
+    # 일정 삭제 - refactoring 진행중, push 관련 내용 추가 필요
     url(r'^delete_schedule/$', views.delete_schedule_logic, name='delete_schedule'),
     # 일정 완료
     url(r'^update_schedule_state_cd/$', views.update_schedule_state_cd_logic, name='update_schedule_state_cd'),
@@ -40,9 +40,7 @@ urlpatterns = [
 
     # 그룹 일정 기능 #####################################################################################################
     # 그룹 일정 등록
-    url(r'^add_lecture_schedule/$', views.add_lecture_schedule_logic, name='add_lecture_schedule'),
     # 그룹 일정 취소
-    url(r'^delete_lecture_schedule/$', views.delete_lecture_schedule_logic, name='delete_lecture_schedule'),
     # 그룹 일정 완료
     url(r'^finish_lecture_schedule/$', views.finish_lecture_schedule_logic, name='finish_lecture_schedule'),
     # 그룹 일정에 그룹회원 일정 등록

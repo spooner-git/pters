@@ -337,9 +337,10 @@
             };
             //en_dis_type 0: off일정, 1:레슨일정
             //duplication_enable_flag 0: 중복불허 1:중복허용
-            
+            console.log(data);
             let url;
-            switch(this.list_type){
+            url ='/schedule/add_schedule/';
+            /*switch(this.list_type){
                 case "lesson":
                     if(this.data_to_send.lecture_max_num == 1){
                         url = '/schedule/add_schedule/'
@@ -351,7 +352,7 @@
                 case "off":
                     url = '/schedule/add_schedule/';
                     break;
-            }
+            }*/
 
             Plan_func.create(url, data, ()=>{
                 layer_popup.close_layer_popup();

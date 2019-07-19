@@ -4529,7 +4529,8 @@ def attend_mode_finish_logic(request):
                             if member_ticket_id is None or member_ticket_id == '':
                                 error = '예약 가능한 횟수가 없습니다.'
                             else:
-                                error = func_check_lecture_available_member_before(class_id, schedule_info.lecture_tb_id,
+                                error = func_check_lecture_available_member_before(class_id,
+                                                                                   schedule_info.lecture_tb_id,
                                                                                    schedule_id)
 
                         if error is None:
