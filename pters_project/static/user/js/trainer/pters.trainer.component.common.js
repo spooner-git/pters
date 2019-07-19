@@ -25,11 +25,11 @@ class CComponent{
         let html = `<li class="create_row" id="${id}">
                         <div class="obj_table_raw">
                             <div class="cell_title">
-                                ${icon != "" ? `<img class="obj_icon_basic" src="${icon}">` : ""} 
+                                ${icon != "" ? `<img src="${icon}">` : ""} 
                                 <span class="cell_text">${title}</span>
                                 <input type="hidden">
                             </div>
-                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
                         </div>
                     </li>`;
 

@@ -886,8 +886,10 @@ class Plan_func{
             },
     
             //통신 실패시 처리
-            error:function(){
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            error:function(data){
+                console.log(data)
+                // show_error_message(data.statusText);
+                show_error_message('오류 발생 \n 모든 필수 정보를 입력후 다시 시도해주세요.');
             }
         });
     }
