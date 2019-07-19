@@ -24,13 +24,13 @@ from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.models import ScheduleTb, DeleteScheduleTb
 from trainer.functions import func_get_trainer_setting_list
-from trainer.models import ClassMemberTicketTb, LectureMemberTicketTb, ClassTb, SettingTb, LectureTb, TicketLectureTb,\
-    TicketTb, LectureMemberTb
+from trainer.models import ClassMemberTicketTb,  ClassTb, SettingTb, LectureTb, TicketLectureTb,\
+    TicketTb
 from .models import MemberTicketTb, MemberMemberTicketTb
 
-from schedule.functions import func_get_member_ticket_id, func_get_lecture_member_ticket_id, \
-    func_check_lecture_available_member_before, func_check_lecture_available_member_after, func_add_schedule, \
-    func_date_check, func_refresh_member_ticket_count
+from schedule.functions import func_get_member_ticket_id, func_check_lecture_available_member_before,\
+    func_check_lecture_available_member_after, func_add_schedule, func_refresh_member_ticket_count, \
+    func_get_lecture_member_ticket_id_from_trainee
 from .functions import func_get_class_member_ticket_count, func_get_member_ticket_list, func_get_class_list, \
     func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_lecture_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
@@ -410,9 +410,8 @@ def add_trainee_schedule_logic(request):
                                                                       lecture_schedule_id=lecture_schedule_id,
                                                                       member_ticket_tb__member_id=request.user.id)
                     if len(lecture_schedule_data) == 0:
-                        member_ticket_result = func_get_lecture_member_ticket_id(class_id,
-                                                                                 lecture_schedule_info.lecture_tb_id,
-                                                                                 request.user.id)
+                        member_ticket_result = func_get_lecture_member_ticket_id_from_trainee(
+                            class_id, lecture_schedule_info.lecture_tb_id, request.user.id)
 
                         if member_ticket_result['error'] is not None:
                             error = member_ticket_result['error']

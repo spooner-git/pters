@@ -463,7 +463,7 @@ def add_repeat_schedule_logic(request):
     repeat_end_time = request.POST.get('repeat_end_time')
     repeat_schedule_time_duration = request.POST.get('repeat_dur', '')
     en_dis_type = request.POST.get('en_dis_type', ON_SCHEDULE_TYPE)
-    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
+    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_ENABLE)
 
     class_id = request.session.get('class_id', '')
     # setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
@@ -486,8 +486,6 @@ def add_repeat_schedule_logic(request):
     repeat_success_date_data = []
     schedule_check = 0
 
-    if duplication_enable_flag is None or duplication_enable_flag == '':
-        duplication_enable_flag = SCHEDULE_DUPLICATION_DISABLE
     if repeat_type == '':
         error = '매주/격주를 선택해주세요.'
 
@@ -985,17 +983,14 @@ def add_lecture_schedule_logic(request):
     schedule_end_date = request.POST.get('end_date')
     schedule_end_time = request.POST.get('end_time')
     note = request.POST.get('add_memo', '')
-    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
-    lecture_member_ids = request.POST.get('lecture_member_ids', '')
+    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_ENABLE)
+    lecture_member_ids = request.POST.getlist('lecture_member_ids[]', '')
 
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
-
-    if lecture_member_ids is not None and lecture_member_ids != '':
-        lecture_member_ids = lecture_member_ids.split('/')
 
     error = None
     info_message = None
@@ -1011,8 +1006,6 @@ def add_lecture_schedule_logic(request):
     ticket_tb_list = []
     context = {'push_member_ticket_id': '', 'push_title': '', 'push_message': ''}
 
-    if duplication_enable_flag is None or duplication_enable_flag == '':
-        duplication_enable_flag = SCHEDULE_DUPLICATION_DISABLE
     if lecture_id == '':
         error = '오류가 발생했습니다.'
     elif schedule_date == '':
@@ -1818,11 +1811,10 @@ def add_lecture_repeat_schedule_logic(request):
     repeat_schedule_time_duration = request.POST.get('repeat_dur', '')
     class_id = request.session.get('class_id', '')
 
-    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
+    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_ENABLE)
     # setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
-    lecture_member_ids = request.POST.get('lecture_member_ids', '')
-    if lecture_member_ids is not None and lecture_member_ids != '':
-        lecture_member_ids = lecture_member_ids.split('/')
+    lecture_member_ids = request.POST.getlist('lecture_member_ids[]', '')
+
     week_info = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)']
     context = {}
     error = None
@@ -1841,8 +1833,6 @@ def add_lecture_repeat_schedule_logic(request):
     repeat_duplication_date_data = []
     repeat_success_date_data = []
 
-    if duplication_enable_flag is None or duplication_enable_flag == '':
-        duplication_enable_flag = SCHEDULE_DUPLICATION_DISABLE
     if repeat_type == '':
         error = '빈도를 선택해주세요.'
 
@@ -2048,9 +2038,8 @@ def add_lecture_repeat_schedule_confirm(request):
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
-    lecture_member_ids = request.POST.get('lecture_member_ids', '')
-    if lecture_member_ids is not None and lecture_member_ids != '':
-        lecture_member_ids = lecture_member_ids.split('/')
+    lecture_member_ids = request.POST.getlist('lecture_member_ids[]', '')
+
     if repeat_schedule_id == '':
         error = '확인할 반복 일정을 선택해주세요.'
     if repeat_confirm == '':
