@@ -2559,7 +2559,7 @@ def add_ticket_info_logic(request):
     ticket_week_schedule_enable = request.POST.get('ticket_week_schedule_enable', 7)
     ticket_day_schedule_enable = request.POST.get('ticket_day_schedule_enable', 1)
     ticket_reg_count = request.POST.get('ticket_reg_count', 0)
-    lecture_id_list = request.POST.getlist('lecture_id_list')
+    lecture_id_list = request.POST.getlist('lecture_id_list[]', '')
     error = None
 
     try:
@@ -2598,18 +2598,17 @@ def add_ticket_info_logic(request):
                                        reg_count=ticket_reg_count, note=ticket_note, use=USE)
                 ticket_info.save()
 
-                if lecture_id_list != '':
-                    for lecture_id in lecture_id_list:
-                        if lecture_id is not None and lecture_id != '':
-                            ticket_lecture_counter = TicketLectureTb.objects.filter(class_tb_id=class_id,
-                                                                                    ticket_tb_id=ticket_info.ticket_id,
-                                                                                    lecture_tb_id=lecture_id,
-                                                                                    use=USE).count()
-                            if ticket_lecture_counter == 0:
-                                ticket_lecture_info = TicketLectureTb(class_tb_id=class_id,
-                                                                      ticket_tb_id=ticket_info.ticket_id,
-                                                                      lecture_tb_id=lecture_id, use=USE)
-                                ticket_lecture_info.save()
+                for lecture_id in lecture_id_list:
+                    if lecture_id is not None and lecture_id != '':
+                        ticket_lecture_counter = TicketLectureTb.objects.filter(class_tb_id=class_id,
+                                                                                ticket_tb_id=ticket_info.ticket_id,
+                                                                                lecture_tb_id=lecture_id,
+                                                                                use=USE).count()
+                        if ticket_lecture_counter == 0:
+                            ticket_lecture_info = TicketLectureTb(class_tb_id=class_id,
+                                                                  ticket_tb_id=ticket_info.ticket_id,
+                                                                  lecture_tb_id=lecture_id, use=USE)
+                            ticket_lecture_info.save()
         except InternalError:
             error = error
 
@@ -4373,7 +4372,7 @@ def update_setting_language_logic(request):
 # log 삭제
 def alarm_delete_logic(request):
     log_size = request.POST.get('log_id_size')
-    delete_log_id = request.POST.getlist('log_id_array[]')
+    delete_log_id = request.POST.getlist('log_id_array[]', '')
 
     error = None
     if log_size == '0':

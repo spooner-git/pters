@@ -49,6 +49,33 @@ def func_get_member_ticket_id(class_id, member_id):
 # 그룹 Lecture Id 조회
 def func_get_lecture_member_ticket_id(class_id, lecture_id, member_id):
 
+    member_ticket_id = None
+    error = None
+    class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
+        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd='VIEW',
+                                   member_ticket_tb__member_id=member_id, member_ticket_tb__state_cd='IP',
+                                   member_ticket_tb__member_ticket_avail_count__gt=0,
+                                   member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
+                                                                       'member_ticket_tb__reg_dt')
+
+    for class_member_ticket_info in class_member_ticket_data:
+        ticket_lecture_count = TicketLectureTb.objects.filter(
+            ticket_tb_id=class_member_ticket_info.member_ticket_tb.ticket_tb_id, ticket_tb__state_cd='IP',
+            lecture_tb__state_cd='IP', lecture_tb_id=lecture_id, use=USE).count()
+
+        if ticket_lecture_count > 0:
+            member_ticket_id = class_member_ticket_info.member_ticket_tb.member_ticket_id
+            break
+
+    if len(class_member_ticket_data) == 0:
+        error = '예약 가능 횟수를 확인해주세요.'
+
+    return {'error': error, 'member_ticket_id': member_ticket_id}
+
+
+# 그룹 Lecture Id 조회
+def func_get_lecture_member_ticket_id_from_trainee(class_id, lecture_id, member_id):
+
     today = datetime.date.today()
     member_ticket_id = None
     error = None
