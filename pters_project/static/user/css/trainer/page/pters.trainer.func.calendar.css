@@ -32,10 +32,21 @@
 		background-position: center;
 		background-size: 23px;
 	}
-	.cal_tools_wrap > .swap_cal{
+	.cal_tools_wrap > .go_today{
 		display: table-cell;
 		height: 100%;
-		background-image: url("/static/common/icon/icon_swap.png?v2");
+		background-image: url("/static/common/icon/icon_today.png");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	}
+	.cal_upper_box .swap_cal{
+		display: inline-block;
+		height: 15px;
+		width: 15px;
+		vertical-align: middle;
+		margin-bottom: 4px;
+		background-image: url("/static/common/icon/expand_more_black.png");
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 23px;

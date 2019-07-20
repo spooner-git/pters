@@ -83,7 +83,6 @@ class Calendar {
                         
                     }
                 }
-                
             });
             
             this.toggle_touch_move('on', '#calendar_wrap');
@@ -186,6 +185,10 @@ class Calendar {
     }
 
     go_month (year, month){
+        if(year == undefined && month == undefined){
+            year = new Date().getFullYear();
+            month = new Date().getMonth()+1;
+        }
         this.current_year = year;
         this.current_month = month;
         this.render_upper_box("month");
@@ -193,6 +196,45 @@ class Calendar {
         this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
             if(date == `${this.current_year}-${this.current_month}-01`){
                 this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
+            }
+        });
+
+    }
+
+    go_week (year, month, date){
+        let week;
+        if(year == undefined && month == undefined && date == undefined){
+            year = new Date().getFullYear();
+            month = new Date().getMonth()+1;
+            date = new Date().getDate();
+        }
+
+        this.current_year = year;
+        this.current_month = month;
+        this.current_date = date;
+        this.current_week = Math.ceil( (date + new Date(year, month-1, 1).getDay() )/7 ) - 1;
+
+        this.render_upper_box("week");
+        this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
+        
+        //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
+        if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
+            this.week_zoomed.activate = false;
+            this.week_zoomed.target_row = new Date(year, month-1, date).getDay()+1;
+            this.zoom_week_cal();
+        }
+
+        this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+            if(date == `${this.current_year}-${this.current_month}-01`){
+                this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+                // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata);
+
+                //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
+                if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
+                    this.week_zoomed.activate = false;
+                    this.zoom_week_cal();
+                }
+                
             }
         });
     }
@@ -755,14 +797,15 @@ class Calendar {
             {
                 "month_cal_upper_box":` <div class="cal_upper_box">
                                             <button onclick="${this.instance}.move_month('prev')" style="vertical-align:middle;" hidden>이전</button>
-                                            <div style="display:inline-block;width:200px;font-size:20px;font-weight:bold;">
+                                            <div style="display:inline-block;width:200px;font-size:20px;font-weight:bold;" onclick="${this.instance}.switch_cal_type()">
                                                 <span class="display_year">${this.current_year}년</span>
                                                 <span class="display_month">${this.current_month}월</span>
+                                                <div class="swap_cal"></div>
                                             </div>
                                             <button onclick="${this.instance}.move_month('next')" style="vertical-align:middle;" hidden>다음</button>
                                             <div class="cal_tools_wrap">
-                                                <div class="swap_cal" onclick="${this.instance}.switch_cal_type()"></div>
-                                                <div class="add_plan" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':'${this.current_year}-${this.current_month}-${this.current_date}'})"></div>
+                                                <div class="go_today" onclick="${this.instance}.go_month()"></div>
+                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()"></div>
                                             </div>
                                         </div>
                                         <div class="cal_week_line_dates">
@@ -773,16 +816,17 @@ class Calendar {
                 "week_cal_upper_box":`
                                         <div class="cal_upper_box">
                                             <button onclick="${this.instance}.move_week('prev')" style="vertical-align:middle;" hidden>이전</button>
-                                            <div style="display:inline-block;width:200px;font-size:20px;font-weight:bold;">
+                                            <div style="display:inline-block;width:200px;font-size:20px;font-weight:bold;" onclick="${this.instance}.switch_cal_type()">
                                                 <span class="display_week">${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0] :null}월 
                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0] :null}일 - 
                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]: null}월 
                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[6]: null}일
                                                 </span>
+                                                <div class="swap_cal"></div>
                                             </div>
                                             <button onclick="${this.instance}.move_week('next')" style="vertical-align:middle;" hidden>다음</button>
                                             <div class="cal_tools_wrap">
-                                                <div class="swap_cal"  onclick="${this.instance}.switch_cal_type()"></div>
+                                                <div class="go_today" onclick="${this.instance}.go_week()"></div>
                                                 <div class="add_plan" onclick="${this.instance}.add_plan_button()"></div>
                                             </div>
                                         </div>
