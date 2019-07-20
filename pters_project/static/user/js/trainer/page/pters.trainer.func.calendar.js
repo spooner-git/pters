@@ -13,7 +13,11 @@ class Calendar {
         this.cal_type = "week";
         this.current_page_num = 1;
 
-        this.week_zoomed = false;
+        // this.week_zoomed = false;
+        this.week_zoomed = {
+            activate : false,
+            target_row : null
+        };
 
         let d = new Date();
         this.today = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
@@ -58,14 +62,30 @@ class Calendar {
         case "week":
             this.render_upper_box(cal_type);
             this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
+            
+            //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
+            if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
+                this.week_zoomed.activate = false;
+                this.zoom_week_cal();
+            }
+
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                 if(this.cal_type == cal_type){
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                        this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata);
+                        // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata);
+
+                        //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
+                        if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
+                            this.week_zoomed.activate = false;
+                            this.zoom_week_cal();
+                        }
+                        
                     }
                 }
+                
             });
+            
             this.toggle_touch_move('on', '#calendar_wrap');
             break;
         }
@@ -336,13 +356,14 @@ class Calendar {
     }
     
     zoom_week_cal (event){
-        let clicked_number = event.target.dataset.row;
+        
+        let clicked_number = event != undefined ? event.target.dataset.row : this.week_zoomed.target_row;
 
         if(clicked_number == undefined){
             return false;
         }
 
-        if(this.week_zoomed == false){
+        if(this.week_zoomed.activate == false){
             for(let i=1; i<=7; i++){
                 if(i==clicked_number){
                     Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
@@ -355,9 +376,11 @@ class Calendar {
                 });
                 
             }
-            this.week_zoomed = true;
+            // this.week_zoomed = true;
+            this.week_zoomed.activate = true;
+            this.week_zoomed.target_row = clicked_number;
             this.toggle_touch_move('off', '#calendar_wrap');
-        }else if(this.week_zoomed == true){
+        }else if(this.week_zoomed.activate == true){
             for(let i=1; i<=7; i++){
                 if(i==clicked_number){
                     Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
@@ -369,7 +392,9 @@ class Calendar {
                     el.style.display = "table-cell";
                 });
             }
-            this.week_zoomed = false;
+            // this.week_zoomed = false;
+            this.week_zoomed.activate = false;
+            this.week_zoomed.target_row = clicked_number;
             this.toggle_touch_move('on', '#calendar_wrap');
         }
     }
