@@ -1315,6 +1315,9 @@
         render_list(){
             let html_to_join = [];
             let length = this.data.length;
+            if(length == 0){
+                html_to_join.push(CComponent.no_data_row('수업 목록이 비어있습니다.'));
+            }
             for(let i=0; i<length; i++){
                 // lecture_id, lecture_name, color_code, max_member_num, onclick
                 let data = this.data[i];
@@ -1395,8 +1398,10 @@
         render_list(){
             let html_to_join = [];
             let length = this.data.length;
+            if(length == 0){
+                html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.'));
+            }
             for(let i=0; i<length; i++){
-                
                 let data = this.data[i];
                 let member_id = data.member_id;
                 let member_name = data.member_name;

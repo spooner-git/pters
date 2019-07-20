@@ -134,4 +134,16 @@ class CComponent{
     }
 
 
+    static no_data_row(text){
+        let html = `<li class="no_data_row">
+                        <div class="obj_table_raw">
+                            <div class="cell_no_data_row_text">
+                                <img src="/static/common/icon/icon_dissatisfied.png">
+                                ${text}
+                            </div>
+                        </div>
+                    </li>`;
+        return html;
+    }
+
 }
