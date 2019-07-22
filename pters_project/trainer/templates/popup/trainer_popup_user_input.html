@@ -495,9 +495,9 @@
             this.default_option = {
                                     year_start : this.current_year - 100,
                                     year_end : this.current_year,
-                                    init_year : 1986,
-                                    init_month : 2,
-                                    init_date : 24,
+                                    init_year : this.current_year,
+                                    init_month : this.current_month+1,
+                                    init_date : this.current_date,
                                     callback_when_set : function(){
                                         return false;
                                     }
@@ -505,13 +505,13 @@
             if(user_option != undefined){
                 //user_option이 들어왔을경우 default_option의 값을 user_option값으로 바꿔준다.
                 for(let option in user_option){
-                    this.default_option[option] = user_option[option];
+                    if(user_option[option] != null){
+                        this.default_option[option] = user_option[option];
+                    }
                 }
             }
             this.init();
         }
-
-        
 
         init(){
             this.init_html();
@@ -540,13 +540,13 @@
         }
 
         reset(year, month, date){
-            if(year == undefined){
+            if(year == undefined || year == "" || year.length == 0 || year == null){
                 year = this.default_option.init_year;
             }
-            if(month == undefined){
+            if(month == undefined || month == "" || month.length == 0 || month == null){
                 month = this.default_option.init_month;
             }
-            if(date == undefined){
+            if(date == undefined || date == "" || date.length == 0 || date == null){
                 date = this.default_option.init_date;
             }
             
@@ -620,7 +620,6 @@
 
             document.querySelector(`${this.targetHTML} .date_selector_date_wrap`).innerHTML = html;
         }
-
 
         set_iscroll(){
             this.year_scroll = new IScroll(`#year_wrap_${this.instance}`,{
@@ -787,14 +786,8 @@
 
         set_selected_data(){
             let result = this.get_selected_data();
-            let data_text_temp = `${result.year}년 ${result.month}월 ${result.date}일`;
             let data = `${result.year}.${result.month}.${result.date}`;
-
-            let d = new Date(result.year, result.month+1, result.date);
-            let day = d.getDay();
-            let day_name = ['월', '화', '수', '목', '금', '토', '일'];
-
-            let data_text = `${data_text_temp} (${day_name[day]})`;
+            let data_text = DateRobot.to_text(result.year, result.month, result.date);
             
             $(this.result_target).text(data_text);
             $(this.result_target).siblings('input').val(data);
@@ -803,7 +796,6 @@
                                 data: data, data_text: data_text
             }
 
-            // this.default_option.callback_when_set(data, data_text);
             this.default_option.callback_when_set(data_return);
         }
 
@@ -839,10 +831,10 @@
             this.user_scroll_hour = false;
             this.user_scroll_minute = false;
 
-            let d = new Date();
-            this.current_hour = d.getHours() > 12 ? d.getHours() - 12 : d.getHours();
-            this.current_minute = Math.round(d.getMinutes()/5)*5
-            this.current_zone = d.getHours() > 12 ? 1 : 0;
+            this.current_time = TimeRobot.to_zone(new Date().getHours(), new Date().getMinutes());
+            this.current_zone = this.current_time.zone;
+            this.current_hour = this.current_time.hour;
+            this.current_minute = this.current_time.minute;
 
             this.default_option = {
                                     init_zone : this.current_zone,
@@ -855,13 +847,14 @@
             if(user_option != undefined){
                 //user_option이 들어왔을경우 default_option의 값을 user_option값으로 바꿔준다.
                 for(let option in user_option){
-                    this.default_option[option] = user_option[option];
+                    if(user_option[option] != null){
+                        this.default_option[option] = user_option[option];
+                    }
                 }
             }
+            
             this.init();
         }
-
-        
 
         init(){
             this.init_html();
@@ -890,13 +883,13 @@
         }
 
         reset(zone, hour, minute){
-            if(zone == undefined){
+            if(zone == undefined || zone == null){
                 zone = this.default_option.init_zone;
             }
-            if(hour == undefined){
+            if(hour == undefined || zone == null){
                 hour = this.default_option.init_hour;
             }
-            if(minute == undefined){
+            if(minute == undefined || zone == null){
                 minute = this.default_option.init_minute;
             }
             
@@ -963,7 +956,6 @@
 
             document.querySelector(`${this.targetHTML} .time_selector_minute_wrap`).innerHTML = html;
         }
-
 
         set_iscroll(){
             this.zone_scroll = new IScroll(`#zone_wrap_${this.instance}`,{
@@ -1323,6 +1315,9 @@
         render_list(){
             let html_to_join = [];
             let length = this.data.length;
+            if(length == 0){
+                html_to_join.push(CComponent.no_data_row('수업 목록이 비어있습니다.'));
+            }
             for(let i=0; i<length; i++){
                 // lecture_id, lecture_name, color_code, max_member_num, onclick
                 let data = this.data[i];
@@ -1403,8 +1398,10 @@
         render_list(){
             let html_to_join = [];
             let length = this.data.length;
+            if(length == 0){
+                html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.'));
+            }
             for(let i=0; i<length; i++){
-                
                 let data = this.data[i];
                 let member_id = data.member_id;
                 let member_name = data.member_name;

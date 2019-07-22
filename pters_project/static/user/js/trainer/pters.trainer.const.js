@@ -91,3 +91,6 @@ const POPUP_ADDRESS_LECTURE_SELECT = 'popup_lecture_select';
 const AJAX = 0;
 const LOCAL = 1;
 /* input팝업 구분 */
+
+/*기타 */
+const DAYNAME_KR = ['일', '월', '화', '수', '목', '금', '토'];

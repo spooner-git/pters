@@ -11,15 +11,13 @@ class Calendar {
         this.instance = instance;
         
         this.cal_type = "week";
-        this.current_page_num = 1;
+
+        this.slide = {left:0, center:1, right:2};
 
         // this.week_zoomed = false;
         this.week_zoomed = {
             activate : false,
-            target_row : null,
-            vertical:{
-                activate : false
-            }
+            target_row : null
         };
 
         let d = new Date();
@@ -38,10 +36,6 @@ class Calendar {
             user_selected_date: {year:this.current_year, month:this.current_month, date:this.current_date},
             user_selected_time: {hour:this.current_hour, minute:this.current_minute, hour2:this.current_hour, minute2:this.current_minute}
         };
-
-        let interval = setInterval(()=>{
-            this.relocate_current_time_indicator();
-        }, 60000);
     }
 
     init (cal_type){
@@ -52,24 +46,57 @@ class Calendar {
             cal_type = this.cal_type;
         }
         this.cal_type = cal_type;
+
+        let next, next_year, next_month, next_week, prev, prev_year, prev_month, prev_week;
+
         switch(cal_type){
+
         case "month":
             this.render_upper_box(cal_type);
-            this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
-            this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+
+            next = this.get_next_month();
+            next_year = next.year;
+            next_month = next.month;
+            next_week = next.week;
+
+            prev = this.get_prev_month();
+            prev_year = prev.year;
+            prev_month = prev.month;
+            prev_week = prev.week;
+
+            this.render_month_cal( this.slide.center, this.current_year, this.current_month);
+            this.render_month_cal( this.slide.left, prev_year, prev_month);
+            this.render_month_cal( this.slide.right, next_year, next_month);
+            this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 100, (jsondata, date) => {
                 if(this.cal_type == cal_type){
                     if(date == `${this.current_year}-${this.current_month}-01`){
-                        this.render_month_cal( this.current_page_num, this.current_year, this.current_month, jsondata);
+                        this.render_month_cal( this.slide.center, this.current_year, this.current_month, jsondata);
+                        this.render_month_cal( this.slide.left, prev_year, prev_month, jsondata);
+                        this.render_month_cal( this.slide.right, next_year, next_month, jsondata);
                     }
                 }
             });
-            this.toggle_touch_move('on', '#calendar_wrap');
+
             break;
 
         case "week":
             this.render_upper_box(cal_type);
-            this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
-            
+
+            next = this.get_next_week();
+            next_year = next.year;
+            next_month = next.month;
+            next_week = next.week;
+
+            prev = this.get_prev_week();
+            prev_year = prev.year;
+            prev_month = prev.month;
+            prev_week = prev.week;
+
+            this.render_week_cal(this.slide.center, this.current_year, this.current_month, this.current_week);
+            this.render_week_cal(this.slide.left, prev_year, prev_month, prev_week);
+            this.render_week_cal(this.slide.right, next_year, next_month, next_week);
+
+
             //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
             if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
                 this.week_zoomed.activate = false;
@@ -79,21 +106,78 @@ class Calendar {
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                 if(this.cal_type == cal_type){
                     if(date == `${this.current_year}-${this.current_month}-01`){
-                        this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                        // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata);
+                        this.render_week_cal(this.slide.center, this.current_year, this.current_month, this.current_week, jsondata);
+                        this.render_week_cal(this.slide.left, prev_year, prev_month, prev_week, jsondata);
+                        this.render_week_cal(this.slide.right, next_year, next_month, next_week, jsondata);
 
                         //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
                         if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
                             this.week_zoomed.activate = false;
                             this.zoom_week_cal();
                         }
+                        
                     }
                 }
             });
             
-            this.toggle_touch_move('on', '#calendar_wrap');
             break;
         }
+        
+        this.install_swiper();
+    }
+
+    install_swiper (){
+        var cal_swiper = new Swiper ('.swiper-container', {
+            // Optional parameters
+            initialSlide: 1,
+            speed:200
+            // speed:100,
+            // shortSwipes:false,
+            // longSwipesRatio:0.2,
+            // longSwipesMs:50
+        });
+
+        cal_swiper.on('slideNextTransitionStart', ()=>{
+            cal_swiper.allowTouchMove = false;
+        });
+
+        cal_swiper.on('slideNextTransitionEnd', ()=>{
+            this.slide.right++;
+            this.slide.center++;
+            this.slide.left++;
+            
+            cal_swiper.appendSlide(`<div class="swiper-slide" id="cal_slide_${this.slide.right}">${this.slide.right}</div>`);
+            cal_swiper.removeSlide(0);
+            if(this.cal_type == "week"){
+                this.move_week("next");
+            }else if(this.cal_type == "month"){
+                this.move_month("next");
+            }
+            
+            cal_swiper.allowTouchMove = true;
+            
+        });
+
+        cal_swiper.on('slidePrevTransitionStart', ()=>{
+            cal_swiper.allowTouchMove = false;
+        });
+
+        cal_swiper.on('slidePrevTransitionEnd', ()=>{
+            this.slide.right--;
+            this.slide.center--;
+            this.slide.left--;
+            
+            cal_swiper.prependSlide(`<div class="swiper-slide" id="cal_slide_${this.slide.left}">Slide ${this.slide.left}</div>`);
+            cal_swiper.removeSlide(2);
+            if(this.cal_type == "week"){
+                this.move_week("prev");
+            }else if(this.cal_type == "month"){
+                this.move_month("prev");
+            }
+
+            cal_swiper.allowTouchMove = true;
+            
+        });
     }
 
 
@@ -109,7 +193,7 @@ class Calendar {
         let week = this.current_week > this.get_week_number(year, prev_month) ? this.get_week_number(year, prev_month) : this.current_week;
         
         return {
-            "year":year, "month": prev_month, "week":week
+            year: year, month: prev_month, week: week
         };
     }
 
@@ -119,7 +203,7 @@ class Calendar {
         let week = this.current_week > this.get_week_number(year, next_month) ? this.get_week_number(year, next_month) : this.current_week;
 
         return {
-            "year":year, "month": next_month, "week": week
+            year: year, month: next_month, week: week
         };
     }
 
@@ -136,7 +220,10 @@ class Calendar {
         };
     }
 
-    get_prev_week (){
+    get_prev_week (howmuch){
+        if(howmuch == undefined){
+            howmuch = 1;
+        }
         let year = this.current_year;
         let month = this.current_month;
         let week = this.current_week;
@@ -146,23 +233,26 @@ class Calendar {
         let prev_year = year - 1;
         let prev_month = month - 1 < 1 ? 12 : month-1;
 
-        week = week - 1;
-        if(week == -1 && first_day == 0){
+        week = week - howmuch;
+        if(week <= -1 && first_day == 0){
             week = Math.ceil( ( new Date(prev_month == 12 ? prev_year: year, prev_month-1, 1).getDay() + new Date(prev_month == 12 ? prev_year: year, prev_month, 0).getDate()  )/7 - 1  );
             month = month - 1 < 1 ? 12  : month - 1;
             year = month == 12 ? year - 1 : year;   
-        }else if(week == -1 && first_day !=0){
+        }else if(week <= -1 && first_day !=0){
             week = Math.ceil( ( new Date(prev_month == 12 ? prev_year: year, prev_month-1, 1).getDay() + new Date(prev_month == 12 ? prev_year: year, prev_month, 0).getDate()  )/7 - 2  );
             month = month - 1 < 1 ? 12  : month - 1;
             year = month == 12 ? year - 1 : year;      
         }
 
         return {
-            "year":year, "month":month, "week":week
+            year: year, month: month, week: week
         };
     }
 
-    get_next_week (){
+    get_next_week (howmuch){
+        if(howmuch == undefined){
+            howmuch = 1;
+        }
         let year = this.current_year;
         let month = this.current_month;
         let week = this.current_week;
@@ -173,7 +263,7 @@ class Calendar {
         // let next_year = year + 1;
         // let next_month = month + 1 > 12 ? 1 : month + 1;
 
-        week = week + 1;
+        week = week + howmuch;
         if(week  == week_num_this_month && new Date(year, month, 0).getDay() != 6 ){
             week = 1;
             month = month + 1 > 12 ? 1  : month + 1;
@@ -187,7 +277,7 @@ class Calendar {
         }
         
         return {
-            "year":year, "month":month, "week":week
+            year: year, month: month, week: week
         };
     }
 
@@ -196,20 +286,32 @@ class Calendar {
             year = new Date().getFullYear();
             month = new Date().getMonth()+1;
         }
+
+        this.current_year = year;
+        this.current_month = month;
+
+        let prev = this.get_prev_month();
+        let next = this.get_next_month();
+
+        console.log(this.get_prev_month(), this.get_next_month())
+
         this.current_year = year;
         this.current_month = month;
         this.render_upper_box("month");
-        this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
-        this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+        this.render_month_cal( this.slide.center, this.current_year, this.current_month);
+        this.render_month_cal( this.slide.left, prev.year, prev.month);
+        this.render_month_cal( this.slide.right, next.year, next.month);
+        this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 90, (jsondata, date) => {
             if(date == `${this.current_year}-${this.current_month}-01`){
-                this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
+                this.render_month_cal(this.slide.center, this.current_year, this.current_month, jsondata);
+                this.render_month_cal(this.slide.left, prev.year, prev.month, jsondata);
+                this.render_month_cal(this.slide.right, next.year, next.month, jsondata);
             }
         });
 
     }
 
     go_week (year, month, date){
-        let week;
         if(year == undefined && month == undefined && date == undefined){
             year = new Date().getFullYear();
             month = new Date().getMonth()+1;
@@ -221,8 +323,13 @@ class Calendar {
         this.current_date = date;
         this.current_week = Math.ceil( (date + new Date(year, month-1, 1).getDay() )/7 ) - 1;
 
+        let prev = this.get_prev_week();
+        let next = this.get_next_week();
+
         this.render_upper_box("week");
-        this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
+        this.render_week_cal(this.slide.center, this.current_year, this.current_month, this.current_week);
+        this.render_week_cal(this.slide.left, prev.year, prev.month, prev.week);
+        this.render_week_cal(this.slide.right, next.year, next.month, next.week);
         
         //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
         if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
@@ -233,7 +340,9 @@ class Calendar {
 
         this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
             if(date == `${this.current_year}-${this.current_month}-01`){
-                this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+                this.render_week_cal( this.slide.center, this.current_year, this.current_month, this.current_week, jsondata);
+                this.render_week_cal( this.slide.left, prev.year, prev.month, prev.week, jsondata);
+                this.render_week_cal( this.slide.right, next.year, next.month, next.week, jsondata);
                 // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata);
 
                 //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
@@ -254,16 +363,16 @@ class Calendar {
             this.current_month = next.month;
             this.current_week = next.week;
 
-            /*페이지 삽입*/
-            this.current_page_num = this.current_page_num + 1;
-            this.append_child(this.subtargetHTML, 'div', this.current_page_num);
-            /*페이지 삽입*/
+            let next_next = this.get_next_month();
+            let next_next_year = next_next.year;
+            let next_next_month = next_next.month;
 
             this.render_upper_box("month");
-            this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
-            this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+            this.render_month_cal( this.slide.right, next_next_year, next_next_month);
+            this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 100, (jsondata, date) => {
                 if(date == `${this.current_year}-${this.current_month}-01`){
-                    this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
+                    // this.render_month_cal(this.slide.right, next_next_year, next_next_month, jsondata);
+                    this.render_month_cal(this.slide.center, this.current_year, this.current_month, jsondata);
                 }
             });
             break;
@@ -274,16 +383,16 @@ class Calendar {
             this.current_month = prev.month;
             this.current_week = prev.week;
 
-            /*페이지 삽입*/
-            this.current_page_num = this.current_page_num - 1;
-            this.prepend_child(this.subtargetHTML, 'div', this.current_page_num);
-            /*페이지 삽입*/
+            let prev_prev = this.get_prev_month();
+            let prev_prev_year = prev_prev.year;
+            let prev_prev_month = prev_prev.month;
 
             this.render_upper_box("month");
-            this.render_month_cal(this.current_page_num, this.current_year, this.current_month);
-            this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+            this.render_month_cal(this.slide.left, prev_prev_year, prev_prev_month);
+            this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 100, (jsondata, date) => {
                 if(date == `${this.current_year}-${this.current_month}-01`){
-                    this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
+                    // this.render_month_cal(this.slide.left, prev_prev_year, prev_prev_month, jsondata);
+                    this.render_month_cal(this.slide.center, this.current_year, this.current_month, jsondata);
                 }
             });
             break;
@@ -293,45 +402,48 @@ class Calendar {
     move_week (direction){
         switch(direction){
         case "next":
+            //한주 후로 전역값을 바꾼다.
             let next = this.get_next_week();
             this.current_year = next.year;
             this.current_month = next.month;
             this.current_week = next.week;
-            
 
-            /*페이지 삽입*/
-            this.current_page_num = this.current_page_num + 1;
-            this.append_child(this.subtargetHTML, 'div', this.current_page_num);
-            /*페이지 삽입*/
+            //전역 값에서 한주더 후 값을 구한다.(새로 맨뒤에 추가되는 슬라이드에 2주후 데이터를 그려주기 위해)
+            let next_next = this.get_next_week();
+            let next_next_year = next_next.year;
+            let next_next_month = next_next.month;
+            let next_next_week = next_next.week;
+           
 
             this.render_upper_box("week");
-            this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
+            this.render_week_cal(this.slide.right, next_next_year, next_next_month, next_next_week);
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                 if(date == `${this.current_year}-${this.current_month}-01`){
-                    this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                    // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                    // this.render_week_cal( this.slide.right, next_next_year, next_next_month, next_next_week, jsondata);
+                    this.render_week_cal( this.slide.center, this.current_year, this.current_month, this.current_week, jsondata);
                 }
             });
             break;
 
         case "prev":
+            //한주 전으로 전역값을 바꾼다.
             let prev = this.get_prev_week();
             this.current_year = prev.year;
             this.current_month = prev.month;
             this.current_week = prev.week;
-            
 
-            /*페이지 삽입*/
-            this.current_page_num = this.current_page_num - 1;
-            this.prepend_child(this.subtargetHTML, 'div', this.current_page_num);
-            /*페이지 삽입*/
+            //전역 값에서 한주더 전 값을 구한다.(새로 맨앞에 추가되는 슬라이드에 2주전 데이터를 그려주기 위해)
+            let prev_prev = this.get_prev_week();
+            let prev_prev_year = prev_prev.year;
+            let prev_prev_month = prev_prev.month;
+            let prev_prev_week = prev_prev.week;
 
             this.render_upper_box("week");
-            this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
+            this.render_week_cal(this.slide.left, prev_prev_year, prev_prev_month, prev_prev_week);
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                 if(date == `${this.current_year}-${this.current_month}-01`){
-                    this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                    // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                    // this.render_week_cal( this.slide.left, prev_prev_year, prev_prev_month, prev_prev_week, jsondata);
+                    this.render_week_cal( this.slide.center, this.current_year, this.current_month, this.current_week, jsondata);
                 }
             });
             break;
@@ -361,7 +473,7 @@ class Calendar {
             document.getElementById('cal_display_panel').innerHTML = component.month_cal_upper_box;
             break;
         case "week":
-            document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box;
+            document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box + component.week_cal_upper_box_date_tool;
             break;
         }
     }
@@ -382,25 +494,22 @@ class Calendar {
         for(let i=0; i<6; i++){
             weeks_div = [...weeks_div, this.draw_week_line(year, month, i, schedule_data, `${this.instance}.open_popup_plan_view`, 'month', row_height)];
         }
-        document.getElementById(`page${page}`).innerHTML = weeks_div.join('');
+        document.getElementById(`cal_slide_${page}`).innerHTML = weeks_div.join('');
         // document.getElementById('cal_display_panel').innerHTML = component.month_cal_upper_box;
-        func_set_webkit_overflow_scrolling(`#page${page}`);
+        // func_set_webkit_overflow_scrolling(`#page${page}`);
     }
 
     render_week_cal (page, year, month, week, schedule_data){ //주간 달력 렌더링 (연, 월, 몇번째 주)
         if(current_page != this.page_name){
             return false;
         }
-        let week_date_name_data = this.static_component().week_cal_upper_box_date_tool;
+
         let data = this.draw_week_line(year, month, week, schedule_data, `${this.instance}.zoom_week_cal`, "week");
         
 
-        document.getElementById(`page${page}`).innerHTML = week_date_name_data + data;
+        document.getElementById(`cal_slide_${page}`).innerHTML = data;
         // document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box;
-        func_set_webkit_overflow_scrolling(`#page${page}`);
-
-        this.week_zoomed.vertical.activate = false;
-        this.relocate_current_time_indicator();
+        // func_set_webkit_overflow_scrolling(`#page${page}`);
     }
 
     open_popup_plan_view (event, year, month, date){
@@ -426,11 +535,11 @@ class Calendar {
                 Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
                     el.style.display = "none";
                 });
+                
             }
-            
             this.week_zoomed.activate = true;
             this.week_zoomed.target_row = clicked_number;
-            this.toggle_touch_move('off', '#calendar_wrap');
+            // this.toggle_touch_move('off', '#calendar_wrap');
         }else if(this.week_zoomed.activate == true){
             for(let i=1; i<=7; i++){
                 if(i==clicked_number){
@@ -443,29 +552,12 @@ class Calendar {
                     el.style.display = "table-cell";
                 });
             }
-            
             this.week_zoomed.activate = false;
             this.week_zoomed.target_row = clicked_number;
-            this.toggle_touch_move('on', '#calendar_wrap');
+            // this.toggle_touch_move('on', '#calendar_wrap');
         }
     }
 
-    zoom_week_cal_vertical (){
-        if(this.week_zoomed.vertical.activate == false){
-            this.week_zoomed.vertical.activate = true;
-            $('.week_row article').css('height', '180px');
-            $('.week_row > div').css({'background-image': 'url(/static/user/res/new/calendar_hour_long.png?v2)',
-                                        'background-size': '30px 180px'
-            });
-        }else if(this.week_zoomed.vertical.activate == true){
-            this.week_zoomed.vertical.activate = false;
-            $('.week_row article').css('height', '60px');
-            $('.week_row > div').css({'background-image': 'url(/static/user/res/new/calendar_hour_short.png)',
-                                        'background-size': '30px 60px'
-            });
-        }
-        this.relocate_current_time_indicator();
-    }
 
     get_week_dates (year, month, week){
         const firstday_this_month = (new Date(Number(year), Number(month)-1, 1)).getDay(); // 3
@@ -616,7 +708,7 @@ class Calendar {
                 }
     
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
-                    today_marking = `<div style="position: absolute;width: 100%;height: 3px;top: ${month_or_week == "week" ? '-30px' : 0} ;background: #fe4e65;left: 0;"></div>`;
+                    today_marking = `<div style="position: absolute;width: 100%;height: 3px; ${month_or_week == "week" ? 'bottom:0px' : 'top:0px'} ;background: #fe4e65;left: 0;"></div>`;
                 }
     
                 dates_to_join.push(
@@ -636,10 +728,10 @@ class Calendar {
         return(
             week_dates_info == false 
                 ? 
-                    result_html
+                result_html
                 :
                 `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:30px;background-color:#ffffff;z-index:10;height:25px;line-height:15px;font-size:20px` : ""}">
-                    ${month_or_week == "week" ? `<div class="week_cal_time_text"  onclick="${this.instance}.zoom_week_cal_vertical()"></div>` : ""}
+                    ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
                     ${result_html}
                 </div>
             ${month_or_week == "week" ? this.week_schedule_draw(year, month, week, schedule_data): ""}`
@@ -707,9 +799,7 @@ class Calendar {
                             
                             // let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_PLAN_VIEW}', 90, ${POPUP_FROM_BOTTOM}, {'select_date':'${date_to_search}'})`;
                             let onclick = `${this.instance}.open_popup_plan_view(event, ${_year[i]}, ${_month[i]}, ${_date[i]})`;
-                            let height = 100*(diff.hour*60+60*diff.minute/60)/(24*60);
-
-                            let styles = `width:${100/cell_divide}%;height:${height}%;top:${(plan_start.hour-work_start)*60 + 60*plan_start.minute/60}px;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style}`;
+                            let styles = `width:${100/cell_divide}%;height:${diff.hour*60+60*diff.minute/60}px;top:${(plan_start.hour-work_start)*60 + 60*plan_start.minute/60}px;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style}`;
                             return `<div onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week" style="${styles}">
                                         ${plan_name}
                                     </div>`;
@@ -724,10 +814,7 @@ class Calendar {
         }
         let week_html_template = `
                                 <div class="week_row">
-                                    <div class="week_cal_time_text" onclick="${this.instance}.zoom_week_cal_vertical()">
-                                        <div id="current_time_indicator" style="width:${this.window_height - (12.5)*this.window_height/100 }px;"><div></div></div>
-                                        ${ (this.worktime.map( (t) => { return `<article>${t}:00</article>`; } )).join('') }
-                                    </div>
+                                    <div class="week_cal_time_text">${ (this.worktime.map( (t) => { return `<article>${t}:00</article>`; } )).join('') }</div>
                                     <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1">${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
                                     <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2">${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
                                     <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3">${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
@@ -789,25 +876,6 @@ class Calendar {
         layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null});
     }
 
-    relocate_current_time_indicator(){
-        let indicator = document.getElementById('current_time_indicator');
-
-        let hour = new Date().getHours();
-        let min = new Date().getMinutes();
-
-        let pos_y = hour * 60 + min;
-
-        if(this.week_zoomed.vertical.activate == true){
-            pos_y = pos_y * 3;
-        }
-
-        if(indicator != undefined){
-            indicator.style.top = `${pos_y}px`;
-            console.log(pos_y);
-        }
-        
-        
-    }
 
     request_schedule_data (date, days, callback){
         let date_ = date;
@@ -883,7 +951,7 @@ class Calendar {
                 ,
                 "week_cal_upper_box_date_tool":`
                     <div class="cal_week_line_dates" style="border-bottom:0;font-size:13px;">
-                        <div class="week_cal_time_text"  onclick="${this.instance}.zoom_week_cal_vertical()">펼치기</div>
+                        <div class="week_cal_time_text"></div>
                         <div class="_week_row_1 obj_font_color_sunday_red">일</div><div class="_week_row_2">월</div><div class="_week_row_3">화</div>
                         <div class="_week_row_4">수</div><div class="_week_row_5">목</div><div class="_week_row_6">금</div>
                         <div class="_week_row_7 obj_font_color_saturday_blue">토</div>
@@ -895,122 +963,23 @@ class Calendar {
                                   </div>
                                   `
                 ,
-                "initial_page":`<div id="${this.subtargetHTML}"><div id="cal_display_panel"><span></span></div><div id="page${this.current_page_num}" class="pages" style="left:0px;"></div></div>`
+                "initial_page":`
+                                <div id="cal_display_panel" style="list-style:none;">
+                                    <span></span>
+                                </div>
+                                
+                                <div class="swiper-container" id="swiper_calendar" style="padding-top:60px;"  style="list-style:none;">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide" id="cal_slide_${this.slide.left}">Slide 1</div>
+                                        <div class="swiper-slide" id="cal_slide_${this.slide.center}">Slide 2</div>
+                                        <div class="swiper-slide" id="cal_slide_${this.slide.right}">Slide 3</div>
+                                    </div>
+                                </div>
+                                `                
             }
         );
     }
 
-
-    toggle_touch_move (onoff, input_target_html){
-        let ts;
-        let tsy;
-        let tm;
-        let tmy;
-        let selector_body = $(input_target_html);
-        let x_threshold;
-        let y_threshold;
-        let swiper_x = false;
-        if(this.cal_type == "week"){
-            x_threshold = 20;
-            y_threshold = 200;
-        }else if(this.cal_type == "month"){
-            x_threshold = 20;
-            y_threshold = 200;
-        }
-
-        switch(onoff){
-        case "on":
-            selector_body.off("touchstart").on("touchstart", (e) => {
-                ts = e.originalEvent.touches[0].clientX;
-                tsy = e.originalEvent.touches[0].clientY;
-            });
-
-            selector_body.off('touchmove').on('touchmove', (e) => {
-                tm = e.originalEvent.touches[0].clientX;
-                tmy = e.originalEvent.touches[0].clientY;
-                
-                if( Math.abs(ts - tm) > Math.abs(tsy - tmy) && swiper_x == false ){
-                    $('#root_content').on('touchmove', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        return false;
-                    });
-                    swiper_x = true;
-                }
-            });
-
-            selector_body.off("touchend").on("touchend", (e) => {
-
-                if(swiper_x == true){
-                    $('#root_content').off('touchmove');
-                    swiper_x = false;
-                }
-                
-
-                let te = e.originalEvent.changedTouches[0].clientX;
-                let tey = e.originalEvent.changedTouches[0].clientY;
-                // if(Math.abs(tsy - tey) < y_threshold){
-                if( Math.abs(ts - te) > Math.abs(tsy - tey)){
-                    if(ts>te+x_threshold){
-                        if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
-                    }else if(ts<te-x_threshold){
-                        if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
-                    }
-                }
-                return true;
-            });
-            break;
-
-        case "off":
-            selector_body.off("touchstart").off("touchend").off('touchmove');
-            break;
-        }
-    }
-
-    append_child (target, type, page_num){
-        let el = document.createElement(type);
-        el.id = `page${page_num}`;
-        el.style.transform = 'translateX(100%)';
-        el.classList.add('pages');
-        document.getElementById(target).appendChild(el);
-    
-        let el_prev = document.getElementById(`page${page_num-1}`);
-        
-        this.toggle_touch_move('off', '#calendar_wrap');
-        setTimeout(() => {
-            el.style.transform = 'translateX(0)';
-            el_prev.style.transform = 'translateX(-100%)';
-            setTimeout(() => {
-                this.toggle_touch_move('on', '#calendar_wrap');
-            }, 100);
-            setTimeout(() => {
-                el_prev.parentNode.removeChild(el_prev);
-            }, 200);
-        }, 0);
-    }
-    
-    prepend_child (target, type, page_num){
-        let el = document.createElement(type);
-        el.id = `page${page_num}`;
-        el.style.transform = 'translateX(-100%)';
-        el.classList.add('pages');
-        let _target = document.getElementById(target);
-        _target.insertBefore(el, _target.childNodes[0]);
-    
-        let el_prev = document.getElementById(`page${page_num+1}`);
-        
-        this.toggle_touch_move('off', '#calendar_wrap');
-        setTimeout(() => {
-            el.style.transform = 'translateX(0)';
-            el_prev.style.transform = 'translateX(100%)';
-            setTimeout(() => {
-                this.toggle_touch_move('on', '#calendar_wrap');
-            }, 100);
-            setTimeout(() => {
-                el_prev.parentNode.removeChild(el_prev);
-            }, 200);
-        }, 0);
-    }
 
 }
 
