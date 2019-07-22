@@ -73,7 +73,7 @@
     }
     
     let plan_view_popup = new Plan_view('#wrapper_box_plan_view_toolbox', data, "plan_view_popup");
-    plan_view_popup.request_data(console.log(data))
+    plan_view_popup.request_data(()=>{console.log(data)})
 
     func_set_webkit_overflow_scrolling('.popup_plan_view');
 </script>

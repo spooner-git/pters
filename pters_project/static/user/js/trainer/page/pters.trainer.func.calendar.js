@@ -389,11 +389,11 @@ class Calendar {
         if(current_page != this.page_name){
             return false;
         }
-        let week_date_name_data = this.static_component().week_cal_upper_box_date_tool;
+        // let week_date_name_data = this.static_component().week_cal_upper_box_date_tool;
         let data = this.draw_week_line(year, month, week, schedule_data, "week");
         
 
-        document.getElementById(`page${page}`).innerHTML = week_date_name_data + data;
+        document.getElementById(`page${page}`).innerHTML =  data;
         // document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box;
         func_set_webkit_overflow_scrolling(`#page${page}`);
 
@@ -445,18 +445,15 @@ class Calendar {
     }
 
     zoom_week_cal_vertical (){
+        $('.week_indicator').remove();
         if(this.week_zoomed.vertical.activate == false){
             this.week_zoomed.vertical.activate = true;
-            $('.week_row article').css('height', '180px');
-            $('.week_row > div').css({'background-image': 'url(/static/user/res/new/calendar_hour_long.png?v2)',
-                                        'background-size': '30px 180px'
-            });
+            $('.week_rows article').css('height', '180px');
+            $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_long2.png?v)', 'background-size': '30px 180px'});
         }else if(this.week_zoomed.vertical.activate == true){
             this.week_zoomed.vertical.activate = false;
-            $('.week_row article').css('height', '60px');
-            $('.week_row > div').css({'background-image': 'url(/static/user/res/new/calendar_hour_short.png)',
-                                        'background-size': '30px 60px'
-            });
+            $('.week_rows article').css('height', '60px');
+            $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_short.png?v2)', 'background-size': '30px 60px'});
         }
         this.relocate_current_time_indicator();
     }
@@ -597,8 +594,9 @@ class Calendar {
     
                 let border_style, today_marking = "";
                 let sunday, saturday = "";
+                border_style = month_or_week == "week" ? "no_border" : "";
                 if(i == 0){
-                    border_style = month_or_week == "week" ? "" : "no_border";
+                    border_style = "no_border";
                     sunday = "obj_font_color_sunday_red";
                 }
                 if(i == 6){
@@ -608,10 +606,12 @@ class Calendar {
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
                     today_marking = `<div style="position: absolute;width: 100%;height: 3px;top: ${month_or_week == "week" ? '-30px' : 0} ;background: #fe4e65;left: 0;"></div>`;
                 }
-    
+                
+                let onclick = month_or_week == "week" ? `${this.instance}.zoom_week_cal(event, ${_year[i]}, ${_month[i]}, ${_date[i]})` : "";
+
                 dates_to_join.push(
                     `
-                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" onclick="${this.instance}.zoom_week_cal(event, ${_year[i]}, ${_month[i]}, ${_date[i]})">
+                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" onclick="${onclick}">
                         ${_date[i]}
                         <div class="${schedule_number_display} ${has_schedule}">${schedule_date}</div>
                         ${today_marking}
@@ -622,22 +622,25 @@ class Calendar {
         }
 
         let result_html = dates_to_join.join("");
-
+        let week_date_name_data = this.static_component().week_cal_upper_box_date_tool;
         return(
             week_dates_info == false 
                 ? 
                 result_html
                 :
-                `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:30px;background-color:#ffffff;z-index:10;height:25px;line-height:15px;font-size:20px` : ""}">
-                    ${month_or_week == "week" ? `<div class="week_cal_time_text"  onclick="${this.instance}.zoom_week_cal_vertical()"></div>` : ""}
-                    ${result_html}
+                `<div class="${month_or_week == "week" ? "week_upper_float_tool" :""}">
+                    ${month_or_week == "week" ? `<div id="week_zoom_vertical_button" onclick="${this.instance}.zoom_week_cal_vertical()"></div>` : ""}
+                    ${month_or_week == "week" ? week_date_name_data : ""}
+                    <div class="cal_week_line" style="${month_or_week == "week" ? `height:25px;line-height:15px;font-size:13px;font-weight:500` : ""}">
+                        ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
+                        ${result_html}
+                    </div>
                 </div>
-            ${month_or_week == "week" ? this.week_schedule_draw(year, month, week, schedule_data): ""}`
+                ${month_or_week == "week" ? this.week_schedule_draw(year, month, week, schedule_data): ""}`
         );
     }
 
     week_schedule_draw (year, month, week, schedule_data){
-        console.log(schedule_data)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
@@ -715,18 +718,18 @@ class Calendar {
             schedules = [];
         }
         let week_html_template = `
-                                <div class="week_row">
+                                <div class="week_rows">
                                     <div class="week_cal_time_text" onclick="${this.instance}.zoom_week_cal_vertical()">
                                         <div id="current_time_indicator" style="width:${this.window_height - (12.5)*this.window_height/100 }px;"><div></div></div>
-                                        ${ (this.worktime.map( (t) => { return `<article>${t}:00</article>`; } )).join('') }
+                                        ${ (this.worktime.map( (t) => { return `<article><span>${TimeRobot.to_text(t, 0, 'short')}</span></article>`; } )).join('') }
                                     </div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1">${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2">${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3">${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})" class="_week_row_4">${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})" class="_week_row_5">${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})" class="_week_row_6">${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})" class="_week_row_7">${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1 week_row">${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2 week_row">${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3 week_row">${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})" class="_week_row_4 week_row">${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})" class="_week_row_5 week_row">${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})" class="_week_row_6 week_row">${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})" class="_week_row_7 week_row">${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
                                 </div>
                                 `;
         return week_html_template;
@@ -748,6 +751,15 @@ class Calendar {
 
         let hour = Math.floor(offset_hour);
         let minute = 60*(offset_hour - hour);
+        let period_min = 30;
+
+        if(this.week_zoomed.vertical.activate == true){
+            hour = Math.floor(offset_hour/3);
+            minute = Math.round((offset_hour/3 - (Math.floor(offset_hour/3)))*60);
+            period_min = 10;
+        }
+        
+        
 
         //현재 클릭한 곳의 연월일, 시분 데이터
         this.user_data.user_selected_date.year = year;
@@ -757,8 +769,8 @@ class Calendar {
         this.user_data.user_selected_date.text = DateRobot.to_text(year, month, date);
         this.user_data.user_selected_time.hour = hour;
         this.user_data.user_selected_time.minute = minute;
-        this.user_data.user_selected_time.hour2 = TimeRobot.add_time(hour, minute, 0, 30).hour;
-        this.user_data.user_selected_time.minute2 = TimeRobot.add_time(hour, minute, 0, 30).minute;
+        this.user_data.user_selected_time.hour2 = TimeRobot.add_time(hour, minute, 0, period_min).hour;
+        this.user_data.user_selected_time.minute2 = TimeRobot.add_time(hour, minute, 0, period_min).minute;
         this.user_data.user_selected_time.text = TimeRobot.to_text(hour, minute);
         this.user_data.user_selected_time.text2 = TimeRobot.to_text(this.user_data.user_selected_time.hour2, this.user_data.user_selected_time.minute2);
 
@@ -876,8 +888,8 @@ class Calendar {
                                         `             
                 ,
                 "week_cal_upper_box_date_tool":`
-                    <div class="cal_week_line_dates" style="border-bottom:0;font-size:13px;">
-                        <div class="week_cal_time_text"  onclick="${this.instance}.zoom_week_cal_vertical()">펼치기</div>
+                    <div class="cal_week_line_dates" style="border-bottom:0;font-size:11px;">
+                        <div class="week_cal_time_text"></div>
                         <div class="_week_row_1 obj_font_color_sunday_red">일</div><div class="_week_row_2">월</div><div class="_week_row_3">화</div>
                         <div class="_week_row_4">수</div><div class="_week_row_5">목</div><div class="_week_row_6">금</div>
                         <div class="_week_row_7 obj_font_color_saturday_blue">토</div>
@@ -1088,9 +1100,12 @@ class Plan_func{
             beforeSend:function (){
                 ajax_load_image(SHOW);
             },
-            success:function (data){
-                callback(data);
-                return data;
+            success:function (datas){
+                if(callback != undefined){
+                    callback(datas);
+                }
+                console.log(datas)
+                return datas;
             },
 
             complete:function (){
