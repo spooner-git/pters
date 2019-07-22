@@ -647,6 +647,7 @@ class Calendar {
     }
 
     week_schedule_draw (year, month, week, schedule_data){
+        console.log(schedule_data)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
@@ -670,8 +671,8 @@ class Calendar {
                             // 0 : off, 1: 1:1, 2: group
                             let plan_name, plan_status_color, plan_font_style;
                             if(plan.schedule_type == 0){
-                                plan_status_color = '#eeeeee';
-                                plan_name = plan.note;
+                                plan_status_color = '#d2d1cf';
+                                plan_name = plan.note != "" ? plan.note : "OFF" ;
                                 plan_font_style = '';
                             }else if(plan.schedule_type == 1){
                                 plan_status_color = '#fe4e65';
@@ -708,8 +709,9 @@ class Calendar {
                             // let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_PLAN_VIEW}', 90, ${POPUP_FROM_BOTTOM}, {'select_date':'${date_to_search}'})`;
                             let onclick = `${this.instance}.open_popup_plan_view(event, ${_year[i]}, ${_month[i]}, ${_date[i]})`;
                             let height = 100*(diff.hour*60+60*diff.minute/60)/(24*60);
+                            let top = 100*( (plan_start.hour-work_start)*60 + 60*plan_start.minute/60 )/(24*60);
 
-                            let styles = `width:${100/cell_divide}%;height:${height}%;top:${(plan_start.hour-work_start)*60 + 60*plan_start.minute/60}px;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style}`;
+                            let styles = `width:${100/cell_divide}%;height:${height}%;top:${top}%;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style}`;
                             return `<div onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week" style="${styles}">
                                         ${plan_name}
                                     </div>`;
