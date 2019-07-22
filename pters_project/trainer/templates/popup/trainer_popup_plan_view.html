@@ -52,7 +52,7 @@
 
     let data;
     if(current_page == "calendar"){
-        data = calendar.user_data;
+        data = calendar.user_data.user_selected_plan;
     }
 
     class Plan_view{
@@ -65,14 +65,15 @@
         }
 
 
-        request_data(){
-            calendar.request_schedule_data (date, 1, ()=>{
-
-            });
+        request_data(callback){
+            Plan_func.read_plan(this.data.schedule_id, (data)=>{
+                callback(data);
+            })
         }
     }
     
-    
+    let plan_view_popup = new Plan_view('#wrapper_box_plan_view_toolbox', data, "plan_view_popup");
+    plan_view_popup.request_data(console.log(data))
 
     func_set_webkit_overflow_scrolling('.popup_plan_view');
 </script>

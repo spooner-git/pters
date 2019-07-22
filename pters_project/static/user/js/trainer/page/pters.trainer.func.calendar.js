@@ -378,7 +378,7 @@ class Calendar {
         let row_height = (this.window_height - 60 - 31 - 45 - margin)/6;
 
         for(let i=0; i<6; i++){
-            weeks_div = [...weeks_div, this.draw_week_line(year, month, i, schedule_data, `${this.instance}.open_popup_plan_view`, 'month', row_height)];
+            weeks_div = [...weeks_div, this.draw_week_line(year, month, i, schedule_data, 'month', row_height)];
         }
         document.getElementById(`page${page}`).innerHTML = weeks_div.join('');
         // document.getElementById('cal_display_panel').innerHTML = component.month_cal_upper_box;
@@ -637,6 +637,7 @@ class Calendar {
     }
 
     week_schedule_draw (year, month, week, schedule_data){
+        console.log(schedule_data)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
@@ -664,13 +665,13 @@ class Calendar {
                                 plan_name = plan.note != "" ? plan.note : "OFF" ;
                                 plan_font_style = '';
                             }else if(plan.schedule_type == 1){
-                                plan_status_color = '#fe4e65';
+                                plan_status_color = plan.lecture_ing_color_cd;
                                 plan_name = plan.member_name;
-                                plan_font_style = 'color:#ffffff;';
+                                plan_font_style = `color:${plan.lecture_ing_font_cd};`;
                             }else if(plan.schedule_type == 2){
-                                plan_status_color = '#fe4e65';
+                                plan_status_color = plan.lecture_ing_color_cd;
                                 plan_name = plan.lecture_name;
-                                plan_font_style = 'color:#ffffff;';
+                                plan_font_style = `color:${plan.lecture_ing_font_cd};`;
                             }
 
                             if(plan.state_cd != "NP"){
@@ -797,7 +798,6 @@ class Calendar {
             pos_y = pos_y * 3;
         }
 
-        console.log(indicator)
         if(indicator != undefined){
             indicator.style.top = `${pos_y}px`;
         }
@@ -1046,34 +1046,59 @@ class Plan_func{
         });
     }
 
-    static read(data, callback){
-        //데이터 형태 {"member_id":""};
+    static read(date, days, callback){
+        let date_ = date;
+        let days_ = days;
+        if(date_ == undefined){date_ = `${this.current_year}-${this.current_month}-01`;}
+        if(days_ == undefined){days_ = 31;}
+
         $.ajax({
-            url:'/trainer/get_member_info/',
-            type:'GET',
-            data: data,
-            dataType : 'html',
-    
-            beforeSend:function(xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
+            url: '/trainer/get_trainer_schedule_all/',
+            type : 'GET',
+            data : {"date":date_, "day":days_},
+            dataType: "JSON",
+
+            beforeSend:function (){
+                ajax_load_image(SHOW);
             },
-    
-            //보내기후 팝업창 닫기
-            complete:function(){
-                
+            success:function (data){
+                // console.log(data);
+                callback(data, date_);
+                return data;
             },
-    
-            //통신성공시 처리
-            success:function(data){
-                let json = JSON.parse(data);
-                callback(json);
+
+            complete:function (){
+                ajax_load_image(HIDE);
             },
-    
-            //통신 실패시 처리
-            error:function(){
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+
+            error:function (){
+                console.log('server error');
+            }
+        });
+    }
+
+    static read_plan(schedule_id, callback){
+        
+        $.ajax({
+            url: '/trainer/get_trainer_schedule_info/',
+            type : 'GET',
+            data : {"schedule_id":schedule_id},
+            dataType: "JSON",
+
+            beforeSend:function (){
+                ajax_load_image(SHOW);
+            },
+            success:function (data){
+                callback(data);
+                return data;
+            },
+
+            complete:function (){
+                ajax_load_image(HIDE);
+            },
+
+            error:function (){
+                console.log('server error');
             }
         });
     }

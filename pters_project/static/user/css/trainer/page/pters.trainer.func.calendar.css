@@ -202,7 +202,7 @@
 .calendar_schedule_display_week{
 	position: absolute;
 	background-color: #fe4e65;
-	border: 1px solid #ffffff;
+	border: 1px solid #f5f5f5;
 	box-sizing: border-box;
 	
 	padding-left: 3px;
