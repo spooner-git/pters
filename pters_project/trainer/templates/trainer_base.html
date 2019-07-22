@@ -22,7 +22,7 @@
     
     
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.component.common.css" %}>
-    <link rel="stylesheet" href="/static/common/css/swiper.min.css">
+    <link rel="stylesheet" href={% static_url "common/css/swiper.min.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.base.css" %}>
 
     <!-- 페이지 CSS 로드 -->
@@ -202,6 +202,8 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
 <!-- 페이지 스크립트 로드-->
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.home.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.calendar.js" %}></script>
+<!-- <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.calendar_swiper.js" %}></script> -->
+
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.ticket.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.lecture.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.member.js" %}></script>
