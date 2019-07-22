@@ -12,7 +12,8 @@ from django.utils import timezone
 
 from configs import settings
 from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, \
-    SCHEDULE_DUPLICATION_DISABLE, ING_MEMBER_FALSE, ING_MEMBER_TRUE
+    SCHEDULE_DUPLICATION_DISABLE, ING_MEMBER_FALSE, ING_MEMBER_TRUE, STATE_CD_ABSENCE, STATE_CD_FINISH, \
+    STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, LECTURE_TYPE_ONE_TO_ONE, AUTH_TYPE_VIEW
 
 from login.models import LogTb, PushInfoTb
 from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, TicketLectureTb
@@ -27,18 +28,21 @@ def func_get_member_ticket_id(class_id, member_id):
     member_ticket_id = None
     # 강좌에 해당하는 수강/회원 정보 가져오기
     class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
-        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd='VIEW',
-                                   member_ticket_tb__member_id=member_id, member_ticket_tb__state_cd='IP',
+        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd=AUTH_TYPE_VIEW,
+                                   member_ticket_tb__member_id=member_id,
+                                   member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                    member_ticket_tb__member_ticket_avail_count__gt=0,
-                                   member_ticket_tb__member_auth_cd='VIEW',
+                                   member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                                    member_ticket_tb__end_date__gte=today,
                                    member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
                                                                        'member_ticket_tb__reg_dt')
 
     for class_member_ticket_info in class_member_ticket_data:
         ticket_single_lecture_count = TicketLectureTb.objects.filter(
-            ticket_tb_id=class_member_ticket_info.member_ticket_tb.ticket_tb_id, ticket_tb__state_cd='IP',
-            lecture_tb__state_cd='IP', lecture_tb__lecture_type_cd='ONE_TO_ONE', use=USE).count()
+            ticket_tb_id=class_member_ticket_info.member_ticket_tb.ticket_tb_id,
+            ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+            lecture_tb__state_cd=STATE_CD_IN_PROGRESS, lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+            use=USE).count()
         if ticket_single_lecture_count > 0:
             member_ticket_id = class_member_ticket_info.member_ticket_tb.member_ticket_id
             break
@@ -52,16 +56,18 @@ def func_get_lecture_member_ticket_id(class_id, lecture_id, member_id):
     member_ticket_id = None
     error = None
     class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
-        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd='VIEW',
-                                   member_ticket_tb__member_id=member_id, member_ticket_tb__state_cd='IP',
+        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd=AUTH_TYPE_VIEW,
+                                   member_ticket_tb__member_id=member_id,
+                                   member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                    member_ticket_tb__member_ticket_avail_count__gt=0,
                                    member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
                                                                        'member_ticket_tb__reg_dt')
 
     for class_member_ticket_info in class_member_ticket_data:
         ticket_lecture_count = TicketLectureTb.objects.filter(
-            ticket_tb_id=class_member_ticket_info.member_ticket_tb.ticket_tb_id, ticket_tb__state_cd='IP',
-            lecture_tb__state_cd='IP', lecture_tb_id=lecture_id, use=USE).count()
+            ticket_tb_id=class_member_ticket_info.member_ticket_tb.ticket_tb_id,
+            ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+            lecture_tb__state_cd=STATE_CD_IN_PROGRESS, lecture_tb_id=lecture_id, use=USE).count()
 
         if ticket_lecture_count > 0:
             member_ticket_id = class_member_ticket_info.member_ticket_tb.member_ticket_id
@@ -80,8 +86,9 @@ def func_get_lecture_member_ticket_id_from_trainee(class_id, lecture_id, member_
     member_ticket_id = None
     error = None
     class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
-        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd='VIEW',
-                                   member_ticket_tb__member_id=member_id, member_ticket_tb__state_cd='IP',
+        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd=AUTH_TYPE_VIEW,
+                                   member_ticket_tb__member_id=member_id,
+                                   member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                    member_ticket_tb__member_ticket_avail_count__gt=0,
                                    member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
                                                                        'member_ticket_tb__reg_dt')
@@ -89,8 +96,9 @@ def func_get_lecture_member_ticket_id_from_trainee(class_id, lecture_id, member_
     for class_member_ticket_info in class_member_ticket_data:
         if class_member_ticket_info.member_ticket_tb.end_date >= today:
             ticket_lecture_count = TicketLectureTb.objects.filter(
-                ticket_tb_id=class_member_ticket_info.member_ticket_tb.ticket_tb_id, ticket_tb__state_cd='IP',
-                lecture_tb__state_cd='IP', lecture_tb_id=lecture_id, use=USE).count()
+                ticket_tb_id=class_member_ticket_info.member_ticket_tb.ticket_tb_id,
+                ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                lecture_tb__state_cd=STATE_CD_IN_PROGRESS, lecture_tb_id=lecture_id, use=USE).count()
 
             if ticket_lecture_count > 0:
                 member_ticket_id = class_member_ticket_info.member_ticket_tb.member_ticket_id
@@ -110,7 +118,6 @@ def func_refresh_member_ticket_count(class_id, member_ticket_id):
     error = None
     member_ticket_info = None
     check_member_ticket_state_cd = ''
-    schedule_data = None
 
     if member_ticket_id is None or member_ticket_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -131,16 +138,17 @@ def func_refresh_member_ticket_count(class_id, member_ticket_id):
         else:
             error = '오류가 발생했습니다.'
 
-        end_schedule_counter = schedule_data.filter(Q(state_cd='PE') | Q(state_cd='PC'), class_tb_id=class_id,
+        end_schedule_counter = schedule_data.filter(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE),
+                                                    class_tb_id=class_id,
                                                     use=USE).count()
 
         if member_ticket_info.member_ticket_reg_count >= end_schedule_counter:
             member_ticket_info.member_ticket_rem_count = member_ticket_info.member_ticket_reg_count\
                                                          - end_schedule_counter
             if member_ticket_info.member_ticket_rem_count == 0:
-                member_ticket_info.state_cd = 'PE'
+                member_ticket_info.state_cd = STATE_CD_FINISH
 
-            if member_ticket_info.state_cd == 'PE':
+            if member_ticket_info.state_cd == STATE_CD_FINISH:
                 member_ticket_info.member_ticket_rem_count = 0
 
         else:
@@ -151,7 +159,7 @@ def func_refresh_member_ticket_count(class_id, member_ticket_id):
 
     if error is None:
         if member_ticket_info.state_cd != check_member_ticket_state_cd:
-            if member_ticket_info.state_cd == 'PE' or member_ticket_info.state_cd == 'RF':
+            if member_ticket_info.state_cd == STATE_CD_FINISH or member_ticket_info.state_cd == 'RF':
                 func_update_lecture_member_fix_status_cd(class_id, member_ticket_info.member_id)
 
     return error
@@ -179,9 +187,9 @@ def func_refresh_member_ticket_count_for_delete(class_id, member_ticket_id, auth
         class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__member').filter(class_tb_id=class_id,
                                                member_ticket_tb__member_id=member_ticket_info.member_id,
-                                               member_ticket_tb__use=USE, auth_cd='VIEW',
+                                               member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW,
                                                use=USE)
-        if class_member_ticket_data.filter(member_ticket_tb__state_cd='IP').count() > 0:
+        if class_member_ticket_data.filter(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS).count() > 0:
             ing_member_check = ING_MEMBER_TRUE
 
     if error is None:
@@ -200,18 +208,19 @@ def func_refresh_member_ticket_count_for_delete(class_id, member_ticket_id, auth
             error = '오류가 발생했습니다.'
 
     if error is None and check_info is None:
-        end_schedule_counter = schedule_data.filter(Q(state_cd='PE') | Q(state_cd='PC'), use=USE).count()
+        end_schedule_counter = schedule_data.filter(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE),
+                                                    use=USE).count()
         if member_ticket_info.member_ticket_reg_count >= end_schedule_counter:
             member_ticket_info.member_ticket_rem_count \
                 = member_ticket_info.member_ticket_reg_count - end_schedule_counter
             if member_ticket_info.member_ticket_rem_count == 0:
-                member_ticket_info.state_cd = 'PE'
+                member_ticket_info.state_cd = STATE_CD_FINISH
             elif member_ticket_info.member_ticket_rem_count == 1:
                 if member_ticket_info.state_cd != 'RF':
-                    if member_ticket_info.ticket_tb.state_cd == 'IP':
-                        member_ticket_info.state_cd = 'IP'
+                    if member_ticket_info.ticket_tb.state_cd == STATE_CD_IN_PROGRESS:
+                        member_ticket_info.state_cd = STATE_CD_IN_PROGRESS
 
-            if member_ticket_info.state_cd == 'PE':
+            if member_ticket_info.state_cd == STATE_CD_FINISH:
                 member_ticket_info.member_ticket_rem_count = 0
 
             member_ticket_info.save()
@@ -220,7 +229,7 @@ def func_refresh_member_ticket_count_for_delete(class_id, member_ticket_id, auth
 
     if error is None and check_info is None:
         if member_ticket_info.state_cd != check_member_ticket_state_cd:
-            if member_ticket_info.state_cd == 'PE' or member_ticket_info.state_cd == 'RF':
+            if member_ticket_info.state_cd == STATE_CD_FINISH or member_ticket_info.state_cd == 'RF':
                 func_update_lecture_member_fix_status_cd(class_id, member_ticket_info.member_id)
 
     return error
@@ -236,14 +245,15 @@ def func_refresh_lecture_status(lecture_id, lecture_schedule_id, lecture_repeat_
             lecture_schedule_info = None
         lecture_schedule_total_count = ScheduleTb.objects.filter(lecture_schedule_id=lecture_schedule_id,
                                                                  use=USE).count()
-        lecture_schedule_end_count = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+        lecture_schedule_end_count = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH)
+                                                               | Q(state_cd=STATE_CD_ABSENCE),
                                                                lecture_schedule_id=lecture_schedule_id,
                                                                lecture_tb_id=lecture_id, use=USE).count()
 
         if lecture_schedule_info is not None:
             if lecture_schedule_total_count == lecture_schedule_end_count:
-                if lecture_schedule_info.state_cd != 'PE':
-                    lecture_schedule_info.state_cd = 'PE'
+                if lecture_schedule_info.state_cd != STATE_CD_FINISH:
+                    lecture_schedule_info.state_cd = STATE_CD_FINISH
                     lecture_schedule_info.save()
 
     # 그룹 반복 일정 종료
@@ -256,10 +266,10 @@ def func_refresh_lecture_status(lecture_id, lecture_schedule_id, lecture_repeat_
         lecture_repeat_schedule_total_count = \
             RepeatScheduleTb.objects.filter(lecture_schedule_id=lecture_repeat_schedule_id).count()
         lecture_repeat_schedule_end_count = RepeatScheduleTb.objects.filter(
-            lecture_schedule_id=lecture_repeat_schedule_id, state_cd='PE').count()
+            lecture_schedule_id=lecture_repeat_schedule_id, state_cd=STATE_CD_FINISH).count()
         if lecture_repeat_schedule_info is not None:
             if lecture_repeat_schedule_total_count == lecture_repeat_schedule_end_count:
-                lecture_repeat_schedule_info.state_cd = 'PE'
+                lecture_repeat_schedule_info.state_cd = STATE_CD_FINISH
                 lecture_repeat_schedule_info.save()
 
 
@@ -302,10 +312,12 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                     error += ' 일정이 중복되었습니다.'
 
             context['schedule_id'] = add_schedule_info.schedule_id
+
     except TypeError:
         error = '일정 추가중 오류가 발생했습니다.'
     except ValueError:
         error = '일정 추가중 오류가 발생했습니다.'
+
     context['error'] = error
 
     return context
@@ -331,7 +343,7 @@ def func_add_repeat_schedule(class_id, member_ticket_id, lecture_id, lecture_sch
                                                     start_time=start_time,
                                                     end_time=end_time,
                                                     time_duration=time_duration,
-                                                    state_cd='NP', en_dis_type=en_dis_type,
+                                                    state_cd=STATE_CD_NOT_PROGRESS, en_dis_type=en_dis_type,
                                                     reg_member_id=user_id)
 
             repeat_schedule_info.save()
@@ -465,18 +477,19 @@ def func_update_repeat_schedule(repeat_schedule_id):
 
     if error is None:
         repeat_schedule_count = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id).count()
-        repeat_schedule_finish_count = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+        repeat_schedule_finish_count = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH)
+                                                                 | Q(state_cd=STATE_CD_ABSENCE),
                                                                  repeat_schedule_tb_id=repeat_schedule_id).count()
         if repeat_schedule_count == 0:
             repeat_schedule_result = func_delete_repeat_schedule(repeat_schedule_id)
             error = repeat_schedule_result['error']
         else:
             if repeat_schedule_count == repeat_schedule_finish_count:
-                repeat_schedule_info.state_cd = 'PE'
+                repeat_schedule_info.state_cd = STATE_CD_FINISH
             else:
-                repeat_schedule_info.state_cd = 'IP'
+                repeat_schedule_info.state_cd = STATE_CD_IN_PROGRESS
             if repeat_schedule_finish_count == 0:
-                repeat_schedule_info.state_cd = 'NP'
+                repeat_schedule_info.state_cd = STATE_CD_NOT_PROGRESS
             repeat_schedule_info.save()
 
     return error
@@ -495,7 +508,7 @@ def func_check_lecture_available_member_before(class_id, lecture_id, lecture_sch
 
     schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                  lecture_schedule_id=lecture_schedule_id,
-                                                 use=USE).exclude(state_cd='PC').count()
+                                                 use=USE).exclude(state_cd=STATE_CD_ABSENCE).count()
     if schedule_counter > lecture_info.member_num:
         error = '정원을 초과했습니다.'
 
@@ -515,7 +528,7 @@ def func_check_lecture_available_member_after(class_id, lecture_id, lecture_sche
 
     schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                  lecture_schedule_id=lecture_schedule_id,
-                                                 use=USE).exclude(state_cd='PC').count()
+                                                 use=USE).exclude(state_cd=STATE_CD_ABSENCE).count()
     if schedule_counter > lecture_info.member_num:
         error = '정원을 초과했습니다.'
 
@@ -529,7 +542,7 @@ def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_e
         seven_days_ago = add_start_dt - datetime.timedelta(days=1)
         seven_days_after = add_end_dt + datetime.timedelta(days=1)
 
-        schedule_data = ScheduleTb.objects.filter(~Q(state_cd='PC'), class_tb_id=class_id,
+        schedule_data = ScheduleTb.objects.filter(~Q(state_cd=STATE_CD_ABSENCE), class_tb_id=class_id,
                                                   start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after,
                                                   use=USE).exclude(schedule_id=schedule_id)
 
@@ -552,8 +565,9 @@ def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_e
 # 강좌에 해당하는 회원들 스케쥴 알람 업데이트
 def func_update_member_schedule_alarm(class_id):
     member_member_ticket_data = ClassMemberTicketTb.objects.filter(class_tb_id=class_id,
-                                                                   member_ticket_tb__state_cd='IP',
-                                                                   member_ticket_tb__use=USE, auth_cd='VIEW', use=USE)
+                                                                   member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                                                   member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW,
+                                                                   use=USE)
     for member_member_ticket_data_info in member_member_ticket_data:
         member_member_ticket_info = member_member_ticket_data_info.member_ticket_tb
         member_member_ticket_info.schedule_check = 1
@@ -617,7 +631,7 @@ def func_send_push_trainer(member_ticket_id, title, message):
         # member_member_ticket_data = MemberMemberTicketTb.objects.filter(member_ticket_tb_id=member_ticket_id, use=USE)
         # for class_member_ticket_info in member_member_ticket_data:
         member_ticket_info = MemberMemberTicketTb.objects.filter(member_ticket_tb_id=member_ticket_id,
-                                                                 auth_cd='VIEW', use=USE)
+                                                                 auth_cd=AUTH_TYPE_VIEW, use=USE)
         for member_ticket_info in member_ticket_info:
             token_data = PushInfoTb.objects.filter(member_id=member_ticket_info.member.member_id)
             for token_info in token_data:
@@ -652,7 +666,7 @@ def func_send_push_trainee(class_id, title, message):
     error = None
     if class_id is not None and class_id != '':
 
-        member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=USE)
+        member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, use=USE)
 
         for member_class_info in member_class_data:
 
@@ -700,6 +714,12 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
                              use=USE).annotate(lecture_current_member_num=RawSQL(query,
                                                                                  [])).order_by('start_dt', 'reg_dt')
 
+    try:
+        lecture_one_to_one = LectureTb.objects.get(class_tb_id=class_id,
+                                                   lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, state_cd='IP', use=USE)
+    except ObjectDoesNotExist:
+        lecture_one_to_one = None
+
     ordered_schedule_dict = collections.OrderedDict()
     temp_schedule_date = None
     date_schedule_list = []
@@ -735,12 +755,26 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
             lecture_name = schedule_info.lecture_tb.name
             lecture_max_member_num = schedule_info.lecture_tb.member_num
             lecture_current_member_num = schedule_info.lecture_current_member_num
+            lecture_ing_color_cd = schedule_info.lecture_tb.ing_color_cd
+            lecture_ing_font_cd = schedule_info.lecture_tb.ing_font_color_cd
+            lecture_end_color_cd = schedule_info.lecture_tb.end_color_cd
+            lecture_end_font_cd = schedule_info.lecture_tb.end_font_color_cd
             schedule_type = 2
         except AttributeError:
             lecture_id = ''
             lecture_name = ''
             lecture_max_member_num = ''
             lecture_current_member_num = ''
+            if lecture_one_to_one is None:
+                lecture_ing_color_cd = ''
+                lecture_ing_font_cd = ''
+                lecture_end_color_cd = ''
+                lecture_end_font_cd = ''
+            else:
+                lecture_ing_color_cd = lecture_one_to_one.ing_color_cd
+                lecture_ing_font_cd = lecture_one_to_one.ing_font_color_cd
+                lecture_end_color_cd = lecture_one_to_one.end_color_cd
+                lecture_end_font_cd = lecture_one_to_one.end_font_color_cd
 
         # array 에 값을 추가후 dictionary 에 추가
         date_schedule_list.append({'schedule_id': schedule_info.schedule_id,
@@ -752,6 +786,10 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
                                    'member_name': member_name,
                                    'lecture_id': lecture_id,
                                    'lecture_name': lecture_name,
+                                   'lecture_ing_color_cd': lecture_ing_color_cd,
+                                   'lecture_ing_font_cd': lecture_ing_font_cd,
+                                   'lecture_end_color_cd': lecture_end_color_cd,
+                                   'lecture_end_font_cd': lecture_end_font_cd,
                                    'lecture_max_member_num': lecture_max_member_num,
                                    'lecture_current_member_num': lecture_current_member_num})
 
@@ -779,7 +817,7 @@ def func_get_trainer_attend_on_schedule(context, class_id, start_date, end_date,
                                                                              member_ticket_tb__use=USE,
                                                                              class_tb=class_id,
                                                                              en_dis_type=ON_SCHEDULE_TYPE,
-                                                                             state_cd='NP',
+                                                                             state_cd=STATE_CD_NOT_PROGRESS,
                                                                              use=USE).order_by('start_dt', 'reg_dt')
 
 

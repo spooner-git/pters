@@ -315,16 +315,15 @@
 
         send_data(){
 
-            let data = {"member_id":this.data_to_send.member_id,
-                        "lecture_id":this.data_to_send.lecture_id,
-                        "start_date":this.data_to_send.date.replace(/\./gi,"-"), "start_time":this.data_to_send.start_time, 
-                        "end_date":this.data_to_send.date.replace(/\./gi,"-"), "end_time":this.data_to_send.end_time, 
-                        "add_memo":this.data_to_send.memo, "duplication_enable_flag": 1, 
-                        "en_dis_type":this.list_type == "off" ? 0 : 1, "lecture_member_ids[]":this.data_to_send.member_ids
+            let data = {"lecture_id":this.data_to_send.lecture_id,
+                        "start_dt":this.data_to_send.date.replace(/\./gi,"-") + ' ' + this.data_to_send.start_time,
+                        "end_dt":this.data_to_send.date.replace(/\./gi,"-") + ' ' + this.data_to_send.end_time,
+                        "note":this.data_to_send.memo, "duplication_enable_flag": 1,
+                        "en_dis_type":this.list_type == "off" ? 0 : 1, "lecture_member_ids":this.data_to_send.member_ids
             };
             //en_dis_type 0: off일정, 1:레슨일정
             //duplication_enable_flag 0: 중복불허 1:중복허용
-            console.log(data);
+            console.log(data)
             let url;
             url ='/schedule/add_schedule/';
             /*switch(this.list_type){

@@ -91,7 +91,7 @@ class CComponent{
         return html;
     }
 
-    static select_member_row (multiple_select, checked, member_id, member_name, member_rem_count, member_expiry, onclick){
+    static select_member_row (multiple_select, checked, member_id, member_name, member_avail_count, member_expiry, onclick){
 
         let html = `
                     <li class="select_member_row" id="select_member_row_${member_id}">
@@ -100,7 +100,7 @@ class CComponent{
                                 ${member_name}
                             </div>
                             <div class="cell_member_info">
-                                잔여 ${member_rem_count}회 / ${member_expiry}까지
+                                잔여 ${member_avail_count}회 / ${member_expiry}까지
                             </div>
                             <div class="cell_member_selected">
                                 <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? '' : 'member_selected'}">

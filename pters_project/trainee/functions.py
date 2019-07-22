@@ -6,7 +6,8 @@ from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.utils import timezone
 
-from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, MEMBER_RESERVE_PROHIBITION_ON
+from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, MEMBER_RESERVE_PROHIBITION_ON, LECTURE_TYPE_ONE_TO_ONE, \
+    STATE_CD_IN_PROGRESS, STATE_CD_ABSENCE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE
 
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
@@ -38,7 +39,7 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
         ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
                  start_dt__gte=start_date, start_dt__lt=end_date,
                  member_ticket_tb__member_id=user_id,
-                 member_ticket_tb__member_auth_cd='VIEW',
+                 member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                  member_ticket_tb__use=USE
                  ).annotate(lecture_current_member_num=RawSQL('IFNULL(('+query_lecture_current_member_num+' ), 1)', [])
                             ).order_by('start_dt')
@@ -63,7 +64,8 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
     else:
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__member'
-        ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id, member_ticket_tb__member_auth_cd='VIEW',
+        ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id,
+                 member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                  member_ticket_tb__use=USE
                  ).order_by('member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
 
@@ -74,7 +76,8 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
             idx2 = 1
             schedule_data = ScheduleTb.objects.select_related(
                 'member_ticket_tb__member', 'lecture_tb'
-            ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, member_ticket_tb__member_auth_cd='VIEW',
+            ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
+                     member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                      member_ticket_tb__member_id=user_id,
                      member_ticket_tb_id=class_member_ticket_info.member_ticket_tb_id).order_by('start_dt')
 
@@ -123,9 +126,9 @@ def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
     # off_schedule_list = []
 
     # off 스케쥴 전달
-    schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                              start_dt__gte=start_date,
-                                              start_dt__lt=end_date).exclude(state_cd='PC').order_by('start_dt')
+    schedule_data = ScheduleTb.objects.filter(
+        class_tb_id=class_id, start_dt__gte=start_date,
+        start_dt__lt=end_date).exclude(state_cd=STATE_CD_ABSENCE).order_by('start_dt')
 
     context['off_schedule_data'] = schedule_data
 
@@ -136,8 +139,8 @@ def func_get_trainee_on_repeat_schedule(context, user_id, class_id):
     # repeat_schedule_list = []
     pt_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
         'member_ticket_tb'
-    ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, member_ticket_tb__state_cd='IP',
-             member_ticket_tb__member_auth_cd='VIEW',
+    ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+             member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
              member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date')
 
     context['repeat_schedule_data'] = pt_repeat_schedule_data
@@ -162,8 +165,8 @@ def func_get_class_member_ticket_count(context, class_id, user_id):
 
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb'
-        ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id, member_ticket_tb__state_cd='IP',
-                 member_ticket_tb__member_auth_cd='VIEW',
+        ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id,
+                 member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                  member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date')
 
     if error is None:
@@ -171,12 +174,10 @@ def func_get_class_member_ticket_count(context, class_id, user_id):
         for class_member_ticket_info in class_member_ticket_list:
             member_ticket_info = class_member_ticket_info.member_ticket_tb
             # 자유형 문제
-            ticket_single_lecture_count = TicketLectureTb.objects.filter(class_tb_id=class_id,
-                                                                         lecture_tb__lecture_type_cd='ONE_TO_ONE',
-                                                                         ticket_tb_id=member_ticket_info.ticket_tb_id,
-                                                                         ticket_tb__state_cd='IP',
-                                                                         lecture_tb__state_cd='IP',
-                                                                         use=USE).count()
+            ticket_single_lecture_count = TicketLectureTb.objects.filter(
+                class_tb_id=class_id, lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+                ticket_tb_id=member_ticket_info.ticket_tb_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                lecture_tb__state_cd=STATE_CD_IN_PROGRESS, use=USE).count()
 
             if ticket_single_lecture_count > 0:
                 member_ticket_reg_count_sum += member_ticket_info.member_ticket_reg_count
@@ -211,8 +212,8 @@ def func_get_lecture_count(context, class_id, user_id):
 
         member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb'
-        ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id, member_ticket_tb__state_cd='IP',
-                 member_ticket_tb__member_auth_cd='VIEW',
+        ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id,
+                 member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                  member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date')
 
     if error is None:
@@ -233,15 +234,13 @@ def func_get_lecture_count(context, class_id, user_id):
                 if check_flag == 1:
                     ticket_data.append(member_ticket_info)
             # 자유형 문제
-            ticket_single_lecture_count = TicketLectureTb.objects.filter(class_tb_id=class_id,
-                                                                         lecture_tb__lecture_type_cd='ONE_TO_ONE',
-                                                                         ticket_tb_id=member_ticket_info.ticket_tb_id,
-                                                                         ticket_tb__state_cd='IP',
-                                                                         lecture_tb__state_cd='IP',
-                                                                         use=USE).count()
+            ticket_single_lecture_count = TicketLectureTb.objects.filter(
+                class_tb_id=class_id, lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+                ticket_tb_id=member_ticket_info.ticket_tb_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                lecture_tb__state_cd=STATE_CD_IN_PROGRESS, use=USE).count()
 
             if ticket_single_lecture_count > 0:
-                if member_ticket_info.state_cd == 'IP':
+                if member_ticket_info.state_cd == STATE_CD_IN_PROGRESS:
                     member_ticket_reg_count_sum += member_ticket_info.member_ticket_reg_count
                     member_ticket_rem_count_sum += member_ticket_info.member_ticket_rem_count
                     member_ticket_avail_count_sum += member_ticket_info.member_ticket_avail_count
@@ -271,7 +270,7 @@ def func_get_member_ticket_list(context, class_id, member_id, auth_cd):
         error = '회원 정보를 불러오지 못했습니다.'
 
     if auth_cd is None or auth_cd == '':
-        auth_cd = 'VIEW'
+        auth_cd = AUTH_TYPE_VIEW
     auth_cd_list = auth_cd.split('/')
 
     if error is None:
@@ -347,7 +346,7 @@ def func_get_member_ticket_connection_list(context, class_id, member_id, auth_cd
         error = '회원 정보를 불러오지 못했습니다.'
 
     if auth_cd is None or auth_cd == '':
-        auth_cd = 'VIEW'
+        auth_cd = AUTH_TYPE_VIEW
     auth_cd_list = auth_cd.split('/')
 
     if error is None:
@@ -418,7 +417,7 @@ def func_get_class_list(context, member_id):
         'class_tb', 'member_ticket_tb').filter(
         member_ticket_tb__member_id=member_id,
         use=USE).annotate(class_type_name=RawSQL(query_type_cd, [])
-                          ).exclude(member_ticket_tb__member_auth_cd='DELETE').order_by('class_tb_id')
+                          ).exclude(member_ticket_tb__member_auth_cd=AUTH_TYPE_DELETE).order_by('class_tb_id')
 
     class_list = []
     # wait_class_list = []
@@ -444,10 +443,10 @@ def func_get_class_list(context, member_id):
                 input_class_info.class_member_ticket_data = []
                 class_list.append(input_class_info)
 
-            if input_class_info.member_auth_cd == 'WAIT':
+            if input_class_info.member_auth_cd == AUTH_TYPE_WAIT:
                 input_class_info.np_member_ticket_counts += 1
                 input_class_info.class_member_ticket_data.append(class_member_ticket_info.member_ticket_tb)
-            if input_class_info.member_auth_cd == 'VIEW':
+            if input_class_info.member_auth_cd == AUTH_TYPE_VIEW:
                 input_class_info.member_ticket_counts += 1
                 input_class_info.member_ticket_rem_count \
                     += class_member_ticket_info.member_ticket_tb.member_ticket_rem_count
@@ -467,7 +466,7 @@ def func_get_class_list_only_view(context, member_id):
 
     class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
         'class_tb', 'member_ticket_tb').filter(
-        member_ticket_tb__member_id=member_id, member_ticket_tb__member_auth_cd='VIEW',
+        member_ticket_tb__member_id=member_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
         use=USE).annotate(class_type_name=RawSQL(query_type_cd, [])
                           ).order_by('class_tb_id')
 
@@ -495,10 +494,10 @@ def func_get_class_list_only_view(context, member_id):
                 input_class_info.class_member_ticket_data = []
                 class_list.append(input_class_info)
 
-            if class_member_ticket_info.member_ticket_tb.member_auth_cd == 'WAIT':
+            if class_member_ticket_info.member_ticket_tb.member_auth_cd == AUTH_TYPE_WAIT:
                 input_class_info.np_member_ticket_counts += 1
                 input_class_info.class_member_ticket_data.append(class_member_ticket_info.member_ticket_tb)
-            if class_member_ticket_info.member_ticket_tb.member_auth_cd == 'VIEW':
+            if class_member_ticket_info.member_ticket_tb.member_auth_cd == AUTH_TYPE_VIEW:
                 input_class_info.member_ticket_counts += 1
                 input_class_info.member_ticket_rem_count \
                     += class_member_ticket_info.member_ticket_tb.member_ticket_rem_count
@@ -548,7 +547,7 @@ def func_get_trainee_select_schedule(context, class_id, user_id, select_date):
         end_dt = start_dt + datetime.timedelta(hours=23, minutes=59)
 
     schedule_data = ScheduleTb.objects.filter(
-        class_tb=class_id, member_ticket_tb__member_id=user_id, member_ticket_tb__member_auth_cd='VIEW',
+        class_tb=class_id, member_ticket_tb__member_id=user_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
         member_ticket_tb__use=USE, en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_dt,
         start_dt__lte=end_dt).order_by('start_dt')
 
@@ -562,16 +561,16 @@ def func_get_trainee_ing_member_ticket_list(context, class_id, user_id):
     member_ticket_list = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__member',
         'member_ticket_tb__ticket_tb'
-    ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id, member_ticket_tb__state_cd='IP',
-             member_ticket_tb__ticket_tb__state_cd='IP',
-             member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd='VIEW'
+    ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id, member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+             member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+             member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW
              ).order_by('-member_ticket_tb__end_date', 'member_ticket_tb__reg_dt')
 
     for member_ticket_info in member_ticket_list:
         member_ticket_info_ticket_tb = member_ticket_info.member_ticket_tb.ticket_tb
         member_ticket_info.ticket_lecture_data = TicketLectureTb.objects.filter(
-            ticket_tb_id=member_ticket_info_ticket_tb.ticket_id, ticket_tb__state_cd='IP', lecture_tb__state_cd='IP',
-            use=USE)
+            ticket_tb_id=member_ticket_info_ticket_tb.ticket_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+            lecture_tb__state_cd=STATE_CD_IN_PROGRESS, use=USE)
 
     context['ing_member_ticket_data'] = member_ticket_list
     return context
@@ -585,7 +584,7 @@ def func_get_trainee_ticket_list(context, class_id, user_id):
         'member_ticket_tb__member',
         'member_ticket_tb__ticket_tb'
     ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id,
-             member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd='VIEW',
+             member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
              ).annotate(status=RawSQL(query_status, [])).order_by('member_ticket_tb__state_cd',
                                                                   '-member_ticket_tb__start_date',
                                                                   '-member_ticket_tb__reg_dt')
@@ -596,8 +595,8 @@ def func_get_trainee_ticket_list(context, class_id, user_id):
 
         for ticket_info in ticket_list:
             if ticket_info.member_ticket_tb.ticket_tb.ticket_id == member_ticket_info_ticket_tb.ticket_id:
-                if member_ticket_info.member_ticket_tb.state_cd == 'IP':
-                    ticket_info.member_ticket_tb.state_cd = 'IP'
+                if member_ticket_info.member_ticket_tb.state_cd == STATE_CD_IN_PROGRESS:
+                    ticket_info.member_ticket_tb.state_cd = STATE_CD_IN_PROGRESS
                     ticket_info.status = member_ticket_info.status
                 test = False
 
@@ -613,8 +612,8 @@ def func_get_trainee_ing_lecture_list(context, class_id, user_id):
     member_ticket_list = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__member',
         'member_ticket_tb__ticket_tb'
-    ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id, member_ticket_tb__state_cd='IP',
-             member_ticket_tb__use=USE, member_ticket_tb__mmeber_auth_cd='VIEW'
+    ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id, member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+             member_ticket_tb__use=USE, member_ticket_tb__mmeber_auth_cd=AUTH_TYPE_VIEW
              ).order_by('member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
 
     for member_ticket_info in member_ticket_list:
@@ -622,7 +621,8 @@ def func_get_trainee_ing_lecture_list(context, class_id, user_id):
 
         member_ticket_info.ticket_lecture_data = TicketLectureTb.objects.select_related(
             'member_ticket_tb').filter(ticket_tb_id=member_ticket_info_ticket_tb.ticket_id, member_ticket_tb__use=USE,
-                                       ticket_tb__state_cd='IP', lecture_tb__state_cd='IP',
+                                       ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                       lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
                                        use=USE).order_by('member_ticket_tb__reg_dt')
 
         # try:

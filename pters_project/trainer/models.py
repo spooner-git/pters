@@ -4,6 +4,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
+from configs.const import LECTURE_TYPE_ONE_TO_ONE
 from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
 from trainee.models import MemberMemberTicketTb, MemberTicketTb
@@ -147,7 +148,7 @@ class LectureTb(TimeStampedModel):
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)
     member_num = models.IntegerField(db_column='MEMBER_NUM', default=2)  # Field name made lowercase.
     lecture_type_cd = models.CharField(db_column='GROUP_TYPE_CD', max_length=20, blank=True, null=True,
-                                       default='ONE_TO_ONE')
+                                       default=LECTURE_TYPE_ONE_TO_ONE)
     name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True, default='')
     note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True, default='')
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
