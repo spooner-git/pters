@@ -34,7 +34,7 @@ from registration import signals
 from registration.forms import RegistrationForm
 
 from configs import settings
-from configs.const import USE, UN_USE
+from configs.const import USE, UN_USE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT
 from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
 from trainee.models import MemberMemberTicketTb
@@ -1270,12 +1270,12 @@ def out_member_logic(request):
                 #     user.save()
                 # else:
                 if group_name == 'trainee':
-                    member_member_ticket_data = MemberMemberTicketTb.objects.filter(member_id=member_id, auth_cd='VIEW',
-                                                                                    use=USE)
+                    member_member_ticket_data = MemberMemberTicketTb.objects.filter(member_id=member_id,
+                                                                                    auth_cd=AUTH_TYPE_VIEW, use=USE)
                     if len(member_member_ticket_data) > 0:
-                        member_member_ticket_data.update(auth_cd='WAIT')
+                        member_member_ticket_data.update(auth_cd=AUTH_TYPE_WAIT)
                 # elif group_name == 'trainer':
-                #     member_class_data = MemberClassTb.objects.filter(member_id=member_id, auth_cd='VIEW', use=USE)
+                #     member_class_data = MemberClassTb.objects.filter(member_id=member_id, auth_cd=AUTH_TYPE_VIEW, use=USE)
                 #     if len(member_class_data) > 0:
                 #         member_class_data.update(auth_cd='DELETE')
 

@@ -1410,7 +1410,7 @@
                 let member_expiry = data.end_date;
                 let checked = this.target_instance.data_to_send.member_ids.indexOf(member_id) >= 0 ? 1 : 0;
                 let html = CComponent.select_member_row (
-                    this.multiple_select, checked, member_id, member_name, member_rem_count, member_expiry, (add_or_substract)=>{
+                    this.multiple_select, checked, member_id, member_name, member_avail_count, member_expiry, (add_or_substract)=>{
                         if(add_or_substract == "add"){
                             this.target_instance.data_to_send.member_ids.push(member_id);
                             this.target_instance.data_to_send.member_names.push(member_name);

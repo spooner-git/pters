@@ -22,18 +22,19 @@ from django.core.files.base import ContentFile
 from configs import settings
 from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, TO_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, AUTO_ABSENCE_ON, SCHEDULE_DUPLICATION_ENABLE, \
-    OFF_SCHEDULE_TYPE
+    OFF_SCHEDULE_TYPE, LECTURE_TYPE_ONE_TO_ONE, STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, STATE_CD_FINISH, \
+    STATE_CD_ABSENCE
 
 from login.models import LogTb, MemberTb
+from schedule.forms import AddScheduleTbForm
 from trainer.models import LectureTb, ClassTb
 from trainee.models import MemberTicketTb, MemberMemberTicketTb
 from .models import ScheduleTb, RepeatScheduleTb
 
 from .functions import func_get_member_ticket_id, func_add_schedule, func_refresh_member_ticket_count, func_date_check,\
     func_get_lecture_member_ticket_id, func_check_lecture_available_member_before, \
-    func_check_lecture_available_member_after, \
-    func_send_push_trainer, func_send_push_trainee, func_delete_schedule, func_delete_repeat_schedule, \
-    func_update_repeat_schedule, func_get_repeat_schedule_date_list, func_add_repeat_schedule,\
+    func_check_lecture_available_member_after, func_send_push_trainer, func_send_push_trainee, func_delete_schedule, \
+    func_delete_repeat_schedule, func_get_repeat_schedule_date_list, func_add_repeat_schedule, \
     func_refresh_lecture_status
 
 logger = logging.getLogger(__name__)
@@ -50,84 +51,60 @@ class IndexView(TemplateView):
 
 # 일정 추가
 def add_schedule_logic(request):
-    lecture_id = request.POST.get('lecture_id', None)
-    schedule_date = request.POST.get('start_date', '')
-    schedule_time = request.POST.get('start_time', '')
-    schedule_end_date = request.POST.get('end_date', '')
-    schedule_end_time = request.POST.get('end_time', '')
-    en_dis_type = request.POST.get('en_dis_type', OFF_SCHEDULE_TYPE)
-    lecture_member_ids = request.POST.getlist('lecture_member_ids[]', '')
-    note = request.POST.get('add_memo', '')
-    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_ENABLE)
+    schedule_input_form = AddScheduleTbForm(request.POST)
 
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
+    if not schedule_input_form.is_valid():
+        for field in schedule_input_form:
+            for field_error in field.errors:
+                logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + field_error)
+                messages.error(request, field_error)
+                return render(request, 'ajax/schedule_error_info.html')
+
+        for non_field_error in schedule_input_form.non_field_errors():
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + non_field_error)
+            messages.error(request, non_field_error)
+            return render(request, 'ajax/schedule_error_info.html')
+
+    schedule_start_datetime = schedule_input_form.cleaned_data['start_dt']
+    schedule_end_datetime = schedule_input_form.cleaned_data['end_dt']
+    en_dis_type = schedule_input_form.cleaned_data['en_dis_type']
+    note = schedule_input_form.cleaned_data['note']
+    duplication_enable_flag = schedule_input_form.cleaned_data['duplication_enable_flag']
+    lecture_info = schedule_input_form.cleaned_data['lecture_id']
+    lecture_member_ids = schedule_input_form.cleaned_data['lecture_member_ids']
 
     error = None
     info_message = None
-    schedule_start_datetime = None
-    schedule_end_datetime = None
-    lecture_info = None
     lecture_schedule_id = None
     check_outer_schedule_flag = False
+    lecture_id = None
+
+    if lecture_info is not None:
+        lecture_id = lecture_info.lecture_id
+        if lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+            check_outer_schedule_flag = True
+    else:
+        check_outer_schedule_flag = True
+
+    state_cd = STATE_CD_NOT_PROGRESS
+    permission_state_cd = PERMISSION_STATE_CD_APPROVE
+
+    if en_dis_type == ON_SCHEDULE_TYPE:
+        if timezone.now() > schedule_end_datetime:
+            if setting_schedule_auto_finish == AUTO_FINISH_ON:
+                state_cd = STATE_CD_FINISH
+            elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
+                state_cd = STATE_CD_ABSENCE
 
     push_member_ticket_id = []
     push_title = []
     push_message = []
     context = {'push_member_ticket_id': '', 'push_title': '', 'push_message': ''}
-
-    if schedule_date == '':
-        error = '날짜를 선택해 주세요.'
-    elif schedule_end_date == '':
-        error = '날짜를 선택해 주세요.'
-    elif schedule_time == '':
-        error = '시작 시각을 선택해 주세요.'
-    elif schedule_end_time == '':
-        error = '종료 시각을 선택해 주세요.'
-    if schedule_date == schedule_end_date:
-        if schedule_time == schedule_end_time:
-            error = '일정을 다시 선택해주세요.'
-
-    if note is None:
-        note = ''
-
-    if error is None:
-        end_time_check = 0
-        if schedule_end_time == '24:00':
-            schedule_end_time = '23:59'
-            end_time_check = 1
-
-        try:
-            schedule_start_datetime = datetime.datetime.strptime(schedule_date + ' ' + schedule_time,
-                                                                 '%Y-%m-%d %H:%M')
-            schedule_end_datetime = datetime.datetime.strptime(schedule_end_date + ' ' + schedule_end_time,
-                                                               '%Y-%m-%d %H:%M')
-            if end_time_check == 1:
-                schedule_end_datetime = schedule_end_datetime + datetime.timedelta(minutes=1)
-        except ValueError:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError:
-            error = '등록 값에 문제가 있습니다.'
-
-    if error is None and en_dis_type != OFF_SCHEDULE_TYPE:
-        try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=USE)
-            if len(lecture_member_ids) > lecture_info.member_num:
-                error = '수업 정원보다 등록하려는 회원수가 많습니다.'
-            else:
-                # 자유형 문제
-                if lecture_info.lecture_type_cd != 'ONE_TO_ONE':
-                    check_outer_schedule_flag = True
-        except ObjectDoesNotExist:
-            error = '오류가 발생했습니다.'
-
-    if en_dis_type == OFF_SCHEDULE_TYPE:
-        check_outer_schedule_flag = True
 
     # 수업 정보 가져오기
     if error is None:
@@ -135,25 +112,16 @@ def add_schedule_logic(request):
         if check_outer_schedule_flag:
             try:
                 with transaction.atomic():
-                    state_cd = 'NP'
-                    permission_state_cd = 'AP'
-                    if timezone.now() > schedule_end_datetime:
-                        if setting_schedule_auto_finish == AUTO_FINISH_ON:
-                            state_cd = 'PE'
-                        elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
-                            state_cd = 'PC'
-                    schedule_result = func_add_schedule(class_id, None, None,
-                                                        lecture_id, None,
-                                                        schedule_start_datetime, schedule_end_datetime,
-                                                        note, en_dis_type, request.user.id,
-                                                        permission_state_cd,
-                                                        state_cd, duplication_enable_flag)
+                    schedule_result = func_add_schedule(class_id, None, None, lecture_id, None,
+                                                        schedule_start_datetime,
+                                                        schedule_end_datetime, note, en_dis_type, request.user.id,
+                                                        permission_state_cd, state_cd, duplication_enable_flag)
                     error = schedule_result['error']
-
                     if error is None:
                         lecture_schedule_id = schedule_result['schedule_id']
                         error = func_date_check(class_id, schedule_result['schedule_id'],
-                                                schedule_date, schedule_start_datetime, schedule_end_datetime,
+                                                schedule_start_datetime.date(),
+                                                schedule_start_datetime, schedule_end_datetime,
                                                 duplication_enable_flag)
 
                         if error is not None:
@@ -182,6 +150,7 @@ def add_schedule_logic(request):
 
         for lecture_member_id in lecture_member_ids:
             error_temp = None
+
             try:
                 member_info = MemberTb.objects.get(member_id=lecture_member_id)
             except ObjectDoesNotExist:
@@ -203,22 +172,15 @@ def add_schedule_logic(request):
 
                                 if error_temp is None:
 
-                                    state_cd = 'NP'
-                                    permission_state_cd = 'AP'
-                                    if timezone.now() > schedule_end_datetime:
-                                        if setting_schedule_auto_finish == AUTO_FINISH_ON:
-                                            state_cd = 'PE'
-                                        elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
-                                            state_cd = 'PC'
                                     # 자유형 문제
-                                    if lecture_info.lecture_type_cd == 'ONE_TO_ONE':
+                                    if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
                                         lecture_id = None
                                         lecture_schedule_id = None
                                     schedule_result = func_add_schedule(class_id, member_ticket_id, None,
                                                                         lecture_id, lecture_schedule_id,
                                                                         schedule_start_datetime,
                                                                         schedule_end_datetime,
-                                                                        note, ON_SCHEDULE_TYPE, request.user.id,
+                                                                        note, en_dis_type, request.user.id,
                                                                         permission_state_cd,
                                                                         state_cd, duplication_enable_flag)
                                     error_temp = schedule_result['error']
@@ -411,7 +373,7 @@ def update_schedule_state_cd_logic(request):
     schedule_id = request.POST.get('schedule_id')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
-    schedule_state_cd = request.POST.get('state_cd', 'PE')
+    schedule_state_cd = request.POST.get('state_cd', STATE_CD_FINISH)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
@@ -436,9 +398,9 @@ def update_schedule_state_cd_logic(request):
             schedule_info = ScheduleTb.objects.select_related('lecture_tb').get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
             error = '일정 정보를 불러오지 못했습니다.'
-        if schedule_state_cd == 'PE':
+        if schedule_state_cd == STATE_CD_FINISH:
             schedule_state_cd_name = '출석'
-        elif schedule_state_cd == 'PC':
+        elif schedule_state_cd == STATE_CD_ABSENCE:
             schedule_state_cd_name = '결석'
 
     if error is None:
@@ -462,15 +424,15 @@ def update_schedule_state_cd_logic(request):
                 member_ticket_repeat_schedule_data = None
                 if schedule_info.repeat_schedule_tb is not None and schedule_info.repeat_schedule_tb != '':
                     member_ticket_repeat_schedule_data = schedule_info.repeat_schedule_tb
-                    if member_ticket_repeat_schedule_data.state_cd == 'NP':
+                    if member_ticket_repeat_schedule_data.state_cd == STATE_CD_NOT_PROGRESS:
                         member_ticket_repeat_schedule_data.state_cd = 'IP'
                         member_ticket_repeat_schedule_data.save()
                     member_ticket_repeat_schedule_counter = ScheduleTb.objects.filter(
                         repeat_schedule_tb_id=member_ticket_repeat_schedule_data.repeat_schedule_id,
-                        use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC')).count()
+                        use=USE).exclude(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE)).count()
 
                     if member_ticket_repeat_schedule_counter == 0:
-                        member_ticket_repeat_schedule_data.state_cd = 'PE'
+                        member_ticket_repeat_schedule_data.state_cd = STATE_CD_FINISH
                         member_ticket_repeat_schedule_data.save()
 
         except TypeError:
@@ -742,8 +704,8 @@ def add_repeat_schedule_logic(request):
                         if error_date is None:
                             if schedule_check == 1:
 
-                                state_cd = 'NP'
-                                permission_state_cd = 'AP'
+                                state_cd = STATE_CD_NOT_PROGRESS
+                                permission_state_cd = PERMISSION_STATE_CD_APPROVE
                                 schedule_result = func_add_schedule(class_id, member_ticket_id,
                                                                     repeat_schedule_info.repeat_schedule_id,
                                                                     None, None,
@@ -869,7 +831,8 @@ def add_repeat_schedule_confirm(request):
                 with transaction.atomic():
                     schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id)
                     for delete_schedule_info in schedule_data:
-                        if delete_schedule_info.state_cd != 'PE' and delete_schedule_info.state_cd != 'PC':
+                        if delete_schedule_info.state_cd != STATE_CD_FINISH \
+                                and delete_schedule_info.state_cd != STATE_CD_ABSENCE:
                             delete_member_ticket_id = delete_schedule_info.member_ticket_tb_id
                             delete_schedule_info.delete()
                             if en_dis_type == ON_SCHEDULE_TYPE:
@@ -990,7 +953,8 @@ def delete_repeat_schedule_logic(request):
                 delete_member_ticket_id_list = []
                 old_member_ticket_id = None
                 for delete_schedule_info in schedule_data:
-                    if delete_schedule_info.state_cd != 'PE' and delete_schedule_info.state_cd != 'PC':
+                    if delete_schedule_info.state_cd != STATE_CD_FINISH \
+                            and delete_schedule_info.state_cd != STATE_CD_ABSENCE:
                         current_member_ticket_id = delete_schedule_info.member_ticket_tb_id
                         delete_schedule_info.delete()
 
@@ -1119,7 +1083,7 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, View):
 def finish_lecture_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     class_id = request.session.get('class_id', '')
-    schedule_state_cd = request.POST.get('schedule_state_cd', 'PE')
+    schedule_state_cd = request.POST.get('schedule_state_cd', STATE_CD_FINISH)
     schedule_state_cd_name = '완료'
     error = None
     schedule_info = None
@@ -1144,9 +1108,9 @@ def finish_lecture_schedule_logic(request):
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
             error = '일정 정보를 불러오지 못했습니다.'
-        if schedule_state_cd == 'PE':
+        if schedule_state_cd == STATE_CD_FINISH:
             schedule_state_cd_name = '완료'
-        elif schedule_state_cd == 'PC':
+        elif schedule_state_cd == STATE_CD_ABSENCE:
             schedule_state_cd_name = '결석 처리'
 
     if error is None:
@@ -1155,7 +1119,7 @@ def finish_lecture_schedule_logic(request):
     if error is None:
         start_date = schedule_info.start_dt
         end_date = schedule_info.end_dt
-        if schedule_info.state_cd == 'PE' or schedule_info.state_cd == 'PC':
+        if schedule_info.state_cd == STATE_CD_FINISH or schedule_info.state_cd == STATE_CD_ABSENCE:
             error = '완료된 스케쥴입니다.'
 
     if error is None:
@@ -1169,14 +1133,15 @@ def finish_lecture_schedule_logic(request):
                     repeat_schedule_data = schedule_info.repeat_schedule_tb
 
                 if repeat_schedule_data is not None:
-                    if repeat_schedule_data.state_cd == 'NP':
+                    if repeat_schedule_data.state_cd == STATE_CD_NOT_PROGRESS:
                         repeat_schedule_data.state_cd = 'IP'
                         repeat_schedule_data.save()
                     repeat_schedule_counter = \
                         ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_data.repeat_schedule_id,
-                                                  use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC')).count()
+                                                  use=USE).exclude(Q(state_cd=STATE_CD_FINISH)
+                                                                   | Q(state_cd=STATE_CD_ABSENCE)).count()
                     if repeat_schedule_counter == 0:
-                        repeat_schedule_data.state_cd = 'PE'
+                        repeat_schedule_data.state_cd = STATE_CD_FINISH
                         repeat_schedule_data.save()
 
         except TypeError:
@@ -1199,7 +1164,8 @@ def finish_lecture_schedule_logic(request):
             start_date = member_lecture_schedule_info.start_dt
             end_date = member_lecture_schedule_info.end_dt
             member_ticket_info = member_lecture_schedule_info.member_ticket_tb
-            if member_lecture_schedule_info.state_cd == 'PE' or member_lecture_schedule_info.state_cd == 'PC':
+            if member_lecture_schedule_info.state_cd == STATE_CD_FINISH \
+                    or member_lecture_schedule_info.state_cd == STATE_CD_ABSENCE:
                 temp_error = '완료된 스케쥴입니다.'
 
             try:
@@ -1223,19 +1189,20 @@ def finish_lecture_schedule_logic(request):
                             member_ticket_repeat_schedule = member_lecture_schedule_info.repeat_schedule_tb
 
                         if member_ticket_repeat_schedule is not None:
-                            if member_ticket_repeat_schedule.state_cd == 'NP':
+                            if member_ticket_repeat_schedule.state_cd == STATE_CD_NOT_PROGRESS:
                                 member_ticket_repeat_schedule.state_cd = 'IP'
                                 member_ticket_repeat_schedule.save()
                             member_ticket_repeat_schedule_counter = \
                                 ScheduleTb.objects.filter(
                                     repeat_schedule_tb_id=member_ticket_repeat_schedule.repeat_schedule_id,
-                                    use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC')).count()
+                                    use=USE).exclude(Q(state_cd=STATE_CD_FINISH)
+                                                     | Q(state_cd=STATE_CD_ABSENCE)).count()
                             if member_ticket_repeat_schedule_counter == 0:
-                                member_ticket_repeat_schedule.state_cd = 'PE'
+                                member_ticket_repeat_schedule.state_cd = STATE_CD_FINISH
                                 member_ticket_repeat_schedule.save()
 
                         if member_ticket_info.member_ticket_rem_count == 0:
-                            member_ticket_info.state_cd = 'PE'
+                            member_ticket_info.state_cd = STATE_CD_FINISH
                             member_ticket_info.schedule_check = 1
                         member_ticket_info.save()
 
@@ -1382,13 +1349,13 @@ def add_member_lecture_schedule_logic(request):
                 if error is None:
 
                     state_cd = schedule_info.state_cd
-                    permission_state_cd = 'AP'
+                    permission_state_cd = PERMISSION_STATE_CD_APPROVE
 
                     if timezone.now() > schedule_info.end_dt:
                         if setting_schedule_auto_finish == AUTO_FINISH_ON:
-                            state_cd = 'PE'
+                            state_cd = STATE_CD_FINISH
                         elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
-                            state_cd = 'PC'
+                            state_cd = STATE_CD_ABSENCE
                     schedule_result = func_add_schedule(class_id, member_ticket_id, None,
                                                         lecture_id, lecture_schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,
@@ -1520,12 +1487,12 @@ def add_other_member_lecture_schedule_logic(request):
                 if error is None:
 
                     state_cd = schedule_info.state_cd
-                    permission_state_cd = 'AP'
+                    permission_state_cd = PERMISSION_STATE_CD_APPROVE
                     if timezone.now() > schedule_info.end_dt:
                         if setting_schedule_auto_finish == AUTO_FINISH_ON:
-                            state_cd = 'PE'
+                            state_cd = STATE_CD_FINISH
                         elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
-                            state_cd = 'PC'
+                            state_cd = STATE_CD_ABSENCE
                     schedule_result = func_add_schedule(class_id, member_ticket_id, None,
                                                         lecture_id, lecture_schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,
@@ -1731,8 +1698,8 @@ def add_lecture_repeat_schedule_logic(request):
                         schedule_result = None
                         if error_date is None:
 
-                            state_cd = 'NP'
-                            permission_state_cd = 'AP'
+                            state_cd = STATE_CD_NOT_PROGRESS
+                            permission_state_cd = PERMISSION_STATE_CD_APPROVE
                             # if setting_schedule_auto_finish == AUTO_FINISH_ON \
                             #         and timezone.now() > schedule_end_datetime:
                             #     state_cd = 'PE'
@@ -1910,7 +1877,8 @@ def add_lecture_repeat_schedule_confirm(request):
                             member_repeat_schedule_info = repeat_schedule_result['schedule_info']
                             for schedule_info in schedule_data:
                                 member_ticket_id = None
-                                member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
+                                member_ticket_result = func_get_lecture_member_ticket_id(class_id,
+                                                                                         lecture_info.lecture_id,
                                                                                          member_info.member_id)
                                 if member_ticket_result['error'] is None:
                                     member_ticket_id = member_ticket_result['member_ticket_id']
@@ -1924,8 +1892,8 @@ def add_lecture_repeat_schedule_confirm(request):
                                             with transaction.atomic():
                                                 if error_temp is None:
 
-                                                    state_cd = 'NP'
-                                                    permission_state_cd = 'AP'
+                                                    state_cd = STATE_CD_NOT_PROGRESS
+                                                    permission_state_cd = PERMISSION_STATE_CD_APPROVE
                                                     # if setting_schedule_auto_finish == AUTO_FINISH_ON \
                                                     #         and timezone.now() > schedule_info.end_dt:
                                                     #     state_cd = 'PE'
@@ -2037,8 +2005,8 @@ def delete_lecture_repeat_schedule_logic(request):
             with transaction.atomic():
                 for delete_schedule_info in schedule_data:
                     end_schedule_counter = ScheduleTb.objects.filter(
-                        Q(state_cd='PE') | Q(state_cd='PC'), lecture_schedule_id=delete_schedule_info.schedule_id,
-                        use=USE).count()
+                        Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE),
+                        lecture_schedule_id=delete_schedule_info.schedule_id, use=USE).count()
                     if end_schedule_counter == 0:
                         schedule_result = func_delete_schedule(class_id, delete_schedule_info.schedule_id,
                                                                request.user.id)
@@ -2091,7 +2059,8 @@ def delete_lecture_repeat_schedule_logic(request):
                         delete_member_ticket_id_list = []
                         old_member_ticket_id = None
                         for delete_schedule_info in schedule_data:
-                            if delete_schedule_info.state_cd != 'PE' or delete_schedule_info.state_cd != 'PC':
+                            if delete_schedule_info.state_cd != STATE_CD_FINISH \
+                                    or delete_schedule_info.state_cd != STATE_CD_ABSENCE:
                                 current_member_ticket_id = delete_schedule_info.member_ticket_tb_id
                                 delete_schedule_info.delete()
 
