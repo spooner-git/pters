@@ -398,6 +398,8 @@ class Calendar {
         document.getElementById(`page${page}`).innerHTML = week_date_name_data + data;
         // document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box;
         func_set_webkit_overflow_scrolling(`#page${page}`);
+
+        this.week_zoomed.vertical.activate = false;
         this.relocate_current_time_indicator();
     }
 
@@ -424,9 +426,8 @@ class Calendar {
                 Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
                     el.style.display = "none";
                 });
-                
             }
-            // this.week_zoomed = true;
+            
             this.week_zoomed.activate = true;
             this.week_zoomed.target_row = clicked_number;
             this.toggle_touch_move('off', '#calendar_wrap');
@@ -442,7 +443,7 @@ class Calendar {
                     el.style.display = "table-cell";
                 });
             }
-            // this.week_zoomed = false;
+            
             this.week_zoomed.activate = false;
             this.week_zoomed.target_row = clicked_number;
             this.toggle_touch_move('on', '#calendar_wrap');
@@ -463,7 +464,7 @@ class Calendar {
                                         'background-size': '30px 60px'
             });
         }
-        this.relocate_current_time_indicator()
+        this.relocate_current_time_indicator();
     }
 
     get_week_dates (year, month, week){
