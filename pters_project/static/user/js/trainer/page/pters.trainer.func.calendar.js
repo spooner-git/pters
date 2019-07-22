@@ -36,7 +36,8 @@ class Calendar {
 
         this.user_data = {
             user_selected_date: {year:this.current_year, month:this.current_month, date:this.current_date},
-            user_selected_time: {hour:this.current_hour, minute:this.current_minute, hour2:this.current_hour, minute2:this.current_minute}
+            user_selected_time: {hour:this.current_hour, minute:this.current_minute, hour2:this.current_hour, minute2:this.current_minute},
+            user_selected_plan : {schedule_id:""}
         };
 
         let interval = setInterval(()=>{
@@ -234,7 +235,6 @@ class Calendar {
         this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
             if(date == `${this.current_year}-${this.current_month}-01`){
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata);
 
                 //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
                 if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
@@ -309,7 +309,6 @@ class Calendar {
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                 if(date == `${this.current_year}-${this.current_month}-01`){
                     this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                    // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
                 }
             });
             break;
@@ -331,7 +330,6 @@ class Calendar {
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                 if(date == `${this.current_year}-${this.current_month}-01`){
                     this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                    // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
                 }
             });
             break;
@@ -392,7 +390,7 @@ class Calendar {
             return false;
         }
         let week_date_name_data = this.static_component().week_cal_upper_box_date_tool;
-        let data = this.draw_week_line(year, month, week, schedule_data, `${this.instance}.zoom_week_cal`, "week");
+        let data = this.draw_week_line(year, month, week, schedule_data, "week");
         
 
         document.getElementById(`page${page}`).innerHTML = week_date_name_data + data;
@@ -401,10 +399,6 @@ class Calendar {
 
         this.week_zoomed.vertical.activate = false;
         this.relocate_current_time_indicator();
-    }
-
-    open_popup_plan_view (event, year, month, date){
-        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, 100, POPUP_FROM_RIGHT, {'select_date':`${year}-${month}-${date}`});
     }
     
     zoom_week_cal (event){
@@ -559,7 +553,7 @@ class Calendar {
         );
     }
 
-    draw_week_line (year, month, week, schedule_data, onclick_func, month_or_week, row_height){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
+    draw_week_line (year, month, week, schedule_data, month_or_week, row_height){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
@@ -586,10 +580,6 @@ class Calendar {
 
         let height_style = row_height == undefined ? "" : `style='height:${row_height}px'`;
         
-        // let week_html_template = this.week_schedule_draw(year, month, week, schedule_data);
-        
-        
-
         let dates_to_join = [];
 
         if(week_dates_info == false){
@@ -621,7 +611,7 @@ class Calendar {
     
                 dates_to_join.push(
                     `
-                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" onclick="${onclick_func}(event, ${_year[i]}, ${_month[i]}, ${_date[i]})">
+                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" onclick="${this.instance}.zoom_week_cal(event, ${_year[i]}, ${_month[i]}, ${_date[i]})">
                         ${_date[i]}
                         <div class="${schedule_number_display} ${has_schedule}">${schedule_date}</div>
                         ${today_marking}
@@ -636,7 +626,7 @@ class Calendar {
         return(
             week_dates_info == false 
                 ? 
-                    result_html
+                result_html
                 :
                 `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:30px;background-color:#ffffff;z-index:10;height:25px;line-height:15px;font-size:20px` : ""}">
                     ${month_or_week == "week" ? `<div class="week_cal_time_text"  onclick="${this.instance}.zoom_week_cal_vertical()"></div>` : ""}
@@ -647,7 +637,6 @@ class Calendar {
     }
 
     week_schedule_draw (year, month, week, schedule_data){
-        console.log(schedule_data)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
@@ -707,7 +696,7 @@ class Calendar {
                             let cell_divide = plan.duplicated_cell;
                             
                             // let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_PLAN_VIEW}', 90, ${POPUP_FROM_BOTTOM}, {'select_date':'${date_to_search}'})`;
-                            let onclick = `${this.instance}.open_popup_plan_view(event, ${_year[i]}, ${_month[i]}, ${_date[i]})`;
+                            let onclick = `${this.instance}.open_popup_plan_view(event, ${plan.schedule_id})`;
                             let height = 100*(diff.hour*60+60*diff.minute/60)/(24*60);
                             let top = 100*( (plan_start.hour-work_start)*60 + 60*plan_start.minute/60 )/(24*60);
 
@@ -775,6 +764,11 @@ class Calendar {
         layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null});
     }
 
+    open_popup_plan_view (event, schedule_id){
+        this.user_data.user_selected_plan.schedule_id = schedule_id;
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, 100, POPUP_FROM_RIGHT, {'schedule_id':schedule_id});
+    }
+
     add_plan_button (){
         //현재 클릭한 곳의 연월일, 시분 데이터
         this.user_data.user_selected_date.year = null;
@@ -803,12 +797,10 @@ class Calendar {
             pos_y = pos_y * 3;
         }
 
+        console.log(indicator)
         if(indicator != undefined){
             indicator.style.top = `${pos_y}px`;
-            console.log(pos_y);
         }
-        
-        
     }
 
     request_schedule_data (date, days, callback){

@@ -18,9 +18,13 @@
 {% block popup_base_contents %}
     <div class="popup_plan_view">
     
-        <div id="wrapper_box_member_settings" class="obj_box_full">
+        <section id="wrapper_box_plan_view_toolbox" class="obj_box_full">
+
+        </section>
+
+        <section id="wrapper_box_plan_view_upper" class="obj_box_full">
             
-        </div>
+        </section>
 
         <div class="gap"></div>
         <div class="gap"></div>
@@ -45,13 +49,29 @@
     let member_info;
     {% endautoescape %}
 
+
+    let data;
+    if(current_page == "calendar"){
+        data = calendar.user_data;
+    }
+
     class Plan_view{
         constructor(targetHTML, data, instance){
             this.targetHTML = targetHTML;
             this.instance = instance;
             this.data = data;
+
+            this.user_selected_plan = data.user_selected_date
+        }
+
+
+        request_data(){
+            calendar.request_schedule_data (date, 1, ()=>{
+
+            });
         }
     }
+    
     
 
     func_set_webkit_overflow_scrolling('.popup_plan_view');
