@@ -5,6 +5,8 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db import IntegrityError
 
 from configs.const import SCHEDULE_DUPLICATION_ENABLE, USE
+from login.models import MemberTb
+from schedule.functions import func_get_lecture_member_ticket_id
 from trainer.models import LectureTb
 from .models import ScheduleTb
 
@@ -34,13 +36,14 @@ def date_time_validator(value):
 
 
 class AddScheduleTbForm(forms.Form):
+    lecture_member_ids = forms.MultipleChoiceField(label='회원 정보', required=False)
     lecture_id = forms.IntegerField(label='수업 정보', required=False)
     start_dt = forms.CharField(label='시작 일시', validators=[date_time_validator], required=True)
     end_dt = forms.CharField(label='종료 일시', validators=[date_time_validator], required=True)
-    lecture_member_ids = forms.MultipleChoiceField(label='회원 정보', required=False)
-    note = forms.CharField(label='강사 메모', required=False)
-    en_dis_type = forms.IntegerField(label='일정 종류', initial='test', required=True)
+    note = forms.CharField(label='강사 메모', initial='test', required=False)
+    en_dis_type = forms.IntegerField(label='일정 종류', required=True)
     duplication_enable_flag = forms.IntegerField(label='중복 여부', initial=SCHEDULE_DUPLICATION_ENABLE, required=True)
+    lecture_info = None
 
     def clean_lecture_member_ids(self):
         return self.data.getlist('lecture_member_ids[]')
@@ -58,19 +61,20 @@ class AddScheduleTbForm(forms.Form):
         lecture_member_ids = self.cleaned_data["lecture_member_ids"]
 
         error = None
-        lecture_info = None
 
         if lecture_id is not None:
             try:
                 lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=USE)
                 if len(lecture_member_ids) > lecture_info.member_num:
                     error = '수업 정원보다 등록하려는 회원수가 많습니다.'
+                self.lecture_info = lecture_info
             except ObjectDoesNotExist:
                 error = '수업 정보를 불러오지 못햇습니다.'
 
         if error is not None:
             raise ValidationError(error)
-        return lecture_info
+
+        return lecture_id
 
     def clean(self):
         cleaned_data_test = self.cleaned_data
@@ -81,3 +85,35 @@ class AddScheduleTbForm(forms.Form):
             raise ValidationError('일정을 다시 선택해주세요.')
 
         return cleaned_data_test
+
+    def get_lecture_info(self):
+        return self.lecture_info
+
+    def get_member_list(self, class_id):
+        member_list = []
+        lecture_id = self.cleaned_data["lecture_id"]
+        lecture_member_ids = self.cleaned_data["lecture_member_ids"]
+        for lecture_member_id in lecture_member_ids:
+            error = None
+            member_name = None
+            member_ticket_id = None
+            try:
+                member_info = MemberTb.objects.get(member_id=lecture_member_id)
+                member_name = member_info.name
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
+
+            if error is None:
+                member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_id,
+                                                                         lecture_member_id)
+                if member_ticket_result['error'] is not None:
+                    error = member_ticket_result['error']
+                else:
+                    member_ticket_id = member_ticket_result['member_ticket_id']
+
+            member_list.append({'member_id': lecture_member_id,
+                                'member_name': member_name,
+                                'member_ticket_id': member_ticket_id,
+                                'error': error})
+
+        return member_list

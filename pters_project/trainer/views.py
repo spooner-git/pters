@@ -157,6 +157,102 @@ class GetLectureMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                             json_dumps_params={'ensure_ascii': True})
 
 
+class GetTrainerScheduleInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        schedule_id = request.GET.get('schedule_id')
+        # 수업에 해당되는 회원의 숫자 불러오기
+        query = "select count(B." + ScheduleTb._meta.get_field(
+                'schedule_id').column + ") from " + ScheduleTb._meta.db_table + \
+                " as B where B." + ScheduleTb._meta.get_field(
+                'lecture_schedule_id').column + " =`" + ScheduleTb._meta.db_table + \
+                "`.`" + ScheduleTb._meta.get_field('schedule_id').column + "` " \
+                " AND B." + ScheduleTb._meta.get_field(
+                'state_cd').column + " != \'PC\'" \
+                " AND B." + ScheduleTb._meta.get_field('use').column + "=" + str(USE)
+
+        # 그룹 수업에 속한 회원들의 일정은 제외하고 불러온다.
+        schedule_data = ScheduleTb.objects.select_related(
+            'member_ticket_tb__member',
+            'lecture_tb').filter(class_tb=class_id, schedule_id=schedule_id,
+                                 use=USE).annotate(lecture_current_member_num=RawSQL(query,
+                                                                                     [])).order_by('start_dt', 'reg_dt')
+
+        try:
+            lecture_one_to_one = LectureTb.objects.get(class_tb_id=class_id,
+                                                       lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, state_cd='IP', use=USE)
+        except ObjectDoesNotExist:
+            lecture_one_to_one = None
+
+        date_schedule_list = []
+        for schedule_info in schedule_data:
+            # 날짜별로 모아주기 위해서 날짜 분리
+            schedule_start_date_split = str(schedule_info.start_dt).split(' ')
+            schedule_end_date_split = str(schedule_info.end_dt).split(' ')
+            schedule_start_time_split = schedule_start_date_split[1].split(':')
+            schedule_end_time_split = schedule_end_date_split[1].split(':')
+
+            # 날짜 셋팅
+            schedule_start_time = schedule_start_time_split[0] + ':' + schedule_start_time_split[1]
+            schedule_end_time = schedule_end_time_split[0] + ':' + schedule_end_time_split[1]
+
+            # 일정 구분 (0:OFF, 1:개인, 2:그룹)
+            schedule_type = schedule_info.en_dis_type
+
+            # 개인 수업 일정인 경우 정보 추가, 개인 수업이 아닌 경우 빈값
+            try:
+                member_name = schedule_info.member_ticket_tb.member.name
+            except AttributeError:
+                member_name = ''
+
+            # 수업 일정인 경우 정보 추가, 수업이 아닌 경우 빈값
+            try:
+                lecture_id = schedule_info.lecture_tb.lecture_id
+                lecture_name = schedule_info.lecture_tb.name
+                lecture_max_member_num = schedule_info.lecture_tb.member_num
+                lecture_current_member_num = schedule_info.lecture_current_member_num
+                lecture_ing_color_cd = schedule_info.lecture_tb.ing_color_cd
+                lecture_ing_font_cd = schedule_info.lecture_tb.ing_font_color_cd
+                lecture_end_color_cd = schedule_info.lecture_tb.end_color_cd
+                lecture_end_font_cd = schedule_info.lecture_tb.end_font_color_cd
+                schedule_type = 2
+            except AttributeError:
+                lecture_id = ''
+                lecture_name = ''
+                lecture_max_member_num = ''
+                lecture_current_member_num = ''
+                if lecture_one_to_one is None:
+                    lecture_ing_color_cd = ''
+                    lecture_ing_font_cd = ''
+                    lecture_end_color_cd = ''
+                    lecture_end_font_cd = ''
+                else:
+                    lecture_ing_color_cd = lecture_one_to_one.ing_color_cd
+                    lecture_ing_font_cd = lecture_one_to_one.ing_font_color_cd
+                    lecture_end_color_cd = lecture_one_to_one.end_color_cd
+                    lecture_end_font_cd = lecture_one_to_one.end_font_color_cd
+
+            # array 에 값을 추가후 dictionary 에 추가
+            date_schedule_list.append({'schedule_id': schedule_info.schedule_id,
+                                       'start_time': schedule_start_time,
+                                       'end_time': schedule_end_time,
+                                       'state_cd': schedule_info.state_cd,
+                                       'schedule_type': schedule_type,
+                                       'note': schedule_info.note,
+                                       'member_name': member_name,
+                                       'lecture_id': lecture_id,
+                                       'lecture_name': lecture_name,
+                                       'lecture_ing_color_cd': lecture_ing_color_cd,
+                                       'lecture_ing_font_cd': lecture_ing_font_cd,
+                                       'lecture_end_color_cd': lecture_end_color_cd,
+                                       'lecture_end_font_cd': lecture_end_font_cd,
+                                       'lecture_max_member_num': lecture_max_member_num,
+                                       'lecture_current_member_num': lecture_current_member_num})
+
+        return JsonResponse({'schedule_info': date_schedule_list}, json_dumps_params={'ensure_ascii': True})
+
+
 class GetMemberScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):

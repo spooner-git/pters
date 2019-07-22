@@ -51,6 +51,8 @@ class IndexView(TemplateView):
 
 # 일정 추가
 def add_schedule_logic(request):
+
+    # 폼 검사 시작
     schedule_input_form = AddScheduleTbForm(request.POST)
 
     class_id = request.session.get('class_id', '')
@@ -58,34 +60,38 @@ def add_schedule_logic(request):
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
+    error = None
     if not schedule_input_form.is_valid():
         for field in schedule_input_form:
             for field_error in field.errors:
-                logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + field_error)
-                messages.error(request, field_error)
-                return render(request, 'ajax/schedule_error_info.html')
-
+                error = field_error
+                break
         for non_field_error in schedule_input_form.non_field_errors():
-            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + non_field_error)
-            messages.error(request, non_field_error)
-            return render(request, 'ajax/schedule_error_info.html')
+            error = non_field_error
+            break
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + non_field_error)
+        messages.error(request, non_field_error)
+        return render(request, 'ajax/schedule_error_info.html')
 
     schedule_start_datetime = schedule_input_form.cleaned_data['start_dt']
     schedule_end_datetime = schedule_input_form.cleaned_data['end_dt']
     en_dis_type = schedule_input_form.cleaned_data['en_dis_type']
     note = schedule_input_form.cleaned_data['note']
     duplication_enable_flag = schedule_input_form.cleaned_data['duplication_enable_flag']
-    lecture_info = schedule_input_form.cleaned_data['lecture_id']
-    lecture_member_ids = schedule_input_form.cleaned_data['lecture_member_ids']
+    lecture_id = schedule_input_form.cleaned_data['lecture_id']
+    # lecture_member_ids = schedule_input_form.cleaned_data['lecture_member_ids']
 
-    error = None
+    lecture_info = schedule_input_form.get_lecture_info()
+    member_list = schedule_input_form.get_member_list(class_id)
+    # 폼 검사 종료
+
     info_message = None
     lecture_schedule_id = None
     check_outer_schedule_flag = False
-    lecture_id = None
 
     if lecture_info is not None:
-        lecture_id = lecture_info.lecture_id
         if lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
             check_outer_schedule_flag = True
     else:
@@ -94,12 +100,11 @@ def add_schedule_logic(request):
     state_cd = STATE_CD_NOT_PROGRESS
     permission_state_cd = PERMISSION_STATE_CD_APPROVE
 
-    if en_dis_type == ON_SCHEDULE_TYPE:
-        if timezone.now() > schedule_end_datetime:
-            if setting_schedule_auto_finish == AUTO_FINISH_ON:
-                state_cd = STATE_CD_FINISH
-            elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
-                state_cd = STATE_CD_ABSENCE
+    if en_dis_type == ON_SCHEDULE_TYPE and timezone.now() > schedule_end_datetime:
+        if setting_schedule_auto_finish == AUTO_FINISH_ON:
+            state_cd = STATE_CD_FINISH
+        elif setting_schedule_auto_finish == AUTO_ABSENCE_ON:
+            state_cd = STATE_CD_ABSENCE
 
     push_member_ticket_id = []
     push_title = []
@@ -148,84 +153,62 @@ def add_schedule_logic(request):
 
     if error is None:
 
-        for lecture_member_id in lecture_member_ids:
+        for member_info in member_list:
             error_temp = None
 
-            try:
-                member_info = MemberTb.objects.get(member_id=lecture_member_id)
-            except ObjectDoesNotExist:
-                member_info = None
+            if member_info['error'] is None:
+                try:
+                    with transaction.atomic():
+                        # 자유형 문제
+                        if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
+                            lecture_id = None
+                            lecture_schedule_id = None
 
-            if member_info is not None:
-                member_ticket_id = None
-                member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_id,
-                                                                         member_info.member_id)
-                if member_ticket_result['error'] is not None:
-                    error_temp = member_ticket_result['error']
+                        schedule_result = func_add_schedule(class_id, member_info['member_ticket_id'], None,
+                                                            lecture_id, lecture_schedule_id,
+                                                            schedule_start_datetime, schedule_end_datetime,
+                                                            note, en_dis_type, request.user.id, permission_state_cd,
+                                                            state_cd, duplication_enable_flag)
+                        error_temp = schedule_result['error']
+
+                        if error_temp is not None:
+                            raise InternalError
+                        else:
+                            log_data = LogTb(
+                                log_type='LS02', auth_member_id=request.user.id,
+                                from_member_name=request.user.first_name, to_member_name=member_info['member_name'],
+                                class_tb_id=class_id, member_ticket_tb_id=member_info['member_ticket_id'],
+                                log_info=lecture_info.name + ' 수업', log_how='예약 완료',
+                                log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime),
+                                use=USE)
+                            log_data.save()
+
+                            push_info_schedule_start_date = str(schedule_start_datetime).split(':')
+                            push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(
+                                ':')
+                            push_member_ticket_id.append(member_info['member_ticket_id'])
+                            push_title.append(class_type_name + ' - 수업 알림')
+                            push_message.append(request.user.first_name + '님이 '
+                                                + push_info_schedule_start_date[0] + ':'
+                                                + push_info_schedule_start_date[1] + '~'
+                                                + push_info_schedule_end_date[0] + ':'
+                                                + push_info_schedule_end_date[1]
+                                                + ' [' + lecture_info.name + '] 수업을 등록했습니다')
+
+                except TypeError:
+                    error_temp = '오류가 발생했습니다. [1]'
+                except ValueError:
+                    error_temp = '오류가 발생했습니다. [2]'
+                except IntegrityError:
+                    error_temp = '오류가 발생했습니다. [3]'
+                except InternalError:
+                    error_temp = error_temp
+
+            if error_temp is not None:
+                if info_message is None or info_message == '':
+                    info_message = member_info.name
                 else:
-                    member_ticket_id = member_ticket_result['member_ticket_id']
-
-                if error_temp is None:
-                    if member_ticket_id is not None and member_ticket_id != '':
-                        try:
-                            with transaction.atomic():
-
-                                if error_temp is None:
-
-                                    # 자유형 문제
-                                    if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
-                                        lecture_id = None
-                                        lecture_schedule_id = None
-                                    schedule_result = func_add_schedule(class_id, member_ticket_id, None,
-                                                                        lecture_id, lecture_schedule_id,
-                                                                        schedule_start_datetime,
-                                                                        schedule_end_datetime,
-                                                                        note, en_dis_type, request.user.id,
-                                                                        permission_state_cd,
-                                                                        state_cd, duplication_enable_flag)
-                                    error_temp = schedule_result['error']
-
-                                if error_temp is not None:
-                                    raise InternalError
-                                else:
-                                    log_data = LogTb(
-                                        log_type='LS02', auth_member_id=request.user.id,
-                                        from_member_name=request.user.first_name, to_member_name=member_info.name,
-                                        class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
-                                        log_info=lecture_info.name + ' 수업', log_how='예약 완료',
-                                        log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime),
-                                        use=USE)
-                                    log_data.save()
-
-                                    push_info_schedule_start_date = str(schedule_start_datetime).split(':')
-                                    push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(
-                                        ':')
-                                    push_member_ticket_id.append(member_ticket_id)
-                                    push_title.append(class_type_name + ' - 수업 알림')
-                                    push_message.append(request.user.first_name + '님이 '
-                                                        + push_info_schedule_start_date[0] + ':'
-                                                        + push_info_schedule_start_date[1] + '~'
-                                                        + push_info_schedule_end_date[0] + ':'
-                                                        + push_info_schedule_end_date[1]
-                                                        + ' [' + lecture_info.name + '] 수업을 등록했습니다')
-
-                        except TypeError:
-                            error_temp = '오류가 발생했습니다. [1]'
-                        except ValueError:
-                            error_temp = '오류가 발생했습니다. [2]'
-                        except IntegrityError:
-                            error_temp = '오류가 발생했습니다. [3]'
-                        except InternalError:
-                            error_temp = error_temp
-
-                    else:
-                        error_temp = member_info.name + '님의 예약가능한 횟수가 없습니다.'
-
-                if error_temp is not None:
-                    if info_message is None or info_message == '':
-                        info_message = member_info.name
-                    else:
-                        info_message = info_message + ',' + member_info.name
+                    info_message = info_message + ',' + member_info.name
 
     if error is None:
         if info_message is not None:
