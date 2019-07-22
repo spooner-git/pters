@@ -210,6 +210,7 @@ class Calendar {
     }
 
     go_week (year, month, date){
+        this.cal_type = "week";
         let week;
         if(year == undefined && month == undefined && date == undefined){
             year = new Date().getFullYear();
@@ -607,7 +608,7 @@ class Calendar {
                     today_marking = `<div style="position: absolute;width: 100%;height: 3px;top: ${month_or_week == "week" ? '-30px' : 0} ;background: #fe4e65;left: 0;"></div>`;
                 }
                 
-                let onclick = month_or_week == "week" ? `${this.instance}.zoom_week_cal(event, ${_year[i]}, ${_month[i]}, ${_date[i]})` : "";
+                let onclick = month_or_week == "week" ? `${this.instance}.zoom_week_cal(event, ${_year[i]}, ${_month[i]}, ${_date[i]})` : `${this.instance}.go_week(${_year[i]}, ${_month[i]}, ${_date[i]});${this.instance}.zoom_week_cal(event, ${_year[i]}, ${_month[i]}, ${_date[i]})`;
 
                 dates_to_join.push(
                     `
