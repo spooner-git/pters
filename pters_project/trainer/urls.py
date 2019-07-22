@@ -28,6 +28,9 @@ urlpatterns = [
     url(r'^get_lecture_member_schedule_list/$', views.GetLectureMemberScheduleListViewAjax.as_view(),
         name='get_lecture_member_schedule_list'),
 
+    # 강사 전체 스케쥴 조회(OFF/개인/그룹) - refactoring
+    url(r'^get_trainer_schedule_info/$', views.GetTrainerScheduleInfoView.as_view(), name='get_trainer_schedule_info'),
+
     # 회원 스케쥴 조회 - 수업 - refactoring
     url(r'^get_member_schedule_all/$', views.GetMemberScheduleAllView.as_view(), name='get_member_schedule_all'),
 
