@@ -15,6 +15,9 @@ class CComponent{
         $(document).off('click', `#${id}`).on('click', `#${id}`, function(e){
             onclick();
         });
+        // let callback = onclick();
+        // document.getElementById(id).removeEventListener('click', callback);
+        // document.getElementById(id).addEventListener('click', callback);
 
         return html;
     }
