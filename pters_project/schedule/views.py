@@ -11,6 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.files.base import ContentFile
 from django.db import IntegrityError, InternalError, transaction
 from django.db.models import Q
+from django.db.models.expressions import RawSQL
 from django.shortcuts import render
 from django.utils import timezone
 from django.views import View
@@ -2201,19 +2202,22 @@ def send_push_to_trainee_logic(request):
 
 
 def send_push_alarm_logic(request):
+    start_time = timezone.now()
     alarm_setting_time = 5
     alarm_dt = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:00')
     # 개인 수업 일정
+    query_common_cd = "SELECT COMMON_CD_NM FROM COMMON_CD_TB WHERE COMMON_CD=`CLASS_TB`.`SUBJECT_CD`"
     schedule_data = ScheduleTb.objects.select_related(
-        'class_tb', 'lecture_tb', 'member_ticket_tb__member').filter(alarm_dt=alarm_dt,
-                                                                     class_tb_id='127',
-                                                                     use=USE).exclude(en_dis_type=OFF_SCHEDULE_TYPE)
+        'class_tb', 'lecture_tb',
+        'member_ticket_tb__member'
+    ).filter(alarm_dt=alarm_dt, class_tb_id='127',
+             use=USE).annotate(class_type_name=RawSQL(query_common_cd, [])).exclude(en_dis_type=OFF_SCHEDULE_TYPE)
+
     for schedule_info in schedule_data:
         schedule_delta_seconds = (schedule_info.start_dt-schedule_info.alarm_dt).seconds
         minute_message = str(int(schedule_delta_seconds/60)) + '분'
-        try:
-            class_type_name = CommonCdTb.objects.get(common_cd=schedule_info.class_tb.subject_cd).common_cd_nm
-        except ObjectDoesNotExist:
+        class_type_name = schedule_info.class_type_name
+        if schedule_info.class_type_name is None or schedule_info.class_type_name == '':
             class_type_name = schedule_info.class_tb.subject_detail_nm
 
         push_info_schedule_start_date = str(schedule_info.start_dt).split(':')
@@ -2253,5 +2257,6 @@ def send_push_alarm_logic(request):
                                              + push_info_schedule_end_date[1]
                                              + ' [' + schedule_info.lecture_tb.name + '] 수업 시작 '
                                              + minute_message+ ' 전입니다.')
-    logger.info('alarm::'+(str(alarm_dt)))
+    end_time = timezone.now()
+    logger.info('alarm::'+(str(end_time-start_time)))
     return render(request, 'ajax/schedule_error_info.html')

@@ -9,6 +9,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.utils import timezone
+from kombu.exceptions import OperationalError
 
 from configs import settings
 from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, \
@@ -632,8 +633,7 @@ def func_send_push_trainer(member_ticket_id, title, message):
         # member_member_ticket_data = MemberMemberTicketTb.objects.filter(member_ticket_tb_id=member_ticket_id, use=USE)
         # for class_member_ticket_info in member_member_ticket_data:
         member_ticket_info = MemberTicketTb.objects.select_related(
-            'member_ticket_tb__member').filter(member_ticket_tb_id=member_ticket_id,
-                                               member_auth_cd=AUTH_TYPE_VIEW, use=USE)
+            'member').filter(member_ticket_id=member_ticket_id, member_auth_cd=AUTH_TYPE_VIEW, use=USE)
 
         for member_ticket_info in member_ticket_info:
             token_data = PushInfoTb.objects.filter(member_id=member_ticket_info.member_id, use=USE)
@@ -643,7 +643,10 @@ def func_send_push_trainer(member_ticket_id, title, message):
                     token_info.save()
                 instance_id = token_info.token
                 badge_counter = token_info.badge_counter
-                error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
+                try:
+                    error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
+                except OperationalError:
+                    error = task_send_fire_base(instance_id, title, message, badge_counter)
 
     return error
 
@@ -665,7 +668,10 @@ def func_send_push_trainee(class_id, title, message):
                     token_info.save()
                 instance_id = token_info.token
                 badge_counter = token_info.badge_counter
-                error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
+                try:
+                    error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
+                except OperationalError:
+                    error = task_send_fire_base(instance_id, title, message, badge_counter)
 
     return error
 
