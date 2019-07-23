@@ -45,7 +45,6 @@ class Calendar {
     }
 
     init (cal_type){
-        console.log('-1', this.week_zoomed.vertical.activate);
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 
@@ -1077,13 +1076,11 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
-                console.log(data);
                 callback();
             },
     
             //통신 실패시 처리
             error:function(data){
-                console.log(data)
                 // show_error_message(data.statusText);
                 show_error_message('오류 발생 \n 모든 필수 정보를 입력후 다시 시도해주세요.');
             }
@@ -1106,7 +1103,6 @@ class Plan_func{
                 ajax_load_image(SHOW);
             },
             success:function (data){
-                // console.log(data);
                 callback(data, date_);
                 return data;
             },
@@ -1136,7 +1132,6 @@ class Plan_func{
                 if(callback != undefined){
                     callback(datas);
                 }
-                console.log(datas)
                 return datas;
             },
 
