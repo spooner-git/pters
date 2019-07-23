@@ -38,6 +38,13 @@ urlpatterns = [
     # 일정 수정 됐는지 확인
     url(r'^check_schedule_update/$', views.CheckScheduleUpdateViewAjax.as_view(), name='check_schedule_update'),
 
+
+    # 일정 수정 됐는지 확인
+    url(r'^check_schedule_duplicate/$', views.CheckScheduleDuplicateViewAjax.as_view(), name='check_schedule_duplicate'),
+
+
+    # url(r'^change_schedule/$', views.change_schedule_logic, name='change_schedule'),
+
     # 그룹 일정 기능 #####################################################################################################
     # 그룹 일정 등록
     # 그룹 일정 취소

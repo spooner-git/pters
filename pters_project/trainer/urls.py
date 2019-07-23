@@ -278,5 +278,9 @@ urlpatterns = [
     # 회원 선택 팝업 페이지
     url(r'^popup_member_select/$', views.PopupMemberSelect.as_view(), name='popup_member_select'),
     # 수업 선택 팝업 페이지
-    url(r'^popup_lecture_select/$', views.PopupLectureSelect.as_view(), name='popup_lecture_select')
+    url(r'^popup_lecture_select/$', views.PopupLectureSelect.as_view(), name='popup_lecture_select'),
+
+
+    # url(r'^refresh_all_data/$', views.refresh_all_data_logic, name='refresh_all_data')
+
 ]

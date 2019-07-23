@@ -36,13 +36,13 @@ class CComponent{
 
         $(document).off('click', `#${id}`).on('click', `#${id}`, function(e){
             let prev_data = $(this).find('input').val();
-            try{
+            // try{
                 if(prev_data.length == 0){
                     prev_data = undefined;
                 }
-            }catch{
+            // }catch{
 
-            }
+            // }
             onclick(prev_data);
         });
         return html;
