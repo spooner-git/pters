@@ -149,4 +149,14 @@ class CComponent{
         return html;
     }
 
+    static text_button (id, title, onclick){
+ 
+        let html = `<span id="text_button_${id}" style="cursor:pointer;padding:3px 8px;">${title}</span>`;
+        
+        $(document).off('click', `#text_button_${id}`).on('click', `#text_button_${id}`, function(e){
+            onclick();
+        });
+        return html;
+    }
+
 }

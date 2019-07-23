@@ -44,6 +44,10 @@ class Calendar {
         }, 60000);
     }
 
+    get selected_plan(){
+        return this.user_data.user_selected_plan;
+    }
+
     init (cal_type){
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
@@ -805,12 +809,16 @@ class Calendar {
         this.user_data.user_selected_time.text = TimeRobot.to_text(hour, minute);
         this.user_data.user_selected_time.text2 = TimeRobot.to_text(this.user_data.user_selected_time.hour2, this.user_data.user_selected_time.minute2);
 
-        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null});
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            plan_add_popup = new Plan_add('#wrapper_box_plan_add_toolbox', '#wrapper_box_plan_add_upper', '#wrapper_box_plan_add_middle', '#wrapper_box_plan_add_bottom', this.user_data, "plan_add_popup");
+        });
     }
 
     open_popup_plan_view (event, schedule_id){
         this.user_data.user_selected_plan.schedule_id = schedule_id;
-        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, 100, POPUP_FROM_RIGHT, {'schedule_id':schedule_id});
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, 100, POPUP_FROM_RIGHT, {'schedule_id':schedule_id}, ()=>{
+            plan_view_popup = new Plan_view('#wrapper_box_plan_view_toolbox', '#wrapper_box_plan_view_upper', '#wrapper_box_plan_view_middle', '#wrapper_box_plan_view_bottom', this.user_data.user_selected_plan, "plan_view_popup");
+        });
     }
 
     add_plan_button (){
@@ -826,7 +834,9 @@ class Calendar {
         this.user_data.user_selected_time.text = null;
         this.user_data.user_selected_time.text2 = null;
 
-        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null});
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            plan_add_popup = new Plan_add('#wrapper_box_plan_add_toolbox', '#wrapper_box_plan_add_upper', '#wrapper_box_plan_add_middle', '#wrapper_box_plan_add_bottom', this.user_data, "plan_add_popup")
+        });
     }
 
     relocate_current_time_indicator(){
