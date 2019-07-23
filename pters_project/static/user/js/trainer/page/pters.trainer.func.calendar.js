@@ -13,7 +13,6 @@ class Calendar {
         this.cal_type = "week";
         this.current_page_num = 1;
 
-        // this.week_zoomed = false;
         this.week_zoomed = {
             activate : false,
             target_row : null,
@@ -46,6 +45,7 @@ class Calendar {
     }
 
     init (cal_type){
+        console.log('-1', this.week_zoomed.vertical.activate);
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 
@@ -77,16 +77,25 @@ class Calendar {
                 this.zoom_week_cal();
             }
 
+            if(this.week_zoomed.vertical.activate == true){
+                this.week_zoomed.vertical.activate = false;
+                this.zoom_week_cal_vertical();
+            }
+
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                 if(this.cal_type == cal_type){
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
                         // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata);
-
                         //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
                         if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
                             this.week_zoomed.activate = false;
                             this.zoom_week_cal();
+                        }
+
+                        if(this.week_zoomed.vertical.activate == true){
+                            this.week_zoomed.vertical.activate = false;
+                            this.zoom_week_cal_vertical();
                         }
                     }
                 }
@@ -233,6 +242,11 @@ class Calendar {
             this.zoom_week_cal();
         }
 
+        if(this.week_zoomed.vertical.activate == true){
+            this.week_zoomed.vertical.activate = false;
+            this.zoom_week_cal_vertical();
+        }
+
         this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
             if(date == `${this.current_year}-${this.current_month}-01`){
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
@@ -241,6 +255,11 @@ class Calendar {
                 if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
                     this.week_zoomed.activate = false;
                     this.zoom_week_cal();
+                }
+
+                if(this.week_zoomed.vertical.activate == true){
+                    this.week_zoomed.vertical.activate = false;
+                    this.zoom_week_cal_vertical();
                 }
                 
             }
@@ -307,9 +326,17 @@ class Calendar {
 
             this.render_upper_box("week");
             this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
+            if(this.week_zoomed.vertical.activate == true){
+                this.week_zoomed.vertical.activate = false;
+                this.zoom_week_cal_vertical();
+            }
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                 if(date == `${this.current_year}-${this.current_month}-01`){
                     this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+                    if(this.week_zoomed.vertical.activate == true){
+                        this.week_zoomed.vertical.activate = false;
+                        this.zoom_week_cal_vertical();
+                    }
                 }
             });
             break;
@@ -328,9 +355,17 @@ class Calendar {
 
             this.render_upper_box("week");
             this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
+            if(this.week_zoomed.vertical.activate == true){
+                this.week_zoomed.vertical.activate = false;
+                this.zoom_week_cal_vertical();
+            }
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                 if(date == `${this.current_year}-${this.current_month}-01`){
                     this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+                    if(this.week_zoomed.vertical.activate == true){
+                        this.week_zoomed.vertical.activate = false;
+                        this.zoom_week_cal_vertical();
+                    }
                 }
             });
             break;
@@ -382,7 +417,6 @@ class Calendar {
             weeks_div = [...weeks_div, this.draw_week_line(year, month, i, schedule_data, 'month', row_height)];
         }
         document.getElementById(`page${page}`).innerHTML = weeks_div.join('');
-        // document.getElementById('cal_display_panel').innerHTML = component.month_cal_upper_box;
         func_set_webkit_overflow_scrolling(`#page${page}`);
     }
 
@@ -390,15 +424,12 @@ class Calendar {
         if(current_page != this.page_name){
             return false;
         }
-        // let week_date_name_data = this.static_component().week_cal_upper_box_date_tool;
         let data = this.draw_week_line(year, month, week, schedule_data, "week");
         
 
         document.getElementById(`page${page}`).innerHTML =  data;
-        // document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box;
         func_set_webkit_overflow_scrolling(`#page${page}`);
 
-        this.week_zoomed.vertical.activate = false;
         this.relocate_current_time_indicator();
     }
     
