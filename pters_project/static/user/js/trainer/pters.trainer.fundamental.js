@@ -139,7 +139,7 @@ class TimeRobot{
         return {complete: result, hour:hh, minute:mm};
     }
 
-    static to_text(hour, minute){
+    static to_text(hour, minute, short){
         let time = TimeRobot.to_zone(hour, minute);
         let zone = time.zone;
         let hh = time.hour;
@@ -147,7 +147,12 @@ class TimeRobot{
         
         zone = zone == 0 ? "오전" : "오후";
 
-        return `${zone} ${hh}시 ${mm}분`;
+        let result = `${zone} ${hh}시 ${mm}분`;
+        if(short != undefined){
+            result = `${zone} ${hh}시`;
+        }
+
+        return result;
     }
 
     static add_time(hour, minute, plus_hour, plus_minute){

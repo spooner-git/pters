@@ -13,7 +13,6 @@ class Calendar {
         this.cal_type = "week";
         this.current_page_num = 1;
 
-        // this.week_zoomed = false;
         this.week_zoomed = {
             activate : false,
             target_row : null,
@@ -36,7 +35,8 @@ class Calendar {
 
         this.user_data = {
             user_selected_date: {year:this.current_year, month:this.current_month, date:this.current_date},
-            user_selected_time: {hour:this.current_hour, minute:this.current_minute, hour2:this.current_hour, minute2:this.current_minute}
+            user_selected_time: {hour:this.current_hour, minute:this.current_minute, hour2:this.current_hour, minute2:this.current_minute},
+            user_selected_plan : {schedule_id:""}
         };
 
         let interval = setInterval(()=>{
@@ -76,16 +76,25 @@ class Calendar {
                 this.zoom_week_cal();
             }
 
+            if(this.week_zoomed.vertical.activate == true){
+                this.week_zoomed.vertical.activate = false;
+                this.zoom_week_cal_vertical();
+            }
+
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                 if(this.cal_type == cal_type){
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
                         // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata);
-
                         //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
                         if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
                             this.week_zoomed.activate = false;
                             this.zoom_week_cal();
+                        }
+
+                        if(this.week_zoomed.vertical.activate == true){
+                            this.week_zoomed.vertical.activate = false;
+                            this.zoom_week_cal_vertical();
                         }
                     }
                 }
@@ -209,6 +218,7 @@ class Calendar {
     }
 
     go_week (year, month, date){
+        this.cal_type = "week";
         let week;
         if(year == undefined && month == undefined && date == undefined){
             year = new Date().getFullYear();
@@ -231,15 +241,24 @@ class Calendar {
             this.zoom_week_cal();
         }
 
+        if(this.week_zoomed.vertical.activate == true){
+            this.week_zoomed.vertical.activate = false;
+            this.zoom_week_cal_vertical();
+        }
+
         this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
             if(date == `${this.current_year}-${this.current_month}-01`){
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata);
 
                 //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
                 if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
                     this.week_zoomed.activate = false;
                     this.zoom_week_cal();
+                }
+
+                if(this.week_zoomed.vertical.activate == true){
+                    this.week_zoomed.vertical.activate = false;
+                    this.zoom_week_cal_vertical();
                 }
                 
             }
@@ -306,10 +325,17 @@ class Calendar {
 
             this.render_upper_box("week");
             this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
+            if(this.week_zoomed.vertical.activate == true){
+                this.week_zoomed.vertical.activate = false;
+                this.zoom_week_cal_vertical();
+            }
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                 if(date == `${this.current_year}-${this.current_month}-01`){
                     this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                    // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                    if(this.week_zoomed.vertical.activate == true){
+                        this.week_zoomed.vertical.activate = false;
+                        this.zoom_week_cal_vertical();
+                    }
                 }
             });
             break;
@@ -328,10 +354,17 @@ class Calendar {
 
             this.render_upper_box("week");
             this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
+            if(this.week_zoomed.vertical.activate == true){
+                this.week_zoomed.vertical.activate = false;
+                this.zoom_week_cal_vertical();
+            }
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
                 if(date == `${this.current_year}-${this.current_month}-01`){
                     this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                    // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata)
+                    if(this.week_zoomed.vertical.activate == true){
+                        this.week_zoomed.vertical.activate = false;
+                        this.zoom_week_cal_vertical();
+                    }
                 }
             });
             break;
@@ -380,10 +413,9 @@ class Calendar {
         let row_height = (this.window_height - 60 - 31 - 45 - margin)/6;
 
         for(let i=0; i<6; i++){
-            weeks_div = [...weeks_div, this.draw_week_line(year, month, i, schedule_data, `${this.instance}.open_popup_plan_view`, 'month', row_height)];
+            weeks_div = [...weeks_div, this.draw_week_line(year, month, i, schedule_data, 'month', row_height)];
         }
         document.getElementById(`page${page}`).innerHTML = weeks_div.join('');
-        // document.getElementById('cal_display_panel').innerHTML = component.month_cal_upper_box;
         func_set_webkit_overflow_scrolling(`#page${page}`);
     }
 
@@ -391,20 +423,13 @@ class Calendar {
         if(current_page != this.page_name){
             return false;
         }
-        let week_date_name_data = this.static_component().week_cal_upper_box_date_tool;
-        let data = this.draw_week_line(year, month, week, schedule_data, `${this.instance}.zoom_week_cal`, "week");
+        let data = this.draw_week_line(year, month, week, schedule_data, "week");
         
 
-        document.getElementById(`page${page}`).innerHTML = week_date_name_data + data;
-        // document.getElementById('cal_display_panel').innerHTML = component.week_cal_upper_box;
+        document.getElementById(`page${page}`).innerHTML =  data;
         func_set_webkit_overflow_scrolling(`#page${page}`);
 
-        this.week_zoomed.vertical.activate = false;
         this.relocate_current_time_indicator();
-    }
-
-    open_popup_plan_view (event, year, month, date){
-        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, 100, POPUP_FROM_RIGHT, {'select_date':`${year}-${month}-${date}`});
     }
     
     zoom_week_cal (event){
@@ -451,18 +476,15 @@ class Calendar {
     }
 
     zoom_week_cal_vertical (){
+        $('.week_indicator').remove();
         if(this.week_zoomed.vertical.activate == false){
             this.week_zoomed.vertical.activate = true;
-            $('.week_row article').css('height', '180px');
-            $('.week_row > div').css({'background-image': 'url(/static/user/res/new/calendar_hour_long.png?v2)',
-                                        'background-size': '30px 180px'
-            });
+            $('.week_rows article').css('height', '180px');
+            $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_long2.png?v)', 'background-size': '30px 180px'});
         }else if(this.week_zoomed.vertical.activate == true){
             this.week_zoomed.vertical.activate = false;
-            $('.week_row article').css('height', '60px');
-            $('.week_row > div').css({'background-image': 'url(/static/user/res/new/calendar_hour_short.png)',
-                                        'background-size': '30px 60px'
-            });
+            $('.week_rows article').css('height', '60px');
+            $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_short.png?v2)', 'background-size': '30px 60px'});
         }
         this.relocate_current_time_indicator();
     }
@@ -559,7 +581,7 @@ class Calendar {
         );
     }
 
-    draw_week_line (year, month, week, schedule_data, onclick_func, month_or_week, row_height){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
+    draw_week_line (year, month, week, schedule_data, month_or_week, row_height){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
         let _month = week_dates_info.month;
@@ -586,10 +608,6 @@ class Calendar {
 
         let height_style = row_height == undefined ? "" : `style='height:${row_height}px'`;
         
-        // let week_html_template = this.week_schedule_draw(year, month, week, schedule_data);
-        
-        
-
         let dates_to_join = [];
 
         if(week_dates_info == false){
@@ -607,8 +625,9 @@ class Calendar {
     
                 let border_style, today_marking = "";
                 let sunday, saturday = "";
+                border_style = month_or_week == "week" ? "no_border" : "";
                 if(i == 0){
-                    border_style = month_or_week == "week" ? "" : "no_border";
+                    border_style = "no_border";
                     sunday = "obj_font_color_sunday_red";
                 }
                 if(i == 6){
@@ -618,10 +637,12 @@ class Calendar {
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
                     today_marking = `<div style="position: absolute;width: 100%;height: 3px;top: ${month_or_week == "week" ? '-30px' : 0} ;background: #fe4e65;left: 0;"></div>`;
                 }
-    
+                
+                let onclick = month_or_week == "week" ? `${this.instance}.zoom_week_cal(event, ${_year[i]}, ${_month[i]}, ${_date[i]})` : `${this.instance}.go_week(${_year[i]}, ${_month[i]}, ${_date[i]});${this.instance}.zoom_week_cal(event, ${_year[i]}, ${_month[i]}, ${_date[i]})`;
+
                 dates_to_join.push(
                     `
-                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" onclick="${onclick_func}(event, ${_year[i]}, ${_month[i]}, ${_date[i]})">
+                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" onclick="${onclick}">
                         ${_date[i]}
                         <div class="${schedule_number_display} ${has_schedule}">${schedule_date}</div>
                         ${today_marking}
@@ -632,17 +653,21 @@ class Calendar {
         }
 
         let result_html = dates_to_join.join("");
-
+        let week_date_name_data = this.static_component().week_cal_upper_box_date_tool;
         return(
             week_dates_info == false 
                 ? 
-                    result_html
+                result_html
                 :
-                `<div class="cal_week_line" style="${month_or_week == "week" ? `position:sticky;position:-webkit-sticky;top:30px;background-color:#ffffff;z-index:10;height:25px;line-height:15px;font-size:20px` : ""}">
-                    ${month_or_week == "week" ? `<div class="week_cal_time_text"  onclick="${this.instance}.zoom_week_cal_vertical()"></div>` : ""}
-                    ${result_html}
+                `<div class="${month_or_week == "week" ? "week_upper_float_tool" :""}">
+                    ${month_or_week == "week" ? `<div id="week_zoom_vertical_button" onclick="${this.instance}.zoom_week_cal_vertical()"></div>` : ""}
+                    ${month_or_week == "week" ? week_date_name_data : ""}
+                    <div class="cal_week_line" style="${month_or_week == "week" ? `height:25px;line-height:15px;font-size:13px;font-weight:500` : ""}">
+                        ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
+                        ${result_html}
+                    </div>
                 </div>
-            ${month_or_week == "week" ? this.week_schedule_draw(year, month, week, schedule_data): ""}`
+                ${month_or_week == "week" ? this.week_schedule_draw(year, month, week, schedule_data): ""}`
         );
     }
 
@@ -670,17 +695,17 @@ class Calendar {
                             // 0 : off, 1: 1:1, 2: group
                             let plan_name, plan_status_color, plan_font_style;
                             if(plan.schedule_type == 0){
-                                plan_status_color = '#eeeeee';
-                                plan_name = plan.note;
+                                plan_status_color = '#d2d1cf';
+                                plan_name = plan.note != "" ? plan.note : "OFF" ;
                                 plan_font_style = '';
                             }else if(plan.schedule_type == 1){
-                                plan_status_color = '#fe4e65';
+                                plan_status_color = plan.lecture_ing_color_cd;
                                 plan_name = plan.member_name;
-                                plan_font_style = 'color:#ffffff;';
+                                plan_font_style = `color:${plan.lecture_ing_font_cd};`;
                             }else if(plan.schedule_type == 2){
-                                plan_status_color = '#fe4e65';
+                                plan_status_color = plan.lecture_ing_color_cd;
                                 plan_name = plan.lecture_name;
-                                plan_font_style = 'color:#ffffff;';
+                                plan_font_style = `color:${plan.lecture_ing_font_cd};`;
                             }
 
                             if(plan.state_cd != "NP"){
@@ -706,10 +731,11 @@ class Calendar {
                             let cell_divide = plan.duplicated_cell;
                             
                             // let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_PLAN_VIEW}', 90, ${POPUP_FROM_BOTTOM}, {'select_date':'${date_to_search}'})`;
-                            let onclick = `${this.instance}.open_popup_plan_view(event, ${_year[i]}, ${_month[i]}, ${_date[i]})`;
+                            let onclick = `${this.instance}.open_popup_plan_view(event, ${plan.schedule_id})`;
                             let height = 100*(diff.hour*60+60*diff.minute/60)/(24*60);
+                            let top = 100*( (plan_start.hour-work_start)*60 + 60*plan_start.minute/60 )/(24*60);
 
-                            let styles = `width:${100/cell_divide}%;height:${height}%;top:${(plan_start.hour-work_start)*60 + 60*plan_start.minute/60}px;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style}`;
+                            let styles = `width:${100/cell_divide}%;height:${height}%;top:${top}%;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style}`;
                             return `<div onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week" style="${styles}">
                                         ${plan_name}
                                     </div>`;
@@ -723,18 +749,18 @@ class Calendar {
             schedules = [];
         }
         let week_html_template = `
-                                <div class="week_row">
+                                <div class="week_rows">
                                     <div class="week_cal_time_text" onclick="${this.instance}.zoom_week_cal_vertical()">
                                         <div id="current_time_indicator" style="width:${this.window_height - (12.5)*this.window_height/100 }px;"><div></div></div>
-                                        ${ (this.worktime.map( (t) => { return `<article>${t}:00</article>`; } )).join('') }
+                                        ${ (this.worktime.map( (t) => { return `<article><span>${TimeRobot.to_text(t, 0, 'short')}</span></article>`; } )).join('') }
                                     </div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1">${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2">${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3">${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})" class="_week_row_4">${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})" class="_week_row_5">${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})" class="_week_row_6">${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})" class="_week_row_7">${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1 week_row">${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2 week_row">${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3 week_row">${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})" class="_week_row_4 week_row">${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})" class="_week_row_5 week_row">${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})" class="_week_row_6 week_row">${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})" class="_week_row_7 week_row">${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
                                 </div>
                                 `;
         return week_html_template;
@@ -756,6 +782,15 @@ class Calendar {
 
         let hour = Math.floor(offset_hour);
         let minute = 60*(offset_hour - hour);
+        let period_min = 30;
+
+        if(this.week_zoomed.vertical.activate == true){
+            hour = Math.floor(offset_hour/3);
+            minute = Math.round((offset_hour/3 - (Math.floor(offset_hour/3)))*60);
+            period_min = 10;
+        }
+        
+        
 
         //현재 클릭한 곳의 연월일, 시분 데이터
         this.user_data.user_selected_date.year = year;
@@ -765,12 +800,17 @@ class Calendar {
         this.user_data.user_selected_date.text = DateRobot.to_text(year, month, date);
         this.user_data.user_selected_time.hour = hour;
         this.user_data.user_selected_time.minute = minute;
-        this.user_data.user_selected_time.hour2 = TimeRobot.add_time(hour, minute, 0, 30).hour;
-        this.user_data.user_selected_time.minute2 = TimeRobot.add_time(hour, minute, 0, 30).minute;
+        this.user_data.user_selected_time.hour2 = TimeRobot.add_time(hour, minute, 0, period_min).hour;
+        this.user_data.user_selected_time.minute2 = TimeRobot.add_time(hour, minute, 0, period_min).minute;
         this.user_data.user_selected_time.text = TimeRobot.to_text(hour, minute);
         this.user_data.user_selected_time.text2 = TimeRobot.to_text(this.user_data.user_selected_time.hour2, this.user_data.user_selected_time.minute2);
 
         layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null});
+    }
+
+    open_popup_plan_view (event, schedule_id){
+        this.user_data.user_selected_plan.schedule_id = schedule_id;
+        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, 100, POPUP_FROM_RIGHT, {'schedule_id':schedule_id});
     }
 
     add_plan_button (){
@@ -803,10 +843,7 @@ class Calendar {
 
         if(indicator != undefined){
             indicator.style.top = `${pos_y}px`;
-            console.log(pos_y);
         }
-        
-        
     }
 
     request_schedule_data (date, days, callback){
@@ -882,8 +919,8 @@ class Calendar {
                                         `             
                 ,
                 "week_cal_upper_box_date_tool":`
-                    <div class="cal_week_line_dates" style="border-bottom:0;font-size:13px;">
-                        <div class="week_cal_time_text"  onclick="${this.instance}.zoom_week_cal_vertical()">펼치기</div>
+                    <div class="cal_week_line_dates" style="border-bottom:0;font-size:11px;">
+                        <div class="week_cal_time_text"></div>
                         <div class="_week_row_1 obj_font_color_sunday_red">일</div><div class="_week_row_2">월</div><div class="_week_row_3">화</div>
                         <div class="_week_row_4">수</div><div class="_week_row_5">목</div><div class="_week_row_6">금</div>
                         <div class="_week_row_7 obj_font_color_saturday_blue">토</div>
@@ -1039,47 +1076,71 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
-                console.log(data);
                 callback();
             },
     
             //통신 실패시 처리
             error:function(data){
-                console.log(data)
                 // show_error_message(data.statusText);
                 show_error_message('오류 발생 \n 모든 필수 정보를 입력후 다시 시도해주세요.');
             }
         });
     }
 
-    static read(data, callback){
-        //데이터 형태 {"member_id":""};
+    static read(date, days, callback){
+        let date_ = date;
+        let days_ = days;
+        if(date_ == undefined){date_ = `${this.current_year}-${this.current_month}-01`;}
+        if(days_ == undefined){days_ = 31;}
+
         $.ajax({
-            url:'/trainer/get_member_info/',
-            type:'GET',
-            data: data,
-            dataType : 'html',
-    
-            beforeSend:function(xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            url: '/trainer/get_trainer_schedule_all/',
+            type : 'GET',
+            data : {"date":date_, "day":days_},
+            dataType: "JSON",
+
+            beforeSend:function (){
+                ajax_load_image(SHOW);
+            },
+            success:function (data){
+                callback(data, date_);
+                return data;
+            },
+
+            complete:function (){
+                ajax_load_image(HIDE);
+            },
+
+            error:function (){
+                console.log('server error');
+            }
+        });
+    }
+
+    static read_plan(schedule_id, callback){
+        
+        $.ajax({
+            url: '/trainer/get_trainer_schedule_info/',
+            type : 'GET',
+            data : {"schedule_id":schedule_id},
+            dataType: "JSON",
+
+            beforeSend:function (){
+                ajax_load_image(SHOW);
+            },
+            success:function (datas){
+                if(callback != undefined){
+                    callback(datas);
                 }
+                return datas;
             },
-    
-            //보내기후 팝업창 닫기
-            complete:function(){
-                
+
+            complete:function (){
+                ajax_load_image(HIDE);
             },
-    
-            //통신성공시 처리
-            success:function(data){
-                let json = JSON.parse(data);
-                callback(json);
-            },
-    
-            //통신 실패시 처리
-            error:function(){
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+
+            error:function (){
+                console.log('server error');
             }
         });
     }

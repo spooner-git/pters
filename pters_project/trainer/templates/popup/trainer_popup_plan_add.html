@@ -12,7 +12,8 @@
 {% endblock %}
 
 {% block popup_base_wrapper_top_right %}
-<img src="/static/common/icon/icon_done.png" alt="" class="obj_icon_basic" onclick="plan_add.send_data()">
+<!-- <img src="/static/common/icon/icon_done.png" alt="" class="obj_icon_basic" onclick="plan_add.send_data()"> -->
+<span style="color:#fe4e65;font-weight: 500;" onclick="plan_add.send_data()">등록</span>
 {% endblock %}
 
 {% block popup_base_contents %}
@@ -334,20 +335,7 @@
             //duplication_enable_flag 0: 중복불허 1:중복허용
             let url;
             url ='/schedule/add_schedule/';
-            /*switch(this.list_type){
-                case "lesson":
-                    if(this.data_to_send.lecture_max_num == 1){
-                        url = '/schedule/add_schedule/'
-                    }else if(this.data_to_send.lecture_max_num > 1){
-                        url ='/schedule/add_lecture_schedule/'
-                    }
-                    break;
-
-                case "off":
-                    url = '/schedule/add_schedule/';
-                    break;
-            }*/
-
+            
             Plan_func.create(url, data, ()=>{
                 layer_popup.close_layer_popup();
                 calendar.init();

@@ -94,3 +94,4 @@ const LOCAL = 1;
 
 /*기타 */
 const DAYNAME_KR = ['일', '월', '화', '수', '목', '금', '토'];
+const STATE_CODE = {PE:{KR:"완료"}, NP:{KR:"진행 전"}};

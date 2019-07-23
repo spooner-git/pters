@@ -123,6 +123,7 @@
 	display: table-cell;
 	width: auto;
 	vertical-align: middle;
+	text-align: right;
 }
 
 .select_member_row .cell_member_selected{
@@ -135,6 +136,7 @@
 }
 .select_member_row .cell_member_selected .member_selected{
 	display: block !important;
+	float: right;;
 }
 
 .no_data_row{
