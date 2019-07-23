@@ -2203,7 +2203,6 @@ def send_push_to_trainee_logic(request):
 
 def send_push_alarm_logic(request):
     start_time = timezone.now()
-    alarm_setting_time = 5
     alarm_dt = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:00')
     # 개인 수업 일정
     query_common_cd = "SELECT COMMON_CD_NM FROM COMMON_CD_TB WHERE COMMON_CD=`CLASS_TB`.`SUBJECT_CD`"
@@ -2224,39 +2223,29 @@ def send_push_alarm_logic(request):
         push_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
 
         # 개인 수업 일정
+        class_tb_id = schedule_info.class_tb_id
+        member_ticket_tb_id = schedule_info.member_ticket_tb_id
+        push_title = class_type_name+' - 수업 알림'
+        push_message = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] + '~'\
+                       + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]\
+                       + ' 시작 ' + minute_message+ ' 전입니다.'
         if schedule_info.lecture_tb is None:
 
-            func_send_push_trainer(schedule_info.member_ticket_tb_id, class_type_name+' - 수업 알림',
-                                         push_info_schedule_start_date[0] + ':'
-                                         + push_info_schedule_start_date[1] + '~'
-                                         + push_info_schedule_end_date[0] + ':'
-                                         + push_info_schedule_end_date[1]
-                                         + ' [개인 레슨] 수업 시작 ' + minute_message+ ' 전입니다.')
-            func_send_push_trainee(schedule_info.class_tb_id, class_type_name+' - 수업 알림',
-                                         push_info_schedule_start_date[0] + ':'
-                                         + push_info_schedule_start_date[1] + '~'
-                                         + push_info_schedule_end_date[0] + ':'
-                                         + push_info_schedule_end_date[1]
-                                         + ' [개인 레슨] 수업 시작 ' + minute_message+ ' 전입니다.')
+            func_send_push_trainer(member_ticket_tb_id, push_title,
+                                   ' [개인 레슨] '+push_message)
+            func_send_push_trainee(class_tb_id, class_type_name+' - 수업 알림',
+                                   ' [개인 레슨] '+push_message)
+
         else:
             # 그룹 수업 일정
             if schedule_info.lecture_schedule_id is None:
-                func_send_push_trainee(schedule_info.class_tb_id, class_type_name+' - 수업 알림',
-                                             push_info_schedule_start_date[0] + ':'
-                                             + push_info_schedule_start_date[1] + '~'
-                                             + push_info_schedule_end_date[0] + ':'
-                                             + push_info_schedule_end_date[1]
-                                             + ' [' + schedule_info.lecture_tb.name + '] 수업 시작 '
-                                             + minute_message+ ' 전입니다.')
+                func_send_push_trainee(class_tb_id, push_title,
+                                       ' [' + schedule_info.lecture_tb.name + '] '+push_message)
             # 그룹의 회원 수업 일정
             else:
-                func_send_push_trainer(schedule_info.member_ticket_tb_id, class_type_name+' - 수업 알림',
-                                             push_info_schedule_start_date[0] + ':'
-                                             + push_info_schedule_start_date[1] + '~'
-                                             + push_info_schedule_end_date[0] + ':'
-                                             + push_info_schedule_end_date[1]
-                                             + ' [' + schedule_info.lecture_tb.name + '] 수업 시작 '
-                                             + minute_message+ ' 전입니다.')
+                func_send_push_trainer(member_ticket_tb_id, push_title,
+                                       ' [' + schedule_info.lecture_tb.name + '] '+push_message)
+
     end_time = timezone.now()
     logger.info('alarm::'+(str(end_time-start_time)))
     return render(request, 'ajax/schedule_error_info.html')
