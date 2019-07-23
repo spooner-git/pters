@@ -2210,7 +2210,7 @@ def send_push_alarm_logic(request):
                                                                      use=USE).exclude(en_dis_type=OFF_SCHEDULE_TYPE)
     for schedule_info in schedule_data:
         schedule_delta_seconds = (schedule_info.start_dt-schedule_info.alarm_dt).seconds
-        minute_message = str(schedule_delta_seconds/60) + '분'
+        minute_message = str(int(schedule_delta_seconds/60)) + '분'
         try:
             class_type_name = CommonCdTb.objects.get(common_cd=schedule_info.class_tb.subject_cd).common_cd_nm
         except ObjectDoesNotExist:
