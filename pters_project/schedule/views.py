@@ -2253,5 +2253,5 @@ def send_push_alarm_logic(request):
                                              + push_info_schedule_end_date[1]
                                              + ' [' + schedule_info.lecture_tb.name + '] 수업 시작 '
                                              + minute_message+ ' 전입니다.')
-    logger.info(request, 'alarm::'+(str(alarm_dt)))
+    logger.info('alarm::'+(str(alarm_dt)))
     return render(request, 'ajax/schedule_error_info.html')
