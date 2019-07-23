@@ -631,10 +631,12 @@ def func_send_push_trainer(member_ticket_id, title, message):
     if member_ticket_id is not None and member_ticket_id != '':
         # member_member_ticket_data = MemberMemberTicketTb.objects.filter(member_ticket_tb_id=member_ticket_id, use=USE)
         # for class_member_ticket_info in member_member_ticket_data:
-        member_ticket_info = MemberMemberTicketTb.objects.filter(member_ticket_tb_id=member_ticket_id,
-                                                                 auth_cd=AUTH_TYPE_VIEW, use=USE)
+        member_ticket_info = MemberTicketTb.objects.select_related(
+            'member_ticket_tb__member').filter(member_ticket_tb_id=member_ticket_id,
+                                               member_auth_cd=AUTH_TYPE_VIEW, use=USE)
+
         for member_ticket_info in member_ticket_info:
-            token_data = PushInfoTb.objects.filter(member_id=member_ticket_info.member.member_id)
+            token_data = PushInfoTb.objects.filter(member_id=member_ticket_info.member_id, use=USE)
             for token_info in token_data:
                 if token_info.device_id != 'pc':
                     token_info.badge_counter += 1
@@ -651,11 +653,12 @@ def func_send_push_trainee(class_id, title, message):
     error = None
     if class_id is not None and class_id != '':
 
-        member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, use=USE)
+        member_class_data = MemberClassTb.objects.select_related('member').filter(class_tb_id=class_id,
+                                                                                  auth_cd=AUTH_TYPE_VIEW, use=USE)
 
         for member_class_info in member_class_data:
 
-            token_data = PushInfoTb.objects.filter(member_id=member_class_info.member.member_id)
+            token_data = PushInfoTb.objects.filter(member_id=member_class_info.member_id, use=USE)
             for token_info in token_data:
                 if token_info.device_id != 'pc':
                     token_info.badge_counter += 1
