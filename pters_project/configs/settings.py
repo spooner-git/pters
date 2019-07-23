@@ -307,11 +307,14 @@ EL_PAGINATION_LOADING = "<img src='/static/user/res/ajax/loading.gif' alt='loadi
 
 # celery
 # Required
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
 # your redis server url
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0' #your redis url for getting result
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# your redis url for getting result
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 #  Customize the settings # https://docs.celeryproject.org/en/latest/userguide/configuration.html
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Asia/Seoul' # Define the timezone for the scheduler, Celery beat.
+CELERY_TIMEZONE = 'Asia/Seoul'
+CELERY_ENABLE_UTC = False
+# Define the timezone for the scheduler, Celery beat.

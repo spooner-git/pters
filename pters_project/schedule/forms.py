@@ -18,9 +18,10 @@ def null_string_validator(value, text):
 def date_time_validator(value):
     error = None
     date_time = value.split(' ')
+    check_time = False
     if date_time[1] == '24:00':
         value = date_time[0] + ' 23:59'
-
+        check_time = True
     try:
         datetime.datetime.strptime(value, '%Y-%m-%d %H:%M')
     except ValueError:
@@ -49,11 +50,34 @@ class AddScheduleTbForm(forms.Form):
 
     def clean_start_dt(self):
         start_dt = self.cleaned_data["start_dt"]
-        return datetime.datetime.strptime(start_dt, '%Y-%m-%d %H:%M')
+
+        date_time = start_dt.split(' ')
+        check_time = False
+
+        if date_time[1] == '24:00':
+            start_dt = date_time[0] + ' 23:59'
+            check_time = True
+
+        start_dt = datetime.datetime.strptime(start_dt, '%Y-%m-%d %H:%M')
+        if check_time:
+            start_dt = start_dt + datetime.timedelta(minutes=1)
+
+        return start_dt
 
     def clean_end_dt(self):
         end_dt = self.cleaned_data["end_dt"]
-        return datetime.datetime.strptime(end_dt, '%Y-%m-%d %H:%M')
+        date_time = end_dt.split(' ')
+        check_time = False
+
+        if date_time[1] == '24:00':
+            end_dt = date_time[0] + ' 23:59'
+            check_time = True
+
+        end_dt = datetime.datetime.strptime(end_dt, '%Y-%m-%d %H:%M')
+        if check_time:
+            end_dt = end_dt + datetime.timedelta(minutes=1)
+
+        return end_dt
 
     def clean_lecture_id(self):
         lecture_id = self.cleaned_data["lecture_id"]

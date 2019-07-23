@@ -20,7 +20,7 @@ from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, Ticket
 from trainee.models import MemberTicketTb, MemberMemberTicketTb
 from trainer.functions import func_get_class_member_ing_list, func_update_lecture_member_fix_status_cd
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
-
+from .tasks import task_send_fire_base
 
 # 1:1 member_ticket id 조회 - 자유형 문제
 def func_get_member_ticket_id(class_id, member_id):
@@ -298,6 +298,8 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                                            start_dt=start_datetime, end_dt=end_datetime,
                                            state_cd=state_cd, permission_state_cd=permission_state_cd,
                                            note=note, member_note='', en_dis_type=en_dis_type,
+                                           # Test 용
+                                           alarm_dt=start_datetime-datetime.timedelta(minutes=5),
                                            reg_member_id=user_id)
             add_schedule_info.save()
 
@@ -624,78 +626,45 @@ def func_save_log_data(start_date, end_date, class_id, member_ticket_id, user_na
 
 
 # # 강사 -> 회원 push 메시지 전달
-# def func_send_push_trainer(member_ticket_id, title, message):
-#     error = None
-#     push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
-#     if member_ticket_id is not None and member_ticket_id != '':
-#         # member_member_ticket_data = MemberMemberTicketTb.objects.filter(member_ticket_tb_id=member_ticket_id, use=USE)
-#         # for class_member_ticket_info in member_member_ticket_data:
-#         member_ticket_info = MemberMemberTicketTb.objects.filter(member_ticket_tb_id=member_ticket_id,
-#                                                                  auth_cd=AUTH_TYPE_VIEW, use=USE)
-#         for member_ticket_info in member_ticket_info:
-#             token_data = PushInfoTb.objects.filter(member_id=member_ticket_info.member.member_id)
-#             for token_info in token_data:
-#                 if token_info.device_id != 'pc':
-#                     token_info.badge_counter += 1
-#                     token_info.save()
-#                 instance_id = token_info.token
-#                 badge_counter = token_info.badge_counter
-#                 data = {
-#                     'to': instance_id,
-#                     'notification': {
-#                         'title': title,
-#                         'body': message,
-#                         'badge': badge_counter,
-#                         'sound': 'default'
-#                     }
-#                 }
-#                 body = json.dumps(data)
-#                 h = httplib2.Http()
-#                 resp, content = h.request("https://fcm.googleapis.com/fcm/send", method="POST", body=body,
-#                                           headers={'Content-Type': 'application/json;',
-#                                                    'Authorization': 'key=' + push_server_id})
-#                 if resp['status'] != '200':
-#                     error = '오류가 발생했습니다.'
-#
-#     return error
-#
-#
-# # 회원 -> 강사 push 메시지 전달
-# def func_send_push_trainee(class_id, title, message):
-#     push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
-#     error = None
-#     if class_id is not None and class_id != '':
-#
-#         member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, use=USE)
-#
-#         for member_class_info in member_class_data:
-#
-#             token_data = PushInfoTb.objects.filter(member_id=member_class_info.member.member_id)
-#             for token_info in token_data:
-#                 if token_info.device_id != 'pc':
-#                     token_info.badge_counter += 1
-#                     token_info.save()
-#                 instance_id = token_info.token
-#                 badge_counter = token_info.badge_counter
-#                 data = {
-#                     'to': instance_id,
-#                     'notification': {
-#                         'title': title,
-#                         'body': message,
-#                         'badge': badge_counter,
-#                         'sound': 'default'
-#                     }
-#                 }
-#                 body = json.dumps(data)
-#                 h = httplib2.Http()
-#
-#                 resp, content = h.request("https://fcm.googleapis.com/fcm/send", method="POST", body=body,
-#                                           headers={'Content-Type': 'application/json;',
-#                                                    'Authorization': 'key=' + push_server_id})
-#                 if resp['status'] != '200':
-#                     error = '오류가 발생했습니다.'
-#
-#     return error
+def func_send_push_trainer(member_ticket_id, title, message):
+    error = None
+    if member_ticket_id is not None and member_ticket_id != '':
+        # member_member_ticket_data = MemberMemberTicketTb.objects.filter(member_ticket_tb_id=member_ticket_id, use=USE)
+        # for class_member_ticket_info in member_member_ticket_data:
+        member_ticket_info = MemberMemberTicketTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+                                                                 auth_cd=AUTH_TYPE_VIEW, use=USE)
+        for member_ticket_info in member_ticket_info:
+            token_data = PushInfoTb.objects.filter(member_id=member_ticket_info.member.member_id)
+            for token_info in token_data:
+                if token_info.device_id != 'pc':
+                    token_info.badge_counter += 1
+                    token_info.save()
+                instance_id = token_info.token
+                badge_counter = token_info.badge_counter
+                error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
+
+    return error
+
+
+# 회원 -> 강사 push 메시지 전달
+def func_send_push_trainee(class_id, title, message):
+    error = None
+    if class_id is not None and class_id != '':
+
+        member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, use=USE)
+
+        for member_class_info in member_class_data:
+
+            token_data = PushInfoTb.objects.filter(member_id=member_class_info.member.member_id)
+            for token_info in token_data:
+                if token_info.device_id != 'pc':
+                    token_info.badge_counter += 1
+                    token_info.save()
+                instance_id = token_info.token
+                badge_counter = token_info.badge_counter
+                error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
+
+    return error
 
 
 def func_get_trainer_schedule_all(class_id, start_date, end_date):

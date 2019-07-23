@@ -20,10 +20,11 @@ from kombu.exceptions import OperationalError
 from configs import settings
 from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, TO_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, AUTO_ABSENCE_ON, SCHEDULE_DUPLICATION_ENABLE, \
-    LECTURE_TYPE_ONE_TO_ONE, STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, STATE_CD_FINISH, STATE_CD_ABSENCE
-from login.models import LogTb, MemberTb
+    LECTURE_TYPE_ONE_TO_ONE, STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, STATE_CD_FINISH, STATE_CD_ABSENCE, \
+    OFF_SCHEDULE_TYPE
+from login.models import LogTb, MemberTb, CommonCdTb
 from schedule.forms import AddScheduleTbForm
-from schedule.tasks import func_send_push_trainee, func_send_push_trainer
+from schedule.functions import func_send_push_trainee, func_send_push_trainer
 from trainee.models import MemberTicketTb, MemberMemberTicketTb
 from trainer.models import LectureTb, ClassTb
 from .functions import func_get_member_ticket_id, func_add_schedule, func_refresh_member_ticket_count, func_date_check,\
@@ -279,7 +280,8 @@ def delete_schedule_logic(request):
             try:
                 func_send_push_trainer.delay(member_ticket_id,
                                              class_type_name + ' - 수업 알림',
-                                             request.user.first_name + '님이 ' + push_schedule_info + ' [개인 레슨] 수업을 예약 취소했습니다.')
+                                             request.user.first_name + '님이 ' + push_schedule_info
+                                             + ' [개인 레슨] 수업을 예약 취소했습니다.')
             except OperationalError:
                 logger.error(request.user.first_name + '[' + str(request.user.id) + ']'
                              + member_name + '님에게 push 알림 전송에 실패했습니다.')
@@ -342,7 +344,8 @@ def delete_schedule_logic(request):
                     try:
                         func_send_push_trainer.delay(member_ticket_id,
                                                      class_type_name + ' - 수업 알림',
-                                                     request.user.first_name + '님이 ' + push_schedule_info + ' ['+lecture_name+'] 수업을 예약 취소했습니다.')
+                                                     request.user.first_name + '님이 ' + push_schedule_info
+                                                     + ' ['+lecture_name+'] 수업을 예약 취소했습니다.')
                     except OperationalError:
                         logger.error(request.user.first_name + '[' + str(request.user.id) + ']'
                                      + member_name + '님에게 push 알림 전송에 실패했습니다.')
@@ -2194,4 +2197,61 @@ def send_push_to_trainee_logic(request):
     if error is not None:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+str(error))
         messages.error(request, error)
+    return render(request, 'ajax/schedule_error_info.html')
+
+
+def send_push_alarm_logic(request):
+    alarm_setting_time = 5
+    alarm_dt = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:00')
+    # 개인 수업 일정
+    schedule_data = ScheduleTb.objects.select_related(
+        'class_tb', 'lecture_tb', 'member_ticket_tb__member').filter(alarm_dt=alarm_dt,
+                                                                     class_tb_id='127',
+                                                                     use=USE).exclude(en_dis_type=OFF_SCHEDULE_TYPE)
+    for schedule_info in schedule_data:
+        schedule_delta_seconds = (schedule_info.start_dt-schedule_info.alarm_dt).seconds
+        minute_message = str(schedule_delta_seconds/60) + '분'
+        try:
+            class_type_name = CommonCdTb.objects.get(common_cd=schedule_info.class_tb.subject_cd).common_cd_nm
+        except ObjectDoesNotExist:
+            class_type_name = schedule_info.class_tb.subject_detail_nm
+
+        push_info_schedule_start_date = str(schedule_info.start_dt).split(':')
+        push_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
+
+        # 개인 수업 일정
+        if schedule_info.lecture_tb is None:
+
+            func_send_push_trainer(schedule_info.member_ticket_tb_id, class_type_name+' - 수업 알림',
+                                         push_info_schedule_start_date[0] + ':'
+                                         + push_info_schedule_start_date[1] + '~'
+                                         + push_info_schedule_end_date[0] + ':'
+                                         + push_info_schedule_end_date[1]
+                                         + ' [개인 레슨] 수업 시작 ' + minute_message+ ' 전입니다.')
+            func_send_push_trainee(schedule_info.class_tb_id, class_type_name+' - 수업 알림',
+                                         push_info_schedule_start_date[0] + ':'
+                                         + push_info_schedule_start_date[1] + '~'
+                                         + push_info_schedule_end_date[0] + ':'
+                                         + push_info_schedule_end_date[1]
+                                         + ' [개인 레슨] 수업 시작 ' + minute_message+ ' 전입니다.')
+        else:
+            # 그룹 수업 일정
+            if schedule_info.lecture_schedule_id is None:
+                func_send_push_trainee(schedule_info.class_tb_id, class_type_name+' - 수업 알림',
+                                             push_info_schedule_start_date[0] + ':'
+                                             + push_info_schedule_start_date[1] + '~'
+                                             + push_info_schedule_end_date[0] + ':'
+                                             + push_info_schedule_end_date[1]
+                                             + ' [' + schedule_info.lecture_tb.name + '] 수업 시작 '
+                                             + minute_message+ ' 전입니다.')
+            # 그룹의 회원 수업 일정
+            else:
+                func_send_push_trainer(schedule_info.member_ticket_tb_id, class_type_name+' - 수업 알림',
+                                             push_info_schedule_start_date[0] + ':'
+                                             + push_info_schedule_start_date[1] + '~'
+                                             + push_info_schedule_end_date[0] + ':'
+                                             + push_info_schedule_end_date[1]
+                                             + ' [' + schedule_info.lecture_tb.name + '] 수업 시작 '
+                                             + minute_message+ ' 전입니다.')
+
     return render(request, 'ajax/schedule_error_info.html')

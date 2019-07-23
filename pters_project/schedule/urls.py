@@ -68,5 +68,5 @@ urlpatterns = [
     # 푸시 알림 기능 #####################################################################################################
     url(r'^send_push_to_trainer/$', views.send_push_to_trainer_logic, name='send_push_to_trainer'),
     url(r'^send_push_to_trainee/$', views.send_push_to_trainee_logic, name='send_push_to_trainee'),
-
+    url(r'^send_push_alarm/$', views.send_push_alarm_logic, name='send_push_alarm'),
 ]
