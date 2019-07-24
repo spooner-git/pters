@@ -817,7 +817,7 @@ class Calendar {
     open_popup_plan_view (event, schedule_id){
         this.user_data.user_selected_plan.schedule_id = schedule_id;
         layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, 100, POPUP_FROM_RIGHT, {'schedule_id':schedule_id}, ()=>{
-            plan_view_popup = new Plan_view('#wrapper_box_plan_view_toolbox', '#wrapper_box_plan_view_upper', '#wrapper_box_plan_view_middle', '#wrapper_box_plan_view_bottom', this.user_data.user_selected_plan, "plan_view_popup");
+            plan_view_popup = new Plan_view('.popup_plan_view', this.user_data.user_selected_plan, "plan_view_popup");
         });
     }
 

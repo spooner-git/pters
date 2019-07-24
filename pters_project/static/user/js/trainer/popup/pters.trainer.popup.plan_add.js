@@ -13,12 +13,12 @@ class Plan_add{
             current_year: d.getFullYear(),
             current_month: d.getMonth()+1,
             current_date: d.getDate()
-        }
+        };
         this.times = {
             current_hour: TimeRobot.to_zone(d.getHours(), d.getMinutes()).hour,
             current_minute: TimeRobot.to_zone(d.getHours(), d.getMinutes()).minute,
             current_zone: TimeRobot.to_zone(d.getHours(), d.getMinutes()).zone
-        }
+        };
 
         this.data_to_send = {
                 lecture_id:"",
@@ -47,17 +47,7 @@ class Plan_add{
         };
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
-        this.user_data = data_from_external;
-        let user_data_date = this.user_data.user_selected_date;
-        this.data_to_send.date = user_data_date.year == null ? null : {year: user_data_date.year, month:user_data_date.month, date:user_data_date.date};
-        this.data_to_send.date_text = user_data_date.text;
-        
-        let user_data_time = this.user_data.user_selected_time;
-        this.data_to_send.start_time = user_data_time.hour == null ? null : `${user_data_time.hour}:${user_data_time.minute}`;
-        this.data_to_send.start_time_text = user_data_time.text;
-        this.data_to_send.end_time = user_data_time.hour2 == null ? null : `${user_data_time.hour2}:${user_data_time.minute2}`;
-        this.data_to_send.end_time_text = user_data_time.text2;
-        
+        this.set_initial_data(data_from_external);
         this.init();
     }
 
@@ -148,7 +138,19 @@ class Plan_add{
         }else if(type == "lesson"){
             this.render_lecture_add_set();
         }
+    }
 
+    set_initial_data(data){
+        this.user_data = data;
+        let user_data_date = this.user_data.user_selected_date;
+        this.data_to_send.date = user_data_date.year == null ? null : {year: user_data_date.year, month:user_data_date.month, date:user_data_date.date};
+        this.data_to_send.date_text = user_data_date.text;
+        
+        let user_data_time = this.user_data.user_selected_time;
+        this.data_to_send.start_time = user_data_time.hour == null ? null : `${user_data_time.hour}:${user_data_time.minute}`;
+        this.data_to_send.start_time_text = user_data_time.text;
+        this.data_to_send.end_time = user_data_time.hour2 == null ? null : `${user_data_time.hour2}:${user_data_time.minute2}`;
+        this.data_to_send.end_time_text = user_data_time.text2;
     }
 
     render_toolbox(){
@@ -232,8 +234,6 @@ class Plan_add{
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
                                                                                                 }});
             });
-
-
         });
 
         let end_time_text = this.data_to_send.end_time_text == null ? '종료 시간*' : this.data_to_send.end_time_text;
@@ -246,7 +246,7 @@ class Plan_add{
                 let hour = this.data_to_send.end_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data_to_send.end_time.split(':')[0], this.data_to_send.end_time.split(':')[1]).hour;
                 let minute = this.data_to_send.end_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data_to_send.end_time.split(':')[0], this.data_to_send.end_time.split(':')[1]).minute;
                 
-                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시간 선택', data:{zone:zone, hour:hour, minute:minute}, 
+                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시간 선택', data:{zone:zone, hour:hour, minute:minute}, 
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.end_time = object;
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
@@ -265,18 +265,14 @@ class Plan_add{
     }
 
     render_bottom(del){
-
         let html_memo_select = CComponent.create_input_row ('select_memo', this.data_to_send.memo == "" ? '메모' : this.data_to_send.memo, '/static/common/icon/icon_note.png', HIDE, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });
-
         let html = html_memo_select;
-
         if(del != undefined){
             html = "";
         }
-
         document.querySelector(this.targetHTML_bottom).innerHTML = html;
     }
 
