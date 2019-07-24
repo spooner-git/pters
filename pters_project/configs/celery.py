@@ -14,9 +14,11 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 # 장고 app config에 등록된 모든 taks 모듈을 불러온다.
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
+CELERY_WORKING = False
 
-def is_celery_working():
+
+def update_celery_status():
+    global CELERY_WORKING
     result = app.control.broadcast('ping', reply=True, limit=1)
-    return bool(result)
-
-CELERY_WORKING = is_celery_working()
+    CELERY_WORKING = bool(result)
+    return CELERY_WORKING

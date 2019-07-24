@@ -2191,6 +2191,10 @@ def send_push_to_trainee_logic(request):
 
 
 def send_push_alarm_logic(request):
+
+    from configs.celery import update_celery_status
+    update_celery_status()
+
     start_time = timezone.now()
     alarm_dt = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:00')
     # 개인 수업 일정
@@ -2236,5 +2240,6 @@ def send_push_alarm_logic(request):
                                        ' [' + schedule_info.lecture_tb.name + '] '+push_message)
 
     end_time = timezone.now()
+
     logger.info('alarm::'+(str(end_time-start_time))+'/'+str(len(schedule_data)))
     return render(request, 'ajax/schedule_error_info.html')
