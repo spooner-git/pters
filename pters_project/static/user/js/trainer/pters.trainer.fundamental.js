@@ -111,6 +111,8 @@ class TimeRobot{
         if(hour == null && minute == null){
             return {zone:null, hour:null, minute:null};
         }
+        hour = Number(hour);
+        minute = Number(minute);
         let zone;
         let hour_new;
         let minute_new;
@@ -129,6 +131,9 @@ class TimeRobot{
     }
 
     static to_data(zone, hour, minute){
+        zone = Number(zone);
+        hour = Number(hour);
+        minute = Number(minute);
         let hh = zone*12 + hour;
         if(hour == 12){
             hh = zone*hour;
@@ -140,7 +145,9 @@ class TimeRobot{
     }
 
     static to_text(hour, minute, short){
-        let time = TimeRobot.to_zone(hour, minute);
+        hour = Number(hour);
+        minute = Number(minute);
+        let time = TimeRobot.to_zone(Number(hour), Number(minute) );
         let zone = time.zone;
         let hh = time.hour;
         let mm = time.minute;

@@ -3,7 +3,7 @@
 }
 
 
-.create_row{
+.create_row, .create_input_row{
 	list-style: none;
 	line-height: 50px;
 	height: 50px;
@@ -12,8 +12,21 @@
 	font-weight: 500;
 	letter-spacing: -0.5px;
 }
+.create_input_row{
+	cursor: unset;
+}
+.create_input_row input{
+	-webkit-appearance: none;
+	border: 0;
+	border-radius: 0;
+	font-size: inherit;
+	font-family: inherit;
+	letter-spacing: inherit;
+	color: inherit;
+	height: 48px;
+}
 
-.create_row .obj_table_raw > div{
+.create_row .obj_table_raw > div, .create_input_row .obj_table_raw > div{
 	display: table-cell;
 }
 
@@ -21,7 +34,14 @@
 	width: 150px;
 }
 
-.create_row .cell_title > img{
+.create_input_row .cell_title{
+	width: 32px;
+}
+.create_input_row .cell_content{
+	width: auto;
+}
+
+.create_row .cell_title > img, .create_input_row .cell_title > img{
 	vertical-align: middle;
 	margin-bottom: 2px;
 	margin-right: 10px;
@@ -29,7 +49,7 @@
 	height: 20px;
 }
 
-.create_row .cell_value{
+.create_row .cell_value, .create_input_row .cell_value{
 	width: auto;
 	max-width: 150px;
 	text-align: right;
@@ -39,11 +59,11 @@
 	color: #585858;
 }
 
-.create_row .cell_icon{
+.create_row .cell_icon, .create_input_row .cell_icon{
 	width: 30px;
 	text-align: right;
 }
-.create_row .cell_icon > img{
+.create_row .cell_icon > img, .create_input_row .cell_icon > img{
 	vertical-align: middle;
 	margin-bottom: 4px;
 	width: 16px;

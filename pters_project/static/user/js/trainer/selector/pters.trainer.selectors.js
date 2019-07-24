@@ -338,7 +338,7 @@ class DateSelector{
 
         this.data_to_send = {
             text: null,
-            value: {year:null, month:null, date:null}
+            data: {year:null, month:null, date:null}
         };
 
         if(user_option != undefined){
@@ -371,10 +371,10 @@ class DateSelector{
 
 
     reset (object){
-        let year = object.year == null ? this.date.current_year - 25 : object.year;
-        let month = object.month == null ? this.date.current_month : object.month;
-        let date = object.date == null ? this.date.current_date : object.date;
-        this.data_to_send.value = {year: year, month:month, date:date};
+        let year = object.data.year == null ? this.date.current_year : object.data.year;
+        let month = object.data.month == null ? this.date.current_month : object.data.month;
+        let date = object.data.date == null ? this.date.current_date : object.data.date;
+        this.data_to_send.data = {year: year, month:month, date:date};
         this.data_to_send.text = DateRobot.to_text(year, month, date);
         
         this.go_snap(year, month, date);
@@ -621,11 +621,15 @@ class DateSelector{
         let year_text = year.text();
         let month_text = month.text();
         let date_text = date.text();
+        let text = DateRobot.to_text(year_text, month_text, date_text);
 
         return {
-            year : year_text,
-            month : month_text,
-            date: date_text
+            data:{
+                year : year_text,
+                month : month_text,
+                date: date_text
+            },
+            text: text
         };
     }
 
@@ -640,7 +644,10 @@ class DateSelector{
                                     </div>
                                     <span class="date_selector_title">${this.option.title}</span>
                                     <div style="float:right;margin-right:5px;color:#fe4e65;">
-                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', ()=>{this.option.callback_when_set(); console.log(this.get_selected_data()) })}
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', ()=>{ this.data_to_send = this.get_selected_data();
+                                                                                                                    this.option.callback_when_set(this.data_to_send); 
+                                                                                                                    layer_popup.close_layer_popup();
+                                                                                                                })}
                                     </div>
                                 </div>
                                 <div class="date_selector_year_wrap select_wrapper"></div>
@@ -689,7 +696,7 @@ class TimeSelector{
 
         this.data_to_send = {
             text: null,
-            value: {zone:null, hour:null, minute:null}
+            data: {zone:null, hour:null, minute:null}
         };
 
         if(user_option != undefined){
@@ -938,11 +945,17 @@ class TimeSelector{
         let hour_text = hour.text();
         let minute_text = minute.text();
 
+        let data_form = TimeRobot.to_data(zone_value, hour_text, minute_text);
+        let text = TimeRobot.to_text(data_form.hour, data_form.minute);
+
         return {
-            zone_value : zone_value,
-            zone_text : zone_text,
-            hour_text : hour_text,
-            minute_text: minute_text
+            data:{
+                zone : zone_value,
+                hour : hour_text,
+                minute: minute_text
+            },
+            text: text
+            
         };
     }
 
@@ -956,7 +969,9 @@ class TimeSelector{
                                     </div>
                                     <span class="time_selector_title">${this.option.title}</span>
                                     <div style="float:right;margin-right:5px;color:#fe4e65;">
-                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', ()=>{this.option.callback_when_set(); console.log(this.get_selected_data()) })}
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', ()=>{this.data_to_send = this.get_selected_data();
+                                                                                                                    this.option.callback_when_set(this.data_to_send); 
+                                                                                                                    layer_popup.close_layer_popup(); })}
                                     </div>
                                 </div>
                                 <div class="time_selector_zone_wrap select_wrapper"></div>

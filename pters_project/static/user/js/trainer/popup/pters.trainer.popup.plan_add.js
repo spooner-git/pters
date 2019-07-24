@@ -9,12 +9,16 @@ class Plan_add{
         this.list_type = "lesson";
 
         let d = new Date();
-        this.current_year = d.getFullYear();
-        this.current_month = d.getMonth();
-        this.current_date = d.getDate();
-        this.current_hour = TimeRobot.to_zone(d.getHours(), d.getMinutes()).hour;
-        this.current_minute = TimeRobot.to_zone(d.getHours(), d.getMinutes()).minute;
-        this.current_zone = TimeRobot.to_zone(d.getHours(), d.getMinutes()).zone;
+        this.dates = {
+            current_year: d.getFullYear(),
+            current_month: d.getMonth()+1,
+            current_date: d.getDate()
+        }
+        this.times = {
+            current_hour: TimeRobot.to_zone(d.getHours(), d.getMinutes()).hour,
+            current_minute: TimeRobot.to_zone(d.getHours(), d.getMinutes()).minute,
+            current_zone: TimeRobot.to_zone(d.getHours(), d.getMinutes()).zone
+        }
 
         this.data_to_send = {
                 lecture_id:"",
@@ -27,7 +31,7 @@ class Plan_add{
                 member_ids:[],
                 member_name:"",
                 member_names:[],
-                date:"",
+                date: null,
                 date_text: null,
                 start_time:"",
                 start_time_text: null,
@@ -45,7 +49,7 @@ class Plan_add{
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
         this.user_data = data_from_external;
         let user_data_date = this.user_data.user_selected_date;
-        this.data_to_send.date = user_data_date.year == null ? null : `${user_data_date.year}.${user_data_date.month}.${user_data_date.date}`;
+        this.data_to_send.date = user_data_date.year == null ? null : {year: user_data_date.year, month:user_data_date.month, date:user_data_date.date};
         this.data_to_send.date_text = user_data_date.text;
         
         let user_data_time = this.user_data.user_selected_time;
@@ -92,7 +96,7 @@ class Plan_add{
     }
 
     set date(object){
-        this.data_to_send.date = object.date;
+        this.data_to_send.date = object.data;
         this.data_to_send.date_text = object.text;
         this.render_middle();
     }
@@ -102,7 +106,7 @@ class Plan_add{
     }
 
     set start_time(object){
-        this.data_to_send.start_time = object.time;
+        this.data_to_send.start_time = TimeRobot.to_data(object.data.zone, object.data.hour, object.data.minute).complete;
         this.data_to_send.start_time_text = object.text;
         this.render_middle();
     }
@@ -112,7 +116,7 @@ class Plan_add{
     }
 
     set end_time(object){
-        this.data_to_send.end_time = object.time;
+        this.data_to_send.end_time = TimeRobot.to_data(object.data.zone, object.data.hour, object.data.minute).complete;
         this.data_to_send.end_time_text = object.text;
         this.render_middle();
     }
@@ -194,102 +198,61 @@ class Plan_add{
     render_middle(del){
         //등록하는 행을 만든다.
         let date_text = this.data_to_send.date_text == null ? '날짜*' : this.data_to_send.date_text;
-        let html_date_select = CComponent.create_row('select_date', date_text, '/static/common/icon/icon_cal.png', HIDE, (data)=>{ 
+        let html_date_select = CComponent.create_row('select_date', date_text, '/static/common/icon/icon_cal.png', HIDE, ()=>{ 
             //행을 클릭했을때 실행할 내용
-            let date_select_on_plan_add = new DateSelector('#date_select_on_plan_add', '#select_date .cell_text', "date_select_on_plan_add", {
-                                                                    year_start : this.current_year - 5,
-                                                                    year_end : this.current_year + 5,
-                                                                    init_year : data != undefined ? data.split('.')[0] : this.user_data.user_selected_date.year,
-                                                                    init_month : data != undefined ? data.split('.')[1] : this.user_data.user_selected_date.month,
-                                                                    init_date : data != undefined ? data.split('.')[2] : this.user_data.user_selected_date.date,
-                                                                    //DateSelector에서 값을 정했을때 실행할 함수
-                                                                    callback_when_set : (data)=>{
-                                                                        //data는 DateSelector의 set_selected_data로부터 넘어온 유저의 선택값
-                                                                        //DateSelector에서 선택된 값을 서버에 보낼 값에 저장한다.
-                                                                        this.data_to_send.date = data.data;
-                                                                        this.data_to_send.date_text = data.data_text;
-                                                                    }
-                                                                });
-        }) +`<div id="date_select_on_plan_add"></div>`;
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+
+                //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
+                let year = this.data_to_send.date == null ? this.dates.current_year : this.data_to_send.date.year; 
+                let month = this.data_to_send.date == null ? this.dates.current_month : this.data_to_send.date.month;
+                let date = this.data_to_send.date == null ? this.dates.current_date : this.data_to_send.date.date;
+                
+                date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'날짜 선택', data:{year:year, month:month, date:date}, 
+                                                                                                range:{start: this.dates.current_year - 5, end: this.dates.current_year+5}, 
+                                                                                                callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
+                                                                                                    this.date = object; 
+                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+                                                                                                }});
+            });
+        });
 
         let start_time_text = this.data_to_send.start_time_text == null ? '시작 시간*' : this.data_to_send.start_time_text;
-        let html_start_select = CComponent.create_row('select_start', start_time_text, '/static/common/icon/icon_clock.png', HIDE, (data)=>{ //data : 직전 셋팅값
-            let user_selected_time = this.user_data.user_selected_time;
-            let init_zone = data != undefined ? data.split('.')[0] : TimeRobot.to_zone(user_selected_time.hour, user_selected_time.minute).zone;
-            let init_hour = data != undefined ? data.split('.')[1] : TimeRobot.to_zone(user_selected_time.hour, user_selected_time.minute).hour;
-            let init_minute = data != undefined ? data.split('.')[2] : TimeRobot.to_zone(user_selected_time.hour, user_selected_time.minute).minute;
-            let time_start_select_on_plan_add = new TimeSelector('#time_start_select_on_plan_add', '#select_start .cell_text', "time_start_select_on_plan_add", {
-                                                                    init_zone : init_zone,
-                                                                    init_hour : init_hour,
-                                                                    init_minute : init_minute,
-                                                                    callback_when_set : (data)=>{
-                                                                        let prev_zone = Number(data.data.split('.')[0]);
-                                                                        let prev_hour = Number(data.data.split('.')[1]);
-                                                                        let prev_minute = Number(data.data.split('.')[2]);
-                                                                        let result = TimeRobot.to_data(prev_zone, prev_hour, prev_minute);
+        let html_start_select = CComponent.create_row('select_start', start_time_text, '/static/common/icon/icon_clock.png', HIDE, ()=>{ //data : 직전 셋팅값
+            //행을 클릭했을때 실행할 내용
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
-                                                                        if(this.data_to_send.end_time != null){
-                                                                            let end_hour = this.data_to_send.end_time.split(':')[0];
-                                                                            let end_min = this.data_to_send.end_time.split(':')[1];
-                                                                            if(result.hour > end_hour){
-                                                                                show_error_message('시작시각은 종료시각보다 클 수 없습니다.1');
-                                                                                time_start_select_on_plan_add.reset(init_zone, init_hour, init_minute);
-                                                                                return false;
-                                                                            }
-                                                                            if(result.hour == end_hour){
-                                                                                if(result.minute >= end_min){
-                                                                                    show_error_message('시작시각은 종료시각보다 클 수 없습니다.2');
-                                                                                    time_start_select_on_plan_add.reset(init_zone, init_hour, init_minute);
-                                                                                    return false;
-                                                                                }
-                                                                            }
-                                                                        }
+                //data_to_send의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
+                let zone = this.data_to_send.start_time == null ? this.times.current_zone : TimeRobot.to_zone(this.data_to_send.start_time.split(':')[0], this.data_to_send.start_time.split(':')[1]).zone;
+                let hour = this.data_to_send.start_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data_to_send.start_time.split(':')[0], this.data_to_send.start_time.split(':')[1]).hour;
+                let minute = this.data_to_send.start_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data_to_send.start_time.split(':')[0], this.data_to_send.start_time.split(':')[1]).minute;
+                
+                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시간 선택', data:{zone:zone, hour:hour, minute:minute}, 
+                                                                                                callback_when_set: (object)=>{
+                                                                                                    this.start_time = object;
+                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+                                                                                                }});
+            });
 
-                                                                        time_start_select_on_plan_add.delete();
-                                                                        this.data_to_send.start_time = result.complete;
-                                                                        this.data_to_send.start_time_text = data.data_text;
-                                                                    }
-                                                                });
-            })  +`<div id="time_start_select_on_plan_add"></div>`;
+
+        });
 
         let end_time_text = this.data_to_send.end_time_text == null ? '종료 시간*' : this.data_to_send.end_time_text;
-        let html_end_select = CComponent.create_row('select_end', end_time_text, '/static/common/icon/icon_clock_white.png', HIDE, (data)=>{ //data : 직전 셋팅값
-            let user_selected_time = this.user_data.user_selected_time;
-            let init_zone = data != undefined ? data.split('.')[0] : TimeRobot.to_zone(user_selected_time.hour2, user_selected_time.minute2).zone;
-            let init_hour = data != undefined ? data.split('.')[1] : TimeRobot.to_zone(user_selected_time.hour2, user_selected_time.minute2).hour;
-            let init_minute = data != undefined ? data.split('.')[2] : TimeRobot.to_zone(user_selected_time.hour2, user_selected_time.minute2).minute;
-            let time_end_select_on_plan_add = new TimeSelector('#time_end_select_on_plan_add', '#select_end .cell_text', "time_end_select_on_plan_add", {
-                                                                    init_zone : init_zone,
-                                                                    init_hour : init_hour,
-                                                                    init_minute : init_minute,
-                                                                    callback_when_set : (data)=>{
-                                                                        let prev_zone = Number(data.data.split('.')[0]);
-                                                                        let prev_hour = Number(data.data.split('.')[1]);
-                                                                        let prev_minute = Number(data.data.split('.')[2]);
-                                                                        let result = TimeRobot.to_data(prev_zone, prev_hour, prev_minute);
+        let html_end_select = CComponent.create_row('select_end', end_time_text, '/static/common/icon/icon_clock_white.png', HIDE, ()=>{ //data : 직전 셋팅값
+            //행을 클릭했을때 실행할 내용
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
-                                                                        if(this.data_to_send.start_time != null){
-                                                                            let start_hour = this.data_to_send.start_time.split(':')[0];
-                                                                            let start_min = this.data_to_send.start_time.split(':')[1];
-                                                                            if(result.hour < start_hour){
-                                                                                show_error_message('종료시각은 시작시각보다 작을 수 없습니다.');
-                                                                                time_end_select_on_plan_add.reset(init_zone, init_hour, init_minute);
-                                                                                return false;
-                                                                            }
-                                                                            if(result.hour == start_hour){
-                                                                                if(result.minute <= start_min){
-                                                                                    show_error_message('종료시각은 시작시각보다 작을 수 없습니다.');
-                                                                                    time_end_select_on_plan_add.reset(init_zone, init_hour, init_minute);
-                                                                                    return false;
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                        time_end_select_on_plan_add.delete();
-                                                                        this.data_to_send.end_time = result.complete == "0:0" ? "23:59" : result.complete;
-                                                                        this.data_to_send.end_time_text = data.data_text;
-                                                                    }
-                                                                });
-        })  +`<div id="time_end_select_on_plan_add"></div>`;
+                //data_to_send의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
+                let zone = this.data_to_send.end_time == null ? this.times.current_zone : TimeRobot.to_zone(this.data_to_send.end_time.split(':')[0], this.data_to_send.end_time.split(':')[1]).zone;
+                let hour = this.data_to_send.end_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data_to_send.end_time.split(':')[0], this.data_to_send.end_time.split(':')[1]).hour;
+                let minute = this.data_to_send.end_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data_to_send.end_time.split(':')[0], this.data_to_send.end_time.split(':')[1]).minute;
+                
+                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시간 선택', data:{zone:zone, hour:hour, minute:minute}, 
+                                                                                                callback_when_set: (object)=>{
+                                                                                                    this.end_time = object;
+                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+                                                                                                }});
+            });
+        });
         let html_repeat_select = CComponent.create_row('select_repeat', this.data_to_send.repeat.time == "" ? '반복 일정' : this.data_to_send.repeat.day+' '+this.data_to_send.repeat.time, '/static/common/icon/icon_repeat.png', SHOW, (data)=>{ console.log(data);});
 
         let html = html_date_select + html_start_select + html_end_select + html_repeat_select;
@@ -303,16 +266,20 @@ class Plan_add{
 
     render_bottom(del){
         //메모 입력 행을 생성한다. 메모입력 행을 클릭했을때 실행할 함수를 전달한다.
-        let html_memo_select = CComponent.create_row('select_memo', this.data_to_send.memo == "" ? '메모' : this.data_to_send.memo, '/static/common/icon/icon_note.png', HIDE, (data)=>{ 
-            let memo_row = event.target; //event.target은 메모 행
-            show_user_input_popup("text", memo_row.innerText, ()=>{  //메모행을 클릭했을때 실행될 함수. 메모행에서 입력후 확인을 눌렀을때 실행할 함수를 전달한다.
-                //메모행에서 입력후 확인을 눌렀을때, 입력값을 저장한다. 
-                let user_input = $(event.target).parent().siblings('div').find('.popup_basic_user_input_data').val(); //event.target은 메모행의 확인버튼
-                $(memo_row).find('.cell_text').text(user_input);
-                $(memo_row).find('.cell_text').siblings('input').val(user_input);
+        // let html_memo_select = CComponent.create_row('select_memo', this.data_to_send.memo == "" ? '메모' : this.data_to_send.memo, '/static/common/icon/icon_note.png', HIDE, (data)=>{ 
+        //     let memo_row = event.target; //event.target은 메모 행
+        //     show_user_input_popup("text", memo_row.innerText, ()=>{  //메모행을 클릭했을때 실행될 함수. 메모행에서 입력후 확인을 눌렀을때 실행할 함수를 전달한다.
+        //         //메모행에서 입력후 확인을 눌렀을때, 입력값을 저장한다. 
+        //         let user_input = $(event.target).parent().siblings('div').find('.popup_basic_user_input_data').val(); //event.target은 메모행의 확인버튼
+        //         $(memo_row).find('.cell_text').text(user_input);
+        //         $(memo_row).find('.cell_text').siblings('input').val(user_input);
 
-                this.data_to_send.memo = user_input;
-            })
+        //         this.data_to_send.memo = user_input;
+        //     });
+        // });
+        let html_memo_select = CComponent.create_input_row ('select_memo', this.data_to_send.memo == "" ? '메모' : this.data_to_send.memo, '/static/common/icon/icon_note.png', HIDE, (input_data)=>{
+            let user_input_data = input_data;
+            this.memo = user_input_data;
         });
 
         let html = html_memo_select;
@@ -340,8 +307,8 @@ class Plan_add{
     send_data(){
 
         let data = {"lecture_id":this.data_to_send.lecture_id,
-                    "start_dt":this.data_to_send.date.replace(/\./gi,"-") + ' ' + this.data_to_send.start_time,
-                    "end_dt":this.data_to_send.date.replace(/\./gi,"-") + ' ' + this.data_to_send.end_time,
+                    "start_dt": this.data_to_send.date.year+'-'+this.data_to_send.date.month+'-'+this.data_to_send.date.date + ' ' + this.data_to_send.start_time,
+                    "end_dt":this.data_to_send.date.year+'-'+this.data_to_send.date.month+'-'+this.data_to_send.date.date + ' ' + this.data_to_send.end_time,
                     "note":this.data_to_send.memo, "duplication_enable_flag": 1,
                     "en_dis_type":this.list_type == "off" ? 0 : 1, "lecture_member_ids":this.data_to_send.member_ids
         };
