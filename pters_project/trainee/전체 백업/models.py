@@ -5,8 +5,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from configs.const import USE
-from configs.models import TimeStampedModel
+from configs import TimeStampedModel
+from configs import USE
 from login.models import MemberTb, CommonCdTb
 
 

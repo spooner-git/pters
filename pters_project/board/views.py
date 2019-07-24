@@ -1,17 +1,14 @@
 import logging
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models.expressions import RawSQL
-from django.utils import timezone
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import EmailMessage
+from django.db.models.expressions import RawSQL
 from django.shortcuts import redirect
-
-# Create your views here.
+from django.utils import timezone
 from django.views.generic import TemplateView
 
 from configs.const import USE
-
 from .models import QATb
 
 logger = logging.getLogger(__name__)

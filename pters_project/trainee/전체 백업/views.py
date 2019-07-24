@@ -1,13 +1,13 @@
 import datetime
-
 import logging
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
-from django.db import IntegrityError
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.shortcuts import redirect, render
@@ -15,29 +15,23 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
-from django.views.generic.base import ContextMixin
 from el_pagination.views import AjaxListView
 
-# Create your views here.
-
-from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
+from configs import AccessTestMixin
+from configs import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
     SCHEDULE_DUPLICATION_DISABLE
-
-from configs.views import AccessTestMixin
-
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
-from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, HolidayTb
-from trainer.functions import func_get_trainer_setting_list
-from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb
-from .models import LectureTb, MemberLectureTb
-
 from schedule.functions import func_get_member_ticket_id, func_get_lecture_member_ticket_id, \
     func_check_lecture_available_member_before, func_check_lecture_available_member_after, func_add_schedule, \
     func_date_check, func_refresh_member_ticket_count
+from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, HolidayTb
+from trainer.functions import func_get_trainer_setting_list
+from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb
 from .functions import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_schedule_setting, \
     func_get_lecture_connection_list
+from .models import LectureTb, MemberLectureTb
 
 logger = logging.getLogger(__name__)
 

@@ -16,15 +16,16 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView
-from configs import settings
+
 from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, TO_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, AUTO_ABSENCE_ON, SCHEDULE_DUPLICATION_ENABLE, \
     LECTURE_TYPE_ONE_TO_ONE, STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, STATE_CD_FINISH, STATE_CD_ABSENCE, \
     OFF_SCHEDULE_TYPE
-from login.models import LogTb, MemberTb, CommonCdTb
+from configs import settings
+from login.models import LogTb, MemberTb
 from schedule.forms import AddScheduleTbForm
 from schedule.functions import func_send_push_trainee, func_send_push_trainer
-from trainee.models import MemberTicketTb, MemberMemberTicketTb
+from trainee.models import MemberTicketTb
 from trainer.models import LectureTb, ClassTb
 from .functions import func_get_member_ticket_id, func_add_schedule, func_refresh_member_ticket_count, func_date_check,\
     func_get_lecture_member_ticket_id, func_check_lecture_available_member_before, \
@@ -1060,13 +1061,13 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, View):
                 if error is None:
                     update_check = class_info.schedule_check
 
-            if lecture.name == 'trainee':
-                member_ticket_data = MemberMemberTicketTb.objects.filter(member=request.user.id, use=USE)
-
-                if len(member_ticket_data) > 0:
-                    for member_ticket_info in member_ticket_data:
-                        if member_ticket_info.member_ticket_tb.schedule_check == 1:
-                            update_check = 1
+            # if lecture.name == 'trainee':
+            #     member_ticket_data = MemberTicketTb.objects.filter(member_id=request.user.id, use=USE)
+            #
+            #     if len(member_ticket_data) > 0:
+            #         for member_ticket_info in member_ticket_data:
+            #             if member_ticket_info.member_ticket_tb.schedule_check == 1:
+            #                 update_check = 1
 
         context['data_changed'] = update_check
         if error is not None:
@@ -1187,24 +1188,18 @@ def finish_lecture_schedule_logic(request):
             error = '예약 가능 횟수를 확인해주세요.'
 
     if error is None:
-        member_lecture_schedule_data = ScheduleTb.objects.filter(lecture_schedule_id=schedule_id)
+        member_lecture_schedule_data = ScheduleTb.objects.select_related(
+            'member_ticket_tb__member').filter(lecture_schedule_id=schedule_id)
         for member_lecture_schedule_info in member_lecture_schedule_data:
             lecture_repeat_schedule = None
             temp_error = None
-            member_name = None
             start_date = member_lecture_schedule_info.start_dt
             end_date = member_lecture_schedule_info.end_dt
             member_ticket_info = member_lecture_schedule_info.member_ticket_tb
             if member_lecture_schedule_info.state_cd == STATE_CD_FINISH \
                     or member_lecture_schedule_info.state_cd == STATE_CD_ABSENCE:
                 temp_error = '완료된 스케쥴입니다.'
-
-            try:
-                member_member_ticket = MemberMemberTicketTb.objects.get(
-                    member_ticket_tb_id=member_ticket_info.member_ticket_id, use=1)
-                member_name = member_member_ticket.member.name
-            except ObjectDoesNotExist:
-                temp_error = '회원 정보를 불러오지 못했습니다.'
+            member_name = member_lecture_schedule_info.member_ticket_tb.member.name
 
             if temp_error is None:
                 try:

@@ -7,7 +7,7 @@ from django.db import models
 from configs.const import LECTURE_TYPE_ONE_TO_ONE
 from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
-from trainee.models import MemberMemberTicketTb, MemberTicketTb
+from trainee.models import MemberTicketTb
 
 
 class CenterTb(TimeStampedModel):

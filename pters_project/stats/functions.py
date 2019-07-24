@@ -5,7 +5,6 @@ from django.db.models import Q
 
 from configs.const import USE, ON_SCHEDULE_TYPE, STATS_RE_REG, STATS_NEW_REG, STATS_PART_REFUND, STATS_ALL_REFUND, \
     STATE_CD_FINISH, AUTH_TYPE_VIEW
-
 from schedule.models import ScheduleTb
 from trainer.models import ClassMemberTicketTb
 

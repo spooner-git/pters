@@ -1,5 +1,5 @@
-import datetime
 import collections
+import datetime
 
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
@@ -11,7 +11,6 @@ from django.db.models.expressions import RawSQL
 from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, STATE_CD_IN_PROGRESS, STATE_CD_FINISH,\
     STATE_CD_ABSENCE, AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS
-
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.models import MemberTicketTb
