@@ -380,52 +380,23 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script>
 
-        var platform_check = 'pc';
+        var platform_check = 'mobile';
     var push_info = '{{ request.session.push_token }}';
     var device_info = '{{ request.session.device_info }}';
 
     var varUA = navigator.userAgent.toLowerCase();
-    if (varUA.match('android') != null) {
-        platform_check = 'mobile';
-        if (device_info != "web") { //앱일떄
-{#            $('#paymentSetting').css('display', 'none');#}
-            $('._company').css('display', 'none');
-{#            $('a.text-payment').parent('div').css('display', 'none');#}
-            $('.ads_wrap').css('display', 'none');
-            $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
-        } else if (device_info == "web") { //브라우저일때
-            platform_check = "mobile_browser";
-{#                $('a.text-payment').parent('div').css('display', 'inline-block');#}
-        }
-    } else if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
-        platform_check = 'mobile';
-        if (device_info != "web") { //앱일때
-{#            $('#paymentSetting').css('display', 'none');#}
-            $('._company').css('display', 'none');
-{#            $('a.text-payment').parent('div').css('display', 'none');#}
-            $('.ads_wrap').css('display', 'none');
-            $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
-        } else if (device_info == "web") { //브라우저일때
-            platform_check = "mobile_browser";
-{#                $('a.text-payment').parent('div').css('display', 'inline-block');#}
-        }
-
-    } else {
-        platform_check = 'pc';
-{#            $('a.text-payment').parent('div').css('display', 'inline-block');#}
-    }
 
         var IMP = window.IMP; // 생략가능
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
         var device_type = 'pc';
-        var ios_version = '1.4';
+{#        var ios_version = '1.4';#}
 
         if (varUA.match('android') != null) {
             device_type = 'android';
         } else if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
             device_type = 'ios';
         }
-
+        device_type = 'ios';
         $('a.text-payment').css('color','#fe4e65;');
         if($('body').width()<600){
             $('#page-base-addstyle').css('display','block');
@@ -1026,7 +997,7 @@
 
     function set_app_version(version){
         if(version != ''){
-            ios_version = version;
+{#            ios_version = version;#}
             $('#id_standard_product_price_tag').text('30일권');
             $('#id_standard_product_price').text('9900원');
             $('.ptersCheckbox').attr('data-method', 'iap');
