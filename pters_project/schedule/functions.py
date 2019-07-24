@@ -17,10 +17,10 @@ from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, Ticket
 from trainee.models import MemberTicketTb
 from trainer.functions import func_get_class_member_ing_list, func_update_lecture_member_fix_status_cd
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
-from .tasks import task_send_fire_base
 
-from kombu.exceptions import OperationalError
-
+if DEBUG is False:
+    from kombu.exceptions import OperationalError
+    from .tasks import task_send_fire_base
 
 # 1:1 member_ticket id 조회 - 자유형 문제
 def func_get_member_ticket_id(class_id, member_id):
@@ -643,9 +643,12 @@ def func_send_push_trainer(member_ticket_id, title, message):
                 instance_id = token_info.token
                 badge_counter = token_info.badge_counter
 
-                try:
-                    error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
-                except OperationalError:
+                if DEBUG is False:
+                    try:
+                        error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
+                    except OperationalError:
+                        error = task_send_fire_base(instance_id, title, message, badge_counter)
+                else:
                     error = task_send_fire_base(instance_id, title, message, badge_counter)
 
     return error
@@ -668,9 +671,12 @@ def func_send_push_trainee(class_id, title, message):
                     token_info.save()
                 instance_id = token_info.token
                 badge_counter = token_info.badge_counter
-                try:
-                    error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
-                except OperationalError:
+                if DEBUG is False:
+                    try:
+                        error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
+                    except OperationalError:
+                        error = task_send_fire_base(instance_id, title, message, badge_counter)
+                else:
                     error = task_send_fire_base(instance_id, title, message, badge_counter)
     return error
 
