@@ -23,8 +23,11 @@ class CComponent{
 
     //추가 페이지들에서 자주 사용되는 row 스타일
     static create_row (id, title, icon, icon_r_visible, onclick){
+        if(icon == null){
+            icon = '/static/common/icon/icon_dissatisfied.png';
+        }
         
-        let html = `<li class="create_row" id="${id}">
+        let html = `<li class="create_row" id="c_r_${id}">
                         <div class="obj_table_raw">
                             <div class="cell_title">
                                 ${icon != "" ? `<img src="${icon}">` : ""} 
@@ -35,7 +38,7 @@ class CComponent{
                     </li>`;
 
 
-        $(document).off('click', `#${id}`).on('click', `#${id}`, function(e){
+        $(document).off('click', `#c_r_${id}`).on('click', `#c_r_${id}`, function(e){
             onclick();
         });
         return html;

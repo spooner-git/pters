@@ -233,71 +233,71 @@ class TwoTimeSelector{
 // time_select_popup.init();
 
 //하단에서 올라오는 옵션 선택 팝업
-class OptionSelector{
-    constructor(target, instance){
-        this.html_target = target;
-        this.instance = instance;
-        this.data;
-    }
+// class OptionSelector{
+//     constructor(target, instance){
+//         this.html_target = target;
+//         this.instance = instance;
+//         this.data;
+//     }
 
-    reset (option_data){
-        this.data = option_data;
-        this.render_option_list();
-    }
+//     reset (option_data){
+//         this.data = option_data;
+//         this.render_option_list();
+//     }
 
-    render_option_list (){
-        // let length = Object.keys(this.data).length;
-        let $target = $(this.html_target);
-        let html_to_join = [];
-        for(let option in this.data){
-            let option_name = option;
-            let option_value = this.data[option].value;
-            html_to_join.push(
-                `
-                <div id="option_select_${option_value}" class="wrapper_popup_basic_buttons obj_font_bg_black_white option_select" style="border-radius:5px;margin-bottom:5px;">
-                    ${option_name}
-                </div>
-                `
-            );
-        }
-        this.attach_events();
-        document.querySelector(this.html_target).innerHTML = html_to_join.join('');
-    }
+//     render_option_list (){
+//         // let length = Object.keys(this.data).length;
+//         let $target = $(this.html_target);
+//         let html_to_join = [];
+//         for(let option in this.data){
+//             let option_name = option;
+//             let option_value = this.data[option].value;
+//             html_to_join.push(
+//                 `
+//                 <div id="option_select_${option_value}" class="wrapper_popup_basic_buttons obj_font_bg_black_white option_select" style="border-radius:5px;margin-bottom:5px;">
+//                     ${option_name}
+//                 </div>
+//                 `
+//             );
+//         }
+//         this.attach_events();
+//         document.querySelector(this.html_target).innerHTML = html_to_join.join('');
+//     }
 
-    attach_events (){
-        // $("option_select").off('click');
-        for(let option in this.data){
-            let option_value = this.data[option].value;
-            let option_callback = this.data[option].callback;
+//     attach_events (){
+//         // $("option_select").off('click');
+//         for(let option in this.data){
+//             let option_value = this.data[option].value;
+//             let option_callback = this.data[option].callback;
 
-            $(document).off('click', `#option_select_${option_value}`).on('click', `#option_select_${option_value}`, function (){
-                layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);
-                option_callback();
-            });
+//             $(document).off('click', `#option_select_${option_value}`).on('click', `#option_select_${option_value}`, function (){
+//                 layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);
+//                 option_callback();
+//             });
 
-        }
-    }
-
-
-    open (option_data){
-        this.reset(option_data);
-        let option_length = Object.keys(this.data).length;
-        let button_height = 45;
-        let popup_height = 100*(button_height*(option_length+4))/windowHeight;
-        layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select_multi', popup_height, POPUP_FROM_BOTTOM);
-    }
-
-    //data 형태
-    // `{
-    //     사과:{value: 'apple', callback: ()=>{console.log('사과 Apple')} }, 
-    //     수박:{value: 'water_melon', callback: ()=>{console.log('수박 Water melon')} }, 
-    //     바나나:{value: 'banana', callback: ()=>{console.log('바나나 Banana')} }
-    // }`;
+//         }
+//     }
 
 
-}
+//     open (option_data){
+//         this.reset(option_data);
+//         let option_length = Object.keys(this.data).length;
+//         let button_height = 45;
+//         let popup_height = 100*(button_height*(option_length+4))/windowHeight;
+//         layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select_multi', popup_height, POPUP_FROM_BOTTOM);
+//     }
 
-var option_select_popup = new OptionSelector('#option_wrap', 'option_select_popup');
+//     //data 형태
+//     // `{
+//     //     사과:{value: 'apple', callback: ()=>{console.log('사과 Apple')} }, 
+//     //     수박:{value: 'water_melon', callback: ()=>{console.log('수박 Water melon')} }, 
+//     //     바나나:{value: 'banana', callback: ()=>{console.log('바나나 Banana')} }
+//     // }`;
+
+
+// }
+
+// var option_select_popup = new OptionSelector('#option_wrap', 'option_select_popup');
 
 
 //날짜 선택 (년, 월, 일)
@@ -1152,6 +1152,62 @@ class SpinSelector{
                             </div>`
         };
     }
+}
+
+class OptionSelector{
+    constructor(install_target, target_instance, user_option){
+        // this.html_target = target;
+        // this.instance = instance;
+
+        this.target={
+            install:install_target,
+            result:target_instance
+        };
+
+        this.option = {
+            data:null
+        };
+
+        this.data_to_send = {
+            text: null,
+            data: null
+        };
+        this.data = user_option;
+        this.init();
+    }
+
+    init(){
+        this.render_option_list();
+    }
+
+    set data(obejct){
+        this.option.data = obejct;
+        this.render_option_list();
+    }
+
+    render_option_list (){
+        let html_to_join = [];
+        for(let op in this.option.data){
+            let option_name = this.option.data[op].text;
+            let option_value = op;
+            let option_callback = this.option.data[op].callback;
+            html_to_join.push(
+                CComponent.create_row(option_value, option_name, null, HIDE, ()=>{
+                    option_callback();
+                })
+            );
+        }
+
+        document.querySelector(this.target.install).innerHTML = html_to_join.join('');
+    }
+
+
+    //data 형태
+    // `{
+    //     사과:{value: 'apple', callback: ()=>{console.log('사과 Apple')} }, 
+    //     수박:{value: 'water_melon', callback: ()=>{console.log('수박 Water melon')} }, 
+    //     바나나:{value: 'banana', callback: ()=>{console.log('바나나 Banana')} }
+    // }`;
 }
 
 class LectureSelector{

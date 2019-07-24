@@ -58,7 +58,7 @@ class Plan_view{
     }
 
 
-    set member(object){
+    set member (object){
         this.data_to_send.member_id = object.id.join('/');
         this.data_to_send.member_ids = object.id;
 
@@ -68,50 +68,50 @@ class Plan_view{
         this.render_upper();
     }
 
-    get member(){
+    get member (){
         return {id:this.data_to_send.member_ids, name:this.data_to_send.member_names};
     }
 
-    set date(object){
+    set date (object){
         this.data_to_send.date = object.date;
         this.data_to_send.date_text = object.text;
         this.render_middle();
     }
 
-    get date(){
+    get date (){
         return this.data_to_send.date;
     }
 
-    set start_time(object){
+    set start_time (object){
         this.data_to_send.start_time = object.time;
         this.data_to_send.start_time_text = object.text;
         this.render_middle();
     }
 
-    get start_time(){
+    get start_time (){
         return this.data_to_send.start_time;
     }
 
-    set end_time(object){
+    set end_time (object){
         this.data_to_send.end_time = object.time;
         this.data_to_send.end_time_text = object.text;
         this.render_middle();
     }
 
-    get end_time(){
+    get end_time (){
         return this.data_to_send.end_time;
     }
 
-    set memo(text){
+    set memo (text){
         this.data_to_send.memo = text;
         this.render_bottom();
     }
 
-    get memo(){
+    get memo (){
         return this.data_to_send.memo;
     }
 
-    init(){
+    init (){
         let component = this.static_component();
         document.querySelector(this.target.initial_page).innerHTML = component.initial_page;
 
@@ -123,16 +123,18 @@ class Plan_view{
             this.render_middle();
             this.render_bottom();
         });
+
+        this.set_additional_button_event();
     }
 
 
-    render_toolbox(){
+    render_toolbox (){
         document.querySelector('.wrapper_top').style.backgroundColor = this.data_to_send.lecture_color;
         let html = this.dom_row_lecture_name();
         document.querySelector(this.target.toolbox).innerHTML = html;
     }
 
-    render_upper(del){
+    render_upper (del){
         let html = this.dom_row_member_select() + this.dom_row_member_list();
         if(del != undefined){
             html = "";
@@ -140,7 +142,7 @@ class Plan_view{
         document.querySelector(this.target.upper).innerHTML = html;
     }
 
-    render_middle(del){
+    render_middle (del){
         let date_text = this.data_to_send.date_text == null ? '날짜*' : this.data_to_send.date_text;
         let html_date_select = CComponent.create_row('select_date', date_text, '/static/common/icon/icon_cal.png', HIDE, ()=>{ 
             //행을 클릭했을때 실행할 내용
@@ -201,7 +203,7 @@ class Plan_view{
         document.querySelector(this.target.middle).innerHTML = html;
     }
 
-    render_bottom(del){
+    render_bottom (del){
         //메모 입력 행을 생성한다. 메모입력 행을 클릭했을때 실행할 함수를 전달한다.
         let html_memo_select = CComponent.create_input_row ('select_memo', this.data_to_send.memo == "" ? '메모' : this.data_to_send.memo, '/static/common/icon/icon_note.png', HIDE, (input_data)=>{
             let user_input_data = input_data;
@@ -214,7 +216,7 @@ class Plan_view{
         document.querySelector(this.target.bottom).innerHTML = html;
     }
 
-    dom_row_lecture_name(){
+    dom_row_lecture_name (){
         let html = `
                     <div class="info_popup_title_wrap" style="height:50px;background-color:${this.data_to_send.lecture_color}">
                         <div class="info_popup_title" style="display:inline-block;line-height:50px;vertical-align:middle;font-size:18px;font-weight:bold;margin-left:16px;">
@@ -225,7 +227,7 @@ class Plan_view{
         return html;
     }
 
-    dom_row_member_select(){
+    dom_row_member_select (){
         let member_text = this.data_to_send.member_ids.length == 0 ? '회원*' : this.data_to_send.member_ids.length+ '/' + this.data_to_send.lecture_max_num +' 명';
         let html_member_select = CComponent.create_row('select_member', member_text, '/static/common/icon/icon_member.png', SHOW, ()=>{
             //회원 선택 팝업 열기
@@ -238,7 +240,7 @@ class Plan_view{
         return html;
     }
 
-    dom_row_member_list(){
+    dom_row_member_list (){
         let length = this.data_to_send.member_ids.length;
         let html_to_join = [];
         for(let i=0; i<length; i++){
@@ -255,14 +257,14 @@ class Plan_view{
         return html;
     }
 
-    request_data(callback){
+    request_data (callback){
         Plan_func.read_plan(this.schedule_id, (data)=>{
             this.set_initial_data(data); // 초기값을 미리 셋팅한다.
             callback(data);
         });
     }
 
-    set_initial_data(data){
+    set_initial_data (data){
         this.data_to_send.lecture_id = data.schedule_info[0].lecture_id;
         this.data_to_send.lecture_name = data.schedule_info[0].lecture_name;
         this.data_to_send.member_name = data.schedule_info[0].member_name;
@@ -278,7 +280,21 @@ class Plan_view{
         this.data_to_send.schedule_type = data.schedule_info[0].schedule_type;
     }
 
-    send_data(){
+    set_additional_button_event (){
+        document.querySelector('#popup_plan_view_additional_act').addEventListener('click', ()=>{
+            let user_option = {
+                cancel:{text:"일정 취소", callback:()=>{Plan_func.delete({"schedule_id":this.schedule_id});calendar.init();layer_popup.all_close_layer_popup();}
+                            },
+                check:{text:"출석 체크", callback:()=>{alert('출석 체크');}
+                            },
+            };
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_option_selector', 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                var option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        });
+    }
+
+    send_data (){
         let data = {"lecture_id":this.data_to_send.lecture_id,
                     "start_dt":this.data_to_send.date.replace(/\./gi,"-") + ' ' + this.data_to_send.start_time,
                     "end_dt":this.data_to_send.date.replace(/\./gi,"-") + ' ' + this.data_to_send.end_time,
@@ -296,7 +312,7 @@ class Plan_view{
         });
     }
 
-    static_component(){
+    static_component (){
         return {initial_page : `
                         <section id="wrapper_box_plan_view_toolbox">
                             <!-- 수업명 표기 -->
@@ -317,7 +333,7 @@ class Plan_view{
                         <section id="wrapper_box_plan_view_toolbox_bottom" class="obj_box_full">
                             <!-- 수정, 등록 일자 표기 -->
                         </section>`
-                }
+        };
     }
 
 }

@@ -1156,9 +1156,9 @@ class Plan_func{
     }
 
     static delete(data, callback){
-        //데이터 형태 {"member_id":""};
+        //데이터 형태 {"schedule_id":""};
         $.ajax({
-            url:'/trainer/delete_member_info/',
+            url:'/schedule/delete_schedule/',
             type:'POST',
             data: data,
             dataType : 'html',
@@ -1176,7 +1176,10 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
-                callback();
+                if(callback != undefined){
+                    callback();
+                }
+                
             },
     
             //통신 실패시 처리
