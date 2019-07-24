@@ -14,10 +14,6 @@ class CComponent{
         $(document).off('click', `#${id}`).on('click', `#${id}`, function(e){
             onclick();
         });
-        // let callback = onclick();
-        // document.getElementById(id).removeEventListener('click', callback);
-        // document.getElementById(id).addEventListener('click', callback);
-
         return html;
     }
 
@@ -164,8 +160,9 @@ class CComponent{
         return html;
     }
 
-    static text_button (id, title, onclick){
-        let html = `<span id="text_button_${id}" style="cursor:pointer;padding:3px 8px;">${title}</span>`;
+    static text_button (id, title, style, onclick){
+        let style_code = CComponent.data_to_style_code(style);
+        let html = `<span id="text_button_${id}" style="cursor:pointer;padding:3px 8px;${style_code}">${title}</span>`;
         
         $(document).off('click', `#text_button_${id}`).on('click', `#text_button_${id}`, function(e){
             onclick();
@@ -173,11 +170,11 @@ class CComponent{
         return html;
     }
 
-    static icon_button (id, title, url, onclick){
+    static icon_button (id, title, url, style, onclick){
         if(url == null){
             url = '/static/common/icon/icon_account.png';
         }
-        let html = `<div id="icon_button_${id}" style="cursor:pointer;padding:3px 8px;display:inline-block;height:40px;width:auto;">
+        let html = `<div id="icon_button_${id}" style="cursor:pointer;padding:3px 8px;display:inline-block;height:40px;width:auto;${CComponent.data_to_style_code(style)}">
                         <img src="${url}" style="width:24px;height:24px;vertical-align:middle;margin-bottom:4px;margin-right:5px;">
                         <span style="line-height:40px;">${title}</span>
                     </div>`;
@@ -188,4 +185,18 @@ class CComponent{
         return html;
     }
 
+
+    static data_to_style_code(data){
+        if(data == null){
+            return "";
+        }
+        let style_to_join = [];
+        for(let item in data){
+            style_to_join.push( `${item}:${data[item]}` );
+        }
+
+        let style_code = style_to_join.join(';');
+        return style_code;
+    }
 }
+

@@ -85,13 +85,20 @@ const POPUP_ADDRESS_MEMBER_SELECT = 'popup_member_select';
 const POPUP_ADDRESS_LECTURE_SELECT = 'popup_lecture_select';
 // ajax 팝업
 
+// 기본 팝업
+const POPUP_ADDRESS_OPTION_SELECTOR = 'popup_basic_option_selector';
+const POPUP_ADDRESS_TIME_SELECTOR = 'popup_basic_time_selector';
+const POPUP_ADDRESS_DATE_SELECTOR = 'popup_basic_date_selector';
+const POPUP_ADDRESS_SPIN_SELECTOR = 'popup_basic_spin_selector';
+
+
 /* 팝업 주소 */
 
 /* input팝업 구분 */
-const AJAX = 0;
-const LOCAL = 1;
+// const AJAX = 0;
+// const LOCAL = 1;
 /* input팝업 구분 */
 
 /*기타 */
 const DAYNAME_KR = ['일', '월', '화', '수', '목', '금', '토'];
-const STATE_CODE = {PE:{KR:"완료"}, NP:{KR:"진행 전"}};
+// const STATE_CODE = {PE:{KR:"완료"}, NP:{KR:"진행 전"}};

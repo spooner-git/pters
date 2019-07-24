@@ -336,7 +336,7 @@ class DateSelector{
             }
         };
 
-        this.data_to_send = {
+        this.store = {
             text: null,
             data: {year:null, month:null, date:null}
         };
@@ -357,7 +357,7 @@ class DateSelector{
     }
 
     get dataset (){
-        return this.data_to_send;
+        return this.store;
     }
 
     init (){
@@ -374,8 +374,8 @@ class DateSelector{
         let year = object.data.year == null ? this.date.current_year : object.data.year;
         let month = object.data.month == null ? this.date.current_month : object.data.month;
         let date = object.data.date == null ? this.date.current_date : object.data.date;
-        this.data_to_send.data = {year: year, month:month, date:date};
-        this.data_to_send.text = DateRobot.to_text(year, month, date);
+        this.store.data = {year: year, month:month, date:date};
+        this.store.text = DateRobot.to_text(year, month, date);
         
         this.go_snap(year, month, date);
         //값을 저장하고, 스크롤 위치를 들어온 값으로 보낸다.
@@ -640,12 +640,12 @@ class DateSelector{
                             `<div class="date_selector">
                                 <div class="date_selector_confirm">
                                     <div style="float:left;margin-left:5px;">
-                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', ()=>{layer_popup.close_layer_popup();})}
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', null, ()=>{layer_popup.close_layer_popup();})}
                                     </div>
                                     <span class="date_selector_title">${this.option.title}</span>
                                     <div style="float:right;margin-right:5px;color:#fe4e65;">
-                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', ()=>{ this.data_to_send = this.get_selected_data();
-                                                                                                                    this.option.callback_when_set(this.data_to_send); 
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', null, ()=>{ this.store = this.get_selected_data();
+                                                                                                                    this.option.callback_when_set(this.store); 
                                                                                                                     layer_popup.close_layer_popup();
                                                                                                                 })}
                                     </div>
@@ -694,7 +694,7 @@ class TimeSelector{
             }
         };
 
-        this.data_to_send = {
+        this.store = {
             text: null,
             data: {zone:null, hour:null, minute:null}
         };
@@ -716,7 +716,7 @@ class TimeSelector{
     }
 
     get dataset (){
-        return this.data_to_send;
+        return this.store;
     }
 
     init (){
@@ -733,8 +733,8 @@ class TimeSelector{
         let zone = object.zone == null ? this.time.current_zone : object.zone;
         let hour = object.hour == null ? this.time.current_hour : object.hour;
         let minute = object.minute == null ? this.time.current_minute : object.minute;
-        this.data_to_send.value = {zone: zone, hour:hour, minute:minute};
-        this.data_to_send.text = TimeRobot.to_text(TimeRobot.to_data(zone, hour, minute).hour, TimeRobot.to_data(zone, hour, minute).minute);
+        this.store.value = {zone: zone, hour:hour, minute:minute};
+        this.store.text = TimeRobot.to_text(TimeRobot.to_data(zone, hour, minute).hour, TimeRobot.to_data(zone, hour, minute).minute);
         
         this.go_snap(zone, hour, minute);
         //값을 저장하고, 스크롤 위치를 들어온 값으로 보낸다.
@@ -965,12 +965,12 @@ class TimeSelector{
             "initial_html":`<div class="time_selector">
                                 <div class="time_selector_confirm">
                                     <div style="float:left;margin-left:5px;">
-                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', ()=>{layer_popup.close_layer_popup();})}
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', null, ()=>{layer_popup.close_layer_popup();})}
                                     </div>
                                     <span class="time_selector_title">${this.option.title}</span>
                                     <div style="float:right;margin-right:5px;color:#fe4e65;">
-                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', ()=>{this.data_to_send = this.get_selected_data();
-                                                                                                                    this.option.callback_when_set(this.data_to_send); 
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', null, ()=>{this.store = this.get_selected_data();
+                                                                                                                    this.option.callback_when_set(this.store); 
                                                                                                                     layer_popup.close_layer_popup(); })}
                                     </div>
                                 </div>
@@ -1006,7 +1006,7 @@ class SpinSelector{
             }
         };
 
-        this.data_to_send = {
+        this.store = {
             text: null,
             value: null
         };
@@ -1022,12 +1022,12 @@ class SpinSelector{
     }
 
     set dataset (object){
-        this.data_to_send.text = object.text;
-        this.data_to_send.value = object.value;
+        this.store.text = object.text;
+        this.store.value = object.value;
     }
 
     get dataset (){
-        return this.data_to_send;
+        return this.store;
     }
 
 
@@ -1140,11 +1140,11 @@ class SpinSelector{
             "initial_html":`<div class="spin_selector">
                                 <div class="spin_selector_confirm">
                                     <div style="float:left;margin-left:5px;">
-                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', ()=>{layer_popup.close_layer_popup();})}
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', null, ()=>{layer_popup.close_layer_popup();})}
                                     </div>
                                     <span class="span_selector_title">${this.option.title}</span>
                                     <div style="float:right;margin-right:5px;color:#fe4e65;">
-                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', ()=>{this.option.callback_when_set(); console.log(this.get_selected_data()) })}
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', null, ()=>{this.option.callback_when_set(); console.log(this.get_selected_data()) })}
                                     </div>
                                 </div>
                                 <div class="spin_selector_page_wrap select_wrapper"></div>
@@ -1168,7 +1168,7 @@ class OptionSelector{
             data:null
         };
 
-        this.data_to_send = {
+        this.store = {
             text: null,
             data: null
         };
@@ -1217,14 +1217,14 @@ class LectureSelector{
         this.data;
         this.callback;
         this.multiple_select = multiple_select;
-        this.data_to_set = {
+        this.store = {
             id: [],
             name: [],
             max: []
         };
-        this.data_to_set.id = this.target_instance.lecture.id;
-        this.data_to_set.name = this.target_instance.lecture.name;
-        this.data_to_set.max = this.target_instance.lecture.max;
+        this.store.id = this.target_instance.lecture.id;
+        this.store.name = this.target_instance.lecture.name;
+        this.store.max = this.target_instance.lecture.max;
         this.request_list(()=>{
             this.render_list();
         });
@@ -1246,23 +1246,23 @@ class LectureSelector{
             let html =CComponent.select_lecture_row(
                 this.multiple_select, checked, lecture_id, lecture_name, lecture_color_code, lecture_max_num, (add_or_substract)=>{
                     if(add_or_substract == "add"){
-                        this.data_to_set.id.push(lecture_id);
-                        this.data_to_set.name.push(lecture_name);
-                        this.data_to_set.max.push(lecture_max_num);
+                        this.store.id.push(lecture_id);
+                        this.store.name.push(lecture_name);
+                        this.store.max.push(lecture_max_num);
                     }else if(add_or_substract == "substract"){
-                        this.data_to_set.id.splice(this.data_to_set.id.indexOf(lecture_id), 1);
-                        this.data_to_set.name.splice(this.data_to_set.name.indexOf(lecture_name), 1);
-                        this.data_to_set.max.splice(this.data_to_set.name.indexOf(lecture_name), 1);
+                        this.store.id.splice(this.store.id.indexOf(lecture_id), 1);
+                        this.store.name.splice(this.store.name.indexOf(lecture_name), 1);
+                        this.store.max.splice(this.store.name.indexOf(lecture_name), 1);
                     }else if(add_or_substract == "add_single"){
-                        this.data_to_set.id = [];
-                        this.data_to_set.name = [];
-                        this.data_to_set.max = [];
-                        this.data_to_set.id.push(lecture_id);
-                        this.data_to_set.name.push(lecture_name);
-                        this.data_to_set.max.push(lecture_max_num);
+                        this.store.id = [];
+                        this.store.name = [];
+                        this.store.max = [];
+                        this.store.id.push(lecture_id);
+                        this.store.name.push(lecture_name);
+                        this.store.max.push(lecture_max_num);
                     }
 
-                    this.target_instance.lecture = this.data_to_set; //타겟에 선택된 데이터를 set
+                    this.target_instance.lecture = this.store; //타겟에 선택된 데이터를 set
 
                     if(this.multiple_select == 1){
                         layer_popup.close_layer_popup();
@@ -1293,12 +1293,12 @@ class MemberSelector{
         this.appendix = appendix;
         this.callback;
         this.multiple_select = multiple_select;
-        this.data_to_set = {
+        this.store = {
             id: [],
             name: []
         };
-        this.data_to_set.id = this.target_instance.member.id;
-        this.data_to_set.name = this.target_instance.member.name;
+        this.store.id = this.target_instance.member.id;
+        this.store.name = this.target_instance.member.name;
         this.request_list(()=>{
             this.render_list();
         });
@@ -1321,20 +1321,20 @@ class MemberSelector{
             let html = CComponent.select_member_row (
                 this.multiple_select, checked, member_id, member_name, member_avail_count, member_expiry, (add_or_substract)=>{
                     if(add_or_substract == "add"){
-                        this.data_to_set.id.push(member_id);
-                        this.data_to_set.name.push(member_name);
+                        this.store.id.push(member_id);
+                        this.store.name.push(member_name);
                     }else if(add_or_substract == "substract"){
-                        this.data_to_set.id.splice(this.data_to_set.id.indexOf(member_id), 1);
-                        this.data_to_set.name.splice(this.data_to_set.name.indexOf(member_name), 1);
+                        this.store.id.splice(this.store.id.indexOf(member_id), 1);
+                        this.store.name.splice(this.store.name.indexOf(member_name), 1);
                     }else if(add_or_substract == "add_single"){
-                        this.data_to_set.id = [];
-                        this.data_to_set.name = [];
-                        this.data_to_set.id.push(member_id);
-                        this.data_to_set.name.push(member_name);
+                        this.store.id = [];
+                        this.store.name = [];
+                        this.store.id.push(member_id);
+                        this.store.name.push(member_name);
                     }
-                    console.log(this.data_to_set.name)
+                    console.log(this.store.name)
                     
-                    this.target_instance.member = this.data_to_set; //타겟에 선택된 데이터를 set
+                    this.target_instance.member = this.store; //타겟에 선택된 데이터를 set
                     if(this.multiple_select == 1){
                         layer_popup.close_layer_popup();
                     }
