@@ -646,10 +646,12 @@ def func_send_push_trainer(member_ticket_id, title, message):
                 badge_counter = token_info.badge_counter
                 check_async = False
                 if DEBUG is False:
-                    # from configs.celery import is_celery_working
+                    from configs.celery import CELERY_WORKING
                     try:
-                        # if is_celery_working():
-                        check_async = True
+                        if CELERY_WORKING:
+                            check_async = True
+                        else:
+                            check_async = False
                     except OperationalError:
                         check_async = False
                 if check_async:
@@ -679,10 +681,12 @@ def func_send_push_trainee(class_id, title, message):
                 badge_counter = token_info.badge_counter
                 check_async = False
                 if DEBUG is False:
-                    # from configs.celery import is_celery_working
+                    from configs.celery import CELERY_WORKING
                     try:
-                        # if is_celery_working():
-                        check_async = True
+                        if CELERY_WORKING:
+                            check_async = True
+                        else:
+                            check_async = False
                     except OperationalError:
                         check_async = False
 

@@ -2236,5 +2236,9 @@ def send_push_alarm_logic(request):
                                        ' [' + schedule_info.lecture_tb.name + '] '+push_message)
 
     end_time = timezone.now()
+
+    from configs.celery import update_celery_status
+    update_celery_status()
+
     logger.info('alarm::'+(str(end_time-start_time))+'/'+str(len(schedule_data)))
     return render(request, 'ajax/schedule_error_info.html')
