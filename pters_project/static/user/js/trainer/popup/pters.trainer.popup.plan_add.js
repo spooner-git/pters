@@ -265,18 +265,7 @@ class Plan_add{
     }
 
     render_bottom(del){
-        //메모 입력 행을 생성한다. 메모입력 행을 클릭했을때 실행할 함수를 전달한다.
-        // let html_memo_select = CComponent.create_row('select_memo', this.data_to_send.memo == "" ? '메모' : this.data_to_send.memo, '/static/common/icon/icon_note.png', HIDE, (data)=>{ 
-        //     let memo_row = event.target; //event.target은 메모 행
-        //     show_user_input_popup("text", memo_row.innerText, ()=>{  //메모행을 클릭했을때 실행될 함수. 메모행에서 입력후 확인을 눌렀을때 실행할 함수를 전달한다.
-        //         //메모행에서 입력후 확인을 눌렀을때, 입력값을 저장한다. 
-        //         let user_input = $(event.target).parent().siblings('div').find('.popup_basic_user_input_data').val(); //event.target은 메모행의 확인버튼
-        //         $(memo_row).find('.cell_text').text(user_input);
-        //         $(memo_row).find('.cell_text').siblings('input').val(user_input);
 
-        //         this.data_to_send.memo = user_input;
-        //     });
-        // });
         let html_memo_select = CComponent.create_input_row ('select_memo', this.data_to_send.memo == "" ? '메모' : this.data_to_send.memo, '/static/common/icon/icon_note.png', HIDE, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
