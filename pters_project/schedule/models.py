@@ -69,6 +69,7 @@ class ScheduleTb(TimeStampedModel):
     repeat_schedule_tb = models.ForeignKey(RepeatScheduleTb, on_delete=models.SET_DEFAULT, null=True, default='')
     start_dt = models.DateTimeField(db_column='START_DT', blank=True, null=True)  # Field name made lowercase.
     end_dt = models.DateTimeField(db_column='END_DT', blank=True, null=True)  # Field name made lowercase.
+    alarm_dt = models.DateTimeField(db_column='ALARM_DT', blank=True, null=True)  # Field name made lowercase.
     permission_state_cd = models.CharField(db_column='PERMISSION_STATE_CD', max_length=10, blank=True, default='')
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, default='')
     sign_data_url = models.CharField(db_column='SIGN_DATA_URL', max_length=255, blank=True, default='')

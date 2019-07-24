@@ -31,7 +31,7 @@ class MemberTicketTb(TimeStampedModel):
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'LECTURE_TB'
 
     def __str__(self):
