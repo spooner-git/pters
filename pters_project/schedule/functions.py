@@ -19,8 +19,7 @@ from trainer.functions import func_get_class_member_ing_list, func_update_lectur
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
 from .tasks import task_send_fire_base
 
-if DEBUG is False:
-    from kombu.exceptions import OperationalError
+from kombu.exceptions import OperationalError
 
 
 # 1:1 member_ticket id 조회 - 자유형 문제
@@ -644,12 +643,9 @@ def func_send_push_trainer(member_ticket_id, title, message):
                 instance_id = token_info.token
                 badge_counter = token_info.badge_counter
 
-                if DEBUG is False:
-                    try:
-                        error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
-                    except OperationalError:
-                        error = task_send_fire_base(instance_id, title, message, badge_counter)
-                else:
+                try:
+                    error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
+                except OperationalError:
                     error = task_send_fire_base(instance_id, title, message, badge_counter)
 
     return error
@@ -672,12 +668,9 @@ def func_send_push_trainee(class_id, title, message):
                     token_info.save()
                 instance_id = token_info.token
                 badge_counter = token_info.badge_counter
-                if DEBUG is False:
-                    try:
-                        error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
-                    except OperationalError:
-                        error = task_send_fire_base(instance_id, title, message, badge_counter)
-                else:
+                try:
+                    error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
+                except OperationalError:
                     error = task_send_fire_base(instance_id, title, message, badge_counter)
     return error
 
