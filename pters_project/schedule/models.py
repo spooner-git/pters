@@ -8,8 +8,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from configs.const import USE, SCHEDULE_NOT_FINISH, SCHEDULE_FINISH, SCHEDULE_ABSENCE
 from configs.models import TimeStampedModel
+from configs.const import USE, SCHEDULE_NOT_FINISH, SCHEDULE_FINISH, SCHEDULE_ABSENCE
 from login.models import MemberTb, CommonCdTb
 from trainee.models import MemberTicketTb
 from trainer.models import ClassTb, LectureTb

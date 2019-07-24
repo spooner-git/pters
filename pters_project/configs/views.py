@@ -1,19 +1,18 @@
-import logging
 import datetime
+import logging
 from html import parser
 
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.shortcuts import render, redirect
-from django.views.generic import RedirectView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import TemplateView
 from django.utils import timezone
+from django.views.generic import RedirectView
+from django.views.generic import TemplateView
 
-# Create your views here.
-from board.models import QATb
 from configs.const import USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE, UN_USE, AUTO_CANCEL_ON, AUTO_ABSENCE_ON
+from board.models import QATb
 from login.models import PushInfoTb
 from payment.models import ProductFunctionAuthTb, PaymentInfoTb, BillingInfoTb
 from schedule.functions import func_refresh_member_ticket_count

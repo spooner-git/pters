@@ -13,31 +13,26 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView, RedirectView
 
-# Create your views here.
-
+from configs.views import AccessTestMixin
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
     SCHEDULE_DUPLICATION_DISABLE, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, PROGRAM_LECTURE_CONNECT_ACCEPT, \
     SCHEDULE_DUPLICATION_ENABLE, LECTURE_TYPE_ONE_TO_ONE, STATE_CD_IN_PROGRESS, STATE_CD_FINISH, STATE_CD_ABSENCE, \
     STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE
-
-from configs.views import AccessTestMixin
-
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
+from schedule.functions import func_get_member_ticket_id, func_check_lecture_available_member_before,\
+    func_check_lecture_available_member_after, func_add_schedule, func_refresh_member_ticket_count, \
+    func_get_lecture_member_ticket_id_from_trainee
 from schedule.models import ScheduleTb, DeleteScheduleTb
 from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassMemberTicketTb,  ClassTb, SettingTb, LectureTb, TicketLectureTb,\
     TicketTb
-from .models import MemberTicketTb, MemberMemberTicketTb
-
-from schedule.functions import func_get_member_ticket_id, func_check_lecture_available_member_before,\
-    func_check_lecture_available_member_after, func_add_schedule, func_refresh_member_ticket_count, \
-    func_get_lecture_member_ticket_id_from_trainee
 from .functions import func_get_class_member_ticket_count, func_get_member_ticket_list, func_get_class_list, \
     func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_lecture_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
     func_get_member_ticket_connection_list, func_get_trainee_next_schedule_by_class_id,\
     func_get_trainee_select_schedule, func_get_trainee_ing_member_ticket_list, func_check_select_date_reserve_setting, \
     func_get_trainee_ticket_list, func_get_class_list_only_view
+from .models import MemberTicketTb, MemberMemberTicketTb
 
 logger = logging.getLogger(__name__)
 

@@ -2,6 +2,7 @@ import logging
 import random
 
 from django.contrib import messages
+from django.contrib.auth import authenticate, logout, login, get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm, PasswordChangeForm
 from django.contrib.auth.models import User, Group
@@ -10,7 +11,6 @@ from django.contrib.auth.views import deprecate_current_app
 from django.contrib.sites.shortcuts import get_current_site
 from django.core import signing
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.contrib.auth import authenticate, logout, login, get_user_model, update_session_auth_hash
 from django.db import IntegrityError, InternalError, transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, resolve_url
@@ -26,19 +26,15 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import TemplateView, FormView
-from registration.backends.hmac.views import RegistrationView, REGISTRATION_SALT
 from registration import signals
-
-# Create your views here.
-
+from registration.backends.hmac.views import RegistrationView, REGISTRATION_SALT
 from registration.forms import RegistrationForm
 
-from configs import settings
 from configs.const import USE, UN_USE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT
+from configs import settings
 from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
-from trainee.models import MemberMemberTicketTb, MemberTicketTb
-
+from trainee.models import MemberTicketTb
 from .forms import MyPasswordResetForm, MyPasswordChangeForm, MyRegistrationForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb
 

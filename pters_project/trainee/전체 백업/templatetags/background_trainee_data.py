@@ -1,19 +1,19 @@
 import datetime
 import logging
+
 from django import template
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.expressions import RawSQL
-
 from django.utils import timezone
-from configs.const import USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
+
+from configs import USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb, ProductFunctionAuthTb
-from schedule.functions import func_refresh_member_ticket_count, func_refresh_group_status
+from schedule.functions import func_refresh_member_ticket_count
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.views import get_trainee_setting_data
+from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassLectureTb, ClassTb, PackageGroupTb, GroupLectureTb
-from trainer.functions import func_get_trainer_setting_list, func_get_ing_package_member_list, \
-    func_get_end_package_member_list
 
 register = template.Library()
 logger = logging.getLogger(__name__)

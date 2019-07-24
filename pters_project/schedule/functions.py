@@ -1,5 +1,7 @@
-import datetime
 import collections
+import datetime
+import json
+import httplib2
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import InternalError
@@ -7,20 +9,22 @@ from django.db import transaction
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.utils import timezone
+
+from configs import settings
 from configs.settings import DEBUG
 from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, \
     SCHEDULE_DUPLICATION_DISABLE, ING_MEMBER_FALSE, ING_MEMBER_TRUE, STATE_CD_ABSENCE, STATE_CD_FINISH, \
     STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, LECTURE_TYPE_ONE_TO_ONE, AUTH_TYPE_VIEW
-
 from login.models import LogTb, PushInfoTb
-from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, TicketLectureTb
 from trainee.models import MemberTicketTb
 from trainer.functions import func_get_class_member_ing_list, func_update_lecture_member_fix_status_cd
+from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, TicketLectureTb
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
 
 if DEBUG is False:
     from kombu.exceptions import OperationalError
-    from .tasks import task_send_fire_base
+    from .tasks import task_send_fire_base_push
+
 
 # 1:1 member_ticket id 조회 - 자유형 문제
 def func_get_member_ticket_id(class_id, member_id):
@@ -629,8 +633,6 @@ def func_save_log_data(start_date, end_date, class_id, member_ticket_id, user_na
 def func_send_push_trainer(member_ticket_id, title, message):
     error = None
     if member_ticket_id is not None and member_ticket_id != '':
-        # member_member_ticket_data = MemberMemberTicketTb.objects.filter(member_ticket_tb_id=member_ticket_id, use=USE)
-        # for class_member_ticket_info in member_member_ticket_data:
         member_ticket_info = MemberTicketTb.objects.select_related(
             'member').filter(member_ticket_id=member_ticket_id, member_auth_cd=AUTH_TYPE_VIEW, use=USE)
 
@@ -645,11 +647,11 @@ def func_send_push_trainer(member_ticket_id, title, message):
 
                 if DEBUG is False:
                     try:
-                        error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
+                        error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
                     except OperationalError:
-                        error = task_send_fire_base(instance_id, title, message, badge_counter)
+                        error = task_send_fire_base_push(instance_id, title, message, badge_counter)
                 else:
-                    error = task_send_fire_base(instance_id, title, message, badge_counter)
+                    error = send_fire_base_push(instance_id, title, message, badge_counter)
 
     return error
 
@@ -673,11 +675,35 @@ def func_send_push_trainee(class_id, title, message):
                 badge_counter = token_info.badge_counter
                 if DEBUG is False:
                     try:
-                        error = task_send_fire_base.delay(instance_id, title, message, badge_counter)
+                        error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
                     except OperationalError:
-                        error = task_send_fire_base(instance_id, title, message, badge_counter)
+                        error = task_send_fire_base_push(instance_id, title, message, badge_counter)
                 else:
-                    error = task_send_fire_base(instance_id, title, message, badge_counter)
+                    error = send_fire_base_push(instance_id, title, message, badge_counter)
+    return error
+
+
+def send_fire_base_push(instance_id, title, message, badge_counter):
+    push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
+    error = None
+    data = {
+        'to': instance_id,
+        'notification': {
+            'title': title,
+            'body': message,
+            'badge': badge_counter,
+            'sound': 'default'
+        }
+    }
+    body = json.dumps(data)
+    h = httplib2.Http()
+
+    resp, content = h.request("https://fcm.googleapis.com/fcm/send", method="POST", body=body,
+                              headers={'Content-Type': 'application/json;',
+                                       'Authorization': 'key=' + push_server_id})
+    if resp['status'] != '200':
+        error = '오류가 발생했습니다.'
+
     return error
 
 

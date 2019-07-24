@@ -1,12 +1,12 @@
 # Create your views here.
+import collections
 import datetime
 import logging
 import random
 import urllib
-import collections
-
 from operator import attrgetter
 from urllib.parse import quote
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -24,30 +24,27 @@ from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
 
+from configs.views import AccessTestMixin
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
     MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT, SORT_START_DATE, SORT_ASC, SORT_REG_COUNT, \
     GROUP_SCHEDULE, SCHEDULE_DUPLICATION_ENABLE, LECTURE_TYPE_ONE_TO_ONE, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, \
     STATE_CD_ABSENCE, STATE_CD_FINISH, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE
-
-from configs.views import AccessTestMixin
-
 from board.models import BoardTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
-from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
-from trainee.models import MemberTicketTb, MemberMemberTicketTb
-from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
-    SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb
-
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
     func_get_lecture_member_ticket_id, func_check_lecture_available_member_before, func_add_schedule, \
     func_check_lecture_available_member_after, func_get_trainer_schedule_all
+from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from stats.functions import get_sales_data
+from trainee.models import MemberTicketTb, MemberMemberTicketTb
 from .functions import func_get_trainer_setting_list, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
     func_get_member_info, func_get_member_from_member_ticket_list, \
     func_check_member_connection_info, func_get_member_lecture_list, \
     func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info, func_get_ticket_info, \
     func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd
+from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
+    SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb
 
 logger = logging.getLogger(__name__)
 
@@ -172,7 +169,6 @@ class GetTrainerScheduleInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 'state_cd').column + " != \'PC\'" \
                 " AND B." + ScheduleTb._meta.get_field('use').column + "=" + str(USE)
 
-        # 그룹 수업에 속한 회원들의 일정은 제외하고 불러온다.
         schedule_data = ScheduleTb.objects.select_related(
             'member_ticket_tb__member',
             'lecture_tb').filter(class_tb=class_id, schedule_id=schedule_id,

@@ -1,15 +1,14 @@
 import datetime
 import json
-import httplib2
 import logging
 
+import httplib2
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.utils import timezone
 
-from configs import settings
 from configs.const import USE, UN_USE
-
+from configs import settings
 from .models import PaymentInfoTb, ProductPriceTb, BillingInfoTb, BillingCancelInfoTb
 
 logger = logging.getLogger(__name__)
