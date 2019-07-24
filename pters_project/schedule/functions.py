@@ -1,6 +1,4 @@
 import datetime
-import json
-import httplib2
 import collections
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -11,17 +9,17 @@ from django.db.models.expressions import RawSQL
 from django.utils import timezone
 from kombu.exceptions import OperationalError
 
-from configs import settings
 from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, \
     SCHEDULE_DUPLICATION_DISABLE, ING_MEMBER_FALSE, ING_MEMBER_TRUE, STATE_CD_ABSENCE, STATE_CD_FINISH, \
     STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, LECTURE_TYPE_ONE_TO_ONE, AUTH_TYPE_VIEW
 
 from login.models import LogTb, PushInfoTb
 from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, TicketLectureTb
-from trainee.models import MemberTicketTb, MemberMemberTicketTb
+from trainee.models import MemberTicketTb
 from trainer.functions import func_get_class_member_ing_list, func_update_lecture_member_fix_status_cd
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
 from .tasks import task_send_fire_base
+
 
 # 1:1 member_ticket id 조회 - 자유형 문제
 def func_get_member_ticket_id(class_id, member_id):

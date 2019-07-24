@@ -1,11 +1,11 @@
-{% extends "trainer_base.html" %}
+{#{% extends "백업/trainer_base.html" %}#}
 {% load static_url %}
 {% load background_data %}
 {% load humanize %}
 
 {% block local_css %}
-    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.payment.css" %}>
-    <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/백업/trainer/pters.trainer.payment.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/백업/pters.add.style.css" %}>
 {% endblock %}
 
 {% block content %}
@@ -372,14 +372,52 @@
 
 {% block local_js_footer %}
 
+    <script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/백업/pters.common.module.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/백업/pters.base.set.js" %}></script>
     <script type="text/javascript" src="https://service.iamport.kr/js/iamport.payment-1.1.5.js"></script>
     <!-- Placed at the end of the document so the pages load faster -->
     <script>
 
+        var platform_check = 'pc';
+    var push_info = '{{ request.session.push_token }}';
+    var device_info = '{{ request.session.device_info }}';
+
+    var varUA = navigator.userAgent.toLowerCase();
+    if (varUA.match('android') != null) {
+        platform_check = 'mobile';
+        if (device_info != "web") { //앱일떄
+{#            $('#paymentSetting').css('display', 'none');#}
+            $('._company').css('display', 'none');
+{#            $('a.text-payment').parent('div').css('display', 'none');#}
+            $('.ads_wrap').css('display', 'none');
+            $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
+        } else if (device_info == "web") { //브라우저일때
+            platform_check = "mobile_browser";
+{#                $('a.text-payment').parent('div').css('display', 'inline-block');#}
+        }
+    } else if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
+        platform_check = 'mobile';
+        if (device_info != "web") { //앱일때
+{#            $('#paymentSetting').css('display', 'none');#}
+            $('._company').css('display', 'none');
+{#            $('a.text-payment').parent('div').css('display', 'none');#}
+            $('.ads_wrap').css('display', 'none');
+            $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
+        } else if (device_info == "web") { //브라우저일때
+            platform_check = "mobile_browser";
+{#                $('a.text-payment').parent('div').css('display', 'inline-block');#}
+        }
+
+    } else {
+        platform_check = 'pc';
+{#            $('a.text-payment').parent('div').css('display', 'inline-block');#}
+    }
+
         var IMP = window.IMP; // 생략가능
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
         var device_type = 'pc';
-        var varUA = navigator.userAgent.toLowerCase();
         var ios_version = '1.4';
 
         if (varUA.match('android') != null) {
@@ -451,7 +489,7 @@
                     $(this).attr('data-payment-type'), $(this).attr('data-product-contents'),
                     $(this).attr('data-product-price'), $(this).attr('data-product-id'), $(this).attr('data-period-month'));
 
-                if((platform_check == 'mobile') && (device_type=='ios') && (ios_version!='1.4')) {
+                if((platform_check == 'mobile') && (device_type=='ios')) {
                     //alert("test")
                     $('#purchase_popup_page2 .ptersCheckbox').addClass('checked');
                     var product = $('#purchase_popup').attr('data-product');
@@ -838,7 +876,7 @@
             var product_price_name = jsondata.product_price_name;
             find_class_and_delete_it($(`div.product_detail[data-product-id="${product_id}"]`), $left_ticket_name_bg, "textstyle_");
 
-            if((platform_check == 'mobile') && (ios_version != '1.4')) {
+            if(platform_check == 'mobile') {
                 payment_type_cd = 'SINGLE';
                 product_price_name = '30일권';
                 $('.purchase_method_name').text('인앱 결제');
@@ -856,7 +894,7 @@
                                "data-product-id":product_id,
                                "data-period-month":jsondata.product_price_period_month,});
 
-            if((platform_check == 'mobile') && (ios_version != '1.4')) {
+            if(platform_check == 'mobile') {
                 //alert("test")
                 $left_ticket_comment.html(`<span class="${product_color}">30일권</span>`);
                 $left_ticket_new_price.text(`${numberWithCommas(jsondata.product_price_sale_price)}원`).addClass(product_color);
@@ -997,6 +1035,6 @@
 
     </script>
 
-    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.payment.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/백업/trainer/pters.trainer.payment.js" %}></script>
 {% endblock %}
 

@@ -163,8 +163,7 @@ def add_schedule_logic(request):
 
                                 if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
                                     push_info_schedule_start_date = str(schedule_start_datetime).split(':')
-                                    push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(
-                                        ':')
+                                    push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(':')
                                     try:
                                         func_send_push_trainer(member_info['member_ticket_id'],
                                                                class_type_name + ' - 수업 알림',

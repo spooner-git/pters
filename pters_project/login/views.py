@@ -37,7 +37,7 @@ from configs import settings
 from configs.const import USE, UN_USE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT
 from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
-from trainee.models import MemberMemberTicketTb
+from trainee.models import MemberMemberTicketTb, MemberTicketTb
 
 from .forms import MyPasswordResetForm, MyPasswordChangeForm, MyRegistrationForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb
@@ -1258,22 +1258,11 @@ def out_member_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                # if group_name != 'trainee':
-                #     member.contents = str(user.username)+'/'+str(user.id)
-                #     member.use = 0
-                #     member.save()
-                #     count = MemberTb.objects.filter(use=UN_USE).count()
-                #     user.username = 'out_member_'+str(count)
-                #     user.email = ''
-                #     user.is_active = 0
-                #     user.set_password('0000')
-                #     user.save()
-                # else:
                 if group_name == 'trainee':
-                    member_member_ticket_data = MemberMemberTicketTb.objects.filter(member_id=member_id,
-                                                                                    auth_cd=AUTH_TYPE_VIEW, use=USE)
+                    member_member_ticket_data = MemberTicketTb.objects.filter(member_id=member_id,
+                                                                              member_auth_cd=AUTH_TYPE_VIEW, use=USE)
                     if len(member_member_ticket_data) > 0:
-                        member_member_ticket_data.update(auth_cd=AUTH_TYPE_WAIT)
+                        member_member_ticket_data.update(member_auth_cd=AUTH_TYPE_WAIT)
                 # elif group_name == 'trainer':
                 #     member_class_data = MemberClassTb.objects.filter(member_id=member_id, auth_cd=AUTH_TYPE_VIEW, use=USE)
                 #     if len(member_class_data) > 0:
