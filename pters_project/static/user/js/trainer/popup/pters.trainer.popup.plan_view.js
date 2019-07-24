@@ -1,22 +1,25 @@
 class Plan_view{
-    constructor(targetHTML_toolbox, targetHTML_u, targetHTML_m, targetHTML_b, data, instance){
+    constructor(target_html, data, instance){
         this.instance = instance;
         this.target = {
-                        toolbox: targetHTML_toolbox, 
-                        upper: targetHTML_u, 
-                        middle: targetHTML_m, 
-                        bottom: targetHTML_b
+                        initial_page: target_html,
+                        toolbox: '#wrapper_box_plan_view_toolbox', 
+                        upper: '#wrapper_box_plan_view_upper', 
+                        middle: '#wrapper_box_plan_view_middle', 
+                        bottom: '#wrapper_box_plan_view_bottom'
                         }
 
-        this.d = new Date();
-        this.time = {
-            current_year : this.d.getFullYear(),
-            current_month : this.d.getMonth(),
-            current_date : this.d.getDate(),
-            current_hour : TimeRobot.to_zone(this.d.getHours(), this.d.getMinutes()).hour,
-            current_minute : TimeRobot.to_zone(this.d.getHours(), this.d.getMinutes()).minute,
-            current_zone : TimeRobot.to_zone(this.d.getHours(), this.d.getMinutes()).zone
-        }
+        let d = new Date();
+        this.dates = {
+            current_year: d.getFullYear(),
+            current_month: d.getMonth()+1,
+            current_date: d.getDate()
+        };
+        this.times = {
+            current_hour: TimeRobot.to_zone(d.getHours(), d.getMinutes()).hour,
+            current_minute: TimeRobot.to_zone(d.getHours(), d.getMinutes()).minute,
+            current_zone: TimeRobot.to_zone(d.getHours(), d.getMinutes()).zone
+        };
 
         this.schedule_id = data.schedule_id;
         this.data_to_send = {
@@ -55,152 +58,213 @@ class Plan_view{
     }
 
 
-    set member(object){
+    set member (object){
         this.data_to_send.member_id = object.id.join('/');
         this.data_to_send.member_ids = object.id;
 
-        this.data_to_send.member_name = object.name.join('/');
+        this.data_to_send.member_name = object.name.join(', ');
         this.data_to_send.member_names = object.name;
 
         this.render_upper();
     }
 
-    get member(){
-        return this.data_to_send.member_ids;
+    get member (){
+        return {id:this.data_to_send.member_ids, name:this.data_to_send.member_names};
     }
 
-    set date(object){
+    set date (object){
         this.data_to_send.date = object.date;
         this.data_to_send.date_text = object.text;
         this.render_middle();
     }
 
-    get date(){
+    get date (){
         return this.data_to_send.date;
     }
 
-    set start_time(object){
+    set start_time (object){
         this.data_to_send.start_time = object.time;
         this.data_to_send.start_time_text = object.text;
         this.render_middle();
     }
 
-    get start_time(){
+    get start_time (){
         return this.data_to_send.start_time;
     }
 
-    set end_time(object){
+    set end_time (object){
         this.data_to_send.end_time = object.time;
         this.data_to_send.end_time_text = object.text;
         this.render_middle();
     }
 
-    get end_time(){
+    get end_time (){
         return this.data_to_send.end_time;
     }
 
-    set memo(text){
+    set memo (text){
         this.data_to_send.memo = text;
         this.render_bottom();
     }
 
-    get memo(){
+    get memo (){
         return this.data_to_send.memo;
     }
 
-    init(){
+    init (){
+        let component = this.static_component();
+        document.querySelector(this.target.initial_page).innerHTML = component.initial_page;
+
         this.request_data((data)=>{
-            this.render_test(data);
-            this.render_toolbox_upper();
-            this.render_upper();
+            this.render_toolbox();
+            if(data.schedule_info[0].schedule_type != 0){
+                this.render_upper();
+            }
             this.render_middle();
             this.render_bottom();
-            this.render_toolbox_bottom();
         });
+
+        this.set_additional_button_event();
     }
 
-    render_test(data){
-        let datas = data.schedule_info[0];
-        let raw_data = [];
-        for(let item in datas){
-            raw_data.push(
-                `<div style="font-size:12px;padding:2px 10px;">
-                    <span>${item}</span> : <span>${datas[item]}</span>
-                </div>`
-            );
+
+    render_toolbox (){
+        document.querySelector('.wrapper_top').style.backgroundColor = this.data_to_send.lecture_color;
+        let html = this.dom_row_lecture_name();
+        document.querySelector(this.target.toolbox).innerHTML = html;
+    }
+
+    render_upper (del){
+        let html = this.dom_row_member_select() + this.dom_row_member_list();
+        if(del != undefined){
+            html = "";
         }
-
-        let html = `<div>
-                        <p>Raw Data</p>
-                        ${raw_data.join('')}
-                    </div>`
-        document.querySelector('#test').innerHTML = html;
+        document.querySelector(this.target.upper).innerHTML = html;
     }
 
+    render_middle (del){
+        let date_text = this.data_to_send.date_text == null ? '날짜*' : this.data_to_send.date_text;
+        let html_date_select = CComponent.create_row('select_date', date_text, '/static/common/icon/icon_cal.png', HIDE, ()=>{ 
+            //행을 클릭했을때 실행할 내용
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
-    render_toolbox_upper(){
+                //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
+                let year = this.data_to_send.date == null ? this.dates.current_year : this.data_to_send.date.year; 
+                let month = this.data_to_send.date == null ? this.dates.current_month : this.data_to_send.date.month;
+                let date = this.data_to_send.date == null ? this.dates.current_date : this.data_to_send.date.date;
+                
+                date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'날짜 선택', data:{year:year, month:month, date:date}, 
+                                                                                                range:{start: this.dates.current_year - 5, end: this.dates.current_year+5}, 
+                                                                                                callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
+                                                                                                    this.date = object; 
+                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+                                                                                                }});
+            });
+        });
+        let start_time_text = this.data_to_send.start_time_text == null ? '시작 시각*' : this.data_to_send.start_time_text;
+        let html_start_time_select = CComponent.create_row('select_start_time', start_time_text, '/static/common/icon/icon_clock.png', HIDE, ()=>{ 
+            //행을 클릭했을때 실행할 내용
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
+                //data_to_send의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
+                let zone = this.data_to_send.start_time == null ? this.times.current_zone : TimeRobot.to_zone(this.data_to_send.start_time.split(':')[0], this.data_to_send.start_time.split(':')[1]).zone;
+                let hour = this.data_to_send.start_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data_to_send.start_time.split(':')[0], this.data_to_send.start_time.split(':')[1]).hour;
+                let minute = this.data_to_send.start_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data_to_send.start_time.split(':')[0], this.data_to_send.start_time.split(':')[1]).minute;
+                
+                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시간 선택', data:{zone:zone, hour:hour, minute:minute}, 
+                                                                                                callback_when_set: (object)=>{
+                                                                                                    this.start_time = object;
+                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+                                                                                                }});
+            });
+        });
+        let end_time_text = this.data_to_send.end_time_text == null ? '종료 시각*' : this.data_to_send.end_time_text;
+        let html_end_time_select = CComponent.create_row('select_end_time', end_time_text, '/static/common/icon/icon_clock_white.png', HIDE, ()=>{ 
+            //행을 클릭했을때 실행할 내용
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+
+                //data_to_send의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
+                let zone = this.data_to_send.end_time == null ? this.times.current_zone : TimeRobot.to_zone(this.data_to_send.end_time.split(':')[0], this.data_to_send.end_time.split(':')[1]).zone;
+                let hour = this.data_to_send.end_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data_to_send.end_time.split(':')[0], this.data_to_send.end_time.split(':')[1]).hour;
+                let minute = this.data_to_send.end_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data_to_send.end_time.split(':')[0], this.data_to_send.end_time.split(':')[1]).minute;
+                
+                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종 시간 선택', data:{zone:zone, hour:hour, minute:minute}, 
+                                                                                                callback_when_set: (object)=>{
+                                                                                                    this.end_time = object;
+                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+                                                                                                }});
+            });
+        });
+
+        let html = html_date_select + html_start_time_select + html_end_time_select;
+        if(del != undefined){
+            html = "";
+        }
+        document.querySelector(this.target.middle).innerHTML = html;
     }
 
-    render_toolbox_bottom(){
-
+    render_bottom (del){
+        //메모 입력 행을 생성한다. 메모입력 행을 클릭했을때 실행할 함수를 전달한다.
+        let html_memo_select = CComponent.create_input_row ('select_memo', this.data_to_send.memo == "" ? '메모' : this.data_to_send.memo, '/static/common/icon/icon_note.png', HIDE, (input_data)=>{
+            let user_input_data = input_data;
+            this.memo = user_input_data;
+        });
+        let html = html_memo_select;
+        if(del != undefined){
+            html = "";
+        }
+        document.querySelector(this.target.bottom).innerHTML = html;
     }
 
-    render_upper(){
-        let member_text = this.data_to_send.member_name == "" ? '회원*' : this.data_to_send.member_name;
-        let html_member_select = CComponent.create_row('select_member', member_text, '/static/common/icon/icon_member.png', SHOW, (data)=>{
+    dom_row_lecture_name (){
+        let html = `
+                    <div class="info_popup_title_wrap" style="height:50px;background-color:${this.data_to_send.lecture_color}">
+                        <div class="info_popup_title" style="display:inline-block;line-height:50px;vertical-align:middle;font-size:18px;font-weight:bold;margin-left:16px;">
+                            ${this.data_to_send.lecture_name}
+                        </div>
+                    </div>
+                    `;
+        return html;
+    }
+
+    dom_row_member_select (){
+        let member_text = this.data_to_send.member_ids.length == 0 ? '회원*' : this.data_to_send.member_ids.length+ '/' + this.data_to_send.lecture_max_num +' 명';
+        let html_member_select = CComponent.create_row('select_member', member_text, '/static/common/icon/icon_member.png', SHOW, ()=>{
             //회원 선택 팝업 열기
             layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'data':null}, ()=>{
                 var member_select = new MemberSelector('#wrapper_box_member_select', this, this.data_to_send.lecture_max_num, {'lecture_id':this.data_to_send.lecture_id});
             });
         });
         let html = html_member_select;
-        document.querySelector(this.target.upper).innerHTML = html;
+
+        return html;
     }
 
-    render_middle(){
-        let date_text = this.data_to_send.date_text == null ? '날짜*' : this.data_to_send.date_text;
-        let html_date_select = CComponent.create_row('select_date', date_text, '/static/common/icon/icon_cal.png', HIDE, (data)=>{ 
-            show_error_message('날짜 입력 팝업 출력시켜야함');
-        });
-        let start_time_text = this.data_to_send.start_time_text == null ? '시작 시각*' : this.data_to_send.start_time_text;
-        let html_start_time_select = CComponent.create_row('select_start_time', start_time_text, '/static/common/icon/icon_clock.png', HIDE, (data)=>{ 
-            show_error_message('시작시간 입력 팝업 출력시켜야함');
-        });
-        let end_time_text = this.data_to_send.end_time_text == null ? '종료 시각*' : this.data_to_send.end_time_text;
-        let html_end_time_select = CComponent.create_row('select_end_time', end_time_text, '/static/common/icon/icon_clock_white.png', HIDE, (data)=>{ 
-            show_error_message('종료시간 입력 팝업 출력시켜야함');
-        });
+    dom_row_member_list (){
+        let length = this.data_to_send.member_ids.length;
+        let html_to_join = [];
+        for(let i=0; i<length; i++){
+            let member_id = this.data_to_send.member_ids[i];
+            let member_name = this.data_to_send.member_names[i]
+            html_to_join.push(
+                CComponent.icon_button(member_id, member_name, null, ()=>{
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':member_id});
+                })
+            );
+        }
+        let html = `<div>${html_to_join.join('')}</div>`;
 
-        let html = html_date_select + html_start_time_select + html_end_time_select;
-        document.querySelector(this.target.middle).innerHTML = html;
+        return html;
     }
 
-    render_bottom(){
-        //메모 입력 행을 생성한다. 메모입력 행을 클릭했을때 실행할 함수를 전달한다.
-        let html_memo_select = CComponent.create_row('select_memo', this.data_to_send.memo == "" ? '메모' : this.data_to_send.memo, '/static/common/icon/icon_note.png', HIDE, (data)=>{ 
-            let memo_row = event.target; //event.target은 메모 행
-            show_user_input_popup("text", memo_row.innerText, ()=>{  //메모행을 클릭했을때 실행될 함수. 메모행에서 입력후 확인을 눌렀을때 실행할 함수를 전달한다.
-                //메모행에서 입력후 확인을 눌렀을때, 입력값을 저장한다. 
-                let user_input = $(event.target).parent().siblings('div').find('.popup_basic_user_input_data').val(); //event.target은 메모행의 확인버튼
-                $(memo_row).find('.cell_text').text(user_input);
-                $(memo_row).find('.cell_text').siblings('input').val(user_input);
-
-                this.data_to_send.memo = user_input;
-            })
-        });
-        let html = html_memo_select;
-        document.querySelector(this.target.bottom).innerHTML = html;
-    }
-
-    request_data(callback){
+    request_data (callback){
         Plan_func.read_plan(this.schedule_id, (data)=>{
             this.set_initial_data(data); // 초기값을 미리 셋팅한다.
             callback(data);
-        })
+        });
     }
 
-    set_initial_data(data){
+    set_initial_data (data){
         this.data_to_send.lecture_id = data.schedule_info[0].lecture_id;
         this.data_to_send.lecture_name = data.schedule_info[0].lecture_name;
         this.data_to_send.member_name = data.schedule_info[0].member_name;
@@ -212,11 +276,25 @@ class Plan_view{
         this.data_to_send.lecture_max_num = data.schedule_info[0].lecture_max_member_num;
         this.data_to_send.lecture_current_num = data.schedule_info[0].lecture_current_member_num;
         this.data_to_send.lecture_state_cd = data.schedule_info[0].state_cd;
-        this.data_to_send.note = data.schedule_info[0].note;
+        this.data_to_send.memo = data.schedule_info[0].note;
         this.data_to_send.schedule_type = data.schedule_info[0].schedule_type;
     }
 
-    send_data(){
+    set_additional_button_event (){
+        document.querySelector('#popup_plan_view_additional_act').addEventListener('click', ()=>{
+            let user_option = {
+                cancel:{text:"일정 취소", callback:()=>{Plan_func.delete({"schedule_id":this.schedule_id});calendar.init();layer_popup.all_close_layer_popup();}
+                            },
+                check:{text:"출석 체크", callback:()=>{alert('출석 체크');}
+                            },
+            };
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_option_selector', 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                var option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        });
+    }
+
+    send_data (){
         let data = {"lecture_id":this.data_to_send.lecture_id,
                     "start_dt":this.data_to_send.date.replace(/\./gi,"-") + ' ' + this.data_to_send.start_time,
                     "end_dt":this.data_to_send.date.replace(/\./gi,"-") + ' ' + this.data_to_send.end_time,
@@ -232,6 +310,30 @@ class Plan_view{
             layer_popup.close_layer_popup();
             calendar.init();
         });
+    }
+
+    static_component (){
+        return {initial_page : `
+                        <section id="wrapper_box_plan_view_toolbox">
+                            <!-- 수업명 표기 -->
+                        </section>
+
+                        <section id="wrapper_box_plan_view_upper" class="obj_box_full">
+                            <!-- 회원명 -->
+                        </section>
+
+                        <section id="wrapper_box_plan_view_middle" class="obj_box_full">
+                            <!-- 날짜, 시작시간, 종료시간, 반복일정 -->
+                        </section>
+
+                        <section id="wrapper_box_plan_view_bottom" class="obj_box_full">
+                            <!-- 메모 -->
+                        </section>
+
+                        <section id="wrapper_box_plan_view_toolbox_bottom" class="obj_box_full">
+                            <!-- 수정, 등록 일자 표기 -->
+                        </section>`
+        };
     }
 
 }

@@ -23,8 +23,11 @@ class CComponent{
 
     //추가 페이지들에서 자주 사용되는 row 스타일
     static create_row (id, title, icon, icon_r_visible, onclick){
+        if(icon == null){
+            icon = '/static/common/icon/icon_dissatisfied.png';
+        }
         
-        let html = `<li class="create_row" id="${id}">
+        let html = `<li class="create_row" id="c_r_${id}">
                         <div class="obj_table_raw">
                             <div class="cell_title">
                                 ${icon != "" ? `<img src="${icon}">` : ""} 
@@ -35,7 +38,7 @@ class CComponent{
                     </li>`;
 
 
-        $(document).off('click', `#${id}`).on('click', `#${id}`, function(e){
+        $(document).off('click', `#c_r_${id}`).on('click', `#c_r_${id}`, function(e){
             onclick();
         });
         return html;
@@ -162,10 +165,24 @@ class CComponent{
     }
 
     static text_button (id, title, onclick){
- 
         let html = `<span id="text_button_${id}" style="cursor:pointer;padding:3px 8px;">${title}</span>`;
         
         $(document).off('click', `#text_button_${id}`).on('click', `#text_button_${id}`, function(e){
+            onclick();
+        });
+        return html;
+    }
+
+    static icon_button (id, title, url, onclick){
+        if(url == null){
+            url = '/static/common/icon/icon_account.png';
+        }
+        let html = `<div id="icon_button_${id}" style="cursor:pointer;padding:3px 8px;display:inline-block;height:40px;width:auto;">
+                        <img src="${url}" style="width:24px;height:24px;vertical-align:middle;margin-bottom:4px;margin-right:5px;">
+                        <span style="line-height:40px;">${title}</span>
+                    </div>`;
+        
+        $(document).off('click', `#icon_button_${id}`).on('click', `#icon_button_${id}`, function(e){
             onclick();
         });
         return html;

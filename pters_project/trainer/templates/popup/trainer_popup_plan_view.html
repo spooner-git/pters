@@ -13,7 +13,7 @@
 
 {% block popup_base_wrapper_top_right %}
 <!-- 추가행동 버튼 -->
-<img src={%static_url "common/icon/icon_more_horizontal.png" %} alt="추가행동" class="obj_icon_basic">
+<img src={%static_url "common/icon/icon_more_horizontal.png" %} alt="추가행동" class="obj_icon_basic" id="popup_plan_view_additional_act">
 {% endblock %}
 
 {% block popup_base_contents %}
@@ -22,28 +22,7 @@
 
         </section>
     
-        <section id="wrapper_box_plan_view_toolbox" class="obj_box_full">
-            <!-- 수업명 표기 -->
-        </section>
-
-        <section id="wrapper_box_plan_view_upper" class="obj_box_full">
-            <!-- 회원명 -->
-        </section>
-
-        <section id="wrapper_box_plan_view_middle" class="obj_box_full">
-            <!-- 날짜, 시작시간, 종료시간, 반복일정 -->
-        </section>
-
-        <section id="wrapper_box_plan_view_bottom" class="obj_box_full">
-            <!-- 메모 -->
-        </section>
-
-        <section id="wrapper_box_plan_view_toolbox_bottom" class="obj_box_full">
-            <!-- 수정, 등록 일자 표기 -->
-        </section>
-
-        <div class="gap"></div>
-        <div class="gap"></div>
+        
 
     </div>
 {% endblock %}
