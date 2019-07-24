@@ -16,8 +16,6 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView
-from kombu.exceptions import OperationalError
-
 from configs import settings
 from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, TO_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, AUTO_ABSENCE_ON, SCHEDULE_DUPLICATION_ENABLE, \
@@ -164,18 +162,17 @@ def add_schedule_logic(request):
                                 if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
                                     push_info_schedule_start_date = str(schedule_start_datetime).split(':')
                                     push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(':')
-                                    try:
-                                        func_send_push_trainer(member_info['member_ticket_id'],
-                                                               class_type_name + ' - 수업 알림',
-                                                               request.user.first_name + '님이 '
-                                                               + push_info_schedule_start_date[0] + ':'
-                                                               + push_info_schedule_start_date[1] + '~'
-                                                               + push_info_schedule_end_date[0] + ':'
-                                                               + push_info_schedule_end_date[1]
-                                                               + ' [' + lecture_info.name + '] 수업을 등록했습니다')
-                                    except OperationalError:
-                                        logger.error(request.user.first_name + '[' + str(request.user.id) + ']'
-                                                     + member_info['member_name']+'님에게 push 알림 전송에 실패했습니다.')
+                                    func_send_push_trainer(member_info['member_ticket_id'],
+                                                           class_type_name + ' - 수업 알림',
+                                                           request.user.first_name + '님이 '
+                                                           + push_info_schedule_start_date[0] + ':'
+                                                           + push_info_schedule_start_date[1] + '~'
+                                                           + push_info_schedule_end_date[0] + ':'
+                                                           + push_info_schedule_end_date[1]
+                                                           + ' [' + lecture_info.name + '] 수업을 등록했습니다')
+                                    # logger.error(request.user.first_name + '[' + str(request.user.id) + ']'
+                                    #              + member_info['member_name']+'님에게 push 알림 전송에 실패했습니다.')
+
                                 # push_member_ticket_id.append(member_info['member_ticket_id'])
                                 # push_title.append(class_type_name + ' - 수업 알림')
                                 # push_message.append(request.user.first_name + '님이 '
@@ -277,14 +274,12 @@ def delete_schedule_logic(request):
             # push_title.append(class_type_name + ' - 수업 알림')
             # push_message.append(request.user.first_name + '님이 ' + push_schedule_info + ' [개인 레슨] 수업을 예약 취소했습니다.')
 
-            try:
-                func_send_push_trainer(member_ticket_id,
-                                       class_type_name + ' - 수업 알림',
-                                       request.user.first_name + '님이 ' + push_schedule_info
-                                       + ' [개인 레슨] 수업을 예약 취소했습니다.')
-            except OperationalError:
-                logger.error(request.user.first_name + '[' + str(request.user.id) + ']'
-                             + member_name + '님에게 push 알림 전송에 실패했습니다.')
+            func_send_push_trainer(member_ticket_id,
+                                   class_type_name + ' - 수업 알림',
+                                   request.user.first_name + '님이 ' + push_schedule_info
+                                   + ' [개인 레슨] 수업을 예약 취소했습니다.')
+            # logger.error(request.user.first_name + '[' + str(request.user.id) + ']'
+            #              + member_name + '님에게 push 알림 전송에 실패했습니다.')
 
             log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
@@ -341,14 +336,12 @@ def delete_schedule_logic(request):
                 # push_message.append(request.user.first_name+'님이 ' + push_schedule_info +
                 #                     ' ['+lecture_name + '] 수업을 예약 취소했습니다.').
 
-                    try:
-                        func_send_push_trainer(member_ticket_id,
-                                               class_type_name + ' - 수업 알림',
-                                               request.user.first_name + '님이 ' + push_schedule_info
-                                               + ' ['+lecture_name+'] 수업을 예약 취소했습니다.')
-                    except OperationalError:
-                        logger.error(request.user.first_name + '[' + str(request.user.id) + ']'
-                                     + member_name + '님에게 push 알림 전송에 실패했습니다.')
+                    func_send_push_trainer(member_ticket_id,
+                                           class_type_name + ' - 수업 알림',
+                                           request.user.first_name + '님이 ' + push_schedule_info
+                                           + ' ['+lecture_name+'] 수업을 예약 취소했습니다.')
+                    # logger.error(request.user.first_name + '[' + str(request.user.id) + ']'
+                    #              + member_name + '님에게 push 알림 전송에 실패했습니다.')
                 if lecture_info is not None:
                     log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                                      from_member_name=request.user.first_name,

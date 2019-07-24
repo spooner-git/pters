@@ -1,4 +1,4 @@
-from configs import DEBUG
+from configs.settings import DEBUG
 
 if DEBUG is False:
     import os
