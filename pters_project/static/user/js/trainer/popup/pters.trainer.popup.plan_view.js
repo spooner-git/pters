@@ -217,10 +217,19 @@ class Plan_view{
     }
 
     dom_row_lecture_name (){
+        let lecture_name;
+        if(this.data_to_send.schedule_type == 0){
+            lecture_name =`OFF 일정 ${this.data_to_send.memo != "" ? '('+this.data_to_send.memo+')' : ''}`;
+        }else if(this.data_to_send.schedule_type == 1){
+            lecture_name = this.data_to_send.member_name;
+        }else if(this.data_to_send.schedule_type == 2){
+            lecture_name = this.data_to_send.lecture_name;
+        }
+
         let html = `
                     <div class="info_popup_title_wrap" style="height:50px;background-color:${this.data_to_send.lecture_color}">
                         <div class="info_popup_title" style="display:inline-block;line-height:50px;vertical-align:middle;font-size:18px;font-weight:bold;margin-left:16px;">
-                            ${this.data_to_send.lecture_name}
+                            ${lecture_name}
                         </div>
                     </div>
                     `;
