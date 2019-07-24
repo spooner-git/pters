@@ -12,18 +12,34 @@
 {% endblock %}
 
 {% block popup_base_wrapper_top_right %}
-
+<!-- 추가행동 버튼 -->
+<img src={%static_url "common/icon/icon_more_horizontal.png" %} alt="추가행동" class="obj_icon_basic">
 {% endblock %}
 
 {% block popup_base_contents %}
     <div class="popup_plan_view">
+        <section id="test" class="obj_box_full" style="background-color: #f4f4f4;border:1px solid #cccccc;">
+
+        </section>
     
         <section id="wrapper_box_plan_view_toolbox" class="obj_box_full">
-
+            <!-- 수업명 표기 -->
         </section>
 
         <section id="wrapper_box_plan_view_upper" class="obj_box_full">
-            
+            <!-- 회원명 -->
+        </section>
+
+        <section id="wrapper_box_plan_view_middle" class="obj_box_full">
+            <!-- 날짜, 시작시간, 종료시간, 반복일정 -->
+        </section>
+
+        <section id="wrapper_box_plan_view_bottom" class="obj_box_full">
+            <!-- 메모 -->
+        </section>
+
+        <section id="wrapper_box_plan_view_toolbox_bottom" class="obj_box_full">
+            <!-- 수정, 등록 일자 표기 -->
         </section>
 
         <div class="gap"></div>
@@ -49,72 +65,6 @@
     let member_info;
     {% endautoescape %}
 
-
-    let data;
-    if(current_page == "calendar"){
-        data = calendar.user_data.user_selected_plan;
-    }
-
-    class Plan_view{
-        constructor(targetHTML, data, instance){
-            this.targetHTML = targetHTML;
-            this.instance = instance;
-            this.data = data;
-
-            this.user_selected_plan = data.user_selected_date
-        
-            this.init();
-        }
-
-        init(){
-            this.request_data((data)=>{
-                this.render_test(data);
-            });
-        }
-
-        render_test(data){
-            let datas = data.schedule_info[0];
-
-            let type = Number(datas.schedule_type);
-
-            let plan_title;
-            let max_member_num;
-            switch(type){
-                case 0:
-                    plan_title = datas.note != "" ? datas.note : "OFF 일정";
-                    max_member_num = "";
-                    break;
-                case 1:
-                    plan_title = datas.member_name;
-                    max_member_num = "";
-                    break;
-                case 2:
-                    plan_title = datas.lecture_name;
-                    max_member_num = `(${datas.lecture_current_member_num} / ${datas.lecture_max_member_num})`;
-                    break;
-            }
-
-
-            let html = `<div>
-                        <div><div style="width:100%;height:20px;background-color:${datas.lecture_ing_color_cd}"></div></div>
-                        <div>수업명: ${plan_title} ${max_member_num}</div>
-                        <div>시작시각: ${TimeRobot.to_text(datas.start_time.split(':')[0], datas.start_time.split(':')[1])}</div>
-                        <div>종료시각: ${TimeRobot.to_text(datas.end_time.split(':')[0], datas.end_time.split(':')[1])}</div>
-                        <div>상태: ${STATE_CODE[datas.state_cd].KR}</div>
-                    </div>`
-            document.querySelector(this.targetHTML).innerHTML = html;
-        }
-
-
-        request_data(callback){
-            Plan_func.read_plan(this.data.schedule_id, (data)=>{
-                callback(data);
-            })
-        }
-    }
-    
-    let plan_view_popup = new Plan_view('#wrapper_box_plan_view_toolbox', data, "plan_view_popup");
-    
     func_set_webkit_overflow_scrolling('.popup_plan_view');
 </script>
 {% endblock %}

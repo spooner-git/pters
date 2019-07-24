@@ -16,7 +16,7 @@
     <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
     <link rel="shortcut icon" href="/static/common/favicon-48.png">
 
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <!-- <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"> -->
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.fundamental.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.object.css" %}>
     
@@ -38,6 +38,8 @@
     <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/iscroll/iscroll-probe.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/swiper.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
 
     <style>
         #root_progress{
@@ -198,20 +200,25 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
 
 {% block local_js_footer %}
 {% endblock %}
-<script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
+
 
 <!-- 페이지 스크립트 로드-->
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.home.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.calendar.js" %}></script>
-<!-- <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.calendar_swiper.js" %}></script> -->
-
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.ticket.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.lecture.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.member.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.menu.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.component.common.js" %}></script>
 <!-- 페이지 스크립트 로드-->
+
+<!-- ajax 팝업 JS 로드 -->
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_view.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_add.js" %}></script>
+<!-- ajax 팝업 JS 로드 -->
+<!-- 각종 셀렉터 -->
+<script type="text/javascript" src={% static_url "user/js/trainer/selector/pters.trainer.selectors.js" %}></script>
+<!-- 각종 셀렉터 -->
 <!-- POPUP Behavior -->
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.popup.behavior.js" %}></script>
 <!-- POPUP Behavior -->
@@ -289,51 +296,33 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
         }
     }
 
+    // 페이지 인스턴스
     var home = new Home('#root_content', 'home');
     var calendar = new Calendar('#root_content', 'calendar');
     var ticket = new Ticket('#root_content', 'ticket');
     var lecture = new Lecture('#root_content', 'lecture');
     var member = new Member('#root_content', 'member');
     var menu = new Menu('#root_content', 'menu');
+    // 페이지 인스턴스
 
-    // function sideGoPage(page, context){
-    //     current_page = page;
+    // 팝업 인스턴스
+    var plan_add_popup;
+    var plan_view_popup;
+    // 팝업 인스턴스
 
-    //     Array.from(document.getElementsByClassName('nav_item')).forEach( (element) => {
-    //         element.style.background = 'unset';
-    //     })
-    //     context.style.background = 'linear-gradient(to left,#e664657d, #9198e57a)';
-        
-    //     switch(page){
-    //         case 'home':
-    //             // $root_content.html('<div>main 페이지</div>');
-    //             home.init();
-    //         break;
-    //         case 'calendar':
-    //             calendar.init("week");
-    //         break;
-    //         case 'ticket':
-    //             ticket.init();
-    //         break;
-    //         case 'lecture':
-    //             lecture.init();
-    //         break;
-    //         case 'member':
-    //             member.init();
-    //         break;
-    //         case 'menu':
-    //             menu.init();
-    //         break;
-    //     }
-    //     $root_content.scrollTop(1);
-    // }
+    // 범용 셀렉터 인스턴스
+    var option_selector;
+    var time_selector;
+    var date_selector;
+    var spinner_selector;
+    // 범용 셀렉터 인스턴스
+
 
     function sideGoPage(page, context){
         current_page = page;
 
         try{
             let context_loc = document.getElementById(page).offsetLeft;
-            // $('#nav_indicator').animate({'left':`${context_loc}px`},100);
             $('#nav_indicator').css({'transform':`translateX(${context_loc}px)`,'transition':'0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'});
         }
         catch(error){
@@ -342,7 +331,6 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
 
         switch(page){
             case 'home':
-                // $root_content.html('<div>main 페이지</div>');
                 home.init();
             break;
             case 'calendar':
@@ -367,7 +355,6 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
                 location.href = '/payment/';
             break;
         }
-        // $root_content.scrollTop(1);
     }
     $('#home').trigger('click');
 

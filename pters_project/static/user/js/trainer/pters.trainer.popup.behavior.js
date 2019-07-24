@@ -188,7 +188,7 @@ function func_get_popup_ajax (popup_name, data, callback){
             },
 
             success: function (data) {
-                $('body').append(`<div id="${popup_name}">${data}</div>`);
+                $('body').prepend(`<div id="${popup_name}">${data}</div>`);
                 callback();
             },
 

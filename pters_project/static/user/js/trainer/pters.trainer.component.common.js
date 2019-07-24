@@ -7,7 +7,6 @@ class CComponent{
                         <div class="obj_table_raw" >
                             <div class="cell_title">${title}</div>
                             <div class="cell_value">${value}</div>
-                            <input type="hidden">
                             <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
                         </div>
                     </li>`;
@@ -30,7 +29,6 @@ class CComponent{
                             <div class="cell_title">
                                 ${icon != "" ? `<img src="${icon}">` : ""} 
                                 <span class="cell_text">${title}</span>
-                                <input type="hidden">
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
                         </div>
@@ -38,15 +36,29 @@ class CComponent{
 
 
         $(document).off('click', `#${id}`).on('click', `#${id}`, function(e){
-            let prev_data = $(this).find('input').val();
-            // try{
-                if(prev_data.length == 0){
-                    prev_data = undefined;
-                }
-            // }catch{
+            onclick();
+        });
+        return html;
+    }
 
-            // }
-            onclick(prev_data);
+    //추가 페이지들에서 사용되는 text input row 스타일
+    static create_input_row (id, title, icon, icon_r_visible, onfocusout){
+        
+        let html = `<li class="create_input_row" id="c_i_r_${id}">
+                        <div class="obj_table_raw">
+                            <div class="cell_title">
+                                ${icon != "" ? `<img src="${icon}">` : ""} 
+                            </div>
+                            <div class="cell_content">
+                                <input class="cell_text" placeholder="${title}">
+                            </div>
+                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
+                        </div>
+                    </li>`;
+
+        $(document).off('focusout', `#c_i_r_${id}`).on('focusout', `#c_i_r_${id}`, function(e){
+            let user_input_data = $(this).find('input').val();
+            onfocusout(user_input_data);
         });
         return html;
     }
@@ -146,6 +158,16 @@ class CComponent{
                             </div>
                         </div>
                     </li>`;
+        return html;
+    }
+
+    static text_button (id, title, onclick){
+ 
+        let html = `<span id="text_button_${id}" style="cursor:pointer;padding:3px 8px;">${title}</span>`;
+        
+        $(document).off('click', `#text_button_${id}`).on('click', `#text_button_${id}`, function(e){
+            onclick();
+        });
         return html;
     }
 
