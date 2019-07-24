@@ -162,6 +162,10 @@ class TimeRobot{
         return result;
     }
 
+    static compare(object1, object2){
+
+    }
+
     static add_time(hour, minute, plus_hour, plus_minute){
         var shour = hour;
         var smin = minute;
@@ -198,14 +202,6 @@ class TimeRobot{
                 resultMin = smin + addmin;
             }
         }
-
-        // if(resultHour<10){
-        //     resultHour = '0' + resultHour;
-        // }
-        // if(resultMin<10){
-        //     resultMin = '0' + resultMin;
-        // }
-
 
         return {hour:resultHour, minute:resultMin}
     }

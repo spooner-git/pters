@@ -1271,6 +1271,7 @@ class MemberSelector{
                         this.data_to_set.id.push(member_id);
                         this.data_to_set.name.push(member_name);
                     }
+                    console.log(this.data_to_set.name)
                     
                     this.target_instance.member = this.data_to_set; //타겟에 선택된 데이터를 set
                     if(this.multiple_select == 1){
