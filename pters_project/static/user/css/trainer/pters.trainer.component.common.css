@@ -24,6 +24,7 @@
 	letter-spacing: inherit;
 	color: inherit;
 	height: 48px;
+	vertical-align: top;
 }
 
 .create_row .obj_table_raw > div, .create_input_row .obj_table_raw > div{
