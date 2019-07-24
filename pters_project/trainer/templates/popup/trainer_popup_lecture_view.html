@@ -209,6 +209,7 @@
                 let member_sex = data.member_sex;
                 let member_rem = data.member_ticket_rem_count;
                 let member_reg = data.member_ticket_reg_count;
+                let member_fixed = data.member_fix_state_cd;
                 let html = 
                             `
                             <li onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':${member_id}});">
@@ -255,6 +256,8 @@
       slidesPerView: 2,
       spaceBetween: 0,
     });
+
+    console.log(lecture_info)
 
 
 

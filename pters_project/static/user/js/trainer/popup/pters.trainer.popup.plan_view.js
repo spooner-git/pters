@@ -51,6 +51,7 @@ class Plan_view{
 
             //plan_add 팝업의 dataCenter보다 추가된 항목
             lecture_color: null,
+            lecture_font_color: null,
             lecture_current_num: null,
             lecture_state_cd: null,
             schedule_type:null
@@ -230,7 +231,7 @@ class Plan_view{
 
         let html = `
                     <div class="info_popup_title_wrap" style="height:50px;background-color:${this.store.lecture_color}">
-                        <div class="info_popup_title" style="display:inline-block;line-height:50px;vertical-align:middle;font-size:18px;font-weight:bold;margin-left:16px;">
+                        <div class="info_popup_title" style="display:inline-block;line-height:50px;vertical-align:middle;font-size:18px;font-weight:bold;margin-left:16px;color:${this.store.lecture_font_color}">
                             ${lecture_name}
                         </div>
                     </div>
@@ -286,6 +287,7 @@ class Plan_view{
         this.store.end_time = data.schedule_info[0].end_time;
         this.store.end_time_text = TimeRobot.to_text(data.schedule_info[0].end_time.split(':')[0], data.schedule_info[0].end_time.split(':')[1]);
         this.store.lecture_color = data.schedule_info[0].lecture_ing_color_cd;
+        this.store.lecture_font_color = data.schedule_info[0].lecture_ing_font_cd;
         this.store.lecture_max_num = data.schedule_info[0].lecture_max_member_num;
         this.store.lecture_current_num = data.schedule_info[0].lecture_current_member_num;
         this.store.lecture_state_cd = data.schedule_info[0].state_cd;
