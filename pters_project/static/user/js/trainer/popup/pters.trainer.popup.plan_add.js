@@ -73,7 +73,7 @@ class Plan_add{
     }
 
     get member(){
-        return this.data_to_send.member_ids;
+        return {id:this.data_to_send.member_ids, name:this.data_to_send.member_names};
     }
 
     set lecture(object){
@@ -92,7 +92,7 @@ class Plan_add{
     }
 
     get lecture(){
-        return this.data_to_send.lecture_id;
+        return {id:this.data_to_send.lecture_ids, name:this.data_to_send.lecture_names, max:this.data_to_send.lecture_max_nums};
     }
 
     set date(object){
