@@ -48,7 +48,7 @@ class IndexView(TemplateView):
 
 # 일정 추가
 def add_schedule_logic(request):
-
+    start_time = timezone.now()
     # 폼 검사 시작
     schedule_input_form = AddScheduleTbForm(request.POST)
 
@@ -221,6 +221,8 @@ def add_schedule_logic(request):
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    end_time = timezone.now()
+    print(str(end_time-start_time))
     return render(request, 'ajax/schedule_error_info.html', context)
 
 
@@ -2215,7 +2217,7 @@ def send_push_alarm_logic(request):
         push_title = class_type_name+' - 수업 알림'
         push_message = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] + '~'\
                        + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]\
-                       + ' 시작 ' + minute_message+ ' 전입니다.'
+                       + ' ' + minute_message + ' 전입니다.'
         if schedule_info.lecture_tb is None:
 
             func_send_push_trainer(member_ticket_tb_id, push_title,
@@ -2234,5 +2236,5 @@ def send_push_alarm_logic(request):
                                        ' [' + schedule_info.lecture_tb.name + '] '+push_message)
 
     end_time = timezone.now()
-    logger.info('alarm::'+(str(end_time-start_time)))
+    logger.info('alarm::'+(str(end_time-start_time))+'/'+str(len(schedule_data)))
     return render(request, 'ajax/schedule_error_info.html')

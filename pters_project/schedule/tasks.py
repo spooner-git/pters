@@ -26,5 +26,4 @@ def task_send_fire_base_push(instance_id, title, message, badge_counter):
                                        'Authorization': 'key=' + push_server_id})
     if resp['status'] != '200':
         error = '오류가 발생했습니다.'
-
     return error

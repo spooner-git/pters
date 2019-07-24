@@ -644,12 +644,16 @@ def func_send_push_trainer(member_ticket_id, title, message):
                     token_info.save()
                 instance_id = token_info.token
                 badge_counter = token_info.badge_counter
-
+                check_async = False
                 if DEBUG is False:
+                    # from configs.celery import is_celery_working
                     try:
-                        error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
+                        # if is_celery_working():
+                        check_async = True
                     except OperationalError:
-                        error = task_send_fire_base_push(instance_id, title, message, badge_counter)
+                        check_async = False
+                if check_async:
+                    error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
                 else:
                     error = send_fire_base_push(instance_id, title, message, badge_counter)
 
@@ -673,13 +677,20 @@ def func_send_push_trainee(class_id, title, message):
                     token_info.save()
                 instance_id = token_info.token
                 badge_counter = token_info.badge_counter
+                check_async = False
                 if DEBUG is False:
+                    # from configs.celery import is_celery_working
                     try:
-                        error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
+                        # if is_celery_working():
+                        check_async = True
                     except OperationalError:
-                        error = task_send_fire_base_push(instance_id, title, message, badge_counter)
+                        check_async = False
+
+                if check_async:
+                    error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
                 else:
                     error = send_fire_base_push(instance_id, title, message, badge_counter)
+
     return error
 
 
@@ -701,9 +712,9 @@ def send_fire_base_push(instance_id, title, message, badge_counter):
     resp, content = h.request("https://fcm.googleapis.com/fcm/send", method="POST", body=body,
                               headers={'Content-Type': 'application/json;',
                                        'Authorization': 'key=' + push_server_id})
+
     if resp['status'] != '200':
         error = '오류가 발생했습니다.'
-
     return error
 
 
