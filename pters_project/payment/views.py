@@ -1028,7 +1028,7 @@ def payment_for_ios_logic(request):
                                      period_month=1,
                                      price=9900,
                                      name='스탠다드 - 30일권',
-                                     imp_uid=transaction_id,
+                                     imp_uid=receipt_data+'/'+ios_data+'/'+transaction_id,
                                      channel='iap',
                                      card_name=pay_info,
                                      buyer_email=request.user.email,
