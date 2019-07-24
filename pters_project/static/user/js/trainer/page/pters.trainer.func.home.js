@@ -51,6 +51,9 @@ class Home{
                     <button onclick="${onclick_test_spinner}">spin</button>
                     <button onclick="${onclick_test_time}">time</button>
                     <button onclick="${onclick_test_date}">date</button>
+                    <div style="margin-top:50px">
+                        <button onclick="location.href='/login/logout/'">로그아웃</button>
+                    </div>
                     `);
         
         document.querySelector('#home_content_wrap').innerHTML = html_temp.join("");
