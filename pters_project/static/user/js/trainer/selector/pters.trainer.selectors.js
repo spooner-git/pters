@@ -1166,6 +1166,9 @@ class LectureSelector{
             name: [],
             max: []
         };
+        this.data_to_set.id = this.target_instance.lecture.id;
+        this.data_to_set.name = this.target_instance.lecture.name;
+        this.data_to_set.max = this.target_instance.lecture.max;
         this.request_list(()=>{
             this.render_list();
         });
@@ -1183,7 +1186,7 @@ class LectureSelector{
             let lecture_name = data.lecture_name;
             let lecture_color_code = "#fe4e65";
             let lecture_max_num = data.lecture_max_num;
-            let checked = this.target_instance.lecture.indexOf(lecture_id) >= 0 ? 1 : 0;
+            let checked = this.target_instance.lecture.id.indexOf(lecture_id) >= 0 ? 1 : 0;
             let html =CComponent.select_lecture_row(
                 this.multiple_select, checked, lecture_id, lecture_name, lecture_color_code, lecture_max_num, (add_or_substract)=>{
                     if(add_or_substract == "add"){
@@ -1238,6 +1241,8 @@ class MemberSelector{
             id: [],
             name: []
         };
+        this.data_to_set.id = this.target_instance.member.id;
+        this.data_to_set.name = this.target_instance.member.name;
         this.request_list(()=>{
             this.render_list();
         });
@@ -1256,7 +1261,7 @@ class MemberSelector{
             let member_rem_count = data.member_ticket_rem_count;
             let member_avail_count = data.member_ticket_avail_count;
             let member_expiry = data.end_date;
-            let checked = this.target_instance.member.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+            let checked = this.target_instance.member.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
             let html = CComponent.select_member_row (
                 this.multiple_select, checked, member_id, member_name, member_avail_count, member_expiry, (add_or_substract)=>{
                     if(add_or_substract == "add"){
@@ -1271,6 +1276,7 @@ class MemberSelector{
                         this.data_to_set.id.push(member_id);
                         this.data_to_set.name.push(member_name);
                     }
+                    console.log(this.data_to_set.name)
                     
                     this.target_instance.member = this.data_to_set; //타겟에 선택된 데이터를 set
                     if(this.multiple_select == 1){
