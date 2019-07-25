@@ -175,7 +175,8 @@ def update_finish_schedule_data_logic(request):
             not_finish_schedule_info.delete()
             member_ticket_tb_id = delete_schedule_info.member_ticket_tb_id
         func_refresh_member_ticket_count(not_finish_schedule_info.class_tb_id, member_ticket_tb_id)
-
+    end_time = timezone.now()
+    logger.info('finish_schedule_data_time'+str(end_time-now))
     return render(request, 'ajax/task_error_info.html')
 
 
