@@ -137,25 +137,24 @@ def update_finish_schedule_data_logic(request):
     now = timezone.now()
 
     query_setting_schedule_auto_finish = "SELECT SETTING_INFO FROM SETTING_TB" \
-                                         " WHERE CLASS_TB_ID=`SCHEDULE_TB`.`CLASS_TB_ID`" \
+                                         " WHERE CLASS_TB_ID=`CLASS_TB`.`ID`" \
                                          " AND SETTING_TYPE_CD = \'LT_SCHEDULE_AUTO_FINISH\'" \
                                          " AND USE=1"
     logger.info('test0')
     not_finish_schedule_data = ScheduleTb.objects.select_related(
         'class_tb',
         'member_ticket_tb'
-    ).filter(
-        state_cd=STATE_CD_NOT_PROGRESS, en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now, class_tb_id='127', use=USE
-    )
+    ).filter(state_cd=STATE_CD_NOT_PROGRESS, en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now, class_tb_id='127', use=USE)
+
     logger.info('test1::'+str(len(not_finish_schedule_data)))
+
     not_finish_schedule_data = ScheduleTb.objects.select_related(
         'class_tb',
         'member_ticket_tb'
-    ).filter(
-        state_cd=STATE_CD_NOT_PROGRESS, en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now, class_tb_id='127', use=USE
-    ).annotate(
-        setting_schedule_auto_finish=RawSQL(query_setting_schedule_auto_finish,
-                                            [])).exclude(setting_schedule_auto_finish=AUTO_FINISH_OFF)
+    ).filter(state_cd=STATE_CD_NOT_PROGRESS, en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now,  class_tb_id='127', use=USE
+             ).annotate(setting_schedule_auto_finish=RawSQL(query_setting_schedule_auto_finish,
+                                                            [])).exclude(setting_schedule_auto_finish=AUTO_FINISH_OFF)
+
     logger.info('test2::'+str(len(not_finish_schedule_data)))
 
     for not_finish_schedule_info in not_finish_schedule_data:
