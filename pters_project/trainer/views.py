@@ -183,6 +183,7 @@ class GetTrainerScheduleInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         date_schedule_list = []
         for schedule_info in schedule_data:
+
             # 날짜별로 모아주기 위해서 날짜 분리
             schedule_start_date_split = str(schedule_info.start_dt).split(' ')
             schedule_end_date_split = str(schedule_info.end_dt).split(' ')
@@ -218,16 +219,35 @@ class GetTrainerScheduleInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 lecture_name = ''
                 lecture_max_member_num = ''
                 lecture_current_member_num = ''
-                if lecture_one_to_one is None:
-                    lecture_ing_color_cd = ''
-                    lecture_ing_font_cd = ''
-                    lecture_end_color_cd = ''
-                    lecture_end_font_cd = ''
-                else:
+                lecture_ing_color_cd = ''
+                lecture_ing_font_cd = ''
+                lecture_end_color_cd = ''
+                lecture_end_font_cd = ''
+                if lecture_one_to_one is not None:
+                    lecture_id = lecture_one_to_one.lecture_id
+                    lecture_name = lecture_one_to_one.name
+                    lecture_max_member_num = lecture_one_to_one.member_num
+                    lecture_current_member_num = 1
                     lecture_ing_color_cd = lecture_one_to_one.ing_color_cd
                     lecture_ing_font_cd = lecture_one_to_one.ing_font_color_cd
                     lecture_end_color_cd = lecture_one_to_one.end_color_cd
                     lecture_end_font_cd = lecture_one_to_one.end_font_color_cd
+
+            lecture_schedule_list = []
+            lecture_member_schedule_data = ScheduleTb.objects.select_related(
+                'member_ticket_tb__member').filter(class_tb_id=class_id, lecture_schedule_id=schedule_id,
+                                                   use=USE).order_by('start_dt')
+
+            for lecture_member_schedule_info in lecture_member_schedule_data:
+                lecture_schedule_info = {'schedule_id': lecture_member_schedule_info.schedule_id,
+                                         'member_name': lecture_member_schedule_info.member_ticket_tb.member.name,
+                                         'schedule_type': GROUP_SCHEDULE,
+                                         'start_dt': str(lecture_member_schedule_info.start_dt),
+                                         'end_dt': str(lecture_member_schedule_info.end_dt),
+                                         'state_cd': lecture_member_schedule_info.state_cd,
+                                         'note': lecture_member_schedule_info.note
+                                         }
+                lecture_schedule_list.append(lecture_schedule_info)
 
             # array 에 값을 추가후 dictionary 에 추가
             date_schedule_list.append({'schedule_id': schedule_info.schedule_id,
@@ -244,7 +264,8 @@ class GetTrainerScheduleInfoView(LoginRequiredMixin, AccessTestMixin, View):
                                        'lecture_end_color_cd': lecture_end_color_cd,
                                        'lecture_end_font_cd': lecture_end_font_cd,
                                        'lecture_max_member_num': lecture_max_member_num,
-                                       'lecture_current_member_num': lecture_current_member_num})
+                                       'lecture_current_member_num': lecture_current_member_num,
+                                       'lecture_schedule_data': lecture_schedule_list})
 
         return JsonResponse({'schedule_info': date_schedule_list}, json_dumps_params={'ensure_ascii': True})
 
