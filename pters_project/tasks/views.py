@@ -148,13 +148,13 @@ def update_finish_schedule_data_logic(request):
 
     for not_finish_schedule_info in not_finish_schedule_data:
         member_ticket_tb_id = not_finish_schedule_info.member_ticket_tb_id
-        if context['lt_schedule_auto_finish'] == AUTO_FINISH_ON:
+        if not_finish_schedule_info.schedule_auto_finish == AUTO_FINISH_ON:
             not_finish_schedule_info.state_cd = STATE_CD_FINISH
             not_finish_schedule_info.save()
-        elif context['lt_schedule_auto_finish'] == AUTO_ABSENCE_ON:
+        elif not_finish_schedule_info.schedule_auto_finish == AUTO_ABSENCE_ON:
             not_finish_schedule_info.state_cd = STATE_CD_ABSENCE
             not_finish_schedule_info.save()
-        elif context['lt_schedule_auto_finish'] == AUTO_CANCEL_ON:
+        elif not_finish_schedule_info.schedule_auto_finish == AUTO_CANCEL_ON:
             delete_schedule_info = DeleteScheduleTb(
                 schedule_id=not_finish_schedule_info.schedule_id, class_tb_id=not_finish_schedule_info.class_tb_id,
                 lecture_tb_id=not_finish_schedule_info.lecture_tb_id,
