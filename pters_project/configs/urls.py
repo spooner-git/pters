@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^payment/', include('payment.urls', namespace='payment')),
     url(r'^stats/', include('stats.urls', namespace='stats')),
     url(r'^board/', include('board.urls', namespace='board')),
+    url(r'^tasks/', include('tasks.urls', namespace='tasks')),
     # url(r'^404_page/$', views.Error404View.as_view(), name='404_page'),
     url(r'^403\.html$', TemplateView.as_view(template_name='403.html', content_type='text/html')),
     url(r'^404\.html$', TemplateView.as_view(template_name='404.html', content_type='text/html')),

@@ -11,7 +11,6 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.files.base import ContentFile
 from django.db import IntegrityError, InternalError, transaction
 from django.db.models import Q
-from django.db.models.expressions import RawSQL
 from django.shortcuts import render
 from django.utils import timezone
 from django.views import View
@@ -19,8 +18,7 @@ from django.views.generic import TemplateView
 
 from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, TO_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, AUTO_ABSENCE_ON, SCHEDULE_DUPLICATION_ENABLE, \
-    LECTURE_TYPE_ONE_TO_ONE, STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, STATE_CD_FINISH, STATE_CD_ABSENCE, \
-    OFF_SCHEDULE_TYPE
+    LECTURE_TYPE_ONE_TO_ONE, STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, STATE_CD_FINISH, STATE_CD_ABSENCE
 from configs import settings
 from login.models import LogTb, MemberTb
 from schedule.forms import AddScheduleTbForm
@@ -2187,59 +2185,4 @@ def send_push_to_trainee_logic(request):
     if error is not None:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+str(error))
         messages.error(request, error)
-    return render(request, 'ajax/schedule_error_info.html')
-
-
-def send_push_alarm_logic(request):
-
-    from configs.celery import update_celery_status
-    update_celery_status()
-
-    start_time = timezone.now()
-    alarm_dt = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:00')
-    # 개인 수업 일정
-    query_common_cd = "SELECT COMMON_CD_NM FROM COMMON_CD_TB WHERE COMMON_CD=`CLASS_TB`.`SUBJECT_CD`"
-    schedule_data = ScheduleTb.objects.select_related(
-        'class_tb', 'lecture_tb',
-        'member_ticket_tb__member'
-    ).filter(alarm_dt=alarm_dt, class_tb_id='127',
-             use=USE).annotate(class_type_name=RawSQL(query_common_cd, [])).exclude(en_dis_type=OFF_SCHEDULE_TYPE)
-
-    for schedule_info in schedule_data:
-        schedule_delta_seconds = (schedule_info.start_dt-schedule_info.alarm_dt).seconds
-        minute_message = str(int(schedule_delta_seconds/60)) + '분'
-        class_type_name = schedule_info.class_type_name
-        if schedule_info.class_type_name is None or schedule_info.class_type_name == '':
-            class_type_name = schedule_info.class_tb.subject_detail_nm
-
-        push_info_schedule_start_date = str(schedule_info.start_dt).split(':')
-        push_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
-
-        # 개인 수업 일정
-        class_tb_id = schedule_info.class_tb_id
-        member_ticket_tb_id = schedule_info.member_ticket_tb_id
-        push_title = class_type_name+' - 수업 알림'
-        push_message = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] + '~'\
-                       + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]\
-                       + ' ' + minute_message + ' 전입니다.'
-        if schedule_info.lecture_tb is None:
-
-            func_send_push_trainer(member_ticket_tb_id, push_title,
-                                   ' [개인 레슨] '+push_message)
-            func_send_push_trainee(class_tb_id, class_type_name+' - 수업 알림',
-                                   ' [개인 레슨] '+push_message)
-
-        else:
-            # 그룹 수업 일정
-            if schedule_info.lecture_schedule_id is None:
-                func_send_push_trainee(class_tb_id, push_title,
-                                       ' [' + schedule_info.lecture_tb.name + '] '+push_message)
-            # 그룹의 회원 수업 일정
-            else:
-                func_send_push_trainer(member_ticket_tb_id, push_title,
-                                       ' [' + schedule_info.lecture_tb.name + '] '+push_message)
-
-    end_time = timezone.now()
-
-    logger.info('alarm::'+(str(end_time-start_time))+'/'+str(len(schedule_data)))
     return render(request, 'ajax/schedule_error_info.html')

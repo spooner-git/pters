@@ -1139,6 +1139,7 @@ class Plan_func{
                 ajax_load_image(SHOW);
             },
             success:function (datas){
+                console.log(datas);
                 if(callback != undefined){
                     callback(datas);
                 }
