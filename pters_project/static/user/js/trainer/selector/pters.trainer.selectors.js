@@ -1434,7 +1434,7 @@ class DatePickerSelector{
                 }else if(date_cache > reference_date_month_last_day){ // 마지막 날짜가 끝난 이후 처리
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7"></div>`);
                 }else{
-                    dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}" id="calendar_cell_${data_date}"">
+                    dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}" id="calendar_cell_${data_date}"" style="cursor:pointer;">
                                                <div class="calendar_date_number" style="${font_color}${today_style}">${date}</div>
                                           </div>`);
 
