@@ -2,7 +2,7 @@
 .idea/workspace.xml
 pters_project/config/__pycache__/
 pters_project/configs/__pycache__/
-#pters_project/configs/
+pters_project/configs/
 pters_project/configs/__init__.pyc
 pters_project/configs/celery.pyc
 pters_project/configs/const.pyc
