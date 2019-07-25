@@ -185,6 +185,20 @@ class CComponent{
         return html;
     }
 
+    static image_button (id, title, url, style, onclick){
+        if(url == null){
+            url = '/static/common/icon/icon_account.png';
+        }
+        let html = `<div id="image_button_${id}" style="cursor:pointer;padding:3px 8px;display:inline-block;height:40px;width:auto;${CComponent.data_to_style_code(style)}">
+                        <img src="${url}" style="width:24px;height:24px;vertical-align:middle;margin-bottom:4px;margin-right:5px;" alt="${title}">
+                    </div>`;
+        
+        $(document).off('click', `#image_button_${id}`).on('click', `#image_button_${id}`, function(e){
+            onclick();
+        });
+        return html;
+    }
+
 
     static data_to_style_code(data){
         if(data == null){

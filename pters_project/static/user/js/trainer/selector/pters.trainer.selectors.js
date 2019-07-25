@@ -229,77 +229,6 @@ class TwoTimeSelector{
     }
 }
 
-// var time_select_popup = new TwoTimeSelector('.wrapper_popup_time_selector_function', "time_select_popup");
-// time_select_popup.init();
-
-//하단에서 올라오는 옵션 선택 팝업
-// class OptionSelector{
-//     constructor(target, instance){
-//         this.html_target = target;
-//         this.instance = instance;
-//         this.data;
-//     }
-
-//     reset (option_data){
-//         this.data = option_data;
-//         this.render_option_list();
-//     }
-
-//     render_option_list (){
-//         // let length = Object.keys(this.data).length;
-//         let $target = $(this.html_target);
-//         let html_to_join = [];
-//         for(let option in this.data){
-//             let option_name = option;
-//             let option_value = this.data[option].value;
-//             html_to_join.push(
-//                 `
-//                 <div id="option_select_${option_value}" class="wrapper_popup_basic_buttons obj_font_bg_black_white option_select" style="border-radius:5px;margin-bottom:5px;">
-//                     ${option_name}
-//                 </div>
-//                 `
-//             );
-//         }
-//         this.attach_events();
-//         document.querySelector(this.html_target).innerHTML = html_to_join.join('');
-//     }
-
-//     attach_events (){
-//         // $("option_select").off('click');
-//         for(let option in this.data){
-//             let option_value = this.data[option].value;
-//             let option_callback = this.data[option].callback;
-
-//             $(document).off('click', `#option_select_${option_value}`).on('click', `#option_select_${option_value}`, function (){
-//                 layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);
-//                 option_callback();
-//             });
-
-//         }
-//     }
-
-
-//     open (option_data){
-//         this.reset(option_data);
-//         let option_length = Object.keys(this.data).length;
-//         let button_height = 45;
-//         let popup_height = 100*(button_height*(option_length+4))/windowHeight;
-//         layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select_multi', popup_height, POPUP_FROM_BOTTOM);
-//     }
-
-//     //data 형태
-//     // `{
-//     //     사과:{value: 'apple', callback: ()=>{console.log('사과 Apple')} }, 
-//     //     수박:{value: 'water_melon', callback: ()=>{console.log('수박 Water melon')} }, 
-//     //     바나나:{value: 'banana', callback: ()=>{console.log('바나나 Banana')} }
-//     // }`;
-
-
-// }
-
-// var option_select_popup = new OptionSelector('#option_wrap', 'option_select_popup');
-
-
 //날짜 선택 (년, 월, 일)
 class DateSelector{
     constructor (install_target, target_instance, user_option){
@@ -658,9 +587,6 @@ class DateSelector{
         };
     }
 }
-
-// var date_select_popup = new DateSelector('.wrapper_popup_date_selector_function', "date_select_popup");
-
 
 //시간 선택 (오전오후, 시, 분)
 class TimeSelector{
@@ -1363,5 +1289,197 @@ class MemberSelector{
                 callback();
             });
         }
+    }
+}
+
+class DatePickerSelector{
+    constructor (install_target, target_instance, user_option){
+        this.target = {install: install_target, result: target_instance};
+
+        let d = new Date();
+        this.date = {
+            current_year : d.getFullYear(),
+            current_month : d.getMonth()+1,
+            current_date : d.getDate(),
+            current_day : d.getDay()
+        };
+
+        this.option = {
+            myname:null,
+            title:null,
+            data:{
+                year:this.date.current_year, month:this.date.current_month, date:this.date.current_date
+            },
+            callback_when_set : ()=>{
+                return false;
+            }
+        };
+
+
+        this.store = {
+            text: null,
+            data: {year:null, month:null, date:null}
+        };
+
+        if(user_option != undefined){
+            //user_option이 들어왔을경우 default_option의 값을 user_option값으로 바꿔준다.
+            for(let option in user_option){
+                if(user_option[option] != null){
+                    this.option[option] = user_option[option];
+                }
+            }
+        }
+        this.init();
+    }
+
+    set dataset (object){
+        let year = object.data.year == null ? this.date.current_year : object.data.year; // 값이 들어왔으면 값대로, 아니면 현재값으로
+        let month = object.data.month == null ? this.date.current_month : object.data.month;
+        let date = object.data.date == null ? this.date.current_date : object.data.date;
+        this.store.data = {year: year, month:month, date:date};
+        this.store.text = DateRobot.to_text(year, month, date);
+    }
+
+    get dataset (){
+        return this.store;
+    }
+
+    next(){
+        let next_year = this.option.data.month+1 > 12 ? this.option.data.year +1 :  this.option.data.year;
+        let next_month = this.option.data.month+1 > 12 ? 1 : this.option.data.month + 1;
+
+        this.option.data.year = next_year;
+        this.option.data.month = next_month;
+        this.render_datepicker();
+    }
+
+    prev(){
+        let prev_year = this.option.data.month-1 == 0 ? this.option.data.year -1 :  this.option.data.year;
+        let prev_month = this.option.data.month-1 == 0 ? 12 : this.option.data.month - 1;
+
+        this.option.data.year = prev_year;
+        this.option.data.month = prev_month;
+        this.render_datepicker();
+    }
+
+
+    init (){
+        this.init_html();
+        this.render_datepicker();
+    }
+
+    init_html (){
+        //초기 html 생성
+        document.querySelector(this.target.install).innerHTML = this.static_component().initial_html;
+    }
+
+    delete (){
+        document.querySelector(this.target.install).innerHTML = "";
+    }
+
+    render_datepicker(){
+        let reference_date_year = this.option.data.year;
+        let reference_date_month = this.option.data.month;
+        let reference_date_date = this.option.data.date;
+        let reference_date_month_last_day = new Date(reference_date_year, reference_date_month, 0).getDate();
+        let current_month_first_date_day = new Date(reference_date_year, reference_date_month-1, 1).getDay();
+
+        //달력의 상단 표기 부분 (년월표기, 버튼)
+        let month_calendar_upper_tool = `<div class="pters_month_cal_upper_tool_box" style="text-align:center;height:30px;">
+                                            <div class="pters_month_cal_tool_date_text">
+                                                <div class="obj_font_size_15_weight_bold">
+                                                    ${CComponent.image_button('date_picker_prev', '뒤로', '/static/common/icon/navigate_before_black.png', null, ()=>{this.prev();})}
+                                                    ${Number(reference_date_year)}년 ${Number(reference_date_month)}월
+                                                    ${CComponent.image_button('date_picker_next', '앞으로', '/static/common/icon/navigate_next_black.png', null, ()=>{this.next();})}
+                                                </div>
+                                            </div>
+                                        </div>`;
+
+        //달력의 월화수목금 표기를 만드는 부분
+        let month_day_name_text = `<div class="pters_month_cal_day_name_box obj_table_raw" style="text-align:center;"> 
+                                    <div class="obj_table_cell_x7">일</div>
+                                    <div class="obj_table_cell_x7">월</div>
+                                    <div class="obj_table_cell_x7">화</div>
+                                    <div class="obj_table_cell_x7">수</div>
+                                    <div class="obj_table_cell_x7">목</div>
+                                    <div class="obj_table_cell_x7">금</div>
+                                    <div class="obj_table_cell_x7">토</div>  
+                                   </div>`;
+
+        //달력의 날짜를 만드는 부분
+        let htmlToJoin = [];
+        let date_cache = 1;
+        for(let i=0; i<6; i++){
+            let dateCellsToJoin = [];
+
+            for(let j=0; j<7; j++){
+                let data_date = date_format(`${reference_date_year}-${reference_date_month}-${date_cache}`)["yyyy-mm-dd"];
+                let font_color = "";
+                let today_style = "";
+                let date = date_cache;
+                if(j == 0){
+                    font_color = 'color:red;';
+                }else if(j == 6){
+                    font_color = 'color:blue;';
+                }
+
+                if(this.date.current_year == reference_date_year && this.date.current_month == reference_date_month && this.date.current_date == date_cache){
+                    date = `<div style="display:inline-block;height:25px;width:25px;line-height:26px;border-radius:50%;background-color:#fe4e65;">${date_cache}</div>
+                            <div style="position: absolute;top: -15px;left: 50%;color: #fe4e65;font-size: 10px;transform: translateX(-50%);">Today</div>`;
+                    today_style = 'color:#ffffff;position:relative';
+                }
+
+                if(i==0 && j<current_month_first_date_day){ //첫번째 주일때 처리
+                    dateCellsToJoin.push(`<div class="obj_table_cell_x7"></div>`);
+                }else if(date_cache > reference_date_month_last_day){ // 마지막 날짜가 끝난 이후 처리
+                    dateCellsToJoin.push(`<div class="obj_table_cell_x7"></div>`);
+                }else{
+                    dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}" id="calendar_cell_${data_date}"">
+                                               <div class="calendar_date_number" style="${font_color}${today_style}">${date}</div>
+                                          </div>`);
+
+                    $(document).off('click', `#calendar_cell_${data_date}`).on('click', `#calendar_cell_${data_date}`, ()=>{
+                        let date = Number(data_date.split('-')[2]);
+                        this.dataset = {data:{year:reference_date_year, month:reference_date_month, date}};
+                        this.option.callback_when_set(this.store); 
+                        layer_popup.close_layer_popup();
+                    });
+                    date_cache++;
+                }
+            }
+
+            let week_row = `<div class="obj_table_raw" id="week_row_${i}" style="height:35px">
+                                ${dateCellsToJoin.join('')}
+                            </div>`;
+            htmlToJoin.push(week_row);
+
+        }
+
+        let calendar_assembled = `<div class="pters_month_cal_content_box" style="text-align:center;">`+htmlToJoin.join('')+'</div>';
+
+
+
+        //상단의 연월 표기, 일월화수목 표기, 달력숫자를 합쳐서 화면에 그린다.
+        document.querySelector(`${this.target.install} .date_picker_selector_wrap`).innerHTML = `${month_calendar_upper_tool}
+                                                                <div class="obj_box_full">
+                                                                ${month_day_name_text}${calendar_assembled}
+                                                                </div>`;
+    }
+
+
+
+    static_component (){
+        return{
+            "initial_html":
+                            `<div class="date_selector">
+                                <div class="date_selector_confirm">
+                                    <div style="position:absolute;margin-left:5px;">
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', null, ()=>{layer_popup.close_layer_popup();})}
+                                    </div>
+                                    <span class="date_selector_title">${this.option.title}</span>
+                                </div>
+                                <div class="date_picker_selector_wrap"></div>
+                            </div>`
+        };
     }
 }

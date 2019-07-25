@@ -202,19 +202,26 @@ class Plan_add{
         let date_text = this.store.date_text == null ? '날짜*' : this.store.date_text;
         let html_date_select = CComponent.create_row('select_date', date_text, '/static/common/icon/icon_cal.png', HIDE, ()=>{ 
             //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
                 let year = this.store.date == null ? this.dates.current_year : this.store.date.year; 
                 let month = this.store.date == null ? this.dates.current_month : this.store.date.month;
                 let date = this.store.date == null ? this.dates.current_date : this.store.date.date;
                 
-                date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'날짜 선택', data:{year:year, month:month, date:date}, 
-                                                                                                range:{start: this.dates.current_year - 5, end: this.dates.current_year+5}, 
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'날짜 선택', data:{year:year, month:month, date:date},  
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     this.date = object; 
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
-                                                                                                }});
+                }});
+
+                // date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'날짜 선택', data:{year:year, month:month, date:date}, 
+                //                                                                                 range:{start: this.dates.current_year - 5, end: this.dates.current_year+5}, 
+                //                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
+                //                                                                                     this.date = object; 
+                //                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+                //                                                                                 }});
+                
             });
         });
 
