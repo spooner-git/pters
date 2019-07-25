@@ -110,7 +110,7 @@ def send_push_alarm_logic(request):
         push_title = class_type_name+' - 수업 알림'
         push_message = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] + '~'\
                        + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]\
-                       + ' ' + minute_message + ' 전입니다.'
+                       + ' ' + minute_message + '전 입니다.'
         if schedule_info.lecture_tb is None:
 
             func_send_push_trainer(member_ticket_tb_id, push_title,
@@ -143,10 +143,11 @@ def update_finish_schedule_data_logic(request):
     not_finish_schedule_data = ScheduleTb.objects.select_related(
         'class_tb',
         'member_ticket_tb'
-    ).filter(state_cd=STATE_CD_NOT_PROGRESS, en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now, class_tb_id='127',
-             use=USE
-             ).annotate(setting_ticket_auto_finish=RawSQL(query_setting_schedule_auto_finish,
-                                                          [])).filter(~Q(setting_schedule_auto_finish=AUTO_FINISH_OFF))
+    ).filter(
+        state_cd=STATE_CD_NOT_PROGRESS, en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now, class_tb_id='127', use=USE
+    ).annotate(
+        setting_schedule_auto_finish=RawSQL(query_setting_schedule_auto_finish,
+                                            [])).filter(~Q(setting_schedule_auto_finish=AUTO_FINISH_OFF))
 
     for not_finish_schedule_info in not_finish_schedule_data:
         member_ticket_tb_id = not_finish_schedule_info.member_ticket_tb_id

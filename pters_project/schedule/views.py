@@ -46,7 +46,7 @@ class IndexView(TemplateView):
 
 # 일정 추가
 def add_schedule_logic(request):
-    start_time = timezone.now()
+    # start_time = timezone.now()
     # 폼 검사 시작
     schedule_input_form = AddScheduleTbForm(request.POST)
 
@@ -57,11 +57,7 @@ def add_schedule_logic(request):
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
     error = None
     info_message = None
-    # push_member_ticket_id = []
-    # push_title = []
-    # push_message = []
     context = {}
-    # context = {'push_member_ticket_id': '', 'push_title': '', 'push_message': ''}
 
     if schedule_input_form.is_valid():
         schedule_start_datetime = schedule_input_form.cleaned_data['start_dt']
@@ -169,18 +165,6 @@ def add_schedule_logic(request):
                                                            + push_info_schedule_end_date[0] + ':'
                                                            + push_info_schedule_end_date[1]
                                                            + ' [' + lecture_info.name + '] 수업을 등록했습니다')
-                                    # logger.error(request.user.first_name + '[' + str(request.user.id) + ']'
-                                    #              + member_info['member_name']+'님에게 push 알림 전송에 실패했습니다.')
-
-                                # push_member_ticket_id.append(member_info['member_ticket_id'])
-                                # push_title.append(class_type_name + ' - 수업 알림')
-                                # push_message.append(request.user.first_name + '님이 '
-                                #                     + push_info_schedule_start_date[0] + ':'
-                                #                     + push_info_schedule_start_date[1] + '~'
-                                #                     + push_info_schedule_end_date[0] + ':'
-                                #                     + push_info_schedule_end_date[1]
-                                #                     + ' [' + lecture_info.name + '] 수업을 등록했습니다')
-
                     except TypeError:
                         error_temp = '오류가 발생했습니다. [1]'
                     except ValueError:
@@ -211,15 +195,10 @@ def add_schedule_logic(request):
         if info_message is not None:
             info_message += '님의 일정이 등록되지 않았습니다.'
             context['lecture_schedule_info'] = info_message
-        # else:
-        #     if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
-        #         context['push_member_ticket_id'] = push_member_ticket_id
-        #         context['push_title'] = push_title
-        #         context['push_message'] = push_message
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
-    end_time = timezone.now()
+    # end_time = timezone.now()
     # print(str(end_time-start_time))
     return render(request, 'ajax/schedule_error_info.html', context)
 
@@ -240,10 +219,6 @@ def delete_schedule_logic(request):
     start_dt = None
     end_dt = None
     push_schedule_info = None
-    # push_member_ticket_id = []
-    # push_title = []
-    # push_message = []
-    # context = {'push_member_ticket_id': '', 'push_title': '', 'push_message': ''}
 
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
@@ -271,10 +246,6 @@ def delete_schedule_logic(request):
         if lecture_info is None and member_ticket_info is not None:
             member_ticket_id = schedule_info.member_ticket_tb_id
             member_name = schedule_info.member_ticket_tb.member.name
-            # push_member_ticket_id.append(member_ticket_id)
-            # push_title.append(class_type_name + ' - 수업 알림')
-            # push_message.append(request.user.first_name + '님이 ' + push_schedule_info + ' [개인 레슨] 수업을 예약 취소했습니다.')
-
             func_send_push_trainer(member_ticket_id,
                                    class_type_name + ' - 수업 알림',
                                    request.user.first_name + '님이 ' + push_schedule_info
@@ -332,11 +303,6 @@ def delete_schedule_logic(request):
 
             if temp_error is None:
                 if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
-                # push_member_ticket_id.append(member_ticket_id)
-                # push_title.append(class_type_name + ' - 수업 알림')
-                # push_message.append(request.user.first_name+'님이 ' + push_schedule_info +
-                #                     ' ['+lecture_name + '] 수업을 예약 취소했습니다.').
-
                     func_send_push_trainer(member_ticket_id,
                                            class_type_name + ' - 수업 알림',
                                            request.user.first_name + '님이 ' + push_schedule_info
@@ -358,11 +324,6 @@ def delete_schedule_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    # else:
-    #     if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
-    #         context['push_member_ticket_id'] = push_member_ticket_id
-    #         context['push_title'] = push_title
-    #         context['push_message'] = push_message
     return render(request, 'ajax/schedule_error_info.html')
 
 
