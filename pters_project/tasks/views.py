@@ -147,7 +147,7 @@ def update_finish_schedule_data_logic(request):
     ).filter(
         state_cd=STATE_CD_NOT_PROGRESS, en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now, class_tb_id='127', use=USE
     )
-    logger.info('test1')
+    logger.info('test1::'+str(len(not_finish_schedule_data)))
     not_finish_schedule_data = ScheduleTb.objects.select_related(
         'class_tb',
         'member_ticket_tb'
@@ -156,7 +156,7 @@ def update_finish_schedule_data_logic(request):
     ).annotate(
         setting_schedule_auto_finish=RawSQL(query_setting_schedule_auto_finish,
                                             [])).exclude(setting_schedule_auto_finish=AUTO_FINISH_OFF)
-    logger.info('test2')
+    logger.info('test2::'+str(len(not_finish_schedule_data)))
 
     for not_finish_schedule_info in not_finish_schedule_data:
         member_ticket_tb_id = not_finish_schedule_info.member_ticket_tb_id
