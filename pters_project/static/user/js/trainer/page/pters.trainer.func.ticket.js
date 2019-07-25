@@ -93,7 +93,7 @@ class Ticket{
     //수강권 리스트를 렌더링
     render_ticket_list(jsondata, list_status_type){
 
-        console.log(jsondata)
+        console.log(jsondata);
 
         if(current_page != this.page_name){
             return false;
@@ -125,7 +125,18 @@ class Ticket{
             let ticket_member_number = data.ticket_ing_member_num;
             let ticket_end_member_number = data.ticket_end_member_num;
             let ticket_lectures_included_name = data.ticket_lecture_list;
-            let ticket_lectures_included_name_html = ticket_lectures_included_name.map(el => `<div>${el}</div>`).join('');
+            let ticket_lectures_state_cd = data.ticket_lecture_state_cd_list;
+            let ticket_lectures_included_name_html = [];
+            let length_lecture = ticket_lectures_included_name.length;
+            for(let j=0; j<length_lecture; j++){
+                let html;
+                if(ticket_lectures_state_cd[j] == STATE_END_PROGRESS){
+                    html = `<div style="color:#cccccc;text-decoration:line-through;">${ticket_lectures_included_name[j]}</div>`;
+                }else if(ticket_lectures_state_cd[j] == STATE_IN_PROGRESS){
+                    html = `<div>${ticket_lectures_included_name[j]}</div>`;
+                }
+                ticket_lectures_included_name_html.push(html);
+            }
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'ticket_id':${ticket_id}});`;
             let html = `<article class="ticket_wrapper" data-ticketid="${ticket_id}" onclick="${onclick}">
@@ -144,7 +155,7 @@ class Ticket{
                                 <div class="ticket_lectures_wrap">
                                     <div class="ticket_data_title">포함된 수업</div>
                                     <div class="ticket_lectures">
-                                        ${ticket_lectures_included_name_html}
+                                        ${ticket_lectures_included_name_html.join('')}
                                     </div>
                                 </div>
                             </div>
