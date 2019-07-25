@@ -24,10 +24,10 @@ def func_update_finish_member_ticket_data():
     # token_data = PushInfoTb.objects.filter(member_id=member_id, last_login__lte=now-90일, use=USE)
     # token_data.delete()
 
-    query_setting_ticket_auto_finish = "SELECT (SETTING_INFO) FROM SETTING_TB " \
-                                       " WHERE CLASS_TB_ID=`CLASS_LECTURE_TB`.`CLASS_TB_ID`" \
-                                       " AND SETTING_TYPE_CD = \'LT_LECTURE_AUTO_FINISH\' " \
-                                       " AND USE=1"
+    query_setting_ticket_auto_finish = "SELECT A.SETTING_INFO FROM SETTING_TB AS A" \
+                                       " WHERE A.CLASS_TB_ID=`CLASS_LECTURE_TB`.`CLASS_TB_ID`" \
+                                       " AND A.SETTING_TYPE_CD = \'LT_LECTURE_AUTO_FINISH\' " \
+                                       " AND A.USE=1"
     # 지난 수강권 처리
     class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__ticket_tb').filter(
@@ -136,18 +136,15 @@ def update_finish_schedule_data_logic(request):
     context = {}
     now = timezone.now()
 
-    query_setting_schedule_auto_finish = "SELECT SETTING_INFO FROM SETTING_TB" \
-                                         " WHERE CLASS_TB_ID=`SCHEDULE_TB`.`CLASS_TB_ID`" \
-                                         " AND SETTING_TYPE_CD = \'LT_SCHEDULE_AUTO_FINISH\'" \
-                                         " AND USE=1"
-    logger.info('test0')
+    query_setting_schedule_auto_finish = "SELECT A.SETTING_INFO FROM SETTING_TB as A" \
+                                         " WHERE A.CLASS_TB_ID=`SCHEDULE_TB`.`CLASS_TB_ID`" \
+                                         " AND A.SETTING_TYPE_CD = \'LT_SCHEDULE_AUTO_FINISH\'" \
+                                         " AND A.USE=1"
     not_finish_schedule_data = ScheduleTb.objects.select_related(
         'member_ticket_tb'
-    ).filter(state_cd=STATE_CD_NOT_PROGRESS, en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now,  class_tb_id='127', use=USE
-             ).annotate(setting_schedule_auto_finish=RawSQL(query_setting_schedule_auto_finish,
-                                                            [])).exclude(setting_schedule_auto_finish=AUTO_FINISH_OFF)
-
-    logger.info('test2::'+str(len(not_finish_schedule_data)))
+    ).filter(class_tb_id='127', state_cd=STATE_CD_NOT_PROGRESS, en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now, use=USE
+             ).annotate(schedule_auto_finish=RawSQL(query_setting_schedule_auto_finish,
+                                                    [])).exclude(schedule_auto_finish=AUTO_FINISH_OFF)
 
     for not_finish_schedule_info in not_finish_schedule_data:
         member_ticket_tb_id = not_finish_schedule_info.member_ticket_tb_id
