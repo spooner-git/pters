@@ -25,7 +25,7 @@ def func_update_finish_member_ticket_data():
     # token_data.delete()
 
     query_setting_ticket_auto_finish = "SELECT (SETTING_INFO) FROM SETTING_TB " \
-                                       " WHERE CLASS_TB_ID=`CLASS_MEMBER_TICKET_TB`.`CLASS_TB_ID`" \
+                                       " WHERE CLASS_TB_ID=`CLASS_LECTURE_TB`.`CLASS_TB_ID`" \
                                        " AND SETTING_TYPE_CD = \'LT_LECTURE_AUTO_FINISH\' " \
                                        " AND USE=1"
     # 지난 수강권 처리
@@ -136,8 +136,8 @@ def update_finish_schedule_data_logic(request):
     context = {}
     now = timezone.now()
 
-    query_setting_schedule_auto_finish = "SELECT (SETTING_INFO) FROM SETTING_TB " \
-                                         " WHERE CLASS_TB_ID=`CLASS_MEMBER_TICKET_TB`.`CLASS_TB_ID`" \
+    query_setting_schedule_auto_finish = "SELECT SETTING_INFO FROM SETTING_TB " \
+                                         " WHERE CLASS_TB_ID=`CLASS_LECTURE_TB`.`CLASS_TB_ID`" \
                                          " AND SETTING_TYPE_CD = \'LT_SCHEDULE_AUTO_FINISH\' " \
                                          " AND USE=1"
     not_finish_schedule_data = ScheduleTb.objects.select_related(
