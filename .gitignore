@@ -20,6 +20,8 @@ pters_project/login/migrations/__pycache__/
 pters_project/schedule/__pycache__/
 pters_project/trainer/__pycache__/
 pters_project/trainee/__pycache__/
+pters_project/tasks/__pycache__/
+pters_project/tasks/migrations/__pycache__/
 pters_project/schedule/migrations/__pycache__/
 pters_project/trainer/migrations/__pycache__/
 pters_project/trainee/migrations/__pycache__/
@@ -30,6 +32,7 @@ pters_project/logs/trainer_log.log
 pters_project/logs/trainee_log.log
 pters_project/logs/schedule_log.log
 pters_project/logs/payment_log.log
+pters_project/logs/tasks_log.log
 pters_project/login/templatetags/__pycache__/
 pters_project/payment/__pycache__/
 pters_project/payment/migrations/__pycache__/
