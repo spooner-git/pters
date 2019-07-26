@@ -32,7 +32,7 @@ class Ticket{
 
 
     //수강권 리스트 서버에서 불러오기
-    request_ticket_list(status ,callback){
+    request_ticket_list(status, callback){
         //sort_order_by : ticket_type_seq, ticket_name, ticket_member_many, ticket_member_few, ticket_create_new, ticket_create_old
         let url;
         if(status=='ing'){
@@ -57,10 +57,6 @@ class Ticket{
             //통신성공시 처리
             success:function(data){
                 console.log(data);
-                // var jsondata = JSON.parse(data);
-                // if(jsondata.messageArray.length>0){
-                //     console.log("에러:" + jsondata.messageArray);
-                // }else{
                 end_time = performance.now();
                 console.log((end_time-start_time)+'ms');
                     callback(data);

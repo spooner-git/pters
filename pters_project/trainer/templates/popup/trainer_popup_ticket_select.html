@@ -1,0 +1,55 @@
+{% extends "popup/trainer_base_popup_pagetype.html" %}
+{% load static_url %}
+{% load background_trainee_data %}
+
+{% block popup_base_css %}
+    <!-- pters.trainee.popup.plan_view.css -->
+    <!-- <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.plan_view.css" %}> -->
+    <style>
+        .popup_ticket_select{
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+{% endblock %}
+
+{% block popup_base_wrapper_top_center %}
+<span id="ticket_name_in_popup">수강권 선택</span>
+{% endblock %}
+
+{% block popup_base_wrapper_top_right %}
+
+{% endblock %}
+
+{% block popup_base_contents %}
+    <div class="popup_ticket_select">
+    
+        <div id="wrapper_box_ticket_select" class="obj_box_full">
+            
+        </div>
+
+        <div class="gap"></div>
+        <div class="gap"></div>
+
+    </div>
+{% endblock %}
+
+{% block popoup_base_wrapper_bottom_inside %}
+    {% now "Y-m-d" as todays_date %}
+
+    {% if date_format|date:"Y-m-d" >= todays_date and avail_end_date|date:"Y-m-d" >= date_format|date:"Y-m-d"%}
+        <!-- <div class="obj_button_big obj_font_bg_white_coral" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'{{ date_format| date:'Y-m-d' }}'})">예약 추가하기</div> -->
+    {% else %}
+        <!-- <div class="obj_button_big obj_font_bg_pink_white" onclick="layer_popup.all_close_layer_popup()">확인</div> -->
+    {% endif %}
+{% endblock %}
+
+{% block popup_base_js %}
+
+<script>
+
+    // var lecture_select = new LectureSelector('#wrapper_box_lecture_select', "lecture_select", plan_add, false);
+    
+
+    func_set_webkit_overflow_scrolling('.popup_ticket_select');
+</script>
+{% endblock %}

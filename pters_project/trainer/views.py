@@ -4778,3 +4778,10 @@ class PopupLectureSelect(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupLectureSelect, self).get_context_data(**kwargs)
         return context
+
+class PopupTicketSelect(TemplateView):
+    template_name = 'popup/trainer_popup_ticket_select.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupTicketSelect, self).get_context_data(**kwargs)
+        return context

@@ -23,12 +23,13 @@ class Member_add{
                 memo: null,
                 ticket_id:[],
                 ticket_name:[],
+                ticket_effective_days:[],
                 start_date:null,
                 start_date_text:null,
                 end_date:null,
                 end_date_text:null,
-                reg_count:null,
-                reg_price:null
+                ticket_reg_count:[],
+                ticket_price:[]
         };
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
@@ -100,6 +101,19 @@ class Member_add{
 
     get memo(){
         return this.data.memo;
+    }
+
+    set ticket(data){
+        this.data.ticket_id = data.id;
+        this.data.ticket_name = data.name;
+        this.data.ticket_price = data.reg_price;
+        this.data.ticket_reg_count = data.reg_count;
+        this.data.ticket_effective_days = data.effective_days;
+        this.render_content();
+    }
+
+    get ticket(){
+        return {id:this.data.ticket_id, name:this.data.ticket_name, reg_price:this.data.ticket_price, reg_count: this.data.ticket_reg_count, effective_days: this.data.ticket_effective_days};
     }
 
     set reg_count(number){
@@ -251,8 +265,8 @@ class Member_add{
     dom_row_ticket_select(){
         let ticket_text = this.data.ticket_id.length == 0 ? '수강권*' : this.data.ticket_name.join(', ');
         let html = CComponent.create_row('input_ticket_select', ticket_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
-            layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                var lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1);
+            layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                var ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1);
             });
         });
         return html;
@@ -303,7 +317,7 @@ class Member_add{
     }
 
     dom_row_member_reg_coung_input(){
-        let html = CComponent.create_input_number_row ('input_reg_count', this.data.reg_count == null ? '횟수' : this.data.reg_count, '/static/common/icon/icon_rectangle_blank.png', HIDE, (input_data)=>{
+        let html = CComponent.create_input_number_row ('input_reg_count', this.data.ticket_reg_count.length == 0 ? '횟수' : this.data.ticket_reg_count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, (input_data)=>{
             let user_input_data = input_data;
             this.reg_count = user_input_data;
         });
@@ -311,7 +325,7 @@ class Member_add{
     }
 
     dom_row_member_reg_price_input(){
-        let html = CComponent.create_input_number_row ('input_reg_price', this.data.reg_price == null ? '가격' : this.data.reg_price, '/static/common/icon/icon_rectangle_blank.png', HIDE, (input_data)=>{
+        let html = CComponent.create_input_number_row ('input_reg_price', this.data.ticket_price.length == 0 ? '가격' : this.data.ticket_price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, (input_data)=>{
             let user_input_data = input_data;
             this.reg_price = user_input_data;
         });

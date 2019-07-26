@@ -96,6 +96,48 @@ class CComponent{
         return html;
     }
 
+    //수강권 선택 팝업에 사용되는 행
+    static select_ticket_row (multiple_select, checked, ticket_id, ticket_name, ticket_price, ticket_reg_count, ticket_effective_days, onclick){
+        let html = `
+                    <li class="select_ticket_row" id="select_ticket_row_${ticket_id}">
+                        <div class="obj_table_raw">
+                            <div class="cell_ticket_color">
+                                
+                            </div>
+                            <div class="cell_ticket_info">
+                                <div>${ticket_name}</div>
+                                <div>가격 - ${ticket_price}원 / 횟수 - ${ticket_reg_count} / 유효기간 - ${ticket_effective_days}일</div>
+                            </div>
+                            <div class="cell_ticket_selected">
+                                <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? 'none' : 'ticket_selected'}">
+                            </div>
+                        </div>
+                    </li>
+                    `;
+
+        if(multiple_select > 1){
+            $(document).off('click', `#select_ticket_row_${ticket_id}`).on('click', `#select_ticket_row_${ticket_id}`, function(e){
+                if(!$(this).find('.cell_ticket_selected img').hasClass('ticket_selected')){
+                    if($('.ticket_selected').length >= multiple_select){
+                        show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
+                        return false;
+                    }
+                    $(this).find('.cell_ticket_selected img').addClass('ticket_selected');
+                    onclick('add');
+                }else{
+                    $(this).find('.cell_ticket_selected img').removeClass('ticket_selected');
+                    onclick('substract');
+                }
+            });
+        }else if(multiple_select == 1){
+            $(document).off('click', `#select_ticket_row_${ticket_id}`).on('click', `#select_ticket_row_${ticket_id}`, function(e){
+                
+                onclick('add_single');
+                
+            });
+        }
+        return html;
+    }
 
     //수업 선택 팝업에 사용되는 행
     static select_lecture_row (multiple_select, checked, lecture_id, lecture_name, color_code, max_member_num, onclick){

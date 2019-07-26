@@ -1136,6 +1136,88 @@ class OptionSelector{
     // }`;
 }
 
+class TicketSelector{
+    constructor(install_target, target_instance, multiple_select){
+        this.targetHTML = install_target;
+        this.target_instance = target_instance;
+        this.received_data;
+        this.multiple_select = multiple_select;
+        this.data = {
+            id: this.target_instance.ticket.id,
+            name: this.target_instance.ticket.name,
+            reg_price: this.target_instance.ticket.reg_price,
+            reg_count: this.target_instance.ticket.reg_count,
+            effective_days : this.target_instance.ticket.effective_days
+        };
+        this.request_list(()=>{
+            this.render_list();
+        });
+    }
+
+    render_list(){
+        let html_to_join = [];
+        let length = this.received_data.length;
+        if(length == 0){
+            html_to_join.push(CComponent.no_data_row('수업 목록이 비어있습니다.'));
+        }
+        for(let i=0; i<length; i++){
+            let data = this.received_data[i];
+            let ticket_id = data.ticket_id;
+            let ticket_name = data.ticket_name;
+            let ticket_reg_price = data.ticket_price;
+            let ticket_reg_count = data.ticket_reg_count;
+            let ticket_effective_days = data.ticket_effective_days;
+            let checked = this.target_instance.ticket.id.indexOf(ticket_id) >= 0 ? 1 : 0;
+            let html = CComponent.select_ticket_row(
+                this.multiple_select, checked, ticket_id, ticket_name, ticket_reg_price, ticket_reg_count, ticket_effective_days, (add_or_substract)=>{
+                    if(add_or_substract == "add"){
+                        this.data.id.push(ticket_id);
+                        this.data.name.push(ticket_name);
+                        this.data.reg_price.push(ticket_reg_price);
+                        this.data.reg_count.push(ticket_reg_count);
+                        this.data.effective_days.push(ticket_effective_days);
+                    }else if(add_or_substract == "substract"){
+                        this.data.id.splice(this.data.id.indexOf(ticket_id), 1);
+                        this.data.name.splice(this.data.name.indexOf(ticket_name), 1);
+                        this.data.reg_price.splice(this.data.name.indexOf(ticket_name), 1);
+                        this.data.reg_count.splice(this.data.name.indexOf(ticket_name), 1);
+                        this.data.effective_days.splice(this.data.name.indexOf(ticket_name), 1);
+                    }else if(add_or_substract == "add_single"){
+                        this.data.id = [];
+                        this.data.name = [];
+                        this.data.reg_price = [];
+                        this.data.reg_count = [];
+                        this.data.effective_days = [];
+                        this.data.id.push(ticket_id);
+                        this.data.name.push(ticket_name);
+                        this.data.reg_price.push(ticket_reg_price);
+                        this.data.reg_count.push(ticket_reg_count);
+                        this.data.effective_days.push(ticket_effective_days);
+                    }
+
+                    this.target_instance.ticket = this.data; //타겟에 선택된 데이터를 set
+                    
+                    if(this.multiple_select == 1){
+                        layer_popup.close_layer_popup();
+                    }
+                }  
+
+                    
+            );
+            html_to_join.push(html);
+        }
+
+        document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+    }
+
+    request_list (callback){
+        ticket.request_ticket_list("ing", (data)=>{
+            this.received_data = data.current_ticket_data;
+            callback();
+        });
+    }
+}
+
 class LectureSelector{
     constructor(install_target, target_instance, multiple_select){
         this.targetHTML = install_target;

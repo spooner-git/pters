@@ -83,6 +83,7 @@ const POPUP_ADDRESS_TICKET_EDIT = 'popup_ticket_edit';
 
 const POPUP_ADDRESS_MEMBER_SELECT = 'popup_member_select';
 const POPUP_ADDRESS_LECTURE_SELECT = 'popup_lecture_select';
+const POPUP_ADDRESS_TICKET_SELECT = 'popup_ticket_select';
 // ajax 팝업
 
 // 기본 팝업

@@ -76,6 +76,58 @@
 }
 
 
+.select_ticket_row{
+	list-style: none;
+	line-height: 50px;
+	height: 50px;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: -0.5px;
+
+	border-bottom: 1px solid #cccccc;
+	padding: 5px 16px;
+}
+
+.select_ticket_row .cell_ticket_color{
+	display: table-cell;
+	width: 30px;
+	vertical-align: middle;
+}
+
+.select_ticket_row .cell_ticket_color .ticket_color_bar{
+	width: 3px;
+	height: 30px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.select_ticket_row .cell_ticket_info{
+	display: table-cell;
+	width: auto;
+	vertical-align: middle;
+}
+
+.select_ticket_row .cell_ticket_info > div{
+	height: 25px;
+	line-height: 25px;
+}
+
+.select_ticket_row .cell_ticket_selected{
+	display: table-cell;
+	width: 30px;
+	vertical-align: middle;
+}
+.select_ticket_row .cell_ticket_selected img{
+	display: none;
+}
+.select_ticket_row .cell_ticket_selected .ticket_selected{
+	display: block !important;
+}
+
+
+
+
 .select_lecture_row{
 	list-style: none;
 	line-height: 50px;
