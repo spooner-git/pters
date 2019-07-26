@@ -133,7 +133,6 @@ def send_push_alarm_logic(request):
 
 # 지난 일정 처리
 def update_finish_schedule_data_logic(request):
-    context = {}
     now = timezone.now()
 
     query_setting_schedule_auto_finish = "SELECT A.SETTING_INFO FROM SETTING_TB as A" \

@@ -104,5 +104,4 @@
 #         }
 #         body = json.dumps(data, ensure_ascii=False)
 #         end_time = timezone.now()
-#         print('GET:'+str(end_time-start_time))
 #         return JsonResponse(body, safe=False)

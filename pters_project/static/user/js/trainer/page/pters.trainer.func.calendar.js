@@ -779,14 +779,14 @@ class Calendar {
         let offset_hour = pos_hour > Math.floor(pos_hour)+0.5 ? Math.floor(pos_hour) + 0.5 : Math.floor(pos_hour);
         let offset_px = offset_hour * 60;
         let indicator = document.createElement('div');
+        let hour = Math.floor(offset_hour);
+        let minute = 60*(offset_hour - hour);
+        let period_min = 30;
+
         indicator.classList.add('week_indicator');
         indicator.style.top = offset_px+'px';
         indicator.setAttribute('onclick', "event.stopPropagation();$('.week_indicator').remove()");
         event.target.appendChild(indicator);
-
-        let hour = Math.floor(offset_hour);
-        let minute = 60*(offset_hour - hour);
-        let period_min = 30;
 
         if(this.week_zoomed.vertical.activate == true){
             hour = Math.floor(offset_hour/3);

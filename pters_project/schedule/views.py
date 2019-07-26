@@ -199,7 +199,6 @@ def add_schedule_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
     # end_time = timezone.now()
-    # print(str(end_time-start_time))
     return render(request, 'ajax/schedule_error_info.html', context)
 
 

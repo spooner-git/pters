@@ -152,12 +152,12 @@ class Plan_view{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DATE_SELECTOR, 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
                 //dataCenter의 선택날짜가 빈값이라면 오늘로 셋팅한다.
-                let year = this.store.date == null ? this.dates.current_year : this.store.date.year; 
+                let year = this.store.date == null ? this.dates.current_year : this.store.date.year;
                 let month = this.store.date == null ? this.dates.current_month : this.store.date.month;
                 let date = this.store.date == null ? this.dates.current_date : this.store.date.date;
                 
                 date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'날짜 선택', data:{year:year, month:month, date:date}, 
-                                                                                                range:{start: this.dates.current_year - 5, end: this.dates.current_year+5}, 
+                                                                                                range:{start: this.dates.current_year - 5, end: this.dates.current_year+5},
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     this.date = object; 
                                                                                                     //셀렉터에서 선택된 값(object)을 this.dataCenter에 셋팅하고 rerender 한다.
