@@ -773,7 +773,9 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
 
         for lecture_member_schedule_info in lecture_member_schedule_data:
             lecture_schedule_info = {'schedule_id': lecture_member_schedule_info.schedule_id,
+                                     'member_id': lecture_member_schedule_info.member_ticket_tb.member.member_id,
                                      'member_name': lecture_member_schedule_info.member_ticket_tb.member.name,
+                                     'member_ticket_id': lecture_member_schedule_info.member_ticket_tb.member_ticket_id,
                                      'schedule_type': GROUP_SCHEDULE,
                                      'start_dt': str(lecture_member_schedule_info.start_dt),
                                      'end_dt': str(lecture_member_schedule_info.end_dt),
