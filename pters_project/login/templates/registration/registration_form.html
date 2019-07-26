@@ -21,8 +21,8 @@
         <meta name="google-signin-scope" content="profile email">
         <meta name="google-signin-client_id" content="751903262384-dbtt6ho5imk5gssgn1rqpe3vs3linq15.apps.googleusercontent.com">
 
-        <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.register.css" %}>
-        <link rel="stylesheet" href={% static_url "user/css/pters.common.module.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/백업/trainer/pters.trainer.register.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/백업/pters.common.module.css" %}>
 
         <link rel="icon" href="/static/common/favicon.ico">
         {#<link rel="apple-touch-icon" href="/static/common/favicon-152.png">#}
@@ -73,11 +73,22 @@
 {% block content %}
     <body>
 
+    <!-- Google reCapcha v3 -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6Lednq8UAAAAAPNCsPianArQHAITuhgzf-dkX03-"></script>
+    <script>
+        grecaptcha.ready(function() {
+            grecaptcha.execute('6Lednq8UAAAAAPNCsPianArQHAITuhgzf-dkX03-', {action: 'homepage'}).then(function(token) {
+                document.getElementById('g-recaptcha-response').value = token;
+                console.log(token);
+            });
+        });
+    </script>
+
+      <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
                       height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
-
     <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
     <div class="typeselectbox registerbox">
 
@@ -1016,7 +1027,7 @@
 
 {% block local_js_footer %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script type="text/javascript" src={% static_url "user/js/pters.common.module.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/백업/pters.common.module.js" %}></script>
     <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script>

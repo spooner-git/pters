@@ -1,3 +1,4 @@
+
 class Menu{
     constructor(targetHTML, instance){
         this.page_name = 'menu';
@@ -18,7 +19,7 @@ class Menu{
                             pters_pass: {visible: true, name:"PTERS 패스"},
                             store: {visible: true, name:"스토어"},
                             notice: {visible: true, name:"PTERS 공지"}
-                        }
+                        };
 
         let user_options = {store: {visible :false}, notice: {visible :false}};
         this.render_upper_box();

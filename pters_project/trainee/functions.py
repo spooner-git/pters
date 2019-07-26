@@ -194,68 +194,6 @@ def func_get_class_member_ticket_count(context, class_id, user_id):
     return context
 
 
-def func_get_lecture_count(context, class_id, user_id):
-    error = None
-    if class_id is None or class_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
-
-    member_ticket_reg_count_sum = 0
-    member_ticket_rem_count_sum = 0
-    member_ticket_avail_count_sum = 0
-    member_ticket_flag = False
-    member_ticket_list = None
-    ticket_data = []
-
-    if error is None:
-        # 강사에 해당하는 강좌 정보 불러오기
-
-        member_ticket_list = ClassMemberTicketTb.objects.select_related(
-            'member_ticket_tb__ticket_tb'
-        ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id,
-                 member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
-                 member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date')
-
-    if error is None:
-        # 강사 클래스의 반복일정 불러오기
-        for member_ticket_list_info in member_ticket_list:
-            member_ticket_info = member_ticket_list_info.member_ticket_tb
-            if len(ticket_data) == 0:
-                ticket_data.append(member_ticket_info)
-            else:
-                check_flag = 0
-                for ticket_info in ticket_data:
-                    if ticket_info.ticket_tb.ticket_id == member_ticket_info.ticket_tb.ticket_id:
-                        ticket_info.member_ticket_reg_count += member_ticket_info.member_ticket_reg_count
-                        ticket_info.member_ticket_rem_count += member_ticket_info.member_ticket_rem_count
-                        ticket_info.member_ticket_avail_count += member_ticket_info.member_ticket_avail_count
-                    else:
-                        check_flag = 1
-                if check_flag == 1:
-                    ticket_data.append(member_ticket_info)
-            # 자유형 문제
-            ticket_single_lecture_count = TicketLectureTb.objects.filter(
-                class_tb_id=class_id, lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
-                ticket_tb_id=member_ticket_info.ticket_tb_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
-                lecture_tb__state_cd=STATE_CD_IN_PROGRESS, use=USE).count()
-
-            if ticket_single_lecture_count > 0:
-                if member_ticket_info.state_cd == STATE_CD_IN_PROGRESS:
-                    member_ticket_reg_count_sum += member_ticket_info.member_ticket_reg_count
-                    member_ticket_rem_count_sum += member_ticket_info.member_ticket_rem_count
-                    member_ticket_avail_count_sum += member_ticket_info.member_ticket_avail_count
-
-    if member_ticket_reg_count_sum > 0:
-        member_ticket_flag = True
-
-    context['ticket_data'] = ticket_data
-    context['member_ticket_flag'] = member_ticket_flag
-    context['member_ticket_reg_count'] = member_ticket_reg_count_sum
-    context['member_ticket_finish_count'] = member_ticket_reg_count_sum - member_ticket_rem_count_sum
-    context['member_ticket_avail_count'] = member_ticket_avail_count_sum
-
-    return context
-
-
 def func_get_member_ticket_list(context, class_id, member_id, auth_cd):
     error = None
     context['error'] = None
@@ -603,36 +541,6 @@ def func_get_trainee_ticket_list(context, class_id, user_id):
             ticket_list.append(member_ticket_info)
 
     context['ing_ticket_data'] = ticket_list
-    return context
-
-
-def func_get_trainee_ing_lecture_list(context, class_id, user_id):
-
-    member_ticket_list = ClassMemberTicketTb.objects.select_related(
-        'member_ticket_tb__member',
-        'member_ticket_tb__ticket_tb'
-    ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id, member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
-             member_ticket_tb__use=USE, member_ticket_tb__mmeber_auth_cd=AUTH_TYPE_VIEW
-             ).order_by('member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
-
-    for member_ticket_info in member_ticket_list:
-        member_ticket_info_ticket_tb = member_ticket_info.member_ticket_tb.ticket_tb
-
-        member_ticket_info.ticket_lecture_data = TicketLectureTb.objects.select_related(
-            'member_ticket_tb').filter(ticket_tb_id=member_ticket_info_ticket_tb.ticket_id, member_ticket_tb__use=USE,
-                                       ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                       lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                       use=USE).order_by('member_ticket_tb__reg_dt')
-
-        # try:
-        #     member_ticket_info_ticket_tb.ticket_type_cd_nm \
-        #         = CommonCdTb.objects.get(common_cd=member_ticket_info_ticket_tb.ticket_type_cd).common_cd_nm
-        #     if member_ticket_info_ticket_tb.ticket_type_cd_nm == '1:1':
-        #         member_ticket_info_ticket_tb.ticket_type_cd_nm = '개인'
-        # except ObjectDoesNotExist:
-        #     member_ticket_info_ticket_tb.ticket_type_cd_nm = ''
-
-    context['ing_member_ticket_data'] = member_ticket_list
     return context
 
 

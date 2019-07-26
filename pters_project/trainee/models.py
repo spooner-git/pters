@@ -64,5 +64,4 @@ class MemberMemberTicketTb(TimeStampedModel):
             auth_cd_name = CommonCdTb.objects.get(common_cd=self.auth_cd).common_cd_nm
         except ObjectDoesNotExist:
             auth_cd_name = ''
-        # print(str(auth_cd_name))
         return auth_cd_name
