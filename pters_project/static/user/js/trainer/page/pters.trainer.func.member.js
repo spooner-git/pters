@@ -201,7 +201,7 @@ class Member {
             }
         });
     }
-
+    
 
     static_component (){
         return(
@@ -214,7 +214,8 @@ class Member {
                                                 <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">
                                                     <input type="text" class="search_input" placeholder="검색" onclick="event.stopPropagation();" onkeyup="${this.instance}.search_member_by_typing(event)">
                                                 </div>
-                                                <div class="add_member" onclick="layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_MEMBER_ADD}', 95, ${POPUP_FROM_BOTTOM}, {'data':null})"></div>
+                                                <div class="add_member" onclick="layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_MEMBER_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
+                                                    member_add_popup = new Member_add('.popup_member_add', null, 'member_add_popup');});"></div>
                                             </div>
                                         </div>
                                         <div class="member_bottom_tools_wrap">

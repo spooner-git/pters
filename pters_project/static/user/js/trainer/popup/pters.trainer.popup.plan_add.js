@@ -18,26 +18,26 @@ class Plan_add{
         };
 
         this.data = {
-                lecture_id:[],
-                lecture_name:[],
-                lecture_max_num:[],
-                member_id:[],
-                member_name:[],
-                date: null,
-                date_text: null,
-                start_time:"",
-                start_time_text: null,
-                end_time:"",
-                end_time_text: null,
-                repeat: 
-                    {
-                        day: null,
-                        time: null,
-                        repeat_start: null,
-                        repeat_end: null
-                    }
-                ,
-                memo:""
+            lecture_id:[],
+            lecture_name:[],
+            lecture_max_num:[],
+            member_id:[],
+            member_name:[],
+            date: null,
+            date_text: null,
+            start_time:"",
+            start_time_text: null,
+            end_time:"",
+            end_time_text: null,
+            repeat: 
+                {
+                    day: null,
+                    time: null,
+                    repeat_start: null,
+                    repeat_end: null
+                }
+            ,
+            memo:""
         };
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
@@ -163,7 +163,7 @@ class Plan_add{
 
     dom_row_toolbox(){
         let html = `
-        <div class="plan_add_upper_box" style="margin-bottom:8px;">
+        <div class="plan_add_upper_box" style="padding-bottom:8px;">
             <div style="display:inline-block;width:200px;">
                 <div style="display:inline-block;width:200px;">
                     <span style="font-size:20px;font-weight:bold;">일정 등록</span>

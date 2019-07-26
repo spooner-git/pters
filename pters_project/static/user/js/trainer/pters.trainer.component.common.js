@@ -46,22 +46,58 @@ class CComponent{
         let html = `<li class="create_input_row" id="c_i_r_${id}">
                         <div class="obj_table_raw">
                             <div class="cell_title">
-                                ${icon != "" ? `<img src="${icon}">` : ""} 
+                                ${icon != null ? `<img src="${icon}">` : ""} 
                             </div>
                             <div class="cell_content">
-                                <input class="cell_text" placeholder="${title}">
+                                <input class="cell_text" placeholder="${title}" value="${title}">
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
                         </div>
                     </li>`;
+        $(document).off('focusin', `#c_i_r_${id}`).on('focusin', `#c_i_r_${id}`, function(e){
+            $(this).find('input').val('');
+        });
 
         $(document).off('focusout', `#c_i_r_${id}`).on('focusout', `#c_i_r_${id}`, function(e){
             let user_input_data = $(this).find('input').val();
+            if(user_input_data.length == 0){
+                user_input_data = null;
+            }
+            onfocusout(user_input_data);
+        });
+        return html;
+    }
+    
+    //추가 페이지들에서 사용되는 number input row 스타일
+    static create_input_number_row (id, title, icon, icon_r_visible, onfocusout){
+        
+        let html = `<li class="create_input_row" id="c_i_n_r_${id}">
+                        <div class="obj_table_raw">
+                            <div class="cell_title">
+                                ${icon != null ? `<img src="${icon}">` : ""} 
+                            </div>
+                            <div class="cell_content">
+                                <input class="cell_text" placeholder="${title}" type="tel" value="${title}">
+                            </div>
+                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
+                        </div>
+                    </li>`;
+        $(document).off('focusin', `#c_i_n_r_${id}`).on('focusin', `#c_i_n_r_${id}`, function(e){
+            $(this).find('input').val('');
+        });
+
+        $(document).off('focusout', `#c_i_n_r_${id}`).on('focusout', `#c_i_n_r_${id}`, function(e){
+            let user_input_data = $(this).find('input').val();
+            if(user_input_data.length == 0){
+                user_input_data = null;
+            }
             onfocusout(user_input_data);
         });
         return html;
     }
 
+
+    //수업 선택 팝업에 사용되는 행
     static select_lecture_row (multiple_select, checked, lecture_id, lecture_name, color_code, max_member_num, onclick){
         let html = `
                     <li class="select_lecture_row" id="select_lecture_row_${lecture_id}">
@@ -105,6 +141,7 @@ class CComponent{
         return html;
     }
 
+    //회원 선택 팝업에 사용되는 행
     static select_member_row (multiple_select, checked, member_id, member_name, member_avail_count, member_expiry, onclick){
 
         let html = `
@@ -147,7 +184,6 @@ class CComponent{
         return html;
     }
 
-
     static no_data_row(text){
         let html = `<li class="no_data_row">
                         <div class="obj_table_raw">
@@ -160,6 +196,7 @@ class CComponent{
         return html;
     }
 
+    //텍스트만 있는 버튼
     static text_button (id, title, style, onclick){
         let style_code = CComponent.data_to_style_code(style);
         let html = `<span id="text_button_${id}" style="cursor:pointer;padding:3px 8px;${style_code}">${title}</span>`;
@@ -170,6 +207,7 @@ class CComponent{
         return html;
     }
 
+    //왼쪽에 아이콘과 오른쪽에 텍스트가 있는 버튼
     static icon_button (id, title, url, style, onclick){
         if(url == null){
             url = '/static/common/icon/icon_account.png';
@@ -185,6 +223,7 @@ class CComponent{
         return html;
     }
 
+    //이미지만 있는 버튼
     static image_button (id, title, url, style, onclick){
         if(url == null){
             url = '/static/common/icon/icon_account.png';

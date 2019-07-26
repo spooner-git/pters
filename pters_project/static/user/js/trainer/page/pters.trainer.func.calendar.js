@@ -835,7 +835,7 @@ class Calendar {
         this.user_data.user_selected_time.text2 = null;
 
         layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
-            plan_add_popup = new Plan_add('.popup_plan_add', this.user_data, "plan_add_popup")
+            plan_add_popup = new Plan_add('.popup_plan_add', this.user_data, "plan_add_popup");
         });
     }
 
