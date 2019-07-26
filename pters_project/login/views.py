@@ -1947,8 +1947,6 @@ def check_phone_logic(request):
     data = {
         'secret': recapcha_secret_key,
         'response': token,
-
-
     }
     body = json.dumps(data)
     h = httplib2.Http()

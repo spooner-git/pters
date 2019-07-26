@@ -1719,6 +1719,38 @@
                 }
             })
         }
+
+       function check_phone(){
+            $.ajax({
+                url:'/login/check_phone/',
+                type:'POST',
+                //data:{"email" : $('#id_email').val() },
+                data:{'token':document.getElementById('g-recaptcha-response').value},
+                dataType : 'html',
+
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+
+                //통신성공시 처리
+                success:function(data){
+{#                    var jsondata = JSON.parse(data);#}
+                    console.log(data)
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                    alert("에러: 서버 통신 실패");
+                }
+            })
+        }
     // <!-- 네이버아디디로로그인 초기화 Script -->
 {#    var naverLogin = new naver.LoginWithNaverId(#}
 {#      {#}
