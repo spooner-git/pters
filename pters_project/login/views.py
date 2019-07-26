@@ -1,6 +1,8 @@
+import json
 import logging
 import random
 
+import httplib2
 from django.contrib import messages
 from django.contrib.auth import authenticate, logout, login, get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -1936,3 +1938,27 @@ def password_change_done(request,
         sns_data.update(change_password_check=1)
 
     return TemplateResponse(request, template_name, context)
+
+
+def check_phone_logic(request):
+    token = request.POST.get('token', '')
+    recapcha_secret_key = getattr(settings, "PTERS_reCAPCHA_SECRET_KEY", '')
+    # error = None
+    data = {
+        'secret': recapcha_secret_key,
+        'response': token,
+
+
+    }
+    body = json.dumps(data)
+    h = httplib2.Http()
+
+    resp, content = h.request("https://www.google.com/recaptcha/api/siteverify", method="POST", body=body,
+                              headers={'Content-Type': 'application/json;'})
+    if resp['status'] != '200':
+        # error = '오류가 발생했습니다.'
+        logger.error('capcha error:')
+    else:
+        logger.info('capcha resp:'+str(resp))
+        logger.info('capcha content:'+str(content))
+    return render(request, 'ajax/trainer_error_ajax.html')

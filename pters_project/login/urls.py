@@ -137,4 +137,5 @@ urlpatterns = [
     url(r'^password/reset/done/$',
         views.password_reset_done,
         name='auth_password_reset_done'),
+    url(r'^check_phone/$', views.check_phone_logic, name='check_phone'),
 ]
