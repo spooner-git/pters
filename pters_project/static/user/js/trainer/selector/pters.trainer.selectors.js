@@ -1140,17 +1140,13 @@ class LectureSelector{
     constructor(install_target, target_instance, multiple_select){
         this.targetHTML = install_target;
         this.target_instance = target_instance;
-        this.data;
-        this.callback;
+        this.received_data;
         this.multiple_select = multiple_select;
-        this.store = {
-            id: [],
-            name: [],
-            max: []
+        this.data = {
+            id: this.target_instance.lecture.id,
+            name: this.target_instance.lecture.name,
+            max: this.target_instance.lecture.max
         };
-        this.store.id = this.target_instance.lecture.id;
-        this.store.name = this.target_instance.lecture.name;
-        this.store.max = this.target_instance.lecture.max;
         this.request_list(()=>{
             this.render_list();
         });
@@ -1158,37 +1154,37 @@ class LectureSelector{
 
     render_list(){
         let html_to_join = [];
-        let length = this.data.length;
+        let length = this.received_data.length;
         if(length == 0){
             html_to_join.push(CComponent.no_data_row('수업 목록이 비어있습니다.'));
         }
         for(let i=0; i<length; i++){
-            let data = this.data[i];
+            let data = this.received_data[i];
             let lecture_id = data.lecture_id;
             let lecture_name = data.lecture_name;
             let lecture_color_code = "#fe4e65";
             let lecture_max_num = data.lecture_max_num;
             let checked = this.target_instance.lecture.id.indexOf(lecture_id) >= 0 ? 1 : 0;
-            let html =CComponent.select_lecture_row(
+            let html = CComponent.select_lecture_row(
                 this.multiple_select, checked, lecture_id, lecture_name, lecture_color_code, lecture_max_num, (add_or_substract)=>{
                     if(add_or_substract == "add"){
-                        this.store.id.push(lecture_id);
-                        this.store.name.push(lecture_name);
-                        this.store.max.push(lecture_max_num);
+                        this.data.id.push(lecture_id);
+                        this.data.name.push(lecture_name);
+                        this.data.max.push(lecture_max_num);
                     }else if(add_or_substract == "substract"){
-                        this.store.id.splice(this.store.id.indexOf(lecture_id), 1);
-                        this.store.name.splice(this.store.name.indexOf(lecture_name), 1);
-                        this.store.max.splice(this.store.name.indexOf(lecture_name), 1);
+                        this.data.id.splice(this.data.id.indexOf(lecture_id), 1);
+                        this.data.name.splice(this.data.name.indexOf(lecture_name), 1);
+                        this.data.max.splice(this.data.name.indexOf(lecture_name), 1);
                     }else if(add_or_substract == "add_single"){
-                        this.store.id = [];
-                        this.store.name = [];
-                        this.store.max = [];
-                        this.store.id.push(lecture_id);
-                        this.store.name.push(lecture_name);
-                        this.store.max.push(lecture_max_num);
+                        this.data.id = [];
+                        this.data.name = [];
+                        this.data.max = [];
+                        this.data.id.push(lecture_id);
+                        this.data.name.push(lecture_name);
+                        this.data.max.push(lecture_max_num);
                     }
 
-                    this.target_instance.lecture = this.store; //타겟에 선택된 데이터를 set
+                    this.target_instance.lecture = this.data; //타겟에 선택된 데이터를 set
 
                     if(this.multiple_select == 1){
                         layer_popup.close_layer_popup();
@@ -1205,7 +1201,7 @@ class LectureSelector{
 
     request_list (callback){
         lecture.request_lecture_list("ing", (data)=>{
-            this.data = data.current_lecture_data;
+            this.received_data = data.current_lecture_data;
             callback();
         });
     }
@@ -1215,16 +1211,15 @@ class MemberSelector{
     constructor(install_target, target_instance, multiple_select, appendix){
         this.targetHTML = install_target;
         this.target_instance = target_instance;
-        this.data;
+        this.received_data;
         this.appendix = appendix;
-        this.callback;
         this.multiple_select = multiple_select;
-        this.store = {
+        this.data = {
             id: [],
             name: []
         };
-        this.store.id = this.target_instance.member.id;
-        this.store.name = this.target_instance.member.name;
+        this.data.id = this.target_instance.member.id;
+        this.data.name = this.target_instance.member.name;
         this.request_list(()=>{
             this.render_list();
         });
@@ -1232,35 +1227,35 @@ class MemberSelector{
 
     render_list (){
         let html_to_join = [];
-        let length = this.data.length;
+        let length = this.received_data.length;
         if(length == 0){
             html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.'));
         }
         for(let i=0; i<length; i++){
-            let data = this.data[i];
+            let data = this.received_data[i];
             let member_id = data.member_id;
             let member_name = data.member_name;
-            let member_rem_count = data.member_ticket_rem_count;
+            // let member_rem_count = data.member_ticket_rem_count;
             let member_avail_count = data.member_ticket_avail_count;
             let member_expiry = data.end_date;
             let checked = this.target_instance.member.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
             let html = CComponent.select_member_row (
                 this.multiple_select, checked, member_id, member_name, member_avail_count, member_expiry, (add_or_substract)=>{
                     if(add_or_substract == "add"){
-                        this.store.id.push(member_id);
-                        this.store.name.push(member_name);
+                        this.data.id.push(member_id);
+                        this.data.name.push(member_name);
                     }else if(add_or_substract == "substract"){
-                        this.store.id.splice(this.store.id.indexOf(member_id), 1);
-                        this.store.name.splice(this.store.name.indexOf(member_name), 1);
+                        this.data.id.splice(this.data.id.indexOf(member_id), 1);
+                        this.data.name.splice(this.data.name.indexOf(member_name), 1);
                     }else if(add_or_substract == "add_single"){
-                        this.store.id = [];
-                        this.store.name = [];
-                        this.store.id.push(member_id);
-                        this.store.name.push(member_name);
+                        this.data.id = [];
+                        this.data.name = [];
+                        this.data.id.push(member_id);
+                        this.data.name.push(member_name);
                     }
-                    console.log(this.store.name)
+
+                    this.target_instance.member = this.data; //타겟에 선택된 데이터를 set
                     
-                    this.target_instance.member = this.store; //타겟에 선택된 데이터를 set
                     if(this.multiple_select == 1){
                         layer_popup.close_layer_popup();
                     }
@@ -1278,14 +1273,14 @@ class MemberSelector{
         //Lecture_id를 클래스가 받지 못한 경우, 모든 진행 회원 리스트를 받아온다.
         if(this.appendix.lecture_id == undefined){
             member.request_member_list("ing", (data)=>{
-                this.data = data.current_member_data;
+                this.received_data = data.current_member_data;
                 callback();
                 show_error_message('수업 정보를 확인할 수 없어, 전체 진행중 회원목록을 가져옵니다.');
             });
         }else{
             let data = {"lecture_id": this.appendix.lecture_id};
             Lecture_func.read_lecture_members(data, (data)=>{
-                this.data = data.lecture_ing_member_list;
+                this.received_data = data.lecture_ing_member_list;
                 callback();
             });
         }

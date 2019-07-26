@@ -8,10 +8,3 @@
 .popup_plan_add .obj_box_full{
 	padding: 0 16px;
 }
-
-#wrapper_box_plan_add_toolbox{
-	border: 0;
-}
-#wrapper_box_plan_add_toolbox .plan_add_upper_box{
-	margin-bottom: 8px;
-}
