@@ -1008,26 +1008,9 @@ class AddMemberNoEmailView(View):
 
         first_name = request.POST.get('first_name', '')
         name = request.POST.get('name', '')
-        # phone = request.POST.get('username', '')
         sex = request.POST.get('sex', '')
         birthday_dt = request.POST.get('birthday', '')
         phone = request.POST.get('phone', '')
-        # package_id = request.POST.get('group_id', '')
-        # group_id = request.POST.get('group_id', '')
-        # error_count = 0
-        # if package_id is not None and package_id != '':
-        #     package_group_data = PackageLectureTb.objects.filter(package_tb_id=package_id, use=USE)
-        #     for package_group_info in package_group_data:
-        #         if package_group_info.group_tb.group_type_cd == 'NORMAL':
-        #
-        #             if package_group_info.group_tb.ing_group_member_num >= package_group_info.group_tb.member_num:
-        #                 error = package_group_info.group_tb.name
-        #                 error_count += 1
-        #     if error_count == 1:
-        #         error += ' 그룹의 정원을 초과했습니다.'
-        #     elif error_count > 1:
-        #         error = '해당 패키지의 '+str(error_count)+'개의 그룹 정원을 초과했습니다.'
-
         context = add_member_no_email_func(request.user.id, first_name, phone, sex, birthday_dt)
         error = context['error']
 
@@ -1417,14 +1400,10 @@ def add_member_no_email_func(user_id, first_name, phone, sex, birthday_dt):
     username = ''
     context = {'error': None, 'user_db_id': '', 'username': ''}
 
-    # if last_name is None or last_name == '':
-    #     error = '성을 입력해 주세요.'
-
     if first_name is None or first_name == '':
         error = '이름을 입력해 주세요.'
 
     if error is None:
-        # name = last_name + first_name
         name = first_name
         if name == '':
             error = '이름을 입력해 주세요.'
@@ -1942,21 +1921,60 @@ def password_change_done(request,
 
 def check_phone_logic(request):
     token = request.POST.get('token', '')
+    recaptcha_test_session = request.session.get('recaptcha_test_session', 'failed')
+    phone_count = request.session.get('phone_count', 0)
+
     recaptcha_secret_key = getattr(settings, "PTERS_reCAPTCHA_SECRET_KEY", '')
-    # error = None
-    data = {
-        'secret': recaptcha_secret_key,
-        'response': token
-    }
-    body = json.dumps(data)
-    h = httplib2.Http()
-    # print(str(data))
-    resp, content = h.request("https://www.google.com/recaptcha/api/siteverify", method="POST", body=body, headers={'Content-Type': 'application/json;'})
-    if resp['status'] != '200':
-        # error = '오류가 발생했습니다.'
-        logger.error('capcha error:')
+    phone_activation_count = getattr(settings, "PTERS_PHONE_ACTIVATION_MAX_COUNT", '')
+
+    error = None
+
+    if int(phone_count) < phone_activation_count:
+        if recaptcha_test_session != 'success':
+            error = func_recaptcha_test(recaptcha_secret_key, token)
+            if error is None:
+                request.session['recaptcha_test_session'] = 'success'
+            else:
+                request.session['recaptcha_test_session'] = 'failed'
     else:
-        # print(str(content))
-        logger.info('capcha resp:'+str(resp))
-        logger.info('capcha content:'+str(content))
+        error = '일일 휴대폰 인증 횟수가 '+str(phone_activation_count)+'회 초과했습니다.'
+
+    if error is None:
+        logger.info('request phone')
+
+    if error is not None:
+        logger.error('error:'+str(error)+':'+str(timezone.now()))
+        messages.error(request, error)
+
     return render(request, 'ajax/trainer_error_ajax.html')
+
+
+def func_recaptcha_test(recaptcha_secret_key, token):
+    error = None
+    h = httplib2.Http()
+    resp, content = h.request("https://www.google.com/recaptcha/api/siteverify",
+                              method="POST", body='secret=' + recaptcha_secret_key + '&response=' + token,
+                              headers={'Content-Type': 'application/x-www-form-urlencoded;'})
+    if resp['status'] != '200':
+        error = '비정상적인 접근입니다.[1]'
+    else:
+        response_data = content.decode('utf-8')
+        response_json_data = None
+        error = None
+        try:
+            response_json_data = json.loads(response_data)
+        except ValueError:
+            error = '비정상적인 접근입니다.[2]'
+        except TypeError:
+            error = '비정상적인 접근입니다.[3]'
+
+        if error is None:
+            success = response_json_data['success']
+            if success:
+                score = response_json_data['score']
+                if score < 0.5:
+                    error = '비정상적인 접근입니다.[4]'
+            else:
+                error = '비정상적인 접근입니다.[5]'
+
+    return error
