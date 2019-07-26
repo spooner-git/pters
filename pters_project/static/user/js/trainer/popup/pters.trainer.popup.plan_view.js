@@ -110,8 +110,8 @@ class Plan_view{
     set_initial_data (data){
         this.data.lecture_id = data.schedule_info[0].lecture_id;
         this.data.lecture_name = data.schedule_info[0].lecture_name;
-        this.data.member_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return it.member_name;});
-        this.data.member_name = data.schedule_info[0].lecture_schedule_data.map((it)=>{return it.member_name;});
+        this.data.member_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_id}`;});
+        this.data.member_name = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_name}`;});
         this.data.start_time = data.schedule_info[0].start_time;
         this.data.start_time_text = TimeRobot.to_text(data.schedule_info[0].start_time.split(':')[0], data.schedule_info[0].start_time.split(':')[1]);
         this.data.end_time = data.schedule_info[0].end_time;
@@ -137,6 +137,7 @@ class Plan_view{
     
     render_content (){
         let member_select_row = this.dom_row_member_select();
+        let member_list_row = this.dom_row_member_list();
         let date_select_row = this.dom_row_date_select();
         let start_time_select_row = this.dom_row_start_time_select();
         let end_time_select_row = this.dom_row_end_time_select();
@@ -145,7 +146,7 @@ class Plan_view{
             member_select_row == "";
         }
 
-        let html =  '<div class="obj_box_full">'+ member_select_row+'</div>' + 
+        let html =  '<div class="obj_box_full">'+ member_select_row+member_list_row+'</div>' + 
                     '<div class="obj_box_full">' + date_select_row + start_time_select_row + end_time_select_row + '</div>' +
                     '<div class="obj_box_full">'+  memo_select_row + '</div>';
 
