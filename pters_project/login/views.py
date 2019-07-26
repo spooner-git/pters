@@ -1942,21 +1942,21 @@ def password_change_done(request,
 
 def check_phone_logic(request):
     token = request.POST.get('token', '')
-    recapcha_secret_key = getattr(settings, "PTERS_reCAPCHA_SECRET_KEY", '')
+    recaptcha_secret_key = getattr(settings, "PTERS_reCAPTCHA_SECRET_KEY", '')
     # error = None
     data = {
-        'secret': recapcha_secret_key,
-        'response': token,
+        'secret': recaptcha_secret_key,
+        'response': token
     }
     body = json.dumps(data)
     h = httplib2.Http()
-
-    resp, content = h.request("https://www.google.com/recaptcha/api/siteverify", method="POST", body=body,
-                              headers={'Content-Type': 'application/json;'})
+    # print(str(data))
+    resp, content = h.request("https://www.google.com/recaptcha/api/siteverify", method="POST", body=body, headers={'Content-Type': 'application/json;'})
     if resp['status'] != '200':
         # error = '오류가 발생했습니다.'
         logger.error('capcha error:')
     else:
+        # print(str(content))
         logger.info('capcha resp:'+str(resp))
         logger.info('capcha content:'+str(content))
     return render(request, 'ajax/trainer_error_ajax.html')

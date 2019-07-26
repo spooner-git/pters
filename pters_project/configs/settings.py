@@ -191,7 +191,7 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 PTERS_PUSH_SERVER_KEY = os.environ.get("PTERS_PUSH_SERVER_KEY", '')
-PTERS_reCAPCHA_SECRET_KEY = os.environ.get("PTERS_reCAPCHA_SECRET_KEY", '')
+PTERS_reCAPTCHA_SECRET_KEY = os.environ.get("PTERS_reCAPTCHA_SECRET_KEY", '')
 
 # db data upload size
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 100000
