@@ -41,6 +41,10 @@ class Home{
             date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth',title:'날짜 선택',data:null, callback_when_set: ()=>{console.log('시간okok');}});
         });`;
 
+        let onclick_test_datepicker = `layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_picker_selector', ${100*305/windowHeight}, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            date_picker_selector = new DatePickerSelector('#wrapper_popup_date_picker_selector_function', null, {myname:'datepicker',title:'날짜 선택',data:null, callback_when_set: (data)=>{console.log(data);}});
+        });`;
+
 
         html_temp.push(`<div>${class_center_name}</div>
                     <div>${class_type_name}</div>
@@ -51,6 +55,7 @@ class Home{
                     <button onclick="${onclick_test_spinner}">spin</button>
                     <button onclick="${onclick_test_time}">time</button>
                     <button onclick="${onclick_test_date}">date</button>
+                    <button onclick="${onclick_test_datepicker}">date</button>
                     <div style="margin-top:50px">
                         <button onclick="location.href='/login/logout/'">로그아웃</button>
                     </div>
