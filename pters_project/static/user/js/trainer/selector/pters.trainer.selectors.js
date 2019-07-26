@@ -1255,7 +1255,7 @@ class MemberSelector{
                     }
 
                     this.target_instance.member = this.data; //타겟에 선택된 데이터를 set
-                    
+
                     if(this.multiple_select == 1){
                         layer_popup.close_layer_popup();
                     }

@@ -29,14 +29,14 @@ class Plan_add{
                 start_time_text: null,
                 end_time:"",
                 end_time_text: null,
-                repeat: [
+                repeat: 
                     {
                         day: null,
                         time: null,
                         repeat_start: null,
                         repeat_end: null
                     }
-                ],
+                ,
                 memo:""
         };
 
@@ -277,7 +277,7 @@ class Plan_add{
     }
 
     dom_row_repeat_select(){
-        let html = CComponent.create_row('select_repeat', this.data.repeat.time == "" ? '반복 일정' : this.data.repeat.day+' '+this.data.repeat.time, '/static/common/icon/icon_repeat.png', SHOW, (data)=>{ console.log(data);});
+        let html = CComponent.create_row('select_repeat', this.data.repeat.time == null ? '반복 일정' : this.data.repeat.day+' '+this.data.repeat.time, '/static/common/icon/icon_repeat.png', SHOW, (data)=>{ console.log(data);});
         return html;
     }
 
