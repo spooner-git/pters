@@ -1940,7 +1940,7 @@ def check_phone_logic(request):
         error = '일일 휴대폰 인증 횟수가 '+str(phone_activation_count)+'회 초과했습니다.'
 
     if error is None:
-        logger.info('request phone')
+        logger.info('request phone test')
 
     if error is not None:
         logger.error('error:'+str(error)+':'+str(timezone.now()))
