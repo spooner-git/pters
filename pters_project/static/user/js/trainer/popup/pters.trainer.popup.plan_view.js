@@ -112,6 +112,9 @@ class Plan_view{
         this.data.lecture_name = data.schedule_info[0].lecture_name;
         this.data.member_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_id}`;});
         this.data.member_name = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_name}`;});
+        if(data.schedule_info[0].schedule_type == 1){
+            this.data.member_name = data.schedule_info[0].member_name;
+        }
         this.data.start_time = data.schedule_info[0].start_time;
         this.data.start_time_text = TimeRobot.to_text(data.schedule_info[0].start_time.split(':')[0], data.schedule_info[0].start_time.split(':')[1]);
         this.data.end_time = data.schedule_info[0].end_time;
@@ -143,10 +146,10 @@ class Plan_view{
         let end_time_select_row = this.dom_row_end_time_select();
         let memo_select_row = this.dom_row_memo_select();
         if(this.data.schedule_type == 0){
-            member_select_row == "";
+            member_select_row = "";
         }
-
-        let html =  '<div class="obj_box_full">'+ member_select_row+member_list_row+'</div>' + 
+        
+        let html =  '<div class="obj_box_full">'+ member_select_row + member_list_row+'</div>' + 
                     '<div class="obj_box_full">' + date_select_row + start_time_select_row + end_time_select_row + '</div>' +
                     '<div class="obj_box_full">'+  memo_select_row + '</div>';
 
