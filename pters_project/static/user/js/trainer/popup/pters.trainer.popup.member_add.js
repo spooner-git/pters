@@ -263,7 +263,7 @@ class Member_add{
         let start_date_text = this.data.start_date == null ? '시작일*' : this.data.start_date_text;
         let html = CComponent.create_row('start_date_select', start_date_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
             //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
 
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
                 let year = this.data.start_date == null ? this.dates.current_year : this.data.start_date.year; 
@@ -273,7 +273,6 @@ class Member_add{
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'start_date', title:'시작일 선택', data:{year:year, month:month, date:date},  
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     this.start_date = object; 
-                                                                                                    console.log(object)
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
                 }});
             });
@@ -286,12 +285,12 @@ class Member_add{
         let end_date_text = this.data.end_date == null ? '종료일*' : this.data.end_date_text;
         let html = CComponent.create_row('end_date_select', end_date_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
             //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
 
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
                 let year = this.data.end_date == null ? this.dates.current_year : this.data.end_date.year; 
                 let month = this.data.end_date == null ? this.dates.current_month : this.data.end_date.month;
-                let date = this.data.end_date == null ? this.dates.current_date : this.data.date.end_date;
+                let date = this.data.end_date == null ? this.dates.current_date : this.data.end_date;
                 
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'end_date', title:'종료일 선택', data:{year:year, month:month, date:date},  
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
