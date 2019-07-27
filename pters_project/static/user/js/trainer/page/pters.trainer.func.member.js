@@ -240,15 +240,13 @@ class Member {
 
 class Member_func{
     static create(data, callback){
-        //데이터 형태 {"member_id":"", "contents":"", "counts":"", "price":"", "start_date":"", "end_date":"", "class_id":"", "package_id":""};
-
         $.ajax({
-            url:'/trainer/add_lecture_info/',
+            url:'/trainer/add_member_ticket_info/',
             type:'POST',
             data: data,
             dataType : 'html',
     
-            beforeSend:function(xhr, settings) {
+            beforeSend:function(xhr, settings){
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
@@ -260,13 +258,47 @@ class Member_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                callback();
+            success:function(received_data){
+                let data = JSON.parse(received_data);
+                console.log(data);
+                if(callback != undefined){
+                    callback(data);
+                }
             },
     
             //통신 실패시 처리
             error:function(){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static create_pre(data, callback){
+        $.ajax({
+            url:'/login/add_member_info_no_email/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            complete:function(){
+            },
+    
+            success:function(received_data){
+                let data = JSON.parse(received_data);
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+
             }
         });
     }

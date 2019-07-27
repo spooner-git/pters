@@ -75,7 +75,7 @@ urlpatterns = [
     url(r'^export_excel_member_info/$', views.export_excel_member_info_logic, name='export_excel_member_info'),
 
     # 회원 수강정보 추가 - refactoring
-    url(r'^add_member_ticket_info/$', views.add_member_ticket_info_logic, name='add_lecture_info'),
+    url(r'^add_member_ticket_info/$', views.add_member_ticket_info_logic, name='add_member_ticket_info'),
     # 회원 수강정보 수정 - refactoring - 확인 필요
     url(r'^update_member_ticket_info/$', views.update_member_ticket_info_logic, name='update_member_ticket_info'),
     # 회원 수강정보 삭제 - refactoring - 확인 필요

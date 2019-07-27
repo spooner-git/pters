@@ -24,12 +24,12 @@ class Member_add{
                 ticket_id:[],
                 ticket_name:[],
                 ticket_effective_days:[],
+                ticket_reg_count:null,
+                ticket_price:null,
                 start_date:null,
                 start_date_text:null,
                 end_date:null,
-                end_date_text:null,
-                ticket_reg_count:[],
-                ticket_price:[]
+                end_date_text:null
         };
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
@@ -106,32 +106,30 @@ class Member_add{
     set ticket(data){
         this.data.ticket_id = data.id;
         this.data.ticket_name = data.name;
-        this.data.ticket_price = data.reg_price;
-        this.data.ticket_reg_count = data.reg_count;
         this.data.ticket_effective_days = data.effective_days;
         this.render_content();
     }
 
     get ticket(){
-        return {id:this.data.ticket_id, name:this.data.ticket_name, reg_price:this.data.ticket_price, reg_count: this.data.ticket_reg_count, effective_days: this.data.ticket_effective_days};
+        return {id:this.data.ticket_id, name:this.data.ticket_name, effective_days: this.data.ticket_effective_days};
     }
 
     set reg_count(number){
-        this.data.reg_count = number;
+        this.data.ticket_reg_count = number;
         this.render_content();
     }
 
     get reg_count(){
-        return this.data.reg_count;
+        return this.data.ticket_reg_count;
     }
 
     set reg_price(number){
-        this.data.reg_price = number;
+        this.data.ticket_price = number;
         this.render_content();
     }
 
     get reg_price(){
-        return this.data.reg_price;
+        return this.data.ticket_price;
     }
 
 
@@ -244,8 +242,8 @@ class Member_add{
     dom_row_member_sex_input(){
         let html = CComponent.create_row ('input_member_sex', this.data.sex == null ? '성별' : this.data.sex, '/static/common/icon/person_black.png', HIDE, (input_data)=>{
             let user_option = {
-                                male:{text:"남성", callback:()=>{this.sex = "male";layer_popup.close_layer_popup();}},
-                                female:{text:"여성", callback:()=>{this.sex = "female";layer_popup.close_layer_popup();}}
+                                male:{text:"남성", callback:()=>{this.sex = "M";layer_popup.close_layer_popup();}},
+                                female:{text:"여성", callback:()=>{this.sex = "W";layer_popup.close_layer_popup();}}
             };
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
                 var option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
@@ -317,7 +315,7 @@ class Member_add{
     }
 
     dom_row_member_reg_coung_input(){
-        let html = CComponent.create_input_number_row ('input_reg_count', this.data.ticket_reg_count.length == 0 ? '횟수' : this.data.ticket_reg_count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, (input_data)=>{
+        let html = CComponent.create_input_number_row ('input_reg_count', this.data.ticket_reg_count == null ? '횟수' : this.data.ticket_reg_count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, (input_data)=>{
             let user_input_data = input_data;
             this.reg_count = user_input_data;
         });
@@ -325,7 +323,7 @@ class Member_add{
     }
 
     dom_row_member_reg_price_input(){
-        let html = CComponent.create_input_number_row ('input_reg_price', this.data.ticket_price.length == 0 ? '가격' : this.data.ticket_price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, (input_data)=>{
+        let html = CComponent.create_input_number_row ('input_reg_price', this.data.ticket_price == null ? '가격' : this.data.ticket_price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, (input_data)=>{
             let user_input_data = input_data;
             this.reg_price = user_input_data;
         });
@@ -349,22 +347,35 @@ class Member_add{
 
     send_data(){
 
-        let data = {"lecture_id":this.data.lecture_id[0],
+        let data = {
+                    "member_id":null,
+                    "first_name": this.data.name,
                     "name":this.data.name,
                     "phone":this.data.phone,
-                    "birth":`${this.data.birth.year}-${this.data.birth.month}-${this.data.birth.date}`,
+                    "birthday":`${this.data.birth.year}-${this.data.birth.month}-${this.data.birth.date}`,
                     "sex":this.data.sex,
-                    "note":this.data.memo,
+                    "contents":this.data.memo,
                     "ticket_id":this.data.ticket_id[0],
-                    "start_dt": `${this.data.start_date.year}-${this.data.start_date.month}-${this.data.start_date.date}`,
-                    "end_dt":`${this.data.end_date.year}-${this.data.end_date.month}-${this.data.end_date.date}`,
-                    "reg_count":this.data.reg_count,
-                    "reg_price":this.data.reg_price
+                    "start_date": `${this.data.start_date.year}-${this.data.start_date.month}-${this.data.start_date.date}`,
+                    "end_date":`${this.data.end_date.year}-${this.data.end_date.month}-${this.data.end_date.date}`,
+                    "counts":this.data.ticket_reg_count,
+                    "price":this.data.ticket_price
         };
 
-        Member_func.create(data, ()=>{
-            layer_popup.close_layer_popup();
-            member.init();
+        // data = {
+        //     "first_name":"1회원등록", "name":"1회원등록", "sex":"M", "birthday":"1986-02-24", "phone":"01034435752"
+        // };
+        // data = {
+        //     "member_id":null, "contents":null, "counts":null, "price":null, "start_date":null, "end_date":null, "ticket_id":null
+        // }
+
+        Member_func.create_pre(data, (received)=>{
+            data.member_id = received.user_db_id[0];
+            console.log("create", data);
+            Member_func.create(data, ()=>{
+                layer_popup.close_layer_popup();
+                member.init();
+            });
         });
     }
 
