@@ -352,7 +352,7 @@ class Member_add{
                     "first_name": this.data.name,
                     "name":this.data.name,
                     "phone":this.data.phone,
-                    "birthday":`${this.data.birth.year}-${this.data.birth.month}-${this.data.birth.date}`,
+                    "birthday": `${this.data.birth != null ? this.data.birth.year+'-'+this.data.birth.month+'-'+this.data.birth.date : null}`,
                     "sex":this.data.sex,
                     "contents":this.data.memo,
                     "ticket_id":this.data.ticket_id[0],
