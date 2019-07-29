@@ -57,6 +57,8 @@ const SCHEDULE_ABSENCE = 2;
 const SCHEDULE_ALL = 3;
 const SCHEDULE_FINISH_ANYWAY = 4;
 
+const FIX = 'FIX';
+
 /* px */
 const MAX_WIDTH = 800;
 

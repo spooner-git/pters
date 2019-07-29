@@ -99,6 +99,7 @@
             this.target_ticket_member_list = '#wrapper_ticket_members_list';
 
             console.log(this.data)
+            this.ticket_id = this.data.ticket_id;
         }
 
         init(){
@@ -138,7 +139,8 @@
 
         render_ticket_edit_button(target){
             document.querySelector(target).onclick = () => {
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_EDIT, 100, POPUP_FROM_RIGHT, {'ticket_id':this.data.ticket_id});
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_EDIT, 100, POPUP_FROM_RIGHT, {"ticket_id":this.ticket_id}, ()=>{
+                                                    ticket_edit_popup = new Ticket_edit('.popup_ticket_edit', this.ticket_id, 'ticket_edit_popup');});
             };
         }
 

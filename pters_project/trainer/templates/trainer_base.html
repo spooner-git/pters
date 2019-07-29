@@ -217,7 +217,9 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_add.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_edit.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.ticket_add.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.ticket_edit.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
 <script type="text/javascript" src={% static_url "user/js/trainer/selector/pters.trainer.selectors.js" %}></script>
@@ -321,8 +323,14 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
     var plan_view_popup;
     var plan_add_popup;
     var member_add_popup;
+    var member_view_popup;
+    var member_edit_popup;
     var ticket_add_popup;
+    var ticket_view_popup;
+    var ticket_edit_popup
     var lecture_add_popup;
+    var lecture_view_popup;
+    var lecture_edit_popup;
     // 팝업 인스턴스
 
     // 범용 셀렉터 인스턴스
