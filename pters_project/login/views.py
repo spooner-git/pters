@@ -1,8 +1,13 @@
+import base64
+import datetime
+import hashlib
+import hmac
 import json
 import logging
 import random
 
 import httplib2
+import time
 from django.contrib import messages
 from django.contrib.auth import authenticate, logout, login, get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -923,17 +928,14 @@ class AddMemberView(RegistrationView, View):
 
     def post(self, request, *args, **kwargs):
 
-        form = RegistrationForm(request.POST, request.FILES)
+        form = MyRegistrationForm(request.POST, request.FILES)
 
         first_name = request.POST.get('first_name', '')
-        # last_name = request.POST.get('last_name', '')
         name = request.POST.get('name', '')
         phone = request.POST.get('phone', '')
         sex = request.POST.get('sex', '')
         group_type = request.POST.get('group_type', 'trainee')
         birthday_dt = request.POST.get('birthday', '')
-        # address = request.POST.get('address', '')
-        # country = request.POST.get('country', '')
 
         error = None
 
@@ -954,7 +956,7 @@ class AddMemberView(RegistrationView, View):
                         group = Group.objects.get(name=group_type)
                         user.groups.add(group)
                         user.first_name = first_name
-                        # user.last_name = last_name
+                        user.is_active = True
                         user.save()
                         if birthday_dt == '':
                             member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
@@ -963,14 +965,6 @@ class AddMemberView(RegistrationView, View):
                             member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
                                               birthday_dt=birthday_dt, user_id=user.id, use=USE)
                         member.save()
-                        # if group_type == 'trainer':
-                        #    class_info = ClassTb(member_id=user.id, subject_cd='WP',
-                        #                         start_date=datetime.date.today(),
-                        # end_date=datetime.date.today()+timezone.timedelta(days=3650),
-                        #                         class_hour=1, start_hour_unit=1, class_member_num=100,
-                        #                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
-
-                        #    class_info.save()
                 except ValueError:
                     error = '이미 가입된 회원입니다.'
                 except IntegrityError:
@@ -993,9 +987,8 @@ class AddMemberView(RegistrationView, View):
                         else:
                             if field.name != 'username':
                                 error += err
-
         if error is not None:
-            logger.error(name + '[' + form.cleaned_data['email'] + ']' + error)
+            logger.error(name + '[' + form.cleaned_data['username'] + ']' + error)
             messages.error(request, error)
 
         return render(request, self.template_name)
@@ -1921,26 +1914,35 @@ def password_change_done(request,
 
 def check_phone_logic(request):
     token = request.POST.get('token', '')
-    recaptcha_test_session = request.session.get('recaptcha_test_session', 'failed')
-    phone_count = request.session.get('phone_count', 0)
+    recaptcha_test_session = request.session.get('recaptcha_session', '')
+    sms_count = request.session.get('sms_count', 0)
+    phone_number = request.POST.get('phone_number', '')
 
-    recaptcha_secret_key = getattr(settings, "PTERS_reCAPTCHA_SECRET_KEY", '')
-    phone_activation_count = getattr(settings, "PTERS_PHONE_ACTIVATION_MAX_COUNT", '')
-
+    recaptcha_secret_key = settings.PTERS_reCAPTCHA_SECRET_KEY
+    sms_activation_count = settings.PTERS_SMS_ACTIVATION_MAX_COUNT
     error = None
 
-    if int(phone_count) < phone_activation_count:
-        if recaptcha_test_session != 'success':
-            error = func_recaptcha_test(recaptcha_secret_key, token)
-            if error is None:
-                request.session['recaptcha_test_session'] = 'success'
-            else:
-                request.session['recaptcha_test_session'] = 'failed'
-    else:
-        error = '일일 휴대폰 인증 횟수가 '+str(phone_activation_count)+'회 초과했습니다.'
+    if phone_number == '':
+        error = '휴대폰 번호를 입력해주세요.'
 
     if error is None:
-        logger.info('request phone test')
+        if int(sms_count) < sms_activation_count:
+            if recaptcha_test_session != 'success':
+                error = func_recaptcha_test(recaptcha_secret_key, token)
+                if error is None:
+                    request.session['recaptcha_session'] = 'success'
+                else:
+                    request.session['recaptcha_session'] = 'failed'
+        else:
+            error = '일일 문자 인증 횟수가 '+str(sms_activation_count)+'회 초과했습니다.'
+
+    if error is None:
+        max_range = 99999
+        request.session['sms_activation_check'] = False
+        request.session['sms_activation_time'] = str(timezone.now())
+        sms_activation_number = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+        request.session['sms_activation_number'] = sms_activation_number
+        error = func_send_sms_auth(phone_number, sms_activation_number)
 
     if error is not None:
         logger.error('error:'+str(error)+':'+str(timezone.now()))
@@ -1978,3 +1980,74 @@ def func_recaptcha_test(recaptcha_secret_key, token):
                 error = '비정상적인 접근입니다.[5]'
 
     return error
+
+
+def func_send_sms_auth(phone, activation_number):
+    error = None
+    h = httplib2.Http()
+    acc_key_id = settings.PTERS_NAVER_ACCESS_KEY_ID
+    acc_sec_key = settings.PTERS_NAVER_SECRET_KEY.encode('utf-8')
+
+    sms_uri = "/sms/v2/services/{}/messages".format(settings.PTERS_NAVER_SMS_API_KEY_ID)
+    sms_url = "https://sens.apigw.ntruss.com{}".format(sms_uri)
+
+    stime = int(float(time.time()) * 1000)
+    hash_str = "POST {}\n{}\n{}".format(sms_uri, str(stime), acc_key_id)
+    digest = hmac.new(acc_sec_key, msg=hash_str.encode('utf-8'), digestmod=hashlib.sha256).digest()
+    d_hash = base64.b64encode(digest).decode()
+
+    data = {
+        "type": "SMS",
+        "contentType": "COMM",
+        "countryCode": "82",
+        "from": "01027850505",
+        "content": "[PTERS] 인증번호 ["+activation_number+"]를 입력해주세요.",
+        "messages": [
+            {
+                "to": str(phone),
+                "content": "[PTERS] 인증번호 ["+activation_number+"]를 입력해주세요."
+            }
+        ]
+    }
+    body = json.dumps(data)
+
+    resp, content = h.request(sms_url,
+                              method="POST", body=body,
+                              headers={'Content-Type': 'application/json; charset=utf-8',
+                                       'x-ncp-apigw-timestamp': str(stime),
+                                       'x-ncp-iam-access-key': acc_key_id,
+                                       'x-ncp-apigw-signature-v2': d_hash})
+    if resp['status'] != '202':
+        error = '비정상적인 접근입니다.[2-1]'
+    return error
+
+
+class ActivateSmsConfirmView(View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request):
+        user_activation_code = request.POST.get('user_activation_code')
+        sms_activation_number = request.session.get('sms_activation_number')
+        sms_activation_time = request.session.get('sms_activation_time')
+        now = timezone.now()
+        error = None
+        sms_activation_time = datetime.datetime.strptime(sms_activation_time, '%Y-%m-%d %H:%M:%S.%f')
+
+        time_interval = str(now-sms_activation_time)
+        time_interval_data = time_interval.split('.')[0].split(':')
+        time_interval_minutes = time_interval_data[1]
+        time_interval_seconds = time_interval_data[2]
+
+        if user_activation_code == sms_activation_number:
+            if(int(time_interval_minutes)*60+int(time_interval_seconds)) > settings.SMS_ACTIVATION_SECONDS:
+                error = '입력 시한이 지났습니다.'
+                request.session['sms_activation_check'] = False
+            else:
+                request.session['sms_activation_check'] = True
+        else:
+            request.session['sms_activation_check'] = False
+            error = '문자 인증번호가 일치하지 않습니다.'
+        if error is not None:
+            messages.error(request, error)
+
+        return render(request, self.template_name)

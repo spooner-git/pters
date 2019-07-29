@@ -173,8 +173,8 @@
             <div class="outerbox">
                 <!-- <input type="text" name="" maxlength="15" placeholder="성" id="lastname_input"  autocomplete="off"> -->
                 <input type="text" name="" maxlength="15" placeholder="성명" id="familyname_input"  autocomplete="off">
-                <button class="selector_button" data-type="M">남</button>
-                <button class="selector_button" data-type="W">여</button>
+                <!--<button class="selector_button" data-type="M">남</button>
+                <button class="selector_button" data-type="W">여</button>-->
             </div>
 
             <div class="outerbox">
@@ -185,26 +185,16 @@
             </div>
 
             <div class="outerbox">
-                <input type="text" name="" placeholder="휴대폰 번호" id="id_input" maxlength="20" autocomplete="off">
-                <button class="register_button" onclick="check_phone();">인증</button>
-            </div>
-            <div class="outerbox">
-                <input type="text" name="email_first" placeholder="이메일"  id="email_input" autocomplete="off"> @
-                <input type="text" name="email_last" placeholder="이메일 뒷부분"  id="email_input_re" autocomplete="off" >
-                <div style="display: inline-block;">
-                    <img src="/static/user/res/icon-down-grey.png" style="position: absolute;width: 10px;margin-top:15px;margin-left:66px;opacity: 0.5;">
-                    <select class="login_dropdown" id="email_option" title="email">
-                        <option id="self">직접 입력</option>
-{#                        <option id="optionnone">선택</option>#}
-                        <option id="gmail">gmail.com</option>
-                        <option id="naver">naver.com</option>
-                        <option id="daum">daum.net</option>
-                    </select>
+                <input type="text" name="phone_input" placeholder="휴대폰 번호" id="id_phone_input" maxlength="20" autocomplete="off">
+                <button id="id_auth_button" class="register_button" onclick="check_phone();">인증</button>
+                <span class="sms_confirm"></span>
+                <div id="wrapper_id_activation" style="width:70%; display:none; border: solid 1px #1e1e1e; margin-top:6px;" >
+                    <input type="text" name="activation_code" style="width:70%; border:0px;" id="id_activation_code" placeholder="인증 번호 입력">
+                    <span id="auth_timer" style="width:30%; text-align:right; padding-right:16px;">01:00</span>
                 </div>
-{#                <button class="register_button" onclick="check_email();">중복 확인</button>#}
-                <span class="email_confirm" style="margin-top: 0;"></span>
-                <p class="pw_notice">이메일 인증을 하셔야 정상 가입이 되오니 정확한 이메일을 입력해주세요</p>
+                <button class="register_button" id="sms_auth_code" style="display:none; border: solid 1px #1e1e1e; margin-top:6px;">인증 완료</button>
             </div>
+
             <div class="outerbox">
                 <input type="password" name="" placeholder="새 비밀번호"  id="pw_input"  autocomplete="new-password">
                 <input type="password" name="" placeholder="비밀번호 확인" id="pw_input_re" style="margin-left: 10px;"  autocomplete="new-password"><span class="pw_confirm"></span>
@@ -997,12 +987,7 @@
         <input type="hidden" name="first_name" id="first_name" value=""  autocomplete="off">
         <input type="hidden" name="last_name" id="last_name" value=""  autocomplete="off">
         <input type="hidden" name="name" id="newname" value=""  autocomplete="off">
-        <input type="hidden" name="sex" id="newsex" value=""  autocomplete="off">
-        <input type="hidden" name="birthday" id="newbirth" value=""  autocomplete="off">
-        <input type="hidden" name="country" id="newcountry" value=""  autocomplete="off">
-        <input type="hidden" name="address" id="newcity" value=""  autocomplete="off">
         <input type="hidden" id="id_duplicate_check" value="none"  autocomplete="off">
-        <input type="hidden" id="email_duplicate_check" value="none"  autocomplete="off">
         <input type="hidden" name="group_type" id="id_group_type" value="trainer" autocomplete="off">
     </form>
 
@@ -1038,6 +1023,8 @@
     <script>
 
 
+        let activation_timer = 60;
+        let activation_check = false;
         var varUA = navigator.userAgent.toLowerCase();
         if(varUA.match('android') != null){
             $('._company').css('display','none');
@@ -1074,7 +1061,7 @@
         });
 
         var group_type = 'trainer';
-{#        var $form = $('#add-member-id-form');#}
+        var $form = $('#add-member-id-form');
 
         $('#local_registration').click(function(){
             //$('#page1_content').fadeIn();
@@ -1145,64 +1132,62 @@
             limit_char('#familyname_input');
             if(limit_char_check == true){
               var duplicate_check = $('#id_duplicate_check').val();
-              var duplicate_check_email = $('#email_duplicate_check').val();
 
               if(duplicate_check == 1){
-                  if(duplicate_check_email == 1){
-                      if(blank_input_check() == 1){
+                  if(activation_check == true) {
+                      if (blank_input_check() == 1) {
                           var $form2 = $('#add-member-id-form');
                           var serializeArray = $form2.serializeArray();
                           var error_msg = '';
                           $.ajax({
-                              url:'/login/check_member_form_validation/',
-                              type:'POST',
-                              data:serializeArray,
-                              dataType : 'html',
+                              url: '/login/check_member_form_validation/',
+                              type: 'POST',
+                              data: serializeArray,
+                              dataType: 'html',
 
-                              beforeSend:function(){
+                              beforeSend: function () {
                               },
 
                               //통신성공시 처리
-                              success:function(data){
+                              success: function (data) {
                                   var jsondata = JSON.parse(data);
                                   var id_check_message = jsondata.id_check_result;
-                                  if(id_check_message[0].length>0){
+                                  if (id_check_message[0].length > 0) {
                                       error_msg = id_check_message[0];
 
                                       $('#global_error_msg').show().html(error_msg);
-                                      setTimeout(function(){
+                                      setTimeout(function () {
                                           $('#global_error_msg').fadeOut();
                                           //$('ul.errorlist').remove()
-                                      },10000);
+                                      }, 10000);
 
-                                  }else{
-                                      $('.registerbox_add').css('transform','translateX(-400%)');
-                                      $('._step2_label').css('transform','translateX(-400%)');
+                                  } else {
+                                      $('.registerbox_add').css('transform', 'translateX(-400%)');
+                                      $('._step2_label').css('transform', 'translateX(-400%)');
 
-                                      $('.promise_wrap').css('transform','translateX(-50%)');
-                                      $('._step3_label').css('transform','translateX(-50%)');
-                                      $('.outerbox_horizontal').attr('data-view',1);
+                                      $('.promise_wrap').css('transform', 'translateX(-50%)');
+                                      $('._step3_label').css('transform', 'translateX(-50%)');
+                                      $('.outerbox_horizontal').attr('data-view', 1);
                                   }
                               },
 
                               //보내기후 팝업창 닫기
-                              complete:function(){
+                              complete: function () {
 
                               },
 
                               //통신 실패시 처리
-                              error:function(){
+                              error: function () {
                                   alert("에러: 서버 통신 실패");
                               }
                           })
-                      }else{
+                      } else {
                           console.log('test');
                           alert(blank_input_check());
                       }
-                  }else if(duplicate_check_email == 0){
-                      alert('사용할 수 없는 email입니다.');
-                  }else if(duplicate_check_email == 'none'){
-                      alert('email 정보를 확인해 주세요.');
+                  }
+                  else{
+                    alert('문자 인증을 완료 해주세요.');
                   }
               }else if(duplicate_check == 0){
                   alert('사용할 수 없는 아이디입니다.');
@@ -1221,9 +1206,10 @@
                 result = '성명을 입력해주세요';
             // }else if($('#last_name').val().length == 0 ){
             //     result = '성을 입력해주세요';
-            }else if($('#newsex').val().length == 0 ){
-                result = '성별을 입력해주세요';
             }
+            //else if($('#newsex').val().length == 0 ){
+            //    result = '성별을 입력해주세요';
+            //}
             /*else if($('#newbirth').val().length == 0 ){
              result = '생일을 입력해주세요'
              }else if($('#newcountry').val().length == 0 ){
@@ -1376,11 +1362,11 @@
         });
 
 
-        $('.selector_button').click(function(){
-            $(this).addClass('selector_button_checked');
-            $(this).siblings().removeClass('selector_button_checked');
-            $form.find('#newsex').attr('value',$(this).attr('data-type'));
-        });
+        //$('.selector_button').click(function(){
+            //$(this).addClass('selector_button_checked');
+            //$(this).siblings().removeClass('selector_button_checked');
+            //$form.find('#newsex').attr('value',$(this).attr('data-type'));
+        //});
 
         // $('#lastname_input').keyup(function(){
         //     if($(this).val().length>0){
@@ -1409,65 +1395,10 @@
             }
         });
 
-        $('#email_input').keyup(function(){
-            $('#email_duplicate_check').val('none');
-{#            $('.email_confirm').text('')#}
-            var selector_email_input_re = $('#email_input_re');
-            if(selector_email_input_re.val().length>0){
-                $('#id_email').attr('value', $(this).val()+'@'+selector_email_input_re.val());
-                check_email();
-            }else{
-                $('#id_email').attr('value',"");
-                $('.email_confirm').text('');
-            }
+        $('#id_phone_input').keyup(function(){
+{#            $('.sms_confirm').text('');#}
+{#            activation_check = false;#}
         });
-
-        $('#email_input_re').keyup(function(){
-            $('#email_duplicate_check').val('none');
-{#            $('.email_confirm').text('')#}
-            var selector_email_input = $('#email_input');
-            if(selector_email_input.val().length>0){
-                $('#id_email').attr('value', selector_email_input.val()+'@'+$(this).val());
-                check_email();
-            }else{
-                $('#id_email').attr('value',"");
-                $('.email_confirm').text('');
-            }
-        });
-
-        $('#email_option').change(function(){
-            var selector_email_input = $('#email_input');
-            var selector_email_input_re = $('#email_input_re');
-            if($(this).val() =="직접 입력"){
-                selector_email_input_re.attr('readonly',false).val("");
-                selector_email_input_re.keyup(function(){
-                    if(selector_email_input.val().length>0){
-                        $('#id_email').attr('value', selector_email_input.val()+'@'+selector_email_input_re.val());
-                    }else{
-                        $('#id_email').attr('value',"");
-                    }
-                })
-            }else if($(this).val()!="선택"){
-                selector_email_input_re.val($(this).val());
-                selector_email_input_re.attr('readonly',true);
-            }else{
-                selector_email_input_re.attr('readonly',true).val("");
-            }
-
-            if(selector_email_input.val().length>0){
-                $('#id_email').attr('value', selector_email_input.val()+'@'+selector_email_input_re.val());
-                if(selector_email_input_re.val().length>0){
-                    check_email();
-                }
-                else{
-                    $('.email_confirm').text('');
-                }
-            }else{
-                $('#id_email').attr('value',"");
-                $('.email_confirm').text('');
-            }
-        });
-
 
 
         $('#birth_year, #birth_month, #birth_date').change(function(){
@@ -1587,7 +1518,7 @@
                     //$('ul.errorlist').remove()
                 },10000)
             }else{
-                alert('이메일 인증후 로그인 해주세요');
+                alert('로그인 해주세요');
                 goHome();
             }
         }
@@ -1644,46 +1575,6 @@
             }
         }
 
-
-        function check_email(){
-            var $form = $('#add-member-id-form');
-            var serializeArray = $form.serializeArray();
-            console.log(serializeArray)
-            $.ajax({
-                url:'/login/check_member_email/',
-                type:'GET',
-                //data:{"email" : $('#id_email').val() },
-                data:serializeArray,
-                dataType : 'html',
-
-                beforeSend:function(){
-                },
-
-                //통신성공시 처리
-                success:function(data){
-                    var jsondata = JSON.parse(data);
-                    var id_check_message = jsondata.id_check_result;
-                    if(id_check_message[0].length>0){
-                        var error_msg = id_check_message[0];
-                        $('.email_confirm').text(error_msg).css({'display':'block','color':'#fe4e65'});
-                        $form.find('#email_duplicate_check').val(0);
-                    }else{
-                        $('.email_confirm').text('사용 가능').css({'display':'block','color':'green'});
-                        $form.find('#email_duplicate_check').val(1);
-                    }
-                },
-
-                //보내기후 팝업창 닫기
-                complete:function(){
-
-                },
-
-                //통신 실패시 처리
-                error:function(){
-                    alert("에러: 서버 통신 실패");
-                }
-            })
-        }
         function check_password(){
             var $form = $('#add-member-id-form');
             var serializeArray = $form.serializeArray();
@@ -1721,37 +1612,110 @@
             })
         }
 
+        var auth_time_interval;
        function check_phone(){
+           if(activation_check == false){
+                $('.sms_confirm').text(" ").css({'display':'none'});
+                $('#auth_timer').text('01:00');
+                activation_timer = 60;
+                activation_check = false;
+                $.ajax({
+                    url:'/login/check_phone/',
+                    type:'POST',
+                    data:{'token':document.getElementById('g-recaptcha-response').value,
+                        'phone_number':document.getElementById('id_phone_input').value},
+                    dataType : 'html',
+
+                    beforeSend:function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                    },
+
+                    //통신성공시 처리
+                    success:function(data){
+                        let jsondata = $.parseJSON(data);
+                        if(jsondata.messageArray.length > 0){
+                            alert(jsondata.messageArray);
+                        }else{
+                            alert('인증번호가 발송되었습니다.');
+                            $('#sms_auth_code').css('display', 'inline-block');
+                            $('#wrapper_id_activation').css('display', 'inline-block');
+                            auth_time_interval = setInterval(function(){
+                                activation_timer--;
+                                if(activation_timer<0){
+                                    $('#sms_auth_code').css('display', 'none');
+                                    $('#wrapper_id_activation').css('display', 'none');
+                                    $('.sms_confirm').text('인증 시간이 초과되었습니다.').css({'display':'block','color':'#fe4e65'});
+                                    clearInterval(auth_time_interval);
+                                }else{
+                                    let minutes = parseInt(activation_timer/60);
+                                    let seconds = activation_timer - minutes*60;
+                                    if(seconds<10){
+                                        seconds = '0'+seconds;
+                                    }
+                                    $('#auth_timer').text(minutes+':'+seconds);
+                                }
+                            }, 1000);
+                        }
+                    },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+
+                    },
+
+                    //통신 실패시 처리
+                    error:function(){
+                        alert("에러: 서버 통신 실패");
+                    }
+                });
+
+           }
+           else{
+               alert('인증이 확인되었습니다.')
+           }
+        }
+
+        $('#sms_auth_code').click(function(){
+            let user_activation_code = $('#id_activation_code').val();
             $.ajax({
-                url:'/login/check_phone/',
+                url:'/login/activate_sms_confirm/',
                 type:'POST',
-                //data:{"email" : $('#id_email').val() },
-                data:{'token':document.getElementById('g-recaptcha-response').value},
+                data: {'user_activation_code':user_activation_code},
                 dataType : 'html',
 
-                beforeSend:function(xhr, settings) {
+                beforeSend: function (xhr, settings) {
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                         xhr.setRequestHeader("X-CSRFToken", csrftoken);
                     }
+{#                    ajax_load_image('show');#}
                 },
 
                 //통신성공시 처리
                 success:function(data){
-{#                    var jsondata = JSON.parse(data);#}
-                    console.log(data)
+                    let jsondata = $.parseJSON(data);
+                    if(jsondata.messageArray.length > 0){
+                        $('.sms_confirm').text(jsondata.messageArray).css({'display':'block','color':'#fe4e65'});
+                    }else{
+                        clearInterval(auth_time_interval);
+                        $('#sms_auth_code').css('display', 'none');
+                        $('#wrapper_id_activation').css('display', 'none');
+                        $('.sms_confirm').text('인증 완료').css({'display':'block','color':'green'});
+                        alert('인증이 완료되었습니다.');
+                        activation_check = true;
+                        $('#id_phone_input').attr('disabled', true);
+                        $('#id_auth_button').text('인증 완료');
+                    }
                 },
-
-                //보내기후 팝업창 닫기
                 complete:function(){
-
+{#                    ajax_load_image('hide');#}
                 },
-
-                //통신 실패시 처리
                 error:function(){
-                    alert("에러: 서버 통신 실패");
+
                 }
-            })
-        }
+            });
+        });
     // <!-- 네이버아디디로로그인 초기화 Script -->
 {#    var naverLogin = new naver.LoginWithNaverId(#}
 {#      {#}
