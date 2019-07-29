@@ -987,7 +987,6 @@ class AddMemberView(RegistrationView, View):
                         else:
                             if field.name != 'username':
                                 error += err
-        print(str(error))
         if error is not None:
             logger.error(name + '[' + form.cleaned_data['username'] + ']' + error)
             messages.error(request, error)
@@ -1923,16 +1922,20 @@ def check_phone_logic(request):
     sms_activation_count = settings.PTERS_SMS_ACTIVATION_MAX_COUNT
     error = None
 
-    if int(sms_count) < sms_activation_count:
-        if recaptcha_test_session != 'success':
-            error = func_recaptcha_test(recaptcha_secret_key, token)
-            if error is None:
-                request.session['recaptcha_session'] = 'success'
-            else:
-                request.session['recaptcha_session'] = 'failed'
-    else:
-        error = '일일 문자 인증 횟수가 '+str(sms_activation_count)+'회 초과했습니다.'
-    print(str(recaptcha_test_session))
+    if phone_number == '':
+        error = '휴대폰 번호를 입력해주세요.'
+
+    if error is None:
+        if int(sms_count) < sms_activation_count:
+            if recaptcha_test_session != 'success':
+                error = func_recaptcha_test(recaptcha_secret_key, token)
+                if error is None:
+                    request.session['recaptcha_session'] = 'success'
+                else:
+                    request.session['recaptcha_session'] = 'failed'
+        else:
+            error = '일일 문자 인증 횟수가 '+str(sms_activation_count)+'회 초과했습니다.'
+
     if error is None:
         max_range = 99999
         request.session['sms_activation_check'] = False
@@ -2015,8 +2018,7 @@ def func_send_sms_auth(phone, activation_number):
                                        'x-ncp-iam-access-key': acc_key_id,
                                        'x-ncp-apigw-signature-v2': d_hash})
     if resp['status'] != '202':
-        error = '비정상적인 접근입니다.[1]'
-
+        error = '비정상적인 접근입니다.[2-1]'
     return error
 
 

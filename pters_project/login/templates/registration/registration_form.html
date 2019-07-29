@@ -1634,12 +1634,12 @@
                 //통신성공시 처리
                 success:function(data){
                     let jsondata = $.parseJSON(data);
-                    $('#sms_auth_code').css('display', 'inline-block');
-                    $('#wrapper_id_activation').css('display', 'inline-block');
                     if(jsondata.messageArray.length > 0){
                         alert(jsondata.messageArray);
                     }else{
                         alert('인증번호가 발송되었습니다.');
+                        $('#sms_auth_code').css('display', 'inline-block');
+                        $('#wrapper_id_activation').css('display', 'inline-block');
                         auth_time_interval = setInterval(function(){
                             activation_timer--;
                             if(activation_timer<0){
