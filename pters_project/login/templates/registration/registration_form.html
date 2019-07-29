@@ -186,7 +186,7 @@
 
             <div class="outerbox">
                 <input type="text" name="phone_input" placeholder="휴대폰 번호" id="id_phone_input" maxlength="20" autocomplete="off">
-                <button class="register_button" onclick="check_phone();">인증</button>
+                <button id="id_auth_button" class="register_button" onclick="check_phone();">인증</button>
                 <span class="sms_confirm"></span>
                 <div id="wrapper_id_activation" style="width:70%; display:none; border: solid 1px #1e1e1e; margin-top:6px;" >
                     <input type="text" name="activation_code" style="width:70%; border:0px;" id="id_activation_code" placeholder="인증 번호 입력">
@@ -1396,8 +1396,8 @@
         });
 
         $('#id_phone_input').keyup(function(){
-            $('.sms_confirm').text('');
-            activation_check = false;
+{#            $('.sms_confirm').text('');#}
+{#            activation_check = false;#}
         });
 
 
@@ -1614,61 +1614,67 @@
 
         var auth_time_interval;
        function check_phone(){
-            $('.sms_confirm').text(" ").css({'display':'none'});
-            $('#auth_timer').text('01:00');
-            activation_timer = 60;
-            activation_check = false;
-            $.ajax({
-                url:'/login/check_phone/',
-                type:'POST',
-                data:{'token':document.getElementById('g-recaptcha-response').value,
-                    'phone_number':document.getElementById('id_phone_input').value},
-                dataType : 'html',
+           if(activation_check == false){
+                $('.sms_confirm').text(" ").css({'display':'none'});
+                $('#auth_timer').text('01:00');
+                activation_timer = 60;
+                activation_check = false;
+                $.ajax({
+                    url:'/login/check_phone/',
+                    type:'POST',
+                    data:{'token':document.getElementById('g-recaptcha-response').value,
+                        'phone_number':document.getElementById('id_phone_input').value},
+                    dataType : 'html',
 
-                beforeSend:function(xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                },
+                    beforeSend:function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                    },
 
-                //통신성공시 처리
-                success:function(data){
-                    let jsondata = $.parseJSON(data);
-                    if(jsondata.messageArray.length > 0){
-                        alert(jsondata.messageArray);
-                    }else{
-                        alert('인증번호가 발송되었습니다.');
-                        $('#sms_auth_code').css('display', 'inline-block');
-                        $('#wrapper_id_activation').css('display', 'inline-block');
-                        auth_time_interval = setInterval(function(){
-                            activation_timer--;
-                            if(activation_timer<0){
-                                $('#sms_auth_code').css('display', 'none');
-                                $('#wrapper_id_activation').css('display', 'none');
-                                $('.sms_confirm').text('인증 시간이 초과되었습니다.').css({'display':'block','color':'#fe4e65'});
-                                clearInterval(auth_time_interval);
-                            }else{
-                                let minutes = parseInt(activation_timer/60);
-                                let seconds = activation_timer - minutes*60;
-                                if(seconds<10){
-                                    seconds = '0'+seconds;
+                    //통신성공시 처리
+                    success:function(data){
+                        let jsondata = $.parseJSON(data);
+                        if(jsondata.messageArray.length > 0){
+                            alert(jsondata.messageArray);
+                        }else{
+                            alert('인증번호가 발송되었습니다.');
+                            $('#sms_auth_code').css('display', 'inline-block');
+                            $('#wrapper_id_activation').css('display', 'inline-block');
+                            auth_time_interval = setInterval(function(){
+                                activation_timer--;
+                                if(activation_timer<0){
+                                    $('#sms_auth_code').css('display', 'none');
+                                    $('#wrapper_id_activation').css('display', 'none');
+                                    $('.sms_confirm').text('인증 시간이 초과되었습니다.').css({'display':'block','color':'#fe4e65'});
+                                    clearInterval(auth_time_interval);
+                                }else{
+                                    let minutes = parseInt(activation_timer/60);
+                                    let seconds = activation_timer - minutes*60;
+                                    if(seconds<10){
+                                        seconds = '0'+seconds;
+                                    }
+                                    $('#auth_timer').text(minutes+':'+seconds);
                                 }
-                                $('#auth_timer').text(minutes+':'+seconds);
-                            }
-                        }, 1000);
+                            }, 1000);
+                        }
+                    },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+
+                    },
+
+                    //통신 실패시 처리
+                    error:function(){
+                        alert("에러: 서버 통신 실패");
                     }
-                },
+                });
 
-                //보내기후 팝업창 닫기
-                complete:function(){
-
-                },
-
-                //통신 실패시 처리
-                error:function(){
-                    alert("에러: 서버 통신 실패");
-                }
-            })
+           }
+           else{
+               alert('인증이 확인되었습니다.')
+           }
         }
 
         $('#sms_auth_code').click(function(){
@@ -1698,6 +1704,8 @@
                         $('.sms_confirm').text('인증 완료').css({'display':'block','color':'green'});
                         alert('인증이 완료되었습니다.');
                         activation_check = true;
+                        $('#id_phone_input').attr('disabled', true);
+                        $('#id_auth_button').text('인증 완료');
                     }
                 },
                 complete:function(){
