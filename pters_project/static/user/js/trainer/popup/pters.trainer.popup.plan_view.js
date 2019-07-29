@@ -290,7 +290,7 @@ class Plan_view{
     set_additional_button_event (){
         document.querySelector('#popup_plan_view_additional_act').addEventListener('click', ()=>{
             let user_option = {
-                cancel:{text:"일정 취소", callback:()=>{ show_user_confirm(`정말 ${this.data.lecture_name} 일정을 취소하시겠습니까?`, ()=>{
+                cancel:{text:"일정 취소", callback:()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
                                                             Plan_func.delete({"schedule_id":this.schedule_id});calendar.init();layer_popup.all_close_layer_popup();
                                                          });
                                                       }
