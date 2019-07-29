@@ -97,8 +97,6 @@
             this.target_name = '#lecture_name_in_popup';
             this.target_member_list = '#wrapper_lecture_members_list';
             this.target_ticket_list = '#wrapper_lecture_tickets_list';
-            
-            this.lecture_id = data.lecture_id;
         }
 
         init(){
@@ -138,8 +136,8 @@
 
         render_lecture_edit_button(target){
             document.querySelector(target).onclick =  () => {
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_EDIT, 100, POPUP_FROM_RIGHT, {'lecture_id':this.lecture_id}, ()=>{
-                                                    lecture_edit_popup = new Lecture_edit('.popup_lecture_edit', this.lecture_id, 'lecture_edit_popup');});
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_EDIT, 100, POPUP_FROM_RIGHT, {'lecture_id':this.data.lecture_id}, ()=>{
+                                                    lecture_edit_popup = new Lecture_edit('.popup_lecture_edit', this.data.lecture_id, 'lecture_edit_popup');});
             };
         }
 

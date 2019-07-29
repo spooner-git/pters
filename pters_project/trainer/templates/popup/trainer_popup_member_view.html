@@ -142,8 +142,8 @@
 
         render_member_edit_button (target){
             document.querySelector(target).onclick = () => {
-                // open_member_edit_popup(this.data.basic_info.member_id);
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_EDIT, 100, POPUP_FROM_RIGHT, {'member_id':this.data.basic_info.member_id});
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_EDIT, 100, POPUP_FROM_RIGHT, {'member_id':this.data.basic_info.member_id}, ()=>{
+                                                    member_edit_popup = new Member_edit('.popup_member_edit', this.data.basic_info.member_id, 'member_edit_popup');});
             }
         }
 
