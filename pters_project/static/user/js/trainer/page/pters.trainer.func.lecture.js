@@ -175,7 +175,8 @@ class Lecture {
                                             <div class="lecture_tools_wrap">
                                                 <div class="swap_list" onclick="${this.instance}.switch_type();"></div>
                                                 <div class="search_lecture"></div>
-                                                <div class="add_lecture" onclick="layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_LECTURE_ADD}', 95, ${POPUP_FROM_BOTTOM}, {'data':null})"></div>
+                                                <div class="add_lecture" onclick="layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_LECTURE_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
+                                                    lecture_add_popup = new Lecture_add('.popup_lecture_add', null, 'lecture_add_popup');});"></div>
                                             </div>
                                         </div>
                                         <div class="lecture_bottom_tools_wrap">
@@ -196,7 +197,6 @@ class Lecture_func{
     static create(data, callback){
         //데이터 형태 {"member_num":"", "name":"", "note":"", "ing_color_cd":"", "end_color_cd":"", "ing_font_color_cd":"", "end_font_color_cd":""};
 
-        
         $.ajax({
             url:'/trainer/add_lecture_info/',
             type:'POST',
@@ -216,6 +216,7 @@ class Lecture_func{
     
             //통신성공시 처리
             success:function(data){
+                console.log("lecture_func",data)
                 callback();
             },
     

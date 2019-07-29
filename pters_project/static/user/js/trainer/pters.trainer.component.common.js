@@ -253,6 +253,51 @@ class CComponent{
         return html;
     }
 
+    //회원 선택 팝업에 사용되는 행
+    static select_color_row (multiple_select, checked, bg_code, font_code, color_name, onclick){
+        let color_bg_code_without_sharp = bg_code.replace('#', '');
+
+        let html = `
+                    <li class="select_color_row" id="select_color_row_${color_bg_code_without_sharp}">
+                        <div class="obj_table_raw">
+                            <div class="cell_color_name">
+                                
+                            </div>
+                            <div class="cell_color_info" style="color:${font_code};background-color:${bg_code};">
+                                ${color_name}
+                            </div>
+                            <div class="cell_color_selected">
+                                <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? '' : 'color_selected'}">
+                            </div>
+                        </div>
+                    </li>
+                    `;
+
+        if(multiple_select > 1){
+            $(document).off('click', `#select_color_row_${color_bg_code_without_sharp}`).on('click', `#select_color_row_${color_bg_code_without_sharp}`, function(e){
+                console.log('?')
+                if(!$(this).find('.cell_color_selected img').hasClass('color_selected')){
+                    if($('.color_selected').length >= multiple_select){
+                        show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
+                        return false;
+                    }
+                    $(this).find('.cell_color_selected img').addClass('color_selected');
+                    onclick('add');
+                }else{
+                    $(this).find('.cell_color_selected img').removeClass('color_selected');
+                    onclick('substract');
+                }
+            });
+        }else if(multiple_select == 1){
+            $(document).off('click', `#select_color_row_${color_bg_code_without_sharp}`).on('click', `#select_color_row_${color_bg_code_without_sharp}`, function(e){
+                
+                onclick('add_single');
+                
+            });
+        }
+        return html;
+    }
+
     static no_data_row(text){
         let html = `<li class="no_data_row">
                         <div class="obj_table_raw">

@@ -21,7 +21,9 @@ class Lecture_add{
                 capacity:null,
                 fixed_member_id:[],
                 fixed_member_name:[],
-                color:null
+                color_bg:[],
+                color_font:[],
+                color_name:[]
         };
 
         this.init();
@@ -36,42 +38,47 @@ class Lecture_add{
         return this.data.name;
     }
 
-    set ticket(data){
-        this.data.ticket_id = data.id;
-        this.data.ticket_name = data.name;
-        this.data.ticket_effective_days = data.effective_days;
+    set time(text){
+        this.data.time = text;
         this.render_content();
     }
 
-    get ticket(){
-        return {id:this.data.ticket_id, name:this.data.ticket_name, effective_days: this.data.ticket_effective_days};
+    get time(){
+        return this.data.time;
     }
 
-    set reg_count(number){
-        this.data.ticket_reg_count = number;
+    set capacity(number){
+        this.data.capacity = number;
         this.render_content();
     }
 
-    get reg_count(){
-        return this.data.ticket_reg_count;
+    get capacity(){
+        return this.data.capacity;
     }
 
-    set reg_price(number){
-        this.data.ticket_price = number;
+    set member(data){
+        this.data.fixed_member_id = data.id;
+        this.data.fixed_member_name = data.name;
         this.render_content();
     }
 
-    get reg_price(){
-        return this.data.ticket_price;
+    get member(){
+        return {id:this.data.fixed_member_id, name:this.data.fixed_member_name};
     }
 
+    set color(data){
+        this.data.color_bg = data.bg;
+        this.data.color_font = data.font;
+        this.data.color_name = data.name;
+        this.render_content();
+    }
 
-    init(type){
-        if(type == undefined){
-            type = this.list_type;
-        }
-        this.list_type = type;
+    get color(){
+        return {bg:this.data.color_bg, font:this.data.color_font, name:this.data.color_name};
+    }
 
+ 
+    init(){
         this.render_initial();
         this.render_toolbox();
         this.render_content();
@@ -87,19 +94,16 @@ class Lecture_add{
     }
     
     render_content(){
-        let name = this.dom_row_member_name_input();
-        let phone = this.dom_row_member_phone_input();
-        let birth = this.dom_row_member_birth_input();
-        let sex = this.dom_row_member_sex_input();
-        let memo = this.dom_row_member_memo_input();
-        let ticket = this.dom_row_ticket_select();
-        let start_date = this.dom_row_start_date_select();
-        let end_date = this.dom_row_end_date_select();
-        let reg_count = this.dom_row_member_reg_coung_input();
-        let reg_price = this.dom_row_member_reg_price_input();
+        let name = this.dom_row_lecture_name_input();
+        let time = this.dom_row_lecture_time_input(); //수업 진행시간
+        let capacity = this.dom_row_capacity_input();
+        let fixed_member = this.dom_row_fiexd_member_select();
+        let fixed_member_list = this.dom_row_fixed_member_list();
+        let color = this.dom_row_color_select();
 
-        let html =  '<div class="obj_box_full">'+name+phone+birth+sex+memo+'</div>' + 
-                    '<div class="obj_box_full">'+ticket + start_date+end_date+reg_count+reg_price+ '</div>';
+        let html =  '<div class="obj_box_full">'+name+'</div>' + 
+                    '<div class="obj_box_full">'+capacity+fixed_member+fixed_member_list+ '</div>' + 
+                    '<div class="obj_box_full">'+color+ '</div>';
 
         document.getElementById(this.target.content).innerHTML = html;
     }
@@ -109,7 +113,7 @@ class Lecture_add{
         <div class="member_add_upper_box" style="padding-bottom:8px;">
             <div style="display:inline-block;width:200px;">
                 <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold;">회원 등록</span>
+                    <span style="font-size:20px;font-weight:bold;">새로운 수업</span>
                 </div>
             </div>
         </div>
@@ -117,182 +121,89 @@ class Lecture_add{
         return html;
     }
 
-    dom_row_member_name_input(){
-        let html = CComponent.create_input_row ('input_member_name', this.data.name == null ? '회원명*' : this.data.name, '/static/common/icon/person_black.png', HIDE, (input_data)=>{
+    dom_row_lecture_name_input(){
+        let html = CComponent.create_input_row ('input_lecture_name', this.data.name == null ? '수업명*' : this.data.name, '/static/common/icon/icon_book.png', HIDE, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
         });
         return html;
     }
 
-    dom_row_member_phone_input(){
-        let html = CComponent.create_input_number_row ('input_member_phone', this.data.phone == null ? '휴대폰 번호*' : this.data.phone, '/static/common/icon/icon_smartphone.png', HIDE, (input_data)=>{
+    dom_row_lecture_time_input(){
+        let html = CComponent.create_input_row ('input_lecture_time', this.data.time == null ? '진행 시간*' : this.data.time, '/static/common/icon/icon_clock.png', HIDE, (input_data)=>{
             let user_input_data = input_data;
-            this.phone = user_input_data;
+            this.time = user_input_data;
         });
         return html;
     }
 
-    dom_row_member_birth_input(){
-        //등록하는 행을 만든다.
-        let birth_text = this.data.birth == null ? '생년월일' : Object.values(this.data.birth).join('.');
-        let html = CComponent.create_row('input_member_birth', birth_text, '/static/common/icon/icon_cake.png', HIDE, ()=>{ 
-            //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
-
-                //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
-                let year = this.data.birth == null ? 1986 : this.data.birth.year; 
-                let month = this.data.birth == null ? 2 : this.data.birth.month;
-                let date = this.data.birth == null ? 24 : this.data.birth.date;
-                
-                date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'생년월일 선택', data:{year:year, month:month, date:date}, 
-                                                                                                range:{start: this.dates.current_year - 90, end: this.dates.current_year}, 
-                                                                                                callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
-                                                                                                    this.birth = object; 
-                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
-                                                                                                }});
-                
-            });
-        });
-        return html;
-    }
-
-    dom_row_member_sex_input(){
-        let html = CComponent.create_row ('input_member_sex', this.data.sex == null ? '성별' : this.data.sex, '/static/common/icon/person_black.png', HIDE, (input_data)=>{
-            let user_option = {
-                                male:{text:"남성", callback:()=>{this.sex = "M";layer_popup.close_layer_popup();}},
-                                female:{text:"여성", callback:()=>{this.sex = "W";layer_popup.close_layer_popup();}}
-            };
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
-                var option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
-            });
-        });
-        return html;
-    }
-
-    dom_row_member_memo_input(){
-        let html = CComponent.create_input_row ('input_member_memo', this.data.memo == null ? '특이사항' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, (input_data)=>{
+  
+    dom_row_capacity_input(){
+        let html = CComponent.create_input_number_row ('input_lecture_capacity', this.data.capacity == null ? '정원*' : '정원 '+this.data.capacity+'명', '/static/common/icon/icon_member.png', HIDE, (input_data)=>{
             let user_input_data = input_data;
-            this.memo = user_input_data;
+            this.capacity = user_input_data;
         });
         return html;
     }
 
-    dom_row_ticket_select(){
-        let ticket_text = this.data.ticket_id.length == 0 ? '수강권*' : this.data.ticket_name.join(', ');
-        let html = CComponent.create_row('input_ticket_select', ticket_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
-            layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                var ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1);
-            });
+    dom_row_fiexd_member_select(){
+        let fixed_member_text = this.data.fixed_member_name.length == 0 ? '고정 회원' : '고정회원 '+this.data.fixed_member_id.length+'명 선택됨';
+        let html = CComponent.create_row('select_member', fixed_member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, (data)=>{
+            if(this.data.capacity != null){
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':null});
+                });
+            }else{
+                show_error_message('정원을 먼저 입력해주세요.');
+            }
         });
         return html;
     }
 
-    dom_row_start_date_select(){
-        //등록하는 행을 만든다.
-        let start_date_text = this.data.start_date == null ? '시작일*' : this.data.start_date_text;
-        let html = CComponent.create_row('start_date_select', start_date_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
-            //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
-
-                //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
-                let year = this.data.start_date == null ? this.dates.current_year : this.data.start_date.year; 
-                let month = this.data.start_date == null ? this.dates.current_month : this.data.start_date.month;
-                let date = this.data.start_date == null ? this.dates.current_date : this.data.start_date.date;
-                
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'start_date', title:'시작일 선택', data:{year:year, month:month, date:date},  
-                                                                                                callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
-                                                                                                    this.start_date = object; 
-                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
-                }});
-            });
-        });
-        return html;
-    }
-
-    dom_row_end_date_select(){
-        //등록하는 행을 만든다.
-        let end_date_text = this.data.end_date == null ? '종료일*' : this.data.end_date_text;
-        let html = CComponent.create_row('end_date_select', end_date_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
-            //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
-
-                //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
-                let year = this.data.end_date == null ? this.dates.current_year : this.data.end_date.year; 
-                let month = this.data.end_date == null ? this.dates.current_month : this.data.end_date.month;
-                let date = this.data.end_date == null ? this.dates.current_date : this.data.end_date;
-                
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'end_date', title:'종료일 선택', data:{year:year, month:month, date:date},  
-                                                                                                callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
-                                                                                                    this.end_date = object; 
-                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
-                }});
-            });
-        });
-        return html;
-    }
-
-    dom_row_member_reg_coung_input(){
-        let html = CComponent.create_input_number_row ('input_reg_count', this.data.ticket_reg_count == null ? '횟수' : this.data.ticket_reg_count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, (input_data)=>{
-            let user_input_data = input_data;
-            this.reg_count = user_input_data;
-        });
-        return html;
-    }
-
-    dom_row_member_reg_price_input(){
-        let html = CComponent.create_input_number_row ('input_reg_price', this.data.ticket_price == null ? '가격' : this.data.ticket_price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, (input_data)=>{
-            let user_input_data = input_data;
-            this.reg_price = user_input_data;
-        });
-        return html;
-    }
-
-
-
-
-    switch_type(){
-        switch(this.list_type){
-            case "lesson":
-                this.init("off");
-            break;
-
-            case "off":
-                this.init("lesson");
-            break;
+    dom_row_fixed_member_list (){
+        let length = this.data.fixed_member_id.length;
+        let html_to_join = [];
+        
+        for(let i=0; i<length; i++){
+            let member_id = this.data.fixed_member_id[i];
+            let member_name = this.data.fixed_member_name[i];
+            let icon_button_style = null;
+            html_to_join.push(
+                CComponent.icon_button(member_id, member_name, null, icon_button_style, ()=>{
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':member_id});
+                })
+            );
         }
+        let html = `<div>${html_to_join.join('')}</div>`;
+
+        return html;
     }
+
+    dom_row_color_select(){
+        let color_text = this.data.color_name.length == 0 ? '색상 태그' : `<span style="background-color:${this.data.color_bg};color:${this.data.color_font};padding:5px;border-radius:4px;">${this.data.color_name}</span>`;
+        let html = CComponent.create_row('input_color_select', color_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
+            layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_COLOR_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                color_select = new ColorSelector('#wrapper_box_color_select', this, 1);
+            });
+        });
+        return html;
+    }
+
 
     send_data(){
 
         let data = {
-                    "member_id":null,
-                    "first_name": this.data.name,
                     "name":this.data.name,
-                    "phone":this.data.phone,
-                    "birthday": `${this.data.birth != null ? this.data.birth.year+'-'+this.data.birth.month+'-'+this.data.birth.date : ''}`,
-                    "sex":this.data.sex,
-                    "contents":this.data.memo,
-                    "ticket_id":this.data.ticket_id[0],
-                    "start_date": `${this.data.start_date.year}-${this.data.start_date.month}-${this.data.start_date.date}`,
-                    "end_date":`${this.data.end_date.year}-${this.data.end_date.month}-${this.data.end_date.date}`,
-                    "counts":this.data.ticket_reg_count,
-                    "price":this.data.ticket_price
+                    "member_num":this.data.capacity,
+                    "ing_color_cd":this.data.color_bg,
+                    "end_color_cd":"",
+                    "ing_font_color_cd":this.data.color_font,
+                    "end_font_color_cd":""
         };
 
-        // data = {
-        //     "first_name":"1회원등록", "name":"1회원등록", "sex":"M", "birthday":"1986-02-24", "phone":"01034435752"
-        // };
-        // data = {
-        //     "member_id":null, "contents":null, "counts":null, "price":null, "start_date":null, "end_date":null, "ticket_id":null
-        // }
-
-        Member_func.create_pre(data, (received)=>{
-            data.member_id = received.user_db_id[0];
-            Member_func.create(data, ()=>{
-                layer_popup.close_layer_popup();
-                member.init();
-            });
+        Lecture_func.create(data, ()=>{
+            layer_popup.close_layer_popup();
+            lecture.init();
         });
     }
 

@@ -1353,11 +1353,16 @@ class MemberSelector{
     request_list (callback){
         //Lecture_id를 클래스가 전달받은 경우, 해당 lecture에 속한 회원 리스트를 받아온다.
         //Lecture_id를 클래스가 받지 못한 경우, 모든 진행 회원 리스트를 받아온다.
-        if(this.appendix.lecture_id == undefined){
+        if(this.appendix == undefined){
             member.request_member_list("ing", (data)=>{
                 this.received_data = data.current_member_data;
                 callback();
                 show_error_message('수업 정보를 확인할 수 없어, 전체 진행중 회원목록을 가져옵니다.');
+            });
+        }else if(this.appendix.lecture_id == null){
+            member.request_member_list("ing", (data)=>{
+                this.received_data = data.current_member_data;
+                callback();
             });
         }else{
             let data = {"lecture_id": this.appendix.lecture_id};
@@ -1368,6 +1373,84 @@ class MemberSelector{
         }
     }
 }
+
+class ColorSelector{
+    constructor(install_target, target_instance, multiple_select){
+        this.targetHTML = install_target;
+        this.target_instance = target_instance;
+        this.received_data;
+        this.multiple_select = multiple_select;
+        this.data = {
+            bg: [],
+            font:[],
+            name: []
+        };
+        this.data.bg = this.target_instance.color.bg;
+        this.data.font = this.target_instance.color.font;
+        this.data.name = this.target_instance.color.name;
+        this.request_list(()=>{
+            this.render_list();
+        });
+    }
+
+    render_list (){
+        let html_to_join = [];
+        let length = this.received_data.length;
+        if(length == 0){
+            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.'));
+        }
+        for(let i=0; i<length; i++){
+            let data = this.received_data[i];
+            let bg_code = data.color_code;
+            let font_code = data.color_font_code;
+            let name = data.color_name;
+            let checked = this.target_instance.color.bg.indexOf(bg_code) >= 0 ? 1 : 0; //타겟이 이미 가진 색상 데이터를 get
+            let html = CComponent.select_color_row (
+                this.multiple_select, checked, bg_code, font_code, name, (add_or_substract)=>{
+                    console.log('asdfasdf')
+                    if(add_or_substract == "add"){
+                        this.data.bg.push(bg_code);
+                        this.data.font.push(font_code);
+                        this.data.name.push(name);
+                    }else if(add_or_substract == "substract"){
+                        this.data.bg.splice(this.data.name.indexOf(name), 1);
+                        this.data.font.splice(this.data.name.indexOf(name), 1);
+                        this.data.name.splice(this.data.name.indexOf(name), 1);
+                    }else if(add_or_substract == "add_single"){
+                        this.data.bg = [];
+                        this.data.font = [];
+                        this.data.name = [];
+                        this.data.bg.push(bg_code);
+                        this.data.font.push(font_code);
+                        this.data.name.push(name);
+                    }
+
+                    this.target_instance.color = this.data; //타겟에 선택된 데이터를 set
+
+                    if(this.multiple_select == 1){
+                        layer_popup.close_layer_popup();
+                    }
+                        
+                }  
+            );
+            html_to_join.push(html);
+        }
+
+        document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+    }
+
+    request_list (callback){
+        let color_data = [
+            {color_code:"#fe4e65", color_font_code:"#ffffff", color_name:"PTERS 레드"},
+            {color_code:"#cccccc", color_font_code:"#282828", color_name:"PTERS 그레이"},
+            {color_code:"#0000ff", color_font_code:"#ffffff", color_name:"블루"}
+        ];
+        this.received_data = color_data;
+        callback();
+    }
+}
+
+
 
 class DatePickerSelector{
     constructor (install_target, target_instance, user_option){

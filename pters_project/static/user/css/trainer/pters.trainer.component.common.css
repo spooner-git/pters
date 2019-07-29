@@ -234,6 +234,47 @@
 	float: right;;
 }
 
+
+.select_color_row{
+	list-style: none;
+	line-height: 50px;
+	height: 50px;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: -0.5px;
+
+	border-bottom: 1px solid #cccccc;
+	padding: 5px 16px;
+}
+
+.select_color_row .cell_color_name{
+	display: table-cell;
+	width: 100px;
+	vertical-align: middle;
+}
+
+.select_color_row .cell_color_info{
+	display: table-cell;
+	width: auto;
+	vertical-align: middle;
+	text-align: right;
+}
+
+.select_color_row .cell_color_selected{
+	display: table-cell;
+	width: 30px;
+	vertical-align: middle;
+}
+.select_color_row .cell_color_selected img{
+	display: none;
+}
+.select_color_row .cell_color_selected .color_selected{
+	display: block !important;
+	float: right;;
+}
+
+
 .no_data_row{
 	list-style: none;
 	line-height: 50px;
