@@ -137,7 +137,7 @@ class Ticket_add{
         let lecture_text = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.join(', ');
         let html = CComponent.create_row('input_lecture_select', lecture_text, '/static/common/icon/icon_book.png', SHOW, ()=>{ 
             layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1);
+                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999);
             });
         });
         return html;
