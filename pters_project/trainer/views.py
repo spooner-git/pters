@@ -959,7 +959,7 @@ class ClassSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
 
 class AddClassView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'trainer_class_add.html'
+    template_name = '백업/trainer_class_add.html'
 
     def get(self, request):
         context = {}

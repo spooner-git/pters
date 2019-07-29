@@ -3,6 +3,8 @@
     ["{{ user_db_id }}"],
   "username" :
     ["{{ username }}"],
+    "activation_check" :
+    ["{{ sms_activation_check }}"],
   "messageArray" :
   [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
 }

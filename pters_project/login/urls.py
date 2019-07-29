@@ -138,4 +138,5 @@ urlpatterns = [
         views.password_reset_done,
         name='auth_password_reset_done'),
     url(r'^check_phone/$', views.check_phone_logic, name='check_phone'),
+    url(r'^activate_sms_confirm/$', views.ActivateSmsConfirmView.as_view(), name='activate_sms_confirm')
 ]
