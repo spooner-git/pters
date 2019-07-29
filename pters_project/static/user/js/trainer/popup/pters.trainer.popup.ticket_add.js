@@ -19,6 +19,7 @@ class Ticket_add{
                 name:null,
                 lecture_id:[],
                 lecture_name:[],
+                lecture_max:[],
                 ticket_effective_days:null,
                 count:null,
                 price:null,
@@ -40,11 +41,12 @@ class Ticket_add{
     set lecture(data){
         this.data.lecture_id = data.id;
         this.data.lecture_name = data.name;
+        this.data.lecture_max = data.max;
         this.render_content();
     }
 
     get lecture(){
-        return {id:this.data.lecture_id, name:this.data.lecture_name};
+        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max};
     }
 
     set period(text){
@@ -101,11 +103,12 @@ class Ticket_add{
     render_content(){
         let name = this.dom_row_ticket_name_input();
         let lecture = this.dom_row_lecture_select();
+        let lecture_list = this.dom_row_lecture_select_list();
         let count = this.dom_row_ticket_coung_input();
         let price = this.dom_row_ticket_price_input();
         let memo = this.dom_row_ticket_memo_input();
 
-        let html =  '<div class="obj_box_full">'+name+lecture+'</div>' + 
+        let html =  '<div class="obj_box_full">'+name+lecture+lecture_list+'</div>' + 
                     '<div class="obj_box_full">'+count+price+ '</div>' + 
                     '<div class="obj_box_full">'+memo+ '</div>';
 
@@ -134,12 +137,31 @@ class Ticket_add{
     }
 
     dom_row_lecture_select(){
-        let lecture_text = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.join(', ');
+        let lecture_text = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개 선택됨';
         let html = CComponent.create_row('input_lecture_select', lecture_text, '/static/common/icon/icon_book.png', SHOW, ()=>{ 
             layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999);
             });
         });
+        return html;
+    }
+
+    dom_row_lecture_select_list (){
+        let length = this.data.lecture_id.length;
+        let html_to_join = [];
+        
+        for(let i=0; i<length; i++){
+            let lecture_id = this.data.lecture_id[i];
+            let lecture_name = this.data.lecture_name[i];
+            let icon_button_style = null;
+            html_to_join.push(
+                CComponent.icon_button(lecture_id, lecture_name, null, icon_button_style, ()=>{
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture':lecture_id});
+                })
+            );
+        }
+        let html = `<div>${html_to_join.join('')}</div>`;
+
         return html;
     }
 
