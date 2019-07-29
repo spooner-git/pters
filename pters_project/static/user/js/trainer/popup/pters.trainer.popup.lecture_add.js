@@ -1,6 +1,6 @@
-class Member_add{
+class Lecture_add{
     constructor(install_target, data_from_external, instance){
-        this.target = {install: install_target, toolbox:'section_member_add_toolbox', content:'section_member_add_content'};
+        this.target = {install: install_target, toolbox:'section_lecture_add_toolbox', content:'section_lecture_add_content'};
         this.instance = instance;
 
         let d = new Date();
@@ -16,24 +16,14 @@ class Member_add{
         };
 
         this.data = {
-                name: null,
-                phone: null,
-                birth: null,
-                sex: null,
-                memo: null,
-                ticket_id:[],
-                ticket_name:[],
-                ticket_effective_days:[],
-                ticket_reg_count:null,
-                ticket_price:null,
-                start_date:null,
-                start_date_text:null,
-                end_date:null,
-                end_date_text:null
+                name:null,
+                time:null,
+                capacity:null,
+                fixed_member_id:[],
+                fixed_member_name:[],
+                color:null
         };
 
-        //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
-        this.set_initial_data(data_from_external);
         this.init();
     }
 
@@ -44,63 +34,6 @@ class Member_add{
 
     get name(){
         return this.data.name;
-    }
-
-    set phone(number){
-        this.data.phone = number;
-        this.render_content();
-    }
-
-    get phone(){
-        return this.data.phone;
-    }
-
-    set birth(data){
-        this.data.birth = data.data;
-        this.render_content();
-    }
-
-    get birth(){
-        return this.data.birth;
-    }
-
-    set sex(data){
-        this.data.sex = data;
-        this.render_content();
-    }
-
-    get sex(){
-        return this.data.sex;
-    }
-
-    set start_date(data){
-        this.data.start_date = data.data;
-        this.data.start_date_text = data.text;
-        this.render_content();
-    }
-
-    get start_date(){
-        return this.data.start_date;
-    }
-
-    set end_date(data){
-        this.data.end_date = data.data;
-        this.data.end_date_text = data.text;
-        this.render_content();
-    }
-
-    get end_date(){
-        return this.data.end_date;
-    }
-
-
-    set memo(text){
-        this.data.memo = text;
-        this.render_content();
-    }
-
-    get memo(){
-        return this.data.memo;
     }
 
     set ticket(data){
@@ -144,21 +77,6 @@ class Member_add{
         this.render_content();
     }
 
-    set_initial_data(data){
-        if(data == null){
-            return null;
-        }
-        this.user_data = data;
-        let user_data_date = this.user_data.user_selected_date;
-        this.data.date = user_data_date.year == null ? null : {year: user_data_date.year, month:user_data_date.month, date:user_data_date.date};
-        this.data.date_text = user_data_date.text;
-        
-        let user_data_time = this.user_data.user_selected_time;
-        this.data.start_time = user_data_time.hour == null ? null : `${user_data_time.hour}:${user_data_time.minute}`;
-        this.data.start_time_text = user_data_time.text;
-        this.data.end_time = user_data_time.hour2 == null ? null : `${user_data_time.hour2}:${user_data_time.minute2}`;
-        this.data.end_time_text = user_data_time.text2;
-    }
 
     render_initial(){
         document.querySelector(this.target.install).innerHTML = this.static_component().initial_page;

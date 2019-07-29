@@ -96,6 +96,33 @@ class CComponent{
         return html;
     }
 
+    static create_input_textarea_row (id, title, icon, icon_r_visible, onfocusout){
+        
+        let html = `<li class="create_input_row create_input_textarea_row" id="c_i_t_r_${id}">
+                        <div class="obj_table_raw">
+                            <div class="cell_title">
+                                ${icon != null ? `<img src="${icon}">` : ""} 
+                            </div>
+                            <div class="cell_content">
+                                <textarea class="cell_text" placeholder="${title}" value="${title}"></textarea>
+                            </div>
+                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
+                        </div>
+                    </li>`;
+        $(document).off('focusin', `#c_i_t_r_${id}`).on('focusin', `#c_i_t_r_${id}`, function(e){
+            $(this).find('textarea').val('');
+        });
+
+        $(document).off('focusout', `#c_i_t_r_${id}`).on('focusout', `#c_i_t_r_${id}`, function(e){
+            let user_input_data = $(this).find('textarea').val();
+            if(user_input_data.length == 0){
+                user_input_data = null;
+            }
+            onfocusout(user_input_data);
+        });
+        return html;
+    }
+
     //수강권 선택 팝업에 사용되는 행
     static select_ticket_row (multiple_select, checked, ticket_id, ticket_name, ticket_price, ticket_reg_count, ticket_effective_days, onclick){
         let html = `

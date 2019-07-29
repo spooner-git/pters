@@ -216,6 +216,8 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_view.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_add.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_add.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.ticket_add.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
 <script type="text/javascript" src={% static_url "user/js/trainer/selector/pters.trainer.selectors.js" %}></script>
@@ -316,9 +318,11 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
     // 페이지 인스턴스
 
     // 팝업 인스턴스
-    var plan_add_popup;
     var plan_view_popup;
+    var plan_add_popup;
     var member_add_popup;
+    var ticket_add_popup;
+    var lecture_add_popup;
     // 팝업 인스턴스
 
     // 범용 셀렉터 인스턴스
@@ -326,6 +330,8 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
     var time_selector;
     var date_selector;
     var spinner_selector;
+    var lecture_select;
+    var ticket_select;
     // 범용 셀렉터 인스턴스
 
 
