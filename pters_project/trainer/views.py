@@ -2332,6 +2332,10 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                              'lecture_name': lecture_tb.name,
                                              'lecture_note': lecture_tb.note,
                                              'lecture_max_num': lecture_tb.member_num,
+                                             'lecture_ing_color_cd': lecture_tb.ing_color_cd,
+                                             'lecture_ing_font_cd': lecture_tb.ing_font_cd,
+                                             'lecture_end_color_cd': lecture_tb.end_color_cd,
+                                             'lecture_end_font_cd': lecture_tb.end_font_cd,
                                              'lecture_ticket_list': lecture_ticket_list,
                                              'lecture_ticket_state_cd_list': lecture_ticket_state_cd_list,
                                              'lecture_ticket_id_list': lecture_ticket_id_list}
@@ -2345,6 +2349,10 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_name': lecture_info.name,
                                                      'lecture_note': lecture_info.note,
                                                      'lecture_max_num': lecture_info.member_num,
+                                                     'lecture_ing_color_cd': lecture_info.ing_color_cd,
+                                                     'lecture_ing_font_cd': lecture_info.ing_font_cd,
+                                                     'lecture_end_color_cd': lecture_info.end_color_cd,
+                                                     'lecture_end_font_cd': lecture_info.end_font_cd,
                                                      'lecture_ticket_list': [],
                                                      'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}
@@ -2419,6 +2427,10 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                              'lecture_name': lecture_tb.name,
                                              'lecture_note': lecture_tb.note,
                                              'lecture_max_num': lecture_tb.member_num,
+                                             'lecture_ing_color_cd': lecture_tb.ing_color_cd,
+                                             'lecture_ing_font_cd': lecture_tb.ing_font_cd,
+                                             'lecture_end_color_cd': lecture_tb.end_color_cd,
+                                             'lecture_end_font_cd': lecture_tb.end_font_cd,
                                              'lecture_ticket_list': lecture_ticket_list,
                                              'lecture_ticket_state_cd_list': lecture_ticket_state_cd_list,
                                              'lecture_ticket_id_list': lecture_ticket_id_list}
@@ -2432,6 +2444,10 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_name': lecture_info.name,
                                                      'lecture_note': lecture_info.note,
                                                      'lecture_max_num': lecture_info.member_num,
+                                                     'lecture_ing_color_cd': lecture_info.ing_color_cd,
+                                                     'lecture_ing_font_cd': lecture_info.ing_font_cd,
+                                                     'lecture_end_color_cd': lecture_info.end_color_cd,
+                                                     'lecture_end_font_cd': lecture_info.end_font_cd,
                                                      'lecture_ticket_list': [],
                                                      'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}
