@@ -45,6 +45,10 @@ class CComponent{
 
     //추가 페이지들에서 사용되는 text input row 스타일
     static create_input_row (id, title, icon, icon_r_visible, disabled, onfocusout){
+        let disable = 'disabled';
+        if(disabled == false){
+            disable = '';
+        }
 
         let html = `<li class="create_input_row" id="c_i_r_${id}">
                         <div class="obj_table_raw">
@@ -52,7 +56,7 @@ class CComponent{
                                 ${icon != null ? `<img src="${icon}">` : ""} 
                             </div>
                             <div class="cell_content">
-                                <input type="text" class="cell_text" placeholder="${title}" value="${title}" disabled="${disabled}">
+                                <input type="text" class="cell_text" placeholder="${title}" value="${title}" ${disable}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
                         </div>
@@ -73,6 +77,10 @@ class CComponent{
     
     //추가 페이지들에서 사용되는 number input row 스타일
     static create_input_number_row (id, title, icon, icon_r_visible, disabled, onfocusout){
+        let disable = 'disabled';
+        if(disabled == false){
+            disable = '';
+        }
         
         let html = `<li class="create_input_row" id="c_i_n_r_${id}">
                         <div class="obj_table_raw">
@@ -80,7 +88,7 @@ class CComponent{
                                 ${icon != null ? `<img src="${icon}">` : ""} 
                             </div>
                             <div class="cell_content">
-                                <input class="cell_text" placeholder="${title}" type="tel" value="${title}" disabled="${disabled}">
+                                <input class="cell_text" placeholder="${title}" type="tel" value="${title}" ${disable}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
                         </div>

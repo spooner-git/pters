@@ -125,12 +125,13 @@ class Lecture {
             let lecture_note = data.lecture_note != "" ? data.lecture_note : " - ";
             let lecture_max_member_number = data.lecture_max_num;
             let lecture_member_number = data.lecture_ing_member_num;
+            let lecture_ing_bg_color = data.lecture_ing_color_cd;
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'lecture_id':${lecture_id}});`;
             let html = `<article class="lecture_wrapper" data-lectureid="${lecture_id}" onclick="${onclick}">
                             <div class="lecture_data_l">
-                                <div class="lecture_tag_body" style="background:#fe4e65"></div>
-                                <div class="lecture_tag_head" style="border-left-color:#fe4e65"></div>
+                                <div class="lecture_tag_body" style="background:${lecture_ing_bg_color}"></div>
+                                <div class="lecture_tag_head" style="border-left-color:${lecture_ing_bg_color}"></div>
                             </div>
                             <div class="lecture_data_c">
                                 <div class="lecture_name">${lecture_name}</div>
