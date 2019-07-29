@@ -282,7 +282,7 @@ class Plan_add{
     }
 
     dom_row_memo_select(){
-        let html = CComponent.create_input_row ('select_memo', this.data.memo == "" ? '메모' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, (input_data)=>{
+        let html = CComponent.create_input_row ('select_memo', this.data.memo == "" ? '메모' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });

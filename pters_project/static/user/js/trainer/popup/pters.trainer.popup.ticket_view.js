@@ -1,6 +1,6 @@
-class Ticket_edit{
+class Ticket_view{
     constructor(install_target, ticket_id, instance){
-        this.target = {install: install_target, toolbox:'section_ticket_edit_toolbox', content:'section_ticket_edit_content'};
+        this.target = {install: install_target, toolbox:'section_ticket_view_toolbox', content:'section_ticket_view_content'};
         this.instance = instance;
         this.ticket_id = ticket_id;
 
@@ -17,21 +17,24 @@ class Ticket_edit{
         };
 
         this.data = {
-                name:null,
-                lecture_id:[],
-                lecture_name:[],
-                lecture_max:[],
-                ticket_effective_days:null,
-                count:null,
-                price:null,
-                memo:null,
+            name:null,
+            lecture_id:[],
+            lecture_name:[],
+            lecture_max:[],
+            ticket_effective_days:null,
+            count:null,
+            price:null,
+            memo:null,
 
-                ticket_state_cd:null,
-                ticket_day_schedule_enable:null,
-                ticket_week_schedule_enable:null,
+            ticket_state_cd:null,
+            ticket_day_schedule_enable:null,
+            ticket_week_schedule_enable:null,
 
-                ticket_reg_dt:null,
-                ticket_mod_dt:null
+            ticket_reg_dt:null,
+            ticket_mod_dt:null,
+
+            member_id:[],
+            member_name:[]
         };
 
         this.init();
@@ -119,7 +122,11 @@ class Ticket_edit{
             this.data.ticket_reg_dt = data.ticket_info.ticket_reg_dt;
             this.data.ticket_mod_dt = data.ticket_info.ticket_mod_dt;
 
-            this.init();
+            Ticket_func.read_member_list({"ticket_id":this.ticket_id}, (data)=>{
+                this.data.member_id = data.ticket_ing_member_list.map((el)=>{return el.member_id;});
+                this.data.member_name = data.ticket_ing_member_list.map((el)=>{return el.member_name;});
+                this.init();
+            });
         });
     }
 
@@ -132,16 +139,20 @@ class Ticket_edit{
     }
     
     render_content(){
-        let name = this.dom_row_ticket_name_input();
         let lecture = this.dom_row_lecture_select();
         let lecture_list = this.dom_row_lecture_select_list();
         let count = this.dom_row_ticket_coung_input();
         let price = this.dom_row_ticket_price_input();
         let memo = this.dom_row_ticket_memo_input();
+        let reg_mod = this.dom_row_reg_mod_date();
+        let member = this.dom_row_member();
+        let member_list = this.dom_row_member_list();
 
-        let html =  '<div class="obj_box_full">'+name+lecture+lecture_list+'</div>' + 
+        let html =  '<div class="obj_box_full">'+lecture+lecture_list+'</div>' + 
                     '<div class="obj_box_full">'+count+price+ '</div>' + 
-                    '<div class="obj_box_full">'+memo+ '</div>';
+                    '<div class="obj_box_full">'+memo+ '</div>' + 
+                    '<div class="obj_box_full">'+reg_mod+ '</div>' +
+                    '<div class="obj_box_full">'+member+member_list+ '</div>';
 
         document.getElementById(this.target.content).innerHTML = html;
     }
@@ -149,9 +160,9 @@ class Ticket_edit{
     dom_row_toolbox(){
         let html = `
         <div class="member_add_upper_box" style="padding-bottom:8px;">
-            <div style="display:inline-block;width:200px;">
-                <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold;">수강권 정보</span>
+            <div style="display:inline-block;width:320px;">
+                <div style="display:inline-block;width:320px;">
+                    <span style="font-size:20px;font-weight:bold;">${this.data.name == null ? '' : this.data.name}</span>
                 </div>
             </div>
         </div>
@@ -159,23 +170,14 @@ class Ticket_edit{
         return html;
     }
 
-    dom_row_ticket_name_input(){
-        let html = CComponent.create_input_row ('input_ticket_name', this.data.name == null ? '수강권명*' : this.data.name, '/static/common/icon/person_black.png', HIDE, false, (input_data)=>{
-            let user_input_data = input_data;
-            if(user_input_data == null){
-                user_input_data = this.data.name;
-            }
-            this.name = user_input_data;
-        });
-        return html;
-    }
+
 
     dom_row_lecture_select(){
-        let lecture_text = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개 선택됨';
+        let lecture_text = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개';
         let html = CComponent.create_row('input_lecture_select', lecture_text, '/static/common/icon/icon_book.png', SHOW, ()=>{ 
-            layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999);
-            });
+            // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            //     lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999);
+            // });
         });
         return html;
     }
@@ -187,9 +189,10 @@ class Ticket_edit{
         for(let i=0; i<length; i++){
             let lecture_id = this.data.lecture_id[i];
             let lecture_name = this.data.lecture_name[i];
-            let icon_button_style = null;
+            let icon_button_style = {"display":"block", "padding":"0"};
+            let lecture_name_set = `<div style="display:inline-block;width:10px;height:10px;border-radius:5px;background-color:#fe4e65;margin-right:10px;"></div>${lecture_name}`;
             html_to_join.push(
-                CComponent.icon_button(lecture_id, lecture_name, null, icon_button_style, ()=>{
+                CComponent.icon_button (lecture_id, lecture_name_set, NONE, icon_button_style, ()=>{
                     layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id});
                 })
             );
@@ -200,41 +203,70 @@ class Ticket_edit{
     }
 
     dom_row_ticket_coung_input(){
-        let html = CComponent.create_input_number_row ('input_ticket_count', this.data.count == null ? '횟수' : this.data.count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
-            let user_input_data = input_data;
-            if(user_input_data == null){
-                user_input_data = this.data.count;
-            }
-            this.count = user_input_data;
+        let html = CComponent.create_input_number_row ('input_ticket_count', this.data.count == null ? '횟수' : this.data.count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, true, (input_data)=>{
+            // let user_input_data = input_data;
+            // this.count = user_input_data;
         });
         return html;
     }
 
     dom_row_ticket_price_input(){
-        let html = CComponent.create_input_number_row ('input_ticket_price', this.data.price == null ? '가격' : this.data.price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
-            let user_input_data = input_data;
-            if(user_input_data == null){
-                user_input_data = this.data.price;
-            }
-            this.price = user_input_data;
+        let html = CComponent.create_input_number_row ('input_ticket_price', this.data.price == null ? '가격' : this.data.price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, true, (input_data)=>{
+            // let user_input_data = input_data;
+            // this.price = user_input_data;
         });
         return html;
     }
 
     dom_row_ticket_memo_input(){
-        let html = CComponent.create_input_row ('input_ticket_memo', this.data.memo == null ? '설명' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, false, (input_data)=>{
-            let user_input_data = input_data;
-            if(user_input_data == null){
-                user_input_data = this.data.memo;
-            }
-            this.memo = user_input_data;
+        let html = CComponent.create_input_row ('input_ticket_memo', this.data.memo == null ? '설명' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, true, (input_data)=>{
+            // let user_input_data = input_data;
+            // this.memo = user_input_data;
         });
         return html;
     }
 
+    dom_row_reg_mod_date(){
+        let html = CComponent.create_row ('reg_mod_date', '등록 0000년 00월 00일 (요일)', NONE, HIDE, ()=>{});
+        return html;
+    }
+
+    dom_row_member(){
+        let member_text = this.data.member_id.length == 0 ? '진행중인 회원' : '진행중인 회원 ('+this.data.member_id.length+' 명)';
+        let html = CComponent.create_row('ing_member', member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{
+            // if(this.data.capacity != null){
+            //     layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            //         member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':null});
+            //     });
+            // }else{
+            //     show_error_message('정원을 먼저 입력해주세요.');
+            // }
+        });
+        return html;
+    }
+
+    dom_row_member_list (){
+        let length = this.data.member_id.length;
+        let html_to_join = [];
+        
+        for(let i=0; i<length; i++){
+            let member_id = this.data.member_id[i];
+            let member_name = this.data.member_name[i];
+            let icon_button_style = {"display":"block", "font-size":"13px", "padding":"0"};
+            html_to_join.push(
+                CComponent.icon_button(member_id, member_name, NONE, icon_button_style, ()=>{
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':member_id});
+                })
+            );
+        }
+        let html = `<div>${html_to_join.join('')}</div>`;
+
+        return html;
+    }
+
+
     send_data(){
         let data = {
-                    "ticket_id":this.ticket_id,
                     "ticket_name":this.data.name,
                     "lecture_id_list[]":this.data.lecture_id,
                     "ticket_effective_days":this.data.ticket_effective_days,
@@ -243,14 +275,15 @@ class Ticket_edit{
                     "ticket_note":this.data.memo,
                     "ticket_week_schedule_enable":7, //주간 수강 제한 횟수
                     "ticket_day_schedule_enable":1  //일일 수강 제한 횟수
+
         };
 
-        Ticket_func.update(data, ()=>{
+
+        Ticket_func.create(data, ()=>{
             layer_popup.close_layer_popup();
             ticket.init();
         });
     }
-
 
     static_component(){
         return {

@@ -8,51 +8,17 @@
 {% endblock %}
 
 {% block popup_base_wrapper_top_center %}
-<span id="ticket_name_in_popup"></span>
+<span id="ticket_name_in_popup">&nbsp;</span>
 {% endblock %}
 
 {% block popup_base_wrapper_top_right %}
-<span id="ticket_edit_popup_show_button">설정</span>
+<span id="ticket_edit_popup_show_button" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_EDIT, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_view_popup.ticket_id}, ()=>{
+        ticket_edit_popup = new Ticket_edit('.popup_ticket_edit', ticket_view_popup.ticket_id, 'ticket_edit_popup');});">설정</span>
 {% endblock %}
 
 {% block popup_base_contents %}
     <div class="popup_ticket_view">
-        <div id="wrapper_box_ticket_info">
-    
-        </div>
-
-        <div class="gap"></div>
-
-        <div id="wrapper_box_ticket_lectures">
-            <div class="obj_box_full">
-                <div id="toggle_set_lectures_in_ticket">
-                        
-                </div>
-            </div>
-            <div class="obj_box_full" style="padding: 0;">
-                <div id="wrapper_ticket_lectures_list">
-                    
-                </div>
-            </div>
-        </div>
-
-        <div class="gap"></div>
-
-        <div id="wrapper_box_ticket_members">
-            <div class="obj_box_full">
-                <div id="toggle_set_members_in_ticket">
-                    
-                </div>
-            </div>
-            <div class="obj_box_full" style="padding: 0;">
-                <div id="wrapper_ticket_members_list">
-                    
-                </div>
-            </div>
-        </div>
-
-        <div class="gap"></div>
-        <div class="gap"></div>
+        
 
     </div>
 {% endblock %}
@@ -71,181 +37,9 @@
 
 <script>
 
-    {% autoescape off %}
-    let ticket_info = {{ ticket_info }};
-    {% endautoescape %}
-
-    function toggle_list(target_selector){
-        let $target = $(target_selector);
-        let status = $target.attr('data-toggle');
-        if(status == 0){
-            $target.show(100);
-            $target.attr('data-toggle', 1);
-        }else if(status == undefined || status == 1){
-            $target.hide(100);
-            $target.attr('data-toggle', 0);
-        }
-    }
-
-    class Ticket_info{
-        constructor(targetHTML, instance, data){
-            this.targetHTML = targetHTML;
-            this.instance = instance;
-            this.data = data;
-            
-            this.target_basic_info = '#wrapper_box_ticket_info';
-            this.target_ticket_name = '#ticket_name_in_popup';
-            this.target_ticket_lecture_list = '#wrapper_ticket_lectures_list';
-            this.target_ticket_member_list = '#wrapper_ticket_members_list';
-        }
-
-        init(){
-            this.render_basic_info();
-            this.render_ticket_name();
-            this.render_ticket_edit_button('#ticket_edit_popup_show_button');
-            this.render_lecture_list_set();
-            this.render_member_list_set();
-        }
-
-        refresh(data){
-            this.reform_data(data);
-            this.render_ticket_name();
-            this.render_basic_info();
-        }
-
-        reform_data(data){
-            this.data = data.ticket_info;
-        }
-
-        render_member_list_set(target){
-            this.render_static_component('#toggle_set_members_in_ticket', "toggle_set_member");
-            this.render_include_member_info(target);
-        }
-
-        render_lecture_list_set(target){
-            this.render_static_component('#toggle_set_lectures_in_ticket', "toggle_set_lecture");
-            this.render_include_lecture_info(target);
-        }
-
-        render_ticket_name(target){
-            if(target == undefined){
-                target = this.target_ticket_name;
-            }
-            document.querySelector(target).innerHTML = this.data.ticket_name;
-        }
-
-        render_ticket_edit_button(target){
-            document.querySelector(target).onclick = () => {
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_EDIT, 100, POPUP_FROM_RIGHT, {"ticket_id":this.data.ticket_id}, ()=>{
-                                                    ticket_edit_popup = new Ticket_edit('.popup_ticket_edit', this.data.ticket_id, 'ticket_edit_popup');});
-            };
-        }
-
-        render_basic_info(target){
-            if(target == undefined){
-                target = this.target_basic_info;
-            }
-            let html = `
-                        <div class="obj_box_full">
-                            <div id="wrapper_ticket_info_basic">
-                                <div class="obj_tag obj_font_bg_grey_trans" style="line-height: 20px;">${'횟수제'}</div>
-                                <div>${'30회 - 900,000 원'}</div>
-                                <div>${this.data.ticket_note}</div>
-                            </div>
-                            <div id="wrapper_ticket_info_dates">
-                                <div>수정 <span>${this.data.ticket_mod_dt}</span></div>
-                                <div>개설 <span>${this.data.ticket_reg_dt}</span></div>
-                            </div>
-                        </div
-                        >`
-            document.querySelector(target).innerHTML = html;
-        }
-
-        render_include_lecture_info(target){
-            if(target == undefined){
-                target = this.target_ticket_lecture_list;
-            }
-            let html_to_join = [];
-            let length = this.data.ticket_lecture_id_list.length;
-            for(var i=0; i<length; i++){
-                let lecture_id = this.data.ticket_lecture_id_list[i];
-                let lecture_name = this.data.ticket_lecture_list[i]
-                let html = 
-                            `
-                            <li onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':${lecture_id}})">
-                                <div class="lecture_data_l">
-                                    <div class="lecture_tag_body" style="background:#fe4e65"></div>
-                                    <div class="lecture_tag_head" style="border-left-color:#fe4e65"></div>
-                                </div>
-                                <div class="lecture_data_c">
-                                    <div class="lecture_name">${lecture_name}</div>
-                                </div>
-                                <div class="lecture_data_r">
-                                    <div class="lecture_member_number">정원 - %0명
-                                    </div>
-                                </div>
-                            </li>
-                            `
-                html_to_join.push(html);
-            }
-            document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`;
-        }
-
-        render_include_member_info(target){
-            if(target == undefined){
-                target = this.target_ticket_member_list;
-            }
-            let html_to_join = [];
-            let length = this.data.ticket_member_list.length;
-            for(var i=0; i<length; i++){
-                let data = this.data.ticket_member_list[i];
-                let member_id = data.member_id;
-                let member_name = data.member_name;
-                let member_sex = data.member_sex;
-                let member_rem = data.member_ticket_rem_count;
-                let member_reg = data.member_ticket_reg_count;
-                let html = 
-                            `
-                            <li onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':${member_id}});">
-                                <div class="member_data_l">
-                                    <img src="/static/common/icon/icon_account.png">
-                                </div>                
-                                <div class="member_data_c">
-                                    <div class="member_name">${member_name}</div>
-                                </div>
-                                <div class="member_data_r">
-                                    <div class="member_counts">잔여 ${member_rem}회</div>
-                                </div>
-                            </li>
-                            `
-                html_to_join.push(html);
-            }
-            document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`;           
-        }
-
-        render_static_component(target, component_name){
-            document.querySelector(target).innerHTML = this.static_component()[component_name];
-        }
-
-        static_component(){
-            return {
-                    toggle_set_lecture : `<div id="toggle_ticket_lectures_list" onclick="toggle_list('#wrapper_ticket_lectures_list')">
-                                            <span>포함된 수업 ${this.data.ticket_lecture_id_list.length}</span>
-                                            <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
-                                        </div>`,
-                    toggle_set_member: `<div id="toggle_ticket_members_list" onclick="toggle_list('#wrapper_ticket_members_list')">
-                                            <span>진행중인 회원 ${this.data.ticket_member_list.length}</span>
-                                            <img src="/static/common/icon/expand_less_black.png" alt="펼치기/접기" class="obj_icon_expand">
-                                        </div>`
-            }
-        }
-    }
-
-    var ticket_info_popup = new Ticket_info('.popup_ticket_view', 'ticket_info_popup', ticket_info);
-    ticket_info_popup.init();
-
-
-
+    // {% autoescape off %}
+    // let ticket_info = {{ ticket_info }};
+    // {% endautoescape %}
 
     func_set_webkit_overflow_scrolling('.popup_ticket_view');
 </script>
