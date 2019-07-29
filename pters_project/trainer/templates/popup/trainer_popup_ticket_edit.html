@@ -1,6 +1,5 @@
-{% extends "popup/trainer_base_popup_pagetype.html" %}
+{% extends "popup/trainer_base_popup_regtype.html" %}
 {% load static_url %}
-{% load background_trainee_data %}
 
 {% block popup_base_css %}
     <!-- pters.trainee.popup.plan_view.css -->
@@ -8,22 +7,15 @@
 {% endblock %}
 
 {% block popup_base_wrapper_top_center %}
-<span id="ticket_name_in_popup">수강권 설정</span>
+<span id="ticket_edit_name_in_popup">&nbsp;</span>
 {% endblock %}
 
 {% block popup_base_wrapper_top_right %}
-
+<span style="color:#fe4e65;font-weight: 500;" onclick="ticket_edit_popup.send_data()">완료</span>
 {% endblock %}
 
 {% block popup_base_contents %}
     <div class="popup_ticket_edit">
-    
-        <div id="wrapper_box_ticket_settings" class="obj_box_full">
-            
-        </div>
-
-        <div class="gap"></div>
-        <div class="gap"></div>
 
     </div>
 {% endblock %}
@@ -41,172 +33,10 @@
 {% block popup_base_js %}
 
 <script>
-
     {% autoescape off %}
     let ticket_info = {{ ticket_info }};
     {% endautoescape %}
 
-
-    class Ticket_edit{
-        constructor(targetHTML, data, instance){
-            this.targetHTML = targetHTML;
-            this.instance = instance;
-            this.data = data;
-            
-            this.ticket_id
-            this.ticket_name;
-            this.ticket_description;
-            this.ticket_include_lectures;
-            this.ticket_count;
-            this.ticket_expiry;
-            this.ticket_price;
-            this.ticket_status_cd;
-            this.items;
-        }
-
-        init(){
-            this.reform_data(this.data);
-            this.render_setting_list();
-        }
-
-        reform_data(data){
-            this.data = data;
-            this.ticket_id = this.data.ticket_id;
-            this.ticket_name = this.data.ticket_name;
-            this.ticket_description = this.data.ticket_note;
-            this.ticket_include_lectures = this.data.ticket_lecture_list;
-            this.ticket_count = "% 100";
-            this.ticket_expiry = "% 3개월";
-            this.ticket_price = "% 1,200,000원";
-            this.ticket_status_cd = this.data.ticket_state_cd;
-            this.items =    {    
-                                ticket_name: {visible: true, title:"수강권명", value:this.ticket_name, user_input_type:"text"},
-                                // ticket_description: {visible: true, title:"수강권 설명", value: this.ticket_description},
-                                ticket_note: {visible: true, title:"수강권 설명", value: this.ticket_description, user_input_type:"text"},
-                                ticket_include_lectures: {visible: true, title:"포함된 수업", value: this.ticket_include_lectures.length, user_input_type:"link"},
-                                ticket_count: {visible: true, title:"횟수", value: this.ticket_count, user_input_type:"number"},
-                                ticket_expiry: {visible: true, title:"유효 기간", value: this.ticket_expiry, user_input_type:"date"},
-                                ticket_price: {visible: true, title:"가격", value: this.ticket_price, user_input_type:"number"},
-                                ticket_finished_members: {visible: true, title:"수강 종료된 회원", value:"", user_input_type:"link"},
-                                ticket_history: {visible: true, title:"수강권 이력", value:"", user_input_type:"link"},
-                                ticket_deactivate: {visible: this.ticket_status_cd == "IP" ? true : false, title:"수강권 비활성화", value:"", user_input_type:"option", option_data:
-                                    {"비활성화":{value: 0, callback: ()=>{this.data_state('ticket_state_cd', 'PE')}}}
-                                },
-                                ticket_activate: {visible: this.ticket_status_cd != "IP" ? true : false, title:"수강권 활성화", value:"", user_input_type:"option", option_data:
-                                    {"활성화":{value: 0, callback: ()=>{this.data_state('ticket_state_cd', 'IP')}}}
-                                },
-                                ticket_delete: {visible: this.ticket_status_cd != "IP" ? true : false, title:"수강권 삭제", value:"", user_input_type:"option", option_data:
-                                    {"완전 삭제":{value: 0, callback: ()=>{this.data_delete()}}}
-                                }
-                            };
-        }
-
-        render_setting_list(target, options){
-            
-            if(target == undefined || target == ""){
-                target = this.targetHTML;
-            }
-            if(options != undefined){
-                for(let item in options){
-                    this.menu_items[item].visible = options[item].visible;
-                }
-            }
-
-            let html_to_join = [];
-            for(let item in this.items){
-                let item_el = this.items[item];
-                if(item_el.visible == false){
-                    continue;
-                }
-                if(item_el.value == ""){
-                    item_el.value = "&nbsp;"
-                }
-               
-                let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, ()=>{
-                    this.attach_events(item_el.user_input_type, item_el.title, item_el.value, item, item_el.option_data)
-                });
-                html_to_join.push(html);
-            }
-            document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`; 
-        }
-
-        attach_events(type, title, value, item, appendix_data){
-            let onclick;
-            switch(type){
-                case "text":
-                    onclick = show_user_input_popup(type, value, ()=>{this.data_update(event, item)} );
-                    break;
-                case "number":
-                    onclick = show_user_input_popup(type, value, ()=>{this.data_update(event, item)} );
-                    break;
-                case "option":
-                    let option_data = appendix_data;
-                    onclick = option_select_popup.open(option_data);
-                    break;
-                case "time":
-                    onclick = time_select_popup.open(`${this.instance}.data_update(this, '${item}')`);
-                    break;
-                case "date":
-                    onclick = date_select_popup.open(`${this.instance}.data_update(this, '${item}')`);
-                    break;
-                case "datepicker":
-                    onclick;
-                    break;
-                case "color":
-                    onclick = show_user_input_popup(type, value, `${this.instance}.data_update(this, '${item}')`);
-                    break;
-                case "disabled":
-                    onclick = show_error_message("수정 할 수 없는 항목입니다.");
-                    break;    
-            }
-            return onclick;
-        }
-
-        data_update(context, item_name){
-            let user_input = $(context.target).parent().siblings('div').find('.popup_basic_user_input_data').val();
-            let data_to_send = {};
-            data_to_send["ticket_id"] = this.ticket_id;
-            data_to_send[item_name] = user_input;
-            
-            Ticket_func.update(data_to_send, () => {
-                this.data_refresh();
-            }) 
-        }
-
-        data_state(item_name, external_input){
-            let data_to_send = {};
-            data_to_send["ticket_id"] = this.ticket_id;
-            data_to_send[item_name.replace(/ticket_/gi,"")] = external_input;
-            
-            Ticket_func.status(data_to_send, () => {
-                this.data_refresh();
-            }) 
-        }
-
-        data_delete(){
-            let data_to_send = {};
-            data_to_send["ticket_id"] = this.ticket_id;
-            
-            Ticket_func.delete(data_to_send, () => {
-                // this.data_refresh();
-                layer_popup.all_close_layer_popup();
-                ticket.init();
-            }) 
-        }
-
-        data_refresh(){
-            Ticket_func.read({"ticket_id":this.ticket_id}, (data)=>{
-                this.reform_data(data.ticket_info);
-                this.render_setting_list();
-                ticket_info_popup.refresh(data);
-                ticket.init();
-            }) 
-        }
-
-    }
-
-    var ticket_edit = new Ticket_edit("#wrapper_box_ticket_settings", ticket_info, "ticket_edit");
-    ticket_edit.init();
 
     func_set_webkit_overflow_scrolling('.popup_ticket_view');
 </script>

@@ -49,7 +49,7 @@ class CComponent{
                                 ${icon != null ? `<img src="${icon}">` : ""} 
                             </div>
                             <div class="cell_content">
-                                <input class="cell_text" placeholder="${title}" value="${title}">
+                                <input type="text" class="cell_text" placeholder="${title}" value="${title}">
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
                         </div>

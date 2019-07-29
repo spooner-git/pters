@@ -1,6 +1,5 @@
-{% extends "popup/trainer_base_popup_pagetype.html" %}
+{% extends "popup/trainer_base_popup_regtype.html" %}
 {% load static_url %}
-{% load background_trainee_data %}
 
 {% block popup_base_css %}
     <!-- pters.trainee.popup.plan_view.css -->
@@ -8,22 +7,15 @@
 {% endblock %}
 
 {% block popup_base_wrapper_top_center %}
-<span id="ticket_name_in_popup">회원 설정</span>
+<span id="member_edit_name_in_popup">&nbsp;</span>
 {% endblock %}
 
 {% block popup_base_wrapper_top_right %}
-
+<span style="color:#fe4e65;font-weight: 500;" onclick="member_edit_popup.send_data()">완료</span>
 {% endblock %}
 
 {% block popup_base_contents %}
     <div class="popup_member_edit">
-    
-        <div id="wrapper_box_member_settings" class="obj_box_full">
-            
-        </div>
-
-        <div class="gap"></div>
-        <div class="gap"></div>
 
     </div>
 {% endblock %}
@@ -41,186 +33,8 @@
 {% block popup_base_js %}
 
 <script>
-    {% autoescape off %}
-    let member_info = {{ member_info }};
-    {% endautoescape %}
 
 
-    class Member_edit{
-        constructor(targetHTML, data, instance){
-            this.targetHTML = targetHTML;
-            this.instance = instance;
-            this.data = data;
-
-            this.member_id;
-            this.member_name;
-            this.member_user_id;
-            this.member_phone;
-            this.member_birth;
-            this.member_sex;
-            this.member_note;
-            this.member_sync;
-
-            this.items;
-        }
-
-        init(){
-            this.reform_data(this.data);
-            this.render_setting_list();
-        }
-        
-        reform_data(data){
-            this.data = data;
-            this.member_id = this.data.member_id;
-            this.member_name = this.data.member_name != "None" ? this.data.member_name: "미입력" ;
-            this.member_user_id = this.data.member_user_id != "None" ? this.data.member_user_id : "미입력";
-            this.member_phone = this.data.member_phone != "None" ? this.data.member_phone : "미입력";
-            this.member_birth = this.data.member_birthday_dt != "None" ? this.data.member_birthday_d : "미입력";
-            this.member_sex = this.data.member_sex != "None" ? this.data.member_sex : "미입력";
-            this.member_note = "% 회원 특이사항 특이사항 특이사항";
-            this.member_sync = this.data.member_connection_check;
-
-            this.items =    {    
-                                member_first_name: {visible: true, title:"회원명", value:this.member_name, user_input_type:"text"},
-                                member_user_id: {visible: true, title:"아이디", value: this.member_user_id, user_input_type:"disabled"},
-                                member_phone: {visible: true, title:"연락처", value: this.member_phone, user_input_type:"number"},
-                                member_birthday: {visible: true, title:"생년월일", value: this.member_birth, user_input_type:"date"},
-                                member_sex: {visible: true, title:"성별", value: this.member_sex, user_input_type:"option", option_data:
-                                   {"남성":{value: 0, callback: ()=>{}}, "여성":{value: 1, callback: ()=>{}}}
-                                },
-                                member_note: {visible: true, title:"특이사항", value: this.member_note, user_input_type:"text"},
-                                member_ticket_history: {visible: true, title:"수강권 이력", value:"", user_input_type:"link"},
-                                member_lecture_history: {visible: true, title:"수업 이력", value:"", user_input_type:"link"},
-                                member_sync_request: {visible: this.member_sync == 0 ? true : false, title:"연결하기", value:"", user_input_type:"option", option_data:
-                                   {"연결 요청":{value: 0, callback: ()=>{}}}
-                                },
-                                member_sync_disconnect: {visible: this.member_sync == 1 ? true : false, title:"연결끊기", value:"", user_input_type:"option", option_data:
-                                   {"연결 해제":{value: 0, callback: ()=>{}}}
-                                },
-                                member_sync_wait: {visible: this.member_sync == 2 ? true : false, title:"연결대기", value:"", user_input_type:"option", option_data:
-                                    {"연결요청 취소":{value: 0, callback: ()=>{}}}
-                                },
-                                member_deactivate: {visible: true, title:"(임시)회원 비활성화", value:"", user_input_type:"option", option_data:
-                                    {"비활성화":{value: 0, callback: ()=>{this.data_state('member_state_cd', 'PE')}}}
-                                },
-                                member_activate: {visible: true, title:"(임시)회원 활성화", value:"", user_input_type:"option", option_data:
-                                    {"활성화":{value: 0, callback: ()=>{this.data_state('member_state_cd', 'IP')}}}
-                                },
-                                member_delete: {visible: true, title:"회원 삭제", value:"", user_input_type:"option", option_data:
-                                    {"완전 삭제":{value: 0, callback: ()=>{this.data_delete();}}}
-                                }
-                            };
-        }
-
-
-        render_setting_list(target, options){
-            if(target == undefined || target == ""){
-                target = this.targetHTML;
-            }
-            if(options != undefined){
-                for(let item in options){
-                    this.menu_items[item].visible = options[item].visible;
-                }
-            }
-
-            let html_to_join = [];
-            for(let item in this.items){
-                let item_el = this.items[item];
-                if(item_el.visible == false){
-                    continue;
-                }
-                if(item_el.value == ""){
-                    item_el.value = "&nbsp;"
-                }
-
-                let html = CComponent.setting_row(`${item}`, item_el.title, item_el.value, ()=>{
-                    this.attach_events(item_el.user_input_type, item_el.title, item_el.value, item, item_el.option_data)
-                });
-                html_to_join.push(html);
-            }
-            document.querySelector(target).innerHTML = `<ul>${html_to_join.join('')}</ul>`; 
-            this.attach_events();
-        }
-
-        
-        attach_events(type, title, value, item, appendix_data){
-            let onclick;
-            switch(type){
-                case "text":
-                    onclick = show_user_input_popup(type, value, ()=>{this.data_update(event, item)} );
-                    break;
-                case "number":
-                    onclick = show_user_input_popup(type, value, ()=>{this.data_update(event, item)} );
-                    break;
-                case "option":
-                    let option_data = appendix_data;
-                    onclick = option_select_popup.open(option_data);
-                    break;
-                case "time":
-                    onclick = time_select_popup.open(`${this.instance}.data_update(this, '${item}')`);
-                    break;
-                case "date":
-                    onclick = date_select_popup.open(`${this.instance}.data_update(this, '${item}')`);
-                    break;
-                case "datepicker":
-                    onclick;
-                    break;
-                case "color":
-                    onclick = show_user_input_popup(type, value, `${this.instance}.data_update(this, '${item}')`);
-                    break;
-                case "disabled":
-                    onclick = show_error_message("수정 할 수 없는 항목입니다.");
-                    break;    
-            }
-            return onclick;
-        }
-
-        data_update(context, item_name){
-            //데이터 형태 {"member_id":"", "first_name":"", "phone":"", "sex":"", "birthday":"", "phone":""};
-            let user_input = $(context.target).parent().siblings('div').find('.popup_basic_user_input_data').val();
-            let data_to_send = {};
-            data_to_send["member_id"] = this.member_id;
-            data_to_send[item_name.replace(/member_/gi,"")] = user_input;
-            
-            Member_func.update(data_to_send, () => {
-                this.data_refresh();
-            }) 
-        }
-
-        data_state(item_name, external_input){
-            let data_to_send = {};
-            data_to_send["member_id"] = this.member_id;
-            data_to_send[item_name.replace(/member_/gi,"")] = external_input;
-            
-            Member_func.status(data_to_send, () => {
-                this.data_refresh();
-            }) 
-        }
-
-        data_delete(){
-            let data_to_send = {};
-            data_to_send["member_id"] = this.member_id;
-            
-            Member_func.delete(data_to_send, () => {
-                // this.data_refresh();
-                layer_popup.all_close_layer_popup();
-                member.init();
-            }) 
-        }
-
-        data_refresh(){
-            Member_func.read({"member_id":this.member_id}, (data)=>{
-                this.reform_data(data);
-                this.render_setting_list();
-                member_info_popup.refresh(data);
-                member.init();
-            })
-        }
-    }
-
-    var member_edit = new Member_edit("#wrapper_box_member_settings", member_info, "member_edit");
-    member_edit.init();
-
-    func_set_webkit_overflow_scrolling('.popup_ticket_view');
+    func_set_webkit_overflow_scrolling('.popup_member_view');
 </script>
 {% endblock %}
