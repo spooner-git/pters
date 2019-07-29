@@ -670,14 +670,14 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
                 lecture_end_font_cd = lecture_one_to_one.end_font_color_cd
 
         # array 에 값을 추가후 dictionary 에 추가
-        date_schedule_list.append({'schedule_id': schedule_info.schedule_id,
+        date_schedule_list.append({'schedule_id': str(schedule_info.schedule_id),
                                    'start_time': schedule_start_time,
                                    'end_time': schedule_end_time,
                                    'state_cd': schedule_info.state_cd,
                                    'schedule_type': schedule_type,
                                    'note': schedule_info.note,
                                    'member_name': member_name,
-                                   'lecture_id': lecture_id,
+                                   'lecture_id': str(lecture_id),
                                    'lecture_name': lecture_name,
                                    'lecture_ing_color_cd': lecture_ing_color_cd,
                                    'lecture_ing_font_cd': lecture_ing_font_cd,
@@ -772,10 +772,10 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                                use=USE).order_by('start_dt')
 
         for lecture_member_schedule_info in lecture_member_schedule_data:
-            lecture_schedule_info = {'schedule_id': lecture_member_schedule_info.schedule_id,
-                                     'member_id': lecture_member_schedule_info.member_ticket_tb.member.member_id,
+            lecture_schedule_info = {'schedule_id': str(lecture_member_schedule_info.schedule_id),
+                                     'member_id': str(lecture_member_schedule_info.member_ticket_tb.member.member_id),
                                      'member_name': lecture_member_schedule_info.member_ticket_tb.member.name,
-                                     'member_ticket_id': lecture_member_schedule_info.member_ticket_tb.member_ticket_id,
+                                     'member_ticket_id': str(lecture_member_schedule_info.member_ticket_tb.member_ticket_id),
                                      'schedule_type': GROUP_SCHEDULE,
                                      'start_dt': str(lecture_member_schedule_info.start_dt),
                                      'end_dt': str(lecture_member_schedule_info.end_dt),
@@ -785,14 +785,14 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
             lecture_schedule_list.append(lecture_schedule_info)
 
         # array 에 값을 추가후 dictionary 에 추가
-        date_schedule_list.append({'schedule_id': schedule_info.schedule_id,
+        date_schedule_list.append({'schedule_id': str(schedule_info.schedule_id),
                                    'start_time': schedule_start_time,
                                    'end_time': schedule_end_time,
                                    'state_cd': schedule_info.state_cd,
                                    'schedule_type': schedule_type,
                                    'note': schedule_info.note,
                                    'member_name': member_name,
-                                   'lecture_id': lecture_id,
+                                   'lecture_id': str(lecture_id),
                                    'lecture_name': lecture_name,
                                    'lecture_ing_color_cd': lecture_ing_color_cd,
                                    'lecture_ing_font_cd': lecture_ing_font_cd,
@@ -826,7 +826,7 @@ def func_get_member_schedule_all(class_id, member_id):
     schedule_list = []
     temp_member_ticket_id = None
     for member_schedule_info in member_schedule_data:
-        member_ticket_id = member_schedule_info.member_ticket_tb.member_ticket_id
+        member_ticket_id = str(member_schedule_info.member_ticket_tb.member_ticket_id)
         lecture_info = member_schedule_info.lecture_tb
         schedule_type = member_schedule_info.en_dis_type
 
@@ -847,8 +847,8 @@ def func_get_member_schedule_all(class_id, member_id):
             lecture_max_member_num = ''
 
         # 일정 정보를 추가하고 수강권에 할당
-        schedule_info = {'schedule_id': member_schedule_info.schedule_id,
-                         'lecture_id': lecture_id,
+        schedule_info = {'schedule_id': str(member_schedule_info.schedule_id),
+                         'lecture_id': str(lecture_id),
                          'lecture_name': lecture_name,
                          'lecture_max_member_num': lecture_max_member_num,
                          'schedule_type': schedule_type,
@@ -895,13 +895,13 @@ def func_get_lecture_schedule_all(class_id, lecture_id):
             lecture_max_member_num = ''
             lecture_current_member_num = ''
 
-        lecture_schedule_list.append({'schedule_id': schedule_info.schedule_id,
+        lecture_schedule_list.append({'schedule_id': str(schedule_info.schedule_id),
                                       'start_dt': str(schedule_info.start_dt),
                                       'end_dt': str(schedule_info.end_dt),
                                       'state_cd': schedule_info.state_cd,
                                       'schedule_type': schedule_type,
                                       'note': schedule_info.note,
-                                      'lecture_id': lecture_id,
+                                      'lecture_id': str(lecture_id),
                                       'lecture_name': lecture_name,
                                       'lecture_max_member_num': lecture_max_member_num,
                                       'lecture_current_member_num': lecture_current_member_num})

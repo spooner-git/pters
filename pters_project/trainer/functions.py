@@ -160,7 +160,7 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, 
 
             if lecture_member_data is not None:
                 for lecture_member_info in lecture_member_data:
-                    if lecture_member_info.member_id == member_id:
+                    if str(lecture_member_info.member_id) == member_id:
                         fix_state_cd = lecture_member_info.fix_state_cd
 
             member_data = {'member_id': member_id,
@@ -209,7 +209,7 @@ def func_get_member_info(class_id, user_id, member_id):
                     member.phone = '***-****-' + member.phone[7:]
                 member.user.email = ''
 
-        member_info = {'member_id': member.member_id,
+        member_info = {'member_id': str(member.member_id),
                        'member_user_id': member.user.username,
                        'member_name': member.name,
                        'member_phone': str(member.phone),
@@ -261,12 +261,12 @@ def func_get_member_lecture_list(class_id, member_id):
 
         for ticket_lecture_info in ticket_lecture_data:
             lecture_tb = ticket_lecture_info.lecture_tb
-            lecture_info = {'lecture_id': lecture_tb.lecture_id,
+            lecture_info = {'lecture_id': str(lecture_tb.lecture_id),
                             'lecture_name': lecture_tb.name,
                             'lecture_note': lecture_tb.note,
                             'lecture_max_num': lecture_tb.member_num
                             }
-            member_lecture_list[lecture_tb.lecture_id] = lecture_info
+            member_lecture_list[str(lecture_tb.lecture_id)] = lecture_info
 
     return member_lecture_list
 
@@ -288,9 +288,9 @@ def func_get_member_ticket_list(class_id, member_id):
         if '\r\n' in member_ticket_tb.note:
             member_ticket_tb.note = member_ticket_tb.note.replace('\r\n', ' ')
 
-        member_ticket_info = {'member_ticket_id': member_ticket_tb.member_ticket_id,
+        member_ticket_info = {'member_ticket_id': str(member_ticket_tb.member_ticket_id),
                               'member_ticket_name': ticket_tb.name,
-                              'member_ticket_ticket_id': ticket_tb.ticket_id,
+                              'member_ticket_ticket_id': str(ticket_tb.ticket_id),
                               'member_ticket_state_cd': member_ticket_tb.state_cd,
                               'member_ticket_reg_count': member_ticket_tb.member_ticket_reg_count,
                               'member_ticket_rem_count': member_ticket_tb.member_ticket_rem_count,
@@ -301,7 +301,7 @@ def func_get_member_ticket_list(class_id, member_id):
                               'member_ticket_refund_date': str(member_ticket_tb.refund_date),
                               'member_ticket_refund_price': member_ticket_tb.refund_price,
                               'member_ticket_note': str(member_ticket_tb.note)}
-        member_ticket_list[member_ticket_tb.member_ticket_id] = member_ticket_info
+        member_ticket_list[str(member_ticket_tb.member_ticket_id)] = member_ticket_info
     return member_ticket_list
 
 
@@ -557,7 +557,7 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
         if lecture_tb.use == USE:
             ticket_lecture_list.append(lecture_tb.name)
             ticket_lecture_state_cd_list.append(lecture_tb.state_cd)
-            ticket_lecture_id_list.append(lecture_tb.lecture_id)
+            ticket_lecture_id_list.append(str(lecture_tb.lecture_id))
 
     if ticket_tb is None:
         try:
@@ -595,7 +595,7 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
         ticket_member_num_name = 'ticket_end_member_num'
     member_list = func_get_member_from_member_ticket_list(all_member_ticket_list, None, user_id)
     if ticket_tb is not None:
-        ticket_info = {'ticket_id': ticket_id,
+        ticket_info = {'ticket_id': str(ticket_id),
                        'ticket_name': ticket_tb.name,
                        'ticket_note': ticket_tb.note,
                        'ticket_state_cd': ticket_tb.state_cd,
@@ -639,7 +639,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
         if ticket_tb.use == USE:
             lecture_ticket_list.append(ticket_tb.name)
             lecture_ticket_state_cd_list.append(ticket_tb.state_cd)
-            lecture_ticket_id_list.append(ticket_tb.ticket_id)
+            lecture_ticket_id_list.append(str(ticket_tb.ticket_id))
 
     if lecture_tb is None:
         try:
@@ -660,7 +660,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
     member_list = func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, user_id)
 
     if lecture_tb is not None:
-        lecture_info = {'lecture_id': lecture_id, 'lecture_name': lecture_tb.name, 'lecture_note': lecture_tb.note,
+        lecture_info = {'lecture_id': str(lecture_id), 'lecture_name': lecture_tb.name, 'lecture_note': lecture_tb.note,
                         'lecture_state_cd': lecture_tb.state_cd, 'lecture_max_num': lecture_tb.member_num,
                         'lecture_reg_dt': str(lecture_tb.reg_dt), 'lecture_mod_dt': str(lecture_tb.mod_dt),
                         'lecture_ticket_list': lecture_ticket_list,
