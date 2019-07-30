@@ -226,6 +226,7 @@ class Lecture_edit{
 
         Lecture_func.update(data, ()=>{
             layer_popup.close_layer_popup();
+            lecture_view_popup.set_initial_data();
             lecture.init();
         });
     }

@@ -100,12 +100,14 @@ function func_ajax_after_send(ajax_name, ajax_data){
 
 class DateRobot{
     static to_text(year, month, date){
-        if(year.split('-').length == 3 && month == undefined && date == undefined){
+        year = String(year);
+        month = String(month);
+        date = String(date);
+        if(year.split('-').length == 3){
             date = year.split('-')[2];
             month = year.split('-')[1];
             year = year.split('-')[0];
         }
-
         let day = DAYNAME_KR[new Date(year, month-1, date).getDay()];
 
         return `${year}년 ${month}월 ${date}일 (${day})`;
