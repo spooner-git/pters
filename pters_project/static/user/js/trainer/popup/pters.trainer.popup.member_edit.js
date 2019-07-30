@@ -136,7 +136,7 @@ class Member_edit{
             console.log(data);
             this.data.name = data.member_name;
             this.data.phone = data.member_phone != "None" ? data.member_phone : null;
-            this.data.birth = data.member_birtday_dt != "None" ? data.member_birtday_dt : null;
+            this.data.birth = data.member_birtday_dt != "None" ? {year:data.member_birthday_dt.split('-')[0], month:data.member_birthday_dt.split('-')[1], date:data.member_birthday_dt.split('-')[2]} : null;
             this.data.sex = data.member_sex != "None" ? data.member_sex : null;
             this.data.memo = null;
             this.init();
@@ -238,7 +238,6 @@ class Member_edit{
 
 
     send_data(){
-
         let data = {
                     "member_id": this.member_id,
                     "first_name": this.data.name,
@@ -246,7 +245,7 @@ class Member_edit{
                     "phone":this.data.phone,
                     "birthday": `${this.data.birth != null ? this.data.birth.year+'-'+this.data.birth.month+'-'+this.data.birth.date : ''}`,
                     "sex":this.data.sex,
-                    "contents":this.data.memo,
+                    "note":this.data.memo,
         };
 
         Member_func.update(data, ()=>{

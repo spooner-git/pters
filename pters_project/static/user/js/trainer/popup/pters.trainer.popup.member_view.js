@@ -263,7 +263,7 @@ class Member_view{
 
     dom_row_member_birth_input(){
         //등록하는 행을 만든다.
-        let html = CComponent.create_input_number_row ('member_birth', this.data.birth == null ? '생년월일' : this.data.phone, '/static/common/icon/icon_cake.png', HIDE, true, (input_data)=>{
+        let html = CComponent.create_input_number_row ('member_birth', this.data.birth == null ? '생년월일' : this.data.birth, '/static/common/icon/icon_cake.png', HIDE, true, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
         });
@@ -291,7 +291,6 @@ class Member_view{
 
         let html_to_join = [];
         for(let i=0; i<ticket_length; i++){
-            console.log(this.data.ticket[i].ticket_id)
 
             //티켓 이름 표기 부분
             let ticket_text = this.data.ticket[i].ticket_id.length == 0 ? '수강권*' : this.data.ticket[i].ticket_name;
