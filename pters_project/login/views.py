@@ -1912,17 +1912,17 @@ def password_change_done(request,
     return TemplateResponse(request, template_name, context)
 
 
-def check_phone_logic(request):
+def activate_sms_logic(request):
     token = request.POST.get('token', '')
     recaptcha_test_session = request.session.get('recaptcha_session', '')
     sms_count = request.session.get('sms_count', 0)
-    phone_number = request.POST.get('phone_number', '')
+    phone = request.POST.get('phone', '')
 
     recaptcha_secret_key = settings.PTERS_reCAPTCHA_SECRET_KEY
     sms_activation_count = settings.PTERS_SMS_ACTIVATION_MAX_COUNT
     error = None
 
-    if phone_number == '':
+    if phone == '':
         error = '휴대폰 번호를 입력해주세요.'
 
     if error is None:
@@ -1942,7 +1942,7 @@ def check_phone_logic(request):
         request.session['sms_activation_time'] = str(timezone.now())
         sms_activation_number = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
         request.session['sms_activation_number'] = sms_activation_number
-        error = func_send_sms_auth(phone_number, sms_activation_number)
+        error = func_send_sms_auth(phone, sms_activation_number)
 
     if error is not None:
         logger.error('error:'+str(error)+':'+str(timezone.now()))
@@ -1991,8 +1991,8 @@ def func_send_sms_auth(phone, activation_number):
     sms_uri = "/sms/v2/services/{}/messages".format(settings.PTERS_NAVER_SMS_API_KEY_ID)
     sms_url = "https://sens.apigw.ntruss.com{}".format(sms_uri)
 
-    stime = int(float(time.time()) * 1000)
-    hash_str = "POST {}\n{}\n{}".format(sms_uri, str(stime), acc_key_id)
+    now = int(float(time.time()) * 1000)
+    hash_str = "POST {}\n{}\n{}".format(sms_uri, str(now), acc_key_id)
     digest = hmac.new(acc_sec_key, msg=hash_str.encode('utf-8'), digestmod=hashlib.sha256).digest()
     d_hash = base64.b64encode(digest).decode()
 
@@ -2000,7 +2000,7 @@ def func_send_sms_auth(phone, activation_number):
         "type": "SMS",
         "contentType": "COMM",
         "countryCode": "82",
-        "from": "01027850505",
+        "from": settings.PTERS_NAVER_SMS_PHONE_NUMBER,
         "content": "[PTERS] 인증번호 ["+activation_number+"]를 입력해주세요.",
         "messages": [
             {
@@ -2014,7 +2014,7 @@ def func_send_sms_auth(phone, activation_number):
     resp, content = h.request(sms_url,
                               method="POST", body=body,
                               headers={'Content-Type': 'application/json; charset=utf-8',
-                                       'x-ncp-apigw-timestamp': str(stime),
+                                       'x-ncp-apigw-timestamp': str(now),
                                        'x-ncp-iam-access-key': acc_key_id,
                                        'x-ncp-apigw-signature-v2': d_hash})
     if resp['status'] != '202':
@@ -2051,3 +2051,70 @@ class ActivateSmsConfirmView(View):
             messages.error(request, error)
 
         return render(request, self.template_name)
+
+
+class ResetPasswordSmsView(View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request):
+        phone = request.POST.get('phone', '')
+
+        error = None
+
+        if phone == '':
+            error = '휴대폰 번호를 입력해주세요.'
+
+        if error is None:
+            max_range = 99999
+            request.session['sms_activation_check'] = False
+            request.session['sms_activation_time'] = str(timezone.now())
+            sms_activation_number = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+            request.session['sms_activation_number'] = sms_activation_number
+            error = func_send_sms_auth(phone, sms_activation_number)
+
+        if error is not None:
+            logger.error('error:'+str(error)+':'+str(timezone.now()))
+            messages.error(request, error)
+
+        return render(request, self.template_name)
+
+
+def func_send_sms_reset_password(phone, activation_number):
+    error = None
+    h = httplib2.Http()
+    acc_key_id = settings.PTERS_NAVER_ACCESS_KEY_ID
+    acc_sec_key = settings.PTERS_NAVER_SECRET_KEY.encode('utf-8')
+
+    sms_uri = "/sms/v2/services/{}/messages".format(settings.PTERS_NAVER_SMS_API_KEY_ID)
+    sms_url = "https://sens.apigw.ntruss.com{}".format(sms_uri)
+
+    now = int(float(time.time()) * 1000)
+    hash_str = "POST {}\n{}\n{}".format(sms_uri, str(now), acc_key_id)
+    digest = hmac.new(acc_sec_key, msg=hash_str.encode('utf-8'), digestmod=hashlib.sha256).digest()
+    d_hash = base64.b64encode(digest).decode()
+
+    data = {
+        "type": "SMS",
+        "contentType": "COMM",
+        "countryCode": "82",
+        "from": settings.PTERS_NAVER_SMS_PHONE_NUMBER,
+        "content": "[PTERS] 인증번호 ["+activation_number+"]를 입력해주세요.",
+        "messages": [
+            {
+                "to": str(phone),
+                "content": "[PTERS] 인증번호 ["+activation_number+"]를 입력해주세요."
+            }
+        ]
+    }
+    body = json.dumps(data)
+
+    resp, content = h.request(sms_url,
+                              method="POST", body=body,
+                              headers={'Content-Type': 'application/json; charset=utf-8',
+                                       'x-ncp-apigw-timestamp': str(now),
+                                       'x-ncp-iam-access-key': acc_key_id,
+                                       'x-ncp-apigw-signature-v2': d_hash})
+    if resp['status'] != '202':
+        error = '비정상적인 접근입니다.[2-1]'
+
+    return error

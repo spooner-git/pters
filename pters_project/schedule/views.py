@@ -113,13 +113,13 @@ def add_schedule_logic(request):
             except InternalError:
                 error = error
 
-        if error is None and en_dis_type == ON_SCHEDULE_TYPE:
-            log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                             from_member_name=request.user.first_name,
-                             class_tb_id=class_id,
-                             log_info=lecture_info.name + ' 일정', log_how='등록',
-                             log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime), use=USE)
-            log_data.save()
+            if error is None and en_dis_type == ON_SCHEDULE_TYPE:
+                log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+                                 from_member_name=request.user.first_name,
+                                 class_tb_id=class_id,
+                                 log_info=lecture_info.name + ' 일정', log_how='등록',
+                                 log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime), use=USE)
+                log_data.save()
 
         if error is None:
             # 그룹 레슨이거나 개인 레슨인 경우
