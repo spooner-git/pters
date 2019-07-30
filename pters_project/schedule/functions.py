@@ -649,9 +649,9 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
             lecture_max_member_num = schedule_info.lecture_tb.member_num
             lecture_current_member_num = schedule_info.lecture_current_member_num
             lecture_ing_color_cd = schedule_info.lecture_tb.ing_color_cd
-            lecture_ing_font_cd = schedule_info.lecture_tb.ing_font_color_cd
+            lecture_ing_font_color_cd = schedule_info.lecture_tb.ing_font_color_cd
             lecture_end_color_cd = schedule_info.lecture_tb.end_color_cd
-            lecture_end_font_cd = schedule_info.lecture_tb.end_font_color_cd
+            lecture_end_font_color_cd = schedule_info.lecture_tb.end_font_color_cd
             schedule_type = 2
         except AttributeError:
             lecture_id = ''
@@ -660,14 +660,14 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
             lecture_current_member_num = ''
             if lecture_one_to_one is None:
                 lecture_ing_color_cd = ''
-                lecture_ing_font_cd = ''
+                lecture_ing_font_color_cd = ''
                 lecture_end_color_cd = ''
-                lecture_end_font_cd = ''
+                lecture_end_font_color_cd = ''
             else:
                 lecture_ing_color_cd = lecture_one_to_one.ing_color_cd
-                lecture_ing_font_cd = lecture_one_to_one.ing_font_color_cd
+                lecture_ing_font_color_cd = lecture_one_to_one.ing_font_color_cd
                 lecture_end_color_cd = lecture_one_to_one.end_color_cd
-                lecture_end_font_cd = lecture_one_to_one.end_font_color_cd
+                lecture_end_font_color_cd = lecture_one_to_one.end_font_color_cd
 
         # array 에 값을 추가후 dictionary 에 추가
         date_schedule_list.append({'schedule_id': str(schedule_info.schedule_id),
@@ -680,9 +680,9 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
                                    'lecture_id': str(lecture_id),
                                    'lecture_name': lecture_name,
                                    'lecture_ing_color_cd': lecture_ing_color_cd,
-                                   'lecture_ing_font_cd': lecture_ing_font_cd,
+                                   'lecture_ing_font_color_cd': lecture_ing_font_color_cd,
                                    'lecture_end_color_cd': lecture_end_color_cd,
-                                   'lecture_end_font_cd': lecture_end_font_cd,
+                                   'lecture_end_font_color_cd': lecture_end_font_color_cd,
                                    'lecture_max_member_num': lecture_max_member_num,
                                    'lecture_current_member_num': lecture_current_member_num})
 
@@ -743,9 +743,9 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
             lecture_max_member_num = schedule_info.lecture_tb.member_num
             lecture_current_member_num = schedule_info.lecture_current_member_num
             lecture_ing_color_cd = schedule_info.lecture_tb.ing_color_cd
-            lecture_ing_font_cd = schedule_info.lecture_tb.ing_font_color_cd
+            lecture_ing_font_color_cd = schedule_info.lecture_tb.ing_font_color_cd
             lecture_end_color_cd = schedule_info.lecture_tb.end_color_cd
-            lecture_end_font_cd = schedule_info.lecture_tb.end_font_color_cd
+            lecture_end_font_color_cd = schedule_info.lecture_tb.end_font_color_cd
             schedule_type = 2
         except AttributeError:
             lecture_id = ''
@@ -753,18 +753,18 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
             lecture_max_member_num = ''
             lecture_current_member_num = ''
             lecture_ing_color_cd = ''
-            lecture_ing_font_cd = ''
+            lecture_ing_font_color_cd = ''
             lecture_end_color_cd = ''
-            lecture_end_font_cd = ''
+            lecture_end_font_color_cd = ''
             if lecture_one_to_one is not None:
                 lecture_id = lecture_one_to_one.lecture_id
                 lecture_name = lecture_one_to_one.name
                 lecture_max_member_num = lecture_one_to_one.member_num
                 lecture_current_member_num = 1
                 lecture_ing_color_cd = lecture_one_to_one.ing_color_cd
-                lecture_ing_font_cd = lecture_one_to_one.ing_font_color_cd
+                lecture_ing_font_color_cd = lecture_one_to_one.ing_font_color_cd
                 lecture_end_color_cd = lecture_one_to_one.end_color_cd
-                lecture_end_font_cd = lecture_one_to_one.end_font_color_cd
+                lecture_end_font_color_cd = lecture_one_to_one.end_font_color_cd
 
         lecture_schedule_list = []
         lecture_member_schedule_data = ScheduleTb.objects.select_related(
@@ -795,9 +795,9 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                    'lecture_id': str(lecture_id),
                                    'lecture_name': lecture_name,
                                    'lecture_ing_color_cd': lecture_ing_color_cd,
-                                   'lecture_ing_font_cd': lecture_ing_font_cd,
+                                   'lecture_ing_font_color_cd': lecture_ing_font_color_cd,
                                    'lecture_end_color_cd': lecture_end_color_cd,
-                                   'lecture_end_font_cd': lecture_end_font_cd,
+                                   'lecture_end_font_color_cd': lecture_end_font_color_cd,
                                    'lecture_max_member_num': lecture_max_member_num,
                                    'lecture_current_member_num': lecture_current_member_num,
                                    'lecture_schedule_data': lecture_schedule_list})

@@ -247,6 +247,7 @@ class Ticket_edit{
 
         Ticket_func.update(data, ()=>{
             layer_popup.close_layer_popup();
+            ticket_view_popup.set_initial_data();
             ticket.init();
         });
     }

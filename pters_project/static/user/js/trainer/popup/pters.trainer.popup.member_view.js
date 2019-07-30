@@ -272,13 +272,7 @@ class Member_view{
 
     dom_row_member_sex_input(){
         let html = CComponent.create_row ('input_member_sex', this.data.sex == null ? '성별' : this.data.sex, '/static/common/icon/person_black.png', HIDE, ()=>{
-            // let user_option = {
-            //                     male:{text:"남성", callback:()=>{this.sex = "M";layer_popup.close_layer_popup();}},
-            //                     female:{text:"여성", callback:()=>{this.sex = "W";layer_popup.close_layer_popup();}}
-            // };
-            // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
-            //     var option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
-            // });
+            
         });
         return html;
     }
@@ -343,35 +337,7 @@ class Member_view{
 
     send_data(){
 
-        let data = {
-                    "member_id":null,
-                    "first_name": this.data.name,
-                    "name":this.data.name,
-                    "phone":this.data.phone,
-                    "birthday": `${this.data.birth != null ? this.data.birth.year+'-'+this.data.birth.month+'-'+this.data.birth.date : ''}`,
-                    "sex":this.data.sex,
-                    "contents":this.data.memo,
-                    "ticket_id":this.data.ticket_id[0],
-                    "start_date": `${this.data.start_date.year}-${this.data.start_date.month}-${this.data.start_date.date}`,
-                    "end_date":`${this.data.end_date.year}-${this.data.end_date.month}-${this.data.end_date.date}`,
-                    "counts":this.data.ticket_reg_count,
-                    "price":this.data.ticket_price
-        };
 
-        // data = {
-        //     "first_name":"1회원등록", "name":"1회원등록", "sex":"M", "birthday":"1986-02-24", "phone":"01034435752"
-        // };
-        // data = {
-        //     "member_id":null, "contents":null, "counts":null, "price":null, "start_date":null, "end_date":null, "ticket_id":null
-        // }
-
-        Member_func.create_pre(data, (received)=>{
-            data.member_id = received.user_db_id[0];
-            Member_func.create(data, ()=>{
-                layer_popup.close_layer_popup();
-                member.init();
-            });
-        });
     }
 
     static_component(){

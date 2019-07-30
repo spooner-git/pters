@@ -21,6 +21,7 @@ class Ticket_view{
             lecture_id:[],
             lecture_name:[],
             lecture_max:[],
+            lecture_color:[],
             ticket_effective_days:null,
             count:null,
             price:null,
@@ -110,6 +111,7 @@ class Ticket_view{
             this.data.lecture_id = data.ticket_info.ticket_lecture_id_list;
             this.data.lecture_name = data.ticket_info.ticket_lecture_list;
             this.data.lecture_max = [];
+            this.data.lecture_color = data.ticket_info.ticket_lecture_ing_color_cd_list;
             this.data.ticket_effective_days = data.ticket_info.ticket_effective_days;
             this.data.count = data.ticket_info.ticket_reg_count;
             this.data.price = data.ticket_info.ticket_price;
@@ -188,11 +190,14 @@ class Ticket_view{
         for(let i=0; i<length; i++){
             let lecture_id = this.data.lecture_id[i];
             let lecture_name = this.data.lecture_name[i];
+            let lecture_color = this.data.lecture_color[i];
             let icon_button_style = {"display":"block", "padding":"0", "font-size":"13px"};
-            let lecture_name_set = `<div style="display:inline-block;width:10px;height:10px;border-radius:5px;background-color:#fe4e65;margin-right:10px;"></div>${lecture_name}`;
+            let lecture_name_set = `<div style="display:inline-block;width:10px;height:10px;border-radius:5px;background-color:${lecture_color};margin-right:10px;"></div>${lecture_name}`;
             html_to_join.push(
                 CComponent.icon_button (lecture_id, lecture_name_set, NONE, icon_button_style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id});
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id}, ()=>{
+                        lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
+                    });
                 })
             );
         }
@@ -249,7 +254,9 @@ class Ticket_view{
             let icon_button_style = {"display":"block", "font-size":"13px", "padding":"0"};
             html_to_join.push(
                 CComponent.icon_button(member_id, member_name, NONE, icon_button_style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':member_id});
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':member_id} ,()=>{
+                        member_view_popup = new Member_view('.popup_member_view', member_id, 'member_view_popup');
+                    });
                 })
             );
         }
