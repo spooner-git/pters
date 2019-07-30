@@ -101,6 +101,10 @@
               <div id="naverIdLogin" style="float: left;"><img src="/static/user/res/naver.png" style="float:left;margin-left:25px;width: 78px;margin-top:8px;margin-right:19px;">네이버 ID로 가입하기</div>
             </div>
 
+            <div id="kakao_registration" class="registration_select_button">
+              <div id="kakaoIdLogin" style="float: left;"><img src="/static/user/res/kakao.png" style="float:left;margin-left:25px;width: 78px;margin-top:8px;margin-right:19px;">카카오 ID로 가입하기</div>
+            </div>
+
             <!-- 구글아이디로그인 버튼 노출 영역 -->
             <!-- <div id="google_registration" class="registration_select_button">
                 <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" data-width="60" data-height="30" data-longtitle="false" style="float:left;margin-left: 35px;margin-top:4px;"></div>
@@ -1283,6 +1287,9 @@
     // <!--  네이버아이디로로그인 초기화 Script -->
     $('#naverIdLogin').click(function (){
         window.location.href = "/?social_type=naver"
+    });
+    $('#kakaoIdLogin').click(function (){
+        window.location.href = "/?social_type=kakao"
     });
 
     </script>

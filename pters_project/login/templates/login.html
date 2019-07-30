@@ -164,7 +164,6 @@
                     </fb:login-button> -->
                     <!-- //페이스북아이디로그인 버튼 노출 영역 -->
 
-
                     <input type="hidden" name="keyword" id="keyword">
                     <div class="innerbox">
                         <a href="{% url 'login:registration_register' %}"><div id="registerButton">회원 가입</div></a>
@@ -329,8 +328,24 @@
     <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/login/pters.trainer.login.js" %}></script>
     <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-
+    <script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>
+    <script type='text/javascript'>
+      //<![CDATA[
+        // 사용할 앱의 JavaScript 키를 설정해 주세요.
+        Kakao.init('bc785e514ad25b7f3b04d2e4ed03123c');
+        // 카카오 로그인 버튼을 생성합니다.
+        Kakao.Auth.createLoginButton({
+          container: '#kakao-login-btn',
+          success: function(authObj) {
+            alert(JSON.stringify(authObj));
+          },
+          fail: function(err) {
+             alert(JSON.stringify(err));
+          }
+        });
+      //]]>
+    </script>
 {#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
     <script>
 {#      delete_token('pc');#}
