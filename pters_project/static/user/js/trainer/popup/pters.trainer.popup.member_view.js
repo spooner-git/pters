@@ -271,14 +271,14 @@ class Member_view{
     }
 
     dom_row_member_sex_input(){
-        let html = CComponent.create_row ('input_member_sex', this.data.sex == null || this.data.sex == 'None' ? '미입력 (성별)' : this.data.sex, '/static/common/icon/person_black.png', HIDE, ()=>{
+        let html = CComponent.create_row ('member_sex', this.data.sex == null || this.data.sex == 'None' ? '미입력 (성별)' : this.data.sex, '/static/common/icon/person_black.png', HIDE, ()=>{
             
         });
         return html;
     }
 
     dom_row_member_memo_input(){
-        let html = CComponent.create_input_row ('input_member_memo', this.data.memo == null ? '특이사항' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, true, (input_data)=>{
+        let html = CComponent.create_input_row ('member_memo', this.data.memo == null ? '특이사항' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, true, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });
