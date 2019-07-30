@@ -704,7 +704,6 @@
     <script type="text/javascript" src={% static_url "user/js/백업/pters.common.module.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
     <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script>
 
 
@@ -996,7 +995,6 @@
         $('.contractread_check span').click(function(e){
             e.stopPropagation();
             var $checkbox = $(this).siblings('input');
-            console.log($checkbox.is(':checked'))
             if($checkbox.is(':checked')){
                 $checkbox.prop('checked', false);
             }else{

@@ -936,57 +936,61 @@ class AddMemberView(RegistrationView, View):
         sex = request.POST.get('sex', '')
         group_type = request.POST.get('group_type', 'trainee')
         birthday_dt = request.POST.get('birthday', '')
-
+        sms_activation_check = request.session.get('sms_activation_check', False)
         error = None
 
-        if form.is_valid():
-            user = None
-            try:
-                user = User.objects.get(username=form.cleaned_data['username'])
-            except ObjectDoesNotExist:
-                error = None
+        if sms_activation_check is False:
+            error = '문자 인증을 완료해주세요.'
 
-            if user is not None:
-                error = '이미 가입된 회원입니다.'
-
-            if error is None:
+        if error is None:
+            if form.is_valid():
+                user = None
                 try:
-                    with transaction.atomic():
-                        user = self.register(form)
-                        group = Group.objects.get(name=group_type)
-                        user.groups.add(group)
-                        user.first_name = first_name
-                        user.is_active = True
-                        user.save()
-                        if birthday_dt == '':
-                            member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                              user_id=user.id, use=USE)
-                        else:
-                            member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                              birthday_dt=birthday_dt, user_id=user.id, use=USE)
-                        member.save()
-                except ValueError:
+                    user = User.objects.get(username=form.cleaned_data['username'])
+                except ObjectDoesNotExist:
+                    error = None
+
+                if user is not None:
                     error = '이미 가입된 회원입니다.'
-                except IntegrityError:
-                    error = '등록 값에 문제가 있습니다.'
-                except TypeError:
-                    error = '등록 값에 문제가 있습니다.'
-                except ValidationError:
-                    error = '등록 값에 문제가 있습니다.'
-                except InternalError:
-                    error = '이미 가입된 회원입니다.'
-        else:
-            for field in form:
-                if field.errors:
-                    for err in field.errors:
-                        if error is None:
-                            if field.name == 'username':
-                                error = '사용할수 없는 ID 입니다.'
+
+                if error is None:
+                    try:
+                        with transaction.atomic():
+                            user = self.register(form)
+                            group = Group.objects.get(name=group_type)
+                            user.groups.add(group)
+                            user.first_name = first_name
+                            user.is_active = True
+                            user.save()
+                            if birthday_dt == '':
+                                member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
+                                                  user_id=user.id, use=USE)
                             else:
-                                error = err
-                        else:
-                            if field.name != 'username':
-                                error += err
+                                member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
+                                                  birthday_dt=birthday_dt, user_id=user.id, use=USE)
+                            member.save()
+                    except ValueError:
+                        error = '이미 가입된 회원입니다.'
+                    except IntegrityError:
+                        error = '등록 값에 문제가 있습니다.'
+                    except TypeError:
+                        error = '등록 값에 문제가 있습니다.'
+                    except ValidationError:
+                        error = '등록 값에 문제가 있습니다.'
+                    except InternalError:
+                        error = '이미 가입된 회원입니다.'
+            else:
+                for field in form:
+                    if field.errors:
+                        for err in field.errors:
+                            if error is None:
+                                if field.name == 'username':
+                                    error = '사용할수 없는 ID 입니다.'
+                                else:
+                                    error = err
+                            else:
+                                if field.name != 'username':
+                                    error += err
         if error is not None:
             logger.error(name + '[' + form.cleaned_data['username'] + ']' + error)
             messages.error(request, error)
@@ -1103,23 +1107,28 @@ class CheckMemberValidationView(View):
     error = ''
 
     def post(self, request):
+        sms_activation_check = request.session.get('sms_activation_check', False)
         context = {}
         # context = super(CheckMemberValidationView, self).get_context_data(**kwargs)
-        form = MyRegistrationForm(self.request.POST, self.request.FILES)
-        if form.is_valid():
-            self.error = ''
-        else:
-            for field in form:
-                if field.errors:
-                    for err in field.errors:
-                        if self.error is None or self.error == '':
-                            if field.name == 'username':
-                                self.error = '사용할수 없는 ID 입니다.'
+        if sms_activation_check is False:
+            self.error = '문자 인증을 완료해주세요.'
+
+        if self.error == '':
+            form = MyRegistrationForm(self.request.POST, self.request.FILES)
+            if form.is_valid():
+                self.error = ''
+            else:
+                for field in form:
+                    if field.errors:
+                        for err in field.errors:
+                            if self.error is None or self.error == '':
+                                if field.name == 'username':
+                                    self.error = '사용할수 없는 ID 입니다.'
+                                else:
+                                    self.error = err
                             else:
-                                self.error = err
-                        else:
-                            if field.name != 'username':
-                                self.error += err
+                                if field.name != 'username':
+                                    self.error += err
         if self.error != '':
             context['error'] = self.error
         return render(request, self.template_name, context)
