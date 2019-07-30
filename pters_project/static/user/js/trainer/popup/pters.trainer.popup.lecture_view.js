@@ -165,7 +165,7 @@ class Lecture_view{
 
     dom_row_color_view(){
         let color_text = this.data.color_bg == null ? '색상명' : `<span style="background-color:${this.data.color_bg};color:${this.data.color_font};padding:5px;border-radius:4px;">${this.data.color_bg}</span>`;
-        let html = CComponent.create_row('input_color_select', color_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
+        let html = CComponent.create_row('lecture_color', color_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
             
         });
         return html;
@@ -226,7 +226,7 @@ class Lecture_view{
             let icon = NONE;
             if(member_fix == FIX){
                 icon = '/static/common/icon/icon_lock.png';
-                icon_button_style = {"display":"block", "font-size":"13px", "padding":"0", 'color':'#fe4e65'};
+                // icon_button_style = {"display":"block", "font-size":"13px", "padding":"0", 'color':'#fe4e65'};
             }
             html_to_join.push(
                 CComponent.icon_button(member_id, member_name, icon, icon_button_style, ()=>{

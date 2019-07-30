@@ -36,7 +36,7 @@ class Calendar {
         this.user_data = {
             user_selected_date: {year:this.current_year, month:this.current_month, date:this.current_date},
             user_selected_time: {hour:this.current_hour, minute:this.current_minute, hour2:this.current_hour, minute2:this.current_minute},
-            user_selected_plan : {schedule_id:""}
+            user_selected_plan : {schedule_id:"", date:{year:null, month:null, date:null}}
         };
 
         let interval = setInterval(()=>{
@@ -735,7 +735,7 @@ class Calendar {
                             let cell_divide = plan.duplicated_cell;
                             
                             // let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_PLAN_VIEW}', 90, ${POPUP_FROM_BOTTOM}, {'select_date':'${date_to_search}'})`;
-                            let onclick = `${this.instance}.open_popup_plan_view(event, ${plan.schedule_id})`;
+                            let onclick = `${this.instance}.open_popup_plan_view(event, ${plan.schedule_id}, ${_year[i]},${_month[i]},${_date[i]})`;
                             let height = 100*(diff.hour*60+60*diff.minute/60)/(24*60);
                             let top = 100*( (plan_start.hour-work_start)*60 + 60*plan_start.minute/60 )/(24*60);
 
@@ -814,8 +814,11 @@ class Calendar {
         });
     }
 
-    open_popup_plan_view (event, schedule_id){
+    open_popup_plan_view (event, schedule_id, year, month, date){
         this.user_data.user_selected_plan.schedule_id = schedule_id;
+        this.user_data.user_selected_plan.date.year = year;
+        this.user_data.user_selected_plan.date.month = month;
+        this.user_data.user_selected_plan.date.date = date;
         layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, 100, POPUP_FROM_RIGHT, {'schedule_id':schedule_id}, ()=>{
             plan_view_popup = new Plan_view('.popup_plan_view', this.user_data.user_selected_plan, "plan_view_popup");
         });

@@ -252,7 +252,7 @@
 
 .select_color_row .cell_color_name{
 	display: table-cell;
-	width: 100px;
+	width: 40px;
 	vertical-align: middle;
 }
 
@@ -260,7 +260,7 @@
 	display: table-cell;
 	width: auto;
 	vertical-align: middle;
-	text-align: right;
+	text-align: left;
 }
 
 .select_color_row .cell_color_selected{

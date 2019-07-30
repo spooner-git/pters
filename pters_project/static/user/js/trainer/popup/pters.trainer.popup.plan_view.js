@@ -16,6 +16,7 @@ class Plan_view{
         };
 
         this.schedule_id = data_from_external.schedule_id;
+        this.selected_date = data_from_external.date;
         this.data = {
             lecture_id: [],
             lecture_name: [],
@@ -115,6 +116,8 @@ class Plan_view{
         if(data.schedule_info[0].schedule_type == 1){
             this.data.member_name = data.schedule_info[0].member_name;
         }
+        this.data.date = this.selected_date;
+        this.data.date_text = DateRobot.to_text(this.data.date.year, this.data.date.month, this.data.date.date);
         this.data.start_time = data.schedule_info[0].start_time;
         this.data.start_time_text = TimeRobot.to_text(data.schedule_info[0].start_time.split(':')[0], data.schedule_info[0].start_time.split(':')[1]);
         this.data.end_time = data.schedule_info[0].end_time;
@@ -216,17 +219,24 @@ class Plan_view{
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DATE_SELECTOR, 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
-                //dataCenter의 선택날짜가 빈값이라면 오늘로 셋팅한다.
+                //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
                 let year = this.data.date == null ? this.dates.current_year : this.data.date.year; 
                 let month = this.data.date == null ? this.dates.current_month : this.data.date.month;
                 let date = this.data.date == null ? this.dates.current_date : this.data.date.date;
                 
-                date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'날짜 선택', data:{year:year, month:month, date:date}, 
-                                                                                                range:{start: this.dates.current_year - 5, end: this.dates.current_year+5},
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'날짜 선택', data:{year:year, month:month, date:date},  
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     this.date = object; 
-                                                                                                    //셀렉터에서 선택된 값(object)을 this.dataCenter에 셋팅하고 rerender 한다.
-                                                                                                }});
+                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+                }});
+
+
+                // date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'날짜 선택', data:{year:year, month:month, date:date}, 
+                //                                                                                 range:{start: this.dates.current_year - 5, end: this.dates.current_year+5},
+                //                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
+                //                                                                                     this.date = object; 
+                //                                                                                     //셀렉터에서 선택된 값(object)을 this.dataCenter에 셋팅하고 rerender 한다.
+                //                                                                                 }});
             });
         });
         return html;
@@ -293,7 +303,10 @@ class Plan_view{
         document.querySelector('#popup_plan_view_additional_act').addEventListener('click', ()=>{
             let user_option = {
                 cancel:{text:"일정 취소", callback:()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
-                                                            Plan_func.delete({"schedule_id":this.schedule_id});calendar.init();layer_popup.all_close_layer_popup();
+                                                            Plan_func.delete({"schedule_id":this.schedule_id}, ()=>{
+                                                                calendar.init();layer_popup.all_close_layer_popup();
+                                                            });
+                                                            
                                                          });
                                                       }
                             },

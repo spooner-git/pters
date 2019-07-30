@@ -1407,7 +1407,6 @@ class ColorSelector{
             let checked = this.target_instance.color.bg.indexOf(bg_code) >= 0 ? 1 : 0; //타겟이 이미 가진 색상 데이터를 get
             let html = CComponent.select_color_row (
                 this.multiple_select, checked, bg_code, font_code, name, (add_or_substract)=>{
-                    console.log('asdfasdf')
                     if(add_or_substract == "add"){
                         this.data.bg.push(bg_code);
                         this.data.font.push(font_code);
@@ -1441,9 +1440,14 @@ class ColorSelector{
 
     request_list (callback){
         let color_data = [
-            {color_code:"#fe4e65", color_font_code:"#ffffff", color_name:"PTERS 레드"},
-            {color_code:"#cccccc", color_font_code:"#282828", color_name:"PTERS 그레이"},
-            {color_code:"#0000ff", color_font_code:"#ffffff", color_name:"블루"}
+            {color_code:"#fbf3bd", color_font_code:"#282828", color_name:"#fbf3bd"},
+            {color_code:"#dbe6f7", color_font_code:"#282828", color_name:"#dbe6f7"},
+            {color_code:"#ffd3d9", color_font_code:"#282828", color_name:"#ffd3d9"},
+            {color_code:"#ffe3c2", color_font_code:"#282828", color_name:"ffe3c2"},
+            {color_code:"#ceeac4", color_font_code:"#282828", color_name:"ceeac4"},
+            {color_code:"#d8d6ff", color_font_code:"#282828", color_name:"d8d6ff"},
+            {color_code:"#ead8f2", color_font_code:"#282828", color_name:"ead8f2"},
+            {color_code:"#d9c3ab", color_font_code:"#282828", color_name:"d9c3ab"}
         ];
         this.received_data = color_data;
         callback();
