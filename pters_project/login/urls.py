@@ -31,6 +31,8 @@ urlpatterns = [
     # 로그인 페이지
     url(r'^login_simple_naver/$', views.LoginSimpleNaverView.as_view(), name='login_simple_naver'),
     # 로그인 페이지
+    url(r'^login_simple_kakao/$', views.LoginSimpleKakaoView.as_view(), name='login_simple_kakao'),
+    # 로그인 페이지
     url(r'^login_simple_sns/$', views.LoginSimpleSnsView.as_view(), name='login_simple_sns'),
     # sns 회원가입 페이지
     url(r'^new_member_sns_info/$', views.NewMemberSnsInfoView.as_view(), name='new_member_sns_info'),
@@ -140,7 +142,6 @@ urlpatterns = [
     url(r'^activate_sms/$', views.activate_sms_logic, name='activate_sms'),
     url(r'^activate_sms_confirm/$', views.ActivateSmsConfirmView.as_view(), name='activate_sms_confirm'),
 
-    url(r'^reset_password_sms/$', views.ResetPasswordSmsView.as_view(), name='reset_password_sms')
-
+    url(r'^reset_password_sms/$', views.ResetPasswordSmsView.as_view(), name='reset_password_sms'),
 
 ]

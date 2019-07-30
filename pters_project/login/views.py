@@ -287,6 +287,15 @@ class LoginSimpleNaverView(TemplateView):
         return context
 
 
+class LoginSimpleKakaoView(TemplateView):
+    template_name = 'login_kakao_processing.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(LoginSimpleKakaoView, self).get_context_data(**kwargs)
+        context['access_token'] = self.request.GET.get('access_token', '')
+        return context
+
+
 class LoginSimpleSnsView(TemplateView):
     template_name = 'login_sns_processing.html'
 
@@ -390,9 +399,12 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
 
         # if last_name == '' or last_name == 'None' or last_name is None:
         #     last_name = ''
-
+        if email == '' or email is None:
+            username = sns_id
+        else:
+            username = email
         try:
-            user = User.objects.get(username=email)
+            user = User.objects.get(username=username)
         except ObjectDoesNotExist:
             error = None
 
@@ -403,7 +415,7 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
             try:
                 with transaction.atomic():
 
-                    user = User.objects.create_user(username=email, first_name=first_name, email=email,
+                    user = User.objects.create_user(username=username, first_name=first_name, email=email,
                                                     password=sns_id, is_active=1)
                     group = Group.objects.get(name=group_type)
                     user.groups.add(group)
@@ -436,7 +448,7 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
                 error = '이미 가입된 회원입니다.'
 
         if error is not None:
-            logger.error(name + '[' + email + ']' + error)
+            logger.error(name + '[' + username + ']' + error)
             messages.error(request, error)
 
         return redirect(next_page)
@@ -576,6 +588,8 @@ class CheckSnsMemberInfoView(TemplateView):
         sns_id = self.request.GET.get('sns_id', '')
         sns_type = self.request.GET.get('sns_type', '')
         username = ''
+        if user_email is None or user_email == '':
+            user_email = sns_id
 
         context['error'] = '0'
         try:

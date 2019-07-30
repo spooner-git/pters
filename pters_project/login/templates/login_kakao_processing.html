@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>NaverLoginSDK</title>
+</head>
+
+<body>
+
+    <form action="." id="add-member-id-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="email" id="id_email" value="">
+        <input type="hidden" name="sns_id" id="id_sns_id" value="" >
+        <input type="hidden" name="sns_type" id="id_sns_type" value="KAKAO" >
+    </form>
+
+    <form action="{% url 'login:login' %}" id="login-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="username" id="id_username">
+        <input type="hidden" name="social_login_check" id="id_social_login_check" value="1">
+        <input type="hidden" name="social_login_type" value="KAKAO">
+        <input type="hidden" name="social_login_id" id="id_social_login_id" value="">
+        <input type="hidden" name="auto_login_check" value="1">
+        <input type="hidden" name="social_accessToken" id="id_accessToken" value="" >
+        <input type="hidden" name="next_page" value = '{% url 'index' %}'>
+    </form>
+
+    <form action="{% url 'login:new_member_sns_info' %}" id="new-member-sns-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="username" id="id_sns_username">
+        <input type="hidden" name="email" id="id_sns_email">
+        <input type="hidden" name="name" id="id_sns_name">
+        <input type="hidden" name="sns_id" id="id_new_sns_id">
+        <input type="hidden" name="sns_type" value="KAKAO">
+        <input type="hidden" name="social_accessToken" id="id_accessToken1" value="" >
+        <input type="hidden" name="sex" id="id_sns_sex">
+    </form>
+
+    <form action="{% url 'login:add_old_member_sns_info' %}" id="old-member-sns-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="username" id="id_sns_username2">
+        <input type="hidden" name="email" id="id_sns_email2">
+        <input type="hidden" name="name" id="id_sns_name2">
+        <input type="hidden" name="sns_id" id="id_new_sns_id2">
+        <input type="hidden" name="sns_type" value="KAKAO">
+        <input type="hidden" name="sex" id="id_sns_sex2">
+        <input type="hidden" name="social_accessToken" id="id_accessToken2" value="" >
+        <input type="hidden" name="next_page" value = '{% url 'index' %}'>
+    </form>
+
+{#	callback 처리중입니다. 이 페이지에서는 callback을 처리하고 바로 main으로 redirect하기때문에 이 메시지가 보이면 안됩니다.#}
+
+	<!-- (1) LoginWithNaverId Javscript SDK -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+
+
+	<!-- (2) LoginWithNaverId Javscript 설정 정보 및 초기화 -->
+	<script>
+
+
+
+        Kakao.init('4533bb10ac61e20907cd273f0941210a');
+		/* (4) Callback의 처리. 정상적으로 Callback 처리가 완료될 경우 main page로 redirect(또는 Popup close) */
+		window.addEventListener('load', function () {
+
+              Kakao.API.request({
+               url: '/v1/user/me',
+               success: function(res) {
+                     console.log(res);//<---- 콘솔 로그에 id 정보 출력(id는 res안에 있기 때문에  res.id 로 불러온다)
+                     console.log(res.id);//<---- 콘솔 로그에 id 정보 출력(id는 res안에 있기 때문에  res.id 로 불러온다)
+                     console.log(res.kaccount_email);//<---- 콘솔 로그에 email 정보 출력 (어딨는지 알겠죠?)
+                     console.log(res.properties['nickname']);//<---- 콘솔 로그에 닉네임 출력(properties에 있는 nickname 접근
+                    var email = res.kaccount_email;
+					var name = res.properties['nickname'];
+					var sns_id = res.id;
+					var access_token = '{{ access_token }}';
+
+                    $('#id_email').attr('value', email);
+                    $('#id_username').attr('value', email);
+                    $('#id_sns_id').attr('value', sns_id);
+
+                    $('#id_sns_username').attr('value', email);
+                    $('#id_sns_email').attr('value', email);
+                    $('#id_sns_name').attr('value', name);
+                    $('#id_new_sns_id').attr('value', sns_id);
+
+                    $('#id_sns_username2').attr('value', email);
+                    $('#id_sns_email2').attr('value', email);
+                    $('#id_sns_name2').attr('value', name);
+                    $('#id_new_sns_id2').attr('value', sns_id);
+
+                    $('#id_social_login_id').attr('value', sns_id);
+                    $('#id_accessToken').attr('value', access_token);
+                    $('#id_accessToken1').attr('value', access_token);
+                    $('#id_accessToken2').attr('value', access_token);
+
+					if( name == undefined || name == null) {
+						alert("이름은 필수정보입니다. 정보제공을 동의해주세요.");
+						return;
+					}
+
+                    check_sns_member_info();
+                   }
+
+             });
+		});
+
+        function check_sns_member_info(){
+            var $form = $('#add-member-id-form');
+            var serializeArray = $form.serializeArray();
+            $.ajax({
+                url:'/login/check_sns_member_info/',
+                type:'GET',
+                data:serializeArray,
+                dataType : 'html',
+
+                beforeSend:function(){
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    var id_check_message = jsondata.id_check_result;
+                    var id_username = jsondata.id_username;
+                    if(id_check_message == '0'){
+                        console.log('회원 아님');
+                        document.getElementById('new-member-sns-form').submit();
+                    }else if(id_check_message == '1'){
+                        console.log('SNS 회원');
+                        $('#id_username').attr('value', id_username);
+                        $('#id_social_login_check').attr('value', '1');
+                        document.getElementById('login-form').submit();
+                    }
+                    else{
+                        $('#id_username2').attr('value', id_username);
+                        $('#id_social_login_check2').attr('value', '1');
+                        console.log('기존 회원');
+                        if (confirm('기존 PTERS ID와 카카오 아이디와 연동하시겠습니까?')) {
+                            document.getElementById('old-member-sns-form').submit();
+                        } else {
+                            window.location.replace('/');
+                        }
+                    }
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                    alert("에러: 서버 통신 실패")
+                }
+            });
+        }
+
+	</script>
+</body>
+
+</html>

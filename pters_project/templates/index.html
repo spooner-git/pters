@@ -210,11 +210,11 @@
                     <form action="{% url 'login:login' %}" id="login-form" method="post">
                         {% csrf_token %}
                         <div id="idinput" class="pters_login_input">
-                            <img id="idimg" alt="피터스 아이디" src={% static_url "user/res/login/icon-user.png" %}>
+                            <img id="idimg" alt="피터스 아이디" style="width:5%; margin-right:2%;" src={% static_url "user/res/login/icon-user.png" %}>
                             <input type="text" class="loginboxstyle form-control" name="username" id="username_id" placeholder="아이디" autofocus>
                         </div>
                         <div id="pwinput" style="margin-top:5%;"  class="pters_login_input">
-                            <img id="pwimg" alt="피터스 비밀번호" src={% static_url "user/res/login/icon-lock.png" %}>
+                            <img id="pwimg" alt="피터스 비밀번호" style="width:5%; margin-right:2%;" src={% static_url "user/res/login/icon-lock.png" %}>
                             <input type="password" class="loginboxstyle form-control" name="password" id="password_id" placeholder="비밀번호">
                         </div>
                         <div class="checkbox" style="margin-top:15px;margin-left:27px;text-align: left;"  class="pters_login_input">
@@ -252,10 +252,12 @@
                         <!-- 네이버아이디로로그인 버튼 노출 영역 -->
                             <div id="naverIdLogin" style="display:none"></div>
                             <div id="naverLogin_img" onclick="location.href = naverLogin.generateAuthorizeUrl();" style="cursor: pointer;">
-                                <img src="/static/user/res/login/naver.svg" style="width:18px;">
+                                <img class="login_form_img" src="/static/user/res/login/naver.svg" style="width:18px;">
                                 <span style="color:#ffffff;font-size: 16px;font-weight: 300;">네이버 아이디로 로그인</span>
                             </div>
                         <!-- //네이버아이디로로그인 버튼 노출 영역 -->
+                            <a id="custom-login-btn" href="javascript:loginWithKakao()">
+                            <img src="//mud-kage.kakao.com/14/dn/btqbjxsO6vP/KPiGpdnsubSq3a0PHEGUK1/o.jpg" width="300"/>
                     </form>
                 </div>
             </div>
@@ -312,7 +314,8 @@
     <script type="text/javascript" src={% static_url "user/js/login/pters.trainer.promote.js" %}></script>
 {#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
     <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>
     <script>
         var bodywidth = window.innerWidth;
 
@@ -575,6 +578,23 @@
 	/* 설정정보를 초기화하고 연동을 준비 */
 	naverLogin.init();
     // <!--  네이버아이디로로그인 초기화 Script -->
+
+    //<![CDATA[
+    // 사용할 앱의 JavaScript 키를 설정해 주세요.
+    Kakao.init('4533bb10ac61e20907cd273f0941210a');
+    function loginWithKakao() {
+      // 로그인 창을 띄웁니다.
+      Kakao.Auth.login({
+        success: function(authObj) {
+          location.href = '/login/login_simple_kakao/?access_token='+authObj.access_token;
+        },
+        fail: function(err) {
+          alert(JSON.stringify(err));
+        }
+      });
+    }
+
+    //]]>
 
 // <!-- 구글 로그인  Script -->
 {#    var google_login_check = false;#}
