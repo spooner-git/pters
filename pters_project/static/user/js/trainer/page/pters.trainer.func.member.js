@@ -119,7 +119,8 @@ class Member {
             let member_reg = data.member_ticket_reg_count;
             let member_rem = data.member_ticket_rem_count;
 
-            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'member_id':${member_id}});`;
+            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'member_id':${member_id}}, ()=>{
+                member_view_popup = new Member_view('.popup_member_view', ${member_id}, 'member_view_popup');});`;
             let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}">
                             <div class="member_data_l">
                                 <img src="/static/common/icon/icon_account.png">
@@ -307,6 +308,38 @@ class Member_func{
         //데이터 형태 {"member_id":""};
         $.ajax({
             url:'/trainer/get_member_info/',
+            type:'GET',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                let json = JSON.parse(data);
+                callback(json);
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static read_ticket_list(data, callback){
+        //데이터 형태 {"member_id":""};
+        $.ajax({
+            url:'/trainer/get_member_ticket_list/',
             type:'GET',
             data: data,
             dataType : 'html',

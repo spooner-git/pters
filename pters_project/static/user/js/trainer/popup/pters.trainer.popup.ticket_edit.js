@@ -151,7 +151,7 @@ class Ticket_edit{
         <div class="member_add_upper_box" style="padding-bottom:8px;">
             <div style="display:inline-block;width:200px;">
                 <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold;">수강권 정보</span>
+                    <span style="font-size:20px;font-weight:bold;">수강권 수정</span>
                 </div>
             </div>
         </div>
