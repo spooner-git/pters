@@ -272,9 +272,9 @@ class CComponent{
                     <li class="select_color_row" id="select_color_row_${color_bg_code_without_sharp}">
                         <div class="obj_table_raw">
                             <div class="cell_color_name">
-                                
+                                <div style="width:20px;height:20px;border-radius:4px;background-color:${bg_code}"></div>
                             </div>
-                            <div class="cell_color_info" style="color:${font_code};background-color:${bg_code};">
+                            <div class="cell_color_info">
                                 ${color_name}
                             </div>
                             <div class="cell_color_selected">

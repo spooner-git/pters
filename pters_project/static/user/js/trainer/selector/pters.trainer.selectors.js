@@ -1407,7 +1407,6 @@ class ColorSelector{
             let checked = this.target_instance.color.bg.indexOf(bg_code) >= 0 ? 1 : 0; //타겟이 이미 가진 색상 데이터를 get
             let html = CComponent.select_color_row (
                 this.multiple_select, checked, bg_code, font_code, name, (add_or_substract)=>{
-                    console.log('asdfasdf')
                     if(add_or_substract == "add"){
                         this.data.bg.push(bg_code);
                         this.data.font.push(font_code);
@@ -1441,9 +1440,6 @@ class ColorSelector{
 
     request_list (callback){
         let color_data = [
-            {color_code:"#fe4e65", color_font_code:"#ffffff", color_name:"#fe4e65"},
-            {color_code:"#cccccc", color_font_code:"#282828", color_name:"#cccccc"},
-            {color_code:"#5555f5", color_font_code:"#ffffff", color_name:"#0000ff"},
             {color_code:"#fbf3bd", color_font_code:"#282828", color_name:"#fbf3bd"},
             {color_code:"#dbe6f7", color_font_code:"#282828", color_name:"#dbe6f7"},
             {color_code:"#ffd3d9", color_font_code:"#282828", color_name:"#ffd3d9"},
