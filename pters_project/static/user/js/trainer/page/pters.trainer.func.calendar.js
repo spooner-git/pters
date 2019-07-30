@@ -705,11 +705,11 @@ class Calendar {
                             }else if(plan.schedule_type == 1){
                                 plan_status_color = plan.lecture_ing_color_cd;
                                 plan_name = plan.member_name;
-                                plan_font_style = `color:${plan.lecture_ing_font_cd};`;
+                                plan_font_style = `color:${plan.lecture_ing_font_color_cd};`;
                             }else if(plan.schedule_type == 2){
                                 plan_status_color = plan.lecture_ing_color_cd;
                                 plan_name = plan.lecture_name;
-                                plan_font_style = `color:${plan.lecture_ing_font_cd};`;
+                                plan_font_style = `color:${plan.lecture_ing_font_color_cd};`;
                             }
 
                             if(plan.state_cd != "NP"){

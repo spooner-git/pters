@@ -668,9 +668,9 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
                         'lecture_ticket_id_list': lecture_ticket_id_list,
                         'lecture_ing_member_num': len(member_list),
                         'lecture_ing_color_cd': lecture_tb.ing_color_cd,
-                        'lecture_ing_font_cd': lecture_tb.ing_font_cd,
+                        'lecture_ing_font_color_cd': lecture_tb.ing_font_color_cd,
                         'lecture_end_color_cd': lecture_tb.end_color_cd,
-                        'lecture_end_font_cd': lecture_tb.end_font_cd,
+                        'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
                         'lecture_member_list': member_list}
     else:
         lecture_info = None
