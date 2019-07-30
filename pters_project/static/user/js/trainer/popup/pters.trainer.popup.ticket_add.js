@@ -193,17 +193,15 @@ class Ticket_add{
         let data = {
                     "ticket_name":this.data.name,
                     "lecture_id_list[]":this.data.lecture_id,
-                    "ticket_effective_days":this.data.ticket_effective_days,
-                    "ticket_reg_count":this.data.count,
-                    "ticket_price":this.data.price,
+                    // "ticket_effective_days":30,
+                    // "ticket_reg_count":this.data.count,
+                    // "ticket_price":this.data.price,
                     "ticket_note":this.data.memo,
                     "ticket_week_schedule_enable":7, //주간 수강 제한 횟수
                     "ticket_day_schedule_enable":1  //일일 수강 제한 횟수
-
         };
 
-
-        console.log(data)
+        console.log("ticket_add", data);
 
         Ticket_func.create(data, ()=>{
             layer_popup.close_layer_popup();
