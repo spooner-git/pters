@@ -143,7 +143,7 @@ class Ticket_edit{
         let memo = this.dom_row_ticket_memo_input();
 
         let html =  '<div class="obj_box_full">'+name+lecture+lecture_list+'</div>' + 
-                    '<div class="obj_box_full">'+count+price+ '</div>' + 
+                    // '<div class="obj_box_full">'+count+price+ '</div>' + 
                     '<div class="obj_box_full">'+memo+ '</div>';
 
         document.getElementById(this.target.content).innerHTML = html;

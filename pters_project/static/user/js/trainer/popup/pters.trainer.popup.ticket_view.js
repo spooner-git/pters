@@ -150,7 +150,7 @@ class Ticket_view{
         let member_list = this.dom_row_member_list();
 
         let html =  '<div class="obj_box_full">'+lecture+lecture_list+'</div>' + 
-                    '<div class="obj_box_full">'+count+price+ '</div>' + 
+                    // '<div class="obj_box_full">'+count+price+ '</div>' + 
                     '<div class="obj_box_full">'+memo+ '</div>' + 
                     '<div class="obj_box_full">'+reg_mod+ '</div>' +
                     '<div class="obj_box_full">'+member+member_list+ '</div>';
@@ -175,7 +175,7 @@ class Ticket_view{
 
     dom_row_lecture_select(){
         let lecture_text = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개';
-        let html = CComponent.create_row('input_lecture_select', lecture_text, '/static/common/icon/icon_book.png', SHOW, ()=>{ 
+        let html = CComponent.create_row('input_lecture_select', lecture_text, '/static/common/icon/icon_book.png', HIDE, ()=>{ 
             // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
             //     lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999);
             // });
@@ -240,7 +240,7 @@ class Ticket_view{
 
     dom_row_member(){
         let member_text = this.data.member_id.length == 0 ? '진행중인 회원' : '진행중인 회원 ('+this.data.member_id.length+' 명)';
-        let html = CComponent.create_row('ing_member', member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{});
+        let html = CComponent.create_row('ing_member', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
         return html;
     }
 

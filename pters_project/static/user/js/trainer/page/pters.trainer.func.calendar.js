@@ -376,15 +376,25 @@ class Calendar {
     }
 
     switch_cal_type (){
-        switch(this.cal_type){
-        case "month":
-            this.init("week");
-            break;
 
-        case "week":
-            this.init("month");
-            break;
-        }
+        let user_option = {
+            month:{text:"월간 달력", callback:()=>{this.init("month");layer_popup.close_layer_popup();}},
+            week:{text:"주간 달력", callback:()=>{this.init("week");layer_popup.close_layer_popup();}}
+        };
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+        option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        });
+
+
+        // switch(this.cal_type){
+        //     case "month":
+        //         this.init("week");
+        //         break;
+
+        //     case "week":
+        //         this.init("month");
+        //         break;
+        //     }
     }
 
     render_upper_box (type){
