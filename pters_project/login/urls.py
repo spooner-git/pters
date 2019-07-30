@@ -137,6 +137,10 @@ urlpatterns = [
     url(r'^password/reset/done/$',
         views.password_reset_done,
         name='auth_password_reset_done'),
-    url(r'^check_phone/$', views.check_phone_logic, name='check_phone'),
-    url(r'^activate_sms_confirm/$', views.ActivateSmsConfirmView.as_view(), name='activate_sms_confirm')
+    url(r'^activate_sms/$', views.activate_sms_logic, name='activate_sms'),
+    url(r'^activate_sms_confirm/$', views.ActivateSmsConfirmView.as_view(), name='activate_sms_confirm'),
+
+    url(r'^reset_password_sms/$', views.ResetPasswordSmsView.as_view(), name='reset_password_sms')
+
+
 ]
