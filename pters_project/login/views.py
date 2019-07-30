@@ -1947,6 +1947,10 @@ def activate_sms_logic(request):
 
     if phone == '':
         error = '휴대폰 번호를 입력해주세요.'
+    else:
+        member_list = MemberTb.objects.filter(phone=phone, user__is_active=True, use=USE)
+        if len(member_list) > 0:
+            error = '이미 등록된 휴대폰 번호가 존재합니다.'
 
     if error is None:
         if int(sms_count) < sms_activation_count:
