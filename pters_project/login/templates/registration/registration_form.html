@@ -102,7 +102,7 @@
             </div>
 
             <div id="kakao_registration" class="registration_select_button">
-              <div id="kakaoIdLogin" style="float: left;"><img src="/static/user/res/kakao.png" style="float:left;margin-left:25px;width: 78px;margin-top:8px;margin-right:19px;">카카오 ID로 가입하기</div>
+              <div id="kakaoIdLogin" style="float: left;" onclick="javascript:loginWithKakao();"><img src="/static/user/res/kakao.png" style="float:left;margin-left:25px;width: 78px;margin-top:8px;margin-right:19px;">카카오 ID로 가입하기</div>
             </div>
 
             <!-- 구글아이디로그인 버튼 노출 영역 -->
@@ -708,6 +708,7 @@
     <script type="text/javascript" src={% static_url "user/js/백업/pters.common.module.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
     <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
+    <script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
     <script>
 
 
@@ -1288,10 +1289,18 @@
     $('#naverIdLogin').click(function (){
         window.location.href = "/?social_type=naver"
     });
-    $('#kakaoIdLogin').click(function (){
-        window.location.href = "/?social_type=kakao"
-    });
-
+    Kakao.init('4533bb10ac61e20907cd273f0941210a');
+    function loginWithKakao() {
+      // 로그인 창을 띄웁니다.
+      Kakao.Auth.login({
+        success: function(authObj) {
+          location.href = '/login/login_simple_kakao/?access_token='+authObj.access_token;
+        },
+        fail: function(err) {
+          alert(JSON.stringify(err));
+        }
+      });
+    }
     </script>
 {% endblock %}
 
