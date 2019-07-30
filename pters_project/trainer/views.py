@@ -2218,10 +2218,9 @@ def update_lecture_status_info_logic(request):
 
 # 그룹 고정 회원 기능
 def update_fix_lecture_member_logic(request):
-    class_id = request.POST.get('class_id', '')
+    class_id = request.session.get('class_id', '')
     lecture_id = request.POST.get('lecture_id', '')
-    member_id = request.POST.get('member_id', '')
-
+    member_ids = request.POST.getlist('member_ids[]', '')
     error = None
     lecture_info = None
 
@@ -2235,45 +2234,46 @@ def update_fix_lecture_member_logic(request):
         except ObjectDoesNotExist:
             error = '오류가 발생했습니다.'
 
-    if error is None:
-        member_lecture_list = func_get_member_lecture_list(class_id, member_id)
-        try:
-            member_lecture_list[lecture_id]
-        except KeyError:
-            error = '해당 회원님은 수업에 참여할 수 있는 수강권이 없습니다.'
+    for member_id in member_ids:
+        if error is None:
+            member_lecture_list = func_get_member_lecture_list(class_id, member_id)
+            try:
+                member_lecture_list[lecture_id]
+            except KeyError:
+                error = '해당 회원님은 수업에 참여할 수 있는 수강권이 없습니다.'
 
-    if error is None:
-        try:
-            with transaction.atomic():
-                lecture_member_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
-                                                                         lecture_tb_id=lecture_id, use=USE)
-                # 이미 고정 회원의 경우 제거하기
-                try:
-                    lecture_member_fix = LectureMemberTb.objects.get(class_tb_id=class_id, lecture_tb_id=lecture_id,
-                                                                     member_id=member_id, use=USE)
-                    lecture_member_fix.delete()
-                except ObjectDoesNotExist:
+        if error is None:
+            try:
+                with transaction.atomic():
+                    lecture_member_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
+                                                                             lecture_tb_id=lecture_id, use=USE)
+                    # 이미 고정 회원의 경우 제거하기
+                    try:
+                        lecture_member_fix = LectureMemberTb.objects.get(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                                                         member_id=member_id, use=USE)
+                        lecture_member_fix.delete()
+                    except ObjectDoesNotExist:
 
-                    # 수업에 고정회원 가능 여부 체크
-                    if len(lecture_member_fix_data) + 1 > lecture_info.member_num:
-                        error = '정원보다 고정 회원이 많습니다.'
-                        raise InternalError()
+                        # 수업에 고정회원 가능 여부 체크
+                        if len(lecture_member_fix_data) + 1 > lecture_info.member_num:
+                            error = '정원보다 고정 회원이 많습니다.'
+                            raise InternalError()
 
-                    # 수업에 고정회원 추가하기
-                    lecture_member_fix = LectureMemberTb(class_tb_id=class_id, lecture_tb_id=lecture_id,
-                                                         member_id=member_id, fix_state_cd='FIX', use=USE)
-                    lecture_member_fix.save()
+                        # 수업에 고정회원 추가하기
+                        lecture_member_fix = LectureMemberTb(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                                             member_id=member_id, fix_state_cd='FIX', use=USE)
+                        lecture_member_fix.save()
 
-        except ValueError:
-            error = '오류가 발생했습니다. [4]'
-        except IntegrityError:
-            error = '오류가 발생했습니다. [5]'
-        except TypeError:
-            error = '오류가 발생했습니다. [6]'
-        except ValidationError:
-            error = '오류가 발생했습니다. [7]'
-        except InternalError:
-            error = error
+            except ValueError:
+                error = '오류가 발생했습니다. [4]'
+            except IntegrityError:
+                error = '오류가 발생했습니다. [5]'
+            except TypeError:
+                error = '오류가 발생했습니다. [6]'
+            except ValidationError:
+                error = '오류가 발생했습니다. [7]'
+            except InternalError:
+                error = error
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
