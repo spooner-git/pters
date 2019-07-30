@@ -12,8 +12,9 @@
 {% endblock %}
 
 {% block popup_base_wrapper_top_right %}
-<span id="member_edit_popup_show_button" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_EDIT, 100, POPUP_FROM_RIGHT, {'member_id':member_view_popup.member_id}, ()=>{
-        member_edit_popup = new Member_edit('.popup_member_edit', member_view_popup.member_id, 'member_edit_popup');});">편집</span>
+<img src={%static_url "common/icon/icon_pencil.png" %} class="obj_icon_basic" style="margin-right:10px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_EDIT, 100, POPUP_FROM_RIGHT, {'member_id':member_view_popup.member_id}, ()=>{
+    member_edit_popup = new Member_edit('.popup_member_edit', member_view_popup.member_id, 'member_edit_popup');});">
+<img src={%static_url "common/icon/icon_more_horizontal.png" %} class="obj_icon_basic" onclick="member_view_popup.upper_right_menu();">
 {% endblock %}
 
 {% block popup_base_contents %}
