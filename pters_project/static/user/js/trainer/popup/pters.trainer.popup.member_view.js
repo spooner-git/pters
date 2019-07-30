@@ -232,7 +232,7 @@ class Member_view{
         <div class="member_add_upper_box" style="padding-bottom:8px;">
             <div style="display:inline-block;width:200px;">
                 <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold;">회원 등록</span>
+                    <span style="font-size:20px;font-weight:bold;">${this.data.name == null ? '' : this.data.name}</span>
                 </div>
             </div>
         </div>
