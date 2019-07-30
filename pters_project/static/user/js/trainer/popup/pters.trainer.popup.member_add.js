@@ -315,7 +315,7 @@ class Member_add{
     }
 
     dom_row_member_reg_coung_input(){
-        let html = CComponent.create_input_number_row ('input_reg_count', this.data.ticket_reg_count == null ? '횟수' : this.data.ticket_reg_count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
+        let html = CComponent.create_input_number_row ('input_reg_count', this.data.ticket_reg_count == null ? '횟수*' : this.data.ticket_reg_count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             this.reg_count = user_input_data;
         });
@@ -362,12 +362,9 @@ class Member_add{
                     "price":this.data.ticket_price
         };
 
-        // data = {
-        //     "first_name":"1회원등록", "name":"1회원등록", "sex":"M", "birthday":"1986-02-24", "phone":"01034435752"
-        // };
-        // data = {
-        //     "member_id":null, "contents":null, "counts":null, "price":null, "start_date":null, "end_date":null, "ticket_id":null
-        // }
+        if(this.check_before_send() == false){
+            return false;
+        }
 
         Member_func.create_pre(data, (received)=>{
             data.member_id = received.user_db_id[0];
@@ -383,5 +380,36 @@ class Member_add{
             initial_page:`<section id="${this.target.toolbox}" class="obj_box_full" style="border:0"></section>
                           <section id="${this.target.content}"></section>`
         };
+    }
+
+    check_before_send(){
+        if(this.data.name == null){
+            show_error_message('회원명을 입력 해주세요.');
+            return false;
+        }
+        if(this.data.phone == null){
+            show_error_message('휴대폰 번호를 입력 해주세요.');
+            return false;
+        }
+        if(this.data.ticket_id.length == 0){
+            show_error_message('등록할 수강권을 선택 해주세요.');
+            return false;
+        }
+        if(this.data.start_date.length == 0){
+            show_error_message('등록할 수강권을 선택 해주세요.');
+            return false;
+        }
+        if(this.data.end_date.length == 0){
+            show_error_message('등록할 수강권을 선택 해주세요.');
+            return false;
+        }
+        if(this.data.ticket_reg_count == null){
+            show_error_message('등록 횟수를 입력 해주세요.');
+            return false;
+        }
+        // if(this.data.ticket_price == null){
+        //     show_error_message('등록 금액을 선택 해주세요.');
+        // }
+        return true;
     }
 }

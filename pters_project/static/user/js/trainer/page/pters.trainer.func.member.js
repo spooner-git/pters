@@ -401,7 +401,6 @@ class Member_func{
 
     static update(data, callback){
         //데이터 형태 {"member_id":"", "first_name":"", "phone":"", "sex":"", "birthday":""};
-
         $.ajax({
             url:'/trainer/update_member_info/',
             type:'POST',
