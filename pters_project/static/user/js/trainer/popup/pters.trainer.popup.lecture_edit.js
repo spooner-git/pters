@@ -213,7 +213,6 @@ class Lecture_edit{
 
 
     send_data(){
-
         let data = {
                     "lecture_id":this.lecture_id,
                     "name":this.data.name,
@@ -225,6 +224,11 @@ class Lecture_edit{
         };
 
         Lecture_func.update(data, ()=>{
+            for(let i=0; i<this.data.fixed_member_id.length; i++){
+                let data = {"lecture_id":this.lecture_id, "member_id":this.data.fixed_member_id[i]};
+                Lecture_func.update_fixed_member(data);
+            }
+            
             layer_popup.close_layer_popup();
             lecture_view_popup.set_initial_data();
             lecture.init();

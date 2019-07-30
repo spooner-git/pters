@@ -199,7 +199,9 @@ class Plan_view{
             let icon_button_style = null;
             html_to_join.push(
                 CComponent.icon_button(member_id, member_name, null, icon_button_style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':member_id});
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':member_id}, ()=>{
+                        member_view_popup = new Member_view('.popup_member_view', member_id, 'member_view_popup');
+                    });
                 })
             );
         }

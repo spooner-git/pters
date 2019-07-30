@@ -181,7 +181,7 @@ class Lecture_view{
 
     dom_row_ticket(){
         let member_text = this.data.ticket_id.length == 0 ? '이 수업을 포함하는 수강권 (0)' : '이 수업을 포함하는 수강권 ('+this.data.ticket_id.length+')';
-        let html = CComponent.create_row('ticket_number', member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{});
+        let html = CComponent.create_row('ticket_number', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
         return html;
     }
 
@@ -210,7 +210,7 @@ class Lecture_view{
 
     dom_row_member(){
         let member_text = this.data.member_number == null ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_number+' 명)';
-        let html = CComponent.create_row('member_number', member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{});
+        let html = CComponent.create_row('member_number', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
         return html;
     }
 

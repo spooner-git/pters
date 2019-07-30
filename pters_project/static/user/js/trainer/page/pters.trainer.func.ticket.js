@@ -272,37 +272,6 @@ class Ticket_func{
         });
     }
 
-    static read_member_list(data, callback){
-        $.ajax({
-            url:'/trainer/get_ticket_ing_member_list/',
-            type:'GET',
-            data: data,
-            dataType : 'html',
-    
-            beforeSend:function(xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            },
-    
-            //보내기후 팝업창 닫기
-            complete:function(){
-                
-            },
-    
-            //통신성공시 처리
-            success:function(data){
-                let json = JSON.parse(data);
-                callback(json);
-            },
-    
-            //통신 실패시 처리
-            error:function(){
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-            }
-        });
-    }
-
     static delete(data, callback){
         //데이터 형태 {"ticket_id":""};
         $.ajax({
@@ -387,6 +356,76 @@ class Ticket_func{
             //통신성공시 처리
             success:function(data){
                 callback(data);
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static read_member_list(data, callback){
+        $.ajax({
+            url:'/trainer/get_ticket_ing_member_list/',
+            type:'GET',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                let json = JSON.parse(data);
+                callback(json);
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static update_lecture(type, data, callback){
+        let url;
+        if(type == ADD){
+            url = '/trainer/add_ticket_lecture_info/';
+        }else if(type == DELETE){
+            url = '/trainer/delete_ticket_lecture_info/';
+        }
+        $.ajax({
+            url: url,
+            type:'POST',
+            data: data,
+            dataType : 'html',
+            async:false,
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                if(callback != undefined){
+                    callback();
+                }
             },
     
             //통신 실패시 처리
