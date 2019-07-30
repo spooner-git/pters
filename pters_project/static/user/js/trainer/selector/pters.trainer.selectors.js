@@ -1441,9 +1441,17 @@ class ColorSelector{
 
     request_list (callback){
         let color_data = [
-            {color_code:"#fe4e65", color_font_code:"#ffffff", color_name:"PTERS 레드"},
-            {color_code:"#cccccc", color_font_code:"#282828", color_name:"PTERS 그레이"},
-            {color_code:"#0000ff", color_font_code:"#ffffff", color_name:"블루"}
+            {color_code:"#fe4e65", color_font_code:"#ffffff", color_name:"#fe4e65"},
+            {color_code:"#cccccc", color_font_code:"#282828", color_name:"#cccccc"},
+            {color_code:"#5555f5", color_font_code:"#ffffff", color_name:"#0000ff"},
+            {color_code:"#fbf3bd", color_font_code:"#282828", color_name:"#fbf3bd"},
+            {color_code:"#dbe6f7", color_font_code:"#282828", color_name:"#dbe6f7"},
+            {color_code:"#ffd3d9", color_font_code:"#282828", color_name:"#ffd3d9"},
+            {color_code:"#ffe3c2", color_font_code:"#282828", color_name:"ffe3c2"},
+            {color_code:"#ceeac4", color_font_code:"#282828", color_name:"ceeac4"},
+            {color_code:"#d8d6ff", color_font_code:"#282828", color_name:"d8d6ff"},
+            {color_code:"#ead8f2", color_font_code:"#282828", color_name:"ead8f2"},
+            {color_code:"#d9c3ab", color_font_code:"#282828", color_name:"d9c3ab"}
         ];
         this.received_data = color_data;
         callback();

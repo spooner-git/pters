@@ -93,9 +93,9 @@ class Lecture_edit{
             this.data.capacity = data.lecture_max_num;
             this.data.fixed_member_id = data.lecture_member_list.filter((el)=>{return el.member_fix_state_cd == FIX ? true : false;}).map((el)=>{return el.member_id;});
             this.data.fixed_member_name = data.lecture_member_list.filter((el)=>{return el.member_fix_state_cd == FIX ? true : false;}).map((el)=>{return el.member_name;});
-            // this.data.color_bg = data.ing_color_cd;
-            // this.data.color_font = data.ing_font_color_cd;
-            // this.data.color_name = data.ing_color_cd;
+            this.data.color_bg = [data.lecture_ing_color_cd];
+            this.data.color_font = [data.lecture_ing_font_color_cd];
+            this.data.color_name = [data.lecture_ing_color_cd];
             this.init();
         });
     }
@@ -113,7 +113,7 @@ class Lecture_edit{
         let name = this.dom_row_lecture_name_input();
         let time = this.dom_row_lecture_time_input(); //수업 진행시간
         let capacity = this.dom_row_capacity_input();
-        let fixed_member = this.dom_row_fiexd_member_select();
+        let fixed_member = this.dom_row_fixed_member_select();
         let fixed_member_list = this.dom_row_fixed_member_list();
         let color = this.dom_row_color_select();
 
@@ -168,7 +168,7 @@ class Lecture_edit{
         return html;
     }
 
-    dom_row_fiexd_member_select(){
+    dom_row_fixed_member_select(){
         let fixed_member_text = this.data.fixed_member_name.length == 0 ? '고정 회원' : '고정회원 '+this.data.fixed_member_id.length+'명 선택됨';
         let html = CComponent.create_row('select_member', fixed_member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, (data)=>{
             if(this.data.capacity != null){
@@ -217,10 +217,10 @@ class Lecture_edit{
                     "lecture_id":this.lecture_id,
                     "name":this.data.name,
                     "member_num":this.data.capacity,
-                    "ing_color_cd":this.data.color_bg,
+                    "ing_color_cd":this.data.color_bg[0],
                     "end_color_cd":"",
-                    "ing_font_color_cd":this.data.color_font,
-                    "end_font_color_cd":""
+                    "ing_font_color_cd":this.data.color_font[0],
+                    "end_font_color_cd":"",
         };
 
         Lecture_func.update(data, ()=>{
