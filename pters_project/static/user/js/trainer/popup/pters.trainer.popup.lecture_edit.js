@@ -138,7 +138,7 @@ class Lecture_edit{
     }
 
     dom_row_lecture_name_input(){
-        let html = CComponent.create_input_row ('input_lecture_name', this.data.name == null ? '수업명*' : this.data.name, '/static/common/icon/icon_book.png', HIDE, (input_data)=>{
+        let html = CComponent.create_input_row ('input_lecture_name', this.data.name == null ? '수업명*' : this.data.name, '/static/common/icon/icon_book.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.name;
@@ -149,7 +149,7 @@ class Lecture_edit{
     }
 
     dom_row_lecture_time_input(){
-        let html = CComponent.create_input_row ('input_lecture_time', this.data.time == null ? '진행 시간*' : this.data.time, '/static/common/icon/icon_clock.png', HIDE, (input_data)=>{
+        let html = CComponent.create_input_row ('input_lecture_time', this.data.time == null ? '진행 시간*' : this.data.time, '/static/common/icon/icon_clock.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             this.time = user_input_data;
         });
@@ -158,7 +158,7 @@ class Lecture_edit{
 
   
     dom_row_capacity_input(){
-        let html = CComponent.create_input_number_row ('input_lecture_capacity', this.data.capacity == null ? '정원*' : '정원 '+this.data.capacity+'명', '/static/common/icon/icon_member.png', HIDE, (input_data)=>{
+        let html = CComponent.create_input_number_row ('input_lecture_capacity', this.data.capacity == null ? '정원*' : '정원 '+this.data.capacity+'명', '/static/common/icon/icon_member.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.capacity;

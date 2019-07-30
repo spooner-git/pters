@@ -203,7 +203,7 @@ class Member_edit{
     }
 
     dom_row_member_name_input(){
-        let html = CComponent.create_input_row ('input_member_name', this.data.name == null ? '회원명*' : this.data.name, '/static/common/icon/person_black.png', HIDE, (input_data)=>{
+        let html = CComponent.create_input_row ('input_member_name', this.data.name == null ? '회원명*' : this.data.name, '/static/common/icon/person_black.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
         });
@@ -211,7 +211,7 @@ class Member_edit{
     }
 
     dom_row_member_phone_input(){
-        let html = CComponent.create_input_number_row ('input_member_phone', this.data.phone == null ? '휴대폰 번호*' : this.data.phone, '/static/common/icon/icon_smartphone.png', HIDE, (input_data)=>{
+        let html = CComponent.create_input_number_row ('input_member_phone', this.data.phone == null ? '휴대폰 번호*' : this.data.phone, '/static/common/icon/icon_smartphone.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
         });
@@ -256,7 +256,7 @@ class Member_edit{
     }
 
     dom_row_member_memo_input(){
-        let html = CComponent.create_input_row ('input_member_memo', this.data.memo == null ? '특이사항' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, (input_data)=>{
+        let html = CComponent.create_input_row ('input_member_memo', this.data.memo == null ? '특이사항' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });
@@ -318,7 +318,7 @@ class Member_edit{
     // }
 
     // dom_row_member_reg_coung_input(){
-    //     let html = CComponent.create_input_number_row ('input_reg_count', this.data.ticket_reg_count == null ? '횟수' : this.data.ticket_reg_count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, (input_data)=>{
+    //     let html = CComponent.create_input_number_row ('input_reg_count', this.data.ticket_reg_count == null ? '횟수' : this.data.ticket_reg_count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
     //         let user_input_data = input_data;
     //         this.reg_count = user_input_data;
     //     });
@@ -326,7 +326,7 @@ class Member_edit{
     // }
 
     // dom_row_member_reg_price_input(){
-    //     let html = CComponent.create_input_number_row ('input_reg_price', this.data.ticket_price == null ? '가격' : this.data.ticket_price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, (input_data)=>{
+    //     let html = CComponent.create_input_number_row ('input_reg_price', this.data.ticket_price == null ? '가격' : this.data.ticket_price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
     //         let user_input_data = input_data;
     //         this.reg_price = user_input_data;
     //     });

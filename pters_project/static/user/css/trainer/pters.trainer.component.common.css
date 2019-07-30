@@ -29,6 +29,7 @@
 	vertical-align: middle;
 	padding: 0;
 	margin: 0;
+	background-color: transparent
 }
 .create_input_row textarea{
 	-webkit-appearance: none;
@@ -44,6 +45,7 @@
 	vertical-align: middle;
 	padding: 0;
 	margin: 0;
+	background-color: transparent
 }
 .create_input_textarea_row{
 	height: auto;
