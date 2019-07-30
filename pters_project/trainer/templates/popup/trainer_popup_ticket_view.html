@@ -12,8 +12,10 @@
 {% endblock %}
 
 {% block popup_base_wrapper_top_right %}
-<span id="ticket_edit_popup_show_button" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_EDIT, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_view_popup.ticket_id}, ()=>{
-        ticket_edit_popup = new Ticket_edit('.popup_ticket_edit', ticket_view_popup.ticket_id, 'ticket_edit_popup');});">편집</span>
+<img src={%static_url "common/icon/icon_pencil.png" %} class="obj_icon_basic" style="margin-right:10px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_EDIT, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_view_popup.ticket_id}, ()=>{
+    ticket_edit_popup = new Ticket_edit('.popup_ticket_edit', ticket_view_popup.ticket_id, 'ticket_edit_popup');});">
+<img src={%static_url "common/icon/icon_more_horizontal.png" %} class="obj_icon_basic" onclick="ticket_view_popup.upper_right_menu();">
+<!-- <span id="ticket_edit_popup_show_button" >편집</span> -->
 {% endblock %}
 
 {% block popup_base_contents %}

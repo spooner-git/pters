@@ -201,8 +201,10 @@ class Ticket_add{
                     "ticket_day_schedule_enable":1  //일일 수강 제한 횟수
         };
 
-        console.log("ticket_add", data);
-
+        if(this.check_before_send() == false){
+            return false;
+        }
+        
         Ticket_func.create(data, ()=>{
             layer_popup.close_layer_popup();
             ticket.init();
@@ -214,5 +216,17 @@ class Ticket_add{
             initial_page:`<section id="${this.target.toolbox}" class="obj_box_full" style="border:0"></section>
                           <section id="${this.target.content}"></section>`
         };
+    }
+
+    check_before_send(){
+        if(this.data.name == null){
+            show_error_message('수강권명을 입력해주세요');
+            return false;
+        }
+        if(this.data.lecture_id.length == 0){
+            show_error_message('포함할 수업을 선택해주세요');
+            return false;
+        }
+        return true;
     }
 }

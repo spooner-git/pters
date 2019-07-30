@@ -267,23 +267,23 @@ class Ticket_view{
 
 
     send_data(){
-        let data = {
-                    "ticket_name":this.data.name,
-                    "lecture_id_list[]":this.data.lecture_id,
-                    "ticket_effective_days":this.data.ticket_effective_days,
-                    "ticket_reg_count":this.data.count,
-                    "ticket_price":this.data.price,
-                    "ticket_note":this.data.memo,
-                    "ticket_week_schedule_enable":7, //주간 수강 제한 횟수
-                    "ticket_day_schedule_enable":1  //일일 수강 제한 횟수
+        // let data = {
+        //             "ticket_name":this.data.name,
+        //             "lecture_id_list[]":this.data.lecture_id,
+        //             "ticket_effective_days":this.data.ticket_effective_days,
+        //             "ticket_reg_count":this.data.count,
+        //             "ticket_price":this.data.price,
+        //             "ticket_note":this.data.memo,
+        //             "ticket_week_schedule_enable":7, //주간 수강 제한 횟수
+        //             "ticket_day_schedule_enable":1  //일일 수강 제한 횟수
 
-        };
+        // };
 
 
-        Ticket_func.create(data, ()=>{
-            layer_popup.close_layer_popup();
-            ticket.init();
-        });
+        // Ticket_func.create(data, ()=>{
+        //     layer_popup.close_layer_popup();
+        //     ticket.init();
+        // });
     }
 
     static_component(){
@@ -291,5 +291,16 @@ class Ticket_view{
             initial_page:`<section id="${this.target.toolbox}" class="obj_box_full" style="border:0"></section>
                           <section id="${this.target.content}"></section>`
         };
+    }
+
+    upper_right_menu(){
+        let user_option = {
+            deactivate:{text:"비활성화", callback:()=>{alert('작업중');layer_popup.close_layer_popup();}},
+            delete:{text:"삭제", callback:()=>{alert('작업중');layer_popup.close_layer_popup();}}
+        };
+        
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        });
     }
 }

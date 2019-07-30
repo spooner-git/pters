@@ -242,11 +242,21 @@ class Lecture_view{
     }
 
 
-
     static_component(){
         return {
             initial_page:`<section id="${this.target.toolbox}" class="obj_box_full" style="border:0"></section>
                           <section id="${this.target.content}"></section>`
         };
+    }
+
+    upper_right_menu(){
+        let user_option = {
+            deactivate:{text:"비활성화", callback:()=>{alert('작업중');layer_popup.close_layer_popup();}},
+            delete:{text:"삭제", callback:()=>{alert('작업중');layer_popup.close_layer_popup();}}
+        };
+        
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        });
     }
 }

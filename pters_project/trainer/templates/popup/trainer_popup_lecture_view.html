@@ -12,8 +12,9 @@
 {% endblock %}
 
 {% block popup_base_wrapper_top_right %}
-<span id="lecture_edit_popup_show_button" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_EDIT, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_view_popup.lecture_id}, ()=>{
-        lecture_edit_popup = new Lecture_edit('.popup_lecture_edit', lecture_view_popup.lecture_id, 'lecture_edit_popup');});">편집</span>
+<img src={%static_url "common/icon/icon_pencil.png" %} class="obj_icon_basic" style="margin-right:10px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_EDIT, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_view_popup.lecture_id}, ()=>{
+    lecture_edit_popup = new Lecture_edit('.popup_lecture_edit', lecture_view_popup.lecture_id, 'lecture_edit_popup');});">
+<img src={%static_url "common/icon/icon_more_horizontal.png" %} class="obj_icon_basic" onclick="lecture_view_popup.upper_right_menu();">
 {% endblock %}
 
 {% block popup_base_contents %}

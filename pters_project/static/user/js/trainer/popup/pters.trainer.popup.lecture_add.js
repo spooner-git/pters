@@ -201,6 +201,10 @@ class Lecture_add{
                     "end_font_color_cd":""
         };
 
+        if(this.check_before_send() == false){
+            return false;
+        }
+
         Lecture_func.create(data, ()=>{
             layer_popup.close_layer_popup();
             lecture.init();
@@ -212,5 +216,18 @@ class Lecture_add{
             initial_page:`<section id="${this.target.toolbox}" class="obj_box_full" style="border:0"></section>
                           <section id="${this.target.content}"></section>`
         };
+    }
+
+    check_before_send(){
+        if(this.data.name == null){
+            show_error_message('수업명을 입력해주세요.');
+            return false;
+        }
+
+        if(this.data.capacity == null){
+            show_error_message('정원을 입력해주세요.');
+            return false;
+        }
+        return true;
     }
 }

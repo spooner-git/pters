@@ -247,7 +247,7 @@ class Member_edit{
                     "sex":this.data.sex,
                     "note":this.data.memo,
         };
-
+        
         Member_func.update(data, ()=>{
             layer_popup.close_layer_popup();
             member_view_popup.set_initial_data();

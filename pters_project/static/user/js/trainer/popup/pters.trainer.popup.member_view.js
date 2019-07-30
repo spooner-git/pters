@@ -345,4 +345,15 @@ class Member_view{
                           <section id="${this.target.content}"></section>`
         };
     }
+
+    upper_right_menu(){
+        let user_option = {
+            deactivate:{text:"비활성화", callback:()=>{alert('작업중');layer_popup.close_layer_popup();}},
+            delete:{text:"삭제", callback:()=>{alert('작업중');layer_popup.close_layer_popup();}}
+        };
+        
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        });
+    }
 }
