@@ -226,7 +226,7 @@ class Lecture_view{
             let icon = NONE;
             if(member_fix == FIX){
                 icon = '/static/common/icon/icon_lock.png';
-                icon_button_style = {"display":"block", "font-size":"13px", "padding":"0", 'color':'#fe4e65'};
+                // icon_button_style = {"display":"block", "font-size":"13px", "padding":"0", 'color':'#fe4e65'};
             }
             html_to_join.push(
                 CComponent.icon_button(member_id, member_name, icon, icon_button_style, ()=>{

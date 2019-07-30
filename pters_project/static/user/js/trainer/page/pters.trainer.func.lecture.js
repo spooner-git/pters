@@ -218,7 +218,6 @@ class Lecture_func{
     
             //통신성공시 처리
             success:function(data){
-                console.log("lecture_func",data)
                 callback();
             },
     
@@ -326,7 +325,6 @@ class Lecture_func{
     }
 
     static status(data, callback){
-        console.log(data)
         //데이터 형태 {"lecture_id":"", "state_cd":""};
         $.ajax({
             url:'/trainer/update_lecture_status_info/',
@@ -412,7 +410,6 @@ class Lecture_func{
     
             //통신성공시 처리
             success:function(data){
-                console.log(data);
                 if(callback != undefined){
                     callback();
                 }
