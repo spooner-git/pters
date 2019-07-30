@@ -210,7 +210,6 @@ class Ticket{
 
 class Ticket_func{
     static create(data, callback){
-        //데이터 형태 {"ticket_name":"", "ticket_note":"", "ticket_list":[""]};
         $.ajax({
             url:'/trainer/add_ticket_info/',
             type:'POST',
