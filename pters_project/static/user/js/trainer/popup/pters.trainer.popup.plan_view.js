@@ -120,7 +120,7 @@ class Plan_view{
         this.data.end_time = data.schedule_info[0].end_time;
         this.data.end_time_text = TimeRobot.to_text(data.schedule_info[0].end_time.split(':')[0], data.schedule_info[0].end_time.split(':')[1]);
         this.data.lecture_color = data.schedule_info[0].lecture_ing_color_cd;
-        this.data.lecture_font_color = data.schedule_info[0].lecture_ing_font_cd;
+        this.data.lecture_font_color = data.schedule_info[0].lecture_ing_font_color_cd;
         this.data.lecture_max_num = data.schedule_info[0].lecture_max_member_num;
         this.data.lecture_current_num = data.schedule_info[0].lecture_current_member_num;
         this.data.lecture_state_cd = data.schedule_info[0].state_cd;

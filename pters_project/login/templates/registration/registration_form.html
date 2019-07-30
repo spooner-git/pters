@@ -190,7 +190,7 @@
                 <span class="sms_confirm"></span>
                 <div id="wrapper_id_activation" style="width:70%; display:none; border: solid 1px #1e1e1e; margin-top:6px;" >
                     <input type="text" name="activation_code" style="width:70%; border:0px;" id="id_activation_code" placeholder="인증 번호 입력">
-                    <span id="auth_timer" style="width:30%; text-align:right; padding-right:16px;">01:00</span>
+                    <span id="auth_timer" style="width:30%; text-align:right; padding-right:16px;">03:00</span>
                 </div>
                 <button class="register_button" id="sms_auth_code" style="display:none; border: solid 1px #1e1e1e; margin-top:6px;">인증 완료</button>
             </div>
@@ -1023,7 +1023,7 @@
     <script>
 
 
-        let activation_timer = 60;
+        let activation_timer = 180;
         let activation_check = false;
         var varUA = navigator.userAgent.toLowerCase();
         if(varUA.match('android') != null){
@@ -1616,8 +1616,8 @@
        function check_phone(){
            if(activation_check == false){
                 $('.sms_confirm').text(" ").css({'display':'none'});
-                $('#auth_timer').text('01:00');
-                activation_timer = 60;
+                $('#auth_timer').text('03:00');
+                activation_timer = 180;
                 activation_check = false;
                 $.ajax({
                     url:'/login/check_phone/',
