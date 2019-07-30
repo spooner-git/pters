@@ -95,7 +95,6 @@ class Lecture {
 
     //수강권 리스트를 렌더링
     render_lecture_list (jsondata, list_status_type){
-        console.log(jsondata)
 
         if(current_page != this.page_name){
             return false;
@@ -128,7 +127,8 @@ class Lecture {
             let lecture_member_number = data.lecture_ing_member_num;
             let lecture_ing_bg_color = data.lecture_ing_color_cd;
 
-            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'lecture_id':${lecture_id}});`;
+            let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'lecture_id':${lecture_id}}, ()=>{
+                lecture_view_popup = new Lecture_view('.popup_lecture_view', ${lecture_id}, 'lecture_view_popup');});`;
             let html = `<article class="lecture_wrapper" data-lectureid="${lecture_id}" onclick="${onclick}">
                             <div class="lecture_data_l">
                                 <div class="lecture_tag_body" style="background:${lecture_ing_bg_color}"></div>
