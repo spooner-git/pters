@@ -165,7 +165,7 @@ class Lecture_view{
 
     dom_row_color_view(){
         let color_text = this.data.color_bg == null ? '색상명' : `<span style="background-color:${this.data.color_bg};color:${this.data.color_font};padding:5px;border-radius:4px;">${this.data.color_bg}</span>`;
-        let html = CComponent.create_row('input_color_select', color_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
+        let html = CComponent.create_row('lecture_color', color_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
             
         });
         return html;
