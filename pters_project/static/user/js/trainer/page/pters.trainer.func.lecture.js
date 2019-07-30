@@ -95,6 +95,7 @@ class Lecture {
 
     //수강권 리스트를 렌더링
     render_lecture_list (jsondata, list_status_type){
+        console.log(jsondata)
 
         if(current_page != this.page_name){
             return false;
