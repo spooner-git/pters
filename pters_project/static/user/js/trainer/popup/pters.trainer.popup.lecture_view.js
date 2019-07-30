@@ -1,4 +1,4 @@
-class Lecture_add{
+class Lecture_view{
     constructor(install_target, data_from_external, instance){
         this.target = {install: install_target, toolbox:'section_lecture_add_toolbox', content:'section_lecture_add_content'};
         this.instance = instance;

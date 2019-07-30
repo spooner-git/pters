@@ -22,6 +22,9 @@ class CComponent{
         if(icon == null){
             icon = '/static/common/icon/icon_dissatisfied.png';
         }
+        if(icon == NONE){
+            icon = '/static/common/icon/menu_white.png';
+        }
         
         let html = `<li class="create_row" id="c_r_${id}">
                         <div class="obj_table_raw">
@@ -41,15 +44,19 @@ class CComponent{
     }
 
     //추가 페이지들에서 사용되는 text input row 스타일
-    static create_input_row (id, title, icon, icon_r_visible, onfocusout){
-        
+    static create_input_row (id, title, icon, icon_r_visible, disabled, onfocusout){
+        let disable = 'disabled';
+        if(disabled == false){
+            disable = '';
+        }
+
         let html = `<li class="create_input_row" id="c_i_r_${id}">
                         <div class="obj_table_raw">
                             <div class="cell_title">
                                 ${icon != null ? `<img src="${icon}">` : ""} 
                             </div>
                             <div class="cell_content">
-                                <input type="text" class="cell_text" placeholder="${title}" value="${title}">
+                                <input type="text" class="cell_text" placeholder="${title}" value="${title}" ${disable}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
                         </div>
@@ -69,7 +76,11 @@ class CComponent{
     }
     
     //추가 페이지들에서 사용되는 number input row 스타일
-    static create_input_number_row (id, title, icon, icon_r_visible, onfocusout){
+    static create_input_number_row (id, title, icon, icon_r_visible, disabled, onfocusout){
+        let disable = 'disabled';
+        if(disabled == false){
+            disable = '';
+        }
         
         let html = `<li class="create_input_row" id="c_i_n_r_${id}">
                         <div class="obj_table_raw">
@@ -77,7 +88,7 @@ class CComponent{
                                 ${icon != null ? `<img src="${icon}">` : ""} 
                             </div>
                             <div class="cell_content">
-                                <input class="cell_text" placeholder="${title}" type="tel" value="${title}">
+                                <input class="cell_text" placeholder="${title}" type="tel" value="${title}" ${disable}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
                         </div>
@@ -326,6 +337,10 @@ class CComponent{
         if(url == null){
             url = '/static/common/icon/icon_account.png';
         }
+        if(url == NONE){
+            url = '/static/common/icon/menu_white.png';
+        }
+
         let html = `<div id="icon_button_${id}" style="cursor:pointer;padding:3px 8px;display:inline-block;height:40px;width:auto;${CComponent.data_to_style_code(style)}">
                         <img src="${url}" style="width:24px;height:24px;vertical-align:middle;margin-bottom:4px;margin-right:5px;">
                         <span style="line-height:40px;">${title}</span>

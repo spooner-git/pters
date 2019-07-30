@@ -1,7 +1,8 @@
-class Member_add{
-    constructor(install_target, data_from_external, instance){
-        this.target = {install: install_target, toolbox:'section_member_add_toolbox', content:'section_member_add_content'};
+class Member_edit{
+    constructor(install_target, member_id, instance){
+        this.target = {install: install_target, toolbox:'section_member_edit_toolbox', content:'section_member_edit_content'};
         this.instance = instance;
+        this.member_id = member_id;
 
         let d = new Date();
         this.dates = {
@@ -21,20 +22,20 @@ class Member_add{
                 birth: null,
                 sex: null,
                 memo: null,
-                ticket_id:[],
-                ticket_name:[],
-                ticket_effective_days:[],
-                ticket_reg_count:null,
-                ticket_price:null,
-                start_date:null,
-                start_date_text:null,
-                end_date:null,
-                end_date_text:null
+                // ticket_id:[],
+                // ticket_name:[],
+                // ticket_effective_days:[],
+                // ticket_reg_count:null,
+                // ticket_price:null,
+                // start_date:null,
+                // start_date_text:null,
+                // end_date:null,
+                // end_date_text:null
         };
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
-        this.set_initial_data(data_from_external);
         this.init();
+        this.set_initial_data();
     }
 
     set name(text){
@@ -133,31 +134,31 @@ class Member_add{
     }
 
 
-    init(type){
-        if(type == undefined){
-            type = this.list_type;
-        }
-        this.list_type = type;
-
+    init(){
         this.render_initial();
         this.render_toolbox();
         this.render_content();
     }
 
-    set_initial_data(data){
-        if(data == null){
-            return null;
-        }
-        this.user_data = data;
-        let user_data_date = this.user_data.user_selected_date;
-        this.data.date = user_data_date.year == null ? null : {year: user_data_date.year, month:user_data_date.month, date:user_data_date.date};
-        this.data.date_text = user_data_date.text;
-        
-        let user_data_time = this.user_data.user_selected_time;
-        this.data.start_time = user_data_time.hour == null ? null : `${user_data_time.hour}:${user_data_time.minute}`;
-        this.data.start_time_text = user_data_time.text;
-        this.data.end_time = user_data_time.hour2 == null ? null : `${user_data_time.hour2}:${user_data_time.minute2}`;
-        this.data.end_time_text = user_data_time.text2;
+    set_initial_data(){
+        Member_func.read({"member_id": this.member_id}, (data)=>{
+            console.log(data);
+            this.data.name = data.member_name;
+            this.data.phone = data.member_phone != "None" ? data.member_phone : null;
+            this.data.birth = data.member_birtday_dt != "None" ? data.member_birtday_dt : null;
+            this.data.sex = data.member_sex != "None" ? data.member_sex : null;
+            this.data.memo = null;
+            // this.data.ticket_id = [];
+            // this.data.ticket_name = [];
+            // this.data.ticket_effective_days = [];
+            // this.data.ticket_reg_count = null;
+            // this.data.ticket_price = null;
+            // this.data.start_date = null;
+            // this.data.start_date_text = null;
+            // this.data.end_date = null;
+            // this.data.end_date_text = null;
+            this.init();
+        });
     }
 
     render_initial(){
@@ -174,14 +175,16 @@ class Member_add{
         let birth = this.dom_row_member_birth_input();
         let sex = this.dom_row_member_sex_input();
         let memo = this.dom_row_member_memo_input();
-        let ticket = this.dom_row_ticket_select();
-        let start_date = this.dom_row_start_date_select();
-        let end_date = this.dom_row_end_date_select();
-        let reg_count = this.dom_row_member_reg_coung_input();
-        let reg_price = this.dom_row_member_reg_price_input();
+        // let ticket = this.dom_row_ticket_select();
+        // let start_date = this.dom_row_start_date_select();
+        // let end_date = this.dom_row_end_date_select();
+        // let reg_count = this.dom_row_member_reg_coung_input();
+        // let reg_price = this.dom_row_member_reg_price_input();
 
-        let html =  '<div class="obj_box_full">'+name+phone+birth+sex+memo+'</div>' + 
-                    '<div class="obj_box_full">'+ticket + start_date+end_date+reg_count+reg_price+ '</div>';
+        // let html =  '<div class="obj_box_full">'+name+phone+birth+sex+memo+'</div>' + 
+        //             '<div class="obj_box_full">'+ticket + start_date+end_date+reg_count+reg_price+ '</div>';
+
+        let html =  '<div class="obj_box_full">'+name+phone+birth+sex+memo+'</div>';
 
         document.getElementById(this.target.content).innerHTML = html;
     }
@@ -191,7 +194,7 @@ class Member_add{
         <div class="member_add_upper_box" style="padding-bottom:8px;">
             <div style="display:inline-block;width:200px;">
                 <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold;">회원 등록</span>
+                    <span style="font-size:20px;font-weight:bold;">회원 정보 수정</span>
                 </div>
             </div>
         </div>
@@ -260,121 +263,92 @@ class Member_add{
         return html;
     }
 
-    dom_row_ticket_select(){
-        let ticket_text = this.data.ticket_id.length == 0 ? '수강권*' : this.data.ticket_name.join(', ');
-        let html = CComponent.create_row('input_ticket_select', ticket_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
-            layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                var ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1);
-            });
-        });
-        return html;
-    }
+    // dom_row_ticket_select(){
+    //     let ticket_text = this.data.ticket_id.length == 0 ? '수강권*' : this.data.ticket_name.join(', ');
+    //     let html = CComponent.create_row('input_ticket_select', ticket_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
+    //         layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+    //             var ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1);
+    //         });
+    //     });
+    //     return html;
+    // }
 
-    dom_row_start_date_select(){
-        //등록하는 행을 만든다.
-        let start_date_text = this.data.start_date == null ? '시작일*' : this.data.start_date_text;
-        let html = CComponent.create_row('start_date_select', start_date_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
-            //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+    // dom_row_start_date_select(){
+    //     //등록하는 행을 만든다.
+    //     let start_date_text = this.data.start_date == null ? '시작일*' : this.data.start_date_text;
+    //     let html = CComponent.create_row('start_date_select', start_date_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
+    //         //행을 클릭했을때 실행할 내용
+    //         layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
 
-                //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
-                let year = this.data.start_date == null ? this.dates.current_year : this.data.start_date.year; 
-                let month = this.data.start_date == null ? this.dates.current_month : this.data.start_date.month;
-                let date = this.data.start_date == null ? this.dates.current_date : this.data.start_date.date;
+    //             //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
+    //             let year = this.data.start_date == null ? this.dates.current_year : this.data.start_date.year; 
+    //             let month = this.data.start_date == null ? this.dates.current_month : this.data.start_date.month;
+    //             let date = this.data.start_date == null ? this.dates.current_date : this.data.start_date.date;
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'start_date', title:'시작일 선택', data:{year:year, month:month, date:date},  
-                                                                                                callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
-                                                                                                    this.start_date = object; 
-                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
-                }});
-            });
-        });
-        return html;
-    }
+    //             date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'start_date', title:'시작일 선택', data:{year:year, month:month, date:date},  
+    //                                                                                             callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
+    //                                                                                                 this.start_date = object; 
+    //                                                                                                 //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+    //             }});
+    //         });
+    //     });
+    //     return html;
+    // }
 
-    dom_row_end_date_select(){
-        //등록하는 행을 만든다.
-        let end_date_text = this.data.end_date == null ? '종료일*' : this.data.end_date_text;
-        let html = CComponent.create_row('end_date_select', end_date_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
-            //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+    // dom_row_end_date_select(){
+    //     //등록하는 행을 만든다.
+    //     let end_date_text = this.data.end_date == null ? '종료일*' : this.data.end_date_text;
+    //     let html = CComponent.create_row('end_date_select', end_date_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
+    //         //행을 클릭했을때 실행할 내용
+    //         layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
 
-                //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
-                let year = this.data.end_date == null ? this.dates.current_year : this.data.end_date.year; 
-                let month = this.data.end_date == null ? this.dates.current_month : this.data.end_date.month;
-                let date = this.data.end_date == null ? this.dates.current_date : this.data.end_date;
+    //             //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
+    //             let year = this.data.end_date == null ? this.dates.current_year : this.data.end_date.year; 
+    //             let month = this.data.end_date == null ? this.dates.current_month : this.data.end_date.month;
+    //             let date = this.data.end_date == null ? this.dates.current_date : this.data.end_date;
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'end_date', title:'종료일 선택', data:{year:year, month:month, date:date},  
-                                                                                                callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
-                                                                                                    this.end_date = object; 
-                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
-                }});
-            });
-        });
-        return html;
-    }
+    //             date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'end_date', title:'종료일 선택', data:{year:year, month:month, date:date},  
+    //                                                                                             callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
+    //                                                                                                 this.end_date = object; 
+    //                                                                                                 //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+    //             }});
+    //         });
+    //     });
+    //     return html;
+    // }
 
-    dom_row_member_reg_coung_input(){
-        let html = CComponent.create_input_number_row ('input_reg_count', this.data.ticket_reg_count == null ? '횟수' : this.data.ticket_reg_count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
-            let user_input_data = input_data;
-            this.reg_count = user_input_data;
-        });
-        return html;
-    }
+    // dom_row_member_reg_coung_input(){
+    //     let html = CComponent.create_input_number_row ('input_reg_count', this.data.ticket_reg_count == null ? '횟수' : this.data.ticket_reg_count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
+    //         let user_input_data = input_data;
+    //         this.reg_count = user_input_data;
+    //     });
+    //     return html;
+    // }
 
-    dom_row_member_reg_price_input(){
-        let html = CComponent.create_input_number_row ('input_reg_price', this.data.ticket_price == null ? '가격' : this.data.ticket_price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
-            let user_input_data = input_data;
-            this.reg_price = user_input_data;
-        });
-        return html;
-    }
+    // dom_row_member_reg_price_input(){
+    //     let html = CComponent.create_input_number_row ('input_reg_price', this.data.ticket_price == null ? '가격' : this.data.ticket_price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
+    //         let user_input_data = input_data;
+    //         this.reg_price = user_input_data;
+    //     });
+    //     return html;
+    // }
 
-
-
-
-    switch_type(){
-        switch(this.list_type){
-            case "lesson":
-                this.init("off");
-            break;
-
-            case "off":
-                this.init("lesson");
-            break;
-        }
-    }
 
     send_data(){
 
         let data = {
-                    "member_id":null,
+                    "member_id": this.member_id,
                     "first_name": this.data.name,
                     "name":this.data.name,
                     "phone":this.data.phone,
                     "birthday": `${this.data.birth != null ? this.data.birth.year+'-'+this.data.birth.month+'-'+this.data.birth.date : ''}`,
                     "sex":this.data.sex,
                     "contents":this.data.memo,
-                    "ticket_id":this.data.ticket_id[0],
-                    "start_date": `${this.data.start_date.year}-${this.data.start_date.month}-${this.data.start_date.date}`,
-                    "end_date":`${this.data.end_date.year}-${this.data.end_date.month}-${this.data.end_date.date}`,
-                    "counts":this.data.ticket_reg_count,
-                    "price":this.data.ticket_price
         };
 
-        // data = {
-        //     "first_name":"1회원등록", "name":"1회원등록", "sex":"M", "birthday":"1986-02-24", "phone":"01034435752"
-        // };
-        // data = {
-        //     "member_id":null, "contents":null, "counts":null, "price":null, "start_date":null, "end_date":null, "ticket_id":null
-        // }
-
-        Member_func.create_pre(data, (received)=>{
-            data.member_id = received.user_db_id[0];
-            Member_func.create(data, ()=>{
-                layer_popup.close_layer_popup();
-                member.init();
-            });
+        Member_func.update(data, ()=>{
+            layer_popup.close_layer_popup();
+            member.init();
         });
     }
 
