@@ -4754,6 +4754,20 @@ class PopupMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['member_ticket_list'] = member_ticket_list
         return context
 
+class PopupMemberSimpleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'popup/trainer_popup_member_simple_view.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupMemberSimpleView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        member_id = self.request.GET.get('member_id')
+        member_result = func_get_member_info(class_id, self.request.user.id, member_id)
+        member_ticket_list = dict(func_get_member_ticket_list(class_id, member_id))
+        member_lecture_list = dict(func_get_member_lecture_list(class_id, member_id))
+        context['member_info'] = member_result['member_info']
+        context['member_lecture_list'] = member_lecture_list
+        context['member_ticket_list'] = member_ticket_list
+        return context
 
 class PopupMemberEdit(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_member_edit.html'

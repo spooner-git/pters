@@ -348,19 +348,390 @@ class Member_view{
 
     upper_right_menu(){
         let user_option = {
-            delete:{text:"삭제", callback:()=>{
-                                                show_user_confirm(`"${this.data.name}" 님을 영구 삭제 하시겠습니까? <br> 데이터를 복구할 수 없습니다.`, ()=>{
-                                                    Member_func.delete({"member_id":this.member_id}, ()=>{
-                                                        member.init();layer_popup.all_close_layer_popup();
-                                                    });
-                                                    
-                                                });
-                                            }
-                        }
+            delete:{text:"회원 삭제", callback:()=>{
+                    show_user_confirm(`"${this.data.name}" 님 정보를 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
+                        Member_func.delete({"member_id":this.member_id}, ()=>{
+                            member.init();layer_popup.all_close_layer_popup();
+                        });
+                    });
+                }
+            },
+            deactivate:{text:"비활성화", callback:()=>{
+                    show_user_confirm(`"${this.data.name}" 님을 비활성화 하시겠습니까? <br> 비활성화 탭에서 확인할 수 있습니다.`, ()=>{
+                        alert('작업중');
+                        
+                    });
+                }
+            },
+            activate:{text:"활성화", callback:()=>{
+                    show_user_confirm(`"${this.data.name}" 님을 다시 활성화 하시겠습니까?`, ()=>{
+                        alert('작업중');
+                    });
+                }
+            },
+            ticket_history:{text:"수강권 이력", callback:()=>{
+                    alert('작업중');
+                }
+            },
+            lesson_history:{text:"수업 이력", callback:()=>{
+                    alert('작업중');
+                }
+            }
         };
         
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
     }
+}
+
+
+class Member_simple_view{
+    constructor(install_target, member_id, instance){
+        this.target = {install: install_target, toolbox:'section_member_simple_view_toolbox', content:'section_member_simple_view_content', close_button:'section_member_simple_view_close_button'};
+        this.instance = instance;
+        this.member_id = member_id;
+
+        let d = new Date();
+        this.dates = {
+            current_year: d.getFullYear(),
+            current_month: d.getMonth()+1,
+            current_date: d.getDate()
+        };
+        this.times = {
+            current_hour: TimeRobot.to_zone(d.getHours(), d.getMinutes()).hour,
+            current_minute: TimeRobot.to_zone(d.getHours(), d.getMinutes()).minute,
+            current_zone: TimeRobot.to_zone(d.getHours(), d.getMinutes()).zone
+        };
+
+        this.data = {
+            name: null,
+            phone: null,
+            birth: null,
+            sex: null,
+            memo: null,
+            email:null,
+
+            connection:null,
+            active:null,
+
+            ticket:
+                [
+                    {
+                        ticket_id:[],
+                        ticket_name:null,
+                        ticket_effective_days:null,
+                        ticket_reg_count:null,
+                        ticket_price:null,
+                        start_date:null,
+                        start_date_text:null,
+                        end_date:null,
+                        end_date_text:null,
+                        lecture_id:[],
+                        lecture_name:[],
+                        lecture_state:[],
+                    }
+                ]
+                
+        };
+
+        //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
+       
+        this.init();
+        this.set_initial_data();
+    }
+
+    set name(text){
+        this.data.name = text;
+        this.render_content();
+    }
+
+    get name(){
+        return this.data.name;
+    }
+
+    set phone(number){
+        this.data.phone = number;
+        this.render_content();
+    }
+
+    get phone(){
+        return this.data.phone;
+    }
+
+    set birth(data){
+        this.data.birth = data.data;
+        this.render_content();
+    }
+
+    get birth(){
+        return this.data.birth;
+    }
+
+    set sex(data){
+        this.data.sex = data;
+        this.render_content();
+    }
+
+    get sex(){
+        return this.data.sex;
+    }
+
+    set start_date(data){
+        this.data.start_date = data.data;
+        this.data.start_date_text = data.text;
+        this.render_content();
+    }
+
+    get start_date(){
+        return this.data.start_date;
+    }
+
+    set end_date(data){
+        this.data.end_date = data.data;
+        this.data.end_date_text = data.text;
+        this.render_content();
+    }
+
+    get end_date(){
+        return this.data.end_date;
+    }
+
+
+    set memo(text){
+        this.data.memo = text;
+        this.render_content();
+    }
+
+    get memo(){
+        return this.data.memo;
+    }
+
+    set ticket(data){
+        this.data.ticket_id = data.id;
+        this.data.ticket_name = data.name;
+        this.data.ticket_effective_days = data.effective_days;
+        this.render_content();
+    }
+
+    get ticket(){
+        return {id:this.data.ticket_id, name:this.data.ticket_name, effective_days: this.data.ticket_effective_days};
+    }
+
+    set reg_count(number){
+        this.data.ticket_reg_count = number;
+        this.render_content();
+    }
+
+    get reg_count(){
+        return this.data.ticket_reg_count;
+    }
+
+    set reg_price(number){
+        this.data.ticket_price = number;
+        this.render_content();
+    }
+
+    get reg_price(){
+        return this.data.ticket_price;
+    }
+
+
+    init(){
+        this.render_initial();
+        this.render_toolbox();
+        this.render_content();
+    }
+
+    set_initial_data (){
+        Member_func.read({"member_id": this.member_id}, (data)=>{
+            this.data.name = data.member_name;
+            this.data.phone = data.member_phone;
+            this.data.birth = data.member_birthday_dt;
+            this.data.sex = data.member_sex;
+            this.data.connection = data.member_connection_check;
+            this.data.active = data.member_is_active;
+            this.data.email = data.member_email;
+
+
+            Member_func.read_ticket_list({"member_id":this.member_id}, (data)=>{
+                let ticket_list = data;
+                this.data.ticket = [];
+                for(let ticket in ticket_list){
+                    let ticket_reg_count_of_this_member = ticket_list[ticket].member_ticket_reg_count;
+                    let ticket_reg_price_of_this_member = ticket_list[ticket].member_ticket_price;
+                    let ticket_reg_date_of_this_member = ticket_list[ticket].member_ticket_start_date;
+                    let ticket_end_date_of_this_member = ticket_list[ticket].member_ticket_end_date;
+                    let ticket_remain_date = Math.round((new Date(ticket_end_date_of_this_member).getTime() - new Date().getTime()) / (1000*60*60*24));
+                    let ticket_remain_alert_text = "";
+                    if(ticket_remain_date < 0){
+                        ticket_remain_alert_text = " 지남";
+                        ticket_remain_date = Math.abs(ticket_remain_date);
+                    }
+
+                    Ticket_func.read({"ticket_id": ticket_list[ticket].member_ticket_ticket_id}, (data)=>{
+                        let ticket_of_member = {
+                                            ticket_id:data.ticket_info.ticket_id,
+                                            ticket_name:data.ticket_info.ticket_name,
+                                            ticket_effective_days:data.ticket_info.ticket_effective_days,
+                                            ticket_reg_count:ticket_reg_count_of_this_member,
+                                            ticket_price:ticket_reg_price_of_this_member,
+                                            start_date:ticket_reg_date_of_this_member,
+                                            start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member),
+                                            end_date:ticket_end_date_of_this_member,
+                                            end_date_text:ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member)+' 까지',
+                                            lecture_id:data.ticket_info.ticket_lecture_id_list,
+                                            lecture_name:data.ticket_info.ticket_lecture_list,
+                                            lecture_state:data.ticket_info.ticket_lecture_state_cd_list,
+                                        }
+                        this.data.ticket.push(ticket_of_member);
+
+                        this.init();
+                    });
+                }
+            });
+        });
+    }
+
+    render_initial(){
+        document.querySelector(this.target.install).innerHTML = this.static_component().initial_page;
+    }
+
+    render_toolbox(){
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_row_toolbox();
+        document.getElementById(this.target.close_button).innerHTML = this.dom_close_button();
+    }
+    
+    render_content(){
+        // let name = this.dom_row_member_name_input();
+        let phone = this.dom_row_member_phone_input();
+        let birth = this.dom_row_member_birth_input();
+        let sex = this.dom_row_member_sex_input();
+        let memo = this.dom_row_member_memo_input();
+        let ticket = this.dom_row_ticket();
+
+        let html =  '<div class="obj_box_full">'+phone+birth+sex+memo+'</div>' + 
+                    '<div class="obj_box_full">'+ticket+ '</div>';
+
+        document.getElementById(this.target.content).innerHTML = html;
+    }
+
+    dom_row_toolbox(){
+        let text_button_style = {"color":"#858282", "font-size":"13px", "font-weight":"500"};
+        let text_button = CComponent.text_button ("detail_user_info", "더보기", text_button_style, ()=>{
+            show_user_confirm(`작업중이던 항목을 모두 닫고 회원 메뉴로 이동합니다.`, ()=>{
+                layer_popup.all_close_layer_popup();
+                sideGoPage("member");
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':this.member_id} ,()=>{
+                    member_view_popup = new Member_view('.popup_member_view', this.member_id, 'member_view_popup');
+                });
+            });
+        });
+
+        let html = `
+        <div style="height:48px;line-height:48px;">
+            <div style="display:inline-block;float:left;width:275px;">
+                <span style="font-size:13px;font-weight:500;">${this.data.name == null ? '' : this.data.name}</span>
+            </div>
+            <div style="display:inline-block;float:right;width:65px;text-align:right;">
+                ${text_button}
+            </div>
+        </div>
+        `;
+        return html;
+    }
+
+    dom_row_member_name_input(){
+        let icon_r_visible = HIDE;
+        let onclick = ()=>{alert('연결 되어있음');};
+        if(this.data.connection != 1){
+            icon_r_visible = SHOW;
+            onclick = ()=>{alert('연결 되어있지 않음');};
+        }
+        let html = CComponent.create_row ('member_name_view', this.data.name == null ? '회원명*' : this.data.name, '/static/common/icon/person_black.png', SHOW, ()=>{
+            onclick();
+        });
+        return html;
+    }
+
+    dom_row_member_phone_input(){
+        let html = CComponent.create_input_number_row ('member_phone_view', this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone, '/static/common/icon/icon_smartphone.png', HIDE, true, (input_data)=>{
+            let user_input_data = input_data;
+            this.phone = user_input_data;
+        });
+        return html;
+    }
+
+    dom_row_member_birth_input(){
+        //등록하는 행을 만든다.
+        let html = CComponent.create_input_number_row ('member_birth_view', this.data.birth == null || this.data.birth == 'None' ? '미입력 (생년월일)' : this.data.birth, '/static/common/icon/icon_cake.png', HIDE, true, (input_data)=>{
+            let user_input_data = input_data;
+            this.phone = user_input_data;
+        });
+        return html;
+    }
+
+    dom_row_member_sex_input(){
+        let html = CComponent.create_row ('member_sex_view', this.data.sex == null || this.data.sex == 'None' ? '미입력 (성별)' : this.data.sex, '/static/common/icon/person_black.png', HIDE, ()=>{
+            
+        });
+        return html;
+    }
+
+    dom_row_member_memo_input(){
+        let html = CComponent.create_input_row ('member_memo_view', this.data.memo == null ? '특이사항' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, true, (input_data)=>{
+            let user_input_data = input_data;
+            this.memo = user_input_data;
+        });
+        return html;
+    }
+
+    dom_close_button(){
+        let style = {"display":"block", "height":"48px", "line-height":"48px", "padding":"0"};
+        let html = CComponent.button ("close_member_simple", "닫기", style, ()=>{
+            layer_popup.close_layer_popup();
+        });
+        return html;
+    }
+
+
+    dom_row_ticket(){
+        let ticket_length = this.data.ticket.length;
+
+        let html_to_join = [];
+        for(let i=0; i<ticket_length; i++){
+
+            //티켓 이름 표기 부분
+            let ticket_text = this.data.ticket[i].ticket_id.length == 0 ? '수강권*' : this.data.ticket[i].ticket_name;
+            let html_ticket_name = CComponent.create_row(`input_ticket_select_${i}`, ticket_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
+                let ticket_id =  this.data.ticket[i].ticket_id;
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
+                    ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
+                });
+            });
+
+            
+            //티켓내 남은횟수, 남은 기간 표기 부분
+            let icon_button_style_remain_count_info = {"display":"block", "padding":0, "font-size":"12px", "height":"20px"};
+            let icon_button_style_remain_data_info = {"display":"block", "padding":0, "font-size":"12px"};
+            let html_remain_info = CComponent.icon_button('reg_count', `남은 횟수  <span style="color:#fe4e65">정보없음</span>`, NONE, icon_button_style_remain_count_info, ()=>{}) + 
+                                    CComponent.icon_button('reg_date', `남은 기간 <span style="color:#fe4e65">${this.data.ticket[i].end_date_text}</span>`, NONE, icon_button_style_remain_data_info, ()=>{});
+
+            html_to_join.push(html_ticket_name + html_remain_info);
+        }
+        let html = html_to_join.join('');
+
+        return html;
+    }
+
+
+    static_component(){
+        return {
+            initial_page:`<section id="${this.target.toolbox}" class="obj_box_full" style="position:sticky;position:-webkit-sticky;top:0;"></section>
+                          <section id="${this.target.content}" style="width:100%;height:399px;overflow-y:auto;"></section>
+                          <section id="${this.target.close_button}" class="obj_box_full" style="height:48px;"></section>
+                          `
+        };
+    }
+
 }

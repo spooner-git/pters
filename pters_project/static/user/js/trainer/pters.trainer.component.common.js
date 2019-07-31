@@ -321,6 +321,16 @@ class CComponent{
         return html;
     }
 
+    //버튼
+    static button (id, title, style, onclick){
+        let style_code = CComponent.data_to_style_code(style);
+        let html = `<div id="button_${id}" style="text-align:center;cursor:pointer;padding:3px 8px;${style_code}">${title}</div>`;
+        
+        $(document).off('click', `#button_${id}`).on('click', `#button_${id}`, function(e){
+            onclick();
+        });
+        return html;
+    }
     //텍스트만 있는 버튼
     static text_button (id, title, style, onclick){
         let style_code = CComponent.data_to_style_code(style);

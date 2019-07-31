@@ -258,6 +258,8 @@ urlpatterns = [
     url(r'^popup_plan_add/$', views.PopupCalendarPlanAdd.as_view(), name='popup_plan_add'),
     # 회원정보 팝업 페이지
     url(r'^popup_member_view/$', views.PopupMemberView.as_view(), name='popup_member_view'),
+    # 회원 간단 정보 팝업 페이지
+    url(r'^popup_member_simple_view/$', views.PopupMemberSimpleView.as_view(), name='popup_member_simple_view'),
     # 회원추가 팝업 페이지
     url(r'^popup_member_add/$', views.PopupMemberAdd.as_view(), name='popup_member_add'),
     # 회원설정 팝업 페이지

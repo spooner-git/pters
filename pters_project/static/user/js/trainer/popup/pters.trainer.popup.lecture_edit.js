@@ -193,7 +193,10 @@ class Lecture_edit{
             let icon_button_style = null;
             html_to_join.push(
                 CComponent.icon_button(member_id, member_name, null, icon_button_style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':member_id});
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(500/windowHeight), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
+                        member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
+                        //회원 간단 정보 팝업 열기
+                    });
                 })
             );
         }
