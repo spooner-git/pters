@@ -109,10 +109,10 @@ class Plan_add{
 
 
     init(type){
-        // if(type == undefined){
-        //     type = this.list_type;
-        // }
-        // this.list_type = type;
+        if(type == undefined){
+            type = this.list_type;
+        }
+        this.list_type = type;
 
         // this.render_initial();
         // this.render_toolbox();
