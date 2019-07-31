@@ -21,12 +21,13 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError, InternalError, transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, resolve_url
+from django.template import loader
 from django.template.loader import render_to_string
 from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.encoding import force_text
-from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_text, force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.translation import ugettext as _
 from django.views import View
 from django.views.decorators.cache import never_cache
@@ -794,78 +795,6 @@ class ChangeResendEmailAuthenticationView(MyReRegistrationView, View):
             messages.error(request, error)
 
         return render(request, self.template_name)
-
-
-# 회원가입 api
-class ResetPasswordView(View):
-    template_name = 'ajax/registration_error_ajax.html'
-
-    def post(self, request):
-        email = request.POST.get('email', '')
-        error = None
-        post_reset_redirect = None
-        from_email = None
-        # extra_context = None
-        html_email_template_name = None
-        extra_email_context = None
-        form = None
-        password_reset_form = MyPasswordResetForm
-        token_generator = default_token_generator
-        # template_name = 'registration_error_ajax.html'
-        email_template_name = 'password_reset_email.txt'
-        subject_template_name = 'password_reset_subject.txt'
-        # context = None
-        if email is None or email == '':
-            error = 'Email 정보를 입력해주세요.'
-
-        if error is None:
-            if User.objects.filter(email=email).exists() is not True:
-                error = email + '로 가입된 회원이 없습니다.'
-
-        if error is None:
-            if post_reset_redirect is None:
-                post_reset_redirect = reverse('login:auth_password_reset_done')
-            else:
-                post_reset_redirect = resolve_url(post_reset_redirect)
-            if request.method == "POST":
-                form = password_reset_form(request.POST)
-                if form.is_valid():
-                    opts = {
-                        'use_https': request.is_secure(),
-                        'token_generator': token_generator,
-                        'from_email': from_email,
-                        'email_template_name': email_template_name,
-                        'subject_template_name': subject_template_name,
-                        'request': request,
-                        'html_email_template_name': html_email_template_name,
-                        'extra_email_context': extra_email_context,
-                    }
-                    form.save(**opts)
-                    return HttpResponseRedirect(post_reset_redirect)
-                else:
-                    for field in form:
-                        if field.errors:
-                            for err in field.errors:
-                                if error is None:
-                                    error = err
-                                else:
-                                    error += err
-            else:
-                form = password_reset_form()
-
-        if error is None:
-            context = {
-                'form': form,
-                'title': 'Password reset',
-            }
-            # if extra_context is not None:
-            #     context.update(extra_context)
-
-            return render(request, self.template_name, context)
-        else:
-            logger.error('email:' + email + '/' + error)
-            messages.error(request, error)
-            return render(request, self.template_name)
 
 
 # 회원가입 api
@@ -2080,24 +2009,52 @@ class ActivateSmsConfirmView(View):
         return render(request, self.template_name)
 
 
+class ResetPasswordView(TemplateView):
+    template_name = 'reset_password_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ResetPasswordView, self).get_context_data(**kwargs)
+        return context
+
+
 class ResetPasswordSmsView(View):
     template_name = 'ajax/registration_error_ajax.html'
+    sms_template_name = 'password_reset_sms.txt'
 
     def post(self, request):
+        member_user_id = request.POST.get('member_user_id', '')
         phone = request.POST.get('phone', '')
+        token_generator = default_token_generator
+        current_site = get_current_site(request)
+        site_name = current_site.name
+        domain = current_site.domain
 
         error = None
+        member_data = None
 
         if phone == '':
             error = '휴대폰 번호를 입력해주세요.'
 
+        if member_user_id == '':
+            error = 'ID를 입력해주세요.'
+
         if error is None:
-            max_range = 99999
-            request.session['sms_activation_check'] = False
-            request.session['sms_activation_time'] = str(timezone.now())
-            sms_activation_number = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
-            request.session['sms_activation_number'] = sms_activation_number
-            error = func_send_sms_auth(phone, sms_activation_number)
+            member_data = MemberTb.objects.filter(user__username=member_user_id, phone=phone, user__is_active=True)
+            if len(member_data) == 0:
+                error = '가입된 회원이 없습니다.'
+
+        if error is None:
+            for member_info in member_data:
+                context = {
+                    'domain': domain,
+                    'site_name': site_name,
+                    'uid': urlsafe_base64_encode(force_bytes(member_info.user.pk)),
+                    'user': member_info.user,
+                    'token': token_generator.make_token(member_info.user),
+                    'protocol': 'https' if request.is_secure() else 'http',
+                }
+                contents = loader.render_to_string(self.sms_template_name, context)
+                error = func_send_sms_reset_password(phone, contents)
 
         if error is not None:
             logger.error('error:'+str(error)+':'+str(timezone.now()))
@@ -2106,7 +2063,7 @@ class ResetPasswordSmsView(View):
         return render(request, self.template_name)
 
 
-def func_send_sms_reset_password(phone, activation_number):
+def func_send_sms_reset_password(phone, contents):
     error = None
     h = httplib2.Http()
     acc_key_id = settings.PTERS_NAVER_ACCESS_KEY_ID
@@ -2125,11 +2082,11 @@ def func_send_sms_reset_password(phone, activation_number):
         "contentType": "COMM",
         "countryCode": "82",
         "from": settings.PTERS_NAVER_SMS_PHONE_NUMBER,
-        "content": "[PTERS] 인증번호 ["+activation_number+"]를 입력해주세요.",
+        "content": contents,
         "messages": [
             {
                 "to": str(phone),
-                "content": "[PTERS] 인증번호 ["+activation_number+"]를 입력해주세요."
+                "content": contents
             }
         ]
     }
