@@ -79,21 +79,41 @@ class Lecture_add{
 
  
     init(){
-        this.render_initial();
-        this.render_toolbox();
-        this.render_content();
+        // this.render_initial();
+        // this.render_toolbox();
+        // this.render_content();
+        this.render();
     }
 
+    clear(){
+        document.querySelector(this.target.install).innerHTML = "";
+    }
 
-    render_initial(){
-        document.querySelector(this.target.install).innerHTML = this.static_component().initial_page;
+    render(){
+        let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();lecture_add_popup.clear();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_add_popup.send_data();lecture_add_popup.clear();">저장</span></span>`;
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}">${this.dom_assembly_content()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
     }
 
     render_toolbox(){
-        document.getElementById(this.target.toolbox).innerHTML = this.dom_row_toolbox();
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+    }
+
+    render_content(){
+        document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+    dom_assembly_toolbox(){
+        return this.dom_row_toolbox();
     }
     
-    render_content(){
+    dom_assembly_content(){
         let name = this.dom_row_lecture_name_input();
         let time = this.dom_row_lecture_time_input(); //수업 진행시간
         let capacity = this.dom_row_capacity_input();
@@ -105,7 +125,7 @@ class Lecture_add{
                     '<div class="obj_box_full">'+capacity+fixed_member+fixed_member_list+ '</div>' + 
                     '<div class="obj_box_full">'+color+ '</div>';
 
-        document.getElementById(this.target.content).innerHTML = html;
+        return html;
     }
 
     dom_row_toolbox(){
@@ -210,13 +230,6 @@ class Lecture_add{
             lecture.init();
         });
         layer_popup.close_layer_popup();
-    }
-
-    static_component(){
-        return {
-            initial_page:`<section id="${this.target.toolbox}" class="obj_box_full" style="border:0"></section>
-                          <section id="${this.target.content}"></section>`
-        };
     }
 
     check_before_send(){

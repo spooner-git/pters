@@ -194,7 +194,7 @@ class Ticket{
                                             <div class="ticket_tools_wrap">
                                                 <div class="swap_list" onclick="${this.instance}.switch_type();"></div>
                                                 <div class="search_ticket"></div>
-                                                <div class="add_ticket" onclick="layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_TICKET_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
+                                                <div class="add_ticket" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
                                                     ticket_add_popup = new Ticket_add('.popup_ticket_add', null, 'ticket_add_popup');});"></div>
                                             </div>
                                         </div>

@@ -15,9 +15,12 @@
     }
         .popup_mobile .wrapper_top{
             padding: 15px;
-            /* margin-bottom: 10px; */
             line-height: 24px;
             text-align: center;
+
+            position: sticky;
+            position: -webkit-sticky;
+            top: 0;
         }
             .popup_mobile .wrapper_top .logo_pters{
                 width: 80px;

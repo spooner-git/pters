@@ -133,10 +133,14 @@ class Ticket_view{
         });
     }
 
+    clear(){
+        document.querySelector(this.target.install).innerHTML = "";
+    }
+
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup()" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();ticket_view_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png?v=2019-07-25_00:16" class="obj_icon_basic" onclick="ticket_view_popup.upper_right_menu();"></span>`;
+        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="ticket_view_popup.upper_right_menu();"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}">${this.dom_assembly_content()}</section>`;
         
@@ -145,20 +149,12 @@ class Ticket_view{
         document.querySelector(this.target.install).innerHTML = html;
     }
 
-    render_initial(){
-        document.querySelector(this.target.install).innerHTML = this.dom_assembly_initial();
-    }
-
     render_toolbox(){
         document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
     }
 
     render_content(){
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
-    }
-
-    dom_assembly_initial(){
-        return this.static_component().initial_page;
     }
 
     dom_assembly_toolbox(){
@@ -314,13 +310,6 @@ class Ticket_view{
         //     layer_popup.close_layer_popup();
         //     ticket.init();
         // });
-    }
-
-    static_component(){
-        return {
-            initial_page:`<section id="${this.target.toolbox}" class="obj_box_full" style="border:0"></section>
-                          <section id="${this.target.content}"></section>`
-        };
     }
 
     upper_right_menu(){

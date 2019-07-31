@@ -150,9 +150,10 @@ class Member_view{
 
 
     init(){
-        this.render_initial();
-        this.render_toolbox();
-        this.render_content();
+        // this.render_initial();
+        // this.render_toolbox();
+        // this.render_content();
+        this.render();
     }
 
     set_initial_data (){
@@ -205,15 +206,35 @@ class Member_view{
         });
     }
 
-    render_initial(){
-        document.querySelector(this.target.install).innerHTML = this.static_component().initial_page;
+    clear(){
+        document.querySelector(this.target.install).innerHTML = "";
+    }
+
+    render(){
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();member_view_popup.clear();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="member_view_popup.upper_right_menu();"></span>`;
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}">${this.dom_assembly_content()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
     }
 
     render_toolbox(){
-        document.getElementById(this.target.toolbox).innerHTML = this.dom_row_toolbox();
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+    }
+
+    render_content(){
+        document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+    dom_assembly_toolbox(){
+        return this.dom_row_toolbox();
     }
     
-    render_content(){
+    dom_assembly_content(){
         let name = this.dom_row_member_name_input();
         let phone = this.dom_row_member_phone_input();
         let birth = this.dom_row_member_birth_input();
@@ -224,7 +245,7 @@ class Member_view{
         let html =  '<div class="obj_box_full">'+name+phone+birth+sex+memo+'</div>' + 
                     '<div class="obj_box_full">'+ticket+ '</div>';
 
-        document.getElementById(this.target.content).innerHTML = html;
+        return html;
     }
 
     dom_row_toolbox(){
@@ -347,12 +368,7 @@ class Member_view{
 
     }
 
-    static_component(){
-        return {
-            initial_page:`<section id="${this.target.toolbox}" class="obj_box_full" style="border:0"></section>
-                          <section id="${this.target.content}"></section>`
-        };
-    }
+  
 
     upper_right_menu(){
         let user_option = {

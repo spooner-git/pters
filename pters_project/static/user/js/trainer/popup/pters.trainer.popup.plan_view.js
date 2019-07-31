@@ -100,12 +100,14 @@ class Plan_view{
     }
 
     init (){
-        this.render_initial();
+        // this.render_initial();
+        // this.request_data(()=>{
+        //     this.render_toolbox();
+        //     this.render_content();
+        // });
         this.request_data(()=>{
-            this.render_toolbox();
-            this.render_content();
+            this.render();
         });
-        this.set_additional_button_event();
     }
 
     set_initial_data (data){
@@ -131,17 +133,38 @@ class Plan_view{
         this.data.schedule_type = data.schedule_info[0].schedule_type;
     }
 
-    render_initial (){
-        document.querySelector(this.target.install).innerHTML = this.static_component().initial_page;
+    clear(){
+        document.querySelector(this.target.install).innerHTML = "";
     }
 
-    render_toolbox (){
+    render(){
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();plan_view_popup.clear();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="plan_view_popup.upper_right_menu();"></span>`;
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full" style="border:0;padding:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}">${this.dom_assembly_content()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.wrapper_top').style.backgroundColor = this.data.lecture_color;
+    }
+
+    render_toolbox(){
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+    }
+
+    render_content(){
+        document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+
+    dom_assembly_toolbox (){
         let html = this.dom_row_lecture_name();
-        document.getElementById(this.target.toolbox).innerHTML = html;
+        return html;
     }
     
-    render_content (){
+    dom_assembly_content (){
         let member_select_row = this.dom_row_member_select();
         let member_list_row = this.dom_row_member_list();
         let date_select_row = this.dom_row_date_select();
@@ -156,7 +179,7 @@ class Plan_view{
                     '<div class="obj_box_full">' + date_select_row + start_time_select_row + end_time_select_row + '</div>' +
                     '<div class="obj_box_full">'+  memo_select_row + '</div>';
 
-        document.getElementById(this.target.content).innerHTML = html;
+        return html;
     }
 
     dom_row_lecture_name (){
@@ -300,23 +323,22 @@ class Plan_view{
         });
     }
 
-    set_additional_button_event (){
-        document.querySelector('#popup_plan_view_additional_act').addEventListener('click', ()=>{
-            let user_option = {
-                cancel:{text:"일정 취소", callback:()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
-                                                            Plan_func.delete({"schedule_id":this.schedule_id}, ()=>{
-                                                                calendar.init();layer_popup.all_close_layer_popup();
-                                                            });
-                                                            
-                                                         });
-                                                      }
-                            },
-                check:{text:"출석 체크", callback:()=>{alert('출석 체크');}
-                            },
-            };
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
-                var option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
-            });
+    upper_right_menu(){
+        let user_option = {
+            cancel:{text:"일정 취소", callback:()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
+                            Plan_func.delete({"schedule_id":this.schedule_id}, ()=>{
+                                calendar.init();layer_popup.all_close_layer_popup();
+                            });
+                            
+                        });
+                    }
+            },
+            check:{text:"출석 체크", callback:()=>{alert('출석 체크');}
+            }
+        };
+        
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
     }
 
@@ -336,13 +358,6 @@ class Plan_view{
             layer_popup.close_layer_popup();
             calendar.init();
         });
-    }
-
-    static_component (){
-        return {initial_page : `
-                                <section id="section_plan_view_toolbox"></section>
-                                <section id="section_plan_view_content"></section>`
-        };
     }
 
 }

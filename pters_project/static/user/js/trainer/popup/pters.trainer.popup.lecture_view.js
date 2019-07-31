@@ -88,14 +88,14 @@ class Lecture_view{
 
  
     init(){
-        this.render_initial();
-        this.render_toolbox();
-        this.render_content();
+        // this.render_initial();
+        // this.render_toolbox();
+        // this.render_content();
+        this.render();
     }
 
     set_initial_data (){
         Lecture_func.read({"lecture_id": this.lecture_id}, (data)=>{
-            console.log(data);
             this.data.name = data.lecture_name;
             this.data.capacity = data.lecture_max_num;
             this.data.member_number = data.lecture_ing_member_num;
@@ -115,16 +115,35 @@ class Lecture_view{
         });   
     }
 
+    clear(){
+        document.querySelector(this.target.install).innerHTML = "";
+    }
 
-    render_initial(){
-        document.querySelector(this.target.install).innerHTML = this.static_component().initial_page;
+    render(){
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();lecture_view_popup.clear();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="lecture_view_popup.upper_right_menu();"></span>`;
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}">${this.dom_assembly_content()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
     }
 
     render_toolbox(){
-        document.getElementById(this.target.toolbox).innerHTML = this.dom_row_toolbox();
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+    }
+
+    render_content(){
+        document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+    dom_assembly_toolbox(){
+        return this.dom_row_toolbox();
     }
     
-    render_content(){
+    dom_assembly_content(){
         // let time = this.dom_row_lecture_time_input(); //수업 진행시간
         // let name = this.dom_row_lecture_name_input();
         let capacity = this.dom_row_capacity_view();
@@ -142,7 +161,7 @@ class Lecture_view{
                     '<div class="obj_box_full">'+ticket+ticket_list+ '</div>' + 
                     '<div class="obj_box_full">'+member+member_list+ '</div>';
 
-        document.getElementById(this.target.content).innerHTML = html;
+        return html;
     }
 
     dom_row_toolbox(){
@@ -248,15 +267,7 @@ class Lecture_view{
 
         return html;
     }
-
-
-    static_component(){
-        return {
-            initial_page:`<section id="${this.target.toolbox}" class="obj_box_full" style="border:0"></section>
-                          <section id="${this.target.content}"></section>`
-        };
-    }
-
+    
     upper_right_menu(){
         let user_option = {
             activate:{text:"활성화", callback:()=>{
