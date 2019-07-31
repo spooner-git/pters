@@ -101,14 +101,14 @@ class Ticket_view{
 
 
     init(){
-        this.render_initial();
-        this.render_toolbox();
-        this.render_content();
+        // this.render_initial();
+        // this.render_toolbox();
+        // this.render_content();
+        this.render();
     }
 
     set_initial_data (){
         Ticket_func.read({"ticket_id": this.ticket_id}, (data)=>{
-            console.log(data);
             this.data.name = data.ticket_info.ticket_name;
             this.data.lecture_id = data.ticket_info.ticket_lecture_id_list;
             this.data.lecture_name = data.ticket_info.ticket_lecture_list;
@@ -133,32 +133,56 @@ class Ticket_view{
         });
     }
 
+    render(){
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup()" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png?v=2019-07-25_00:16" class="obj_icon_basic" onclick="ticket_view_popup.upper_right_menu();"></span>`;
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}">${this.dom_assembly_content()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
     render_initial(){
-        document.querySelector(this.target.install).innerHTML = this.static_component().initial_page;
+        document.querySelector(this.target.install).innerHTML = this.dom_assembly_initial();
     }
 
     render_toolbox(){
-        document.getElementById(this.target.toolbox).innerHTML = this.dom_row_toolbox();
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+    }
+
+    render_content(){
+        document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+    dom_assembly_initial(){
+        return this.static_component().initial_page;
+    }
+
+    dom_assembly_toolbox(){
+        return this.dom_row_toolbox();
     }
     
-    render_content(){
+    dom_assembly_content(){
         let lecture = this.dom_row_lecture_select();
         let lecture_list = this.dom_row_lecture_select_list();
-        let count = this.dom_row_ticket_coung_input();
-        let price = this.dom_row_ticket_price_input();
+        // let count = this.dom_row_ticket_coung_input();
+        // let price = this.dom_row_ticket_price_input();
         let memo = this.dom_row_ticket_memo_input();
-        let reg_mod = this.dom_row_reg_mod_date();
+        // let reg_mod = this.dom_row_reg_mod_date();
         let member = this.dom_row_member();
         let member_list = this.dom_row_member_list();
 
         let html =  '<div class="obj_box_full">'+lecture+lecture_list+'</div>' + 
                     // '<div class="obj_box_full">'+count+price+ '</div>' + 
                     '<div class="obj_box_full">'+memo+ '</div>' + 
-                    '<div class="obj_box_full">'+reg_mod+ '</div>' +
+                    // '<div class="obj_box_full">'+reg_mod+ '</div>' +
                     '<div class="obj_box_full">'+member+member_list+ '</div>';
-
-        document.getElementById(this.target.content).innerHTML = html;
+        return html;
     }
+
 
     dom_row_toolbox(){
         let html = `
@@ -172,8 +196,6 @@ class Ticket_view{
         `;
         return html;
     }
-
-
 
     dom_row_lecture_select(){
         let lecture_text = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개';
@@ -346,6 +368,8 @@ class Ticket_view{
         });
     }
 }
+
+
 
 class Ticket_simple_view{
     constructor(install_target, ticket_id, instance, readonly){
