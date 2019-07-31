@@ -238,7 +238,7 @@ class Lecture_view{
 
     dom_row_member(){
         let member_text = this.data.member_number == null ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_number+' 명)';
-        let html = CComponent.create_row('member_number_view', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
+        let html = CComponent.create_row('member_number_view', member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{});
         return html;
     }
 

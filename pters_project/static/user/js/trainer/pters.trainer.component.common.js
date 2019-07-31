@@ -43,26 +43,26 @@ class CComponent{
         return html;
     }
 
-    //추가 페이지들에서 사용되는 text input row 스타일
-    static create_input_row (id, title, icon, icon_r_visible, disabled, onfocusout){
+     //추가 페이지들에서 사용되는 text input row 스타일
+    static create_input_row (id, title, placeholder, icon, icon_r_visible, style, disabled, onfocusout){
         let disable = 'disabled';
         if(disabled == false){
             disable = '';
         }
 
-        let html = `<li class="create_input_row" id="c_i_r_${id}">
+        let html = `<li class="create_input_row" id="c_i_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
-                            <div class="cell_title">
+                            <div class="cell_title" style="display:${icon == undefined ? 'none' : ''}">
                                 ${icon != null ? `<img src="${icon}">` : ""} 
                             </div>
                             <div class="cell_content">
-                                <input type="text" class="cell_text" placeholder="${title}" value="${title}" ${disable}>
+                                <input type="text" class="cell_text" placeholder="${placeholder}" value="${title}" ${disable}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
                         </div>
                     </li>`;
         $(document).off('focusin', `#c_i_r_${id}`).on('focusin', `#c_i_r_${id}`, function(e){
-            $(this).find('input').val('');
+            // $(this).find('input').val('');
         });
 
         $(document).off('focusout', `#c_i_r_${id}`).on('focusout', `#c_i_r_${id}`, function(e){
@@ -76,19 +76,19 @@ class CComponent{
     }
     
     //추가 페이지들에서 사용되는 number input row 스타일
-    static create_input_number_row (id, title, icon, icon_r_visible, disabled, onfocusout){
+    static create_input_number_row (id, title, placeholder, icon, icon_r_visible, style, disabled, onfocusout){
         let disable = 'disabled';
         if(disabled == false){
             disable = '';
         }
         
-        let html = `<li class="create_input_row" id="c_i_n_r_${id}">
+        let html = `<li class="create_input_row" id="c_i_n_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
-                            <div class="cell_title">
+                            <div class="cell_title" style="display:${icon == undefined ? 'none' : ''}">
                                 ${icon != null ? `<img src="${icon}">` : ""} 
                             </div>
                             <div class="cell_content">
-                                <input class="cell_text" placeholder="${title}" type="tel" value="${title}" ${disable}>
+                                <input class="cell_text" placeholder="${placeholder}" type="tel" value="${title}" ${disable}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
                         </div>

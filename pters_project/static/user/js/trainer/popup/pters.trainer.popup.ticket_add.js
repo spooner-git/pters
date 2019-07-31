@@ -153,7 +153,8 @@ class Ticket_add{
     }
 
     dom_row_ticket_name_input(){
-        let html = CComponent.create_input_row ('input_ticket_name', this.data.name == null ? '수강권명*' : this.data.name, '/static/common/icon/person_black.png', HIDE, false, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_row ('input_ticket_name', this.data.name == null ? '' : this.data.name, '수강권명*', '/static/common/icon/person_black.png', HIDE, style, false, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
         });
@@ -196,7 +197,8 @@ class Ticket_add{
     }
 
     dom_row_ticket_coung_input(){
-        let html = CComponent.create_input_number_row ('input_ticket_count', this.data.count == null ? '횟수' : this.data.count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_number_row ('input_ticket_count', this.data.count == null ? '' : this.data.count+'회', '횟수', '/static/common/icon/icon_rectangle_blank.png', HIDE, style, false, (input_data)=>{
             let user_input_data = input_data;
             this.count = user_input_data;
         });
@@ -204,7 +206,8 @@ class Ticket_add{
     }
 
     dom_row_ticket_price_input(){
-        let html = CComponent.create_input_number_row ('input_ticket_price', this.data.price == null ? '가격' : this.data.price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_number_row ('input_ticket_price', this.data.price == null ? '' : this.data.price+'원', '가격', '/static/common/icon/icon_rectangle_blank.png', HIDE, style, false, (input_data)=>{
             let user_input_data = input_data;
             this.price = user_input_data;
         });
@@ -212,7 +215,8 @@ class Ticket_add{
     }
 
     dom_row_ticket_memo_input(){
-        let html = CComponent.create_input_row ('input_ticket_memo', this.data.memo == null ? '설명' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, false, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_row ('input_ticket_memo', this.data.memo == null ? '' : this.data.memo, '설명', '/static/common/icon/icon_note.png', HIDE, style, false, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });

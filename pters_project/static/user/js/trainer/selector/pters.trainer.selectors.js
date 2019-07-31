@@ -1248,7 +1248,7 @@ class LectureSelector{
     render(){
         let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();lecture_select.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_select.upper_right_menu();">등록</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_select.upper_right_menu();">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");

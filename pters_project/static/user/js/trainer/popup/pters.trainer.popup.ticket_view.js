@@ -46,7 +46,7 @@ class Ticket_view{
 
     set name(text){
         this.data.name = text;
-        this.render_content();
+        // this.render_content();
     }
 
     get name(){
@@ -75,7 +75,7 @@ class Ticket_view{
 
     set memo(text){
         this.data.memo = text;
-        this.render_content();
+        // this.render_content();
     }
 
     get memo(){
@@ -185,11 +185,18 @@ class Ticket_view{
 
 
     dom_row_toolbox(){
+        let style = {"font-size":"20px", "font-weight":"bold"};
+        let sub_html = CComponent.create_input_row ('ticket_name_view', this.data.name == null ? '' : this.data.name, '수강권명*', undefined, HIDE, style, false, (input_data)=>{
+            let user_input_data = input_data;
+            this.name = user_input_data;
+            this.send_data();
+        });
+        
         let html = `
         <div class="member_add_upper_box" style="padding-bottom:8px;">
             <div style="display:inline-block;width:320px;">
                 <div style="display:inline-block;width:320px;">
-                    <span style="font-size:20px;font-weight:bold;">${this.data.name == null ? '' : this.data.name}</span>
+                    ${sub_html}
                 </div>
             </div>
         </div>
@@ -235,7 +242,8 @@ class Ticket_view{
     }
 
     dom_row_ticket_coung_input(){
-        let html = CComponent.create_input_number_row ('ticket_count_view', this.data.count == null ? '횟수' : this.data.count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, true, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_number_row ('ticket_count_view', this.data.count == null ? '' : this.data.count+'회', '횟수', '/static/common/icon/icon_rectangle_blank.png', HIDE, style, true, (input_data)=>{
             // let user_input_data = input_data;
             // this.count = user_input_data;
         });
@@ -243,7 +251,8 @@ class Ticket_view{
     }
 
     dom_row_ticket_price_input(){
-        let html = CComponent.create_input_number_row ('ticket_price_view', this.data.price == null ? '가격' : this.data.price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, true, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_number_row ('ticket_price_view', this.data.price == null ? '' : this.data.price+'원', '가격', '/static/common/icon/icon_rectangle_blank.png', HIDE, style, true, (input_data)=>{
             // let user_input_data = input_data;
             // this.price = user_input_data;
         });
@@ -251,7 +260,8 @@ class Ticket_view{
     }
 
     dom_row_ticket_memo_input(){
-        let html = CComponent.create_input_row ('ticket_memo_view', this.data.memo == null ? '설명' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, false, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_row ('ticket_memo_view', this.data.memo == null ? '' : this.data.memo, '설명', '/static/common/icon/icon_note.png', HIDE, style, false, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
             this.send_data();
@@ -586,7 +596,7 @@ class Ticket_simple_view{
     }
 
     dom_row_ticket_memo_input(){
-        let html = CComponent.create_input_row ('ticket_memo_view', this.data.memo == null ? '설명' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, true, (input_data)=>{
+        let html = CComponent.create_input_row ('ticket_memo_view', this.data.memo == null ? '설명' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, style, true, (input_data)=>{
             // let user_input_data = input_data;
             // this.memo = user_input_data;
         });

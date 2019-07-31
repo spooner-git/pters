@@ -2,16 +2,16 @@
 	cursor: pointer;
 }
 
-input{
-	color: #888888 !important;
-	-webkit-text-fill-color: #888888 !important;
-	opacity: 1;
-}
-input:disabled{
+/* input{
 	color: #282828 !important;
 	-webkit-text-fill-color: #282828 !important;
 	opacity: 1;
 }
+input:disabled{
+	color: #888888 !important;
+	-webkit-text-fill-color: #888888 !important;
+	opacity: 1;
+} */
 
 .create_row, .create_input_row{
 	list-style: none;
