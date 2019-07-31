@@ -162,7 +162,9 @@ class Member_add{
     }
 
     clear(){
-        document.querySelector(this.target.install).innerHTML = "";
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
     }
 
     render(){

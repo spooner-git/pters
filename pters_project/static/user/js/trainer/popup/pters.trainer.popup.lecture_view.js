@@ -116,7 +116,9 @@ class Lecture_view{
     }
 
     clear(){
-        document.querySelector(this.target.install).innerHTML = "";
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
     }
 
     render(){
@@ -267,7 +269,7 @@ class Lecture_view{
 
         return html;
     }
-    
+
     upper_right_menu(){
         let user_option = {
             activate:{text:"활성화", callback:()=>{
