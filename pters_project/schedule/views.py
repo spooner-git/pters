@@ -70,7 +70,6 @@ def add_schedule_logic(request):
         lecture_info = schedule_input_form.get_lecture_info()
         member_list = schedule_input_form.get_member_list(class_id)
         # 폼 검사 종료
-
         lecture_schedule_id = None
 
         state_cd = STATE_CD_NOT_PROGRESS
@@ -178,9 +177,9 @@ def add_schedule_logic(request):
 
                 if error_temp is not None:
                     if info_message is None or info_message == '':
-                        info_message = member_info.name
+                        info_message = member_info['member_name']
                     else:
-                        info_message = info_message + ',' + member_info.name
+                        info_message = info_message + ',' + member_info['member_name']
 
     else:
         for field in schedule_input_form:

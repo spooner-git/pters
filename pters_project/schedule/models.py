@@ -77,6 +77,10 @@ class ScheduleTb(TimeStampedModel):
     note = models.CharField(db_column='NOTE', max_length=255, blank=True, default='')
     member_note = models.CharField(db_column='MEMBER_NOTE', max_length=255, blank=True, default='')
     en_dis_type = models.CharField(db_column='EN_DIS_TYPE', max_length=10, blank=True, default='')
+    ing_color_cd = models.CharField(db_column='ING_COLOR_CD', max_length=20, default='#ffd3d9')
+    end_color_cd = models.CharField(db_column='END_COLOR_CD', max_length=20, default='#d2d1cf')
+    ing_font_color_cd = models.CharField(db_column='ING_FONT_COLOR_CD', max_length=20, default='#282828')
+    end_font_color_cd = models.CharField(db_column='END_FONT_COLOR_CD', max_length=20, default='#282828')
     reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', default=USE)  # Field name made lowercase.
 
