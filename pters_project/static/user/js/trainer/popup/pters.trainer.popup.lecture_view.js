@@ -150,7 +150,7 @@ class Lecture_view{
         // let name = this.dom_row_lecture_name_input();
         let capacity = this.dom_row_capacity_view();
         let color = this.dom_row_color_view();
-        let reg_mod = this.dom_row_reg_mod_date();
+        // let reg_mod = this.dom_row_reg_mod_date();
         let ticket = this.dom_row_ticket();
         let ticket_list = this.dom_row_ticket_list();
         let member = this.dom_row_member();
@@ -159,7 +159,7 @@ class Lecture_view{
 
         let html =  '<div class="obj_box_full">'+capacity+'</div>' + 
                     '<div class="obj_box_full">'+color+ '</div>' + 
-                    '<div class="obj_box_full">'+reg_mod+ '</div>' + 
+                    // '<div class="obj_box_full">'+reg_mod+ '</div>' + 
                     '<div class="obj_box_full">'+ticket+ticket_list+ '</div>' + 
                     '<div class="obj_box_full">'+member+member_list+ '</div>';
 
