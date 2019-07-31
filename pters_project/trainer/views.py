@@ -4799,6 +4799,15 @@ class PopupLectureView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['lecture_info'] = func_get_lecture_info(class_id, lecture_id, self.request.user.id)
         return context
 
+class PopupLectureSimpleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'popup/trainer_popup_lecture_simple_view.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupLectureSimpleView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        lecture_id = self.request.GET.get('lecture_id')
+        context['lecture_info'] = func_get_lecture_info(class_id, lecture_id, self.request.user.id)
+        return context
 
 class PopupLectureEdit(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_lecture_edit.html'
@@ -4830,6 +4839,16 @@ class PopupTicketView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['ticket_info'] = func_get_ticket_info(class_id, ticket_id, self.request.user.id)
         return context
 
+class PopupTicketSimpleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'popup/trainer_popup_ticket_simple_view.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupTicketSimpleView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        ticket_id = self.request.GET.get('ticket_id')
+
+        context['ticket_info'] = func_get_ticket_info(class_id, ticket_id, self.request.user.id)
+        return context
 
 class PopupTicketEdit(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_ticket_edit.html'

@@ -193,8 +193,12 @@ class Ticket_edit{
             let icon_button_style = null;
             html_to_join.push(
                 CComponent.icon_button(lecture_id, lecture_name, null, icon_button_style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id}, ()=>{
-                        lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
+                    // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id}, ()=>{
+                    //     lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
+                    // });
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(253/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
+                        lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
+                        //수업 간단 정보 팝업 열기
                     });
                 })
             );

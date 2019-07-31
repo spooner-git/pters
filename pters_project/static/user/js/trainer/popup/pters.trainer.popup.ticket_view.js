@@ -197,8 +197,9 @@ class Ticket_view{
             let lecture_name_set = `<div style="display:inline-block;width:10px;height:10px;border-radius:5px;background-color:${lecture_color};margin-right:10px;"></div>${lecture_name}`;
             html_to_join.push(
                 CComponent.icon_button (lecture_id, lecture_name_set, NONE, icon_button_style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id}, ()=>{
-                        lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(253/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
+                        lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
+                        //수업 간단 정보 팝업 열기
                     });
                 })
             );
@@ -241,7 +242,7 @@ class Ticket_view{
     }
 
     dom_row_member(){
-        let member_text = this.data.member_id.length == 0 ? '진행중인 회원' : '진행중인 회원 ('+this.data.member_id.length+' 명)';
+        let member_text = this.data.member_id.length == 0 ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_id.length+' 명)';
         let html = CComponent.create_row('ing_member_view', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
         return html;
     }
@@ -344,4 +345,229 @@ class Ticket_view{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
     }
+}
+
+class Ticket_simple_view{
+    constructor(install_target, ticket_id, instance, readonly){
+        this.target = {install: install_target, toolbox:'section_ticket_view_toolbox', content:'section_ticket_view_content', close_button:'section_ticket_simple_view_close_button'};
+        this.instance = instance;
+        this.ticket_id = ticket_id;
+        this.readonly = readonly;
+
+        let d = new Date();
+        this.dates = {
+            current_year: d.getFullYear(),
+            current_month: d.getMonth()+1,
+            current_date: d.getDate()
+        };
+        this.times = {
+            current_hour: TimeRobot.to_zone(d.getHours(), d.getMinutes()).hour,
+            current_minute: TimeRobot.to_zone(d.getHours(), d.getMinutes()).minute,
+            current_zone: TimeRobot.to_zone(d.getHours(), d.getMinutes()).zone
+        };
+
+        this.data = {
+            name:null,
+            lecture_id:[],
+            lecture_name:[],
+            lecture_max:[],
+            lecture_color:[],
+            ticket_effective_days:null,
+            count:null,
+            price:null,
+            memo:null,
+
+            ticket_state:null,
+            ticket_day_schedule_enable:null,
+            ticket_week_schedule_enable:null,
+
+            ticket_reg_dt:null,
+            ticket_mod_dt:null,
+
+            member_id:[],
+            member_name:[]
+        };
+
+        this.init();
+        this.set_initial_data();
+    }
+
+    set name(text){
+        this.data.name = text;
+        this.render_content();
+    }
+
+    get name(){
+        return this.data.name;
+    }
+
+    set lecture(data){
+        this.data.lecture_id = data.id;
+        this.data.lecture_name = data.name;
+        this.data.lecture_max = data.max;
+        this.render_content();
+    }
+
+    get lecture(){
+        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max};
+    }
+
+    set period(text){
+        this.data.ticket_effective_days = text;
+        this.render_content();
+    }
+
+    get period(){
+        return this.data.ticket_effective_days;
+    }
+
+    set memo(text){
+        this.data.memo = text;
+        this.render_content();
+    }
+
+    get memo(){
+        return this.data.memo;
+    }
+    
+    set count(number){
+        this.data.count = number;
+        this.render_content();
+    }
+
+    get count(){
+        return this.data._count;
+    }
+
+    set price(number){
+        this.data.price = number;
+        this.render_content();
+    }
+
+    get price(){
+        return this.data.price;
+    }
+
+
+    init(){
+        this.render_initial();
+        this.render_toolbox();
+        this.render_content();
+    }
+
+    set_initial_data (){
+        Ticket_func.read({"ticket_id": this.ticket_id}, (data)=>{
+            console.log(data);
+            this.data.name = data.ticket_info.ticket_name;
+            this.data.lecture_id = data.ticket_info.ticket_lecture_id_list;
+            this.data.lecture_name = data.ticket_info.ticket_lecture_list;
+            this.data.lecture_max = [];
+            this.data.lecture_color = data.ticket_info.ticket_lecture_ing_color_cd_list;
+            this.data.ticket_effective_days = data.ticket_info.ticket_effective_days;
+            this.data.count = data.ticket_info.ticket_reg_count;
+            this.data.price = data.ticket_info.ticket_price;
+            this.data.memo = data.ticket_info.ticket_note;
+            
+            this.data.ticket_state = data.ticket_info.ticket_state_cd;
+            this.data.ticket_day_schedule_enable = data.ticket_info.ticket_day_schedule_enable;
+            this.data.ticket_week_schedule_enable = data.ticket_info.ticket_week_schedule_enable;
+
+            this.data.ticket_reg_dt = data.ticket_info.ticket_reg_dt;
+            this.data.ticket_mod_dt = data.ticket_info.ticket_mod_dt;
+            Ticket_func.read_member_list({"ticket_id":this.ticket_id}, (data)=>{
+                this.data.member_id = data.ticket_ing_member_list.map((el)=>{return el.member_id;});
+                this.data.member_name = data.ticket_ing_member_list.map((el)=>{return el.member_name;});
+                this.init();
+            });
+        });
+    }
+
+    render_initial(){
+        document.querySelector(this.target.install).innerHTML = this.static_component().initial_page;
+    }
+
+    render_toolbox(){
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_row_toolbox();
+        document.getElementById(this.target.close_button).innerHTML = this.dom_close_button();
+    }
+    
+    render_content(){
+        let lecture = this.dom_row_lecture_select();
+        let memo = this.dom_row_ticket_memo_input();
+        let member = this.dom_row_member();
+
+        let html =  '<div class="obj_box_full">'+lecture+member+memo+'</div>';
+
+        document.getElementById(this.target.content).innerHTML = html;
+    }
+
+    dom_row_toolbox(){
+        let text_button_style = {"color":"#858282", "font-size":"13px", "font-weight":"500"};
+        let text_button = CComponent.text_button ("detail_ticket_info", "더보기", text_button_style, ()=>{
+            show_user_confirm(`작업중이던 항목을 모두 닫고 수강권 메뉴로 이동합니다.`, ()=>{
+                layer_popup.all_close_layer_popup();
+                sideGoPage("ticket");
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':this.ticket_id} ,()=>{
+                    ticket_view_popup = new Ticket_view('.popup_ticket_view', this.ticket_id, 'ticket_view_popup');
+                });
+            });
+        });
+
+        let html = `
+        <div style="height:48px;line-height:48px;">
+            <div style="display:inline-block;float:left;width:275px;">
+                <span style="font-size:13px;font-weight:500;">${this.data.name == null ? '' : this.data.name}</span>
+            </div>
+            <div style="display:inline-block;float:right;width:65px;text-align:right;">
+                ${text_button}
+            </div>
+        </div>
+        `;
+        return html;
+    }
+
+    dom_row_lecture_select(){
+        let lecture_text = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개';
+        let html = CComponent.create_row('lecture_select_view', lecture_text, '/static/common/icon/icon_book.png', HIDE, ()=>{ 
+            // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            //     lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999);
+            // });
+        });
+        return html;
+    }
+
+    dom_row_ticket_memo_input(){
+        let html = CComponent.create_input_row ('ticket_memo_view', this.data.memo == null ? '설명' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, true, (input_data)=>{
+            // let user_input_data = input_data;
+            // this.memo = user_input_data;
+        });
+        return html;
+    }
+
+
+    dom_row_member(){
+        let member_text = this.data.member_id.length == 0 ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_id.length+' 명)';
+        let html = CComponent.create_row('ing_member_view', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
+        return html;
+    }
+
+    dom_close_button(){
+        let style = {"display":"block", "height":"48px", "line-height":"48px", "padding":"0"};
+        let html = CComponent.button ("close_member_simple", "닫기", style, ()=>{
+            layer_popup.close_layer_popup();
+        });
+        return html;
+    }
+
+
+    static_component(){
+        return {
+            initial_page:`<section id="${this.target.toolbox}" class="obj_box_full" style="position:sticky;position:-webkit-sticky;top:0;"></section>
+                            <section id="${this.target.content}" style="width:100%;height:auto;overflow-y:auto;"></section>
+                            <section id="${this.target.close_button}" class="obj_box_full" style="height:48px;"></section>
+                        `
+        };
+    }
+
+    
 }

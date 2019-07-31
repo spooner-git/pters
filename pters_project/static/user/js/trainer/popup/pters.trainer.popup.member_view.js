@@ -296,8 +296,12 @@ class Member_view{
             let ticket_text = this.data.ticket[i].ticket_id.length == 0 ? '수강권*' : this.data.ticket[i].ticket_name;
             let html_ticket_name = CComponent.create_row(`input_ticket_select_${i}`, ticket_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
                 let ticket_id =  this.data.ticket[i].ticket_id;
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
-                    ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
+                // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
+                //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
+                // });
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(254/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
+                    ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
+                    //수강권 간단 정보 팝업 열기
                 });
             });
 
@@ -311,8 +315,12 @@ class Member_view{
                 let icon_button_style = {"display":"block", "padding":"0", "font-size":"13px"};
                 let lecture_name_set = `<div style="display:inline-block;width:10px;height:10px;border-radius:5px;background-color:#fe4e65;margin-right:10px;"></div>${lecture_name}`;
                 let html_lecture_list_info = CComponent.icon_button (lecture_id, lecture_name_set, NONE, icon_button_style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id}, ()=>{
-                        lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
+                    // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id}, ()=>{
+                    //     lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
+                    // });
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(253/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
+                        lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
+                        //수업 간단 정보 팝업 열기
                     });
                 });
 
@@ -686,15 +694,6 @@ class Member_simple_view{
         return html;
     }
 
-    dom_close_button(){
-        let style = {"display":"block", "height":"48px", "line-height":"48px", "padding":"0"};
-        let html = CComponent.button ("close_member_simple", "닫기", style, ()=>{
-            layer_popup.close_layer_popup();
-        });
-        return html;
-    }
-
-
     dom_row_ticket(){
         let ticket_length = this.data.ticket.length;
 
@@ -705,8 +704,12 @@ class Member_simple_view{
             let ticket_text = this.data.ticket[i].ticket_id.length == 0 ? '수강권*' : this.data.ticket[i].ticket_name;
             let html_ticket_name = CComponent.create_row(`input_ticket_select_${i}`, ticket_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
                 let ticket_id =  this.data.ticket[i].ticket_id;
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
-                    ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
+                // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
+                //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
+                // });
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(254/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
+                    ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
+                    //회원 간단 정보 팝업 열기
                 });
             });
 
@@ -724,6 +727,13 @@ class Member_simple_view{
         return html;
     }
 
+    dom_close_button(){
+        let style = {"display":"block", "height":"48px", "line-height":"48px", "padding":"0"};
+        let html = CComponent.button ("close_member_simple", "닫기", style, ()=>{
+            layer_popup.close_layer_popup();
+        });
+        return html;
+    }
 
     static_component(){
         return {
