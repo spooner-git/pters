@@ -1078,7 +1078,7 @@ class Calendar {
 class Plan_func{
     static create(url, data, callback){
         //데이터 형태 {"member_id":"", "contents":"", "counts":"", "price":"", "start_date":"", "end_date":"", "class_id":"", "package_id":""};
-
+        console.log('test:'+data);
         $.ajax({
             // url:'/schedule/add_schedule/',
             url : url,
@@ -1099,6 +1099,7 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
+                console.log(data)
                 callback();
             },
     

@@ -222,16 +222,15 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
         lecture_schedule_id = None
     if repeat_schedule_id == '':
         repeat_schedule_id = None
-    max_mem_num = 1
+    max_mem_count = 1
     ing_color_cd = ''
     end_color_cd = ''
     ing_font_color_cd = ''
     end_font_color_cd = ''
-
     if lecture_id is not None:
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-            max_mem_num = lecture_info.member_num
+            max_mem_count = lecture_info.member_num
             ing_color_cd = lecture_info.ing_color_cd
             end_color_cd = lecture_info.end_color_cd
             ing_font_color_cd = lecture_info.ing_font_color_cd
@@ -243,14 +242,13 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
             try:
                 lecture_info = LectureTb.objects.get(class_tb_id=class_id,
                                                      lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
-                max_mem_num = lecture_info.member_num
+                max_mem_count = lecture_info.member_num
                 ing_color_cd = lecture_info.ing_color_cd
                 end_color_cd = lecture_info.end_color_cd
                 ing_font_color_cd = lecture_info.ing_font_color_cd
                 end_font_color_cd = lecture_info.end_font_color_cd
             except ObjectDoesNotExist:
                 lecture_info = None
-
     try:
         with transaction.atomic():
             add_schedule_info = ScheduleTb(class_tb_id=class_id,
@@ -262,13 +260,12 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                                            state_cd=state_cd, permission_state_cd=permission_state_cd,
                                            note=note, member_note='', en_dis_type=en_dis_type,
                                            # Test 용
-                                           max_mem_num=max_mem_num,
+                                           max_mem_count=max_mem_count,
                                            ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                            ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
                                            alarm_dt=start_datetime-datetime.timedelta(minutes=5),
                                            reg_member_id=user_id)
             add_schedule_info.save()
-
             if member_ticket_id is not None:
                 error = func_refresh_member_ticket_count(class_id, member_ticket_id)
 
