@@ -13,6 +13,10 @@ class Ticket{
     }
 
     init(list_status_type){
+        if(current_page != this.page_name){
+            return false;
+        }
+
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page
 
@@ -204,7 +208,7 @@ class Ticket{
                                 ,
                 "initial_page":`<div id="${this.subtargetHTML}"><div id="ticket_display_panel"></div><div id="ticket_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div></div>`
             }
-        )
+        );
     }
 }
 

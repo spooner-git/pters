@@ -206,9 +206,10 @@ class Ticket_add{
         }
         
         Ticket_func.create(data, ()=>{
-            layer_popup.close_layer_popup();
+            // layer_popup.close_layer_popup();
             ticket.init();
         });
+        layer_popup.close_layer_popup();
     }
 
     static_component(){
