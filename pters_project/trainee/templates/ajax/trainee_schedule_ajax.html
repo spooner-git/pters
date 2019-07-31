@@ -38,7 +38,7 @@
       "lecture_schedule_lecture_name":
       [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.lecture_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lecture_schedule_max_member_num":
-      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.lecture_tb.member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lecture_schedule_current_member_num":
       [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.lecture_current_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lecture_schedule_start_datetime":
@@ -50,9 +50,9 @@
       "lecture_schedule_note":
       [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lecture_schedule_ing_color_cd":
-      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.lecture_tb.ing_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.ing_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lecture_schedule_end_color_cd":
-      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.lecture_tb.end_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.end_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lecture_member_ticket_avail_count":
       [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.lecture_member_ticket_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 

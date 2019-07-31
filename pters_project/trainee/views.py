@@ -169,6 +169,21 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         #         member_lecture.save()
         #     except ObjectDoesNotExist:
         #         member_lecture = None
+        # schedule_data = ScheduleTb.objects.select_related('lecture_tb').filter(ing_color_cd__isnull=True,
+        #                                                                        en_dis_type=ON_SCHEDULE_TYPE)
+        # for schedule_info in schedule_data:
+        #     if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
+        #         schedule_info.max_mem_count = schedule_info.lecture_tb.member_num
+        #         schedule_info.ing_color_cd = schedule_info.lecture_tb.ing_color_cd
+        #         schedule_info.ing_font_color_cd = schedule_info.lecture_tb.ing_font_color_cd
+        #         schedule_info.end_color_cd = schedule_info.lecture_tb.end_color_cd
+        #         schedule_info.end_font_color_cd = schedule_info.lecture_tb.end_font_color_cd
+        #     else:
+        #         schedule_info.ing_color_cd = '#fbf3bd'
+        #         schedule_info.ing_font_color_cd = '#d2d1cf'
+        #         schedule_info.end_color_cd = '#282828'
+        #         schedule_info.end_font_color_cd = '#282828'
+        #     schedule_info.save()
 
         if class_id is not None and class_id != '':
             context = func_get_trainee_next_schedule_by_class_id(context, class_id, self.request.user.id)
