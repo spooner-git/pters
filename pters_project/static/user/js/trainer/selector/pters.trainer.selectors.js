@@ -1219,22 +1219,44 @@ class TicketSelector{
 }
 
 class LectureSelector{
-    constructor(install_target, target_instance, multiple_select){
-        this.targetHTML = install_target;
+    constructor(install_target, target_instance, multiple_select, callback){
+        this.target = {install:install_target};
         this.target_instance = target_instance;
+        this.callback = callback;
         this.received_data;
         this.multiple_select = multiple_select;
         this.data = {
-            id: this.target_instance.lecture.id,
-            name: this.target_instance.lecture.name,
-            max: this.target_instance.lecture.max
+            id: this.target_instance.lecture.id.slice(),
+            name: this.target_instance.lecture.name.slice(),
+            max: this.target_instance.lecture.max.slice()
         };
+        this.init();
+    }
+
+    init(){
         this.request_list(()=>{
-            this.render_list();
+            this.render();
         });
     }
 
-    render_list(){
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();lecture_select.clear();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_select.upper_right_menu();">등록</span></span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list(){
         let html_to_join = [];
         let length = this.received_data.length;
         if(length == 0){
@@ -1266,8 +1288,6 @@ class LectureSelector{
                         this.data.max.push(lecture_max_num);
                     }
 
-                    this.target_instance.lecture = this.data; //타겟에 선택된 데이터를 set
-
                     if(this.multiple_select == 1){
                         layer_popup.close_layer_popup();
                     }
@@ -1278,7 +1298,8 @@ class LectureSelector{
             html_to_join.push(html);
         }
 
-        document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
     }
 
     request_list (callback){
@@ -1286,6 +1307,12 @@ class LectureSelector{
             this.received_data = data.current_lecture_data;
             callback();
         });
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
     }
 }
 
