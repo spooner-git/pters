@@ -7,6 +7,10 @@ class Menu{
     }
 
     init(){
+        if(current_page != this.page_name){
+            return false;
+        }
+
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 

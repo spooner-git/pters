@@ -348,16 +348,6 @@ class Member_view{
 
     upper_right_menu(){
         let user_option = {
-            // deactivate:{text:"비활성화", callback:()=>{
-            //                                             show_user_confirm(`${this.data.name} 님을 비활성화 하시겠습니까? <br> 비활성화 탭에서 다시 활성화 할 수 있습니다.`, ()=>{
-            //                                                 Member_func.delete({"schedule_id":this.schedule_id}, ()=>{
-            //                                                     calendar.init();layer_popup.all_close_layer_popup();
-            //                                                 });
-                                                            
-            //                                             });
-            //                                             // layer_popup.close_layer_popup();
-            //                                         }
-            //             },
             delete:{text:"삭제", callback:()=>{
                                                 show_user_confirm(`"${this.data.name}" 님을 영구 삭제 하시겠습니까? <br> 데이터를 복구할 수 없습니다.`, ()=>{
                                                     Member_func.delete({"member_id":this.member_id}, ()=>{
