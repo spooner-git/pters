@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm, AuthenticationForm, SetPasswordForm
 from django.contrib.auth.models import User
 from django.forms import TextInput
+from django.template import loader
 from django.utils.functional import lazy
 from registration.forms import RegistrationForm
 

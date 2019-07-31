@@ -76,8 +76,6 @@ urlpatterns = [
     # 미인증 회원 로그인시
     url(r'^resend_email_member/$', views.NewMemberReSendEmailView.as_view(), name='resend_email_member'),
 
-    url(r'^reset_password/$', views.ResetPasswordView.as_view(),
-        name='reset_password'),
 
     # 회원 탈퇴 기능
     url(r'^out_member/$', views.out_member_logic, name='out_member'),
@@ -142,6 +140,7 @@ urlpatterns = [
     url(r'^activate_sms/$', views.activate_sms_logic, name='activate_sms'),
     url(r'^activate_sms_confirm/$', views.ActivateSmsConfirmView.as_view(), name='activate_sms_confirm'),
 
+    url(r'^reset_password/$', views.ResetPasswordView.as_view(), name='reset_password'),
     url(r'^reset_password_sms/$', views.ResetPasswordSmsView.as_view(), name='reset_password_sms'),
 
 ]
