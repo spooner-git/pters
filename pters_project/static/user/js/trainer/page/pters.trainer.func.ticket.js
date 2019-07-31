@@ -204,7 +204,7 @@ class Ticket{
                                 ,
                 "initial_page":`<div id="${this.subtargetHTML}"><div id="ticket_display_panel"></div><div id="ticket_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div></div>`
             }
-        )
+        );
     }
 }
 

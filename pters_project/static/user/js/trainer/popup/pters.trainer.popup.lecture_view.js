@@ -30,7 +30,8 @@ class Lecture_view{
                 ticket_id:[],
                 ticket_name:[],
                 ticket_state:[],
-                memo:null
+                memo:null,
+                lecture_state:null
         };
 
         this.init();
@@ -108,6 +109,8 @@ class Lecture_view{
             this.data.ticket_state = data.lecture_ticket_state_cd_list;
             this.data.memo = data.lecture_note;
 
+            this.data.lecture_state = data.lecture_state_cd;
+
             this.init();
         });   
     }
@@ -157,7 +160,7 @@ class Lecture_view{
 
     dom_row_capacity_view(){
         let capacity_text = this.data.capacity == null ? '정원' : '정원 '+this.data.capacity+' 명';
-        let html = CComponent.create_row('lecture_capacity', capacity_text, '/static/common/icon/people_black.png', HIDE, ()=>{ 
+        let html = CComponent.create_row('lecture_capacity_view', capacity_text, '/static/common/icon/people_black.png', HIDE, ()=>{ 
             
         });
         return html;
@@ -165,7 +168,7 @@ class Lecture_view{
 
     dom_row_color_view(){
         let color_text = this.data.color_bg == null ? '색상명' : `<span style="background-color:${this.data.color_bg};color:${this.data.color_font};padding:5px;border-radius:4px;">${this.data.color_bg}</span>`;
-        let html = CComponent.create_row('lecture_color', color_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
+        let html = CComponent.create_row('lecture_color_view', color_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
             
         });
         return html;
@@ -173,7 +176,7 @@ class Lecture_view{
 
     dom_row_reg_mod_date(){
         let icon_button_style = {"display":"block", "padding":0, "font-size":"12px"};
-        let html1 = CComponent.icon_button('reg_date', `등록 ${this.data.reg_date}`, NONE, icon_button_style, ()=>{});
+        let html1 = CComponent.icon_button('reg_date_view', `등록 ${this.data.reg_date}`, NONE, icon_button_style, ()=>{});
         // let html2 = CComponent.icon_button('mod_date', `수정 ${this.data.ticket_mod_dt}`, NONE, icon_button_style, ()=>{});
         let html = html1;
         return html;
@@ -181,7 +184,7 @@ class Lecture_view{
 
     dom_row_ticket(){
         let member_text = this.data.ticket_id.length == 0 ? '이 수업을 포함하는 수강권 (0)' : '이 수업을 포함하는 수강권 ('+this.data.ticket_id.length+')';
-        let html = CComponent.create_row('ticket_number', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
+        let html = CComponent.create_row('ticket_number_view', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
         return html;
     }
 
@@ -210,7 +213,7 @@ class Lecture_view{
 
     dom_row_member(){
         let member_text = this.data.member_number == null ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_number+' 명)';
-        let html = CComponent.create_row('member_number', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
+        let html = CComponent.create_row('member_number_view', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
         return html;
     }
 
@@ -251,9 +254,43 @@ class Lecture_view{
 
     upper_right_menu(){
         let user_option = {
-            deactivate:{text:"비활성화", callback:()=>{alert('작업중');layer_popup.close_layer_popup();}},
-            delete:{text:"삭제", callback:()=>{alert('작업중');layer_popup.close_layer_popup();}}
+            activate:{text:"활성화", callback:()=>{
+                    show_user_confirm(`"${this.data.name}" 수업을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
+                        Lecture_func.status({"lecture_id":this.lecture_id, "state_cd":STATE_IN_PROGRESS}, ()=>{
+                            lecture.init();
+                            layer_popup.all_close_layer_popup();
+                        });
+                        
+                    });
+                }   
+            },
+            deactivate:{text:"비활성화", callback:()=>{
+                    show_user_confirm(`"${this.data.name}" 수업을 비활성화 하시겠습니까? <br> 비활성화 탭에서 다시 활성화 할 수 있습니다.`, ()=>{
+                        Lecture_func.status({"lecture_id":this.lecture_id, "state_cd":STATE_END_PROGRESS}, ()=>{
+                            lecture.init();
+                            layer_popup.all_close_layer_popup();
+                        });
+                        
+                    });
+                }   
+            },
+            delete:{text:"삭제", callback:()=>{
+                    show_user_confirm(`"${this.data.name}" 수업을 영구 삭제 하시겠습니까? <br> 데이터를 복구할 수 없습니다.`, ()=>{
+                        Lecture_func.delete({"lecture_id":this.lecture_id}, ()=>{
+                            lecture.init();
+                            layer_popup.all_close_layer_popup();
+                        });
+                    });
+                }
+            }
         };
+
+        if(this.data.lecture_state == STATE_IN_PROGRESS){
+            delete user_option.activate;
+            delete user_option.delete;
+        }else if(this.data.lecture_state == STATE_END_PROGRESS){
+            delete user_option.deactivate;
+        }
         
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);

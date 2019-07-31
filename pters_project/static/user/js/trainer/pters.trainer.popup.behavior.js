@@ -38,7 +38,6 @@ let layer_popup = (function (){
             $popup_name_selector.remove();
             popup_data = {};
         }
-        // console.log("popup_data",popup_data)
         return popup_data;
     }
 
@@ -85,7 +84,6 @@ let layer_popup = (function (){
         }
 
         $('.content_page').css('overflow-y', 'auto');
-        
         return popup_data;
     }
 
@@ -146,13 +144,12 @@ let layer_popup = (function (){
         },
         "all_close_layer_popup": function () {
             let popup_data = func_all_close_layer_popup();
-            console.log(popup_data)
             this.animation_set(CLOSE, popup_data);
         },
 
         "animation_set": function (option, popup_data){
             //비어 있는 경우 동작 안되도록 설정;
-            if(popup_data==undefined || !Object.keys(popup_data).length){
+            if(popup_data==undefined || !Object.keys(popup_data).length){                
                 location.reload();
             }else{
                 // let animation_flag = func_get_animation_flag(popup_data.popup_size);

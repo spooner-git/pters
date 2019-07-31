@@ -247,14 +247,14 @@ class Member_view{
             icon_r_visible = SHOW;
             onclick = ()=>{alert('연결 되어있지 않음');};
         }
-        let html = CComponent.create_row ('member_name', this.data.name == null ? '회원명*' : this.data.name, '/static/common/icon/person_black.png', SHOW, ()=>{
+        let html = CComponent.create_row ('member_name_view', this.data.name == null ? '회원명*' : this.data.name, '/static/common/icon/person_black.png', SHOW, ()=>{
             onclick();
         });
         return html;
     }
 
     dom_row_member_phone_input(){
-        let html = CComponent.create_input_number_row ('member_phone', this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone, '/static/common/icon/icon_smartphone.png', HIDE, true, (input_data)=>{
+        let html = CComponent.create_input_number_row ('member_phone_view', this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone, '/static/common/icon/icon_smartphone.png', HIDE, true, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
         });
@@ -263,7 +263,7 @@ class Member_view{
 
     dom_row_member_birth_input(){
         //등록하는 행을 만든다.
-        let html = CComponent.create_input_number_row ('member_birth', this.data.birth == null || this.data.birth == 'None' ? '미입력 (생년월일)' : this.data.birth, '/static/common/icon/icon_cake.png', HIDE, true, (input_data)=>{
+        let html = CComponent.create_input_number_row ('member_birth_view', this.data.birth == null || this.data.birth == 'None' ? '미입력 (생년월일)' : this.data.birth, '/static/common/icon/icon_cake.png', HIDE, true, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
         });
@@ -271,14 +271,14 @@ class Member_view{
     }
 
     dom_row_member_sex_input(){
-        let html = CComponent.create_row ('member_sex', this.data.sex == null || this.data.sex == 'None' ? '미입력 (성별)' : this.data.sex, '/static/common/icon/person_black.png', HIDE, ()=>{
+        let html = CComponent.create_row ('member_sex_view', this.data.sex == null || this.data.sex == 'None' ? '미입력 (성별)' : this.data.sex, '/static/common/icon/person_black.png', HIDE, ()=>{
             
         });
         return html;
     }
 
     dom_row_member_memo_input(){
-        let html = CComponent.create_input_row ('member_memo', this.data.memo == null ? '특이사항' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, true, (input_data)=>{
+        let html = CComponent.create_input_row ('member_memo_view', this.data.memo == null ? '특이사항' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, true, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });
@@ -348,8 +348,25 @@ class Member_view{
 
     upper_right_menu(){
         let user_option = {
-            deactivate:{text:"비활성화", callback:()=>{alert('작업중');layer_popup.close_layer_popup();}},
-            delete:{text:"삭제", callback:()=>{alert('작업중');layer_popup.close_layer_popup();}}
+            // deactivate:{text:"비활성화", callback:()=>{
+            //                                             show_user_confirm(`${this.data.name} 님을 비활성화 하시겠습니까? <br> 비활성화 탭에서 다시 활성화 할 수 있습니다.`, ()=>{
+            //                                                 Member_func.delete({"schedule_id":this.schedule_id}, ()=>{
+            //                                                     calendar.init();layer_popup.all_close_layer_popup();
+            //                                                 });
+                                                            
+            //                                             });
+            //                                             // layer_popup.close_layer_popup();
+            //                                         }
+            //             },
+            delete:{text:"삭제", callback:()=>{
+                                                show_user_confirm(`"${this.data.name}" 님을 영구 삭제 하시겠습니까? <br> 데이터를 복구할 수 없습니다.`, ()=>{
+                                                    Member_func.delete({"member_id":this.member_id}, ()=>{
+                                                        member.init();layer_popup.all_close_layer_popup();
+                                                    });
+                                                    
+                                                });
+                                            }
+                        }
         };
         
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{

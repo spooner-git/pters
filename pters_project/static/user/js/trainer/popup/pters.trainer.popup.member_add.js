@@ -346,6 +346,9 @@ class Member_add{
     }
 
     send_data(){
+        if(this.check_before_send() == false){
+            return false;
+        }
 
         let data = {
                     "member_id":null,
@@ -362,17 +365,14 @@ class Member_add{
                     "price":this.data.ticket_price
         };
 
-        if(this.check_before_send() == false){
-            return false;
-        }
-
         Member_func.create_pre(data, (received)=>{
             data.member_id = received.user_db_id[0];
             Member_func.create(data, ()=>{
-                layer_popup.close_layer_popup();
+                // layer_popup.close_layer_popup();
                 member.init();
             });
         });
+        layer_popup.close_layer_popup();
     }
 
     static_component(){
@@ -395,12 +395,12 @@ class Member_add{
             show_error_message('등록할 수강권을 선택 해주세요.');
             return false;
         }
-        if(this.data.start_date.length == 0){
-            show_error_message('등록할 수강권을 선택 해주세요.');
+        if(this.data.start_date == null){
+            show_error_message('시작일을 입력 해주세요.');
             return false;
         }
-        if(this.data.end_date.length == 0){
-            show_error_message('등록할 수강권을 선택 해주세요.');
+        if(this.data.end_date == null){
+            show_error_message('종료일을 입력 해주세요.');
             return false;
         }
         if(this.data.ticket_reg_count == null){

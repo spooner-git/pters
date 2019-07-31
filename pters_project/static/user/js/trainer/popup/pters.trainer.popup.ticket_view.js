@@ -27,7 +27,7 @@ class Ticket_view{
             price:null,
             memo:null,
 
-            ticket_state_cd:null,
+            ticket_state:null,
             ticket_day_schedule_enable:null,
             ticket_week_schedule_enable:null,
 
@@ -107,6 +107,7 @@ class Ticket_view{
 
     set_initial_data (){
         Ticket_func.read({"ticket_id": this.ticket_id}, (data)=>{
+            console.log(data);
             this.data.name = data.ticket_info.ticket_name;
             this.data.lecture_id = data.ticket_info.ticket_lecture_id_list;
             this.data.lecture_name = data.ticket_info.ticket_lecture_list;
@@ -117,7 +118,7 @@ class Ticket_view{
             this.data.price = data.ticket_info.ticket_price;
             this.data.memo = data.ticket_info.ticket_note;
             
-            this.data.ticket_state_cd = data.ticket_info.ticket_state_cd;
+            this.data.ticket_state = data.ticket_info.ticket_state_cd;
             this.data.ticket_day_schedule_enable = data.ticket_info.ticket_day_schedule_enable;
             this.data.ticket_week_schedule_enable = data.ticket_info.ticket_week_schedule_enable;
 
@@ -175,7 +176,7 @@ class Ticket_view{
 
     dom_row_lecture_select(){
         let lecture_text = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개';
-        let html = CComponent.create_row('input_lecture_select', lecture_text, '/static/common/icon/icon_book.png', HIDE, ()=>{ 
+        let html = CComponent.create_row('lecture_select_view', lecture_text, '/static/common/icon/icon_book.png', HIDE, ()=>{ 
             // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
             //     lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999);
             // });
@@ -207,7 +208,7 @@ class Ticket_view{
     }
 
     dom_row_ticket_coung_input(){
-        let html = CComponent.create_input_number_row ('input_ticket_count', this.data.count == null ? '횟수' : this.data.count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, true, (input_data)=>{
+        let html = CComponent.create_input_number_row ('ticket_count_view', this.data.count == null ? '횟수' : this.data.count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, true, (input_data)=>{
             // let user_input_data = input_data;
             // this.count = user_input_data;
         });
@@ -215,7 +216,7 @@ class Ticket_view{
     }
 
     dom_row_ticket_price_input(){
-        let html = CComponent.create_input_number_row ('input_ticket_price', this.data.price == null ? '가격' : this.data.price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, true, (input_data)=>{
+        let html = CComponent.create_input_number_row ('ticket_price_view', this.data.price == null ? '가격' : this.data.price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, true, (input_data)=>{
             // let user_input_data = input_data;
             // this.price = user_input_data;
         });
@@ -223,7 +224,7 @@ class Ticket_view{
     }
 
     dom_row_ticket_memo_input(){
-        let html = CComponent.create_input_row ('input_ticket_memo', this.data.memo == null ? '설명' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, true, (input_data)=>{
+        let html = CComponent.create_input_row ('ticket_memo_view', this.data.memo == null ? '설명' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, true, (input_data)=>{
             // let user_input_data = input_data;
             // this.memo = user_input_data;
         });
@@ -232,7 +233,7 @@ class Ticket_view{
 
     dom_row_reg_mod_date(){
         let icon_button_style = {"display":"block", "padding":0, "font-size":"12px"};
-        let html1 = CComponent.icon_button('reg_date', `등록 ${this.data.ticket_reg_dt}`, NONE, icon_button_style, ()=>{});
+        let html1 = CComponent.icon_button('reg_date_view', `등록 ${this.data.ticket_reg_dt}`, NONE, icon_button_style, ()=>{});
         // let html2 = CComponent.icon_button('mod_date', `수정 ${this.data.ticket_mod_dt}`, NONE, icon_button_style, ()=>{});
         let html = html1;
         return html;
@@ -240,7 +241,7 @@ class Ticket_view{
 
     dom_row_member(){
         let member_text = this.data.member_id.length == 0 ? '진행중인 회원' : '진행중인 회원 ('+this.data.member_id.length+' 명)';
-        let html = CComponent.create_row('ing_member', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
+        let html = CComponent.create_row('ing_member_view', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
         return html;
     }
 
@@ -295,9 +296,44 @@ class Ticket_view{
 
     upper_right_menu(){
         let user_option = {
-            deactivate:{text:"비활성화", callback:()=>{alert('작업중');layer_popup.close_layer_popup();}},
-            delete:{text:"삭제", callback:()=>{alert('작업중');layer_popup.close_layer_popup();}}
+            activate:{text:"활성화", callback:()=>{
+                    show_user_confirm(`"${this.data.name}" 수강권을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
+                        Ticket_func.status({"ticket_id":this.ticket_id, "state_cd":STATE_IN_PROGRESS}, ()=>{
+                            ticket.init();
+                            layer_popup.all_close_layer_popup();
+                        });
+                        
+                    });
+                }   
+            },
+            deactivate:{text:"비활성화", callback:()=>{
+                    show_user_confirm(`"${this.data.name}" 수강권을 비활성화 하시겠습니까? <br> 비활성화 탭에서 다시 활성화 할 수 있습니다.`, ()=>{
+                        Ticket_func.status({"ticket_id":this.ticket_id, "state_cd":STATE_END_PROGRESS}, ()=>{
+                            ticket.init();
+                            layer_popup.all_close_layer_popup();
+                        });
+                        
+                    });
+                }   
+            },
+            delete:{text:"삭제", callback:()=>{
+                    show_user_confirm(`"${this.data.name}" 수강권을 영구 삭제 하시겠습니까? <br> 데이터를 복구할 수 없습니다.`, ()=>{
+                        Ticket_func.delete({"ticket_id":this.ticket_id}, ()=>{
+                            ticket.init();
+                            layer_popup.all_close_layer_popup();
+                        });
+                        
+                    });
+                }
+            }
         };
+
+        if(this.data.ticket_state == STATE_IN_PROGRESS){
+            delete user_option.activate;
+            delete user_option.delete;
+        }else if(this.data.ticket_state == STATE_END_PROGRESS){
+            delete user_option.deactivate;
+        }
         
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);

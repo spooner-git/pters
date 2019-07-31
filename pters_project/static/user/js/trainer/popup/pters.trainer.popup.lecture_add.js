@@ -206,9 +206,10 @@ class Lecture_add{
         }
 
         Lecture_func.create(data, ()=>{
-            layer_popup.close_layer_popup();
+            // layer_popup.close_layer_popup();
             lecture.init();
         });
+        layer_popup.close_layer_popup();
     }
 
     static_component(){

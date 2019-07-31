@@ -276,12 +276,11 @@ class Lecture_func{
     
             //보내기후 팝업창 닫기
             complete:function(data){
-                callback(data)
             },
     
             //통신성공시 처리
             success:function(data){
-                callback();
+                callback(data);
             },
     
             //통신 실패시 처리
@@ -389,7 +388,6 @@ class Lecture_func{
 
     static update_fixed_member(data, callback){
         // lecture_id, member_id
-        console.log("update_fixed_member", data);
         $.ajax({
             url:'/trainer/update_fix_lecture_member/',
             type:'POST',
