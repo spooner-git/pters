@@ -122,8 +122,7 @@ class Lecture_add{
         let color = this.dom_row_color_select();
 
         let html =  '<div class="obj_box_full">'+CComponent.dom_tag('수업명') + name+'</div>' + 
-                    '<div class="obj_box_full">'+CComponent.dom_tag('정원') + capacity + '<div class="gap"></div>' +
-                                                 CComponent.dom_tag('고정 회원') + fixed_member+fixed_member_list+ '</div>' + 
+                    '<div class="obj_box_full">'+CComponent.dom_tag('정원') + capacity + '</div>' + 
                     '<div class="obj_box_full">'+CComponent.dom_tag('색상')+ color+ '</div>';
 
         return html;
