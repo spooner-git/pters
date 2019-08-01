@@ -19,7 +19,7 @@
 
             <div class="registration_content" style="margin-top:20px; min-height:calc(100% - 181px);">
 
-                <!-- PTERS 로그인 버튼 노출 영역 -->
+                <!-- 그룹 타입 선택 영역 -->
                 <div class="group_select_box_on" id="group_select_trainer_box" onclick="check_group_select('trainer');">
                     강사
                 </div>
@@ -27,6 +27,8 @@
                     회원
                 </div>
                 <div style="width:320px; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
+
+                <!-- 약관 동의 영역 -->
                 <div class="contract">
                     <span class="all_contract">전체 약관에 동의</span>
                     <div class="contract_select_box" onclick="select_contract('all');">
@@ -47,8 +49,9 @@
                 </div>
             </div>
 
+            <!-- 가입 완료 버튼 노출 영역 -->
             <div class="registration_foot">
-                <div class="social_login_box" onclick="document.getElementById('sns-form').submit();" style="background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
+                <div class="social_login_box" onclick="sns_add_member();" style="background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
                     <div class="social_login_img"></div>
                     <span class="social_login_text" style="color:#ffffff;">가입 완료</span>
                     <div style="display:table-cell; width:60px;"></div>
@@ -75,68 +78,15 @@
 {% endblock %}
 
 {% block local_js_footer %}
-    <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
-    <script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-    <script>
-
-{#    $(window).resize(function(){#}
-{#        console.log('window:'+$(this).height());#}
-{#        console.log('ccla:'+Number($('.registration_content').height() + $('.registration_foot').height()));#}
-{#        if(Number($(this).height()) < Number(320 + $('.registration_foot').height())){#}
-{#            console.log('test');#}
-{#            $('.registration_foot').css('transform', 'initial');#}
-{#        }else{#}
-{#            $('.registration_foot').css('transform', 'translate(0px, -100%)');#}
-{#        }#}
-{#    });#}
-    function check_group_select(group_type) {
-        $('#id_group_type').val(group_type);
-        if (group_type == 'trainer') {
-            $('#group_select_trainer_box').attr('class', 'group_select_box_on');
-            $('#group_select_trainee_box').attr('class', 'group_select_box_off');
-        } else {
-            $('#group_select_trainer_box').attr('class', 'group_select_box_off');
-            $('#group_select_trainee_box').attr('class', 'group_select_box_on');
-        }
-    }
-    function select_contract(contract_type){
-        let all_contract = $('#all_contract');
-        let contract_selector = $(`#${contract_type}`);
-        let contract_select_check = $('.contract_select_check');
-        let contract_detail_select_check = $('.contract_detail_select_check');
-        let policy = $('#policy');
-        let privacy = $('#privacy');
-        let compare_contract = policy;
-
-        if(policy.selector==contract_selector.selector){
-            compare_contract = privacy;
-        }else{
-            compare_contract = policy;
-        }
-
-        if(contract_type=='all'){
-            if(all_contract.attr('data-check')=='false'){
-                contract_select_check.attr('data-check', 'true');
-                contract_select_check.text('v');
-            }else{
-                contract_select_check.attr('data-check', 'false');
-                contract_select_check.text('');
+    <script type="text/javascript" src="{% static_url "/user/js/login/login.registration.js" %}"></script>
+    <script type="text/javascript">
+        function sns_add_member() {
+            if($('#all_contract').attr('data-check')=='true'){
+                document.getElementById('sns-form').submit();
             }
-        }else{
-            if(contract_selector.attr('data-check')=='false'){
-                contract_selector.attr('data-check', 'true');
-                contract_selector.text('v');
-                if(compare_contract.attr('data-check')=='true'){
-                    all_contract.attr('data-check', 'true');
-                    all_contract.text('v');
-                }
-            }else{
-                contract_selector.attr('data-check', 'false');
-                contract_selector.text('');
-                all_contract.attr('data-check', 'false');
-                all_contract.text('');
+            else{
+                alert('약관에 동의해주세요.')
             }
         }
-    }
     </script>
 {% endblock %}

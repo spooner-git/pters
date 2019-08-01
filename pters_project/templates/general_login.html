@@ -47,21 +47,23 @@
 
                     <div style="width:320px; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
 
-                    <!-- PTERS 로그인 버튼 노출 영역 -->
+                    <!-- PTERS 로그인 입력 영역 -->
                     <div>
                         <input class="pters_login_input" type="text" name="username" id="username_id" placeholder="아이디" autofocus>
                     </div>
                     <div style="margin-top:8px;">
                         <input class="pters_login_input" type="password" name="password" id="password_id" placeholder="비밀번호">
                     </div>
+                    <!-- PTERS 로그인 버튼 노출 영역 -->
                     <div class="social_login_box" onclick="document.getElementById('login-form').submit();" style="background-color: #fe4e65; margin-top:12px;">
                         <div class="social_login_img"></div>
                         <span class="social_login_text" style="color:#ffffff;">로그인</span>
                         <div style="display:table-cell; width:60px;"></div>
                     </div>
 
+
                     <div style="width:320px; height: 1px;background:#f5f2f3; margin-top: 16px; margin-bottom: 8px;"></div>
-                    <!-- 회원가입, 일반 로그인 버튼 노출 영역역 -->
+                    <!-- 회원가입, 비밀번호 재설정 버튼 노출 영역 -->
                     <div style="display:table; width:100%; height: 48px; margin-bottom:20px;">
                         <div class="general_text" style="color:#858282;" onclick="location.href='{% url 'login:registration_check' %}'">회원 가입</div>
                         <div class="general_text" style="color:#858282;" onclick="location.href='{% url 'login:reset_password' %}'">비밀번호 재설정</div>

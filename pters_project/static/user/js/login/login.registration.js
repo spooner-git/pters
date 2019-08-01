@@ -17,6 +17,9 @@ $(document).ready(function() {
         }
         did_scroll = false;
     });
+    $('#id_username').focusout(function(){
+        check_username($(this).val());
+    });
 
 });
 
@@ -70,7 +73,7 @@ function select_contract(contract_type) {
         compare_contract = policy;
     }
 
-    if (contract_type == 'all') {
+    if (contract_type == 'all_contract') {
         if (all_contract.attr('data-check') == 'false') {
             contract_select_check.attr('data-check', 'true');
             contract_select_check.text('v');
@@ -161,4 +164,38 @@ function password_check(){
         $('#id_password_re_default_confirm').css('color', '#fe4e65');
     }
 
+}
+
+
+// 회원 아이디 중복 검사(with backend)
+function check_username(data){
+    $.ajax({
+        url:'/login/check_member_username/',
+        type:'POST',
+        data:{"username" : data },
+        dataType : 'html',
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            let jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                $('#id_username_confirm').text(jsondata.messageArray).css({'display':'block'});
+            }else{
+                $('#id_username_confirm').text('');
+            }
+        },
+        //보내기후 팝업창 닫기
+        complete:function(){
+        },
+        //통신 실패시 처리
+        error:function(){
+            alert("에러: 서버 통신 실패")
+        }
+    });
 }
