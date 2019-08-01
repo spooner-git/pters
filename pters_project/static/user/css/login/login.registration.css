@@ -1,3 +1,7 @@
+html{
+    font-family: NotoSansCJKkr;
+}
+
 #errorMessageBar{
     display: block;
     width: 100%;
@@ -58,7 +62,6 @@
 .social_login_text{
     width: 200px;
     height: 48px;
-    font-family: NotoSansCJKkr;
     font-size: 15px;
     font-weight: 500;
     font-style: normal;
@@ -74,7 +77,6 @@
     display:table-cell;
     width: 50%;
     height: 48px;
-    font-family: NotoSansCJKkr;
     font-size: 13px;
     font-weight: 500;
     font-style: normal;
@@ -106,11 +108,18 @@
     height: 46px;
     border-radius: 2px;
     border: solid 1px #d6d2d2;
-    padding:0px;
+    padding: 0;
     text-indent: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: -0.5px;
+    color: #3d3b3b;
 }
+
 .pters_login_input::-webkit-input-placeholder {
-    font-family: NotoSansCJKkr;
     font-size: 15px;
     font-weight: normal;
     font-style: normal;
@@ -131,7 +140,6 @@
 .pters_description{
     width: 320px;
     height: 100px;
-    font-family: NotoSansCJKkr;
     font-size: 20px;
     font-weight: bold;
     font-style: normal;
@@ -169,7 +177,6 @@
 .registration_title{
     width: 200px;
     height: 24px;
-    font-family: NotoSansCJKkr;
     font-size: 15px;
     font-weight: 500;
     font-style: normal;
@@ -207,15 +214,15 @@
 
 
 .group_select_box_on{
+    display:inline-block;
     width: 154px;
-    height: 48px;
-    line-height: 47px;
+    height: 46px;
+    line-height: 46px;
     border-radius: 2px;
     background-color: #fe4e65;
-    display:inline-block;
+    border: 1px solid #fe4e65;
     cursor: pointer;
     text-align: center;
-    font-family: NotoSansCJKkr;
     font-size: 15px;
     font-weight: bold;
     font-style: normal;
@@ -224,16 +231,15 @@
     color: #ffffff;
 }
 .group_select_box_off{
+    display:inline-block;
     width: 154px;
     height: 46px;
     line-height: 46px;
     border-radius: 2px;
     background-color:#ffffff;
     border: 1px solid #d6d2d2;
-    display:inline-block;
     cursor: pointer;
     text-align: center;
-    font-family: NotoSansCJKkr;
     font-size: 15px;
     font-weight:500;
     font-style: normal;
@@ -253,7 +259,6 @@
 .all_contract{
     width: 268px;
     height: 24px;
-    font-family: NotoSansCJKkr;
     font-size: 15px;
     font-weight: bold;
     font-style: normal;
@@ -265,7 +270,6 @@
 .detail_contract{
     width: 268px;
     height: 20px;
-    font-family: NotoSansCJKkr;
     font-size: 13px;
     font-weight: 500;
     font-style: normal;

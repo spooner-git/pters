@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm, PasswordChangeForm
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.contrib.auth.views import deprecate_current_app
 from django.contrib.sites.shortcuts import get_current_site
 from django.core import signing
@@ -976,43 +977,6 @@ class AddMemberNoEmailView(View):
             return render(request, self.template_name, {'username': context['username'],
                                                         'user_db_id': context['user_db_id']})
 
-
-class CheckMemberIdView(TemplateView):
-    template_name = 'ajax/id_check_ajax.html'
-    error = ''
-
-    def get_context_data(self, **kwargs):
-        context = super(CheckMemberIdView, self).get_context_data(**kwargs)
-        user_id = self.request.GET.get('id', '')
-        form = RegistrationForm(self.request.GET, self.request.FILES)
-        if user_id is None or user_id == '':
-            self.error = 'ID를 입력해주세요.'
-        else:
-            if form.is_valid():
-                if User.objects.filter(username=user_id).exists():
-                    self.error = '사용 불가'
-            else:
-                for field in form:
-                    if field.errors:
-                        for err in field.errors:
-                            if self.error is None or self.error == '':
-                                if field.name == 'username':
-                                    self.error = err
-                                else:
-                                    self.error = ''
-                            else:
-                                if field.name == 'username':
-                                    self.error += err
-
-        if self.error != '':
-            self.error = self.error.replace("이름", "ID")
-            if self.error == '해당 사용자 ID은 이미 존재합니다.':
-                self.error = '사용 불가'
-
-        if self.error != '':
-            context['error'] = self.error
-
-        return context
 
 
 class CheckMemberEmailView(TemplateView):
@@ -2111,3 +2075,26 @@ def func_send_sms_reset_password(phone, contents):
         error = '비정상적인 접근입니다.[2-1]'
 
     return error
+
+
+class CheckMemberUsernameView(View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request):
+        username = request.POST.get('username', '')
+        error = ''
+        if username is None or username == '':
+            error = '아이디를 입력해주세요.'
+
+        if error == '':
+            if User.objects.filter(username=username).exists():
+                error = '중복된 아이디 입니다.'
+
+        if error == '':
+            form = MyRegistrationForm(request.POST, request.FILES)
+            if len(form['username'].errors) > 0:
+                error = form['username'].errors[0]
+
+        if error != '':
+            messages.error(request, error)
+        return render(request, self.template_name)

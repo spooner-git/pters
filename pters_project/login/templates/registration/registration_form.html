@@ -22,6 +22,19 @@
             text-align: center;
             color: #b8b4b4;
         }
+        .input_description{
+            width: 100%;
+            margin-top:5px;
+            margin-bottom:10px;
+            text-indent: 10px;
+            font-size: 12px;
+            font-weight: 500;
+            font-style: normal;
+            font-stretch: normal;
+        }
+        .input_description_text{
+            color: #fe4e65;
+        }
     </style>
 {% endblock %}
 {% block content %}
@@ -62,29 +75,51 @@
                 </div>
 
                 <div style="margin-top:8px;">
-                    <input class="pters_login_input" type="text" name="name" id="name_id" placeholder="이름" autofocus>
+                    <input class="pters_login_input" type="text" name="name" id="id_name" placeholder="이름" minlength="2" maxlength="8"
+                           pattern="[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]" onkeyup="limit_char_check(event);" autofocus>
+                    <div class="input_description">
+                        <div class="input_description_text" id="id_name_confirm"></div>
+                        <div id="id_name_default_confirm"> -_ 제외 특수문자 불가</div>
+                    </div>
                 </div>
                 <div style="margin-top:8px;">
-                    <input class="pters_login_input" type="text" name="username" id="username_id" placeholder="아이디">
-                </div>
-                <div style="margin-top:8px;">
-                    <input class="pters_login_input" type="password" name="password" id="password_id" placeholder="비밀번호">
-                </div>
-                <div style="margin-top:8px;">
-                    <input class="pters_login_input" type="password" name="password_re" id="password_re_id" placeholder="비밀번호 확인">
+                    <input class="pters_login_input" type="text" name="username" id="id_username" placeholder="아이디" minlength="4" maxlength="20"
+                           pattern="[^a-zA-Z0-9-._@]" onkeyup="limit_char_check(event);">
+                    <div class="input_description">
+                        <div class="input_description_text" id="id_username_confirm"></div>
+                        <div id="id_username_default_confirm">영어, 숫자, -_@ 제외 불가</div>
+                    </div>
                 </div>
 
                 <div style="margin-top:8px;">
-                    <input class="pters_login_input" type="text" name="phone" id="phone_id"
-                           placeholder="휴대폰 번호" maxlength="11" autocomplete="off" style="width:232px;">
-                    <div class="auth_button" id="id_auth_button" onclick="activate_sms();">인증</div>
-                    <span class="sms_confirm"></span>
+                    <input class="pters_login_input" type="password" name="password" id="id_password" placeholder="비밀번호" minlength="8" maxlength="20"
+                            pattern="[^a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\/]" onkeyup="limit_password_check(event);">
+                    <div class="input_description">
+                        <div class="input_description_text" id="id_password_confirm"></div>
+                        <div id="id_password_default_confirm">한글을 제외한 특수문자(공백 제외)/영문/숫자를 혼합</div>
+                    </div>
                 </div>
                 <div style="margin-top:8px;">
-                    <input class="pters_login_input" type="text" name="activation_code" id="id_activation_code"
-                           placeholder="인증 번호" style="width:232px;">
+                    <input class="pters_login_input" type="password" name="password_re" id="id_password_re" placeholder="비밀번호 확인" minlength="8" maxlength="20"
+                            onkeyup="password_check(event);">
+                    <div class="input_description">
+                        <div class="input_description_text" id="id_password_re_confirm"></div>
+                        <div id="id_password_re_default_confirm">동일한 비밀번호 입력</div>
+                    </div>
+                </div>
+
+                <div style="margin-top:8px;">
+                    <input class="pters_login_input" type="text" name="phone" id="id_phone" placeholder="휴대폰 번호" minlength="10" maxlength="11"
+                           autocomplete="off" style="width:232px;" pattern="[^0-9]" onkeyup="limit_char_auto_correction(event);">
+                    <div class="auth_button" id="id_auth_button" onclick="activate_sms();">인증</div>
+                    <div id="id_phone_confirm"></div>
+                </div>
+
+                <div style="margin-top:8px;">
+                    <input class="pters_login_input" type="text" name="activation_code" id="id_activation_code" placeholder="인증 번호" maxlength="8"
+                           style="width:232px;" pattern="[^0-9]" onkeyup="limit_char_auto_correction(event);">
                     <div class="auth_button" id="sms_auth_code">확인</div>
-                    <span id="auth_timer" style="display:none; width:30%; text-align:right; padding-right:16px;">03:00</span>
+                    <div id="auth_timer" style="display:none; width:30%; text-align:right; padding-right:16px;">03:00</div>
                 </div>
 
                 <div style="width:320px; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
@@ -134,103 +169,51 @@
 {% endblock %}
 
 {% block local_js_footer %}
-
+    <script type="text/javascript" src="{% static_url "/user/js/login/login.registration.js" %}"></script>
     <script type="text/javascript">
-
-        let did_scroll; // 스크롤시에 사용자가 스크롤했다는 것을 알림
-        let delta = 4; // 스크롤시 감도 (낮으면 자주 발생)
-        let last_scroll_top = 0; // 마지막 스크롤된 위치 저장
-
-        // 스크롤 이벤트 처리
-        $('#root_content').scroll(function(){
-            // 중복되지 않도록 semaphore
-            did_scroll = true;
-            if (did_scroll) {
-                checkScrolled();
-            }
-            did_scroll = false;
-        });
-
-        // 스크롤 방향을 검사해서 회원가입 명칭 띄워주기
-        function checkScrolled() {
-            let current_scroll_top = $('#root_content').scrollTop();
-            // 스크롤 변화량이 delta 값이 넘지 않으면 return
-            if(Math.abs(last_scroll_top - current_scroll_top) < delta){
-                return;
-            }
-
-            if (current_scroll_top > last_scroll_top){
-                // 스크롤 다운(아래로)
-                if(current_scroll_top > 10){
-                    $('.registration_title').css('display', 'table-cell');
-                    $('.registration_content_title').css('display', 'none');
-                }
-            }else{
-                // 스크롤 다운(위로)
-                if(current_scroll_top  < 24) {
-                    $('.registration_title').css('display', 'none');
-                    $('.registration_content_title').css('display', 'block');
-                }
-            }
-            last_scroll_top = current_scroll_top;
-        }
-
-
-        function check_group_select(group_type) {
-            $('#id_group_type').val(group_type);
-            if (group_type == 'trainer') {
-                $('#group_select_trainer_box').attr('class', 'group_select_box_on');
-                $('#group_select_trainee_box').attr('class', 'group_select_box_off');
-            } else {
-                $('#group_select_trainer_box').attr('class', 'group_select_box_off');
-                $('#group_select_trainee_box').attr('class', 'group_select_box_on');
-            }
-        }
-        function select_contract(contract_type){
-            let all_contract = $('#all_contract');
-            let contract_selector = $(`#${contract_type}`);
-            let contract_select_check = $('.contract_select_check');
-            let contract_detail_select_check = $('.contract_detail_select_check');
-            let policy = $('#policy');
-            let privacy = $('#privacy');
-            let compare_contract = policy;
-
-            if(policy.selector==contract_selector.selector){
-                compare_contract = privacy;
-            }else{
-                compare_contract = policy;
-            }
-
-            if(contract_type=='all'){
-                if(all_contract.attr('data-check')=='false'){
-                    contract_select_check.attr('data-check', 'true');
-                    contract_select_check.text('v');
-                }else{
-                    contract_select_check.attr('data-check', 'false');
-                    contract_select_check.text('');
-                }
-            }else{
-                if(contract_selector.attr('data-check')=='false'){
-                    contract_selector.attr('data-check', 'true');
-                    contract_selector.text('v');
-                    if(compare_contract.attr('data-check')=='true'){
-                        all_contract.attr('data-check', 'true');
-                        all_contract.text('v');
-                    }
-                }else{
-                    contract_selector.attr('data-check', 'false');
-                    contract_selector.text('');
-                    all_contract.attr('data-check', 'false');
-                    all_contract.text('');
-                }
-            }
-        }
 
         let activation_timer = 180;
         let activation_check = false;
 
+        // 회원 아이디 검사(with backend)
         var $form = $('#add-member-id-form');
+        $('#id_username').focusout(function(){
+            check_username($(this).val());
+        });
 
+        function check_username(data){
+            $.ajax({
+                url:'/login/check_member_username/',
+                type:'POST',
+                data:{"username" : data },
+                dataType : 'html',
+
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    let jsondata = JSON.parse(data);
+                    console.log(jsondata);
+                    if(jsondata.messageArray.length>0){
+                        console.log(jsondata.messageArray);
+                        $('#id_username_confirm').text(jsondata.messageArray).css({'display':'block'});
+                    }else{
+                        $('#id_username_confirm').text('');
+                    }
+                },
+                //보내기후 팝업창 닫기
+                complete:function(){
+                },
+                //통신 실패시 처리
+                error:function(){
+                    alert("에러: 서버 통신 실패")
+                }
+            });
+        }
 
         $('button#registerMember').click(function(){
             limit_char('#familyname_input');
@@ -328,16 +311,6 @@
         }
 
 
-        $('#id_input').keyup(function(){
-            $('.id_confirm').text('');
-            $('#id_duplicate_check').val('none');
-            var userinput = $(this).val();
-            $('#id_username').attr('value',userinput);
-            var test_val = document.getElementsByName('username');
-            test_val.value = userinput;
-            $('#newid2').attr('value',userinput);
-            check_id();
-        });
 
         $('#pw_input').keyup(function(){
             $('#pw_input_re').val("");
@@ -386,9 +359,6 @@
             }
         });
 
-        $('#id_phone_input').keyup(function(event){
-            event.target.value = event.target.value.replace(/[^0-9]/g, "");
-        });
 
         $('button#registerMemberFinal').click(function(){
             if($('#all_contract').attr('data-check')=='true'){
@@ -429,19 +399,6 @@
         });
 
         //특수문자 입력 제한
-        var limit_char_check = true;
-        function limit_char(e){
-            //var limit =  /[\[\]~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\＠§※☆★○●◎◇◆□■△▲▽▼→←↑↓↔〓◁◀▷▶♤♠♡♥♧♣⊙◈▣◐◑▒▤▥▨▧▦▩♨☏☎☜☞¶†‡↕↗↙↖↘♭♩♪♬㉿㈜№㏇™㏂㏘℡]/gi;
-            var limit =  /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]/gi;
-            var temp = $(e).val();
-            if(limit.test(temp)){
-                $(e).val(temp.replace(limit, ""));
-                alert("이름에 - 와 _ 를 제외한 특수문자는 입력하실 수 없습니다.");
-                limit_char_check = false;
-            }else{
-              limit_char_check = true;
-            }
-        }
 
         function memberInfo_add(data){
             var jsondata = JSON.parse(data);
@@ -452,53 +409,6 @@
             }else{
                 alert('가입이 완료되었습니다. 로그인 해주세요');
                 location.href="{% url 'login:logout' %}";
-            }
-        }
-
-        function check_id(){
-            var inputLimit = /^[A-Za-z]+[a-z0-9.-_]{3,19}$/g;
-            var userIDinput = $('#id_input').val();
-            if(inputLimit.test(userIDinput)!=true){
-{#                alert('4자이상 20자 이내 영문과 숫자, 허용된 특수문자만 입력해주세요. \n 아이디는 반드시 영문으로 시작 해야합니다.');#}
-                $('.id_confirm').text('사용 불가').css({'display':'inline','color':'#fe4e65'});
-                $('#add-member-id-form').find('#id_duplicate_check').val(0);
-            }else{
-                var $form = $('#add-member-id-form');
-                var serializeArray = $form.serializeArray();
-                $.ajax({
-                    url:'/login/check_member_id/',
-                    type:'GET',
-                    //data:{"id" : $('#id_input').val() },
-                    data:serializeArray,
-                    dataType : 'html',
-
-                    beforeSend:function(){
-                    },
-
-                    //통신성공시 처리
-                    success:function(data){
-                        var jsondata = JSON.parse(data);
-                        var id_check_message = jsondata.id_check_result;
-                        if(id_check_message[0].length>0){
-                            var error_msg = id_check_message[0];
-                            $('.id_confirm').text(error_msg).css({'display':'inline','color':'#fe4e65'});
-                            $form.find('#id_duplicate_check').val(0);
-                        }else{
-                            $('.id_confirm').text('사용 가능').css({'display':'inline','color':'green'});
-                            $form.find('#id_duplicate_check').val(1);
-                        }
-                    },
-
-                    //보내기후 팝업창 닫기
-                    complete:function(){
-
-                    },
-
-                    //통신 실패시 처리
-                    error:function(){
-                        alert("에러: 서버 통신 실패")
-                    }
-                })
             }
         }
 
@@ -542,7 +452,7 @@
         var auth_time_interval;
        function activate_sms(){
            if(activation_check == false){
-                $('.sms_confirm').text(" ").css({'display':'none'});
+                $('#id_phone_confirm').text(" ").css({'display':'none'});
                 $('#auth_timer').text('03:00');
                 activation_timer = 180;
                 activation_check = false;
@@ -574,7 +484,7 @@
                                 if(activation_timer<0){
                                     $('#sms_auth_code').css('display', 'none');
                                     $('#wrapper_id_activation').css('display', 'none');
-                                    $('.sms_confirm').text('인증 시간이 초과되었습니다.').css({'display':'block','color':'#fe4e65'});
+                                    $('#id_phone_confirm').text('인증 시간이 초과되었습니다.').css({'display':'block','color':'#fe4e65'});
                                     clearInterval(auth_time_interval);
                                 }else{
                                     let minutes = parseInt(activation_timer/60);
@@ -624,12 +534,12 @@
                 success:function(data){
                     let jsondata = $.parseJSON(data);
                     if(jsondata.messageArray.length > 0){
-                        $('.sms_confirm').text(jsondata.messageArray).css({'display':'block','color':'#fe4e65'});
+                        $('#id_phone_confirm').text(jsondata.messageArray).css({'display':'block','color':'#fe4e65'});
                     }else{
                         clearInterval(auth_time_interval);
                         $('#sms_auth_code').css('display', 'none');
                         $('#wrapper_id_activation').css('display', 'none');
-                        $('.sms_confirm').text('인증 완료').css({'display':'block','color':'green'});
+                        $('#id_phone_confirm').text('인증 완료').css({'display':'block','color':'green'});
                         alert('인증이 완료되었습니다.');
                         activation_check = true;
                         $('#id_phone_input').attr('disabled', true);
