@@ -315,6 +315,7 @@ class Member_view{
         let html = CComponent.create_input_number_row ('member_phone_view', this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone, '휴대폰 번호', '/static/common/icon/icon_smartphone.png', HIDE, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
+            this.send_data();
         });
         return html;
     }
