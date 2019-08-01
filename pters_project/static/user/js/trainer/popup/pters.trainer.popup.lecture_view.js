@@ -22,9 +22,12 @@ class Lecture_view{
                 capacity:null,
                 member_number:null,
                 member:[],
-                color_bg:null,
-                color_font:null,
-                color_name:null,
+                fixed_member_id:[],
+                fixed_member_name:[],
+                fixed_member_id_original:[],
+                color_bg:[],
+                color_font:[],
+                color_name:[],
                 reg_date:null,
                 mod_date:null,
                 ticket_id:[],
@@ -40,7 +43,7 @@ class Lecture_view{
 
     set name(text){
         this.data.name = text;
-        this.render_content();
+        // this.render_content();
     }
 
     get name(){
@@ -68,7 +71,7 @@ class Lecture_view{
     set member(data){
         this.data.fixed_member_id = data.id;
         this.data.fixed_member_name = data.name;
-        this.render_content();
+        // this.render_content();
     }
 
     get member(){
@@ -79,7 +82,7 @@ class Lecture_view{
         this.data.color_bg = data.bg;
         this.data.color_font = data.font;
         this.data.color_name = data.name;
-        this.render_content();
+        // this.render_content();
     }
 
     get color(){
@@ -100,8 +103,11 @@ class Lecture_view{
             this.data.capacity = data.lecture_max_num;
             this.data.member_number = data.lecture_ing_member_num;
             this.data.member = data.lecture_member_list;
-            this.data.color_bg = data.lecture_ing_color_cd;
-            this.data.color_font = data.lecture_ing_font_color_cd;
+            this.data.fixed_member_id = data.lecture_member_list.filter((el)=>{return el.member_fix_state_cd == FIX ? true : false;}).map((el)=>{return el.member_id;});
+            this.data.fixed_member_id_original = this.data.fixed_member_id.slice(); //나중에 비교를 위해서 복사
+            this.data.fixed_member_name = data.lecture_member_list.filter((el)=>{return el.member_fix_state_cd == FIX ? true : false;}).map((el)=>{return el.member_name;});
+            this.data.color_bg = [data.lecture_ing_color_cd];
+            this.data.color_font = [data.lecture_ing_font_color_cd];
             this.data.reg_date = DateRobot.to_text(data.lecture_reg_dt.split(' ')[0]);
             this.data.mod_date = DateRobot.to_text(data.lecture_mod_dt.split(' ')[0]);
             this.data.ticket_id = data.lecture_ticket_id_list;
@@ -167,11 +173,18 @@ class Lecture_view{
     }
 
     dom_row_toolbox(){
+        let style = {"font-size":"20px", "font-weight":"bold"};
+        let sub_html = CComponent.create_input_row ('lecture_name_view', this.data.name == null ? '' : this.data.name, '수업명*', undefined, HIDE, style, false, (input_data)=>{
+            let user_input_data = input_data;
+            this.name = user_input_data;
+            this.send_data();
+        });
+        
         let html = `
-        <div class="member_add_upper_box" style="padding-bottom:8px;">
-            <div style="display:inline-block;width:200px;">
-                <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold;">${this.data.name}</span>
+        <div class="lecture_view_upper_box" style="padding-bottom:8px;">
+            <div style="display:inline-block;width:320px;">
+                <div style="display:inline-block;width:320px;">
+                    ${sub_html}
                 </div>
             </div>
         </div>
@@ -179,18 +192,29 @@ class Lecture_view{
         return html;
     }
 
+
     dom_row_capacity_view(){
-        let capacity_text = this.data.capacity == null ? '정원' : '정원 '+this.data.capacity+' 명';
-        let html = CComponent.create_row('lecture_capacity_view', capacity_text, '/static/common/icon/people_black.png', HIDE, ()=>{ 
-            
+        let style = null;
+        let html = CComponent.create_input_number_row ('lecture_capacity_view', this.data.capacity == null ? '' : '정원 '+this.data.capacity+'명', '정원', '/static/common/icon/icon_member.png', HIDE, style, false, (input_data)=>{
+            let user_input_data = input_data;
+            if(user_input_data == null){
+                user_input_data = this.data.capacity;
+            }
+            this.capacity = user_input_data;
+            this.send_data();
         });
         return html;
     }
 
     dom_row_color_view(){
-        let color_text = this.data.color_bg == null ? '색상명' : `<span style="background-color:${this.data.color_bg};color:${this.data.color_font};padding:5px;border-radius:4px;">${this.data.color_bg}</span>`;
-        let html = CComponent.create_row('lecture_color_view', color_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
-            
+        let color_text = this.data.color_bg.length == 0 ? '색상 태그' : `<span style="background-color:${this.data.color_bg};color:${this.data.color_font};padding:5px;border-radius:4px;">${COLOR_NAME_CODE[this.data.color_bg]}</span>`;
+        let html = CComponent.create_row('color_select_view', color_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_COLOR_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                color_select = new ColorSelector('#wrapper_box_color_select', this, 1, (set_data)=>{
+                    this.color = set_data;
+                    this.send_data();
+                });
+            });
         });
         return html;
     }
@@ -235,10 +259,21 @@ class Lecture_view{
         return html;
     }
 
-
     dom_row_member(){
         let member_text = this.data.member_number == null ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_number+' 명)';
-        let html = CComponent.create_row('member_number_view', member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{});
+        let html = CComponent.create_row('select_member', member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{
+            //고정 인원 선택
+            if(this.data.capacity != null){
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':this.lecture_id}, (set_data)=>{
+                        this.member = set_data;
+                        this.send_data();
+                    });
+                });
+            }else{
+                show_error_message('정원을 먼저 입력해주세요.');
+            }
+        });
         return html;
     }
 
@@ -254,7 +289,6 @@ class Lecture_view{
             let icon = NONE;
             if(member_fix == FIX){
                 icon = '/static/common/icon/icon_lock.png';
-                // icon_button_style = {"display":"block", "font-size":"13px", "padding":"0", 'color':'#fe4e65'};
             }
             html_to_join.push(
                 CComponent.icon_button(member_id, member_name, icon, icon_button_style, ()=>{
@@ -268,6 +302,27 @@ class Lecture_view{
         let html = `<div>${html_to_join.join('')}</div>`;
 
         return html;
+    }
+
+    send_data(){
+        let data = {
+            "lecture_id":this.lecture_id,
+            "name":this.data.name,
+            "member_num":this.data.capacity,
+            "ing_color_cd":this.data.color_bg[0],
+            "end_color_cd":"",
+            "ing_font_color_cd":this.data.color_font[0],
+            "end_font_color_cd":"",
+        };
+
+        Lecture_func.update(data, ()=>{
+            let fixed_unfixed_members = this.func_update_fixed_member();
+            let data = {"lecture_id":this.lecture_id, "member_ids[]":fixed_unfixed_members};
+            Lecture_func.update_fixed_member(data); //async false 함수
+
+            this.set_initial_data();
+            lecture.init();
+        });
     }
 
     upper_right_menu(){
@@ -313,6 +368,28 @@ class Lecture_view{
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
+    }
+
+    func_update_fixed_member(){
+        let members_changed = [];
+
+        let members = {};
+        let sum_member = this.data.fixed_member_id.concat(this.data.fixed_member_id_original);
+        for(let i=0; i<sum_member.length; i++){
+            members[sum_member[i]] = sum_member[i];
+        }
+        let member_ids = Object.keys(members); //data_original과 data의 lecture_id들을 중복을 제거하고 합친 결과
+
+        let list = this.data.fixed_member_id.slice();
+        let list_original = this.data.fixed_member_id_original.slice();
+
+        let filter_forward = member_ids.filter(val => !list.includes(val));
+        let filter_reverse = member_ids.filter(val => !list_original.includes(val));
+
+        members_changed = filter_forward.concat(filter_reverse);
+
+        //두개 배열에서 중복되는 요소는 제거하고 하나로 만든다.
+        return members_changed;
     }
 }
 

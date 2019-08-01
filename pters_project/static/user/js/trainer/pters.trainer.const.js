@@ -109,4 +109,7 @@ const POPUP_ADDRESS_SPIN_SELECTOR = 'popup_basic_spin_selector';
 
 /*기타 */
 const DAYNAME_KR = ['일', '월', '화', '수', '목', '금', '토'];
+const COLOR_NAME_CODE = {"#fbf3bd":"바나나", "#dbe6f7":"하늘", "#ffd3d9": "복숭아",
+              "#ffe3c2":"살구", "#ceeac4":"키위", "#d8d6ff":"포도",
+              "#ead8f2":"블루베리", "#d9c3ab":"고구마"};
 // const STATE_CODE = {PE:{KR:"완료"}, NP:{KR:"진행 전"}};

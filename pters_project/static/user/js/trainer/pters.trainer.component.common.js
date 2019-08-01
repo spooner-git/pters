@@ -286,7 +286,6 @@ class CComponent{
 
         if(multiple_select > 1){
             $(document).off('click', `#select_color_row_${color_bg_code_without_sharp}`).on('click', `#select_color_row_${color_bg_code_without_sharp}`, function(e){
-                console.log('?')
                 if(!$(this).find('.cell_color_selected img').hasClass('color_selected')){
                     if($('.color_selected').length >= multiple_select){
                         show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);

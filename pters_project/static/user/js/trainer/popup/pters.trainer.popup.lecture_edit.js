@@ -171,7 +171,7 @@ class Lecture_edit{
 
     dom_row_fixed_member_select(){
         let fixed_member_text = this.data.fixed_member_name.length == 0 ? '고정 회원' : '고정회원 '+this.data.fixed_member_id.length+'명 선택됨';
-        let html = CComponent.create_row('select_member', fixed_member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, (data)=>{
+        let html = CComponent.create_row('select_member', fixed_member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{
             if(this.data.capacity != null){
                 layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                     member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':this.lecture_id});

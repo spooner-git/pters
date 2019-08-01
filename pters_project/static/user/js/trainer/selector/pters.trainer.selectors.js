@@ -1247,7 +1247,7 @@ class LectureSelector{
 
     render(){
         let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();lecture_select.clear();" class="obj_icon_prev">`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_select.upper_right_menu();">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
@@ -1317,10 +1317,11 @@ class LectureSelector{
 }
 
 class MemberSelector{
-    constructor(install_target, target_instance, multiple_select, appendix){
-        this.targetHTML = install_target;
+    constructor(install_target, target_instance, multiple_select, appendix, callback){
+        this.target = {install:install_target};
         this.target_instance = target_instance;
         this.received_data;
+        this.callback = callback;
         this.appendix = appendix;
         this.multiple_select = multiple_select;
         this.data = {
@@ -1329,12 +1330,33 @@ class MemberSelector{
         };
         this.data.id = this.target_instance.member.id;
         this.data.name = this.target_instance.member.name;
+        this.init();
+    }
+
+    init(){
         this.request_list(()=>{
-            this.render_list();
+            this.render();
         });
     }
 
-    render_list (){
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();member_select.clear();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_select.upper_right_menu();">완료</span></span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list (){
         let html_to_join = [];
         let length = this.received_data.length;
         if(length == 0){
@@ -1374,7 +1396,8 @@ class MemberSelector{
             html_to_join.push(html);
         }
 
-        document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
     }
 
     request_list (callback){
@@ -1399,12 +1422,19 @@ class MemberSelector{
             });
         }
     }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
 }
 
 class ColorSelector{
-    constructor(install_target, target_instance, multiple_select){
-        this.targetHTML = install_target;
+    constructor(install_target, target_instance, multiple_select, callback){
+        this.target = {install:install_target};
         this.target_instance = target_instance;
+        this.callback = callback;
         this.received_data;
         this.multiple_select = multiple_select;
         this.data = {
@@ -1415,12 +1445,33 @@ class ColorSelector{
         this.data.bg = this.target_instance.color.bg;
         this.data.font = this.target_instance.color.font;
         this.data.name = this.target_instance.color.name;
+        this.init();
+    }
+
+    init(){
         this.request_list(()=>{
-            this.render_list();
+            this.render();
         });
     }
 
-    render_list (){
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();color_select.clear();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="color_select.upper_right_menu();">완료</span></span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list (){
         let html_to_join = [];
         let length = this.received_data.length;
         if(length == 0){
@@ -1430,7 +1481,7 @@ class ColorSelector{
             let data = this.received_data[i];
             let bg_code = data.color_code;
             let font_code = data.color_font_code;
-            let name = data.color_name;
+            let name = COLOR_NAME_CODE[data.color_code];
             let checked = this.target_instance.color.bg.indexOf(bg_code) >= 0 ? 1 : 0; //타겟이 이미 가진 색상 데이터를 get
             let html = CComponent.select_color_row (
                 this.multiple_select, checked, bg_code, font_code, name, (add_or_substract)=>{
@@ -1451,10 +1502,10 @@ class ColorSelector{
                         this.data.name.push(name);
                     }
 
-                    this.target_instance.color = this.data; //타겟에 선택된 데이터를 set
+                    // this.target_instance.color = this.data; //타겟에 선택된 데이터를 set
 
                     if(this.multiple_select == 1){
-                        layer_popup.close_layer_popup();
+                        this.upper_right_menu();
                     }
                         
                 }  
@@ -1462,22 +1513,29 @@ class ColorSelector{
             html_to_join.push(html);
         }
 
-        document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        // document.querySelector(this.target.install).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
     }
 
     request_list (callback){
         let color_data = [
-            {color_code:"#fbf3bd", color_font_code:"#282828", color_name:"#fbf3bd"},
-            {color_code:"#dbe6f7", color_font_code:"#282828", color_name:"#dbe6f7"},
-            {color_code:"#ffd3d9", color_font_code:"#282828", color_name:"#ffd3d9"},
-            {color_code:"#ffe3c2", color_font_code:"#282828", color_name:"ffe3c2"},
-            {color_code:"#ceeac4", color_font_code:"#282828", color_name:"ceeac4"},
-            {color_code:"#d8d6ff", color_font_code:"#282828", color_name:"d8d6ff"},
-            {color_code:"#ead8f2", color_font_code:"#282828", color_name:"ead8f2"},
-            {color_code:"#d9c3ab", color_font_code:"#282828", color_name:"d9c3ab"}
+            {color_code:"#fbf3bd", color_font_code:"#282828"},
+            {color_code:"#dbe6f7", color_font_code:"#282828"},
+            {color_code:"#ffd3d9", color_font_code:"#282828"},
+            {color_code:"#ffe3c2", color_font_code:"#282828"},
+            {color_code:"#ceeac4", color_font_code:"#282828"},
+            {color_code:"#d8d6ff", color_font_code:"#282828"},
+            {color_code:"#ead8f2", color_font_code:"#282828"},
+            {color_code:"#d9c3ab", color_font_code:"#282828"}
         ];
         this.received_data = color_data;
         callback();
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
     }
 }
 
