@@ -140,7 +140,7 @@ class Ticket{
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'ticket_id':${ticket_id}}, ()=>{
                 ticket_view_popup = new Ticket_view('.popup_ticket_view', ${ticket_id}, 'ticket_view_popup');});`;
-            let html = `<article class="ticket_wrapper" data-ticketid="${ticket_id}" onclick="${onclick}">
+            let html = `<article class="ticket_wrapper" data-ticketid="${ticket_id}" onclick="${onclick}" style="color:${list_status_type == "ing" ? "" : '#a3a0a0'}">
                             <div class="ticket_data_u">
                                 <div class="ticket_name">${ticket_name}</div>
                                 <div class="ticket_note">${ticket_note}</div>

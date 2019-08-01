@@ -171,7 +171,13 @@ class Lecture_view{
 
     dom_row_toolbox(){
         let style = {"font-size":"20px", "font-weight":"bold"};
-        let sub_html = CComponent.create_input_row ('lecture_name_view', this.data.name == null ? '' : this.data.name, '수업명*', undefined, HIDE, style, false, (input_data)=>{
+        let title = this.data.name == null ? '' : this.data.name;
+        if(this.data.lecture_state == STATE_END_PROGRESS){
+            style["color"] = "#888888";
+            title = title + ' (비활성)';
+        }
+
+        let sub_html = CComponent.create_input_row ('lecture_name_view', title, '수업명*', undefined, HIDE, style, false, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
             this.send_data();
@@ -514,10 +520,15 @@ class Lecture_simple_view{
             });
         });
 
+        let lecture_name = this.data.name == null ? '' : this.data.name;
+        if(this.data.ticket_state == STATE_END_PROGRESS){
+            lecture_name = `<span style="color:#888888;">${lecture_name}</span><span> (비활성)</span>`;
+        }
+
         let html = `
         <div style="height:48px;line-height:48px;">
             <div style="display:inline-block;float:left;width:275px;">
-                <span style="font-size:13px;font-weight:500;">${this.data.name == null ? '' : this.data.name}</span>
+                <span style="font-size:13px;font-weight:500;">${lecture_name}</span>
             </div>
             <div style="display:inline-block;float:right;width:65px;text-align:right;">
                 ${text_button}

@@ -384,7 +384,7 @@ class Member_view{
         for(let i=0; i<ticket_length; i++){
             let ticket_name = this.data.ticket[i].ticket_name;
             if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
-                ticket_name = `<span style="text-decoration:line-through;color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`
+                ticket_name = `<span style="color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;
             }
 
             //티켓 이름 표기 부분
@@ -718,7 +718,7 @@ class Member_simple_view{
         for(let i=0; i<ticket_length; i++){
             let ticket_name = this.data.ticket[i].ticket_name;
             if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
-                ticket_name = `<span style="text-decoration:line-through;color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`
+                ticket_name = `<span style="color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;
             }
 
             //티켓 이름 표기 부분
