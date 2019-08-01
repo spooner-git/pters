@@ -22,6 +22,8 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^general_login/$', views.general_login, name='general_login'),
+
     url(r'^check/$', views.CheckView.as_view(), name='check'),
     url(r'^policy/$', views.SiteUsePolicyView.as_view(), name='policy'),
     url(r'^policy_charge/$', views.SiteUsePolicyChargeView.as_view(), name='policy_charge'),
