@@ -134,14 +134,15 @@ class Member_add{
 
 
     init(type){
-        if(type == undefined){
-            type = this.list_type;
-        }
-        this.list_type = type;
+        // if(type == undefined){
+        //     type = this.list_type;
+        // }
+        // this.list_type = type;
 
-        this.render_initial();
-        this.render_toolbox();
-        this.render_content();
+        // this.render_initial();
+        // this.render_toolbox();
+        // this.render_content();
+        this.render();
     }
 
     set_initial_data(data){
@@ -160,15 +161,37 @@ class Member_add{
         this.data.end_time_text = user_data_time.text2;
     }
 
-    render_initial(){
-        document.querySelector(this.target.install).innerHTML = this.static_component().initial_page;
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();member_add_popup.clear();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_add_popup.send_data()">등록</span></span>`;
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}">${this.dom_assembly_content()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
     }
 
     render_toolbox(){
-        document.getElementById(this.target.toolbox).innerHTML = this.dom_row_toolbox();
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+    }
+
+    render_content(){
+        document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+    dom_assembly_toolbox(){
+        return this.dom_row_toolbox();
     }
     
-    render_content(){
+    dom_assembly_content(){
         let name = this.dom_row_member_name_input();
         let phone = this.dom_row_member_phone_input();
         let birth = this.dom_row_member_birth_input();
@@ -183,7 +206,7 @@ class Member_add{
         let html =  '<div class="obj_box_full">'+name+phone+birth+sex+memo+'</div>' + 
                     '<div class="obj_box_full">'+ticket + start_date+end_date+reg_count+reg_price+ '</div>';
 
-        document.getElementById(this.target.content).innerHTML = html;
+        return html;
     }
 
     dom_row_toolbox(){
@@ -373,13 +396,6 @@ class Member_add{
             });
         });
         layer_popup.close_layer_popup();
-    }
-
-    static_component(){
-        return {
-            initial_page:`<section id="${this.target.toolbox}" class="obj_box_full" style="border:0"></section>
-                          <section id="${this.target.content}"></section>`
-        };
     }
 
     check_before_send(){

@@ -819,7 +819,7 @@ class Calendar {
         this.user_data.user_selected_time.text = TimeRobot.to_text(hour, minute);
         this.user_data.user_selected_time.text2 = TimeRobot.to_text(this.user_data.user_selected_time.hour2, this.user_data.user_selected_time.minute2);
 
-        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
             plan_add_popup = new Plan_add('.popup_plan_add', this.user_data, "plan_add_popup");
         });
     }
@@ -829,7 +829,7 @@ class Calendar {
         this.user_data.user_selected_plan.date.year = year;
         this.user_data.user_selected_plan.date.month = month;
         this.user_data.user_selected_plan.date.date = date;
-        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_VIEW, 100, POPUP_FROM_RIGHT, {'schedule_id':schedule_id}, ()=>{
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_VIEW, 100, POPUP_FROM_RIGHT, {'schedule_id':schedule_id}, ()=>{
             plan_view_popup = new Plan_view('.popup_plan_view', this.user_data.user_selected_plan, "plan_view_popup");
         });
     }
@@ -847,7 +847,7 @@ class Calendar {
         this.user_data.user_selected_time.text = null;
         this.user_data.user_selected_time.text2 = null;
 
-        layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
             plan_add_popup = new Plan_add('.popup_plan_add', this.user_data, "plan_add_popup");
         });
     }

@@ -204,6 +204,7 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
 </nav>
 
 {% include 'popup/trainer_popup_basic.html' %}
+{% include 'popup/trainer_popup_pages.html' %}
 {% include 'popup/trainer_popup_user_input.html' %}
 
 <footer>
@@ -227,6 +228,7 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.member.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.menu.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.component.common.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.base.js" %}></script>
 <!-- 페이지 스크립트 로드-->
 
 <!-- ajax 팝업 JS 로드 -->
@@ -243,7 +245,7 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.ticket_view.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
-<script type="text/javascript" src={% static_url "user/js/trainer/selector/pters.trainer.selectors.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.selectors.js" %}></script>
 <!-- 각종 셀렉터 -->
 <!-- POPUP Behavior -->
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.popup.behavior.js" %}></script>

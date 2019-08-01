@@ -87,20 +87,43 @@ class Ticket_add{
 
 
     init(){
-        this.render_initial();
-        this.render_toolbox();
-        this.render_content();
+        // this.render_initial();
+        // this.render_toolbox();
+        // this.render_content();
+        this.render();
     }
 
-    render_initial(){
-        document.querySelector(this.target.install).innerHTML = this.static_component().initial_page;
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();ticket_add_popup.clear();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="ticket_add_popup.send_data();ticket_add_popup.clear();">등록</span></span>`;
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}">${this.dom_assembly_content()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
     }
 
     render_toolbox(){
-        document.getElementById(this.target.toolbox).innerHTML = this.dom_row_toolbox();
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+    }
+
+    render_content(){
+        document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+    dom_assembly_toolbox(){
+        return this.dom_row_toolbox();
     }
     
-    render_content(){
+    dom_assembly_content(){
         let name = this.dom_row_ticket_name_input();
         let lecture = this.dom_row_lecture_select();
         let lecture_list = this.dom_row_lecture_select_list();
@@ -112,7 +135,8 @@ class Ticket_add{
                     // '<div class="obj_box_full">'+count+price+ '</div>' + 
                     '<div class="obj_box_full">'+memo+ '</div>';
 
-        document.getElementById(this.target.content).innerHTML = html;
+        // document.getElementById(this.target.content).innerHTML = html;
+        return html;
     }
 
     dom_row_toolbox(){
@@ -129,7 +153,8 @@ class Ticket_add{
     }
 
     dom_row_ticket_name_input(){
-        let html = CComponent.create_input_row ('input_ticket_name', this.data.name == null ? '수강권명*' : this.data.name, '/static/common/icon/person_black.png', HIDE, false, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_row ('input_ticket_name', this.data.name == null ? '' : this.data.name, '수강권명*', '/static/common/icon/person_black.png', HIDE, style, false, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
         });
@@ -139,8 +164,10 @@ class Ticket_add{
     dom_row_lecture_select(){
         let lecture_text = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개 선택됨';
         let html = CComponent.create_row('input_lecture_select', lecture_text, '/static/common/icon/icon_book.png', SHOW, ()=>{ 
-            layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999);
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, (set_data)=>{
+                    this.lecture = set_data; //타겟에 선택된 데이터를 set
+                });
             });
         });
         return html;
@@ -156,7 +183,11 @@ class Ticket_add{
             let icon_button_style = null;
             html_to_join.push(
                 CComponent.icon_button(lecture_id, lecture_name, null, icon_button_style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id});
+                    // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id});
+                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(253/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
+                        lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
+                        //수업 간단 정보 팝업 열기
+                    });
                 })
             );
         }
@@ -166,7 +197,8 @@ class Ticket_add{
     }
 
     dom_row_ticket_coung_input(){
-        let html = CComponent.create_input_number_row ('input_ticket_count', this.data.count == null ? '횟수' : this.data.count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_number_row ('input_ticket_count', this.data.count == null ? '' : this.data.count+'회', '횟수', '/static/common/icon/icon_rectangle_blank.png', HIDE, style, false, (input_data)=>{
             let user_input_data = input_data;
             this.count = user_input_data;
         });
@@ -174,7 +206,8 @@ class Ticket_add{
     }
 
     dom_row_ticket_price_input(){
-        let html = CComponent.create_input_number_row ('input_ticket_price', this.data.price == null ? '가격' : this.data.price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_number_row ('input_ticket_price', this.data.price == null ? '' : this.data.price+'원', '가격', '/static/common/icon/icon_rectangle_blank.png', HIDE, style, false, (input_data)=>{
             let user_input_data = input_data;
             this.price = user_input_data;
         });
@@ -182,7 +215,8 @@ class Ticket_add{
     }
 
     dom_row_ticket_memo_input(){
-        let html = CComponent.create_input_row ('input_ticket_memo', this.data.memo == null ? '설명' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, false, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_row ('input_ticket_memo', this.data.memo == null ? '' : this.data.memo, '설명', '/static/common/icon/icon_note.png', HIDE, style, false, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });
@@ -210,13 +244,6 @@ class Ticket_add{
             ticket.init();
         });
         layer_popup.close_layer_popup();
-    }
-
-    static_component(){
-        return {
-            initial_page:`<section id="${this.target.toolbox}" class="obj_box_full" style="border:0"></section>
-                          <section id="${this.target.content}"></section>`
-        };
     }
 
     check_before_send(){

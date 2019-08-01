@@ -8,3 +8,11 @@
 .popup_member_view .obj_box_full{
 	padding: 0 16px;
 }
+
+
+/* 간단 보기 */
+.popup_member_simple_view{
+}
+.popup_member_simple_view .obj_box_full{
+	padding: 0 16px;
+}

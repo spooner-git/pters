@@ -8,3 +8,10 @@
 .popup_lecture_view .obj_box_full{
 	padding: 0 16px;
 }
+
+/* 간단보기 */
+.popup_lecture_simple_view{
+}
+.popup_lecture_simple_view .obj_box_full{
+	padding: 0 16px;
+}
