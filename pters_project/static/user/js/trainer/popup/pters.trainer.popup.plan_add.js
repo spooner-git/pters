@@ -114,10 +114,8 @@ class Plan_add{
         }
         this.list_type = type;
 
-        // this.render_initial();
-        // this.render_toolbox();
-        // this.render_content();
         this.render();
+        func_set_webkit_overflow_scrolling('.wrapper_middle');
     }
 
     set_initial_data(data){
@@ -143,8 +141,8 @@ class Plan_add{
         let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();plan_add_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="plan_add_popup.send_data()">등록</span></span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full" style="border:0">${this.dom_assembly_toolbox()}</section>
-                        <section id="${this.target.content}">${this.dom_assembly_content()}</section>`;
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -160,7 +158,7 @@ class Plan_add{
     }
 
     dom_assembly_toolbox(){
-       return this.dom_row_toolbox();
+        return this.dom_row_toolbox();
     }
     
     dom_assembly_content(){
@@ -172,14 +170,17 @@ class Plan_add{
         let repeat_select_row = this.dom_row_repeat_select();
         let memo_select_row = this.dom_row_memo_select();
 
+        let display = "";
         if(this.list_type != "lesson"){
-            lecture_select_row = "";
-            member_select_row = "";
+            display = 'none';
         }
 
-        let html =  '<div class="obj_box_full">'+lecture_select_row + member_select_row+'</div>' + 
-                    '<div class="obj_box_full">' + date_select_row + start_time_select_row + end_time_select_row + repeat_select_row + '</div>' +
-                    '<div class="obj_box_full">'+  memo_select_row + '</div>';
+        let html =  `<div class="obj_box_full" style="display:${display}">` + CComponent.dom_tag('일정') + lecture_select_row + '</div>' + 
+                    `<div class="obj_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' + 
+                    '<div class="obj_box_full">' +  CComponent.dom_tag('일자') + date_select_row + '<div class="gap"></div>' +
+                                                    CComponent.dom_tag('진행 시간') + start_time_select_row + end_time_select_row +  '<div class="gap"></div>' +
+                                                    CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
+                    '<div class="obj_box_full">'+  CComponent.dom_tag('메모') + memo_select_row + '</div>';
 
         return html;
     }
@@ -206,8 +207,11 @@ class Plan_add{
     dom_row_lecture_select(){
         let lecture_text = this.data.lecture_name.length == 0 ? '수업*' : this.data.lecture_name.join(', ');
         let html = CComponent.create_row('select_lecture', lecture_text, '/static/common/icon/icon_book.png', SHOW, (data)=>{ 
-            layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
-                var lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1);
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
+                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1, (set_data)=>{
+                    this.lecture = set_data;
+                    this.render_content();
+                });
             });
         });
         return html;
@@ -217,8 +221,11 @@ class Plan_add{
         let member_text = this.data.member_name.length == 0 ? '회원*' : this.data.member_name.join(', ');
         let html = CComponent.create_row('select_member', member_text, '/static/common/icon/icon_member.png', SHOW, (data)=>{
             if(this.data.lecture_id.length != 0){
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
-                    var member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num[0], {'lecture_id':this.data.lecture_id[0]});
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
+                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num[0], {'lecture_id':this.data.lecture_id[0]}, (set_data)=>{
+                        this.member = set_data;
+                        this.render_content();
+                    });
                 });
             }else{
                 show_error_message('수업을 먼저 선택해주세요.');
@@ -305,7 +312,8 @@ class Plan_add{
     }
 
     dom_row_memo_select(){
-        let html = CComponent.create_input_row ('select_memo', this.data.memo == "" ? '메모' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, false, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_row ('select_memo', this.data.memo == "" ? '' : this.data.memo, '일정 메모','/static/common/icon/icon_note.png', HIDE, style, false, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });

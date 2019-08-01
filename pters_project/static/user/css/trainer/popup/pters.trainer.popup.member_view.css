@@ -1,12 +1,19 @@
-.gap{
-	margin-top: 10px;
-}
 .popup_member_view{
 	-webkit-overflow-scrolling: touch;
 }
 
 .popup_member_view .obj_box_full{
-	padding: 0 16px;
+	padding: 15px 16px;
+}
+
+.popup_member_view .popup_toolbox{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+}
+
+.popup_member_view .popup_content{
+	padding-top: 1px;
 }
 
 

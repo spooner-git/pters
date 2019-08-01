@@ -17,6 +17,11 @@ class CComponent{
         return html;
     }
 
+    static dom_tag(tag_name){
+        let html = `<div class="dom_tag">${tag_name}</div>`;
+        return html;
+    }
+
     //추가 페이지들에서 자주 사용되는 row 스타일
     static create_row (id, title, icon, icon_r_visible, onclick){
         if(icon == null){
@@ -94,13 +99,17 @@ class CComponent{
                         </div>
                     </li>`;
         $(document).off('focusin', `#c_i_n_r_${id}`).on('focusin', `#c_i_n_r_${id}`, function(e){
-            // $(this).find('input').val('');
+            let current_value = $(this).find('input').val();
+            $(this).find('input').val(Number(current_value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣,]/gi, "") ));
         });
 
         $(document).off('focusout', `#c_i_n_r_${id}`).on('focusout', `#c_i_n_r_${id}`, function(e){
-            let user_input_data = $(this).find('input').val();
+            LimitChar.number(`#c_i_n_r_${id} input`);
+            let user_input_data = $(`#c_i_n_r_${id} input`).val();
             if(user_input_data.length == 0){
                 user_input_data = null;
+            }else{
+                user_input_data = Number(user_input_data);
             }
             onfocusout(user_input_data);
         });
@@ -376,7 +385,7 @@ class CComponent{
         return html;
     }
 
-
+    //스타일 코드를 인라인스타일 스타일 코드로 변환시켜주는 함수
     static data_to_style_code(data){
         if(data == null){
             return "";
@@ -391,3 +400,23 @@ class CComponent{
     }
 }
 
+
+class LimitChar{
+    static number(selector){
+        var limit =  /[^0-9,]/gi;
+        var temp = $(selector).val();
+        if(limit.test(temp)){
+            $(selector).val(temp.replace(limit, ""));
+            show_error_message("숫자만 입력하실 수 있습니다.");
+        }
+    }
+
+    static text(selector){
+        var limit =  /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]/gi;
+        var temp = $(selector).val();
+        if(limit.test(temp)){
+            $(selector).val(temp.replace(limit, ""));
+            show_error_message("- 와 _ 를 제외한 특수문자는 입력하실 수 없습니다.");
+        }
+    }
+}

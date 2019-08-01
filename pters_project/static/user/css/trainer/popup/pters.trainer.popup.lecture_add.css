@@ -1,10 +1,17 @@
-.gap{
-	margin-top: 10px;
-}
 .popup_lecture_add{
 	-webkit-overflow-scrolling: touch;
 }
 
 .popup_lecture_add .obj_box_full{
-	padding: 0 16px;
+	padding: 15px 16px;
+}
+
+.popup_lecture_add .popup_toolbox{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+}
+
+.popup_lecture_add .popup_content{
+	padding-top: 1px;
 }

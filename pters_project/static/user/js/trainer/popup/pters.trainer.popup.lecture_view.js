@@ -91,10 +91,8 @@ class Lecture_view{
 
  
     init(){
-        // this.render_initial();
-        // this.render_toolbox();
-        // this.render_content();
         this.render();
+        func_set_webkit_overflow_scrolling('.wrapper_middle');
     }
 
     set_initial_data (){
@@ -131,8 +129,8 @@ class Lecture_view{
         let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();lecture_view_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="lecture_view_popup.upper_right_menu();"></span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full" style="border:0">${this.dom_assembly_toolbox()}</section>
-                        <section id="${this.target.content}">${this.dom_assembly_content()}</section>`;
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -163,11 +161,10 @@ class Lecture_view{
         let member_list = this.dom_row_member_list();
 
 
-        let html =  '<div class="obj_box_full">'+capacity+'</div>' + 
-                    '<div class="obj_box_full">'+color+ '</div>' + 
-                    // '<div class="obj_box_full">'+reg_mod+ '</div>' + 
-                    '<div class="obj_box_full">'+ticket+ticket_list+ '</div>' + 
-                    '<div class="obj_box_full">'+member+member_list+ '</div>';
+        let html =  '<div class="obj_box_full">' + CComponent.dom_tag('정원') + capacity + '</div>' + 
+                    '<div class="obj_box_full">' + CComponent.dom_tag('색상') + color +  '</div>' + 
+                    '<div class="obj_box_full">' + CComponent.dom_tag('이 수업을 포함하는 수강권') + ticket + ticket_list + '</div>' + 
+                    '<div class="obj_box_full">' + CComponent.dom_tag('진행중 회원') + member + member_list + '</div>';
 
         return html;
     }
@@ -228,7 +225,10 @@ class Lecture_view{
     }
 
     dom_row_ticket(){
-        let member_text = this.data.ticket_id.length == 0 ? '이 수업을 포함하는 수강권 (0)' : '이 수업을 포함하는 수강권 ('+this.data.ticket_id.length+')';
+        // let member_text = this.data.ticket_id.length == 0 ? '이 수업을 포함하는 수강권 (0)' : '이 수업을 포함하는 수강권 ('+this.data.ticket_id.length+')';
+        // let html = CComponent.create_row('ticket_number_view', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
+        // return html;
+        let member_text = this.data.ticket_id.length == 0 ? '0 개' : this.data.ticket_id.length+' 개';
         let html = CComponent.create_row('ticket_number_view', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
         return html;
     }
@@ -247,9 +247,9 @@ class Lecture_view{
                     // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
                     //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
                     // });
-                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(254/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(254/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                         ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
-                        //회원 간단 정보 팝업 열기
+                        //수강권 간단 정보 팝업 열기
                     });
                 })
             );
@@ -260,7 +260,22 @@ class Lecture_view{
     }
 
     dom_row_member(){
-        let member_text = this.data.member_number == null ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_number+' 명)';
+        // let member_text = this.data.member_number == null ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_number+' 명)';
+        // let html = CComponent.create_row('select_member', member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{
+        //     //고정 인원 선택
+        //     if(this.data.capacity != null){
+        //         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+        //             member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':this.lecture_id}, (set_data)=>{
+        //                 this.member = set_data;
+        //                 this.send_data();
+        //             });
+        //         });
+        //     }else{
+        //         show_error_message('정원을 먼저 입력해주세요.');
+        //     }
+        // });
+        // return html;
+        let member_text = this.data.member_number == null ? '0 명' : this.data.member_number+' 명';
         let html = CComponent.create_row('select_member', member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{
             //고정 인원 선택
             if(this.data.capacity != null){
@@ -292,7 +307,7 @@ class Lecture_view{
             }
             html_to_join.push(
                 CComponent.icon_button(member_id, member_name, icon, icon_button_style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(500/windowHeight), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(500/windowHeight), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
                         member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
                         //회원 간단 정보 팝업 열기
                     });
@@ -432,60 +447,9 @@ class Lecture_simple_view{
         this.init();
         this.set_initial_data();
     }
-
-    set name(text){
-        this.data.name = text;
-        this.render_content();
-    }
-
-    get name(){
-        return this.data.name;
-    }
-
-    set time(text){
-        this.data.time = text;
-        this.render_content();
-    }
-
-    get time(){
-        return this.data.time;
-    }
-
-    set capacity(number){
-        this.data.capacity = number;
-        this.render_content();
-    }
-
-    get capacity(){
-        return this.data.capacity;
-    }
-
-    set member(data){
-        this.data.fixed_member_id = data.id;
-        this.data.fixed_member_name = data.name;
-        this.render_content();
-    }
-
-    get member(){
-        return {id:this.data.fixed_member_id, name:this.data.fixed_member_name};
-    }
-
-    set color(data){
-        this.data.color_bg = data.bg;
-        this.data.color_font = data.font;
-        this.data.color_name = data.name;
-        this.render_content();
-    }
-
-    get color(){
-        return {bg:this.data.color_bg, font:this.data.color_font, name:this.data.color_name};
-    }
-
  
     init(){
-        this.render_initial();
-        this.render_toolbox();
-        this.render_content();
+        this.render();
     }
 
     set_initial_data (){
@@ -509,9 +473,15 @@ class Lecture_simple_view{
         });   
     }
 
+    render(){
+        let dom_toolbox = this.dom_row_toolbox();
+        let dom_content = this.dom_assembly_content();
+        let dom_close_button = this.dom_close_button();
 
-    render_initial(){
-        document.querySelector(this.target.install).innerHTML = this.static_component().initial_page;
+        let html = `<section id="${this.target.toolbox}" class="obj_box_full" style="position:sticky;position:-webkit-sticky;top:0;">${dom_toolbox}</section>
+                    <section id="${this.target.content}" style="width:100%;height:auto;overflow-y:auto;">${dom_content}</section>
+                    <section id="${this.target.close_button}" class="obj_box_full" style="height:48px;">${dom_close_button}</section>`;
+        document.querySelector(this.target.install).innerHTML = html;
     }
 
     render_toolbox(){
@@ -519,17 +489,16 @@ class Lecture_simple_view{
         document.getElementById(this.target.close_button).innerHTML = this.dom_close_button();
     }
     
-    render_content(){
+    dom_assembly_content(){
         // let time = this.dom_row_lecture_time_input(); //수업 진행시간
         // let name = this.dom_row_lecture_name_input();
         let capacity = this.dom_row_capacity_view();
         let color = this.dom_row_color_view();
         let member = this.dom_row_member();
 
-
         let html =  '<div class="obj_box_full">'+capacity+color+member+'</div>';
 
-        document.getElementById(this.target.content).innerHTML = html;
+        return html;
     }
 
 
@@ -539,7 +508,7 @@ class Lecture_simple_view{
             show_user_confirm(`작업중이던 항목을 모두 닫고 수업 메뉴로 이동합니다.`, ()=>{
                 layer_popup.all_close_layer_popup();
                 sideGoPage("lecture");
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':this.lecture_id}, ()=>{
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':this.lecture_id}, ()=>{
                     lecture_view_popup = new Lecture_view('.popup_lecture_view', this.lecture_id, 'lecture_view_popup');
                 });
             });
@@ -586,16 +555,6 @@ class Lecture_simple_view{
             layer_popup.close_layer_popup();
         });
         return html;
-    }
-
-
-    static_component(){
-        return {
-            initial_page:`<section id="${this.target.toolbox}" class="obj_box_full" style="position:sticky;position:-webkit-sticky;top:0;"></section>
-                          <section id="${this.target.content}" style="width:100%;height:auto;overflow-y:auto;"></section>
-                          <section id="${this.target.close_button}" class="obj_box_full" style="height:48px;"></section>
-                         `
-        };
     }
 
 }

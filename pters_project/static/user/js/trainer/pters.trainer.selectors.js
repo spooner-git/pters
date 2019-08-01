@@ -1137,9 +1137,11 @@ class OptionSelector{
 }
 
 class TicketSelector{
-    constructor(install_target, target_instance, multiple_select){
-        this.targetHTML = install_target;
+    constructor(install_target, target_instance, multiple_select, callback){
+        // this.targetHTML = install_target;
+        this.target = {install : install_target};
         this.target_instance = target_instance;
+        this.callback = callback;
         this.received_data;
         this.multiple_select = multiple_select;
         this.data = {
@@ -1149,12 +1151,33 @@ class TicketSelector{
             reg_count: this.target_instance.ticket.reg_count,
             effective_days : this.target_instance.ticket.effective_days
         };
+        this.init();
+    }
+
+    init(){
         this.request_list(()=>{
-            this.render_list();
+            this.render();
         });
     }
 
-    render_list(){
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();lecture_select.clear();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_select.upper_right_menu();">완료</span></span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list(){
         let html_to_join = [];
         let length = this.received_data.length;
         if(length == 0){
@@ -1198,7 +1221,7 @@ class TicketSelector{
                     this.target_instance.ticket = this.data; //타겟에 선택된 데이터를 set
                     
                     if(this.multiple_select == 1){
-                        layer_popup.close_layer_popup();
+                        this.upper_right_menu();
                     }
                 }  
 
@@ -1207,7 +1230,8 @@ class TicketSelector{
             html_to_join.push(html);
         }
 
-        document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
     }
 
     request_list (callback){
@@ -1216,11 +1240,17 @@ class TicketSelector{
             callback();
         });
     }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
 }
 
 class LectureSelector{
     constructor(install_target, target_instance, multiple_select, callback){
-        this.target = {install:install_target};
+        this.target = {install : install_target};
         this.target_instance = target_instance;
         this.callback = callback;
         this.received_data;
@@ -1289,7 +1319,7 @@ class LectureSelector{
                     }
 
                     if(this.multiple_select == 1){
-                        layer_popup.close_layer_popup();
+                        this.upper_right_menu();
                     }
                 }  
 
@@ -1388,7 +1418,7 @@ class MemberSelector{
                     this.target_instance.member = this.data; //타겟에 선택된 데이터를 set
 
                     if(this.multiple_select == 1){
-                        layer_popup.close_layer_popup();
+                        this.upper_right_menu();
                     }
                         
                 }  

@@ -145,6 +145,9 @@
             width: 35px;
             z-index: 1500;
         }
+        .gap{
+            margin-top: 10px;
+        }
     </style>
     {% block local_css %}
     {% endblock %}
@@ -235,13 +238,10 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_view.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_add.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_edit.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_view.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_add.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_edit.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_view.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.ticket_add.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.ticket_edit.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.ticket_view.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
@@ -410,9 +410,6 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
         }
     }
     $('#home').trigger('click');
-
-
-    
 
 </script>
 
