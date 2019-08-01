@@ -540,7 +540,7 @@ class Ticket_simple_view{
 
     dom_row_ticket_memo_input(){
         let style = null;
-        let html = CComponent.create_input_row ('ticket_memo_view', this.data.memo == null ? '설명' : this.data.memo, '설명', '/static/common/icon/icon_note.png', HIDE, style, true, (input_data)=>{
+        let html = CComponent.create_input_row ('ticket_memo_view', this.data.memo == null ? '' : this.data.memo, '설명', '/static/common/icon/icon_note.png', HIDE, style, true, (input_data)=>{
             // let user_input_data = input_data;
             // this.memo = user_input_data;
         });

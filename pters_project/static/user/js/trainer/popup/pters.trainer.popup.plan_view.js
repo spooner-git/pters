@@ -82,7 +82,7 @@ class Plan_view{
 
     set end_time (data){
         this.data.end_time = TimeRobot.to_data(data.data.zone, data.data.hour, data.data.minute).complete;
-        this.data.end_time_text = object.text;
+        this.data.end_time_text = data.text;
         this.render_content();
     }
 
@@ -100,11 +100,6 @@ class Plan_view{
     }
 
     init (){
-        // this.render_initial();
-        // this.request_data(()=>{
-        //     this.render_toolbox();
-        //     this.render_content();
-        // });
         this.request_data(()=>{
             this.render();
         });
@@ -208,8 +203,11 @@ class Plan_view{
         let member_text = this.data.member_id.length == 0 ? '회원*' : this.data.member_id.length+ '/' + this.data.lecture_max_num +' 명';
         let html_member_select = CComponent.create_row('select_member', member_text, '/static/common/icon/icon_member.png', SHOW, ()=>{
             //회원 선택 팝업 열기
-            layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'data':null}, ()=>{
-                var member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num, {'lecture_id':this.data.lecture_id});
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'data':null}, ()=>{
+                member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num, {'lecture_id':this.data.lecture_id}, (set_data)=>{
+                    this.member = set_data;
+                    this.render_content();
+                });
             });
         });
         let html = html_member_select;
@@ -227,7 +225,7 @@ class Plan_view{
             let icon_button_style = null;
             html_to_join.push(
                 CComponent.icon_button(member_id, member_name, null, icon_button_style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(500/windowHeight), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(500/windowHeight), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
                         member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
                         //회원 간단 정보 팝업 열기
                     });
@@ -311,7 +309,8 @@ class Plan_view{
     }
 
     dom_row_memo_select (){
-        let html = CComponent.create_input_row ('select_memo', this.data.memo == "" ? '메모' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, false, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_row ('select_memo', this.data.memo == null ? '' : this.data.memo, '일정 메모', '/static/common/icon/icon_note.png', HIDE, style, false, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });

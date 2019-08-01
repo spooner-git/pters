@@ -206,8 +206,11 @@ class Plan_add{
     dom_row_lecture_select(){
         let lecture_text = this.data.lecture_name.length == 0 ? '수업*' : this.data.lecture_name.join(', ');
         let html = CComponent.create_row('select_lecture', lecture_text, '/static/common/icon/icon_book.png', SHOW, (data)=>{ 
-            layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
-                var lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1);
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
+                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1, (set_data)=>{
+                    this.lecture = set_data;
+                    this.render_content();
+                });
             });
         });
         return html;
@@ -217,8 +220,11 @@ class Plan_add{
         let member_text = this.data.member_name.length == 0 ? '회원*' : this.data.member_name.join(', ');
         let html = CComponent.create_row('select_member', member_text, '/static/common/icon/icon_member.png', SHOW, (data)=>{
             if(this.data.lecture_id.length != 0){
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
-                    var member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num[0], {'lecture_id':this.data.lecture_id[0]});
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
+                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num[0], {'lecture_id':this.data.lecture_id[0]}, (set_data)=>{
+                        this.member = set_data;
+                        this.render_content();
+                    });
                 });
             }else{
                 show_error_message('수업을 먼저 선택해주세요.');
@@ -305,7 +311,8 @@ class Plan_add{
     }
 
     dom_row_memo_select(){
-        let html = CComponent.create_input_row ('select_memo', this.data.memo == "" ? '메모' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, false, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_row ('select_memo', this.data.memo == "" ? '일정 메모' : this.data.memo, '일정 메모','/static/common/icon/icon_note.png', HIDE, style, false, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });
