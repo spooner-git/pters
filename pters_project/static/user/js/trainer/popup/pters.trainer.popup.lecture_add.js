@@ -92,7 +92,7 @@ class Lecture_add{
     render(){
         let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();lecture_add_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_add_popup.send_data();lecture_add_popup.clear();">저장</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_add_popup.send_data();">저장</span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -242,6 +242,7 @@ class Lecture_add{
             lecture.init();
         });
         layer_popup.close_layer_popup();
+        lecture_add_popup.clear();
     }
 
     check_before_send(){

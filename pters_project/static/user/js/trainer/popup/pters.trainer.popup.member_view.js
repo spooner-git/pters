@@ -35,7 +35,9 @@ class Member_view{
                         ticket_name:null,
                         ticket_effective_days:null,
                         ticket_reg_count:null,
+                        ticket_rem_count:null,
                         ticket_price:null,
+                        ticket_state:null,
                         start_date:null,
                         start_date_text:null,
                         end_date:null,
@@ -43,6 +45,7 @@ class Member_view{
                         lecture_id:[],
                         lecture_name:[],
                         lecture_state:[],
+                        lecture_color:[],
                     }
                 ]
                 
@@ -176,9 +179,11 @@ class Member_view{
 
 
             Member_func.read_ticket_list({"member_id":this.member_id}, (data)=>{
+                console.log(1,data)
                 let ticket_list = data;
                 this.data.ticket = [];
                 for(let ticket in ticket_list){
+                    let ticket_rem_count_of_this_member = ticket_list[ticket].member_ticket_rem_count;
                     let ticket_reg_count_of_this_member = ticket_list[ticket].member_ticket_reg_count;
                     let ticket_reg_price_of_this_member = ticket_list[ticket].member_ticket_price;
                     let ticket_reg_date_of_this_member = ticket_list[ticket].member_ticket_start_date;
@@ -196,7 +201,9 @@ class Member_view{
                                             ticket_name:data.ticket_info.ticket_name,
                                             ticket_effective_days:data.ticket_info.ticket_effective_days,
                                             ticket_reg_count:ticket_reg_count_of_this_member,
+                                            ticket_rem_count:ticket_rem_count_of_this_member,
                                             ticket_price:ticket_reg_price_of_this_member,
+                                            ticket_state:data.ticket_info.ticket_state_cd,
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member),
                                             end_date:ticket_end_date_of_this_member,
@@ -204,6 +211,7 @@ class Member_view{
                                             lecture_id:data.ticket_info.ticket_lecture_id_list,
                                             lecture_name:data.ticket_info.ticket_lecture_list,
                                             lecture_state:data.ticket_info.ticket_lecture_state_cd_list,
+                                            lecture_color:data.ticket_info.ticket_lecture_ing_color_cd_list,
                                         }
                         this.data.ticket.push(ticket_of_member);
 
@@ -374,15 +382,19 @@ class Member_view{
 
         let html_to_join = [];
         for(let i=0; i<ticket_length; i++){
+            let ticket_name = this.data.ticket[i].ticket_name;
+            if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
+                ticket_name = `<span style="text-decoration:line-through;color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`
+            }
 
             //티켓 이름 표기 부분
-            let ticket_text = this.data.ticket[i].ticket_id.length == 0 ? '수강권*' : this.data.ticket[i].ticket_name;
+            let ticket_text = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
             let html_ticket_name = CComponent.create_row(`input_ticket_select_${i}`, ticket_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
                 let ticket_id =  this.data.ticket[i].ticket_id;
-                // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
+                // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
                 //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
                 // });
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(254/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(254/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                     ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
                     //수강권 간단 정보 팝업 열기
                 });
@@ -391,17 +403,18 @@ class Member_view{
             //티켓내 수업 리스트 표기 부분
             let length = this.data.ticket[i].lecture_id.length;
             let html_to_join_lecture_list = [];
-            
+            console.log(this.data.ticket);
             for(let j=0; j<length; j++){
                 let lecture_id = this.data.ticket[i].lecture_id[j];
                 let lecture_name = this.data.ticket[i].lecture_name[j];
+                let lecture_color = this.data.ticket[i].lecture_color[j];
                 let icon_button_style = {"display":"block", "padding":"0", "font-size":"13px"};
-                let lecture_name_set = `<div style="display:inline-block;width:10px;height:10px;border-radius:5px;background-color:#fe4e65;margin-right:10px;"></div>${lecture_name}`;
+                let lecture_name_set = `<div style="display:inline-block;width:10px;height:10px;border-radius:5px;background-color:${lecture_color};margin-right:10px;"></div>${lecture_name}`;
                 let html_lecture_list_info = CComponent.icon_button (lecture_id, lecture_name_set, NONE, icon_button_style, ()=>{
-                    // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id}, ()=>{
+                    // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id}, ()=>{
                     //     lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
                     // });
-                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(253/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(253/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
                         lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
                         //수업 간단 정보 팝업 열기
                     });
@@ -412,7 +425,7 @@ class Member_view{
             //티켓내 남은횟수, 남은 기간 표기 부분
             let icon_button_style_remain_count_info = {"display":"block", "padding":0, "font-size":"12px", "height":"20px"};
             let icon_button_style_remain_data_info = {"display":"block", "padding":0, "font-size":"12px"};
-            let html_remain_info = CComponent.icon_button('reg_count', `남은 횟수  <span style="color:#fe4e65">정보없음</span>`, NONE, icon_button_style_remain_count_info, ()=>{}) + 
+            let html_remain_info = CComponent.icon_button('reg_count', `남은 횟수  <span style="color:#fe4e65">${this.data.ticket[i].ticket_rem_count}</span>`, NONE, icon_button_style_remain_count_info, ()=>{}) + 
                                     CComponent.icon_button('reg_date', `남은 기간 <span style="color:#fe4e65">${this.data.ticket[i].end_date_text}</span>`, NONE, icon_button_style_remain_data_info, ()=>{});
             let html_ticket_lecture_list = `<div>${html_to_join_lecture_list.join('')}</div>`;
 
@@ -519,7 +532,9 @@ class Member_simple_view{
                         ticket_name:null,
                         ticket_effective_days:null,
                         ticket_reg_count:null,
+                        ticket_rem_count:null,
                         ticket_price:null,
+                        ticket_state:null,
                         start_date:null,
                         start_date_text:null,
                         end_date:null,
@@ -558,6 +573,7 @@ class Member_simple_view{
                 let ticket_list = data;
                 this.data.ticket = [];
                 for(let ticket in ticket_list){
+                    let ticket_rem_count_of_this_member = ticket_list[ticket].member_ticket_rem_count;
                     let ticket_reg_count_of_this_member = ticket_list[ticket].member_ticket_reg_count;
                     let ticket_reg_price_of_this_member = ticket_list[ticket].member_ticket_price;
                     let ticket_reg_date_of_this_member = ticket_list[ticket].member_ticket_start_date;
@@ -575,7 +591,9 @@ class Member_simple_view{
                                             ticket_name:data.ticket_info.ticket_name,
                                             ticket_effective_days:data.ticket_info.ticket_effective_days,
                                             ticket_reg_count:ticket_reg_count_of_this_member,
+                                            ticket_rem_count:ticket_rem_count_of_this_member,
                                             ticket_price:ticket_reg_price_of_this_member,
+                                            ticket_state:data.ticket_info.ticket_state_cd,
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member),
                                             end_date:ticket_end_date_of_this_member,
@@ -698,15 +716,19 @@ class Member_simple_view{
 
         let html_to_join = [];
         for(let i=0; i<ticket_length; i++){
+            let ticket_name = this.data.ticket[i].ticket_name;
+            if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
+                ticket_name = `<span style="text-decoration:line-through;color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`
+            }
 
             //티켓 이름 표기 부분
-            let ticket_text = this.data.ticket[i].ticket_id.length == 0 ? '수강권*' : this.data.ticket[i].ticket_name;
+            let ticket_text = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
             let html_ticket_name = CComponent.create_row(`input_ticket_select_${i}`, ticket_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
                 let ticket_id =  this.data.ticket[i].ticket_id;
-                // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
+                // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
                 //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
                 // });
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(254/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(254/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                     ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
                     //회원 간단 정보 팝업 열기
                 });
@@ -716,7 +738,7 @@ class Member_simple_view{
             //티켓내 남은횟수, 남은 기간 표기 부분
             let icon_button_style_remain_count_info = {"display":"block", "padding":0, "font-size":"12px", "height":"20px"};
             let icon_button_style_remain_data_info = {"display":"block", "padding":0, "font-size":"12px"};
-            let html_remain_info = CComponent.icon_button('reg_count', `남은 횟수  <span style="color:#fe4e65">정보없음</span>`, NONE, icon_button_style_remain_count_info, ()=>{}) + 
+            let html_remain_info = CComponent.icon_button('reg_count', `남은 횟수  <span style="color:#fe4e65">${this.data.ticket[i].ticket_rem_count}</span>`, NONE, icon_button_style_remain_count_info, ()=>{}) + 
                                     CComponent.icon_button('reg_date', `남은 기간 <span style="color:#fe4e65">${this.data.ticket[i].end_date_text}</span>`, NONE, icon_button_style_remain_data_info, ()=>{});
 
             html_to_join.push(html_ticket_name + html_remain_info);

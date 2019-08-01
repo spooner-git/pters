@@ -1070,7 +1070,7 @@ class SpinSelector{
                                     </div>
                                     <span class="span_selector_title">${this.option.title}</span>
                                     <div style="float:right;margin-right:5px;color:#fe4e65;">
-                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', null, ()=>{this.option.callback_when_set(); console.log(this.get_selected_data()) })}
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', null, ()=>{this.option.callback_when_set();})}
                                     </div>
                                 </div>
                                 <div class="spin_selector_page_wrap select_wrapper"></div>
@@ -1296,11 +1296,12 @@ class LectureSelector{
             let data = this.received_data[i];
             let lecture_id = data.lecture_id;
             let lecture_name = data.lecture_name;
-            let lecture_color_code = "#fe4e65";
+            let lecture_color_code = data.lecture_ing_color_cd;
             let lecture_max_num = data.lecture_max_num;
+            let lecture_ing_member_num = data.lecture_ing_member_num;
             let checked = this.target_instance.lecture.id.indexOf(lecture_id) >= 0 ? 1 : 0;
             let html = CComponent.select_lecture_row(
-                this.multiple_select, checked, lecture_id, lecture_name, lecture_color_code, lecture_max_num, (add_or_substract)=>{
+                this.multiple_select, checked, lecture_id, lecture_name, lecture_color_code, lecture_max_num, lecture_ing_member_num, (add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.id.push(lecture_id);
                         this.data.name.push(lecture_name);
@@ -1334,6 +1335,7 @@ class LectureSelector{
 
     request_list (callback){
         lecture.request_lecture_list("ing", (data)=>{
+            console.log(data)
             this.received_data = data.current_lecture_data;
             callback();
         });
