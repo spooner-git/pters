@@ -166,18 +166,13 @@ class Ticket_view{
     dom_assembly_content(){
         let lecture = this.dom_row_lecture_select();
         let lecture_list = this.dom_row_lecture_select_list();
-        // let count = this.dom_row_ticket_coung_input();
-        // let price = this.dom_row_ticket_price_input();
         let memo = this.dom_row_ticket_memo_input();
-        // let reg_mod = this.dom_row_reg_mod_date();
         let member = this.dom_row_member();
         let member_list = this.dom_row_member_list();
 
-        let html =  '<div class="obj_box_full">'+lecture+lecture_list+'</div>' + 
-                    // '<div class="obj_box_full">'+count+price+ '</div>' + 
-                    '<div class="obj_box_full">'+memo+ '</div>' + 
-                    // '<div class="obj_box_full">'+reg_mod+ '</div>' +
-                    '<div class="obj_box_full">'+member+member_list+ '</div>';
+        let html =  '<div class="obj_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>' + 
+                    '<div class="obj_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>' + 
+                    '<div class="obj_box_full">'+CComponent.dom_tag('수강권 보유 회원')+member+member_list+ '</div>';
         return html;
     }
 
@@ -276,7 +271,10 @@ class Ticket_view{
     }
 
     dom_row_member(){
-        let member_text = this.data.member_id.length == 0 ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_id.length+' 명)';
+        // let member_text = this.data.member_id.length == 0 ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_id.length+' 명)';
+        // let html = CComponent.create_row('ing_member_view', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
+        // return html;
+        let member_text = this.data.member_id.length == 0 ? '0 명' : this.data.member_id.length+' 명';
         let html = CComponent.create_row('ing_member_view', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
         return html;
     }

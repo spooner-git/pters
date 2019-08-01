@@ -31,7 +31,7 @@ class Ticket_add{
 
     set name(text){
         this.data.name = text;
-        this.render_content();
+        // this.render_content();
     }
 
     get name(){
@@ -42,7 +42,7 @@ class Ticket_add{
         this.data.lecture_id = data.id;
         this.data.lecture_name = data.name;
         this.data.lecture_max = data.max;
-        this.render_content();
+        // this.render_content();
     }
 
     get lecture(){
@@ -51,7 +51,7 @@ class Ticket_add{
 
     set period(text){
         this.data.ticket_effective_days = text;
-        this.render_content();
+        // this.render_content();
     }
 
     get period(){
@@ -60,7 +60,7 @@ class Ticket_add{
 
     set memo(text){
         this.data.memo = text;
-        this.render_content();
+        // this.render_content();
     }
 
     get memo(){
@@ -69,7 +69,7 @@ class Ticket_add{
     
     set count(number){
         this.data.count = number;
-        this.render_content();
+        // this.render_content();
     }
 
     get count(){
@@ -78,7 +78,7 @@ class Ticket_add{
 
     set price(number){
         this.data.price = number;
-        this.render_content();
+        // this.render_content();
     }
 
     get price(){
@@ -129,9 +129,9 @@ class Ticket_add{
         let price = this.dom_row_ticket_price_input();
         let memo = this.dom_row_ticket_memo_input();
 
-        let html =  '<div class="obj_box_full">'+name+lecture+lecture_list+'</div>' + 
-                    // '<div class="obj_box_full">'+count+price+ '</div>' + 
-                    '<div class="obj_box_full">'+memo+ '</div>';
+        let html =  '<div class="obj_box_full">' + CComponent.dom_tag('수강권명') + name + '<div class="gap"></div>' +
+                                                   CComponent.dom_tag('수업 구성') + lecture + lecture_list + '</div>' + 
+                    '<div class="obj_box_full">' + CComponent.dom_tag('설명') + memo + '</div>';
 
         // document.getElementById(this.target.content).innerHTML = html;
         return html;
@@ -165,6 +165,7 @@ class Ticket_add{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, (set_data)=>{
                     this.lecture = set_data; //타겟에 선택된 데이터를 set
+                    this.render_content();
                 });
             });
         });

@@ -224,3 +224,4 @@ class TimeRobot{
         return {hour:resultHour, minute:resultMin}
     }
 }
+

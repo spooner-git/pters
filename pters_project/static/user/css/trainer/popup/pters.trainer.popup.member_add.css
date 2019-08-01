@@ -1,12 +1,9 @@
-.gap{
-	margin-top: 10px;
-}
 .popup_member_add{
 	-webkit-overflow-scrolling: touch;
 }
 
 .popup_member_add .obj_box_full{
-	padding: 0 16px;
+	padding: 15px 16px;
 }
 
 .popup_member_add .popup_toolbox{

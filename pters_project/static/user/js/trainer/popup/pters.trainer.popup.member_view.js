@@ -252,8 +252,8 @@ class Member_view{
         // let memo = this.dom_row_member_memo_input();
         let ticket = this.dom_row_ticket();
 
-        let html =  '<div class="obj_box_full">'+user_id+phone+birth+sex+'</div>' + 
-                    '<div class="obj_box_full">'+ticket+ '</div>';
+        let html =  '<div class="obj_box_full">' + CComponent.dom_tag('기본 정보') + user_id + phone + birth + sex + '</div>' + 
+                    '<div class="obj_box_full">' + CComponent.dom_tag('보유 수강권') + ticket + '</div>';
 
         return html;
     }

@@ -177,9 +177,9 @@ class Plan_add{
 
         let html =  `<div class="obj_box_full" style="display:${display}">` + CComponent.dom_tag('일정') + lecture_select_row + '</div>' + 
                     `<div class="obj_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' + 
-                    '<div class="obj_box_full">' + CComponent.dom_tag('일자') + date_select_row + '</div>' +
-                    '<div class="obj_box_full">' + CComponent.dom_tag('진행 시간') + start_time_select_row + end_time_select_row +  '</div>' +
-                    '<div class="obj_box_full">' + CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
+                    '<div class="obj_box_full">' +  CComponent.dom_tag('일자') + date_select_row + '<div class="gap"></div>' +
+                                                    CComponent.dom_tag('진행 시간') + start_time_select_row + end_time_select_row +  '<div class="gap"></div>' +
+                                                    CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
                     '<div class="obj_box_full">'+  CComponent.dom_tag('메모') + memo_select_row + '</div>';
 
         return html;

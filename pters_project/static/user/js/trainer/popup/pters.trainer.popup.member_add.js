@@ -93,7 +93,6 @@ class Member_add{
         return this.data.end_date;
     }
 
-
     set memo(text){
         this.data.memo = text;
         this.render_content();
@@ -196,8 +195,8 @@ class Member_add{
         let reg_count = this.dom_row_member_reg_coung_input();
         let reg_price = this.dom_row_member_reg_price_input();
 
-        let html =  '<div class="obj_box_full">'+name+phone+birth+sex+memo+'</div>' + 
-                    '<div class="obj_box_full">'+ticket + start_date+end_date+reg_count+reg_price+ '</div>';
+        let html =  '<div class="obj_box_full">' + CComponent.dom_tag('기본 정보 입력') + name + phone + birth + sex +  '</div>' + 
+                    '<div class="obj_box_full">' + CComponent.dom_tag('수강권 등록') + ticket + start_date + end_date + reg_count + reg_price + memo + '</div>';
 
         return html;
     }
@@ -216,7 +215,14 @@ class Member_add{
     }
 
     dom_row_member_name_input(){
-        let html = CComponent.create_input_row ('input_member_name', this.data.name == null ? '회원명*' : this.data.name, '/static/common/icon/person_black.png', HIDE, false, (input_data)=>{
+        let id = 'input_member_name';
+        let title = this.data.name == null ? '' : this.data.name;
+        let placeholder = '회원명*';
+        let icon = '/static/common/icon/person_black.png';
+        let icon_r_visible = HIDE;
+        let style = null;
+        let input_disabled = false;
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
         });
@@ -224,7 +230,14 @@ class Member_add{
     }
 
     dom_row_member_phone_input(){
-        let html = CComponent.create_input_number_row ('input_member_phone', this.data.phone == null ? '휴대폰 번호*' : this.data.phone, '/static/common/icon/icon_smartphone.png', HIDE, false, (input_data)=>{
+        let id = 'input_member_phone';
+        let title = this.data.phone == null ? '' : this.data.phone;
+        let placeholder = '휴대폰 번호*';
+        let icon = '/static/common/icon/icon_smartphone.png';
+        let icon_r_visible = HIDE;
+        let style = null;
+        let input_disabled = false;
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
         });
@@ -233,8 +246,11 @@ class Member_add{
 
     dom_row_member_birth_input(){
         //등록하는 행을 만든다.
-        let birth_text = this.data.birth == null ? '생년월일' : Object.values(this.data.birth).join('.');
-        let html = CComponent.create_row('input_member_birth', birth_text, '/static/common/icon/icon_cake.png', HIDE, ()=>{ 
+        let id = 'input_member_birth';
+        let title = this.data.birth == null ? '생년월일' : Object.values(this.data.birth).join('.');
+        let icon = '/static/common/icon/icon_cake.png';
+        let icon_r_visible = HIDE;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -256,20 +272,31 @@ class Member_add{
     }
 
     dom_row_member_sex_input(){
-        let html = CComponent.create_row ('input_member_sex', this.data.sex == null ? '성별' : this.data.sex, '/static/common/icon/person_black.png', HIDE, (input_data)=>{
+        let id = 'input_member_sex';
+        let title = this.data.sex == null ? '성별' : this.data.sex;
+        let icon = '/static/common/icon/person_black.png';
+        let icon_r_visible = HIDE;
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, ()=>{
             let user_option = {
                                 male:{text:"남성", callback:()=>{this.sex = "M";layer_popup.close_layer_popup();}},
                                 female:{text:"여성", callback:()=>{this.sex = "W";layer_popup.close_layer_popup();}}
             };
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
-                var option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
             });
         });
         return html;
     }
 
     dom_row_member_memo_input(){
-        let html = CComponent.create_input_row ('input_member_memo', this.data.memo == null ? '특이사항' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, false, (input_data)=>{
+        let id = 'input_member_memo';
+        let title = this.data.memo == null ? '' : this.data.memo;
+        let placeholder = '특이사항';
+        let icon = '/static/common/icon/icon_note.png';
+        let icon_r_visible = HIDE;
+        let style = null;
+        let input_disabled = false;
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });
@@ -277,10 +304,16 @@ class Member_add{
     }
 
     dom_row_ticket_select(){
-        let ticket_text = this.data.ticket_id.length == 0 ? '수강권*' : this.data.ticket_name.join(', ');
-        let html = CComponent.create_row('input_ticket_select', ticket_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
-            layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                var ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1);
+        let id = 'input_ticket_select';
+        let title = this.data.ticket_id.length == 0 ? '수강권*' : this.data.ticket_name.join(', ');
+        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon_r_visible = SHOW;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, ()=>{ 
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1, (set_data)=>{
+                    this.ticket = set_data;
+                    this.render_content();
+                });
             });
         });
         return html;
@@ -331,7 +364,14 @@ class Member_add{
     }
 
     dom_row_member_reg_coung_input(){
-        let html = CComponent.create_input_number_row ('input_reg_count', this.data.ticket_reg_count == null ? '횟수*' : this.data.ticket_reg_count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
+        let id = 'input_reg_count';
+        let title = this.data.ticket_reg_count == null ? '' : this.data.ticket_reg_count+'회';
+        let placeholder = '횟수*';
+        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon_r_visible = HIDE;
+        let style = null;
+        let input_disabled = false;
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.reg_count = user_input_data;
         });
@@ -339,14 +379,19 @@ class Member_add{
     }
 
     dom_row_member_reg_price_input(){
-        let html = CComponent.create_input_number_row ('input_reg_price', this.data.ticket_price == null ? '가격' : this.data.ticket_price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
+        let id = 'input_reg_price';
+        let title = this.data.ticket_price == null ? '' : this.data.ticket_price+'원';
+        let placeholder = '가격';
+        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon_r_visible = HIDE;
+        let style = null;
+        let input_disabled = false;
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.reg_price = user_input_data;
         });
         return html;
     }
-
-
 
 
     switch_type(){
