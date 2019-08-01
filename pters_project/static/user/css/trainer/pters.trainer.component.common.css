@@ -166,14 +166,14 @@ input:disabled{
 
 .select_lecture_row{
 	list-style: none;
-	line-height: 50px;
-	height: 50px;
+	line-height: 60px;
+	height: 60px;
 	cursor: pointer;
 	font-size: 13px;
 	font-weight: 500;
 	letter-spacing: -0.5px;
 
-	border-bottom: 1px solid #cccccc;
+	/* border-bottom: 1px solid #cccccc; */
 	padding: 5px 16px;
 }
 
@@ -184,8 +184,9 @@ input:disabled{
 }
 
 .select_lecture_row .cell_lecture_color .lecture_color_bar{
-	width: 3px;
-	height: 30px;
+	width: 16px;
+	height: 16px;
+	border-radius: 8px;
 	display: inline-block;
 	vertical-align: middle;
 }
@@ -194,6 +195,12 @@ input:disabled{
 	display: table-cell;
 	width: auto;
 	vertical-align: middle;
+}
+
+.select_lecture_row .cell_lecture_info > .lecture_additional_info{
+	font-size: 11px;
+	font-weight: 500;
+	color: #5c5859;
 }
 
 .select_lecture_row .cell_lecture_info > div{

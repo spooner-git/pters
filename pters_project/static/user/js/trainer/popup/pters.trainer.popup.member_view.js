@@ -37,6 +37,7 @@ class Member_view{
                         ticket_reg_count:null,
                         ticket_rem_count:null,
                         ticket_price:null,
+                        ticket_state:null,
                         start_date:null,
                         start_date_text:null,
                         end_date:null,
@@ -195,7 +196,6 @@ class Member_view{
                     }
 
                     Ticket_func.read({"ticket_id": ticket_list[ticket].member_ticket_ticket_id}, (data)=>{
-                        console.log(data)
                         let ticket_of_member = {
                                             ticket_id:data.ticket_info.ticket_id,
                                             ticket_name:data.ticket_info.ticket_name,
@@ -203,6 +203,7 @@ class Member_view{
                                             ticket_reg_count:ticket_reg_count_of_this_member,
                                             ticket_rem_count:ticket_rem_count_of_this_member,
                                             ticket_price:ticket_reg_price_of_this_member,
+                                            ticket_state:data.ticket_info.ticket_state_cd,
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member),
                                             end_date:ticket_end_date_of_this_member,
@@ -381,9 +382,13 @@ class Member_view{
 
         let html_to_join = [];
         for(let i=0; i<ticket_length; i++){
+            let ticket_name = this.data.ticket[i].ticket_name;
+            if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
+                ticket_name = `<span style="text-decoration:line-through;color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`
+            }
 
             //티켓 이름 표기 부분
-            let ticket_text = this.data.ticket[i].ticket_id.length == 0 ? '수강권*' : this.data.ticket[i].ticket_name;
+            let ticket_text = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
             let html_ticket_name = CComponent.create_row(`input_ticket_select_${i}`, ticket_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
                 let ticket_id =  this.data.ticket[i].ticket_id;
                 // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
@@ -529,6 +534,7 @@ class Member_simple_view{
                         ticket_reg_count:null,
                         ticket_rem_count:null,
                         ticket_price:null,
+                        ticket_state:null,
                         start_date:null,
                         start_date_text:null,
                         end_date:null,
@@ -587,6 +593,7 @@ class Member_simple_view{
                                             ticket_reg_count:ticket_reg_count_of_this_member,
                                             ticket_rem_count:ticket_rem_count_of_this_member,
                                             ticket_price:ticket_reg_price_of_this_member,
+                                            ticket_state:data.ticket_info.ticket_state_cd,
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member),
                                             end_date:ticket_end_date_of_this_member,
@@ -709,9 +716,13 @@ class Member_simple_view{
 
         let html_to_join = [];
         for(let i=0; i<ticket_length; i++){
+            let ticket_name = this.data.ticket[i].ticket_name;
+            if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
+                ticket_name = `<span style="text-decoration:line-through;color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`
+            }
 
             //티켓 이름 표기 부분
-            let ticket_text = this.data.ticket[i].ticket_id.length == 0 ? '수강권*' : this.data.ticket[i].ticket_name;
+            let ticket_text = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
             let html_ticket_name = CComponent.create_row(`input_ticket_select_${i}`, ticket_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
                 let ticket_id =  this.data.ticket[i].ticket_id;
                 // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{

@@ -187,7 +187,7 @@ class CComponent{
     }
 
     //수업 선택 팝업에 사용되는 행
-    static select_lecture_row (multiple_select, checked, lecture_id, lecture_name, color_code, max_member_num, onclick){
+    static select_lecture_row (multiple_select, checked, lecture_id, lecture_name, color_code, max_member_num, ing_member_num,onclick){
         let html = `
                     <li class="select_lecture_row" id="select_lecture_row_${lecture_id}">
                         <div class="obj_table_raw">
@@ -197,7 +197,7 @@ class CComponent{
                             </div>
                             <div class="cell_lecture_info">
                                 <div>${lecture_name}</div>
-                                <div>정원 - ${max_member_num} 명</div>
+                                <div class="lecture_additional_info">정원 - ${max_member_num} 명 / 진행중 - ${ing_member_num} 명</div>
                             </div>
                             <div class="cell_lecture_selected">
                                 <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? 'none' : 'lecture_selected'}">

@@ -146,6 +146,7 @@ class Plan_view{
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.wrapper_top').style.backgroundColor = this.data.lecture_color;
+        document.querySelector('.wrapper_top').style.border = 0;
     }
 
     render_toolbox(){
@@ -169,11 +170,13 @@ class Plan_view{
         let start_time_select_row = this.dom_row_start_time_select();
         let end_time_select_row = this.dom_row_end_time_select();
         let memo_select_row = this.dom_row_memo_select();
+
+        let display = "";
         if(this.data.schedule_type == 0){
-            member_select_row = "";
+            display = 'none';
         }
         
-        let html =  '<div class="obj_box_full">'+ CComponent.dom_tag('회원') + member_select_row + member_list_row+'</div>' + 
+        let html =  `<div class="obj_box_full" style="display:${display}">`+ CComponent.dom_tag('회원') + member_select_row + member_list_row+'</div>' + 
                     '<div class="obj_box_full">' +  CComponent.dom_tag('일자') + date_select_row + 
                                                     CComponent.dom_tag('진행시간') + start_time_select_row + end_time_select_row + '</div>' +
                     '<div class="obj_box_full">'+ CComponent.dom_tag('메모') + memo_select_row + '</div>';

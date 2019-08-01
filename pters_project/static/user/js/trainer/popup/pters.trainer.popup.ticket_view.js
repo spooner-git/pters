@@ -525,7 +525,7 @@ class Ticket_simple_view{
     }
 
     dom_row_lecture_select(){
-        let lecture_text = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개';
+        let lecture_text = this.data.lecture_id.length == 0 ? '수업 0개' : this.data.lecture_name.length+'개';
         let html = CComponent.create_row('lecture_select_view', lecture_text, '/static/common/icon/icon_book.png', HIDE, ()=>{ 
             // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
             //     lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999);
