@@ -53,7 +53,6 @@ urlpatterns = [
     url(r'^register_business/$', views.RegisterBusinessView.as_view(), name='register_business'),
     url(r'^register_type/$', views.RegisterTypeSelectView.as_view(), name='register_type'),
     url(r'^add_member_info_email/$', views.add_member_info_logic_test, name='add_member_info_email'),
-    url(r'^check_member_id/$', views.CheckMemberIdView.as_view(), name='check_member_id'),
     url(r'^check_member_email/$', views.CheckMemberEmailView.as_view(), name='check_member_email'),
     url(r'^check_member_form_validation/$', views.CheckMemberValidationView.as_view(),
         name='check_member_form_validation'),
@@ -144,4 +143,8 @@ urlpatterns = [
     url(r'^reset_password/$', views.ResetPasswordView.as_view(), name='reset_password'),
     url(r'^reset_password_sms/$', views.ResetPasswordSmsView.as_view(), name='reset_password_sms'),
 
+
+
+    # refactoring
+    url(r'^check_member_username/$', views.CheckMemberUsernameView.as_view(), name='check_member_username'),
 ]

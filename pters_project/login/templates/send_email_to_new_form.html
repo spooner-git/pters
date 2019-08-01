@@ -1087,9 +1087,9 @@
                 var $form = $('#add-member-id-form');
                 var serializeArray = $form.serializeArray();
                 $.ajax({
-                    url:'/login/check_member_id/',
+                    url:'/login/check_member_username/',
                     type:'GET',
-                    //data:{"id" : $('#id_input').val() },
+                    //data:{"username" : $('#id_input').val() },
                     data:serializeArray,
                     dataType : 'html',
 

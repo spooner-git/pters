@@ -296,9 +296,9 @@
 
         function check_id(){
             $.ajax({
-                url:'/login/check_member_id/',
+                url:'/login/check_member_username/',
                 type:'GET',
-                data:{"id" : $('#id_input').val() },
+                data:{"username" : $('#id_input').val() },
                 dataType : 'html',
 
                 beforeSend:function(){
