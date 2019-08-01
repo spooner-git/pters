@@ -9,6 +9,16 @@
 	padding: 0 16px;
 }
 
+.popup_member_view .popup_toolbox{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+}
+
+.popup_member_view .popup_content{
+	padding-top: 1px;
+}
+
 
 /* 간단 보기 */
 .popup_member_simple_view{

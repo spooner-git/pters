@@ -21,6 +21,7 @@
             position: sticky;
             position: -webkit-sticky;
             top: 0;
+            background-color: #ffffff;
         }
             .popup_mobile .wrapper_top .logo_pters{
                 width: 80px;

@@ -6,5 +6,15 @@
 }
 
 .popup_plan_add .obj_box_full{
-	padding: 0 16px;
+	padding: 15px 16px;
+}
+
+.popup_plan_add .popup_toolbox{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+}
+
+.popup_plan_add .popup_content{
+	padding-top: 1px;
 }

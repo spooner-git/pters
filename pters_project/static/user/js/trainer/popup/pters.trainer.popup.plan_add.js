@@ -114,10 +114,8 @@ class Plan_add{
         }
         this.list_type = type;
 
-        // this.render_initial();
-        // this.render_toolbox();
-        // this.render_content();
         this.render();
+        func_set_webkit_overflow_scrolling('.wrapper_middle');
     }
 
     set_initial_data(data){
@@ -143,8 +141,8 @@ class Plan_add{
         let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();plan_add_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="plan_add_popup.send_data()">등록</span></span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full" style="border:0">${this.dom_assembly_toolbox()}</section>
-                        <section id="${this.target.content}">${this.dom_assembly_content()}</section>`;
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -160,7 +158,7 @@ class Plan_add{
     }
 
     dom_assembly_toolbox(){
-       return this.dom_row_toolbox();
+        return this.dom_row_toolbox();
     }
     
     dom_assembly_content(){
@@ -172,14 +170,17 @@ class Plan_add{
         let repeat_select_row = this.dom_row_repeat_select();
         let memo_select_row = this.dom_row_memo_select();
 
+        let display = "";
         if(this.list_type != "lesson"){
-            lecture_select_row = "";
-            member_select_row = "";
+            display = 'none';
         }
 
-        let html =  '<div class="obj_box_full">'+lecture_select_row + member_select_row+'</div>' + 
-                    '<div class="obj_box_full">' + date_select_row + start_time_select_row + end_time_select_row + repeat_select_row + '</div>' +
-                    '<div class="obj_box_full">'+  memo_select_row + '</div>';
+        let html =  `<div class="obj_box_full" style="display:${display}">` + CComponent.dom_tag('일정') + lecture_select_row + '</div>' + 
+                    `<div class="obj_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' + 
+                    '<div class="obj_box_full">' + CComponent.dom_tag('일자') + date_select_row + '</div>' +
+                    '<div class="obj_box_full">' + CComponent.dom_tag('진행 시간') + start_time_select_row + end_time_select_row +  '</div>' +
+                    '<div class="obj_box_full">' + CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
+                    '<div class="obj_box_full">'+  CComponent.dom_tag('메모') + memo_select_row + '</div>';
 
         return html;
     }
@@ -312,7 +313,7 @@ class Plan_add{
 
     dom_row_memo_select(){
         let style = null;
-        let html = CComponent.create_input_row ('select_memo', this.data.memo == "" ? '일정 메모' : this.data.memo, '일정 메모','/static/common/icon/icon_note.png', HIDE, style, false, (input_data)=>{
+        let html = CComponent.create_input_row ('select_memo', this.data.memo == "" ? '' : this.data.memo, '일정 메모','/static/common/icon/icon_note.png', HIDE, style, false, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });

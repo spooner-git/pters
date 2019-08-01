@@ -9,6 +9,16 @@
 	padding: 0 16px;
 }
 
+.popup_ticket_view .popup_toolbox{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+}
+
+.popup_ticket_view .popup_content{
+	padding-top: 1px;
+}
+
 /* 간단보기 */
 .popup_ticket_simple_view{
 }

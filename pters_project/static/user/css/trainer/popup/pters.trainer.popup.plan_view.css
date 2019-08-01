@@ -9,6 +9,17 @@
 	padding: 0 16px;
 }
 
+.popup_plan_view .popup_toolbox{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+}
+
+.popup_plan_view .popup_content{
+	padding-top: 1px;
+}
+
+
 #wrapper_box_plan_view_toolbox{
 	border: 0;
 }

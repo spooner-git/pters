@@ -2,6 +2,7 @@
  @import url(/static/common/fonts/notosanskr.css);
  html{
      font-family: 'Noto Sans KR', sans-serif !important;
+     box-sizing: border-box !important;
  /* background-color: #f7f5f6;*/
  }
 

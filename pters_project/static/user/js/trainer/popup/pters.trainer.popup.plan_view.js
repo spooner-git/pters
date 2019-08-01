@@ -102,6 +102,7 @@ class Plan_view{
     init (){
         this.request_data(()=>{
             this.render();
+            func_set_webkit_overflow_scrolling('.wrapper_middle');
         });
     }
 
@@ -138,8 +139,8 @@ class Plan_view{
         let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();plan_view_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="plan_view_popup.upper_right_menu();"></span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full" style="border:0;padding:0">${this.dom_assembly_toolbox()}</section>
-                        <section id="${this.target.content}">${this.dom_assembly_content()}</section>`;
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;padding:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 

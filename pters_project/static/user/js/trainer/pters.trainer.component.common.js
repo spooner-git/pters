@@ -17,6 +17,11 @@ class CComponent{
         return html;
     }
 
+    static dom_tag(tag_name){
+        let html = `<div class="dom_tag">${tag_name}</div>`;
+        return html;
+    }
+
     //추가 페이지들에서 자주 사용되는 row 스타일
     static create_row (id, title, icon, icon_r_visible, onclick){
         if(icon == null){
