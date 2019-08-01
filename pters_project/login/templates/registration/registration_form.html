@@ -5,37 +5,7 @@
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="751903262384-dbtt6ho5imk5gssgn1rqpe3vs3linq15.apps.googleusercontent.com">
     <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
-    <style type="text/css">
-        .auth_button{
-            width: 80px;
-            height: 46px;
-            border-radius: 2px;
-            border: solid 1px #d6d2d2;
-            float: right;
-            font-family: NotoSansCJKkr;
-            font-size: 15px;
-            font-weight: 500;
-            font-style: normal;
-            font-stretch: normal;
-            line-height: 46px;
-            letter-spacing: -0.5px;
-            text-align: center;
-            color: #b8b4b4;
-        }
-        .input_description{
-            width: 100%;
-            margin-top:5px;
-            margin-bottom:10px;
-            text-indent: 10px;
-            font-size: 12px;
-            font-weight: 500;
-            font-style: normal;
-            font-stretch: normal;
-        }
-        .input_description_text{
-            color: #fe4e65;
-        }
-    </style>
+
 {% endblock %}
 {% block content %}
     <!-- Google reCapcha v3 -->
@@ -49,28 +19,27 @@
         });
     </script>
     <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
-                      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
 
     <div id="root_content">
         <div id="registration_box">
+            <!-- 헤더 영역 -->
             <div class="registration_top" style="border-bottom:0px;">
                 <div class="registration_left" onclick="location.href='{% url "login:registration_check" %}'">X</div>
                 <div class="registration_title" style="display:none;">회원가입</div>
                 <div class="registration_right"></div>
             </div>
 
-            <form action="../" id="add-member-id-form" method="post" autocomplete="new-password">
-                {% csrf_token %}
-                <input type="hidden" name="group_type" id="id_group_type" value="trainer" autocomplete="off">
-
-                <div class="registration_content" style="min-height: calc(100% - 190px);">
+            <!-- 입력 영역 -->
+            <div class="registration_content" style="min-height: calc(100% - 190px);">
+                <form action="../" id="add-member-id-form" method="post" autocomplete="new-password">
+                    {% csrf_token %}
+                    <input type="hidden" name="group_type" id="id_group_type" value="trainer" autocomplete="off">
+                    <!-- 회원가입 제목 영역 -->
                     <div class="wrapper_registration_content_title" style="margin-bottom:40px; height:24px;">
                         <div class="registration_content_title" style="font-size: 20px; font-weight: bold; color: #1f1d1e; letter-spacing: -1px; text-align: center;">회원가입</div>
                     </div>
-                    <!-- PTERS 로그인 버튼 노출 영역 -->
+
+                    <!-- 그룹 타입 선택 영역 -->
                     <div class="group_select_box_on" id="group_select_trainer_box" onclick="check_group_select('trainer');">
                         강사
                     </div>
@@ -78,6 +47,7 @@
                         회원
                     </div>
 
+                    <!-- 이름 입력 영역 -->
                     <div style="margin-top:8px;">
                         <input class="pters_login_input" type="text" name="name" id="id_name" placeholder="이름" minlength="2" maxlength="8"
                                pattern="[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]" onkeyup="limit_char_check(event);" data-valid="false" autofocus>
@@ -86,7 +56,9 @@
                             <div id="id_name_default_confirm"> -_ 제외 특수문자 불가</div>
                         </div>
                     </div>
-                    <div style="margin-top:8px;">
+
+                    <!-- 아이디 입력 영역 -->
+                   <div style="margin-top:8px;">
                         <input class="pters_login_input" type="text" name="username" id="id_username" placeholder="아이디" minlength="4" maxlength="20"
                                pattern="[^a-zA-Z0-9-._@]" onkeyup="limit_char_check(event);" data-valid="false">
                         <div class="input_description">
@@ -95,6 +67,7 @@
                         </div>
                     </div>
 
+                    <!-- 비밀번호 입력 영역 -->
                     <div style="margin-top:8px;">
                         <input class="pters_login_input" type="password" name="password" id="id_password" placeholder="비밀번호" minlength="8" maxlength="20"
                                 pattern="[^a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\/]" onkeyup="limit_password_check(event);" data-valid="false">
@@ -103,7 +76,9 @@
                             <div id="id_password_default_confirm">한글을 제외한 특수문자(공백 제외)/영문/숫자를 혼합</div>
                         </div>
                     </div>
-                    <div style="margin-top:8px;">
+
+                    <!-- 비밀번호 재입력 영역 -->
+                   <div style="margin-top:8px;">
                         <input class="pters_login_input" type="password" name="password_re" id="id_password_re" placeholder="비밀번호 확인" minlength="8" maxlength="20"
                                 onkeyup="password_check(event);" data-valid="false">
                         <div class="input_description">
@@ -112,6 +87,7 @@
                         </div>
                     </div>
 
+                    <!-- 휴대폰 번호 입력 영역 -->
                     <div style="margin-top:8px;">
                         <input class="pters_login_input" type="text" name="phone" id="id_phone" placeholder="휴대폰 번호" minlength="10" maxlength="11"
                                autocomplete="off" style="width:232px;" pattern="[^0-9]" onkeyup="limit_char_auto_correction(event); check_sms_auth_button(event);" data-valid="false">
@@ -119,8 +95,8 @@
                         <div id="id_phone_confirm"></div>
                     </div>
 
+                    <!-- 인증 번호 입력 영역 -->
                     <div style="margin-top:8px;">
-
                         <div id="wrapper_id_activation" style="width: 232px; border: solid 1px #d6d2d2; display:inline-block">
                             <input class="pters_login_input" type="text" name="activation_code" id="id_activation_code" placeholder="인증 번호" maxlength="8"
                                    style="width:70%; border:0" pattern="[^0-9]" onkeyup="limit_char_auto_correction(event);" data-valid="false">
@@ -129,6 +105,7 @@
                         <div class="auth_button" id="sms_auth_code" onclick="check_sms_auth_code();">확인</div>
                     </div>
 
+                    <!-- 약관 동의 영역 -->
                     <div style="width:320px; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
                     <div class="contract">
                         <span class="all_contract">전체 약관에 동의</span>
@@ -148,8 +125,10 @@
                             <span class="contract_select_check contract_detail_select_check" id="privacy" data-check="false"></span>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
+
+            <!-- 가입 완료 버튼 영역 -->
             <div class="registration_foot" style="margin-top:40px; transform: initial; padding-bottom:0px;">
                 <div class="social_login_box" onclick="document.getElementById('sns-form').submit();" style="background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
                     <div class="social_login_img"></div>
