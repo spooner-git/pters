@@ -62,87 +62,94 @@
                 <div class="registration_right"></div>
             </div>
 
-            <div class="registration_content" style="min-height: calc(100% - 190px);">
-                <div class="wrapper_registration_content_title" style="margin-bottom:40px; height:24px;">
-                    <div class="registration_content_title" style="font-size: 20px; font-weight: bold; color: #1f1d1e; letter-spacing: -1px; text-align: center;">회원가입</div>
-                </div>
-                <!-- PTERS 로그인 버튼 노출 영역 -->
-                <div class="group_select_box_on" id="group_select_trainer_box" onclick="check_group_select('trainer');">
-                    강사
-                </div>
-                <div class="group_select_box_off" id="group_select_trainee_box" onclick="check_group_select('trainee');" style="float:right;">
-                    회원
-                </div>
+            <form action="../" id="add-member-id-form" method="post" autocomplete="new-password">
+                {% csrf_token %}
+                <input type="hidden" name="group_type" id="id_group_type" value="trainer" autocomplete="off">
 
-                <div style="margin-top:8px;">
-                    <input class="pters_login_input" type="text" name="name" id="id_name" placeholder="이름" minlength="2" maxlength="8"
-                           pattern="[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]" onkeyup="limit_char_check(event);" autofocus>
-                    <div class="input_description">
-                        <div class="input_description_text" id="id_name_confirm"></div>
-                        <div id="id_name_default_confirm"> -_ 제외 특수문자 불가</div>
+                <div class="registration_content" style="min-height: calc(100% - 190px);">
+                    <div class="wrapper_registration_content_title" style="margin-bottom:40px; height:24px;">
+                        <div class="registration_content_title" style="font-size: 20px; font-weight: bold; color: #1f1d1e; letter-spacing: -1px; text-align: center;">회원가입</div>
                     </div>
-                </div>
-                <div style="margin-top:8px;">
-                    <input class="pters_login_input" type="text" name="username" id="id_username" placeholder="아이디" minlength="4" maxlength="20"
-                           pattern="[^a-zA-Z0-9-._@]" onkeyup="limit_char_check(event);">
-                    <div class="input_description">
-                        <div class="input_description_text" id="id_username_confirm"></div>
-                        <div id="id_username_default_confirm">영어, 숫자, -_@ 제외 불가</div>
+                    <!-- PTERS 로그인 버튼 노출 영역 -->
+                    <div class="group_select_box_on" id="group_select_trainer_box" onclick="check_group_select('trainer');">
+                        강사
                     </div>
-                </div>
+                    <div class="group_select_box_off" id="group_select_trainee_box" onclick="check_group_select('trainee');" style="float:right;">
+                        회원
+                    </div>
 
-                <div style="margin-top:8px;">
-                    <input class="pters_login_input" type="password" name="password" id="id_password" placeholder="비밀번호" minlength="8" maxlength="20"
-                            pattern="[^a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\/]" onkeyup="limit_password_check(event);">
-                    <div class="input_description">
-                        <div class="input_description_text" id="id_password_confirm"></div>
-                        <div id="id_password_default_confirm">한글을 제외한 특수문자(공백 제외)/영문/숫자를 혼합</div>
+                    <div style="margin-top:8px;">
+                        <input class="pters_login_input" type="text" name="name" id="id_name" placeholder="이름" minlength="2" maxlength="8"
+                               pattern="[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]" onkeyup="limit_char_check(event);" data-valid="false" autofocus>
+                        <div class="input_description">
+                            <div class="input_description_text" id="id_name_confirm"></div>
+                            <div id="id_name_default_confirm"> -_ 제외 특수문자 불가</div>
+                        </div>
                     </div>
-                </div>
-                <div style="margin-top:8px;">
-                    <input class="pters_login_input" type="password" name="password_re" id="id_password_re" placeholder="비밀번호 확인" minlength="8" maxlength="20"
-                            onkeyup="password_check(event);">
-                    <div class="input_description">
-                        <div class="input_description_text" id="id_password_re_confirm"></div>
-                        <div id="id_password_re_default_confirm">동일한 비밀번호 입력</div>
+                    <div style="margin-top:8px;">
+                        <input class="pters_login_input" type="text" name="username" id="id_username" placeholder="아이디" minlength="4" maxlength="20"
+                               pattern="[^a-zA-Z0-9-._@]" onkeyup="limit_char_check(event);" data-valid="false">
+                        <div class="input_description">
+                            <div class="input_description_text" id="id_username_confirm"></div>
+                            <div id="id_username_default_confirm">영어, 숫자, -_@ 제외 불가</div>
+                        </div>
                     </div>
-                </div>
 
-                <div style="margin-top:8px;">
-                    <input class="pters_login_input" type="text" name="phone" id="id_phone" placeholder="휴대폰 번호" minlength="10" maxlength="11"
-                           autocomplete="off" style="width:232px;" pattern="[^0-9]" onkeyup="limit_char_auto_correction(event);">
-                    <div class="auth_button" id="id_auth_button" onclick="activate_sms();">인증</div>
-                    <div id="id_phone_confirm"></div>
-                </div>
+                    <div style="margin-top:8px;">
+                        <input class="pters_login_input" type="password" name="password" id="id_password" placeholder="비밀번호" minlength="8" maxlength="20"
+                                pattern="[^a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\/]" onkeyup="limit_password_check(event);" data-valid="false">
+                        <div class="input_description">
+                            <div class="input_description_text" id="id_password_confirm"></div>
+                            <div id="id_password_default_confirm">한글을 제외한 특수문자(공백 제외)/영문/숫자를 혼합</div>
+                        </div>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <input class="pters_login_input" type="password" name="password_re" id="id_password_re" placeholder="비밀번호 확인" minlength="8" maxlength="20"
+                                onkeyup="password_check(event);" data-valid="false">
+                        <div class="input_description">
+                            <div class="input_description_text" id="id_password_re_confirm"></div>
+                            <div id="id_password_re_default_confirm">동일한 비밀번호 입력</div>
+                        </div>
+                    </div>
 
-                <div style="margin-top:8px;">
-                    <input class="pters_login_input" type="text" name="activation_code" id="id_activation_code" placeholder="인증 번호" maxlength="8"
-                           style="width:232px;" pattern="[^0-9]" onkeyup="limit_char_auto_correction(event);">
-                    <div class="auth_button" id="sms_auth_code">확인</div>
-                    <div id="auth_timer" style="display:none; width:30%; text-align:right; padding-right:16px;">03:00</div>
-                </div>
+                    <div style="margin-top:8px;">
+                        <input class="pters_login_input" type="text" name="phone" id="id_phone" placeholder="휴대폰 번호" minlength="10" maxlength="11"
+                               autocomplete="off" style="width:232px;" pattern="[^0-9]" onkeyup="limit_char_auto_correction(event); check_sms_auth_button(event);" data-valid="false">
+                        <button class="auth_button" id="id_auth_button" onclick="activate_sms();" disabled>인증</button>
+                        <div id="id_phone_confirm"></div>
+                    </div>
 
-                <div style="width:320px; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
-                <div class="contract">
-                    <span class="all_contract">전체 약관에 동의</span>
-                    <div class="contract_select_box" onclick="select_contract('all');">
-                        <span class="contract_select_check" id="all_contract" data-check="false"></span>
+                    <div style="margin-top:8px;">
+
+                        <div id="wrapper_id_activation" style="width: 232px; border: solid 1px #d6d2d2; display:inline-block">
+                            <input class="pters_login_input" type="text" name="activation_code" id="id_activation_code" placeholder="인증 번호" maxlength="8"
+                                   style="width:70%; border:0" pattern="[^0-9]" onkeyup="limit_char_auto_correction(event);" data-valid="false">
+                            <div id="auth_timer" style="display:none; width:30%; text-align:right; padding-right:16px;">03:00</div>
+                        </div>
+                        <div class="auth_button" id="sms_auth_code" onclick="check_sms_auth_code();">확인</div>
+                    </div>
+
+                    <div style="width:320px; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
+                    <div class="contract">
+                        <span class="all_contract">전체 약관에 동의</span>
+                        <div class="contract_select_box" onclick="select_contract('all_contract');">
+                            <span class="contract_select_check" id="all_contract" data-check="false"></span>
+                        </div>
+                    </div>
+                    <div class="contract">
+                        <span class="detail_contract" onclick="location.href='/privacy/'">가입 약관</span>
+                        <div class="contract_select_box" onclick="select_contract('policy');">
+                            <span class="contract_select_check contract_detail_select_check" id="policy" data-check="false"></span>
+                        </div>
+                    </div>
+                    <div class="contract">
+                        <span class="detail_contract" onclick="location.href='/policy/'">개인 정보 처리 방침</span>
+                        <div class="contract_select_box" onclick="select_contract('privacy');">
+                            <span class="contract_select_check contract_detail_select_check" id="privacy" data-check="false"></span>
+                        </div>
                     </div>
                 </div>
-                <div class="contract">
-                    <span class="detail_contract" onclick="location.href='/privacy/'">가입 약관</span>
-                    <div class="contract_select_box" onclick="select_contract('policy');">
-                        <span class="contract_select_check contract_detail_select_check" id="policy" data-check="false"></span>
-                    </div>
-                </div>
-                <div class="contract">
-                    <span class="detail_contract" onclick="location.href='/policy/'">개인 정보 처리 방침</span>
-                    <div class="contract_select_box" onclick="select_contract('privacy');">
-                        <span class="contract_select_check contract_detail_select_check" id="privacy" data-check="false"></span>
-                    </div>
-                </div>
-            </div>
-
+            </form>
             <div class="registration_foot" style="margin-top:40px; transform: initial; padding-bottom:0px;">
                 <div class="social_login_box" onclick="document.getElementById('sns-form').submit();" style="background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
                     <div class="social_login_img"></div>
@@ -153,19 +160,6 @@
         </div>
     </div>
 
-    <form action="../" id="add-member-id-form" method="post" autocomplete="new-password">
-        {% csrf_token %}
-        <div style="display:none;">
-            {{ form.as_p }}
-        </div>
-        <input type="hidden" name="id" id="newid2" value=""  autocomplete="off">
-        <input type="hidden" name="first_name" id="first_name" value=""  autocomplete="off">
-        <input type="hidden" name="last_name" id="last_name" value=""  autocomplete="off">
-        <input type="hidden" name="name" id="newname" value=""  autocomplete="off">
-        <input type="hidden" id="id_duplicate_check" value="none"  autocomplete="off">
-        <input type="hidden" name="group_type" id="id_group_type" value="trainer" autocomplete="off">
-    </form>
-
 {% endblock %}
 
 {% block local_js_footer %}
@@ -173,19 +167,34 @@
     <script type="text/javascript">
 
         let activation_timer = 180;
-        let activation_check = false;
 
-        // 회원 아이디 검사(with backend)
-        var $form = $('#add-member-id-form');
-        $('#id_username').focusout(function(){
-            check_username($(this).val());
-        });
+        function check_sms_auth_button(event){
+            if(event.target.value.length>10){
+                let id_auth_button = $('#id_auth_button');
+                id_auth_button.css({'color':'#fe4e65', 'border':'solid 1px #fe4e65'});
+                id_auth_button.attr('disabled', false);
+            }
+            else{
+                let id_auth_button = $('#id_auth_button');
+                id_auth_button.css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2'});
+                id_auth_button.attr('disabled', true);
+            }
+        }
 
-        function check_username(data){
+        //특수문자 입력 제한
+
+       var auth_time_interval;
+       function activate_sms(){
+            $('#id_phone_confirm').text(" ").css({'display':'none'});
+            $('#auth_timer').text('03:00');
+            $('#id_auth_button').text('재인증');
+            activation_timer = 180;
             $.ajax({
-                url:'/login/check_member_username/',
+                url:'/login/activate_sms/',
                 type:'POST',
-                data:{"username" : data },
+                data:{'token':document.getElementById('g-recaptcha-response').value,
+                      'phone':document.getElementById('id_phone').value
+                     },
                 dataType : 'html',
 
                 beforeSend:function(xhr, settings) {
@@ -193,329 +202,44 @@
                         xhr.setRequestHeader("X-CSRFToken", csrftoken);
                     }
                 },
-
                 //통신성공시 처리
                 success:function(data){
-                    let jsondata = JSON.parse(data);
-                    console.log(jsondata);
-                    if(jsondata.messageArray.length>0){
-                        console.log(jsondata.messageArray);
-                        $('#id_username_confirm').text(jsondata.messageArray).css({'display':'block'});
+                    let jsondata = $.parseJSON(data);
+                    if(jsondata.messageArray.length > 0){
+                        alert(jsondata.messageArray);
                     }else{
-                        $('#id_username_confirm').text('');
+                        alert('인증번호가 발송되었습니다.');
+                        $('#sms_auth_code').css('display', 'inline-block');
+                        $('#wrapper_id_activation').css('display', 'inline-block');
+                        auth_time_interval = setInterval(function(){
+                            activation_timer--;
+                            if(activation_timer<0){
+                                $('#sms_auth_code').css('display', 'none');
+                                $('#id_phone_confirm').text('인증 시간이 초과되었습니다.').css({'display':'block','color':'#fe4e65'});
+                                clearInterval(auth_time_interval);
+                            }else{
+                                let minutes = parseInt(activation_timer/60);
+                                let seconds = activation_timer - minutes*60;
+                                if(seconds<10){
+                                    seconds = '0'+seconds;
+                                }
+                                $('#auth_timer').text(minutes+':'+seconds);
+                            }
+                        }, 1000);
                     }
                 },
                 //보내기후 팝업창 닫기
                 complete:function(){
-                },
-                //통신 실패시 처리
-                error:function(){
-                    alert("에러: 서버 통신 실패")
-                }
-            });
-        }
-
-        $('button#registerMember').click(function(){
-            limit_char('#familyname_input');
-            if(limit_char_check == true){
-              var duplicate_check = $('#id_duplicate_check').val();
-
-              if(duplicate_check == 1){
-                  if(activation_check == true) {
-                      if (blank_input_check() == 1) {
-                          var $form2 = $('#add-member-id-form');
-                          var serializeArray = $form2.serializeArray();
-                          var error_msg = '';
-                          $.ajax({
-                              url: '/login/check_member_form_validation/',
-                              type: 'POST',
-                              data: serializeArray,
-                              dataType: 'html',
-
-                              beforeSend: function () {
-                              },
-
-                              //통신성공시 처리
-                              success: function (data) {
-                                  var jsondata = JSON.parse(data);
-                                  var id_check_message = jsondata.id_check_result;
-                                  if (id_check_message[0].length > 0) {
-                                      error_msg = id_check_message[0];
-
-                                      $('#global_error_msg').show().html(error_msg);
-                                      setTimeout(function () {
-                                          $('#global_error_msg').fadeOut();
-                                          //$('ul.errorlist').remove()
-                                      }, 10000);
-
-                                  } else {
-                                      $('.registerbox_add').css('transform', 'translateX(-400%)');
-                                      $('._step2_label').css('transform', 'translateX(-400%)');
-
-                                      $('.promise_wrap').css('transform', 'translateX(-50%)');
-                                      $('._step3_label').css('transform', 'translateX(-50%)');
-                                      $('.outerbox_horizontal').attr('data-view', 1);
-                                  }
-                              },
-
-                              //보내기후 팝업창 닫기
-                              complete: function () {
-
-                              },
-
-                              //통신 실패시 처리
-                              error: function () {
-                                  alert("에러: 서버 통신 실패");
-                              }
-                          })
-                      } else {
-                          console.log('test');
-                          alert(blank_input_check());
-                      }
-                  }
-                  else{
-                    alert('문자 인증을 완료 해주세요.');
-                  }
-              }else if(duplicate_check == 0){
-                  alert('사용할 수 없는 아이디입니다.');
-              }else if(duplicate_check == 'none'){
-                  alert('id 정보를 확인해주세요.');
-              }
-            }
-        });
-
-        function blank_input_check(){
-            var pw_input_length = $('#pw_input').val().length;
-            var pw_input_re_length = $('#pw_input_re').val().length;
-            var pw_confirm_text = $('.pw_confirm').text();
-            var result = 1;
-            if($('#first_name').val().length == 0 ) {
-                result = '성명을 입력해주세요';
-            }
-            else{
-                result = 1;
-            }
-            if(result == 1){
-                if(pw_input_length == 0){
-                    result = '비밀번호를 입력해주세요';
-                }else if(pw_input_re_length == 0){
-                    result = '비밀번호 확인을 입력해주세요';
-                }else if(pw_confirm_text != '비밀번호 일치'){
-                    result = '비밀번호가 일치하지 않습니다.';
-                }
-                else{
-                    result = 1;
-                }
-            }
-            return result
-        }
-
-
-
-        $('#pw_input').keyup(function(){
-            $('#pw_input_re').val("");
-            $('.pw_confirm').css({'display':'none'});
-            $('#id_password1').attr('value',$('#pw_input').val());
-            $('#id_password2').attr('value',$('#pw_input').val());
-            if($(this).val().length>=8) {
-                check_password();
-            }
-            else{
-                $('.pw_confirm').text('8자 이상 입력').css({'display':'inline','color':'#fe4e65'});
-            }
-        });
-
-        $('#pw_input_re').keyup(function(){
-            var selector_pw_input = $('#pw_input');
-            if(selector_pw_input.val().length > 7){
-                if($(this).val().length==0){
-                    $('.pw_confirm').css({'display':'none'});
-                    $('#id_password1').attr('value',"");
-                    $('#id_password2').attr('value',"");
-                }else if($(this).val() != selector_pw_input.val()){
-                    $('.pw_confirm').text('비밀번호 불일치').css({'display':'inline','color':'#fe4e65'});
-                    $('#id_password1').attr('value',"");
-                    $('#id_password2').attr('value',"");
-                }else{
-                    $('.pw_confirm').text('비밀번호 일치').css({'display':'inline','color':'green'});
-                    $('#id_password1').attr('value',$(this).val());
-                    $('#id_password2').attr('value',$(this).val());
-                }
-            }else{
-                $('.pw_confirm').text('8자 이상 입력').css({'display':'inline','color':'#fe4e65'});
-                //$('.pw_confirm').css({'display':'none'})
-                $('#id_password1').attr('value',"");
-                $('#id_password2').attr('value',"");
-            }
-        });
-
-        $('#familyname_input').keyup(function(){
-            if($(this).val().length>0){
-                limit_char(this);
-                $form.find('#newname').attr('value', $(this).val());
-                $form.find('#first_name').attr('value', $(this).val());
-            }else{
-                $form.find('#newname').attr('value',"");
-            }
-        });
-
-
-        $('button#registerMemberFinal').click(function(){
-            if($('#all_contract').attr('data-check')=='true'){
-                var $form = $('#add-member-id-form');
-                var serializeArray = $form.serializeArray();
-                console.log(serializeArray);
-                $.ajax({
-                    //url:'/accounts/register/',
-                    url:'/login/add_member_info/',
-                    type:'POST',
-                    data:serializeArray,
-                    dataType : 'html',
-
-                    beforeSend:function(){
-                        $('.ajaxloadingPC').css('display','block');
-                        $('.promise_wrap').css('opacity','0.3');
-                    },
-
-                    //통신성공시 처리
-                    success:function(data){
-                        memberInfo_add(data);
-                    },
-
-                    //보내기후 팝업창 닫기
-                    complete:function(){
-                        $('.ajaxloadingPC').css('display','none');
-                        $('.promise_wrap').css('opacity','1');
-                    },
-
-                    //통신 실패시 처리
-                    error:function(){
-
-                    }
-                })
-            }else{
-                alert('약관 동의 후 가입할 수 있습니다.');
-            }
-        });
-
-        //특수문자 입력 제한
-
-        function memberInfo_add(data){
-            var jsondata = JSON.parse(data);
-            if(jsondata.messageArray.length > 0){
-                setTimeout(function(){
-                    $('#global_error_msg').fadeOut();
-                },10000)
-            }else{
-                alert('가입이 완료되었습니다. 로그인 해주세요');
-                location.href="{% url 'login:logout' %}";
-            }
-        }
-
-        function check_password(){
-            var $form = $('#add-member-id-form');
-            var serializeArray = $form.serializeArray();
-            $.ajax({
-                url:'/login/check_member_password_form_validation/',
-                type:'POST',
-                data:serializeArray,
-                dataType : 'html',
-
-                beforeSend:function(){
-                },
-
-                //통신성공시 처리
-                success:function(data){
-                    var jsondata = JSON.parse(data);
-                    var id_check_message = jsondata.id_check_result;
-                    if(id_check_message[0].length>0){
-                        $('.pw_confirm').text(id_check_message[0]).css({'display':'inline','color':'#fe4e65'});
-
-                    }else{
-                        $('.pw_confirm').text('사용 가능 비밀번호').css({'display':'inline','color':'green'});
-
-                    }
-                },
-
-                //보내기후 팝업창 닫기
-                complete:function(){
 
                 },
-
                 //통신 실패시 처리
                 error:function(){
                     alert("에러: 서버 통신 실패");
                 }
-            })
+            });
         }
 
-        var auth_time_interval;
-       function activate_sms(){
-           if(activation_check == false){
-                $('#id_phone_confirm').text(" ").css({'display':'none'});
-                $('#auth_timer').text('03:00');
-                activation_timer = 180;
-                activation_check = false;
-                $.ajax({
-                    url:'/login/activate_sms/',
-                    type:'POST',
-                    data:{'token':document.getElementById('g-recaptcha-response').value,
-                          'phone':document.getElementById('id_phone_input').value
-                         },
-                    dataType : 'html',
-
-                    beforeSend:function(xhr, settings) {
-                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                        }
-                    },
-
-                    //통신성공시 처리
-                    success:function(data){
-                        let jsondata = $.parseJSON(data);
-                        if(jsondata.messageArray.length > 0){
-                            alert(jsondata.messageArray);
-                        }else{
-                            alert('인증번호가 발송되었습니다.');
-                            $('#sms_auth_code').css('display', 'inline-block');
-                            $('#wrapper_id_activation').css('display', 'inline-block');
-                            auth_time_interval = setInterval(function(){
-                                activation_timer--;
-                                if(activation_timer<0){
-                                    $('#sms_auth_code').css('display', 'none');
-                                    $('#wrapper_id_activation').css('display', 'none');
-                                    $('#id_phone_confirm').text('인증 시간이 초과되었습니다.').css({'display':'block','color':'#fe4e65'});
-                                    clearInterval(auth_time_interval);
-                                }else{
-                                    let minutes = parseInt(activation_timer/60);
-                                    let seconds = activation_timer - minutes*60;
-                                    if(seconds<10){
-                                        seconds = '0'+seconds;
-                                    }
-                                    $('#auth_timer').text(minutes+':'+seconds);
-                                }
-                            }, 1000);
-                        }
-                    },
-
-                    //보내기후 팝업창 닫기
-                    complete:function(){
-
-                    },
-
-                    //통신 실패시 처리
-                    error:function(){
-                        alert("에러: 서버 통신 실패");
-                    }
-                });
-
-           }
-           else{
-               alert('인증이 확인되었습니다.')
-           }
-        }
-
-        $('#sms_auth_code').click(function(){
+        function check_sms_auth_code(){
             let user_activation_code = $('#id_activation_code').val();
             $.ajax({
                 url:'/login/activate_sms_confirm/',
@@ -527,7 +251,6 @@
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                         xhr.setRequestHeader("X-CSRFToken", csrftoken);
                     }
-{#                    ajax_load_image('show');#}
                 },
 
                 //통신성공시 처리
@@ -541,19 +264,17 @@
                         $('#wrapper_id_activation').css('display', 'none');
                         $('#id_phone_confirm').text('인증 완료').css({'display':'block','color':'green'});
                         alert('인증이 완료되었습니다.');
-                        activation_check = true;
-                        $('#id_phone_input').attr('disabled', true);
                         $('#id_auth_button').text('인증 완료');
                     }
                 },
                 complete:function(){
-{#                    ajax_load_image('hide');#}
+
                 },
                 error:function(){
 
                 }
             });
-        });
+        }
 
     </script>
 {% endblock %}
