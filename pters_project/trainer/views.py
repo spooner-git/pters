@@ -2471,28 +2471,30 @@ class GetLectureIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View)
         class_id = self.request.session.get('class_id', '')
         lecture_id = request.GET.get('lecture_id', '')
         error = None
-
+        member_list = []
         lecture_ticket_data = TicketLectureTb.objects.select_related(
             'ticket_tb', 'lecture_tb').filter(class_tb_id=class_id, lecture_tb_id=lecture_id, lecture_tb__use=USE,
                                               ticket_tb__state_cd=STATE_CD_IN_PROGRESS, ticket_tb__use=USE,
                                               use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
 
-        # 수업에 속한 수강권을 가지고 있는 회원들을 가지고 오기 위한 작업
-        query_ticket_list = Q()
-        for lecture_ticket_info in lecture_ticket_data:
-            query_ticket_list |= Q(member_ticket_tb__ticket_tb_id=lecture_ticket_info.ticket_tb_id)
+        if len(lecture_ticket_data) > 0:
+            # 수업에 속한 수강권을 가지고 있는 회원들을 가지고 오기 위한 작업
+            query_ticket_list = Q()
+            for lecture_ticket_info in lecture_ticket_data:
+                query_ticket_list |= Q(member_ticket_tb__ticket_tb_id=lecture_ticket_info.ticket_tb_id)
 
-        all_class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
-            'member_ticket_tb__ticket_tb',
-            'member_ticket_tb__member').filter(query_ticket_list, class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
-                                               member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                               member_ticket_tb__ticket_tb__use=USE,
-                                               member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                               member_ticket_tb__use=USE,
-                                               use=USE).order_by('member_ticket_tb__member_id',
-                                                                 'member_ticket_tb__end_date')
+            all_class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
+                'member_ticket_tb__ticket_tb',
+                'member_ticket_tb__member').filter(query_ticket_list, class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+                                                   member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                                   member_ticket_tb__ticket_tb__use=USE,
+                                                   member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                                   member_ticket_tb__use=USE,
+                                                   use=USE).order_by('member_ticket_tb__member_id',
+                                                                     'member_ticket_tb__end_date')
 
-        member_list = func_get_member_from_member_ticket_list(all_class_member_ticket_list, lecture_id, request.user.id)
+            member_list = func_get_member_from_member_ticket_list(all_class_member_ticket_list, lecture_id, request.user.id)
+
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
