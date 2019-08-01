@@ -537,100 +537,100 @@ class Member_simple_view{
         this.set_initial_data();
     }
 
-    set name(text){
-        this.data.name = text;
-        // this.render_content();
-    }
+    // set name(text){
+    //     this.data.name = text;
+    //     // this.render_content();
+    // }
 
-    get name(){
-        return this.data.name;
-    }
+    // get name(){
+    //     return this.data.name;
+    // }
 
-    set phone(number){
-        this.data.phone = number;
-        // this.render_content();
-    }
+    // set phone(number){
+    //     this.data.phone = number;
+    //     // this.render_content();
+    // }
 
-    get phone(){
-        return this.data.phone;
-    }
+    // get phone(){
+    //     return this.data.phone;
+    // }
 
-    set birth(data){
-        this.data.birth = data.data;
-        // this.render_content();
-    }
+    // set birth(data){
+    //     this.data.birth = data.data;
+    //     // this.render_content();
+    // }
 
-    get birth(){
-        return this.data.birth;
-    }
+    // get birth(){
+    //     return this.data.birth;
+    // }
 
-    set sex(data){
-        this.data.sex = data;
-        // this.render_content();
-    }
+    // set sex(data){
+    //     this.data.sex = data;
+    //     // this.render_content();
+    // }
 
-    get sex(){
-        return this.data.sex;
-    }
+    // get sex(){
+    //     return this.data.sex;
+    // }
 
-    set start_date(data){
-        this.data.start_date = data.data;
-        this.data.start_date_text = data.text;
-        // this.render_content();
-    }
+    // set start_date(data){
+    //     this.data.start_date = data.data;
+    //     this.data.start_date_text = data.text;
+    //     // this.render_content();
+    // }
 
-    get start_date(){
-        return this.data.start_date;
-    }
+    // get start_date(){
+    //     return this.data.start_date;
+    // }
 
-    set end_date(data){
-        this.data.end_date = data.data;
-        this.data.end_date_text = data.text;
-        // this.render_content();
-    }
+    // set end_date(data){
+    //     this.data.end_date = data.data;
+    //     this.data.end_date_text = data.text;
+    //     // this.render_content();
+    // }
 
-    get end_date(){
-        return this.data.end_date;
-    }
+    // get end_date(){
+    //     return this.data.end_date;
+    // }
 
 
-    set memo(text){
-        this.data.memo = text;
-        // this.render_content();
-    }
+    // set memo(text){
+    //     this.data.memo = text;
+    //     // this.render_content();
+    // }
 
-    get memo(){
-        return this.data.memo;
-    }
+    // get memo(){
+    //     return this.data.memo;
+    // }
 
-    set ticket(data){
-        this.data.ticket_id = data.id;
-        this.data.ticket_name = data.name;
-        this.data.ticket_effective_days = data.effective_days;
-        this.render_content();
-    }
+    // set ticket(data){
+    //     this.data.ticket_id = data.id;
+    //     this.data.ticket_name = data.name;
+    //     this.data.ticket_effective_days = data.effective_days;
+    //     this.render_content();
+    // }
 
-    get ticket(){
-        return {id:this.data.ticket_id, name:this.data.ticket_name, effective_days: this.data.ticket_effective_days};
-    }
+    // get ticket(){
+    //     return {id:this.data.ticket_id, name:this.data.ticket_name, effective_days: this.data.ticket_effective_days};
+    // }
 
-    set reg_count(number){
-        this.data.ticket_reg_count = number;
-        this.render_content();
-    }
+    // set reg_count(number){
+    //     this.data.ticket_reg_count = number;
+    //     this.render_content();
+    // }
 
-    get reg_count(){
-        return this.data.ticket_reg_count;
-    }
+    // get reg_count(){
+    //     return this.data.ticket_reg_count;
+    // }
 
-    set reg_price(number){
-        this.data.ticket_price = number;
-        this.render_content();
-    }
+    // set reg_price(number){
+    //     this.data.ticket_price = number;
+    //     this.render_content();
+    // }
 
-    get reg_price(){
-        return this.data.ticket_price;
-    }
+    // get reg_price(){
+    //     return this.data.ticket_price;
+    // }
 
 
     init(){
