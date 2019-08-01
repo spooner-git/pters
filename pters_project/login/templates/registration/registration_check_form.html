@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+    {% load static_url %}
+    {% block local_css %}
+        <meta name="registertrainer" content="trainer_register">
+        <meta name="google-signin-scope" content="profile email">
+        <meta name="google-signin-client_id" content="751903262384-dbtt6ho5imk5gssgn1rqpe3vs3linq15.apps.googleusercontent.com">
+        <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
+
+    {% endblock %}
+{% block content %}
+
+    <div id="root_content">
+        <div id="registration_box">
+            <div class="registration_top">
+                <div class="registration_left" onclick="location.href='/'"><</div>
+                <div class="registration_title">회원가입</div>
+                <div class="registration_right"></div>
+            </div>
+            <div class="registration_content" style="min-height: calc(100% - 250px);"></div>
+            <div class="registration_foot">
+                <!-- 네이버 로그인 버튼 노출 영역 -->
+                <div class="social_login_box" onclick="location.href = '/?social_type=naver'" style="background-color: #0dd25a;">
+                    <div class="social_login_img"><img src="/static/user/res/login/naver.svg" style="width: 16px; height: 14.7px; vertical-align:middle;"></div>
+                    <span class="social_login_text">네이버로 회원가입</span>
+                    <div style="display:table-cell; width:60px;"></div>
+                </div>
+                <!-- 카카오톡 로그인 버튼 노출 영역 -->
+                <div class="social_login_box" id="custom-login-btn" onclick="loginWithKakao();" style="background-color: #ffeb00; margin-top:12px;">
+                    <div class="social_login_img"><img src="/static/user/res/login/naver.svg" style="width: 16px; height: 14.7px; vertical-align:middle;"></div>
+                    <span class="social_login_text" style="color:#3a1c1d;">카카오톡으로 회원가입</span>
+                    <div style="display:table-cell; width:60px;"></div>
+                </div>
+                <!-- PTERS 로그인 버튼 노출 영역 -->
+                <div class="social_login_box" onclick="location.href = '{% url "login:registration_register" %}';" style="background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
+                    <div class="social_login_img"></div>
+                    <span class="social_login_text" style="color:#ffffff;">일반 회원가입</span>
+                    <div style="display:table-cell; width:60px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block local_js_footer %}
+    <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
+    <script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script>
+    function loginWithKakao() {
+        Kakao.init('4533bb10ac61e20907cd273f0941210a');
+        // 로그인 창을 띄웁니다.
+        Kakao.Auth.login({
+            success: function(authObj) {
+                location.href = '/login/login_simple_kakao/?access_token='+authObj.access_token;
+            },
+            fail: function(err) {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+    </script>
+{% endblock %}

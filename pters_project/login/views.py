@@ -280,6 +280,15 @@ class ServiceTestLoginView(TemplateView):
         return context
 
 
+class RegistrationCheck(TemplateView):
+    template_name = 'registration/registration_check_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(RegistrationCheck, self).get_context_data(**kwargs)
+
+        return context
+
+
 class LoginSimpleNaverView(TemplateView):
     template_name = 'login_naver_processing.html'
 
