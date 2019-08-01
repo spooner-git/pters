@@ -112,6 +112,18 @@ class DateRobot{
 
         return `${year}년 ${month}월 ${date}일 (${day})`;
     }
+
+    static to_split(data){
+        if(data == null || data == undefined || data == "None" || data == ""){
+            return null;
+        }
+        let split = data.split('-');
+        let year = split[0];
+        let month = split[1];
+        let date = split[2];
+
+        return {year:year, month:month, date:date};
+    }
 }
 
 class TimeRobot{

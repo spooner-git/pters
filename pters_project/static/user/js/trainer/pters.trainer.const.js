@@ -7,6 +7,10 @@ const ALL_CLOSE = "all_close";
 const STATE_IN_PROGRESS = "IP";
 const STATE_END_PROGRESS = "PE";
 
+const CONNECTED = 0;
+const UNCONNECTED = 1;
+const CONNECT_WAIT = 2;
+
 const PROGRAM_SELECT = 0;
 const PROGRAM_LECTURE_CONNECT_ACCEPT = 1;
 const PROGRAM_LECTURE_CONNECT_DELETE = 2;
@@ -60,6 +64,7 @@ const SCHEDULE_FINISH_ANYWAY = 4;
 
 const FIX = 'FIX';
 
+
 /* px */
 const MAX_WIDTH = 800;
 
@@ -112,4 +117,5 @@ const DAYNAME_KR = ['일', '월', '화', '수', '목', '금', '토'];
 const COLOR_NAME_CODE = {"#fbf3bd":"바나나", "#dbe6f7":"하늘", "#ffd3d9": "복숭아",
               "#ffe3c2":"살구", "#ceeac4":"키위", "#d8d6ff":"포도",
               "#ead8f2":"블루베리", "#d9c3ab":"고구마"};
+const SEX_CODE = {"M": "남성", "W": "여성"};
 // const STATE_CODE = {PE:{KR:"완료"}, NP:{KR:"진행 전"}};

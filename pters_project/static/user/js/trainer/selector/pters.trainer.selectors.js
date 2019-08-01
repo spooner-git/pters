@@ -1539,8 +1539,6 @@ class ColorSelector{
     }
 }
 
-
-
 class DatePickerSelector{
     constructor (install_target, target_instance, user_option){
         this.target = {install: install_target, result: target_instance};

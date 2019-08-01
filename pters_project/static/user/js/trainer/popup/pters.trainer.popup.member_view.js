@@ -18,6 +18,7 @@ class Member_view{
 
         this.data = {
             name: null,
+            user_id:null,
             phone: null,
             birth: null,
             sex: null,
@@ -53,9 +54,17 @@ class Member_view{
         this.set_initial_data();
     }
 
+    set user_id(text){
+        this.data.user_id = text;
+    }
+
+    get user_id(){
+        return this.data.user_id;
+    }
+
     set name(text){
         this.data.name = text;
-        this.render_content();
+        // this.render_content();
     }
 
     get name(){
@@ -64,7 +73,7 @@ class Member_view{
 
     set phone(number){
         this.data.phone = number;
-        this.render_content();
+        // this.render_content();
     }
 
     get phone(){
@@ -73,7 +82,7 @@ class Member_view{
 
     set birth(data){
         this.data.birth = data.data;
-        this.render_content();
+        // this.render_content();
     }
 
     get birth(){
@@ -82,7 +91,7 @@ class Member_view{
 
     set sex(data){
         this.data.sex = data;
-        this.render_content();
+        // this.render_content();
     }
 
     get sex(){
@@ -92,7 +101,7 @@ class Member_view{
     set start_date(data){
         this.data.start_date = data.data;
         this.data.start_date_text = data.text;
-        this.render_content();
+        // this.render_content();
     }
 
     get start_date(){
@@ -102,7 +111,7 @@ class Member_view{
     set end_date(data){
         this.data.end_date = data.data;
         this.data.end_date_text = data.text;
-        this.render_content();
+        // this.render_content();
     }
 
     get end_date(){
@@ -112,7 +121,7 @@ class Member_view{
 
     set memo(text){
         this.data.memo = text;
-        this.render_content();
+        // this.render_content();
     }
 
     get memo(){
@@ -123,7 +132,7 @@ class Member_view{
         this.data.ticket_id = data.id;
         this.data.ticket_name = data.name;
         this.data.ticket_effective_days = data.effective_days;
-        this.render_content();
+        // this.render_content();
     }
 
     get ticket(){
@@ -132,7 +141,7 @@ class Member_view{
 
     set reg_count(number){
         this.data.ticket_reg_count = number;
-        this.render_content();
+        // this.render_content();
     }
 
     get reg_count(){
@@ -141,7 +150,7 @@ class Member_view{
 
     set reg_price(number){
         this.data.ticket_price = number;
-        this.render_content();
+        // this.render_content();
     }
 
     get reg_price(){
@@ -150,18 +159,16 @@ class Member_view{
 
 
     init(){
-        // this.render_initial();
-        // this.render_toolbox();
-        // this.render_content();
         this.render();
     }
 
     set_initial_data (){
         Member_func.read({"member_id": this.member_id}, (data)=>{
+            this.data.user_id = data.member_user_id;
             this.data.name = data.member_name;
-            this.data.phone = data.member_phone;
-            this.data.birth = data.member_birthday_dt;
-            this.data.sex = data.member_sex;
+            this.data.phone = data.member_phone == "None" || data.member_phone == "" ? null : data.member_phone;
+            this.data.birth = DateRobot.to_split(data.member_birthday_dt);
+            this.data.sex = data.member_sex == "None" || data.member_sex == "" ? null : data.member_sex;
             this.data.connection = data.member_connection_check;
             this.data.active = data.member_is_active;
             this.data.email = data.member_email;
@@ -237,25 +244,32 @@ class Member_view{
     }
     
     dom_assembly_content(){
-        let name = this.dom_row_member_name_input();
+        let user_id = this.dom_row_member_user_id_input();
         let phone = this.dom_row_member_phone_input();
         let birth = this.dom_row_member_birth_input();
         let sex = this.dom_row_member_sex_input();
-        let memo = this.dom_row_member_memo_input();
+        // let memo = this.dom_row_member_memo_input();
         let ticket = this.dom_row_ticket();
 
-        let html =  '<div class="obj_box_full">'+name+phone+birth+sex+memo+'</div>' + 
+        let html =  '<div class="obj_box_full">'+user_id+phone+birth+sex+'</div>' + 
                     '<div class="obj_box_full">'+ticket+ '</div>';
 
         return html;
     }
 
     dom_row_toolbox(){
+        let style = {"font-size":"20px", "font-weight":"bold"};
+        let sub_html = CComponent.create_input_row ('member_name_view', this.data.name == null ? '' : this.data.name, '회원명', undefined, HIDE, style, false, (input_data)=>{
+            let user_input_data = input_data;
+            this.name = user_input_data;
+            this.send_data();
+        });
+        
         let html = `
-        <div class="member_add_upper_box" style="padding-bottom:8px;">
-            <div style="display:inline-block;width:200px;">
-                <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold;">${this.data.name == null ? '' : this.data.name}</span>
+        <div class="member_view_upper_box" style="padding-bottom:8px;">
+            <div style="display:inline-block;width:320px;">
+                <div style="display:inline-block;width:320px;">
+                    ${sub_html}
                 </div>
             </div>
         </div>
@@ -263,21 +277,42 @@ class Member_view{
         return html;
     }
 
-    dom_row_member_name_input(){
-        let icon_r_visible = HIDE;
-        let onclick = ()=>{alert('연결 되어있음');};
-        if(this.data.connection != 1){
-            icon_r_visible = SHOW;
-            onclick = ()=>{alert('연결 되어있지 않음');};
+    dom_row_member_user_id_input(){
+        let icon_r_visible = SHOW;
+        let onclick;
+        if(this.data.connection == CONNECTED || this.data.connection == CONNECT_WAIT){
+            onclick = ()=>{
+                let user_option = {
+                        connect:{text:"연결 요청", callback:()=>{alert('연결요청 함수 실행');layer_popup.close_layer_popup();}}
+                    };
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                    option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+                });
+            };
+        }else if(this.data.connection == UNCONNECTED){
+            onclick = ()=>{
+                let user_option = {
+                        connect:{text:"연결 해제", callback:()=>{alert('연결해제요청 함수 실행');layer_popup.close_layer_popup();}}
+                    };
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                    option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+                });
+            };
         }
-        let html = CComponent.create_row ('member_name_view', this.data.name == null ? '회원명*' : this.data.name, '/static/common/icon/person_black.png', SHOW, ()=>{
+
+        let html = CComponent.create_row ('member_user_id_view', this.data.user_id == null ? '회원ID' : this.data.user_id, '/static/common/icon/person_black.png', icon_r_visible, ()=>{
             onclick();
         });
         return html;
     }
 
     dom_row_member_phone_input(){
-        let html = CComponent.create_input_number_row ('member_phone_view', this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone, '/static/common/icon/icon_smartphone.png', HIDE, true, (input_data)=>{
+        let style = null;
+        let disabled = false;
+        if(this.data.connection != 1){
+            disabled = true;
+        }
+        let html = CComponent.create_input_number_row ('member_phone_view', this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone, '휴대폰 번호', '/static/common/icon/icon_smartphone.png', HIDE, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
         });
@@ -286,22 +321,45 @@ class Member_view{
 
     dom_row_member_birth_input(){
         //등록하는 행을 만든다.
-        let html = CComponent.create_input_number_row ('member_birth_view', this.data.birth == null || this.data.birth == 'None' ? '미입력 (생년월일)' : this.data.birth, '/static/common/icon/icon_cake.png', HIDE, true, (input_data)=>{
-            let user_input_data = input_data;
-            this.phone = user_input_data;
+        let birth_text = this.data.birth == null || this.data.birth == 'None' ? '생년월일' : Object.values(this.data.birth).join('.');
+        let html = CComponent.create_row('input_member_birth', birth_text, '/static/common/icon/icon_cake.png', HIDE, ()=>{ 
+            //행을 클릭했을때 실행할 내용
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+
+                //data_to_send의 선택날짜가 빈값이라면 1986.02.24로 셋팅한다.
+                let year = this.data.birth == null ? 1986 : this.data.birth.year; 
+                let month = this.data.birth == null ? 2 : this.data.birth.month;
+                let date = this.data.birth == null ? 24 : this.data.birth.date;
+                
+                date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'생년월일 선택', data:{year:year, month:month, date:date}, 
+                                                                                                range:{start: this.dates.current_year - 90, end: this.dates.current_year}, 
+                                                                                                callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
+                                                                                                    this.birth = object; 
+                                                                                                    this.send_data();
+                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+                                                                                                }});
+                
+            });
         });
         return html;
     }
 
     dom_row_member_sex_input(){
-        let html = CComponent.create_row ('member_sex_view', this.data.sex == null || this.data.sex == 'None' ? '미입력 (성별)' : this.data.sex, '/static/common/icon/person_black.png', HIDE, ()=>{
-            
+        let html = CComponent.create_row ('input_member_sex', this.data.sex == null ||this.data.sex == 'None' ? '성별' : SEX_CODE[this.data.sex], '/static/common/icon/person_black.png', HIDE, ()=>{
+            let user_option = {
+                                male:{text:"남성", callback:()=>{this.sex = "M";this.send_data();layer_popup.close_layer_popup();}},
+                                female:{text:"여성", callback:()=>{this.sex = "W";this.send_data();layer_popup.close_layer_popup();}}
+            };
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                var option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
         });
         return html;
     }
 
     dom_row_member_memo_input(){
-        let html = CComponent.create_input_row ('member_memo_view', this.data.memo == null ? '특이사항' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, true, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_row ('member_memo_view', this.data.memo == null ? '특이사항' : this.data.memo, '특이사항', '/static/common/icon/icon_note.png', HIDE, style, false, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });
@@ -366,8 +424,19 @@ class Member_view{
 
 
     send_data(){
-
-
+        let data = {
+                    "member_id": this.member_id,
+                    "first_name": this.data.name,
+                    "phone":this.data.phone == null ? "" : this.data.phone,
+                    "birthday": `${this.data.birth != null ? this.data.birth.year+'-'+this.data.birth.month+'-'+this.data.birth.date : ''}`,
+                    "sex":this.data.sex == null ? "" : this.data.sex,
+                    // "note":this.data.memo,
+        };
+        console.log("data_send", data);
+        Member_func.update(data, ()=>{
+            this.set_initial_data();
+            member.init();
+        });
     }
 
   
@@ -469,7 +538,7 @@ class Member_simple_view{
 
     set name(text){
         this.data.name = text;
-        this.render_content();
+        // this.render_content();
     }
 
     get name(){
@@ -478,7 +547,7 @@ class Member_simple_view{
 
     set phone(number){
         this.data.phone = number;
-        this.render_content();
+        // this.render_content();
     }
 
     get phone(){
@@ -487,7 +556,7 @@ class Member_simple_view{
 
     set birth(data){
         this.data.birth = data.data;
-        this.render_content();
+        // this.render_content();
     }
 
     get birth(){
@@ -496,7 +565,7 @@ class Member_simple_view{
 
     set sex(data){
         this.data.sex = data;
-        this.render_content();
+        // this.render_content();
     }
 
     get sex(){
@@ -506,7 +575,7 @@ class Member_simple_view{
     set start_date(data){
         this.data.start_date = data.data;
         this.data.start_date_text = data.text;
-        this.render_content();
+        // this.render_content();
     }
 
     get start_date(){
@@ -516,7 +585,7 @@ class Member_simple_view{
     set end_date(data){
         this.data.end_date = data.data;
         this.data.end_date_text = data.text;
-        this.render_content();
+        // this.render_content();
     }
 
     get end_date(){
@@ -526,7 +595,7 @@ class Member_simple_view{
 
     set memo(text){
         this.data.memo = text;
-        this.render_content();
+        // this.render_content();
     }
 
     get memo(){
@@ -681,7 +750,8 @@ class Member_simple_view{
     }
 
     dom_row_member_phone_input(){
-        let html = CComponent.create_input_number_row ('member_phone_view', this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone, '/static/common/icon/icon_smartphone.png', HIDE, true, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_number_row ('member_phone_view', this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone, '휴대폰 번호', '/static/common/icon/icon_smartphone.png', HIDE, style, true, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
         });
@@ -690,7 +760,8 @@ class Member_simple_view{
 
     dom_row_member_birth_input(){
         //등록하는 행을 만든다.
-        let html = CComponent.create_input_number_row ('member_birth_view', this.data.birth == null || this.data.birth == 'None' ? '미입력 (생년월일)' : this.data.birth, '/static/common/icon/icon_cake.png', HIDE, true, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_number_row ('member_birth_view', this.data.birth == null || this.data.birth == 'None' ? '미입력 (생년월일)' : this.data.birth, '생년월일', '/static/common/icon/icon_cake.png', HIDE, style, true, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
         });
@@ -705,7 +776,8 @@ class Member_simple_view{
     }
 
     dom_row_member_memo_input(){
-        let html = CComponent.create_input_row ('member_memo_view', this.data.memo == null ? '특이사항' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, true, (input_data)=>{
+        let style = null;
+        let html = CComponent.create_input_row ('member_memo_view', this.data.memo == null ? '특이사항' : this.data.memo, '특이사항', '/static/common/icon/icon_note.png', HIDE, style, true, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });
