@@ -13,6 +13,4 @@ class PopupBase{
                         `;
                 return html;
     }
-
-    //<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup()" class="obj_icon_x">
 }

@@ -537,106 +537,9 @@ class Member_simple_view{
         this.set_initial_data();
     }
 
-    // set name(text){
-    //     this.data.name = text;
-    //     // this.render_content();
-    // }
-
-    // get name(){
-    //     return this.data.name;
-    // }
-
-    // set phone(number){
-    //     this.data.phone = number;
-    //     // this.render_content();
-    // }
-
-    // get phone(){
-    //     return this.data.phone;
-    // }
-
-    // set birth(data){
-    //     this.data.birth = data.data;
-    //     // this.render_content();
-    // }
-
-    // get birth(){
-    //     return this.data.birth;
-    // }
-
-    // set sex(data){
-    //     this.data.sex = data;
-    //     // this.render_content();
-    // }
-
-    // get sex(){
-    //     return this.data.sex;
-    // }
-
-    // set start_date(data){
-    //     this.data.start_date = data.data;
-    //     this.data.start_date_text = data.text;
-    //     // this.render_content();
-    // }
-
-    // get start_date(){
-    //     return this.data.start_date;
-    // }
-
-    // set end_date(data){
-    //     this.data.end_date = data.data;
-    //     this.data.end_date_text = data.text;
-    //     // this.render_content();
-    // }
-
-    // get end_date(){
-    //     return this.data.end_date;
-    // }
-
-
-    // set memo(text){
-    //     this.data.memo = text;
-    //     // this.render_content();
-    // }
-
-    // get memo(){
-    //     return this.data.memo;
-    // }
-
-    // set ticket(data){
-    //     this.data.ticket_id = data.id;
-    //     this.data.ticket_name = data.name;
-    //     this.data.ticket_effective_days = data.effective_days;
-    //     this.render_content();
-    // }
-
-    // get ticket(){
-    //     return {id:this.data.ticket_id, name:this.data.ticket_name, effective_days: this.data.ticket_effective_days};
-    // }
-
-    // set reg_count(number){
-    //     this.data.ticket_reg_count = number;
-    //     this.render_content();
-    // }
-
-    // get reg_count(){
-    //     return this.data.ticket_reg_count;
-    // }
-
-    // set reg_price(number){
-    //     this.data.ticket_price = number;
-    //     this.render_content();
-    // }
-
-    // get reg_price(){
-    //     return this.data.ticket_price;
-    // }
-
 
     init(){
-        this.render_initial();
-        this.render_toolbox();
-        this.render_content();
+        this.render();
     }
 
     set_initial_data (){
@@ -689,16 +592,19 @@ class Member_simple_view{
         });
     }
 
-    render_initial(){
-        document.querySelector(this.target.install).innerHTML = this.static_component().initial_page;
-    }
+    render(){
+        let dom_toolbox = this.dom_row_toolbox();
+        let dom_content = this.dom_assembly_content();
+        let dom_close_button = this.dom_close_button();
 
-    render_toolbox(){
-        document.getElementById(this.target.toolbox).innerHTML = this.dom_row_toolbox();
-        document.getElementById(this.target.close_button).innerHTML = this.dom_close_button();
+        let html = `<section id="${this.target.toolbox}" class="obj_box_full" style="position:sticky;position:-webkit-sticky;top:0;">${dom_toolbox}</section>
+                    <section id="${this.target.content}" style="width:100%;height:399px;overflow-y:auto;">${dom_content}</section>
+                    <section id="${this.target.close_button}" class="obj_box_full" style="height:48px;">${dom_close_button}</section>`;
+        
+        document.querySelector(this.target.install).innerHTML = html;
     }
     
-    render_content(){
+    dom_assembly_content(){
         // let name = this.dom_row_member_name_input();
         let phone = this.dom_row_member_phone_input();
         let birth = this.dom_row_member_birth_input();
@@ -709,7 +615,8 @@ class Member_simple_view{
         let html =  '<div class="obj_box_full">'+phone+birth+sex+memo+'</div>' + 
                     '<div class="obj_box_full">'+ticket+ '</div>';
 
-        document.getElementById(this.target.content).innerHTML = html;
+        // document.getElementById(this.target.content).innerHTML = html;
+        return html;
     }
 
     dom_row_toolbox(){
@@ -717,10 +624,10 @@ class Member_simple_view{
         let text_button = CComponent.text_button ("detail_user_info", "더보기", text_button_style, ()=>{
             show_user_confirm(`작업중이던 항목을 모두 닫고 회원 메뉴로 이동합니다.`, ()=>{
                 layer_popup.all_close_layer_popup();
-                sideGoPage("member");
-                layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':this.member_id} ,()=>{
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':this.member_id}, ()=>{
                     member_view_popup = new Member_view('.popup_member_view', this.member_id, 'member_view_popup');
                 });
+                sideGoPage("member");
             });
         });
 
@@ -824,15 +731,6 @@ class Member_simple_view{
             layer_popup.close_layer_popup();
         });
         return html;
-    }
-
-    static_component(){
-        return {
-            initial_page:`<section id="${this.target.toolbox}" class="obj_box_full" style="position:sticky;position:-webkit-sticky;top:0;"></section>
-                          <section id="${this.target.content}" style="width:100%;height:399px;overflow-y:auto;"></section>
-                          <section id="${this.target.close_button}" class="obj_box_full" style="height:48px;"></section>
-                          `
-        };
     }
 
 }
