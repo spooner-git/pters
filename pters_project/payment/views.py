@@ -931,13 +931,18 @@ def payment_for_ios_logic(request):
     input_transaction_id = ''
     context['test_info'] = ''
     pay_info = '인앱 결제'
+    receipt_data = ''
+    ios_data = ''
+    logger.info(str(request.user.last_name) + str(request.user.first_name)
+                + '(' + str(request.user.id) + ')님 ios 결제 시도')
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
         error = '오류가 발생했습니다.'
     except TypeError:
         error = '오류가 발생했습니다.'
-    #
+    logger.info(str(request.user.last_name) + str(request.user.first_name)
+                + '(' + str(request.user.id) + ')님 ios 결제 시도2')
     if error is None:
         try:
             receipt_data = json_loading_data['receipt_data']
@@ -947,32 +952,54 @@ def payment_for_ios_logic(request):
         except KeyError:
             error = '오류가 발생했습니다.'
 
+    logger.info(str(request.user.last_name) + str(request.user.first_name)
+                + '(' + str(request.user.id) + ')님 ios 결제 시도3:'
+                + 'receipt_data:'+str(product_id) + '/ios_data:'+' '+str(ios_data) + '/product_id:'+' '+str(product_id)
+                + '/transaction_id:'+' '+str(input_transaction_id))
+
     data = {
         'exclude-old-transactions': "true",
         'receipt-data': receipt_data,
         'password': ios_data
     }
+
+    logger.info(str(request.user.last_name) + str(request.user.first_name)
+                + '(' + str(request.user.id) + ')님 ios 결제 시도4:')
+
     body = json.dumps(data)
     h = httplib2.Http()
 
+    logger.info(str(request.user.last_name) + str(request.user.first_name)
+                + '(' + str(request.user.id) + ')님 ios 결제 시도5:')
     resp, content = h.request("https://buy.itunes.apple.com/verifyReceipt", method="POST", body=body,
                               headers={'Content-Type': 'application/json;'})
 
-    json_data = content.decode('utf-8')
+    logger.info(str(request.user.last_name) + str(request.user.first_name)
+                + '(' + str(request.user.id) + ')님 ios 결제 시도6:')
     json_loading_data = None
     error = None
     transaction_id = ''
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다.'
-    except TypeError:
-        error = '오류가 발생했습니다.'
 
     if error is None:
+        logger.info(str(request.user.last_name) + str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 ios 결제 시도7:')
+
         if resp['status'] == '200':
+            logger.info(str(request.user.last_name) + str(request.user.first_name)
+                        + '(' + str(request.user.id) + ')님 ios 결제 시도8:')
+            json_data = content.decode('utf-8')
+            try:
+                json_loading_data = json.loads(json_data)
+            except ValueError:
+                error = '오류가 발생했습니다.'
+            except TypeError:
+                error = '오류가 발생했습니다.'
+            logger.info(str(request.user.last_name) + str(request.user.first_name)
+                        + '(' + str(request.user.id) + ')님 ios 결제 시도9:')
             # print(json_loading_data)
             if str(json_loading_data['status']) == '21007':
+                logger.info(str(request.user.last_name) + str(request.user.first_name)
+                            + '(' + str(request.user.id) + ')님 ios 결제 시도9-1:')
                 resp, content = h.request("https://sandbox.itunes.apple.com/verifyReceipt", method="POST", body=body,
                                           headers={'Content-Type': 'application/json;'})
 
@@ -980,6 +1007,8 @@ def payment_for_ios_logic(request):
                 json_loading_data = None
                 error = None
 
+                logger.info(str(request.user.last_name) + str(request.user.first_name)
+                            + '(' + str(request.user.id) + ')님 ios 결제 시도9-2:')
                 try:
                     json_loading_data = json.loads(json_data)
                 except ValueError:
@@ -987,26 +1016,45 @@ def payment_for_ios_logic(request):
                 except TypeError:
                     error = '오류가 발생했습니다.'
 
+                logger.info(str(request.user.last_name) + str(request.user.first_name)
+                            + '(' + str(request.user.id) + ')님 ios 결제 시도9-3:')
                 if error is None:
                     if resp['status'] == '200':
-                        # print(json_loading_data)
+                        logger.info(str(request.user.last_name) + str(request.user.first_name)
+                                    + '(' + str(request.user.id) + ')님 ios 결제 시도9-4:')
                         in_app_info = json_loading_data['receipt']['in_app']
                         transaction_id = str(in_app_info[0]['transaction_id'])
                         # logger.error(str(json_loading_data['receipt']))
                         context['test_info'] = 'sandbox test 환경입니다.'
                         pay_info = 'sandbox test'
             else:
+                logger.info(str(request.user.last_name) + str(request.user.first_name)
+                            + '(' + str(request.user.id) + ')님 ios 결제 시도10:')
                 in_app_info = json_loading_data['receipt']['in_app']
+                logger.info(str(request.user.last_name) + str(request.user.first_name)
+                            + '(' + str(request.user.id) + ')님 ios 결제 시도11:')
                 transaction_id = str(in_app_info[0]['transaction_id'])
+                logger.info(str(request.user.last_name) + str(request.user.first_name)
+                            + '(' + str(request.user.id) + ')님 ios 결제 시도12:')
                 # logger.error(str(json_loading_data['receipt']))
     else:
+        logger.info(str(request.user.last_name) + str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 ios 결제 시도7-2:')
         context['error'] = error
 
     if error is None:
+        logger.info(str(request.user.last_name) + str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 ios 결제 시도13:input_transaction_id:'
+                    + str(input_transaction_id) + '/transaction_id:' + str(transaction_id))
+
         if input_transaction_id != transaction_id:
+            logger.info(str(request.user.last_name) + str(request.user.first_name)
+                        + '(' + str(request.user.id) + ')님 ios 결제 시도13-1:')
             error = '결제중 오류가 발생했습니다.'
 
     if error is None:
+        logger.info(str(request.user.last_name) + str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 ios 결제 시도14:')
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
                                                         end_date__gte=today,
@@ -1015,12 +1063,20 @@ def payment_for_ios_logic(request):
         except ObjectDoesNotExist:
             start_date = today
 
+        logger.info(str(request.user.last_name) + str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 ios 결제 시도15:start_date:'+str(start_date))
     if error is None:
         date = int(start_date.strftime('%d'))
+        logger.info(str(request.user.last_name) + str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 ios 결제 시도16:end_date:'+str(date))
         end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date)).split(' ')[0]
+        logger.info(str(request.user.last_name) + str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 ios 결제 시도17:end_date:'+str(end_date))
         start_date = str(start_date).split(' ')[0]
 
-    if error is None:
+        logger.info(str(request.user.last_name) + str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 ios 결제 시도18:start_date:'+str(start_date))
+
         payment_info = PaymentInfoTb(member_id=str(request.user.id),
                                      product_tb_id=7,
                                      payment_type_cd='SINGLE',
@@ -1032,6 +1088,7 @@ def payment_for_ios_logic(request):
                                      price=9900,
                                      name='스탠다드 - 30일권',
                                      imp_uid=transaction_id,
+                                     # imp_uid=input_transaction_id,
                                      channel='iap',
                                      card_name=pay_info,
                                      buyer_email=request.user.email,
@@ -1044,11 +1101,16 @@ def payment_for_ios_logic(request):
                                      buyer_name=str(request.user.first_name),
                                      # amount=int(payment_result['amount']),
                                      use=USE)
+
+        logger.info(str(request.user.last_name) + str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 ios 결제 시도19')
         payment_info.save()
 
+        logger.info(str(request.user.last_name) + str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 ios 결제 시도20')
     if error is None:
-        logger.error(str(request.user.last_name) + str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 ios 결제 완료:' + str(product_id) + ':'+' '+str(start_date))
+        logger.info(str(request.user.last_name) + str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 ios 결제 완료:' + str(product_id) + ':'+' '+str(start_date))
     else:
         messages.error(request, error)
         logger.error(str(request.user.last_name)+str(request.user.first_name)
