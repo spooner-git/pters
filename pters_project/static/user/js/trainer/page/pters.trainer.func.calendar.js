@@ -1006,19 +1006,27 @@ class Calendar {
                 // if( Math.abs(ts - tm) > Math.abs(tsy - tmy) && swiper_x == false ){
                 if( Math.abs(ts - tm) > Math.abs(tsy - tmy)){
                     if(swiper_x == false){
-                        // $('#root_content').on('touchmove', (e) => {
-                        //     e.preventDefault();
-                        //     e.stopPropagation();
-                        //     return false;
-                        // });
+                        $('#root_content').on('touchmove', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            return false;
+                        });
                         swiper_x = true;
                     }
                     
                     
                     if(ts - tm>x_threshold){
                         if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
+                        if(swiper_x == true){
+                            $('#root_content').off('touchmove');
+                            swiper_x = false;
+                        }
                     }else if(ts - tm<-x_threshold){
                         if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
+                        if(swiper_x == true){
+                            $('#root_content').off('touchmove');
+                            swiper_x = false;
+                        }
                     }
                     // selector_body.off("touchstart").off("touchend").off('touchmove');
 
@@ -1026,25 +1034,25 @@ class Calendar {
                 }
             });
 
-            selector_body.off("touchend").on("touchend", (e) => {
+            // selector_body.off("touchend").on("touchend", (e) => {
 
-                if(swiper_x == true){
-                    $('#root_content').off('touchmove');
-                    swiper_x = false;
-                }
+            //     if(swiper_x == true){
+            //         $('#root_content').off('touchmove');
+            //         swiper_x = false;
+            //     }
 
-                let te = e.originalEvent.changedTouches[0].clientX;
-                let tey = e.originalEvent.changedTouches[0].clientY;
+            //     let te = e.originalEvent.changedTouches[0].clientX;
+            //     let tey = e.originalEvent.changedTouches[0].clientY;
 
-                // if( Math.abs(ts - te) > Math.abs(tsy - tey)){
-                //     if(ts>te+x_threshold){
-                //         if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
-                //     }else if(ts<te-x_threshold){
-                //         if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
-                //     }
-                // }
-                // return true;
-            });
+            //     if( Math.abs(ts - te) > Math.abs(tsy - tey)){
+            //         if(ts>te+x_threshold){
+            //             if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
+            //         }else if(ts<te-x_threshold){
+            //             if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
+            //         }
+            //     }
+            //     return true;
+            // });
             break;
 
         case "off":
