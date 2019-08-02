@@ -2,50 +2,14 @@
  * Created by Hyunki on 01/08/2019.
  */
 
-let did_scroll; // 스크롤시에 사용자가 스크롤했다는 것을 알림
-let delta = 4; // 스크롤시 감도 (낮으면 자주 발생)
-let last_scroll_top = 0; // 마지막 스크롤된 위치 저장
 
 $(document).ready(function() {
 
-    // 스크롤 이벤트 처리
-    $('#root_content').scroll(function () {
-        // 중복되지 않도록 semaphore
-        did_scroll = true;
-        if (did_scroll) {
-            checkScrolled();
-        }
-        did_scroll = false;
-    });
     $('#id_username').focusout(function(){
         check_username($(this).val());
     });
 
 });
-
-// 스크롤 방향을 검사해서 회원가입 명칭 띄워주기
-function checkScrolled() {
-    let current_scroll_top = $('#root_content').scrollTop();
-    // 스크롤 변화량이 delta 값이 넘지 않으면 return
-    if (Math.abs(last_scroll_top - current_scroll_top) < delta) {
-        return;
-    }
-
-    if (current_scroll_top > last_scroll_top) {
-        // 스크롤 다운(아래로)
-        if (current_scroll_top > 10) {
-            $('.registration_title').css('display', 'table-cell');
-            $('.registration_content_title').css('display', 'none');
-        }
-    } else {
-        // 스크롤 다운(위로)
-        if (current_scroll_top < 24) {
-            $('.registration_title').css('display', 'none');
-            $('.registration_content_title').css('display', 'block');
-        }
-    }
-    last_scroll_top = current_scroll_top;
-}
 
 function check_group_select(group_type) {
     $('#id_group_type').val(group_type);

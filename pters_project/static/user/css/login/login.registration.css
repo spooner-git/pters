@@ -33,7 +33,7 @@ html{
     transform: translate3D(-50%, -50%, 0);
     max-width: 800px;
     width: 100%;
-    overflow-y: auto;
+    overflow-y: hidden;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     z-index: 0;
@@ -152,10 +152,12 @@ html{
 
 
 #registration_box{
-    width: 360px;
+    width: 375px;
     padding-left: calc(50% - 180px);
-    padding-right: calc(50% - 180px);
+    /*padding-right: calc(50% - 180px);*/
     height: 100%;
+    overflow-y:auto;
+    overflow-x:hidden;
 }
 .registration_top{
     position: sticky;
