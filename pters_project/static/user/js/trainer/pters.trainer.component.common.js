@@ -144,9 +144,9 @@ class CComponent{
     }
 
     //수강권 선택 팝업에 사용되는 행
-    static select_ticket_row (multiple_select, checked, ticket_id, ticket_name, ticket_price, ticket_reg_count, ticket_effective_days, onclick){
+    static select_ticket_row (multiple_select, checked, location, ticket_id, ticket_name, ticket_price, ticket_reg_count, ticket_effective_days, onclick){
         let html = `
-                    <li class="select_ticket_row" id="select_ticket_row_${ticket_id}">
+                    <li class="select_ticket_row str_${location}" id="select_ticket_row_${ticket_id}">
                         <div class="obj_table_raw">
                             <div class="cell_ticket_color">
                                 
@@ -165,7 +165,7 @@ class CComponent{
         if(multiple_select > 1){
             $(document).off('click', `#select_ticket_row_${ticket_id}`).on('click', `#select_ticket_row_${ticket_id}`, function(e){
                 if(!$(this).find('.cell_ticket_selected img').hasClass('ticket_selected')){
-                    if($('.ticket_selected').length >= multiple_select){
+                    if($(`.str_${location} .ticket_selected`).length >= multiple_select){
                         show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
                         return false;
                     }
@@ -187,9 +187,9 @@ class CComponent{
     }
 
     //수업 선택 팝업에 사용되는 행
-    static select_lecture_row (multiple_select, checked, lecture_id, lecture_name, color_code, max_member_num, ing_member_num,onclick){
+    static select_lecture_row (multiple_select, checked, location, lecture_id, lecture_name, color_code, max_member_num, ing_member_num,onclick){
         let html = `
-                    <li class="select_lecture_row" id="select_lecture_row_${lecture_id}">
+                    <li class="select_lecture_row slr_${location}" id="select_lecture_row_${lecture_id}">
                         <div class="obj_table_raw">
                             <div class="cell_lecture_color">
                                 <div style="background-color:${color_code}" class="lecture_color_bar">
@@ -209,7 +209,7 @@ class CComponent{
         if(multiple_select > 1){
             $(document).off('click', `#select_lecture_row_${lecture_id}`).on('click', `#select_lecture_row_${lecture_id}`, function(e){
                 if(!$(this).find('.cell_lecture_selected img').hasClass('lecture_selected')){
-                    if($('.lecture_selected').length >= multiple_select){
+                    if($(`.slr_${location} .lecture_selected`).length >= multiple_select){
                         show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
                         return false;
                     }
@@ -231,10 +231,10 @@ class CComponent{
     }
 
     //회원 선택 팝업에 사용되는 행
-    static select_member_row (multiple_select, checked, member_id, member_name, member_avail_count, member_expiry, onclick){
+    static select_member_row (multiple_select, checked, location, member_id, member_name, member_avail_count, member_expiry, onclick){
 
         let html = `
-                    <li class="select_member_row" id="select_member_row_${member_id}">
+                    <li class="select_member_row smr_${location}" id="select_member_row_${member_id}">
                         <div class="obj_table_raw">
                             <div class="cell_member_name">
                                 ${member_name}
@@ -252,7 +252,7 @@ class CComponent{
         if(multiple_select > 1){
             $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
                 if(!$(this).find('.cell_member_selected img').hasClass('member_selected')){
-                    if($('.member_selected').length >= multiple_select){
+                    if($(`.smr_${location} .member_selected`).length >= multiple_select){
                         show_error_message(`${multiple_select} 명까지 선택할 수 있습니다.`);
                         return false;
                     }
@@ -273,12 +273,12 @@ class CComponent{
         return html;
     }
 
-    //회원 선택 팝업에 사용되는 행
-    static select_color_row (multiple_select, checked, bg_code, font_code, color_name, onclick){
+    //색상 선택 팝업에 사용되는 행
+    static select_color_row (multiple_select, checked, location, bg_code, font_code, color_name, onclick){
         let color_bg_code_without_sharp = bg_code.replace('#', '');
 
         let html = `
-                    <li class="select_color_row" id="select_color_row_${color_bg_code_without_sharp}">
+                    <li class="select_color_row scr_${location}" id="select_color_row_${color_bg_code_without_sharp}">
                         <div class="obj_table_raw">
                             <div class="cell_color_name">
                                 <div style="width:20px;height:20px;border-radius:4px;background-color:${bg_code}"></div>
@@ -296,7 +296,7 @@ class CComponent{
         if(multiple_select > 1){
             $(document).off('click', `#select_color_row_${color_bg_code_without_sharp}`).on('click', `#select_color_row_${color_bg_code_without_sharp}`, function(e){
                 if(!$(this).find('.cell_color_selected img').hasClass('color_selected')){
-                    if($('.color_selected').length >= multiple_select){
+                    if($(`.scr_${location} .color_selected`).length >= multiple_select){
                         show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
                         return false;
                     }
@@ -312,6 +312,50 @@ class CComponent{
                 
                 onclick('add_single');
                 
+            });
+        }
+        return html;
+    }
+
+    //일반(이미지 없음) 선택 팝업에 사용되는 행
+    static select_row (multiple_select, checked, location, id, title, icon, onclick){
+        let html = `
+                    <li class="select_row sr_${location}" id="select_row_${id}">
+                        <div class="obj_table_raw">
+                            <div class="cell_select_icon">
+                                ${icon != null ? `<img src="${icon}">` : ""} 
+                            </div>
+                            <div class="cell_select_title">
+                                ${title}
+                            </div>
+                            <div class="cell_select_selected">
+                                <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? '' : 'option_selected'}">
+                            </div>
+                        </div>
+                    </li>
+                    `;
+
+        if(multiple_select > 1){
+            $(document).off('click', `#select_row_${id}`).on('click', `#select_row_${id}`, function(e){
+                if(!$(this).find('.cell_select_selected img').hasClass('option_selected')){
+                    if($(`.sr_${location} .option_selected`).length >= multiple_select){
+                        show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
+                        return false;
+                    }
+                    $(this).find('.cell_select_selected img').addClass('option_selected');
+                    onclick('add');
+                }else{
+                    $(this).find('.cell_select_selected img').removeClass('option_selected');
+                    onclick('substract');
+                }
+            });
+        }else if(multiple_select == 1){
+            $(document).off('click', `#select_row_${id}`).on('click', `#select_row_${id}`, function(e){
+                if( !$(this).find('.cell_select_selected img').hasClass('option_selected') ){
+                    onclick('add_single');
+                }else{
+                    return false;
+                }
             });
         }
         return html;

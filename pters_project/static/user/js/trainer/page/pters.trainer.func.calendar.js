@@ -648,7 +648,6 @@ class Calendar {
                     saturday = "obj_font_color_saturday_blue";
                 }
                 
-                console.log(`${_year[i]}-${_month[i]}-${_date[i]}`, this.today, `${_year[i]}-${_month[i]}-${_date[i]}` == this.today)
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
                     today_marking = `<div style="position: absolute;width: 100%;height: 3px;top: ${month_or_week == "week" ? '-30px' : 0} ;background: #fe4e65;left: 0;"></div>`;
                 }
@@ -1079,7 +1078,6 @@ class Calendar {
 class Plan_func{
     static create(url, data, callback){
         //데이터 형태 {"member_id":"", "contents":"", "counts":"", "price":"", "start_date":"", "end_date":"", "class_id":"", "package_id":""};
-        console.log('test:'+data);
         $.ajax({
             // url:'/schedule/add_schedule/',
             url : url,
@@ -1100,14 +1098,14 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
-                console.log(data)
-                callback();
+                let json = JSON.parse(data);
+                callback(json);
             },
     
             //통신 실패시 처리
             error:function(data){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                location.reload();
+                // location.reload();
             }
         });
     }
@@ -1138,7 +1136,7 @@ class Plan_func{
 
             error:function (){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                location.reload();
+                // location.reload();
             }
         });
     }
@@ -1155,7 +1153,6 @@ class Plan_func{
                 ajax_load_image(SHOW);
             },
             success:function (datas){
-                console.log(datas);
                 if(callback != undefined){
                     callback(datas);
                 }
@@ -1168,7 +1165,7 @@ class Plan_func{
 
             error:function (){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                location.reload();
+                // location.reload();
             }
         });
     }
@@ -1203,7 +1200,7 @@ class Plan_func{
             //통신 실패시 처리
             error:function(){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                location.reload();
+                // location.reload();
             }
         });
     }
@@ -1236,7 +1233,7 @@ class Plan_func{
             //통신 실패시 처리
             error:function(){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                location.reload();
+                // location.reload();
             }
         });
     }
@@ -1268,7 +1265,7 @@ class Plan_func{
             //통신 실패시 처리
             error:function(){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                location.reload();
+                // location.reload();
             }
         });
     }

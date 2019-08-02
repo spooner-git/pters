@@ -145,8 +145,8 @@ class Plan_view{
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
-        document.querySelector('.wrapper_top').style.backgroundColor = this.data.lecture_color;
-        document.querySelector('.wrapper_top').style.border = 0;
+        document.querySelector('.popup_plan_view .wrapper_top').style.backgroundColor = this.data.lecture_color;
+        document.querySelector('.popup_plan_view .wrapper_top').style.border = 0;
     }
 
     render_toolbox(){

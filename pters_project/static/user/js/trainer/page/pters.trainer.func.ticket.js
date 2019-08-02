@@ -10,6 +10,8 @@ class Ticket{
         this.list_type_text = "";
         this.list_status_type_text = "";
         this.list_status_type = "ing"; //ing, end
+
+        this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
     }
 
     init(list_status_type){
@@ -18,7 +20,7 @@ class Ticket{
         }
 
         let component = this.static_component();
-        document.querySelector(this.targetHTML).innerHTML = component.initial_page
+        document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 
         if(list_status_type==undefined){
             list_status_type = this.list_status_type;
@@ -26,8 +28,12 @@ class Ticket{
 
         this.list_status_type = list_status_type;
 
+        if(this.received_data_cache != null){
+            this.render_ticket_list(this.received_data_cache, list_status_type);
+        }
         this.render_upper_box();
         this.request_ticket_list(list_status_type, (jsondata) => {
+            this.received_data_cache = jsondata;
             this.render_ticket_list(jsondata, list_status_type);
             this.render_upper_box();
         });
@@ -92,8 +98,6 @@ class Ticket{
 
     //수강권 리스트를 렌더링
     render_ticket_list(jsondata, list_status_type){
-
-        console.log(jsondata);
 
         if(current_page != this.page_name){
             return false;
@@ -160,17 +164,17 @@ class Ticket{
                                     </div>
                                 </div>
                             </div>
-                        </article>`
+                        </article>`;
             html_temp.push(html);
         }
 
         document.querySelector('#ticket_content_wrap').innerHTML = html_temp.join("");
-        $('#root_content').scrollTop(1);
     }
 
 
     //리스트 타입을 스위치
     switch_type(){
+        this.received_data_cache = null;
         switch(this.list_status_type){
             case "ing":
                 this.init("end");

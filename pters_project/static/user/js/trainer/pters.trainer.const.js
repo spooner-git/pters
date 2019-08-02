@@ -7,6 +7,12 @@ const ALL_CLOSE = "all_close";
 const STATE_IN_PROGRESS = "IP";
 const STATE_END_PROGRESS = "PE";
 
+const ON = 1;
+const OFF = 0;
+
+const CONFIRM = 1;
+const CANCEL = 0;
+
 const CONNECTED = 0;
 const UNCONNECTED = 1;
 const CONNECT_WAIT = 2;
@@ -30,7 +36,6 @@ const NONE = 'None';
 
 const CALL_AJAX = 0;
 const CALL_PAGE_MOVE = 1;
-
 
 const POPUP_FROM_LEFT = 0;
 const POPUP_FROM_RIGHT = 1;
@@ -98,21 +103,24 @@ const POPUP_ADDRESS_TICKET_SIMPLE_VIEW = 'popup_ticket_simple_view';
 const POPUP_ADDRESS_TICKET_ADD = 'popup_ticket_add';
 const POPUP_ADDRESS_TICKET_EDIT = 'popup_ticket_edit';
 
-const POPUP_ADDRESS_MEMBER_SELECT = 'popup_member_select';
-const POPUP_ADDRESS_LECTURE_SELECT = 'popup_lecture_select';
-const POPUP_ADDRESS_TICKET_SELECT = 'popup_ticket_select';
-const POPUP_ADDRESS_COLOR_SELECT = 'popup_color_select';
-
 const POPUP_MEMBER_SCHEDULE_HISTORY = 'popup_member_schedule_history';
 const POPUP_MEMBER_TICKET_HISTORY = 'popup_member_ticket_history';
 // 풀페이지 팝업
 
-// 기본 팝업
+// User Input 팝업
 const POPUP_ADDRESS_OPTION_SELECTOR = 'popup_basic_option_selector';
 const POPUP_ADDRESS_TIME_SELECTOR = 'popup_basic_time_selector';
 const POPUP_ADDRESS_DATE_SELECTOR = 'popup_basic_date_selector';
 const POPUP_ADDRESS_SPIN_SELECTOR = 'popup_basic_spin_selector';
 
+const POPUP_ADDRESS_MEMBER_SELECT = 'popup_member_select';
+const POPUP_ADDRESS_LECTURE_SELECT = 'popup_lecture_select';
+const POPUP_ADDRESS_TICKET_SELECT = 'popup_ticket_select';
+const POPUP_ADDRESS_COLOR_SELECT = 'popup_color_select';
+
+const POPUP_ADDRESS_REPEAT_SELECT = 'popup_repeat_select';
+const POPUP_ADDRESS_DAY_SELECT = 'popup_day_select';
+// User Input 팝업
 
 /* 팝업 주소 */
 
@@ -123,6 +131,7 @@ const POPUP_ADDRESS_SPIN_SELECTOR = 'popup_basic_spin_selector';
 
 /*기타 */
 const DAYNAME_KR = ['일', '월', '화', '수', '목', '금', '토'];
+const DAYNAME_EN_SHORT = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT'];
 const COLOR_NAME_CODE = {"#fbf3bd":"바나나", "#dbe6f7":"하늘", "#ffd3d9": "복숭아",
               "#ffe3c2":"살구", "#ceeac4":"키위", "#d8d6ff":"포도",
               "#ead8f2":"블루베리", "#d9c3ab":"고구마"};
