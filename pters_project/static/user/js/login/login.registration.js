@@ -38,25 +38,25 @@ function select_contract(contract_type) {
     }
 
     if (contract_type == 'all_contract') {
-        if (all_contract.attr('data-check') == 'false') {
-            contract_select_check.attr('data-check', 'true');
+        if (all_contract.attr('data-valid') == 'false') {
+            contract_select_check.attr('data-valid', 'true');
             contract_select_check.text('v');
         } else {
-            contract_select_check.attr('data-check', 'false');
+            contract_select_check.attr('data-valid', 'false');
             contract_select_check.text('');
         }
     } else {
-        if (contract_selector.attr('data-check') == 'false') {
-            contract_selector.attr('data-check', 'true');
+        if (contract_selector.attr('data-valid') == 'false') {
+            contract_selector.attr('data-valid', 'true');
             contract_selector.text('v');
-            if (compare_contract.attr('data-check') == 'true') {
-                all_contract.attr('data-check', 'true');
+            if (compare_contract.attr('data-valid') == 'true') {
+                all_contract.attr('data-valid', 'true');
                 all_contract.text('v');
             }
         } else {
-            contract_selector.attr('data-check', 'false');
+            contract_selector.attr('data-valid', 'false');
             contract_selector.text('');
-            all_contract.attr('data-check', 'false');
+            all_contract.attr('data-valid', 'false');
             all_contract.text('');
         }
     }
@@ -71,7 +71,6 @@ function limit_char_auto_correction(event){
 function limit_char_check(event){
     let limit_reg_pattern = event.target.pattern.replace('[', '[^').split('{')[0];
     let limit = new RegExp(limit_reg_pattern, "gi");
-    console.log(limit);
     let limit_char_check = false;
     let min_length = event.target.minLength;
     let event_id = event.target.id;
@@ -85,11 +84,9 @@ function limit_char_check(event){
     else{
         $(`#${confirm_id}`).text('');
         if(limit.test(event.target.value)){
-            console.log('no');
             $(`#${default_confirm_id}`).css('color', '#fe4e65');
             event.target.attributes['data-valid'].value = 'false';
         }else{
-            console.log('ok');
             $(`#${default_confirm_id}`).css('color', 'green');
             event.target.attributes['data-valid'].value = 'true';
         }
@@ -181,12 +178,14 @@ function check_sms_auth_button(event){
     if(event.target.value.length>10){
         let id_auth_button = $('#id_auth_button');
         id_auth_button.css({'color':'#fe4e65', 'border':'solid 1px #fe4e65'});
-        id_auth_button.attr({'disabled': false, 'data-valid':'true'});
+        id_auth_button.attr('disabled', false);
+        event.target.attributes['data-valid'].value = 'true';
     }
     else{
         let id_auth_button = $('#id_auth_button');
         id_auth_button.css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2'});
-        id_auth_button.attr({'disabled': true, 'data-valid':'false'});
+        id_auth_button.attr('disabled', true);
+        event.target.attributes['data-valid'].value = 'false';
     }
 }
 
