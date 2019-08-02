@@ -101,7 +101,7 @@
 }
 
 .pters_login_input{
-    width: 318px;
+    width: calc(100% - 2px);
     height: 46px;
     border-radius: 2px;
     border: solid 1px #d6d2d2;
@@ -148,7 +148,7 @@
 
 
 #registration_box{
-    width: 375px;
+    width: 360px;
     padding-left: calc(50% - 180px);
     /*padding-right: calc(50% - 180px);*/
     height: 100%;
@@ -214,7 +214,7 @@
 
 .group_select_box_on{
     display:inline-block;
-    width: 154px;
+    width: 146px;
     height: 46px;
     line-height: 46px;
     border-radius: 2px;
@@ -231,7 +231,7 @@
 }
 .group_select_box_off{
     display:inline-block;
-    width: 154px;
+    width: 146px;
     height: 46px;
     line-height: 46px;
     border-radius: 2px;
@@ -295,7 +295,7 @@
 }
 
 .auth_button{
-    width: 80px;
+    width: 70px;
     height: 46px;
     border-radius: 2px;
     border: solid 1px #d6d2d2;

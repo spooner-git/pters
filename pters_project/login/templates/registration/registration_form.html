@@ -9,6 +9,9 @@
         #root_content{
             overflow-y:hidden;
         }
+        .contract{
+            width:297px;
+        }
     </style>
 {% endblock %}
 {% block content %}
@@ -94,13 +97,13 @@
                     <!-- 휴대폰 번호 입력 영역 -->
                     <div style="margin-top:8px;">
                         <input class="pters_login_input" type="text" name="phone" id="id_phone" placeholder="휴대폰 번호" minlength="10" maxlength="11"
-                               autocomplete="off" style="width:232px;" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event); check_sms_auth_button(event);" data-valid="false">
+                               autocomplete="off" style="width:225px;" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event); check_sms_auth_button(event);" data-valid="false">
                         <button class="auth_button" id="id_auth_button" onclick="activate_sms();" disabled>인증</button>
                     </div>
 
                     <!-- 인증 번호 입력 영역 -->
                     <div style="margin-top:8px;">
-                        <div id="wrapper_id_activation" style="width: 232px; border: solid 1px #d6d2d2; display:inline-block">
+                        <div id="wrapper_id_activation" style="width: 225px; border: solid 1px #d6d2d2; display:inline-block">
                             <input class="pters_login_input" type="text" name="activation_code" id="id_activation_code" placeholder="인증 번호" minlength="3" maxlength="8"
                                    style="width:70%; border:0" pattern="[0-9]{3,8}" onkeyup="limit_char_auto_correction(event);" data-valid="false">
                             <div id="auth_timer" style="display:none; width:20%; text-align:right; padding-right:12px; color: #ff001f; font-size: 13px; font-weight: 500; letter-spacing: -0.5px;">
@@ -138,7 +141,7 @@
 
             <!-- 가입 완료 버튼 영역 -->
             <div class="registration_foot" style="margin-top:40px; transform: initial; padding-bottom:0px;">
-                <div class="social_login_box" onclick="registration_member_info();" style="background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
+                <div class="social_login_box" onclick="registration_member_info();" style="width:305px; background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
                     <div class="social_login_img"></div>
                     <span class="social_login_text" style="color:#ffffff;">가입 완료</span>
                     <div style="display:table-cell; width:60px;"></div>
