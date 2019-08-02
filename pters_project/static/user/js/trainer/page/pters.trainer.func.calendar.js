@@ -1019,7 +1019,7 @@ class Calendar {
                     swiper_x = false;
                 }
                 
-                alert(e.originalEvent.changedTouches[0].clientX)
+                setTimeout(()=>{return false;}, 0);
 
                 let te = e.originalEvent.changedTouches[0].clientX;
                 let tey = e.originalEvent.changedTouches[0].clientY;
