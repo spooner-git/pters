@@ -163,6 +163,11 @@ class TimeRobot{
     }
 
     static to_text(hour, minute, short){
+        if(String(hour).split(':').length == 3){
+            minute = hour.split(':')[1];
+            hour = hour.split(':')[0];
+        }
+
         hour = Number(hour);
         minute = Number(minute);
         let time = TimeRobot.to_zone(Number(hour), Number(minute) );
