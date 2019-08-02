@@ -10,7 +10,7 @@
             overflow-y:hidden;
         }
         .contract{
-            width:297px;
+            width: calc(100% - 8px);
         }
     </style>
 {% endblock %}
@@ -117,7 +117,7 @@
                     </div>
 
                     <!-- 약관 동의 영역 -->
-                    <div style="width:320px; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
+                    <div style="width:100%; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
                     <div class="contract">
                         <span class="all_contract">전체 약관에 동의</span>
                         <div class="contract_select_box" onclick="select_contract('all_contract');">
@@ -141,7 +141,7 @@
 
             <!-- 가입 완료 버튼 영역 -->
             <div class="registration_foot" style="margin-top:40px; transform: initial; padding-bottom:0px;">
-                <div class="social_login_box" onclick="registration_member_info();" style="width:305px; background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
+                <div class="social_login_box" onclick="registration_member_info();" style="width:100%; background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
                     <div class="social_login_img"></div>
                     <span class="social_login_text" style="color:#ffffff;">가입 완료</span>
                     <div style="display:table-cell; width:60px;"></div>
