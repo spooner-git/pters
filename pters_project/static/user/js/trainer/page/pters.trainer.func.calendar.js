@@ -1012,7 +1012,7 @@ class Calendar {
                 }
             });
 
-            selector_body.off("touchend").on("touchend", (e) => {
+            selector_body.off("touchcancel").on("touchcancel", (e) => {
 
                 if(swiper_x == true){
                     $('#root_content').off('touchmove');
@@ -1035,7 +1035,7 @@ class Calendar {
             break;
 
         case "off":
-            selector_body.off("touchstart").off("touchend").off('touchmove');
+            selector_body.off("touchstart").off("touchcancel").off('touchmove');
             break;
         }
     }
