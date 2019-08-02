@@ -94,7 +94,8 @@ html{
     padding-right:20px;
     /*overflow-y:auto;*/
     /*overflow-x:hidden;*/
-    min-height: calc(100% - 205px);
+    padding-top:40px;
+    min-height: calc(100% - 245px);
 }
 .login_foot{
     /*position:fixed;*/
@@ -135,7 +136,6 @@ html{
     opacity: 0.5;
     border-radius: 8px;
     background-color: #fe4e65;
-    margin-top: 40px;
 }
 .pters_description{
     width: 320px;
