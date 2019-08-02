@@ -32,6 +32,34 @@
 
 {% block local_js_footer %}
     <script type="text/javascript">
+        //기기종류 판단
+        const varUA = navigator.userAgent.toLowerCase();
+        let device = PC;
+        let os = IOS;
+        let browser = CHROME;
+        if (varUA.match(/android/) != null) {
+            device = MOBILE;
+            os = ANDROID;
+        }else if (varUA.match(/iphone/) != null || varUA.match(/ipad/) != null || varUA.match(/ipod/) != null) {
+            device = MOBILE;
+            os = IOS;
+        }else if (varUA.match(/macintosh/) != null){
+            device = PC;
+            os = IOS;
+        }else{
+            device = PC;
+            os = WINDOW;
+        }
+
+        if (varUA.match(/firefox/) != null) {
+            browser = FIREFOX;
+        }else if (varUA.match(/chrome/) != null || varUA.match(/chromium/) != null) {
+            browser = CHROME;
+        }else if (varUA.match(/safari/) != null) {
+            browser = SAFARI;
+        }else if (varUA.match(/edge/) != null) {
+            browser = EDGE;
+        }
         func_set_webkit_overflow_scrolling('#root_content');
     </script>
 {% endblock %}
