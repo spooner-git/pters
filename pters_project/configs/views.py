@@ -34,21 +34,6 @@ def index(request):
         return redirect(next_page)
 
 
-def general_login(request):
-    # login 완료시 main page 이동
-    template_name = 'general_login.html'
-
-    if request.user.is_authenticated():
-        next_page = '/check/'
-    else:
-        next_page = ''
-
-    if next_page == '':
-        return render(request, template_name)
-    else:
-        return redirect(next_page)
-
-
 class CheckView(LoginRequiredMixin, RedirectView):
 
     def get(self, request, **kwargs):

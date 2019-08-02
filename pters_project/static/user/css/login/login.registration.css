@@ -166,6 +166,7 @@ html{
     background-color: #ffffff;
     display:table;
     border-bottom: solid 1px #f5f2f3;
+    z-index: 1;
 }
 .registration_left{
     width: 24px;
