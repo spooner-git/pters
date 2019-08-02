@@ -317,6 +317,23 @@ class CComponent{
         return html;
     }
 
+    //회원의 일정 이력에 사용되는 행
+    static schedule_history_row (schedule_id, date, schedule_name, attend_status, memo){
+        let html = `<li class="schedule_history_row" id="schedule_history_row_${schedule_id}">
+                        <div class="obj_table_raw">
+                            <div class="cell_schedule_date">${date}</div>
+                            <div class="cell_schedule_info">${schedule_name}</div>
+                            <div class="cell_schedule_attend">${attend_status}</div>
+                        </div>
+                        <div class="obj_table_raw">
+                            <div class="cell_schedule_date"></div>
+                            <div class="cell_schedule_info">${memo}</div>
+                        </div>
+                    </li>`;
+        return html;
+    }
+
+
     static no_data_row(text){
         let html = `<li class="no_data_row">
                         <div class="obj_table_raw">

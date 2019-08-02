@@ -36,7 +36,12 @@ class Member_schedule_history{
     }
 
     dom_list(){
-        
+
+        let html_to_join = [];
+        let html;
+        html = ;
+        html_to_join.push(html);
+
         return html_to_join.join('');
     }
 
@@ -54,3 +59,6 @@ class Member_schedule_history{
         this.clear();
     }
 }
+
+
+

@@ -300,6 +300,39 @@ input:disabled{
 }
 
 
+.schedule_history_row{
+	list-style: none;
+	line-height: 60px;
+	height: 60px;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: -0.5px;
+
+	/* border-bottom: 1px solid #cccccc; */
+	padding: 5px 16px;
+}
+
+.schedule_history_row .cell_schedule_date{
+	display: table-cell;
+	width: 45px;
+	vertical-align: middle;
+}
+
+.schedule_history_row .cell_schedule_info{
+	display: table-cell;
+	width: auto;
+	vertical-align: middle;
+}
+
+.schedule_history_row .cell_schedule_attend{
+	display: table-cell;
+	width: 45px;
+	vertical-align: middle;
+}
+
+
+
 .no_data_row{
 	list-style: none;
 	line-height: 50px;
