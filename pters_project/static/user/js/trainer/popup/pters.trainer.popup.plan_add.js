@@ -370,17 +370,15 @@ class Plan_add{
                 layer_popup.close_layer_popup();
                 calendar.init();
             });
+            
         }else if(this.data.repeat.power == ON){
             let url = '/schedule/add_repeat_schedule/';
             let confirm_url = '/schedule/add_repeat_schedule_confirm/';
-            console.log("repeat_data", data);
             
             Plan_func.create(url, data, (received)=>{
-                console.log(received);
                 let repeat_schedule_id = received.repeatArray[0];
                 let repeat_confirm = 1;
                 let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm};
-                console.log("repeat_confirm_data", confirm_data)
                 Plan_func.create(confirm_url, confirm_data, ()=>{
                     layer_popup.close_layer_popup();
                     calendar.init();
