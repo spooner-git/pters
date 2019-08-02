@@ -1040,6 +1040,10 @@ def payment_for_ios_logic(request):
                 logger.info(str(request.user.last_name) + str(request.user.first_name)
                             + '(' + str(request.user.id) + ')님 ios 결제 시도12:')
                 # logger.error(str(json_loading_data['receipt']))
+        else:
+            logger.info(str(request.user.last_name) + str(request.user.first_name)
+                        + '(' + str(request.user.id) + ')님 ios 결제 시도8-2:에러 발생!!!!!!!')
+
     else:
         logger.info(str(request.user.last_name) + str(request.user.first_name)
                     + '(' + str(request.user.id) + ')님 ios 결제 시도7-2:')
