@@ -42,6 +42,19 @@ class Calendar {
         let interval = setInterval(()=>{
             this.relocate_current_time_indicator();
         }, 60000);
+
+        //Time of the long press
+        // this.tempo = 1000; //Time 1000ms = 1s
+        // this.mouseDown = () => {
+        //     timer = setTimeout(function(){ 
+        //             //Insert your function here
+        //             $('.week_rows > .week_row').css('background-color', '#ffffff');
+        //             show_error_message("롱터치!");
+        //     }, this.tempo);
+        // };
+        // const mouseUp = () => {
+        //     clearTimeout(timer);
+        // };
     }
 
     get selected_plan(){
@@ -1071,7 +1084,6 @@ class Calendar {
             }, 200);
         }, 0);
     }
-
 }
 
 
