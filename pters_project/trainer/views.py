@@ -2493,8 +2493,8 @@ class GetLectureIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View)
                                                    use=USE).order_by('member_ticket_tb__member_id',
                                                                      'member_ticket_tb__end_date')
 
-            member_list = func_get_member_from_member_ticket_list(all_class_member_ticket_list, lecture_id, request.user.id)
-
+            member_list = func_get_member_from_member_ticket_list(all_class_member_ticket_list, lecture_id,
+                                                                  request.user.id)
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -4756,6 +4756,7 @@ class PopupMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['member_ticket_list'] = member_ticket_list
         return context
 
+
 class PopupMemberSimpleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_member_simple_view.html'
 
@@ -4770,6 +4771,7 @@ class PopupMemberSimpleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['member_lecture_list'] = member_lecture_list
         context['member_ticket_list'] = member_ticket_list
         return context
+
 
 class PopupMemberEdit(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_member_edit.html'
@@ -4811,6 +4813,7 @@ class PopupLectureSimpleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['lecture_info'] = func_get_lecture_info(class_id, lecture_id, self.request.user.id)
         return context
 
+
 class PopupLectureEdit(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_lecture_edit.html'
 
@@ -4851,6 +4854,7 @@ class PopupTicketSimpleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         context['ticket_info'] = func_get_ticket_info(class_id, ticket_id, self.request.user.id)
         return context
+
 
 class PopupTicketEdit(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_ticket_edit.html'

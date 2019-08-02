@@ -31,7 +31,7 @@
 
             <!-- 입력 영역 -->
             <div class="registration_content" style="min-height: calc(100% - 190px);">
-                <form action="../" id="add-member-id-form" method="post" autocomplete="new-password">
+                <form action="../" id="add-member-id-form" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="group_type" id="id_group_type" value="trainer" autocomplete="off">
                     <!-- 회원가입 제목 영역 -->
@@ -70,7 +70,7 @@
                     <!-- 비밀번호 입력 영역 -->
                     <div style="margin-top:8px;">
                         <input class="pters_login_input" type="password" name="password" id="id_password" placeholder="비밀번호" minlength="8" maxlength="20"
-                                pattern="[^a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\/]" onkeyup="limit_password_check(event);" data-valid="false">
+                                pattern="[^a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\/]" onkeyup="limit_password_check(event);" data-valid="false" autocomplete="new-password">
                         <div class="input_description">
                             <div class="input_description_text" id="id_password_confirm"></div>
                             <div id="id_password_default_confirm">한글을 제외한 특수문자(공백 제외)/영문/숫자를 혼합</div>

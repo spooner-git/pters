@@ -11,13 +11,13 @@ from django.db.models.expressions import RawSQL
 from django.utils import timezone
 
 from configs import settings
-from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, \
-    SCHEDULE_DUPLICATION_DISABLE, ING_MEMBER_FALSE, ING_MEMBER_TRUE, STATE_CD_ABSENCE, STATE_CD_FINISH, \
-    STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, LECTURE_TYPE_ONE_TO_ONE, AUTH_TYPE_VIEW, GROUP_SCHEDULE
+from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, USE, UN_USE, SCHEDULE_DUPLICATION_DISABLE, \
+    STATE_CD_ABSENCE, STATE_CD_FINISH, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, LECTURE_TYPE_ONE_TO_ONE, \
+    AUTH_TYPE_VIEW, GROUP_SCHEDULE
 from configs.settings import DEBUG
-from login.models import LogTb, PushInfoTb
+from login.models import PushInfoTb
 from trainee.models import MemberTicketTb
-from trainer.functions import func_get_class_member_ing_list, func_update_lecture_member_fix_status_cd
+from trainer.functions import func_update_lecture_member_fix_status_cd
 from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, TicketLectureTb
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
 
@@ -767,7 +767,8 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
             lecture_schedule_info = {'schedule_id': str(lecture_member_schedule_info.schedule_id),
                                      'member_id': str(lecture_member_schedule_info.member_ticket_tb.member.member_id),
                                      'member_name': lecture_member_schedule_info.member_ticket_tb.member.name,
-                                     'member_ticket_id': str(lecture_member_schedule_info.member_ticket_tb.member_ticket_id),
+                                     'member_ticket_id':
+                                         str(lecture_member_schedule_info.member_ticket_tb.member_ticket_id),
                                      'schedule_type': GROUP_SCHEDULE,
                                      'start_dt': str(lecture_member_schedule_info.start_dt),
                                      'end_dt': str(lecture_member_schedule_info.end_dt),
@@ -802,10 +803,10 @@ def func_get_member_schedule_all(class_id, member_id):
     query_auth = "select " + ClassMemberTicketTb._meta.get_field('auth_cd').column + \
                  " from " + ClassMemberTicketTb._meta.db_table + \
                  " as B where B." + ClassMemberTicketTb._meta.get_field('member_ticket_tb').column + " = " \
-                                                                                                     "`" + ScheduleTb._meta.db_table + "`.`" + \
+                 "`" + ScheduleTb._meta.db_table + "`.`" + \
                  ScheduleTb._meta.get_field('member_ticket_tb').column + \
                  "` and B.CLASS_TB_ID = " + str(class_id) + \
-                 " and B." + ClassMemberTicketTb._meta.get_field('use').column + "=" + USE
+                 " and B." + ClassMemberTicketTb._meta.get_field('use').column + "=" + str(USE)
 
     member_schedule_data = ScheduleTb.objects.select_related(
         'member_ticket_tb__member',
@@ -863,7 +864,7 @@ def func_get_lecture_schedule_all(class_id, lecture_id):
             ScheduleTb._meta.get_field('lecture_schedule_id').column + \
             " = `"+ScheduleTb._meta.db_table+"`.`"+ScheduleTb._meta.get_field('schedule_id').column+"` " \
             "AND B."+ScheduleTb._meta.get_field('state_cd').column+" != \'PC\' AND B." + \
-            ScheduleTb._meta.get_field('use').column+"="+USE
+            ScheduleTb._meta.get_field('use').column+"="+str(USE)
 
     schedule_data = ScheduleTb.objects.select_related(
         'member_ticket_tb__member',
