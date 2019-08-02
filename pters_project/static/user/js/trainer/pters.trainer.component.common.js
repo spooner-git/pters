@@ -422,12 +422,15 @@ class LimitChar{
 }
 
 function limit_char_auto_correction(event){
-    let limit = new RegExp(event.target.pattern, "gi");
+    let limit_reg_pattern = event.target.pattern.replace('[', '[^');
+    let limit = new RegExp(limit_reg_pattern, "gi");
     event.target.value = event.target.value.replace(limit, "");
 }
 
 function limit_char_check(event){
-    let limit = new RegExp(event.target.pattern, "gi");
+
+    let limit_reg_pattern = event.target.pattern.replace('[', '[^');
+    let limit = new RegExp(limit_reg_pattern, "gi");
     let limit_char_check = false;
     let min_length = event.target.minLength;
     let event_id = event.target.id;

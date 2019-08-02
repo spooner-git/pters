@@ -99,12 +99,14 @@ function select_contract(contract_type) {
 }
 
 function limit_char_auto_correction(event){
-    let limit = new RegExp(event.target.pattern, "gi");
+    let limit_reg_pattern = event.target.pattern.replace('[', '[^');
+    let limit = new RegExp(limit_reg_pattern, "gi");
     event.target.value = event.target.value.replace(limit, "");
 }
 
 function limit_char_check(event){
-    let limit = new RegExp(event.target.pattern, "gi");
+    let limit_reg_pattern = event.target.pattern.replace('[', '[^');
+    let limit = new RegExp(limit_reg_pattern, "gi");
     let limit_char_check = false;
     let min_length = event.target.minLength;
     let event_id = event.target.id;
@@ -113,13 +115,16 @@ function limit_char_check(event){
     if(event.target.value.length < Number(min_length)){
         $(`#${confirm_id}`).text('최소 '+min_length+'자 이상 입력');
         $(`#${default_confirm_id}`).css('color', 'black');
+        event.target.attributes['data-valid'].value = 'false';
     }
     else{
         $(`#${confirm_id}`).text('');
         if(limit.test(event.target.value)){
             $(`#${default_confirm_id}`).css('color', '#fe4e65');
+            event.target.attributes['data-valid'].value = 'false';
         }else{
             $(`#${default_confirm_id}`).css('color', 'green');
+            event.target.attributes['data-valid'].value = 'true';
         }
     }
 
@@ -128,7 +133,8 @@ function limit_char_check(event){
 
 function limit_password_check(event){
 
-    let limit = new RegExp(event.target.pattern, "gi");
+    let limit_reg_pattern = event.target.pattern.replace('[', '[^');
+    let limit = new RegExp(limit_reg_pattern, "gi");
     let limit_char_check = false;
     let min_length = event.target.minLength;
     let event_id = event.target.id;
@@ -137,21 +143,25 @@ function limit_password_check(event){
     if(event.target.value.length < Number(min_length)){
         $(`#${confirm_id}`).text('최소 '+min_length+'자 이상 입력');
         $(`#${default_confirm_id}`).css('color', 'black');
+        event.target.attributes['data-valid'].value = 'false';
     }
     else{
         $(`#${confirm_id}`).text('');
         if(limit.test(event.target.value)){
             $(`#${default_confirm_id}`).css('color', '#fe4e65');
+            event.target.attributes['data-valid'].value = 'false';
         }else{
             if(isNaN(event.target.value)){
                 $(`#${default_confirm_id}`).css('color', 'green');
+                event.target.attributes['data-valid'].value = 'true';
             }else{
                 $(`#${default_confirm_id}`).css('color', '#fe4e65');
+                event.target.attributes['data-valid'].value = 'false';
             }
         }
     }
-
     document.getElementById('id_password_re').value = '';
+    $('#id_password_re_default_confirm').css('color', 'black');
     return limit_char_check
 }
 
@@ -165,7 +175,6 @@ function password_check(){
     }
 
 }
-
 
 // 회원 아이디 중복 검사(with backend)
 function check_username(data){
@@ -186,6 +195,7 @@ function check_username(data){
             let jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
                 $('#id_username_confirm').text(jsondata.messageArray).css({'display':'block'});
+                $('#id_username').attr('data-valid', 'false');
             }else{
                 $('#id_username_confirm').text('');
             }
@@ -198,4 +208,17 @@ function check_username(data){
             alert("에러: 서버 통신 실패")
         }
     });
+}
+
+function check_sms_auth_button(event){
+    if(event.target.value.length>10){
+        let id_auth_button = $('#id_auth_button');
+        id_auth_button.css({'color':'#fe4e65', 'border':'solid 1px #fe4e65'});
+        id_auth_button.attr({'disabled': false, 'data-valid':'true'});
+    }
+    else{
+        let id_auth_button = $('#id_auth_button');
+        id_auth_button.css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2'});
+        id_auth_button.attr({'disabled': true, 'data-valid':'false'});
+    }
 }
