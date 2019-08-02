@@ -648,7 +648,6 @@ class Calendar {
                     saturday = "obj_font_color_saturday_blue";
                 }
                 
-                console.log(`${_year[i]}-${_month[i]}-${_date[i]}`, this.today, `${_year[i]}-${_month[i]}-${_date[i]}` == this.today)
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
                     today_marking = `<div style="position: absolute;width: 100%;height: 3px;top: ${month_or_week == "week" ? '-30px' : 0} ;background: #fe4e65;left: 0;"></div>`;
                 }
@@ -1079,7 +1078,6 @@ class Calendar {
 class Plan_func{
     static create(url, data, callback){
         //데이터 형태 {"member_id":"", "contents":"", "counts":"", "price":"", "start_date":"", "end_date":"", "class_id":"", "package_id":""};
-        console.log('test:'+data);
         $.ajax({
             // url:'/schedule/add_schedule/',
             url : url,
@@ -1155,7 +1153,6 @@ class Plan_func{
                 ajax_load_image(SHOW);
             },
             success:function (datas){
-                console.log(datas);
                 if(callback != undefined){
                     callback(datas);
                 }

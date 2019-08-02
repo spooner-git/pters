@@ -11,6 +11,8 @@ class Member {
         this.list_type = "ing";
 
         this.search = false;
+
+        this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
     }
 
     init (list_type){
@@ -27,8 +29,12 @@ class Member {
 
         this.list_type = list_type;
 
+        if(this.received_data_cache != null){
+            this.render_member_list(this.received_data_cache, list_type);
+        }
         this.render_upper_box();
         this.request_member_list(list_type, (jsondata) => {
+            this.received_data_cache = jsondata;
             this.render_member_list(jsondata, list_type);
             this.render_upper_box();
         });
@@ -147,7 +153,6 @@ class Member {
         }
 
         document.querySelector('#member_content_wrap').innerHTML = html_temp.join("");
-        $('#root_content').scrollTop(1);
     }
 
 
