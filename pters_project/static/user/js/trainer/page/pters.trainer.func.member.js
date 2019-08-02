@@ -376,7 +376,7 @@ class Member_func{
         });
     }
 
-    static read_schedule_list(data, callback){
+    static read_schedule_list_by_ticket(data, callback){
         //데이터 형태 {"member_id":""};
         $.ajax({
             url:'/trainer/get_member_schedule_all/',
@@ -397,7 +397,8 @@ class Member_func{
     
             //통신성공시 처리
             success:function(data){
-                callback(data);
+                let json = JSON.parse(data);
+                callback(json);
             },
     
             //통신 실패시 처리

@@ -179,7 +179,6 @@ class Member_view{
 
 
             Member_func.read_ticket_list({"member_id":this.member_id}, (data)=>{
-                console.log(1,data)
                 let ticket_list = data;
                 this.data.ticket = [];
                 for(let ticket in ticket_list){
@@ -403,7 +402,6 @@ class Member_view{
             //티켓내 수업 리스트 표기 부분
             let length = this.data.ticket[i].lecture_id.length;
             let html_to_join_lecture_list = [];
-            console.log(this.data.ticket);
             for(let j=0; j<length; j++){
                 let lecture_id = this.data.ticket[i].lecture_id[j];
                 let lecture_name = this.data.ticket[i].lecture_name[j];
@@ -447,7 +445,6 @@ class Member_view{
                     "sex":this.data.sex == null ? "" : this.data.sex,
                     // "note":this.data.memo,
         };
-        console.log("data_send", data);
         Member_func.update(data, ()=>{
             this.set_initial_data();
             member.init();
@@ -484,7 +481,9 @@ class Member_view{
                 }
             },
             lesson_history:{text:"수업 이력", callback:()=>{
-                    alert('작업중');
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
+                        member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.member_id, null);
+                    });
                 }
             }
         };

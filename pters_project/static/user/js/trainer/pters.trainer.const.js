@@ -56,9 +56,15 @@ const FIREFOX = 'firefox';
 const CHROME = 'chrome';
 const EDGE = 'edge';
 
-const SCHEDULE_NOT_FINISH = 0;
-const SCHEDULE_FINISH = 1;
-const SCHEDULE_ABSENCE = 2;
+// const SCHEDULE_NOT_FINISH = 0;
+// const SCHEDULE_FINISH = 1;
+// const SCHEDULE_ABSENCE = 2;
+// const SCHEDULE_ALL = 3;
+// const SCHEDULE_FINISH_ANYWAY = 4;
+
+const SCHEDULE_NOT_FINISH = 'NP';
+const SCHEDULE_FINISH = 'PE';
+const SCHEDULE_ABSENCE = 'PC';
 const SCHEDULE_ALL = 3;
 const SCHEDULE_FINISH_ANYWAY = 4;
 
@@ -121,4 +127,4 @@ const COLOR_NAME_CODE = {"#fbf3bd":"바나나", "#dbe6f7":"하늘", "#ffd3d9": "
               "#ffe3c2":"살구", "#ceeac4":"키위", "#d8d6ff":"포도",
               "#ead8f2":"블루베리", "#d9c3ab":"고구마"};
 const SEX_CODE = {"M": "남성", "W": "여성"};
-// const STATE_CODE = {PE:{KR:"완료"}, NP:{KR:"진행 전"}};
+const SCHEDULE_STATUS = {"NP" : "진행전", "PC": "결석", "PE": "출석완료"};
