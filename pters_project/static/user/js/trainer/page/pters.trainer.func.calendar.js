@@ -984,10 +984,10 @@ class Calendar {
         let y_threshold;
         let swiper_x = false;
         if(this.cal_type == "week"){
-            x_threshold = 20;
+            x_threshold = 50;
             y_threshold = 200;
         }else if(this.cal_type == "month"){
-            x_threshold = 20;
+            x_threshold = 50;
             y_threshold = 200;
         }
 
@@ -1001,14 +1001,28 @@ class Calendar {
             selector_body.off('touchmove').on('touchmove', (e) => {
                 tm = e.originalEvent.touches[0].clientX;
                 tmy = e.originalEvent.touches[0].clientY;
-                
-                if( Math.abs(ts - tm) > Math.abs(tsy - tmy) && swiper_x == false ){
-                    $('#root_content').on('touchmove', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        return false;
-                    });
-                    swiper_x = true;
+
+
+                // if( Math.abs(ts - tm) > Math.abs(tsy - tmy) && swiper_x == false ){
+                if( Math.abs(ts - tm) > Math.abs(tsy - tmy)){
+                    if(swiper_x == false){
+                        // $('#root_content').on('touchmove', (e) => {
+                        //     e.preventDefault();
+                        //     e.stopPropagation();
+                        //     return false;
+                        // });
+                        swiper_x = true;
+                    }
+                    
+                    
+                    if(ts - tm>x_threshold){
+                        if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
+                    }else if(ts - tm<-x_threshold){
+                        if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
+                    }
+                    // selector_body.off("touchstart").off("touchend").off('touchmove');
+
+                    
                 }
             });
 
@@ -1021,15 +1035,15 @@ class Calendar {
 
                 let te = e.originalEvent.changedTouches[0].clientX;
                 let tey = e.originalEvent.changedTouches[0].clientY;
-                // if(Math.abs(tsy - tey) < y_threshold){
-                if( Math.abs(ts - te) > Math.abs(tsy - tey)){
-                    if(ts>te+x_threshold){
-                        if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
-                    }else if(ts<te-x_threshold){
-                        if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
-                    }
-                }
-                return true;
+
+                // if( Math.abs(ts - te) > Math.abs(tsy - tey)){
+                //     if(ts>te+x_threshold){
+                //         if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
+                //     }else if(ts<te-x_threshold){
+                //         if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
+                //     }
+                // }
+                // return true;
             });
             break;
 
