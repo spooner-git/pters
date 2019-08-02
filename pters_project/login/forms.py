@@ -40,7 +40,8 @@ class MyRegistrationForm(RegistrationForm):
     username = UsernameField(
         max_length=20,
         validators=[UnicodeUsernameValidator(message='영어, 숫자, -_@ 제외 불가'),
-                    MinLengthValidator(4, message='최소 4자 이상 입력')]
+                    MinLengthValidator(4, message='최소 4자 이상 입력'),
+                    ]
     )
     name = CharField(
         max_length=20,

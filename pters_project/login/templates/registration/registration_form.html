@@ -5,7 +5,14 @@
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="751903262384-dbtt6ho5imk5gssgn1rqpe3vs3linq15.apps.googleusercontent.com">
     <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
-
+    <style type="text/css">
+        #root_content{
+            overflow-y:hidden;
+        }
+        .contract{
+            width: calc(100% - 8px);
+        }
+    </style>
 {% endblock %}
 {% block content %}
     <!-- Google reCapcha v3 -->
@@ -49,8 +56,8 @@
 
                     <!-- 이름 입력 영역 -->
                     <div style="margin-top:8px;">
-                        <input class="pters_login_input" type="text" name="name" id="id_name" placeholder="이름" minlength="2" maxlength="8"
-                               pattern="[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]" onkeyup="limit_char_check(event);" data-valid="false" autofocus>
+                        <input class="pters_login_input" type="text" name="name" id="id_name" placeholder="이름" minlength="2" maxlength="10"
+                               pattern="[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}" onkeyup="limit_char_check(event);" data-valid="false" autofocus>
                         <div class="input_description">
                             <div class="input_description_text" id="id_name_confirm"></div>
                             <div id="id_name_default_confirm"> -_ 제외 특수문자 불가</div>
@@ -60,7 +67,7 @@
                     <!-- 아이디 입력 영역 -->
                    <div style="margin-top:8px;">
                         <input class="pters_login_input" type="text" name="username" id="id_username" placeholder="아이디" minlength="4" maxlength="20"
-                               pattern="[a-zA-Z0-9-._@]" onkeyup="limit_char_check(event);" data-valid="false">
+                               pattern="[a-zA-Z0-9-._@]{4,20}" onkeyup="limit_char_check(event);" data-valid="false">
                         <div class="input_description">
                             <div class="input_description_text" id="id_username_confirm"></div>
                             <div id="id_username_default_confirm">영어, 숫자, -_@ 제외 불가</div>
@@ -70,7 +77,7 @@
                     <!-- 비밀번호 입력 영역 -->
                     <div style="margin-top:8px;">
                         <input class="pters_login_input" type="password" name="password" id="id_password" placeholder="비밀번호" minlength="8" maxlength="20"
-                                pattern="[a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\/]" onkeyup="limit_password_check(event);" data-valid="false" autocomplete="new-password">
+                                pattern="[a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\/]{8,20}" onkeyup="limit_password_check(event);" data-valid="false" autocomplete="new-password">
                         <div class="input_description">
                             <div class="input_description_text" id="id_password_confirm"></div>
                             <div id="id_password_default_confirm">한글을 제외한 특수문자(공백 제외)/영문/숫자를 혼합</div>
@@ -90,15 +97,15 @@
                     <!-- 휴대폰 번호 입력 영역 -->
                     <div style="margin-top:8px;">
                         <input class="pters_login_input" type="text" name="phone" id="id_phone" placeholder="휴대폰 번호" minlength="10" maxlength="11"
-                               autocomplete="off" style="width:232px;" pattern="[0-9]" onkeyup="limit_char_auto_correction(event); check_sms_auth_button(event);" data-valid="false">
+                               autocomplete="off" style="width:225px;" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event); check_sms_auth_button(event);" data-valid="false">
                         <button class="auth_button" id="id_auth_button" onclick="activate_sms();" disabled>인증</button>
                     </div>
 
                     <!-- 인증 번호 입력 영역 -->
                     <div style="margin-top:8px;">
-                        <div id="wrapper_id_activation" style="width: 232px; border: solid 1px #d6d2d2; display:inline-block">
-                            <input class="pters_login_input" type="text" name="activation_code" id="id_activation_code" placeholder="인증 번호" maxlength="8"
-                                   style="width:70%; border:0" pattern="[0-9]" onkeyup="limit_char_auto_correction(event);" data-valid="false">
+                        <div id="wrapper_id_activation" style="width: 225px; border: solid 1px #d6d2d2; display:inline-block">
+                            <input class="pters_login_input" type="text" name="activation_code" id="id_activation_code" placeholder="인증 번호" minlength="3" maxlength="8"
+                                   style="width:70%; border:0" pattern="[0-9]{3,8}" onkeyup="limit_char_auto_correction(event);" data-valid="false">
                             <div id="auth_timer" style="display:none; width:20%; text-align:right; padding-right:12px; color: #ff001f; font-size: 13px; font-weight: 500; letter-spacing: -0.5px;">
                                 03:00
                             </div>
@@ -110,7 +117,7 @@
                     </div>
 
                     <!-- 약관 동의 영역 -->
-                    <div style="width:320px; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
+                    <div style="width:100%; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
                     <div class="contract">
                         <span class="all_contract">전체 약관에 동의</span>
                         <div class="contract_select_box" onclick="select_contract('all_contract');">
@@ -134,7 +141,7 @@
 
             <!-- 가입 완료 버튼 영역 -->
             <div class="registration_foot" style="margin-top:40px; transform: initial; padding-bottom:0px;">
-                <div class="social_login_box" onclick="document.getElementById('sns-form').submit();" style="background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
+                <div class="social_login_box" onclick="registration_member_info();" style="width:100%; background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
                     <div class="social_login_img"></div>
                     <span class="social_login_text" style="color:#ffffff;">가입 완료</span>
                     <div style="display:table-cell; width:60px;"></div>
@@ -148,112 +155,53 @@
 {% block local_js_footer %}
     <script type="text/javascript" src="{% static_url "/user/js/login/login.registration.js" %}"></script>
     <script type="text/javascript">
+        window.addEventListener('load', function () {
+            $('.grecaptcha-badge').css('display', 'none');
+        });
 
-        let activation_timer = 180;
+        let did_scroll; // 스크롤시에 사용자가 스크롤했다는 것을 알림
+        let delta = 4; // 스크롤시 감도 (낮으면 자주 발생)
+        let last_scroll_top = 0; // 마지막 스크롤된 위치 저장
+        let $scoll_event = $('#registration_box');
+        // 스크롤 이벤트 처리
+        $scoll_event.scroll(function () {
+            // 중복되지 않도록 semaphore
+            did_scroll = true;
+            if (did_scroll) {
+                checkScrolled();
+            }
+            did_scroll = false;
+        });
 
+        // 스크롤 방향을 검사해서 회원가입 명칭 띄워주기
+        function checkScrolled() {
+            let current_scroll_top = $scoll_event.scrollTop();
+            if($scoll_event.scrollTop() == 0){
+                $scoll_event.scrollTop(1);
+            }
+            // 스크롤 변화량이 delta 값이 넘지 않으면 return
+            if (Math.abs(last_scroll_top - current_scroll_top) < delta) {
+                return;
+            }
 
-        //특수문자 입력 제한
-
-        var auth_time_interval;
-        function activate_sms(){
-            // 인증 버튼 활성화
-            $('#id_activation_button').attr('disabled', false).css({'color':'#fe4e65', 'border':'solid 1px #fe4e65'});
-
-            // 인증 관련 메시지 초기화
-            $('#id_auth_button').text('재인증').css({'color':'#fe4e65', 'border':'solid 1px #fe4e65'});
-            $('#id_activation_confirm').text(" ").css({'display':'none'});
-            $('#auth_timer').text('03:00').css({'display':'inline-block'});
-            activation_timer = 180;
-
-            // 인증 메시지 발송
-            $.ajax({
-                url:'/login/activate_sms/',
-                type:'POST',
-                data:{'token':document.getElementById('g-recaptcha-response').value,
-                      'phone':document.getElementById('id_phone').value
-                     },
-                dataType : 'html',
-
-                beforeSend:function(xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                },
-                //통신성공시 처리
-                success:function(data){
-                    let jsondata = JSON.parse(data);
-                    if(jsondata.messageArray.length > 0){
-                        alert(jsondata.messageArray);
-                    }else{
-                        alert('인증번호가 발송되었습니다.');
-                        auth_time_interval = setInterval(function(){
-                            activation_timer--;
-                            // 시간 종료시 처리
-                            if(activation_timer<0){
-                                $('#id_activation_confirm').text('인증 시간이 초과되었습니다.').css({'display':'block'}).css('color', '#fe4e65');
-                                $('#id_activation_button').attr('disabled', true).css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2'});
-                                clearInterval(auth_time_interval);
-                            }else{
-                                // 시간 표시
-                                let minutes = parseInt(activation_timer/60);
-                                let seconds = activation_timer - minutes*60;
-                                if(seconds<10){
-                                    seconds = '0'+seconds;
-                                }
-                                $('#auth_timer').text(minutes+':'+seconds);
-                            }
-                        }, 1000);
-                    }
-                },
-                //보내기후 팝업창 닫기
-                complete:function(){
-
-                },
-                //통신 실패시 처리
-                error:function(){
-                    alert("에러: 서버 통신 실패");
+            if (current_scroll_top > last_scroll_top) {
+                // 스크롤 다운(아래로)
+                if (current_scroll_top > 10) {
+                    $('.registration_title').css('display', 'table-cell');
+                    $('.registration_content_title').css('display', 'none');
                 }
-            });
+            } else {
+                // 스크롤 다운(위로)
+                if (current_scroll_top < 24) {
+                    $('.registration_title').css('display', 'none');
+                    $('.registration_content_title').css('display', 'block');
+                }
+            }
+            last_scroll_top = current_scroll_top;
         }
 
-        function check_activation_code(){
-            let $id_activation_code = $('#id_activation_code');
-            $.ajax({
-                url:'/login/activate_sms_confirm/',
-                type:'POST',
-                data: {'user_activation_code': $id_activation_code.val()},
-                dataType : 'html',
+        function registration_member_info(){
 
-                beforeSend: function (xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                },
-
-                //통신성공시 처리
-                success:function(data){
-                    let jsondata = JSON.parse(data);
-                    if(jsondata.messageArray.length > 0){
-                        $('#id_activation_confirm').text(jsondata.messageArray).css({'display':'block','color':'#fe4e65'});
-                        $id_activation_code.attr('data-valid', 'false');
-                    }else{
-                        clearInterval(auth_time_interval);
-                        alert('인증이 완료되었습니다.');
-                        $('#id_auth_button').text('인증').attr('disabled', true).css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2'});
-                        $('#id_activation_confirm').text('인증 완료').css({'display':'block','color':'green'});
-                        $('#id_activation_button').attr('disabled', true).css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2'});
-                        $id_activation_code.attr('data-valid', 'true');
-                        $('#auth_timer').text("");
-                    }
-                },
-                complete:function(){
-
-                },
-                error:function(){
-
-                }
-            });
         }
-
     </script>
 {% endblock %}

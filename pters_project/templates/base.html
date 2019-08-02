@@ -19,7 +19,15 @@
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="751903262384-dbtt6ho5imk5gssgn1rqpe3vs3linq15.apps.googleusercontent.com">
     <meta name="login" content="trainer_login">
-
+    <style type="text/css">
+         /*폰트 임포트*/
+         @import url(/static/common/fonts/notosanskr.css);
+         html{
+             font-family: 'Noto Sans KR', sans-serif !important;
+             box-sizing: border-box !important;
+         /* background-color: #f7f5f6;*/
+         }
+    </style>
     {% block local_css %}
     {% endblock %}
 </head>
@@ -31,6 +39,36 @@
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
 
 {% block local_js_footer %}
+    <script type="text/javascript">
+        //기기종류 판단
+        const varUA = navigator.userAgent.toLowerCase();
+        let device = PC;
+        let os = IOS;
+        let browser = CHROME;
+        if (varUA.match(/android/) != null) {
+            device = MOBILE;
+            os = ANDROID;
+        }else if (varUA.match(/iphone/) != null || varUA.match(/ipad/) != null || varUA.match(/ipod/) != null) {
+            device = MOBILE;
+            os = IOS;
+        }else if (varUA.match(/macintosh/) != null){
+            device = PC;
+            os = IOS;
+        }else{
+            device = PC;
+            os = WINDOW;
+        }
+
+        if (varUA.match(/firefox/) != null) {
+            browser = FIREFOX;
+        }else if (varUA.match(/chrome/) != null || varUA.match(/chromium/) != null) {
+            browser = CHROME;
+        }else if (varUA.match(/safari/) != null) {
+            browser = SAFARI;
+        }else if (varUA.match(/edge/) != null) {
+            browser = EDGE;
+        }
+    </script>
 {% endblock %}
 
 </body>

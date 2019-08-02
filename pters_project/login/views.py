@@ -50,14 +50,19 @@ from .models import MemberTb, PushInfoTb, SnsInfoTb
 logger = logging.getLogger(__name__)
 
 
-class IndexView(TemplateView):
-    template_name = 'login.html'
+def index(request):
+    # login 완료시 main page 이동
+    template_name = 'general_login.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-        logout(self.request)
+    if request.user.is_authenticated():
+        next_page = '/check/'
+    else:
+        next_page = ''
 
-        return context
+    if next_page == '':
+        return render(request, template_name)
+    else:
+        return redirect(next_page)
 
 
 def login_trainer(request):
@@ -144,14 +149,6 @@ class ServiceInfoView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ServiceInfoView, self).get_context_data(**kwargs)
-        return context
-
-
-class ServicePriceInfoView(TemplateView):
-    template_name = 'service_price_info.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(ServicePriceInfoView, self).get_context_data(**kwargs)
         return context
 
 
@@ -307,70 +304,6 @@ class LoginSimpleKakaoView(TemplateView):
         return context
 
 
-class LoginSimpleSnsView(TemplateView):
-    template_name = 'login_sns_processing.html'
-
-    def post(self, request):
-        # context = super(LoginSimpleFacebookView, self).get_context_data(**kwargs)
-        context = {}
-        sns_id = request.POST.get('sns_id', '')
-        username = request.POST.get('username', '')
-        email = request.POST.get('email', '')
-        last_name = request.POST.get('last_name', '')
-        first_name = request.POST.get('first_name', '')
-        sns_type = request.POST.get('sns_type', 'google')
-        social_access_token = request.POST.get('social_accessToken', '')
-        sex = request.POST.get('sex', '')
-
-        context['username'] = username
-        context['email'] = email
-        context['last_name'] = last_name
-        context['first_name'] = first_name
-        context['name'] = last_name + first_name
-        context['sns_id'] = sns_id
-        context['sns_type'] = sns_type
-        context['social_accessToken'] = social_access_token
-        context['sex'] = sex
-
-        return render(request, self.template_name, context)
-
-
-class RegisterTrainerView(TemplateView):
-    template_name = 'login_register_trainer.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(RegisterTrainerView, self).get_context_data(**kwargs)
-
-        return context
-
-
-class RegisterGeneralView(TemplateView):
-    template_name = 'login_register_general.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(RegisterGeneralView, self).get_context_data(**kwargs)
-
-        return context
-
-
-class RegisterBusinessView(TemplateView):
-    template_name = 'login_register_business.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(RegisterBusinessView, self).get_context_data(**kwargs)
-
-        return context
-
-
-class RegisterTypeSelectView(TemplateView):
-    template_name = 'login_register_type.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(RegisterTypeSelectView, self).get_context_data(**kwargs)
-
-        return context
-
-
 # 로그아웃 api
 def logout_trainer(request):
     # logout 끝나면 login page로 이동
@@ -390,7 +323,7 @@ def logout_trainer(request):
 class AddNewMemberSnsInfoView(RegistrationView, View):
     template_name = 'ajax/registration_error_ajax.html'
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
 
         email = request.POST.get('email', '')
         first_name = request.POST.get('first_name', '')
@@ -408,8 +341,6 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
         if first_name == '' or first_name == 'None' or first_name is None:
             first_name = name
 
-        # if last_name == '' or last_name == 'None' or last_name is None:
-        #     last_name = ''
         if email == '' or email is None:
             username = sns_id
         else:
@@ -438,12 +369,12 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
                                          sns_name=name, sns_connect_date=timezone.now(), use=USE)
                     sns_info.save()
                     user.backend = 'django.contrib.auth.backends.ModelBackend'
-                    request.session['social_login_check'] = '1'
-                    request.session['social_login_type'] = sns_type
-                    request.session['social_login_id'] = sns_id
-                    request.session['social_accessToken'] = social_access_token
+                    self.request.session['social_login_check'] = '1'
+                    self.request.session['social_login_type'] = sns_type
+                    self.request.session['social_login_id'] = sns_id
+                    self.request.session['social_accessToken'] = social_access_token
                     if auto_login_check == '0':
-                        request.session.set_expiry(0)
+                        self.request.session.set_expiry(0)
                     login(request, user)
                     return redirect('/trainer/')
 
@@ -1441,85 +1372,6 @@ class BaseRegistrationView(FormView):
         raise NotImplementedError
 
 
-class RegistrationView(BaseRegistrationView):
-    """
-    Register a new (inactive) user account, generate an activation key
-    and email it to the user.
-
-    This is different from the model-based activation workflow in that
-    the activation key is the username, signed using Django's
-    TimestampSigner, with HMAC verification on activation.
-
-    """
-    email_body_template = 'registration/activation_email.txt'
-    email_subject_template = 'registration/activation_email_subject.txt'
-
-    def register(self, form):
-        new_user = self.create_inactive_user(form)
-        signals.user_registered.send(sender=self.__class__,
-                                     user=new_user,
-                                     request=self.request)
-        return new_user
-
-    def get_success_url(self, user):
-        return ('registration_complete', (), {})
-
-    def create_inactive_user(self, form):
-        """
-        Create the inactive user account and send an email containing
-        activation instructions.
-
-        """
-        new_user = form.save(commit=False)
-        new_user.is_active = False
-        new_user.save()
-
-        self.send_activation_email(new_user)
-
-        return new_user
-
-    def get_activation_key(self, user):
-        """
-        Generate the activation key which will be emailed to the user.
-
-        """
-        return signing.dumps(
-            obj=getattr(user, user.USERNAME_FIELD),
-            salt=REGISTRATION_SALT
-        )
-
-    def get_email_context(self, activation_key):
-        """
-        Build the template context used for the activation email.
-
-        """
-        scheme = 'https' if self.request.is_secure else 'http'
-        return {
-            'scheme': scheme,
-            'activation_key': activation_key,
-            'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
-            'site': get_current_site(self.request)
-        }
-
-    def send_activation_email(self, user):
-        """
-        Send the activation email. The activation key is the username,
-        signed using TimestampSigner.
-
-        """
-        activation_key = self.get_activation_key(user)
-        context = self.get_email_context(activation_key)
-        context.update({
-            'user': user,
-        })
-        subject = render_to_string(self.email_subject_template,
-                                   context)
-        # Force subject to a single line to avoid header-injection
-        # issues.
-        subject = ''.join(subject.splitlines())
-        message = render_to_string(self.email_body_template,
-                                   context)
-        user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
 
 
 class BaseActivationView(TemplateView):
@@ -2096,5 +1948,16 @@ class CheckMemberUsernameView(View):
                 error = form['username'].errors[0]
 
         if error != '':
+            if 'This name cannot be registered' in error:
+                error = '등록 불가 아이디 입니다.'
             messages.error(request, error)
         return render(request, self.template_name)
+
+
+class RegistrationView(TemplateView):
+    template_name = 'registration/registration_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(RegistrationView, self).get_context_data(**kwargs)
+
+        return context

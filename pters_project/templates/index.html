@@ -49,7 +49,7 @@
                     <!-- 회원가입, 일반 로그인 버튼 노출 영역역 -->
                     <div style="display:table; width:100%; height: 48px; margin-bottom:20px;">
                         <div class="general_text" onclick="location.href='{% url 'login:registration_check' %}'">회원 가입</div>
-                        <div class="general_text" onclick="location.href='{% url 'general_login' %}'">일반 로그인</div>
+                        <div class="general_text" onclick="location.href='{% url 'login:index' %}'">일반 로그인</div>
                     </div>
                 </form>
             </div>
@@ -84,17 +84,6 @@
         </div>
     </div>
 
-    <form action="{% url 'login:login_simple_sns' %}" id="sns-form" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="username" id="id_sns_username">
-        <input type="hidden" name="email" id="id_sns_email">
-        <input type="hidden" name="last_name" id="id_sns_last_name">
-        <input type="hidden" name="first_name" id="id_sns_first_name">
-        <input type="hidden" name="sns_id" id="id_new_sns_id">
-        <input type="hidden" name="sns_type" id="id_sns_type" >
-        <input type="hidden" name="social_accessToken" id="id_social_accessToken" >
-        <input type="hidden" name="sex" id="id_sns_sex">
-    </form>
 {% endblock %}
 
 {% block local_js_footer %}
@@ -102,6 +91,7 @@
 <script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>
 <script type="text/javascript">
+
     var varUA = navigator.userAgent.toLowerCase();//useAgent값 얻기
     var device_text = '브라우저, iOS, Android 앱으로';
     var method_text = 'PC웹(크롬, 파이어폭스, 엣지, 사파리)과 스마트폰, 태블릿 등';
@@ -112,9 +102,7 @@
         device_text = '브라우저, iOS 앱으로';
         method_text = 'PC, 스마트폰, 태블릿 등';
     }
-{#    $(window).resize(function(){#}
-{#        $('.login_content').css('height', $(this).height()-$('.login_foot').height()+'px');#}
-{#    });#}
+
     $('#connectedMethod').html(method_text);
     $('#connectedDevice').html(device_text);
 
