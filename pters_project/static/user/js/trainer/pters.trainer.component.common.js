@@ -420,3 +420,31 @@ class LimitChar{
         }
     }
 }
+
+function limit_char_auto_correction(event){
+    let limit = new RegExp(event.target.pattern, "gi");
+    event.target.value = event.target.value.replace(limit, "");
+}
+
+function limit_char_check(event){
+    let limit = new RegExp(event.target.pattern, "gi");
+    let limit_char_check = false;
+    let min_length = event.target.minLength;
+    let event_id = event.target.id;
+    let confirm_id = event_id+'_confirm';
+    let default_confirm_id = event_id+'_default_confirm';
+    if(event.target.value.length < Number(min_length)){
+        $(`#${confirm_id}`).text('최소 '+min_length+'자 이상 입력');
+        $(`#${default_confirm_id}`).css('color', 'black');
+    }
+    else{
+        $(`#${confirm_id}`).text('');
+        if(limit.test(event.target.value)){
+            $(`#${default_confirm_id}`).css('color', '#fe4e65');
+        }else{
+            $(`#${default_confirm_id}`).css('color', 'green');
+        }
+    }
+
+    return limit_char_check
+}
