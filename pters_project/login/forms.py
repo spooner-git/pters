@@ -33,9 +33,14 @@ class MyRegistrationForm(RegistrationForm):
         self.fields['username'].required = True
         self.fields['name'].required = True
         self.fields['email'].required = False
-        self.fields['password1'].widget.attrs.update({
-            'autocomplete': 'new-password'
-        })
+
+    labels = {
+        'username': '아이디',
+        'name': '이름',
+        'email': '이메일',
+        'password1': '비밀번호',
+        'password2': '비밀번호 확인'
+    }
 
     username = UsernameField(
         max_length=20,
@@ -45,7 +50,7 @@ class MyRegistrationForm(RegistrationForm):
     )
     name = CharField(
         max_length=20,
-        validators=[RegexValidator(regex='[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]', message='-_ 제외 특수문자 불가'),
+        validators=[RegexValidator(regex='[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}', message='-_ 제외 특수문자 불가'),
                     MinLengthValidator(2, message='최소 2자 이상 입력')]
     )
 

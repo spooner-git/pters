@@ -43,7 +43,6 @@ urlpatterns = [
     url(r'^check_member_password_form_validation/$', views.CheckMemberPasswordValidationView.as_view(),
         name='check_member_password_form_validation'),
 
-    url(r'^add_member_info_no_email/$', views.AddMemberNoEmailView.as_view(), name='add_member_info_no_email'),
 
     url(r'^new_member_resend_email_authentication/$', views.NewMemberResendEmailAuthenticationView.as_view(),
         name='new_member_resend_email_authentication'),
@@ -127,8 +126,9 @@ urlpatterns = [
     # 소셜 회원 가입 처리 로직
     url(r'^add_new_member_sns_info/$', views.AddNewMemberSnsInfoView.as_view(), name='add_new_member_sns_info'),
 
-    # 다시 확인
-    url(r'^add_member_info_email/$', views.add_member_info_logic_test, name='add_member_info_email'),
+
+    # 강사가 등록하는 회원용
+    url(r'^add_member_info_no_email/$', views.AddMemberNoEmailView.as_view(), name='add_member_info_no_email'),
 
 
     # 네이버 아이디 로그인 처리

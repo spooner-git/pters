@@ -312,6 +312,7 @@
     text-align: center;
     color: #b8b4b4;
     background-color: #ffffff;
+    cursor: pointer;
 }
 
 .input_description{

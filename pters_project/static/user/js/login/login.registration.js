@@ -124,12 +124,12 @@ function limit_password_check(event){
             }
         }
     }
-    document.getElementById('id_password_re').value = '';
+    $('#id_password_re').attr('data-valid', 'false').val("");
     $('#id_password_re_default_confirm').css('color', 'black');
     return limit_char_check
 }
 
-function password_check(){
+function password_check(event){
     let password_1 = document.getElementById('id_password').value;
     let password_2 = document.getElementById('id_password_re').value;
     if(password_1 == password_2){
@@ -137,6 +137,7 @@ function password_check(){
     }else{
         $('#id_password_re_default_confirm').css('color', '#fe4e65');
     }
+    event.target.attributes['data-valid'].value = 'true';
 
 }
 
@@ -177,14 +178,14 @@ function check_username(data){
 function check_sms_auth_button(event){
     if(event.target.value.length>10){
         let id_auth_button = $('#id_auth_button');
-        id_auth_button.css({'color':'#fe4e65', 'border':'solid 1px #fe4e65'});
-        id_auth_button.attr('disabled', false);
+        id_auth_button.css({'color':'#fe4e65', 'border':'solid 1px #fe4e65', 'pointer-events':'auto'});
+        // id_auth_button.attr('disabled', false);
         event.target.attributes['data-valid'].value = 'true';
     }
     else{
         let id_auth_button = $('#id_auth_button');
-        id_auth_button.css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2'});
-        id_auth_button.attr('disabled', true);
+        id_auth_button.css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+        // id_auth_button.attr('disabled', true);
         event.target.attributes['data-valid'].value = 'false';
     }
 }
@@ -193,7 +194,7 @@ let activation_timer = 180;
 var auth_time_interval;
 function activate_sms(){
     // 인증 버튼 활성화
-    $('#id_activation_button').attr('disabled', false).css({'color':'#fe4e65', 'border':'solid 1px #fe4e65'});
+    $('#id_activation_button').css({'color':'#fe4e65', 'border':'solid 1px #fe4e65', 'pointer-events':'auto'});
 
     // 인증 관련 메시지 초기화
     $('#id_auth_button').text('재인증').css({'color':'#fe4e65', 'border':'solid 1px #fe4e65'});
@@ -219,6 +220,9 @@ function activate_sms(){
         success:function(data){
             let jsondata = JSON.parse(data);
             if(jsondata.messageArray.length > 0){
+                $('#id_auth_button').text('인증').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+                $('#id_activation_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+                $('#auth_timer').text("");
                 alert(jsondata.messageArray);
             }else{
                 alert('인증번호가 발송되었습니다.');
@@ -227,7 +231,7 @@ function activate_sms(){
                     // 시간 종료시 처리
                     if(activation_timer<0){
                         $('#id_activation_confirm').text('인증 시간이 초과되었습니다.').css({'display':'block'}).css('color', '#fe4e65');
-                        $('#id_activation_button').attr('disabled', true).css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2'});
+                        $('#id_activation_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
                         clearInterval(auth_time_interval);
                     }else{
                         // 시간 표시
@@ -274,12 +278,73 @@ function check_activation_code(){
                 $id_activation_code.attr('data-valid', 'false');
             }else{
                 clearInterval(auth_time_interval);
-                alert('인증이 완료되었습니다.');
-                $('#id_auth_button').text('인증').attr('disabled', true).css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2'});
+                $('#id_auth_button').text('인증').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
                 $('#id_activation_confirm').text('인증 완료').css({'display':'block','color':'green'});
-                $('#id_activation_button').attr('disabled', true).css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2'});
+                $('#id_activation_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
                 $id_activation_code.attr('data-valid', 'true');
                 $('#auth_timer').text("");
+                alert('인증이 완료되었습니다.');
+            }
+        },
+        complete:function(){
+
+        },
+        error:function(){
+
+        }
+    });
+}
+
+function registration_member_info(){
+    // form 안에 있는 값 검사
+    let inputs = document.getElementById("id_add_member_form").elements;
+    let error_info = '';
+
+    if(document.getElementById('all_contract').getAttribute('data-valid') == 'false'){
+        error_info = '약관 동의';
+    }
+    for(let i=0; i<inputs.length; i++){
+        if (inputs[i].nodeName === "INPUT" && (inputs[i].type === "text" || inputs[i].type === "password")) {
+            // Update text input
+            if(inputs[i].getAttribute('data-valid') == 'false'){
+                error_info = inputs[i].getAttribute('title');
+                break;
+            }
+        }
+    }
+    if(error_info!=''){
+        alert(error_info+'를 확인해주세요.');
+    }else{
+        add_member_info();
+    }
+}
+
+function add_member_info(){
+    let $id_add_member_form = $('#id_add_member_form');
+    $.ajax({
+        url:$id_add_member_form.attr('action'),
+        type:$id_add_member_form.attr('method'),
+        data: $id_add_member_form.serializeArray(),
+        dataType : 'html',
+
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            let jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length > 0){
+                let error_message = '';
+                for(let i=0; i<jsondata.messageArray.length; i++){
+                    error_message += jsondata.messageArray[i] + '<br/>';
+                }
+                alert(error_message);
+            }else{
+                alert('가입이 완료되었습니다.');
+                location.href = $('#id_next_page').val();
             }
         },
         complete:function(){

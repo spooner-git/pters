@@ -737,88 +737,15 @@ class ChangeResendEmailAuthenticationView(MyReRegistrationView, View):
         return render(request, self.template_name)
 
 
-# 회원가입 api
-def add_member_info_logic_test(request):
-    user_id = request.POST.get('id', '')
-    name = request.POST.get('name', '')
-    phone = request.POST.get('phone', '')
-    sex = request.POST.get('sex', '')
-    group_type = request.POST.get('group_type', 'trainee')
-    birthday_dt = request.POST.get('birthday', '')
-
-    error = None
-    member = None
-    user = None
-
-    if user_id == '':
-        error = 'ID를 입력해 주세요.'
-
-    if group_type == '':
-        group_type = 'trainee'
-
-    if error is None:
-        try:
-            user = User.objects.get(username=user_id)
-
-        except ObjectDoesNotExist:
-            error = '필수 입력 사항을 확인해주세요.'
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                group = Group.objects.get(name=group_type)
-                user.groups.add(group)
-                user.first_name = name
-                user.save()
-                if birthday_dt == '':
-                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                      user_id=user.id, use=USE)
-                else:
-                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                      birthday_dt=birthday_dt, user_id=user.id, use=USE)
-                member.save()
-                # if group_type == 'trainer':
-                #     class_info = ClassTb(member_id=user.id, class_type_cd='PT',
-                #                         start_date=datetime.date.today(),
-                #  end_date=datetime.date.today()+timezone.timedelta(days=3650),
-                #                         class_hour=1, start_hour_unit=1, class_member_num=100,
-                #                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
-
-                #    class_info.save()
-
-        except ValueError:
-            error = '이미 가입된 회원입니다.'
-        except IntegrityError:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError:
-            error = '등록 값에 문제가 있습니다.'
-        except ValidationError:
-            error = '등록 값에 문제가 있습니다.'
-        except InternalError:
-            error = '이미 가입된 회원입니다.'
-
-    if error is None:
-        logger.info(member.name + ' 회원 가입 완료')
-        messages.info(request, '회원가입이 정상적으로 완료됐습니다.')
-    else:
-        logger.error(name + '[' + str(user_id) + ']' + error)
-        messages.error(request, error)
-    return render(request, 'ajax/registration_error_ajax.html')
-
-
 class AddMemberView(RegistrationView, View):
     template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request, *args, **kwargs):
-
         form = MyRegistrationForm(request.POST, request.FILES)
-
-        first_name = request.POST.get('first_name', '')
         name = request.POST.get('name', '')
+        first_name = request.POST.get('first_name', name)
         phone = request.POST.get('phone', '')
-        sex = request.POST.get('sex', '')
         group_type = request.POST.get('group_type', 'trainee')
-        birthday_dt = request.POST.get('birthday', '')
         sms_activation_check = request.session.get('sms_activation_check', False)
         error = None
 
@@ -845,13 +772,10 @@ class AddMemberView(RegistrationView, View):
                             user.first_name = first_name
                             user.is_active = True
                             user.save()
-                            if birthday_dt == '':
-                                member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                                  user_id=user.id, use=USE)
-                            else:
-                                member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                                  birthday_dt=birthday_dt, user_id=user.id, use=USE)
+
+                            member = MemberTb(member_id=user.id, name=name, phone=phone, user_id=user.id, use=USE)
                             member.save()
+
                     except ValueError:
                         error = '이미 가입된 회원입니다.'
                     except IntegrityError:
@@ -864,16 +788,8 @@ class AddMemberView(RegistrationView, View):
                         error = '이미 가입된 회원입니다.'
             else:
                 for field in form:
-                    if field.errors:
-                        for err in field.errors:
-                            if error is None:
-                                if field.name == 'username':
-                                    error = '사용할수 없는 ID 입니다.'
-                                else:
-                                    error = err
-                            else:
-                                if field.name != 'username':
-                                    error += err
+                    for err in field.errors:
+                        messages.error(request, str(field.label)+':'+err)
         if error is not None:
             logger.error(name + '[' + form.cleaned_data['username'] + ']' + error)
             messages.error(request, error)

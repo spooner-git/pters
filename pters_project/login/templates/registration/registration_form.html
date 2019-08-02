@@ -38,8 +38,9 @@
 
             <!-- 입력 영역 -->
             <div class="registration_content" style="min-height: calc(100% - 190px);">
-                <form action="{% url "login:add_member_info_no_email" %}" id="id_add_member_form" method="post">
+                <form action="{% url "login:add_member_info" %}" id="id_add_member_form" method="post">
                     {% csrf_token %}
+                    <input type="hidden" name="next_page" id="id_next_page" value="{% url 'index' %}">
                     <input type="hidden" name="group_type" id="id_group_type" value="trainer" autocomplete="off">
                     <!-- 회원가입 제목 영역 -->
                     <div class="wrapper_registration_content_title" style="margin-bottom:40px; height:24px;">
@@ -76,7 +77,7 @@
 
                     <!-- 비밀번호 입력 영역 -->
                     <div style="margin-top:8px;">
-                        <input class="pters_login_input" type="password" name="password" id="id_password" placeholder="비밀번호" minlength="8" maxlength="20" title="비밀번호"
+                        <input class="pters_login_input" type="password" name="password1" id="id_password" placeholder="비밀번호" minlength="8" maxlength="20" title="비밀번호"
                                 pattern="[a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\/]{8,20}" onkeyup="limit_password_check(event);" data-valid="false" autocomplete="new-password">
                         <div class="input_description">
                             <div class="input_description_text" id="id_password_confirm"></div>
@@ -86,7 +87,7 @@
 
                     <!-- 비밀번호 재입력 영역 -->
                    <div style="margin-top:8px;">
-                        <input class="pters_login_input" type="password" name="password_re" id="id_password_re" placeholder="비밀번호 확인" minlength="8" maxlength="20" title="비밀번호 확인"
+                        <input class="pters_login_input" type="password" name="password2" id="id_password_re" placeholder="비밀번호 확인" minlength="8" maxlength="20" title="비밀번호 확인"
                                 onkeyup="password_check(event);" data-valid="false">
                         <div class="input_description">
                             <div class="input_description_text" id="id_password_re_confirm"></div>
@@ -98,7 +99,7 @@
                     <div style="margin-top:8px;">
                         <input class="pters_login_input" type="text" name="phone" id="id_phone" placeholder="휴대폰 번호" minlength="10" maxlength="11" title="휴대폰 번호"
                                autocomplete="off" style="width:225px;" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event); check_sms_auth_button(event);" data-valid="false">
-                        <button class="auth_button" id="id_auth_button" onclick="activate_sms();" disabled>인증</button>
+                        <div class="auth_button" id="id_auth_button" onclick="activate_sms();" style="pointer-events:none;">인증</div>
                     </div>
 
                     <!-- 인증 번호 입력 영역 -->
@@ -110,7 +111,7 @@
                                 03:00
                             </div>
                         </div>
-                        <button class="auth_button" id="id_activation_button" onclick="check_activation_code();" disabled>확인</button>
+                        <div class="auth_button" id="id_activation_button" onclick="check_activation_code();" style="pointer-events:none;">확인</div>
                         <div class="input_description">
                             <div class="input_description_text" id="id_activation_confirm"></div>
                         </div>
@@ -155,6 +156,7 @@
 {% block local_js_footer %}
     <script type="text/javascript" src="{% static_url "/user/js/login/login.registration.js" %}"></script>
     <script type="text/javascript">
+        // 구글 reCAPTCHA 보이지 않게 하기
         window.addEventListener('load', function () {
             $('.grecaptcha-badge').css('display', 'none');
         });
@@ -200,29 +202,5 @@
             last_scroll_top = current_scroll_top;
         }
 
-        function registration_member_info(){
-            // form 안에 있는 값 검사
-            let inputs = document.getElementById("id_add_member_form").elements;
-            let error_info = '';
-
-            if(document.getElementById('all_contract').getAttribute('data-valid') == 'false'){
-                error_info = '약관에 동의해주세요.';
-            }
-            for(let i=0; i<inputs.length; i++){
-                if (inputs[i].nodeName === "INPUT" && (inputs[i].type === "text" || inputs[i].type === "password")) {
-                    // Update text input
-                    if(inputs[i].getAttribute('data-valid') == 'false'){
-                        error_info = inputs[i].getAttribute('title');
-                        break;
-                    }
-                }
-            }
-            if(error_info!=''){
-                alert(error_info+'를 확인해주세요.');
-            }else{
-                console.log('가입!!!!');
-            }
-
-        }
     </script>
 {% endblock %}
