@@ -1012,13 +1012,14 @@ class Calendar {
                 }
             });
 
-            selector_body.off("touchcancel").on("touchcancel", (e) => {
+            selector_body.off("touchend").on("touchend", (e) => {
 
                 if(swiper_x == true){
                     $('#root_content').off('touchmove');
                     swiper_x = false;
                 }
                 
+                alert(e.originalEvent.changedTouches[0].clientX)
 
                 let te = e.originalEvent.changedTouches[0].clientX;
                 let tey = e.originalEvent.changedTouches[0].clientY;
@@ -1035,7 +1036,7 @@ class Calendar {
             break;
 
         case "off":
-            selector_body.off("touchstart").off("touchcancel").off('touchmove');
+            selector_body.off("touchstart").off("touchend").off('touchmove');
             break;
         }
     }
