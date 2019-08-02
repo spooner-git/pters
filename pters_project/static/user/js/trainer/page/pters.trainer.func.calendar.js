@@ -1100,14 +1100,14 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
-                console.log(data)
-                callback();
+                let json = JSON.parse(data);
+                callback(json);
             },
     
             //통신 실패시 처리
             error:function(data){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                location.reload();
+                // location.reload();
             }
         });
     }
@@ -1138,7 +1138,7 @@ class Plan_func{
 
             error:function (){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                location.reload();
+                // location.reload();
             }
         });
     }
@@ -1168,7 +1168,7 @@ class Plan_func{
 
             error:function (){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                location.reload();
+                // location.reload();
             }
         });
     }
@@ -1203,7 +1203,7 @@ class Plan_func{
             //통신 실패시 처리
             error:function(){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                location.reload();
+                // location.reload();
             }
         });
     }
@@ -1236,7 +1236,7 @@ class Plan_func{
             //통신 실패시 처리
             error:function(){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                location.reload();
+                // location.reload();
             }
         });
     }
@@ -1268,7 +1268,7 @@ class Plan_func{
             //통신 실패시 처리
             error:function(){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                location.reload();
+                // location.reload();
             }
         });
     }

@@ -1762,3 +1762,217 @@ class DatePickerSelector{
         };
     }
 }
+
+class RepeatSelector{
+    constructor(install_target, target_instance, callback){
+        this.target = {install:install_target};
+        this.target_instance = target_instance;
+        this.callback = callback;
+
+        let d = new Date();
+        this.dates = {
+            current_year: d.getFullYear(),
+            current_month: d.getMonth()+1,
+            current_date: d.getDate()
+        };
+
+        this.data = {
+            power: OFF,
+            day: [],
+            repeat_end: {year:null, month:null, date:null}
+        };
+        
+        this.init();
+        this.set_initial_data();
+    }
+
+    set power(data){
+        this.data.power = data;
+        this.render();
+    }
+
+    set day(selected_array){
+        this.data.day = selected_array;
+        this.render();
+    }
+
+    get day(){
+        return this.data.day;
+    }
+
+    set end_date(data){
+        this.data.repeat_end = data;
+        this.render();
+    }
+
+    init(){
+        this.render();
+    }
+
+    set_initial_data(){
+        this.data = this.target_instance.repeat;
+        this.init();
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="repeat_select.upper_right_menu();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="">반복 일정</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;">&nbsp;</span></span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list (){
+        let power = this.dom_row_repeat_power();
+        let day = this.dom_row_day_select_button();
+        let end = this.dom_row_end_date_select_button();
+
+        let html = power + day + end;
+        return html;
+    }
+
+    dom_row_repeat_power(){
+        let multiple_select = 1;
+        let checked = this.data.power == OFF ? 1 : 0; //타겟이 이미 가진 색상 데이터를 get
+        let id = "repeat_power";
+        let title = "반복 안함";
+        let icon = null;
+        let html = CComponent.select_row (multiple_select, checked, id, title, icon, (add_or_substract)=>{   
+                this.power = OFF;
+                this.day = [];
+                this.end_date = {year:null, month:null, date:null};
+            }  
+        );
+
+        return html;
+    }
+
+    dom_row_day_select_button(){
+        let title = this.data.day.length == 0 ? '요일 지정' : this.data.day.join(', ');
+        let html = CComponent.create_row('select_day', title, NONE, HIDE, ()=>{ 
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_day_select', 100, POPUP_FROM_RIGHT, null, ()=>{
+                day_select = new DaySelector('#wrapper_box_day_select', this, 7, (set_data)=>{
+                    this.day = set_data.day;
+                });
+            });
+        });
+        return html;
+    }
+
+    dom_row_end_date_select_button(){
+        let title = this.data.repeat_end.year == null ? '반복 종료일' : DateRobot.to_text(this.data.repeat_end.year, this.data.repeat_end.month, this.data.repeat_end.date)+' 까지';
+        let html = CComponent.create_row('select_end_date', title, NONE, HIDE, ()=>{ 
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                let year = this.target_instance.date == null ? this.dates.current_year : this.target_instance.date.year; 
+                let month = this.target_instance.date == null ? this.dates.current_month : this.target_instance.date.month;
+                let date = this.target_instance.date == null ? this.dates.current_date : this.target_instance.date.date;
+                
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'repeat_end_date', title:'날짜 선택', data:{year:year, month:month, date:date},  
+                                                                                                callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
+                                                                                                    this.end_date = object.data; 
+                                                                                                    this.power = ON;
+                }});
+            });
+        });
+        return html;
+    }
+
+    request_list (callback){
+        
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
+
+class DaySelector{
+    constructor(install_target, target_instance, multiple_select, callback){
+        this.target = {install:install_target};
+        this.target_instance = target_instance;
+        this.callback = callback;
+        this.received_data;
+        this.multiple_select = multiple_select;
+        this.data = {
+            day:[]
+        };
+        this.init();
+        this.set_initial_data();
+    }
+
+
+    init(){
+        this.render();
+    }
+
+    set_initial_data(){
+        this.data.day = this.target_instance.day;
+        this.init();
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="day_select.upper_right_menu();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="day_select.upper_right_menu();">완료</span></span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list (){
+        let html_to_join = [];
+        for(let i=0; i<7; i++){
+            let checked = this.data.day.indexOf(DAYNAME_EN_SHORT[i]) != -1 ? 1 : 0; //타겟이 이미 가진 데이터를 get
+            let id = `day_${i}`;
+            let title = DAYNAME_KR[i]+'요일';
+            let icon = null;
+            let html = CComponent.select_row (this.multiple_select, checked, id, title, icon, (add_or_substract)=>{
+                    if(add_or_substract == "add"){
+                        this.data.day.push(DAYNAME_EN_SHORT[i]);
+                        this.render();
+                    }else if(add_or_substract == "substract"){
+                        this.data.day.splice(this.data.day.indexOf(DAYNAME_EN_SHORT[i]), 1);
+                        this.render();
+                    }else if(add_or_substract == "add_single"){
+                        this.data.day = [DAYNAME_EN_SHORT[i]];
+                        this.upper_right_menu();
+                    }
+                }  
+            );
+            html_to_join.push(html);
+        }
+
+
+        return html_to_join.join('');
+    }
+
+    request_list (callback){
+        // this.received_data = color_data;
+        // callback();
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}

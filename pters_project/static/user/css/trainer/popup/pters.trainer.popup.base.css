@@ -40,8 +40,8 @@
                 height: 24px;
             }
             .popup_mobile .wrapper_top .icon_center{
-                font-size: 18px;
-                font-weight: bold;
+                font-size: 15px;
+                font-weight: 500;
             }
             .popup_mobile .wrapper_top .icon_right{
                float: right;

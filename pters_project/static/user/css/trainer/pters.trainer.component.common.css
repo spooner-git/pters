@@ -299,7 +299,6 @@ input:disabled{
 	float: right;;
 }
 
-
 .schedule_history_row{
 	list-style: none;
 	line-height: auto;
@@ -336,6 +335,43 @@ input:disabled{
 	color: #5c5859;
 }
 
+.select_row{
+	list-style: none;
+	line-height: 50px;
+	height: 50px;
+	cursor: pointer;
+	font-size: 15px;
+	font-weight: 500;
+	letter-spacing: -0.5px;
+
+	border-bottom: 1px solid #f5f2f3;
+}
+
+.select_row .cell_select_icon{
+	display: table-cell;
+	width: 33px;
+	vertical-align: middle;
+}
+
+.select_row .cell_select_title{
+	display: table-cell;
+	width: auto;
+	vertical-align: middle;
+	text-align: left;
+}
+
+.select_row .cell_select_selected{
+	display: table-cell;
+	width: 40px;
+	vertical-align: middle;
+}
+.select_row .cell_select_selected img{
+	display: none;
+}
+.select_row .cell_select_selected .option_selected{
+	display: block !important;
+	
+}
 
 
 .no_data_row{

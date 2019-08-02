@@ -31,10 +31,9 @@ class Plan_add{
             end_time_text: null,
             repeat: 
                 {
-                    day: null,
-                    time: null,
-                    repeat_start: null,
-                    repeat_end: null
+                    power: OFF,
+                    day: [],
+                    repeat_end: {year:null, month:null, date:null}
                 }
             ,
             memo:""
@@ -105,6 +104,14 @@ class Plan_add{
 
     get memo(){
         return this.data.memo;
+    }
+
+    set repeat(data){
+        this.data.repeat = data;
+    }
+
+    get repeat(){
+        return this.data.repeat;
     }
 
 
@@ -307,7 +314,14 @@ class Plan_add{
     }
 
     dom_row_repeat_select(){
-        let html = CComponent.create_row('select_repeat', this.data.repeat.time == null ? '반복 일정' : this.data.repeat.day+' '+this.data.repeat.time, '/static/common/icon/icon_repeat.png', SHOW, (data)=>{ console.log(data);});
+        let html = CComponent.create_row('select_repeat', this.data.repeat.power == OFF ? '반복 일정' : this.data.repeat.day.join(', '), '/static/common/icon/icon_repeat.png', SHOW, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_REPEAT_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                repeat_select = new RepeatSelector('#wrapper_box_repeat_select', this, (set_data)=>{
+                    this.repeat = set_data;
+                    this.render_content();
+                });
+            });
+        });
         return html;
     }
 
@@ -338,16 +352,41 @@ class Plan_add{
                     "start_dt": this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.start_time,
                     "end_dt":this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.end_time,
                     "note":this.data.memo, "duplication_enable_flag": 1,
-                    "en_dis_type":this.list_type == "off" ? 0 : 1, "lecture_member_ids":this.data.member_id
+                    "en_dis_type":this.list_type == "off" ? 0 : 1, "lecture_member_ids":this.data.member_id,
+
+                    //repeat 관련
+                    "repeat_freq":"WW", 
+                    "repeat_start_date":this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date, 
+                    "repeat_end_date":this.data.repeat.repeat_end.year+'-'+this.data.repeat.repeat_end.month+'-'+this.data.repeat.repeat_end.date,
+                    "repeat_start_time":this.data.start_time, "repeat_end_time":this.data.end_time, "repeat_day":this.data.repeat.day.join('/')
         };
+        
         //en_dis_type 0: off일정, 1:레슨일정
         //duplication_enable_flag 0: 중복불허 1:중복허용
-        let url;
-        url ='/schedule/add_schedule/';
+        if(this.data.repeat.power == OFF){
+            let url ='/schedule/add_schedule/';
+            
+            Plan_func.create(url, data, ()=>{
+                layer_popup.close_layer_popup();
+                calendar.init();
+            });
+        }else if(this.data.repeat.power == ON){
+            let url = '/schedule/add_repeat_schedule/';
+            let confirm_url = '/schedule/add_repeat_schedule_confirm/';
+            console.log("repeat_data", data);
+            
+            Plan_func.create(url, data, (received)=>{
+                console.log(received);
+                let repeat_schedule_id = received.repeatArray[0];
+                let repeat_confirm = 1;
+                let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm};
+                console.log("repeat_confirm_data", confirm_data)
+                Plan_func.create(confirm_url, confirm_data, ()=>{
+                    layer_popup.close_layer_popup();
+                    calendar.init();
+                });
+            });
+        }
         
-        Plan_func.create(url, data, ()=>{
-            layer_popup.close_layer_popup();
-            calendar.init();
-        });
     }
 }

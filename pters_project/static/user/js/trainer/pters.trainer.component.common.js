@@ -273,7 +273,7 @@ class CComponent{
         return html;
     }
 
-    //회원 선택 팝업에 사용되는 행
+    //색상 선택 팝업에 사용되는 행
     static select_color_row (multiple_select, checked, bg_code, font_code, color_name, onclick){
         let color_bg_code_without_sharp = bg_code.replace('#', '');
 
@@ -312,6 +312,50 @@ class CComponent{
                 
                 onclick('add_single');
                 
+            });
+        }
+        return html;
+    }
+
+    //일반(이미지 없음) 선택 팝업에 사용되는 행
+    static select_row (multiple_select, checked, id, title, icon, onclick){
+        let html = `
+                    <li class="select_row" id="select_row_${id}">
+                        <div class="obj_table_raw">
+                            <div class="cell_select_icon">
+                                ${icon != null ? `<img src="${icon}">` : ""} 
+                            </div>
+                            <div class="cell_select_title">
+                                ${title}
+                            </div>
+                            <div class="cell_select_selected">
+                                <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? '' : 'option_selected'}">
+                            </div>
+                        </div>
+                    </li>
+                    `;
+
+        if(multiple_select > 1){
+            $(document).off('click', `#select_row_${id}`).on('click', `#select_row_${id}`, function(e){
+                if(!$(this).find('.cell_select_selected img').hasClass('option_selected')){
+                    if($('.option_selected').length >= multiple_select){
+                        show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
+                        return false;
+                    }
+                    $(this).find('.cell_select_selected img').addClass('option_selected');
+                    onclick('add');
+                }else{
+                    $(this).find('.cell_select_selected img').removeClass('option_selected');
+                    onclick('substract');
+                }
+            });
+        }else if(multiple_select == 1){
+            $(document).off('click', `#select_row_${id}`).on('click', `#select_row_${id}`, function(e){
+                if( !$(this).find('.cell_select_selected img').hasClass('option_selected') ){
+                    onclick('add_single');
+                }else{
+                    return false;
+                }
             });
         }
         return html;
