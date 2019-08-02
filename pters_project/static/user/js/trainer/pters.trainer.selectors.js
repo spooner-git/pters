@@ -1141,6 +1141,7 @@ class TicketSelector{
         // this.targetHTML = install_target;
         this.target = {install : install_target};
         this.target_instance = target_instance;
+        this.unique_instance = install_target.replace(/#./gi, "");
         this.callback = callback;
         this.received_data;
         this.multiple_select = multiple_select;
@@ -1192,7 +1193,7 @@ class TicketSelector{
             let ticket_effective_days = data.ticket_effective_days;
             let checked = this.target_instance.ticket.id.indexOf(ticket_id) >= 0 ? 1 : 0;
             let html = CComponent.select_ticket_row(
-                this.multiple_select, checked, ticket_id, ticket_name, ticket_reg_price, ticket_reg_count, ticket_effective_days, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, ticket_id, ticket_name, ticket_reg_price, ticket_reg_count, ticket_effective_days, (add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.id.push(ticket_id);
                         this.data.name.push(ticket_name);
@@ -1252,6 +1253,7 @@ class LectureSelector{
     constructor(install_target, target_instance, multiple_select, callback){
         this.target = {install : install_target};
         this.target_instance = target_instance;
+        this.unique_instance = install_target.replace(/#./gi, "");
         this.callback = callback;
         this.received_data;
         this.multiple_select = multiple_select;
@@ -1301,7 +1303,7 @@ class LectureSelector{
             let lecture_ing_member_num = data.lecture_ing_member_num;
             let checked = this.target_instance.lecture.id.indexOf(lecture_id) >= 0 ? 1 : 0;
             let html = CComponent.select_lecture_row(
-                this.multiple_select, checked, lecture_id, lecture_name, lecture_color_code, lecture_max_num, lecture_ing_member_num, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, lecture_id, lecture_name, lecture_color_code, lecture_max_num, lecture_ing_member_num, (add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.id.push(lecture_id);
                         this.data.name.push(lecture_name);
@@ -1352,6 +1354,7 @@ class MemberSelector{
     constructor(install_target, target_instance, multiple_select, appendix, callback){
         this.target = {install:install_target};
         this.target_instance = target_instance;
+        this.unique_instance = install_target.replace(/#./gi, "");
         this.received_data;
         this.callback = callback;
         this.appendix = appendix;
@@ -1403,7 +1406,7 @@ class MemberSelector{
             let member_expiry = data.end_date;
             let checked = this.target_instance.member.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
             let html = CComponent.select_member_row (
-                this.multiple_select, checked, member_id, member_name, member_avail_count, member_expiry, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_avail_count, member_expiry, (add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.id.push(member_id);
                         this.data.name.push(member_name);
@@ -1466,6 +1469,7 @@ class ColorSelector{
     constructor(install_target, target_instance, multiple_select, callback){
         this.target = {install:install_target};
         this.target_instance = target_instance;
+        this.unique_instance = install_target.replace(/#./gi, "");
         this.callback = callback;
         this.received_data;
         this.multiple_select = multiple_select;
@@ -1516,7 +1520,7 @@ class ColorSelector{
             let name = COLOR_NAME_CODE[data.color_code];
             let checked = this.target_instance.color.bg.indexOf(bg_code) >= 0 ? 1 : 0; //타겟이 이미 가진 색상 데이터를 get
             let html = CComponent.select_color_row (
-                this.multiple_select, checked, bg_code, font_code, name, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, bg_code, font_code, name, (add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.bg.push(bg_code);
                         this.data.font.push(font_code);
@@ -1767,6 +1771,7 @@ class RepeatSelector{
     constructor(install_target, target_instance, callback){
         this.target = {install:install_target};
         this.target_instance = target_instance;
+        this.unique_instance = install_target.replace(/#./gi, "");
         this.callback = callback;
 
         let d = new Date();
@@ -1846,7 +1851,7 @@ class RepeatSelector{
         let id = "repeat_power";
         let title = "반복 안함";
         let icon = null;
-        let html = CComponent.select_row (multiple_select, checked, id, title, icon, (add_or_substract)=>{   
+        let html = CComponent.select_row (multiple_select, checked, this.unique_instance, id, title, icon, ()=>{   
                 this.power = OFF;
                 this.day = [];
                 this.end_date = {year:null, month:null, date:null};
@@ -1901,6 +1906,7 @@ class DaySelector{
     constructor(install_target, target_instance, multiple_select, callback){
         this.target = {install:install_target};
         this.target_instance = target_instance;
+        this.unique_instance = install_target.replace(/#./gi,"");
         this.callback = callback;
         this.received_data;
         this.multiple_select = multiple_select;
@@ -1945,7 +1951,7 @@ class DaySelector{
             let id = `day_${i}`;
             let title = DAYNAME_KR[i]+'요일';
             let icon = null;
-            let html = CComponent.select_row (this.multiple_select, checked, id, title, icon, (add_or_substract)=>{
+            let html = CComponent.select_row (this.multiple_select, checked, this.unique_instance, id, title, icon, (add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.day.push(DAYNAME_EN_SHORT[i]);
                         this.render();
