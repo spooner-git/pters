@@ -158,6 +158,7 @@ class Member {
 
     //리스트 타입을 스위치
     switch_type (type){
+        this.received_data_cache = null;
         // console.log(context);
         if(type == this.list_type){
             return false;

@@ -162,6 +162,7 @@ class Lecture {
 
     //리스트 타입을 스위치
     switch_type (){
+        this.received_data_cache = null;
         switch(this.list_status_type){
         case "ing":
             this.init("end");
