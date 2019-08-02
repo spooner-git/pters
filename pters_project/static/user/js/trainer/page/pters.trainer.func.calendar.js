@@ -1018,8 +1018,6 @@ class Calendar {
                     $('#root_content').off('touchmove');
                     swiper_x = false;
                 }
-                
-                setTimeout(()=>{return false;}, 0);
 
                 let te = e.originalEvent.changedTouches[0].clientX;
                 let tey = e.originalEvent.changedTouches[0].clientY;
