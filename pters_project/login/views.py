@@ -674,7 +674,6 @@ class ResendEmailAuthenticationView(MyReRegistrationView, View):
                 error = '가입되지 않은 회원입니다.'
 
         if error is None:
-            # user = authenticate(username=username, password=password)
             if user is not None:
                 if user.is_active:
                     error = '이미 인증된 ID 입니다.'

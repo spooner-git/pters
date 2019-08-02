@@ -17,7 +17,7 @@
 {% block content %}
     <!-- Google reCapcha v3 -->
     <script src="https://www.google.com/recaptcha/api.js?render=6Lednq8UAAAAAPNCsPianArQHAITuhgzf-dkX03-"></script>
-    <script>
+    <script stype="text/javascript">
         grecaptcha.ready(function() {
             grecaptcha.execute('6Lednq8UAAAAAPNCsPianArQHAITuhgzf-dkX03-', {action: 'homepage'}).then(function(token) {
                 document.getElementById('g-recaptcha-response').value = token;
@@ -38,7 +38,7 @@
 
             <!-- 입력 영역 -->
             <div class="registration_content" style="min-height: calc(100% - 190px);">
-                <form action="../" id="add-member-id-form" method="post">
+                <form action="{% url "login:add_member_info_no_email" %}" id="id_add_member_form" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="group_type" id="id_group_type" value="trainer" autocomplete="off">
                     <!-- 회원가입 제목 영역 -->
@@ -56,7 +56,7 @@
 
                     <!-- 이름 입력 영역 -->
                     <div style="margin-top:8px;">
-                        <input class="pters_login_input" type="text" name="name" id="id_name" placeholder="이름" minlength="2" maxlength="10"
+                        <input class="pters_login_input" type="text" name="name" id="id_name" placeholder="이름" minlength="2" maxlength="10" title="이름"
                                pattern="[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}" onkeyup="limit_char_check(event);" data-valid="false" autofocus>
                         <div class="input_description">
                             <div class="input_description_text" id="id_name_confirm"></div>
@@ -66,7 +66,7 @@
 
                     <!-- 아이디 입력 영역 -->
                    <div style="margin-top:8px;">
-                        <input class="pters_login_input" type="text" name="username" id="id_username" placeholder="아이디" minlength="4" maxlength="20"
+                        <input class="pters_login_input" type="text" name="username" id="id_username" placeholder="아이디" minlength="4" maxlength="20" title="아이디"
                                pattern="[a-zA-Z0-9-._@]{4,20}" onkeyup="limit_char_check(event);" data-valid="false">
                         <div class="input_description">
                             <div class="input_description_text" id="id_username_confirm"></div>
@@ -76,8 +76,8 @@
 
                     <!-- 비밀번호 입력 영역 -->
                     <div style="margin-top:8px;">
-                        <input class="pters_login_input" type="password" name="password" id="id_password" placeholder="비밀번호" minlength="8" maxlength="20"
-                                pattern="[a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\`\/]{8,20}" onkeyup="limit_password_check(event);" data-valid="false" autocomplete="new-password">
+                        <input class="pters_login_input" type="password" name="password" id="id_password" placeholder="비밀번호" minlength="8" maxlength="20" title="비밀번호"
+                                pattern="[a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\/]{8,20}" onkeyup="limit_password_check(event);" data-valid="false" autocomplete="new-password">
                         <div class="input_description">
                             <div class="input_description_text" id="id_password_confirm"></div>
                             <div id="id_password_default_confirm">한글을 제외한 특수문자(공백 제외)/영문/숫자를 혼합</div>
@@ -86,7 +86,7 @@
 
                     <!-- 비밀번호 재입력 영역 -->
                    <div style="margin-top:8px;">
-                        <input class="pters_login_input" type="password" name="password_re" id="id_password_re" placeholder="비밀번호 확인" minlength="8" maxlength="20"
+                        <input class="pters_login_input" type="password" name="password_re" id="id_password_re" placeholder="비밀번호 확인" minlength="8" maxlength="20" title="비밀번호 확인"
                                 onkeyup="password_check(event);" data-valid="false">
                         <div class="input_description">
                             <div class="input_description_text" id="id_password_re_confirm"></div>
@@ -96,7 +96,7 @@
 
                     <!-- 휴대폰 번호 입력 영역 -->
                     <div style="margin-top:8px;">
-                        <input class="pters_login_input" type="text" name="phone" id="id_phone" placeholder="휴대폰 번호" minlength="10" maxlength="11"
+                        <input class="pters_login_input" type="text" name="phone" id="id_phone" placeholder="휴대폰 번호" minlength="10" maxlength="11" title="휴대폰 번호"
                                autocomplete="off" style="width:225px;" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event); check_sms_auth_button(event);" data-valid="false">
                         <button class="auth_button" id="id_auth_button" onclick="activate_sms();" disabled>인증</button>
                     </div>
@@ -104,7 +104,7 @@
                     <!-- 인증 번호 입력 영역 -->
                     <div style="margin-top:8px;">
                         <div id="wrapper_id_activation" style="width: 225px; border: solid 1px #d6d2d2; display:inline-block">
-                            <input class="pters_login_input" type="text" name="activation_code" id="id_activation_code" placeholder="인증 번호" minlength="3" maxlength="8"
+                            <input class="pters_login_input" type="text" name="activation_code" id="id_activation_code" placeholder="인증 번호" minlength="3" maxlength="8" title="휴대폰 인증"
                                    style="width:70%; border:0" pattern="[0-9]{3,8}" onkeyup="limit_char_auto_correction(event);" data-valid="false">
                             <div id="auth_timer" style="display:none; width:20%; text-align:right; padding-right:12px; color: #ff001f; font-size: 13px; font-weight: 500; letter-spacing: -0.5px;">
                                 03:00
@@ -121,19 +121,19 @@
                     <div class="contract">
                         <span class="all_contract">전체 약관에 동의</span>
                         <div class="contract_select_box" onclick="select_contract('all_contract');">
-                            <span class="contract_select_check" id="all_contract" data-check="false"></span>
+                            <span class="contract_select_check" id="all_contract" data-valid="false"></span>
                         </div>
                     </div>
                     <div class="contract">
                         <span class="detail_contract" onclick="location.href='/privacy/'">가입 약관</span>
                         <div class="contract_select_box" onclick="select_contract('policy');">
-                            <span class="contract_select_check contract_detail_select_check" id="policy" data-check="false"></span>
+                            <span class="contract_select_check contract_detail_select_check" id="policy" data-valid="false"></span>
                         </div>
                     </div>
                     <div class="contract">
                         <span class="detail_contract" onclick="location.href='/policy/'">개인 정보 처리 방침</span>
                         <div class="contract_select_box" onclick="select_contract('privacy');">
-                            <span class="contract_select_check contract_detail_select_check" id="privacy" data-check="false"></span>
+                            <span class="contract_select_check contract_detail_select_check" id="privacy" data-valid="false"></span>
                         </div>
                     </div>
                 </form>
@@ -201,6 +201,27 @@
         }
 
         function registration_member_info(){
+            // form 안에 있는 값 검사
+            let inputs = document.getElementById("id_add_member_form").elements;
+            let error_info = '';
+
+            if(document.getElementById('all_contract').getAttribute('data-valid') == 'false'){
+                error_info = '약관에 동의해주세요.';
+            }
+            for(let i=0; i<inputs.length; i++){
+                if (inputs[i].nodeName === "INPUT" && (inputs[i].type === "text" || inputs[i].type === "password")) {
+                    // Update text input
+                    if(inputs[i].getAttribute('data-valid') == 'false'){
+                        error_info = inputs[i].getAttribute('title');
+                        break;
+                    }
+                }
+            }
+            if(error_info!=''){
+                alert(error_info+'를 확인해주세요.');
+            }else{
+                console.log('가입!!!!');
+            }
 
         }
     </script>

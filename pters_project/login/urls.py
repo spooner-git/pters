@@ -36,8 +36,8 @@ urlpatterns = [
     # sns 회원가입 체크
     url(r'^check_sns_member_info/$', views.CheckSnsMemberInfoView.as_view(), name='check_sns_member_info'),
 
-    url(r'^add_member_info_email/$', views.add_member_info_logic_test, name='add_member_info_email'),
     url(r'^check_member_email/$', views.CheckMemberEmailView.as_view(), name='check_member_email'),
+
     url(r'^check_member_form_validation/$', views.CheckMemberValidationView.as_view(),
         name='check_member_form_validation'),
     url(r'^check_member_password_form_validation/$', views.CheckMemberPasswordValidationView.as_view(),
@@ -127,6 +127,8 @@ urlpatterns = [
     # 소셜 회원 가입 처리 로직
     url(r'^add_new_member_sns_info/$', views.AddNewMemberSnsInfoView.as_view(), name='add_new_member_sns_info'),
 
+    # 다시 확인
+    url(r'^add_member_info_email/$', views.add_member_info_logic_test, name='add_member_info_email'),
 
 
     # 네이버 아이디 로그인 처리

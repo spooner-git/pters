@@ -290,7 +290,7 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
     const $root_content = $('#root_content');
     var current_page = "home";
     func_set_webkit_overflow_scrolling('#root_content');
-
+    $root_content.css('height', `${windowHeight}px`);
     $root_content.scroll(function(){
         let scroll_loc = $(this).scrollTop();
         let element_height = $(this).innerHeight();
