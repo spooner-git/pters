@@ -963,10 +963,11 @@ def payment_for_ios_logic(request):
         'password': ios_data
     }
 
-    logger.info(str(request.user.last_name) + str(request.user.first_name)
-                + '(' + str(request.user.id) + ')님 ios 결제 시도4:')
-
     body = json.dumps(data)
+
+    logger.info(str(request.user.last_name) + str(request.user.first_name)
+                + '(' + str(request.user.id) + ')님 ios 결제 시도4:'+str(body))
+
     h = httplib2.Http()
 
     logger.info(str(request.user.last_name) + str(request.user.first_name)
