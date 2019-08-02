@@ -31,7 +31,7 @@
                 <!-- 약관 동의 영역 -->
                 <div class="contract">
                     <span class="all_contract">전체 약관에 동의</span>
-                    <div class="contract_select_box" onclick="select_contract('all');">
+                    <div class="contract_select_box" onclick="select_contract('all_contract');">
                         <span class="contract_select_check" id="all_contract" data-valid="false"></span>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
     <script type="text/javascript" src="{% static_url "/user/js/login/login.registration.js" %}"></script>
     <script type="text/javascript">
         function sns_add_member() {
-            if($('#all_contract').attr('data-check')=='true'){
+            if($('#all_contract').attr('data-valid')=='true'){
                 document.getElementById('sns-form').submit();
             }
             else{
