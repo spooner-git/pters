@@ -17,7 +17,7 @@
 
         <div id="login_box">
 
-            <div class="login_content" style="min-height: calc(100% - 410px);">
+            <div class="login_content" style="min-height: calc(100% - 430px);">
                 <div class="pters_logo"></div>
             </div>
             <div class="login_foot">
@@ -73,69 +73,19 @@
         </div>
     </div>
 
-
-    <div class="album_wrap_ie" id="IE_block_explain" style="display: none;">
-        <div class="album_ie" id="promote_1">
-            <div class="explain_wrap_ie">
-                <div class="explain_main">
-                    <h1>1:1 레슨 일정/회원 관리 시스템</h1>
-
-                    <div class="logo_label"><a href="https://www.pters.co.kr"><img src="/static/user/res/PTERS_logo_pure.png?v2" alt="PTERS" class=""></a><!-- <span class="pters_logo_text"> 피터스</span> --></div>
-
-                    <p>일정 관리는 쉽고 빠르게</p>
-                    <p>회원의 만족도는 업!</p>
-                </div>
-                <div class="gotoSignIn_pc">
-                    <p><span class="pink_strong">MS 익스플로러</span>로 접속하신 분께서는 아래 브라우저를 설치후 이용을 부탁드립니다.</p>
-                    <a href="https://www.microsoft.com/ko-kr/windows/microsoft-edge"><button class="brower_site"><img src="/static/user/res/login/browser/edge_icon.png">MS Edge</button></a>
-                    <a href="https://www.mozilla.org/ko/firefox/"><button class="brower_site"><img src="/static/user/res/login/browser/firefox_icon.png">Firefox</button></a>
-                    <a href="https://www.google.co.kr/chrome/index.html"><button class="brower_site"><img src="/static/user/res/login/browser/chrome_icon.png">Chrome</button></a>
-                </div>
-            </div>
-            <div class="gotoSignIn" style="top: 65%;color: #ffffff;">
-                <p><span class="pink_strong">MS 익스플로러</span>로 접속하신 분께서는 아래 브라우저를 설치후 이용을 부탁드립니다.</p>
-                <a href="https://www.google.co.kr/chrome/index.html"><button class="brower_site"><img src="/static/user/res/login/browser/chrome_icon.png">Chrome</button></a>
-                <a href="https://www.mozilla.org/ko/firefox/"><button class="brower_site"><img src="/static/user/res/login/browser/firefox_icon.png">Firefox</button></a>
-                <a href="https://www.microsoft.com/ko-kr/windows/microsoft-edge"><button class="brower_site"><img src="/static/user/res/login/browser/edge_icon.png">MS Edge</button></a>
-            </div>
-        </div>
-    </div>
-
 {% endblock %}
 
 {% block local_js_footer %}
 <script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/login/pters.trainer.promote.js" %}></script>
 <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
 <script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-<script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>
+<!--<script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>-->
 <script type="text/javascript">
-    var varUA = navigator.userAgent.toLowerCase();//useAgent값 얻기
-    var device_text = '브라우저, iOS, Android 앱으로';
-    var method_text = 'PC웹(크롬, 파이어폭스, 엣지, 사파리)과 스마트폰, 태블릿 등';
-    if(varUA.match('android') != null){
-        device_text = '브라우저, Android 앱으로';
-        method_text = 'PC, 스마트폰, 태블릿 등';
-    }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-        device_text = '브라우저, iOS 앱으로';
-        method_text = 'PC, 스마트폰, 태블릿 등';
-    }
-{#    $(window).resize(function(){#}
-{#        $('.login_content').css('height', $(this).height()-$('.login_foot').height()+'px');#}
-{#    });#}
-    $('#connectedMethod').html(method_text);
-    $('#connectedDevice').html(device_text);
-
-    if(varUA.match('MSIE') != null || varUA.match('msie') != null || varUA.match('rv:11.0')){
-        $('#album_wrap, .upperbar a, .pagination, .paginationMobile').css('display','none');
-        $('#IE_block_explain').css('display','block');
-    }
 
     $('#errorMessageBar span:nth-child(2)').click(function(){
         $('#errorMessageBar').fadeOut('fast')
     });
-
 
     window.addEventListener('load', function () {
         var val = location.href.substr(

@@ -5,7 +5,11 @@
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="751903262384-dbtt6ho5imk5gssgn1rqpe3vs3linq15.apps.googleusercontent.com">
     <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
-
+    <style type="text/css">
+        #root_content{
+            overflow-y:hidden;
+        }
+    </style>
 {% endblock %}
 {% block content %}
     <!-- Google reCapcha v3 -->
@@ -169,6 +173,9 @@
         // 스크롤 방향을 검사해서 회원가입 명칭 띄워주기
         function checkScrolled() {
             let current_scroll_top = $scoll_event.scrollTop();
+            if($scoll_event.scrollTop() == 0){
+                $scoll_event.scrollTop(1);
+            }
             // 스크롤 변화량이 delta 값이 넘지 않으면 return
             if (Math.abs(last_scroll_top - current_scroll_top) < delta) {
                 return;
@@ -190,7 +197,6 @@
             last_scroll_top = current_scroll_top;
         }
 
-        func_set_webkit_overflow_scrolling('#registration_box');
         function registration_member_info(){
 
         }
