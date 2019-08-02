@@ -975,7 +975,9 @@ def payment_for_ios_logic(request):
                               headers={'Content-Type': 'application/json;'})
 
     logger.info(str(request.user.last_name) + str(request.user.first_name)
-                + '(' + str(request.user.id) + ')님 ios 결제 시도6:')
+                + '(' + str(request.user.id) + ')님 ios 결제 시도6:'+'resp:'+str(resp))
+    logger.info(str(request.user.last_name) + str(request.user.first_name)
+                + '(' + str(request.user.id) + ')님 ios 결제 시도6-1:'+'content:'+str(content))
     json_loading_data = None
     error = None
     transaction_id = ''
