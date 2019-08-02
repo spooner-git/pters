@@ -421,7 +421,7 @@ class Calendar {
         if(schedule_data == undefined){
             schedule_data = false;
         }
-        let weeks_div = [`<div style="margin-top:30px;"></div>`];
+        let weeks_div = [`<div style="margin-top:35px;"></div>`];
 
         let margin = 10;
         let row_height = (this.window_height - 60 - 31 - 45 - margin)/6;
@@ -647,7 +647,8 @@ class Calendar {
                 if(i == 6){
                     saturday = "obj_font_color_saturday_blue";
                 }
-    
+                
+                console.log(`${_year[i]}-${_month[i]}-${_date[i]}`, this.today, `${_year[i]}-${_month[i]}-${_date[i]}` == this.today)
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
                     today_marking = `<div style="position: absolute;width: 100%;height: 3px;top: ${month_or_week == "week" ? '-30px' : 0} ;background: #fe4e65;left: 0;"></div>`;
                 }
