@@ -147,13 +147,11 @@
 
 {% block local_js_footer %}
     <script type="text/javascript" src="{% static_url "/user/js/login/login.registration.js" %}"></script>
-    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
     <script type="text/javascript">
         window.addEventListener('load', function () {
             $('.grecaptcha-badge').css('display', 'none');
         });
 
-        func_set_webkit_overflow_scrolling('#registration_box');
         function registration_member_info(){
 
         }

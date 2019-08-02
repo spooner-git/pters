@@ -92,8 +92,8 @@ html{
     height:auto;
     padding-left:20px;
     padding-right:20px;
-    /*overflow-y:auto;*/
-    /*overflow-x:hidden;*/
+    overflow-y:hidden;
+    overflow-x:hidden;
     padding-top:40px;
     min-height: calc(100% - 245px);
 }
@@ -200,8 +200,8 @@ html{
     height:auto;
     padding-left:20px;
     padding-right:20px;
-    /*overflow-y:auto;*/
-    /*overflow-x:hidden;*/
+    overflow-y:hidden;
+    overflow-x:hidden;
     min-height: calc(100% - 61px);
 }
 .registration_foot{
