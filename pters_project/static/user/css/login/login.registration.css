@@ -101,6 +101,9 @@
 }
 
 .pters_login_input{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
     width: calc(100% - 2px);
     height: 46px;
     border-radius: 2px;
