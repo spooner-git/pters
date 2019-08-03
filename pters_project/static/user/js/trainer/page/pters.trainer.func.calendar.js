@@ -1034,25 +1034,26 @@ class Calendar {
                 }
             });
 
-            // selector_body.off("touchend").on("touchend", (e) => {
+            //아이폰에서 touchmove를 threshold보다 작게했을때 상하스크롤이 locking되는 현상 방지
+            selector_body.off("touchend").on("touchend", (e) => {
 
-            //     if(swiper_x == true){
-            //         $('#root_content').off('touchmove');
-            //         swiper_x = false;
-            //     }
+                if(swiper_x == true){
+                    $('#root_content').off('touchmove');
+                    swiper_x = false;
+                }
 
-            //     let te = e.originalEvent.changedTouches[0].clientX;
-            //     let tey = e.originalEvent.changedTouches[0].clientY;
+                // let te = e.originalEvent.changedTouches[0].clientX;
+                // let tey = e.originalEvent.changedTouches[0].clientY;
 
-            //     if( Math.abs(ts - te) > Math.abs(tsy - tey)){
-            //         if(ts>te+x_threshold){
-            //             if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
-            //         }else if(ts<te-x_threshold){
-            //             if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
-            //         }
-            //     }
-            //     return true;
-            // });
+                // if( Math.abs(ts - te) > Math.abs(tsy - tey)){
+                //     if(ts>te+x_threshold){
+                //         if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
+                //     }else if(ts<te-x_threshold){
+                //         if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
+                //     }
+                // }
+                // return true;
+            });
             break;
 
         case "off":
