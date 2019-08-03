@@ -34,7 +34,7 @@
                         <div style="display:table-cell; width:60px;"></div>
                     </div>
                     <!-- 카카오톡 로그인 버튼 노출 영역 -->
-                    <div class="social_login_box" id="custom-login-btn" onclick="javascript:loginWithKakao();" style="background-color: #ffeb00; margin-top:12px;">
+                    <div class="social_login_box" id="custom-login-btn" onclick="loginWithKakao();" style="background-color: #ffeb00; margin-top:12px;">
                         <div class="social_login_img"><img src="/static/user/res/login/naver.svg" style="width: 20px; height: 20px; vertical-align:middle;"></div>
                         <span class="social_login_text" style="color:#3a1c1d;">카카오톡 로그인</span>
                         <div style="display:table-cell; width:60px;"></div>
@@ -55,15 +55,14 @@
             </div>
         </div>
     </div>
-
-
+    <!--
     <div class="album_wrap_ie" id="IE_block_explain" style="display: none;">
         <div class="album_ie" id="promote_1">
             <div class="explain_wrap_ie">
                 <div class="explain_main">
                     <h1>1:1 레슨 일정/회원 관리 시스템</h1>
 
-                    <div class="logo_label"><a href="https://www.pters.co.kr"><img src="/static/user/res/PTERS_logo_pure.png?v2" alt="PTERS" class=""></a><!-- <span class="pters_logo_text"> 피터스</span> --></div>
+                    <div class="logo_label"><a href="https://www.pters.co.kr"><img src="/static/user/res/PTERS_logo_pure.png?v2" alt="PTERS" class=""></a></div>
 
                     <p>일정 관리는 쉽고 빠르게</p>
                     <p>회원의 만족도는 업!</p>
@@ -83,7 +82,7 @@
             </div>
         </div>
     </div>
-
+    -->
 {% endblock %}
 
 {% block local_js_footer %}
@@ -91,7 +90,7 @@
 <script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>
 <script type="text/javascript">
-
+    /*
     var varUA = navigator.userAgent.toLowerCase();//useAgent값 얻기
     var device_text = '브라우저, iOS, Android 앱으로';
     var method_text = 'PC웹(크롬, 파이어폭스, 엣지, 사파리)과 스마트폰, 태블릿 등';
@@ -110,11 +109,11 @@
         $('#album_wrap, .upperbar a, .pagination, .paginationMobile').css('display','none');
         $('#IE_block_explain').css('display','block');
     }
+    */
 
     $('#errorMessageBar span:nth-child(2)').click(function(){
         $('#errorMessageBar').fadeOut('fast')
     });
-
 
     window.addEventListener('load', function () {
         var val = location.href.substr(

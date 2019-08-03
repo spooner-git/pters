@@ -43,7 +43,6 @@ urlpatterns = [
     url(r'^check_member_password_form_validation/$', views.CheckMemberPasswordValidationView.as_view(),
         name='check_member_password_form_validation'),
 
-    url(r'^add_member_info_no_email/$', views.AddMemberNoEmailView.as_view(), name='add_member_info_no_email'),
 
     url(r'^new_member_resend_email_authentication/$', views.NewMemberResendEmailAuthenticationView.as_view(),
         name='new_member_resend_email_authentication'),
@@ -111,31 +110,31 @@ urlpatterns = [
 
 
 
-    # refactoring
-    url(r'^check_member_username/$', views.CheckMemberUsernameView.as_view(), name='check_member_username'),
 
     # 회원 가입 유형 처리 부분
     url(r'^registration_check/$', views.RegistrationCheck.as_view(), name='registration_check'),
     # 일반 회원 가입 페이지
     url(r'^register/$', views.RegistrationView.as_view(), name='registration_register'),
-
-
-    # 일반 회원 가입 처리 로직
-    url(r'^add_member_info/$', views.AddMemberView.as_view(), name='add_member_info'),
     # 소셜 회원가입 페이지
     url(r'^new_member_sns_info/$', views.NewMemberSnsInfoView.as_view(), name='new_member_sns_info'),
-    # 소셜 회원 가입 처리 로직
-    url(r'^add_new_member_sns_info/$', views.AddNewMemberSnsInfoView.as_view(), name='add_new_member_sns_info'),
-
-    # 다시 확인
-    url(r'^add_member_info_email/$', views.add_member_info_logic_test, name='add_member_info_email'),
-
 
     # 네이버 아이디 로그인 처리
     url(r'^login_simple_naver/$', views.LoginSimpleNaverView.as_view(), name='login_simple_naver'),
     # 카카오 아이디 로그인 처리
     url(r'^login_simple_kakao/$', views.LoginSimpleKakaoView.as_view(), name='login_simple_kakao'),
 
+
+    # 일반 회원 가입 처리 로직
+    url(r'^add_member_info/$', views.AddMemberView.as_view(), name='add_member_info'),
+    # 소셜 회원 가입 처리 로직
+    url(r'^add_new_member_sns_info/$', views.AddNewMemberSnsInfoView.as_view(), name='add_new_member_sns_info'),
+
+
+    # 강사가 등록하는 회원용
+    url(r'^add_member_info_no_email/$', views.AddMemberNoEmailView.as_view(), name='add_member_info_no_email'),
+
+    # 회원가입 id 체크 기능
+    url(r'^check_member_username/$', views.CheckMemberUsernameView.as_view(), name='check_member_username'),
 
     # 문자 인증 처리 기능
     url(r'^activate_sms/$', views.activate_sms_logic, name='activate_sms'),
