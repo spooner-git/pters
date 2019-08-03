@@ -299,7 +299,7 @@ class Ticket_view{
                     //     member_view_popup = new Member_view('.popup_member_view', member_id, 'member_view_popup');
                             //회원 Full 정보 팝업 열기
                     // });
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(500/windowHeight), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/windowHeight), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
                         member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
                         //회원 간단 정보 팝업 열기
                     });

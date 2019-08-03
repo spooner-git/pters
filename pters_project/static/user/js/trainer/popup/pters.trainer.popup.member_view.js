@@ -616,7 +616,7 @@ class Member_simple_view{
         let dom_close_button = this.dom_close_button();
 
         let html = `<section id="${this.target.toolbox}" class="obj_box_full" style="position:sticky;position:-webkit-sticky;top:0;">${dom_toolbox}</section>
-                    <section id="${this.target.content}" style="width:100%;height:399px;overflow-y:auto;">${dom_content}</section>
+                    <section id="${this.target.content}" style="width:100%;height:299px;overflow-y:auto;">${dom_content}</section>
                     <section id="${this.target.close_button}" class="obj_box_full" style="height:48px;">${dom_close_button}</section>`;
         
         document.querySelector(this.target.install).innerHTML = html;
