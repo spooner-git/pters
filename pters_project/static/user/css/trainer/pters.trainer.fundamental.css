@@ -7,7 +7,10 @@
  }
 
  html, body{
-    overscroll-behavior-y: contain; 
+     overflow: hidden;
+     margin: 0;
+    /* overscroll-behavior-y: contain;  */
+
     /* position: fixed; 
     height: 100%;
     width: 100%;

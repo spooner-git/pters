@@ -94,7 +94,7 @@
             /* box-shadow:0px 0px 6px #777 inset; */
         }
 
-        #root_content{
+        /* #root_content{
             position: fixed;
             top: 50%;
             left: 50%;
@@ -105,10 +105,20 @@
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
             z-index: 0;
-            /* background-color: #f7f5f6; */
             background-color: #ffffff;
-            /* height: 100%; */
-            height: 50%;
+            height: 100%;
+        } */
+        #root_content{
+            position: relative;
+            max-width: 800px;
+            width: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            z-index: 0;
+            background-color: #ffffff;
+            height: 100%;
+            scroll-behavior: smooth;
         }
         #root_nav{
             position: fixed;
@@ -303,8 +313,6 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
             nav_bar('on');
         }
     });
-    document.getElementById('debug_toolbar').innerHTML = `windowHeight:${windowHeight}, window_out_Height:${window.outerHeight}`
-
     //팝업이 떠있을때, 팝업을 스크롤하면, 뒤의 root_content 항목이 스크롤되서 위치에서 벗어난 현상 해결
     $(document).on('touchstart', '.popup_mobile', function(){
         $('#root_content').css({'overflow-y':'hidden'})
