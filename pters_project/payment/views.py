@@ -1083,38 +1083,39 @@ def payment_for_ios_logic(request):
 
         logger.info(str(request.user.last_name) + str(request.user.first_name)
                     + '(' + str(request.user.id) + ')님 ios 결제 시도18:start_date:'+str(start_date))
+    if error is not None:
+        transaction_id = str(error)
+    payment_info = PaymentInfoTb(member_id=str(request.user.id),
+                                 product_tb_id=7,
+                                 payment_type_cd='SINGLE',
+                                 merchant_uid='m_'+str(request.user.id)+'_7_'+str(timezone.now().timestamp()),
+                                 customer_uid='c_'+str(request.user.id)+'_7_'+str(timezone.now().timestamp()),
+                                 start_date=start_date, end_date=end_date,
+                                 paid_date=today,
+                                 period_month=1,
+                                 price=9900,
+                                 name='스탠다드 - 30일권',
+                                 imp_uid=transaction_id,
+                                 # imp_uid=input_transaction_id,
+                                 channel='iap',
+                                 card_name=pay_info,
+                                 buyer_email=request.user.email,
+                                 status='paid',
+                                 fail_reason='',
+                                 currency='',
+                                 pay_method=pay_info,
+                                 pg_provider='IOS',
+                                 receipt_url='',
+                                 buyer_name=str(request.user.first_name),
+                                 # amount=int(payment_result['amount']),
+                                 use=USE)
 
-        payment_info = PaymentInfoTb(member_id=str(request.user.id),
-                                     product_tb_id=7,
-                                     payment_type_cd='SINGLE',
-                                     merchant_uid='m_'+str(request.user.id)+'_7_'+str(timezone.now().timestamp()),
-                                     customer_uid='c_'+str(request.user.id)+'_7_'+str(timezone.now().timestamp()),
-                                     start_date=start_date, end_date=end_date,
-                                     paid_date=today,
-                                     period_month=1,
-                                     price=9900,
-                                     name='스탠다드 - 30일권',
-                                     imp_uid=transaction_id,
-                                     # imp_uid=input_transaction_id,
-                                     channel='iap',
-                                     card_name=pay_info,
-                                     buyer_email=request.user.email,
-                                     status='paid',
-                                     fail_reason='',
-                                     currency='',
-                                     pay_method=pay_info,
-                                     pg_provider='IOS',
-                                     receipt_url='',
-                                     buyer_name=str(request.user.first_name),
-                                     # amount=int(payment_result['amount']),
-                                     use=USE)
+    logger.info(str(request.user.last_name) + str(request.user.first_name)
+                + '(' + str(request.user.id) + ')님 ios 결제 시도19')
+    payment_info.save()
 
-        logger.info(str(request.user.last_name) + str(request.user.first_name)
-                    + '(' + str(request.user.id) + ')님 ios 결제 시도19')
-        payment_info.save()
-
-        logger.info(str(request.user.last_name) + str(request.user.first_name)
-                    + '(' + str(request.user.id) + ')님 ios 결제 시도20')
+    logger.info(str(request.user.last_name) + str(request.user.first_name)
+                + '(' + str(request.user.id) + ')님 ios 결제 시도20')
     if error is None:
         logger.info(str(request.user.last_name) + str(request.user.first_name)
                     + '(' + str(request.user.id) + ')님 ios 결제 완료:' + str(product_id) + ':'+' '+str(start_date))
