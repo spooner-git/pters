@@ -163,7 +163,7 @@
 
 {% block navbar %}
 {% endblock %}
-<div id="debug_toolbar" style="position:fixed;top:0;font-size:13px;background-color:#1e1e1e85;color:#ffffff;width:100%;left:0;z-index:1500" hidden></div>
+<div id="debug_toolbar" style="position:fixed;top:0;font-size:13px;background-color:#1e1e1e85;color:#ffffff;width:100%;left:0;z-index:1500"></div>
 
 <!-- <div id="shade_for_popup_basic" style="position:fixed;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
 onclick="layer_popup.all_close_layer_popup();"></div> -->
@@ -303,6 +303,7 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
             nav_bar('on');
         }
     });
+    document.getElementById('debug_toolbar').innerHTML = `windowHeight:${windowHeight}, window_out_Height:${window.outerHeight}`
 
     //팝업이 떠있을때, 팝업을 스크롤하면, 뒤의 root_content 항목이 스크롤되서 위치에서 벗어난 현상 해결
     $(document).on('touchstart', '.popup_mobile', function(){
