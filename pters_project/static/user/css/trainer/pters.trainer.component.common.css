@@ -382,7 +382,8 @@ input:disabled{
 	font-size: 15px;
 	font-weight: 500;
 	letter-spacing: -0.5px;
-	border-bottom: 1px solid #f5f2f3;
+	/* border-bottom: 1px solid #f5f2f3; */
+	padding: 0px 16px;
 }
 
 .select_attend_row .cell_member_name{
@@ -400,16 +401,21 @@ input:disabled{
 .select_attend_row .cell_attend_select > div{
 	display: inline-block;
 	width: 80px;
+	font-size: 13px;
+	color: #858282;
 	cursor: pointer;
+}
+.select_attend_row .cell_attend_select > div > span{
+	margin-right: 8px;
 }
 .pters_checkbox{
 	position: relative;
 	display: inline-block;
-	width: 16px;
-	height: 16px;
+	width: 14px;
+	height: 14px;
 	border: 2px solid #858282;
 	border-radius: 50%;
-	margin-bottom: 4px;
+	margin-bottom: 2px;
 	vertical-align: middle;
 }
 .checkbox_selected{
@@ -420,8 +426,8 @@ input:disabled{
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	width: 10px;
-	height: 10px;
+	width: 9px;
+	height: 9px;
 	border-radius: 50%;
 	background-color: #fe4e65;
 	vertical-align: middle;

@@ -4,6 +4,7 @@ class Member_attend{
         this.schedule_id = schedule_id;
         this.callback = callback;
         this.received_data;
+        this.check_entire = true;
         this.data = {
             id:{name:null, member_id:null, state_cd:null}
         };
@@ -25,6 +26,12 @@ class Member_attend{
             let state = data.lecture_schedule_data[i].state_cd;
             let member_name = data.lecture_schedule_data[i].member_name;
             new_data[member_id] = {name:member_name, member_id:member_id, state_cd:state};
+            if(state != SCHEDULE_FINISH){
+                this.check_entire = false;
+            }
+        }
+        if(data.schedule_type == 1){
+            new_data[null] = {name:data.member_name, state_cd:data.state_cd, member_id:null};
         }
 
         this.data = new_data;
@@ -40,18 +47,51 @@ class Member_attend{
         let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();member_attend.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="">출석 체크</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_attend.upper_right_menu();">완료</span></span>`;
-        let content =   `<section>${this.dom_list()}</section>`;
+        let content =   `<section>${this.dom_row_check_entire()}</section><section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
     }
 
+    dom_row_check_entire(){
+        let html;
+        html = `<div class="obj_table_raw" style="height:50px;padding:0px 16px;box-sizing:border-box;">
+                    <div style="display:table-cell;width:150px;"></div>
+                    <div style="display:table-cell;width:auto;font-size:13px;font-weight:500;text-align:right;vertical-align:middle;" id="check_entire_${this.schedule_id}">
+                        <span style="color:#858282">전원 출석</span>
+                        ${this.check_entire == true 
+                            ? `<div class="pters_checkbox checkbox_selected"><div class="checkbox_selected_inner"></div></div>`
+                            : `<div class="pters_checkbox"></div>`
+                        }
+                    </div>
+                </div>
+                `;
+        $(document).off('click', `#check_entire_${this.schedule_id}`).on('click', `#check_entire_${this.schedule_id}`, ()=>{
+            if(this.check_entire == true){
+                $(this).find('.pters_checkbox').removeClass('checkbox_selected');
+                $(this).html('');
+                for(let member in this.data){
+                    this.data[member].state_cd = SCHEDULE_NOT_FINISH;
+                }
+                this.check_entire = false;
+            }else{
+                $(this).find('.pters_checkbox').addClass('checkbox_selected');
+                $(this).find('.pters_checkbox').html('<div class="checkbox_selected_inner"></div>');
+                for(let member in this.data){
+                    this.data[member].state_cd = SCHEDULE_FINISH;
+                }
+                this.check_entire = true;
+            }
+            this.render();
+        });
+        return html;
+    }
+
     dom_list(){
         let html_to_join = [];
         let html;
         for(let item in this.data){
-            console.log('item', item)
             let data = this.data[item];
             let checked_absence = data.state_cd == "PC" ? 1 : 0;
             let checked_attend = data.state_cd == "PE" ? 1 : 0;
@@ -73,9 +113,17 @@ class Member_attend{
                         this.data[member_id].state_cd = SCHEDULE_NOT_FINISH;
                     break;
                 }
+                if(this.check_entire == true){
+                    this.check_entire = false;
+
+                }
             });
             html_to_join.push(html);
         }
+        if(html_to_join.length == 0){
+            html_to_join.push(CComponent.no_data_row('일정에 포함된 회원이 없습니다.'));
+        }
+
         return html_to_join.join('');
     }
 
@@ -87,7 +135,7 @@ class Member_attend{
     }
 
     send_data(){
-        
+
     }
 
     upper_right_menu(){
