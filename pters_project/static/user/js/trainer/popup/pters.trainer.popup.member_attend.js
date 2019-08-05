@@ -58,7 +58,7 @@ class Member_attend{
         let html;
         html = `<div class="obj_table_raw" style="height:50px;padding:0px 16px;box-sizing:border-box;">
                     <div style="display:table-cell;width:150px;"></div>
-                    <div style="display:table-cell;width:auto;font-size:13px;font-weight:500;text-align:right;vertical-align:middle;" id="check_entire_${this.schedule_id}">
+                    <div style="display:table-cell;width:auto;font-size:13px;font-weight:500;text-align:right;vertical-align:middle;cursor:pointer;" id="check_entire_${this.schedule_id}">
                         <span style="color:#858282">전원 출석</span>
                         ${this.check_entire == true 
                             ? `<div class="pters_checkbox checkbox_selected"><div class="checkbox_selected_inner"></div></div>`
@@ -102,21 +102,28 @@ class Member_attend{
                 switch(add_or_substract){
                 case 'check_absence':
                     this.data[member_id].state_cd = SCHEDULE_ABSENCE;
+                    this.check_entire = false;
                     break;
                 case 'uncheck_absence':
                         this.data[member_id].state_cd = SCHEDULE_NOT_FINISH;
+                        this.check_entire = false;
                     break;
                 case 'check_attend':
                         this.data[member_id].state_cd = SCHEDULE_FINISH;
+                        this.check_entire = true;
+                        for(let id in this.data){
+                            if(this.data[id].state_cd != SCHEDULE_FINISH){
+                                this.check_entire = false;
+                            }
+                        }
+
                     break;
                 case 'uncheck_attend':
                         this.data[member_id].state_cd = SCHEDULE_NOT_FINISH;
+                        this.check_entire = false;
                     break;
                 }
-                if(this.check_entire == true){
-                    this.check_entire = false;
-
-                }
+                this.render();
             });
             html_to_join.push(html);
         }

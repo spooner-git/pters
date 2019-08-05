@@ -391,28 +391,16 @@ class CComponent{
 
         $(document).off('click', `#${member_id}_absence`).on('click', `#${member_id}_absence`, function(){
             if($(this).find('.pters_checkbox').hasClass('checkbox_selected')){
-                $(this).find('.pters_checkbox').removeClass('checkbox_selected');
-                $(this).find('.pters_checkbox').html('');
                 onclick('uncheck_absence');
             }else{
-                $(this).find('.pters_checkbox').addClass('checkbox_selected');
-                $(this).find('.pters_checkbox').html('<div class="checkbox_selected_inner"></div>');
-                $(`#${member_id}_attend`).find('.pters_checkbox').removeClass('checkbox_selected');
-                $(`#${member_id}_attend`).find('.pters_checkbox').html('');
                 onclick('check_absence');
             }
         });
 
         $(document).off('click', `#${member_id}_attend`).on('click', `#${member_id}_attend`, function(){
             if($(this).find('.pters_checkbox').hasClass('checkbox_selected')){
-                $(this).find('.pters_checkbox').removeClass('checkbox_selected');
-                $(this).find('.pters_checkbox').html('');
                 onclick('uncheck_attend');
             }else{
-                $(this).find('.pters_checkbox').addClass('checkbox_selected');
-                $(this).find('.pters_checkbox').html('<div class="checkbox_selected_inner"></div>');
-                $(`#${member_id}_absence`).find('.pters_checkbox').removeClass('checkbox_selected');
-                $(`#${member_id}_absence`).find('.pters_checkbox').html('');
                 onclick('check_attend');
             }
         });
