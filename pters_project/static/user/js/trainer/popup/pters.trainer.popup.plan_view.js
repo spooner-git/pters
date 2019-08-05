@@ -17,12 +17,15 @@ class Plan_view{
 
         this.schedule_id = data_from_external.schedule_id;
         this.selected_date = data_from_external.date;
+        this.received_data;
         this.data = {
             lecture_id: [],
             lecture_name: [],
             lecture_max_num: [],
             member_id: [],
             member_name:[],
+            member_schedule_id:[],
+            member_schedule_state:[],
             date: null,
             date_text: null,
             start_time: null,
@@ -58,6 +61,15 @@ class Plan_view{
 
     get member (){
         return {id:this.data.member_id, name:this.data.member_name};
+    }
+
+    set member_schedule (data){
+        this.data.member_schedule_id = data.schedule_id;
+        this.data.member_schedule_state = data.schedule_state;
+    }
+
+    get member_schedule (){
+        return {schedule_id:this.data.member_schedule_id, schedule_state: this.data.member_schedule_state};
     }
 
     set date (data){
@@ -111,6 +123,9 @@ class Plan_view{
         this.data.lecture_name = data.schedule_info[0].lecture_name;
         this.data.member_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_id}`;});
         this.data.member_name = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_name}`;});
+        this.data.member_schedule_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.schedule_id}`;});
+        this.data.member_schedule_state = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.state_cd}`;});
+
         if(data.schedule_info[0].schedule_type == 1){
             this.data.member_name = data.schedule_info[0].member_name;
         }
@@ -339,7 +354,28 @@ class Plan_view{
                         });
                     }
             },
-            check:{text:"출석 체크", callback:()=>{alert('출석 체크');}
+            check:{text:"출석 체크", callback:()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ATTEND, 100, POPUP_FROM_RIGHT, null, ()=>{
+                        member_attend = new Member_attend('.popup_member_attend', this.schedule_id, (set_data)=>{
+                            //출석체크 팝업에서 완료버튼을 눌렀을때 할 행동
+                            // this.data = {
+                            //     id:{name:null, member_id:null, state_cd:null}
+                            // };
+                            for(let member in set_data){
+                                let member_id = member;
+                                let state_cd = set_data[member].state_cd;
+                                let member_id_index = this.data.member_id.indexOf(member_id);
+                                if(this.data.member_schedule_state[member_id_index] != state_cd){
+                                    let send_data = {"schedule_id":this.data.member_schedule_id[member_id_index], "state_cd":state_cd};
+                                    Plan_func.status(send_data, ()=>{
+                                        this.init();
+                                    });
+                                }
+
+                            }
+                        });
+                    });    
+                }
             }
         };
         

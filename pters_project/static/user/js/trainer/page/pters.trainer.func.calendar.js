@@ -1281,9 +1281,9 @@ class Plan_func{
     }
 
     static status(data, callback){
-        //데이터 형태 {"ticket_id":"", "state_cd":""};
+        //데이터 형태 {"schedule_id":"", "state_cd":""};
         $.ajax({
-            url:'/trainer/update_member_status_info/',
+            url:'/schedule/update_schedule_state_cd/',
             type:'POST',
             data: data,
             dataType : 'html',
