@@ -159,15 +159,18 @@ class Lecture {
 
 
     //리스트 타입을 스위치
-    switch_type (){
+    switch_type (type){
         this.received_data_cache = null;
-        switch(this.list_status_type){
+        if(type == this.list_status_type){
+            return false;
+        }
+        switch(type){
         case "ing":
-            this.init("end");
+            this.init("ing");
             break;
 
         case "end":
-            this.init("ing");
+            this.init("end");
             break;
         }
     }
@@ -191,8 +194,8 @@ class Lecture {
                                         </div>
                                         <div class="lecture_bottom_tools_wrap">
                                             <div class="list_type_tab_wrap">
-                                                <div onclick="${this.instance}.switch_type();" class="${this.list_status_type == "ing" ? "tab_selected": ""}">활성화 ${this.list_status_type == "ing" ? "<div class='tab_selected_bar'></div>" : ""}</div>
-                                                <div onclick="${this.instance}.switch_type();" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화 ${this.list_status_type == "end" ? "<div class='tab_selected_bar'></div>" : ""}</div>
+                                                <div onclick="${this.instance}.switch_type('ing');" class="${this.list_status_type == "ing" ? "tab_selected": ""}">활성화 ${this.list_status_type == "ing" ? "<div class='tab_selected_bar'></div>" : ""}</div>
+                                                <div onclick="${this.instance}.switch_type('end');" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화 ${this.list_status_type == "end" ? "<div class='tab_selected_bar'></div>" : ""}</div>
                                             </div>
                                         </div>
                                             `

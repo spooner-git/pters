@@ -175,15 +175,18 @@ class Ticket{
 
 
     //리스트 타입을 스위치
-    switch_type(){
+    switch_type(type){
         this.received_data_cache = null;
-        switch(this.list_status_type){
+        if(type == this.list_status_type){
+            return false;
+        }
+        switch(type){
             case "ing":
-                this.init("end");
+                this.init("ing");
             break;
 
             case "end":
-                this.init("ing");
+                this.init("end");
             break;
         }
     }
@@ -198,7 +201,6 @@ class Ticket{
                                                 
                                             </div>
                                             <div class="ticket_tools_wrap">
-                                                <div class="swap_list" onclick="${this.instance}.switch_type();"></div>
                                                 <div class="search_ticket"></div>
                                                 <div class="add_ticket" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
                                                     ticket_add_popup = new Ticket_add('.popup_ticket_add', null, 'ticket_add_popup');});"></div>
@@ -206,8 +208,8 @@ class Ticket{
                                         </div>
                                         <div class="ticket_bottom_tools_wrap">
                                             <div class="list_type_tab_wrap">
-                                                <div onclick="${this.instance}.switch_type();" class="${this.list_status_type == "ing" ? "tab_selected": ""}">활성화 ${this.list_status_type == "ing" ? "<div class='tab_selected_bar'></div>" : ""}</div>
-                                                <div onclick="${this.instance}.switch_type();" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화 ${this.list_status_type == "end" ? "<div class='tab_selected_bar'></div>" : ""}</div>
+                                                <div onclick="${this.instance}.switch_type('ing');" class="${this.list_status_type == "ing" ? "tab_selected": ""}">활성화 ${this.list_status_type == "ing" ? "<div class='tab_selected_bar'></div>" : ""}</div>
+                                                <div onclick="${this.instance}.switch_type('end');" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화 ${this.list_status_type == "end" ? "<div class='tab_selected_bar'></div>" : ""}</div>
                                             </div>
                                         </div>
                                             `
