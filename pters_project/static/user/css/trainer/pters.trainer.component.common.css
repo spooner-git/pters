@@ -464,13 +464,14 @@ input:disabled{
 	vertical-align: middle;
 }
 .list_type_tab_wrap > div{
+	position: relative;
 	display: table-cell;
 	width: 55px;
 	font-size: 13px;
-	line-height: 33px;
+	color: #b8b4b4;
+	font-weight: bold;
+	line-height: 35px;
 	text-align: left;
-	padding-left: 5px;
-	border-bottom: 2px solid transparent;
 }
 .list_sort_select_wrap{
 	float: right;
@@ -491,8 +492,16 @@ input:disabled{
 	font-size: inherit;
 }
 .tab_selected{
-	font-weight: bold;
-	border-bottom-color: #fe4e65 !important;
+	color: #3b3d3d !important;
+}
+.tab_selected_bar{
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 16px;
+	height: 4px;
+	border-radius: 2px;
+	background-color: #fe4e65;
 }
 /* 탭 */
 

@@ -219,7 +219,7 @@ class Member {
             {
                 member_upper_box:`   <div class="member_upper_box">
                                             <div style="display:inline-block;width:200px;">
-                                                <span style="font-size:20px;font-weight:bold;">회원 ${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</span>
+                                                <span style="font-size:23px;font-weight:bold;color:#3b3d3d">회원 <span style="color:#fe4e65;">${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</span></span>
                                             </div>
                                             <div class="member_tools_wrap">
                                                 <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">
@@ -231,8 +231,8 @@ class Member {
                                         </div>
                                         <div class="member_bottom_tools_wrap">
                                             <div class="list_type_tab_wrap">
-                                                <div onclick="${this.instance}.switch_type('ing');" class="${this.list_type == "ing" ? "tab_selected" : ""}">진행중</div>
-                                                <div onclick="${this.instance}.switch_type('end');" class="${this.list_type == "end" ? "tab_selected" : ""}">종료</div>
+                                                <div onclick="${this.instance}.switch_type('ing');" class="${this.list_type == "ing" ? "tab_selected": ""}">진행중 ${this.list_type == "ing" ? "<div class='tab_selected_bar'></div>" : ""}</div>
+                                                <div onclick="${this.instance}.switch_type('end');" class="${this.list_type == "end" ? "tab_selected" : ""}">종료 ${this.list_type == "end" ? "<div class='tab_selected_bar'></div>" : ""}</div>
                                             </div>
                                             <div class="list_sort_select_wrap">
                                                 <select>

@@ -3,6 +3,8 @@
  html{
      font-family: 'Noto Sans KR', sans-serif !important;
      box-sizing: border-box !important;
+     color: #1f1d1e;
+     letter-spacing: -0.5px;
  /* background-color: #f7f5f6;*/
  }
 
