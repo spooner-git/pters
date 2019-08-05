@@ -927,7 +927,7 @@ class Calendar {
             {
                 "month_cal_upper_box":` <div class="cal_upper_box">
                                             <button onclick="${this.instance}.move_month('prev')" style="vertical-align:middle;" hidden>이전</button>
-                                            <div style="display:inline-block;width:200px;font-size:20px;font-weight:bold;" onclick="${this.instance}.switch_cal_type()">
+                                            <div style="display:inline-block;width:200px;font-size:23px;font-weight:bold;color:#3b3d3d;" onclick="${this.instance}.switch_cal_type()">
                                                 <span class="display_year">${this.current_year}년</span>
                                                 <span class="display_month">${this.current_month}월</span>
                                                 <div class="swap_cal"></div>
@@ -946,7 +946,7 @@ class Calendar {
                 "week_cal_upper_box":`
                                         <div class="cal_upper_box">
                                             <button onclick="${this.instance}.move_week('prev')" style="vertical-align:middle;" hidden>이전</button>
-                                            <div style="display:inline-block;width:200px;font-size:20px;font-weight:bold;" onclick="${this.instance}.switch_cal_type()">
+                                            <div style="display:inline-block;width:200px;font-size:23px;font-weight:bold;color:#3b3d3d;" onclick="${this.instance}.switch_cal_type()">
                                                 <span class="display_week">${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0] :null}월 
                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0] :null}일 - 
                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]: null}월 

@@ -119,6 +119,7 @@ class Member {
         }
 
         this.member_length = length;
+        console.log("whoe", whole_data)
 
         let html_temp = [];
         for (let i=0; i<length; i++){
@@ -128,16 +129,26 @@ class Member {
             let member_phone = data.member_phone;
             let member_reg = data.member_ticket_reg_count;
             let member_rem = data.member_ticket_rem_count;
+            let end_date = data.end_date;
+            let end_date_text = DateRobot.to_text(end_date);
+            let remain_date = Math.round((new Date(end_date).getTime() - new Date().getTime()) / (1000*60*60*24));
+            let remain_alert_text = "";
+            if(remain_date < 0){
+                remain_alert_text = " 지남";
+                remain_date = Math.abs(remain_date);
+            }
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'member_id':${member_id}}, ()=>{
                 member_view_popup = new Member_view('.popup_member_view', ${member_id}, 'member_view_popup');});`;
-            let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}">
+            let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : '#a3a0a0'}">
                             <div class="member_data_l">
                                 <img src="/static/common/icon/icon_account.png">
                             </div>                
                             <div class="member_data_c">
                                 <div class="member_name">${member_name}</div>
-                                <div class="member_counts"> ${member_rem} / ${member_reg} <span style="font-size:10px;color:#8d8d8d;">(남은 횟수 / 총 등록횟수)</span></div>
+                                <div class="member_counts">
+                                 ${list_type == "ing" ? member_rem+'회/ '+remain_date+'일'+remain_alert_text+'/ - '+end_date_text+'까지' : '종료됨'}
+                                </div>
                             </div>
                             <div class="member_data_r">
                                 <div class="member_phone" onclick="event.stopPropagation();location.href='tel:${member_phone}'" ${member_phone == "None" ? "style='display:none;'" : ""}>

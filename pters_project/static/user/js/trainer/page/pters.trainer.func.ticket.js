@@ -191,7 +191,7 @@ class Ticket{
             {    "ticket_upper_box":`   <div class="ticket_upper_box">
                                             <div style="display:inline-block;width:200px;">
                                                 <div style="display:inline-block;width:200px;">
-                                                    <span style="font-size:20px;font-weight:bold;">수강권 ${this.data_length}</span>
+                                                    <span style="font-size:23px;font-weight:bold;color:#3b3d3d">수강권 <span style="color:#fe4e65;">${this.data_length}</span></span>
                                                 </div>
                                                 
                                             </div>
@@ -204,8 +204,8 @@ class Ticket{
                                         </div>
                                         <div class="ticket_bottom_tools_wrap">
                                             <div class="list_type_tab_wrap">
-                                                <div onclick="${this.instance}.switch_type();" class="${this.list_status_type == "ing" ? "tab_selected" : ""}">활성화</div>
-                                                <div onclick="${this.instance}.switch_type();" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화</div>
+                                                <div onclick="${this.instance}.switch_type();" class="${this.list_status_type == "ing" ? "tab_selected": ""}">활성화 ${this.list_status_type == "ing" ? "<div class='tab_selected_bar'></div>" : ""}</div>
+                                                <div onclick="${this.instance}.switch_type();" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화 ${this.list_status_type == "end" ? "<div class='tab_selected_bar'></div>" : ""}</div>
                                             </div>
                                         </div>
                                             `
