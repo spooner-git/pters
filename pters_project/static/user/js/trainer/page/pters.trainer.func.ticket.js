@@ -131,37 +131,39 @@ class Ticket{
             let ticket_lectures_included_name = data.ticket_lecture_list;
             let ticket_lectures_state_cd = data.ticket_lecture_state_cd_list;
             let ticket_lectures_included_name_html = [];
+            let ticket_lectures_color = data.ticket_lecture_ing_color_cd_list;
             let length_lecture = ticket_lectures_included_name.length;
             for(let j=0; j<length_lecture; j++){
                 let html;
                 if(ticket_lectures_state_cd[j] == STATE_END_PROGRESS){
-                    html = `<div style="color:#cccccc;text-decoration:line-through;">${ticket_lectures_included_name[j]}</div>`;
+                    html = `<div style="color:#cccccc;text-decoration:line-through;">
+                                <div class="ticket_lecture_color" style="background-color:${ticket_lectures_color[j]}"></div>
+                                ${ticket_lectures_included_name[j]}
+                            </div>`;
                 }else if(ticket_lectures_state_cd[j] == STATE_IN_PROGRESS){
-                    html = `<div>${ticket_lectures_included_name[j]}</div>`;
+                    html = `<div>
+                                <div class="ticket_lecture_color" style="background-color:${ticket_lectures_color[j]}"></div>
+                                ${ticket_lectures_included_name[j]}
+                            </div>`;
                 }
                 ticket_lectures_included_name_html.push(html);
             }
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'ticket_id':${ticket_id}}, ()=>{
                 ticket_view_popup = new Ticket_view('.popup_ticket_view', ${ticket_id}, 'ticket_view_popup');});`;
-            let html = `<article class="ticket_wrapper" data-ticketid="${ticket_id}" onclick="${onclick}" style="color:${list_status_type == "ing" ? "" : '#a3a0a0'}">
+            let html = `<article class="ticket_wrapper" data-ticketid="${ticket_id}" onclick="${onclick}" style="opacity:${list_status_type == "ing" ? "1" : '0.6'}">
                             <div class="ticket_data_u">
-                                <div class="ticket_name">${ticket_name}</div>
-                                <div class="ticket_note">${ticket_note}</div>
-                            </div>
-                            <div class="ticket_data_b">
-                                <div class="ticket_member_number_wrap">
-                                    <div class="ticket_data_title">회원</div>
+                                <div class="ticket_name">
+                                    ${ticket_name}
                                     <div class="ticket_member_number">
                                         ${list_status_type == "ing" ? ticket_member_number : ticket_end_member_number}명
                                     </div>
                                 </div>
-                                
-                                <div class="ticket_lectures_wrap">
-                                    <div class="ticket_data_title">포함된 수업</div>
-                                    <div class="ticket_lectures">
-                                        ${ticket_lectures_included_name_html.join('')}
-                                    </div>
+                                <div class="ticket_note">${ticket_note}</div>
+                            </div>
+                            <div class="ticket_data_b">
+                                <div class="ticket_lectures">
+                                    ${ticket_lectures_included_name_html.join('')}
                                 </div>
                             </div>
                         </article>`;
