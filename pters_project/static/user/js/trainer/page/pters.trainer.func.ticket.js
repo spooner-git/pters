@@ -137,12 +137,12 @@ class Ticket{
                 let html;
                 if(ticket_lectures_state_cd[j] == STATE_END_PROGRESS){
                     html = `<div style="color:#cccccc;text-decoration:line-through;">
-                                <div class="ticket_lecture_color" style="background-color:${ticket_lectures_color[j]}"></div>
+                                <div class="ticket_lecture_color" style="background-color:${list_status_type == "ing" ? ticket_lectures_color[j]: '#a3a0a0'}"></div>
                                 ${ticket_lectures_included_name[j]}
                             </div>`;
                 }else if(ticket_lectures_state_cd[j] == STATE_IN_PROGRESS){
                     html = `<div>
-                                <div class="ticket_lecture_color" style="background-color:${ticket_lectures_color[j]}"></div>
+                                <div class="ticket_lecture_color" style="background-color:${list_status_type == "ing" ? ticket_lectures_color[j]: '#a3a0a0'}"></div>
                                 ${ticket_lectures_included_name[j]}
                             </div>`;
                 }
@@ -212,7 +212,7 @@ class Ticket{
                                         </div>
                                             `
                                 ,
-                "initial_page":`<div id="${this.subtargetHTML}"><div id="ticket_display_panel"></div><div id="ticket_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div></div>`
+                "initial_page":`<div id="${this.subtargetHTML}"><div id="ticket_display_panel"></div><div id="ticket_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px;padding:0 16px;box-sizing:border-box;"></div></div>`
             }
         );
     }

@@ -13,7 +13,7 @@
 		line-height: 50px;
 		background-color: #ffffff;
 		/* border-bottom: 1px solid #cccccc; */
-		padding: 0 20px;
+		padding: 0 16px;
 		box-sizing: border-box;
 	}
 	.ticket_tools_wrap{
@@ -53,14 +53,14 @@
 	.ticket_bottom_tools_wrap{
 		background-color: #ffffff;
 		border-bottom: 1px solid #cccccc;
-		padding: 0 20px;
+		padding: 0 16px;
 		font-size: 14px;
 	}
 
 
 
 .ticket_wrapper{
-	width: 95%;
+	width: 100%;
 	padding: 10px 15px;
 	background-color: #ffffff;
 	border: 1px solid #f4f4f4;
