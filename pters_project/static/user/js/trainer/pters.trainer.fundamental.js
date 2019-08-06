@@ -36,7 +36,6 @@ function func_set_webkit_overflow_scrolling(target_selector){
     }
 }
 
-
 function ajax_load_image(option){
     let $ajax_load_image = $('img.ajax_loading_image');
 	switch(option){
