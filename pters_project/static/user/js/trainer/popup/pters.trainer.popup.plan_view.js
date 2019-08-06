@@ -157,7 +157,7 @@ class Plan_view{
                             <img src="/static/common/icon/icon_delete.png" class="obj_icon_basic" onclick="plan_view_popup.upper_right_menu(0);">
                             <img src="/static/common/icon/icon_done.png" class="obj_icon_basic" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};margin-left:20px">
                         </span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;padding:0">${this.dom_assembly_toolbox()}</section>
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -214,7 +214,7 @@ class Plan_view{
 
         let html = `
                     <div class="info_popup_title_wrap" style="height:50px;background-color:${this.data.lecture_color}">
-                        <div class="info_popup_title" style="display:inline-block;line-height:50px;vertical-align:middle;font-size:18px;font-weight:bold;margin-left:16px;color:${this.data.lecture_font_color}">
+                        <div class="info_popup_title" style="display:inline-block;line-height:50px;vertical-align:middle;font-size:18px;font-weight:bold;color:${this.data.lecture_font_color}">
                             ${lecture_name}
                         </div>
                     </div>

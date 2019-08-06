@@ -174,7 +174,7 @@ class Lecture_view{
         
         let id = 'lecture_name_view';
         let title = this.data.name == null ? '' : this.data.name;
-        let style = {"font-size":"20px", "font-weight":"bold", "padding":"0 28px"};
+        let style = {"font-size":"20px", "font-weight":"bold"};
         if(this.data.lecture_state == STATE_END_PROGRESS){
             style["color"] = "#888888";
             title = title + ' (비활성)';
@@ -510,7 +510,10 @@ class Lecture_simple_view{
         let html = `<section id="${this.target.toolbox}" class="obj_box_full" style="position:sticky;position:-webkit-sticky;top:0;">${dom_toolbox}</section>
                     <section id="${this.target.content}" style="width:100%;height:auto;overflow-y:auto;">${dom_content}</section>
                     <section id="${this.target.close_button}" class="obj_box_full" style="height:48px;">${dom_close_button}</section>`;
+
         document.querySelector(this.target.install).innerHTML = html;
+        document.querySelector('.popup_lecture_view .wrapper_top').style.border = 0;
+
     }
 
     render_toolbox(){

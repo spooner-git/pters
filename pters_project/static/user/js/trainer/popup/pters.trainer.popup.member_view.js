@@ -237,6 +237,7 @@ class Member_view{
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
+        document.querySelector('.popup_member_view .wrapper_top').style.border = 0;
     }
 
     render_toolbox(){
@@ -281,7 +282,7 @@ class Member_view{
         });
         
         let html = `
-        <div class="member_view_upper_box" style="padding-bottom:8px;">
+        <div class="member_view_upper_box">
             <div style="display:inline-block;width:320px;">
                 <div style="display:inline-block;width:320px;">
                     ${sub_html}

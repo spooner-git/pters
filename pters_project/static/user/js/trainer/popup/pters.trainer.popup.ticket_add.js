@@ -107,6 +107,7 @@ class Ticket_add{
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
+        document.querySelector('.popup_ticket_add .wrapper_top').style.border = 0;
     }
 
     render_toolbox(){
@@ -139,7 +140,7 @@ class Ticket_add{
 
     dom_row_toolbox(){
         let html = `
-        <div class="member_add_upper_box" style="padding-bottom:8px;">
+        <div class="ticket_add_upper_box">
             <div style="display:inline-block;width:200px;">
                 <div style="display:inline-block;width:200px;">
                     <span style="font-size:20px;font-weight:bold;">새로운 수강권</span>

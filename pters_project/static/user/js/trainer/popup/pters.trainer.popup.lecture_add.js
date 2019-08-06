@@ -99,6 +99,7 @@ class Lecture_add{
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
+        document.querySelector('.popup_lecture_add .wrapper_top').style.border = 0;
     }
 
     render_toolbox(){
@@ -130,7 +131,7 @@ class Lecture_add{
 
     dom_row_toolbox(){
         let html = `
-        <div class="member_add_upper_box" style="padding-bottom:8px;">
+        <div class="lecture_add_upper_box">
             <div style="display:inline-block;width:200px;">
                 <div style="display:inline-block;width:200px;">
                     <span style="font-size:20px;font-weight:bold;">새로운 수업</span>

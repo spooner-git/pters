@@ -180,7 +180,7 @@ class Ticket_view{
 
     dom_row_toolbox(){
         let id = 'ticket_name_view'
-        let style = {"font-size":"20px", "font-weight":"bold", "padding":"0 28px"};
+        let style = {"font-size":"20px", "font-weight":"bold"};
         let title = this.data.name == null ? '' : this.data.name;
         if(this.data.ticket_state == STATE_END_PROGRESS){
             style["color"] = "#888888";

@@ -154,7 +154,7 @@ class Plan_add{
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
         
         document.querySelector(this.target.install).innerHTML = html;
-        document.querySelector('.popup_plan_add .wrapper_top').style.borderColor = 'transparent';
+        document.querySelector('.popup_plan_add .wrapper_top').style.border = 0;
     }
 
     render_toolbox(){
