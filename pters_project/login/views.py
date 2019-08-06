@@ -277,11 +277,11 @@ class ServiceTestLoginView(TemplateView):
         return context
 
 
-class RegistrationCheck(TemplateView):
-    template_name = 'registration_check_form.html'
+class CheckRegistration(TemplateView):
+    template_name = 'check_registration.html'
 
     def get_context_data(self, **kwargs):
-        context = super(RegistrationCheck, self).get_context_data(**kwargs)
+        context = super(CheckRegistration, self).get_context_data(**kwargs)
 
         return context
 
@@ -788,7 +788,7 @@ class AddTempMemberInfoView(RegistrationView, View):
 
 
 class AuthenticatedMemberView(View):
-    template_name = 'authenticated_member_form.html'
+    template_name = 'registration_authenticated_member_form.html'
 
     def get(self, request):
         context = {}
@@ -1347,6 +1347,55 @@ class ActivateSmsConfirmView(View):
             messages.error(request, error)
 
         return render(request, self.template_name)
+
+
+class FindIdView(TemplateView):
+    template_name = 'find_id_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(FindIdView, self).get_context_data(**kwargs)
+        return context
+
+    def post(self, request):
+        name = request.POST.get('name', '')
+        phone = request.POST.get('phone', '')
+        email = request.POST.get('email', '')
+        find_id_type = request.POST.get('find_id_type', '')
+        error = None
+        member_username = ''
+
+        if find_id_type == 'phone':
+            if phone is None or phone == '':
+                error = '휴대폰 번호를 입력해주세요'
+        elif find_id_type == 'email':
+            if email is None or email == '':
+                error = '이메일을 입력해주세요.'
+        if name is None or name == '':
+            error = '이름을 입력해주세요.'
+
+        if error is None:
+            try:
+                member = None
+                if find_id_type == 'phone':
+                    member = MemberTb.objects.get(name=name, phone=phone)
+                elif find_id_type == 'email':
+                    member = MemberTb.objects.get(name=name, user__email=email)
+
+                if member is not None:
+                    counter = 0
+                    for member_username_info in member.user.username:
+                        if counter < 3:
+                            member_username += member_username_info
+                        else:
+                            member_username += '*'
+                        counter += 1
+
+            except ObjectDoesNotExist:
+                error = '일치하는 회원 정보가 없습니다.'
+
+        if error is not None:
+            messages.error(self.request, error)
+        return render(request, self.template_name, {'username': member_username})
 
 
 class ResetPasswordView(TemplateView):

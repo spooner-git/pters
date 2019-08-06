@@ -12,7 +12,7 @@
     <div id="root_content">
         <div id="registration_box">
             <div class="registration_top">
-                <div class="registration_left" onclick="location.href='{% url "login:registration_check" %}'">X</div>
+                <div class="registration_left" onclick="location.href='{% url "login:check_registration" %}'">X</div>
                 <div class="registration_title">{% if sns_type == "KAKAO"%}카카오톡으로 {% elif sns_type == "NAVER"%}네이버로 {% else %}소셜 {% endif %}회원가입</div>
                 <div class="registration_right"></div>
             </div>
