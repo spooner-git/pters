@@ -512,8 +512,6 @@ class Lecture_simple_view{
                     <section id="${this.target.close_button}" class="obj_box_full" style="height:48px;">${dom_close_button}</section>`;
 
         document.querySelector(this.target.install).innerHTML = html;
-        document.querySelector('.popup_lecture_view .wrapper_top').style.border = 0;
-
     }
 
     render_toolbox(){
