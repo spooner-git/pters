@@ -11,7 +11,7 @@
 		height: 60px;
 		line-height: 60px;
 		background-color: #ffffff;
-		border-bottom: 1px solid #cccccc;
+		/* border-bottom: 1px solid #cccccc; */
 		padding: 0 16px;
 		box-sizing: border-box;
 		margin-bottom: 4px;
@@ -73,7 +73,7 @@
 .week_upper_float_tool{
 	position: sticky;
 	position: -webkit-sticky;
-	box-shadow: 0 1px 5px 0 #d6d6d6;
+	box-shadow: 0 0 20px 0 #ebebeb;
 	top: 0;
 	background-color: #ffffff;
 	z-index: 10;
@@ -97,10 +97,11 @@
 	text-align: center;
 	height: 58px;
 	line-height: 40px;
-	border-bottom: 1px solid #cccccc;
+	/* border-bottom: 1px solid #cccccc; */
 	border-collapse: collapse;
 	table-layout: fixed;
 
+	color: #5c5859;
 	font-size: 11px;
 	font-weight: 500;
 }
@@ -110,15 +111,15 @@
 	/* width: 14.285%; */
 	width: 12.5%;
 	/* padding: 0px 10px; */
-	border-left: 1px solid #cccccc;
+	border-left: 1px solid #f5f2f3;
 }
 .cal_week_line_dates{
 	display: table;
 	width: 100%;
 	text-align: center;
-	height: 30px;
-	line-height: 30px;
-	border-bottom: 1px solid #cccccc;
+	height: 20px;
+	line-height: 20px;
+	border-bottom: 1px solid #f5f2f3;
 	background-color: #ffffff;
 	border-collapse: collapse;
 	table-layout: fixed;
@@ -130,6 +131,18 @@
 	/* width: 14.285%; */
 	width: 12.5%;
 	/* border-left: 1px solid #cccccc; */
+}
+.today_marking{
+	position: absolute;
+	width: 28px;
+	height: 28px;
+	border-radius: 14px;
+	z-index: -1;
+	top:50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: #ffe8eb;
+	
 }
 .no_border{
 	border: 0 !important;
@@ -150,6 +163,7 @@
 
 .week_cal_time_text{
 	font-size: 11px;
+	color: #858282;
 	border: 0 !important;
 }
 .week_rows{
@@ -162,7 +176,7 @@
 	position: relative;
 	display: table-cell;
 	width: 12.5%;
-	border-left: 1px solid #cccccc;
+	border-left: 1px solid #f5f2f3;
 }
 .week_rows > .week_row{
 	position: relative;
@@ -172,7 +186,7 @@
 	background-image: url("/static/user/res/new/calendar_hour_short.png?v2");
 	background-size: 30px 60px;
 	background-position: top;
-	border-left: 1px solid #cccccc;
+	border-left: 1px solid #f5f2f3;
 }
 .week_rows article{
 	position: relative;
@@ -258,6 +272,7 @@
 	height: 1px;
 	left: 100%;
 	z-index: 3;
+	opacity: 0.5;
 	background-color:#fe4e65;
 }
 	#current_time_indicator > div{
@@ -267,5 +282,6 @@
 		border-radius: 3px;
 		top: -3px;
 		left: -3px;
+		opacity: 0.5;
 		background-color: #fe4e65;
 	}

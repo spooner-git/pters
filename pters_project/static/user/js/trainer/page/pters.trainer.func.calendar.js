@@ -442,7 +442,7 @@ class Calendar {
         if(schedule_data == undefined){
             schedule_data = false;
         }
-        let weeks_div = [`<div style="margin-top:35px;"></div>`];
+        let weeks_div = [`<div style="margin-top:25px;"></div>`];
 
         let margin = 10;
         let row_height = (this.window_height - 60 - 31 - 45 - margin)/6;
@@ -662,6 +662,7 @@ class Calendar {
                 let saturday = "";
                 let border_style = "";
                 let today_marking = "";
+                let today_text_style = "";
                 border_style = month_or_week == "week" ? "no_border" : "";
                 if(i == 0){
                     border_style = "no_border";
@@ -672,7 +673,8 @@ class Calendar {
                 }
                 
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
-                    today_marking = `<div style="position: absolute;width: 100%;height: 3px;top: ${month_or_week == "week" ? '-30px' : 0} ;background: #fe4e65;left: 0;"></div>`;
+                    today_marking = `<div class="today_marking" style="${month_or_week == "week" ? '' : 'top:22%'}"></div>`;
+                    today_text_style = 'color:#fe4e65;font-weight:bold;'
                 }
                 
                 let onclick = month_or_week == "week" ? `${this.instance}.zoom_week_cal(event, ${_year[i]}, ${_month[i]}, ${_date[i]})` : `calendar.week_zoomed.activate = true;calendar.week_zoomed.target_row = this.dataset.row;${this.instance}.go_week(${_year[i]}, ${_month[i]}, ${_date[i]});`;
@@ -680,7 +682,7 @@ class Calendar {
                 dates_to_join.push(
                     `
                     <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" onclick="event.stopPropagation();${onclick}">
-                        ${_date[i]}
+                        <span style="${today_text_style}">${_date[i]}</span>
                         <div class="${schedule_number_display} ${has_schedule}">${schedule_date}</div>
                         ${today_marking}
                     </div>
@@ -696,10 +698,10 @@ class Calendar {
                 ? 
                 result_html
                 :
-                `<div class="${month_or_week == "week" ? "week_upper_float_tool" :""}">
+                `<div class="${month_or_week == "week" ? "week_upper_float_tool" :""}" style="${month_or_week == "month" ? 'border-bottom:1px solid #f5f2f3':''}">
                     ${month_or_week == "week" ? `<div id="week_zoom_vertical_button" onclick="${this.instance}.zoom_week_cal_vertical()"></div>` : ""}
                     ${month_or_week == "week" ? week_date_name_data : ""}
-                    <div class="cal_week_line" style="${month_or_week == "week" ? `height:25px;line-height:15px;font-size:13px;font-weight:500` : ""}">
+                    <div class="cal_week_line" style="${month_or_week == "week" ? `height:35px;line-height:35px;font-size:15px;font-weight:500` : ""}">
                         ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
                         ${result_html}
                     </div>
