@@ -33,6 +33,8 @@ class MyRegistrationForm(RegistrationForm):
         self.fields['username'].required = True
         self.fields['name'].required = False
         self.fields['email'].required = False
+        self.fields['password1'].required = False
+        self.fields['password2'].required = False
 
     labels = {
         'username': '아이디',
@@ -70,12 +72,8 @@ class MyPasswordResetForm(PasswordResetForm):
 
 
 class MyPasswordChangeForm(SetPasswordForm):
-    """
-    A form that lets a user change their password by entering their old
-    password.
-    """
-    error_messages = dict(SetPasswordForm.error_messages, **{
-        'password_incorrect': _("Your old password was entered incorrectly. Please enter it again."),
-    })
+    # error_messages = dict(SetPasswordForm.error_messages, **{
+    #     'password_incorrect': _(""),
+    # })
 
     field_order = ['new_password1', 'new_password2']

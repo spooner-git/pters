@@ -20,6 +20,7 @@ from django.contrib.auth.views import deprecate_current_app
 from django.contrib.sites.shortcuts import get_current_site
 from django.core import signing
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.mail import EmailMultiAlternatives
 from django.db import IntegrityError, InternalError, transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, resolve_url
@@ -129,10 +130,7 @@ def login_trainer(request):
                         else:
                             request.session['member_id'] = user.id
                             request.session['username'] = user.username
-                            if user.email is None or user.email == '':
-                                next_page = '/login/registration_temp/'
-                            else:
-                                next_page = '/login/resend_email_member/'
+                            next_page = '/login/authenticated_member/'
                 else:
                     error = '이미 탈퇴한 회원입니다.'
         else:
@@ -397,10 +395,10 @@ class AddSocialMemberInfoView(RegistrationView, View):
         return redirect(next_page)
 
 
-class AddOldMemberSnsInfoView(RegistrationView, View):
+class AddOldSocialMemberInfoView(RegistrationView, View):
     template_name = 'ajax/registration_error_ajax.html'
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
 
         # first_name = request.POST.get('first_name', '')
         email = request.POST.get('email', '')
@@ -521,12 +519,12 @@ class RegistrationSocialView(TemplateView):
         return render(request, self.template_name, context)
 
 
-class CheckSnsMemberInfoView(TemplateView):
-    template_name = 'ajax/id_check_ajax.html'
+class CheckSocialMemberInfoView(TemplateView):
+    template_name = 'ajax/registration_error_ajax.html'
     error = ''
 
     def get_context_data(self, **kwargs):
-        context = super(CheckSnsMemberInfoView, self).get_context_data(**kwargs)
+        context = super(CheckSocialMemberInfoView, self).get_context_data(**kwargs)
         user_email = self.request.GET.get('email', '')
         sns_id = self.request.GET.get('sns_id', '')
         sns_type = self.request.GET.get('sns_type', '')
@@ -534,27 +532,32 @@ class CheckSnsMemberInfoView(TemplateView):
         if user_email is None or user_email == '':
             user_email = sns_id
 
-        context['error'] = '0'
+        # 소셜 회원가입하지 않고 email 정보도 없는 회원
+        context['social_check'] = '0'
+
+        # 소셜 회원가입한 회원
         try:
             sns_info = SnsInfoTb.objects.select_related('member').get(sns_id=sns_id, sns_type=sns_type, use=USE)
             username = sns_info.member.user.username
-            context['error'] = '1'
+            context['social_check'] = '1'
         except ObjectDoesNotExist:
             sns_info = None
 
-        if sns_info is None:
+        # 소셜 회원가입하지 않았으나 email은 등록된 회원
+        if sns_info is None and user_email is not None and user_email != '':
             try:
                 user_info = User.objects.get(email=user_email)
                 username = user_info.username
-                context['error'] = '2'
+                context['social_check'] = '2'
             except ObjectDoesNotExist:
                 username = ''
 
+        # 소셜 회원가입하지 않았으나 email은 등록된 회원
         if username == '':
             try:
                 user_info = User.objects.get(username=user_email)
                 username = user_info.username
-                context['error'] = '2'
+                context['social_check'] = '2'
             except ObjectDoesNotExist:
                 username = ''
 
@@ -692,52 +695,6 @@ class ResendEmailAuthenticationView(MyReRegistrationView, View):
         return render(request, self.template_name)
 
 
-# 회원가입 api
-class ChangeResendEmailAuthenticationView(MyReRegistrationView, View):
-    template_name = 'ajax/registration_error_ajax.html'
-
-    def post(self, request):
-        user_id = request.POST.get('username', '')
-        email = request.POST.get('email', '')
-        member_id = request.POST.get('member_id', '')
-
-        error = None
-        user = None
-        if member_id is None or member_id == '':
-            error = 'ID를 입력해주세요.'
-
-        if error is None:
-            try:
-                User.objects.get(email=email)
-                error = '이미 가입된 email입니다.'
-            except ObjectDoesNotExist:
-                error = None
-
-        if error is None:
-            try:
-                user = User.objects.get(id=member_id)
-                user.email = email
-                user.is_active = 0
-                user.save()
-            except ObjectDoesNotExist:
-                error = '가입되지 않은 회원입니다.'
-
-        if error is None:
-            # user = authenticate(username=username, password=password)
-            if user is not None:
-                self.send_activation_email(user)
-            else:
-                error = 'ID가 존재하지 않습니다.'
-
-        if error is None:
-            logger.info(str(user_id) + '[' + str(email) + '] 이메일 변경 요청')
-        else:
-            logger.error(str(user_id) + '[' + str(email) + ']' + str(error))
-            messages.error(request, error)
-
-        return render(request, self.template_name)
-
-
 class AddMemberView(RegistrationView, View):
     template_name = 'ajax/registration_error_ajax.html'
 
@@ -825,103 +782,6 @@ class AddMemberNoEmailView(View):
                                                         'user_db_id': context['user_db_id']})
 
 
-
-class CheckMemberEmailView(TemplateView):
-    template_name = 'ajax/id_check_ajax.html'
-    error = ''
-
-    def get_context_data(self, **kwargs):
-        context = super(CheckMemberEmailView, self).get_context_data(**kwargs)
-        user_email = self.request.GET.get('email', '')
-        form = RegistrationForm(self.request.GET, self.request.FILES)
-        if user_email is None or user_email == '':
-            self.error = 'Email을 입력해주세요.'
-        else:
-            user_data = User.objects.filter(email=user_email)
-
-            if len(user_data) > 0:
-                self.error = '사용 불가'
-                context['username'] = user_data[0].username
-
-            if self.error is None or self.error == '':
-                if form.is_valid():
-                    if User.objects.filter(email=user_email).exists():
-                        self.error = '사용 불가'
-                else:
-                    for field in form:
-                        if field.errors:
-                            for err in field.errors:
-                                if self.error is None or self.error == '':
-                                    if field.name == 'email':
-                                        self.error = err
-                                    else:
-                                        self.error = ''
-                                else:
-                                    if field.name == 'email':
-                                        self.error += err
-        if self.error != '':
-            context['error'] = self.error
-
-        return context
-
-
-class CheckMemberValidationView(View):
-    template_name = 'ajax/id_check_ajax.html'
-    error = ''
-
-    def post(self, request):
-        sms_activation_check = request.session.get('sms_activation_check', False)
-        context = {}
-        # context = super(CheckMemberValidationView, self).get_context_data(**kwargs)
-        if sms_activation_check is False:
-            self.error = '문자 인증을 완료해주세요.'
-
-        if self.error == '':
-            form = MyRegistrationForm(self.request.POST, self.request.FILES)
-            if form.is_valid():
-                self.error = ''
-            else:
-                for field in form:
-                    if field.errors:
-                        for err in field.errors:
-                            if self.error is None or self.error == '':
-                                if field.name == 'username':
-                                    self.error = '사용할수 없는 ID 입니다.'
-                                else:
-                                    self.error = err
-                            else:
-                                if field.name != 'username':
-                                    self.error += err
-        if self.error != '':
-            context['error'] = self.error
-        return render(request, self.template_name, context)
-
-
-class CheckMemberPasswordValidationView(View):
-    template_name = 'ajax/id_check_ajax.html'
-    error = ''
-
-    def post(self, request):
-        context = {}
-        # context = super(CheckMemberValidationView, self).get_context_data(**kwargs)
-        form = RegistrationForm(self.request.POST, self.request.FILES)
-        if form.is_valid():
-            self.error = ''
-        else:
-            for field in form:
-                if field.errors:
-                    for err in field.errors:
-                        if self.error is None or self.error == '':
-                            if field.name == 'password2':
-                                self.error = err
-                        else:
-                            if field.name == 'password2':
-                                self.error += err
-        if self.error != '':
-            context['error'] = self.error
-        return render(request, self.template_name, context)
-
-
 class RegisterErrorView(TemplateView):
     template_name = 'ajax/registration_error_ajax.html'
 
@@ -985,29 +845,49 @@ class AddTempMemberInfoView(RegistrationView, View):
         return render(request, self.template_name)
 
 
-class NewMemberReSendEmailView(View):
-    template_name = 'send_email_to_reconfirm_form.html'
+class AuthenticatedMemberView(View):
+    template_name = 'authenticated_member_form.html'
 
     def get(self, request):
         context = {}
-        # context = super(NewMemberReSendEmailView, self).get_context_data(**kwargs)
-        user_id = request.session.get('user_id', '')
+        member_id = request.session.get('member_id', '')
         error = None
-        user = None
-        if user_id is None or user_id == '':
-            error = '정보를 불러오지 못했습니다.'
+        if member_id is None or member_id == '':
+            error = '회원 정보를 불러오지 못했습니다.[1]'
+
         if error is None:
             try:
-                user = User.objects.get(id=user_id)
+                member = MemberTb.objects.get(member_id=member_id)
+                context['member'] = member
             except ObjectDoesNotExist:
-                error = '정보를 불러오지 못했습니다.'
+                error = '회원 정보를 불러오지 못했습니다.[2]'
 
-        if error is None:
-            context['user_email'] = user.email
-
-        context['activation_days'] = getattr(settings, "ACCOUNT_ACTIVATION_DAYS", '')
+        if error is not None:
+            logger.error('member_id:'+str(member_id) + str(error))
+            messages.error(request, error)
 
         return render(request, self.template_name, context)
+
+
+def authenticated_member_logic(request):
+    member_id = request.POST.get('member_id', '')
+    error = None
+    if member_id is None or member_id == '':
+        error = '회원 정보를 불러오지 못했습니다.[1]'
+
+    if error is None:
+        try:
+            member = MemberTb.objects.get(member_id=member_id)
+            member.user.is_active = True
+            member.user.save()
+        except ObjectDoesNotExist:
+            error = '회원 정보를 불러오지 못했습니다.[2]'
+
+    if error is not None:
+        logger.error('member_id:'+str(member_id) + str(error))
+        messages.error(request, error)
+
+    return render(request, 'ajax/registration_error_ajax.html')
 
 
 # 회워탈퇴 api
@@ -1656,7 +1536,6 @@ def func_recaptcha_test(recaptcha_secret_key, token):
             error = '비정상적인 접근입니다.[2]'
         except TypeError:
             error = '비정상적인 접근입니다.[3]'
-
         if error is None:
             success = response_json_data['success']
             if success:
@@ -1709,6 +1588,25 @@ def func_send_sms_auth(phone, activation_number):
     return error
 
 
+def func_send_email_auth(email, activation_number, request):
+    current_site = get_current_site(request)
+    site_name = current_site.name
+    domain = current_site.domain
+    context = {
+        'email': email,
+        'domain': domain,
+        'site_name': site_name,
+        'request': request,
+        'reset_activation_number': activation_number
+    }
+    body = loader.render_to_string('activation_email.html', context)
+    subject = loader.render_to_string('activation_email_subject.txt', context)
+    email_message = EmailMultiAlternatives(subject, body, None, [email])
+    html_email = loader.render_to_string('activation_email.html', context)
+    email_message.attach_alternative(html_email, 'text/html')
+    email_message.send()
+
+
 class ActivateSmsConfirmView(View):
     template_name = 'ajax/registration_error_ajax.html'
 
@@ -1745,53 +1643,257 @@ class ResetPasswordView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ResetPasswordView, self).get_context_data(**kwargs)
+        self.request.session.set_expiry(1)
         return context
 
 
-class ResetPasswordSmsView(View):
+class ResetPassword2View(View):
+    template_name = 'reset_password_form2.html'
+
+    def post(self, request):
+        name = request.POST.get('name', '')
+        username = request.POST.get('username', '')
+        error = None
+        member = None
+        request.session['reset_activation_check'] = False
+
+        if username is None or username == '':
+            error = '아이디를 입력해주세요'
+        if name is None or name == '':
+            error = '이름을 입력해주세요.'
+        if error is None:
+            try:
+                member = MemberTb.objects.get(name=name, user__username=username)
+                if member.phone is None:
+                    member.phone = ''
+                else:
+                    if len(member.phone) < 10:
+                        member.phone = ''
+                    else:
+                        member.phone = member.phone[0:3] + '-' + member.phone[3:4] + '***-' + member.phone[7:8]+'***'
+                if member.user.email is None:
+                    member.email = ''
+                else:
+                    member_email = ''
+                    counter = 0
+                    email_check = False
+                    for member_email_info in member.user.email:
+                        if counter < 3 or member_email_info == '@':
+                            member_email += member_email_info
+                        else:
+                            member_email += '*'
+                        if member_email_info == '@':
+                            counter = 0
+                            email_check = True
+                        counter += 1
+
+                    if email_check:
+                        member.email = member_email
+                    else:
+                        member.email = ''
+            except ObjectDoesNotExist:
+                error = '일치하는 회원 정보가 없습니다.'
+
+        if error is not None:
+            messages.error(request, error)
+
+        return render(request, self.template_name, {'member': member})
+
+
+def reset_password3(request):
+    member_id = request.POST.get('member_id', '')
+    reset_activation_check = request.session.get('reset_activation_check', False)
+    reset_password_time = request.session.get('reset_password_time')
+    error = None
+    member = None
+
+    if member_id is None or member_id == '':
+        error = '일치하는 회원 정보가 없습니다.[0]'
+
+    if error is None:
+        try:
+            member = MemberTb.objects.get(member_id=member_id)
+        except ObjectDoesNotExist:
+            error = '일치하는 회원 정보가 없습니다.[1]'
+
+    if error is None:
+        if reset_activation_check is False:
+            error = '잘못된 접근입니다.'
+
+    if error is None:
+        if reset_password_time is None or reset_password_time == '':
+            reset_password_time = str(timezone.now())
+            request.session['reset_password_time'] = reset_password_time
+        reset_password_time = datetime.datetime.strptime(reset_password_time, '%Y-%m-%d %H:%M:%S.%f')
+
+        time_interval = str(timezone.now()-reset_password_time)
+        time_interval_data = time_interval.split('.')[0].split(':')
+        time_interval_minutes = time_interval_data[1]
+        time_interval_seconds = time_interval_data[2]
+
+        if(int(time_interval_minutes)*60+int(time_interval_seconds)) > settings.RESET_PASSWORD_ACTIVATION_SECONDS:
+            error = '입력 시한이 지났습니다. 다시 인증을 해주세요.[0]'
+
+    if error is None:
+        return render(request, 'reset_password_form3.html', {'member': member})
+    else:
+        messages.error(request, error)
+        return redirect('/login/reset_password/')
+
+
+def reset_password_logic(request):
+    reset_password_time = request.session.get('reset_password_time')
+    reset_activation_check = request.session.get('reset_activation_check', False)
+    error = None
+
+    if request.method == "POST":
+        member_id = request.POST.get('member_id', '')
+        member = None
+        if member_id is None or member_id == '':
+            error = '일치하는 회원 정보가 없습니다.[0]'
+
+        if error is None:
+            try:
+                member = MemberTb.objects.get(member_id=member_id)
+            except ObjectDoesNotExist:
+                error = '일치하는 회원 정보가 없습니다.[1]'
+
+        if error is None:
+            if reset_activation_check is False:
+                error = '잘못된 접근입니다.'
+
+        if error is None:
+            if reset_password_time is None or reset_password_time == '':
+                reset_password_time = str(timezone.now())
+                request.session['reset_password_time'] = reset_password_time
+            reset_password_time = datetime.datetime.strptime(reset_password_time, '%Y-%m-%d %H:%M:%S.%f')
+
+            time_interval = str(timezone.now() - reset_password_time)
+            time_interval_data = time_interval.split('.')[0].split(':')
+            time_interval_minutes = time_interval_data[1]
+            time_interval_seconds = time_interval_data[2]
+
+            if (int(time_interval_minutes) * 60 + int(
+                    time_interval_seconds)) > settings.RESET_PASSWORD_ACTIVATION_SECONDS:
+                error = '입력 시한이 지났습니다. 다시 인증을 해주세요.[0]'
+
+        if error is None:
+            form = MyPasswordChangeForm(user=member.user, data=request.POST)
+            if form.is_valid():
+                form.save()
+            else:
+                for field in form:
+                    for err in field.errors:
+                        messages.error(request, str(field.label)+':'+err)
+    else:
+        error = '잘못된 접근입니다.'
+    if error is not None:
+        messages.error(request, str(field.label)+':'+err)
+
+    return render(request, 'ajax/registration_error_ajax.html')
+
+
+class ResetActivateView(View):
     template_name = 'ajax/registration_error_ajax.html'
     sms_template_name = 'password_reset_sms.txt'
 
     def post(self, request):
-        member_user_id = request.POST.get('member_user_id', '')
+        token = request.POST.get('token', '')
+        recaptcha_test_session = request.session.get('recaptcha_session', '')
+        sms_count = request.session.get('sms_count', 0)
+        member_id = request.POST.get('member_id', '')
         phone = request.POST.get('phone', '')
-        token_generator = default_token_generator
-        current_site = get_current_site(request)
-        site_name = current_site.name
-        domain = current_site.domain
+        email = request.POST.get('email', '')
+        activation_type = request.POST.get('activation_type', 'phone')
 
+        recaptcha_secret_key = settings.PTERS_reCAPTCHA_SECRET_KEY
+        sms_activation_count = settings.PTERS_SMS_ACTIVATION_MAX_COUNT
         error = None
-        member_data = None
+        max_range = 99999
+        request.session['reset_activation_check'] = False
+        request.session['reset_activation_time'] = str(timezone.now())
+        reset_activation_number = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+        request.session['reset_activation_number'] = reset_activation_number
+        request.session['reset_activation_type'] = activation_type
 
-        if phone == '':
-            error = '휴대폰 번호를 입력해주세요.'
+        if recaptcha_test_session != 'success':
+            error = func_recaptcha_test(recaptcha_secret_key, token)
+            if error is None:
+                request.session['recaptcha_session'] = 'success'
+            else:
+                request.session['recaptcha_session'] = 'failed'
 
-        if member_user_id == '':
-            error = 'ID를 입력해주세요.'
+        if activation_type == 'phone':
+            if phone == '':
+                error = '휴대폰 번호를 입력해주세요.'
+            else:
+                member_list = MemberTb.objects.filter(member_id=member_id, phone=phone, use=USE)
+                if len(member_list) == 0:
+                    error = '휴대폰 번호가 잘못됐습니다.'
 
-        if error is None:
-            member_data = MemberTb.objects.filter(user__username=member_user_id, phone=phone, user__is_active=True)
-            if len(member_data) == 0:
-                error = '가입된 회원이 없습니다.'
+            if error is None:
+                if int(sms_count) > sms_activation_count:
+                    error = '일일 문자 인증 횟수가 '+str(sms_activation_count)+'회 초과했습니다.'
 
-        if error is None:
-            for member_info in member_data:
-                context = {
-                    'domain': domain,
-                    'site_name': site_name,
-                    'uid': urlsafe_base64_encode(force_bytes(member_info.user.pk)),
-                    'user': member_info.user,
-                    'token': token_generator.make_token(member_info.user),
-                    'protocol': 'https' if request.is_secure() else 'http',
-                }
-                contents = loader.render_to_string(self.sms_template_name, context)
-                error = func_send_sms_reset_password(phone, contents)
+            if error is None:
+                error = func_send_sms_auth(phone, reset_activation_number)
+
+        elif activation_type == 'email':
+            if email == '':
+                error = '이메일 주소를 입력해주세요.'
+            else:
+                member_list = MemberTb.objects.filter(member_id=member_id, user__email=email, use=USE)
+                if len(member_list) == 0:
+                    error = '이메일 주소가 잘못됐습니다.'
+
+            if error is None:
+                func_send_email_auth(email, reset_activation_number, request)
+
+        else:
+            error = '인증하실 방법을 선택해주세요.'
 
         if error is not None:
             logger.error('error:'+str(error)+':'+str(timezone.now()))
             messages.error(request, error)
 
         return render(request, self.template_name)
+
+
+class ResetActivateConfirmView(View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request):
+        user_activation_code = request.POST.get('user_activation_code')
+        sms_activation_number = request.session.get('reset_activation_number')
+        sms_activation_time = request.session.get('reset_activation_time')
+        reset_activation_type = request.session.get('reset_activation_type', 'phone')
+        now = timezone.now()
+        error = None
+        sms_activation_time = datetime.datetime.strptime(sms_activation_time, '%Y-%m-%d %H:%M:%S.%f')
+
+        time_interval = str(now-sms_activation_time)
+        time_interval_data = time_interval.split('.')[0].split(':')
+        time_interval_minutes = time_interval_data[1]
+        time_interval_seconds = time_interval_data[2]
+
+        limit_time = settings.SMS_ACTIVATION_SECONDS
+        if reset_activation_type == 'email':
+            limit_time = settings.EMAIL_ACTIVATION_SECONDS
+
+        if user_activation_code == sms_activation_number:
+            if(int(time_interval_minutes)*60+int(time_interval_seconds)) > limit_time:
+                error = '입력 시한이 지났습니다.'
+                request.session['reset_activation_check'] = False
+            else:
+                request.session['reset_activation_check'] = True
+        else:
+            request.session['reset_activation_check'] = False
+            error = '인증번호가 일치하지 않습니다.'
+        if error is not None:
+            messages.error(request, error)
+
+        return render(request, self.template_name)
+
 
 
 def func_send_sms_reset_password(phone, contents):
@@ -1865,5 +1967,6 @@ class RegistrationView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(RegistrationView, self).get_context_data(**kwargs)
+        self.request.session['sms_activation_check'] = False
 
         return context

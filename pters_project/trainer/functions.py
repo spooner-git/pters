@@ -541,7 +541,7 @@ def func_get_trainer_setting_list(context, user_id, class_id):
 
 def func_get_ticket_info(class_id, ticket_id, user_id):
     ticket_lecture_data = TicketLectureTb.objects.select_related(
-        'ticket_tb', 'lecture_tb').filter(class_tb_id=class_id, ticket_tb_id=ticket_id,
+        'ticket_tb', 'lecture_tb').filter(ticket_tb_id=ticket_id,
                                           ticket_tb__state_cd=STATE_CD_IN_PROGRESS, ticket_tb__use=USE,
                                           use=USE).order_by('ticket_tb_id', 'lecture_tb_id')
 
@@ -569,7 +569,7 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
 
     if ticket_tb is None:
         try:
-            ticket_tb = TicketTb.objects.get(class_tb_id=class_id, ticket_id=ticket_id, use=USE)
+            ticket_tb = TicketTb.objects.get(ticket_id=ticket_id, use=USE)
         except ObjectDoesNotExist:
             ticket_tb = None
 

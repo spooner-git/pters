@@ -38,7 +38,7 @@
         <input type="hidden" name="sex" id="id_sns_sex">
     </form>
 
-    <form action="{% url 'login:add_old_member_sns_info' %}" id="old-member-sns-form" method="post">
+    <form action="{% url 'login:add_old_social_member_info' %}" id="old-member-sns-form" method="post">
         {% csrf_token %}
         <input type="hidden" name="username" id="id_sns_username2">
         <input type="hidden" name="email" id="id_sns_email2">
@@ -122,7 +122,7 @@
 						return;
 					}
 
-                    check_sns_member_info();
+                    check_social_member_info();
 
 {#					window.location.replace("http://" + window.location.hostname + ( (location.port==""||location.port==undefined)?"":":" + location.port) + "/sample/main.html");#}
 				} else {
@@ -132,11 +132,11 @@
 			});
 		});
 
-        function check_sns_member_info(){
+        function check_social_member_info(){
             var $form = $('#add-member-id-form');
             var serializeArray = $form.serializeArray();
             $.ajax({
-                url:'/login/check_sns_member_info/',
+                url:'/login/check_social_member_info/',
                 type:'GET',
                 data:serializeArray,
                 dataType : 'html',
@@ -147,12 +147,12 @@
                 //통신성공시 처리
                 success:function(data){
                     var jsondata = JSON.parse(data);
-                    var id_check_message = jsondata.id_check_result;
-                    var id_username = jsondata.id_username;
-                    if(id_check_message == '0'){
+                    var social_check = jsondata.social_check;
+                    var id_username = jsondata.username;
+                    if(social_check == '0'){
                         console.log('회원 아님');
                         document.getElementById('new-member-sns-form').submit();
-                    }else if(id_check_message == '1'){
+                    }else if(social_check == '1'){
                         console.log('SNS 회원');
                         $('#id_username').attr('value', id_username);
                         $('#id_social_login_check').attr('value', '1');

@@ -5,10 +5,6 @@
 
 $(document).ready(function() {
 
-    $('#id_username').focusout(function(){
-        check_username($(this).val());
-    });
-
 });
 
 function check_group_select(group_type) {
@@ -134,10 +130,10 @@ function password_check(event){
     let password_2 = document.getElementById('id_password_re').value;
     if(password_1 == password_2){
         $('#id_password_re_default_confirm').css('color', 'green');
+        event.target.attributes['data-valid'].value = 'true';
     }else{
         $('#id_password_re_default_confirm').css('color', '#fe4e65');
     }
-    event.target.attributes['data-valid'].value = 'true';
 
 }
 
@@ -175,31 +171,31 @@ function check_username(data){
     });
 }
 
-function check_sms_auth_button(event){
-    if(event.target.value.length>10){
-        let id_auth_button = $('#id_auth_button');
-        id_auth_button.css({'color':'#fe4e65', 'border':'solid 1px #fe4e65', 'pointer-events':'auto'});
-        // id_auth_button.attr('disabled', false);
+function check_sms_activation_button(event){
+    if(event.target.value.length>9){
+        let id_activation_button = $('#id_activation_button');
+        id_activation_button.css({'color':'#fe4e65', 'border':'solid 1px #fe4e65', 'pointer-events':'auto'});
+        // id_activation_button.attr('disabled', false);
         event.target.attributes['data-valid'].value = 'true';
     }
     else{
-        let id_auth_button = $('#id_auth_button');
-        id_auth_button.css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
-        // id_auth_button.attr('disabled', true);
+        let id_activation_button = $('#id_activation_button');
+        id_activation_button.css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+        // id_activation_button.attr('disabled', true);
         event.target.attributes['data-valid'].value = 'false';
     }
 }
 
 let activation_timer = 180;
-var auth_time_interval;
+var activation_time_interval;
 function activate_sms(){
     // 인증 버튼 활성화
-    $('#id_activation_button').css({'color':'#fe4e65', 'border':'solid 1px #fe4e65', 'pointer-events':'auto'});
+    $('#id_activation_confirm_button').css({'color':'#fe4e65', 'border':'solid 1px #fe4e65', 'pointer-events':'auto'});
 
     // 인증 관련 메시지 초기화
-    $('#id_auth_button').text('재인증').css({'color':'#fe4e65', 'border':'solid 1px #fe4e65'});
+    $('#id_activation_button').text('재인증').css({'color':'#fe4e65', 'border':'solid 1px #fe4e65'});
     $('#id_activation_confirm').text(" ").css({'display':'none'});
-    $('#auth_timer').text('03:00').css({'display':'inline-block'});
+    $('#activation_timer').text('03:00').css({'display':'inline-block'});
     activation_timer = 180;
 
     // 인증 메시지 발송
@@ -220,19 +216,19 @@ function activate_sms(){
         success:function(data){
             let jsondata = JSON.parse(data);
             if(jsondata.messageArray.length > 0){
-                $('#id_auth_button').text('인증').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
-                $('#id_activation_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
-                $('#auth_timer').text("");
+                $('#id_activation_button').text('인증').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+                $('#id_activation_confirm_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+                $('#activation_timer').text("");
                 alert(jsondata.messageArray);
             }else{
                 alert('인증번호가 발송되었습니다.');
-                auth_time_interval = setInterval(function(){
+                activation_time_interval = setInterval(function(){
                     activation_timer--;
                     // 시간 종료시 처리
                     if(activation_timer<0){
                         $('#id_activation_confirm').text('인증 시간이 초과되었습니다.').css({'display':'block'}).css('color', '#fe4e65');
-                        $('#id_activation_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
-                        clearInterval(auth_time_interval);
+                        $('#id_activation_confirm_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+                        clearInterval(activation_time_interval);
                     }else{
                         // 시간 표시
                         let minutes = parseInt(activation_timer/60);
@@ -240,7 +236,7 @@ function activate_sms(){
                         if(seconds<10){
                             seconds = '0'+seconds;
                         }
-                        $('#auth_timer').text(minutes+':'+seconds);
+                        $('#activation_timer').text(minutes+':'+seconds);
                     }
                 }, 1000);
             }
@@ -277,13 +273,13 @@ function check_activation_code(){
                 $('#id_activation_confirm').text(jsondata.messageArray).css({'display':'block','color':'#fe4e65'});
                 $id_activation_code.attr('data-valid', 'false');
             }else{
-                clearInterval(auth_time_interval);
-                $('#id_auth_button').text('인증').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
-                $('#id_activation_confirm').text('인증 완료').css({'display':'block','color':'green'});
-                $('#id_activation_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+                clearInterval(activation_time_interval);
+                $('#id_activation_button').text('인증').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+                $('#id_activation_confirm').text('확인').css({'display':'block','color':'green'});
+                $('#id_activation_confirm_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
                 $id_activation_code.attr('data-valid', 'true');
-                $('#auth_timer').text("");
-                alert('인증이 완료되었습니다.');
+                $('#activation_timer').text("");
+                alert('확인되었습니다.');
             }
         },
         complete:function(){
