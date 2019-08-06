@@ -615,6 +615,7 @@ class TimeSelector{
             data:{
                 zone:null, hour:null, minute:null
             },
+            min:null,
             callback_when_set : ()=>{
                 return false;
             }
@@ -782,6 +783,11 @@ class TimeSelector{
                 self.zone_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
                 $(`${self.target.install} li[data-zpos="${Math.abs(self.zone_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
                 $(`${self.target.install} li[data-zpos="${Math.abs(self.zone_scroll.y)}"]`).css('color', '#1e1e1e');
+                if(self.check_minimum_time() == false){
+                    document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
+                }else{
+                    document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
+                }
             }
         });
 
@@ -809,6 +815,12 @@ class TimeSelector{
                 self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
                 $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
                 $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+
+                if(self.check_minimum_time() == false){
+                    document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
+                }else{
+                    document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
+                }
             }
         });
 
@@ -836,6 +848,11 @@ class TimeSelector{
                 $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
                 $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).css('color', '#1e1e1e');
                 
+                if(self.check_minimum_time() == false){
+                    document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
+                }else{
+                    document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
+                }
             }
         });
 
@@ -895,9 +912,7 @@ class TimeSelector{
                                     </div>
                                     <span class="time_selector_title">${this.option.title}</span>
                                     <div style="float:right;margin-right:5px;color:#fe4e65;">
-                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', null, ()=>{this.store = this.get_selected_data();
-                                                                                                                    this.option.callback_when_set(this.store); 
-                                                                                                                    layer_popup.close_layer_popup(); })}
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', null, ()=>{this.upper_right_button();})}
                                     </div>
                                 </div>
                                 <div class="time_selector_zone_wrap select_wrapper"></div>
@@ -907,6 +922,37 @@ class TimeSelector{
                             </div>`
         };
     }
+
+    check_minimum_time(){
+        if(this.option.min != null){
+            let selected_time_data_form = TimeRobot.to_data(this.get_selected_data().data.zone, this.get_selected_data().data.hour, this.get_selected_data().data.minute).complete;
+            let min_time_data_form = TimeRobot.to_data(this.option.min.zone, this.option.min.hour, this.option.min.minute).complete;
+            if(selected_time_data_form == '0:0'){
+                selected_time_data_form = '24:00';
+            }
+            console.log(selected_time_data_form, min_time_data_form, TimeRobot.compare(selected_time_data_form, min_time_data_form))
+
+            let time_compare = TimeRobot.compare(selected_time_data_form, min_time_data_form); // > 일경우 true;
+            if(time_compare == false){
+                // show_error_message('종료시간은 시작시간보다 작을 수 없습니다.');
+                return false;
+            }
+        }
+        return true;
+    }
+
+    upper_right_button(){
+        let minimum_check = this.check_minimum_time();
+        if(minimum_check == false){
+            show_error_message('종료시간은 시작시간보다 작을 수 없습니다.');
+            return false;
+        }
+
+        this.store = this.get_selected_data();
+        this.option.callback_when_set(this.store); 
+        layer_popup.close_layer_popup();
+    }
+
 }
 
 //싱글 스피너 범용 (Data 받는다)

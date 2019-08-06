@@ -184,8 +184,55 @@ class TimeRobot{
         return result;
     }
 
-    static compare(object1, object2){
+    static compare(time_data_form1, time_data_form2){
 
+        let hour1 = Number(time_data_form1.split(':')[0]);
+        let minute1 = Number(time_data_form1.split(':')[1]);
+        let hour2 = Number(time_data_form2.split(':')[0]);
+        let minute2 = Number(time_data_form2.split(':')[1]);
+
+        if(hour1 < hour2){
+            return false;
+        }
+
+        if(hour1 > hour2){
+            return true
+        }
+
+        if(hour1 == hour2){
+            if(minute1 >= minute2){
+                return true
+            }else{
+                return false;
+            }
+        }
+    }
+
+    static compare_by_zone(zone_form_data1, zone_form_data2){
+        let time_data_form1 = TimeRobot.to_data(zone_form_data1.zone, zone_form_data1.hour, zone_form_data1.minute).complete;
+        let time_data_form2 = TimeRobot.to_data(zone_form_data2.zone, zone_form_data2.hour, zone_form_data2.minute).complete;
+        
+        let hour1 = Number(time_data_form1.split(':')[0]);
+        let minute1 = Number(time_data_form1.split(':')[1]);
+        let hour2 = Number(time_data_form2.split(':')[0]);
+        let minute2 = Number(time_data_form2.split(':')[1]);
+
+
+        if(hour1 < hour2){
+            return false;
+        }
+
+        if(hour1 > hour2){
+            return true
+        }
+
+        if(hour1 == hour2){
+            if(minute1 >= minute2){
+                return true
+            }else{
+                return false;
+            }
+        }
     }
 
     static add_time(hour, minute, plus_hour, plus_minute){
@@ -225,7 +272,7 @@ class TimeRobot{
             }
         }
 
-        return {hour:resultHour, minute:resultMin}
+        return {hour:resultHour, minute:resultMin};
     }
 }
 

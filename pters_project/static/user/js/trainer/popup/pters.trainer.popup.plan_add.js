@@ -315,6 +315,13 @@ class Plan_add{
                 time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시간 선택', data:{zone:zone, hour:hour, minute:minute}, 
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.start_time = object;
+                                                                                                    if(this.data.end_time != null){
+                                                                                                        let compare = TimeRobot.compare_by_zone(object.data, TimeRobot.to_zone(this.data.end_time.split(':')[0],this.data.end_time.split(':')[1]));
+                                                                                                        console.log(compare, object.data, TimeRobot.to_zone(this.data.end_time.split(':')[0],this.data.end_time.split(':')[1]))
+                                                                                                        if(compare == true){
+                                                                                                            this.end_time = object;
+                                                                                                        }
+                                                                                                    }
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
                                                                                                 }});
             });
@@ -330,14 +337,25 @@ class Plan_add{
         let icon_r_text = "";
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ //data : 직전 셋팅값
             //행을 클릭했을때 실행할 내용
+            if(this.data.start_time == null){
+                show_error_message('시작시간을 먼저 선택해주세요');
+                return false;
+            }
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
-
                 //data_to_send의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
-                let zone = this.data.end_time == null ? this.times.current_zone : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).zone;
-                let hour = this.data.end_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).hour;
-                let minute = this.data.end_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).minute;
-                
-                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시간 선택', data:{zone:zone, hour:hour, minute:minute}, 
+                let zone = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).zone;
+                let hour = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
+                let minute = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
+
+                //유저가 선택할 수 있는 최저 시간을 셋팅한다. 이시간보다 작은값을 선택하려면 메세지를 띄우기 위함
+                let time_min = TimeRobot.add_time(TimeRobot.to_data(zone, hour, minute).hour, TimeRobot.to_data(zone, hour, minute).minute, 0, 5);
+                let time_min_type_zone = TimeRobot.to_zone(time_min.hour, time_min.minute);
+                let zone_min = time_min_type_zone.zone;
+                let zone_hour = time_min_type_zone.hour;
+                let zone_minute = time_min_type_zone.minute;
+
+                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시간 선택', 
+                                                                                                data:{zone:zone_min, hour:zone_hour, minute:zone_minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.end_time = object;
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
