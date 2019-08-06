@@ -249,9 +249,9 @@ class Lecture_add{
         let data = {
                     "name":this.data.name,
                     "member_num":this.data.capacity,
-                    "ing_color_cd":this.data.color_bg,
+                    "ing_color_cd":this.data.color_bg[0],
                     "end_color_cd":"",
-                    "ing_font_color_cd":this.data.color_font,
+                    "ing_font_color_cd":this.data.color_font[0],
                     "end_font_color_cd":""
         };
 
