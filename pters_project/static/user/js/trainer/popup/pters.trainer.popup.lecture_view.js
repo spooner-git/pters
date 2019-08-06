@@ -195,7 +195,6 @@ class Lecture_view{
         return html;
     }
 
-
     dom_row_capacity_view(){
         let style = null;
         let html = CComponent.create_input_number_row ('lecture_capacity_view', this.data.capacity == null ? '' : '정원 '+this.data.capacity+'명', '정원', '/static/common/icon/icon_member.png', HIDE, style, false, (input_data)=>{

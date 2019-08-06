@@ -134,7 +134,7 @@ class Member {
             let remain_date = Math.round((new Date(end_date).getTime() - new Date().getTime()) / (1000*60*60*24));
             let remain_alert_text = "";
             if(remain_date < 0){
-                remain_alert_text = " 지남";
+                remain_alert_text = " <span style='color:#fe4e65;'>지남</span>";
                 remain_date = Math.abs(remain_date);
             }
 

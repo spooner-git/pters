@@ -147,7 +147,7 @@ class Lecture {
                                     <div class="lecture_member_number">${list_status_type == "ing" ? lecture_member_number+' 명' : ""}</div>
                                 </div>
                                 <div class="lecture_note">
-                                    정원 - ${lecture_max_member_number}명 / ${lecture_note}\
+                                    정원 - ${lecture_max_member_number}명
                                 </div>
                             </div>
                         </article>`;
