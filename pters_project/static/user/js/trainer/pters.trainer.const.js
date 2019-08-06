@@ -105,6 +105,8 @@ const POPUP_ADDRESS_TICKET_EDIT = 'popup_ticket_edit';
 
 const POPUP_MEMBER_SCHEDULE_HISTORY = 'popup_member_schedule_history';
 const POPUP_MEMBER_TICKET_HISTORY = 'popup_member_ticket_history';
+
+const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
 // 풀페이지 팝업
 
 // User Input 팝업

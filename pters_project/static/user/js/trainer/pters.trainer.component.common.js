@@ -361,6 +361,53 @@ class CComponent{
         return html;
     }
 
+    //출석 체크 팝업에 사용되는 행
+    static select_attend_row (checked_absence, checked_attend, location, member_id, member_name, onclick){
+        let html = `
+                    <li class="select_attend_row sar_${location}" id="sar_${member_id}">
+                        <div class="obj_table_raw">
+                            <div class="cell_member_name">
+                                <span>${member_name}</span>
+                            </div>
+                            <div class="cell_attend_select">
+                                <div id="${member_id}_absence">
+                                    <span>결석</span>
+                                    ${checked_absence == 1 
+                                        ? `<div class="pters_checkbox checkbox_selected"><div class="checkbox_selected_inner"></div></div>`
+                                        : `<div class="pters_checkbox"></div>`
+                                    }
+                                </div>
+                                <div id="${member_id}_attend">
+                                    <span>출석</span>
+                                    ${checked_attend == 1 
+                                        ? `<div class="pters_checkbox checkbox_selected"><div class="checkbox_selected_inner"></div></div>`
+                                        : `<div class="pters_checkbox"></div>`
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    `;
+
+        $(document).off('click', `#${member_id}_absence`).on('click', `#${member_id}_absence`, function(){
+            if($(this).find('.pters_checkbox').hasClass('checkbox_selected')){
+                onclick('uncheck_absence');
+            }else{
+                onclick('check_absence');
+            }
+        });
+
+        $(document).off('click', `#${member_id}_attend`).on('click', `#${member_id}_attend`, function(){
+            if($(this).find('.pters_checkbox').hasClass('checkbox_selected')){
+                onclick('uncheck_attend');
+            }else{
+                onclick('check_attend');
+            }
+        });
+
+        return html;
+    }
+
     //회원의 일정 이력에 사용되는 행
     static schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo){
         let html = `<li class="schedule_history_row" id="schedule_history_row_${schedule_id}">

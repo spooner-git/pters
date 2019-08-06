@@ -131,37 +131,39 @@ class Ticket{
             let ticket_lectures_included_name = data.ticket_lecture_list;
             let ticket_lectures_state_cd = data.ticket_lecture_state_cd_list;
             let ticket_lectures_included_name_html = [];
+            let ticket_lectures_color = data.ticket_lecture_ing_color_cd_list;
             let length_lecture = ticket_lectures_included_name.length;
             for(let j=0; j<length_lecture; j++){
                 let html;
                 if(ticket_lectures_state_cd[j] == STATE_END_PROGRESS){
-                    html = `<div style="color:#cccccc;text-decoration:line-through;">${ticket_lectures_included_name[j]}</div>`;
+                    html = `<div style="color:#cccccc;text-decoration:line-through;">
+                                <div class="ticket_lecture_color" style="background-color:${list_status_type == "ing" ? ticket_lectures_color[j]: '#a3a0a0'}"></div>
+                                ${ticket_lectures_included_name[j]}
+                            </div>`;
                 }else if(ticket_lectures_state_cd[j] == STATE_IN_PROGRESS){
-                    html = `<div>${ticket_lectures_included_name[j]}</div>`;
+                    html = `<div>
+                                <div class="ticket_lecture_color" style="background-color:${list_status_type == "ing" ? ticket_lectures_color[j]: '#a3a0a0'}"></div>
+                                ${ticket_lectures_included_name[j]}
+                            </div>`;
                 }
                 ticket_lectures_included_name_html.push(html);
             }
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'ticket_id':${ticket_id}}, ()=>{
                 ticket_view_popup = new Ticket_view('.popup_ticket_view', ${ticket_id}, 'ticket_view_popup');});`;
-            let html = `<article class="ticket_wrapper" data-ticketid="${ticket_id}" onclick="${onclick}" style="color:${list_status_type == "ing" ? "" : '#a3a0a0'}">
+            let html = `<article class="ticket_wrapper" data-ticketid="${ticket_id}" onclick="${onclick}" style="opacity:${list_status_type == "ing" ? "1" : '0.6'}">
                             <div class="ticket_data_u">
-                                <div class="ticket_name">${ticket_name}</div>
-                                <div class="ticket_note">${ticket_note}</div>
-                            </div>
-                            <div class="ticket_data_b">
-                                <div class="ticket_member_number_wrap">
-                                    <div class="ticket_data_title">회원</div>
+                                <div class="ticket_name">
+                                    ${ticket_name}
                                     <div class="ticket_member_number">
                                         ${list_status_type == "ing" ? ticket_member_number : ticket_end_member_number}명
                                     </div>
                                 </div>
-                                
-                                <div class="ticket_lectures_wrap">
-                                    <div class="ticket_data_title">포함된 수업</div>
-                                    <div class="ticket_lectures">
-                                        ${ticket_lectures_included_name_html.join('')}
-                                    </div>
+                                <div class="ticket_note">${ticket_note}</div>
+                            </div>
+                            <div class="ticket_data_b">
+                                <div class="ticket_lectures">
+                                    ${ticket_lectures_included_name_html.join('')}
                                 </div>
                             </div>
                         </article>`;
@@ -173,15 +175,18 @@ class Ticket{
 
 
     //리스트 타입을 스위치
-    switch_type(){
+    switch_type(type){
         this.received_data_cache = null;
-        switch(this.list_status_type){
+        if(type == this.list_status_type){
+            return false;
+        }
+        switch(type){
             case "ing":
-                this.init("end");
+                this.init("ing");
             break;
 
             case "end":
-                this.init("ing");
+                this.init("end");
             break;
         }
     }
@@ -191,12 +196,11 @@ class Ticket{
             {    "ticket_upper_box":`   <div class="ticket_upper_box">
                                             <div style="display:inline-block;width:200px;">
                                                 <div style="display:inline-block;width:200px;">
-                                                    <span style="font-size:20px;font-weight:bold;">수강권 ${this.data_length}</span>
+                                                    <span style="font-size:23px;font-weight:bold;color:#3b3d3d">수강권 <span style="color:#fe4e65;">${this.data_length}</span></span>
                                                 </div>
                                                 
                                             </div>
                                             <div class="ticket_tools_wrap">
-                                                <div class="swap_list" onclick="${this.instance}.switch_type();"></div>
                                                 <div class="search_ticket"></div>
                                                 <div class="add_ticket" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
                                                     ticket_add_popup = new Ticket_add('.popup_ticket_add', null, 'ticket_add_popup');});"></div>
@@ -204,13 +208,13 @@ class Ticket{
                                         </div>
                                         <div class="ticket_bottom_tools_wrap">
                                             <div class="list_type_tab_wrap">
-                                                <div onclick="${this.instance}.switch_type();" class="${this.list_status_type == "ing" ? "tab_selected" : ""}">활성화</div>
-                                                <div onclick="${this.instance}.switch_type();" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화</div>
+                                                <div onclick="${this.instance}.switch_type('ing');" class="${this.list_status_type == "ing" ? "tab_selected": ""}">활성화 ${this.list_status_type == "ing" ? "<div class='tab_selected_bar'></div>" : ""}</div>
+                                                <div onclick="${this.instance}.switch_type('end');" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화 ${this.list_status_type == "end" ? "<div class='tab_selected_bar'></div>" : ""}</div>
                                             </div>
                                         </div>
                                             `
                                 ,
-                "initial_page":`<div id="${this.subtargetHTML}"><div id="ticket_display_panel"></div><div id="ticket_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div></div>`
+                "initial_page":`<div id="${this.subtargetHTML}"><div id="ticket_display_panel"></div><div id="ticket_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px;padding:0 16px;box-sizing:border-box;"></div></div>`
             }
         );
     }

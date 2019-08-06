@@ -3,11 +3,16 @@
  html{
      font-family: 'Noto Sans KR', sans-serif !important;
      box-sizing: border-box !important;
+     color: #1f1d1e;
+     letter-spacing: -0.5px;
  /* background-color: #f7f5f6;*/
  }
 
  html, body{
-    overscroll-behavior-y: contain; 
+     overflow: hidden;
+     margin: 0;
+    /* overscroll-behavior-y: contain;  */
+
     /* position: fixed; 
     height: 100%;
     width: 100%;

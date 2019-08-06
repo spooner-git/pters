@@ -10,6 +10,13 @@
 	position: sticky;
 	position: -webkit-sticky;
 	top: 0;
+	padding: 20px 16px 0 50px;
+	box-sizing: border-box
+}
+
+.popup_plan_add .plan_add_upper_box{
+	padding-bottom:8px;
+	box-sizing:border-box;
 }
 
 .popup_plan_add .popup_content{

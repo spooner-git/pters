@@ -17,12 +17,15 @@ class Plan_view{
 
         this.schedule_id = data_from_external.schedule_id;
         this.selected_date = data_from_external.date;
+        this.received_data;
         this.data = {
             lecture_id: [],
             lecture_name: [],
             lecture_max_num: [],
             member_id: [],
             member_name:[],
+            member_schedule_id:[],
+            member_schedule_state:[],
             date: null,
             date_text: null,
             start_time: null,
@@ -58,6 +61,15 @@ class Plan_view{
 
     get member (){
         return {id:this.data.member_id, name:this.data.member_name};
+    }
+
+    set member_schedule (data){
+        this.data.member_schedule_id = data.schedule_id;
+        this.data.member_schedule_state = data.schedule_state;
+    }
+
+    get member_schedule (){
+        return {schedule_id:this.data.member_schedule_id, schedule_state: this.data.member_schedule_state};
     }
 
     set date (data){
@@ -111,6 +123,9 @@ class Plan_view{
         this.data.lecture_name = data.schedule_info[0].lecture_name;
         this.data.member_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_id}`;});
         this.data.member_name = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_name}`;});
+        this.data.member_schedule_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.schedule_id}`;});
+        this.data.member_schedule_state = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.state_cd}`;});
+
         if(data.schedule_info[0].schedule_type == 1){
             this.data.member_name = data.schedule_info[0].member_name;
         }
@@ -138,7 +153,10 @@ class Plan_view{
     render(){
         let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();plan_view_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="plan_view_popup.upper_right_menu();"></span>`;
+        let top_right = `<span class="icon_right">
+                            <img src="/static/common/icon/icon_delete.png" class="obj_icon_basic" onclick="plan_view_popup.upper_right_menu(0);">
+                            <img src="/static/common/icon/icon_done.png" class="obj_icon_basic" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};margin-left:20px">
+                        </span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;padding:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -227,9 +245,19 @@ class Plan_view{
         for(let i=0; i<length; i++){
             let member_id = this.data.member_id[i];
             let member_name = this.data.member_name[i];
-            let icon_button_style = null;
+            let icon_button_style = {"padding":"3px 1%", "width":"30%", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500"};
+            let state = this.data.member_schedule_state[i];
+            let state_icon_url;
+            if(state == SCHEDULE_ABSENCE){
+                state_icon_url = '/static/common/icon/close_black.png';
+            }else if(state == SCHEDULE_FINISH){
+                state_icon_url = '/static/common/icon/icon_done.png';
+            }else if(state == SCHEDULE_NOT_FINISH){
+                state_icon_url = NONE;
+            }
+
             html_to_join.push(
-                CComponent.icon_button(member_id, member_name, null, icon_button_style, ()=>{
+                CComponent.icon_button(member_id, member_name, state_icon_url, icon_button_style, ()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/windowHeight), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
                         member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
                         //회원 간단 정보 팝업 열기
@@ -246,7 +274,7 @@ class Plan_view{
         let date_text = this.data.date_text == null ? '날짜*' : this.data.date_text;
         let html = CComponent.create_row('select_date', date_text, '/static/common/icon/icon_cal.png', HIDE, ()=>{ 
             //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DATE_SELECTOR, 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DATE_SELECTOR, 100*305/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
                 let year = this.data.date == null ? this.dates.current_year : this.data.date.year; 
@@ -324,28 +352,50 @@ class Plan_view{
 
     request_data (callback){
         Plan_func.read_plan(this.schedule_id, (data)=>{
+            console.log(data)
             this.set_initial_data(data); // 초기값을 미리 셋팅한다.
             callback(data);
         });
     }
 
-    upper_right_menu(){
-        let user_option = {
-            cancel:{text:"일정 취소", callback:()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
-                            Plan_func.delete({"schedule_id":this.schedule_id}, ()=>{
-                                calendar.init();layer_popup.all_close_layer_popup();
-                            });
-                            
-                        });
-                    }
+    upper_right_menu(number){
+        let user_option = [
+            ()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
+                    Plan_func.delete({"schedule_id":this.schedule_id}, ()=>{
+                        calendar.init();layer_popup.all_close_layer_popup();
+                    });
+                });
             },
-            check:{text:"출석 체크", callback:()=>{alert('출석 체크');}
-            }
-        };
-        
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
-            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
-        });
+            ()=>{
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ATTEND, 100, POPUP_FROM_RIGHT, null, ()=>{
+                    member_attend = new Member_attend('.popup_member_attend', this.schedule_id, (set_data)=>{
+                        //출석체크 팝업에서 완료버튼을 눌렀을때 할 행동
+                        if(this.data.schedule_type == 1){
+                            let state_cd = set_data[null].state_cd;
+                            let send_data = {"schedule_id":this.schedule_id, "state_cd":state_cd};
+                            Plan_func.status(send_data, ()=>{
+                                this.init();
+                                calendar.init();
+                            });
+                        }
+                        for(let member in set_data){
+                            let member_id = member;
+                            let state_cd = set_data[member].state_cd;
+                            let member_id_index = this.data.member_id.indexOf(member_id);
+                            if(this.data.member_schedule_state[member_id_index] != state_cd){
+                                let send_data = {"schedule_id":this.data.member_schedule_id[member_id_index], "state_cd":state_cd};
+                                Plan_func.status(send_data, ()=>{
+                                    this.init();
+                                    calendar.init();
+                                });
+                            }
+                        }
+                    });
+                });
+            }    
+        ];
+
+        user_option[number]();
     }
 
     send_data (){

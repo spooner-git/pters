@@ -140,16 +140,14 @@ class Lecture {
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'lecture_id':${lecture_id}}, ()=>{
                 lecture_view_popup = new Lecture_view('.popup_lecture_view', ${lecture_id}, 'lecture_view_popup');});`;
             let html = `<article class="lecture_wrapper" data-lectureid="${lecture_id}" onclick="${onclick}" style="color:${list_status_type == "ing" ? "" : '#a3a0a0'}">
-                            <div class="lecture_data_l">
-                                <div class="lecture_tag_body" style="background:${lecture_ing_bg_color}"></div>
-                                <div class="lecture_tag_head" style="border-left-color:${lecture_ing_bg_color}"></div>
-                            </div>
                             <div class="lecture_data_c">
-                                <div class="lecture_name">${lecture_name}</div>
-                                <div class="lecture_note">정원 - ${lecture_max_member_number}명 / ${lecture_note}</div>
-                            </div>
-                            <div class="lecture_data_r">
-                                <div class="lecture_member_number">${list_status_type == "ing" ? lecture_member_number+'명' : ""}
+                                <div class="lecture_name">
+                                    <div class="lecture_tag" style="background:${list_status_type == "ing" ? lecture_ing_bg_color : "#a3a0a0"}"></div>
+                                    ${lecture_name} 
+                                    <div class="lecture_member_number">${list_status_type == "ing" ? lecture_member_number+' 명' : ""}</div>
+                                </div>
+                                <div class="lecture_note">
+                                    정원 - ${lecture_max_member_number}명 / ${lecture_note}\
                                 </div>
                             </div>
                         </article>`;
@@ -161,15 +159,18 @@ class Lecture {
 
 
     //리스트 타입을 스위치
-    switch_type (){
+    switch_type (type){
         this.received_data_cache = null;
-        switch(this.list_status_type){
+        if(type == this.list_status_type){
+            return false;
+        }
+        switch(type){
         case "ing":
-            this.init("end");
+            this.init("ing");
             break;
 
         case "end":
-            this.init("ing");
+            this.init("end");
             break;
         }
     }
@@ -180,7 +181,7 @@ class Lecture {
                 lecture_upper_box:`   <div class="lecture_upper_box">
                                             <div style="display:inline-block;width:200px;">
                                                 <div style="display:inline-block;width:200px;">
-                                                    <span style="font-size:20px;font-weight:bold;">수업 ${this.data_length}</span>
+                                                    <span style="font-size:23px;font-weight:bold;color:#3b3d3d">수업 <span style="color:#fe4e65;">${this.data_length}</span></span>
                                                 </div>
                                                 
                                             </div>
@@ -193,13 +194,13 @@ class Lecture {
                                         </div>
                                         <div class="lecture_bottom_tools_wrap">
                                             <div class="list_type_tab_wrap">
-                                                <div onclick="${this.instance}.switch_type();" class="${this.list_status_type == "ing" ? "tab_selected" : ""}">활성화</div>
-                                                <div onclick="${this.instance}.switch_type();" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화</div>
+                                                <div onclick="${this.instance}.switch_type('ing');" class="${this.list_status_type == "ing" ? "tab_selected": ""}">활성화 ${this.list_status_type == "ing" ? "<div class='tab_selected_bar'></div>" : ""}</div>
+                                                <div onclick="${this.instance}.switch_type('end');" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화 ${this.list_status_type == "end" ? "<div class='tab_selected_bar'></div>" : ""}</div>
                                             </div>
                                         </div>
                                             `
                 ,
-                initial_page:`<div id="${this.subtargetHTML}"><div id="lecture_display_panel"></div><div id="lecture_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div></div>`
+                initial_page:`<div id="${this.subtargetHTML}"><div id="lecture_display_panel"></div><div id="lecture_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px;padding-top:12px;"></div></div>`
             }
         );
     }
