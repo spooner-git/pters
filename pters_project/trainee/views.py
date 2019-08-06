@@ -32,7 +32,7 @@ from .functions import func_get_class_member_ticket_count, func_get_member_ticke
     func_get_member_ticket_connection_list, func_get_trainee_next_schedule_by_class_id,\
     func_get_trainee_select_schedule, func_get_trainee_ing_member_ticket_list, func_check_select_date_reserve_setting, \
     func_get_trainee_ticket_list, func_get_class_list_only_view
-from .models import MemberTicketTb, MemberMemberTicketTb
+from .models import MemberTicketTb
 
 logger = logging.getLogger(__name__)
 
@@ -105,7 +105,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                         member_ticket_id_select = class_member_ticket_info.member_ticket_tb_id
                     class_counter += 1
 
-            if class_counter > 1 or member_ticket_np_counter > 0:
+            if class_counter > 1:
                 # self.url = '/trainee/member_ticket_select/'
                 request.session['trainer_id'] = class_tb_selected.member_id
                 request.session['class_id'] = class_tb_selected.class_id
@@ -116,15 +116,16 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 request.session['class_center_name'] = class_tb_selected.get_center_name()
                 self.url = '/trainee/trainee_main/'
             else:
-                # self.url = '/trainee/cal_month/'
-                self.url = '/trainee/trainee_main/'
-                request.session['trainer_id'] = class_tb_comp.member_id
-                request.session['class_id'] = class_tb_comp.class_id
-                request.session['member_ticket_id'] = member_ticket_id_select
-                request.session['class_hour'] = class_tb_comp.class_hour
-                request.session['class_type_code'] = class_tb_comp.subject_cd
-                request.session['program_title'] = class_tb_comp.get_class_type_cd_name()
-                request.session['class_center_name'] = class_tb_comp.get_center_name()
+                if member_ticket_np_counter == 0:
+                    # self.url = '/trainee/cal_month/'
+                    self.url = '/trainee/trainee_main/'
+                    request.session['trainer_id'] = class_tb_comp.member_id
+                    request.session['class_id'] = class_tb_comp.class_id
+                    request.session['member_ticket_id'] = member_ticket_id_select
+                    request.session['class_hour'] = class_tb_comp.class_hour
+                    request.session['class_type_code'] = class_tb_comp.subject_cd
+                    request.session['program_title'] = class_tb_comp.get_class_type_cd_name()
+                    request.session['class_center_name'] = class_tb_comp.get_center_name()
 
         return super(IndexView, self).get(request, **kwargs)
 
@@ -437,24 +438,18 @@ def add_trainee_schedule_logic(request):
     if error is None:
         if member_ticket_id is None:
             error = '예약 가능 횟수를 확인해주세요.'
-        else:
-            try:
-                test_member_member_ticket = MemberMemberTicketTb.objects.get(member_ticket_tb_id=member_ticket_id,
-                                                                             use=USE)
-            except ObjectDoesNotExist:
-                test_member_member_ticket = None
-
-            if test_member_member_ticket is not None:
-                if test_member_member_ticket.auth_cd == AUTH_TYPE_WAIT:
-                    error = ' 알림 -> 프로그램 연결 허용 선택후 이용 가능합니다.'
-                elif test_member_member_ticket.auth_cd == AUTH_TYPE_DELETE:
-                    error = '강사님에게 프로그램 연결을 요청하세요.'
 
     if error is None:
         try:
             member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
+
+        if error is None:
+            if member_ticket_info.member_auth_cd == AUTH_TYPE_WAIT:
+                error = ' 알림 -> 프로그램 연결 허용 선택후 이용 가능합니다.'
+            elif member_ticket_info.member_auth_cd == AUTH_TYPE_DELETE:
+                error = '강사님에게 프로그램 연결을 요청하세요.'
 
         if error is None:
             if start_date.date() > member_ticket_info.end_date:
@@ -809,14 +804,8 @@ def program_select_logic(request):
             ).filter(class_tb_id=class_id, member_ticket_tb__member_id=request.user.id,
                      member_ticket_tb__member_auth_cd=AUTH_TYPE_WAIT, use=USE).order_by('-member_ticket_tb__start_date')
             for member_ticket_info in member_ticket_data:
-                try:
-                    member_member_ticket = MemberMemberTicketTb.objects.get(
-                        member_ticket_tb_id=member_ticket_info.member_ticket_id, member_id=request.user.id)
-                    member_member_ticket.auth_cd = AUTH_TYPE_DELETE
-                    member_member_ticket.save()
-                except ObjectDoesNotExist:
-                    error = None
-
+                member_ticket_info.member_ticket_tb.member_auth_cd = AUTH_TYPE_DELETE
+                member_ticket_info.member_ticket_tb.save()
             class_info = None
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
@@ -848,13 +837,8 @@ def program_select_logic(request):
                      member_ticket_tb__member_auth_cd=AUTH_TYPE_WAIT,
                      use=USE).order_by('-member_ticket_tb__start_date')
             for member_ticket_info in member_ticket_data:
-                try:
-                    member_member_ticket = MemberMemberTicketTb.objects.get(
-                        member_ticket_tb_id=member_ticket_info.member_ticket_id, member_id=request.user.id)
-                    member_member_ticket.auth_cd = AUTH_TYPE_VIEW
-                    member_member_ticket.save()
-                except ObjectDoesNotExist:
-                    error = None
+                member_ticket_info.member_ticket_tb.member_auth_cd = AUTH_TYPE_VIEW
+                member_ticket_info.member_ticket_tb.save()
 
             class_info = None
             try:
@@ -1133,15 +1117,14 @@ class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         log_data = None
 
         if error is None:
-            member_ticket_data = MemberMemberTicketTb.objects.filter(member_id=request.user.id, auth_cd=AUTH_TYPE_VIEW)
+            member_ticket_data = MemberTicketTb.objects.filter(member_id=request.user.id, member_auth_cd=AUTH_TYPE_VIEW)
             if len(member_ticket_data) > 0:
                 for idx, member_ticket_info in enumerate(member_ticket_data):
-                    member_ticket_tb = member_ticket_info.member_ticket_tb
                     if idx == 0:
-                        log_data = LogTb.objects.filter(member_ticket_tb_id=member_ticket_tb.member_ticket_id,
+                        log_data = LogTb.objects.filter(member_ticket_tb_id=member_ticket_info.member_ticket_id,
                                                         use=USE).order_by('-reg_dt')
                     else:
-                        log_data |= LogTb.objects.filter(member_ticket_tb_id=member_ticket_tb.member_ticket_id,
+                        log_data |= LogTb.objects.filter(member_ticket_tb_id=member_ticket_info.member_ticket_id,
                                                          use=USE).order_by('-reg_dt')
                 log_data.order_by('-reg_dt')
 

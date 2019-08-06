@@ -3,9 +3,8 @@
 
 <head>
 	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>NaverLoginSDK</title>
+	<title>naver login</title>
 </head>
 
 <body>
@@ -28,7 +27,7 @@
         <input type="hidden" name="next_page" value = '{% url 'index' %}'>
     </form>
 
-    <form action="{% url 'login:new_member_sns_info' %}" id="new-member-sns-form" method="post">
+    <form action="{% url 'login:registration_social' %}" id="new-member-sns-form" method="post">
         {% csrf_token %}
         <input type="hidden" name="username" id="id_sns_username">
         <input type="hidden" name="email" id="id_sns_email">

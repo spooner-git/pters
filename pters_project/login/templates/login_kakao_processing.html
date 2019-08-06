@@ -3,9 +3,8 @@
 
 <head>
 	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>NaverLoginSDK</title>
+	<title>kakao login</title>
 </head>
 
 <body>
@@ -28,7 +27,7 @@
         <input type="hidden" name="next_page" value = '{% url 'index' %}'>
     </form>
 
-    <form action="{% url 'login:new_member_sns_info' %}" id="new-member-sns-form" method="post">
+    <form action="{% url 'login:registration_social' %}" id="new-member-sns-form" method="post">
         {% csrf_token %}
         <input type="hidden" name="username" id="id_sns_username">
         <input type="hidden" name="email" id="id_sns_email">
@@ -53,12 +52,12 @@
 
 {#	callback 처리중입니다. 이 페이지에서는 callback을 처리하고 바로 main으로 redirect하기때문에 이 메시지가 보이면 안됩니다.#}
 
-	<!-- (1) LoginWithNaverId Javscript SDK -->
+	<!-- (1) LoginWithKakaoId Javscript SDK -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 
 
-	<!-- (2) LoginWithNaverId Javscript 설정 정보 및 초기화 -->
+	<!-- (2) LoginWithKakaoId Javscript 설정 정보 및 초기화 -->
 	<script>
 
 
