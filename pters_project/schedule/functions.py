@@ -48,7 +48,7 @@ def func_get_member_ticket_id(class_id, member_id):
             lecture_tb__state_cd=STATE_CD_IN_PROGRESS, lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
             use=USE).count()
         if ticket_single_lecture_count > 0:
-            member_ticket_id = class_member_ticket_info.member_ticket_tb.member_ticket_id
+            member_ticket_id = class_member_ticket_info.member_ticket_tb_id
             break
 
     return member_ticket_id

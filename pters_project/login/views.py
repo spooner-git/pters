@@ -12,6 +12,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, logout, login, get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm, PasswordChangeForm
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.validators import UnicodeUsernameValidator
@@ -121,22 +122,22 @@ def login_trainer(request):
                         group_name = 'trainer'
                         if len(group_list) == 1:
                             group_name = group_list[0].name
-                        if group_name == 'trainee' and member.name not in user.username:
+                        if group_name == 'trainee' and not user.check_password('0000'):
                             login(request, user)
                             if auto_login_check == '0':
                                 request.session.set_expiry(0)
                         else:
-                            request.session['user_id'] = user.id
+                            request.session['member_id'] = user.id
                             request.session['username'] = user.username
                             if user.email is None or user.email == '':
-                                next_page = '/login/send_email_member/'
+                                next_page = '/login/registration_temp/'
                             else:
                                 next_page = '/login/resend_email_member/'
                 else:
                     error = '이미 탈퇴한 회원입니다.'
         else:
             error = 'ID/비밀번호를 확인해주세요.'
-            next_page = '/'
+            # next_page = '/'
             # logger.error(error)
 
     if error is not None:
@@ -279,7 +280,7 @@ class ServiceTestLoginView(TemplateView):
 
 
 class RegistrationCheck(TemplateView):
-    template_name = 'registration/registration_check_form.html'
+    template_name = 'registration_check_form.html'
 
     def get_context_data(self, **kwargs):
         context = super(RegistrationCheck, self).get_context_data(**kwargs)
@@ -320,7 +321,7 @@ def logout_trainer(request):
     return redirect('/')
 
 
-class AddNewMemberSnsInfoView(RegistrationView, View):
+class AddSocialMemberInfoView(RegistrationView, View):
     template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request):
@@ -334,7 +335,7 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
         auto_login_check = request.POST.get('auto_login_check', '1')
         group_type = request.POST.get('group_type', 'trainer')
         social_access_token = request.POST.get('social_accessToken', '')
-        next_page = request.POST.get('next_page', '/login/new_member_sns_info/')
+        next_page = request.POST.get('next_page', '/login/registration_social/')
 
         error = None
         user = None
@@ -504,8 +505,8 @@ class DeleteSnsInfoView(View):
         return render(request, self.template_name)
 
 
-class NewMemberSnsInfoView(TemplateView):
-    template_name = 'send_sns_info_to_new_form.html'
+class RegistrationSocialView(TemplateView):
+    template_name = 'registration_social_form.html'
 
     def post(self, request):
         context = {'username': self.request.POST.get('username'),
@@ -563,7 +564,7 @@ class CheckSnsMemberInfoView(TemplateView):
 
 
 # 회원가입 api
-class NewMemberResendEmailAuthenticationView(RegistrationView, View):
+class AddTempMemberInfoView(RegistrationView, View):
     template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request):
@@ -740,7 +741,7 @@ class ChangeResendEmailAuthenticationView(MyReRegistrationView, View):
 class AddMemberView(RegistrationView, View):
     template_name = 'ajax/registration_error_ajax.html'
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         form = MyRegistrationForm(request.POST, request.FILES)
         name = request.POST.get('name', '')
         first_name = request.POST.get('first_name', name)
@@ -930,13 +931,58 @@ class RegisterErrorView(TemplateView):
         return context
 
 
-class NewMemberSendEmailView(TemplateView):
-    template_name = 'send_email_to_new_form.html'
+class RegistrationTempView(TemplateView):
+    template_name = 'registration_temp_member_form.html'
 
     def get_context_data(self, **kwargs):
-        context = super(NewMemberSendEmailView, self).get_context_data(**kwargs)
+        context = super(RegistrationTempView, self).get_context_data(**kwargs)
 
         return context
+
+
+# 회원가입 api
+class AddTempMemberInfoView(RegistrationView, View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request):
+
+        form = MyRegistrationForm(request.POST, request.FILES)
+        member_id = request.POST.get('member_id', '')
+        error = None
+        user = None
+        try:
+            user = User.objects.get(id=member_id)
+        except ObjectDoesNotExist:
+            error = '가입되지 않은 회원입니다.'
+
+        if error is None:
+            if form.is_valid():
+                try:
+                    with transaction.atomic():
+                        user.username = form.cleaned_data['username']
+                        user.set_password(form.cleaned_data['password1'])
+                        user.save()
+
+                except ValueError:
+                    error = '오류가 발생했습니다.[1]'
+                except IntegrityError:
+                    error = '오류가 발생했습니다.[2]'
+                except TypeError:
+                    error = '오류가 발생했습니다.[3]'
+                except ValidationError:
+                    error = '오류가 발생했습니다.[4]'
+                except InternalError:
+                    error = '오류가 발생했습니다.[5]'
+            else:
+                for field in form:
+                    for err in field.errors:
+                        messages.error(request, str(field.label)+':'+err)
+
+        if error is not None:
+            logger.error('member_id:'+str(member_id)+'[' + form.cleaned_data['username'] + ']' + error)
+            messages.error(request, error)
+
+        return render(request, self.template_name)
 
 
 class NewMemberReSendEmailView(View):
@@ -1232,61 +1278,6 @@ def add_member_no_email_func(user_id, first_name, phone, sex, birthday_dt):
     context['error'] = error
 
     return context
-
-
-class BaseRegistrationView(FormView):
-    """
-    Base class for user registration views.
-
-    """
-    disallowed_url = 'registration_disallowed'
-    form_class = MyRegistrationForm
-    success_url = None
-    template_name = 'registration/registration_form.html'
-
-    def dispatch(self, *args, **kwargs):
-        """
-        Check that user signup is allowed before even bothering to
-        dispatch or do other processing.
-
-        """
-        if not self.registration_allowed():
-            return redirect(self.disallowed_url)
-        return super(BaseRegistrationView, self).dispatch(*args, **kwargs)
-
-    def form_valid(self, form):
-        new_user = self.register(form)
-        success_url = self.get_success_url(new_user) if \
-            (hasattr(self, 'get_success_url') and
-             callable(self.get_success_url)) else \
-            self.success_url
-
-        # success_url may be a string, or a tuple providing the full
-        # argument set for redirect(). Attempting to unpack it tells
-        # us which one it is.
-        try:
-            to, args, kwargs = success_url
-            return redirect(to, *args, **kwargs)
-        except ValueError:
-            return redirect(success_url)
-
-    def registration_allowed(self):
-        """
-        Override this to enable/disable user registration, either
-        globally or on a per-request basis.
-
-        """
-        return getattr(settings, 'REGISTRATION_OPEN', True)
-
-    def register(self, form):
-        """
-        Implement user-registration logic here. Access to both the
-        request and the registration form is available here.
-
-        """
-        raise NotImplementedError
-
-
 
 
 class BaseActivationView(TemplateView):
@@ -1870,7 +1861,7 @@ class CheckMemberUsernameView(View):
 
 
 class RegistrationView(TemplateView):
-    template_name = 'registration/registration_form.html'
+    template_name = 'registration_form.html'
 
     def get_context_data(self, **kwargs):
         context = super(RegistrationView, self).get_context_data(**kwargs)

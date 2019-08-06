@@ -43,17 +43,12 @@ urlpatterns = [
     url(r'^check_member_password_form_validation/$', views.CheckMemberPasswordValidationView.as_view(),
         name='check_member_password_form_validation'),
 
-
-    url(r'^new_member_resend_email_authentication/$', views.NewMemberResendEmailAuthenticationView.as_view(),
-        name='new_member_resend_email_authentication'),
     url(r'^resend_email_authentication/$', views.ResendEmailAuthenticationView.as_view(),
         name='resend_email_authentication'),
 
     url(r'^change_resend_email_authentication/$', views.ChangeResendEmailAuthenticationView.as_view(),
         name='change_resend_email_authentication'),
 
-    # 미인증 및 강사 회원가입 로그인시
-    url(r'^send_email_member/$', views.NewMemberSendEmailView.as_view(), name='send_email_member'),
     # 미인증 회원 로그인시
     url(r'^resend_email_member/$', views.NewMemberReSendEmailView.as_view(), name='resend_email_member'),
 
@@ -113,10 +108,16 @@ urlpatterns = [
 
     # 회원 가입 유형 처리 부분
     url(r'^registration_check/$', views.RegistrationCheck.as_view(), name='registration_check'),
+
     # 일반 회원 가입 페이지
     url(r'^register/$', views.RegistrationView.as_view(), name='registration_register'),
+    # 일반 회원 가입 처리 로직
+    url(r'^add_member_info/$', views.AddMemberView.as_view(), name='add_member_info'),
+
     # 소셜 회원가입 페이지
-    url(r'^new_member_sns_info/$', views.NewMemberSnsInfoView.as_view(), name='new_member_sns_info'),
+    url(r'^registration_social/$', views.RegistrationSocialView.as_view(), name='registration_social'),
+    # 소셜 회원 가입 처리 로직
+    url(r'^add_social_member_info/$', views.AddSocialMemberInfoView.as_view(), name='add_social_member_info'),
 
     # 네이버 아이디 로그인 처리
     url(r'^login_simple_naver/$', views.LoginSimpleNaverView.as_view(), name='login_simple_naver'),
@@ -124,10 +125,12 @@ urlpatterns = [
     url(r'^login_simple_kakao/$', views.LoginSimpleKakaoView.as_view(), name='login_simple_kakao'),
 
 
-    # 일반 회원 가입 처리 로직
-    url(r'^add_member_info/$', views.AddMemberView.as_view(), name='add_member_info'),
-    # 소셜 회원 가입 처리 로직
-    url(r'^add_new_member_sns_info/$', views.AddNewMemberSnsInfoView.as_view(), name='add_new_member_sns_info'),
+    # 미인증 및 강사 회원가입 로그인시
+    url(r'^registration_temp/$', views.RegistrationTempView.as_view(), name='registration_temp'),
+
+    url(r'^add_temp_member_info/$', views.AddTempMemberInfoView.as_view(),
+        name='add_temp_member_info'),
+
 
 
     # 강사가 등록하는 회원용

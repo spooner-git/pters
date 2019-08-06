@@ -31,7 +31,7 @@ class MyRegistrationForm(RegistrationForm):
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
         self.fields['username'].required = True
-        self.fields['name'].required = True
+        self.fields['name'].required = False
         self.fields['email'].required = False
 
     labels = {

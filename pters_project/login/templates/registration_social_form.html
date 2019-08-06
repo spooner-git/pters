@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    <form action="{% url 'login:add_new_member_sns_info' %}" id="sns-form" method="post">
+    <form action="{% url 'login:add_social_member_info' %}" id="sns-form" method="post">
         {% csrf_token %}
         <input type="hidden" name="username" id="id_sns_username" value="{{ username }}">
         <input type="hidden" name="email" id="id_sns_email" value="{{ email }}">
@@ -72,7 +72,7 @@
         <input type="hidden" name="sex" id="id_sns_sex" value="{{ sex }}">
         <input type="hidden" name="social_accessToken" id="id_social_accessToken" value="{{ social_accessToken }}">
         <input type="hidden" name="group_type" id="id_group_type" value="trainer">
-        <input type="hidden" name="next_page" value="{% url 'login:new_member_sns_info' %}">
+        <input type="hidden" name="next_page" value="{% url 'login:registration_social' %}">
     </form>
 
 {% endblock %}

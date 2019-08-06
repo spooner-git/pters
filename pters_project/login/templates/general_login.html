@@ -17,14 +17,14 @@
 
         <div id="login_box">
 
-            <div class="login_content" style="min-height: calc(100% - 430px);">
+            <div class="login_content" style="min-height: calc(100% - 450px);">
                 <div class="pters_logo"></div>
             </div>
             <div class="login_foot">
                 <form action="{% url 'login:login' %}" id="login-form" method="post">
                     <input type="hidden" name="keyword" id="keyword">
                     <input type="hidden" name="auto_login_check" value="1">
-                    <input type="hidden" name="next_page" value = '{% url 'index' %}'>
+                    <input type="hidden" name="next_page" value = '{% url 'login:index' %}'>
                     {% csrf_token %}
                     <!-- 네이버 로그인 버튼 노출 영역 -->
                     <div class="social_login_box" onclick="location.href=naverLogin.generateAuthorizeUrl();" style="background-color: #0dd25a;">
@@ -52,7 +52,7 @@
                         <input class="pters_login_input" type="text" name="username" id="username_id" placeholder="아이디" autofocus>
                     </div>
                     <div style="margin-top:8px;">
-                        <input class="pters_login_input" type="password" name="password" id="password_id" placeholder="비밀번호">
+                        <input class="pters_login_input" type="password" name="password" id="password_id" placeholder="비밀번호" onkeyup="enter_key();">
                     </div>
                     <!-- PTERS 로그인 버튼 노출 영역 -->
                     <div class="social_login_box" onclick="document.getElementById('login-form').submit();" style="background-color: #fe4e65; margin-top:12px;">
@@ -82,6 +82,13 @@
 <script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <!--<script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>-->
 <script type="text/javascript">
+
+    function enter_key() {
+        if (window.event.keyCode == 13) {
+             // 엔터키가 눌렸을 때 실행할 내용
+             document.getElementById('login-form').submit();
+        }
+    }
 
     $('#errorMessageBar span:nth-child(2)').click(function(){
         $('#errorMessageBar').fadeOut('fast')
