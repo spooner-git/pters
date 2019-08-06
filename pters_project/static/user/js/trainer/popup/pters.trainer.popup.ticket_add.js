@@ -151,8 +151,15 @@ class Ticket_add{
     }
 
     dom_row_ticket_name_input(){
+        let id = 'input_ticket_name';
+        let title = this.data.name == null ? '' : this.data.name;
+        let placeholder = '수강권명*';
+        let icon = '/static/common/icon/person_black.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let html = CComponent.create_input_row ('input_ticket_name', this.data.name == null ? '' : this.data.name, '수강권명*', '/static/common/icon/person_black.png', HIDE, style, false, (input_data)=>{
+        let disabled = false;
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
         });
@@ -160,8 +167,12 @@ class Ticket_add{
     }
 
     dom_row_lecture_select(){
-        let lecture_text = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개 선택됨';
-        let html = CComponent.create_row('input_lecture_select', lecture_text, '/static/common/icon/icon_book.png', SHOW, ()=>{ 
+        let id = 'input_lecture_select';
+        let title = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개 선택됨';
+        let icon = '/static/common/icon/icon_book.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, (set_data)=>{
                     this.lecture = set_data; //타겟에 선택된 데이터를 set
@@ -196,8 +207,15 @@ class Ticket_add{
     }
 
     dom_row_ticket_coung_input(){
+        let id = 'input_ticket_count';
+        let title = this.data.count == null ? '' : this.data.count+'회';
+        let placeholder = '횟수';
+        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text;
         let style = null;
-        let html = CComponent.create_input_number_row ('input_ticket_count', this.data.count == null ? '' : this.data.count+'회', '횟수', '/static/common/icon/icon_rectangle_blank.png', HIDE, style, false, (input_data)=>{
+        let disabled = false;
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.count = user_input_data;
         });
@@ -205,8 +223,15 @@ class Ticket_add{
     }
 
     dom_row_ticket_price_input(){
+        let id = 'input_ticket_price';
+        let title = this.data.price == null ? '' : this.data.price+'원';
+        let placeholder = '가격';
+        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text;
         let style = null;
-        let html = CComponent.create_input_number_row ('input_ticket_price', this.data.price == null ? '' : this.data.price+'원', '가격', '/static/common/icon/icon_rectangle_blank.png', HIDE, style, false, (input_data)=>{
+        let disabled = false;
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.price = user_input_data;
         });
@@ -214,8 +239,15 @@ class Ticket_add{
     }
 
     dom_row_ticket_memo_input(){
+        let id = 'input_ticket_memo';
+        let title = this.data.memo == null ? '' : this.data.memo;
+        let placeholder = '설명';
+        let icon = '/static/common/icon/icon_note.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let html = CComponent.create_input_row ('input_ticket_memo', this.data.memo == null ? '' : this.data.memo, '설명', '/static/common/icon/icon_note.png', HIDE, style, false, (input_data)=>{
+        let disabled = false;
+        let html = CComponent.create_input_row (id, title, '설명', icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });

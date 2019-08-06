@@ -17,27 +17,34 @@ class CComponent{
         return html;
     }
 
-    static dom_tag(tag_name){
-        let html = `<div class="dom_tag">${tag_name}</div>`;
+    static dom_tag(tag_name, style){
+        let html = `<div class="dom_tag" style="${CComponent.data_to_style_code(style)}">${tag_name}</div>`;
         return html;
     }
 
     //추가 페이지들에서 자주 사용되는 row 스타일
-    static create_row (id, title, icon, icon_r_visible, onclick){
+    static create_row (id, title, icon, icon_r_visible, icon_r_text, onclick){
         if(icon == null){
             icon = '/static/common/icon/icon_dissatisfied.png';
         }
         if(icon == NONE){
             icon = '/static/common/icon/menu_white.png';
         }
+        let icon_l_visible = "";
+        if(icon == undefined){
+            icon_l_visible = 'none';
+        }
         
         let html = `<li class="create_row" id="c_r_${id}">
                         <div class="obj_table_raw">
-                            <div class="cell_title">
+                            <div class="cell_title" style="display:${icon_l_visible}">
                                 ${icon != "" ? `<img src="${icon}">` : ""} 
                                 <span class="cell_text">${title}</span>
                             </div>
-                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
+                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
+                                ${icon_r_text}
+                                <img src="/static/common/icon/navigate_next_black.png">
+                            </div>
                         </div>
                     </li>`;
 
@@ -49,7 +56,7 @@ class CComponent{
     }
 
      //추가 페이지들에서 사용되는 text input row 스타일
-    static create_input_row (id, title, placeholder, icon, icon_r_visible, style, disabled, onfocusout){
+    static create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout){
         let disable = 'disabled';
         if(disabled == false){
             disable = '';
@@ -63,7 +70,10 @@ class CComponent{
                             <div class="cell_content">
                                 <input type="text" class="cell_text" placeholder="${placeholder}" value="${title}" ${disable}>
                             </div>
-                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
+                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
+                                ${icon_r_text}
+                                <img src="/static/common/icon/navigate_next_black.png">
+                            </div>
                         </div>
                     </li>`;
         $(document).off('focusin', `#c_i_r_${id}`).on('focusin', `#c_i_r_${id}`, function(e){
@@ -81,7 +91,7 @@ class CComponent{
     }
     
     //추가 페이지들에서 사용되는 number input row 스타일
-    static create_input_number_row (id, title, placeholder, icon, icon_r_visible, style, disabled, onfocusout){
+    static create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout){
         let disable = 'disabled';
         if(disabled == false){
             disable = '';
@@ -95,7 +105,10 @@ class CComponent{
                             <div class="cell_content">
                                 <input class="cell_text" placeholder="${placeholder}" type="tel" value="${title}" ${disable}>
                             </div>
-                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
+                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
+                                ${icon_r_text}
+                                <img src="/static/common/icon/navigate_next_black.png">
+                            </div>
                         </div>
                     </li>`;
         $(document).off('focusin', `#c_i_n_r_${id}`).on('focusin', `#c_i_n_r_${id}`, function(e){
@@ -116,7 +129,7 @@ class CComponent{
         return html;
     }
 
-    static create_input_textarea_row (id, title, icon, icon_r_visible, onfocusout){
+    static create_input_textarea_row (id, title, icon, icon_r_visible, icon_r_text, onfocusout){
         
         let html = `<li class="create_input_row create_input_textarea_row" id="c_i_t_r_${id}">
                         <div class="obj_table_raw">
@@ -126,7 +139,10 @@ class CComponent{
                             <div class="cell_content">
                                 <textarea class="cell_text" placeholder="${title}" value="${title}"></textarea>
                             </div>
-                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} ><img src="/static/common/icon/navigate_next_black.png"></div>
+                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
+                                ${icon_r_text}
+                                <img src="/static/common/icon/navigate_next_black.png">
+                            </div>
                         </div>
                     </li>`;
         $(document).off('focusin', `#c_i_t_r_${id}`).on('focusin', `#c_i_t_r_${id}`, function(e){
@@ -499,7 +515,7 @@ class CComponent{
 
     //스타일 코드를 인라인스타일 스타일 코드로 변환시켜주는 함수
     static data_to_style_code(data){
-        if(data == null){
+        if(data == null || data == undefined){
             return "";
         }
         let style_to_join = [];
