@@ -1117,8 +1117,14 @@ class OptionSelector{
             let option_name = this.option.data[op].text;
             let option_value = op;
             let option_callback = this.option.data[op].callback;
+
+            let id = option_value;
+            let title = option_name;
+            let icon = null;
+            let icon_r_visible = HIDE;
+            let icon_r_text = "";
             html_to_join.push(
-                CComponent.create_row(option_value, option_name, null, HIDE, ()=>{
+                CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
                     option_callback();
                 })
             );
@@ -1859,8 +1865,12 @@ class RepeatSelector{
     }
 
     dom_row_day_select_button(){
+        let id = 'select_day';
         let title = this.data.day.length == 0 ? '요일 지정' : this.data.day.join(', ');
-        let html = CComponent.create_row('select_day', title, NONE, HIDE, ()=>{ 
+        let icon = NONE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_day_select', 100, POPUP_FROM_RIGHT, null, ()=>{
                 day_select = new DaySelector('#wrapper_box_day_select', this, 7, (set_data)=>{
                     this.day = set_data.day;
@@ -1871,8 +1881,12 @@ class RepeatSelector{
     }
 
     dom_row_end_date_select_button(){
+        let id = 'select_end_date';
         let title = this.data.repeat_end.year == null ? '반복 종료일' : DateRobot.to_text(this.data.repeat_end.year, this.data.repeat_end.month, this.data.repeat_end.date)+' 까지';
-        let html = CComponent.create_row('select_end_date', title, NONE, HIDE, ()=>{ 
+        let icon = NONE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
                 let year = this.target_instance.date == null ? this.dates.current_year : this.target_instance.date.year; 
                 let month = this.target_instance.date == null ? this.dates.current_month : this.target_instance.date.month;
