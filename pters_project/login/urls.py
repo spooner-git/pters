@@ -42,7 +42,7 @@ urlpatterns = [
 
 
     # 회원가입 유형 처리 부분
-    url(r'^registration_check/$', views.RegistrationCheck.as_view(), name='registration_check'),
+    url(r'^check_registration/$', views.CheckRegistration.as_view(), name='check_registration'),
 
     # 일반 회원가입 페이지
     url(r'^register/$', views.RegistrationView.as_view(), name='registration_register'),
@@ -91,6 +91,7 @@ urlpatterns = [
 
 
     # 비밀번호 초기화 문자 인증 처리 기능
+    url(r'^find_id/$', views.FindIdView.as_view(), name='find_id'),
     url(r'^reset_password/$', views.ResetPasswordView.as_view(), name='reset_password'),
     url(r'^reset_password2/$', views.ResetPassword2View.as_view(), name='reset_password2'),
     url(r'^reset_password3/$', views.reset_password3, name='reset_password3'),
