@@ -1324,9 +1324,7 @@ class LectureSelector{
                     if(this.multiple_select == 1){
                         this.upper_right_menu();
                     }
-                }  
-
-                    
+                }    
             );
             html_to_join.push(html);
         }
@@ -1337,7 +1335,6 @@ class LectureSelector{
 
     request_list (callback){
         lecture.request_lecture_list("ing", (data)=>{
-            console.log(data)
             this.received_data = data.current_lecture_data;
             callback();
         });

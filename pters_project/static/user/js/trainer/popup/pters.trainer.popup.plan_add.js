@@ -152,8 +152,9 @@ class Plan_add{
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
-
+        
         document.querySelector(this.target.install).innerHTML = html;
+        document.querySelector('.popup_plan_add .wrapper_top').style.borderColor = 'transparent';
     }
 
     render_toolbox(){
@@ -194,17 +195,17 @@ class Plan_add{
 
     dom_row_toolbox(){
         let html = `
-        <div class="plan_add_upper_box" style="padding-bottom:8px;">
+        <div class="plan_add_upper_box">
             <div style="display:inline-block;width:200px;">
                 <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold;">일정 등록</span>
+                    <span style="font-size:20px;font-weight:bold;">새로운 일정</span>
                 </div>
             </div>
         </div>
         <div class="plan_add_bottom_tools_wrap">
             <div class="list_type_tab_wrap">
-                <div onclick="${this.instance}.switch_type();" class="${this.list_type == "lesson" ? "tab_selected" : ""}">수업</div>
-                <div onclick="${this.instance}.switch_type();" class="${this.list_type == "off" ? "tab_selected" : ""}">OFF</div>
+                <div onclick="${this.instance}.switch_type('lesson');" class="${this.list_type == "lesson" ? "tab_selected" : ""}">수업</div>
+                <div onclick="${this.instance}.switch_type('off');" class="${this.list_type == "off" ? "tab_selected" : ""}">OFF</div>
             </div>
         </div>
         `;
@@ -216,8 +217,21 @@ class Plan_add{
         let html = CComponent.create_row('select_lecture', lecture_text, '/static/common/icon/icon_book.png', SHOW, (data)=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1, (set_data)=>{
+                    //수업을 추가
                     this.lecture = set_data;
-                    this.render_content();
+                    //수업에 속한 고정회원들을 추가
+                    Lecture_func.read({"lecture_id": set_data.id[0]}, (data)=>{
+                        let member_length = data.lecture_member_list.length;
+                        let data_to_set = {id:[], name:[]}
+                        for(let i=0; i<member_length; i++){
+                            let member_data = data.lecture_member_list[i];
+                            if(member_data.member_fix_state_cd == FIX){
+                                data_to_set.id.push(member_data.member_id);
+                                data_to_set.name.push(member_data.member_name);
+                            }
+                        }
+                        this.member = data_to_set;
+                    });
                 });
             });
         });
@@ -334,14 +348,17 @@ class Plan_add{
         return html;
     }
 
-    switch_type(){
-        switch(this.list_type){
+    switch_type(type){
+        if(type == this.list_type){
+            return false;
+        }
+        switch(type){
             case "lesson":
-                this.init("off");
+                this.init("lesson");
             break;
 
             case "off":
-                this.init("lesson");
+                this.init("off");
             break;
         }
     }
