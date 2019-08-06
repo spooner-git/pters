@@ -149,6 +149,7 @@ class Ticket_view{
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
+        document.querySelector('.popup_ticket_view .wrapper_top').style.border = 0;
     }
 
     render_toolbox(){
@@ -167,32 +168,38 @@ class Ticket_view{
         let lecture = this.dom_row_lecture_select();
         let lecture_list = this.dom_row_lecture_select_list();
         let memo = this.dom_row_ticket_memo_input();
-        let member = this.dom_row_member();
+        // let member = this.dom_row_member();
         let member_list = this.dom_row_member_list();
 
         let html =  '<div class="obj_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>' + 
                     '<div class="obj_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>' + 
-                    '<div class="obj_box_full">'+CComponent.dom_tag('수강권 보유 회원')+member+member_list+ '</div>';
+                    '<div class="obj_box_full">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, {"padding":"0", "color":"#858282"})+member_list+ '</div>';
         return html;
     }
 
 
     dom_row_toolbox(){
+        let id = 'ticket_name_view'
         let style = {"font-size":"20px", "font-weight":"bold"};
         let title = this.data.name == null ? '' : this.data.name;
         if(this.data.ticket_state == STATE_END_PROGRESS){
             style["color"] = "#888888";
             title = title + ' (비활성)';
         }
+        let placeholder = '수강권명*';
+        let icon = undefined;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let disabled = false;
 
-        let sub_html = CComponent.create_input_row ('ticket_name_view', title, '수강권명*', undefined, HIDE, style, false, (input_data)=>{
+        let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
             this.send_data();
         });
         
         let html = `
-        <div class="member_add_upper_box" style="padding-bottom:8px;">
+        <div class="member_add_upper_box" style="">
             <div style="display:inline-block;width:320px;">
                 <div style="display:inline-block;width:320px;">
                     ${sub_html}
@@ -204,14 +211,21 @@ class Ticket_view{
     }
 
     dom_row_lecture_select(){
-        let lecture_text = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개';
-        let html = CComponent.create_row('lecture_select_view', lecture_text, '/static/common/icon/icon_book.png', HIDE, ()=>{ 
+        let id = 'lecture_select_view';
+        let title = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개';
+        let icon = '/static/common/icon/icon_book.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = CComponent.text_button ('ticket_lecture_list_view', "수업 목록", null, ()=>{
+            //티켓에 포함될 수업 선택
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, (set_data)=>{
                     this.lecture = set_data; //타겟에 선택된 데이터를 set
                     this.send_data();
                 });
             });
+        });
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+            
         });
         return html;
     }
@@ -224,8 +238,8 @@ class Ticket_view{
             let lecture_id = this.data.lecture_id[i];
             let lecture_name = this.data.lecture_name[i];
             let lecture_color = this.data.lecture_color[i];
-            let icon_button_style = {"display":"block", "padding":"0", "font-size":"13px"};
-            let lecture_name_set = `<div style="display:inline-block;width:10px;height:10px;border-radius:5px;background-color:${lecture_color};margin-right:10px;"></div>${lecture_name}`;
+            let icon_button_style = {"display":"block", "padding":"0", "font-size":"15px", "font-weight":"500", "height":"50px", "line-height":"50px"};
+            let lecture_name_set = `<div style="display:inline-block;width:12px;height:12px;border-radius:6px;background-color:${lecture_color};margin-right:12px;"></div>${lecture_name}`;
             html_to_join.push(
                 CComponent.icon_button (lecture_id, lecture_name_set, NONE, icon_button_style, ()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(253/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
@@ -241,8 +255,15 @@ class Ticket_view{
     }
 
     dom_row_ticket_coung_input(){
+        let id = 'ticket_count_view';
+        let title = this.data.count == null ? '' : this.data.count+'회';
+        let placeholder = '횟수';
+        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let html = CComponent.create_input_number_row ('ticket_count_view', this.data.count == null ? '' : this.data.count+'회', '횟수', '/static/common/icon/icon_rectangle_blank.png', HIDE, style, true, (input_data)=>{
+        let disabled = true;
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             // let user_input_data = input_data;
             // this.count = user_input_data;
         });
@@ -250,8 +271,15 @@ class Ticket_view{
     }
 
     dom_row_ticket_price_input(){
+        let id = 'ticket_price_view';
+        let title = this.data.price == null ? '' : this.data.price+'원';
+        let placeholder = '가격';
+        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let html = CComponent.create_input_number_row ('ticket_price_view', this.data.price == null ? '' : this.data.price+'원', '가격', '/static/common/icon/icon_rectangle_blank.png', HIDE, style, true, (input_data)=>{
+        let disabled = true;
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             // let user_input_data = input_data;
             // this.price = user_input_data;
         });
@@ -259,8 +287,15 @@ class Ticket_view{
     }
 
     dom_row_ticket_memo_input(){
+        let id = 'ticket_memo_view';
+        let title = this.data.memo == null ? '' : this.data.memo;
+        let placeholder = '설명';
+        let icon = '/static/common/icon/icon_note.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let html = CComponent.create_input_row ('ticket_memo_view', this.data.memo == null ? '' : this.data.memo, '설명', '/static/common/icon/icon_note.png', HIDE, style, false, (input_data)=>{
+        let disabled = false;
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
             this.send_data();
@@ -280,8 +315,12 @@ class Ticket_view{
         // let member_text = this.data.member_id.length == 0 ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_id.length+' 명)';
         // let html = CComponent.create_row('ing_member_view', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
         // return html;
-        let member_text = this.data.member_id.length == 0 ? '0 명' : this.data.member_id.length+' 명';
-        let html = CComponent.create_row('ing_member_view', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
+        let id = 'ing_member_view';
+        let title = this.data.member_id.length == 0 ? '0 명' : this.data.member_id.length+' 명';
+        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{});
         return html;
     }
 
@@ -292,13 +331,9 @@ class Ticket_view{
         for(let i=0; i<length; i++){
             let member_id = this.data.member_id[i];
             let member_name = this.data.member_name[i];
-            let icon_button_style = {"display":"block", "font-size":"13px", "padding":"0"};
+            let style = {"display":"block", "font-size":"15px", "font-weight":"500", "padding":"0", "height":"50px", "line-height":"50px"};
             html_to_join.push(
-                CComponent.icon_button(member_id, member_name, NONE, icon_button_style, ()=>{
-                    // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':member_id} ,()=>{
-                    //     member_view_popup = new Member_view('.popup_member_view', member_id, 'member_view_popup');
-                            //회원 Full 정보 팝업 열기
-                    // });
+                CComponent.text_button(member_id, member_name, style, ()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/windowHeight), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
                         member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
                         //회원 간단 정보 팝업 열기
@@ -536,8 +571,12 @@ class Ticket_simple_view{
     }
 
     dom_row_lecture_select(){
-        let lecture_text = this.data.lecture_id.length == 0 ? '수업 0개' : this.data.lecture_name.length+'개';
-        let html = CComponent.create_row('lecture_select_view', lecture_text, '/static/common/icon/icon_book.png', HIDE, ()=>{ 
+        let id = 'lecture_select_view';
+        let title = this.data.lecture_id.length == 0 ? '수업 0개' : this.data.lecture_name.length+'개';
+        let icon = '/static/common/icon/icon_book.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
             //     lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999);
             // });
@@ -546,8 +585,15 @@ class Ticket_simple_view{
     }
 
     dom_row_ticket_memo_input(){
+        let id = 'ticket_memo_view';
+        let title = this.data.memo == null ? '' : this.data.memo;
+        let placeholder = '설명';
+        let icon = '/static/common/icon/icon_note.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let html = CComponent.create_input_row ('ticket_memo_view', this.data.memo == null ? '' : this.data.memo, '설명', '/static/common/icon/icon_note.png', HIDE, style, true, (input_data)=>{
+        let disabled = true;
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             // let user_input_data = input_data;
             // this.memo = user_input_data;
         });
@@ -556,8 +602,12 @@ class Ticket_simple_view{
 
 
     dom_row_member(){
-        let member_text = this.data.member_id.length == 0 ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_id.length+' 명)';
-        let html = CComponent.create_row('ing_member_view', member_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{});
+        let id = 'ing_member_view';
+        let title = this.data.member_id.length == 0 ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_id.length+' 명)';
+        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{});
         return html;
     }
 

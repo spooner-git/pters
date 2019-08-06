@@ -99,6 +99,7 @@ class Lecture_add{
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
+        document.querySelector('.popup_lecture_add .wrapper_top').style.border = 0;
     }
 
     render_toolbox(){
@@ -130,7 +131,7 @@ class Lecture_add{
 
     dom_row_toolbox(){
         let html = `
-        <div class="member_add_upper_box" style="padding-bottom:8px;">
+        <div class="lecture_add_upper_box">
             <div style="display:inline-block;width:200px;">
                 <div style="display:inline-block;width:200px;">
                     <span style="font-size:20px;font-weight:bold;">새로운 수업</span>
@@ -142,8 +143,15 @@ class Lecture_add{
     }
 
     dom_row_lecture_name_input(){
+        let id = 'input_lecture_name';
+        let title = this.data.name == null ? '' : this.data.name;
+        let placeholder = '수업명*';
+        let icon = '/static/common/icon/icon_book.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let html = CComponent.create_input_row ('input_lecture_name', this.data.name == null ? '' : this.data.name, '수업명*', '/static/common/icon/icon_book.png', HIDE, style, false, (input_data)=>{
+        let disabled = false;
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
         });
@@ -151,8 +159,15 @@ class Lecture_add{
     }
 
     dom_row_lecture_time_input(){
+        let id = 'input_lecture_time';
+        let title = this.data.time == null ? '' : this.data.time;
+        let placeholder = '진행 시간*';
+        let icon = '/static/common/icon/icon_clock.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let html = CComponent.create_input_row ('input_lecture_time', this.data.time == null ? '' : this.data.time, '진행 시간*', '/static/common/icon/icon_clock.png', HIDE, style, false, (input_data)=>{
+        let disabled = false;
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.time = user_input_data;
         });
@@ -161,8 +176,15 @@ class Lecture_add{
 
   
     dom_row_capacity_input(){
+        let id = 'input_lecture_capacity';
+        let title = this.data.capacity == null ? '' : '정원 '+this.data.capacity+'명';
+        let placeholder =  '정원*';
+        let icon = '/static/common/icon/icon_member.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let html = CComponent.create_input_number_row ('input_lecture_capacity', this.data.capacity == null ? '' : '정원 '+this.data.capacity+'명', '정원*', '/static/common/icon/icon_member.png', HIDE, style, false, (input_data)=>{
+        let disabled = false;
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.capacity = user_input_data;
         });
@@ -171,10 +193,10 @@ class Lecture_add{
 
     dom_row_fiexd_member_select(){
         let fixed_member_text = this.data.fixed_member_name.length == 0 ? '고정 회원' : '고정회원 '+this.data.fixed_member_id.length+'명 선택됨';
-        let html = CComponent.create_row('select_member', fixed_member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, (data)=>{
+        let html = CComponent.create_row('select_member', fixed_member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, '고정 회원',(data)=>{
             if(this.data.capacity != null){
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':null}, (set_data)=>{
+                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':null, "title":"고정 회원 선택"}, (set_data)=>{
                         this.member = set_data;
                         this.render_content();
                     });
@@ -210,7 +232,7 @@ class Lecture_add{
 
     dom_row_color_select(){
         let color_text = this.data.color_name.length == 0 ? '색상 태그' : `<span style="background-color:${this.data.color_bg};color:${this.data.color_font};padding:5px;border-radius:4px;">${this.data.color_name}</span>`;
-        let html = CComponent.create_row('input_color_select', color_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
+        let html = CComponent.create_row('input_color_select', color_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, '', ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_COLOR_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 color_select = new ColorSelector('#wrapper_box_color_select', this, 1, (set_data)=>{
                     this.color = set_data;

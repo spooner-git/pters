@@ -157,7 +157,7 @@ class Plan_view{
                             <img src="/static/common/icon/icon_delete.png" class="obj_icon_basic" onclick="plan_view_popup.upper_right_menu(0);">
                             <img src="/static/common/icon/icon_done.png" class="obj_icon_basic" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};margin-left:20px">
                         </span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;padding:0">${this.dom_assembly_toolbox()}</section>
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -214,7 +214,7 @@ class Plan_view{
 
         let html = `
                     <div class="info_popup_title_wrap" style="height:50px;background-color:${this.data.lecture_color}">
-                        <div class="info_popup_title" style="display:inline-block;line-height:50px;vertical-align:middle;font-size:18px;font-weight:bold;margin-left:16px;color:${this.data.lecture_font_color}">
+                        <div class="info_popup_title" style="display:inline-block;line-height:50px;vertical-align:middle;font-size:18px;font-weight:bold;color:${this.data.lecture_font_color}">
                             ${lecture_name}
                         </div>
                     </div>
@@ -223,11 +223,15 @@ class Plan_view{
     }
 
     dom_row_member_select (){
-        let member_text = this.data.member_id.length == 0 ? '회원*' : this.data.member_id.length+ '/' + this.data.lecture_max_num +' 명';
-        let html_member_select = CComponent.create_row('select_member', member_text, '/static/common/icon/icon_member.png', SHOW, ()=>{
+        let id = 'select_member';
+        let title = this.data.member_id.length == 0 ? '회원*' : this.data.member_id.length+ '/' + this.data.lecture_max_num +' 명';
+        let icon = '/static/common/icon/icon_member.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let html_member_select = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
             //회원 선택 팝업 열기
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'data':null}, ()=>{
-                member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num, {'lecture_id':this.data.lecture_id}, (set_data)=>{
+                member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num, {'lecture_id':this.data.lecture_id, "title":"회원 선택"}, (set_data)=>{
                     this.member = set_data;
                     this.render_content();
                 });
@@ -271,8 +275,12 @@ class Plan_view{
     }
 
     dom_row_date_select (){
-        let date_text = this.data.date_text == null ? '날짜*' : this.data.date_text;
-        let html = CComponent.create_row('select_date', date_text, '/static/common/icon/icon_cal.png', HIDE, ()=>{ 
+        let id = 'select_date';
+        let title = this.data.date_text == null ? '날짜*' : this.data.date_text;
+        let icon = '/static/common/icon/icon_cal.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DATE_SELECTOR, 100*305/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -300,8 +308,12 @@ class Plan_view{
     }
 
     dom_row_start_time_select (){
-        let start_time_text = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
-        let html = CComponent.create_row('select_start_time', start_time_text, '/static/common/icon/icon_clock.png', HIDE, ()=>{ 
+        let id = 'select_start_time';
+        let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
+        let icon = '/static/common/icon/icon_clock.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TIME_SELECTOR, 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -321,8 +333,12 @@ class Plan_view{
     }
 
     dom_row_end_time_select (){
-        let end_time_text = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
-        let html = CComponent.create_row('select_end_time', end_time_text, '/static/common/icon/icon_clock_white.png', HIDE, ()=>{ 
+        let id = 'select_end_time';
+        let title = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
+        let icon = '/static/common/icon/icon_clock_white.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TIME_SELECTOR, 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -342,8 +358,15 @@ class Plan_view{
     }
 
     dom_row_memo_select (){
+        let id = 'select_memo';
+        let title = this.data.memo == null ? '' : this.data.memo;
+        let placeholder = '일정 메모';
+        let icon = '/static/common/icon/icon_note.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let html = CComponent.create_input_row ('select_memo', this.data.memo == null ? '' : this.data.memo, '일정 메모', '/static/common/icon/icon_note.png', HIDE, style, false, (input_data)=>{
+        let disabled = false;
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });

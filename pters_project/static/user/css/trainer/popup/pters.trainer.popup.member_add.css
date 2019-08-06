@@ -10,6 +10,11 @@
 	position: sticky;
 	position: -webkit-sticky;
 	top: 0;
+	padding: 0px 16px 10px 50px;
+}
+.popup_member_add .member_add_upper_box{
+	height: 40px;
+	line-height: 40px;
 }
 
 .popup_member_add .popup_content{

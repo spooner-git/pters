@@ -154,7 +154,7 @@ class Plan_add{
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
         
         document.querySelector(this.target.install).innerHTML = html;
-        document.querySelector('.popup_plan_add .wrapper_top').style.borderColor = 'transparent';
+        document.querySelector('.popup_plan_add .wrapper_top').style.border = 0;
     }
 
     render_toolbox(){
@@ -213,8 +213,12 @@ class Plan_add{
     }
 
     dom_row_lecture_select(){
-        let lecture_text = this.data.lecture_name.length == 0 ? '수업*' : this.data.lecture_name.join(', ');
-        let html = CComponent.create_row('select_lecture', lecture_text, '/static/common/icon/icon_book.png', SHOW, (data)=>{ 
+        let id = 'select_lecture';
+        let title = this.data.lecture_name.length == 0 ? '수업*' : this.data.lecture_name.join(', ');
+        let icon = '/static/common/icon/icon_book.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1, (set_data)=>{
                     //수업을 추가
@@ -239,11 +243,15 @@ class Plan_add{
     }
 
     dom_row_member_select(){
-        let member_text = this.data.member_name.length == 0 ? '회원*' : this.data.member_name.join(', ');
-        let html = CComponent.create_row('select_member', member_text, '/static/common/icon/icon_member.png', SHOW, (data)=>{
+        let id = 'select_member';
+        let title = this.data.member_name.length == 0 ? '회원*' : this.data.member_name.join(', ');
+        let icon = '/static/common/icon/icon_member.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
             if(this.data.lecture_id.length != 0){
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
-                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num[0], {'lecture_id':this.data.lecture_id[0]}, (set_data)=>{
+                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num[0], {'lecture_id':this.data.lecture_id[0], "title":"회원 선택"}, (set_data)=>{
                         this.member = set_data;
                         this.render_content();
                     });
@@ -257,8 +265,12 @@ class Plan_add{
 
     dom_row_date_select(){
         //등록하는 행을 만든다.
-        let date_text = this.data.date_text == null ? '날짜*' : this.data.date_text;
-        let html = CComponent.create_row('select_date', date_text, '/static/common/icon/icon_cal.png', HIDE, ()=>{ 
+        let id = 'select_date';
+        let title = this.data.date_text == null ? '날짜*' : this.data.date_text;
+        let icon = '/static/common/icon/icon_cal.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -286,8 +298,12 @@ class Plan_add{
     }
 
     dom_row_start_time_select(){
-        let start_time_text = this.data.start_time_text == null ? '시작 시간*' : this.data.start_time_text;
-        let html = CComponent.create_row('select_start', start_time_text, '/static/common/icon/icon_clock.png', HIDE, ()=>{ //data : 직전 셋팅값
+        let id = 'select_start';
+        let title = this.data.start_time_text == null ? '시작 시간*' : this.data.start_time_text;
+        let icon = '/static/common/icon/icon_clock.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ //data : 직전 셋팅값
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -307,8 +323,12 @@ class Plan_add{
     }
 
     dom_row_end_time_select(){
-        let end_time_text = this.data.end_time_text == null ? '종료 시간*' : this.data.end_time_text;
-        let html = CComponent.create_row('select_end', end_time_text, '/static/common/icon/icon_clock_white.png', HIDE, ()=>{ //data : 직전 셋팅값
+        let id = 'select_end';
+        let title = this.data.end_time_text == null ? '종료 시간*' : this.data.end_time_text;
+        let icon = '/static/common/icon/icon_clock_white.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ //data : 직전 셋팅값
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -328,7 +348,12 @@ class Plan_add{
     }
 
     dom_row_repeat_select(){
-        let html = CComponent.create_row('select_repeat', this.data.repeat.power == OFF ? '반복 일정' : this.data.repeat.day.join(', '), '/static/common/icon/icon_repeat.png', SHOW, ()=>{
+        let id = 'select_repeat';
+        let title =this.data.repeat.power == OFF ? '반복 일정' : this.data.repeat.day.join(', ')
+        let icon = '/static/common/icon/icon_repeat.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_REPEAT_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 repeat_select = new RepeatSelector('#wrapper_box_repeat_select', this, (set_data)=>{
                     this.repeat = set_data;
@@ -340,8 +365,15 @@ class Plan_add{
     }
 
     dom_row_memo_select(){
+        let id = 'select_memo';
+        let title = this.data.memo == "" ? '' : this.data.memo;
+        let placeholder = '일정 메모';
+        let icon = '/static/common/icon/icon_note.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let html = CComponent.create_input_row ('select_memo', this.data.memo == "" ? '' : this.data.memo, '일정 메모','/static/common/icon/icon_note.png', HIDE, style, false, (input_data)=>{
+        let disabled = false;
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });

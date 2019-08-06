@@ -237,6 +237,7 @@ class Member_view{
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
+        document.querySelector('.popup_member_view .wrapper_top').style.border = 0;
     }
 
     render_toolbox(){
@@ -266,15 +267,22 @@ class Member_view{
     }
 
     dom_row_toolbox(){
+        let id = 'member_name_view';
+        let title = this.data.name == null ? '' : this.data.name;
+        let placeholder = '회원명';
+        let icon = undefined;
+        let icon_r_visible = HIDE;
+        let icon_r_text;
         let style = {"font-size":"20px", "font-weight":"bold"};
-        let sub_html = CComponent.create_input_row ('member_name_view', this.data.name == null ? '' : this.data.name, '회원명', undefined, HIDE, style, false, (input_data)=>{
+        let disabled = false;
+        let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
             this.send_data();
         });
         
         let html = `
-        <div class="member_view_upper_box" style="padding-bottom:8px;">
+        <div class="member_view_upper_box">
             <div style="display:inline-block;width:320px;">
                 <div style="display:inline-block;width:320px;">
                     ${sub_html}
@@ -286,7 +294,6 @@ class Member_view{
     }
 
     dom_row_member_user_id_input(){
-        let icon_r_visible = SHOW;
         let onclick;
         if(this.data.connection == CONNECTED || this.data.connection == CONNECT_WAIT){
             onclick = ()=>{
@@ -307,20 +314,31 @@ class Member_view{
                 });
             };
         }
+        let id = 'member_user_id_view';
+        let title = this.data.user_id == null ? '회원ID' : this.data.user_id;
+        let icon = '/static/common/icon/person_black.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text;
 
-        let html = CComponent.create_row ('member_user_id_view', this.data.user_id == null ? '회원ID' : this.data.user_id, '/static/common/icon/person_black.png', icon_r_visible, ()=>{
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
             onclick();
         });
         return html;
     }
 
     dom_row_member_phone_input(){
+        let id = 'member_phone_view';
+        let title = this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone;
+        let placeholder = '휴대폰 번호';
+        let icon = '/static/common/icon/icon_smartphone.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text;
         let style = null;
         let disabled = false;
         if(this.data.connection != 1){
             disabled = true;
         }
-        let html = CComponent.create_input_number_row ('member_phone_view', this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone, '휴대폰 번호', '/static/common/icon/icon_smartphone.png', HIDE, style, disabled, (input_data)=>{
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
             this.send_data();
@@ -330,8 +348,12 @@ class Member_view{
 
     dom_row_member_birth_input(){
         //등록하는 행을 만든다.
-        let birth_text = this.data.birth == null || this.data.birth == 'None' ? '생년월일' : Object.values(this.data.birth).join('.');
-        let html = CComponent.create_row('input_member_birth', birth_text, '/static/common/icon/icon_cake.png', HIDE, ()=>{ 
+        let id = 'input_member_birth';
+        let title = this.data.birth == null || this.data.birth == 'None' ? '생년월일' : Object.values(this.data.birth).join('.');
+        let icon = '/static/common/icon/icon_cake.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -354,7 +376,12 @@ class Member_view{
     }
 
     dom_row_member_sex_input(){
-        let html = CComponent.create_row ('input_member_sex', this.data.sex == null ||this.data.sex == 'None' ? '성별' : SEX_CODE[this.data.sex], '/static/common/icon/person_black.png', HIDE, ()=>{
+        let id = 'input_member_sex';
+        let title = this.data.sex == null ||this.data.sex == 'None' ? '성별' : SEX_CODE[this.data.sex];
+        let icon = '/static/common/icon/person_black.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
             let user_option = {
                                 male:{text:"남성", callback:()=>{this.sex = "M";this.send_data();layer_popup.close_layer_popup();}},
                                 female:{text:"여성", callback:()=>{this.sex = "W";this.send_data();layer_popup.close_layer_popup();}}
@@ -367,8 +394,15 @@ class Member_view{
     }
 
     dom_row_member_memo_input(){
+        let id = 'member_memo_view';
+        let title = this.data.memo == null ? '' : this.data.memo;
+        let placeholder = '특이사항';
+        let icon = '/static/common/icon/icon_note.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let html = CComponent.create_input_row ('member_memo_view', this.data.memo == null ? '' : this.data.memo, '특이사항', '/static/common/icon/icon_note.png', HIDE, style, false, (input_data)=>{
+        let disabled = false;
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });
@@ -387,8 +421,12 @@ class Member_view{
             }
 
             //티켓 이름 표기 부분
-            let ticket_text = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
-            let html_ticket_name = CComponent.create_row(`input_ticket_select_${i}`, ticket_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
+            let id = `input_ticket_select_${i}`;
+            let title = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
+            let icon = '/static/common/icon/icon_rectangle_blank.png';
+            let icon_r_visible = SHOW;
+            let icon_r_text = "";
+            let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
                 let ticket_id =  this.data.ticket[i].ticket_id;
                 // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
                 //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
@@ -663,21 +701,32 @@ class Member_simple_view{
     }
 
     dom_row_member_name_input(){
+        let id = 'member_name_view';
+        let title = this.data.name == null ? '회원명*' : this.data.name;
+        let icon = '/static/common/icon/person_black.png';
+        let icon_r_text = "";
         let icon_r_visible = HIDE;
         let onclick = ()=>{alert('연결 되어있음');};
         if(this.data.connection != 1){
             icon_r_visible = SHOW;
             onclick = ()=>{alert('연결 되어있지 않음');};
         }
-        let html = CComponent.create_row ('member_name_view', this.data.name == null ? '회원명*' : this.data.name, '/static/common/icon/person_black.png', SHOW, ()=>{
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
             onclick();
         });
         return html;
     }
 
     dom_row_member_phone_input(){
+        let id = 'member_phone_view';
+        let title =  this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone;
+        let placeholder = '휴대폰 번호';
+        let icon = '/static/common/icon/icon_smartphone.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let html = CComponent.create_input_number_row ('member_phone_view', this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone, '휴대폰 번호', '/static/common/icon/icon_smartphone.png', HIDE, style, true, (input_data)=>{
+        let disabled = true;
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
         });
@@ -686,8 +735,15 @@ class Member_simple_view{
 
     dom_row_member_birth_input(){
         //등록하는 행을 만든다.
+        let id = 'member_birth_view';
+        let title = this.data.birth == null || this.data.birth == 'None' ? '미입력 (생년월일)' : this.data.birth;
+        let placeholder =  '생년월일';
+        let icon = '/static/common/icon/icon_cake.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let html = CComponent.create_input_number_row ('member_birth_view', this.data.birth == null || this.data.birth == 'None' ? '미입력 (생년월일)' : this.data.birth, '생년월일', '/static/common/icon/icon_cake.png', HIDE, style, true, (input_data)=>{
+        let disabled = true;
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
         });
@@ -695,15 +751,27 @@ class Member_simple_view{
     }
 
     dom_row_member_sex_input(){
-        let html = CComponent.create_row ('member_sex_view', this.data.sex == null || this.data.sex == 'None' ? '미입력 (성별)' : this.data.sex, '/static/common/icon/person_black.png', HIDE, ()=>{
+        let id = 'member_sex_view';
+        let title = this.data.sex == null || this.data.sex == 'None' ? '미입력 (성별)' : this.data.sex;
+        let icon = '/static/common/icon/person_black.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
             
         });
         return html;
     }
 
     dom_row_member_memo_input(){
+        let id = 'member_memo_view';
+        let title = this.data.memo == null ? '' : this.data.memo;
+        let placeholder = '특이사항';
+        let icon = '/static/common/icon/icon_note.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let html = CComponent.create_input_row ('member_memo_view', this.data.memo == null ? '' : this.data.memo, '특이사항', '/static/common/icon/icon_note.png', HIDE, style, true, (input_data)=>{
+        let disabled = true;
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });
@@ -721,8 +789,12 @@ class Member_simple_view{
             }
 
             //티켓 이름 표기 부분
-            let ticket_text = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
-            let html_ticket_name = CComponent.create_row(`input_ticket_select_${i}`, ticket_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, ()=>{ 
+            let id = `input_ticket_select_${i}`;
+            let title = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
+            let icon = '/static/common/icon/icon_rectangle_blank.png';
+            let icon_r_visible = SHOW;
+            let icon_r_text = "";
+            let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
                 let ticket_id =  this.data.ticket[i].ticket_id;
                 // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
                 //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');

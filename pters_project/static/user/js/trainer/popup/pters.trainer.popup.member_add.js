@@ -169,6 +169,7 @@ class Member_add{
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
+        document.querySelector('.popup_member_add .wrapper_top').style.border = 0;
     }
 
     render_toolbox(){
@@ -203,7 +204,7 @@ class Member_add{
 
     dom_row_toolbox(){
         let html = `
-        <div class="member_add_upper_box" style="padding-bottom:8px;">
+        <div class="member_add_upper_box">
             <div style="display:inline-block;width:200px;">
                 <div style="display:inline-block;width:200px;">
                     <span style="font-size:20px;font-weight:bold;">회원 등록</span>
@@ -220,9 +221,10 @@ class Member_add{
         let placeholder = '회원명*';
         let icon = '/static/common/icon/person_black.png';
         let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
         let input_disabled = false;
-        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, style, input_disabled, (input_data)=>{
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
         });
@@ -235,9 +237,10 @@ class Member_add{
         let placeholder = '휴대폰 번호*';
         let icon = '/static/common/icon/icon_smartphone.png';
         let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
         let input_disabled = false;
-        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, style, input_disabled, (input_data)=>{
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
         });
@@ -250,7 +253,8 @@ class Member_add{
         let title = this.data.birth == null ? '생년월일' : Object.values(this.data.birth).join('.');
         let icon = '/static/common/icon/icon_cake.png';
         let icon_r_visible = HIDE;
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, ()=>{ 
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -276,7 +280,8 @@ class Member_add{
         let title = this.data.sex == null ? '성별' : this.data.sex;
         let icon = '/static/common/icon/person_black.png';
         let icon_r_visible = HIDE;
-        let html = CComponent.create_row (id, title, icon, icon_r_visible, ()=>{
+        let icon_r_text = "";
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
             let user_option = {
                                 male:{text:"남성", callback:()=>{this.sex = "M";layer_popup.close_layer_popup();}},
                                 female:{text:"여성", callback:()=>{this.sex = "W";layer_popup.close_layer_popup();}}
@@ -294,9 +299,10 @@ class Member_add{
         let placeholder = '특이사항';
         let icon = '/static/common/icon/icon_note.png';
         let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
         let input_disabled = false;
-        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, style, input_disabled, (input_data)=>{
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         });
@@ -308,7 +314,8 @@ class Member_add{
         let title = this.data.ticket_id.length == 0 ? '수강권*' : this.data.ticket_name.join(', ');
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = SHOW;
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, ()=>{ 
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1, (set_data)=>{
                     this.ticket = set_data;
@@ -321,8 +328,12 @@ class Member_add{
 
     dom_row_start_date_select(){
         //등록하는 행을 만든다.
-        let start_date_text = this.data.start_date == null ? '시작일*' : this.data.start_date_text;
-        let html = CComponent.create_row('start_date_select', start_date_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
+        let id = 'start_date_select';
+        let title = this.data.start_date == null ? '시작일*' : this.data.start_date_text;
+        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
 
@@ -343,8 +354,12 @@ class Member_add{
 
     dom_row_end_date_select(){
         //등록하는 행을 만든다.
-        let end_date_text = this.data.end_date == null ? '종료일*' : this.data.end_date_text;
-        let html = CComponent.create_row('end_date_select', end_date_text, '/static/common/icon/icon_rectangle_blank.png', HIDE, ()=>{ 
+        let id = 'end_date_select';
+        let title = this.data.end_date == null ? '종료일*' : this.data.end_date_text;
+        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
 
@@ -369,9 +384,10 @@ class Member_add{
         let placeholder = '횟수*';
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
         let input_disabled = false;
-        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, style, input_disabled, (input_data)=>{
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.reg_count = user_input_data;
         });
@@ -384,9 +400,10 @@ class Member_add{
         let placeholder = '가격';
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
         let input_disabled = false;
-        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, style, input_disabled, (input_data)=>{
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.reg_price = user_input_data;
         });
