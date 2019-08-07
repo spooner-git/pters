@@ -63,7 +63,6 @@ class Member {
             //통신성공시 처리
             success:function (data){
                 // var jsondata = JSON.parse(data);
-                console.log(data);
                 end_time = performance.now();
                 // if(jsondata.messageArray.length>0){
                 //     console.log("에러:" + jsondata.messageArray);
@@ -119,7 +118,6 @@ class Member {
         }
 
         this.member_length = length;
-        console.log("whoe", whole_data)
 
         let html_temp = [];
         for (let i=0; i<length; i++){
@@ -282,7 +280,6 @@ class Member_func{
             //통신성공시 처리
             success:function(received_data){
                 let data = JSON.parse(received_data);
-                console.log(data);
                 if(callback != undefined){
                     callback(data);
                 }

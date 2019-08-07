@@ -239,15 +239,17 @@
 	background-color: #fe4e65;
 	border: 1px solid #ffffff;
 	box-sizing: border-box;
-	
 	padding-left: 3px;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
 	font-size: 10px;
 	letter-spacing: -0.3px;
-
 	z-index: 2;
+	/* white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden; */
+	overflow: hidden;
+	word-break: break-all;
+	line-height: 10px;
+	padding: 2px;
 }
 .week_group_schedule{
 	background-color: #fe4e65;
