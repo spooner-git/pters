@@ -971,7 +971,8 @@ def payment_for_ios_logic(request):
                 receipt_data = json_loading_data['receipt_data']
                 product_id = json_loading_data['product_id']
                 transaction_id = json_loading_data['transaction_id']
-                ios_receipt_check = IosReceiptCheckTb(member_id=request.user.id, payment_tb_id=payment_info.payment_id,
+                ios_receipt_check = IosReceiptCheckTb(member_id=request.user.id,
+                                                      payment_tb_id=payment_info.payment_info_id,
                                                       original_transaction_id=transaction_id, receipt_data=receipt_data,
                                                       iap_status_cd='YET_VALIDATION')
                 ios_receipt_check.save()
