@@ -750,7 +750,7 @@ class Calendar {
                             if(plan.state_cd != "NP"){
                                 plan_status_color = '#d2d1cf';
                                 plan_font_style = 'color:#282828;';
-                                plan_font_style+='text-decoration:line-through;';
+                                plan_font_style+='text-decoration:line-through;text-decoration-color:#00000054;';
                             }
 
                             let tform_s = time_form(plan.start_time);
