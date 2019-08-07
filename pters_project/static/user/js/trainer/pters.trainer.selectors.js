@@ -1642,6 +1642,7 @@ class DatePickerSelector{
             data:{
                 year:this.date.current_year, month:this.date.current_month, date:this.date.current_date
             },
+            min:null,
             callback_when_set : ()=>{
                 return false;
             }
@@ -1746,6 +1747,14 @@ class DatePickerSelector{
 
             for(let j=0; j<7; j++){
                 let data_date = date_format(`${reference_date_year}-${reference_date_month}-${date_cache}`)["yyyy-mm-dd"];
+                let date_compare = false;
+                if(this.option.min != null){
+                    date_compare = DateRobot.compare(`${this.option.min.year}-${this.option.min.month}-${this.option.min.date}`, data_date);
+                    if(date_compare == true){
+                        //날짜가 min date보다 전 일경우
+                    }
+                }
+
                 let font_color = "";
                 let today_style = "";
                 let date = date_cache;
@@ -1753,6 +1762,9 @@ class DatePickerSelector{
                     font_color = 'color:red;';
                 }else if(j == 6){
                     font_color = 'color:blue;';
+                }
+                if(date_compare == true){
+                    font_color = 'color:#cccccc';
                 }
 
                 if(this.date.current_year == reference_date_year && this.date.current_month == reference_date_month && this.date.current_date == date_cache){
@@ -1769,12 +1781,15 @@ class DatePickerSelector{
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}" id="calendar_cell_${data_date}"" style="cursor:pointer;">
                                                <div class="calendar_date_number" style="${font_color}${today_style}">${date}</div>
                                           </div>`);
-
                     $(document).off('click', `#calendar_cell_${data_date}`).on('click', `#calendar_cell_${data_date}`, ()=>{
-                        let date = Number(data_date.split('-')[2]);
-                        this.dataset = {data:{year:reference_date_year, month:reference_date_month, date}};
-                        this.option.callback_when_set(this.store); 
-                        layer_popup.close_layer_popup();
+                        if(date_compare != true){
+                            let date = Number(data_date.split('-')[2]);
+                            this.dataset = {data:{year:reference_date_year, month:reference_date_month, date}};
+                            this.option.callback_when_set(this.store); 
+                            layer_popup.close_layer_popup();
+                        }else{
+                            show_error_message('종료일은 시작일보다 빠를수 없습니다.');
+                        }
                     });
                     date_cache++;
                 }

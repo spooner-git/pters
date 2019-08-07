@@ -121,6 +121,37 @@ class DateRobot{
 
         return {year:year, month:month, date:date};
     }
+
+    static compare(date_form_1, date_form_2){
+        let year1 = date_form_1.split('-')[0];
+        let month1 = date_form_1.split('-')[1];
+        let date1 = date_form_1.split('-')[2];
+        let year2 = date_form_2.split('-')[0];
+        let month2 = date_form_2.split('-')[1];
+        let date2 = date_form_2.split('-')[2];
+
+        if(month1.length < 2){
+            month1 = '0'+month1;
+        }
+        if(month2.length < 2){
+            month2 = '0'+month2;
+        }
+        if(date1.length < 2){
+            date1 = '0'+date1;
+        }
+        if(date2.length < 2){
+            date2 = '0'+date2;
+        }
+
+        let yyyymmdd1 = Number(`${year1}${month1}${date1}`);
+        let yyyymmdd2 = Number(`${year2}${month2}${date2}`);
+
+        if(yyyymmdd1 > yyyymmdd2){
+            return true
+        }else{
+            return false;
+        }
+    }
 }
 
 class TimeRobot{
