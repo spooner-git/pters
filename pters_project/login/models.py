@@ -20,11 +20,11 @@ class MemberTb(TimeStampedModel):
     age = models.IntegerField(db_column='AGE', blank=True, null=True)  # Field name made lowercase.
     sex = models.CharField(db_column='SEX', max_length=2, blank=True, default='')  # Field name made lowercase.
     birthday_dt = models.DateField(db_column='BIRTHDAY_DT', blank=True, null=True)  # Field name made lowercase.
-    country = models.CharField(db_column='COUNTRY', max_length=255, blank=True, default='')  # Field name made lowercase.
-    address = models.CharField(db_column='ADDRESS', max_length=255, blank=True, default='')  # Field name made lowercase.
+    country = models.CharField(db_column='COUNTRY', max_length=255, blank=True, default='')
+    address = models.CharField(db_column='ADDRESS', max_length=255, blank=True, default='')
     job = models.CharField(db_column='JOB', max_length=20, blank=True, default='')  # Field name made lowercase.
     contents = models.CharField(db_column='CONTENTS', max_length=255, blank=True, default='')
-    reg_info = models.CharField(db_column='REG_INFO', max_length=20, blank=True, default='')  # Field name made lowercase
+    reg_info = models.CharField(db_column='REG_INFO', max_length=20, blank=True, default='')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
@@ -38,7 +38,7 @@ class MemberTb(TimeStampedModel):
 
 class CommonCdTb(models.Model):
     common_cd_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    group_cd = models.CharField(db_column='GROUP_CD', max_length=45, blank=True, default='')  # Field name made lowercase
+    group_cd = models.CharField(db_column='GROUP_CD', max_length=45, blank=True, default='')
     common_cd = models.CharField(db_column='COMMON_CD', primary_key=True, max_length=45)  # Field name made lowercase.
     common_cd_nm = models.CharField(db_column='COMMON_CD_NM', max_length=100, blank=True, default='')
     group_cd_nm = models.CharField(db_column='GROUP_CD_NM', max_length=100, blank=True, default='')
@@ -60,7 +60,7 @@ class LogTb(TimeStampedModel):
     from_member_name = models.CharField(db_column='FROM_MEMBER_NAME', max_length=20, blank=True, default='')
     to_member_name = models.CharField(db_column='TO_MEMBER_NAME', max_length=20, blank=True, default='')
     class_tb_id = models.CharField(db_column='CLASS_TB_ID', max_length=20, blank=True, default='')
-    lecture_tb_id = models.CharField(db_column='LECTURE_TB_ID', max_length=20, blank=True, default='')
+    member_ticket_tb_id = models.CharField(db_column='LECTURE_TB_ID', max_length=20, blank=True, default='')
     log_info = models.CharField(db_column='LOG_INFO', max_length=255, blank=True, default='')
     log_how = models.CharField(db_column='LOG_HOW', max_length=255, blank=True, default='')
     log_detail = models.CharField(db_column='LOG_DETAIL', max_length=255, blank=True, default='')
@@ -94,11 +94,11 @@ class SnsInfoTb(TimeStampedModel):
     sns_info_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
     sns_id = models.CharField(db_column='SNS_ID', max_length=255, blank=True, default='')  # Field name made lowercase.
-    sns_type = models.CharField(db_column='SNS_TYPE', max_length=10, blank=True, default='')  # Field name made lowercase.
-    sns_name = models.CharField(db_column='SNS_NAME', max_length=255, blank=True, default='')  # Field name made lowercase.
-    sns_profile = models.CharField(db_column='SNS_PROFILE', max_length=255, blank=True, default='')  # Field name made lowercase.
-    sns_connect_date = models.DateField(db_column='SNS_CONNECT_DATE', blank=True, null=True)  # Field name made lowercase.
-    change_password_check = models.IntegerField(db_column='CHANGE_PASSWORD_CHECK', default=0)  # Field name made lowercase.
+    sns_type = models.CharField(db_column='SNS_TYPE', max_length=10, blank=True, default='')
+    sns_name = models.CharField(db_column='SNS_NAME', max_length=255, blank=True, default='')
+    sns_profile = models.CharField(db_column='SNS_PROFILE', max_length=255, blank=True, default='')
+    sns_connect_date = models.DateField(db_column='SNS_CONNECT_DATE', blank=True, null=True)
+    change_password_check = models.IntegerField(db_column='CHANGE_PASSWORD_CHECK', default=0)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:

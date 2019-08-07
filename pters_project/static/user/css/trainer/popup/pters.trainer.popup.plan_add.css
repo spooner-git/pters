@@ -1,0 +1,24 @@
+.popup_plan_add{
+	-webkit-overflow-scrolling: touch;
+}
+
+.popup_plan_add .obj_box_full{
+	padding: 15px 16px;
+}
+
+.popup_plan_add .popup_toolbox{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+	padding: 0px 16px 10px 50px;
+	box-sizing: border-box
+}
+
+.popup_plan_add .plan_add_upper_box{
+	padding-bottom:8px;
+	box-sizing:border-box;
+}
+
+.popup_plan_add .popup_content{
+	padding-top: 1px;
+}

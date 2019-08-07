@@ -22,146 +22,125 @@ urlpatterns = [
     url(r'^get_error_info/$', views.GetErrorInfoView.as_view(), name='get_error_info'),
 
     # 일정 기능 #####################################################################################################
-    # 강사 스케쥴 조회 - 1:1/Group/Off
-    url(r'^get_trainer_schedule/$', views.GetTrainerScheduleView.as_view(), name='get_trainer_schedule'),
-    # 강사 스케쥴 조회 - Off
+    # 강사 전체 스케쥴 조회(OFF/개인/그룹) - refactoring
+    url(r'^get_trainer_schedule_all/$', views.GetTrainerScheduleAllView.as_view(), name='get_trainer_schedule_all'),
+    # 그룹 수업 일정에 속하는 회원의 일정 조회 - refactoring
+    url(r'^get_lecture_member_schedule_list/$', views.GetLectureMemberScheduleListViewAjax.as_view(),
+        name='get_lecture_member_schedule_list'),
+
+    # 강사 전체 스케쥴 조회(OFF/개인/그룹) - refactoring
+    url(r'^get_trainer_schedule_info/$', views.GetTrainerScheduleInfoView.as_view(), name='get_trainer_schedule_info'),
+
+    # 회원 스케쥴 조회 - 수업 - refactoring
+    url(r'^get_member_schedule_all/$', views.GetMemberScheduleAllView.as_view(), name='get_member_schedule_all'),
+
+    # 수업 스케쥴 조회 - refactoring
+    url(r'^get_lecture_schedule_list/$', views.GetLectureScheduleListView.as_view(), name='get_lecture_schedule_list'),
+
+    # OFF 반복 일정 조회 - refactoring
     url(r'^get_off_repeat_schedule/$', views.GetOffRepeatScheduleView.as_view(), name='get_off_repeat_schedule'),
-    # 강사 스케쥴 조회 - Group
-    url(r'^get_trainer_group_schedule/$', views.GetTrainerGroupScheduleView.as_view(),
-        name='get_trainer_group_schedule'),
-    # 회원 스케쥴 조회 - 1:1/Group
-    url(r'^get_member_schedule/$', views.GetMemberScheduleView.as_view(), name='get_member_schedule'),
-    # 회원 반복 일정 조회 - 1:1/Group
+    # 수업 반복 일정 조회 - refactoring
+    url(r'^get_lecture_repeat_schedule_list/$', views.GetLectureRepeatScheduleListViewAjax.as_view(),
+        name='get_lecture_repeat_schedule_list'),
+    # 회원 반복 일정 조회 - refactoring
     url(r'^get_member_repeat_schedule/$', views.GetMemberRepeatScheduleView.as_view(),
         name='get_member_repeat_schedule'),
-    # 그룹일정에 속하는 그룹회원 일정 조회
-    url(r'^get_group_member_schedule_list/$', views.GetGroupMemberScheduleListViewAjax.as_view(),
-        name='get_group_member_schedule_list'),
-    # 그룹 반복 일정 조회
-    url(r'^get_group_repeat_schedule_list/$', views.GetGroupRepeatScheduleListViewAjax.as_view(),
-        name='get_group_repeat_schedule_list'),
-    # 그룹 반복일정과 같이 등록된 회원들의 반복일정
-    url(r'^get_group_member_repeat_schedule_list/$', views.GetGroupMemberRepeatScheduleListViewAjax.as_view(),
-        name='get_group_member_repeat_schedule_list'),
+
+
 
     # 회원 기능 #####################################################################################################
-    # 회원 정보 조회
+    # 회원 정보 조회 - refactoring
     url(r'^get_member_info/$', views.GetMemberInfoView.as_view(), name='get_member_info'),
-    # 전체 회원 목록 조회
+    url(r'^search_member_info/$', views.SearchMemberInfoView.as_view(), name='search_member_info'),
+    # 전체 회원 목록 조회 - refactoring
     url(r'^get_member_list/$', views.GetMemberListView.as_view(), name='get_member_list'),
-    # 진행중 회원 목록 조회
+    # 진행중 회원 목록 조회 - refactoring
     url(r'^get_member_ing_list/$', views.GetMemberIngListViewAjax.as_view(), name='get_member_ing_list'),
-    # 진행 완료 회원 목록 조회
+    # 진행 완료 회원 목록 조회 - refactoring
     url(r'^get_member_end_list/$', views.GetMemberEndListViewAjax.as_view(), name='get_member_end_list'),
-    # 회원 정보 수정
+
+    # 회원 수강정보 조회 - refactoring
+    url(r'^get_member_ticket_list/$', views.GetMemberTicketListView.as_view(), name='get_member_ticket_list'),
+    # 회원이 들을수 있는 수업 조회
+    url(r'^get_member_lecture_list/$', views.GetMemberLectureListView.as_view(), name='get_member_lecture_list'),
+
+
+    # 회원 정보 수정 - refactoring - 확인 필요
     url(r'^update_member_info/$', views.update_member_info_logic, name='update_member_info'),
-    # 회원 정보 삭제
+    # 회원 정보 삭제 - refactoring - 확인 필요
     url(r'^delete_member_info/$', views.delete_member_info_logic, name='delete_member_info'),
     # 회원 리스트 엑셀 export 기능
     url(r'^export_excel_member_list/$', views.export_excel_member_list_logic, name='export_excel_member_list'),
     # 회원 정보 엑셀 export 기능
     url(r'^export_excel_member_info/$', views.export_excel_member_info_logic, name='export_excel_member_info'),
 
-    # 수강 정보 기능 #####################################################################################################
-    # 수강정보 조회
-    url(r'^get_lecture_list/$', views.GetLectureListView.as_view(), name='get_lecture_list'),
-    # 수강정보 추가
+    # 회원 수강정보 추가 - refactoring
+    url(r'^add_member_ticket_info/$', views.add_member_ticket_info_logic, name='add_member_ticket_info'),
+    # 회원 수강정보 수정 - refactoring - 확인 필요
+    url(r'^update_member_ticket_info/$', views.update_member_ticket_info_logic, name='update_member_ticket_info'),
+    # 회원 수강정보 삭제 - refactoring - 확인 필요
+    url(r'^delete_member_ticket_info/$', views.delete_member_ticket_info_logic, name='delete_member_ticket_info'),
+    # 회원 수강정보 상태 변경 - refactoring - 확인 필요
+    url(r'^update_member_ticket_status_info/$', views.update_member_ticket_status_info_logic,
+        name='update_member_ticket_status_info'),
+    # 회원 연동 상태 변경 - refactoring - 확인 필요
+    url(r'^update_member_connection_info/$', views.update_member_connection_info_logic,
+        name='update_member_connection_info'),
+
+
+
+    # 수업 기능 ##########################################################################################################
+    # 수업 추가 - refactoring
     url(r'^add_lecture_info/$', views.add_lecture_info_logic, name='add_lecture_info'),
-    # 수강정보 수정
-    url(r'^update_lecture_info/$', views.update_lecture_info_logic, name='update_lecture_info'),
-    # 수강정보 삭제
+    # 수업 삭제 - refactoring - 내부 회원 삭제 x
     url(r'^delete_lecture_info/$', views.delete_lecture_info_logic, name='delete_lecture_info'),
-    # 수강정보 종료 상태 변경
-    url(r'^finish_lecture_info/$', views.finish_lecture_info_logic, name='finish_lecture_info'),
-    # 수강정보 환불 상태 변경
-    url(r'^refund_lecture_info/$', views.refund_lecture_info_logic, name='refund_lecture_info'),
-    # 수강정보 진행중 상태 변경
-    url(r'^progress_lecture_info/$', views.progress_lecture_info_logic, name='progress_lecture_info'),
-    # 수강정보 연동 상태 변경
-    url(r'^update_lecture_connection_info/$', views.update_lecture_connection_info_logic,
-        name='update_lecture_connection_info'),
+    # 수업 수정 - refactoring - 내부 회원 수정 x
+    url(r'^update_lecture_info/$', views.update_lecture_info_logic, name='update_lecture_info'),
 
-    # 그룹 기능 ##########################################################################################################
-    # 그룹 추가
-    url(r'^add_group_info/$', views.add_group_info_logic, name='add_group_info'),
-    # 그룹 삭제 - 내부 회원 삭제 x
-    url(r'^delete_group_info/$', views.delete_group_info_logic, name='delete_group_info'),
-    # 그룹 수정 - 내부 회원 수정 x
-    url(r'^update_group_info/$', views.update_group_info_logic, name='update_group_info'),
-    # 진행중 그룹 list 조회
-    url(r'^get_group_info/$', views.GetGroupInfoViewAjax.as_view(), name='get_group_info'),
-    # 그룹 회원 추가
-    url(r'^add_group_member/$', views.add_group_member_logic, name='add_group_member'),
-    # 그룹 회원 삭제
-    url(r'^delete_group_member_info/$', views.delete_group_member_info_logic, name='delete_group_member_info'),
-    # 진행중 그룹 list 조회
-    url(r'^get_group_ing_list/$', views.GetGroupIngListViewAjax.as_view(), name='get_group_ing_list'),
-    # 완료된 그룹 list 조회
-    url(r'^get_group_end_list/$', views.GetGroupEndListViewAjax.as_view(), name='get_group_end_list'),
-    # 그룹 회원 조회
-    url(r'^get_group_member/$', views.GetGroupMemberViewAjax.as_view(), name='get_group_member'),
-    # 그룹 종료 회원 조회
-    url(r'^get_end_group_member/$', views.GetEndGroupMemberViewAjax.as_view(), name='get_end_group_member'),
-    # 그룹 종료 상태 변경
-    url(r'^finish_group_info/$', views.finish_group_info_logic, name='finish_group_info'),
-    # 그룹 재개 상태 변경
-    url(r'^progress_group_info/$', views.progress_group_info_logic, name='progress_group_info'),
-    # 그룹 고정 맴버 변경
-    url(r'^update_fix_group_member/$', views.update_fix_group_member_logic, name='update_fix_group_member'),
+    # 수업 종료 상태 변경 - refactoring
+    url(r'^update_lecture_status_info/$', views.update_lecture_status_info_logic, name='update_lecture_status_info'),
+    # 수업 고정 맴버 변경
+    url(r'^update_fix_lecture_member/$', views.update_fix_lecture_member_logic, name='update_fix_lecture_member'),
 
-    # 패키지 기능 #########################################################################################################
-    # 패키지 추가
-    url(r'^add_package_info/$', views.add_package_info_logic, name='add_package_info'),
-    # 패키지 삭제
-    url(r'^delete_package_info/$', views.delete_package_info_logic, name='delete_package_info'),
-    # 패키지 수정
-    url(r'^update_package_info/$', views.update_package_info_logic, name='update_package_info'),
-    # 패키지에 그룹 추가
-    url(r'^add_package_group_info/$', views.add_package_group_info_logic, name='add_package_group_info'),
-    # 패키지에 그룹 삭제
-    url(r'^delete_package_group_info/$', views.delete_package_group_info_logic, name='delete_package_group_info'),
-    # 진행중 패키지 list 조회
-    url(r'^get_package_ing_list/$', views.GetPackageIngListViewAjax.as_view(), name='get_package_ing_list'),
-    # 완료된 패키지 list 조회
-    url(r'^get_package_end_list/$', views.GetPackageEndListViewAjax.as_view(), name='get_package_end_list'),
-    # 패키지 만들 list 조회
-    url(r'^get_single_package_list/$', views.GetSinglePackageViewAjax.as_view(),
-        name='get_single_package_list'),
-    # 패키지 회원 조회
-    url(r'^get_package_member/$', views.GetPackageMemberViewAjax.as_view(), name='get_package_member'),
-    # 패키지 종료 회원 조회
-    url(r'^get_end_package_member/$', views.GetEndPackageMemberViewAjax.as_view(), name='get_end_package_member'),
-
-    # 패키지 종료 상태 변경
-    url(r'^finish_package_info/$', views.finish_package_info_logic, name='finish_package_info'),
-    # 패키지 재개 상태 변경
-    url(r'^progress_package_info/$', views.progress_package_info_logic, name='progress_package_info'),
-
-    # 패키지 소속 그룹 리스트 조회
-    url(r'^get_package_group_list/$', views.GetPackageGroupListViewAjax.as_view(), name='get_package_group_list'),
-    # 패키지 종료된 소속 그룹 리스트 조회
-    url(r'^get_end_package_group_list/$', views.GetEndPackageGroupListViewAjax.as_view(),
-        name='get_end_package_group_list'),
-
-    # 패키지 회원 추가
-    url(r'^add_package_member/$', views.add_package_member_logic, name='add_package_member'),
-    # 패키지 회원 삭제
-    url(r'^delete_package_member_info/$', views.delete_package_member_info_logic, name='delete_package_member_info'),
+    # 수업 정보 조회 - refactoring
+    url(r'^get_lecture_info/$', views.GetLectureInfoViewAjax.as_view(), name='get_lecture_info'),
+    # 진행중 수업 list 조회 - refactoring
+    url(r'^get_lecture_ing_list/$', views.GetLectureIngListViewAjax.as_view(), name='get_lecture_ing_list'),
+    # 완료된 수업 list 조회 - refactoring
+    url(r'^get_lecture_end_list/$', views.GetLectureEndListViewAjax.as_view(), name='get_lecture_end_list'),
+    # 수업 회원 조회 - refactoring
+    url(r'^get_lecture_ing_member_list/$', views.GetLectureIngMemberListViewAjax.as_view(),
+        name='get_lecture_ing_member_list'),
 
 
 
-    # 수업 관리 기능 ######################################################################################################
-    # 진행중 회원/그룹/클래스 list 조회
-    url(r'^get_member_group_class_ing_list/$', views.GetMemberGroupClassIngListViewAjax.as_view(),
-        name='get_member_group_class_ing_list'),
-    url(r'^get_member_group_class_end_list/$', views.GetMemberGroupClassEndListViewAjax.as_view(),
-        name='get_member_group_class_end_list'),
-    # 진행중 회원 목록 조회 1:1만
-    url(r'^get_member_one_to_one_ing_list/$', views.GetMemberOneToOneIngListViewAjax.as_view(),
-        name='get_member_one_to_one_ing_list'),
-    # 진행 완료 회원 목록 조회 1:1만
-    url(r'^get_member_one_to_one_end_list/$', views.GetMemberOneToOneEndListViewAjax.as_view(),
-        name='get_member_one_to_one_end_list'),
+    # 수강권 기능 #########################################################################################################
+    # 수강권 추가 - refactoring
+    url(r'^add_ticket_info/$', views.add_ticket_info_logic, name='add_ticket_info'),
+    # 수강권 삭제 - refactoring
+    url(r'^delete_ticket_info/$', views.delete_ticket_info_logic, name='delete_ticket_info'),
+    # 수강권 수정 - refactoring
+    url(r'^update_ticket_info/$', views.update_ticket_info_logic, name='update_ticket_info'),
+    # 수강권에 수업 추가 - refactoring
+    url(r'^add_ticket_lecture_info/$', views.add_ticket_lecture_info_logic, name='add_ticket_lecture_info'),
+    # 수강권에 수업 삭제 - refactoring
+    url(r'^delete_ticket_lecture_info/$', views.delete_ticket_lecture_info_logic, name='delete_ticket_lecture_info'),
+    # 수강권 상태 변경 - refactoring
+    url(r'^update_ticket_status_info/$', views.update_ticket_status_info_logic, name='update_ticket_status_info'),
+
+    # 수강권 정보 조회 - refactoring
+    url(r'^get_ticket_info/$', views.GetTicketInfoViewAjax.as_view(), name='get_ticket_info'),
+    # 진행중 수강권 list 조회 - refactoring
+    url(r'^get_ticket_ing_list/$', views.GetTicketIngListViewAjax.as_view(), name='get_ticket_ing_list'),
+    # 완료된 수강권 list 조회 - refactoring
+    url(r'^get_ticket_end_list/$', views.GetTicketEndListViewAjax.as_view(), name='get_ticket_end_list'),
+    # 수강권 회원 조회 - refactoring
+    url(r'^get_ticket_ing_member_list/$', views.GetTicketIngMemberListViewAjax.as_view(),
+        name='get_ticket_ing_member_list'),
+    # 수강권 종료 회원 조회 - refactoring
+    url(r'^get_ticket_end_member_list/$', views.GetTicketEndMemberListViewAjax.as_view(),
+        name='get_ticket_end_member_list'),
+
 
 
     # 강좌 기능 ##########################################################################################################
@@ -234,32 +213,12 @@ urlpatterns = [
     # 페이지 #####################################################################################################
     # 강사 메인 페이지
     url(r'^trainer_main/$', views.TrainerMainView.as_view(), name='trainer_main'),
-    # 일일 일정 페이지
-    url(r'^cal_day/$', views.CalDayView.as_view(), name='cal_day'),
-    # 주간 일정 페이지
-    url(r'^cal_week/$', views.CalWeekView.as_view(), name='cal_week'),
-    # 월간 일정 페이지
-    url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
     # 일정 페이지
     url(r'^cal_total/$', views.CalTotalView.as_view(), name='cal_total'),
     # 회원/그룹/클래스 통합 뷰 페이지
     url(r'^lecture_manage/$', views.ManageLectureView.as_view(), name='lecture_manage'),
-    # 수강권 페이지
-    url(r'^ticket_manage/$', views.ManageTicketView.as_view(), name='ticket_manage'),
     # 회원 관리 페이지
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
-    # 그룹 관리 페이지
-    url(r'^group_manage/$', views.ManageGroupView.as_view(), name='group_manage'),
-    # 클래스 관리 페이지
-    url(r'^class_manage/$', views.ManageClassView.as_view(), name='class_manage'),
-    # 센터 관리 페이지
-    url(r'^center_manage/$', views.ManageCenterView.as_view(), name='center_manage'),
-    # 이용 문의 페이지
-    url(r'^help_setting/$', views.HelpPtersView.as_view(), name='help_setting'),
-    # From 피터스팀 페이지
-    url(r'^frompters_setting/$', views.FromPtersView.as_view(), name='frompters_setting'),
-    # About us 페이지
-    url(r'^aboutus_setting/$', views.AboutUsView.as_view(), name='aboutus_setting'),
     # Attend Mode 페이지
     url(r'^attend_mode/$', views.AttendModeView.as_view(), name='attend_mode'),
     # Attend Mode Detail 페이지
@@ -271,7 +230,7 @@ urlpatterns = [
     # Mypage 페이지
     url(r'^trainer_mypage/$', views.MyPageView.as_view(), name='trainer_mypage'),
     # 회원 탈퇴 페이지
-    url(r'^delete_account/$', views.DeleteAccountView.as_view(), name='delete_account'),
+    # url(r'^delete_account/$', views.DeleteAccountView.as_view(), name='delete_account'),
     # Setting 페이지
     url(r'^trainer_setting/$', views.TrainerSettingView.as_view(), name='trainer_setting'),
     # 배경 화면 선택 페이지
@@ -282,24 +241,56 @@ urlpatterns = [
     url(r'^reserve_setting/$', views.ReserveSettingView.as_view(), name='reserve_setting'),
     # 예약 관련 Setting 페이지
     url(r'^basic_setting/$', views.BasicSettingView.as_view(), name='basic_setting'),
-    # 금액 Setting 페이지
-    url(r'^sales_setting/$', views.SalesSettingView.as_view(), name='sales_setting'),
-    # 클래스 Setting 페이지
-    url(r'^class_setting/$', views.ClassSettingView.as_view(), name='class_setting'),
-    # 언어 Setting 페이지
-    url(r'^language_setting/$', views.LanguageSettingView.as_view(), name='language_setting'),
     # 매출 관리 페이지
     url(r'^work_manage/$', views.ManageWorkView.as_view(), name='work_manage'),
     # 알람 조회 페이지
     url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
     # 알람 조회 페이지 PC
-    url(r'^alarm_pc/$', views.AlarmPCView.as_view(), name='alarm_pc'),
+    # url(r'^alarm_pc/$', views.AlarmPCView.as_view(), name='alarm_pc'),
 
-    # iframe 주간 일정 페이지
-    url(r'^iframe_week/$', views.CalWeekIframeView.as_view(), name='iframe_week'),
-    # iframe 월간 일정 페이지
-    url(r'^iframe_month/$', views.CalMonthIframeView.as_view(), name='iframe_month'),
-    # iframe 회원 달력 미리보기 페이지
-    url(r'^iframe_preview/$', views.CalPreviewIframeView.as_view(), name='iframe_preview'),
     ######################################################################################################
+
+    # 리뉴얼 
+    # 팝업
+    # 일정 팝업 페이지
+    url(r'^popup_plan_view/$', views.PopupCalendarPlanView.as_view(), name='popup_plan_view'),
+    # 일정 팝업 페이지
+    url(r'^popup_plan_add/$', views.PopupCalendarPlanAdd.as_view(), name='popup_plan_add'),
+    # 회원정보 팝업 페이지
+    url(r'^popup_member_view/$', views.PopupMemberView.as_view(), name='popup_member_view'),
+    # 회원 간단 정보 팝업 페이지
+    url(r'^popup_member_simple_view/$', views.PopupMemberSimpleView.as_view(), name='popup_member_simple_view'),
+    # 회원추가 팝업 페이지
+    url(r'^popup_member_add/$', views.PopupMemberAdd.as_view(), name='popup_member_add'),
+    # 회원설정 팝업 페이지
+    url(r'^popup_member_edit/$', views.PopupMemberEdit.as_view(), name='popup_member_edit'),
+    # 수업정보 팝업 페이지
+    url(r'^popup_lecture_view/$', views.PopupLectureView.as_view(), name='popup_lecture_view'),
+    # 수업 간단 정보 팝업 페이지
+    url(r'^popup_lecture_simple_view/$', views.PopupLectureSimpleView.as_view(), name='popup_lecture_simple_view'),
+    # 수업추가 팝업 페이지
+    url(r'^popup_lecture_add/$', views.PopupLectureAdd.as_view(), name='popup_lecture_add'),
+    # 수업설정 팝업 페이지
+    url(r'^popup_lecture_edit/$', views.PopupLectureEdit.as_view(), name='popup_lecture_edit'),
+    # 수강권정보 팝업 페이지
+    url(r'^popup_ticket_view/$', views.PopupTicketView.as_view(), name='popup_ticket_view'),
+    # 수강권 간단 정보 팝업 페이지
+    url(r'^popup_ticket_simple_view/$', views.PopupTicketSimpleView.as_view(), name='popup_ticket_simple_view'),
+    # 수강권추가 팝업 페이지
+    url(r'^popup_ticket_add/$', views.PopupTicketAdd.as_view(), name='popup_ticket_add'),
+    # 수강권설정 팝업 페이지
+    url(r'^popup_ticket_edit/$', views.PopupTicketEdit.as_view(), name='popup_ticket_edit'),
+
+    # 회원 선택 팝업 페이지
+    url(r'^popup_member_select/$', views.PopupMemberSelect.as_view(), name='popup_member_select'),
+    # 수업 선택 팝업 페이지
+    url(r'^popup_lecture_select/$', views.PopupLectureSelect.as_view(), name='popup_lecture_select'),
+    # 수강권 선택 팝업 페이지
+    url(r'^popup_ticket_select/$', views.PopupTicketSelect.as_view(), name='popup_ticket_select'),
+    # 색상태그 선택 팝업 페이지
+    url(r'^popup_color_select/$', views.PopupColorSelect.as_view(), name='popup_color_select'),
+
+
+    # url(r'^refresh_all_data/$', views.refresh_all_data_logic, name='refresh_all_data')
+
 ]

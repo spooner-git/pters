@@ -31,9 +31,9 @@
         <option value="$MODULE_DIR$/schedule/templates" />
         <option value="$MODULE_DIR$/payment/templates" />
         <option value="$MODULE_DIR$/configs/templates" />
-        <option value="$MODULE_DIR$/center/templates" />
         <option value="$MODULE_DIR$/board/templates" />
         <option value="$MODULE_DIR$/stats/templates" />
+        <option value="$MODULE_DIR$/tasks/templates" />
       </list>
     </option>
   </component>

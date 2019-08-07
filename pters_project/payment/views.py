@@ -1,33 +1,28 @@
 import datetime
 import json
-
-import httplib2
 import logging
 
+import httplib2
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
-from django.db import InternalError
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import render, redirect
+from django.utils import timezone
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
-from django.utils import timezone
 
-# Create your views here.
-
-from configs import settings
 from configs.const import USE, UN_USE
-
+from configs import settings
 from login.models import MemberTb
-from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb, ProductPriceTb, ProductFunctionAuthTb
-
 from .functions import func_set_billing_schedule, func_get_imp_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_cancel_period_billing_schedule, \
-    func_iamport_webhook_customer_billing_logic, func_set_billing_schedule_now, func_get_payment_info_from_imp
+    func_set_billing_schedule_now, func_get_payment_info_from_imp
+from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb, ProductPriceTb, ProductFunctionAuthTb, \
+    IosReceiptCheckTb
 
 logger = logging.getLogger(__name__)
 
@@ -37,17 +32,18 @@ class PaymentView(LoginRequiredMixin, View):
 
     def get(self, request):
         context = {}
-        today = datetime.date.today()
-        function_auth_list = []
         product_list = ProductTb.objects.filter(upper_product_id='1', use=USE).exclude(product_id='6').order_by('order')
         for product_info in product_list:
-            product_price_list = ProductPriceTb.objects.filter(product_tb_id=product_info.product_id, use=USE).order_by('order')
-            sub_product_list = ProductTb.objects.filter(upper_product_id=product_info.product_id, use=USE).order_by('order')
+            product_price_list = ProductPriceTb.objects.filter(product_tb_id=product_info.product_id,
+                                                               use=USE).order_by('order')
+            sub_product_list = ProductTb.objects.filter(upper_product_id=product_info.product_id,
+                                                        use=USE).order_by('order')
             product_info.price_list = product_price_list
             if len(sub_product_list) > 0:
                 product_info.sub_product_list = sub_product_list
                 for sub_product_info in sub_product_list:
-                    sub_product_price_list = ProductPriceTb.objects.filter(product_tb_id=sub_product_info.product_id, use=USE).order_by('order')
+                    sub_product_price_list = ProductPriceTb.objects.filter(product_tb_id=sub_product_info.product_id,
+                                                                           use=USE).order_by('order')
                     sub_product_info.sub_price_list = sub_product_price_list
         payment_count = PaymentInfoTb.objects.filter(member_id=request.user.id).count()
         context['payment_count'] = payment_count
@@ -170,7 +166,7 @@ def check_before_billing_logic(request):
             error = '오류가 발생했습니다.[7]'
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     return render(request, 'ajax/payment_error_info.html', context)
@@ -224,8 +220,9 @@ def check_finish_billing_logic(request):
 
                     # 정기 결제인 경우 정보 update
                     if pre_payment_info.payment_type_cd == 'PERIOD':
-                        before_billing_data = BillingInfoTb.objects.filter(member_id=pre_payment_info.member_id,
-                                                                           use=USE).exclude(customer_uid=pre_payment_info.customer_uid)
+                        before_billing_data = BillingInfoTb.objects.filter(
+                            member_id=pre_payment_info.member_id,
+                            use=USE).exclude(customer_uid=pre_payment_info.customer_uid)
                         try:
                             pre_billing_info = BillingInfoTb.objects.get(customer_uid=pre_payment_info.customer_uid)
                         except ObjectDoesNotExist:
@@ -307,8 +304,9 @@ def billing_check_logic(request):
 
                 # 정기 결제인 경우 정보 update
                 if pre_payment_info.payment_type_cd == 'PERIOD':
-                    before_billing_data = BillingInfoTb.objects.filter(member_id=pre_payment_info.member_id,
-                                                                       use=USE).exclude(customer_uid=pre_payment_info.customer_uid)
+                    before_billing_data = BillingInfoTb.objects.filter(
+                        member_id=pre_payment_info.member_id,
+                        use=USE).exclude(customer_uid=pre_payment_info.customer_uid)
                     try:
                         pre_billing_info = BillingInfoTb.objects.get(customer_uid=pre_payment_info.customer_uid)
                     except ObjectDoesNotExist:
@@ -405,7 +403,7 @@ def cancel_period_billing_logic(request):
             payment_data.update(status='cancelled', use=UN_USE)
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -464,12 +462,9 @@ def restart_period_billing_logic(request):
     context['error'] = error
     if error is not None:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 재결제 신청 오류:'
-                     + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 오류:' + str(error))
     else:
-        logger.info(str(request.user.last_name)+str(request.user.first_name)
-                    + '(' + str(request.user.id) + ')님 재결제 신청 완료')
+        logger.info(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 완료')
 
     context['error'] = error
     return redirect(next_page)
@@ -528,12 +523,9 @@ def clear_pause_period_billing_logic(request):
     context['error'] = error
     if error is not None:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 재결제 신청 오류:'
-                     + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 오류:' + str(error))
     else:
-        logger.info(str(request.user.last_name)+str(request.user.first_name)
-                    + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
+        logger.info(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
 
     context['error'] = error
     return redirect(next_page)
@@ -561,9 +553,7 @@ def delete_period_billing_logic(request):
 
     if error is not None:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 정기 결제 카드 삭제 신청 :'
-                     + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 정기 결제 카드 삭제 신청 :' + str(error))
 
     return redirect(next_page)
 
@@ -610,7 +600,7 @@ def update_period_billing_logic(request):
             payment_data.update(status='cancelled', use=UN_USE)
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -651,7 +641,7 @@ def update_reserve_product_info_logic(request):
         billing_info.save()
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -667,7 +657,6 @@ def check_update_period_billing_logic(request):
     customer_uid = request.POST.get('customer_uid')
     new_merchant_uid = request.POST.get('new_merchant_uid')
     new_customer_uid = request.POST.get('new_customer_uid')
-    paid_date = None
     if error is None:
         try:
             billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
@@ -727,7 +716,7 @@ def check_update_period_billing_logic(request):
         except ValueError:
             error = '오류가 발생했습니다.[7]'
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -797,7 +786,6 @@ class GetProductInfoView(LoginRequiredMixin, View):
         context = {}
         product_id = request.GET.get('product_id', '')
 
-        product_info = None
         product_function_data = []
         try:
             product_info = ProductTb.objects.get(product_id=product_id, use=USE)
@@ -844,9 +832,8 @@ def payment_for_iap_logic(request):
 
     product_id = None
     payment_type_cd = None
-    paid_amount = 0
-    product_price_id = None
     start_date = None
+    end_date = None
     context = {}
     error = None
     os_info = ''
@@ -907,12 +894,11 @@ def payment_for_iap_logic(request):
         payment_info.save()
 
     if error is None:
-        logger.info(str(request.user.last_name) + str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 iap 결제 완료:' + str(product_id) + ':'+' '+str(start_date))
+        logger.info(str(request.user.first_name) + '(' + str(request.user.id) + ')님 iap 결제 완료:'
+                    + str(product_id) + ':'+' '+str(start_date))
     else:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
 
     return render(request, 'ajax/payment_error_info.html', context)
 
@@ -927,84 +913,10 @@ def payment_for_ios_logic(request):
     start_date = None
     context = {}
     error = None
+    inner_error = None
     today = datetime.date.today()
-    input_transaction_id = ''
     context['test_info'] = ''
     pay_info = '인앱 결제'
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다.'
-    except TypeError:
-        error = '오류가 발생했습니다.'
-    #
-    if error is None:
-        try:
-            receipt_data = json_loading_data['receipt_data']
-            ios_data = json_loading_data['ios_data']
-            product_id = json_loading_data['product_id']
-            input_transaction_id = json_loading_data['transaction_id']
-        except KeyError:
-            error = '오류가 발생했습니다.'
-
-    data = {
-        'exclude-old-transactions': "true",
-        'receipt-data': receipt_data,
-        'password': ios_data
-    }
-    body = json.dumps(data)
-    h = httplib2.Http()
-
-    resp, content = h.request("https://buy.itunes.apple.com/verifyReceipt", method="POST", body=body,
-                              headers={'Content-Type': 'application/json;'})
-
-    json_data = content.decode('utf-8')
-    json_loading_data = None
-    error = None
-    transaction_id = ''
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다.'
-    except TypeError:
-        error = '오류가 발생했습니다.'
-
-    if error is None:
-        if resp['status'] == '200':
-            # print(json_loading_data)
-            if str(json_loading_data['status']) == '21007':
-                resp, content = h.request("https://sandbox.itunes.apple.com/verifyReceipt", method="POST", body=body,
-                                          headers={'Content-Type': 'application/json;'})
-
-                json_data = content.decode('utf-8')
-                json_loading_data = None
-                error = None
-
-                try:
-                    json_loading_data = json.loads(json_data)
-                except ValueError:
-                    error = '오류가 발생했습니다.'
-                except TypeError:
-                    error = '오류가 발생했습니다.'
-
-                if error is None:
-                    if resp['status'] == '200':
-                        # print(json_loading_data)
-                        in_app_info = json_loading_data['receipt']['in_app']
-                        transaction_id = str(in_app_info[0]['transaction_id'])
-                        # logger.error(str(json_loading_data['receipt']))
-                        context['test_info'] = 'sandbox test 환경입니다.'
-                        pay_info = 'sandbox test'
-            else:
-                in_app_info = json_loading_data['receipt']['in_app']
-                transaction_id = str(in_app_info[0]['transaction_id'])
-                # logger.error(str(json_loading_data['receipt']))
-    else:
-        context['error'] = error
-
-    if error is None:
-        if input_transaction_id != transaction_id:
-            error = '결제중 오류가 발생했습니다.'
 
     if error is None:
         try:
@@ -1020,7 +932,6 @@ def payment_for_ios_logic(request):
         end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date)).split(' ')[0]
         start_date = str(start_date).split(' ')[0]
 
-    if error is None:
         payment_info = PaymentInfoTb(member_id=str(request.user.id),
                                      product_tb_id=7,
                                      payment_type_cd='SINGLE',
@@ -1031,7 +942,8 @@ def payment_for_ios_logic(request):
                                      period_month=1,
                                      price=9900,
                                      name='스탠다드 - 30일권',
-                                     imp_uid=transaction_id,
+                                     imp_uid='',
+                                     # imp_uid=input_transaction_id,
                                      channel='iap',
                                      card_name=pay_info,
                                      buyer_email=request.user.email,
@@ -1044,11 +956,32 @@ def payment_for_ios_logic(request):
                                      buyer_name=str(request.user.first_name),
                                      # amount=int(payment_result['amount']),
                                      use=USE)
+
         payment_info.save()
 
+        try:
+            json_loading_data = json.loads(json_data)
+        except ValueError:
+            inner_error = '오류가 발생했습니다.'
+        except TypeError:
+            inner_error = '오류가 발생했습니다.'
+
+        if inner_error is None:
+            try:
+                receipt_data = json_loading_data['receipt_data']
+                product_id = json_loading_data['product_id']
+                transaction_id = json_loading_data['transaction_id']
+                ios_receipt_check = IosReceiptCheckTb(member_id=request.user.id, payment_tb_id=payment_info.payment_id,
+                                                      original_transaction_id=transaction_id, receipt_data=receipt_data,
+                                                      iap_status_cd='YET_VALIDATION')
+                ios_receipt_check.save()
+            except KeyError:
+                inner_error = ''
+
     if error is None:
-        logger.error(str(request.user.last_name) + str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 ios 결제 완료:' + str(product_id) + ':'+' '+str(start_date))
+        logger.info(str(request.user.last_name) + str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 ios 결제 완료:' + str(product_id) + ':' + ' '
+                    + str(start_date) + '/' + str(inner_error))
     else:
         messages.error(request, error)
         logger.error(str(request.user.last_name)+str(request.user.first_name)
@@ -1086,12 +1019,9 @@ def resend_period_billing_logic(request):
     context['error'] = error
     if error is not None:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 재결제 신청 오류:'
-                     + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 오류:' + str(error))
     else:
-        logger.info(str(request.user.last_name)+str(request.user.first_name)
-                    + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
+        logger.info(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
 
     context['error'] = error
     return render(request, 'ajax/payment_error_info.html', context)
@@ -1126,7 +1056,7 @@ def delete_billing_info_logic(request):
             payment_user_info.save()
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -1170,7 +1100,7 @@ def delete_billing_logic(request):
             billing_user_info.delete()
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -1189,7 +1119,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
         cancel_period_payment_data = []
         stop_period_payment_data = []
         current_billing_info = []
-        period_info_flag = []
+        # period_info_flag = []
         today = datetime.date.today()
         period_payment_no = 1
         for product_info in product_list:
@@ -1200,14 +1130,9 @@ class PaymentHistoryView(LoginRequiredMixin, View):
             #                                                 use=USE).latest('end_date')
             # except ObjectDoesNotExist:
             #     payment_info = None
-            payment_data = PaymentInfoTb.objects.select_related('product_tb').filter(member_id=request.user.id,
-                                                                                     product_tb_id=product_info.product_id,
-                                                                                     # payment_type_cd='SINGLE',
-                                                                                     start_date__lte=today,
-                                                                                     end_date__gte=today,
-                                                                                     status='paid',
-                                                                                     # price__gt=0,
-                                                                                     use=USE)
+            payment_data = PaymentInfoTb.objects.select_related(
+                'product_tb').filter(member_id=request.user.id, product_tb_id=product_info.product_id,
+                                     start_date__lte=today, end_date__gte=today, status='paid', use=USE)
 
             period_payment_data = PaymentInfoTb.objects.select_related('product_tb'
                                                                        ).filter(Q(status='reserve')
@@ -1375,3 +1300,54 @@ class PaymentHistoryView(LoginRequiredMixin, View):
 
         return render(request, self.template_name, context)
 
+
+def ios_receipt_validation_logic(request):
+
+    ios_receipt_validation_data = IosReceiptCheckTb.objects.filter(use=USE).exclude('FINISH_VALIDATION')
+
+    h = httplib2.Http()
+
+    for ios_receipt_validation_info in ios_receipt_validation_data:
+        data = {
+            'exclude-old-transactions': "true",
+            'receipt-data': ios_receipt_validation_data.receipt_data,
+            'password': settings.PTERS_IOS_SUBSCRIPTION_SECRET
+        }
+
+        body = json.dumps(data)
+
+        resp, content = h.request("https://buy.itunes.apple.com/verifyReceipt", method="POST", body=body,
+                                  headers={'Content-Type': 'application/json;'})
+
+        json_loading_data = None
+        error = None
+        if error is None:
+
+            if resp['status'] == '200':
+                json_data = content.decode('utf-8')
+                try:
+                    json_loading_data = json.loads(json_data)
+                except ValueError:
+                    error = '오류가 발생했습니다.'
+                except TypeError:
+                    error = '오류가 발생했습니다.'
+
+        if error is None:
+            if str(json_loading_data['status']) == '0':
+                in_app_info = json_loading_data['receipt']['in_app']
+                transaction_id = str(in_app_info[0]['transaction_id'])
+                ios_receipt_validation_info.transaction_id = transaction_id
+                if ios_receipt_validation_info.original_transaction_id != transaction_id:
+                    ios_receipt_validation_info.iap_status_cd = 'TRANSACTION_ID_FAULT'
+                else:
+                    try:
+                        ios_receipt_validation_info.cancellation_date = str(in_app_info[0]['cancellation_date'])
+                        ios_receipt_validation_info.iap_status_cd = 'CANCEL'
+                    except KeyError:
+                        ios_receipt_validation_info.iap_status_cd = 'FINISH_VALIDATION'
+            else:
+                ios_receipt_validation_info.iap_status_cd = str(json_loading_data['status'])
+
+            ios_receipt_validation_info.save()
+
+    return render(request, 'ajax/payment_error_info.html')

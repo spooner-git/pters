@@ -1,19 +1,19 @@
 import datetime
 import logging
+
 from django import template
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.expressions import RawSQL
-
 from django.utils import timezone
-from configs.const import USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
+
+from configs import USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb, ProductFunctionAuthTb
-from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
+from schedule.functions import func_refresh_member_ticket_count
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.views import get_trainee_setting_data
+from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassLectureTb, ClassTb, PackageGroupTb, GroupLectureTb
-from trainer.functions import func_get_trainer_setting_list, func_get_ing_package_member_list, \
-    func_get_end_package_member_list
 
 register = template.Library()
 logger = logging.getLogger(__name__)
@@ -88,7 +88,7 @@ def get_setting_info(request):
             for not_finish_schedule_info in not_finish_schedule_data:
                 not_finish_schedule_info.state_cd = 'PE'
                 not_finish_schedule_info.save()
-                func_refresh_lecture_count(class_id, not_finish_schedule_info.lecture_tb_id)
+                func_refresh_member_ticket_count(class_id, not_finish_schedule_info.lecture_tb_id)
 
         if context['lt_lecture_auto_finish'] == AUTO_FINISH_ON:
             class_lecture_data = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
@@ -119,9 +119,6 @@ def get_setting_info(request):
                 lecture_info.save()
 
                 if lecture_info is not None and lecture_info != '':
-                    lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-                    lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-                    lecture_info.package_tb.save()
 
                     query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
                                         "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
@@ -141,7 +138,6 @@ def get_setting_info(request):
                             group_lecture_data.update(fix_state_cd='FIX')
                         else:
                             group_lecture_data.update(fix_state_cd='')
-                        func_refresh_group_status(package_group_info.group_tb_id, None, None)
     return context
 
 

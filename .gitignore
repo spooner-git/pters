@@ -2,7 +2,8 @@
 .idea/workspace.xml
 pters_project/config/__pycache__/
 pters_project/configs/__pycache__/
-pters_project/configs/
+pters_project/configs/__init__.pyc
+pters_project/configs/migrations/__pycache__/
 pters_project/configs/middleware/__pycache__/
 pters_project/center/__pycache__/
 pters_project/center/migrations/__pycache__/
@@ -12,6 +13,8 @@ pters_project/login/migrations/__pycache__/
 pters_project/schedule/__pycache__/
 pters_project/trainer/__pycache__/
 pters_project/trainee/__pycache__/
+pters_project/tasks/__pycache__/
+pters_project/tasks/migrations/__pycache__/
 pters_project/schedule/migrations/__pycache__/
 pters_project/trainer/migrations/__pycache__/
 pters_project/trainee/migrations/__pycache__/
@@ -22,6 +25,7 @@ pters_project/logs/trainer_log.log
 pters_project/logs/trainee_log.log
 pters_project/logs/schedule_log.log
 pters_project/logs/payment_log.log
+pters_project/logs/tasks_log.log
 pters_project/login/templatetags/__pycache__/
 pters_project/payment/__pycache__/
 pters_project/payment/migrations/__pycache__/

@@ -75,7 +75,8 @@
             position: fixed;
             display:none;
             width: 100%;
-            max-width: 650px;
+            height: 100%;
+            /* max-width: 650px; */
             margin: 0 auto;
             background-color: #f4f4f4;
             border-radius: 5px;
@@ -87,6 +88,7 @@
         #wrapper_lesson_now{
             background-color: #ffffff;
             border-radius: 5px;
+            height: 70%;
         }
         #wrapper_arrow_button{
             position: relative;
@@ -111,12 +113,20 @@
         }
         #wrapper_lesson_now_info{
             margin: 0 auto;
-            max-width: 550px;
+            /* max-width: 550px; */
             padding: 15px;
             box-sizing: border-box;
-            text-align: center
+            text-align: center;
+            height:100%;
+            overflow-y: auto;
+
         }
         #wrapper_lesson_now_info_name{
+            display: inline-block;
+            width: 300px;
+            margin: 1%;
+            height: 110px;
+            overflow-y: hidden;
             padding: 15px;
             border: 2px solid #1e1e1e;
             border-radius: 10px;
@@ -219,7 +229,7 @@
                 {% for group_schedule_info in group_schedule_data %}
                 <div id="wrapper_lesson_now_info_name" data-id="{{ group_schedule_info.schedule_id }}" onclick="lesson_select(this)">
 {#                    <p style="margin:0;" class="fts_16">현재 진행중인 수업</p>#}
-                    <p class="fts_22 ftw_bd">(그룹) {{ group_schedule_info.group_tb.name }} - 정원 : {{ group_schedule_info.group_tb.member_num }} <br/>
+                    <p class="fts_20 ftw_bd">(그룹) {{ group_schedule_info.lecture_tb.name }} - 정원 : {{ group_schedule_info.group_tb.member_num }} <br/>
                         출석 : {{ group_schedule_info.group_current_finish_member_num }} / 예약 : {{ group_schedule_info.group_current_member_num }}</p>
                     <p class="fts_20">{{ group_schedule_info.start_dt | time:'H:i' }} ~ {{ group_schedule_info.end_dt | time:'H:i' }}</p>
                 </div>
@@ -229,7 +239,7 @@
                     {% if not pt_schedule_info.group_tb %}
                         <div id="wrapper_lesson_now_info_name" data-id="{{ pt_schedule_info.schedule_id }}" onclick="lesson_select(this)">
 {#                            <p style="margin:0;" class="fts_16">현재 진행중인 수업</p>#}
-                            <p class="fts_22 ftw_bd">(개인) 1:1 레슨 - {{ pt_schedule_info.lecture_tb.member.name }} 회원</p>
+                            <p class="fts_20 ftw_bd">(개인) 개인 레슨 - {{ pt_schedule_info.lecture_tb.member.name }} 회원</p>
                             <p class="fts_20">{{ pt_schedule_info.start_dt | time:'H:i' }} ~ {{ pt_schedule_info.end_dt | time:'H:i' }}</p>
                         </div>
                     {% endif %}
@@ -283,36 +293,36 @@
                 back_to_normal_mode(event, 'admin_menu');
             }
         };
-        setInterval(function(){
-            $.ajax({
-                url: '/trainer/get_attend_mode_schedule/',
-                type : 'GET',
-                dataType : 'html',
+        // setInterval(function(){
+        //     $.ajax({
+        //         url: '/trainer/get_attend_mode_schedule/',
+        //         type : 'GET',
+        //         dataType : 'html',
 
-                beforeSend:function(){
-                },
+        //         beforeSend:function(){
+        //         },
 
-                success:function(data){
-                    var jsondata = JSON.parse(data);
-                    if(jsondata.messageArray.length>0){
-                        alert(jsondata.messageArray);
-                    }else{
-                        if(JSON.stringify(group_schedule_id) != JSON.stringify(jsondata.group_schedule_id)){
-                            location.reload();
-                        }
-                        if(JSON.stringify(scheduleIdArray) != JSON.stringify(jsondata.scheduleIdArray)){
-                            location.reload();
-                        }
-                    }
-                },
-                complete:function(){
-                },
+        //         success:function(data){
+        //             var jsondata = JSON.parse(data);
+        //             if(jsondata.messageArray.length>0){
+        //                 alert(jsondata.messageArray);
+        //             }else{
+        //                 if(JSON.stringify(group_schedule_id) != JSON.stringify(jsondata.group_schedule_id)){
+        //                     location.reload();
+        //                 }
+        //                 if(JSON.stringify(scheduleIdArray) != JSON.stringify(jsondata.scheduleIdArray)){
+        //                     location.reload();
+        //                 }
+        //             }
+        //         },
+        //         complete:function(){
+        //         },
 
-                error:function(){
-                    console.log('server error');
-                }
-            });
-        }, 60000);// 자동 ajax 새로고침(일정가져오기)
+        //         error:function(){
+        //             console.log('server error');
+        //         }
+        //     });
+        // }, 60000);// 자동 ajax 새로고침(일정가져오기)
 
 
         function form_confirm(e){
@@ -531,7 +541,7 @@
                         alert(jsondata.messageArray);
                     }else{
                         if(popup_name == 'exit'){
-                            location.href = '/trainer/trainer_setting/'
+                            location.href = '/trainer/trainer_main/'
                         }else if(popup_name=='admin_menu'){
                             back_to_normal_mode(event,'admin_menu');
                         }

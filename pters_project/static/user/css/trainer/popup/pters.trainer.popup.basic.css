@@ -1,0 +1,75 @@
+/* 예/아니오 등 기본 팝업 CSS */
+.popup_mobile_basic{
+    background-color:transparent;
+}
+.popup_mobile_basic > div{
+    /*display: none;*/
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform:translate(-50%, -50%);
+    /*transform:translateX(100%);*/
+    background-color: #ffffff;
+
+    width: 300px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+}
+
+.wrapper_popup_basic_comment{
+    position: relative;
+    text-align: center;
+    /* height: 65px; */
+    height: auto;
+    min-height: 65px;
+    /* 아래  .wrapper_popup_basic_comment > p 주석처리랑 쌍으로 묶임, 아래 주석지우면 height 65px로 */
+    
+    display: table;
+    width: 100%;
+}
+.wrapper_popup_basic_comment > p{
+    margin: 0;
+    width:  100%;
+    padding: 0 15px;
+    box-sizing: border-box;
+    /* position: absolute;
+    top: 50%;
+    left:  50%;
+    transform: translate(-50%, -50%); */
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.wrapper_popup_basic_buttons{
+    text-align: center;
+    border-top: 1px solid #cccccc;
+    height: 45px;
+    line-height: 45px;
+    cursor: pointer;
+}
+
+    .wrapper_popup_basic_buttons .popup_basic_cancel{
+        cursor: pointer;
+        border-right: 1px solid #cccccc;
+    }
+
+    .wrapper_popup_basic_buttons .popup_basic_confirm{
+        cursor: pointer;
+    }
+
+.popup_basic_user_input_text, .popup_basic_user_input_number{
+    text-align: center;
+}
+    .popup_basic_user_input_data{
+        -webkit-appearance: none;
+        width: 85%;
+        height: 40px;
+        font-size: 16px;
+        background-color: #ffffff;
+        margin: 10px 0;
+        border-radius: 0px;
+        border: 0;
+        border-bottom: 1px solid #cccccc;
+        box-sizing: border-box;
+        text-align: center;
+    }

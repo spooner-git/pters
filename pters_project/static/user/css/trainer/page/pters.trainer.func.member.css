@@ -1,0 +1,123 @@
+#member_display_panel{
+	position: sticky;
+	position: -webkit-sticky;
+	height: auto;
+	z-index: 10;
+	width: 100%;
+	top: 0;
+	/* text-align: center; */
+}
+	.member_upper_box{
+		position: relative;
+		height: 50px;
+		line-height: 50px;
+		background-color: #ffffff;
+		/* border-bottom: 1px solid #cccccc; */
+		padding: 0 16px;
+		box-sizing: border-box;
+	}
+	.member_tools_wrap{
+		display: table;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 100px;
+		height: 100%;
+	}
+	.member_tools_wrap > .search_member{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_search.png");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	}
+	.member_tools_wrap > .search_member > .search_input{
+		position: absolute;
+		display: none;
+		-webkit-appearance: none;
+		width: 200%;
+		height: 50px;
+		left: -200%;
+		border: 1px solid #cccccc;
+		background-color: #ffffff;
+		border-radius: 0;
+		transform: translateY(-50px);
+		box-sizing: border-box;
+		transition: 0.25s;
+	}
+	.member_tools_wrap > .add_member{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_add.png?v2");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	}
+	/* .member_tools_wrap > .swap_list{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_swap.png?v2");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	} */
+	.member_bottom_tools_wrap{
+		background-color: #ffffff;
+		border-bottom: 1px solid #cccccc;
+		padding: 0 16px;
+		font-size: 14px;
+	}
+	
+
+
+
+.member_wrapper{
+	display: table;
+	width: 100%;
+	padding: 5px 15px;
+	/* background-color: #ffffff;
+	border: 1px solid #f4f4f4; */
+	margin: 10px auto;
+	box-sizing: border-box;
+}
+
+.member_data_l{
+	/* display: table-cell; */
+	display: none;
+	width: 50px;
+	text-align: left;
+	vertical-align: middle;
+}
+	.member_data_l > img{
+		width: 40px;
+		vertical-align: middle;
+	}
+.member_data_c{
+	display: table-cell;
+	width: auto;
+}
+.member_data_r{
+	/* display: table-cell; */
+	display: none;
+	width: 20%;
+	max-width: 100px;
+	vertical-align: middle;
+}
+.member_name{
+	font-size: 16px;
+	font-weight: 500;
+}
+.member_counts{
+	font-size: 11px;
+	font-weight: 500;
+	color: #858282;
+}
+.member_phone, .member_sms{
+	display: table-cell;
+}
+.icon_contact{
+	width: 25px;
+	margin: 0 10px;
+}
+

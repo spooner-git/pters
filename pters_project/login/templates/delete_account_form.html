@@ -1,0 +1,92 @@
+{% extends "trainer_base.html" %}
+
+
+{% load static_url %}
+{% block local_css %}
+
+    <meta name="login" content="pwreset_login">
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.pwchange.setting.css" %}>
+    <style type="text/css">
+    	
+    </style>
+
+{% load i18n %}
+
+
+<div class="pwchange_wrap" id="submit_input">
+	<div id="inputError_info">
+        <div id="errorMsg_info" class="inputErrorInner">
+            <p style="line-height: 35px;vertical-align: middle;margin:0;"></p>
+        </div>
+    </div>
+	<form method="post" action="../../static">
+	  {% csrf_token %} 
+	  {{ form.as_p }}
+	</form>
+	<div class="button_wrap">
+		<button class="submitBtn bgwhite" onclick="goBack()">뒤로</button>
+		<button class="submitBtn submit_change_pw">변경하기</button>
+	</div>
+</div>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+	$('button.submit_change_pw').click(function(){
+		$form = $('#submit_input form')
+		$.ajax({
+              url:'/login/password/change/',
+              type:'POST',
+              data:$form.serialize(),
+              dataType : 'html',
+
+              beforeSend:function(){
+              	beforeSend()
+              },
+
+              //보내기후 팝업창 닫기
+              complete:function(){
+              	completeSend()
+              },
+
+              //통신성공시 처리
+              success:function(data){
+              		console.log(data)
+                  	alert('비밀번호가 성공적으로 변경 되었습니다.')
+                  	goBack()
+                  //$('#errorMsg_info p').text(messageArray)
+              },
+
+              //통신 실패시 처리
+              error:function(){
+                alert("서버 통신 에러가 발생하였습니다. 잠시후 다시 시도해주세요")
+              },
+          })
+	})
+
+	function pw_check(){
+
+	}
+
+	function beforeSend(){
+{#        $('html').css("cursor","wait");#}
+        $('#ajaxloadingPC').css('display','block');
+        $('#submit_input button').css('visibility','hidden')
+    }
+
+    function completeSend(){
+{#        $('html').css("cursor","auto");#}
+        $('#ajaxloadingPC').css('display','none');
+        $('#submit_input button').css('visibility','visible')
+    }
+
+    function goBack(){
+        location.href="{% url 'trainer:trainer_mypage' %}"
+    }
+</script>
+
+
+{% endblock %}
+
+

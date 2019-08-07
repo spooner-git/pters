@@ -1,0 +1,26 @@
+.popup_plan_view{
+	-webkit-overflow-scrolling: touch;
+}
+
+.popup_plan_view .obj_box_full{
+	padding: 15px 16px;
+}
+
+.popup_plan_view .popup_toolbox{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+	padding: 0px 16px 10px 50px;
+}
+
+.popup_plan_view .popup_content{
+	padding-top: 1px;
+}
+
+
+#wrapper_box_plan_view_toolbox{
+	border: 0;
+}
+#wrapper_box_plan_view_toolbox .plan_view_upper_box{
+	margin-bottom: 8px;
+}

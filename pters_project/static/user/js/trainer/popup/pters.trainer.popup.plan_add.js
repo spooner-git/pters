@@ -1,0 +1,457 @@
+class Plan_add{
+    constructor(install_target, data_from_external, instance){
+        this.target = {install: install_target, toolbox:'section_plan_add_toolbox', content:'section_plan_add_content'};
+        this.instance = instance;
+
+        this.list_type = "lesson";
+
+        let d = new Date();
+        this.dates = {
+            current_year: d.getFullYear(),
+            current_month: d.getMonth()+1,
+            current_date: d.getDate()
+        };
+        this.times = {
+            current_hour: TimeRobot.to_zone(d.getHours(), d.getMinutes()).hour,
+            current_minute: TimeRobot.to_zone(d.getHours(), d.getMinutes()).minute,
+            current_zone: TimeRobot.to_zone(d.getHours(), d.getMinutes()).zone
+        };
+
+        this.data = {
+            lecture_id:[],
+            lecture_name:[],
+            lecture_max_num:[],
+            member_id:[],
+            member_name:[],
+            date: null,
+            date_text: null,
+            start_time:"",
+            start_time_text: null,
+            end_time:"",
+            end_time_text: null,
+            repeat: 
+                {
+                    power: OFF,
+                    day: [],
+                    repeat_end: {year:null, month:null, date:null}
+                }
+            ,
+            memo:""
+        };
+
+        //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
+        this.set_initial_data(data_from_external);
+        this.init();
+    }
+
+    set lecture(data){
+        this.data.lecture_id = data.id;
+        this.data.lecture_name = data.name;
+        this.data.lecture_max_num = data.max;
+        this.member = {id:[], name: []}; //수업을 선택했기 때문에, 회원란을 모두 비워준다.
+        this.render_content();
+    }
+
+    get lecture(){
+        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max_num};
+    }
+
+
+    set member(data){
+        this.data.member_id = data.id;
+        this.data.member_name = data.name;
+        this.render_content();
+    }
+
+    get member(){
+        return {id:this.data.member_id, name:this.data.member_name};
+    }
+
+    set date(data){
+        this.data.date = data.data;
+        this.data.date_text = data.text;
+        this.render_content();
+    }
+
+    get date(){
+        return this.data.date;
+    }
+
+    set start_time(data){
+        this.data.start_time = TimeRobot.to_data(data.data.zone, data.data.hour, data.data.minute).complete;
+        this.data.start_time_text = data.text;
+        this.render_content();
+    }
+
+    get start_time(){
+        return this.data.start_time;
+    }
+
+    set end_time(data){
+        this.data.end_time = TimeRobot.to_data(data.data.zone, data.data.hour, data.data.minute).complete;
+        this.data.end_time_text = data.text;
+        this.render_content();
+    }
+
+    get end_time(){
+        return this.data.end_time;
+    }
+
+    set memo(text){
+        this.data.memo = text;
+        this.render_content();
+    }
+
+    get memo(){
+        return this.data.memo;
+    }
+
+    set repeat(data){
+        this.data.repeat = data;
+    }
+
+    get repeat(){
+        return this.data.repeat;
+    }
+
+
+    init(type){
+        if(type == undefined){
+            type = this.list_type;
+        }
+        this.list_type = type;
+
+        this.render();
+        func_set_webkit_overflow_scrolling('.wrapper_middle');
+    }
+
+    set_initial_data(data){
+        this.user_data = data;
+        let user_data_date = this.user_data.user_selected_date;
+        this.data.date = user_data_date.year == null ? null : {year: user_data_date.year, month:user_data_date.month, date:user_data_date.date};
+        this.data.date_text = user_data_date.text;
+        
+        let user_data_time = this.user_data.user_selected_time;
+        this.data.start_time = user_data_time.hour == null ? null : `${user_data_time.hour}:${user_data_time.minute}`;
+        this.data.start_time_text = user_data_time.text;
+        this.data.end_time = user_data_time.hour2 == null ? null : `${user_data_time.hour2}:${user_data_time.minute2}`;
+        this.data.end_time_text = user_data_time.text2;
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();plan_add_popup.clear();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="plan_add_popup.send_data()">등록</span></span>`;
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+        
+        document.querySelector(this.target.install).innerHTML = html;
+        document.querySelector('.popup_plan_add .wrapper_top').style.border = 0;
+    }
+
+    render_toolbox(){
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+    }
+
+    render_content(){
+        document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+    dom_assembly_toolbox(){
+        return this.dom_row_toolbox();
+    }
+    
+    dom_assembly_content(){
+        let lecture_select_row = this.dom_row_lecture_select();
+        let member_select_row = this.dom_row_member_select();
+        let date_select_row = this.dom_row_date_select();
+        let start_time_select_row = this.dom_row_start_time_select();
+        let end_time_select_row = this.dom_row_end_time_select();
+        let repeat_select_row = this.dom_row_repeat_select();
+        let memo_select_row = this.dom_row_memo_select();
+
+        let display = "";
+        if(this.list_type != "lesson"){
+            display = 'none';
+        }
+
+        let html =  `<div class="obj_box_full" style="display:${display}">` + CComponent.dom_tag('일정') + lecture_select_row + '</div>' + 
+                    `<div class="obj_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' + 
+                    '<div class="obj_box_full">' +  CComponent.dom_tag('일자') + date_select_row + '<div class="gap"></div>' +
+                                                    CComponent.dom_tag('진행 시간') + start_time_select_row + end_time_select_row +  '<div class="gap"></div>' +
+                                                    CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
+                    '<div class="obj_box_full">'+  CComponent.dom_tag('메모') + memo_select_row + '</div>';
+
+        return html;
+    }
+
+    dom_row_toolbox(){
+        let html = `
+        <div class="plan_add_upper_box">
+            <div style="display:inline-block;width:200px;">
+                <div style="display:inline-block;width:200px;">
+                    <span style="font-size:20px;font-weight:bold;">새로운 일정</span>
+                </div>
+            </div>
+        </div>
+        <div class="plan_add_bottom_tools_wrap">
+            <div class="list_type_tab_wrap">
+                <div onclick="${this.instance}.switch_type('lesson');" class="${this.list_type == "lesson" ? "tab_selected" : ""}">수업</div>
+                <div onclick="${this.instance}.switch_type('off');" class="${this.list_type == "off" ? "tab_selected" : ""}">OFF</div>
+            </div>
+        </div>
+        `;
+        return html;
+    }
+
+    dom_row_lecture_select(){
+        let id = 'select_lecture';
+        let title = this.data.lecture_name.length == 0 ? '수업*' : this.data.lecture_name.join(', ');
+        let icon = '/static/common/icon/icon_book.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
+                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1, (set_data)=>{
+                    //수업을 추가
+                    this.lecture = set_data;
+                    //수업에 속한 고정회원들을 추가
+                    Lecture_func.read({"lecture_id": set_data.id[0]}, (data)=>{
+                        let member_length = data.lecture_member_list.length;
+                        let data_to_set = {id:[], name:[]}
+                        for(let i=0; i<member_length; i++){
+                            let member_data = data.lecture_member_list[i];
+                            if(member_data.member_fix_state_cd == FIX){
+                                data_to_set.id.push(member_data.member_id);
+                                data_to_set.name.push(member_data.member_name);
+                            }
+                        }
+                        this.member = data_to_set;
+                    });
+                });
+            });
+        });
+        return html;
+    }
+
+    dom_row_member_select(){
+        let id = 'select_member';
+        let title = this.data.member_name.length == 0 ? '회원*' : this.data.member_name.join(', ');
+        let icon = '/static/common/icon/icon_member.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
+            if(this.data.lecture_id.length != 0){
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
+                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num[0], {'lecture_id':this.data.lecture_id[0], "title":"회원 선택"}, (set_data)=>{
+                        this.member = set_data;
+                        this.render_content();
+                    });
+                });
+            }else{
+                show_error_message('수업을 먼저 선택해주세요.');
+            }
+        });
+        return html;
+    }
+
+    dom_row_date_select(){
+        //등록하는 행을 만든다.
+        let id = 'select_date';
+        let title = this.data.date_text == null ? '날짜*' : this.data.date_text;
+        let icon = '/static/common/icon/icon_cal.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+            //행을 클릭했을때 실행할 내용
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+
+                //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
+                let year = this.data.date == null ? this.dates.current_year : this.data.date.year; 
+                let month = this.data.date == null ? this.dates.current_month : this.data.date.month;
+                let date = this.data.date == null ? this.dates.current_date : this.data.date.date;
+                
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'날짜 선택', data:{year:year, month:month, date:date},  
+                                                                                                callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
+                                                                                                    this.date = object; 
+                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+                }});
+
+                // date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'날짜 선택', data:{year:year, month:month, date:date}, 
+                //                                                                                 range:{start: this.dates.current_year - 5, end: this.dates.current_year+5}, 
+                //                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
+                //                                                                                     this.date = object; 
+                //                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+                //                                                                                 }});
+                
+            });
+        });
+        return html;
+    }
+
+    dom_row_start_time_select(){
+        let id = 'select_start';
+        let title = this.data.start_time_text == null ? '시작 시간*' : this.data.start_time_text;
+        let icon = '/static/common/icon/icon_clock.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ //data : 직전 셋팅값
+            //행을 클릭했을때 실행할 내용
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+
+                //data_to_send의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
+                let zone = this.data.start_time == null ? this.times.current_zone : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).zone;
+                let hour = this.data.start_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
+                let minute = this.data.start_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
+                
+                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시간 선택', data:{zone:zone, hour:hour, minute:minute}, 
+                                                                                                callback_when_set: (object)=>{
+                                                                                                    this.start_time = object;
+                                                                                                    if(this.data.end_time != null){
+                                                                                                        let compare = TimeRobot.compare_by_zone(object.data, TimeRobot.to_zone(this.data.end_time.split(':')[0],this.data.end_time.split(':')[1]));
+                                                                                                        console.log(compare, object.data, TimeRobot.to_zone(this.data.end_time.split(':')[0],this.data.end_time.split(':')[1]))
+                                                                                                        if(compare == true){
+                                                                                                            this.end_time = object;
+                                                                                                        }
+                                                                                                    }
+                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+                                                                                                }});
+            });
+        });
+        return html;
+    }
+
+    dom_row_end_time_select(){
+        let id = 'select_end';
+        let title = this.data.end_time_text == null ? '종료 시간*' : this.data.end_time_text;
+        let icon = '/static/common/icon/icon_clock_white.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ //data : 직전 셋팅값
+            //행을 클릭했을때 실행할 내용
+            if(this.data.start_time == null){
+                show_error_message('시작시간을 먼저 선택해주세요');
+                return false;
+            }
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+                //data_to_send의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
+                let zone = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).zone;
+                let hour = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
+                let minute = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
+
+                //유저가 선택할 수 있는 최저 시간을 셋팅한다. 이시간보다 작은값을 선택하려면 메세지를 띄우기 위함
+                let time_min = TimeRobot.add_time(TimeRobot.to_data(zone, hour, minute).hour, TimeRobot.to_data(zone, hour, minute).minute, 0, 5);
+                let time_min_type_zone = TimeRobot.to_zone(time_min.hour, time_min.minute);
+                let zone_min = time_min_type_zone.zone;
+                let zone_hour = time_min_type_zone.hour;
+                let zone_minute = time_min_type_zone.minute;
+
+                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시간 선택', 
+                                                                                                data:{zone:zone_min, hour:zone_hour, minute:zone_minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
+                                                                                                callback_when_set: (object)=>{
+                                                                                                    this.end_time = object;
+                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+                                                                                                }});
+            });
+        });
+        return html;
+    }
+
+    dom_row_repeat_select(){
+        let id = 'select_repeat';
+        let title =this.data.repeat.power == OFF ? '반복 일정' : this.data.repeat.day.join(', ')
+        let icon = '/static/common/icon/icon_repeat.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_REPEAT_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                repeat_select = new RepeatSelector('#wrapper_box_repeat_select', this, (set_data)=>{
+                    this.repeat = set_data;
+                    this.render_content();
+                });
+            });
+        });
+        return html;
+    }
+
+    dom_row_memo_select(){
+        let id = 'select_memo';
+        let title = this.data.memo == "" ? '' : this.data.memo;
+        let placeholder = '일정 메모';
+        let icon = '/static/common/icon/icon_note.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let disabled = false;
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let user_input_data = input_data;
+            this.memo = user_input_data;
+        });
+        return html;
+    }
+
+    switch_type(type){
+        if(type == this.list_type){
+            return false;
+        }
+        switch(type){
+            case "lesson":
+                this.init("lesson");
+            break;
+
+            case "off":
+                this.init("off");
+            break;
+        }
+    }
+
+    send_data(){
+
+        let data = {"lecture_id":this.data.lecture_id[0],
+                    "start_dt": this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.start_time,
+                    "end_dt":this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.end_time,
+                    "note":this.data.memo, "duplication_enable_flag": 1,
+                    "en_dis_type":this.list_type == "off" ? 0 : 1, "lecture_member_ids":this.data.member_id,
+
+                    //repeat 관련
+                    "repeat_freq":"WW", 
+                    "repeat_start_date":this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date, 
+                    "repeat_end_date":this.data.repeat.repeat_end.year+'-'+this.data.repeat.repeat_end.month+'-'+this.data.repeat.repeat_end.date,
+                    "repeat_start_time":this.data.start_time, "repeat_end_time":this.data.end_time, "repeat_day":this.data.repeat.day.join('/')
+        };
+        
+        //en_dis_type 0: off일정, 1:레슨일정
+        //duplication_enable_flag 0: 중복불허 1:중복허용
+        if(this.data.repeat.power == OFF){
+            let url ='/schedule/add_schedule/';
+            
+            Plan_func.create(url, data, ()=>{
+                layer_popup.close_layer_popup();
+                calendar.init();
+            });
+            
+        }else if(this.data.repeat.power == ON){
+            let url = '/schedule/add_repeat_schedule/';
+            let confirm_url = '/schedule/add_repeat_schedule_confirm/';
+            
+            Plan_func.create(url, data, (received)=>{
+                let repeat_schedule_id = received.repeatArray[0];
+                let repeat_confirm = 1;
+                let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm};
+                Plan_func.create(confirm_url, confirm_data, ()=>{
+                    layer_popup.close_layer_popup();
+                    calendar.init();
+                });
+            });
+        }
+        
+    }
+}

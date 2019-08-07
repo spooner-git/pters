@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static_url %}
+{% block local_css %}
+    <meta name="registertrainer" content="trainer_register">
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="751903262384-dbtt6ho5imk5gssgn1rqpe3vs3linq15.apps.googleusercontent.com">
+    <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
+
+{% endblock %}
+
+{% block content %}
+    <div id="root_content">
+        <div id="registration_box">
+            <div class="registration_top">
+                <div class="registration_left" onclick="location.href='{% url "login:check_registration" %}'">X</div>
+                <div class="registration_title">{% if sns_type == "KAKAO"%}카카오톡으로 {% elif sns_type == "NAVER"%}네이버로 {% else %}소셜 {% endif %}회원가입</div>
+                <div class="registration_right"></div>
+            </div>
+
+            <div class="registration_content" style="margin-top:20px; min-height:calc(100% - 181px);">
+
+                <!-- 그룹 타입 선택 영역 -->
+                <div class="group_select_box_on" id="group_select_trainer_box" onclick="check_group_select('trainer');">
+                    강사
+                </div>
+                <div class="group_select_box_off" id="group_select_trainee_box" onclick="check_group_select('trainee');" style="float:right;">
+                    회원
+                </div>
+                <div style="width:320px; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
+
+                <!-- 약관 동의 영역 -->
+                <div class="contract">
+                    <span class="all_contract">전체 약관에 동의</span>
+                    <div class="contract_select_box" onclick="select_contract('all_contract');">
+                        <span class="contract_select_check" id="all_contract" data-valid="false"></span>
+                    </div>
+                </div>
+                <div class="contract">
+                    <span class="detail_contract" onclick="location.href='/privacy/'">가입 약관</span>
+                    <div class="contract_select_box" onclick="select_contract('policy');">
+                        <span class="contract_select_check contract_detail_select_check" id="policy" data-valid="false"></span>
+                    </div>
+                </div>
+                <div class="contract">
+                    <span class="detail_contract" onclick="location.href='/policy/'">개인 정보 처리 방침</span>
+                    <div class="contract_select_box" onclick="select_contract('privacy');">
+                        <span class="contract_select_check contract_detail_select_check" id="privacy" data-valid="false"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 가입 완료 버튼 노출 영역 -->
+            <div class="registration_foot">
+                <div class="social_login_box" onclick="sns_add_member();" style="background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
+                    <div class="social_login_img"></div>
+                    <span class="social_login_text" style="color:#ffffff;">가입 완료</span>
+                    <div style="display:table-cell; width:60px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form action="{% url 'login:add_social_member_info' %}" id="sns-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="username" id="id_sns_username" value="{{ username }}">
+        <input type="hidden" name="email" id="id_sns_email" value="{{ email }}">
+        <input type="hidden" name="last_name" id="id_sns_last_name" value="{{ last_name }}">
+        <input type="hidden" name="first_name" id="id_sns_first_name" value="{{ first_name }}">
+        <input type="hidden" name="name" id="id_sns_name" value="{{ name }}">
+        <input type="hidden" name="sns_id" id="id_sns_id" value="{{ sns_id }}">
+        <input type="hidden" name="sns_type" value="{{ sns_type }}">
+        <input type="hidden" name="sex" id="id_sns_sex" value="{{ sex }}">
+        <input type="hidden" name="social_accessToken" id="id_social_accessToken" value="{{ social_accessToken }}">
+        <input type="hidden" name="group_type" id="id_group_type" value="trainer">
+        <input type="hidden" name="next_page" value="{% url 'login:registration_social' %}">
+    </form>
+
+{% endblock %}
+
+{% block local_js_footer %}
+    <script type="text/javascript" src="{% static_url "/user/js/login/login.registration.js" %}"></script>
+    <script type="text/javascript">
+        function sns_add_member() {
+            if($('#all_contract').attr('data-valid')=='true'){
+                document.getElementById('sns-form').submit();
+            }
+            else{
+                alert('약관에 동의해주세요.')
+            }
+        }
+    </script>
+{% endblock %}

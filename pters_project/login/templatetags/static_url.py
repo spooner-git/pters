@@ -1,11 +1,10 @@
 import datetime
+import logging
 import os
 from os import path
 
-import logging
 from django import template
 
-# from configs.settings import DEBUG
 from configs.settings import STATIC_URL, STATICFILES_DIRS
 
 register = template.Library()

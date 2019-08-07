@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% load static_url %}
+{% block local_css %}
+    <meta name="registertrainer" content="trainer_register">
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="751903262384-dbtt6ho5imk5gssgn1rqpe3vs3linq15.apps.googleusercontent.com">
+    <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
+    <style type="text/css">
+        #root_content{
+            overflow-y:hidden;
+        }
+        .contract{
+            width: calc(100% - 8px);
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <!-- Google reCapcha v3 -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6Lednq8UAAAAAPNCsPianArQHAITuhgzf-dkX03-"></script>
+    <script stype="text/javascript">
+        grecaptcha.ready(function() {
+            grecaptcha.execute('6Lednq8UAAAAAPNCsPianArQHAITuhgzf-dkX03-', {action: 'homepage'}).then(function(token) {
+                document.getElementById('g-recaptcha-response').value = token;
+                console.log(token);
+            });
+        });
+    </script>
+    <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
+
+    <div id="root_content">
+        <div id="registration_box">
+            <!-- 헤더 영역 -->
+            <div class="registration_top" style="border-bottom:0px;">
+                <div class="registration_left" onclick="location.href='{% url "login:check_registration" %}'">X</div>
+                <div class="registration_title" style="display:none;">회원가입</div>
+                <div class="registration_right"></div>
+            </div>
+
+            <!-- 입력 영역 -->
+            <div class="registration_content" style="min-height: calc(100% - 190px);">
+                <form action="{% url "login:add_member_info" %}" id="id_add_member_form" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="next_page" id="id_next_page" value="{% url 'index' %}">
+                    <input type="hidden" name="group_type" id="id_group_type" value="trainer" autocomplete="off">
+                    <!-- 회원가입 제목 영역 -->
+                    <div class="wrapper_registration_content_title" style="margin-bottom:40px; height:24px;">
+                        <div class="registration_content_title" style="font-size: 20px; font-weight: bold; color: #1f1d1e; letter-spacing: -1px; text-align: center;">회원가입</div>
+                    </div>
+
+                    <!-- 그룹 타입 선택 영역 -->
+                    <div class="group_select_box_on" id="group_select_trainer_box" onclick="check_group_select('trainer');">
+                        강사
+                    </div>
+                    <div class="group_select_box_off" id="group_select_trainee_box" onclick="check_group_select('trainee');" style="float:right;">
+                        회원
+                    </div>
+
+                    <!-- 이름 입력 영역 -->
+                    <div style="margin-top:8px;">
+                        <input class="pters_login_input" type="text" name="name" id="id_name" placeholder="이름" minlength="2" maxlength="10" title="이름"
+                               pattern="[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}" onkeyup="limit_char_check(event);" data-valid="false" autofocus>
+                        <div class="input_description">
+                            <div class="input_description_text" id="id_name_confirm"></div>
+                            <div id="id_name_default_confirm"> -_ 제외 특수문자 불가</div>
+                        </div>
+                    </div>
+
+                    <!-- 아이디 입력 영역 -->
+                   <div style="margin-top:8px;">
+                        <input class="pters_login_input" type="text" name="username" id="id_username" placeholder="아이디" minlength="4" maxlength="20" title="아이디"
+                               pattern="[a-zA-Z0-9-._@]{4,20}" onkeyup="limit_char_check(event);" data-valid="false">
+                        <div class="input_description">
+                            <div class="input_description_text" id="id_username_confirm"></div>
+                            <div id="id_username_default_confirm">영어, 숫자, -_@ 제외 불가</div>
+                        </div>
+                    </div>
+
+                    <!-- 비밀번호 입력 영역 -->
+                    <div style="margin-top:8px;">
+                        <input class="pters_login_input" type="password" name="password1" id="id_password" placeholder="비밀번호" minlength="8" maxlength="20" title="비밀번호"
+                                pattern="[a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\/]{8,20}" onkeyup="limit_password_check(event);" data-valid="false" autocomplete="new-password">
+                        <div class="input_description">
+                            <div class="input_description_text" id="id_password_confirm"></div>
+                            <div id="id_password_default_confirm">한글을 제외한 특수문자(공백 제외)/영문/숫자를 혼합</div>
+                        </div>
+                    </div>
+
+                    <!-- 비밀번호 재입력 영역 -->
+                   <div style="margin-top:8px;">
+                        <input class="pters_login_input" type="password" name="password2" id="id_password_re" placeholder="비밀번호 확인" minlength="8" maxlength="20" title="비밀번호 확인"
+                                onkeyup="password_check(event);" data-valid="false">
+                        <div class="input_description">
+                            <div class="input_description_text" id="id_password_re_confirm"></div>
+                            <div id="id_password_re_default_confirm">동일한 비밀번호 입력</div>
+                        </div>
+                    </div>
+
+                    <!-- 휴대폰 번호 입력 영역 -->
+                    <div style="margin-top:8px;">
+                        <input class="pters_login_input" type="text" name="phone" id="id_phone" placeholder="휴대폰 번호" minlength="10" maxlength="11" title="휴대폰 번호"
+                               autocomplete="off" style="width:225px;" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event); check_sms_activation_button(event);" data-valid="false">
+                        <div class="activation_button" id="id_activation_button" onclick="activate_sms();" style="pointer-events:none;">인증</div>
+                    </div>
+
+                    <!-- 인증 번호 입력 영역 -->
+                    <div style="margin-top:8px;">
+                        <div id="wrapper_id_activation" style="width: 225px; border: solid 1px #d6d2d2; display:inline-block">
+                            <input class="pters_login_input" type="text" name="activation_code" id="id_activation_code" placeholder="인증 번호" minlength="3" maxlength="8" title="휴대폰 인증"
+                                   style="width:70%; border:0" pattern="[0-9]{3,8}" onkeyup="limit_char_auto_correction(event);" data-valid="false">
+                            <div id="activation_timer" style="display:none; width:20%; text-align:right; padding-right:12px; color: #ff001f; font-size: 13px; font-weight: 500; letter-spacing: -0.5px;">
+                                03:00
+                            </div>
+                        </div>
+                        <div class="activation_button" id="id_activation_confirm_button" onclick="check_activation_code();" style="pointer-events:none;">확인</div>
+                        <div class="input_description">
+                            <div class="input_description_text" id="id_activation_confirm"></div>
+                        </div>
+                    </div>
+
+                    <!-- 약관 동의 영역 -->
+                    <div style="width:100%; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
+                    <div class="contract">
+                        <span class="all_contract">전체 약관에 동의</span>
+                        <div class="contract_select_box" onclick="select_contract('all_contract');">
+                            <span class="contract_select_check" id="all_contract" data-valid="false"></span>
+                        </div>
+                    </div>
+                    <div class="contract">
+                        <span class="detail_contract" onclick="location.href='/privacy/'">가입 약관</span>
+                        <div class="contract_select_box" onclick="select_contract('policy');">
+                            <span class="contract_select_check contract_detail_select_check" id="policy" data-valid="false"></span>
+                        </div>
+                    </div>
+                    <div class="contract">
+                        <span class="detail_contract" onclick="location.href='/policy/'">개인 정보 처리 방침</span>
+                        <div class="contract_select_box" onclick="select_contract('privacy');">
+                            <span class="contract_select_check contract_detail_select_check" id="privacy" data-valid="false"></span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 가입 완료 버튼 영역 -->
+            <div class="registration_foot" style="margin-top:40px; transform: initial; padding-bottom:0px;">
+                <div class="social_login_box" onclick="registration_member_info();" style="width:100%; background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
+                    <div class="social_login_img"></div>
+                    <span class="social_login_text" style="color:#ffffff;">가입 완료</span>
+                    <div style="display:table-cell; width:60px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block local_js_footer %}
+    <script type="text/javascript" src="{% static_url "/user/js/login/login.registration.js" %}"></script>
+    <script type="text/javascript">
+        // 구글 reCAPTCHA 보이지 않게 하기
+        window.addEventListener('load', function () {
+            $('#id_username').focusout(function(){
+                check_username($(this).val());
+            });
+            $('.grecaptcha-badge').css('display', 'none');
+        });
+
+        let did_scroll; // 스크롤시에 사용자가 스크롤했다는 것을 알림
+        let delta = 4; // 스크롤시 감도 (낮으면 자주 발생)
+        let last_scroll_top = 0; // 마지막 스크롤된 위치 저장
+        let $scoll_event = $('#registration_box');
+        // 스크롤 이벤트 처리
+        $scoll_event.scroll(function () {
+            // 중복되지 않도록 semaphore
+            did_scroll = true;
+            if (did_scroll) {
+                checkScrolled();
+            }
+            did_scroll = false;
+        });
+
+        // 스크롤 방향을 검사해서 회원가입 명칭 띄워주기
+        function checkScrolled() {
+            let current_scroll_top = $scoll_event.scrollTop();
+            if($scoll_event.scrollTop() == 0){
+                $scoll_event.scrollTop(1);
+            }
+            // 스크롤 변화량이 delta 값이 넘지 않으면 return
+            if (Math.abs(last_scroll_top - current_scroll_top) < delta) {
+                return;
+            }
+
+            if (current_scroll_top > last_scroll_top) {
+                // 스크롤 다운(아래로)
+                if (current_scroll_top > 10) {
+                    $('.registration_title').css('display', 'table-cell');
+                    $('.registration_content_title').css('display', 'none');
+                }
+            } else {
+                // 스크롤 다운(위로)
+                if (current_scroll_top < 24) {
+                    $('.registration_title').css('display', 'none');
+                    $('.registration_content_title').css('display', 'block');
+                }
+            }
+            last_scroll_top = current_scroll_top;
+        }
+
+    </script>
+{% endblock %}

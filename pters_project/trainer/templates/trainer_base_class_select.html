@@ -21,18 +21,7 @@
     <link rel="stylesheet" href={% static_url "user/css/pters.common.module.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.select.class.css" %}>
     <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
-    <style type="text/css">
-        html{
-            background-image: url("/static/user/res/main/bg-image-basic-mobile.jpg");
-            height: 100%;
-        }
-        @media(min-width:600px){
-            html{
-                background-image: url("/static/user/res/main/bg-image-basic-pc.jpg");
 
-            }
-        }
-    </style>
     {% block local_css %}
     {% endblock %}
 </head>
@@ -40,11 +29,6 @@
 {% block navbar %}
     <div id="shade"></div>
     <div id="shade3"></div>
-
-    <div id="alarm">
-        <p>알림 팝업</p>
-        <button>닫기</button>
-    </div>
 
 
     <div id="popup_lecture_select" class="popups">
@@ -71,273 +55,11 @@
         </div>
     </div>
 
-    <!--일정 눌렀을때 팝업메뉴-->
-    <div id="cal_popup_planinfo" class="popups">
-        <div id="popup_img">
-            <span id="popup_planinfo_title" class="popup_title"></span>
-            <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
-            <img src="/static/user/res/ptadd/btn-x.png" id="btn_close" class="popup_close_x_button">
-        </div>
-        <div class="popup_info_text">
-            <p id="popup_info"></p>
-            <p id="popup_info2"></p>
-            <p id="popup_info3_memo" style="color:#fe4e65;font-size:13px;"></p>
-        </div>
-        <div id="popup_btn_complete" class="popup_inner popup_inner_finish">
-            <span class="KRtext">일정 완료</span><span class="JPtext">日程完了</span><span class="ENtext">Finish Schedule</span>
-        </div>
-        <div id="popup_btn_delete" class="popup_inner popup_inner_delete">
-            <span class="KRtext">일정 취소</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span>
-        </div>
-        <div id="canvasWrap">
-            <span class="KRtext">회원님 완료 서명을 입력해주세요.</span>
-            <span class="JPtext">完了署名を入力して下さい</span>
-            <span class="ENtext">Enter Completion Signature</span>
-            <canvas id="canvas"></canvas>
-        </div>
-        <div id="popup_sign_img">
-            <img src="" id="id_sign_img">
-        </div>
-    </div>
-    <!--일정 눌렀을때 팝업메뉴-->
-
-    <!--삭제 확인 팝업메뉴-->
-    <div id="cal_popup_plandelete" class="popups">
-        <div id="popup_img">
-            <span id="popup_delete_title" class="popup_title"></span>
-            <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
-            <img src="/static/user/res/ptadd/btn-x.png" id="btn_close3" class="popup_close_x_button">
-        </div>
-        <div id="popup_delete_question" class="KRtext popup_info_text">정말 일정을 취소하시겠습니까?</div>
-        <div id="popup_delete_question" class="JPtext popup_info_text">日程を削除しますか</div>
-        <div id="popup_delete_question" class="ENtext popup_info_text">Are you sure to cancel the schedule?</div>
-        <div id="popup_delete_btn_yes" class="popup_inner popup_inner_delete">
-            <span class="KRtext">예</span>
-            <span class="JPtext">はい</span>
-            <span class="ENtext">Yes</span>
-        </div>
-        <div id="popup_delete_btn_no" class="popup_inner popup_inner_delete">
-            <span class="KRtext">아니오</span>
-            <span class="JPtext">いいえ</span>
-            <span class="ENtext">No</span>
-        </div>
-    </div>
-    <!--삭제 확인 팝업메뉴-->
-
-    <!--반복일정 등록 확인 팝업메뉴-->
-    <div id="cal_popup_repeatconfirm" class="popups">
-        <div id="popup_img">
-            <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
-            <img src="/static/user/res/ptadd/btn-x.png" id="btn_close_repeatconfirm" class="popup_close_x_button">
-        </div>
-        <div class="popup_info_text">
-            <p class="_repeatconfirmQuestion"></p>
-            <p id="repeat_confirm_day"></p>
-            <p id="repeat_confirm_dur"></p>
-        </div>
-        <div id="popup_btn_repeatconfirm_yes" class="popup_inner popup_inner_delete">
-            <span style="color:#282828;" class="KRtext">예</span>
-            <span style="color:#282828;" class="JPtext">はい</span>
-            <span style="color:#282828;" class="ENtext">Yes</span>
-        </div>
-        <div id="popup_btn_repeatconfim_no" class="popup_inner popup_inner_delete">
-            <span class="KRtext">아니오</span>
-            <span class="JPtext">いいえ</span>
-            <span class="ENtext">No</span>
-        </div>
-    </div>
-    <!--반복일정 등록 확인 팝업메뉴-->
-
-    <!--[월간전용] 일정조회(강사)팝업 -->
-    <div id="cal_popup_plancheck" class="popups">
-        <div style="position: relative;">
-            <div>
-                <img src="/static/user/res/ptadd/icon-cal.png" alt="" class="img_cal">
-                <span id="countNum">0</span>
-            </div>
-            <img src="/static/user/res/ptadd/btn-x.png" alt="" id="btn_close5" class="btn_close_popup">
-            <p class="popup_ymdText">yy년,mm월,dd일,O요일</p></div>
-        <p style="font-size: 11px;color:#fe4e65;"></p>
-        <div class="popup_inner_month" style="height: auto;"></div>
-    </div>
-    <!--[월간전용] 일정조회(강사)팝업 -->
-
-    <!--[월간전용] 알림 팝업 -->
-    <div id="ng_popup" class="popups">
-        <img src="/static/user/res/stopmark.png" alt="Caution!" style="width:30px;margin: 20px;">
-        <div id="ng_popup_text" style="margin-bottom: 20px;">
-            <p>일정은 오늘 날짜 기준</p><p>2주앞만 설정 가능합니다.</p>
-        </div>
-    </div>
-    <!--[월간전용] 알림 팝업 -->
-
-
-    <nav class="navbar navbar-fixed-top navbar-default"  id="page-base">
-        <div id="navshade"></div>
-        <div class="container" style="max-width:1000px;">
-            <div class="navbar-header">
-                <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="openNav()">
-                    <span class="icon-bar" style="width: 20px;"></span>
-                    <span class="icon-bar" style="width:60%;"></span>
-                    <span class="icon-bar" style="width: 20px;"></span>
-                </button>
-                {% block nav_center_img %}
-                    <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'index' %}">{{user.first_name }}  코치님 일정</a>-->
-                    <a id="uptext" class="uptext" href="{% url 'index' %}">{{user.first_name }}  <span></span></a>
-                {% endblock %}
-                <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
-                    <a href="{% url 'trainer:alarm' %}"><img src={% static_url "user/res/main/alarm-on.png" %} style="width:20px;"></a>
-                </button>
-
-                <div id="outer_Sidenav" class="outer_Sidenav">
-
-                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                </div>
-
-                <div id="inner_Sidenav" class="sidenav">
-
-                    <div class="sidebar_upper" onclick="location.href='{% url 'index' %}'">
-                        <a href="{% url 'index' %}" style="width:100%;height: 100%;z-index: 1"></a>
-                        <div style="z-index: -1"><img src={% static_url "user/res/icon-pf.png" %} alt="#"></div>
-                        <div id="user_name">{{user.first_name}}
-                            <span class="KRtext">님</span><span class="JPtext">様</span><span class="ENtext"></span>
-                        </div>
-                        <div id="welcome"><span class="KRtext">안녕하세요!</span><span class="JPtext">こんにちは</span><span class="ENtext">What a nice day!</span></div>
-                    </div>
-
-                    <!--
-                    <div class="sidebar_div" id="cal_day"><img src={% static_url "user/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#">
-                        <a href="{% url 'trainer:cal_day' %}" class="sidebar_text __todayplan">
-                        </a>
-                    </div>
-                    <div class="sidebar_div"><img src={% static_url "user/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#">
-                        <a href="{% url 'trainer:cal_week' %}" class="sidebar_text __weekplan">
-                        </a>
-                    </div>
-                    <div class="sidebar_div"><img src={% static_url "user/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#">
-                        <a href="{% url 'trainer:cal_month' %}" class="sidebar_text __monthplan">
-                        </a>
-                    </div>
-                    <div class="sidebar_div"><img src={% static_url "user/res/icon-user-setting.png" %} class="sidebar_icon" alt="#">
-                        <a href="{% url 'trainer:member_manage' %}" class="sidebar_text __membermanage">
-                        </a>
-                    </div>
-                    <div class="sidebar_div"><img src={% static_url "user/res/icon-pencil.png" %} class="sidebar_icon" alt="#">
-                        <a href="{% url 'trainer:work_manage' %}" class="sidebar_text __workmanage">
-                        </a>
-                    </div>
-                    <div class="sidebar_div" style="height: 100%;"></div>
-                    <div class="sidebar_div sidebar_div_last">
-                        <div class="sidebar_div_last1">
-                            <img src="{% static_url "user/res/icon-setting.png" %}" class="sidebar_icon sidebar_icon_setting" alt="#">
-                            <a href="{% url 'trainer:trainer_setting' %}" class="sidebar_text __setting">
-                            </a>
-                        </div>
-                        <div class="sidebar_div_last2">
-                            <img src={% static_url "user/res/icon-info.png" %} alt="#" class="sidebar_icon_info sidebar_icon">
-                        </div>
-                    </div>
-                    -->
-                </div>
-
-            </div>
-        </div><!-- /.container -->
-    </nav><!-- /.navbar -->
-
-    <!--
-    <nav class="navbar navbar-fixed-top navbar-default" id="page-base-addstyle">
-        <div class="container">
-            <div class="navbar-header">
-                <button id="upbutton-x" class="navbar-toggle" aria-controls="navbar">
-                    <img src={% static_url "user/res/ptadd/btn-x.png" %} style="width:90%;">
-                </button>
-                {% block nav_center_img1 %}
-                    <a id="uptext2" class="uptext"></a>
-                {% endblock %}
-                <button id="upbutton-check" class="navbar-toggle" aria-controls="navbar">
-                    <img src={% static_url "user/res/ptadd/btn-complete.png" %} style="width:100%;">
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <nav class="navbar navbar-fixed-top navbar-default" id="page-base-modifystyle">
-        <div class="container">
-            <div class="navbar-header">
-                <button id="upbutton-x-modify" class="navbar-toggle" aria-controls="navbar">
-                    <img src={% static_url "user/res/ptadd/btn-x.png" %} style="width:90%;">
-                </button>
-                {% block nav_center_img2 %}
-                    <a id="uptext3" class="uptext">회원 정보</a>
-                {% endblock %}
-                <button id="upbutton-modify" class="navbar-toggle" aria-controls="navbar" data-type = "view">
-                    <img src={% static_url "user/res/member/icon-edit.png" %} style="width:100%;">
-                </button>
-            </div>
-        </div>
-    </nav>
-    -->
-
-    <nav class="navbar navbar-fixed-top" id="pcver">
-        <div class="centermenu">
-            <img src="/static/user/res/PTERS_logo_pure.png?v2" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'index' %}'" style="cursor: pointer;">
-            <div class="centermenu_box">
-                <!--
-                <div class="centermenu_div" style="display: none;">
-                    <a href="{% url 'trainer:cal_day' %}" class="centermenu_text __todayplan"></a>
-                </div>
-                <div class="centermenu_div">
-                    <a href="{% url 'trainer:cal_week' %}" class="centermenu_text __weekplan"></a>
-                </div>
-                <div class="centermenu_div">
-                    <a href="{% url 'trainer:cal_month' %}" class="centermenu_text __monthplan"></a>
-                </div>
-                <div class="centermenu_div">
-                    <a href="{% url 'trainer:member_manage' %}" class="centermenu_text __membermanage"></a>
-                </div>
-                <div class="centermenu_div">
-                    <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text __setting"></a>
-                </div>
-                -->
-            </div>
-            <div id="loginInfo" class="centermenu_div" style="float:right;">
-                <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:3px;">
-                <span class="pcwhere"></span>
-                <span class="pcwho">{{user.first_name}} 님<span></span></span>
-            </div>
-            <span class="pclogout text-logout" onclick="location.href='{% url 'login:logout' %}'"></span>
-            <!--
-            <span id="pters-version" style="position: absolute;top:55px;right:0%;color:#a2a2a2;font-size:10px;">v0.1712.0000</span>
-            -->
-        </div>
-    </nav>
-
-    <div class="footergap">
-
-    </div>
 
 {% endblock %}
 
 {% block content %}
 {% endblock %}
-
-<footer class="fixfooter bottomzero">
-    <!--
-    <div class="bottomfooter1">
-        <span>English</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <span>한국어</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <span>日本語</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-    </div>
-    -->
-    <div class="bottomfooter2">
-        <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-        <span>회사소개</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <span>이용안내</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <span>제휴제안</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <span>개인정보처리방침</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <span>고객센터</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-    </div>
-</footer>
 
 
 
@@ -451,12 +173,11 @@
             dataType : 'html',
 
             beforeSend:function(){
-{#                $('html').css("cursor","wait");#}
             },
 
             success:function(data){
                 var jsondata = JSON.parse(data);
-                lec_select_classIdArray = jsondata.classIdArray
+                lec_select_classIdArray = jsondata.classIdArray;
                 lec_select_centerNameArray = jsondata.centerNameArray;
                 lec_select_subjectNameArray = jsondata.subjectNameArray;
                 lec_select_startDateArray = jsondata.startDateArray;
@@ -469,6 +190,7 @@
                 lec_select_stateCodeArray = jsondata.stateCodeArray;
                 lec_select_subjectCodeArray= jsondata.subjectCodeArray;
 
+
                 fill_lecture_select_popup(jsondata, HTMLselector);
                 if(use == "callback"){
                     callback();
@@ -476,11 +198,11 @@
             },
 
             complete:function(){
-{#                $('html').css("cursor","auto");#}
             },
 
             error:function(){
-                console.log('server error')
+                alert('error');
+                console.log('server error');
             }
         })
     }
@@ -528,49 +250,16 @@
     }
 
 
-    /*
-    function fill_lecture_select_popup(){
-        var len = lec_select_subjectNameArray.length;
-        var list_table_to_join = []
-        var center_counter = 0;
-        for(var i=0; i<len; i++){
-            //if(lec_select_npLectureCountsArray[i] == '0'){
-            var table = '<div class="pters_table lecture_row" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'>'
-            var centerName = '<div class="pters_table_cell table_center_name">'+lec_select_centerNameArray[i]+'</div>'
-            var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_subjectNameArray[i]+'</div>'
-            var traineeNum = '<div class="pters_table_cell table_trainee_num">'+lec_select_classInProgressMemberNumArray[i]+'명</div>'
-            var startDate = '<div class="pters_table_cell table_start_date">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
-            var status = '<div class="pters_table_cell table_lecture_status">'+lec_select_stateNameArray[i]+'</div>'
-            var sum = table + centerName + lectureName + traineeNum + startDate + status +'</div>'
-            list_table_to_join.push(sum)
-            if(lec_select_centerNameArray[i] != ''){
-                center_counter += 1;
-            }
-        }
-        var list_table = list_table_to_join.join('')
-        $('.lecture_select_table_list').html(list_table)
-
-        if(center_counter==0){
-            $('.table_center_name').css('display', 'none')
-        }
-    }
-    */
 
     function open_lecture_select_popup(){
-        console.log('aegasegae')
-        $('.popups').hide();
         $('#popup_lecture_select').fadeIn('fast');
-        closeNav();
-        shade_index(100);
-        console.log('nponponp')
-        ajax_read_lecture_info_from_db($('.lecture_select_table_list'),'callback',function(){
-            append_dropdown_scroll_arrow('.lecture_select_table_list', '#popup_lecture_select_title', 35, 0)
+        ajax_read_lecture_info_from_db($('.lecture_select_table_list'),'callback', function(){
+            append_dropdown_scroll_arrow('.lecture_select_table_list', '#popup_lecture_select_title', 35, 0);
             set_list_overflow_scrolling('.lecture_select_table_list', '#popup_lecture_select_title');
         });
     }
 
     function open_lecture_select_popup_pc(){
-        $('.popups').hide();
         ajax_read_lecture_info_from_db($('#subject-selector'), 'callback', function(){
             append_dropdown_scroll_arrow('#subject-selector', '#myInfo', 50, -60)
             set_list_overflow_scrolling('#subject-selector', '#myInfo');
@@ -578,6 +267,7 @@
     }
 
     function fill_lecture_select_popup(jsondata, HTMLselector){
+
         var json = class_sort_by_center(jsondata);
         var list_table_to_join = [];
         for(center in json){
@@ -616,7 +306,7 @@
                 var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+centerName__+'</div>';
                 var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+currentIndicator+className+'</div>';
                 var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'"> 총 '+classIPNumber+'명</div>';
-                var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(startDt,'.')+' ~</div>';
+                var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+startDt+' ~</div>';
                 var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+stateName+'</div>';
                 //var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>';
                 if(subject_join.length == 0){

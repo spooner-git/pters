@@ -1,0 +1,334 @@
+/* 박스 */
+    .obj_box_nav_bar{
+        width: 100%;
+        height: 50px;
+        top: 0;
+        left: 0px;
+        background-color: #000000;
+        box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2);
+        z-index: 1;
+    }
+
+    .obj_box_full{
+        height: auto;
+        background-color: #ffffff;
+        border-radius: 2px;
+        border: 1px solid #f2f2f2;
+    }
+    .obj_box_full_grey{
+        height: auto;
+        background-color: #fafafa;
+        border-radius: 5px;
+        border: 1px solid #f2f2f2;
+    }
+    .obj_box_popup_topper{
+        height: auto;
+        background-color: #ff3b44;
+        border-radius: 8px 8px 0px 0px;
+        box-shadow: 0 0 15px 0 rgba(131, 131, 131, 0.25);
+        padding-top: 20px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .obj_box_card{
+        height: auto;
+        background-color: #ffffff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+        margin-left: 20px;
+        margin-right: 20px;
+        padding: 20px;
+    }
+
+    .obj_box_photo{
+        height: 30px;
+        width: 30px;
+        border: 2px solid #000000;
+        border-radius: 50%;
+        background-color: #ffffff;
+    }
+
+/* 텍스트 박스 */
+
+    .obj_font_size_18_weight_900{
+        font-size: 18px;
+        font-weight: 900;
+        letter-spacing: -0.5px;
+    }
+    .obj_font_size_18_weight_bold{
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: -0.5px;
+    }
+
+
+
+    .obj_font_size_15_weight_900{
+        font-size: 15px;
+        font-weight: 900;
+        letter-spacing: -0.5px;
+    }
+    .obj_font_size_15_weight_bold{
+        font-size: 15px;
+        font-weight: bold;
+        letter-spacing: -0.5px;
+    }
+    .obj_font_size_15_weight_500{
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: -0.5px;
+    }
+
+
+    .obj_font_size_14_weight_500{
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: -0.5px;
+    }
+    .obj_font_size_14_weight_normal{
+        font-size: 14px;
+        font-weight: normal;
+        letter-spacing: -0.5px;
+    }
+
+
+    .obj_font_size_13_weight_bold{
+        font-size: 13px;
+        font-weight: bold;
+        letter-spacing: -0.5px;
+    }
+    .obj_font_size_13_weight_500{
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: -0.5px;
+    }
+    .obj_font_size_13_weight_normal{
+        font-size: 13px;
+        font-weight: normal;
+        letter-spacing: -0.5px;
+    }
+
+
+    .obj_font_size_12_weight_bold{
+        font-size: 12px;
+        font-weight: bold;
+        letter-spacing: -0.5px;
+    }
+    .obj_font_size_12_weight_500{
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: -0.5px;
+    }
+    .obj_font_size_12_weight_normal{
+        font-size: 12px;
+        font-weight: normal;
+        letter-spacing: -0.5px;
+    }
+
+
+    .obj_font_size_11_weight_bold{
+        font-size:11px;
+        font-weight: bold;
+        letter-spacing: -0.3px;
+    }
+    .obj_font_size_11_weight_500{
+        font-size:11px;
+        font-weight: 500;
+        letter-spacing: -0.3px;
+    }
+    .obj_font_size_11_weight_normal{
+        font-size: 11px;
+        font-weight: normal;
+        letter-spacing: -0.3px;
+    }
+
+    .obj_font_size_10_weight_500{
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: -0.3px;
+    }
+
+
+/* 글자 색상 */
+    .obj_font_color_black{
+        color: #000000;
+    }
+    .obj_font_color_light_black{
+        color: #333333;
+    }
+    .obj_font_color_dark_grey{
+        color: #737373;
+    }
+    .obj_font_color_grey{
+        color: #999999;
+    }
+    .obj_font_color_light_grey{
+        color: #b3b3b3;
+    }
+    .obj_font_color_white{
+        color: #ffffff;
+    }
+    .obj_font_color_light_blue{
+        color: #509cf2;
+    }
+    .obj_font_color_saturday_blue{
+        color: #0076ff;
+    }
+    .obj_font_color_pters_dark_red{
+        color: #f25050;
+    }
+    .obj_font_color_pters_red{
+        color: #fe4e65;
+    }
+    .obj_font_color_coral{
+        color: #ff3b44;
+    }
+    .obj_font_color_sunday_red{
+        color: #ff0000
+    }
+
+/* 버튼 */
+    .obj_icon_basic{
+        width: 24px;
+        height: 24px;
+    }
+    .obj_icon_x{
+        width: 24px;
+        height: 24px;
+    }
+    .obj_icon_expand{
+        width: 24px;
+        height: 24px;
+    }
+    .obj_icon_arrow{
+        width: 24px;
+        height: 24px;
+    }
+
+    .obj_button_gen{
+        width: 90px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: normal;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+    .obj_button_big{
+        width: 100%;
+        height: 55px;
+        line-height: 45px;
+        text-align: center;
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+        border: 5px solid #f0f0f0 !important;
+        border-radius: 2px;
+        box-sizing: border-box;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .obj_tag{
+        width: 58px;
+        height: 18px;
+        line-height: 18px;
+        border-radius: 11px;
+        text-align: center;
+        vertical-align: top;
+        font-size: 11px;
+        font-weight: bold;
+        letter-spacing: -0.5px;
+        display: inline-block;
+    }
+
+
+/* 버튼 글자, 배경 색상 */
+    .obj_font_bg_white_pink{
+        color: #ffffff;
+        background-color: #fe4e65;
+    }
+    .obj_font_bg_pink_white{
+        color: #fe4e65;
+        background-color: #ffffff;
+    }
+    .obj_font_bg_black_white{
+        color: #000000;
+        background-color: #ffffff;
+    }
+    .obj_font_bg_white_grey{
+        color: #ffffff;
+        background-color: #656565;
+        border: 1px solid transparent;
+    }
+    .obj_font_bg_white_black{
+        color: #ffffff;
+        background-color: #000000;
+    }
+    .obj_font_bg_white_dark_grey{
+        color: #ffffff;
+        background-color: #464646;
+    }
+    .obj_font_bg_trans_pink{
+        color: #fe4e65;
+        background-color: transparent;
+        border: 1px solid #fe4e65;
+    }
+    .obj_font_bg_white_coral{
+        color: #ffffff;
+        background-color: #ff3b44;
+        border: 1px solid transparent;
+    }
+    .obj_font_bg_coral_white{
+        color: #ff3b44;
+        background-color: #ffffff;
+    }
+    .obj_font_bg_grey_trans{
+        color: #656565;
+        background-color: #ffffff;
+        border: 1px solid #656565;
+    }
+    .obj_font_bg_coral_trans{
+        color: #ff3b44;
+        background-color: #ffffff;
+        border: 1px solid #ff3b44;
+    }
+/* table */
+    .obj_table_raw{
+        display: table;
+        width: 100%;
+        vertical-align: middle;
+    }
+    .obj_table_cell_x2{
+        display: table-cell;
+        width: 50%;
+        vertical-align: middle;
+    }
+    .obj_table_cell_x3{
+        display: table-cell;
+        width: 33.33%;
+        vertical-align: middle;
+    }
+    .obj_table_cell_x4{
+        display: table-cell;
+        width: 25%;
+        vertical-align: middle;
+    }
+    .obj_table_cell_x5{
+        display: table-cell;
+        width: 20%;
+        vertical-align: middle;
+    }
+    .obj_table_cell_x6{
+        display: table-cell;
+        width: 16.6%;
+        vertical-align: middle;
+    }
+    .obj_table_cell_x7{
+        display: table-cell;
+        width: 14.28%;
+        vertical-align: middle;
+    }
+
+/*(공통) 모든 페이지에서 사용할 수 있는 오브젝트, 폰트스타일*/

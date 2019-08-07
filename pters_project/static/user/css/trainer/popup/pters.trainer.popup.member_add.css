@@ -1,0 +1,22 @@
+.popup_member_add{
+	-webkit-overflow-scrolling: touch;
+}
+
+.popup_member_add .obj_box_full{
+	padding: 15px 16px;
+}
+
+.popup_member_add .popup_toolbox{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+	padding: 0px 16px 10px 50px;
+}
+.popup_member_add .member_add_upper_box{
+	height: 40px;
+	line-height: 40px;
+}
+
+.popup_member_add .popup_content{
+	padding-top: 1px;
+}

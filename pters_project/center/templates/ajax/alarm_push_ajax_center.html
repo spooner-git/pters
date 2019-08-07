@@ -1,8 +1,0 @@
-    {
-    "messageArray" :
-    [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-
-    "log_info_array" :
-    [{% for log_info in log_data %}"{{ log_info.from_member_name }}님이 {% if log_info.to_member_name %}{{ log_info.to_member_name }}님의{% endif %} {{ log_info.log_info }}를  {{ log_info.log_how }} 했습니다. {% if log_info.log_detail %}{{ log_info.log_detail }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
-
-    }

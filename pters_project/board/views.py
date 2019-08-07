@@ -1,17 +1,14 @@
 import logging
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models.expressions import RawSQL
-from django.utils import timezone
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import EmailMessage
+from django.db.models.expressions import RawSQL
 from django.shortcuts import redirect
-
-# Create your views here.
+from django.utils import timezone
 from django.views.generic import TemplateView
 
 from configs.const import USE
-
 from .models import QATb
 
 logger = logging.getLogger(__name__)
@@ -43,7 +40,7 @@ def add_question_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
         messages.info(request, qa_type_cd+'/'+title+'/'+contents)
 

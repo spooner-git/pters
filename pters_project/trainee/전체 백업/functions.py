@@ -1,14 +1,10 @@
 import datetime
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from django.db.models import Q
 from django.db.models.expressions import RawSQL
-from django.db.models.functions import Coalesce
 from django.utils import timezone
 
-from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, TO_TRAINEE_LESSON_ALARM_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
-    AUTO_FINISH_OFF
-
+from configs import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.models import ClassTb, ClassLectureTb, GroupLectureTb, SettingTb, PackageGroupTb

@@ -1,8 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import ClassTb, MemberClassTb, ClassLectureTb, GroupTb, GroupLectureTb, SettingTb, BackgroundImgTb, \
-    PackageTb, PackageGroupTb
+from .models import ClassTb, MemberClassTb, ClassMemberTicketTb, LectureTb, LectureMemberTicketTb, SettingTb,\
+    BackgroundImgTb, TicketTb, TicketLectureTb
 
 
 @admin.register(ClassTb)
@@ -21,30 +21,29 @@ class MemberClassTbAdmin(admin.ModelAdmin):
                     'mod_member_id', 'reg_dt', 'mod_dt', 'use')
 
 
-@admin.register(ClassLectureTb)
-class ClassLectureTbAdmin(admin.ModelAdmin):
-    list_display = ('class_lecture_id', 'class_tb', 'lecture_tb', 'auth_cd',
+@admin.register(ClassMemberTicketTb)
+class ClassMemberTicketTbAdmin(admin.ModelAdmin):
+    list_display = ('class_member_ticket_id', 'class_tb', 'member_ticket_tb', 'auth_cd',
                     'mod_member_id', 'reg_dt', 'mod_dt', 'use')
-    search_fields = ['class_tb__member__name', 'lecture_tb__member__name']
+    search_fields = ['class_tb__member__name', 'member_ticket_tb__member__name']
 
 
-@admin.register(GroupTb)
-class GroupTbAdmin(admin.ModelAdmin):
-    list_display = ('group_id', 'class_tb', 'name', 'group_type_cd', 'member_num',
-                    'ing_group_member_num', 'end_group_member_num', 'state_cd',
+@admin.register(LectureTb)
+class LectureTbAdmin(admin.ModelAdmin):
+    list_display = ('lecture_id', 'class_tb', 'name', 'member_num', 'state_cd',
                     'ing_color_cd', 'end_color_cd', 'ing_font_color_cd', 'end_font_color_cd',
-                    'note', 'reg_dt', 'mod_dt', 'use')
+                    'lecture_type_cd', 'note', 'reg_dt', 'mod_dt', 'use')
     search_fields = ['class_tb__member__name']
 
 
-@admin.register(GroupLectureTb)
-class GroupLectureTbAdmin(admin.ModelAdmin):
-    list_display = ('group_lecture_id', 'group_tb', 'lecture_tb', 'reg_dt', 'mod_dt', 'use')
+@admin.register(LectureMemberTicketTb)
+class LectureMemberTicketTbAdmin(admin.ModelAdmin):
+    list_display = ('lecture_member_ticket_id', 'lecture_tb', 'member_ticket_tb', 'reg_dt', 'mod_dt', 'use')
 
 
 @admin.register(SettingTb)
 class SettingTbAdmin(admin.ModelAdmin):
-    list_display = ('setting_id', 'member', 'class_tb', 'lecture_tb', 'setting_type_cd', 'setting_info',
+    list_display = ('setting_id', 'member', 'class_tb', 'member_ticket_tb', 'setting_type_cd', 'setting_info',
                     'reg_dt', 'mod_dt', 'use')
     search_fields = ['member__name', 'class_tb']
 
@@ -55,15 +54,13 @@ class BackgroundImgTbAdmin(admin.ModelAdmin):
                     'reg_dt', 'mod_dt', 'use')
 
 
-@admin.register(PackageTb)
-class PackageTbAdmin(admin.ModelAdmin):
-    list_display = ('package_id', 'class_tb', 'name', 'package_type_cd',
-                    'ing_package_member_num', 'end_package_member_num',
-                    'package_group_num', 'state_cd', 'note', 'reg_dt', 'mod_dt', 'use')
-    search_fields = ['class_tb__member__name', 'package_type_cd', 'name']
+@admin.register(TicketTb)
+class TicketTbAdmin(admin.ModelAdmin):
+    list_display = ('ticket_id', 'class_tb', 'name', 'state_cd', 'note', 'reg_dt', 'mod_dt', 'use')
+    search_fields = ['class_tb__member__name', 'name']
 
 
-@admin.register(PackageGroupTb)
-class PackageGroupTbAdmin(admin.ModelAdmin):
-    list_display = ('package_group_id', 'class_tb', 'package_tb', 'group_tb', 'reg_dt', 'mod_dt', 'use')
+@admin.register(TicketLectureTb)
+class TicketLectureTbAdmin(admin.ModelAdmin):
+    list_display = ('ticket_lecture_id', 'class_tb', 'ticket_tb', 'lecture_tb', 'reg_dt', 'mod_dt', 'use')
 

@@ -1,0 +1,222 @@
+{% load static_url %}
+
+<link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.basic.css" %}>
+<style>
+    .wrapper_popup_time_selector_function, .wrapper_popup_date_selector_function{
+        text-align: center;
+    }
+    .time_selector, .date_selector, .spin_selector{
+        position: relative;
+        text-align: center;
+    }
+    
+    .time_selector .select_wrapper{
+        display: inline-block;
+        width: 30%;
+        position: relative;
+        overflow: hidden;
+        height: 200px;
+        max-width: 90px;
+    }
+    .date_selector .select_wrapper{
+        display: inline-block;
+        width: 30%;
+        position: relative;
+        overflow: hidden;
+        height: 200px;
+        max-width: 90px;
+    }
+
+    .spin_selector .select_wrapper{
+        display: inline-block;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        height: 200px;
+        max-width: 400px;
+    }
+
+    .time_selector_confirm, .date_selector_confirm, .spin_selector_confirm{
+        text-align: center;
+        font-size: 13px;
+        font-weight: 500;
+        height: 40px;
+        line-height: 40px;
+    }
+
+    .select_wrapper_child{
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 200px;
+        z-index: 1;
+        /* background-image: linear-gradient(#8e8e8e, transparent 35%, transparent 65%, #8e8e8e); */
+    }
+    
+    .selector_unit{
+        position: absolute;
+        top: 80px;
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: right;
+        font-size: 11px;
+    }
+
+    .selector_indicator{
+        position: absolute;
+        top: 120px;
+        width: 100%;
+        height: 40px;
+        border-top: 1px solid #fe4e65;
+        border-bottom: 1px solid #fe4e65;
+    }
+
+    .select_wrapper ul{
+        /* color: #1e1e1e; */
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .select_wrapper ul > li{
+        color: #cccccc;
+        background-color: transparent;
+        height: 40px;
+        line-height: 40px;
+        font-size: 15px;
+        font-weight: 500;
+    }
+</style>
+
+
+<div class="popup_mobile popup_mobile_basic">
+    <div class="popup_basic_user_input popup_basic_user_input_text obj_font_size_15_weight_500">
+        <div class="wrapper_popup_basic_comment obj_font_size_18_weight_bold"></div>
+        <div><input type="text" placeholder="입력 해주세요." class="popup_basic_user_input_data"></div>
+        <div class="wrapper_popup_basic_buttons obj_table_raw">
+            <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">취소</div>
+            <div class="popup_basic_confirm obj_table_cell_x2">확인</div>
+        </div>
+    </div>
+</div>
+
+<div class="popup_mobile popup_mobile_basic">
+    <div class="popup_basic_user_input popup_basic_user_input_number obj_font_size_15_weight_500">
+        <div class="wrapper_popup_basic_comment obj_font_size_18_weight_bold"></div>
+        <div><input type="tel" placeholder="입력 해주세요." class="popup_basic_user_input_data"></div>
+        <div class="wrapper_popup_basic_buttons obj_table_raw">
+            <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">취소</div>
+            <div class="popup_basic_confirm obj_table_cell_x2">확인</div>
+        </div>
+    </div>
+</div>
+
+<div class="popup_mobile popup_full" style="background-color:transparent;padding:0 20px;box-sizing: border-box;">
+    <div class="popup_basic_user_select_multi obj_font_size_15_weight_500">
+        <div class="wrapper_popup_basic_comment obj_font_size_18_weight_bold"></div>
+        <div id="option_wrap" class="wrapper_popup_basic_user_select_options" style="margin-bottom: 30px;">
+
+        </div>
+        <div class="wrapper_popup_basic_buttons obj_table_raw  obj_font_bg_black_white" style="border-radius:5px;">
+            <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">취소</div>
+        </div>
+    </div>
+</div> 
+
+<div class="popup_mobile popup_full">
+    <div class="popup_basic_time_selector obj_font_size_15_weight_500" style="background-color:#ffffff;border-top-right-radius: 8px;border-top-left-radius: 8px;">
+        <div id="wrapper_popup_time_selector_function">
+        </div>
+    </div>
+</div>
+
+<div class="popup_mobile popup_full">
+    <div class="popup_basic_date_selector obj_font_size_15_weight_500" style="background-color:#ffffff;border-top-right-radius: 8px;border-top-left-radius: 8px;">
+        <div id="wrapper_popup_date_selector_function">
+        </div>
+    </div>
+</div>
+
+<div class="popup_mobile popup_full">
+    <div class="popup_basic_date_picker_selector obj_font_size_15_weight_500" style="background-color:#ffffff;border-top-right-radius: 8px;border-top-left-radius: 8px;">
+        <div id="wrapper_popup_date_picker_selector_function">
+        </div>
+    </div>
+</div>
+
+<div class="popup_mobile popup_full">
+	<div class="popup_basic_spin_selector obj_font_size_15_weight_500" style="background-color:#ffffff;border-top-right-radius: 8px;border-top-left-radius: 8px;">
+        <div id="wrapper_popup_spin_selector_function">
+        </div>
+    </div>
+</div>
+
+<div class="popup_mobile popup_full">
+	<div class="popup_basic_option_selector obj_font_size_15_weight_500" style="background-color:#ffffff;border-top-right-radius: 8px;border-top-left-radius: 8px;">
+        <div id="wrapper_popup_option_selector_function" style="padding:0 16px;">
+        </div>
+        <div class="wrapper_popup_basic_buttons obj_table_raw  obj_font_bg_black_white" style="border-radius:5px;">
+            <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">닫기</div>
+        </div>
+    </div>
+</div>
+
+
+<div class="popup_mobile">
+    <div class="popup_lecture_select">
+        <div id="wrapper_box_lecture_select" class="obj_box_full">
+            
+        </div>
+    </div>
+</div>
+
+<div class="popup_mobile">
+    <div class="popup_color_select">
+        <div id="wrapper_box_color_select" class="obj_box_full">
+            
+        </div>
+    </div>
+</div>
+
+<div class="popup_mobile">
+    <div class="popup_member_select">
+        <div id="wrapper_box_member_select" class="obj_box_full">
+            
+        </div>
+    </div>
+</div>
+
+<div class="popup_mobile">
+    <div class="popup_ticket_select">
+        <div id="wrapper_box_ticket_select" class="obj_box_full">
+            
+        </div>
+    </div>
+</div>
+
+<div class="popup_mobile">
+    <div class="popup_day_select">
+        <div id="wrapper_box_day_select" class="obj_box_full">
+            
+        </div>
+    </div>
+</div>
+
+<div class="popup_mobile">
+    <div class="popup_repeat_select">
+        <div id="wrapper_box_repeat_select" class="obj_box_full">
+            
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+// 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    
+// 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// 시간 선택 팝업++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+</script>

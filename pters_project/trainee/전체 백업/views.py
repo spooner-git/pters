@@ -1,13 +1,13 @@
 import datetime
-
 import logging
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
-from django.db import IntegrityError
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.shortcuts import redirect, render
@@ -15,29 +15,23 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
-from django.views.generic.base import ContextMixin
 from el_pagination.views import AjaxListView
 
-# Create your views here.
-
-from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
+from configs import AccessTestMixin
+from configs import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
     SCHEDULE_DUPLICATION_DISABLE
-
-from configs.views import AccessTestMixin
-
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
+from schedule.functions import func_get_member_ticket_id, func_get_lecture_member_ticket_id, \
+    func_check_lecture_available_member_before, func_check_lecture_available_member_after, func_add_schedule, \
+    func_date_check, func_refresh_member_ticket_count
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb
-from .models import LectureTb, MemberLectureTb
-
-from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
-    func_check_group_available_member_before, func_check_group_available_member_after, func_add_schedule, \
-    func_date_check, func_refresh_lecture_count
 from .functions import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_schedule_setting, \
     func_get_lecture_connection_list
+from .models import LectureTb, MemberLectureTb
 
 logger = logging.getLogger(__name__)
 
@@ -314,9 +308,9 @@ def add_trainee_schedule_logic(request):
     push_class_id = []
     push_title = []
     push_message = []
-    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    context = {'push_member_ticket_id': None, 'push_title': None, 'push_message': None}
     schedule_info = None
-    lecture_id = None
+    member_ticket_id = None
     lt_res_member_time_duration = 1
 
     if class_id is None or class_id == '':
@@ -364,7 +358,7 @@ def add_trainee_schedule_logic(request):
 
     if error is None:
         if group_schedule_id == '' or group_schedule_id is None:
-            lecture_id = func_get_lecture_id(class_id, request.user.id)
+            member_ticket_id = func_get_member_ticket_id(class_id, request.user.id)
         # 그룹 Lecture Id 조회
         else:
             try:
@@ -388,17 +382,18 @@ def add_trainee_schedule_logic(request):
                                                                     group_schedule_id=group_schedule_id,
                                                                     lecture_tb__member_id=request.user.id)
                     if len(group_schedule_data) == 0:
-                        lecture_id = func_get_group_lecture_id(group_schedule_info.group_tb_id, request.user.id)
+                        lecture_id = func_get_lecture_member_ticket_id(class_id, group_schedule_info.group_tb_id,
+                                                                       request.user.id)
                     else:
                         lecture_id = None
                         error = '이미 일정에 포함되어있습니다.'
 
     if error is None:
-        if lecture_id is None:
+        if member_ticket_id is None:
             error = '예약 가능 횟수를 확인해주세요.'
 
     if error is None:
-        error = pt_add_logic_func(training_date, start_date, end_date, request.user.id, lecture_id, class_id,
+        error = pt_add_logic_func(training_date, start_date, end_date, request.user.id, member_ticket_id, class_id,
                                   request, group_schedule_id)
 
     if error is None:
@@ -445,7 +440,7 @@ def add_trainee_schedule_logic(request):
 
         return render(request, 'ajax/trainee_error_info.html', context)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -532,7 +527,7 @@ def delete_trainee_schedule_logic(request):
                 schedule_info.delete()
 
                 if error is None:
-                    error = func_refresh_lecture_count(class_id, lecture_id)
+                    error = func_refresh_member_ticket_count(class_id, lecture_id)
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -551,7 +546,7 @@ def delete_trainee_schedule_logic(request):
         # class_info.save()
 
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name+request.user.first_name,
+                         from_member_name=request.user.first_name,
                          class_tb_id=class_info.class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info=' ['+group_type_name+']'+group_name + ' 일정',
                          log_how='취소', log_detail=str(start_date) + '/' + str(end_date), use=USE)
@@ -585,7 +580,7 @@ def delete_trainee_schedule_logic(request):
 
         return render(request, 'ajax/trainee_error_info.html', context)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -615,8 +610,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = func_get_class_lecture_count(context, class_id, self.request.user.id)
 
         if context['error'] is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + context['error'])
+            logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + context['error'])
             messages.error(self.request, context['error'])
 
         return context
@@ -638,8 +632,7 @@ class GetTraineeScheduleHistoryView(LoginRequiredMixin, AccessTestMixin, Templat
             context = func_get_trainee_on_schedule(context, class_id, member_id, None, None)
 
         if context['error'] is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name+'['
-                         + str(self.request.user.id) + ']' + context['error'])
+            logger.error(self.request.user.first_name+'[' + str(self.request.user.id) + ']' + context['error'])
             messages.error(self.request, context['error'])
 
         return context
@@ -652,8 +645,7 @@ class GetTraineeClassListView(LoginRequiredMixin, AccessTestMixin, View):
         context = {'error': None}
         context = func_get_class_list(context, request.user.id)
         if context['error'] is not None:
-            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
-                         + str(request.user.id) + ']' + context['error'])
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + context['error'])
             messages.error(request, context['error'])
 
         return render(request, self.template_name, context)
@@ -671,8 +663,7 @@ class GetTraineeLectureConnectionListView(LoginRequiredMixin, AccessTestMixin, T
         context = func_get_lecture_connection_list(context, class_id, self.request.user.id, auth_cd)
 
         if context['error'] is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + context['error'])
+            logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + context['error'])
             messages.error(self.request, context['error'])
 
         return context
@@ -690,8 +681,7 @@ class GetTraineeLectureListView(LoginRequiredMixin, AccessTestMixin, TemplateVie
         context = func_get_lecture_list(context, class_id, self.request.user.id, auth_cd)
 
         if context['error'] is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + context['error'])
+            logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + context['error'])
             messages.error(self.request, context['error'])
 
         return context
@@ -707,7 +697,7 @@ class GetTraineeCountView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = func_get_class_lecture_count(context, class_id, self.request.user.id)
 
         if context['error'] is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
+            logger.error(self.request.user.first_name + '['
                          + str(self.request.user.id) + ']' + context['error'])
             messages.error(self.request, context['error'])
 
@@ -806,7 +796,7 @@ def lecture_processing(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
     return redirect(next_page)
 
@@ -1012,8 +1002,7 @@ class GetTraineeGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Templa
                     group_list.append(group_lecture_info)
 
         if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
-                self.request.user.id) + ']' + error)
+            logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
         context['group_data'] = group_list
@@ -1062,8 +1051,7 @@ class GetTraineeGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Templa
                     group_list.append(group_lecture_info)
 
         if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
-                self.request.user.id) + ']' + error)
+            logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
         context['group_data'] = group_list
@@ -1236,7 +1224,7 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
 
     if error is None:
         if group_schedule_info is not None and group_schedule_info != '':
-            error = func_check_group_available_member_before(class_id, group_schedule_info.group_tb_id,
+            error = func_check_lecture_available_member_before(class_id, group_schedule_info.group_tb_id,
                                                              group_schedule_id)
 
     if error is None:
@@ -1247,15 +1235,15 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
                                                     group_id, group_schedule_id,
                                                     start_date, end_date, note, ON_SCHEDULE_TYPE, request.user.id,
                                                     permission_state_cd,
-                                                    'NP')
+                                                    'NP', SCHEDULE_DUPLICATION_DISABLE)
                 error = schedule_result['error']
 
                 if error is None:
-                    error = func_refresh_lecture_count(class_id, lecture_id)
+                    error = func_refresh_member_ticket_count(class_id, lecture_id)
 
                 if error is None:
                     if group_schedule_info is not None and group_schedule_info != '':
-                        error = func_check_group_available_member_after(class_id, group_id, group_schedule_id)
+                        error = func_check_lecture_available_member_after(class_id, group_id, group_schedule_id)
                     else:
                         error = func_date_check(class_id, schedule_result['schedule_id'],
                                                 pt_schedule_date, start_date, end_date, SCHEDULE_DUPLICATION_DISABLE)
@@ -1280,7 +1268,7 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
     if error is None:
         if group_schedule_id is not None and group_schedule_id != '':
             log_data = LogTb(log_type='LS01', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name + request.user.first_name,
+                             from_member_name=request.user.first_name,
                              class_tb_id=class_id,
                              lecture_tb_id=lecture_id,
                              log_info='['+group_schedule_info.get_group_type_cd_name() + ']'
@@ -1289,7 +1277,7 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
             log_data.save()
         else:
             log_data = LogTb(log_type='LS01', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name+request.user.first_name,
+                             from_member_name=request.user.first_name,
                              class_tb_id=class_id, lecture_tb_id=lecture_id,
                              log_info='[1:1 레슨] 일정', log_how='등록', log_detail=str(start_date) + '/' + str(end_date),
                              use=USE)

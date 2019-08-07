@@ -46,10 +46,10 @@ INSTALLED_APPS = [
     'schedule',
     'trainee',
     'trainer',
-    'center',
     'payment',
     'stats',
     'board',
+    'tasks',
 ]
 
 MIDDLEWARE = [
@@ -121,9 +121,9 @@ DATABASES = {
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    # },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
@@ -160,7 +160,7 @@ STATICFILES_DIRS = (
   os.path.join(BASE_DIR, "static"),
   'static/',
 )
-STATIC_ROOT = '/static/'
+# STATIC_ROOT = '/static/'
 # STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
 
 # LOGIN URL
@@ -191,9 +191,23 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 PTERS_PUSH_SERVER_KEY = os.environ.get("PTERS_PUSH_SERVER_KEY", '')
+PTERS_reCAPTCHA_SECRET_KEY = os.environ.get("PTERS_reCAPTCHA_SECRET_KEY", '')
+PTERS_SMS_ACTIVATION_MAX_COUNT = 15
+
+PTERS_NAVER_ACCESS_KEY_ID = os.environ.get("PTERS_NAVER_ACCESS_KEY_ID", '')
+PTERS_NAVER_SECRET_KEY = os.environ.get("PTERS_NAVER_SECRET_KEY", '')
+PTERS_NAVER_SMS_API_KEY_ID = os.environ.get("PTERS_NAVER_SMS_API_KEY_ID", '')
+PTERS_NAVER_SMS_SECRET_KEY = os.environ.get("PTERS_NAVER_SMS_SECRET_KEY", '')
+SMS_ACTIVATION_SECONDS = 180
+EMAIL_ACTIVATION_SECONDS = 600
+RESET_PASSWORD_ACTIVATION_SECONDS = 300
+PTERS_NAVER_SMS_PHONE_NUMBER = os.environ.get("PTERS_NAVER_SMS_PHONE_NUMBER", '')
+
 
 # db data upload size
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 100000
+
+PTERS_IOS_SUBSCRIPTION_SECRET = os.environ.get("PTERS_IOS_SUBSCRIPTION_SECRET", '')
 
 LOG_FILE = os.path.join(os.path.dirname(__file__), '..', 'logs/default_log.log')
 LOG_FILE_LOGIN = os.path.join(os.path.dirname(__file__), '..', 'logs/login_log.log')
@@ -201,6 +215,7 @@ LOG_FILE_SCHEDULE = os.path.join(os.path.dirname(__file__), '..', 'logs/schedule
 LOG_FILE_TRAINEE = os.path.join(os.path.dirname(__file__), '..', 'logs/trainee_log.log')
 LOG_FILE_TRAINER = os.path.join(os.path.dirname(__file__), '..', 'logs/trainer_log.log')
 LOG_FILE_PAYMENT = os.path.join(os.path.dirname(__file__), '..', 'logs/payment_log.log')
+LOG_FILE_TASKS = os.path.join(os.path.dirname(__file__), '..', 'logs/tasks_log.log')
 
 LOGGING = {
     'version': 1,
@@ -263,6 +278,14 @@ LOGGING = {
             'maxBytes': 1024*1024*10,
             'backupCount': 5,
         },
+        'tasks_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'verbose',
+            'filename': LOG_FILE_TASKS,
+            'maxBytes': 1024*1024*10,
+            'backupCount': 5,
+        },
     },
     'loggers': {
         '': {
@@ -300,7 +323,26 @@ LOGGING = {
             'handlers': ['payment_file'],
             'level': 'DEBUG',
         },
+        'tasks': {
+            'handlers': ['tasks_file'],
+            'level': 'DEBUG',
+        },
     }
 }
 
 EL_PAGINATION_LOADING = "<img src='/static/user/res/ajax/loading.gif' alt='loading' style='width:10%;'/>"
+
+
+# celery
+# Required
+# your redis server url
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# your redis url for getting result
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+#  Customize the settings # https://docs.celeryproject.org/en/latest/userguide/configuration.html
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Seoul'
+CELERY_ENABLE_UTC = False
+# Define the timezone for the scheduler, Celery beat.

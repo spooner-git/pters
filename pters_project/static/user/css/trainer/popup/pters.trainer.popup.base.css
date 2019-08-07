@@ -1,0 +1,80 @@
+/* 예/아니오 등 기본 팝업 CSS */
+
+/*모바일 팝업 페이지 기본 요소*/
+    .popup_mobile{
+        background-color: #ffffff;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        transform: translate(100%, 0%);
+        top: 0;
+	    /*overflow-y: auto;*/
+        /*-webkit-overflow-scrolling: touch;*/
+        /*z-index: 1500;*/
+        
+    }
+        .popup_mobile .wrapper_top{
+            padding: 15px;
+            line-height: 24px;
+            text-align: center;
+
+            position: sticky;
+            position: -webkit-sticky;
+            top: 0;
+            background-color: #ffffff;
+
+            border-bottom: 1px solid #f5f2f3;
+        }
+            .popup_mobile .wrapper_top .logo_pters{
+                width: 80px;
+                vertical-align: top;
+            }
+            .popup_mobile .wrapper_top .obj_icon_x{
+                float: right;
+                width: 24px;
+                height: 24px;
+            }
+            .popup_mobile .wrapper_top .obj_icon_prev{
+                float: left;
+                width: 24px;
+                height: 24px;
+            }
+            .popup_mobile .wrapper_top .icon_center{
+                font-size: 15px;
+                font-weight: 500;
+            }
+            .popup_mobile .wrapper_top .icon_right{
+               float: right;
+               font-size: 14px;
+            }
+        .popup_mobile.popup_full{
+            /* background-color: #f2f2f2; */
+            background-color: #ffffff;
+            border-top-right-radius: 8px; 
+            border-top-left-radius: 8px;
+        }
+        .popup_mobile.popup_no_border_radius{
+            border-radius: 0;
+        }
+            .popup_mobile.popup_full .wrapper_top{
+                background-color: #ffffff;
+                border-top-right-radius: 8px; 
+                border-top-left-radius: 8px;
+            }
+            .popup_mobile.popup_no_border_radius .wrapper_top{
+                border-radius: 0;
+            }
+            .popup_mobile.popup_full .wrapper_top .obj_icon_x{
+                margin-top: 4px;
+            }
+
+
+		.popup_mobile > .obj_button_big{
+			bottom: 0;
+		}
+
+       /* .popup_mobile.popup_full .obj_font_size_18_weight_900{
+            position: absolute;
+            top: 20px;
+        }
+*/

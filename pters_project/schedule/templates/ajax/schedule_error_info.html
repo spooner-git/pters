@@ -9,9 +9,8 @@
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}],
       "RepeatDuplicationDateArray" :
       [""],
-      "group_schedule_info" :
-      ["{{ group_schedule_info }}"],
-
+      "lecture_schedule_info" :
+      ["{{ lecture_schedule_info }}"],
       "repeatArray" :
       ["{{ request.session.repeat_schedule_id }}"],
       "repeatScheduleCounterArray" :

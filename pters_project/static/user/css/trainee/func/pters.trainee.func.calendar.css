@@ -211,7 +211,7 @@
 		border-radius: 50%;
 		background-color: #b3b3b3;
 	}
-	/*.schedule_marking_group{
+	/*.schedule_marking_lecture{
 		display: inline-block;
 		width: 4px;
 		height: 4px;
@@ -220,7 +220,7 @@
 		background-color: #ffffff;
 		vertical-align: middle;
 	}*/
-	.group_plan_indicator{
+	.lecture_plan_indicator{
 		height: 3px;
 		margin-bottom: 3px;
 	}
