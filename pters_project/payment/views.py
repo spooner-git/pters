@@ -910,91 +910,12 @@ def payment_for_ios_logic(request):
     product_id = None
     payment_type_cd = None
     start_date = None
-    end_date = None
     context = {}
     error = None
+    inner_error = None
     today = datetime.date.today()
-    input_transaction_id = ''
-    transaction_id = ''
     context['test_info'] = ''
     pay_info = '인앱 결제'
-    receipt_data = None
-    ios_data = None
-    body = None
-    resp = {}
-    h = httplib2.Http()
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다.'
-    except TypeError:
-        error = '오류가 발생했습니다.'
-    #
-    if error is None:
-        try:
-            receipt_data = json_loading_data['receipt_data']
-            ios_data = json_loading_data['ios_data']
-            product_id = json_loading_data['product_id']
-            input_transaction_id = json_loading_data['transaction_id']
-        except KeyError:
-            error = '오류가 발생했습니다.'
-
-    if error is None:
-        data = {
-            'exclude-old-transactions': "true",
-            'receipt-data': receipt_data,
-            'password': ios_data
-        }
-        body = json.dumps(data)
-
-        resp, content = h.request("https://buy.itunes.apple.com/verifyReceipt", method="POST", body=body,
-                                  headers={'Content-Type': 'application/json;'})
-
-        json_data = content.decode('utf-8')
-        json_loading_data = None
-        error = None
-        transaction_id = ''
-        try:
-            json_loading_data = json.loads(json_data)
-        except ValueError:
-            error = '오류가 발생했습니다.'
-        except TypeError:
-            error = '오류가 발생했습니다.'
-
-    if error is None:
-        if resp['status'] == '200':
-            if str(json_loading_data['status']) == '21007':
-                resp, content = h.request("https://sandbox.itunes.apple.com/verifyReceipt", method="POST", body=body,
-                                          headers={'Content-Type': 'application/json;'})
-
-                json_data = content.decode('utf-8')
-                json_loading_data = None
-                error = None
-
-                try:
-                    json_loading_data = json.loads(json_data)
-                except ValueError:
-                    error = '오류가 발생했습니다.'
-                except TypeError:
-                    error = '오류가 발생했습니다.'
-
-                if error is None:
-                    if resp['status'] == '200':
-                        in_app_info = json_loading_data['receipt']['in_app']
-                        transaction_id = str(in_app_info[0]['transaction_id'])
-                        # logger.error(str(json_loading_data['receipt']))
-                        context['test_info'] = 'sandbox test 환경입니다.'
-                        pay_info = 'sandbox test'
-            else:
-                in_app_info = json_loading_data['receipt']['in_app']
-                transaction_id = str(in_app_info[0]['transaction_id'])
-                # logger.error(str(json_loading_data['receipt']))
-    else:
-        context['error'] = error
-
-    if error is None:
-        if input_transaction_id != transaction_id:
-            error = '결제중 오류가 발생했습니다.'
 
     if error is None:
         try:
@@ -1010,7 +931,6 @@ def payment_for_ios_logic(request):
         end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date)).split(' ')[0]
         start_date = str(start_date).split(' ')[0]
 
-    if error is None:
         payment_info = PaymentInfoTb(member_id=str(request.user.id),
                                      product_tb_id=7,
                                      payment_type_cd='SINGLE',
@@ -1021,7 +941,8 @@ def payment_for_ios_logic(request):
                                      period_month=1,
                                      price=9900,
                                      name='스탠다드 - 30일권',
-                                     imp_uid=receipt_data+'/'+ios_data+'/'+transaction_id,
+                                     imp_uid='',
+                                     # imp_uid=input_transaction_id,
                                      channel='iap',
                                      card_name=pay_info,
                                      buyer_email=request.user.email,
@@ -1034,14 +955,36 @@ def payment_for_ios_logic(request):
                                      buyer_name=str(request.user.first_name),
                                      # amount=int(payment_result['amount']),
                                      use=USE)
+
         payment_info.save()
 
+        try:
+            json_loading_data = json.loads(json_data)
+        except ValueError:
+            inner_error = '오류가 발생했습니다.'
+        except TypeError:
+            inner_error = '오류가 발생했습니다.'
+
+        if inner_error is None:
+            try:
+                receipt_data = json_loading_data['receipt_data']
+                product_id = json_loading_data['product_id']
+                transaction_id = json_loading_data['transaction_id']
+                ios_receipt_check = IosReceiptCheckTb(member_id=request.user.id, payment_tb_id=payment_info.payment_id,
+                                                      original_transaction_id=transaction_id, receipt_data=receipt_data,
+                                                      iap_status_cd='YET_VALIDATION')
+                ios_receipt_check.save()
+            except KeyError:
+                inner_error = ''
+
     if error is None:
-        logger.error(str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 ios 결제 완료:' + str(product_id) + ':'+' '+str(start_date))
+        logger.info(str(request.user.last_name) + str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 ios 결제 완료:' + str(product_id) + ':' + ' '
+                    + str(start_date) + '/' + str(inner_error))
     else:
         messages.error(request, error)
-        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
+        logger.error(str(request.user.last_name)+str(request.user.first_name)
+                     + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
 
     return render(request, 'ajax/payment_error_info.html', context)
 
