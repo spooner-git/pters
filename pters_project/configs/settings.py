@@ -195,6 +195,8 @@ PTERS_PUSH_SERVER_KEY = os.environ.get("PTERS_PUSH_SERVER_KEY", '')
 # db data upload size
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 100000
 
+PTERS_IOS_SUBSCRIPTION_SECRET = os.environ.get("PTERS_IOS_SUBSCRIPTION_SECRET", '')
+
 LOG_FILE = os.path.join(os.path.dirname(__file__), '..', 'logs/default_log.log')
 LOG_FILE_LOGIN = os.path.join(os.path.dirname(__file__), '..', 'logs/login_log.log')
 LOG_FILE_SCHEDULE = os.path.join(os.path.dirname(__file__), '..', 'logs/schedule_log.log')
