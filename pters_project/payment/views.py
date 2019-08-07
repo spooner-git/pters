@@ -21,7 +21,8 @@ from login.models import MemberTb
 from .functions import func_set_billing_schedule, func_get_imp_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_cancel_period_billing_schedule, \
     func_set_billing_schedule_now, func_get_payment_info_from_imp
-from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb, ProductPriceTb, ProductFunctionAuthTb
+from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb, ProductPriceTb, ProductFunctionAuthTb, \
+    IosReceiptCheckTb
 
 logger = logging.getLogger(__name__)
 
@@ -1298,3 +1299,55 @@ class PaymentHistoryView(LoginRequiredMixin, View):
         context['current_billing_info'] = current_billing_info
 
         return render(request, self.template_name, context)
+
+
+def ios_receipt_validation_logic(request):
+
+    ios_receipt_validation_data = IosReceiptCheckTb.objects.filter(use=USE).exclude('FINISH_VALIDATION')
+
+    h = httplib2.Http()
+
+    for ios_receipt_validation_info in ios_receipt_validation_data:
+        data = {
+            'exclude-old-transactions': "true",
+            'receipt-data': ios_receipt_validation_data.receipt_data,
+            'password': settings.PTERS_IOS_SUBSCRIPTION_SECRET
+        }
+
+        body = json.dumps(data)
+
+        resp, content = h.request("https://buy.itunes.apple.com/verifyReceipt", method="POST", body=body,
+                                  headers={'Content-Type': 'application/json;'})
+
+        json_loading_data = None
+        error = None
+        if error is None:
+
+            if resp['status'] == '200':
+                json_data = content.decode('utf-8')
+                try:
+                    json_loading_data = json.loads(json_data)
+                except ValueError:
+                    error = '오류가 발생했습니다.'
+                except TypeError:
+                    error = '오류가 발생했습니다.'
+
+        if error is None:
+            if str(json_loading_data['status']) == '0':
+                in_app_info = json_loading_data['receipt']['in_app']
+                transaction_id = str(in_app_info[0]['transaction_id'])
+                ios_receipt_validation_info.transaction_id = transaction_id
+                if ios_receipt_validation_info.original_transaction_id != transaction_id:
+                    ios_receipt_validation_info.iap_status_cd = 'TRANSACTION_ID_FAULT'
+                else:
+                    try:
+                        ios_receipt_validation_info.cancellation_date = str(in_app_info[0]['cancellation_date'])
+                        ios_receipt_validation_info.iap_status_cd = 'CANCEL'
+                    except KeyError:
+                        ios_receipt_validation_info.iap_status_cd = 'FINISH_VALIDATION'
+            else:
+                ios_receipt_validation_info.iap_status_cd = str(json_loading_data['status'])
+
+            ios_receipt_validation_info.save()
+
+    return render(request, 'ajax/payment_error_info.html')
