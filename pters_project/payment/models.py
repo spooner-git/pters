@@ -131,3 +131,20 @@ class ProductFunctionAuthTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'PRODUCT_FUNCTION_AUTH_TB'
+
+
+class IosReceiptCheckTb(TimeStampedModel):
+    ios_receipt_check_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    payment_tb = models.ForeignKey(PaymentInfoTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    original_transaction_id = models.CharField(db_column='ORIGINAL_TRANSACTION_ID', max_length=45,
+                                               blank=True, null=True)
+    transaction_id = models.CharField(db_column='TRANSACTION_ID', max_length=45, blank=True, null=True)
+    cancellation_date = models.CharField(db_column='CANCELLATION_DATE', max_length=45, blank=True, null=True)
+    receipt_data = models.TextField(db_column='RECEIPT_DATA', blank=True, null=True)
+    iap_status_cd = models.CharField(db_column='IAP_STATUS_CD', max_length=45, blank=True, null=True)
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'IOS_RECEIPT_CHECK_TB'
