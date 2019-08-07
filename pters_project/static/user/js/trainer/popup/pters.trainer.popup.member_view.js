@@ -298,7 +298,7 @@ class Member_view{
         if(this.data.connection == CONNECTED || this.data.connection == CONNECT_WAIT){
             onclick = ()=>{
                 let user_option = {
-                        connect:{text:"연결 요청", callback:()=>{alert('연결요청 함수 실행');layer_popup.close_layer_popup();}}
+                        connect:{text:"연결 해제", callback:()=>{alert('연결해제 함수 실행');layer_popup.close_layer_popup();}}
                     };
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
@@ -307,7 +307,7 @@ class Member_view{
         }else if(this.data.connection == UNCONNECTED){
             onclick = ()=>{
                 let user_option = {
-                        connect:{text:"연결 해제", callback:()=>{alert('연결해제요청 함수 실행');layer_popup.close_layer_popup();}}
+                        connect:{text:"연결 요청", callback:()=>{alert('연결요청 함수 실행');layer_popup.close_layer_popup();}}
                     };
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
@@ -318,7 +318,7 @@ class Member_view{
         let title = this.data.user_id == null ? '회원ID' : this.data.user_id;
         let icon = '/static/common/icon/person_black.png';
         let icon_r_visible = SHOW;
-        let icon_r_text;
+        let icon_r_text = this.data.connection == CONNECTED || this.data.connection == CONNECT_WAIT ? "연결 해제" : "연결 요청";
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
             onclick();
@@ -501,21 +501,23 @@ class Member_view{
                     });
                 }
             },
-            deactivate:{text:"비활성화", callback:()=>{
-                    show_user_confirm(`"${this.data.name}" 님을 비활성화 하시겠습니까? <br> 비활성화 탭에서 확인할 수 있습니다.`, ()=>{
-                        alert('작업중');
+            // deactivate:{text:"비활성화", callback:()=>{
+            //         show_user_confirm(`"${this.data.name}" 님을 비활성화 하시겠습니까? <br> 비활성화 탭에서 확인할 수 있습니다.`, ()=>{
+            //             alert('작업중');
                         
-                    });
-                }
-            },
-            activate:{text:"활성화", callback:()=>{
-                    show_user_confirm(`"${this.data.name}" 님을 다시 활성화 하시겠습니까?`, ()=>{
-                        alert('작업중');
-                    });
-                }
-            },
+            //         });
+            //     }
+            // },
+            // activate:{text:"활성화", callback:()=>{
+            //         show_user_confirm(`"${this.data.name}" 님을 다시 활성화 하시겠습니까?`, ()=>{
+            //             alert('작업중');
+            //         });
+            //     }
+            // },
             ticket_history:{text:"수강권 이력", callback:()=>{
-                    alert('작업중');
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
+                        member_ticket_history = new Member_ticket_history('.popup_member_ticket_history', this.member_id, null);
+                    });
                 }
             },
             lesson_history:{text:"수업 이력", callback:()=>{

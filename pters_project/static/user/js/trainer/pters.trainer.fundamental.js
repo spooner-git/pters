@@ -152,6 +152,16 @@ class DateRobot{
             return false;
         }
     }
+
+    static diff_date(date1, date2){
+        let diff_date = Math.round((new Date(date1).getTime() - new Date(date2).getTime()) / (1000*60*60*24));
+        // let diff_date_text = "일";
+        // if(diff_date < 0){
+        //     diff_date_text = "일 지남";
+        //     diff_date = Math.abs(diff_date);
+        // }
+        return diff_date;
+    }
 }
 
 class TimeRobot{
