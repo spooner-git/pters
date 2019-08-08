@@ -139,13 +139,14 @@ class Lecture_edit{
     }
 
     dom_row_lecture_name_input(){
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}";
         let html = CComponent.create_input_row ('input_lecture_name', this.data.name == null ? '수업명*' : this.data.name, '/static/common/icon/icon_book.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.name;
             }
             this.name = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
@@ -159,13 +160,15 @@ class Lecture_edit{
 
   
     dom_row_capacity_input(){
+        let pattern = "[0-9]{0,10}";
         let html = CComponent.create_input_number_row ('input_lecture_capacity', this.data.capacity == null ? '정원*' : '정원 '+this.data.capacity+'명', '/static/common/icon/icon_member.png', HIDE, false, (input_data)=>{
+            input_data = Number(input_data);
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.capacity;
             }
             this.capacity = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 

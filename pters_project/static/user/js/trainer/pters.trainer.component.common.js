@@ -56,7 +56,7 @@ class CComponent{
     }
 
      //추가 페이지들에서 사용되는 text input row 스타일
-    static create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout){
+    static create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern){
         let disable = 'disabled';
         if(disabled == false){
             disable = '';
@@ -68,7 +68,7 @@ class CComponent{
                                 ${icon != null ? `<img src="${icon}">` : ""} 
                             </div>
                             <div class="cell_content">
-                                <input type="text" class="cell_text" placeholder="${placeholder}" value="${title}" ${disable}>
+                                <input type="text" class="cell_text" placeholder="${placeholder}" pattern="${pattern}" onkeyup="limit_char_check(event);" data-valid="false" value="${title}" ${disable}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
@@ -91,7 +91,7 @@ class CComponent{
     }
     
     //추가 페이지들에서 사용되는 number input row 스타일
-    static create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout){
+    static create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern){
         let disable = 'disabled';
         if(disabled == false){
             disable = '';
@@ -103,7 +103,7 @@ class CComponent{
                                 ${icon != null ? `<img src="${icon}">` : ""} 
                             </div>
                             <div class="cell_content">
-                                <input class="cell_text" placeholder="${placeholder}" type="tel" value="${title}" ${disable}>
+                                <input class="cell_text" placeholder="${placeholder}" type="tel" pattern="${pattern}" value="${title}" onkeyup="limit_char_auto_correction(event);" data-valid="false" ${disable}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
@@ -113,7 +113,7 @@ class CComponent{
                     </li>`;
         $(document).off('focusin', `#c_i_n_r_${id}`).on('focusin', `#c_i_n_r_${id}`, function(e){
             let current_value = $(this).find('input').val();
-            $(this).find('input').val(Number(current_value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣,]/gi, "") ));
+            $(this).find('input').val(Number(current_value.replace(/[^0-9]/gi, "") ));
         });
 
         $(document).off('focusout', `#c_i_n_r_${id}`).on('focusout', `#c_i_n_r_${id}`, function(e){
@@ -121,9 +121,10 @@ class CComponent{
             let user_input_data = $(`#c_i_n_r_${id} input`).val();
             if(user_input_data.length == 0){
                 user_input_data = null;
-            }else{
-                user_input_data = Number(user_input_data);
             }
+            // else{
+                // user_input_data = Number(user_input_data);
+            // }
             onfocusout(user_input_data);
         });
         return html;
@@ -570,14 +571,13 @@ class LimitChar{
 }
 
 function limit_char_auto_correction(event){
-    let limit_reg_pattern = event.target.pattern.replace('[', '[^');
+    let limit_reg_pattern = event.target.pattern.replace('[', '[^').split('{')[0];
     let limit = new RegExp(limit_reg_pattern, "gi");
     event.target.value = event.target.value.replace(limit, "");
 }
 
 function limit_char_check(event){
-
-    let limit_reg_pattern = event.target.pattern.replace('[', '[^');
+    let limit_reg_pattern = event.target.pattern.replace('[', '[^').split('{')[0];
     let limit = new RegExp(limit_reg_pattern, "gi");
     let limit_char_check = false;
     let min_length = event.target.minLength;
@@ -587,13 +587,16 @@ function limit_char_check(event){
     if(event.target.value.length < Number(min_length)){
         $(`#${confirm_id}`).text('최소 '+min_length+'자 이상 입력');
         $(`#${default_confirm_id}`).css('color', 'black');
+        event.target.attributes['data-valid'].value = 'false';
     }
     else{
         $(`#${confirm_id}`).text('');
         if(limit.test(event.target.value)){
             $(`#${default_confirm_id}`).css('color', '#fe4e65');
+            event.target.attributes['data-valid'].value = 'false';
         }else{
             $(`#${default_confirm_id}`).css('color', 'green');
+            event.target.attributes['data-valid'].value = 'true';
         }
     }
 

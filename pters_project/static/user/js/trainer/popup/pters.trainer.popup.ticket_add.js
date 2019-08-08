@@ -126,7 +126,7 @@ class Ticket_add{
         let name = this.dom_row_ticket_name_input();
         let lecture = this.dom_row_lecture_select();
         let lecture_list = this.dom_row_lecture_select_list();
-        let count = this.dom_row_ticket_coung_input();
+        let count = this.dom_row_ticket_count_input();
         let price = this.dom_row_ticket_price_input();
         let memo = this.dom_row_ticket_memo_input();
 
@@ -160,10 +160,11 @@ class Ticket_add{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
+        let pattern = '[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}';
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
@@ -207,7 +208,7 @@ class Ticket_add{
         return html;
     }
 
-    dom_row_ticket_coung_input(){
+    dom_row_ticket_count_input(){
         let id = 'input_ticket_count';
         let title = this.data.count == null ? '' : this.data.count+'회';
         let placeholder = '횟수';
@@ -216,10 +217,12 @@ class Ticket_add{
         let icon_r_text;
         let style = null;
         let disabled = false;
+        let pattern = '[0-9]{1,10}';
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            input_data = Number(input_data);
             let user_input_data = input_data;
             this.count = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
@@ -232,10 +235,12 @@ class Ticket_add{
         let icon_r_text;
         let style = null;
         let disabled = false;
+        let pattern = "[0-9]{0,10}";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            input_data = Number(input_data);
             let user_input_data = input_data;
             this.price = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
@@ -248,10 +253,11 @@ class Ticket_add{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let html = CComponent.create_input_row (id, title, '설명', icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 

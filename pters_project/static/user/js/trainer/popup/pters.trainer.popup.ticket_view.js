@@ -179,7 +179,7 @@ class Ticket_view{
 
 
     dom_row_toolbox(){
-        let id = 'ticket_name_view'
+        let id = 'ticket_name_view';
         let style = {"font-size":"20px", "font-weight":"bold"};
         let title = this.data.name == null ? '' : this.data.name;
         if(this.data.ticket_state == STATE_END_PROGRESS){
@@ -191,12 +191,12 @@ class Ticket_view{
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let disabled = false;
-
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
             this.send_data();
-        });
+        }, pattern);
         
         let html = `
         <div class="member_add_upper_box" style="">
@@ -254,7 +254,7 @@ class Ticket_view{
         return html;
     }
 
-    dom_row_ticket_coung_input(){
+    dom_row_ticket_count_input(){
         let id = 'ticket_count_view';
         let title = this.data.count == null ? '' : this.data.count+'회';
         let placeholder = '횟수';
@@ -263,10 +263,12 @@ class Ticket_view{
         let icon_r_text = "";
         let style = null;
         let disabled = true;
+        let pattern = "[0-9]{0,10}";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            // input_data = Number(input_data);
             // let user_input_data = input_data;
             // this.count = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
@@ -279,10 +281,12 @@ class Ticket_view{
         let icon_r_text = "";
         let style = null;
         let disabled = true;
+        let pattern = "[0-9]{0,10}";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            // input_data = Number(input_data);
             // let user_input_data = input_data;
             // this.price = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
@@ -295,11 +299,12 @@ class Ticket_view{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
             this.send_data();
-        });
+        }, pattern);
         return html;
     }
 
@@ -593,10 +598,11 @@ class Ticket_simple_view{
         let icon_r_text = "";
         let style = null;
         let disabled = true;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             // let user_input_data = input_data;
             // this.memo = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 

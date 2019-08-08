@@ -138,7 +138,7 @@ class Ticket_edit{
         let name = this.dom_row_ticket_name_input();
         let lecture = this.dom_row_lecture_select();
         let lecture_list = this.dom_row_lecture_select_list();
-        let count = this.dom_row_ticket_coung_input();
+        let count = this.dom_row_ticket_count_input();
         let price = this.dom_row_ticket_price_input();
         let memo = this.dom_row_ticket_memo_input();
 
@@ -163,13 +163,14 @@ class Ticket_edit{
     }
 
     dom_row_ticket_name_input(){
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}";
         let html = CComponent.create_input_row ('input_ticket_name', this.data.name == null ? '수강권명*' : this.data.name, '/static/common/icon/person_black.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.name;
             }
             this.name = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
@@ -208,36 +209,41 @@ class Ticket_edit{
         return html;
     }
 
-    dom_row_ticket_coung_input(){
+    dom_row_ticket_count_input(){
+        let pattern = "[0-9]{0,10}";
         let html = CComponent.create_input_number_row ('input_ticket_count', this.data.count == null ? '횟수' : this.data.count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
+            input_data = Number(input_data);
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.count;
             }
             this.count = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
     dom_row_ticket_price_input(){
+        let pattern = "[0-9]{0,10}";
         let html = CComponent.create_input_number_row ('input_ticket_price', this.data.price == null ? '가격' : this.data.price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
+            input_data = Number(input_data);
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.price;
             }
             this.price = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
     dom_row_ticket_memo_input(){
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let html = CComponent.create_input_row ('input_ticket_memo', this.data.memo == null ? '설명' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.memo;
             }
             this.memo = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 

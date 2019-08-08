@@ -275,11 +275,12 @@ class Member_view{
         let icon_r_text;
         let style = {"font-size":"20px", "font-weight":"bold"};
         let disabled = false;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
             this.send_data();
-        });
+        }, pattern);
         
         let html = `
         <div class="member_view_upper_box">
@@ -402,10 +403,11 @@ class Member_view{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
@@ -728,10 +730,11 @@ class Member_simple_view{
         let icon_r_text = "";
         let style = null;
         let disabled = true;
+        let pattern = "[0-9]{10,11}";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
@@ -745,10 +748,11 @@ class Member_simple_view{
         let icon_r_text = "";
         let style = null;
         let disabled = true;
+        let pattern = "[0-9]{4}-[0-9]{2}-[0-9]{2}";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
@@ -773,10 +777,11 @@ class Member_simple_view{
         let icon_r_text = "";
         let style = null;
         let disabled = true;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 

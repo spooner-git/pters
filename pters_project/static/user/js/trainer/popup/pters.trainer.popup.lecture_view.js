@@ -184,12 +184,12 @@ class Lecture_view{
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let disabled = false;
-
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
             this.send_data();
-        });
+        }, pattern);
         
         let html = `
         <div class="lecture_view_upper_box" style="">
@@ -224,14 +224,16 @@ class Lecture_view{
         });
         let style = null;
         let disabled = false;
+        let pattern = "[0-9]{0,10}";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            input_data = Number(input_data);
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.capacity;
             }
             this.capacity = user_input_data;
             this.send_data();
-        });
+        }, pattern);
         return html;
     }
 

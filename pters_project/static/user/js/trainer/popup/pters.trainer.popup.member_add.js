@@ -195,7 +195,7 @@ class Member_add{
         let ticket = this.dom_row_ticket_select();
         let start_date = this.dom_row_start_date_select();
         let end_date = this.dom_row_end_date_select();
-        let reg_count = this.dom_row_member_reg_coung_input();
+        let reg_count = this.dom_row_member_reg_count_input();
         let reg_price = this.dom_row_member_reg_price_input();
 
         let html =  '<div class="obj_box_full">' + CComponent.dom_tag('기본 정보 입력') + name + phone + birth + sex +  '</div>' + 
@@ -226,10 +226,11 @@ class Member_add{
         let icon_r_text = "";
         let style = null;
         let input_disabled = this.data_from_external == null ? false : true;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
@@ -242,10 +243,11 @@ class Member_add{
         let icon_r_text = "";
         let style = null;
         let input_disabled = this.data_from_external == null ? false : true;
+        let pattern = "[0-9]{10,11}";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
@@ -256,7 +258,7 @@ class Member_add{
         let icon = '/static/common/icon/icon_cake.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
             //행을 클릭했을때 실행할 내용
             if(this.data_from_external != null){
                 return false;
@@ -312,10 +314,11 @@ class Member_add{
         let icon_r_text = "";
         let style = null;
         let input_disabled = false;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
@@ -395,7 +398,7 @@ class Member_add{
         return html;
     }
 
-    dom_row_member_reg_coung_input(){
+    dom_row_member_reg_count_input(){
         let id = 'input_reg_count';
         let title = this.data.ticket_reg_count == null ? '' : this.data.ticket_reg_count+'회';
         let placeholder = '횟수*';
@@ -404,10 +407,12 @@ class Member_add{
         let icon_r_text = "";
         let style = null;
         let input_disabled = false;
+        let pattern = "[0-9]{0,10}";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
+            input_data = Number(input_data);
             let user_input_data = input_data;
             this.reg_count = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
@@ -420,10 +425,12 @@ class Member_add{
         let icon_r_text = "";
         let style = null;
         let input_disabled = false;
+        let pattern = "[0-9]{0,10}";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
+            input_data = Number(input_data);
             let user_input_data = input_data;
             this.reg_price = user_input_data;
-        });
+        }, pattern);
         return html;
     }
 
