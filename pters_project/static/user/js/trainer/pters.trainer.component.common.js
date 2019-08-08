@@ -56,7 +56,7 @@ class CComponent{
     }
 
      //추가 페이지들에서 사용되는 text input row 스타일
-    static create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern){
+    static create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required){
         let disable = 'disabled';
         if(disabled == false){
             disable = '';
@@ -70,7 +70,8 @@ class CComponent{
                             </div>
                             <div class="cell_content">
                                 <input type="text" class="cell_text" title="${placeholder}" placeholder="${placeholder}" pattern="${pattern}" value="${title}"
-                                 onkeyup="limit_char_check(event);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" data-valid="false" ${disable}>
+                                 onkeyup="limit_char_check(event.target);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" 
+                                 data-error-message="" data-pattern-message="${pattern_message}" data-valid="false" ${disable} ${required}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
@@ -94,7 +95,7 @@ class CComponent{
     
     //추가 페이지들에서 사용되는 number input row 스타일
     static
-    create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, unit){
+    create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, unit, required){
         let disable = 'disabled';
         if(disabled == false){
             disable = '';
@@ -108,7 +109,8 @@ class CComponent{
                             </div>
                             <div class="cell_content">
                                 <input class="cell_text" title="${placeholder}" placeholder="${placeholder}" type="tel" pattern="${pattern}" value="${title}"
-                                 onkeyup="limit_char_auto_correction(event);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" data-valid="false" ${disable}>
+                                 onkeyup="limit_char_auto_correction(event.target);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" 
+                                 data-error-message="" data-valid="false" ${disable} ${required}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
@@ -583,55 +585,79 @@ class LimitChar{
 }
 
 function limit_char_auto_correction(event){
-    let limit_reg_pattern = event.target.pattern.replace('[', '[^').split('{')[0];
+    let limit_reg_pattern = event.pattern.replace('[', '[^').split('{')[0];
     let limit = new RegExp(limit_reg_pattern, "gi");
-    let min_length = event.target.minLength;
-    event.target.value = event.target.value.replace(limit, "");
-    if(event.target.value.length < Number(min_length)) {
-        event.target.attributes['data-valid'].value = 'false';
+    let min_length = event.minLength;
+    let title = event.attributes['title'].value;
+    event.value = event.value.replace(limit, "");
+    if(event.value.length < Number(min_length)) {
+        event.attributes['data-error-message'].value = title+' : 입력해주세요.';
+        event.attributes['data-valid'].value = 'false';
     }else{
-        event.target.attributes['data-valid'].value = 'true';
+        event.attributes['data-error-message'].value = '';
+        event.attributes['data-valid'].value = 'true';
     }
 }
 
 function limit_char_check(event){
-    let limit_reg_pattern = event.target.pattern.replace('[', '[^').split('{')[0];
+    let limit_reg_pattern = event.pattern.replace('[', '[^').split('{')[0];
     let limit = new RegExp(limit_reg_pattern, "gi");
     let limit_char_check = false;
-    let min_length = event.target.minLength;
-    let event_id = event.target.id;
+    let min_length = event.minLength;
+    let event_id = event.id;
+    let title = event.attributes['title'].value;
     let confirm_id = event_id+'_confirm';
     let default_confirm_id = event_id+'_default_confirm';
-    if(event.target.value.length < Number(min_length)){
-        $(`#${confirm_id}`).text('최소 '+min_length+'자 이상 입력');
-        $(`#${default_confirm_id}`).css('color', 'black');
-        event.target.attributes['data-valid'].value = 'false';
+    if(event.value.length < Number(min_length)){
+        event.attributes['data-error-message'].value = title+' : 최소 '+min_length+'자 이상 입력해야합니다.';
+        // $(`#${confirm_id}`).text('최소 '+min_length+'자 이상 입력');
+        // $(`#${default_confirm_id}`).css('color', 'black');
+        event.attributes['data-valid'].value = 'false';
     }
     else{
         $(`#${confirm_id}`).text('');
-        if(limit.test(event.target.value)){
-            $(`#${default_confirm_id}`).css('color', '#fe4e65');
-            event.target.attributes['data-valid'].value = 'false';
+        if(limit.test(event.value)){
+            event.attributes['data-error-message'].value = title+' : '+event.attributes['data-pattern-message'].value + ' 합니다.';
+            // $(`#${default_confirm_id}`).css('color', '#fe4e65');
+            event.attributes['data-valid'].value = 'false';
         }else{
-            $(`#${default_confirm_id}`).css('color', 'green');
-            event.target.attributes['data-valid'].value = 'true';
+            event.attributes['data-error-message'].value = '';
+            // $(`#${default_confirm_id}`).css('color', 'green');
+            event.attributes['data-valid'].value = 'true';
         }
     }
 
     return limit_char_check
 }
 
-function registration_form_check(form_id){
+function update_check_registration_form(forms){
     // form 안에 있는 값 검사
-    let inputs = document.getElementById(form_id).elements;
+    let inputs = forms.elements;
+
+    for(let i=0; i<inputs.length; i++){
+        if (inputs[i].nodeName === "INPUT" && (inputs[i].type === "text" || inputs[i].type === "tel")) {
+            // Update text input
+            if(inputs[i].type === "text"){
+                limit_char_check(inputs[i]);
+            }
+            if(inputs[i].type === "tel"){
+                limit_char_auto_correction(inputs[i]);
+            }
+        }
+    }
+}
+
+function check_registration_form(forms){
+    // form 안에 있는 값 검사
+    let inputs = forms.elements;
     let error_info = '';
 
     for(let i=0; i<inputs.length; i++){
         if (inputs[i].nodeName === "INPUT" && (inputs[i].type === "text" || inputs[i].type === "tel")) {
             // Update text input
             console.log(inputs[i].getAttribute('title')+':'+inputs[i].getAttribute('data-valid'));
-            if(inputs[i].getAttribute('data-valid') == 'false'){
-                error_info = inputs[i].getAttribute('title');
+            if((inputs[i].value !=  '' || inputs[i].required) && inputs[i].getAttribute('data-valid') == 'false'){
+                error_info = inputs[i].getAttribute('data-error-message');
                 break;
             }
         }

@@ -2,6 +2,7 @@ class Ticket_add{
     constructor(install_target, instance){
         this.target = {install: install_target, toolbox:'section_ticket_add_toolbox', content:'section_ticket_add_content'};
         this.instance = instance;
+        this.form_id = 'id_ticket_add_form';
 
         let d = new Date();
         this.dates = {
@@ -31,7 +32,7 @@ class Ticket_add{
 
     set name(text){
         this.data.name = text;
-        // this.render_content();
+        this.render_content();
     }
 
     get name(){
@@ -42,7 +43,7 @@ class Ticket_add{
         this.data.lecture_id = data.id;
         this.data.lecture_name = data.name;
         this.data.lecture_max = data.max;
-        // this.render_content();
+        this.render_content();
     }
 
     get lecture(){
@@ -51,7 +52,7 @@ class Ticket_add{
 
     set period(text){
         this.data.ticket_effective_days = text;
-        // this.render_content();
+        this.render_content();
     }
 
     get period(){
@@ -60,7 +61,7 @@ class Ticket_add{
 
     set memo(text){
         this.data.memo = text;
-        // this.render_content();
+        this.render_content();
     }
 
     get memo(){
@@ -69,7 +70,7 @@ class Ticket_add{
     
     set count(number){
         this.data.count = number;
-        // this.render_content();
+        this.render_content();
     }
 
     get count(){
@@ -78,7 +79,7 @@ class Ticket_add{
 
     set price(number){
         this.data.price = number;
-        // this.render_content();
+        this.render_content();
     }
 
     get price(){
@@ -101,8 +102,8 @@ class Ticket_add{
         let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();ticket_add_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="ticket_add_popup.send_data();">등록</span></span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
-                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
+        let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -116,6 +117,7 @@ class Ticket_add{
 
     render_content(){
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+        update_check_registration_form(document.getElementById(`${this.form_id}`));
     }
 
     dom_assembly_toolbox(){
@@ -160,11 +162,12 @@ class Ticket_add{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
-        let pattern = '[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}';
+        let pattern = '[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}';
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
-        }, pattern);
+        }, pattern, pattern_message, 'required');
         return html;
     }
 
@@ -225,7 +228,7 @@ class Ticket_add{
             }
             let user_input_data = input_data;
             this.count = user_input_data;
-        }, pattern, unit);
+        }, pattern, unit, '');
         return html;
     }
 
@@ -246,7 +249,7 @@ class Ticket_add{
             }
             let user_input_data = input_data;
             this.price = user_input_data;
-        }, pattern, unit);
+        }, pattern, unit, '');
         return html;
     }
 
@@ -259,15 +262,19 @@ class Ticket_add{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
         let html = CComponent.create_input_row (id, title, '설명', icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
-        }, pattern);
+        }, pattern, pattern_message, '');
         return html;
     }
 
     send_data(){
+        if(this.check_before_send() == false){
+            return false;
+        }
         let data = {
                     "ticket_name":this.data.name,
                     "lecture_id_list[]":this.data.lecture_id,
@@ -278,10 +285,6 @@ class Ticket_add{
                     "ticket_week_schedule_enable":7, //주간 수강 제한 횟수
                     "ticket_day_schedule_enable":1  //일일 수강 제한 횟수
         };
-
-        if(this.check_before_send() == false){
-            return false;
-        }
         
         Ticket_func.create(data, ()=>{
             // layer_popup.close_layer_popup();
@@ -292,14 +295,23 @@ class Ticket_add{
     }
 
     check_before_send(){
-        if(this.data.name == null){
-            show_error_message('수강권명을 입력해주세요');
+        let error_info = check_registration_form(document.getElementById(`${this.form_id}`));
+        console.log(error_info);
+        if(error_info != ''){
+            show_error_message(error_info);
             return false;
         }
-        if(this.data.lecture_id.length == 0){
-            show_error_message('포함할 수업을 선택해주세요');
-            return false;
+        else{
+            return true;
         }
-        return true;
+        // if(this.data.name == null){
+        //     show_error_message('수강권명을 입력해주세요');
+        //     return false;
+        // }
+        // if(this.data.lecture_id.length == 0){
+        //     show_error_message('포함할 수업을 선택해주세요');
+        //     return false;
+        // }
+        // return true;
     }
 }

@@ -163,14 +163,15 @@ class Ticket_edit{
     }
 
     dom_row_ticket_name_input(){
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
         let html = CComponent.create_input_row ('input_ticket_name', this.data.name == null ? '수강권명*' : this.data.name, '/static/common/icon/person_black.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.name;
             }
             this.name = user_input_data;
-        }, pattern);
+        }, pattern, pattern_message, 'required');
         return html;
     }
 
@@ -221,7 +222,7 @@ class Ticket_edit{
                 user_input_data = this.data.count;
             }
             this.count = user_input_data;
-        }, pattern, unit);
+        }, pattern, unit, '');
         return html;
     }
 
@@ -237,19 +238,20 @@ class Ticket_edit{
                 user_input_data = this.data.price;
             }
             this.price = user_input_data;
-        }, pattern, unit);
+        }, pattern, unit, '');
         return html;
     }
 
     dom_row_ticket_memo_input(){
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
         let html = CComponent.create_input_row ('input_ticket_memo', this.data.memo == null ? '설명' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.memo;
             }
             this.memo = user_input_data;
-        }, pattern);
+        }, pattern, pattern_message, '');
         return html;
     }
 

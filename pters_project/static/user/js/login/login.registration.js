@@ -59,32 +59,32 @@ function select_contract(contract_type) {
 }
 
 function limit_char_auto_correction(event){
-    let limit_reg_pattern = event.target.pattern.replace('[', '[^').split('{')[0];
+    let limit_reg_pattern = event.pattern.replace('[', '[^').split('{')[0];
     let limit = new RegExp(limit_reg_pattern, "gi");
-    event.target.value = event.target.value.replace(limit, "");
+    event.value = event.value.replace(limit, "");
 }
 
 function limit_char_check(event){
-    let limit_reg_pattern = event.target.pattern.replace('[', '[^').split('{')[0];
+    let limit_reg_pattern = event.pattern.replace('[', '[^').split('{')[0];
     let limit = new RegExp(limit_reg_pattern, "gi");
     let limit_char_check = false;
-    let min_length = event.target.minLength;
-    let event_id = event.target.id;
+    let min_length = event.minLength;
+    let event_id = event.id;
     let confirm_id = event_id+'_confirm';
     let default_confirm_id = event_id+'_default_confirm';
-    if(event.target.value.length < Number(min_length)){
+    if(event.value.length < Number(min_length)){
         $(`#${confirm_id}`).text('최소 '+min_length+'자 이상 입력');
         $(`#${default_confirm_id}`).css('color', 'black');
-        event.target.attributes['data-valid'].value = 'false';
+        event.attributes['data-valid'].value = 'false';
     }
     else{
         $(`#${confirm_id}`).text('');
-        if(limit.test(event.target.value)){
+        if(limit.test(event.value)){
             $(`#${default_confirm_id}`).css('color', '#fe4e65');
-            event.target.attributes['data-valid'].value = 'false';
+            event.attributes['data-valid'].value = 'false';
         }else{
             $(`#${default_confirm_id}`).css('color', 'green');
-            event.target.attributes['data-valid'].value = 'true';
+            event.attributes['data-valid'].value = 'true';
         }
     }
 
@@ -93,30 +93,30 @@ function limit_char_check(event){
 
 function limit_password_check(event){
 
-    let limit_reg_pattern = event.target.pattern.replace('[', '[^').split('{')[0];
+    let limit_reg_pattern = event.pattern.replace('[', '[^').split('{')[0];
     let limit = new RegExp(limit_reg_pattern, "gi");
     let limit_char_check = false;
-    let min_length = event.target.minLength;
-    let event_id = event.target.id;
+    let min_length = event.minLength;
+    let event_id = event.id;
     let confirm_id = event_id+'_confirm';
     let default_confirm_id = event_id+'_default_confirm';
-    if(event.target.value.length < Number(min_length)){
+    if(event.value.length < Number(min_length)){
         $(`#${confirm_id}`).text('최소 '+min_length+'자 이상 입력');
         $(`#${default_confirm_id}`).css('color', 'black');
-        event.target.attributes['data-valid'].value = 'false';
+        event.attributes['data-valid'].value = 'false';
     }
     else{
         $(`#${confirm_id}`).text('');
-        if(limit.test(event.target.value)){
+        if(limit.test(event.value)){
             $(`#${default_confirm_id}`).css('color', '#fe4e65');
-            event.target.attributes['data-valid'].value = 'false';
+            event.attributes['data-valid'].value = 'false';
         }else{
-            if(isNaN(event.target.value)){
+            if(isNaN(event.value)){
                 $(`#${default_confirm_id}`).css('color', 'green');
-                event.target.attributes['data-valid'].value = 'true';
+                event.attributes['data-valid'].value = 'true';
             }else{
                 $(`#${default_confirm_id}`).css('color', '#fe4e65');
-                event.target.attributes['data-valid'].value = 'false';
+                event.attributes['data-valid'].value = 'false';
             }
         }
     }
@@ -130,7 +130,7 @@ function password_check(event){
     let password_2 = document.getElementById('id_password_re').value;
     if(password_1 == password_2){
         $('#id_password_re_default_confirm').css('color', 'green');
-        event.target.attributes['data-valid'].value = 'true';
+        event.attributes['data-valid'].value = 'true';
     }else{
         $('#id_password_re_default_confirm').css('color', '#fe4e65');
     }
@@ -172,17 +172,17 @@ function check_username(data){
 }
 
 function check_sms_activation_button(event){
-    if(event.target.value.length>9){
+    if(event.value.length>9){
         let id_activation_button = $('#id_activation_button');
         id_activation_button.css({'color':'#fe4e65', 'border':'solid 1px #fe4e65', 'pointer-events':'auto'});
         // id_activation_button.attr('disabled', false);
-        event.target.attributes['data-valid'].value = 'true';
+        event.attributes['data-valid'].value = 'true';
     }
     else{
         let id_activation_button = $('#id_activation_button');
         id_activation_button.css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
         // id_activation_button.attr('disabled', true);
-        event.target.attributes['data-valid'].value = 'false';
+        event.attributes['data-valid'].value = 'false';
     }
 }
 
@@ -291,9 +291,9 @@ function check_activation_code(){
     });
 }
 
-function registration_member_info(form_id){
+function registration_member_info(forms){
     // form 안에 있는 값 검사
-    let inputs = document.getElementById(form_id).elements;
+    let inputs = forms.elements;
     let error_info = '';
 
     if(document.getElementById('all_contract').getAttribute('data-valid') == 'false'){

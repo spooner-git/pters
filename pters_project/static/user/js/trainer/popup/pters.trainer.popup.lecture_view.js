@@ -3,6 +3,7 @@ class Lecture_view{
         this.target = {install: install_target, toolbox:'section_lecture_view_toolbox', content:'section_lecture_view_content'};
         this.instance = instance;
         this.lecture_id = lecture_id;
+        this.form_id = 'id_lecture_view_form';
 
         let d = new Date();
         this.dates = {
@@ -43,7 +44,7 @@ class Lecture_view{
 
     set name(text){
         this.data.name = text;
-        // this.render_content();
+        this.render_content();
     }
 
     get name(){
@@ -71,7 +72,7 @@ class Lecture_view{
     set member(data){
         this.data.fixed_member_id = data.id;
         this.data.fixed_member_name = data.name;
-        // this.render_content();
+        this.render_content();
     }
 
     get member(){
@@ -82,7 +83,7 @@ class Lecture_view{
         this.data.color_bg = data.bg;
         this.data.color_font = data.font;
         this.data.color_name = data.name;
-        // this.render_content();
+        this.render_content();
     }
 
     get color(){
@@ -129,8 +130,8 @@ class Lecture_view{
         let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();lecture_view_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="lecture_view_popup.upper_right_menu();"></span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
-                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
+        let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -144,6 +145,7 @@ class Lecture_view{
 
     render_content(){
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+        update_check_registration_form(document.getElementById(`${this.form_id}`));
     }
 
     dom_assembly_toolbox(){
@@ -184,12 +186,13 @@ class Lecture_view{
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
             this.send_data();
-        }, pattern);
+        }, pattern, pattern_message, 'required');
         
         let html = `
         <div class="lecture_view_upper_box" style="">
@@ -207,7 +210,7 @@ class Lecture_view{
         let unit = '명';
         let id = 'lecture_capacity_view';
         let title = this.data.capacity == null ? '' : '정원 '+this.data.capacity+unit;
-        let placeholder = '정원';
+        let placeholder = '정원*';
         let icon = '/static/common/icon/icon_member.png';
         let icon_r_visible = SHOW;
         let icon_r_text = CComponent.text_button ('lecture_fixed_member_select', "고정 회원", null, ()=>{
@@ -236,7 +239,7 @@ class Lecture_view{
             }
             this.capacity = user_input_data;
             this.send_data();
-        }, pattern, unit);
+        }, pattern, unit, 'required');
         return html;
     }
 
@@ -354,6 +357,9 @@ class Lecture_view{
     }
 
     send_data(){
+        if(this.check_before_send() == false){
+            return false;
+        }
         let data = {
             "lecture_id":this.lecture_id,
             "name":this.data.name,
@@ -439,6 +445,19 @@ class Lecture_view{
 
         //두개 배열에서 중복되는 요소는 제거하고 하나로 만든다.
         return members_changed;
+    }
+
+    check_before_send(){
+
+        let error_info = check_registration_form(document.getElementById(`${this.form_id}`));
+        console.log(error_info);
+        if(error_info != ''){
+            show_error_message(error_info);
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 }
 

@@ -56,7 +56,7 @@
                         <!-- 휴대폰 번호 입력 영역 -->
                         <div style="margin-top:8px;" id="input_phone">
                             <input class="pters_login_input" type="text" name="phone" id="id_phone" placeholder="휴대폰 번호" minlength="10" maxlength="11" title="휴대폰 번호"
-                                   autocomplete="off" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event);" data-valid="false" onkeyup="enter_key();">
+                                   autocomplete="off" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event.target);" data-valid="false" onkeyup="enter_key();">
                         </div>
                         <!-- 이메일 입력 영역 -->
                         <div style="margin-top:8px; display:none;" id="input_email">

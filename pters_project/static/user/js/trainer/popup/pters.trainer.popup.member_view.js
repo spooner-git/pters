@@ -3,6 +3,7 @@ class Member_view{
         this.target = {install: install_target, toolbox:'section_member_view_toolbox', content:'section_member_view_content'};
         this.instance = instance;
         this.member_id = member_id;
+        this.form_id = 'id_member_view_form';
 
         let d = new Date();
         this.dates = {
@@ -67,7 +68,7 @@ class Member_view{
 
     set name(text){
         this.data.name = text;
-        // this.render_content();
+        this.render_content();
     }
 
     get name(){
@@ -76,7 +77,7 @@ class Member_view{
 
     set phone(number){
         this.data.phone = number;
-        // this.render_content();
+        this.render_content();
     }
 
     get phone(){
@@ -85,7 +86,7 @@ class Member_view{
 
     set birth(data){
         this.data.birth = data.data;
-        // this.render_content();
+        this.render_content();
     }
 
     get birth(){
@@ -94,7 +95,7 @@ class Member_view{
 
     set sex(data){
         this.data.sex = data;
-        // this.render_content();
+        this.render_content();
     }
 
     get sex(){
@@ -104,7 +105,7 @@ class Member_view{
     set start_date(data){
         this.data.start_date = data.data;
         this.data.start_date_text = data.text;
-        // this.render_content();
+        this.render_content();
     }
 
     get start_date(){
@@ -114,7 +115,7 @@ class Member_view{
     set end_date(data){
         this.data.end_date = data.data;
         this.data.end_date_text = data.text;
-        // this.render_content();
+        this.render_content();
     }
 
     get end_date(){
@@ -124,7 +125,7 @@ class Member_view{
 
     set memo(text){
         this.data.memo = text;
-        // this.render_content();
+        this.render_content();
     }
 
     get memo(){
@@ -135,7 +136,7 @@ class Member_view{
         this.data.ticket_id = data.id;
         this.data.ticket_name = data.name;
         this.data.ticket_effective_days = data.effective_days;
-        // this.render_content();
+        this.render_content();
     }
 
     get ticket(){
@@ -144,7 +145,7 @@ class Member_view{
 
     set reg_count(number){
         this.data.ticket_reg_count = number;
-        // this.render_content();
+        this.render_content();
     }
 
     get reg_count(){
@@ -153,7 +154,7 @@ class Member_view{
 
     set reg_price(number){
         this.data.ticket_price = number;
-        // this.render_content();
+        this.render_content();
     }
 
     get reg_price(){
@@ -231,8 +232,8 @@ class Member_view{
         let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();member_view_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="member_view_popup.upper_right_menu();"></span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
-                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
+        let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -246,6 +247,7 @@ class Member_view{
 
     render_content(){
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+        update_check_registration_form(document.getElementById(`${this.form_id}`));
     }
 
     dom_assembly_toolbox(){
@@ -275,12 +277,13 @@ class Member_view{
         let icon_r_text;
         let style = {"font-size":"20px", "font-weight":"bold"};
         let disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "공백, + - _ 제외 특수문자는 입력 불가";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
             this.send_data();
-        }, pattern);
+        }, pattern, pattern_message, '');
         
         let html = `
         <div class="member_view_upper_box">
@@ -345,7 +348,7 @@ class Member_view{
             let user_input_data = input_data;
             this.phone = user_input_data;
             this.send_data();
-        }, pattern, unit);
+        }, pattern, unit, '');
         return html;
     }
 
@@ -405,11 +408,12 @@ class Member_view{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
-        }, pattern);
+        }, pattern, pattern_message, '');
         return html;
     }
 
@@ -479,6 +483,9 @@ class Member_view{
 
 
     send_data(){
+        if(this.check_before_send() == false){
+            return false;
+        }
         let data = {
                     "member_id": this.member_id,
                     "first_name": this.data.name,
@@ -535,6 +542,18 @@ class Member_view{
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
+    }
+    check_before_send(){
+
+        let error_info = check_registration_form(document.getElementById(`${this.form_id}`));
+        console.log(error_info);
+        if(error_info != ''){
+            show_error_message(error_info);
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 }
 
@@ -737,7 +756,7 @@ class Member_simple_view{
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
-        }, pattern, unit);
+        }, pattern, unit, '');
         return html;
     }
 
@@ -756,7 +775,7 @@ class Member_simple_view{
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
-        }, pattern, unit);
+        }, pattern, unit, '');
         return html;
     }
 
@@ -781,11 +800,12 @@ class Member_simple_view{
         let icon_r_text = "";
         let style = null;
         let disabled = true;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
-        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let html = CComponent.create_input_row(id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
-        }, pattern);
+        }, pattern, pattern_message, '');
         return html;
     }
 

@@ -495,7 +495,6 @@ def update_member_info_logic(request):
             member = MemberTb.objects.get(member_id=member_id)
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
-
     if error is None:
         if member.user.is_active or str(request.user.id) != str(member.reg_info):
             error = '회원 정보를 수정할수 없습니다.'
@@ -504,13 +503,12 @@ def update_member_info_logic(request):
             with transaction.atomic():
                 # 회원의 이름을 변경하는 경우 자동으로 ID 변경되도록 설정
                 if member.user.first_name != first_name:
-                    username = member.user.first_name
+                    username = first_name
                     i = 0
                     count = MemberTb.objects.filter(name=username).count()
                     max_range = (100 * (10 ** len(str(count)))) - 1
                     for i in range(0, 100):
-                        username = member.user.first_name\
-                                   + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+                        username += str(random.randrange(0, max_range)).zfill(len(str(max_range)))
                         try:
                             User.objects.get(username=username)
                         except ObjectDoesNotExist:
@@ -1961,14 +1959,13 @@ def update_member_connection_info_logic(request):
 
 def add_lecture_info_logic(request):
     class_id = request.session.get('class_id', '')
-    member_num = request.POST.get('member_num', '')
     name = request.POST.get('name', '')
+    member_num = request.POST.get('member_num', '')
     note = request.POST.get('note', '')
     ing_color_cd = request.POST.get('ing_color_cd', '#ffd3d9')
     end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
     ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
     end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
-
     error = None
 
     try:
