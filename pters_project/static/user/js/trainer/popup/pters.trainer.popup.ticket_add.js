@@ -209,38 +209,44 @@ class Ticket_add{
     }
 
     dom_row_ticket_count_input(){
+        let unit = '회';
         let id = 'input_ticket_count';
-        let title = this.data.count == null ? '' : this.data.count+'회';
+        let title = this.data.count == null ? '' : this.data.count+unit;
         let placeholder = '횟수';
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text;
         let style = null;
         let disabled = false;
-        let pattern = '[0-9]{1,10}';
+        let pattern = '[0-9]{0,4}';
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            input_data = Number(input_data);
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
             let user_input_data = input_data;
             this.count = user_input_data;
-        }, pattern);
+        }, pattern, unit);
         return html;
     }
 
     dom_row_ticket_price_input(){
+        let unit = '원';
         let id = 'input_ticket_price';
-        let title = this.data.price == null ? '' : this.data.price+'원';
+        let title = this.data.price == null ? '' : this.data.price+unit;
         let placeholder = '가격';
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text;
         let style = null;
         let disabled = false;
-        let pattern = "[0-9]{0,10}";
+        let pattern = "[0-9]{0,8}";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            input_data = Number(input_data);
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
             let user_input_data = input_data;
             this.price = user_input_data;
-        }, pattern);
+        }, pattern, unit);
         return html;
     }
 

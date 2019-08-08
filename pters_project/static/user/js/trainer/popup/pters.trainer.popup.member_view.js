@@ -328,6 +328,7 @@ class Member_view{
     }
 
     dom_row_member_phone_input(){
+        let unit = '';
         let id = 'member_phone_view';
         let title = this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone;
         let placeholder = '휴대폰 번호';
@@ -336,6 +337,7 @@ class Member_view{
         let icon_r_text;
         let style = null;
         let disabled = false;
+        let pattern = "[0-9]{10,11}";
         if(this.data.connection != 1){
             disabled = true;
         }
@@ -343,7 +345,7 @@ class Member_view{
             let user_input_data = input_data;
             this.phone = user_input_data;
             this.send_data();
-        });
+        }, pattern, unit);
         return html;
     }
 
@@ -722,6 +724,7 @@ class Member_simple_view{
     }
 
     dom_row_member_phone_input(){
+        let unit = '';
         let id = 'member_phone_view';
         let title =  this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone;
         let placeholder = '휴대폰 번호';
@@ -734,12 +737,13 @@ class Member_simple_view{
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
-        }, pattern);
+        }, pattern, unit);
         return html;
     }
 
     dom_row_member_birth_input(){
         //등록하는 행을 만든다.
+        let unit = '';
         let id = 'member_birth_view';
         let title = this.data.birth == null || this.data.birth == 'None' ? '미입력 (생년월일)' : this.data.birth;
         let placeholder =  '생년월일';
@@ -752,7 +756,7 @@ class Member_simple_view{
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
-        }, pattern);
+        }, pattern, unit);
         return html;
     }
 

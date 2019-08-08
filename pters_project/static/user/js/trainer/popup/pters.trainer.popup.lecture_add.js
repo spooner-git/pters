@@ -177,20 +177,23 @@ class Lecture_add{
 
   
     dom_row_capacity_input(){
+        let unit = '명';
         let id = 'input_lecture_capacity';
-        let title = this.data.capacity == null ? '' : this.data.capacity+'명';
+        let title = this.data.capacity == null ? '' : this.data.capacity+unit;
         let placeholder =  '정원*';
         let icon = '/static/common/icon/icon_member.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
         let disabled = false;
-        let pattern = "[0-9]{0,10}";
+        let pattern = "[0-9]{0,4}";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            input_data = Number(input_data);
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
             let user_input_data = input_data;
             this.capacity = user_input_data;
-        }, pattern);
+        }, pattern, unit);
         return html;
     }
 

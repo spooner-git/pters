@@ -320,7 +320,7 @@ def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price,
 
             auth_cd = AUTH_TYPE_WAIT
 
-            if not member.user.is_active and member.reg_info == str(user_id):
+            if not member.user.is_active and str(member.reg_info) == str(user_id):
                 auth_cd = AUTH_TYPE_VIEW
 
             member_ticket_counts = ClassMemberTicketTb.objects.select_related(

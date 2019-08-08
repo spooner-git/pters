@@ -367,7 +367,7 @@ class Plan_add{
 
     dom_row_repeat_select(){
         let id = 'select_repeat';
-        let title =this.data.repeat.power == OFF ? '반복 일정' : this.data.repeat.day.join(', ')
+        let title =this.data.repeat.power == OFF ? '반복 일정' : this.data.repeat.day.join(', ');
         let icon = '/static/common/icon/icon_repeat.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";

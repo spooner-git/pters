@@ -61,6 +61,7 @@ class CComponent{
         if(disabled == false){
             disable = '';
         }
+        let min_max_length = pattern.split('{')[1].replace('}', '').split(',');
 
         let html = `<li class="create_input_row" id="c_i_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
@@ -68,7 +69,8 @@ class CComponent{
                                 ${icon != null ? `<img src="${icon}">` : ""} 
                             </div>
                             <div class="cell_content">
-                                <input type="text" class="cell_text" placeholder="${placeholder}" pattern="${pattern}" onkeyup="limit_char_check(event);" data-valid="false" value="${title}" ${disable}>
+                                <input type="text" class="cell_text" title="${placeholder}" placeholder="${placeholder}" pattern="${pattern}" value="${title}"
+                                 onkeyup="limit_char_check(event);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" data-valid="false" ${disable}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
@@ -81,7 +83,7 @@ class CComponent{
         });
 
         $(document).off('focusout', `#c_i_r_${id}`).on('focusout', `#c_i_r_${id}`, function(e){
-            let user_input_data = $(this).find('input').val();
+            let user_input_data = e.target.value;
             if(user_input_data.length == 0){
                 user_input_data = null;
             }
@@ -91,19 +93,22 @@ class CComponent{
     }
     
     //추가 페이지들에서 사용되는 number input row 스타일
-    static create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern){
+    static
+    create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, unit){
         let disable = 'disabled';
         if(disabled == false){
             disable = '';
         }
-        
+        let min_max_length = pattern.split('{')[1].replace('}', '').split(',');
+
         let html = `<li class="create_input_row" id="c_i_n_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
                             <div class="cell_title" style="display:${icon == undefined ? 'none' : ''}">
                                 ${icon != null ? `<img src="${icon}">` : ""} 
                             </div>
                             <div class="cell_content">
-                                <input class="cell_text" placeholder="${placeholder}" type="tel" pattern="${pattern}" value="${title}" onkeyup="limit_char_auto_correction(event);" data-valid="false" ${disable}>
+                                <input class="cell_text" title="${placeholder}" placeholder="${placeholder}" type="tel" pattern="${pattern}" value="${title}"
+                                 onkeyup="limit_char_auto_correction(event);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" data-valid="false" ${disable}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
@@ -112,15 +117,22 @@ class CComponent{
                         </div>
                     </li>`;
         $(document).off('focusin', `#c_i_n_r_${id}`).on('focusin', `#c_i_n_r_${id}`, function(e){
-            let current_value = $(this).find('input').val();
-            $(this).find('input').val(Number(current_value.replace(/[^0-9]/gi, "") ));
+            let current_value = e.target.value;
+            let current_num = '';
+            if(current_value != 0){
+                current_num = current_value.replace(/[^0-9]/gi, "");
+            }
+            e.target.value = current_num;
         });
 
         $(document).off('focusout', `#c_i_n_r_${id}`).on('focusout', `#c_i_n_r_${id}`, function(e){
             LimitChar.number(`#c_i_n_r_${id} input`);
-            let user_input_data = $(`#c_i_n_r_${id} input`).val();
+            let user_input_data = e.target.value;
             if(user_input_data.length == 0){
                 user_input_data = null;
+            }
+            else{
+                e.target.value = user_input_data+unit;
             }
             // else{
                 // user_input_data = Number(user_input_data);
@@ -573,7 +585,13 @@ class LimitChar{
 function limit_char_auto_correction(event){
     let limit_reg_pattern = event.target.pattern.replace('[', '[^').split('{')[0];
     let limit = new RegExp(limit_reg_pattern, "gi");
+    let min_length = event.target.minLength;
     event.target.value = event.target.value.replace(limit, "");
+    if(event.target.value.length < Number(min_length)) {
+        event.target.attributes['data-valid'].value = 'false';
+    }else{
+        event.target.attributes['data-valid'].value = 'true';
+    }
 }
 
 function limit_char_check(event){
@@ -601,4 +619,22 @@ function limit_char_check(event){
     }
 
     return limit_char_check
+}
+
+function registration_form_check(form_id){
+    // form 안에 있는 값 검사
+    let inputs = document.getElementById(form_id).elements;
+    let error_info = '';
+
+    for(let i=0; i<inputs.length; i++){
+        if (inputs[i].nodeName === "INPUT" && (inputs[i].type === "text" || inputs[i].type === "tel")) {
+            // Update text input
+            console.log(inputs[i].getAttribute('title')+':'+inputs[i].getAttribute('data-valid'));
+            if(inputs[i].getAttribute('data-valid') == 'false'){
+                error_info = inputs[i].getAttribute('title');
+                break;
+            }
+        }
+    }
+    return error_info;
 }

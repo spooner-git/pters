@@ -160,15 +160,18 @@ class Lecture_edit{
 
   
     dom_row_capacity_input(){
+        let unit = '명';
         let pattern = "[0-9]{0,10}";
-        let html = CComponent.create_input_number_row ('input_lecture_capacity', this.data.capacity == null ? '정원*' : '정원 '+this.data.capacity+'명', '/static/common/icon/icon_member.png', HIDE, false, (input_data)=>{
-            input_data = Number(input_data);
+        let html = CComponent.create_input_number_row ('input_lecture_capacity', this.data.capacity == null ? '정원*' : '정원 '+this.data.capacity+unit, '/static/common/icon/icon_member.png', HIDE, false, (input_data)=>{
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.capacity;
             }
             this.capacity = user_input_data;
-        }, pattern);
+        }, pattern, unit);
         return html;
     }
 

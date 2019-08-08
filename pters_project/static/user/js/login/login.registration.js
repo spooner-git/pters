@@ -291,9 +291,9 @@ function check_activation_code(){
     });
 }
 
-function registration_member_info(){
+function registration_member_info(form_id){
     // form 안에 있는 값 검사
-    let inputs = document.getElementById("id_add_member_form").elements;
+    let inputs = document.getElementById(form_id).elements;
     let error_info = '';
 
     if(document.getElementById('all_contract').getAttribute('data-valid') == 'false'){

@@ -210,28 +210,34 @@ class Ticket_edit{
     }
 
     dom_row_ticket_count_input(){
+        let unit = '회';
         let pattern = "[0-9]{0,10}";
-        let html = CComponent.create_input_number_row ('input_ticket_count', this.data.count == null ? '횟수' : this.data.count+'회', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
-            input_data = Number(input_data);
+        let html = CComponent.create_input_number_row ('input_ticket_count', this.data.count == null ? '횟수' : this.data.count+unit, '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.count;
             }
             this.count = user_input_data;
-        }, pattern);
+        }, pattern, unit);
         return html;
     }
 
     dom_row_ticket_price_input(){
+        let unit = '원';
         let pattern = "[0-9]{0,10}";
-        let html = CComponent.create_input_number_row ('input_ticket_price', this.data.price == null ? '가격' : this.data.price+'원', '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
-            input_data = Number(input_data);
+        let html = CComponent.create_input_number_row ('input_ticket_price', this.data.price == null ? '가격' : this.data.price+unit, '/static/common/icon/icon_rectangle_blank.png', HIDE, false, (input_data)=>{
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.price;
             }
             this.price = user_input_data;
-        }, pattern);
+        }, pattern, unit);
         return html;
     }
 

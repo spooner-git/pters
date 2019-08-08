@@ -204,8 +204,9 @@ class Lecture_view{
     }
 
     dom_row_capacity_view(){
+        let unit = '명';
         let id = 'lecture_capacity_view';
-        let title = this.data.capacity == null ? '' : '정원 '+this.data.capacity+'명';
+        let title = this.data.capacity == null ? '' : '정원 '+this.data.capacity+unit;
         let placeholder = '정원';
         let icon = '/static/common/icon/icon_member.png';
         let icon_r_visible = SHOW;
@@ -224,16 +225,18 @@ class Lecture_view{
         });
         let style = null;
         let disabled = false;
-        let pattern = "[0-9]{0,10}";
+        let pattern = "[0-9]{0,4}";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            input_data = Number(input_data);
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.capacity;
             }
             this.capacity = user_input_data;
             this.send_data();
-        }, pattern);
+        }, pattern, unit);
         return html;
     }
 

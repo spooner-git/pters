@@ -497,9 +497,8 @@ def update_member_info_logic(request):
             error = '회원 ID를 확인해 주세요.'
 
     if error is None:
-        if member.user.is_active or request.user.id != member.reg_info:
+        if member.user.is_active or str(request.user.id) != str(member.reg_info):
             error = '회원 정보를 수정할수 없습니다.'
-
     if error is None:
         try:
             with transaction.atomic():
