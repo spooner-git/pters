@@ -1,8 +1,7 @@
 class Member_schedule_history{
-    constructor(install_target, member_id, ticket_id, callback){
+    constructor(install_target, member_id, callback){
         this.target = {install : install_target};
         this.member_id = member_id;
-        this.ticket_id = ticket_id;
         this.callback = callback;
         this.received_data;
         this.data = null;

@@ -139,3 +139,4 @@ const COLOR_NAME_CODE = {"#fbf3bd":"바나나", "#dbe6f7":"하늘", "#ffd3d9": "
               "#ead8f2":"블루베리", "#d9c3ab":"고구마"};
 const SEX_CODE = {"M": "남성", "W": "여성"};
 const SCHEDULE_STATUS = {"NP" : "진행전", "PC": "결석", "PE": "출석완료"};
+const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};

@@ -2,6 +2,8 @@ class Member_add{
     constructor(install_target, data_from_external, instance){
         this.target = {install: install_target, toolbox:'section_member_add_toolbox', content:'section_member_add_content'};
         this.instance = instance;
+        this.data_from_external = data_from_external;
+        //data_from_external이 null이면 신규회원등록, member_id 값이 들어오면 재등록
 
         let d = new Date();
         this.dates = {
@@ -16,6 +18,7 @@ class Member_add{
         };
 
         this.data = {
+                member_id:null, //재등록시에만 사용하는 값
                 name: null,
                 phone: null,
                 birth: null,
@@ -33,7 +36,7 @@ class Member_add{
         };
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
-        this.set_initial_data(data_from_external);
+        this.set_initial_data(this.data_from_external);
         this.init();
     }
 
@@ -141,16 +144,15 @@ class Member_add{
         if(data == null){
             return null;
         }
-        this.user_data = data;
-        let user_data_date = this.user_data.user_selected_date;
-        this.data.date = user_data_date.year == null ? null : {year: user_data_date.year, month:user_data_date.month, date:user_data_date.date};
-        this.data.date_text = user_data_date.text;
-        
-        let user_data_time = this.user_data.user_selected_time;
-        this.data.start_time = user_data_time.hour == null ? null : `${user_data_time.hour}:${user_data_time.minute}`;
-        this.data.start_time_text = user_data_time.text;
-        this.data.end_time = user_data_time.hour2 == null ? null : `${user_data_time.hour2}:${user_data_time.minute2}`;
-        this.data.end_time_text = user_data_time.text2;
+
+        Member_func.read(data, (received)=>{
+            this.data.name = received.member_name;
+            this.data.member_id = received.member_id;
+            this.data.phone = received.member_phone == "None" ? null : received.member_phone;
+            this.data.birth = received.member_birthday_dt == "None" ? null : DateRobot.to_split(received.member_birthday_dt);
+            this.data.sex = received.member_sex == "None" ? null :  received.member_sex;
+            this.init();
+        });
     }
 
     clear(){
@@ -207,7 +209,7 @@ class Member_add{
         <div class="member_add_upper_box">
             <div style="display:inline-block;width:200px;">
                 <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold;">회원 등록</span>
+                    <span style="font-size:20px;font-weight:bold;">${this.data_from_external == null ? '회원 등록' : '재등록'}</span>
                 </div>
             </div>
         </div>
@@ -223,7 +225,7 @@ class Member_add{
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
-        let input_disabled = false;
+        let input_disabled = this.data_from_external == null ? false : true;
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
@@ -239,7 +241,7 @@ class Member_add{
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
-        let input_disabled = false;
+        let input_disabled = this.data_from_external == null ? false : true;
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
@@ -256,6 +258,10 @@ class Member_add{
         let icon_r_text = "";
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             //행을 클릭했을때 실행할 내용
+            if(this.data_from_external != null){
+                return false;
+            }
+
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
@@ -282,6 +288,10 @@ class Member_add{
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
+            if(this.data_from_external != null){
+                return false;
+            }
+
             let user_option = {
                                 male:{text:"남성", callback:()=>{this.sex = "M";layer_popup.close_layer_popup();}},
                                 female:{text:"여성", callback:()=>{this.sex = "W";layer_popup.close_layer_popup();}}
@@ -436,7 +446,7 @@ class Member_add{
         }
 
         let data = {
-                    "member_id":null,
+                    "member_id":this.data.member_id,
                     "first_name": this.data.name,
                     "name":this.data.name,
                     "phone":this.data.phone,
@@ -450,13 +460,22 @@ class Member_add{
                     "price":this.data.ticket_price
         };
 
-        Member_func.create_pre(data, (received)=>{
-            data.member_id = received.user_db_id[0];
-            Member_func.create(data, ()=>{
-                // layer_popup.close_layer_popup();
-                member.init();
+        if(this.data_from_external == null){ //신규 회원 등록
+            Member_func.create_pre(data, (received)=>{
+                data.member_id = received.user_db_id[0];
+                Member_func.create(data, ()=>{
+                    // layer_popup.close_layer_popup();
+                    member.init();
+                });
             });
-        });
+        }else{ // 재등록
+            Member_func.create_ticket_re(data, ()=>{
+                member_view_popup.set_initial_data();
+                member_ticket_history.init();
+            });
+        }
+
+        
         layer_popup.close_layer_popup();
     }
 
@@ -465,10 +484,10 @@ class Member_add{
             show_error_message('회원명을 입력 해주세요.');
             return false;
         }
-        if(this.data.phone == null){
-            show_error_message('휴대폰 번호를 입력 해주세요.');
-            return false;
-        }
+        // if(this.data.phone == null){
+        //     show_error_message('휴대폰 번호를 입력 해주세요.');
+        //     return false;
+        // }
         if(this.data.ticket_id.length == 0){
             show_error_message('등록할 수강권을 선택 해주세요.');
             return false;

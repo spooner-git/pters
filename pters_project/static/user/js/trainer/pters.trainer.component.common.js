@@ -444,6 +444,26 @@ class CComponent{
         return html;
     }
 
+    //회원의 수강권 이력에 사용되는 행
+    static ticket_history_row (numbering, ticket_id, date, ticket_name, reg_count, remain_count, avail_count, status){
+        let html = `<li class="ticket_history_row" id="ticket_history_row_${ticket_id}">
+                        <div class="obj_table_raw table_basic_info">
+                            <div class="cell_ticket_num">${numbering}</div>
+                            <div class="cell_ticket_info">${ticket_name}</div>
+                            <div class="cell_ticket_attend">${status}</div>
+                        </div>
+                        <div class="obj_table_raw table_date_info">
+                            <div class="cell_ticket_num"></div>
+                            <div class="cell_ticket_info">${date}</div>
+                        </div>
+                        <div class="obj_table_raw table_memo_info">
+                            <div class="cell_ticket_num"></div>
+                            <div class="cell_ticket_info">등록 ${reg_count} 회 / 출석완료 ${reg_count-remain_count} / 예약가능 ${avail_count}</div>
+                        </div>
+                    </li>`;
+        return html;
+    }
+
 
     static no_data_row(text){
         let html = `<li class="no_data_row">

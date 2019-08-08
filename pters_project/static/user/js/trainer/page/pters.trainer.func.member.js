@@ -323,6 +323,37 @@ class Member_func{
             }
         });
     }
+    
+    static create_ticket_re(data, callback){
+        $.ajax({
+            url:'/trainer/add_member_ticket_info/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            complete:function(){
+            },
+    
+            success:function(received_data){
+                let data = JSON.parse(received_data);
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                location.reload();
+            }
+        });
+    }
 
     static read(data, callback){
         //데이터 형태 {"member_id":""};
