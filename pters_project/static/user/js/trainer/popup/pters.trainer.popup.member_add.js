@@ -119,7 +119,7 @@ class Member_add{
 
     set reg_count(number){
         this.data.ticket_reg_count = number;
-        // this.render_content();
+        this.render_content();
     }
 
     get reg_count(){
@@ -181,13 +181,12 @@ class Member_add{
 
     render_content(){
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
-        update_check_registration_form(document.getElementById(`${this.form_id}`));
     }
 
     dom_assembly_toolbox(){
         return this.dom_row_toolbox();
     }
-    
+
     dom_assembly_content(){
         let name = this.dom_row_member_name_input();
         let phone = this.dom_row_member_phone_input();
@@ -498,7 +497,9 @@ class Member_add{
     }
 
     check_before_send(){
-        let error_info = check_registration_form(document.getElementById(`${this.form_id}`));
+        let forms = document.getElementById(`${this.form_id}`);
+        update_check_registration_form(forms);
+        let error_info = check_registration_form(forms);
         console.log(error_info);
         if(error_info != ''){
             show_error_message(error_info);

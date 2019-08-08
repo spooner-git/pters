@@ -164,7 +164,6 @@ class Plan_add{
 
     render_content(){
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
-        update_check_registration_form(document.getElementById(`${this.form_id}`));
     }
 
     dom_assembly_toolbox(){

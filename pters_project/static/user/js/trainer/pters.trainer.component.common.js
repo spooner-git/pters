@@ -71,7 +71,7 @@ class CComponent{
                             <div class="cell_content">
                                 <input type="text" class="cell_text" title="${placeholder}" placeholder="${placeholder}" pattern="${pattern}" value="${title}"
                                  onkeyup="limit_char_check(event.target);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" 
-                                 data-error-message="" data-pattern-message="${pattern_message}" data-valid="false" ${disable} ${required}>
+                                 data-error-message="${placeholder} : 필수 입력입니다." data-pattern-message="${pattern_message}" data-valid="false" ${disable} ${required}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
@@ -101,7 +101,6 @@ class CComponent{
             disable = '';
         }
         let min_max_length = pattern.split('{')[1].replace('}', '').split(',');
-
         let html = `<li class="create_input_row" id="c_i_n_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
                             <div class="cell_title" style="display:${icon == undefined ? 'none' : ''}">
@@ -110,7 +109,7 @@ class CComponent{
                             <div class="cell_content">
                                 <input class="cell_text" title="${placeholder}" placeholder="${placeholder}" type="tel" pattern="${pattern}" value="${title}"
                                  onkeyup="limit_char_auto_correction(event.target);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" 
-                                 data-error-message="" data-valid="false" ${disable} ${required}>
+                                 data-error-message="${placeholder} : 필수 입력입니다." data-valid="false" ${disable} ${required}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
@@ -134,11 +133,8 @@ class CComponent{
                 user_input_data = null;
             }
             else{
-                e.target.value = user_input_data+unit;
+                user_input_data = Number(user_input_data);
             }
-            // else{
-                // user_input_data = Number(user_input_data);
-            // }
             onfocusout(user_input_data);
         });
         return html;

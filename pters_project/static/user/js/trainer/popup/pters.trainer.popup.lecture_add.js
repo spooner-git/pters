@@ -109,7 +109,6 @@ class Lecture_add{
 
     render_content(){
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
-        update_check_registration_form(document.getElementById(`${this.form_id}`));
     }
 
     dom_assembly_toolbox(){
@@ -281,7 +280,9 @@ class Lecture_add{
 
     check_before_send(){
 
-        let error_info = check_registration_form(document.getElementById(`${this.form_id}`));
+        let forms = document.getElementById(`${this.form_id}`);
+        update_check_registration_form(forms);
+        let error_info = check_registration_form(forms);
         console.log(error_info);
         if(error_info != ''){
             show_error_message(error_info);
