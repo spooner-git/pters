@@ -1,4 +1,3 @@
-
 class Menu{
     constructor(targetHTML, instance){
         this.page_name = 'menu';
@@ -14,7 +13,8 @@ class Menu{
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 
-        this.menu_items = {   
+        this.menu_items = { 
+                            program: {visible: true, name:"프로그램"},   
                             alarm: {visible: true, name:"알림"}, 
                             ticket: {visible: true, name:"수강권"},
                             lecture: {visible: true, name:"수업"},
