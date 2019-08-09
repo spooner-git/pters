@@ -68,7 +68,7 @@ class Alarm {
                                 <div class="alarm_data_b">
                                     <div></div>
                                     <div>
-                                        <span>${alarm_from}님이 ${alarm_from != alarm_to ? alarm_to+'님의' :''} '${alarm_what}'을 ${alarm_how} 하였습니다.</span>
+                                        <span>${alarm_from}님이 ${alarm_to != "" ? alarm_to+'님의' :''} ${alarm_what}을 ${alarm_how} 하였습니다.</span>
                                     </div>
                                 </div>
                             </article>`;
