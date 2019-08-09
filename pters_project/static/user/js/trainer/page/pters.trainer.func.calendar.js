@@ -113,7 +113,6 @@ class Calendar {
                             this.week_zoomed.vertical.activate = false;
                             this.zoom_week_cal_vertical();
                         }
-                        $root_content.scrollTop($('#current_time_indicator').offset().top);
                     }
                 }
             });

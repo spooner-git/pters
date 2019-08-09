@@ -29,7 +29,6 @@ class Menu{
         let user_options = {store: {visible :false}, notice: {visible :false}};
         this.render_upper_box();
         this.render_menu();
-        $root_content.scrollTop(1);
     }
 
     render_upper_box(){

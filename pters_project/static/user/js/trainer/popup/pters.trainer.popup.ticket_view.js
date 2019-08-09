@@ -59,7 +59,7 @@ class Ticket_view{
         this.data.lecture_id = data.id;
         this.data.lecture_name = data.name;
         this.data.lecture_max = data.max;
-        this.data.lecture_state_cd = data.state_cd;
+        // this.data.lecture_state_cd = data.state_cd;
         this.render_content();
     }
 
@@ -252,7 +252,7 @@ class Ticket_view{
             let lecture_name = this.data.lecture_name[i];
             let lecture_state_cd = this.data.lecture_state_cd[i];
             let lecture_color = this.data.lecture_color[i];
-            let text_decoration = (lecture_state_cd == STATE_IN_PROGRESS ? 'none':'color:#cccccc; text-decoration:line-through;');
+            let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:#cccccc; text-decoration:line-through;' : 'none');
             let icon_button_style = {"display":"block", "padding":"0", "font-size":"15px",
                                      "font-weight":"500", "height":"50px", "line-height":"50px"};
 
