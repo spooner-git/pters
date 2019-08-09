@@ -289,12 +289,15 @@ class Lecture_view{
         for(let i=0; i<length; i++){
             let ticket_id = this.data.ticket_id[i];
             let ticket_name = this.data.ticket_name[i];
+            let ticket_state = this.data.ticket_state[i];
             let style = {"display":"block", "font-size":"15px", "font-weight":"500",  "padding":"0", "height":"50px", "line-height":"50px"};
+            if(ticket_state == STATE_END_PROGRESS){
+                style["text-decoration"] = "line-through";
+                style["color"] = "#cccccc";
+                ticket_name += "(비활성)";
+            }
             html_to_join.push(
                 CComponent.text_button(ticket_id, ticket_name, style, ()=>{
-                    // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
-                    //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
-                    // });
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(254/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                         ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
                         //수강권 간단 정보 팝업 열기
@@ -604,7 +607,7 @@ class Lecture_simple_view{
 
     dom_row_color_view(){
         let id = 'lecture_color_view';
-        let title = this.data.color_bg == null ? '색상명' : `<span style="background-color:${this.data.color_bg};color:${this.data.color_font};padding:5px;border-radius:4px;">${this.data.color_bg}</span>`;
+        let title = this.data.color_bg == null ? '색상명' : `<span style="background-color:${this.data.color_bg};color:${this.data.color_font};padding:5px;border-radius:4px;">${COLOR_NAME_CODE[this.data.color_bg]}</span>`;
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";

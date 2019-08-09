@@ -40,56 +40,42 @@ class Alarm {
             return false;
         }
 
-        let whole_data, length;
-
-        if(list_type == "ing"){
-            whole_data = jsondata.current_member_data;
-            length = whole_data.length;
-            this.member_ing_length = length;
-            this.member_list_type_text = "진행중";
-        }else if(list_type == "end"){
-            whole_data = jsondata.finish_member_data;
-            length = whole_data.length;
-            this.member_end_length = length;
-            this.member_list_type_text = "종료";
-        }
-
-        this.member_length = length;
 
         let html_temp = [];
-        for (let i=0; i<length; i++){
-            let data = whole_data[i];
-            let member_id = data.member_id;
-            let member_name = data.member_name;
-            let member_phone = data.member_phone;
-            let member_reg = data.member_ticket_reg_count;
-            let member_rem = data.member_ticket_rem_count;
-            let end_date = data.end_date;
-            let end_date_text = DateRobot.to_text(end_date);
-            let remain_date = Math.round((new Date(end_date).getTime() - new Date().getTime()) / (1000*60*60*24));
-            let remain_alert_text = "";
-            if(remain_date < 0){
-                remain_alert_text = " <span style='color:#fe4e65;'>지남</span>";
-                remain_date = Math.abs(remain_date);
-            }
-
-            let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'member_id':${member_id}}, ()=>{
-                member_view_popup = new Member_view('.popup_member_view', ${member_id}, 'member_view_popup');});`;
-            let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : '#a3a0a0'}">
-                            <div class="alarm_data_u">
-                                <img src="/static/common/icon/icon_account.png">
-                            </div>                
-                            <div class="alarm_data_b">
-                                <div class="member_name">${member_name}</div>
-                                <div class="member_counts">
-                                 ${list_type == "ing" ? member_rem+'회/ '+remain_date+'일'+remain_alert_text+'/ - '+end_date_text+'까지' : '종료됨'}
+        for(let date in jsondata){
+            let length = jsondata[date].length;
+            for (let i=0; i<length; i++){
+                let data = jsondata[date][i];
+                let alarm_id = data.alarm_id;
+                let alarm_from = data.alarm_from_member_name;
+                let alarm_to = data.alarm_to_member_name;
+                let alarm_what = data.alarm_info;
+                let alarm_how = data.alarm_how;
+                let alarm_time_ago = data.time_ago;
+                let read_check = data.read_check;
+                let html = `<article class="alarm_wrapper" data-alarm_id="${alarm_id}" style="background-color:${read_check == 1 ? "" : '#ffe8eb'}">
+                                <div class="alarm_data_u">
+                                    <div>
+                                        <img src="/static/common/icon/icon_rectangle_blank.png" style="float:left;margin-right:16px;">
+                                    </div>
+                                    <div>
+                                        <span>${alarm_how}</span>
+                                    </div>
+                                    <div>
+                                        <span style="float:right;color:#b8b4b4;font-size:11px;">${alarm_time_ago}</span>
+                                    </div>
+                                </div>                
+                                <div class="alarm_data_b">
+                                    <div></div>
+                                    <div>
+                                        <span>${alarm_from}님이 ${alarm_to != "" ? alarm_to+'님의' :''} ${alarm_what}을 ${alarm_how} 하였습니다.</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </article>`;
-            html_temp.push(html);
+                            </article>`;
+                html_temp.push(html);
+            }
         }
-
-        document.querySelector('#member_content_wrap').innerHTML = html_temp.join("");
+        document.querySelector('#alarm_content_wrap').innerHTML = html_temp.join("");
     }
 
   
@@ -97,7 +83,7 @@ class Alarm {
     static_component (){
         return(
             {
-                member_upper_box:`  <div class="alarm_upper_box">
+                alarm_upper_box:`  <div class="alarm_upper_box">
                                         <div style="display:inline-block;width:200px;">
                                             <span style="font-size:23px;font-weight:bold;color:#3b3d3d">알림 </span>
                                         </div>
@@ -123,7 +109,9 @@ class Alarm_func{
             success:function (data){
                 console.log(data);
                 // let jsondata = JSON.parse(data);
-                callback(data);
+                if(callback != undefined){
+                    callback(data);
+                }
             },
 
             //보내기후 팝업창 닫기
