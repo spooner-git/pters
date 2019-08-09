@@ -145,17 +145,17 @@ urlpatterns = [
 
     # 강좌 기능 ##########################################################################################################
     # 강좌 정보 조회
-    url(r'^get_class_list/$', views.GetClassListViewAjax.as_view(), name='get_class_list'),
+    url(r'^get_program_list/$', views.GetProgramListViewAjax.as_view(), name='get_program_list'),
     # 강좌 추가
-    url(r'^add_class_info/$', views.AddClassInfoView.as_view(), name='add_class_info'),
+    url(r'^add_program_info/$', views.AddProgramInfoView.as_view(), name='add_program_info'),
     # 강좌 삭제
-    url(r'^delete_class_info/$', views.DeleteClassInfoView.as_view(), name='delete_class_info'),
+    url(r'^delete_program_info/$', views.DeleteProgramInfoView.as_view(), name='delete_program_info'),
     # 강좌 정보 수정
-    url(r'^update_class_info/$', views.UpdateClassInfoView.as_view(), name='update_class_info'),
+    url(r'^update_program_info/$', views.UpdateProgramInfoView.as_view(), name='update_program_info'),
     # 강좌 정보 선택 처리
-    url(r'^select_class_processing/$', views.select_class_processing_logic, name='select_class_processing'),
+    url(r'^select_program_processing/$', views.select_program_processing_logic, name='select_program_processing'),
     # 강좌 정보 수정
-    url(r'^update_class_info/$', views.UpdateClassInfoView.as_view(), name='update_class_info'),
+    url(r'^update_program_info/$', views.UpdateProgramInfoView.as_view(), name='update_program_info'),
 
 
     # 배경 이미지 설정 기능 #################################################################################################

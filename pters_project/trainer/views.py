@@ -3267,38 +3267,34 @@ class GetTicketEndMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse({'ticket_end_member_list': member_list}, json_dumps_params={'ensure_ascii': True})
 
 
-class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = "ajax/trainer_class_ajax.html"
+class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
-    def get_context_data(self, **kwargs):
-        context = super(GetClassListViewAjax, self).get_context_data(**kwargs)
-        member_class_data = None
+    def get(self, request):
+        program_list = []
         error = None
-        if error is None:
-            member_class_data = MemberClassTb.objects.select_related('class_tb'
-                                                                     ).filter(member_id=self.request.user.id,
-                                                                              auth_cd__contains=AUTH_TYPE_VIEW,
-                                                                              use=USE).order_by('-reg_dt')
+        program_data = MemberClassTb.objects.select_related('class_tb'
+                                                            ).filter(member_id=self.request.user.id,
+                                                                     auth_cd__contains=AUTH_TYPE_VIEW,
+                                                                     use=USE).order_by('-reg_dt')
 
         if error is None:
-            for class_auth_info in member_class_data:
-
-                class_info = class_auth_info.class_tb
-                all_member = func_get_class_member_ing_list(class_info.class_id, '')
+            for program_info in program_data:
+                all_member = func_get_class_member_ing_list(program_info.class_tb.class_id, '')
                 total_member_num = len(all_member)
-                class_info.subject_type_name = class_info.get_class_type_cd_name()
-                class_info.state_cd_name = class_info.get_state_cd_name()
-                class_info.total_member_num = total_member_num
-
-        context['class_data'] = member_class_data
+                program_dict = {'program_id': program_info.class_tb.class_id,
+                                'program_total_member_num': total_member_num,
+                                'program_state_cd': program_info.class_tb.state_cd,
+                                'program_subject_type_name': program_info.class_tb.get_class_type_cd_name()
+                                }
+                program_list.append(program_dict)
 
         if error is not None:
             messages.error(self.request, error)
 
-        return context
+        return JsonResponse({'program_data': program_list}, json_dumps_params={'ensure_ascii': True})
 
 
-class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
+class AddProgramInfoView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/trainer_error_ajax.html'
 
     def post(self, request):
@@ -3388,7 +3384,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name)
 
 
-class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
+class DeleteProgramInfoView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/trainer_error_ajax.html'
 
     def post(self, request):
@@ -3432,7 +3428,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name)
 
 
-class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
+class UpdateProgramInfoView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/trainer_error_ajax.html'
 
     def post(self, request):
@@ -3495,7 +3491,7 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name)
 
 
-def select_class_processing_logic(request):
+def select_program_processing_logic(request):
     class_id = request.POST.get('class_id', '')
     next_page = request.POST.get('next_page', '')
 
