@@ -478,9 +478,6 @@ class Plan_add{
             return false;
         }
         else{
-            console.log(this.data);
-            console.log(this.data.lecture_id[0]);
-            console.log(this.data.lecture_type_cd);
             if(this.list_type == 'lesson'){
                 if(this.data.lecture_name.length == 0){
                     show_error_message('수업을 선택 해주세요.');

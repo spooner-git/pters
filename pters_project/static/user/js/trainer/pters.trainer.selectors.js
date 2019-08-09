@@ -1254,10 +1254,10 @@ class TicketSelector{
                         this.data.effective_days.push(ticket_effective_days);
                     }else if(add_or_substract == "substract"){
                         this.data.id.splice(this.data.id.indexOf(ticket_id), 1);
-                        this.data.name.splice(this.data.name.indexOf(ticket_name), 1);
-                        this.data.reg_price.splice(this.data.name.indexOf(ticket_name), 1);
-                        this.data.reg_count.splice(this.data.name.indexOf(ticket_name), 1);
-                        this.data.effective_days.splice(this.data.name.indexOf(ticket_name), 1);
+                        this.data.name.splice(this.data.id.indexOf(ticket_id), 1);
+                        this.data.reg_price.splice(this.data.id.indexOf(ticket_id), 1);
+                        this.data.reg_count.splice(this.data.id.indexOf(ticket_id), 1);
+                        this.data.effective_days.splice(this.data.id.indexOf(ticket_id), 1);
                     }else if(add_or_substract == "add_single"){
                         this.data.id = [];
                         this.data.name = [];

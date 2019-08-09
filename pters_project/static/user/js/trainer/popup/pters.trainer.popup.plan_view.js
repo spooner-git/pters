@@ -426,6 +426,10 @@ class Plan_view{
     }
 
     send_data (){
+        if(this.check_before_send() == false){
+            return false;
+        }
+
         let data = {"lecture_id":this.data.lecture_id,
                     "start_dt":this.data.date.replace(/\./gi,"-") + ' ' + this.data.start_time,
                     "end_dt":this.data.date.replace(/\./gi,"-") + ' ' + this.data.end_time,
@@ -443,4 +447,43 @@ class Plan_view{
         });
     }
 
+    check_before_send(){
+    //     let forms = document.getElementById(`${this.form_id}`);
+    //     update_check_registration_form(forms);
+    //
+    //     let error_info = check_registration_form(forms);
+    //
+    //     if(error_info != ''){
+    //         show_error_message(error_info);
+    //         return false;
+    //     }
+    //     else{
+    //         if(this.list_type == 'lesson'){
+    //             if(this.data.lecture_name.length == 0){
+    //                 show_error_message('수업을 선택 해주세요.');
+    //                 return false;
+    //             }
+    //             if(this.data.lecture_type_cd[0] == LECTURE_TYPE_ONE_TO_ONE){
+    //                 if(this.data.member_name.length == 0){
+    //                     show_error_message('회원을 선택 해주세요.');
+    //                     return false;
+    //                 }
+    //             }
+    //         }
+    //         if(this.data.date_text == null){
+    //             show_error_message('날짜를 선택 해주세요.');
+    //             return false;
+    //         }
+    //         if(this.data.start_time_text == null){
+    //             show_error_message('시작 시간을 선택 해주세요.');
+    //             return false;
+    //         }
+    //         if(this.data.end_time_text == null){
+    //             show_error_message('종료 시간을 선택 해주세요.');
+    //             return false;
+    //         }
+    //         return true;
+    //     }
+        return true;
+    }
 }
