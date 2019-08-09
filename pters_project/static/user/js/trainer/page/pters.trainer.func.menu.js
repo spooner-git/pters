@@ -29,6 +29,7 @@ class Menu{
         let user_options = {store: {visible :false}, notice: {visible :false}};
         this.render_upper_box();
         this.render_menu();
+        $root_content.scrollTop(1);
     }
 
     render_upper_box(){
@@ -74,7 +75,6 @@ class Menu{
                                 `
                 ,
                 "initial_page":`<div id="menu_display_panel"></div><div id="menu_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div>`
-                // "initial_page":`<div id="menu_display_panel"></div><div id="menu_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;"></div>`
             }
         );
     }
