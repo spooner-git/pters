@@ -1373,6 +1373,8 @@ class LectureSelector{
                         this.data.max.push(lecture_max_num);
                     }
 
+                    this.target_instance.lecture = this.data; //타겟에 선택된 데이터를 set - hkkim (ticket과 다른점 확인 필요 - 190809)
+
                     if(this.multiple_select == 1){
                         this.upper_right_menu();
                     }

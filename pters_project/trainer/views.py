@@ -2043,16 +2043,17 @@ def delete_lecture_info_logic(request):
                     schedule_data_finish.update(use=UN_USE)
 
                 # 관련 수간권 회원들 수강정보 업데이트
-                class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
-                    'class_tb',
-                    'member_ticket_tb__ticket_tb').filter(query_ticket_info, class_tb_id=class_id,
-                                                          auth_cd=AUTH_TYPE_VIEW,
-                                                          member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                                          member_ticket_tb__use=USE, use=USE)
+                if len(ticket_lecture_data) > 0:
+                    class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
+                        'class_tb',
+                        'member_ticket_tb__ticket_tb').filter(query_ticket_info, class_tb_id=class_id,
+                                                              auth_cd=AUTH_TYPE_VIEW,
+                                                              member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                                              member_ticket_tb__use=USE, use=USE)
 
-                for class_member_ticket_info in class_member_ticket_data:
-                    error = func_refresh_member_ticket_count(class_member_ticket_info.class_tb_id,
-                                                             class_member_ticket_info.member_ticket_tb_id)
+                    for class_member_ticket_info in class_member_ticket_data:
+                        error = func_refresh_member_ticket_count(class_member_ticket_info.class_tb_id,
+                                                                 class_member_ticket_info.member_ticket_tb_id)
 
             if error is None:
                 lecture_info.state_cd = STATE_CD_FINISH
@@ -2159,7 +2160,6 @@ def update_lecture_status_info_logic(request):
     error = None
     lecture_info = None
     now = timezone.now()
-
     try:
         lecture_info = LectureTb.objects.get(class_tb_id=class_id, lecture_id=lecture_id)
     except ObjectDoesNotExist:
@@ -2189,20 +2189,20 @@ def update_lecture_status_info_logic(request):
                 repeat_schedule_data.delete()
 
             # 관련 수간권 회원들 수강정보 업데이트
-            class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
-                'member_ticket_tb__ticket_tb').filter(query_ticket_info, class_tb_id=class_id,
-                                                      auth_cd=AUTH_TYPE_VIEW,
-                                                      member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                                      member_ticket_tb__use=USE, use=USE)
+            if len(ticket_lecture_data) > 0:
+                class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
+                    'member_ticket_tb__ticket_tb').filter(query_ticket_info, class_tb_id=class_id,
+                                                          auth_cd=AUTH_TYPE_VIEW,
+                                                          member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                                          member_ticket_tb__use=USE, use=USE)
 
-            for class_member_ticket_info in class_member_ticket_data:
-                error = func_refresh_member_ticket_count(class_member_ticket_info.class_tb_id,
-                                                         class_member_ticket_info.member_ticket_tb_id)
+                for class_member_ticket_info in class_member_ticket_data:
+                    error = func_refresh_member_ticket_count(class_member_ticket_info.class_tb_id,
+                                                             class_member_ticket_info.member_ticket_tb_id)
 
             lecture_member_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
                                                                      lecture_tb_id=lecture_id, use=USE)
             lecture_member_fix_data.delete()
-
         lecture_info.state_cd = state_cd
         lecture_info.save()
 
@@ -2309,6 +2309,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         lecture_ticket_state_cd_list = []
         lecture_ticket_id_list = []
 
+        # 수업과 연관되어있는 수강권 정보 셋팅
         for lecture_ticket_info in lecture_ticket_data:
             lecture_tb = lecture_ticket_info.lecture_tb
             ticket_tb = lecture_ticket_info.ticket_tb
@@ -2336,6 +2337,8 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                              'lecture_ticket_list': lecture_ticket_list,
                                              'lecture_ticket_state_cd_list': lecture_ticket_state_cd_list,
                                              'lecture_ticket_id_list': lecture_ticket_id_list}
+
+        # 수업에 수강권이 연결되어있지 않은 경우 처리
         if len(lecture_data) != len(lecture_data_dict):
             for lecture_info in lecture_data:
                 lecture_id = str(lecture_info.lecture_id)
@@ -2404,6 +2407,7 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         lecture_ticket_list = []
         lecture_ticket_state_cd_list = []
         lecture_ticket_id_list = []
+        # 수업과 연관되어있는 수강권 정보 셋팅
         for lecture_ticket_info in lecture_ticket_data:
             lecture_tb = lecture_ticket_info.lecture_tb
             ticket_tb = lecture_ticket_info.ticket_tb
@@ -2431,6 +2435,8 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                              'lecture_ticket_list': lecture_ticket_list,
                                              'lecture_ticket_state_cd_list': lecture_ticket_state_cd_list,
                                              'lecture_ticket_id_list': lecture_ticket_id_list}
+
+        # 수업에 수강권이 연결되어있지 않은 경우 처리
         if len(lecture_data) != len(lecture_data_dict):
             for lecture_info in lecture_data:
                 lecture_id = str(lecture_info.lecture_id)
