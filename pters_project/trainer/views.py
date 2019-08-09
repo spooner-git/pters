@@ -1221,12 +1221,8 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, View):
             temp_alarm_date = None
             date_alarm_list = []
             for alarm_info in alarm_data:
-                # 날짜별로 모아주기 위해서 날짜 분리
-                alarm_date_split = str(alarm_info.reg_dt).split(' ')
-                alarm_start_time_split = alarm_date_split[1].split(':')
-
                 # 날짜 셋팅
-                alarm_date = alarm_date_split[0]
+                alarm_date = str(alarm_info.reg_dt).split(' ')[0]
                 # 새로운 날짜로 넘어간 경우 array 비워주고 값 셋팅
                 if temp_alarm_date != alarm_date:
                     temp_alarm_date = alarm_date
@@ -1272,6 +1268,9 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, View):
                 # array 에 값을 추가후 dictionary 에 추가
                 date_alarm_list.append({'alarm_id': str(alarm_info.log_id),
                                         'alarm_info': alarm_info.log_info,
+                                        'from_member_name': alarm_info.from_member_name,
+                                        'to_member_name': alarm_info.to_member_name,
+                                        'log_how': alarm_info.log_how,
                                         'alarm_detail': alarm_info.log_detail,
                                         'time_ago': alarm_info.time_ago,
                                         'read_check': alarm_info.log_read,
