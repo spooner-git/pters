@@ -19,6 +19,7 @@ class Alarm {
         Alarm_func.read((jsondata) => {
             this.render_list(jsondata, list_type);
             this.render_upper_box();
+            $root_content.scrollTop(1);
         });
     }
 
@@ -35,7 +36,7 @@ class Alarm {
     }
 
     //회원 리스트를 렌더링
-    render_list (jsondata, list_type){
+    render_list (jsondata){
         if(current_page != this.page_name){
             return false;
         }
