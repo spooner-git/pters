@@ -1834,10 +1834,11 @@ class DatePickerSelector{
 }
 
 class RepeatSelector{
-    constructor(install_target, target_instance, callback){
+    constructor(install_target, target_instance, data_from_external, callback){
         this.target = {install:install_target};
         this.target_instance = target_instance;
         this.unique_instance = install_target.replace(/#./gi, "");
+        this.data_from_external = data_from_external;
         this.callback = callback;
 
         let d = new Date();
@@ -1929,7 +1930,7 @@ class RepeatSelector{
 
     dom_row_day_select_button(){
         let id = 'select_day';
-        let title = this.data.day.length == 0 ? '요일 지정' : this.data.day.join(', ');
+        let title = this.data.day.length == 0 ? '요일 지정' : this.data.day.map((el)=>{return DAYNAME_MATCH[el];}).join(', ');
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -1956,6 +1957,7 @@ class RepeatSelector{
                 let date = this.target_instance.date == null ? this.dates.current_date : this.target_instance.date.date;
                 
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'repeat_end_date', title:'날짜 선택', data:{year:year, month:month, date:date},  
+                                                                                                min:this.data_from_external,
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     this.end_date = object.data; 
                                                                                                     this.power = ON;
@@ -1965,11 +1967,12 @@ class RepeatSelector{
         return html;
     }
 
-    request_list (callback){
-        
-    }
-
     upper_right_menu(){
+        if(this.data.power == OFF){
+            this.data.day = [];
+            this.data.repeat_end = {year:null, month:null, date:null};
+        }
+
         this.callback(this.data);
         layer_popup.close_layer_popup();
         this.clear();

@@ -72,7 +72,8 @@ input:disabled{
 }
 
 .create_row .cell_title{
-	width: 150px;
+	/* width: 150px; */
+	width: auto;
 }
 
 .create_input_row .cell_title{

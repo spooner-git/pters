@@ -96,7 +96,7 @@ function func_ajax_after_send(ajax_name, ajax_data){
 
 
 class DateRobot{
-    static to_text(year, month, date){
+    static to_text(year, month, date, short){
         year = String(year);
         month = String(month);
         date = String(date);
@@ -106,6 +106,9 @@ class DateRobot{
             year = year.split('-')[0];
         }
         let day = DAYNAME_KR[new Date(year, month-1, date).getDay()];
+        if(short == SHORT){
+            return `${year}.${month}.${date}`;
+        }
 
         return `${year}년 ${month}월 ${date}일 (${day})`;
     }
