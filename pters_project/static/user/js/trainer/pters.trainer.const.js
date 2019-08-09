@@ -21,6 +21,9 @@ const PROGRAM_SELECT = 0;
 const PROGRAM_LECTURE_CONNECT_ACCEPT = 1;
 const PROGRAM_LECTURE_CONNECT_DELETE = 2;
 
+const PROGRAM_SELECTED = 'SELECTED';
+const PROGRAM_NOT_SELECTED = 'NOT SELECTED';
+
 const POPUP_INNER_HTML = 0;
 const POPUP_AJAX_CALL = 1;
 const POPUP_BASIC = 2;
@@ -75,6 +78,7 @@ const SCHEDULE_ABSENCE = 'PC';
 const SCHEDULE_ALL = 3;
 const SCHEDULE_FINISH_ANYWAY = 4;
 
+
 const FIX = 'FIX';
 
 
@@ -109,6 +113,8 @@ const POPUP_MEMBER_SCHEDULE_HISTORY = 'popup_member_schedule_history';
 const POPUP_MEMBER_TICKET_HISTORY = 'popup_member_ticket_history';
 
 const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
+
+const POPUP_ADDRESS_PROGRAM_LIST = 'popup_program_list';
 // 풀페이지 팝업
 
 // User Input 팝업
