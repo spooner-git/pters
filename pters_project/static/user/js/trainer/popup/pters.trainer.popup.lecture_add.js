@@ -296,15 +296,5 @@ class Lecture_add{
         else{
             return true;
         }
-        // if(this.data.name == null){
-        //     show_error_message('수업명을 입력해주세요.');
-        //     return false;
-        // }
-        //
-        // if(this.data.capacity == null){
-        //     show_error_message('정원을 입력해주세요.');
-        //     return false;
-        // }
-        // return true;
     }
 }

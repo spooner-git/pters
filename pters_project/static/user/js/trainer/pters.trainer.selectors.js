@@ -1312,8 +1312,9 @@ class LectureSelector{
         this.data = {
             id: this.target_instance.lecture.id.slice(),
             name: this.target_instance.lecture.name.slice(),
-            // state_cd: this.target_instance.lecture.state_cd.slice(),
-            max: this.target_instance.lecture.max.slice()
+            state_cd: this.target_instance.lecture.state_cd.slice(),
+            max: this.target_instance.lecture.max.slice(),
+            lecture_type_cd: this.target_instance.lecture.lecture_type_cd.slice()
         };
         this.init();
     }
@@ -1353,7 +1354,8 @@ class LectureSelector{
             let lecture_name = data.lecture_name;
             let lecture_color_code = data.lecture_ing_color_cd;
             let lecture_max_num = data.lecture_max_num;
-            // let lecture_state_cd = data.lecture_state_cd;
+            let lecture_state_cd = data.lecture_state_cd;
+            let lecture_type_cd = data.lecture_type_cd;
             let lecture_ing_member_num = data.lecture_ing_member_num;
             let checked = this.target_instance.lecture.id.indexOf(lecture_id) >= 0 ? 1 : 0;
             let html = CComponent.select_lecture_row(
@@ -1362,17 +1364,25 @@ class LectureSelector{
                         this.data.id.push(lecture_id);
                         this.data.name.push(lecture_name);
                         this.data.max.push(lecture_max_num);
+                        this.data.state_cd.push(lecture_state_cd);
+                        this.data.lecture_type_cd.push(lecture_type_cd);
                     }else if(add_or_substract == "substract"){
                         this.data.id.splice(this.data.id.indexOf(lecture_id), 1);
-                        this.data.name.splice(this.data.name.indexOf(lecture_name), 1);
-                        this.data.max.splice(this.data.name.indexOf(lecture_name), 1);
+                        this.data.name.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
+                        this.data.max.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
+                        this.data.state_cd.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
+                        this.data.lecture_type_cd.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
                     }else if(add_or_substract == "add_single"){
                         this.data.id = [];
                         this.data.name = [];
                         this.data.max = [];
+                        this.data.state_cd = [];
+                        this.data.lecture_type_cd = [];
                         this.data.id.push(lecture_id);
                         this.data.name.push(lecture_name);
                         this.data.max.push(lecture_max_num);
+                        this.data.state_cd.push(lecture_state_cd);
+                        this.data.lecture_type_cd.push(lecture_type_cd);
                     }
 
                     // this.target_instance.lecture = this.data;

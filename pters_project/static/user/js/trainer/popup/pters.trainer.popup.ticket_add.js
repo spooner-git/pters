@@ -311,14 +311,5 @@ class Ticket_add{
         else{
             return true;
         }
-        // if(this.data.name == null){
-        //     show_error_message('수강권명을 입력해주세요');
-        //     return false;
-        // }
-        // if(this.data.lecture_id.length == 0){
-        //     show_error_message('포함할 수업을 선택해주세요');
-        //     return false;
-        // }
-        // return true;
     }
 }

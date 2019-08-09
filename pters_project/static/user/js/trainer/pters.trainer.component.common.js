@@ -211,7 +211,7 @@ class CComponent{
     }
 
     //수업 선택 팝업에 사용되는 행
-    static select_lecture_row (multiple_select, checked, location, lecture_id, lecture_name, color_code, max_member_num, ing_member_num,onclick){
+    static select_lecture_row (multiple_select, checked, location, lecture_id, lecture_name, color_code, max_member_num, ing_member_num, onclick){
         let html = `
                     <li class="select_lecture_row slr_${location}" id="select_lecture_row_${lecture_id}">
                         <div class="obj_table_raw">
