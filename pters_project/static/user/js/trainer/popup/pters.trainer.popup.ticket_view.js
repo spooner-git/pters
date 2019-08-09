@@ -25,6 +25,7 @@ class Ticket_view{
             lecture_name:[],
             lecture_max:[],
             lecture_color:[],
+            lecture_state_cd:[],
             ticket_effective_days:null,
             count:null,
             price:null,
@@ -58,11 +59,12 @@ class Ticket_view{
         this.data.lecture_id = data.id;
         this.data.lecture_name = data.name;
         this.data.lecture_max = data.max;
+        this.data.lecture_state_cd = data.state_cd;
         this.render_content();
     }
 
     get lecture(){
-        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max};
+        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max, state_cd:this.data.lecture_state_cd};
     }
 
     set period(text){
@@ -115,6 +117,7 @@ class Ticket_view{
             this.data.lecture_name = data.ticket_info.ticket_lecture_list;
             this.data.lecture_max = [];
             this.data.lecture_color = data.ticket_info.ticket_lecture_ing_color_cd_list;
+            this.data.lecture_state_cd = data.ticket_info.ticket_lecture_state_cd_list;
             this.data.ticket_effective_days = data.ticket_info.ticket_effective_days;
             this.data.count = data.ticket_info.ticket_reg_count;
             this.data.price = data.ticket_info.ticket_price;
@@ -215,7 +218,14 @@ class Ticket_view{
 
     dom_row_lecture_select(){
         let id = 'lecture_select_view';
-        let title = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개';
+        let length_lecture = this.data.lecture_name.length;
+        let ing_lecture_length = 0;
+        for(let i=0; i<length_lecture; i++){
+            if(this.data.lecture_state_cd[i] == STATE_IN_PROGRESS){
+                ing_lecture_length++;
+            }
+        }
+        let title = this.data.lecture_id.length == 0 ? '수업*' : ing_lecture_length+'개';
         let icon = '/static/common/icon/icon_book.png';
         let icon_r_visible = SHOW;
         let icon_r_text = CComponent.text_button ('ticket_lecture_list_view', "수업 목록", null, ()=>{
@@ -227,8 +237,8 @@ class Ticket_view{
                 });
             });
         });
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
-            
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
+
         });
         return html;
     }
@@ -240,9 +250,14 @@ class Ticket_view{
         for(let i=0; i<length; i++){
             let lecture_id = this.data.lecture_id[i];
             let lecture_name = this.data.lecture_name[i];
+            let lecture_state_cd = this.data.lecture_state_cd[i];
             let lecture_color = this.data.lecture_color[i];
-            let icon_button_style = {"display":"block", "padding":"0", "font-size":"15px", "font-weight":"500", "height":"50px", "line-height":"50px"};
-            let lecture_name_set = `<div style="display:inline-block;width:12px;height:12px;border-radius:6px;background-color:${lecture_color};margin-right:12px;"></div>${lecture_name}`;
+            let text_decoration = (lecture_state_cd == STATE_IN_PROGRESS ? 'none':'color:#cccccc; text-decoration:line-through;');
+            let icon_button_style = {"display":"block", "padding":"0", "font-size":"15px",
+                                     "font-weight":"500", "height":"50px", "line-height":"50px"};
+
+            let lecture_name_set = `<div style="display:inline-block;width:12px;height:12px;border-radius:6px;background-color:${lecture_color};margin-right:12px;"></div>
+                                    <span style="${text_decoration}">${lecture_name}</span>`;
             html_to_join.push(
                 CComponent.icon_button (lecture_id, lecture_name_set, NONE, icon_button_style, ()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(253/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
@@ -505,6 +520,7 @@ class Ticket_simple_view{
             lecture_name:[],
             lecture_max:[],
             lecture_color:[],
+            lecture_state_cd:[],
             ticket_effective_days:null,
             count:null,
             price:null,
@@ -534,6 +550,7 @@ class Ticket_simple_view{
             this.data.name = data.ticket_info.ticket_name;
             this.data.lecture_id = data.ticket_info.ticket_lecture_id_list;
             this.data.lecture_name = data.ticket_info.ticket_lecture_list;
+            this.data.lecture_state_cd = data.ticket_info.ticket_lecture_state_cd_list;
             this.data.lecture_max = [];
             this.data.lecture_color = data.ticket_info.ticket_lecture_ing_color_cd_list;
             this.data.ticket_effective_days = data.ticket_info.ticket_effective_days;
@@ -609,7 +626,14 @@ class Ticket_simple_view{
 
     dom_row_lecture_select(){
         let id = 'lecture_select_view';
-        let title = this.data.lecture_id.length == 0 ? '수업 0개' : this.data.lecture_name.length+'개';
+        let length_lecture = this.data.lecture_name.length;
+        let ing_lecture_length = 0;
+        for(let i=0; i<length_lecture; i++){
+            if(this.data.lecture_state_cd[i] == STATE_IN_PROGRESS){
+                ing_lecture_length++;
+            }
+        }
+        let title = this.data.lecture_id.length == 0 ? '수업 0개' : ing_lecture_length+'개';
         let icon = '/static/common/icon/icon_book.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";

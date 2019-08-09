@@ -573,7 +573,7 @@ class Lecture_simple_view{
         });
 
         let lecture_name = this.data.name == null ? '' : this.data.name;
-        if(this.data.ticket_state == STATE_END_PROGRESS){
+        if(this.data.lecture_state == STATE_END_PROGRESS){
             lecture_name = `<span style="color:#888888;">${lecture_name}</span><span> (비활성)</span>`;
         }
 

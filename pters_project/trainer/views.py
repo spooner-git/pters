@@ -2910,7 +2910,7 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         ticket_lecture_data = TicketLectureTb.objects.select_related(
             'ticket_tb', 'lecture_tb').filter(class_tb_id=class_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                               ticket_tb__use=USE,
-                                              use=USE).order_by('ticket_tb_id', 'lecture_tb_id')
+                                              use=USE).order_by('ticket_tb_id', 'lecture_tb__state_cd', 'lecture_tb_id')
 
         ticket_data_dict = collections.OrderedDict()
         temp_ticket_id = None
@@ -3069,7 +3069,9 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                               use=USE).order_by('ticket_id')
         ticket_lecture_data = TicketLectureTb.objects.select_related(
             'ticket_tb', 'lecture_tb').filter(class_tb_id=class_id, ticket_tb__state_cd=STATE_CD_FINISH,
-                                              ticket_tb__use=USE, use=USE).order_by('ticket_tb_id', 'lecture_tb_id')
+                                              ticket_tb__use=USE, use=USE).order_by('ticket_tb_id',
+                                                                                    'lecture_tb__state_cd',
+                                                                                    'lecture_tb_id')
 
         ticket_data_dict = collections.OrderedDict()
         temp_ticket_id = None
