@@ -1268,9 +1268,9 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, View):
                 # array 에 값을 추가후 dictionary 에 추가
                 date_alarm_list.append({'alarm_id': str(alarm_info.log_id),
                                         'alarm_info': alarm_info.log_info,
-                                        'from_member_name': alarm_info.from_member_name,
-                                        'to_member_name': alarm_info.to_member_name,
-                                        'log_how': alarm_info.log_how,
+                                        'alarm_from_member_name': alarm_info.from_member_name,
+                                        'alarm_to_member_name': alarm_info.to_member_name,
+                                        'alarm_how': alarm_info.log_how,
                                         'alarm_detail': alarm_info.log_detail,
                                         'time_ago': alarm_info.time_ago,
                                         'read_check': alarm_info.log_read,
