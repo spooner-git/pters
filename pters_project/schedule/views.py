@@ -120,6 +120,9 @@ def add_schedule_logic(request):
                                  log_info=lecture_info.name + ' 일정', log_how='등록',
                                  log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime), use=USE)
                 log_data.save()
+        else:
+            if len(member_list) == 0:
+                error = '회원을 선택해주세요.'
 
         if error is None:
             # 그룹 레슨이거나 개인 레슨인 경우

@@ -529,21 +529,5 @@ class Member_add{
             }
             return true;
         }
-        // if(this.data.name == null){
-        //     show_error_message('회원명을 입력 해주세요.');
-        //     return false;
-        // }
-        // if(this.data.phone == null){
-        //     show_error_message('휴대폰 번호를 입력 해주세요.');
-        //     return false;
-        // }
-        // if(this.data.ticket_reg_count == null){
-        //     show_error_message('등록 횟수를 입력 해주세요.');
-        //     return false;
-        // }
-        // if(this.data.ticket_price == null){
-        //     show_error_message('등록 금액을 선택 해주세요.');
-        // }
-        // return true;
     }
 }

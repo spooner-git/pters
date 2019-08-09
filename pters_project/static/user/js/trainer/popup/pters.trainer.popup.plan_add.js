@@ -22,6 +22,8 @@ class Plan_add{
             lecture_id:[],
             lecture_name:[],
             lecture_max_num:[],
+            lecture_state_cd:[],
+            lecture_type_cd:[],
             member_id:[],
             member_name:[],
             date: null,
@@ -49,12 +51,14 @@ class Plan_add{
         this.data.lecture_id = data.id;
         this.data.lecture_name = data.name;
         this.data.lecture_max_num = data.max;
+        this.data.lecture_state_cd = data.state_cd;
+        this.data.lecture_type_cd = data.lecture_type_cd;
         this.member = {id:[], name: []}; //수업을 선택했기 때문에, 회원란을 모두 비워준다.
         this.render_content();
     }
 
     get lecture(){
-        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max_num};
+        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max_num, state_cd:this.data.lecture_state_cd, lecture_type_cd:this.data.lecture_type_cd};
     }
 
 
@@ -227,7 +231,7 @@ class Plan_add{
                     //수업에 속한 고정회원들을 추가
                     Lecture_func.read({"lecture_id": set_data.id[0]}, (data)=>{
                         let member_length = data.lecture_member_list.length;
-                        let data_to_set = {id:[], name:[]}
+                        let data_to_set = {id:[], name:[]};
                         for(let i=0; i<member_length; i++){
                             let member_data = data.lecture_member_list[i];
                             if(member_data.member_fix_state_cd == FIX){
@@ -418,6 +422,9 @@ class Plan_add{
     }
 
     send_data(){
+        if(this.check_before_send() == false){
+            return false;
+        }
 
         let data = {"lecture_id":this.data.lecture_id[0],
                     "start_dt": this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.start_time,
@@ -457,5 +464,47 @@ class Plan_add{
             });
         }
         
+    }
+
+    check_before_send(){
+        let forms = document.getElementById(`${this.form_id}`);
+        update_check_registration_form(forms);
+
+        let error_info = check_registration_form(forms);
+
+        if(error_info != ''){
+            show_error_message(error_info);
+            return false;
+        }
+        else{
+            console.log(this.data);
+            console.log(this.data.lecture_id[0]);
+            console.log(this.data.lecture_type_cd);
+            if(this.list_type == 'lesson'){
+                if(this.data.lecture_name.length == 0){
+                    show_error_message('수업을 선택 해주세요.');
+                    return false;
+                }
+                if(this.data.lecture_type_cd[0] == LECTURE_TYPE_ONE_TO_ONE){
+                    if(this.data.member_name.length == 0){
+                        show_error_message('회원을 선택 해주세요.');
+                        return false;
+                    }
+                }
+            }
+            if(this.data.date_text == null){
+                show_error_message('날짜를 선택 해주세요.');
+                return false;
+            }
+            if(this.data.start_time_text == null){
+                show_error_message('시작 시간을 선택 해주세요.');
+                return false;
+            }
+            if(this.data.end_time_text == null){
+                show_error_message('종료 시간을 선택 해주세요.');
+                return false;
+            }
+            return true;
+        }
     }
 }
