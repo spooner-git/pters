@@ -35,7 +35,8 @@ class Lecture_view{
                 ticket_name:[],
                 ticket_state:[],
                 memo:null,
-                lecture_state:null
+                lecture_state:null,
+                active_ticket_length:null
         };
 
         this.init();
@@ -165,7 +166,7 @@ class Lecture_view{
 
         let html =  '<div class="obj_box_full">' + CComponent.dom_tag('정원') + capacity + '</div>' + 
                     '<div class="obj_box_full">' + CComponent.dom_tag('색상 태그') + color +  '</div>' + 
-                    '<div class="obj_box_full">' + CComponent.dom_tag(`이 수업을 포함하는 수강권 (${this.data.ticket_id.length} 개)`, {"padding":"0", "color":"#858282"}) + ticket_list + '</div>' + 
+                    '<div class="obj_box_full">' + CComponent.dom_tag(`이 수업을 포함하는 수강권 (${this.data.active_ticket_length} 개)`, {"padding":"0", "color":"#858282"}) + ticket_list + '</div>' + 
                     '<div class="obj_box_full">' + CComponent.dom_tag(`진행중 회원 (${this.data.member_number} 명)`, {"padding":"0", "color":"#858282"}) + member_list + '</div>';
 
         return html;
@@ -285,13 +286,14 @@ class Lecture_view{
     dom_row_ticket_list (){
         let length = this.data.ticket_id.length;
         let html_to_join = [];
-        
+        let progress_end_ticket = 0;
         for(let i=0; i<length; i++){
             let ticket_id = this.data.ticket_id[i];
             let ticket_name = this.data.ticket_name[i];
             let ticket_state = this.data.ticket_state[i];
             let style = {"display":"block", "font-size":"15px", "font-weight":"500",  "padding":"0", "height":"50px", "line-height":"50px"};
             if(ticket_state == STATE_END_PROGRESS){
+                progress_end_ticket++;
                 style["text-decoration"] = "line-through";
                 style["color"] = "#cccccc";
                 ticket_name += "(비활성)";
@@ -305,6 +307,8 @@ class Lecture_view{
                 })
             );
         }
+        this.data.active_ticket_length = length - progress_end_ticket;
+
         let html = `<div>${html_to_join.join('')}</div>`;
 
         return html;
