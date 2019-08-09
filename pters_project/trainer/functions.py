@@ -543,7 +543,7 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
     ticket_lecture_data = TicketLectureTb.objects.select_related(
         'ticket_tb', 'lecture_tb').filter(ticket_tb_id=ticket_id,
                                           ticket_tb__state_cd=STATE_CD_IN_PROGRESS, ticket_tb__use=USE,
-                                          use=USE).order_by('ticket_tb_id', 'lecture_tb_id')
+                                          use=USE).order_by('ticket_tb_id', 'lecture_tb__state_cd', 'lecture_tb_id')
 
     ticket_lecture_list = []
     ticket_lecture_state_cd_list = []
