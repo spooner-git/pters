@@ -2401,6 +2401,46 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             lecture_data_dict[lecture_info]['lecture_ing_member_num'] = len(member_list)
             lecture_list.append(lecture_data_dict[lecture_info])
 
+        # order = ['ONE_TO_ONE', 'NORMAL']
+        # lecture_list = sorted(lecture_list,  key=lambda lecture_info: order.get(lecture_info.lecture_type_cd, 0))
+        # package_data = TicketTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
+        #                                         use=USE).filter(name__contains=keyword).order_by('name')
+
+        # order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
+        # order = {key: i for i, key in enumerate(order)}
+        # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
+
+        # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
+        #                                                                        sort_order_by))
+        # if keyword == '' or keyword is None:
+        #     if sort_info == SORT_PACKAGE_MEMBER_COUNT:
+        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('ing_package_member_num'),
+        #                                                   reverse=int(sort_order_by))
+        #     if sort_info == SORT_PACKAGE_NAME:
+        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('name'),
+        #                                                   reverse=int(sort_order_by))
+        #     elif sort_info == SORT_PACKAGE_CREATE_DATE:
+        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('reg_dt'),
+        #                                                   reverse=int(sort_order_by))
+        # else:
+        #     if sort_info == SORT_PACKAGE_MEMBER_COUNT:
+        #         package_data = sorted(package_data, key=attrgetter('ing_package_member_num'),
+        #                               reverse=int(sort_order_by))
+        #     if sort_info == SORT_PACKAGE_NAME:
+        #         package_data = sorted(package_data, key=attrgetter('name'),
+        #                               reverse=int(sort_order_by))
+        #     elif sort_info == SORT_PACKAGE_CREATE_DATE:
+        #         package_data = sorted(package_data, key=attrgetter('reg_dt'),
+        #                               reverse=int(sort_order_by))
+        #
+        # context['total_package_num'] = len(package_data)
+        # if page != 0:
+        #     paginator = Paginator(package_data, 20)  # Show 20 contacts per page
+        #     try:
+        #         package_data = paginator.page(page)
+        #     except EmptyPage:
+        #         package_data = None
+
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
@@ -3270,6 +3310,7 @@ class GetTicketEndMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
+        class_id = self.request.session.get('class_id', '')
         program_list = []
         error = None
         program_data = MemberClassTb.objects.select_related('class_tb'
@@ -3281,10 +3322,15 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             for program_info in program_data:
                 all_member = func_get_class_member_ing_list(program_info.class_tb.class_id, '')
                 total_member_num = len(all_member)
+                program_selected = 'NOT_SELECTED'
+                if str(class_id) == str(program_info.class_tb.class_id):
+                    program_selected = 'SELECTED'
                 program_dict = {'program_id': program_info.class_tb.class_id,
                                 'program_total_member_num': total_member_num,
+                                'program_subject_cd': program_info.class_tb.subject_cd,
                                 'program_state_cd': program_info.class_tb.state_cd,
-                                'program_subject_type_name': program_info.class_tb.get_class_type_cd_name()
+                                'program_subject_type_name': program_info.class_tb.get_class_type_cd_name(),
+                                'program_selected': program_selected
                                 }
                 program_list.append(program_dict)
 
