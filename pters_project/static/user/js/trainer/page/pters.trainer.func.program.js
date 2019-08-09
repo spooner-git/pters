@@ -15,9 +15,8 @@ class Program {
 
         this.render_upper_box();
         Program_func.read((jsondata) => {
-            // this.render_list(jsondata);
-            // this.render_upper_box();
-            // $root_content.scrollTop(1);
+            this.render_list(jsondata);
+            this.render_upper_box();
         });
     }
 
@@ -29,7 +28,7 @@ class Program {
 
         this.search = false;
         let component = this.static_component();
-        document.getElementById('alarm_display_panel').innerHTML = component.alarm_upper_box;
+        document.getElementById('program_display_panel').innerHTML = component.program_upper_box;
     }
 
     //회원 리스트를 렌더링
@@ -38,54 +37,51 @@ class Program {
             return false;
         }
 
+        let html_temp = [CComponent.dom_tag('등록된 프로그램', {"padding":"5px 20px", "font-weight":"bold", "color":"#858282"})];
+        let html_selected_current_program = [CComponent.dom_tag("선택된 프로그램", {"padding":"5px 20px", "font-weight":"bold", "color":"#fe4e65"})];
+        let length = jsondata.program_data.length;
+        for (let i=0; i<length; i++){
+            let data = jsondata.program_data[i];
+            let name = data.program_subject_type_name;
+            let id = data.program_id;
+            let member_num = data.program_total_member_num;
+            let status = data.program_state_cd;
 
-        let html_temp = [];
-        for(let date in jsondata){
-            let length = jsondata[date].length;
-            for (let i=0; i<length; i++){
-                let data = jsondata[date][i];
-                let alarm_id = data.alarm_id;
-                let alarm_from = data.alarm_from_member_name;
-                let alarm_to = data.alarm_to_member_name;
-                let alarm_what = data.alarm_info;
-                let alarm_how = data.alarm_how;
-                let alarm_time_ago = data.time_ago;
-                let read_check = data.read_check;
-                let html = `<article class="alarm_wrapper" data-alarm_id="${alarm_id}" style="background-color:${read_check == 1 ? "" : '#ffe8eb'}">
-                                <div class="alarm_data_u">
-                                    <div>
-                                        <img src="/static/common/icon/icon_rectangle_blank.png" style="float:left;margin-right:16px;">
-                                    </div>
-                                    <div>
-                                        <span>${alarm_how}</span>
-                                    </div>
-                                    <div>
-                                        <span style="float:right;color:#b8b4b4;font-size:11px;">${alarm_time_ago}</span>
-                                    </div>
-                                </div>                
-                                <div class="alarm_data_b">
-                                    <div></div>
-                                    <div>
-                                        <span>${alarm_from}님이 ${alarm_to != "" ? alarm_to+'님의' :''} ${alarm_what}을 ${alarm_how} 하였습니다.</span>
-                                    </div>
+            let html = `<article class="program_wrapper" data-program_id="${id}">
+                            <div class="program_data_u">
+                                <div>
+                                    <span>${name}</span>
                                 </div>
-                            </article>`;
-                html_temp.push(html);
-            }
+                                <div>
+                                    <span>${member_num} 명</span>
+                                </div>
+                            </div>                
+                            <div class="program_data_b">
+                                <span>${id}</span>
+                            </div>
+                        </article>`;
+            html_temp.push(html);
         }
-        document.querySelector('#alarm_content_wrap').innerHTML = html_temp.join("");
+        
+        document.querySelector('#program_content_wrap').innerHTML = html_temp.join("");
     }
 
     static_component (){
         return(
             {
-                alarm_upper_box:`  <div class="alarm_upper_box">
+                program_upper_box:`    <div class="program_upper_box">
                                         <div style="display:inline-block;width:200px;">
-                                            <span style="font-size:23px;font-weight:bold;color:#3b3d3d">프로그램 </span>
+                                            <div style="display:inline-block;width:200px;">
+                                                <span style="font-size:23px;font-weight:bold;color:#3b3d3d">프로그램 </span>
+                                            </div>
                                         </div>
-                                    </div>`
+                                        <div class="program_tools_wrap">
+                                            <div class="search_program"></div>
+                                            <div class="add_program"></div>
+                                        </div>
+                                </div>`
                 ,
-                initial_page:`<div id="alarm_display_panel"></div><div id="alarm_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div>`
+                initial_page:`<div id="program_display_panel"></div><div id="program_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div>`
             }
         );
     }
@@ -97,9 +93,9 @@ class Program_func{
     }
 
     static read(callback){
-        //알림 리스트 서버에서 불러오기
+        //프로그램 리스트 서버에서 불러오기
         $.ajax({
-            url:"/trainer/class_select/",
+            url:"/trainer/get_program_list/",
             dataType : 'JSON',
             beforeSend:function (){
                 ajax_load_image(SHOW);
@@ -108,7 +104,6 @@ class Program_func{
             //통신성공시 처리
             success:function (data){
                 console.log(data);
-                // let jsondata = JSON.parse(data);
                 if(callback != undefined){
                     callback(data);
                 }

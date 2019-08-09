@@ -1,4 +1,4 @@
-#alarm_display_panel{
+#program_display_panel{
 	position: sticky;
 	position: -webkit-sticky;
 	height: auto;
@@ -7,7 +7,7 @@
 	top: 0;
 	/* text-align: center; */
 }
-	.alarm_upper_box{
+	.program_upper_box{
 		position: relative;
 		height: 50px;
 		line-height: 50px;
@@ -16,7 +16,7 @@
 		padding: 0 16px;
 		box-sizing: border-box;
 	}
-	.alarm_tools_wrap{
+	.program_tools_wrap{
 		display: table;
 		position: absolute;
 		right: 0;
@@ -24,49 +24,58 @@
 		width: 100px;
 		height: 100%;
 	}
+	.program_tools_wrap > .search_program{
+		display: table-cell;
+		height: 100%;
+		/* background-image: url("/static/common/icon/icon_search.png");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px; */
+	}
+	.program_tools_wrap > .add_program{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_add.png?v2");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	}
 
 
 
-.alarm_wrapper{
+.program_wrapper{
 	width: 100%;
-	padding: 15px 20px;
+	padding: 10px 20px;
 	margin: 0px auto;
-	font-size: 14px;
 	box-sizing: border-box;
 }
-.alarm_data_u{
+.program_data_u{
 	display: table;
 	width: 100%;
 	text-align: left;
 	vertical-align: middle;
 	font-weight: 500;
 	margin-bottom: 8px;
+	font-size: 16px;
 }
-.alarm_data_u > div{
-	display: table-cell;
-	vertical-align: middle;
-}
-.alarm_data_u > div:first-child{
-	width: 35px;
-}
-	.alarm_data_u > div:first-child > img{
-		width: 20px;
-		vertical-align: middle
-	}
-.alarm_data_u > div:last-child{
-	width: 70px;
-	text-align: right;
-}
-
-.alarm_data_b{
-	display: table;
-	width: auto;
-	color: #3d3b3b;
-}
-	.alarm_data_b > div{
+	.program_data_u > div{
 		display: table-cell;
 		vertical-align: middle;
 	}
-	.alarm_data_b > div:first-child{
-		width: 35px;
+	.program_data_u > div:first-child{
+		font-weight: bold;
+		width: auto;
 	}
+	.program_data_u > div:last-child{
+		font-weight: 500;
+		width: 80px;
+		text-align: right
+	}
+
+.program_data_b{
+	display: block;
+	width: 100%;
+	color: #858282;
+	font-size: 13px;
+	font-weight: 500;
+}
