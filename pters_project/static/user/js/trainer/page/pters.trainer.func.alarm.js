@@ -42,23 +42,40 @@ class Alarm {
 
 
         let html_temp = [];
-        for (let i=0; i<length; i++){
-            
-            let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" style="color:${list_type == "ing" ? "" : '#a3a0a0'}">
-                            <div class="alarm_data_u">
-                                <img src="/static/common/icon/icon_account.png">
-                            </div>                
-                            <div class="alarm_data_b">
-                                <div class="member_name">${member_name}</div>
-                                <div class="member_counts">
-                                 ${list_type == "ing" ? member_rem+'회/ '+remain_date+'일'+remain_alert_text+'/ - '+end_date_text+'까지' : '종료됨'}
+        for(let date in jsondata){
+            let length = jsondata[date].length;
+            for (let i=0; i<length; i++){
+                let data = jsondata[date][i];
+                let alarm_id = data.alarm_id;
+                let alarm_from = data.alarm_from_member_name;
+                let alarm_to = data.alarm_to_member_name;
+                let alarm_what = data.alarm_info;
+                let alarm_how = data.alarm_how;
+                let alarm_time_ago = data.time_ago;
+                let read_check = data.read_check;
+                let html = `<article class="alarm_wrapper" data-alarm_id="${alarm_id}" style="background-color:${read_check == 1 ? "" : '#ffe8eb'}">
+                                <div class="alarm_data_u">
+                                    <div>
+                                        <img src="/static/common/icon/icon_rectangle_blank.png" style="float:left;margin-right:16px;">
+                                    </div>
+                                    <div>
+                                        <span>${alarm_how}</span>
+                                    </div>
+                                    <div>
+                                        <span style="float:right;color:#b8b4b4;font-size:11px;">${alarm_time_ago}</span>
+                                    </div>
+                                </div>                
+                                <div class="alarm_data_b">
+                                    <div></div>
+                                    <div>
+                                        <span>${alarm_from}님이 ${alarm_from != alarm_to ? alarm_to+'님의' :''} '${alarm_what}'을 ${alarm_how} 하였습니다.</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </article>`;
-            html_temp.push(html);
+                            </article>`;
+                html_temp.push(html);
+            }
         }
-
-        document.querySelector('#member_content_wrap').innerHTML = html_temp.join("");
+        document.querySelector('#alarm_content_wrap').innerHTML = html_temp.join("");
     }
 
   
@@ -66,7 +83,7 @@ class Alarm {
     static_component (){
         return(
             {
-                member_upper_box:`  <div class="alarm_upper_box">
+                alarm_upper_box:`  <div class="alarm_upper_box">
                                         <div style="display:inline-block;width:200px;">
                                             <span style="font-size:23px;font-weight:bold;color:#3b3d3d">알림 </span>
                                         </div>
