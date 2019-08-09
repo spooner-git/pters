@@ -2314,48 +2314,40 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         error = None
 
         lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
-                                                use=USE).order_by('lecture_id')
+                                                use=USE).order_by('-lecture_type_cd', 'name',
+                                                                  'lecture_id')
 
         lecture_ticket_data = TicketLectureTb.objects.select_related(
-            'ticket_tb', 'lecture_tb').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
+            'lecture_tb', 'ticket_tb').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
                                               lecture_tb__use=USE,
-                                              use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
+                                              use=USE).order_by('-lecture_tb__lecture_type_cd', 'lecture_tb__name',
+                                                                'lecture_tb_id', 'ticket_tb_id')
 
         lecture_data_dict = collections.OrderedDict()
-        temp_lecture_id = None
-        lecture_ticket_list = []
-        lecture_ticket_state_cd_list = []
-        lecture_ticket_id_list = []
-
         # 수업과 연관되어있는 수강권 정보 셋팅
         for lecture_ticket_info in lecture_ticket_data:
             lecture_tb = lecture_ticket_info.lecture_tb
             ticket_tb = lecture_ticket_info.ticket_tb
             lecture_id = str(lecture_tb.lecture_id)
-
-            if temp_lecture_id != lecture_id:
-                temp_lecture_id = lecture_id
-                lecture_ticket_list = []
-                lecture_ticket_state_cd_list = []
-                lecture_ticket_id_list = []
-
+            try:
+                lecture_data_dict[lecture_id]
+            except KeyError:
+                lecture_data_dict[lecture_id] = {'lecture_id': lecture_id,
+                                                 'lecture_name': lecture_tb.name,
+                                                 'lecture_note': lecture_tb.note,
+                                                 'lecture_max_num': lecture_tb.member_num,
+                                                 'lecture_ing_color_cd': lecture_tb.ing_color_cd,
+                                                 'lecture_ing_font_color_cd': lecture_tb.ing_font_color_cd,
+                                                 'lecture_end_color_cd': lecture_tb.end_color_cd,
+                                                 'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
+                                                 'lecture_type_cd': lecture_tb.lecture_type_cd,
+                                                 'lecture_ticket_list': [ticket_tb.name],
+                                                 'lecture_ticket_state_cd_list': [ticket_tb.state_cd],
+                                                 'lecture_ticket_id_list': [ticket_tb.ticket_id]}
             if ticket_tb.state_cd == STATE_CD_IN_PROGRESS and ticket_tb.use == USE:
-                lecture_ticket_list.append(ticket_tb.name)
-                lecture_ticket_state_cd_list.append(ticket_tb.state_cd)
-                lecture_ticket_id_list.append(ticket_tb.ticket_id)
-
-            lecture_data_dict[lecture_id] = {'lecture_id': lecture_id,
-                                             'lecture_name': lecture_tb.name,
-                                             'lecture_note': lecture_tb.note,
-                                             'lecture_max_num': lecture_tb.member_num,
-                                             'lecture_ing_color_cd': lecture_tb.ing_color_cd,
-                                             'lecture_ing_font_color_cd': lecture_tb.ing_font_color_cd,
-                                             'lecture_end_color_cd': lecture_tb.end_color_cd,
-                                             'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
-                                             'lecture_type_cd': lecture_tb.lecture_type_cd,
-                                             'lecture_ticket_list': lecture_ticket_list,
-                                             'lecture_ticket_state_cd_list': lecture_ticket_state_cd_list,
-                                             'lecture_ticket_id_list': lecture_ticket_id_list}
+                lecture_data_dict[lecture_id]['lecture_ticket_list'].append(ticket_tb.name)
+                lecture_data_dict[lecture_id]['lecture_ticket_state_cd_list'].append(ticket_tb.state_cd)
+                lecture_data_dict[lecture_id]['lecture_ticket_id_list'].append(ticket_tb.ticket_id)
 
         # 수업에 수강권이 연결되어있지 않은 경우 처리
         if len(lecture_data) != len(lecture_data_dict):
@@ -2400,46 +2392,6 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
             lecture_data_dict[lecture_info]['lecture_ing_member_num'] = len(member_list)
             lecture_list.append(lecture_data_dict[lecture_info])
-
-        # order = ['ONE_TO_ONE', 'NORMAL']
-        # lecture_list = sorted(lecture_list,  key=lambda lecture_info: order.get(lecture_info.lecture_type_cd, 0))
-        # package_data = TicketTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
-        #                                         use=USE).filter(name__contains=keyword).order_by('name')
-
-        # order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
-        # order = {key: i for i, key in enumerate(order)}
-        # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
-
-        # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
-        #                                                                        sort_order_by))
-        # if keyword == '' or keyword is None:
-        #     if sort_info == SORT_PACKAGE_MEMBER_COUNT:
-        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('ing_package_member_num'),
-        #                                                   reverse=int(sort_order_by))
-        #     if sort_info == SORT_PACKAGE_NAME:
-        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('name'),
-        #                                                   reverse=int(sort_order_by))
-        #     elif sort_info == SORT_PACKAGE_CREATE_DATE:
-        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('reg_dt'),
-        #                                                   reverse=int(sort_order_by))
-        # else:
-        #     if sort_info == SORT_PACKAGE_MEMBER_COUNT:
-        #         package_data = sorted(package_data, key=attrgetter('ing_package_member_num'),
-        #                               reverse=int(sort_order_by))
-        #     if sort_info == SORT_PACKAGE_NAME:
-        #         package_data = sorted(package_data, key=attrgetter('name'),
-        #                               reverse=int(sort_order_by))
-        #     elif sort_info == SORT_PACKAGE_CREATE_DATE:
-        #         package_data = sorted(package_data, key=attrgetter('reg_dt'),
-        #                               reverse=int(sort_order_by))
-        #
-        # context['total_package_num'] = len(package_data)
-        # if page != 0:
-        #     paginator = Paginator(package_data, 20)  # Show 20 contacts per page
-        #     try:
-        #         package_data = paginator.page(page)
-        #     except EmptyPage:
-        #         package_data = None
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
