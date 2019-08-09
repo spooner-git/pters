@@ -53,7 +53,26 @@ class Member_schedule_history{
                 let attend_status = SCHEDULE_STATUS[data.state_cd];
                 let memo = data.note;
     
-                html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo);
+                html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, ()=>{
+                    let user_option = {
+                        absence:{text:"결석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_ABSENCE}, ()=>{
+                                                                this.init();
+                                                                member_view_popup.init();
+                                                            });
+                                                            layer_popup.close_layer_popup();}},
+                        attend:{text:"출석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_FINISH}, ()=>{
+                                                                this.init();
+                                                                member_view_popup.init();
+                                                            });layer_popup.close_layer_popup();}},
+                        cancel:{text:"취소", callback:()=>{Plan_func.delete({"schedule_id":schedule_id}, ()=>{
+                                                            this.init();
+                                                            member_view_popup.init();
+                                                        });layer_popup.close_layer_popup();}}
+                    };
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                        option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+                    });
+                });
                 html_sub_assembly_to_join.push(html);
             }
             let button_onclick = ()=>{      let $target = $(`#member_schedule_history_${item}_list`);

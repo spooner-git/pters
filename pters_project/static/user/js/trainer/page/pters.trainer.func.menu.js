@@ -14,7 +14,8 @@ class Menu{
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 
-        this.menu_items = {    
+        this.menu_items = {   
+                            alarm: {visible: true, name:"알림"}, 
                             ticket: {visible: true, name:"수강권"},
                             lecture: {visible: true, name:"수업"},
                             attend_mode: {visible: true, name:"출석체크 모드"},
@@ -75,6 +76,6 @@ class Menu{
                 "initial_page":`<div id="menu_display_panel"></div><div id="menu_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div>`
                 // "initial_page":`<div id="menu_display_panel"></div><div id="menu_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;"></div>`
             }
-        )
+        );
     }
 }

@@ -425,7 +425,7 @@ class CComponent{
     }
 
     //회원의 일정 이력에 사용되는 행
-    static schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo){
+    static schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, callback){
         let html = `<li class="schedule_history_row" id="schedule_history_row_${schedule_id}">
                         <div class="obj_table_raw">
                             <div class="cell_schedule_num">${numbering}</div>
@@ -441,6 +441,9 @@ class CComponent{
                             <div class="cell_schedule_info">${memo}</div>
                         </div>
                     </li>`;
+        $(document).off('click', `#schedule_history_row_${schedule_id}`).on('click', `#schedule_history_row_${schedule_id}`, function(){
+            callback();
+        });
         return html;
     }
 

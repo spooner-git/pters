@@ -244,6 +244,7 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.lecture.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.member.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.menu.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.alarm.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.component.common.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.base.js" %}></script>
 <!-- 페이지 스크립트 로드-->
@@ -357,6 +358,7 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
     var lecture = new Lecture('#root_content', 'lecture');
     var member = new Member('#root_content', 'member');
     var menu = new Menu('#root_content', 'menu');
+    var alarm = new Alarm('#root_content', 'alarm');
     // 페이지 인스턴스
 
     // 팝업 인스턴스
@@ -421,6 +423,9 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
             break;
             case 'member':
                 member.init();
+            break;
+            case 'alarm':
+                alarm.init();
             break;
             case 'menu':
                 menu.init();

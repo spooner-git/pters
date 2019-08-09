@@ -54,7 +54,7 @@ class Member_view{
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
        
         this.init();
-        this.set_initial_data();
+        // this.set_initial_data();
     }
 
     set user_id(text){
@@ -163,6 +163,7 @@ class Member_view{
 
     init(){
         this.render();
+        this.set_initial_data();
         func_set_webkit_overflow_scrolling('.wrapper_middle');
     }
 
@@ -214,7 +215,8 @@ class Member_view{
                                         }
                         this.data.ticket.push(ticket_of_member);
 
-                        this.init();
+                        // this.init();
+                        this.render();
                     });
                 }
             });
@@ -515,12 +517,14 @@ class Member_view{
             //     }
             // },
             ticket_history:{text:"수강권 이력", callback:()=>{
+                    layer_popup.close_layer_popup();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
                         member_ticket_history = new Member_ticket_history('.popup_member_ticket_history', this.member_id, null);
                     });
                 }
             },
             lesson_history:{text:"수업 이력", callback:()=>{
+                    layer_popup.close_layer_popup();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
                         member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.member_id, null);
                     });
@@ -580,7 +584,7 @@ class Member_simple_view{
                         end_date_text:null,
                         lecture_id:[],
                         lecture_name:[],
-                        lecture_state:[],
+                        lecture_state:[]
                     }
                 ]
                 
