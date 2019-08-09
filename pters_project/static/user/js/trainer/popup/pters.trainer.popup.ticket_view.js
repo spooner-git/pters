@@ -236,7 +236,7 @@ class Ticket_view{
     dom_row_lecture_select_list (){
         let length = this.data.lecture_id.length;
         let html_to_join = [];
-        
+
         for(let i=0; i<length; i++){
             let lecture_id = this.data.lecture_id[i];
             let lecture_name = this.data.lecture_name[i];
