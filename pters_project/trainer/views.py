@@ -1205,61 +1205,80 @@ class ManageWorkView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
-    context_object_name = "log_data"
-    template_name = "alarm.html"
-    page_template = 'alarm_page.html'
+class AlarmView(LoginRequiredMixin, AccessTestMixin, View):
 
-    def get_queryset(self):
+    def get(self, request):
         class_id = self.request.session.get('class_id', '')
         error = None
-        log_data = None
-        if error is None:
-            today = datetime.date.today()
-            three_days_ago = today - datetime.timedelta(days=3)
-            log_data = LogTb.objects.filter(class_tb_id=class_id, reg_dt__gte=three_days_ago,
-                                            use=USE).order_by('-reg_dt')
 
+        today = datetime.date.today()
+        three_days_ago = today - datetime.timedelta(days=3)
+        alarm_data = LogTb.objects.filter(class_tb_id=class_id, reg_dt__gte=three_days_ago,
+                                          use=USE).order_by('-reg_dt')
+
+        ordered_alarm_dict = collections.OrderedDict()
         if error is None:
-            for log_info in log_data:
-                if log_info.read == 0:
-                    log_info.log_read = 0
-                    log_info.read = 1
-                    log_info.save()
-                elif log_info.read == 1:
-                    log_info.log_read = 1
+            temp_alarm_date = None
+            date_alarm_list = []
+            for alarm_info in alarm_data:
+                # 날짜별로 모아주기 위해서 날짜 분리
+                alarm_date_split = str(alarm_info.reg_dt).split(' ')
+                alarm_start_time_split = alarm_date_split[1].split(':')
+
+                # 날짜 셋팅
+                alarm_date = alarm_date_split[0]
+                # 새로운 날짜로 넘어간 경우 array 비워주고 값 셋팅
+                if temp_alarm_date != alarm_date:
+                    temp_alarm_date = alarm_date
+                    date_alarm_list = []
+
+                if alarm_info.read == 0:
+                    alarm_info.log_read = 0
+                    alarm_info.read = 1
+                    alarm_info.save()
+                elif alarm_info.read == 1:
+                    alarm_info.log_read = 1
                 else:
-                    log_info.log_read = 2
-                log_info.time_ago = timezone.now() - log_info.reg_dt
-                log_info.reg_dt = str(log_info.reg_dt).split('.')[0]
+                    alarm_info.log_read = 2
+                alarm_info.time_ago = timezone.now() - alarm_info.reg_dt
+                alarm_info.reg_dt = str(alarm_info.reg_dt).split('.')[0]
 
-                if log_info.log_detail is not None and log_info.log_detail != '':
-                    log_detail_split = str(log_info.log_detail).split('/')
+                if alarm_info.log_detail is not None and alarm_info.log_detail != '':
+                    log_detail_split = str(alarm_info.log_detail).split('/')
                     before_day = log_detail_split[0]
                     after_day = log_detail_split[1]
 
-                    if '반복 일정' in log_info.log_info:
-                        log_info.log_detail = before_day + '~' + after_day
+                    if '반복 일정' in alarm_info.log_info:
+                        alarm_info.log_detail = before_day + '~' + after_day
                     else:
-                        log_info.log_detail = before_day + '~' + after_day.split(' ')[1]
+                        alarm_info.log_detail = before_day + '~' + after_day.split(' ')[1]
 
-                day = int(log_info.time_ago.days)
-                hour = int(log_info.time_ago.seconds / 3600)
-                minute = int(log_info.time_ago.seconds / 60)
-                sec = int(log_info.time_ago.seconds)
+                day = int(alarm_info.time_ago.days)
+                hour = int(alarm_info.time_ago.seconds / 3600)
+                minute = int(alarm_info.time_ago.seconds / 60)
+                sec = int(alarm_info.time_ago.seconds)
 
                 if day > 0:
-                    log_info.time_ago = str(day) + '일 전'
+                    alarm_info.time_ago = str(day) + '일 전'
                 else:
                     if hour > 0:
-                        log_info.time_ago = str(hour) + '시간 전'
+                        alarm_info.time_ago = str(hour) + '시간 전'
                     else:
                         if minute > 0:
-                            log_info.time_ago = str(minute) + '분 전'
+                            alarm_info.time_ago = str(minute) + '분 전'
                         else:
-                            log_info.time_ago = str(sec) + '초 전'
+                            alarm_info.time_ago = str(sec) + '초 전'
 
-        return log_data
+                # array 에 값을 추가후 dictionary 에 추가
+                date_alarm_list.append({'alarm_id': str(alarm_info.log_id),
+                                        'alarm_info': alarm_info.log_info,
+                                        'alarm_detail': alarm_info.log_detail,
+                                        'time_ago': alarm_info.time_ago,
+                                        'read_check': alarm_info.log_read,
+                                        'reg_dt': alarm_info.reg_dt})
+                ordered_alarm_dict[alarm_date] = date_alarm_list
+
+        return JsonResponse(ordered_alarm_dict, json_dumps_params={'ensure_ascii': True})
 
 
 # ############### ############### ############### ############### ############### ############### ##############
