@@ -181,7 +181,7 @@ class Member_edit{
         let html = CComponent.create_input_row ('input_member_name', this.data.name == null ? '회원명*' : this.data.name, '/static/common/icon/person_black.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
-        }, pattern, pattern_message, 'required');
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -191,7 +191,7 @@ class Member_edit{
         let html = CComponent.create_input_number_row ('input_member_phone', this.data.phone == null ? '휴대폰 번호' : this.data.phone, '/static/common/icon/icon_smartphone.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
-        }, pattern, unit, '');
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -238,7 +238,7 @@ class Member_edit{
         let html = CComponent.create_input_row ('input_member_memo', this.data.memo == null ? '특이사항' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
-        }, pattern, pattern_message, '');
+        }, pattern, pattern_message, required);
         return html;
     }
 

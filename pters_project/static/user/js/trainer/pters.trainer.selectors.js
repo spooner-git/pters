@@ -1271,7 +1271,7 @@ class TicketSelector{
                         this.data.effective_days.push(ticket_effective_days);
                     }
 
-                    this.target_instance.ticket = this.data; //타겟에 선택된 데이터를 set
+                    // this.target_instance.ticket = this.data; //타겟에 선택된 데이터를 set
                     
                     if(this.multiple_select == 1){
                         this.upper_right_menu();
@@ -1373,7 +1373,7 @@ class LectureSelector{
                         this.data.max.push(lecture_max_num);
                     }
 
-                    this.target_instance.lecture = this.data; //타겟에 선택된 데이터를 set - hkkim (ticket과 다른점 확인 필요 - 190809)
+                    // this.target_instance.lecture = this.data;
 
                     if(this.multiple_select == 1){
                         this.upper_right_menu();
@@ -1471,7 +1471,7 @@ class MemberSelector{
                         this.data.name.push(member_name);
                     }
 
-                    this.target_instance.member = this.data; //타겟에 선택된 데이터를 set
+                    // this.target_instance.member = this.data; //타겟에 선택된 데이터를 set
 
                     if(this.multiple_select == 1){
                         this.upper_right_menu();

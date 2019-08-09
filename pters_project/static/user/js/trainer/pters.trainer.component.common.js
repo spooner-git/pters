@@ -95,7 +95,7 @@ class CComponent{
     
     //추가 페이지들에서 사용되는 number input row 스타일
     static
-    create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, unit, required){
+    create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, required){
         let disable = 'disabled';
         if(disabled == false){
             disable = '';
@@ -131,9 +131,6 @@ class CComponent{
             let user_input_data = e.target.value;
             if(user_input_data.length == 0){
                 user_input_data = null;
-            }
-            else{
-                user_input_data = Number(user_input_data);
             }
             onfocusout(user_input_data);
         });

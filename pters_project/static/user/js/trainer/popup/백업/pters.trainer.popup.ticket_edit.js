@@ -171,7 +171,7 @@ class Ticket_edit{
                 user_input_data = this.data.name;
             }
             this.name = user_input_data;
-        }, pattern, pattern_message, 'required');
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -222,7 +222,7 @@ class Ticket_edit{
                 user_input_data = this.data.count;
             }
             this.count = user_input_data;
-        }, pattern, unit, '');
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -238,7 +238,7 @@ class Ticket_edit{
                 user_input_data = this.data.price;
             }
             this.price = user_input_data;
-        }, pattern, unit, '');
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -251,7 +251,7 @@ class Ticket_edit{
                 user_input_data = this.data.memo;
             }
             this.memo = user_input_data;
-        }, pattern, pattern_message, '');
+        }, pattern, pattern_message, required);
         return html;
     }
 

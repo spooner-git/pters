@@ -147,7 +147,7 @@ class Lecture_edit{
                 user_input_data = this.data.name;
             }
             this.name = user_input_data;
-        }, pattern, pattern_message, 'required');
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -157,7 +157,7 @@ class Lecture_edit{
         let html = CComponent.create_input_number_row ('input_lecture_time', this.data.time == null ? '진행 시간*' : this.data.time, '/static/common/icon/icon_clock.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             this.time = user_input_data;
-        }, pattern, unit, 'required');
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -174,7 +174,7 @@ class Lecture_edit{
                 user_input_data = this.data.capacity;
             }
             this.capacity = user_input_data;
-        }, pattern, unit, 'required');
+        }, pattern, pattern_message, required);
         return html;
     }
 

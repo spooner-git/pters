@@ -194,11 +194,12 @@ class Ticket_view{
         let disabled = false;
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
         let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let required = "required";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
             this.send_data();
-        }, pattern, pattern_message, 'required');
+        }, pattern, pattern_message, required);
         
         let html = `
         <div class="member_add_upper_box" style="">
@@ -267,13 +268,15 @@ class Ticket_view{
         let style = null;
         let disabled = true;
         let pattern = "[0-9]{0,4}";
+        let pattern_message = "";
+        let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
             let user_input_data = input_data;
             this.count = user_input_data;
-        }, pattern, unit, '');
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -288,13 +291,15 @@ class Ticket_view{
         let style = null;
         let disabled = true;
         let pattern = "[0-9]{0,8}";
+        let pattern_message = "";
+        let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
             let user_input_data = input_data;
             this.price = user_input_data;
-        }, pattern, unit, '');
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -309,11 +314,12 @@ class Ticket_view{
         let disabled = false;
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
             this.send_data();
-        }, pattern, pattern_message, '');
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -626,10 +632,11 @@ class Ticket_simple_view{
         let disabled = true;
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             // let user_input_data = input_data;
             // this.memo = user_input_data;
-        }, pattern, pattern_message, '');
+        }, pattern, pattern_message, required);
         return html;
     }
 

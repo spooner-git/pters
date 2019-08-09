@@ -229,10 +229,11 @@ class Member_add{
         let input_disabled = this.data_from_external == null ? false : true;
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
         let pattern_message = "공백, + - _ 제외 특수문자는 입력 불가";
+        let required = "required";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
-        }, pattern, pattern_message, 'required');
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -247,10 +248,12 @@ class Member_add{
         let style = null;
         let input_disabled = this.data_from_external == null ? false : true;
         let pattern = "[0-9]{10,11}";
+        let pattern_message = "";
+        let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
-        }, pattern, unit, '');
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -319,10 +322,11 @@ class Member_add{
         let input_disabled = false;
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
-        }, pattern, pattern_message, '');
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -413,13 +417,15 @@ class Member_add{
         let style = null;
         let input_disabled = false;
         let pattern = "[0-9]{1,4}";
+        let pattern_message = "";
+        let required = "required";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
             let user_input_data = input_data;
             this.reg_count = user_input_data;
-        }, pattern, unit, 'required');
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -434,13 +440,15 @@ class Member_add{
         let style = null;
         let input_disabled = false;
         let pattern = "[0-9]{0,8}";
+        let pattern_message = "";
+        let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
             let user_input_data = input_data;
             this.reg_price = user_input_data;
-        }, pattern, unit, '');
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -499,8 +507,9 @@ class Member_add{
     check_before_send(){
         let forms = document.getElementById(`${this.form_id}`);
         update_check_registration_form(forms);
+
         let error_info = check_registration_form(forms);
-        console.log(error_info);
+
         if(error_info != ''){
             show_error_message(error_info);
             return false;
