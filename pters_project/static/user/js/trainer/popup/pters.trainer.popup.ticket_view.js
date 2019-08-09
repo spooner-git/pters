@@ -4,6 +4,7 @@ class Ticket_view{
         this.instance = instance;
         this.ticket_id = ticket_id;
         this.readonly = readonly;
+        this.form_id = 'id_ticket_view_form';
 
         let d = new Date();
         this.dates = {
@@ -46,7 +47,7 @@ class Ticket_view{
 
     set name(text){
         this.data.name = text;
-        // this.render_content();
+        this.render_content();
     }
 
     get name(){
@@ -57,7 +58,7 @@ class Ticket_view{
         this.data.lecture_id = data.id;
         this.data.lecture_name = data.name;
         this.data.lecture_max = data.max;
-        // this.render_content();
+        this.render_content();
     }
 
     get lecture(){
@@ -75,7 +76,7 @@ class Ticket_view{
 
     set memo(text){
         this.data.memo = text;
-        // this.render_content();
+        this.render_content();
     }
 
     get memo(){
@@ -143,8 +144,8 @@ class Ticket_view{
         let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();ticket_view_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="ticket_view_popup.upper_right_menu();"></span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
-                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
+        let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -179,7 +180,7 @@ class Ticket_view{
 
 
     dom_row_toolbox(){
-        let id = 'ticket_name_view'
+        let id = 'ticket_name_view';
         let style = {"font-size":"20px", "font-weight":"bold"};
         let title = this.data.name == null ? '' : this.data.name;
         if(this.data.ticket_state == STATE_END_PROGRESS){
@@ -191,12 +192,14 @@ class Ticket_view{
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let disabled = false;
-
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let required = "required";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
             this.send_data();
-        });
+        }, pattern, pattern_message, required);
         
         let html = `
         <div class="member_add_upper_box" style="">
@@ -254,35 +257,49 @@ class Ticket_view{
         return html;
     }
 
-    dom_row_ticket_coung_input(){
+    dom_row_ticket_count_input(){
+        let unit = '회';
         let id = 'ticket_count_view';
-        let title = this.data.count == null ? '' : this.data.count+'회';
+        let title = this.data.count == null ? '' : this.data.count+unit;
         let placeholder = '횟수';
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
         let disabled = true;
+        let pattern = "[0-9]{0,4}";
+        let pattern_message = "";
+        let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            // let user_input_data = input_data;
-            // this.count = user_input_data;
-        });
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
+            let user_input_data = input_data;
+            this.count = user_input_data;
+        }, pattern, pattern_message, required);
         return html;
     }
 
     dom_row_ticket_price_input(){
+        let unit = '원';
         let id = 'ticket_price_view';
-        let title = this.data.price == null ? '' : this.data.price+'원';
+        let title = this.data.price == null ? '' : this.data.price+unit;
         let placeholder = '가격';
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
         let disabled = true;
+        let pattern = "[0-9]{0,8}";
+        let pattern_message = "";
+        let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            // let user_input_data = input_data;
-            // this.price = user_input_data;
-        });
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
+            let user_input_data = input_data;
+            this.price = user_input_data;
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -295,11 +312,14 @@ class Ticket_view{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
             this.send_data();
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -348,6 +368,9 @@ class Ticket_view{
 
 
     send_data(){
+        if(this.check_before_send() == false){
+            return false;
+        }
         let data = {
                     "ticket_id":this.ticket_id,
                     "ticket_name":this.data.name,
@@ -438,6 +461,20 @@ class Ticket_view{
             }
         }
         return {add:lecture_id_to_be_added, del:lecture_id_to_be_deleted};
+    }
+    check_before_send(){
+
+        let forms = document.getElementById(`${this.form_id}`);
+        update_check_registration_form(forms);
+        let error_info = check_registration_form(forms);
+        console.log(error_info);
+        if(error_info != ''){
+            show_error_message(error_info);
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 }
 
@@ -593,10 +630,13 @@ class Ticket_simple_view{
         let icon_r_text = "";
         let style = null;
         let disabled = true;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             // let user_input_data = input_data;
             // this.memo = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 

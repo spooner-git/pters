@@ -1734,6 +1734,24 @@ class PopupMyInfoChangeView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
+class PopupMyPasswordChangeView(TemplateView):
+    template_name = 'popup/trainee_popup_my_password_change.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupMyPasswordChangeView, self).get_context_data(**kwargs)
+        member_info = None
+        error = None
+
+        try:
+            member_info = MemberTb.objects.get(member_id=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            context['member_info'] = member_info
+        return context
+
+
 class UserPolicyView(TemplateView):
     template_name = 'trainee_user_policy.html'
 

@@ -3,6 +3,7 @@ class Member_add{
         this.target = {install: install_target, toolbox:'section_member_add_toolbox', content:'section_member_add_content'};
         this.instance = instance;
         this.data_from_external = data_from_external;
+        this.form_id = 'id_member_add_form';
         //data_from_external이 null이면 신규회원등록, member_id 값이 들어오면 재등록
 
         let d = new Date();
@@ -165,8 +166,8 @@ class Member_add{
         let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();member_add_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_add_popup.send_data()">등록</span></span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
-                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
+        let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -185,7 +186,7 @@ class Member_add{
     dom_assembly_toolbox(){
         return this.dom_row_toolbox();
     }
-    
+
     dom_assembly_content(){
         let name = this.dom_row_member_name_input();
         let phone = this.dom_row_member_phone_input();
@@ -195,7 +196,7 @@ class Member_add{
         let ticket = this.dom_row_ticket_select();
         let start_date = this.dom_row_start_date_select();
         let end_date = this.dom_row_end_date_select();
-        let reg_count = this.dom_row_member_reg_coung_input();
+        let reg_count = this.dom_row_member_reg_count_input();
         let reg_price = this.dom_row_member_reg_price_input();
 
         let html =  '<div class="obj_box_full">' + CComponent.dom_tag('기본 정보 입력') + name + phone + birth + sex +  '</div>' + 
@@ -226,26 +227,33 @@ class Member_add{
         let icon_r_text = "";
         let style = null;
         let input_disabled = this.data_from_external == null ? false : true;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "공백, + - _ 제외 특수문자는 입력 불가";
+        let required = "required";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 
     dom_row_member_phone_input(){
+        let unit = '';
         let id = 'input_member_phone';
         let title = this.data.phone == null ? '' : this.data.phone;
-        let placeholder = '휴대폰 번호*';
+        let placeholder = '휴대폰 번호';
         let icon = '/static/common/icon/icon_smartphone.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
         let input_disabled = this.data_from_external == null ? false : true;
+        let pattern = "[0-9]{10,11}";
+        let pattern_message = "";
+        let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -256,7 +264,7 @@ class Member_add{
         let icon = '/static/common/icon/icon_cake.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
             //행을 클릭했을때 실행할 내용
             if(this.data_from_external != null){
                 return false;
@@ -312,10 +320,13 @@ class Member_add{
         let icon_r_text = "";
         let style = null;
         let input_disabled = false;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -329,7 +340,7 @@ class Member_add{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1, (set_data)=>{
                     this.ticket = set_data;
-                    this.render_content();
+                    // this.render_content();
                 });
             });
         });
@@ -395,35 +406,49 @@ class Member_add{
         return html;
     }
 
-    dom_row_member_reg_coung_input(){
+    dom_row_member_reg_count_input(){
+        let unit = '회';
         let id = 'input_reg_count';
-        let title = this.data.ticket_reg_count == null ? '' : this.data.ticket_reg_count+'회';
+        let title = this.data.ticket_reg_count == null ? '' : this.data.ticket_reg_count+unit;
         let placeholder = '횟수*';
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
         let input_disabled = false;
+        let pattern = "[0-9]{1,4}";
+        let pattern_message = "";
+        let required = "required";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
             let user_input_data = input_data;
             this.reg_count = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 
     dom_row_member_reg_price_input(){
+        let unit = '원';
         let id = 'input_reg_price';
-        let title = this.data.ticket_price == null ? '' : this.data.ticket_price+'원';
+        let title = this.data.ticket_price == null ? '' : this.data.ticket_price+unit;
         let placeholder = '가격';
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
         let input_disabled = false;
+        let pattern = "[0-9]{0,8}";
+        let pattern_message = "";
+        let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
             let user_input_data = input_data;
             this.reg_price = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -480,33 +505,45 @@ class Member_add{
     }
 
     check_before_send(){
-        if(this.data.name == null){
-            show_error_message('회원명을 입력 해주세요.');
+        let forms = document.getElementById(`${this.form_id}`);
+        update_check_registration_form(forms);
+
+        let error_info = check_registration_form(forms);
+
+        if(error_info != ''){
+            show_error_message(error_info);
             return false;
         }
+        else{
+            if(this.data.start_date == null){
+                show_error_message('시작일을 입력 해주세요.');
+                return false;
+            }
+            if(this.data.end_date == null){
+                show_error_message('종료일을 입력 해주세요.');
+                return false;
+            }
+            if(this.data.ticket_id.length == 0){
+                show_error_message('등록할 수강권을 선택 해주세요.');
+                return false;
+            }
+            return true;
+        }
+        // if(this.data.name == null){
+        //     show_error_message('회원명을 입력 해주세요.');
+        //     return false;
+        // }
         // if(this.data.phone == null){
         //     show_error_message('휴대폰 번호를 입력 해주세요.');
         //     return false;
         // }
-        if(this.data.ticket_id.length == 0){
-            show_error_message('등록할 수강권을 선택 해주세요.');
-            return false;
-        }
-        if(this.data.start_date == null){
-            show_error_message('시작일을 입력 해주세요.');
-            return false;
-        }
-        if(this.data.end_date == null){
-            show_error_message('종료일을 입력 해주세요.');
-            return false;
-        }
-        if(this.data.ticket_reg_count == null){
-            show_error_message('등록 횟수를 입력 해주세요.');
-            return false;
-        }
+        // if(this.data.ticket_reg_count == null){
+        //     show_error_message('등록 횟수를 입력 해주세요.');
+        //     return false;
+        // }
         // if(this.data.ticket_price == null){
         //     show_error_message('등록 금액을 선택 해주세요.');
         // }
-        return true;
+        // return true;
     }
 }

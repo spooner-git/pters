@@ -2,6 +2,7 @@ class Lecture_add{
     constructor(install_target, data_from_external, instance){
         this.target = {install: install_target, toolbox:'section_lecture_add_toolbox', content:'section_lecture_add_content'};
         this.instance = instance;
+        this.form_id = 'id_lecture_add_form';
 
         let d = new Date();
         this.dates = {
@@ -93,8 +94,8 @@ class Lecture_add{
         let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();lecture_add_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_add_popup.send_data();">저장</span></span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
-                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
+        let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -151,43 +152,60 @@ class Lecture_add{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let required = "required";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 
     dom_row_lecture_time_input(){
+        let unit = '분';
         let id = 'input_lecture_time';
-        let title = this.data.time == null ? '' : this.data.time;
-        let placeholder = '진행 시간*';
+        let title = this.data.time == null ? '' : this.data.time+unit;
+        let placeholder = '진행 시간';
         let icon = '/static/common/icon/icon_clock.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
         let disabled = false;
-        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+        let pattern = "[0-9]{1,4}";
+        let pattern_message = "";
+        let required = "";
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
             let user_input_data = input_data;
             this.time = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 
   
     dom_row_capacity_input(){
+        let unit = '명';
         let id = 'input_lecture_capacity';
-        let title = this.data.capacity == null ? '' : '정원 '+this.data.capacity+'명';
+        let title = this.data.capacity == null ? '' : this.data.capacity+unit;
         let placeholder =  '정원*';
         let icon = '/static/common/icon/icon_member.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
         let disabled = false;
+        let pattern = "[0-9]{1,4}";
+        let pattern_message = "";
+        let required = "required";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
             let user_input_data = input_data;
             this.capacity = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -245,7 +263,9 @@ class Lecture_add{
 
 
     send_data(){
-
+        if(this.check_before_send() == false){
+            return false;
+        }
         let data = {
                     "name":this.data.name,
                     "member_num":this.data.capacity,
@@ -254,10 +274,6 @@ class Lecture_add{
                     "ing_font_color_cd":this.data.color_font[0],
                     "end_font_color_cd":""
         };
-
-        if(this.check_before_send() == false){
-            return false;
-        }
 
         Lecture_func.create(data, ()=>{
             // layer_popup.close_layer_popup();
@@ -268,15 +284,27 @@ class Lecture_add{
     }
 
     check_before_send(){
-        if(this.data.name == null){
-            show_error_message('수업명을 입력해주세요.');
-            return false;
-        }
 
-        if(this.data.capacity == null){
-            show_error_message('정원을 입력해주세요.');
+        let forms = document.getElementById(`${this.form_id}`);
+        update_check_registration_form(forms);
+        let error_info = check_registration_form(forms);
+        console.log(error_info);
+        if(error_info != ''){
+            show_error_message(error_info);
             return false;
         }
-        return true;
+        else{
+            return true;
+        }
+        // if(this.data.name == null){
+        //     show_error_message('수업명을 입력해주세요.');
+        //     return false;
+        // }
+        //
+        // if(this.data.capacity == null){
+        //     show_error_message('정원을 입력해주세요.');
+        //     return false;
+        // }
+        // return true;
     }
 }

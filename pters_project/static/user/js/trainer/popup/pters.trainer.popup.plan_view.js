@@ -2,6 +2,7 @@ class Plan_view{
     constructor (install_target, data_from_external, instance){
         this.target = {install: install_target, toolbox:'section_plan_view_toolbox', content:'section_plan_view_content'};
         this.instance = instance;
+        this.form_id = 'id_plan_view_form';
 
         let d = new Date();
         this.dates = {
@@ -157,8 +158,8 @@ class Plan_view{
                             <img src="/static/common/icon/icon_delete.png" class="obj_icon_basic" onclick="plan_view_popup.upper_right_menu(0);">
                             <img src="/static/common/icon/icon_done.png" class="obj_icon_basic" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};margin-left:20px">
                         </span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}">${this.dom_assembly_toolbox()}</section>
-                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
+        let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -366,10 +367,13 @@ class Plan_view{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 

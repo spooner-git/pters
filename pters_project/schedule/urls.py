@@ -29,10 +29,12 @@ urlpatterns = [
     url(r'^upload_sign_image/$', views.upload_sign_image_logic, name='upload_sign_image'),
     # 일정 메모 수정
     url(r'^update_memo_schedule/$', views.update_memo_schedule_logic, name='update_memo_schedule'),
+
     # 반복일정 등록
     url(r'^add_repeat_schedule/$', views.add_repeat_schedule_logic, name='add_repeat_schedule'),
     # 반복일정 확인
     url(r'^add_repeat_schedule_confirm/$', views.add_repeat_schedule_confirm, name='add_repeat_schedule_confirm'),
+
     # 반복일정 취소
     url(r'^delete_repeat_schedule/$', views.delete_repeat_schedule_logic, name='delete_repeat_schedule'),
     # 일정 수정 됐는지 확인
@@ -55,11 +57,6 @@ urlpatterns = [
     # 그룹 일정에 다른 그룹회원 일정 등록
     url(r'^add_other_member_lecture_schedule/$', views.add_other_member_lecture_schedule_logic,
         name='add_other_member_lecture_schedule'),
-    # 그룹 반복일정 등록
-    url(r'^add_lecture_repeat_schedule/$', views.add_lecture_repeat_schedule_logic, name='add_lecture_repeat_schedule'),
-    # 그룹 반복일정 확인
-    url(r'^add_lecture_repeat_schedule_confirm/$', views.add_lecture_repeat_schedule_confirm,
-        name='add_lecture_repeat_schedule_confirm'),
     # 그룹 반복일정 취소
     url(r'^delete_lecture_repeat_schedule/$', views.delete_lecture_repeat_schedule_logic,
         name='delete_lecture_repeat_schedule'),

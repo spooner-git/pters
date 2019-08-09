@@ -139,33 +139,42 @@ class Lecture_edit{
     }
 
     dom_row_lecture_name_input(){
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
         let html = CComponent.create_input_row ('input_lecture_name', this.data.name == null ? '수업명*' : this.data.name, '/static/common/icon/icon_book.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.name;
             }
             this.name = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 
     dom_row_lecture_time_input(){
-        let html = CComponent.create_input_row ('input_lecture_time', this.data.time == null ? '진행 시간*' : this.data.time, '/static/common/icon/icon_clock.png', HIDE, false, (input_data)=>{
+        let unit = '분';
+        let pattern = "[0-9]{0,4}";
+        let html = CComponent.create_input_number_row ('input_lecture_time', this.data.time == null ? '진행 시간*' : this.data.time, '/static/common/icon/icon_clock.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             this.time = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 
   
     dom_row_capacity_input(){
-        let html = CComponent.create_input_number_row ('input_lecture_capacity', this.data.capacity == null ? '정원*' : '정원 '+this.data.capacity+'명', '/static/common/icon/icon_member.png', HIDE, false, (input_data)=>{
+        let unit = '명';
+        let pattern = "[0-9]{0,10}";
+        let html = CComponent.create_input_number_row ('input_lecture_capacity', this.data.capacity == null ? '정원*' : '정원 '+this.data.capacity+unit, '/static/common/icon/icon_member.png', HIDE, false, (input_data)=>{
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.capacity;
             }
             this.capacity = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 

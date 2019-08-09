@@ -176,18 +176,22 @@ class Member_edit{
     }
 
     dom_row_member_name_input(){
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
         let html = CComponent.create_input_row ('input_member_name', this.data.name == null ? '회원명*' : this.data.name, '/static/common/icon/person_black.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 
     dom_row_member_phone_input(){
-        let html = CComponent.create_input_number_row ('input_member_phone', this.data.phone == null ? '휴대폰 번호*' : this.data.phone, '/static/common/icon/icon_smartphone.png', HIDE, false, (input_data)=>{
+        let unit = '';
+        let pattern = "[0-9]{10,11}";
+        let html = CComponent.create_input_number_row ('input_member_phone', this.data.phone == null ? '휴대폰 번호' : this.data.phone, '/static/common/icon/icon_smartphone.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -229,10 +233,12 @@ class Member_edit{
     }
 
     dom_row_member_memo_input(){
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
         let html = CComponent.create_input_row ('input_member_memo', this.data.memo == null ? '특이사항' : this.data.memo, '/static/common/icon/icon_note.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 

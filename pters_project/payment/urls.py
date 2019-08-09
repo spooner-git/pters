@@ -83,6 +83,6 @@ urlpatterns = [
 
     url(r'^payment_for_iap/$', views.payment_for_iap_logic, name='payment_for_iap'),
     url(r'^payment_for_ios/$', views.payment_for_ios_logic, name='payment_for_ios'),
-
+    url(r'^ios_receipt_validation/$', views.ios_receipt_validation_logic, name='ios_receipt_validation'),
     ###################################################################################################################
 ]

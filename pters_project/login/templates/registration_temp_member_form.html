@@ -49,7 +49,7 @@
                     <!-- 아이디 입력 영역 -->
                    <div style="margin-top:8px;">
                         <input class="pters_login_input" type="text" name="username" id="id_username" placeholder="아이디" minlength="4" maxlength="20" title="아이디"
-                               pattern="[a-zA-Z0-9-._@]{4,20}" onkeyup="limit_char_check(event);" data-valid="false">
+                               pattern="[a-zA-Z0-9-._@]{4,20}" onkeyup="limit_char_check(event.target);" data-valid="false">
                         <div class="input_description">
                             <div class="input_description_text" id="id_username_confirm"></div>
                             <div id="id_username_default_confirm">영어, 숫자, -_@ 제외 불가</div>
@@ -59,7 +59,7 @@
                     <!-- 비밀번호 입력 영역 -->
                     <div style="margin-top:8px;">
                         <input class="pters_login_input" type="password" name="password1" id="id_password" placeholder="비밀번호" minlength="8" maxlength="20" title="비밀번호"
-                                pattern="[a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\/]{8,20}" onkeyup="limit_password_check(event);" data-valid="false" autocomplete="new-password">
+                                pattern="[a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\/]{8,20}" onkeyup="limit_password_check(event.target);" data-valid="false" autocomplete="new-password">
                         <div class="input_description">
                             <div class="input_description_text" id="id_password_confirm"></div>
                             <div id="id_password_default_confirm">한글을 제외한 특수문자(공백 제외)/영문/숫자를 혼합</div>
@@ -69,7 +69,7 @@
                     <!-- 비밀번호 재입력 영역 -->
                    <div style="margin-top:8px;">
                         <input class="pters_login_input" type="password" name="password2" id="id_password_re" placeholder="비밀번호 확인" minlength="8" maxlength="20" title="비밀번호 확인"
-                                onkeyup="password_check(event);" data-valid="false">
+                                onkeyup="password_check(event.target);" data-valid="false">
                         <div class="input_description">
                             <div class="input_description_text" id="id_password_re_confirm"></div>
                             <div id="id_password_re_default_confirm">동일한 비밀번호 입력</div>
@@ -101,7 +101,7 @@
 
             <!-- 가입 완료 버튼 영역 -->
             <div class="registration_foot" style="margin-top:40px; transform: initial; padding-bottom:0px;">
-                <div class="social_login_box" onclick="registration_member_info();" style="width:100%; background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
+                <div class="social_login_box" onclick="registration_member_info(document.getElementById('id_add_member_form'));" style="width:100%; background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
                     <div class="social_login_img"></div>
                     <span class="social_login_text" style="color:#ffffff;">가입 완료</span>
                     <div style="display:table-cell; width:60px;"></div>

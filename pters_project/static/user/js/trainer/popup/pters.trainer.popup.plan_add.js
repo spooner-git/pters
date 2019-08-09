@@ -2,6 +2,7 @@ class Plan_add{
     constructor(install_target, data_from_external, instance){
         this.target = {install: install_target, toolbox:'section_plan_add_toolbox', content:'section_plan_add_content'};
         this.instance = instance;
+        this.form_id = 'id_plan_add_form';
 
         this.list_type = "lesson";
 
@@ -148,8 +149,8 @@ class Plan_add{
         let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();plan_add_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="plan_add_popup.send_data()">등록</span></span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
-                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
+        let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
         
@@ -367,7 +368,7 @@ class Plan_add{
 
     dom_row_repeat_select(){
         let id = 'select_repeat';
-        let title =this.data.repeat.power == OFF ? '반복 일정' : this.data.repeat.day.join(', ')
+        let title =this.data.repeat.power == OFF ? '반복 일정' : this.data.repeat.day.join(', ');
         let icon = '/static/common/icon/icon_repeat.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -391,10 +392,13 @@ class Plan_add{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
-        });
+        }, pattern, pattern_message, required);
         return html;
     }
 

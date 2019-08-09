@@ -320,7 +320,7 @@ def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price,
 
             auth_cd = AUTH_TYPE_WAIT
 
-            if not member.user.is_active and member.reg_info == str(user_id):
+            if not member.user.is_active and str(member.reg_info) == str(user_id):
                 auth_cd = AUTH_TYPE_VIEW
 
             member_ticket_counts = ClassMemberTicketTb.objects.select_related(
@@ -639,6 +639,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
     lecture_ticket_list = []
     lecture_ticket_state_cd_list = []
     lecture_ticket_id_list = []
+    ticket_in_progress_count = 0
 
     lecture_tb = None
     all_member_ticket_list = None
@@ -648,12 +649,13 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
         ticket_tb = lecture_ticket_info.ticket_tb
         if ticket_tb.state_cd == STATE_CD_IN_PROGRESS and ticket_tb.use == USE:
             query_ticket_list |= Q(member_ticket_tb__ticket_tb_id=lecture_ticket_info.ticket_tb_id)
+            ticket_in_progress_count += 1
         if ticket_tb.use == USE:
             lecture_ticket_list.append(ticket_tb.name)
             lecture_ticket_state_cd_list.append(ticket_tb.state_cd)
             lecture_ticket_id_list.append(str(ticket_tb.ticket_id))
 
-    if lecture_tb is None:
+    if ticket_in_progress_count == 0:
         try:
             lecture_tb = LectureTb.objects.get(class_tb_id=class_id, lecture_id=lecture_id)
         except ObjectDoesNotExist:

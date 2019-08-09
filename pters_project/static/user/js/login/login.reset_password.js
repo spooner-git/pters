@@ -62,17 +62,17 @@ function check_reset_activation_button(event, method){
     if(method == 'email'){
         min_length = 5;
     }
-    if(event.target.value.length>min_length){
+    if(event.value.length>min_length){
         let id_activation_button = $(`#id_activation_button_${method}`);
         id_activation_button.css({'color':'#fe4e65', 'border':'solid 1px #fe4e65', 'pointer-events':'auto'});
         // id_activation_button.attr('disabled', false);
-        event.target.attributes['data-valid'].value = 'true';
+        event.attributes['data-valid'].value = 'true';
     }
     else{
         let id_activation_button = $(`#id_activation_button_${method}`);
         id_activation_button.css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
         // id_activation_button.attr('disabled', true);
-        event.target.attributes['data-valid'].value = 'false';
+        event.attributes['data-valid'].value = 'false';
     }
 }
 let reset_activation_timer = 180;
