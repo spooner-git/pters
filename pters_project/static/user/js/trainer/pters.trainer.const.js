@@ -43,6 +43,8 @@ const POPUP_FROM_BOTTOM = 2;
 const POPUP_FROM_TOP = 3;
 const POPUP_FROM_PAGE = 4;
 
+const SHORT = 'short';
+const LONG = 'long';
 
 const ADD = 'add';
 const READ = 'read';
@@ -133,6 +135,7 @@ const POPUP_ADDRESS_DAY_SELECT = 'popup_day_select';
 
 /*기타 */
 const DAYNAME_KR = ['일', '월', '화', '수', '목', '금', '토'];
+const DAYNAME_MATCH = {"SUN":'일', "MON":'월', "TUE":'화', "WED":'수', "THS":'목', "FRI":'금', "SAT":'토'};
 const DAYNAME_EN_SHORT = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT'];
 const COLOR_NAME_CODE = {"#fbf3bd":"바나나", "#dbe6f7":"하늘", "#ffd3d9": "복숭아",
               "#ffe3c2":"살구", "#ceeac4":"키위", "#d8d6ff":"포도",

@@ -371,14 +371,15 @@ class Plan_add{
     }
 
     dom_row_repeat_select(){
+        let repeat_end_date_in_text = '<span style="font-size:11px;"> 종료:'+DateRobot.to_text(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date, SHORT)+'</span>';
         let id = 'select_repeat';
-        let title =this.data.repeat.power == OFF ? '반복 일정' : this.data.repeat.day.join(', ');
+        let title =this.data.repeat.power == OFF ? '반복 일정' : this.data.repeat.day.map((el)=>{return DAYNAME_MATCH[el];}).join(', ') +' '+ repeat_end_date_in_text;
         let icon = '/static/common/icon/icon_repeat.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_REPEAT_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                repeat_select = new RepeatSelector('#wrapper_box_repeat_select', this, (set_data)=>{
+                repeat_select = new RepeatSelector('#wrapper_box_repeat_select', this, this.data.date, (set_data)=>{
                     this.repeat = set_data;
                     this.render_content();
                 });
