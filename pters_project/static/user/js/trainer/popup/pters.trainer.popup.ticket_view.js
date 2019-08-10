@@ -26,6 +26,7 @@ class Ticket_view{
             lecture_max:[],
             lecture_color:[],
             lecture_state_cd:[],
+            lecture_type_cd:[],
             ticket_effective_days:null,
             count:null,
             price:null,
@@ -59,12 +60,13 @@ class Ticket_view{
         this.data.lecture_id = data.id;
         this.data.lecture_name = data.name;
         this.data.lecture_max = data.max;
-        // this.data.lecture_state_cd = data.state_cd;
+        this.data.lecture_state_cd = data.state_cd;
+        this.data.lecture_type_cd = data.type_cd;
         this.render_content();
     }
 
     get lecture(){
-        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max, state_cd:this.data.lecture_state_cd};
+        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max, state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd};
     }
 
     set period(text){

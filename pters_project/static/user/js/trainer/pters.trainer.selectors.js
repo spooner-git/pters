@@ -1314,7 +1314,7 @@ class LectureSelector{
             name: this.target_instance.lecture.name.slice(),
             state_cd: this.target_instance.lecture.state_cd.slice(),
             max: this.target_instance.lecture.max.slice(),
-            lecture_type_cd: this.target_instance.lecture.lecture_type_cd.slice()
+            lecture_type_cd: this.target_instance.lecture.type_cd.slice()
         };
         this.init();
     }
