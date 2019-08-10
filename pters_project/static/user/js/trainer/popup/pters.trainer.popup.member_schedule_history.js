@@ -64,7 +64,7 @@ class Member_schedule_history{
                                                                 this.init();
                                                                 member_view_popup.init();
                                                             });layer_popup.close_layer_popup();}},
-                        cancel:{text:"취소", callback:()=>{Plan_func.delete({"schedule_id":schedule_id}, ()=>{
+                        cancel:{text:"일정 취소", callback:()=>{Plan_func.delete({"schedule_id":schedule_id}, ()=>{
                                                             this.init();
                                                             member_view_popup.init();
                                                         });layer_popup.close_layer_popup();}}
