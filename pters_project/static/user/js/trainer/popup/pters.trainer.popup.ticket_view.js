@@ -479,6 +479,7 @@ class Ticket_view{
         }
         return {add:lecture_id_to_be_added, del:lecture_id_to_be_deleted};
     }
+    
     check_before_send(){
 
         let forms = document.getElementById(`${this.form_id}`);

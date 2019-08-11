@@ -124,6 +124,7 @@ class Plan_view{
         this.data.lecture_id = data.schedule_info[0].lecture_id;
         this.data.lecture_name = data.schedule_info[0].lecture_name;
         this.data.member_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_id}`;});
+        this.data.member_id_original = this.data.member_id.slice();
         this.data.member_name = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_name}`;});
         this.data.member_schedule_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.schedule_id}`;});
         this.data.member_schedule_state = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.state_cd}`;});
@@ -235,7 +236,20 @@ class Plan_view{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'data':null}, ()=>{
                 member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num, {'lecture_id':this.data.lecture_id, "title":"회원 선택"}, (set_data)=>{
                     this.member = set_data;
-                    this.render_content();
+                    let changed = this.func_update_member();
+
+                    for(let j=0; j<changed.del.length; j++){
+                        let index = this.data.member_id_original.indexOf(changed.del[j]);
+                        let member_schedule_id = this.data.member_schedule_id[index];
+                        Plan_func.delete({"schedule_id":member_schedule_id, "async":false});
+                    }
+
+                    for(let i=0; i<changed.add.length; i++){
+                        Plan_func.create('/schedule/add_member_lecture_schedule/', {"member_id":changed.add[i], "schedule_id": this.schedule_id, "async":false}, ()=>{});
+                    }
+                    
+                    this.init();
+                    // this.render_content();
                 });
             });
         });
@@ -464,6 +478,26 @@ class Plan_view{
                     calendar.init();
             });
         });
+    }
+
+    func_update_member(){
+        let members = {};
+        let sum_member = this.data.member_id.concat(this.data.member_id_original);
+        for(let i=0; i<sum_member.length; i++){
+            members[sum_member[i]] = sum_member[i];
+        }
+        let member_ids = Object.keys(members); //data_original과 data의 member_id들을 중복을 제거하고 합친 결과
+        let member_id_to_be_deleted = [];
+        let member_id_to_be_added = [];
+        for(let j=0; j<member_ids.length; j++){
+            if(this.data.member_id_original.indexOf(member_ids[j]) == -1){ //원래 데이터에 없는 member id가 추가되었을 경우
+                member_id_to_be_added.push(member_ids[j]);
+            }else if(this.data.member_id.indexOf(member_ids[j]) == -1){ //원래 데이터에 있던 member id가 빠진 경우
+                member_id_to_be_deleted.push(member_ids[j]);
+            }
+        }
+
+        return {add:member_id_to_be_added, del:member_id_to_be_deleted};
     }
 
     check_before_send(){

@@ -1124,12 +1124,17 @@ class Calendar {
 class Plan_func{
     static create(url, data, callback){
         //데이터 형태 {"member_id":"", "contents":"", "counts":"", "price":"", "start_date":"", "end_date":"", "class_id":"", "package_id":""};
+        let async = true;
+        if(data.async != undefined){
+            async = data.async;
+        }
         $.ajax({
             // url:'/schedule/add_schedule/',
             url : url,
             type:'POST',
             data: data,
             dataType : 'html',
+            async: async,
     
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1218,11 +1223,16 @@ class Plan_func{
 
     static delete(data, callback){
         //데이터 형태 {"schedule_id":""};
+        let async = true;
+        if(data.async != undefined){
+            async = data.async;
+        }
         $.ajax({
             url:'/schedule/delete_schedule/',
             type:'POST',
             data: data,
             dataType : 'html',
+            async: async,
     
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1253,12 +1263,16 @@ class Plan_func{
 
     static update(data, callback){
         //데이터 형태 {"member_id":"", "first_name":"", "phone":"", "sex":"", "birthday":""};
-
+        let async = true;
+        if(data.async != undefined){
+            async = data.async;
+        }
         $.ajax({
             url:'/trainer/update_member_info/',
             type:'POST',
             data: data,
             dataType : 'html',
+            async: async,
     
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1286,11 +1300,16 @@ class Plan_func{
 
     static status(data, callback){
         //데이터 형태 {"schedule_id":"", "state_cd":""};
+        let async = true;
+        if(data.async != undefined){
+            async = data.async;
+        }
         $.ajax({
             url:'/schedule/update_schedule_state_cd/',
             type:'POST',
             data: data,
             dataType : 'html',
+            async: async,
     
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
