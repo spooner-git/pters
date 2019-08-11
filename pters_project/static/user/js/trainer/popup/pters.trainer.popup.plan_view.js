@@ -16,6 +16,7 @@ class Plan_view{
             current_zone: TimeRobot.to_zone(d.getHours(), d.getMinutes()).zone
         };
 
+        this.if_user_changed_any_information = false;
         this.schedule_id = data_from_external.schedule_id;
         this.selected_date = data_from_external.date;
         this.received_data;
@@ -74,7 +75,7 @@ class Plan_view{
     }
 
     set date (data){
-        this.data.date = data.date;
+        this.data.date = data.data;
         this.data.date_text = data.text;
         this.render_content();
     }
@@ -152,7 +153,7 @@ class Plan_view{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();plan_view_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="plan_view_popup.upper_left_menu();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
                             <img src="/static/common/icon/icon_delete.png" class="obj_icon_basic" onclick="plan_view_popup.upper_right_menu(0);">
@@ -293,16 +294,9 @@ class Plan_view{
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'날짜 선택', data:{year:year, month:month, date:date},  
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     this.date = object; 
+                                                                                                    this.if_user_changed_any_information = true;
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
                 }});
-
-
-                // date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'날짜 선택', data:{year:year, month:month, date:date}, 
-                //                                                                                 range:{start: this.dates.current_year - 5, end: this.dates.current_year+5},
-                //                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
-                //                                                                                     this.date = object; 
-                //                                                                                     //셀렉터에서 선택된 값(object)을 this.dataCenter에 셋팅하고 rerender 한다.
-                //                                                                                 }});
             });
         });
         return html;
@@ -326,6 +320,13 @@ class Plan_view{
                 time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시간 선택', data:{zone:zone, hour:hour, minute:minute}, 
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.start_time = object;
+                                                                                                    if(this.data.end_time != null){
+                                                                                                        let compare = TimeRobot.compare_by_zone(object.data, TimeRobot.to_zone(this.data.end_time.split(':')[0],this.data.end_time.split(':')[1]));
+                                                                                                        if(compare == true){
+                                                                                                            this.end_time = object;
+                                                                                                        }
+                                                                                                    }
+                                                                                                    this.if_user_changed_any_information = true;
                                                                                                     //셀렉터에서 선택된 값(object)을 this.dataCenter에 셋팅하고 rerender 한다.
                                                                                                 }});
             });
@@ -344,13 +345,22 @@ class Plan_view{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TIME_SELECTOR, 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
                 //dataCenter의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
-                let zone = this.data.end_time == null ? this.times.current_zone : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).zone;
-                let hour = this.data.end_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).hour;
-                let minute = this.data.end_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).minute;
-                
-                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종 시간 선택', data:{zone:zone, hour:hour, minute:minute}, 
+                let zone = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).zone;
+                let hour = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
+                let minute = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
+
+                //유저가 선택할 수 있는 최저 시간을 셋팅한다. 이시간보다 작은값을 선택하려면 메세지를 띄우기 위함
+                let time_min = TimeRobot.add_time(TimeRobot.to_data(zone, hour, minute).hour, TimeRobot.to_data(zone, hour, minute).minute, 0, 5);
+                let time_min_type_zone = TimeRobot.to_zone(time_min.hour, time_min.minute);
+                let zone_min = time_min_type_zone.zone;
+                let zone_hour = time_min_type_zone.hour;
+                let zone_minute = time_min_type_zone.minute;
+
+                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시간 선택', 
+                                                                                                data:{zone:zone, hour:hour, minute:minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.end_time = object;
+                                                                                                    this.if_user_changed_any_information = true;
                                                                                                     //셀렉터에서 선택된 값(object)을 this.dataCenter에 셋팅하고 rerender 한다.
                                                                                                 }});
             });
@@ -379,7 +389,7 @@ class Plan_view{
 
     request_data (callback){
         Plan_func.read_plan(this.schedule_id, (data)=>{
-            console.log(data)
+            this.received_data = data;
             this.set_initial_data(data); // 초기값을 미리 셋팅한다.
             callback(data);
         });
@@ -425,25 +435,34 @@ class Plan_view{
         user_option[number]();
     }
 
+    upper_left_menu(){
+        if(this.if_user_changed_any_information == true){
+            //날짜, 시작시간, 종료시간이 바뀌었을 경우 변경 데이터를 전송한다.
+            // layer_popup.close_layer_popup();this.clear();
+            this.send_data();
+        }
+        layer_popup.close_layer_popup();this.clear();
+    }
+
     send_data (){
         if(this.check_before_send() == false){
             return false;
         }
-
-        let data = {"lecture_id":this.data.lecture_id,
-                    "start_dt":this.data.date.replace(/\./gi,"-") + ' ' + this.data.start_time,
-                    "end_dt":this.data.date.replace(/\./gi,"-") + ' ' + this.data.end_time,
+        let data1 = {"schedule_id": this.schedule_id};
+        let data2 = {"lecture_id":this.data.lecture_id,
+                    "start_dt": this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.start_time,
+                    "end_dt":this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.end_time,
                     "note":this.data.memo, "duplication_enable_flag": 1,
                     "en_dis_type":this.data.schedule_type == "off" ? 0 : 1, "lecture_member_ids":this.data.member_id
         };
         //en_dis_type 0: off일정, 1:레슨일정
         //duplication_enable_flag 0: 중복불허 1:중복허용
-        let url;
-        url ='/schedule/add_schedule/';
-
-        Plan_func.create(url, data, ()=>{
-            layer_popup.close_layer_popup();
-            calendar.init();
+        
+        Plan_func.delete(data1, ()=>{ //일정을 지운다.
+            let url_to_create_new_schedule ='/schedule/add_schedule/';
+            Plan_func.create(url_to_create_new_schedule, data2, ()=>{ //일정을 새로 등록한다.
+                    calendar.init();
+            });
         });
     }
 

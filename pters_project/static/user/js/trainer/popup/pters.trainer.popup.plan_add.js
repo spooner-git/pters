@@ -322,7 +322,6 @@ class Plan_add{
                                                                                                     this.start_time = object;
                                                                                                     if(this.data.end_time != null){
                                                                                                         let compare = TimeRobot.compare_by_zone(object.data, TimeRobot.to_zone(this.data.end_time.split(':')[0],this.data.end_time.split(':')[1]));
-                                                                                                        console.log(compare, object.data, TimeRobot.to_zone(this.data.end_time.split(':')[0],this.data.end_time.split(':')[1]))
                                                                                                         if(compare == true){
                                                                                                             this.end_time = object;
                                                                                                         }
