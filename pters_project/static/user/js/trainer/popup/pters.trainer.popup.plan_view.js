@@ -193,7 +193,7 @@ class Plan_view{
         let memo_select_row = this.dom_row_memo_select();
 
         let display = "";
-        if(this.data.schedule_type == 0){
+        if(this.data.schedule_type != 2){ //0: OFF, 1: 개인, 2:그룹
             display = 'none';
         }
         
