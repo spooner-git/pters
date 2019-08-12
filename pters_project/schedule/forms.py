@@ -36,7 +36,7 @@ def date_time_validator(value):
 
 
 class AddScheduleTbForm(forms.Form):
-    lecture_member_ids = forms.MultipleChoiceField(label='회원 정보', required=False)
+    member_ids = forms.MultipleChoiceField(label='회원 정보', required=False)
     en_dis_type = forms.CharField(label='일정 종류', required=False)
     lecture_id = forms.IntegerField(label='수업 정보', required=False)
     start_dt = forms.CharField(label='시작 일시', validators=[date_time_validator], required=True)
@@ -45,8 +45,8 @@ class AddScheduleTbForm(forms.Form):
     duplication_enable_flag = forms.IntegerField(label='중복 여부', initial=SCHEDULE_DUPLICATION_ENABLE, required=False)
     lecture_info = None
 
-    def clean_lecture_member_ids(self):
-        return self.data.getlist('lecture_member_ids[]')
+    def clean_member_ids(self):
+        return self.data.getlist('member_ids[]')
 
     def clean_start_dt(self):
         start_dt = self.cleaned_data["start_dt"]
@@ -82,13 +82,13 @@ class AddScheduleTbForm(forms.Form):
     def clean_lecture_id(self):
         lecture_id = self.cleaned_data["lecture_id"]
         en_dis_type = self.cleaned_data["en_dis_type"]
-        lecture_member_ids = self.cleaned_data["lecture_member_ids"]
+        member_ids = self.cleaned_data["member_ids"]
 
         error = None
         if lecture_id is not None:
             try:
                 lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=USE)
-                if len(lecture_member_ids) > lecture_info.member_num:
+                if len(member_ids) > lecture_info.member_num:
                     error = '수업 정원보다 등록하려는 회원수가 많습니다.'
                 self.lecture_info = lecture_info
             except ObjectDoesNotExist:
@@ -117,8 +117,8 @@ class AddScheduleTbForm(forms.Form):
     def get_member_list(self, class_id):
         member_list = []
         lecture_id = self.cleaned_data["lecture_id"]
-        lecture_member_ids = self.cleaned_data["lecture_member_ids"]
-        for lecture_member_id in lecture_member_ids:
+        member_ids = self.cleaned_data["member_ids"]
+        for lecture_member_id in member_ids:
             error = None
             member_name = None
             member_ticket_id = None
