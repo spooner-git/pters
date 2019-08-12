@@ -476,8 +476,8 @@ class Calendar {
         this.relocate_current_time_indicator();
     }
     
-    zoom_week_cal (event){
-        let clicked_number = event != undefined ? event.target.dataset.row : this.week_zoomed.target_row;
+    zoom_week_cal (context){
+        let clicked_number = context != undefined ? context.dataset.row : this.week_zoomed.target_row;
 
 
         if(clicked_number == undefined){
@@ -686,7 +686,7 @@ class Calendar {
                     today_text_style = 'color:#fe4e65;font-weight:bold;';
                 }
                 
-                let onclick = month_or_week == "week" ? `${this.instance}.zoom_week_cal(event, ${_year[i]}, ${_month[i]}, ${_date[i]})` : `calendar.week_zoomed.activate = true;calendar.week_zoomed.target_row = this.dataset.row;${this.instance}.go_week(${_year[i]}, ${_month[i]}, ${_date[i]});`;
+                let onclick = month_or_week == "week" ? `${this.instance}.zoom_week_cal(this, ${_year[i]}, ${_month[i]}, ${_date[i]})` : `calendar.week_zoomed.activate = true;calendar.week_zoomed.target_row = this.dataset.row;${this.instance}.go_week(${_year[i]}, ${_month[i]}, ${_date[i]});`;
 
                 dates_to_join.push(
                     `
