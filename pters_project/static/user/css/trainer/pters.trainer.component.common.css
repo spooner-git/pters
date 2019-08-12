@@ -350,8 +350,9 @@ input:disabled{
 
 .schedule_history_row{
 	list-style: none;
-	line-height: auto;
 	height: auto;
+	/*line-height: auto;*/
+	line-height: inherit;
 	cursor: pointer;
 	font-size: 10px;
 	font-weight: 500;
@@ -386,8 +387,9 @@ input:disabled{
 
 .ticket_history_row{
 	list-style: none;
-	line-height: auto;
 	height: auto;
+	/*line-height: auto;*/
+	line-height: inherit;
 	cursor: pointer;
 	font-size: 11px;
 	font-weight: 500;
@@ -466,8 +468,6 @@ input:disabled{
 	display: block !important;
 	
 }
-
-
 
 .select_attend_row{
 	list-style: none;

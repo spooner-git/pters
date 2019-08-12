@@ -174,7 +174,6 @@ class GetTrainerScheduleInfoView(LoginRequiredMixin, AccessTestMixin, View):
         schedule_id = request.GET.get('schedule_id')
 
         date_schedule_list = func_get_trainer_schedule_info(class_id, schedule_id)
-
         return JsonResponse({'schedule_info': date_schedule_list}, json_dumps_params={'ensure_ascii': True})
 
 

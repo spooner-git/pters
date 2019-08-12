@@ -130,7 +130,10 @@ class Plan_view{
         this.data.member_schedule_state = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.state_cd}`;});
 
         if(data.schedule_info[0].schedule_type == 1){
-            this.data.member_name = data.schedule_info[0].member_name;
+            this.data.member_id.push(data.schedule_info[0].member_id);
+            this.data.member_id_original.push(this.data.member_id);
+            this.data.member_name.push(data.schedule_info[0].member_name);
+            this.data.member_schedule_state.push(data.schedule_info[0].state_cd);
         }
         this.data.date = this.selected_date;
         this.data.date_text = DateRobot.to_text(this.data.date.year, this.data.date.month, this.data.date.date);
@@ -154,11 +157,11 @@ class Plan_view{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="plan_view_popup.upper_left_menu();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="plan_view_popup.upper_left_menu();" class="obj_icon_prev" style="width:28px; height:28px;">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
-                            <img src="/static/common/icon/icon_delete.png" class="obj_icon_basic" onclick="plan_view_popup.upper_right_menu(0);">
-                            <img src="/static/common/icon/icon_done.png" class="obj_icon_basic" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};margin-left:20px">
+                            <img src="/static/common/icon/icon_delete.png" class="obj_icon_28px" onclick="plan_view_popup.upper_right_menu(0);">
+                            <img src="/static/common/icon/icon_done.png" class="obj_icon_28px" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};margin-left:20px">
                         </span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
@@ -168,6 +171,8 @@ class Plan_view{
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_plan_view .wrapper_top').style.backgroundColor = this.data.lecture_color;
         document.querySelector('.popup_plan_view .wrapper_top').style.border = 0;
+        document.querySelector('.popup_plan_view .wrapper_top').style.paddingTop = '20px';
+        document.querySelector('.popup_plan_view .wrapper_top').style.lineHeight = '28px';
     }
 
     render_toolbox(){
@@ -193,11 +198,11 @@ class Plan_view{
         let memo_select_row = this.dom_row_memo_select();
 
         let display = "";
-        if(this.data.schedule_type != 2){ //0: OFF, 1: 개인, 2:그룹
+        if(this.data.schedule_type == 0){ //0: OFF, 1: 개인, 2:그룹
             display = 'none';
         }
         
-        let html =  `<div class="obj_input_box_full" style="display:${display}">`+ CComponent.dom_tag('회원') + member_select_row + member_list_row+'</div>' +
+        let html =  `<div class="obj_input_box_full" style="display:${display}; border:0;">`+ CComponent.dom_tag('회원') + member_select_row + member_list_row+'</div>' +
                     '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                     CComponent.dom_tag('진행시간') + start_time_select_row + end_time_select_row + '</div>' +
                     '<div class="obj_input_box_full">'+ CComponent.dom_tag('메모') + memo_select_row + '</div>';
@@ -210,14 +215,15 @@ class Plan_view{
         if(this.data.schedule_type == 0){
             lecture_name =`OFF 일정 ${this.data.memo != "" ? '('+this.data.memo+')' : ''}`;
         }else if(this.data.schedule_type == 1){
-            lecture_name = this.data.member_name;
+            // lecture_name = this.data.member_name;
+            lecture_name = this.data.lecture_name;
         }else if(this.data.schedule_type == 2){
             lecture_name = this.data.lecture_name;
         }
 
         let html = `
-                    <div class="info_popup_title_wrap" style="height:50px;background-color:${this.data.lecture_color}">
-                        <div class="info_popup_title" style="display:inline-block;line-height:50px;vertical-align:middle;font-size:18px;font-weight:bold;color:${this.data.lecture_font_color}">
+                    <div class="info_popup_title_wrap" style="height:24px;background-color:${this.data.lecture_color}">
+                        <div class="info_popup_title" style="display:inline-block;line-height:24px;font-size:20px;font-weight:bold;letter-spacing:-1px;color:${this.data.lecture_font_color}">
                             ${lecture_name}
                         </div>
                     </div>
@@ -227,14 +233,16 @@ class Plan_view{
 
     dom_row_member_select (){
         let id = 'select_member';
-        let title = this.data.member_id.length == 0 ? '회원 선택*' : this.data.member_id.length+ '/' + this.data.lecture_max_num +' 명';
+        console.log(this.data.member_id);
+        console.log(this.data.member_id.length);
+        let title = this.data.member_id.length == 0 ? '회원*' : this.data.member_id.length+ '/' + this.data.lecture_max_num +' 명';
         let icon = '/static/common/icon/icon_member.png';
         let icon_r_visible = SHOW;
-        let icon_r_text = "";
+        let icon_r_text = "예약 목록";
         let html_member_select = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
             //회원 선택 팝업 열기
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'data':null}, ()=>{
-                member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num, {'lecture_id':this.data.lecture_id, "title":"회원 선택"}, (set_data)=>{
+                member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num, {'lecture_id':this.data.lecture_id, "title":"회원"}, (set_data)=>{
                     this.member = set_data;
                     let changed = this.func_update_member();
 

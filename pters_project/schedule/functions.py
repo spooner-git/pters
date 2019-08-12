@@ -230,25 +230,21 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
     if lecture_id is not None:
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-            max_mem_count = lecture_info.member_num
-            ing_color_cd = lecture_info.ing_color_cd
-            end_color_cd = lecture_info.end_color_cd
-            ing_font_color_cd = lecture_info.ing_font_color_cd
-            end_font_color_cd = lecture_info.end_font_color_cd
         except ObjectDoesNotExist:
             lecture_info = None
-
-        if lecture_info is None:
-            try:
-                lecture_info = LectureTb.objects.get(class_tb_id=class_id,
-                                                     lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
-                max_mem_count = lecture_info.member_num
-                ing_color_cd = lecture_info.ing_color_cd
-                end_color_cd = lecture_info.end_color_cd
-                ing_font_color_cd = lecture_info.ing_font_color_cd
-                end_font_color_cd = lecture_info.end_font_color_cd
-            except ObjectDoesNotExist:
-                lecture_info = None
+    else:
+        try:
+            lecture_info = LectureTb.objects.get(class_tb_id=class_id,
+                                                 lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
+            print(str(lecture_info))
+        except ObjectDoesNotExist:
+            lecture_info = None
+    if lecture_info is not None:
+        max_mem_count = lecture_info.member_num
+        ing_color_cd = lecture_info.ing_color_cd
+        end_color_cd = lecture_info.end_color_cd
+        ing_font_color_cd = lecture_info.ing_font_color_cd
+        end_font_color_cd = lecture_info.end_font_color_cd
     try:
         with transaction.atomic():
             add_schedule_info = ScheduleTb(class_tb_id=class_id,
@@ -739,7 +735,7 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
         # 개인 수업 일정인 경우 정보 추가, 개인 수업이 아닌 경우 빈값
         try:
             member_name = schedule_info.member_ticket_tb.member.name
-            member_id = schedule_info.meber_ticket_tb.member_id
+            member_id = schedule_info.member_ticket_tb.member.member_id
         except AttributeError:
             member_name = ''
             member_id = ''
