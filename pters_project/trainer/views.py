@@ -2840,6 +2840,7 @@ def update_ticket_status_info_logic(request):
 
     error = None
     ticket_info = None
+    ticket_lecture_data = None
     now = timezone.now()
 
     if ticket_id is None or ticket_id == '':
@@ -2854,14 +2855,14 @@ def update_ticket_status_info_logic(request):
     if error is None:
 
         class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
-            'member_ticket_tb').filter(class_tb_id=class_id, member_ticket_tb__ticket_tb_id=ticket_id,
-                                       auth_cd=AUTH_TYPE_VIEW,
-                                       use=USE)
+            'member_ticket_tb__member').filter(class_tb_id=class_id, member_ticket_tb__ticket_tb_id=ticket_id,
+                                               auth_cd=AUTH_TYPE_VIEW,
+                                               use=USE).order_by('member_ticket_tb__member__member_id')
 
         if class_member_ticket_data is not None and state_cd == STATE_CD_FINISH:
+            member_id = None
             for class_member_ticket_info in class_member_ticket_data:
                 member_ticket_info = class_member_ticket_info.member_ticket_tb
-
                 schedule_data = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_info.member_ticket_id,
                                                           end_dt__lte=now,
                                                           use=USE).exclude(Q(state_cd=STATE_CD_FINISH)
@@ -2886,6 +2887,9 @@ def update_ticket_status_info_logic(request):
                     member_ticket_info.member_ticket_rem_count = 0
                     member_ticket_info.state_cd = STATE_CD_FINISH
                 member_ticket_info.save()
+                if member_id != member_ticket_info.member_id:
+                    member_id = member_ticket_info.member_id
+                    func_update_lecture_member_fix_status_cd(class_id, member_id)
 
         ticket_info.state_cd = state_cd
         ticket_info.save()
