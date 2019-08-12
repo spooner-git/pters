@@ -203,5 +203,8 @@ const PROGRAM_CATEGORY = {
             SCIENCE:{name:"과학"}
         }
     },
-    ETC:{name:"기타"},
+    ETC:{name:"기타",
+        sub_category:{
+            ETC:{name:"기타"}
+        }},
 };

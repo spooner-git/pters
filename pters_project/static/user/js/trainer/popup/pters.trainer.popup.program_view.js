@@ -77,9 +77,9 @@ class Program_view{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();program_view_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/close_black.png" onclick="program_view_popup.send_data();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="program_view_popup.upper_right_menu()">완료</span></span>`;
+        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="program_view_popup.upper_right_menu();"></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
@@ -227,6 +227,21 @@ class Program_view{
     }
 
     upper_right_menu(){
-        this.send_data();
+        let user_option = {
+            delete:{text:"프로그램 삭제", callback:()=>{ 
+                    show_user_confirm(`"${this.data.program_name}" 프로그램을 삭제 하시겠습니까? <br> 모든 정보가 삭제되며 복구할 수 없습니다.`, ()=>{
+                        layer_popup.close_layer_popup(); // 옵션 셀렉터 팝업 닫기
+                        layer_popup.close_layer_popup(); // 확인 팝업 닫기
+                        Program_func.delete({"class_id":this.data.program_id}, ()=>{
+                            program_list_popup.init();
+                            layer_popup.close_layer_popup(); // 프로그램 정보 팝업 닫기 -> 즉, 프로그램 리스트 팝업으로 나가기
+                        });
+                    });
+                }
+            }
+        };
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        });
     }
 }

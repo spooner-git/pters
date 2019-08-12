@@ -77,7 +77,7 @@ class Program_list{
             let member_num = data.program_total_member_num;
             let status = data.program_state_cd;
             let selected = data.program_selected;
-            let category_code = data.program_upper_subject_cd;
+            let category_code = data.program_upper_subject_cd != "" ? data.program_upper_subject_cd : "ETC";
             let category_sub_name = PROGRAM_CATEGORY[category_code].sub_category[data.program_subject_cd].name;
             let category_sub_code = data.program_subject_cd;
 
