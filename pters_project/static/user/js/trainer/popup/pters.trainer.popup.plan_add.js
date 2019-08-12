@@ -84,7 +84,7 @@ class Plan_add{
 
     set start_time(data){
         this.data.start_time = TimeRobot.to_data(data.data.zone, data.data.hour, data.data.minute).complete;
-        this.data.start_time_text = data.text;
+        this.data.start_time_text = data.text + ' 부터';
         this.render_content();
     }
 
@@ -94,7 +94,7 @@ class Plan_add{
 
     set end_time(data){
         this.data.end_time = TimeRobot.to_data(data.data.zone, data.data.hour, data.data.minute).complete;
-        this.data.end_time_text = data.text;
+        this.data.end_time_text = data.text + ' 까지';
         this.render_content();
     }
 
@@ -304,7 +304,7 @@ class Plan_add{
 
     dom_row_start_time_select(){
         let id = 'select_start';
-        let title = this.data.start_time_text == null ? '시작 시간*' : this.data.start_time_text;
+        let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
         let icon = '/static/common/icon/icon_clock.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -317,7 +317,7 @@ class Plan_add{
                 let hour = this.data.start_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
                 let minute = this.data.start_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
                 
-                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시간', data:{zone:zone, hour:hour, minute:minute},
+                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{zone:zone, hour:hour, minute:minute},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.start_time = object;
                                                                                                     if(this.data.end_time != null){
@@ -335,7 +335,7 @@ class Plan_add{
 
     dom_row_end_time_select(){
         let id = 'select_end';
-        let title = this.data.end_time_text == null ? '종료 시간*' : this.data.end_time_text;
+        let title = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
         let icon = '/static/common/icon/icon_clock_white.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -358,7 +358,7 @@ class Plan_add{
                 let zone_hour = time_min_type_zone.hour;
                 let zone_minute = time_min_type_zone.minute;
 
-                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시간',
+                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시각',
                                                                                                 data:{zone:zone_min, hour:zone_hour, minute:zone_minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.end_time = object;
@@ -370,9 +370,13 @@ class Plan_add{
     }
 
     dom_row_repeat_select(){
-        let repeat_end_date_in_text = '<span style="font-size:11px;"> 종료:'+DateRobot.to_text(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date, SHORT)+'</span>';
+        let repeat_end_date_in_text = '<span style="font-size:10px; font-weight:500;letter-spacing: -1px;color: #1f1d1e;">'+DateRobot.to_text(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date)+' 까지</span>';
         let id = 'select_repeat';
-        let title =this.data.repeat.power == OFF ? '반복 일정' : this.data.repeat.day.map((el)=>{return DAYNAME_MATCH[el];}).join(', ') +' '+ repeat_end_date_in_text;
+        let repeat_title = this.data.repeat.day.map((el)=>{return DAYNAME_MATCH[el];}).join(', ');
+        if(this.data.repeat.day.length==7){
+            repeat_title = '매일';
+        }
+        let title =this.data.repeat.power == OFF ? '반복 일정' : repeat_title +' / '+ repeat_end_date_in_text;
         let icon = '/static/common/icon/icon_repeat.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -493,11 +497,11 @@ class Plan_add{
                 return false;
             }
             if(this.data.start_time_text == null){
-                show_error_message('시작 시간을 선택 해주세요.');
+                show_error_message('시작 시각을 선택 해주세요.');
                 return false;
             }
             if(this.data.end_time_text == null){
-                show_error_message('종료 시간을 선택 해주세요.');
+                show_error_message('종료 시각을 선택 해주세요.');
                 return false;
             }
             console.log(this.data.repeat);

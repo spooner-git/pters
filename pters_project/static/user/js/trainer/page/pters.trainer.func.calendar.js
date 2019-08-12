@@ -850,8 +850,8 @@ class Calendar {
         this.user_data.user_selected_time.minute = minute;
         this.user_data.user_selected_time.hour2 = TimeRobot.add_time(hour, minute, 0, period_min).hour;
         this.user_data.user_selected_time.minute2 = TimeRobot.add_time(hour, minute, 0, period_min).minute;
-        this.user_data.user_selected_time.text = TimeRobot.to_text(hour, minute);
-        this.user_data.user_selected_time.text2 = TimeRobot.to_text(this.user_data.user_selected_time.hour2, this.user_data.user_selected_time.minute2);
+        this.user_data.user_selected_time.text = TimeRobot.to_text(hour, minute)+' 부터';
+        this.user_data.user_selected_time.text2 = TimeRobot.to_text(this.user_data.user_selected_time.hour2, this.user_data.user_selected_time.minute2)+' 까지';
 
         //롱터치 일정 변경
         if(this.long_touch == ON){

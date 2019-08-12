@@ -86,7 +86,7 @@ class Plan_view{
 
     set start_time (data){
         this.data.start_time = TimeRobot.to_data(data.data.zone, data.data.hour, data.data.minute).complete;
-        this.data.start_time_text = data.text;
+        this.data.start_time_text = data.text + ' 부터';
         this.render_content();
     }
 
@@ -96,7 +96,7 @@ class Plan_view{
 
     set end_time (data){
         this.data.end_time = TimeRobot.to_data(data.data.zone, data.data.hour, data.data.minute).complete;
-        this.data.end_time_text = data.text;
+        this.data.end_time_text = data.text + ' 까지';
         this.render_content();
     }
 
@@ -138,9 +138,9 @@ class Plan_view{
         this.data.date = this.selected_date;
         this.data.date_text = DateRobot.to_text(this.data.date.year, this.data.date.month, this.data.date.date);
         this.data.start_time = data.schedule_info[0].start_time;
-        this.data.start_time_text = TimeRobot.to_text(data.schedule_info[0].start_time.split(':')[0], data.schedule_info[0].start_time.split(':')[1]);
+        this.data.start_time_text = TimeRobot.to_text(data.schedule_info[0].start_time.split(':')[0], data.schedule_info[0].start_time.split(':')[1])+' 부터';
         this.data.end_time = data.schedule_info[0].end_time;
-        this.data.end_time_text = TimeRobot.to_text(data.schedule_info[0].end_time.split(':')[0], data.schedule_info[0].end_time.split(':')[1]);
+        this.data.end_time_text = TimeRobot.to_text(data.schedule_info[0].end_time.split(':')[0], data.schedule_info[0].end_time.split(':')[1])+' 까지';
         this.data.lecture_color = data.schedule_info[0].lecture_ing_color_cd;
         this.data.lecture_font_color = data.schedule_info[0].lecture_ing_font_color_cd;
         this.data.lecture_max_num = data.schedule_info[0].lecture_max_member_num;
@@ -233,9 +233,10 @@ class Plan_view{
 
     dom_row_member_select (){
         let id = 'select_member';
-        console.log(this.data.member_id);
-        console.log(this.data.member_id.length);
         let title = this.data.member_id.length == 0 ? '회원*' : this.data.member_id.length+ '/' + this.data.lecture_max_num +' 명';
+        if(this.data.member_id.length==1&&this.data.lecture_max_num){
+            title = '개인';
+        }
         let icon = '/static/common/icon/icon_member.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "예약 목록";
@@ -339,7 +340,7 @@ class Plan_view{
                 let hour = this.data.start_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
                 let minute = this.data.start_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
                 
-                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시간', data:{zone:zone, hour:hour, minute:minute},
+                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{zone:zone, hour:hour, minute:minute},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.start_time = object;
                                                                                                     if(this.data.end_time != null){
@@ -378,7 +379,7 @@ class Plan_view{
                 let zone_hour = time_min_type_zone.hour;
                 let zone_minute = time_min_type_zone.minute;
 
-                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시간',
+                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시각',
                                                                                                 data:{zone:zone, hour:hour, minute:minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.end_time = object;
