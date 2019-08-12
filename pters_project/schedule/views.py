@@ -523,7 +523,6 @@ def add_repeat_schedule_logic(request):
     repeat_week_type = request.POST.get('repeat_day', '')
     repeat_start_time = request.POST.get('repeat_start_time')
     repeat_end_time = request.POST.get('repeat_end_time')
-    repeat_schedule_time_duration = request.POST.get('repeat_dur', '')
     lecture_id = request.POST.get('lecture_id', None)
     member_ids = request.POST.getlist('member_ids[]', '')
     en_dis_type = request.POST.get('en_dis_type', ON_SCHEDULE_TYPE)
@@ -614,9 +613,7 @@ def add_repeat_schedule_logic(request):
         repeat_schedule_result = func_add_repeat_schedule(class_id, member_ticket_id, lecture_id, None, repeat_type,
                                                           repeat_week_type,
                                                           repeat_schedule_start_date, repeat_schedule_end_date,
-                                                          repeat_start_time,
-                                                          repeat_end_time,
-                                                          repeat_schedule_time_duration, en_dis_type,
+                                                          repeat_start_time, repeat_end_time, en_dis_type,
                                                           request.user.id)
         if repeat_schedule_result['error'] is None:
             if repeat_schedule_result['schedule_info'] is None:
@@ -743,26 +740,19 @@ def add_repeat_schedule_confirm(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id')
     repeat_confirm = request.POST.get('repeat_confirm')
+    member_ids = request.POST.getlist('member_ids[]', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
-
-    lecture_member_ids = request.POST.getlist('lecture_member_ids[]', '')
-
     error = None
     repeat_schedule_info = None
     start_date = None
     end_date = None
     en_dis_type = None
-    member_name = ''
     information = None
     member_ticket_id = ''
-    push_member_ticket_id = []
-    push_title = []
-    push_message = []
     lecture_info = None
-    context = {'push_member_ticket_id': '', 'push_title': '', 'push_message': ''}
 
     if repeat_schedule_id == '':
         error = '확인할 반복 일정을 선택해주세요.'
@@ -786,9 +776,8 @@ def add_repeat_schedule_confirm(request):
     if error is None:
         if en_dis_type == ON_SCHEDULE_TYPE:
             member_ticket_info = repeat_schedule_info.member_ticket_tb
-            member_info = member_ticket_info.member
-            member_ticket_id = member_ticket_info.member_ticket_id
-            member_name = member_info.name
+            if member_ticket_info is not None:
+                member_ticket_id = member_ticket_info.member_ticket_id
 
     if error is None:
         if repeat_confirm == '0':
@@ -833,7 +822,7 @@ def add_repeat_schedule_confirm(request):
 
                 schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id, use=USE)
 
-                for lecture_member_id in lecture_member_ids:
+                for lecture_member_id in member_ids:
                     try:
                         member_info = MemberTb.objects.get(member_id=lecture_member_id)
                     except ObjectDoesNotExist:
@@ -860,7 +849,6 @@ def add_repeat_schedule_confirm(request):
                                                                                   repeat_schedule_info.end_date,
                                                                                   repeat_schedule_info.start_time,
                                                                                   repeat_schedule_info.end_time,
-                                                                                  repeat_schedule_info.time_duration,
                                                                                   repeat_schedule_info.en_dis_type,
                                                                                   request.user.id)
                                 member_repeat_schedule_info = repeat_schedule_result['schedule_info']
@@ -879,22 +867,17 @@ def add_repeat_schedule_confirm(request):
                                         if error_temp is None:
                                             try:
                                                 with transaction.atomic():
-                                                    if error_temp is None:
+                                                    state_cd = STATE_CD_NOT_PROGRESS
+                                                    permission_state_cd = PERMISSION_STATE_CD_APPROVE
+                                                    schedule_result = func_add_schedule(
+                                                        class_id, member_ticket_id,
+                                                        member_repeat_schedule_info.repeat_schedule_id,
+                                                        lecture_info.lecture_id, schedule_info.schedule_id,
+                                                        schedule_info.start_dt, schedule_info.end_dt,
+                                                        '', ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
+                                                        state_cd, SCHEDULE_DUPLICATION_ENABLE)
 
-                                                        state_cd = STATE_CD_NOT_PROGRESS
-                                                        permission_state_cd = PERMISSION_STATE_CD_APPROVE
-                                                        # if setting_schedule_auto_finish == AUTO_FINISH_ON \
-                                                        #         and timezone.now() > schedule_info.end_dt:
-                                                        #     state_cd = 'PE'
-                                                        schedule_result = func_add_schedule(
-                                                            class_id, member_ticket_id,
-                                                            member_repeat_schedule_info.repeat_schedule_id,
-                                                            lecture_info.lecture_id, schedule_info.schedule_id,
-                                                            schedule_info.start_dt, schedule_info.end_dt,
-                                                            '', ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
-                                                            state_cd, SCHEDULE_DUPLICATION_DISABLE)
-
-                                                        error_temp = schedule_result['error']
+                                                    error_temp = schedule_result['error']
 
                                                     if error_temp is None:
                                                         error_temp = func_refresh_member_ticket_count(class_id,
@@ -930,31 +913,29 @@ def add_repeat_schedule_confirm(request):
                                              log_how='반복 일정 등록',
                                              log_detail=str(start_date) + '/' + str(end_date), use=USE)
                             log_data.save()
-                            push_member_ticket_id.append(member_ticket_id)
-                            push_title.append(class_type_name + ' - 수업 알림')
-                            push_message.append(request.user.first_name + '님이 ' + str(start_date) + '~' + str(end_date)
-                                                + ' ['+lecture_info.name + '] 반복 일정을 등록했습니다')
+                            if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
+                                func_send_push_trainer(member_ticket_id,
+                                                       class_type_name + ' - 수업 알림',
+                                                       request.user.first_name + '님이 '
+                                                       + str(start_date) + '~' + str(end_date)
+                                                       + ' ['+lecture_info.name + '] 반복 일정을 등록했습니다')
 
                 information = '반복 일정 등록이 완료됐습니다.'
             else:
-                if en_dis_type == ON_SCHEDULE_TYPE:
-                    push_member_ticket_id.append(member_ticket_id)
-                    push_title.append(class_type_name + ' - 수업 알림')
-                    push_message.append(request.user.first_name + '님이 ' + str(start_date) + '~' + str(end_date)
-                                        + ' ['+lecture_info.name + '] 반복 일정을 등록했습니다')
+                if en_dis_type == ON_SCHEDULE_TYPE and setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
+                    func_send_push_trainer(member_ticket_id,
+                                           class_type_name + ' - 수업 알림',
+                                           request.user.first_name + '님이 '
+                                           + str(start_date) + '~' + str(end_date)
+                                           + ' [개인 수업] 반복 일정을 등록했습니다')
 
     if error is None:
         if information is not None:
-            if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
-                context['push_member_ticket_id'] = push_member_ticket_id
-                context['push_title'] = push_title
-                context['push_message'] = push_message
-
             messages.info(request, information)
     else:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
-    return render(request, 'ajax/schedule_error_info.html', context)
+    return render(request, 'ajax/schedule_error_info.html')
 
 
 def delete_repeat_schedule_logic(request):

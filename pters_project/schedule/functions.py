@@ -37,7 +37,7 @@ def func_get_member_ticket_id(class_id, member_id):
                                    member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                    member_ticket_tb__member_ticket_avail_count__gt=0,
                                    member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
-                                   member_ticket_tb__end_date__gte=today,
+                                   # member_ticket_tb__end_date__gte=today,
                                    member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
                                                                        'member_ticket_tb__reg_dt')
 
@@ -290,7 +290,7 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
 
 # 일정 등록
 def func_add_repeat_schedule(class_id, member_ticket_id, lecture_id, lecture_schedule_id, repeat_type,
-                             week_type, start_date, end_date, start_time, end_time, time_duration, en_dis_type,
+                             week_type, start_date, end_date, start_time, end_time, en_dis_type,
                              user_id):
     error = None
     context = {'error': None, 'schedule_info': None}
@@ -307,7 +307,6 @@ def func_add_repeat_schedule(class_id, member_ticket_id, lecture_id, lecture_sch
                                                     end_date=end_date,
                                                     start_time=start_time,
                                                     end_time=end_time,
-                                                    time_duration=time_duration,
                                                     state_cd=STATE_CD_NOT_PROGRESS, en_dis_type=en_dis_type,
                                                     reg_member_id=user_id)
 
@@ -966,10 +965,9 @@ def func_get_repeat_schedule_date_list(repeat_type, week_type, repeat_schedule_s
             if week_info_detail == week_type_info:
                 repeat_week_type_data.append(idx)
                 break
-
+    repeat_week_type_data.sort()
     # 반복 일정 처음 날짜 설정
     check_date = repeat_schedule_start_date
-
     idx = 0
     # 반복 일정 종료 날짜 보다 크면 종료
     while check_date <= repeat_schedule_end_date:
@@ -1009,5 +1007,4 @@ def func_get_repeat_schedule_date_list(repeat_type, week_type, repeat_schedule_s
         idx += 1
         if idx > 365:
             break
-
     return repeat_schedule_date_list

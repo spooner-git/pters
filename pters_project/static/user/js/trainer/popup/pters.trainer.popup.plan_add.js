@@ -430,11 +430,11 @@ class Plan_add{
                     "start_dt": this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.start_time,
                     "end_dt":this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.end_time,
                     "note":this.data.memo, "duplication_enable_flag": 1,
-                    "en_dis_type":this.list_type == "off" ? 0 : 1, "lecture_member_ids":this.data.member_id,
+                    "en_dis_type":this.list_type == "off" ? 0 : 1, "member_ids":this.data.member_id,
 
                     //repeat 관련
                     "repeat_freq":"WW", 
-                    "repeat_start_date":this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date, 
+                    "repeat_start_date":this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date,
                     "repeat_end_date":this.data.repeat.repeat_end.year+'-'+this.data.repeat.repeat_end.month+'-'+this.data.repeat.repeat_end.date,
                     "repeat_start_time":this.data.start_time, "repeat_end_time":this.data.end_time, "repeat_day":this.data.repeat.day.join('/')
         };
@@ -456,7 +456,7 @@ class Plan_add{
             Plan_func.create(url, data, (received)=>{
                 let repeat_schedule_id = received.repeatArray[0];
                 let repeat_confirm = 1;
-                let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm};
+                let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm, "member_ids":this.data.member_id};
                 Plan_func.create(confirm_url, confirm_data, ()=>{
                     layer_popup.close_layer_popup();
                     calendar.init();
@@ -500,6 +500,17 @@ class Plan_add{
             if(this.data.end_time_text == null){
                 show_error_message('종료 시간을 선택 해주세요.');
                 return false;
+            }
+            console.log(this.data.repeat);
+            if(this.data.repeat.power == ON){
+                if(this.data.repeat.day.length == 0){
+                    show_error_message('반복일정 요일을 선택 해주세요.');
+                    return false;
+                }
+                if(this.data.repeat.repeat_end.date==null){
+                    show_error_message('반복일정 종료일을 선택 해주세요.');
+                    return false;
+                }
             }
             return true;
         }
