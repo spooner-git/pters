@@ -49,6 +49,11 @@
         background-color: #ffffff;
     }
 
+    .obj_input_box_full{
+        height: auto;
+        background-color: #ffffff;
+        border-top: 1px solid #f2f2f2;
+    }
 /* 텍스트 박스 */
 
     .obj_font_size_18_weight_900{
@@ -185,7 +190,7 @@
         color: #ff3b44;
     }
     .obj_font_color_sunday_red{
-        color: #ff0000
+        color: #ff3333;
     }
 
 /* 버튼 */

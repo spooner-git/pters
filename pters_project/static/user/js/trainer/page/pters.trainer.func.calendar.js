@@ -442,9 +442,14 @@ class Calendar {
         if(schedule_data == undefined){
             schedule_data = false;
         }
-        let weeks_div = [`<div style="margin-top:25px;"></div>`];
 
-        let margin = 10;
+        let weeks_div = [`<div class="cal_week_line_dates" style="margin-top:4px; border:0;">
+                            <div class="no_border obj_font_color_sunday_red">일</div><div class="no_border">월</div><div class="no_border">화</div>
+                            <div class="no_border">수</div><div class="no_border">목</div><div class="no_border">금</div><div class="no_border obj_font_color_saturday_blue">토</div>
+                          </div>
+                          <div style="margin-top:4px; border-bottom:1px solid #f5f2f3;"></div>`];
+
+        let margin = 34;
         let row_height = (this.window_height - 60 - 31 - 45 - margin)/6;
 
         for(let i=0; i<6; i++){
@@ -673,7 +678,7 @@ class Calendar {
                 }
                 
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
-                    today_marking = `<div class="today_marking" style="${month_or_week == "week" ? '' : 'top:22%'}"></div>`;
+                    today_marking = `<div class="today_marking" style="${month_or_week == "week" ? '' : 'top:8%; width:20px; height:20px; border-radius:12px;'}"></div>`;
                     today_text_style = 'color:#fe4e65;font-weight:bold;'
                 }
                 
@@ -701,7 +706,7 @@ class Calendar {
                 `<div class="${month_or_week == "week" ? "week_upper_float_tool" :""}" style="${month_or_week == "month" ? 'border-bottom:1px solid #f5f2f3':''}">
                     ${month_or_week == "week" ? `<div id="week_zoom_vertical_button" onclick="${this.instance}.zoom_week_cal_vertical()"></div>` : ""}
                     ${month_or_week == "week" ? week_date_name_data : ""}
-                    <div class="cal_week_line" style="${month_or_week == "week" ? `height:35px;line-height:35px;font-size:15px;font-weight:500` : ""}">
+                    <div class="cal_week_line" style="${month_or_week == "week" ? `height:20px;line-height:20px;font-size:15px;font-weight:500;margin-top:8px;` : ""}">
                         ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
                         ${result_html}
                     </div>
@@ -942,10 +947,11 @@ class Calendar {
                                                 <div class="add_plan" onclick="${this.instance}.add_plan_button()"></div>
                                             </div>
                                         </div>
-                                        <div class="cal_week_line_dates">
-                                            <div class="no_border obj_font_color_sunday_red">일</div><div class="no_border">월</div><div class="no_border">화</div>
-                                            <div class="no_border">수</div><div class="no_border">목</div><div class="no_border">금</div><div class="no_border obj_font_color_saturday_blue">토</div>
-                                        </div>`
+                                        <!--<div class="cal_week_line_dates">-->
+                                            <!--<div class="no_border obj_font_color_sunday_red">일</div><div class="no_border">월</div><div class="no_border">화</div>-->
+                                            <!--<div class="no_border">수</div><div class="no_border">목</div><div class="no_border">금</div><div class="no_border obj_font_color_saturday_blue">토</div>-->
+                                        <!--</div>-->
+                                        `
                 ,
                 "week_cal_upper_box":`
                                         <div class="cal_upper_box">

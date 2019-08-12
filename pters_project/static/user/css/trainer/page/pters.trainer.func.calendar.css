@@ -4,17 +4,20 @@
 	height: auto;
 	z-index: 10;
 	width: 100%;
+	padding-top: 20px;
+	padding-bottom: 12px;
+	background-color: #ffffff;
 	/* text-align: center; */
 }
 	.cal_upper_box{
 		position: relative;
-		height: 60px;
-		line-height: 60px;
+		height: 28px;
+		line-height: 28px;
 		background-color: #ffffff;
 		/* border-bottom: 1px solid #cccccc; */
 		padding: 0 16px;
 		box-sizing: border-box;
-		margin-bottom: 4px;
+		/*margin-bottom: 4px;*/
 	}
 	.cal_tools_wrap{
 		display: table;
@@ -26,30 +29,30 @@
 	}
 	.cal_tools_wrap > .add_plan{
 		display: table-cell;
-		height: 100%;
+		height: 28px;
 		background-image: url("/static/common/icon/icon_add_pink.png");
 		background-repeat: no-repeat;
 		background-position: center;
-		background-size: 23px;
+		background-size: 24px;
 	}
 	.cal_tools_wrap > .go_today{
 		display: table-cell;
-		height: 100%;
+		height: 28px;
 		background-image: url("/static/common/icon/icon_today.png?v2");
 		background-repeat: no-repeat;
 		background-position: center;
-		background-size: 23px;
+		background-size: 24px;
 	}
 	.cal_upper_box .swap_cal{
 		display: inline-block;
-		height: 15px;
-		width: 15px;
+		height: 24px;
+		width: 24px;
 		vertical-align: middle;
 		margin-bottom: 4px;
 		background-image: url("/static/common/icon/expand_more_black.png");
 		background-repeat: no-repeat;
 		background-position: center;
-		background-size: 23px;
+		background-size: 24px;
 	}
 	
 	.display_year{
@@ -77,26 +80,31 @@
 	top: 0;
 	background-color: #ffffff;
 	z-index: 10;
+	padding-top:4px;
+	padding-bottom:8px;
 }
 .week_upper_float_tool #week_zoom_vertical_button{
 	position: absolute;
 	left: 0;
 	top: 0;
-	height: 57px;
-	width: 12.5%;
+	height: 24px;
+	width: 24px;
 	background-image: url('/static/common/icon/icon_zoom.png');
 	background-repeat: no-repeat;
-	background-size: 20px;
+	background-size: 24px;
 	background-position: center;
 	z-index: 1;
+	margin-top:12px;
+	margin-bottom:8px;
+	margin-left:14px;
 }
 
 .cal_week_line{
 	display: table;
 	width: 100%;
 	text-align: center;
-	height: 58px;
-	line-height: 40px;
+	height: 16px;
+	line-height: 16px;
 	/* border-bottom: 1px solid #cccccc; */
 	border-collapse: collapse;
 	table-layout: fixed;
@@ -104,6 +112,7 @@
 	color: #5c5859;
 	font-size: 11px;
 	font-weight: 500;
+	margin-top:4px;
 }
 .cal_week_line > div{
 	position: relative;
@@ -117,13 +126,14 @@
 	display: table;
 	width: 100%;
 	text-align: center;
-	height: 20px;
-	line-height: 20px;
+	height: 16px;
+	line-height: 16px;
 	border-bottom: 1px solid #f5f2f3;
 	background-color: #ffffff;
 	border-collapse: collapse;
 	table-layout: fixed;
 	font-size: 11px;
+	color:#5c5859;
 }
 
 .cal_week_line_dates > div{
@@ -142,7 +152,6 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	background: #ffe8eb;
-	
 }
 .no_border{
 	border: 0 !important;
@@ -224,9 +233,9 @@
 	height: 15px;
 	line-height: 15px;
 	width: 100%;
-	margin: 0 auto;
 	border: 1px solid transparent;
 	color: #858282;
+	margin: 10px auto 0;
 }
 
 .has_schedule{
