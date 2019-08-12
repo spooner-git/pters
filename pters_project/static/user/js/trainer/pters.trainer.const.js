@@ -116,6 +116,7 @@ const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
 
 const POPUP_ADDRESS_PROGRAM_LIST = 'popup_program_list';
 const POPUP_ADDRESS_PROGRAM_ADD = 'popup_program_add';
+const POPUP_ADDRESS_PROGRAM_VIEW = 'popup_program_view';
 // 풀페이지 팝업
 
 // User Input 팝업

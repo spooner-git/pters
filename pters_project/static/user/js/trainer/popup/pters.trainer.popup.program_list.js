@@ -78,8 +78,10 @@ class Program_list{
             let status = data.program_state_cd;
             let selected = data.program_selected;
             let category = data.program_subject_type_name;
+            let category_code = null;
+            let category_sub_code = data.program_subject_cd;
 
-            let html = `<article class="program_wrapper" data-program_id="${id}" onclick="window.location.href='/trainer/select_program_processing/?class_id=${id}&next_page=/trainer/'">
+            let html = `<article class="program_wrapper" data-program_id="${id}" onclick="program_list_popup.event_program_click(${id, name, category_code, category_sub_code});">
                             <div class="program_data_u">
                                 <div>
                                     <span>${name}</span>
@@ -116,6 +118,25 @@ class Program_list{
         </div>
         `;
         return html;
+    }
+
+    event_program_click(id, name, category, category_sub){
+        let user_option = {
+            goto:{text:"프로그램 이동", callback:()=>{ window.location.href=`/trainer/select_program_processing/?class_id=${id}&next_page=/trainer/`; }},
+            edit:{text:"편집", callback:()=>{ 
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_VIEW, 100, POPUP_FROM_RIGHT, null, ()=>{
+                    let external_data = {
+                                            name:name, 
+                                            category:{name:[POPUP_ADDRESS_CATEGORY_SELECT[category]], code:[category]}, 
+                                            category_sub:{name:[POPUP_ADDRESS_CATEGORY_SELECT[category][category_sub]], code:[category_sub]}
+                                        };
+                    program_view_popup = new Program_view('.popup_program_view', external_data);
+                });
+            }}
+        };
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        });
     }
 
     upper_right_menu(){
@@ -190,11 +211,71 @@ class Program_func{
     }
 
     static update(){
+        //프로그램 추가
+        $.ajax({
+            url:"/trainer/update_program_info/",
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //통신성공시 처리
+            success:function (data){
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
 
+            //보내기후 팝업창 닫기
+            complete:function (){
+
+            },
+    
+            //통신 실패시 처리
+            error:function (){
+                console.log('server error');
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
     }
 
     static delete(){
+        //프로그램 추가
+        $.ajax({
+            url:"/trainer/delete_program_info/",
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //통신성공시 처리
+            success:function (data){
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
 
+            //보내기후 팝업창 닫기
+            complete:function (){
+
+            },
+    
+            //통신 실패시 처리
+            error:function (){
+                console.log('server error');
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
     }
 }
 

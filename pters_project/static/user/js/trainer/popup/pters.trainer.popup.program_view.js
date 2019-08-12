@@ -1,7 +1,8 @@
-class Program_add{
-    constructor(install_target){
+class Program_view{
+    constructor(install_target, external_data){
         this.target = {install: install_target, toolbox:'section_program_add_toolbox', content:'section_program_add_content'};
         this.form_id = 'id_program_add_form';
+        this.external_data = external_data;
 
         let d = new Date();
         this.dates = {
@@ -24,7 +25,7 @@ class Program_add{
             program_name_by_user:null
         };
 
-        // this.init();
+        this.init();
         this.set_initial_data();
     }
 
@@ -60,6 +61,10 @@ class Program_add{
     }
 
     set_initial_data (){
+        this.name = this.external_data.name;
+        this.category = this.external_data.category;
+        this.category_sub = this.external_data.category_sub;
+
         this.init(); 
     }
 
@@ -99,42 +104,38 @@ class Program_add{
         let program_category_select_row = this.dom_row_program_category();
         let program_category_sub_select_row = this.dom_row_program_category_sub();
 
-        let html =  '<div class="obj_box_full">' +  CComponent.dom_tag('프로그램명') + program_name_input_row + '</div>' + 
-                    '<div class="obj_box_full">'+  CComponent.dom_tag('분야') + program_category_select_row + program_category_sub_select_row + '</div>';
+        let html =  '<div class="obj_box_full">'+  CComponent.dom_tag('분야') + program_category_select_row + program_category_sub_select_row + '</div>';
 
         return html;
     }
 
     dom_row_toolbox(){
-        let title = "새로운 프로그램";
+        let id = 'program_name_edit';
+        let title = this.data.name == null ? '' : this.data.name;
+        let style = {"font-size":"20px", "font-weight":"bold"};
+        let placeholder =  '프로그램명*';
+        let icon = undefined;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let disabled = false;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let required = "";
+        let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let user_input_data = input_data;
+            this.name = user_input_data;
+            this.send_data();
+        }, pattern, pattern_message, required);
+
         let html = `
-        <div class="program_add_upper_box" style="">
+        <div class="program_view_upper_box" style="">
             <div style="display:inline-block;width:320px;">
                 <div style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
-                    ${title}
+                    ${sub_html}
                 </div>
             </div>
         </div>
         `;
-        return html;
-    }
-
-    dom_row_program_name(){
-        let id = 'program_name_input';
-        let title = this.name == null ? "" : this.name;
-        let placeholder = '프로그램명*';
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
-        let icon_r_visible = HIDE;
-        let icon_r_text = "";
-        let style = null;
-        let disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+()\[\]., 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
-        let pattern_message = "( ) + - _ . ,제외 특수문자는 입력 불가";
-        let required = "required";
-        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            let user_input_data = input_data;
-            this.name = user_input_data;
-        }, pattern, pattern_message, required);
         return html;
     }
 
@@ -186,17 +187,17 @@ class Program_add{
             return false;
         }
         let data = {
-                    "center_id":"", 
+                    "class_id":"", 
                     "subject_cd":this.data.program_category_code[0],
                     "subject_detail_nm":this.data.program_name,
                     "start_date":"", "end_date":"", 
                     "class_hour":60, "start_hour_unit":1, "class_member_num":1
         };
 
-        Program_func.create(data, ()=>{
+        Program_func.update(data, ()=>{
             program_list_popup.init();
-            this.clear();
-            layer_popup.close_layer_popup();
+            // this.clear();
+            // layer_popup.close_layer_popup();
         });
     }
 
