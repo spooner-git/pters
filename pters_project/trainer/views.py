@@ -4,7 +4,7 @@ import datetime
 import logging
 import random
 import urllib
-from operator import attrgetter
+from operator import attrgetter, itemgetter
 from urllib.parse import quote
 
 from django.contrib import messages
@@ -2353,7 +2353,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_ticket_list': [ticket_tb.name],
                                                  'lecture_ticket_state_cd_list': [ticket_tb.state_cd],
                                                  'lecture_ticket_id_list': [ticket_tb.ticket_id]}
-            if ticket_tb.state_cd == STATE_CD_IN_PROGRESS and ticket_tb.use == USE:
+            if ticket_tb.use == USE:
                 lecture_data_dict[lecture_id]['lecture_ticket_list'].append(ticket_tb.name)
                 lecture_data_dict[lecture_id]['lecture_ticket_state_cd_list'].append(ticket_tb.state_cd)
                 lecture_data_dict[lecture_id]['lecture_ticket_id_list'].append(ticket_tb.ticket_id)
@@ -2377,9 +2377,10 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_ticket_list': [],
                                                      'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}
-        lecture_data_dict = collections.OrderedDict(sorted(lecture_data_dict.items(),
-                                                           key=lambda x: (x[1]['lecture_type_cd'],
-                                                                          x[1]['lecture_name'])))
+
+        lecture_data_dict = sorted(lecture_data_dict.items(), key=lambda x: (x[1]['lecture_type_cd']), reverse=True)
+        lecture_data_dict = collections.OrderedDict(lecture_data_dict[0:1]+sorted(lecture_data_dict[1:],
+                                                                                  key=lambda x: (x[1]['lecture_name'])))
         lecture_list = []
 
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
@@ -2425,40 +2426,31 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                               lecture_tb__use=USE,
                                               use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
 
-        lecture_data_dict = collections.OrderedDict()
-        temp_lecture_id = None
-        lecture_ticket_list = []
-        lecture_ticket_state_cd_list = []
-        lecture_ticket_id_list = []
+        lecture_data_dict = {}
         # 수업과 연관되어있는 수강권 정보 셋팅
         for lecture_ticket_info in lecture_ticket_data:
             lecture_tb = lecture_ticket_info.lecture_tb
             ticket_tb = lecture_ticket_info.ticket_tb
             lecture_id = str(lecture_tb.lecture_id)
-
-            if temp_lecture_id != lecture_id:
-                temp_lecture_id = lecture_id
-                lecture_ticket_list = []
-                lecture_ticket_id_list = []
-                lecture_ticket_state_cd_list = []
-
+            try:
+                lecture_data_dict[lecture_id]
+            except KeyError:
+                lecture_data_dict[lecture_id] = {'lecture_id': lecture_id,
+                                                 'lecture_name': lecture_tb.name,
+                                                 'lecture_note': lecture_tb.note,
+                                                 'lecture_max_num': lecture_tb.member_num,
+                                                 'lecture_ing_color_cd': lecture_tb.ing_color_cd,
+                                                 'lecture_ing_font_color_cd': lecture_tb.ing_font_color_cd,
+                                                 'lecture_end_color_cd': lecture_tb.end_color_cd,
+                                                 'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
+                                                 'lecture_type_cd': lecture_tb.lecture_type_cd,
+                                                 'lecture_ticket_list': [ticket_tb.name],
+                                                 'lecture_ticket_state_cd_list': [ticket_tb.state_cd],
+                                                 'lecture_ticket_id_list': [ticket_tb.ticket_id]}
             if ticket_tb.use == USE:
-                lecture_ticket_list.append(ticket_tb.name)
-                lecture_ticket_state_cd_list.append(ticket_tb.state_cd)
-                lecture_ticket_id_list.append(ticket_tb.ticket_id)
-
-            lecture_data_dict[lecture_id] = {'lecture_id': lecture_id,
-                                             'lecture_name': lecture_tb.name,
-                                             'lecture_note': lecture_tb.note,
-                                             'lecture_max_num': lecture_tb.member_num,
-                                             'lecture_ing_color_cd': lecture_tb.ing_color_cd,
-                                             'lecture_ing_font_color_cd': lecture_tb.ing_font_color_cd,
-                                             'lecture_end_color_cd': lecture_tb.end_color_cd,
-                                             'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
-                                             'lecture_type_cd': lecture_tb.lecture_type_cd,
-                                             'lecture_ticket_list': lecture_ticket_list,
-                                             'lecture_ticket_state_cd_list': lecture_ticket_state_cd_list,
-                                             'lecture_ticket_id_list': lecture_ticket_id_list}
+                lecture_data_dict[lecture_id]['lecture_ticket_list'].append(ticket_tb.name)
+                lecture_data_dict[lecture_id]['lecture_ticket_state_cd_list'].append(ticket_tb.state_cd)
+                lecture_data_dict[lecture_id]['lecture_ticket_id_list'].append(ticket_tb.ticket_id)
 
         # 수업에 수강권이 연결되어있지 않은 경우 처리
         if len(lecture_data) != len(lecture_data_dict):
@@ -2480,6 +2472,9 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}
 
+        lecture_data_dict = sorted(lecture_data_dict.items(), key=lambda x: (x[1]['lecture_type_cd']), reverse=True)
+        lecture_data_dict = collections.OrderedDict(lecture_data_dict[0:1]+sorted(lecture_data_dict[1:],
+                                                                                  key=lambda x: (x[1]['lecture_name'])))
         lecture_list = []
 
         for lecture_info in lecture_data_dict:
@@ -2919,55 +2914,42 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                               ticket_tb__use=USE,
                                               use=USE).order_by('ticket_tb_id', 'lecture_tb__state_cd', 'lecture_tb_id')
 
-        ticket_data_dict = collections.OrderedDict()
-        temp_ticket_id = None
-        ticket_lecture_list = []
-        ticket_lecture_state_cd_list = []
-        ticket_lecture_id_list = []
-        ticket_lecture_ing_color_cd_list = []
-        ticket_lecture_ing_font_color_cd_list = []
-        ticket_lecture_end_color_cd_list = []
-        ticket_lecture_end_font_color_cd_list = []
+        ticket_data_dict = {}
         for ticket_lecture_info in ticket_lecture_data:
             ticket_tb = ticket_lecture_info.ticket_tb
             lecture_tb = ticket_lecture_info.lecture_tb
             ticket_id = str(ticket_tb.ticket_id)
-            if temp_ticket_id != ticket_id:
-                temp_ticket_id = ticket_id
-                ticket_lecture_list = []
-                ticket_lecture_state_cd_list = []
-                ticket_lecture_id_list = []
-                ticket_lecture_ing_color_cd_list = []
-                ticket_lecture_ing_font_color_cd_list = []
-                ticket_lecture_end_color_cd_list = []
-                ticket_lecture_end_font_color_cd_list = []
+            try:
+                ticket_data_dict[ticket_id]
+            except KeyError:
+                ticket_data_dict[ticket_id] = {'ticket_id': ticket_id,
+                                               'ticket_name': ticket_tb.name,
+                                               'ticket_note': ticket_tb.note,
+                                               'ticket_effective_days': ticket_tb.effective_days,
+                                               'ticket_price': ticket_tb.price,
+                                               'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
+                                               'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
+                                               'ticket_reg_count': ticket_tb.reg_count,
+                                               'ticket_lecture_list': [lecture_tb.name],
+                                               'ticket_lecture_state_cd_list': [lecture_tb.state_cd],
+                                               'ticket_lecture_id_list': [lecture_tb.lecture_id],
+                                               'ticket_lecture_ing_color_cd_list':
+                                                   [lecture_tb.ing_color_cd],
+                                               'ticket_lecture_ing_font_color_cd_list':
+                                                   [lecture_tb.ing_font_color_cd],
+                                               'ticket_lecture_end_color_cd_list':
+                                                   [lecture_tb.end_color_cd],
+                                               'ticket_lecture_end_font_color_cd_list':
+                                                   [lecture_tb.end_font_color_cd]}
             if lecture_tb.use == USE:
-                ticket_lecture_list.append(lecture_tb.name)
-                ticket_lecture_state_cd_list.append(lecture_tb.state_cd)
-                ticket_lecture_id_list.append(lecture_tb.lecture_id)
-                ticket_lecture_ing_color_cd_list.append(lecture_tb.ing_color_cd)
-                ticket_lecture_ing_font_color_cd_list.append(lecture_tb.ing_font_color_cd)
-                ticket_lecture_end_color_cd_list.append(lecture_tb.end_color_cd)
-                ticket_lecture_end_font_color_cd_list.append(lecture_tb.end_font_color_cd)
-            ticket_data_dict[ticket_id] = {'ticket_id': ticket_id,
-                                           'ticket_name': ticket_tb.name,
-                                           'ticket_note': ticket_tb.note,
-                                           'ticket_effective_days': ticket_tb.effective_days,
-                                           'ticket_price': ticket_tb.price,
-                                           'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
-                                           'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
-                                           'ticket_reg_count': ticket_tb.reg_count,
-                                           'ticket_lecture_list': ticket_lecture_list,
-                                           'ticket_lecture_state_cd_list': ticket_lecture_state_cd_list,
-                                           'ticket_lecture_id_list': ticket_lecture_id_list,
-                                           'ticket_lecture_ing_color_cd_list':
-                                               ticket_lecture_ing_color_cd_list,
-                                           'ticket_lecture_ing_font_color_cd_list':
-                                               ticket_lecture_ing_font_color_cd_list,
-                                           'ticket_lecture_end_color_cd_list':
-                                               ticket_lecture_end_color_cd_list,
-                                           'ticket_lecture_end_font_color_cd_list':
-                                               ticket_lecture_end_font_color_cd_list}
+                ticket_data_dict[ticket_id]['ticket_lecture_list'].append(ticket_tb.name)
+                ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'].append(ticket_tb.state_cd)
+                ticket_data_dict[ticket_id]['ticket_lecture_id_list'].append(ticket_tb.ticket_id)
+                ticket_data_dict[ticket_id]['ticket_lecture_ing_color_cd_list'].append(lecture_tb.ing_color_cd)
+                ticket_data_dict[ticket_id]['ticket_lecture_ing_font_color_cd_list'].append(lecture_tb.ing_font_color_cd)
+                ticket_data_dict[ticket_id]['ticket_lecture_end_color_cd_list'].append(lecture_tb.end_color_cd)
+                ticket_data_dict[ticket_id]['ticket_lecture_end_font_color_cd_list'].append(lecture_tb.end_font_color_cd)
+
         if len(ticket_data) != len(ticket_data_dict):
             for ticket_info in ticket_data:
                 ticket_id = str(ticket_info.ticket_id)
@@ -2989,6 +2971,9 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_lecture_ing_font_color_cd_list': [],
                                                    'ticket_lecture_end_color_cd_list': [],
                                                    'ticket_lecture_end_font_color_cd_list': []}
+
+        ticket_data_dict = collections.OrderedDict(sorted(ticket_data_dict.items(), key=lambda x: (x[1]['ticket_name'])))
+
         ticket_list = []
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb',
@@ -3010,50 +2995,10 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
             ticket_data_dict[ticket_info]['ticket_ing_member_num'] = len(member_list)
             ticket_list.append(ticket_data_dict[ticket_info])
-        # package_data = TicketTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
-        #                                         use=USE).filter(name__contains=keyword).order_by('name')
-
-        # order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
-        # order = {key: i for i, key in enumerate(order)}
-        # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
-
-        # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
-        #                                                                        sort_order_by))
-        # if keyword == '' or keyword is None:
-        #     if sort_info == SORT_PACKAGE_MEMBER_COUNT:
-        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('ing_package_member_num'),
-        #                                                   reverse=int(sort_order_by))
-        #     if sort_info == SORT_PACKAGE_NAME:
-        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('name'),
-        #                                                   reverse=int(sort_order_by))
-        #     elif sort_info == SORT_PACKAGE_CREATE_DATE:
-        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('reg_dt'),
-        #                                                   reverse=int(sort_order_by))
-        # else:
-        #     if sort_info == SORT_PACKAGE_MEMBER_COUNT:
-        #         package_data = sorted(package_data, key=attrgetter('ing_package_member_num'),
-        #                               reverse=int(sort_order_by))
-        #     if sort_info == SORT_PACKAGE_NAME:
-        #         package_data = sorted(package_data, key=attrgetter('name'),
-        #                               reverse=int(sort_order_by))
-        #     elif sort_info == SORT_PACKAGE_CREATE_DATE:
-        #         package_data = sorted(package_data, key=attrgetter('reg_dt'),
-        #                               reverse=int(sort_order_by))
-        #
-        # context['total_package_num'] = len(package_data)
-        # if page != 0:
-        #     paginator = Paginator(package_data, 20)  # Show 20 contacts per page
-        #     try:
-        #         package_data = paginator.page(page)
-        #     except EmptyPage:
-        #         package_data = None
-        #
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
-
-        # context['package_data'] = package_data
 
         # end_time = timezone.now()
         return JsonResponse({'current_ticket_data': ticket_list}, json_dumps_params={'ensure_ascii': True})
@@ -3080,56 +3025,42 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                                                     'lecture_tb__state_cd',
                                                                                     'lecture_tb_id')
 
-        ticket_data_dict = collections.OrderedDict()
-        temp_ticket_id = None
-        ticket_lecture_list = []
-        ticket_lecture_state_cd_list = []
-        ticket_lecture_id_list = []
-        ticket_lecture_ing_color_cd_list = []
-        ticket_lecture_ing_font_color_cd_list = []
-        ticket_lecture_end_color_cd_list = []
-        ticket_lecture_end_font_color_cd_list = []
+        ticket_data_dict = {}
         for ticket_lecture_info in ticket_lecture_data:
             ticket_tb = ticket_lecture_info.ticket_tb
             lecture_tb = ticket_lecture_info.lecture_tb
             ticket_id = str(ticket_tb.ticket_id)
-            if temp_ticket_id != ticket_id:
-                temp_ticket_id = ticket_id
-                ticket_lecture_list = []
-                ticket_lecture_state_cd_list = []
-                ticket_lecture_id_list = []
-                ticket_lecture_ing_color_cd_list = []
-                ticket_lecture_ing_font_color_cd_list = []
-                ticket_lecture_end_color_cd_list = []
-                ticket_lecture_end_font_color_cd_list = []
-
+            try:
+                ticket_data_dict[ticket_id]
+            except KeyError:
+                ticket_data_dict[ticket_id] = {'ticket_id': ticket_id,
+                                               'ticket_name': ticket_tb.name,
+                                               'ticket_note': ticket_tb.note,
+                                               'ticket_effective_days': ticket_tb.effective_days,
+                                               'ticket_price': ticket_tb.price,
+                                               'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
+                                               'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
+                                               'ticket_reg_count': ticket_tb.reg_count,
+                                               'ticket_lecture_list': [lecture_tb.name],
+                                               'ticket_lecture_state_cd_list': [lecture_tb.state_cd],
+                                               'ticket_lecture_id_list': [lecture_tb.lecture_id],
+                                               'ticket_lecture_ing_color_cd_list':
+                                                   [lecture_tb.ing_color_cd],
+                                               'ticket_lecture_ing_font_color_cd_list':
+                                                   [lecture_tb.ing_font_color_cd],
+                                               'ticket_lecture_end_color_cd_list':
+                                                   [lecture_tb.end_color_cd],
+                                               'ticket_lecture_end_font_color_cd_list':
+                                                   [lecture_tb.end_font_color_cd]}
             if lecture_tb.use == USE:
-                ticket_lecture_list.append(lecture_tb.name)
-                ticket_lecture_state_cd_list.append(lecture_tb.state_cd)
-                ticket_lecture_id_list.append(lecture_tb.lecture_id)
-                ticket_lecture_ing_color_cd_list.append(lecture_tb.ing_color_cd)
-                ticket_lecture_ing_font_color_cd_list.append(lecture_tb.ing_font_color_cd)
-                ticket_lecture_end_color_cd_list.append(lecture_tb.end_color_cd)
-                ticket_lecture_end_font_color_cd_list.append(lecture_tb.end_font_color_cd)
-            ticket_data_dict[ticket_id] = {'ticket_id': ticket_id,
-                                           'ticket_name': ticket_tb.name,
-                                           'ticket_note': ticket_tb.note,
-                                           'ticket_effective_days': ticket_tb.effective_days,
-                                           'ticket_price': ticket_tb.price,
-                                           'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
-                                           'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
-                                           'ticket_reg_count': ticket_tb.reg_count,
-                                           'ticket_lecture_list': ticket_lecture_list,
-                                           'ticket_lecture_state_cd_list': ticket_lecture_state_cd_list,
-                                           'ticket_lecture_id_list': ticket_lecture_id_list,
-                                           'ticket_lecture_ing_color_cd_list':
-                                               ticket_lecture_ing_color_cd_list,
-                                           'ticket_lecture_ing_font_color_cd_list':
-                                               ticket_lecture_ing_font_color_cd_list,
-                                           'ticket_lecture_end_color_cd_list':
-                                               ticket_lecture_end_color_cd_list,
-                                           'ticket_lecture_end_font_color_cd_list':
-                                               ticket_lecture_end_font_color_cd_list}
+                ticket_data_dict[ticket_id]['ticket_lecture_list'].append(ticket_tb.name)
+                ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'].append(ticket_tb.state_cd)
+                ticket_data_dict[ticket_id]['ticket_lecture_id_list'].append(ticket_tb.ticket_id)
+                ticket_data_dict[ticket_id]['ticket_lecture_ing_color_cd_list'].append(lecture_tb.ing_color_cd)
+                ticket_data_dict[ticket_id]['ticket_lecture_ing_font_color_cd_list'].append(lecture_tb.ing_font_color_cd)
+                ticket_data_dict[ticket_id]['ticket_lecture_end_color_cd_list'].append(lecture_tb.end_color_cd)
+                ticket_data_dict[ticket_id]['ticket_lecture_end_font_color_cd_list'].append(lecture_tb.end_font_color_cd)
+
         if len(ticket_data) != len(ticket_data_dict):
             for ticket_info in ticket_data:
                 ticket_id = str(ticket_info.ticket_id)
@@ -3151,6 +3082,9 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_lecture_ing_font_color_cd_list': [],
                                                    'ticket_lecture_end_color_cd_list': [],
                                                    'ticket_lecture_end_font_color_cd_list': []}
+
+        ticket_data_dict = collections.OrderedDict(sorted(ticket_data_dict.items(), key=lambda x: (x[1]['ticket_name'])))
+
         ticket_list = []
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb',
@@ -3171,32 +3105,10 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             ticket_data_dict[ticket_info]['ticket_end_member_num'] = len(member_list)
             ticket_list.append(ticket_data_dict[ticket_info])
 
-        # if keyword == '' or keyword is None:
-        #     if sort_info == SORT_PACKAGE_MEMBER_COUNT:
-        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('ing_package_member_num'),
-        #                                                   reverse=int(sort_order_by))
-        #     if sort_info == SORT_PACKAGE_NAME:
-        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('name'),
-        #                                                   reverse=int(sort_order_by))
-        #     elif sort_info == SORT_PACKAGE_CREATE_DATE:
-        #         package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('reg_dt'),
-        #                                                   reverse=int(sort_order_by))
-        # else:
-        #     if sort_info == SORT_PACKAGE_MEMBER_COUNT:
-        #         package_data = sorted(package_data, key=attrgetter('ing_package_member_num'),
-        #                               reverse=int(sort_order_by))
-        #     if sort_info == SORT_PACKAGE_NAME:
-        #         package_data = sorted(package_data, key=attrgetter('name'),
-        #                               reverse=int(sort_order_by))
-        #     elif sort_info == SORT_PACKAGE_CREATE_DATE:
-        #         package_data = sorted(package_data, key=attrgetter('reg_dt'),
-        #                               reverse=int(sort_order_by))
-
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        # context['package_data'] = package_data
         return JsonResponse({'finish_ticket_data': ticket_list}, json_dumps_params={'ensure_ascii': True})
 
 
