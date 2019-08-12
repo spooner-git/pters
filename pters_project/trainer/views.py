@@ -2350,9 +2350,9 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_end_color_cd': lecture_tb.end_color_cd,
                                                  'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
                                                  'lecture_type_cd': lecture_tb.lecture_type_cd,
-                                                 'lecture_ticket_list': [ticket_tb.name],
-                                                 'lecture_ticket_state_cd_list': [ticket_tb.state_cd],
-                                                 'lecture_ticket_id_list': [ticket_tb.ticket_id]}
+                                                 'lecture_ticket_list': [],
+                                                 'lecture_ticket_state_cd_list': [],
+                                                 'lecture_ticket_id_list': []}
             if ticket_tb.use == USE:
                 lecture_data_dict[lecture_id]['lecture_ticket_list'].append(ticket_tb.name)
                 lecture_data_dict[lecture_id]['lecture_ticket_state_cd_list'].append(ticket_tb.state_cd)
@@ -2444,9 +2444,9 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_end_color_cd': lecture_tb.end_color_cd,
                                                  'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
                                                  'lecture_type_cd': lecture_tb.lecture_type_cd,
-                                                 'lecture_ticket_list': [ticket_tb.name],
-                                                 'lecture_ticket_state_cd_list': [ticket_tb.state_cd],
-                                                 'lecture_ticket_id_list': [ticket_tb.ticket_id]}
+                                                 'lecture_ticket_list': [],
+                                                 'lecture_ticket_state_cd_list': [],
+                                                 'lecture_ticket_id_list': []}
             if ticket_tb.use == USE:
                 lecture_data_dict[lecture_id]['lecture_ticket_list'].append(ticket_tb.name)
                 lecture_data_dict[lecture_id]['lecture_ticket_state_cd_list'].append(ticket_tb.state_cd)
@@ -2930,17 +2930,13 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
                                                'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
                                                'ticket_reg_count': ticket_tb.reg_count,
-                                               'ticket_lecture_list': [lecture_tb.name],
-                                               'ticket_lecture_state_cd_list': [lecture_tb.state_cd],
-                                               'ticket_lecture_id_list': [lecture_tb.lecture_id],
-                                               'ticket_lecture_ing_color_cd_list':
-                                                   [lecture_tb.ing_color_cd],
-                                               'ticket_lecture_ing_font_color_cd_list':
-                                                   [lecture_tb.ing_font_color_cd],
-                                               'ticket_lecture_end_color_cd_list':
-                                                   [lecture_tb.end_color_cd],
-                                               'ticket_lecture_end_font_color_cd_list':
-                                                   [lecture_tb.end_font_color_cd]}
+                                               'ticket_lecture_list': [],
+                                               'ticket_lecture_state_cd_list': [],
+                                               'ticket_lecture_id_list': [],
+                                               'ticket_lecture_ing_color_cd_list': [],
+                                               'ticket_lecture_ing_font_color_cd_list': [],
+                                               'ticket_lecture_end_color_cd_list': [],
+                                               'ticket_lecture_end_font_color_cd_list': []}
             if lecture_tb.use == USE:
                 ticket_data_dict[ticket_id]['ticket_lecture_list'].append(ticket_tb.name)
                 ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'].append(ticket_tb.state_cd)
@@ -2972,7 +2968,8 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_lecture_end_color_cd_list': [],
                                                    'ticket_lecture_end_font_color_cd_list': []}
 
-        ticket_data_dict = collections.OrderedDict(sorted(ticket_data_dict.items(), key=lambda x: (x[1]['ticket_name'])))
+        ticket_data_dict = collections.OrderedDict(sorted(ticket_data_dict.items(),
+                                                          key=lambda x: (x[1]['ticket_name'])))
 
         ticket_list = []
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
@@ -3041,17 +3038,13 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
                                                'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
                                                'ticket_reg_count': ticket_tb.reg_count,
-                                               'ticket_lecture_list': [lecture_tb.name],
-                                               'ticket_lecture_state_cd_list': [lecture_tb.state_cd],
-                                               'ticket_lecture_id_list': [lecture_tb.lecture_id],
-                                               'ticket_lecture_ing_color_cd_list':
-                                                   [lecture_tb.ing_color_cd],
-                                               'ticket_lecture_ing_font_color_cd_list':
-                                                   [lecture_tb.ing_font_color_cd],
-                                               'ticket_lecture_end_color_cd_list':
-                                                   [lecture_tb.end_color_cd],
-                                               'ticket_lecture_end_font_color_cd_list':
-                                                   [lecture_tb.end_font_color_cd]}
+                                               'ticket_lecture_list': [],
+                                               'ticket_lecture_state_cd_list': [],
+                                               'ticket_lecture_id_list': [],
+                                               'ticket_lecture_ing_color_cd_list': [],
+                                               'ticket_lecture_ing_font_color_cd_list': [],
+                                               'ticket_lecture_end_color_cd_list': [],
+                                               'ticket_lecture_end_font_color_cd_list': []}
             if lecture_tb.use == USE:
                 ticket_data_dict[ticket_id]['ticket_lecture_list'].append(ticket_tb.name)
                 ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'].append(ticket_tb.state_cd)
@@ -3083,7 +3076,8 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_lecture_end_color_cd_list': [],
                                                    'ticket_lecture_end_font_color_cd_list': []}
 
-        ticket_data_dict = collections.OrderedDict(sorted(ticket_data_dict.items(), key=lambda x: (x[1]['ticket_name'])))
+        ticket_data_dict = collections.OrderedDict(sorted(ticket_data_dict.items(),
+                                                          key=lambda x: (x[1]['ticket_name'])))
 
         ticket_list = []
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
@@ -3267,13 +3261,13 @@ class AddProgramInfoView(LoginRequiredMixin, AccessTestMixin, View):
                                                       auth_cd=AUTH_TYPE_VIEW, mod_member_id=request.user.id, use=USE)
                     member_class_info.save()
 
-                    one_to_one_lecture_info = LectureTb(class_tb_id=class_info.class_id, name='1:1 레슨',
+                    one_to_one_lecture_info = LectureTb(class_tb_id=class_info.class_id, name='개인 레슨',
                                                         ing_color_cd='#fbf3bd', end_color_cd='#d2d1cf',
                                                         state_cd=STATE_CD_IN_PROGRESS,
                                                         lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, member_num=1, use=USE)
                     one_to_one_lecture_info.save()
 
-                    ticket_info = TicketTb(class_tb_id=class_info.class_id, name='1:1 레슨',
+                    ticket_info = TicketTb(class_tb_id=class_info.class_id, name='개인 레슨',
                                            state_cd=STATE_CD_IN_PROGRESS, use=USE)
                     ticket_info.save()
 

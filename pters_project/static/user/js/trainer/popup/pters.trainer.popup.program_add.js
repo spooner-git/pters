@@ -1,6 +1,7 @@
 class Program_add{
     constructor(install_target){
         this.target = {install: install_target, toolbox:'section_program_add_toolbox', content:'section_program_add_content'};
+        this.form_id = 'id_program_add_form';
 
         let d = new Date();
         this.dates = {
@@ -72,8 +73,8 @@ class Program_add{
         let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();program_add_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="program_add_popup.upper_right_menu()">등록</span></span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
-                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
+        let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -127,9 +128,9 @@ class Program_add{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+()\[\].,\{\} 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
-        let pattern_message = "괄호 및 + - _ . ,제외 특수문자는 입력 불가";
-        let required = "";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+()\[\]., 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "( ) + - _ . ,제외 특수문자는 입력 불가";
+        let required = "required";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
@@ -181,10 +182,13 @@ class Program_add{
     }
 
     send_data(){
+        if(this.check_before_send() == false){
+            return false;
+        }
         let data = {
                     "center_id":"", 
-                    "subject_cd":this.category_sub.code[0], 
-                    "subject_detail_nm":this.category_sub.name[0], 
+                    "subject_cd":this.data.program_category_code[0],
+                    "subject_detail_nm":this.data.program_name,
                     "start_date":"", "end_date":"", 
                     "class_hour":60, "start_hour_unit":1, "class_member_num":1
         };
@@ -194,6 +198,28 @@ class Program_add{
             this.clear();
             layer_popup.close_layer_popup();
         });
+    }
+
+    check_before_send(){
+        let forms = document.getElementById(`${this.form_id}`);
+        update_check_registration_form(forms);
+        let error_info = check_registration_form(forms);
+        console.log(error_info);
+        if(error_info != ''){
+            show_error_message(error_info);
+            return false;
+        }
+        else{
+            if(this.data.program_category_code.length==0){
+                show_error_message('분야를 선택해주세요.');
+                return false;
+            }
+            if(this.data.program_category_sub_code.length==0){
+                show_error_message('상세 분야를 선택해주세요.');
+                return false;
+            }
+            return true;
+        }
     }
 
     upper_right_menu(){
