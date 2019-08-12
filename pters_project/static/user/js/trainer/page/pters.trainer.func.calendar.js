@@ -1261,14 +1261,13 @@ class Plan_func{
         });
     }
 
-    static update(data, callback){
-        //데이터 형태 {"member_id":"", "first_name":"", "phone":"", "sex":"", "birthday":""};
+    static update(url, data, callback){
         let async = true;
         if(data.async != undefined){
             async = data.async;
         }
         $.ajax({
-            url:'/trainer/update_member_info/',
+            url:url,
             type:'POST',
             data: data,
             dataType : 'html',
