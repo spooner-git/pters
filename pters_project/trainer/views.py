@@ -3212,9 +3212,11 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                     program_selected = 'SELECTED'
                 program_dict = {'program_id': program_info.class_tb.class_id,
                                 'program_total_member_num': total_member_num,
-                                'program_subject_cd': program_info.class_tb.subject_cd,
                                 'program_state_cd': program_info.class_tb.state_cd,
+                                'program_subject_cd': program_info.class_tb.subject_cd,
                                 'program_subject_type_name': program_info.class_tb.get_class_type_cd_name(),
+                                'program_upper_subject_cd': program_info.class_tb.get_upper_class_type_cd(),
+                                'program_upper_subject_type_name': program_info.class_tb.get_upper_class_type_cd_name(),
                                 'program_selected': program_selected,
                                 'program_center_name': ''
                                 }
