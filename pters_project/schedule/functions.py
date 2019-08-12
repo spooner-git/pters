@@ -739,8 +739,10 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
         # 개인 수업 일정인 경우 정보 추가, 개인 수업이 아닌 경우 빈값
         try:
             member_name = schedule_info.member_ticket_tb.member.name
+            member_id = schedule_info.meber_ticket_tb.member_id
         except AttributeError:
             member_name = ''
+            member_id = ''
 
         # 수업 일정인 경우 정보 추가, 수업이 아닌 경우 빈값
         try:
@@ -784,6 +786,7 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                    'schedule_type': schedule_type,
                                    'note': schedule_info.note,
                                    'member_name': member_name,
+                                   'member_id': member_id,
                                    'lecture_id': str(lecture_id),
                                    'lecture_name': lecture_name,
                                    'lecture_ing_color_cd': schedule_info.ing_color_cd,
