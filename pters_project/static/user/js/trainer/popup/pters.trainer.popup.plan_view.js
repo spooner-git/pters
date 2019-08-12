@@ -397,6 +397,11 @@ class Plan_view{
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
+            let data_to_send = {"schedule_id": this.schedule_id, "add_memo":this.memo};
+            let url_update_memo = '/schedule/update_memo_schedule/';
+            Plan_func.update(url_update_memo, data_to_send, ()=>{
+                this.init();
+            });
         }, pattern, pattern_message, required);
         return html;
     }
