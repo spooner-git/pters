@@ -43,6 +43,11 @@ class Calendar {
             this.relocate_current_time_indicator();
         }, 60000);
 
+        this.long_touch = OFF;
+        this.long_touch_schedule_id;
+        this.touch_timer = 0;
+        this.touch_sense;
+
         //Time of the long press
         // this.tempo = 1000; //Time 1000ms = 1s
         // this.mouseDown = () => {
@@ -442,7 +447,6 @@ class Calendar {
         if(schedule_data == undefined){
             schedule_data = false;
         }
-
         let weeks_div = [`<div class="cal_week_line_dates" style="margin-top:4px; border:0;">
                             <div class="no_border obj_font_color_sunday_red">일</div><div class="no_border">월</div><div class="no_border">화</div>
                             <div class="no_border">수</div><div class="no_border">목</div><div class="no_border">금</div><div class="no_border obj_font_color_saturday_blue">토</div>
@@ -679,7 +683,7 @@ class Calendar {
                 
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
                     today_marking = `<div class="today_marking" style="${month_or_week == "week" ? '' : 'top:8%; width:20px; height:20px; border-radius:12px;'}"></div>`;
-                    today_text_style = 'color:#fe4e65;font-weight:bold;'
+                    today_text_style = 'color:#fe4e65;font-weight:bold;';
                 }
                 
                 let onclick = month_or_week == "week" ? `${this.instance}.zoom_week_cal(event, ${_year[i]}, ${_month[i]}, ${_date[i]})` : `calendar.week_zoomed.activate = true;calendar.week_zoomed.target_row = this.dataset.row;${this.instance}.go_week(${_year[i]}, ${_month[i]}, ${_date[i]});`;
@@ -780,7 +784,7 @@ class Calendar {
                             let top = 100*( (plan_start.hour-work_start)*60 + 60*plan_start.minute/60 )/(24*60);
 
                             let styles = `width:${100/cell_divide}%;height:${height}%;top:${top}%;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style}`;
-                            return `<div onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week" style="${styles}">
+                            return `<div onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week" style="${styles}" ontouchstart="${this.instance}.longtouchstart(event, ${plan.schedule_id},()=>{${this.instance}.mode_to_plan_change();})" ontouchend="${this.instance}.longtouchend(event)">
                                         ${plan_name}
                                     </div>`;
                         })
@@ -849,12 +853,30 @@ class Calendar {
         this.user_data.user_selected_time.text = TimeRobot.to_text(hour, minute);
         this.user_data.user_selected_time.text2 = TimeRobot.to_text(this.user_data.user_selected_time.hour2, this.user_data.user_selected_time.minute2);
 
+        //롱터치 일정 변경
+        if(this.long_touch == ON){
+            
+            let end_dt = `${year}-${month}-${date} ${TimeRobot.add_time(hour, minute, 0, period_min).hour}:${TimeRobot.add_time(hour, minute, 0, period_min).minute}`;
+            Plan_func.read_plan(this.long_touch_schedule_id, (received)=>{
+                let start_dt = `${year}-${month}-${date} ${hour}:${minute}`;
+                let diff = TimeRobot.diff(received.schedule_info[0].start_time, received.schedule_info[0].end_time);
+                let end_dt = `${year}-${month}-${date} ${TimeRobot.add_time(hour, minute, diff.hour, diff.min).hour}:${TimeRobot.add_time(hour, minute, diff.hour, diff.min).minute}`;
+                this.simple_plan_change(received, start_dt, end_dt);
+            });
+
+            return false;
+        }
+
+        //일반 일정 등록
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
             plan_add_popup = new Plan_add('.popup_plan_add', this.user_data, "plan_add_popup");
         });
     }
 
     open_popup_plan_view (event, schedule_id, year, month, date){
+        if(this.long_touch == ON){
+            return false;
+        }
         this.user_data.user_selected_plan.schedule_id = schedule_id;
         this.user_data.user_selected_plan.date.year = year;
         this.user_data.user_selected_plan.date.month = month;
@@ -863,6 +885,66 @@ class Calendar {
             plan_view_popup = new Plan_view('.popup_plan_view', this.user_data.user_selected_plan, "plan_view_popup");
         });
     }
+
+    longtouchstart(event, schedule_id, callback){
+        event.stopPropagation();
+        this.long_touch_schedule_id = schedule_id;
+        this.touch_sense = setInterval(()=>{this.touch_timer+= 100;
+                                    if(this.touch_timer >= 700){
+                                        this.mode_to_plan_change(ON);
+                                        if(callback != undefined){
+                                            callback();
+                                        }
+                                        clearInterval(this.touch_sense);
+                                        this.touch_timer = 0;
+                                    }
+                            }, 100);
+    }
+
+    longtouchend(event){
+        event.stopPropagation();
+        if(this.touch_timer < 700){
+            clearInterval(this.touch_sense);
+            this.touch_timer = 0;
+            return false;
+        }
+        clearInterval(this.touch_sense);
+        this.touch_timer = 0;
+    }
+
+    mode_to_plan_change(switching){
+        switch(switching){
+            case ON:
+                this.long_touch = ON;
+                $('.week_rows > .week_row').css({"background-color":"#ffb0ba61"});
+                break;
+            case OFF:
+                this.long_touch = OFF;
+                $('.week_rows > .week_row').css({"background-color":"#ffffff"});
+                break;
+        }
+    }
+
+    simple_plan_change(data, start_dt, end_dt){
+        let data1 = {"schedule_id": data.schedule_info[0].schedule_id};
+        let data2 = {"lecture_id":data.schedule_info[0].lecture_id,
+                    "start_dt": start_dt,
+                    "end_dt":end_dt,
+                    "note":data.schedule_info[0].note, "duplication_enable_flag": 1,
+                    "en_dis_type":data.schedule_info[0].schedule_type, "lecture_member_ids":data.schedule_info[0].lecture_schedule_data.map((el)=>{return el.member_id})
+        };
+        //en_dis_type 0: off일정, 1:레슨일정
+        //duplication_enable_flag 0: 중복불허 1:중복허용
+        
+        Plan_func.delete(data1, ()=>{ //일정을 지운다.
+            let url_to_create_new_schedule ='/schedule/add_schedule/';
+            Plan_func.create(url_to_create_new_schedule, data2, ()=>{ //일정을 새로 등록한다.
+                this.mode_to_plan_change(OFF);
+                calendar.init();
+            });
+        });
+    }
+
 
     add_plan_button (){
         //현재 클릭한 곳의 연월일, 시분 데이터
