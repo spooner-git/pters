@@ -216,8 +216,8 @@ class CComponent{
                                 </div>
                             </div>
                             <div class="cell_lecture_info">
-                                <div class="lecture_name_info">${lecture_name}</div>
-                                <div class="lecture_additional_info">정원: ${max_member_num} 명 / 진행중 회원: ${ing_member_num} 명</div>
+                                <div>${lecture_name}</div>
+                                <div class="lecture_additional_info">정원: ${max_member_num} 명 / 진행중  ${ing_member_num} 명</div>
                             </div>
                             <div class="cell_lecture_selected">
                                 <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? 'none' : 'lecture_selected'}">

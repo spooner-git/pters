@@ -191,7 +191,7 @@ class Plan_add{
         let html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업') + lecture_select_row + '</div>' +
                     `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' +
                     '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row + '<div class="gap"></div>' +
-                                                    CComponent.dom_tag('진행 시간') + start_time_select_row + end_time_select_row +  '<div class="gap"></div>' +
+                                                    CComponent.dom_tag('시간') + start_time_select_row + end_time_select_row +  '<div class="gap"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
                     '<div class="obj_input_box_full">'+  CComponent.dom_tag('메모') + memo_select_row + '</div>';
 
@@ -249,7 +249,7 @@ class Plan_add{
 
     dom_row_member_select(){
         let id = 'select_member';
-        let title = this.data.member_name.length == 0 ? '회원 선택*' : this.data.member_name.join(', ');
+        let title = this.data.member_name.length == 0 ? '회원*' : this.data.member_name.join(', ');
         let icon = '/static/common/icon/icon_member.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
