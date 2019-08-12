@@ -188,7 +188,7 @@ class Plan_add{
             display = 'none';
         }
 
-        let html =  `<div class="obj_box_full" style="display:${display}">` + CComponent.dom_tag('일정') + lecture_select_row + '</div>' + 
+        let html =  `<div class="obj_box_full" style="display:${display}">` + CComponent.dom_tag('수업') + lecture_select_row + '</div>' +
                     `<div class="obj_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' + 
                     '<div class="obj_box_full">' +  CComponent.dom_tag('일자') + date_select_row + '<div class="gap"></div>' +
                                                     CComponent.dom_tag('진행 시간') + start_time_select_row + end_time_select_row +  '<div class="gap"></div>' +
@@ -225,7 +225,7 @@ class Plan_add{
         let icon_r_text = "";
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
-                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1, (set_data)=>{
+                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1, {'title':'수업'}, (set_data)=>{
                     //수업을 추가
                     this.lecture = set_data;
                     //수업에 속한 고정회원들을 추가
@@ -249,14 +249,14 @@ class Plan_add{
 
     dom_row_member_select(){
         let id = 'select_member';
-        let title = this.data.member_name.length == 0 ? '회원*' : this.data.member_name.join(', ');
+        let title = this.data.member_name.length == 0 ? '회원 선택*' : this.data.member_name.join(', ');
         let icon = '/static/common/icon/icon_member.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
             if(this.data.lecture_id.length != 0){
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
-                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num[0], {'lecture_id':this.data.lecture_id[0], "title":"회원 선택"}, (set_data)=>{
+                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num[0], {'lecture_id':this.data.lecture_id[0], "title":"회원"}, (set_data)=>{
                         this.member = set_data;
                         this.render_content();
                     });
@@ -271,7 +271,7 @@ class Plan_add{
     dom_row_date_select(){
         //등록하는 행을 만든다.
         let id = 'select_date';
-        let title = this.data.date_text == null ? '날짜*' : this.data.date_text;
+        let title = this.data.date_text == null ? '일자*' : this.data.date_text;
         let icon = '/static/common/icon/icon_cal.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -284,7 +284,7 @@ class Plan_add{
                 let month = this.data.date == null ? this.dates.current_month : this.data.date.month;
                 let date = this.data.date == null ? this.dates.current_date : this.data.date.date;
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'날짜 선택', data:{year:year, month:month, date:date},  
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'일자', data:{year:year, month:month, date:date},
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     this.date = object; 
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
@@ -317,7 +317,7 @@ class Plan_add{
                 let hour = this.data.start_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
                 let minute = this.data.start_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
                 
-                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시간 선택', data:{zone:zone, hour:hour, minute:minute}, 
+                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시간', data:{zone:zone, hour:hour, minute:minute},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.start_time = object;
                                                                                                     if(this.data.end_time != null){
@@ -358,7 +358,7 @@ class Plan_add{
                 let zone_hour = time_min_type_zone.hour;
                 let zone_minute = time_min_type_zone.minute;
 
-                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시간 선택', 
+                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시간',
                                                                                                 data:{zone:zone_min, hour:zone_hour, minute:zone_minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.end_time = object;
