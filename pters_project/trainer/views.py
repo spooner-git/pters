@@ -3413,7 +3413,7 @@ class UpdateProgramInfoView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             if str(class_id) == str(class_id_session):
                 request.session['class_type_code'] = class_info.subject_cd
-                request.session['class_type_name'] = class_info.subject_detail_nm
+                request.session['class_type_name'] = class_info.get_class_type_cd_name()
                 request.session['class_hour'] = class_info.class_hour
 
         if error is not None:
