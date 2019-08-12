@@ -2379,8 +2379,15 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_ticket_id_list': []}
 
         lecture_data_dict = sorted(lecture_data_dict.items(), key=lambda x: (x[1]['lecture_type_cd']), reverse=True)
-        lecture_data_dict = collections.OrderedDict(lecture_data_dict[0:1]+sorted(lecture_data_dict[1:],
-                                                                                  key=lambda x: (x[1]['lecture_name'])))
+
+        if len(lecture_data_dict) > 0:
+            if lecture_data_dict[0][1]['lecture_type_cd'] == 'ONE_TO_ONE':
+                lecture_data_dict = collections.OrderedDict(
+                    lecture_data_dict[0:1]+sorted(lecture_data_dict[1:], key=lambda x: (x[1]['lecture_name'])))
+            else:
+                lecture_data_dict = collections.OrderedDict(sorted(lecture_data_dict,
+                                                                   key=lambda x: (x[1]['lecture_name'])))
+
         lecture_list = []
 
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
@@ -2471,10 +2478,15 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_ticket_list': [],
                                                      'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}
-
         lecture_data_dict = sorted(lecture_data_dict.items(), key=lambda x: (x[1]['lecture_type_cd']), reverse=True)
-        lecture_data_dict = collections.OrderedDict(lecture_data_dict[0:1]+sorted(lecture_data_dict[1:],
-                                                                                  key=lambda x: (x[1]['lecture_name'])))
+        if len(lecture_data_dict) > 0:
+            if lecture_data_dict[0][1]['lecture_type_cd'] == 'ONE_TO_ONE':
+                lecture_data_dict = collections.OrderedDict(
+                    lecture_data_dict[0:1]+sorted(lecture_data_dict[1:], key=lambda x: (x[1]['lecture_name'])))
+            else:
+                lecture_data_dict = collections.OrderedDict(sorted(lecture_data_dict,
+                                                                   key=lambda x: (x[1]['lecture_name'])))
+
         lecture_list = []
 
         for lecture_info in lecture_data_dict:
@@ -2828,6 +2840,7 @@ def update_ticket_status_info_logic(request):
 
     error = None
     ticket_info = None
+    ticket_lecture_data = None
     now = timezone.now()
 
     if ticket_id is None or ticket_id == '':
@@ -2842,14 +2855,14 @@ def update_ticket_status_info_logic(request):
     if error is None:
 
         class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
-            'member_ticket_tb').filter(class_tb_id=class_id, member_ticket_tb__ticket_tb_id=ticket_id,
-                                       auth_cd=AUTH_TYPE_VIEW,
-                                       use=USE)
+            'member_ticket_tb__member').filter(class_tb_id=class_id, member_ticket_tb__ticket_tb_id=ticket_id,
+                                               auth_cd=AUTH_TYPE_VIEW,
+                                               use=USE).order_by('member_ticket_tb__member__member_id')
 
         if class_member_ticket_data is not None and state_cd == STATE_CD_FINISH:
+            member_id = None
             for class_member_ticket_info in class_member_ticket_data:
                 member_ticket_info = class_member_ticket_info.member_ticket_tb
-
                 schedule_data = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_info.member_ticket_id,
                                                           end_dt__lte=now,
                                                           use=USE).exclude(Q(state_cd=STATE_CD_FINISH)
@@ -2874,6 +2887,9 @@ def update_ticket_status_info_logic(request):
                     member_ticket_info.member_ticket_rem_count = 0
                     member_ticket_info.state_cd = STATE_CD_FINISH
                 member_ticket_info.save()
+                if member_id != member_ticket_info.member_id:
+                    member_id = member_ticket_info.member_id
+                    func_update_lecture_member_fix_status_cd(class_id, member_id)
 
         ticket_info.state_cd = state_cd
         ticket_info.save()
@@ -3196,9 +3212,11 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                     program_selected = 'SELECTED'
                 program_dict = {'program_id': program_info.class_tb.class_id,
                                 'program_total_member_num': total_member_num,
-                                'program_subject_cd': program_info.class_tb.subject_cd,
                                 'program_state_cd': program_info.class_tb.state_cd,
+                                'program_subject_cd': program_info.class_tb.subject_cd,
                                 'program_subject_type_name': program_info.class_tb.get_class_type_cd_name(),
+                                'program_upper_subject_cd': program_info.class_tb.get_upper_class_type_cd(),
+                                'program_upper_subject_type_name': program_info.class_tb.get_upper_class_type_cd_name(),
                                 'program_selected': program_selected,
                                 'program_center_name': ''
                                 }
@@ -3397,7 +3415,7 @@ class UpdateProgramInfoView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             if str(class_id) == str(class_id_session):
                 request.session['class_type_code'] = class_info.subject_cd
-                request.session['class_type_name'] = class_info.subject_detail_nm
+                request.session['class_type_name'] = class_info.get_class_type_cd_name()
                 request.session['class_hour'] = class_info.class_hour
 
         if error is not None:

@@ -74,6 +74,22 @@ class ClassTb(TimeStampedModel):
     def __str__(self):
         return self.member.__str__()+'_class'
 
+    def get_upper_class_type_cd(self):
+        try:
+            group_cd = CommonCdTb.objects.get(common_cd=self.subject_cd).group_cd
+        except ObjectDoesNotExist:
+            group_cd = ''
+
+        return group_cd
+
+    def get_upper_class_type_cd_name(self):
+        try:
+            group_cd_nm = CommonCdTb.objects.get(common_cd=self.subject_cd).group_cd_nm
+        except ObjectDoesNotExist:
+            group_cd_nm = ''
+
+        return group_cd_nm
+
     def get_class_type_cd_name(self):
         try:
             subject_type_name = CommonCdTb.objects.get(common_cd=self.subject_cd).common_cd_nm
