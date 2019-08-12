@@ -210,7 +210,7 @@ class Lecture_view{
     dom_row_capacity_view(){
         let unit = '명';
         let id = 'lecture_capacity_view';
-        let title = this.data.capacity == null ? '' : '정원 '+this.data.capacity+unit;
+        let title = this.data.capacity == null ? '' : this.data.capacity+unit;
         let placeholder = '정원*';
         let icon = '/static/common/icon/icon_member.png';
         let icon_r_visible = SHOW;
@@ -599,7 +599,7 @@ class Lecture_simple_view{
 
     dom_row_capacity_view(){
         let id = 'lecture_capacity_view';
-        let title = this.data.capacity == null ? '정원' : '정원 '+this.data.capacity+' 명';
+        let title = this.data.capacity == null ? '' : +this.data.capacity+' 명';
         let icon = '/static/common/icon/people_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";

@@ -2379,8 +2379,15 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_ticket_id_list': []}
 
         lecture_data_dict = sorted(lecture_data_dict.items(), key=lambda x: (x[1]['lecture_type_cd']), reverse=True)
-        lecture_data_dict = collections.OrderedDict(lecture_data_dict[0:1]+sorted(lecture_data_dict[1:],
-                                                                                  key=lambda x: (x[1]['lecture_name'])))
+
+        if len(lecture_data_dict) > 0:
+            if lecture_data_dict[0][1]['lecture_type_cd'] == 'ONE_TO_ONE':
+                lecture_data_dict = collections.OrderedDict(
+                    lecture_data_dict[0:1]+sorted(lecture_data_dict[1:], key=lambda x: (x[1]['lecture_name'])))
+            else:
+                lecture_data_dict = collections.OrderedDict(sorted(lecture_data_dict,
+                                                                   key=lambda x: (x[1]['lecture_name'])))
+
         lecture_list = []
 
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
@@ -2471,10 +2478,15 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_ticket_list': [],
                                                      'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}
-
         lecture_data_dict = sorted(lecture_data_dict.items(), key=lambda x: (x[1]['lecture_type_cd']), reverse=True)
-        lecture_data_dict = collections.OrderedDict(lecture_data_dict[0:1]+sorted(lecture_data_dict[1:],
-                                                                                  key=lambda x: (x[1]['lecture_name'])))
+        if len(lecture_data_dict) > 0:
+            if lecture_data_dict[0][1]['lecture_type_cd'] == 'ONE_TO_ONE':
+                lecture_data_dict = collections.OrderedDict(
+                    lecture_data_dict[0:1]+sorted(lecture_data_dict[1:], key=lambda x: (x[1]['lecture_name'])))
+            else:
+                lecture_data_dict = collections.OrderedDict(sorted(lecture_data_dict,
+                                                                   key=lambda x: (x[1]['lecture_name'])))
+
         lecture_list = []
 
         for lecture_info in lecture_data_dict:
