@@ -2954,9 +2954,9 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_lecture_end_color_cd_list': [],
                                                'ticket_lecture_end_font_color_cd_list': []}
             if lecture_tb.use == USE:
-                ticket_data_dict[ticket_id]['ticket_lecture_list'].append(ticket_tb.name)
-                ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'].append(ticket_tb.state_cd)
-                ticket_data_dict[ticket_id]['ticket_lecture_id_list'].append(ticket_tb.ticket_id)
+                ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
+                ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'].append(lecture_tb.state_cd)
+                ticket_data_dict[ticket_id]['ticket_lecture_id_list'].append(lecture_tb.lecture_id)
                 ticket_data_dict[ticket_id]['ticket_lecture_ing_color_cd_list'].append(lecture_tb.ing_color_cd)
                 ticket_data_dict[ticket_id]['ticket_lecture_ing_font_color_cd_list'].append(lecture_tb.ing_font_color_cd)
                 ticket_data_dict[ticket_id]['ticket_lecture_end_color_cd_list'].append(lecture_tb.end_color_cd)
@@ -3062,9 +3062,9 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_lecture_end_color_cd_list': [],
                                                'ticket_lecture_end_font_color_cd_list': []}
             if lecture_tb.use == USE:
-                ticket_data_dict[ticket_id]['ticket_lecture_list'].append(ticket_tb.name)
-                ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'].append(ticket_tb.state_cd)
-                ticket_data_dict[ticket_id]['ticket_lecture_id_list'].append(ticket_tb.ticket_id)
+                ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
+                ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'].append(lecture_tb.state_cd)
+                ticket_data_dict[ticket_id]['ticket_lecture_id_list'].append(lecture_tb.lecture_id)
                 ticket_data_dict[ticket_id]['ticket_lecture_ing_color_cd_list'].append(lecture_tb.ing_color_cd)
                 ticket_data_dict[ticket_id]['ticket_lecture_ing_font_color_cd_list'].append(lecture_tb.ing_font_color_cd)
                 ticket_data_dict[ticket_id]['ticket_lecture_end_color_cd_list'].append(lecture_tb.end_color_cd)
