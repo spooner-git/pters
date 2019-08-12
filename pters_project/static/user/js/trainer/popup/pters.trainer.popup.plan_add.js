@@ -443,7 +443,6 @@ class Plan_add{
         //duplication_enable_flag 0: 중복불허 1:중복허용
         if(this.data.repeat.power == OFF){
             let url ='/schedule/add_schedule/';
-            
             Plan_func.create(url, data, ()=>{
                 layer_popup.close_layer_popup();
                 calendar.init();

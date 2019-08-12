@@ -11,6 +11,8 @@
  html, body{
      overflow: hidden;
      margin: 0;
+     user-select: none !important;
+     -webkit-user-select: none !important;
     /* overscroll-behavior-y: contain;  */
 
     /* position: fixed; 

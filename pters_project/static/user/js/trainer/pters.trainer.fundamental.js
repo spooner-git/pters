@@ -318,5 +318,25 @@ class TimeRobot{
 
         return {hour:resultHour, minute:resultMin};
     }
+
+    static diff(time1, time2){ //time1은 time2보다 작아야한다.
+        let hour1 = Number(time1.split(':')[0]);
+        let minute1 = Number(time1.split(':')[1]);
+        let hour2 = Number(time2.split(':')[0]);
+        let minute2 = Number(time2.split(':')[1]);
+
+        if(hour2 == 0 && minute2 == 0){
+            hour2 = 24;
+        }
+
+        let hour_diff = hour2 - hour1;
+        let min_diff = minute2 - minute1;
+        if(min_diff < 0){
+            hour_diff = hour_diff - 1;
+        }
+
+        return {hour : hour_diff, min: Math.abs(min_diff)};
+
+    }
 }
 

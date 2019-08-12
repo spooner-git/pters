@@ -927,15 +927,15 @@ class Calendar {
 
     simple_plan_change(data, start_dt, end_dt){
         let data1 = {"schedule_id": data.schedule_info[0].schedule_id};
-        let data2 = {"lecture_id":data.schedule_info[0].lecture_id,
+        let data2 = {"lecture_id": data.schedule_info[0].schedule_type == 0 ? "" : data.schedule_info[0].lecture_id,
                     "start_dt": start_dt,
                     "end_dt":end_dt,
                     "note":data.schedule_info[0].note, "duplication_enable_flag": 1,
-                    "en_dis_type":data.schedule_info[0].schedule_type, "lecture_member_ids":data.schedule_info[0].lecture_schedule_data.map((el)=>{return el.member_id})
+                    "en_dis_type":data.schedule_info[0].schedule_type, "member_ids":data.schedule_info[0].lecture_schedule_data.map((el)=>{return el.member_id;})
         };
         //en_dis_type 0: off일정, 1:레슨일정
         //duplication_enable_flag 0: 중복불허 1:중복허용
-        
+
         Plan_func.delete(data1, ()=>{ //일정을 지운다.
             let url_to_create_new_schedule ='/schedule/add_schedule/';
             Plan_func.create(url_to_create_new_schedule, data2, ()=>{ //일정을 새로 등록한다.
