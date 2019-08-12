@@ -2071,3 +2071,93 @@ class DaySelector{
         this.clear();
     }
 }
+
+class CategorySelector{
+    constructor(install_target, target_instance, multiple_select, upper_category, callback){
+        this.target = {install:install_target};
+        this.target_instance = target_instance;
+        this.unique_instance = install_target.replace(/#./gi, "");
+        this.upper_category = upper_category;
+        this.callback = callback;
+        this.received_data;
+        this.multiple_select = multiple_select;
+        this.data = {
+            name:[],
+            code:[]
+        };
+        this.init();
+        this.set_initial_data();
+    }
+
+
+    init(){
+        this.render();
+    }
+
+    set_initial_data(){
+        this.data.name = this.target_instance.category.name;
+        this.data.code = this.target_instance.category.code;
+        this.init();
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="day_select.upper_right_menu();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="day_select.upper_right_menu();">완료</span></span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list (){
+        let category_to_be_drawn = this.upper_category == null ? PROGRAM_CATEGORY : PROGRAM_CATEGORY[this.upper_category].category;
+        let html_to_join = [];
+        for(let item in category_to_be_drawn){
+            let checked = this.data.code.indexOf(item) != -1 ? 1 : 0; //타겟이 이미 가진 데이터를 get
+            let id = `category_${item}`;
+            let multiple_select = this.multiple_select;
+            let title = category_to_be_drawn[item].name;
+            let location = this.unique_instance;
+            let icon = null;
+            let html = CComponent.select_row (multiple_select, checked, location, id, title, icon, (add_or_substract)=>{
+                    if(add_or_substract == "add"){
+                        this.data.name.push(category_to_be_drawn[item].name);
+                        this.data.code.push(item);
+                        this.render();
+                    }else if(add_or_substract == "substract"){
+                        this.data.name.splice(this.data.code.indexOf(item, 1));
+                        this.data.code.splice(this.data.code.indexOf(item, 1));
+                        this.render();
+                    }else if(add_or_substract == "add_single"){
+                        this.data.name = [category_to_be_drawn[item]];
+                        this.data.code = [item];
+                        this.upper_right_menu();
+                    }
+                }  
+            );
+            html_to_join.push(html);
+        }
+
+
+        return html_to_join.join('');
+    }
+
+    request_list (callback){
+        // this.received_data = color_data;
+        // callback();
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}

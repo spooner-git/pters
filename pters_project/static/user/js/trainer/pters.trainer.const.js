@@ -115,6 +115,7 @@ const POPUP_MEMBER_TICKET_HISTORY = 'popup_member_ticket_history';
 const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
 
 const POPUP_ADDRESS_PROGRAM_LIST = 'popup_program_list';
+const POPUP_ADDRESS_PROGRAM_ADD = 'popup_program_add';
 // 풀페이지 팝업
 
 // User Input 팝업
@@ -130,6 +131,8 @@ const POPUP_ADDRESS_COLOR_SELECT = 'popup_color_select';
 
 const POPUP_ADDRESS_REPEAT_SELECT = 'popup_repeat_select';
 const POPUP_ADDRESS_DAY_SELECT = 'popup_day_select';
+
+const POPUP_ADDRESS_CATEGORY_SELECT = 'popup_category_select';
 // User Input 팝업
 
 /* 팝업 주소 */
@@ -154,3 +157,50 @@ const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};
 const LECTURE_TYPE_ONE_TO_ONE = 'ONE_TO_ONE';
 //  수업 종류 - 일반 수업
 const LECTURE_TYPE_NORMAL = 'NORMAL';
+
+
+
+
+//프로그램 리스트
+const PROGRAM_CATEGORY = {
+    TR:{name:"운동", 
+        sub_category:{
+            WT:{name:"웨이트 트레이닝"},
+            PI:{name:"필라테스"},
+            YG:{name:"요가"},
+            BL:{name:"발레"},
+            GOLF:{name:"골프"},
+            TENNIS:{name:"테니스"},
+            BILLIARD:{name:"당구"},
+            SPINNING:{name:"스피닝"},
+        }
+    },
+    MU:{name:"음악", 
+        sub_category:{
+            PIANO:{name:"피아노"},
+            FLUTE:{name:"플룻"},
+            VIOLIN:{name:"바이올린"},
+            CELLO:{name:"첼로"},
+            VOCAL_MUSIC:{name:"성악"},
+            CLARINET:{name:"클라리넷"},
+            GUITAR:{name:"기타"},
+            DRUM:{name:"드럼"},
+            VOCAL:{name:"보컬"},
+            COMPOSITION:{name:"작곡"}
+        }
+    },
+    PL:{name:"과외", 
+        sub_category:{
+            KO:{name:"국어"},
+            EN:{name:"영어"},
+            EG_CM:{name:"영어회화"},
+            MA:{name:"수학"},
+            CH:{name:"중국어"},
+            CH_CM:{name:"중국어 회화"},
+            JP:{name:"일본어"},
+            JP_CM:{name:"일본어 회화"},
+            SCIENCE:{name:"과학"}
+        }
+    },
+    ETC:{name:"기타"},
+};

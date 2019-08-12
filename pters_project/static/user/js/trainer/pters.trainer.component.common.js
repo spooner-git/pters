@@ -30,14 +30,10 @@ class CComponent{
         if(icon == NONE){
             icon = '/static/common/icon/menu_white.png';
         }
-        let icon_l_visible = "";
-        if(icon == undefined){
-            icon_l_visible = 'none';
-        }
         
         let html = `<li class="create_row" id="c_r_${id}">
                         <div class="obj_table_raw">
-                            <div class="cell_title" style="display:${icon_l_visible}">
+                            <div class="cell_title">
                                 ${icon != "" ? `<img src="${icon}">` : ""} 
                                 <span class="cell_text">${title}</span>
                             </div>
