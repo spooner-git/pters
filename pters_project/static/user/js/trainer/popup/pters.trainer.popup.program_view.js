@@ -23,7 +23,8 @@ class Program_view{
             program_category_code:[],
             program_category_sub:[],
             program_category_sub_code:[],
-            program_name_by_user:null
+            program_name_by_user:null,
+            program_selected:null
         };
 
         this.init();
@@ -66,6 +67,7 @@ class Program_view{
         this.name = this.external_data.name;
         this.category = this.external_data.category;
         this.category_sub = this.external_data.category_sub;
+        this.data.program_selected = this.external_data.selected;
 
         this.init(); 
     }
@@ -228,7 +230,11 @@ class Program_view{
 
     upper_right_menu(){
         let user_option = {
-            delete:{text:"프로그램 삭제", callback:()=>{ 
+            delete:{text:"프로그램 삭제", callback:()=>{
+                    if(this.data.program_selected == PROGRAM_SELECTED){
+                        show_error_message('선택되어 있는 프로그램은 삭제할 수 없습니다.<br>다른 프로그램으로 이동 후 삭제가 가능합니다.')
+                        return false;
+                    } 
                     show_user_confirm(`"${this.data.program_name}" 프로그램을 삭제 하시겠습니까? <br> 모든 정보가 삭제되며 복구할 수 없습니다.`, ()=>{
                         layer_popup.close_layer_popup(); // 옵션 셀렉터 팝업 닫기
                         layer_popup.close_layer_popup(); // 확인 팝업 닫기

@@ -81,7 +81,7 @@ class Program_list{
             let category_sub_name = PROGRAM_CATEGORY[category_code].sub_category[data.program_subject_cd].name;
             let category_sub_code = data.program_subject_cd;
 
-            let html = `<article class="program_wrapper" data-program_id="${id}" onclick="program_list_popup.event_program_click(${id}, '${name}', '${category_code}', '${category_sub_code}');">
+            let html = `<article class="program_wrapper" data-program_id="${id}" onclick="program_list_popup.event_program_click(${id}, '${name}', '${category_code}', '${category_sub_code}', '${selected}');">
                             <div class="program_data_u">
                                 <div>
                                     <span>${name}</span>
@@ -120,7 +120,7 @@ class Program_list{
         return html;
     }
 
-    event_program_click(id, name, category, category_sub){
+    event_program_click(id, name, category, category_sub, selected){
         let user_option = {
             goto:{text:"프로그램 이동", callback:()=>{ 
                     window.location.href=`/trainer/select_program_processing/?class_id=${id}&next_page=/trainer/`; 
@@ -133,7 +133,8 @@ class Program_list{
                                                 id:id,
                                                 name:name, 
                                                 category:{name:[PROGRAM_CATEGORY[category].name], code:[category]}, 
-                                                category_sub:{name:[PROGRAM_CATEGORY[category].sub_category[category_sub].name], code:[category_sub]}
+                                                category_sub:{name:[PROGRAM_CATEGORY[category].sub_category[category_sub].name], code:[category_sub]},
+                                                selected:selected
                                             };
                         program_view_popup = new Program_view('.popup_program_view', external_data);
                     });
