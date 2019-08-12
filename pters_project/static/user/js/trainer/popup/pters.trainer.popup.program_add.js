@@ -149,8 +149,10 @@ class Program_add{
                 let multiple_select = 1;
                 let upper_category = null;
                 category_select = new CategorySelector('#wrapper_box_category_select', this, multiple_select, upper_category, (set_data)=>{
+                    if(this.category.code != set_data.code){
+                        this.category_sub = {name:[], code:[]};
+                    }
                     this.category = set_data;
-                    this.category_sub = {name:[], code:[]};
                     this.render_content();
                 });
             });
@@ -187,7 +189,7 @@ class Program_add{
         }
         let data = {
                     "center_id":"", 
-                    "subject_cd":this.data.program_category_code[0],
+                    "subject_cd":this.data.program_category_sub_code[0],
                     "subject_detail_nm":this.data.program_name,
                     "start_date":"", "end_date":"", 
                     "class_hour":60, "start_hour_unit":1, "class_member_num":1

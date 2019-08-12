@@ -173,7 +173,7 @@ const PROGRAM_CATEGORY = {
             GOLF:{name:"골프"},
             TENNIS:{name:"테니스"},
             BILLIARD:{name:"당구"},
-            SPINNING:{name:"스피닝"},
+            SPINNING:{name:"스피닝"}
         }
     },
     MU:{name:"음악", 
@@ -193,7 +193,7 @@ const PROGRAM_CATEGORY = {
     PL:{name:"과외", 
         sub_category:{
             KO:{name:"국어"},
-            EN:{name:"영어"},
+            EG:{name:"영어"},
             EG_CM:{name:"영어회화"},
             MA:{name:"수학"},
             CH:{name:"중국어"},

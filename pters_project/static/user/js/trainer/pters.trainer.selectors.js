@@ -2095,8 +2095,8 @@ class CategorySelector{
     }
 
     set_initial_data(){
-        // this.data.name = this.target_instance.category.name;
-        // this.data.code = this.target_instance.category.code;
+        this.data.name = this.target_instance.category.name;
+        this.data.code = this.target_instance.category.code;
         this.init();
     }
 

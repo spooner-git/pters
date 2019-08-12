@@ -1,7 +1,7 @@
 class Program_view{
     constructor(install_target, external_data){
-        this.target = {install: install_target, toolbox:'section_program_add_toolbox', content:'section_program_add_content'};
-        this.form_id = 'id_program_add_form';
+        this.target = {install: install_target, toolbox:'section_program_view_toolbox', content:'section_program_view_content'};
+        this.form_id = 'id_program_view_form';
         this.external_data = external_data;
 
         let d = new Date();
@@ -17,6 +17,7 @@ class Program_view{
         };
 
         this.data = {
+            program_id:null,
             program_name:null,
             program_category:[],
             program_category_code:[],
@@ -61,6 +62,7 @@ class Program_view{
     }
 
     set_initial_data (){
+        this.data.program_id = this.external_data.id;
         this.name = this.external_data.name;
         this.category = this.external_data.category;
         this.category_sub = this.external_data.category_sub;
@@ -75,16 +77,16 @@ class Program_view{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();program_add_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();program_view_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="program_add_popup.upper_right_menu()">등록</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="program_view_popup.upper_right_menu()">완료</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
-        document.querySelector('.popup_program_add .wrapper_top').style.border = 0;
+        document.querySelector('.popup_program_view .wrapper_top').style.border = 0;
     }
 
     render_toolbox(){
@@ -100,7 +102,7 @@ class Program_view{
     }
     
     dom_assembly_content(){
-        let program_name_input_row = this.dom_row_program_name();
+        // let program_name_input_row = this.dom_row_program_name();
         let program_category_select_row = this.dom_row_program_category();
         let program_category_sub_select_row = this.dom_row_program_category_sub();
 
@@ -111,20 +113,19 @@ class Program_view{
 
     dom_row_toolbox(){
         let id = 'program_name_edit';
-        let title = this.data.name == null ? '' : this.data.name;
+        let title = this.name == null ? '' : this.name;
         let style = {"font-size":"20px", "font-weight":"bold"};
         let placeholder =  '프로그램명*';
         let icon = undefined;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+\(\)\[\]\>\< 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
         let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
         let required = "";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
-            this.send_data();
         }, pattern, pattern_message, required);
 
         let html = `
@@ -150,8 +151,10 @@ class Program_view{
                 let multiple_select = 1;
                 let upper_category = null;
                 category_select = new CategorySelector('#wrapper_box_category_select', this, multiple_select, upper_category, (set_data)=>{
+                    if(this.category.code != set_data.code){
+                        this.category_sub = {name:[], code:[]};
+                    }
                     this.category = set_data;
-                    this.category_sub = {name:[], code:[]};
                     this.render_content();
                 });
             });
@@ -187,8 +190,8 @@ class Program_view{
             return false;
         }
         let data = {
-                    "class_id":"", 
-                    "subject_cd":this.data.program_category_code[0],
+                    "class_id":this.data.program_id, 
+                    "subject_cd":this.data.program_category_sub_code[0],
                     "subject_detail_nm":this.data.program_name,
                     "start_date":"", "end_date":"", 
                     "class_hour":60, "start_hour_unit":1, "class_member_num":1
@@ -196,8 +199,8 @@ class Program_view{
 
         Program_func.update(data, ()=>{
             program_list_popup.init();
-            // this.clear();
-            // layer_popup.close_layer_popup();
+            this.clear();
+            layer_popup.close_layer_popup();
         });
     }
 
