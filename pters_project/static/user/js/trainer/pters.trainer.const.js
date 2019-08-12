@@ -116,6 +116,7 @@ const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
 
 const POPUP_ADDRESS_PROGRAM_LIST = 'popup_program_list';
 const POPUP_ADDRESS_PROGRAM_ADD = 'popup_program_add';
+const POPUP_ADDRESS_PROGRAM_VIEW = 'popup_program_view';
 // 풀페이지 팝업
 
 // User Input 팝업
@@ -172,7 +173,7 @@ const PROGRAM_CATEGORY = {
             GOLF:{name:"골프"},
             TENNIS:{name:"테니스"},
             BILLIARD:{name:"당구"},
-            SPINNING:{name:"스피닝"},
+            SPINNING:{name:"스피닝"}
         }
     },
     MU:{name:"음악", 
@@ -192,7 +193,7 @@ const PROGRAM_CATEGORY = {
     PL:{name:"과외", 
         sub_category:{
             KO:{name:"국어"},
-            EN:{name:"영어"},
+            EG:{name:"영어"},
             EG_CM:{name:"영어회화"},
             MA:{name:"수학"},
             CH:{name:"중국어"},
@@ -202,5 +203,8 @@ const PROGRAM_CATEGORY = {
             SCIENCE:{name:"과학"}
         }
     },
-    ETC:{name:"기타"},
+    ETC:{name:"기타",
+        sub_category:{
+            ETC:{name:"기타"}
+        }},
 };
