@@ -18,20 +18,20 @@ class Program_list{
                 
         };
 
-        // this.init();
-        this.set_initial_data();
+        this.init();
+        // this.set_initial_data();
     }
 
  
     init(){
-        this.render();
+        this.set_initial_data();
         func_set_webkit_overflow_scrolling('.wrapper_middle');
     }
 
     set_initial_data (){
         Program_func.read((data)=>{
             this.data = data;
-            this.init();
+            this.render();
         });   
     }
 
@@ -126,18 +126,22 @@ class Program_list{
 }
 
 class Program_func{
-    static create(){
+    static create(data, callback){
         //프로그램 추가
         $.ajax({
             url:"/trainer/add_program_info/",
-            dataType : 'JSON',
-            beforeSend:function (){
-                ajax_load_image(SHOW);
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
             },
     
             //통신성공시 처리
             success:function (data){
-                console.log(data);
                 if(callback != undefined){
                     callback(data);
                 }
@@ -145,12 +149,13 @@ class Program_func{
 
             //보내기후 팝업창 닫기
             complete:function (){
-                ajax_load_image(HIDE);
+
             },
     
             //통신 실패시 처리
             error:function (){
                 console.log('server error');
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
@@ -161,7 +166,7 @@ class Program_func{
             url:"/trainer/get_program_list/",
             dataType : 'JSON',
             beforeSend:function (){
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
     
             //통신성공시 처리
@@ -174,7 +179,7 @@ class Program_func{
 
             //보내기후 팝업창 닫기
             complete:function (){
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
     
             //통신 실패시 처리

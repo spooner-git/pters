@@ -16,10 +16,10 @@ class Program_add{
 
         this.data = {
             program_name:null,
-            program_category:null,
-            program_category_code:null,
-            program_category_sub:null,
-            program_category_sub_code:null,
+            program_category:[],
+            program_category_code:[],
+            program_category_sub:[],
+            program_category_sub_code:[],
             program_name_by_user:null
         };
 
@@ -139,7 +139,7 @@ class Program_add{
 
     dom_row_program_category(){
         let id = 'program_category_select';
-        let title = this.category == null ? "분야*" : this.category;
+        let title = this.category.name.length == 0 ? "분야*" : this.category.name;
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -149,6 +149,7 @@ class Program_add{
                 let upper_category = null;
                 category_select = new CategorySelector('#wrapper_box_category_select', this, multiple_select, upper_category, (set_data)=>{
                     this.category = set_data;
+                    this.category_sub = {name:[], code:[]};
                     this.render_content();
                 });
             });
@@ -158,16 +159,20 @@ class Program_add{
 
     dom_row_program_category_sub(){
         let id = 'program_category_sub_select';
-        let title = this.category_sub == null ? "상세 분야*" : this.category_sub;
+        let title = this.category_sub.name.length == 0 ? "상세 분야*" : this.category_sub.name;
         let icon = NONE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
+        let multiple_select = 1;
+        let upper_category = this.category.code[0];
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
+            if(upper_category == undefined){
+                show_error_message('상위 분야를 먼저 선택해주세요');
+                return false;
+            }
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CATEGORY_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                let multiple_select = 1;
-                let upper_category = null;
                 category_select = new CategorySelector('#wrapper_box_category_select', this, multiple_select, upper_category, (set_data)=>{
-                    this.category = set_data;
+                    this.category_sub = set_data;
                     this.render_content();
                 });
             });
@@ -178,8 +183,8 @@ class Program_add{
     send_data(){
         let data = {
                     "center_id":"", 
-                    "subject_cd":this.category_sub.code, 
-                    "subject_detail_nm":this.category_sub.name, 
+                    "subject_cd":this.category_sub.code[0], 
+                    "subject_detail_nm":this.category_sub.name[0], 
                     "start_date":"", "end_date":"", 
                     "class_hour":60, "start_hour_unit":1, "class_member_num":1
         };

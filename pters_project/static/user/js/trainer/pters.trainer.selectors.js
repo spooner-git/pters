@@ -2107,9 +2107,9 @@ class CategorySelector{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="day_select.upper_right_menu();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="category_select.upper_right_menu();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="day_select.upper_right_menu();">완료</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="category_select.upper_right_menu();">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -2118,7 +2118,7 @@ class CategorySelector{
     }
 
     dom_list (){
-        let category_to_be_drawn = this.upper_category == null ? PROGRAM_CATEGORY : PROGRAM_CATEGORY[this.upper_category].category;
+        let category_to_be_drawn = this.upper_category == null ? PROGRAM_CATEGORY : PROGRAM_CATEGORY[this.upper_category].sub_category;
         let html_to_join = [];
         for(let item in category_to_be_drawn){
             let checked = this.data.code.indexOf(item) != -1 ? 1 : 0; //타겟이 이미 가진 데이터를 get
@@ -2137,7 +2137,7 @@ class CategorySelector{
                         this.data.code.splice(this.data.code.indexOf(item, 1));
                         this.render();
                     }else if(add_or_substract == "add_single"){
-                        this.data.name = [category_to_be_drawn[item]];
+                        this.data.name = [category_to_be_drawn[item].name];
                         this.data.code = [item];
                         this.upper_right_menu();
                     }
