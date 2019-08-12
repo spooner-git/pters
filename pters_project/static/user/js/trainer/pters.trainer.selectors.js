@@ -1302,12 +1302,13 @@ class TicketSelector{
 }
 
 class LectureSelector{
-    constructor(install_target, target_instance, multiple_select, callback){
+    constructor(install_target, target_instance, multiple_select, appendix, callback){
         this.target = {install : install_target};
         this.target_instance = target_instance;
         this.unique_instance = install_target.replace(/#./gi, "");
         this.callback = callback;
         this.received_data;
+        this.appendix = appendix;
         this.multiple_select = multiple_select;
         this.data = {
             id: this.target_instance.lecture.id.slice(),
@@ -1333,7 +1334,7 @@ class LectureSelector{
 
     render(){
         let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();lecture_select.clear();" class="obj_icon_prev">`;
-        let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
+        let top_center = `<span class="icon_center"><span id="">${this.appendix.title}</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_select.upper_right_menu();">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
@@ -1457,6 +1458,8 @@ class MemberSelector{
     dom_list (){
         let html_to_join = [];
         let length = this.received_data.length;
+        let select_member_num = 0;
+        html_to_join.push('dummy');
         if(length == 0){
             html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.'));
         }
@@ -1482,17 +1485,19 @@ class MemberSelector{
                         this.data.id.push(member_id);
                         this.data.name.push(member_name);
                     }
-
                     // this.target_instance.member = this.data; //타겟에 선택된 데이터를 set
-
                     if(this.multiple_select == 1){
                         this.upper_right_menu();
                     }
                         
                 }  
             );
+            if(checked!=0){
+                select_member_num++;
+            }
             html_to_join.push(html);
         }
+        html_to_join[0] = (`<div class="select_member_max_num" >정원 (<span id="select_member_max_num">${select_member_num}</span>/${this.multiple_select}명) </div>`);
 
         // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
         return html_to_join.join('');
@@ -1743,7 +1748,7 @@ class DatePickerSelector{
                                         </div>`;
 
         //달력의 월화수목금 표기를 만드는 부분
-        let month_day_name_text = `<div class="pters_month_cal_day_name_box obj_table_raw" style="text-align:center;"> 
+        let month_day_name_text = `<div class="pters_month_cal_day_name_box obj_table_raw obj_font_size_11_weight_500" style="text-align:center;"> 
                                     <div class="obj_table_cell_x7">일</div>
                                     <div class="obj_table_cell_x7">월</div>
                                     <div class="obj_table_cell_x7">화</div>
@@ -1773,9 +1778,11 @@ class DatePickerSelector{
                 let today_style = "";
                 let date = date_cache;
                 if(j == 0){
-                    font_color = 'color:red;';
+                    font_color = 'color:#ff3333;';
                 }else if(j == 6){
-                    font_color = 'color:blue;';
+                    font_color = 'color:#3392ff;';
+                }else{
+                    font_color = 'color:#5c5859;';
                 }
                 if(date_compare == true){
                     font_color = 'color:#cccccc';
@@ -1792,7 +1799,7 @@ class DatePickerSelector{
                 }else if(date_cache > reference_date_month_last_day){ // 마지막 날짜가 끝난 이후 처리
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7"></div>`);
                 }else{
-                    dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}" id="calendar_cell_${data_date}"" style="cursor:pointer;">
+                    dateCellsToJoin.push(`<div class="obj_table_cell_x7 obj_font_size_13_weight_500" data-date="${data_date}" id="calendar_cell_${data_date}"" style="cursor:pointer;">
                                                <div class="calendar_date_number" style="${font_color}${today_style}">${date}</div>
                                           </div>`);
                     $(document).off('click', `#calendar_cell_${data_date}`).on('click', `#calendar_cell_${data_date}`, ()=>{
@@ -1968,7 +1975,7 @@ class RepeatSelector{
                 let month = this.target_instance.date == null ? this.dates.current_month : this.target_instance.date.month;
                 let date = this.target_instance.date == null ? this.dates.current_date : this.target_instance.date.date;
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'repeat_end_date', title:'날짜 선택', data:{year:year, month:month, date:date},  
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'repeat_end_date', title:'반복 종료일', data:{year:year, month:month, date:date},
                                                                                                 min:this.data_from_external,
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     this.end_date = object.data; 

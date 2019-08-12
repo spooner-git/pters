@@ -27,6 +27,7 @@ input:disabled{
 	font-size: 15px;
 	font-weight: 500;
 	letter-spacing: -0.5px;
+	/*color: #858282;*/
 }
 .create_input_row{
 	cursor: unset;
@@ -170,15 +171,15 @@ input:disabled{
 
 .select_lecture_row{
 	list-style: none;
-	line-height: 60px;
-	height: 60px;
+	line-height: 36px;
+	height: 36px;
 	cursor: pointer;
 	font-size: 13px;
 	font-weight: 500;
 	letter-spacing: -0.5px;
 
 	/* border-bottom: 1px solid #cccccc; */
-	padding: 5px 16px;
+	padding: 10px 20px;
 }
 
 .select_lecture_row .cell_lecture_color{
@@ -199,12 +200,25 @@ input:disabled{
 	display: table-cell;
 	width: auto;
 	vertical-align: middle;
+	height:16px;
+	line-height:16px;
+}
+
+.select_lecture_row .cell_lecture_info > .lecture_name_info{
+	font-size: 13px;
+	font-weight: 500;
+	color: #1f1d1e;
+	height:16px;
+	line-height:16px;
 }
 
 .select_lecture_row .cell_lecture_info > .lecture_additional_info{
 	font-size: 11px;
 	font-weight: 500;
 	color: #5c5859;
+	height:16px;
+	line-height:16px;
+	margin-top:4px;
 }
 
 .select_lecture_row .cell_lecture_info > div{
@@ -224,35 +238,65 @@ input:disabled{
 	display: block !important;
 }
 
+.select_member_max_num{
+	margin-left:20px;
+	margin-top:16px;
+	margin-bottom:16px;
+	font-size:11px;
+	font-weight:bold;
+	letter-spacing: -0.5px;
+	color:#858282;
+}
+
 .select_member_row{
 	list-style: none;
-	line-height: 50px;
-	height: 50px;
+	/*line-height: 56px;*/
+	height: 36px;
 	cursor: pointer;
 	font-size: 13px;
 	font-weight: 500;
 	letter-spacing: -0.5px;
-
-	border-bottom: 1px solid #cccccc;
-	padding: 5px 16px;
+	color: #1f1d1e;
+	/*border-bottom: 1px solid #cccccc;*/
+	padding: 10px 20px;
 }
 
 .select_member_row .cell_member_name{
-	display: table-cell;
 	width: 100px;
 	vertical-align: middle;
+	height: 16px;
+	line-height: 16px;
 }
 
 .select_member_row .cell_member_info{
-	display: table-cell;
 	width: auto;
 	vertical-align: middle;
+	font-size: 11px;
+	color: #5c5859;
+	height: 16px;
+	line-height: 16px;
+	margin-top: 4px;
+	/*text-align: right;*/
+}
+
+.select_member_row .cell_member_fix{
+	display: table-cell;
+	width: 44px;
 	text-align: right;
+	padding-right:16px;
+	font-size: 11px;
+	font-weight: bold;
+	font-style: normal;
+	font-stretch: normal;
+	letter-spacing: -0.5px;
+	color: #fe4e65;
+	opacity: 0.7;
+	vertical-align: middle;
 }
 
 .select_member_row .cell_member_selected{
 	display: table-cell;
-	width: 30px;
+	width: 24px;
 	vertical-align: middle;
 }
 .select_member_row .cell_member_selected img{

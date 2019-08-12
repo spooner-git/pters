@@ -216,8 +216,8 @@ class CComponent{
                                 </div>
                             </div>
                             <div class="cell_lecture_info">
-                                <div>${lecture_name}</div>
-                                <div class="lecture_additional_info">정원 - ${max_member_num} 명 / 진행중 - ${ing_member_num} 명</div>
+                                <div class="lecture_name_info">${lecture_name}</div>
+                                <div class="lecture_additional_info">정원: ${max_member_num} 명 / 진행중 회원: ${ing_member_num} 명</div>
                             </div>
                             <div class="cell_lecture_selected">
                                 <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? 'none' : 'lecture_selected'}">
@@ -252,15 +252,22 @@ class CComponent{
 
     //회원 선택 팝업에 사용되는 행
     static select_member_row (multiple_select, checked, location, member_id, member_name, member_avail_count, member_expiry, onclick){
-
+        let fix_member_check = '';
+        if(checked==1){
+            fix_member_check = '고정회원'
+        }
         let html = `
                     <li class="select_member_row smr_${location}" id="select_member_row_${member_id}">
+                    
                         <div class="obj_table_raw">
                             <div class="cell_member_name">
                                 ${member_name}
                             </div>
                             <div class="cell_member_info">
-                                잔여 ${member_avail_count}회 / ${member_expiry}까지
+                                예약 가능 횟수 - ${member_avail_count}회 / ${member_expiry}까지
+                            </div>
+                            <div class="cell_member_fix">
+                                ${fix_member_check}
                             </div>
                             <div class="cell_member_selected">
                                 <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? '' : 'member_selected'}">
@@ -271,6 +278,7 @@ class CComponent{
 
         if(multiple_select > 1){
             $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
+                let member_select_count = $(`.smr_${location} .member_selected`).length;
                 if(!$(this).find('.cell_member_selected img').hasClass('member_selected')){
                     if($(`.smr_${location} .member_selected`).length >= multiple_select){
                         show_error_message(`${multiple_select} 명까지 선택할 수 있습니다.`);
@@ -278,10 +286,14 @@ class CComponent{
                     }
                     $(this).find('.cell_member_selected img').addClass('member_selected');
                     onclick('add');
+                    member_select_count++;
+
                 }else{
                     $(this).find('.cell_member_selected img').removeClass('member_selected');
                     onclick('substract');
+                    member_select_count--;
                 }
+                $('#select_member_max_num').text(member_select_count);
             });
         }else if(multiple_select == 1){
             $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){

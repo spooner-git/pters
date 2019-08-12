@@ -233,7 +233,7 @@ class Ticket_view{
         let icon_r_text = CComponent.text_button ('ticket_lecture_list_view', "수업 목록", null, ()=>{
             //티켓에 포함될 수업 선택
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, (set_data)=>{
+                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, {'title':'수업'}, (set_data)=>{
                     this.lecture = set_data; //타겟에 선택된 데이터를 set
                     this.send_data();
                 });

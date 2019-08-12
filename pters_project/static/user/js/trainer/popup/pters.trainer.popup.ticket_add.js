@@ -183,7 +183,7 @@ class Ticket_add{
         let icon_r_text = "";
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, (set_data)=>{
+                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, {'title':'수업'}, (set_data)=>{
                     this.lecture = set_data; //타겟에 선택된 데이터를 set
                     this.render_content();
                 });
