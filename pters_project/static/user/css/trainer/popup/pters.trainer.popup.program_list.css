@@ -26,6 +26,7 @@
 	padding: 10px 20px;
 	margin: 0px auto;
 	box-sizing: border-box;
+	cursor: pointer;
 }
 .program_data_u{
 	display: table;

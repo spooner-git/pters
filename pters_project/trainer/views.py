@@ -59,7 +59,8 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         class_id = request.session.get('class_id', '')
         class_auth_data = MemberClassTb.objects.select_related('class_tb'
                                                                ).filter(member_id=request.user.id,
-                                                                        auth_cd=AUTH_TYPE_VIEW, use=USE)
+                                                                        auth_cd=AUTH_TYPE_VIEW,
+                                                                        use=USE).order_by('-class_tb_id')
 
         error = None
         if class_id is None or class_id == '':
@@ -75,7 +76,17 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     request.session['class_center_name'] = class_info.class_tb.get_center_name()
 
             else:
-                self.url = '/trainer/class_select/'
+                self.url = '/trainer/trainer_main/'
+                for class_info in class_auth_data:
+                    request.session['class_id'] = class_info.class_tb_id
+                    request.session['class_hour'] = class_info.class_tb.class_hour
+                    request.session['class_type_code'] = class_info.class_tb.subject_cd
+                    request.session['class_type_name'] = class_info.class_tb.get_class_type_cd_name()
+                    request.session['class_center_name'] = class_info.class_tb.get_center_name()
+                    if class_info.class_tb_id == '127':
+                        break
+
+                # self.url = '/trainer/class_select/'
         else:
             self.url = '/trainer/trainer_main/'
 
@@ -2314,16 +2325,14 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         error = None
 
         lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
-                                                use=USE).order_by('-lecture_type_cd', 'name',
-                                                                  'lecture_id')
+                                                use=USE).order_by('lecture_id')
 
         lecture_ticket_data = TicketLectureTb.objects.select_related(
             'lecture_tb', 'ticket_tb').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
                                               lecture_tb__use=USE,
-                                              use=USE).order_by('-lecture_tb__lecture_type_cd', 'lecture_tb__name',
-                                                                'lecture_tb_id', 'ticket_tb_id')
+                                              use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
 
-        lecture_data_dict = collections.OrderedDict()
+        lecture_data_dict = {}
         # 수업과 연관되어있는 수강권 정보 셋팅
         for lecture_ticket_info in lecture_ticket_data:
             lecture_tb = lecture_ticket_info.lecture_tb
@@ -2368,7 +2377,9 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_ticket_list': [],
                                                      'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}
-
+        lecture_data_dict = collections.OrderedDict(sorted(lecture_data_dict.items(),
+                                                           key=lambda x: (x[1]['lecture_type_cd'],
+                                                                          x[1]['lecture_name'])))
         lecture_list = []
 
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
@@ -3282,7 +3293,8 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                 'program_subject_cd': program_info.class_tb.subject_cd,
                                 'program_state_cd': program_info.class_tb.state_cd,
                                 'program_subject_type_name': program_info.class_tb.get_class_type_cd_name(),
-                                'program_selected': program_selected
+                                'program_selected': program_selected,
+                                'program_center_name': ''
                                 }
                 program_list.append(program_dict)
 
@@ -3490,8 +3502,8 @@ class UpdateProgramInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
 
 def select_program_processing_logic(request):
-    class_id = request.POST.get('class_id', '')
-    next_page = request.POST.get('next_page', '')
+    class_id = request.GET.get('class_id', '')
+    next_page = request.GET.get('next_page', '')
 
     error = None
     class_info = None

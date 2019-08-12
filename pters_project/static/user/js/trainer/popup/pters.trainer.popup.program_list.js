@@ -81,7 +81,7 @@ class Program_list{
             let selected = data.program_selected;
             let category = data.program_subject_type_name;
 
-            let html = `<article class="program_wrapper" data-program_id="${id}">
+            let html = `<article class="program_wrapper" data-program_id="${id}" onclick="window.location.href='/trainer/select_program_processing/?class_id=${id}&next_page=/trainer/'">
                             <div class="program_data_u">
                                 <div>
                                     <span>${name}</span>
