@@ -929,6 +929,7 @@ class Calendar {
                 $('#debug_toolbar').hide();
                 document.querySelector('.long_touch_active').classList.remove('long_touch_active');
                 this.long_touch_target = null;
+                this.long_touch_target_schedule_id = null;
                 break;
         }
     }
