@@ -5,6 +5,7 @@ class Calendar {
         this.page_name = "calendar";
         this.window_height = window.innerHeight;
         this.pages_height = this.window_height - 102-45;
+        this.page_init = false;
 
         this.targetHTML = targetHTML;
         this.subtargetHTML = 'calendar_wrap';
@@ -47,19 +48,7 @@ class Calendar {
         this.long_touch_schedule_id;
         this.touch_timer = 0;
         this.touch_sense;
-
-        //Time of the long press
-        // this.tempo = 1000; //Time 1000ms = 1s
-        // this.mouseDown = () => {
-        //     timer = setTimeout(function(){ 
-        //             //Insert your function here
-        //             $('.week_rows > .week_row').css('background-color', '#ffffff');
-        //             show_error_message("롱터치!");
-        //     }, this.tempo);
-        // };
-        // const mouseUp = () => {
-        //     clearTimeout(timer);
-        // };
+        this.long_touch_target = null;
     }
 
     get selected_plan(){
@@ -69,7 +58,11 @@ class Calendar {
     init (cal_type){
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
+    
+        this.init_no_new(cal_type);
+    }
 
+    init_no_new(cal_type){
         if(cal_type == undefined){
             cal_type = this.cal_type;
         }
@@ -90,7 +83,7 @@ class Calendar {
 
         case "week":
             this.render_upper_box(cal_type);
-            this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
+            // this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
             
             //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
             if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
@@ -855,7 +848,6 @@ class Calendar {
 
         //롱터치 일정 변경
         if(this.long_touch == ON){
-            
             let end_dt = `${year}-${month}-${date} ${TimeRobot.add_time(hour, minute, 0, period_min).hour}:${TimeRobot.add_time(hour, minute, 0, period_min).minute}`;
             Plan_func.read_plan(this.long_touch_schedule_id, (received)=>{
                 let start_dt = `${year}-${month}-${date} ${hour}:${minute}`;
@@ -888,17 +880,19 @@ class Calendar {
 
     longtouchstart(event, schedule_id, callback){
         event.stopPropagation();
-        this.long_touch_schedule_id = schedule_id;
-        this.touch_sense = setInterval(()=>{this.touch_timer+= 100;
-                                    if(this.touch_timer >= 700){
-                                        this.mode_to_plan_change(ON);
-                                        if(callback != undefined){
-                                            callback();
+        if(this.long_touch == OFF){
+            this.long_touch_schedule_id = schedule_id;
+            this.touch_sense = setInterval(()=>{this.touch_timer+= 100;
+                                        if(this.touch_timer >= 700){
+                                            this.mode_to_plan_change(ON, event);
+                                            if(callback != undefined){
+                                                callback();
+                                            }
+                                            clearInterval(this.touch_sense);
+                                            this.touch_timer = 0;
                                         }
-                                        clearInterval(this.touch_sense);
-                                        this.touch_timer = 0;
-                                    }
-                            }, 100);
+                                }, 100);
+        }
     }
 
     longtouchend(event){
@@ -912,15 +906,21 @@ class Calendar {
         this.touch_timer = 0;
     }
 
-    mode_to_plan_change(switching){
+    mode_to_plan_change(switching, event){
         switch(switching){
             case ON:
                 this.long_touch = ON;
+                this.long_touch_target = event;
                 $('.week_rows > .week_row').css({"background-color":"#ffb0ba61"});
+                $('#debug_toolbar').show().html('<span>일정 변경을 위해 원하는 곳을 터치해주세요.</span><button style="float:right;width:70px;height:100%;" onclick="calendar.mode_to_plan_change(OFF)">취소</button>');
+                this.long_touch_target.target.classList.add('long_touch_active');
                 break;
             case OFF:
                 this.long_touch = OFF;
                 $('.week_rows > .week_row').css({"background-color":"#ffffff"});
+                $('#debug_toolbar').hide();
+                this.long_touch_target.target.classList.remove('long_touch_active');
+                this.long_touch_target = null;
                 break;
         }
     }
@@ -940,7 +940,7 @@ class Calendar {
             let url_to_create_new_schedule ='/schedule/add_schedule/';
             Plan_func.create(url_to_create_new_schedule, data2, ()=>{ //일정을 새로 등록한다.
                 this.mode_to_plan_change(OFF);
-                calendar.init();
+                this.init_no_new();
             });
         });
     }
