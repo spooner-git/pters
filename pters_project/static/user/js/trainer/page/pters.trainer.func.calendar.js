@@ -896,6 +896,7 @@ class Calendar {
     }
 
     longtouchend(event){
+        event.preventDefault();
         event.stopPropagation();
         if(this.touch_timer < 700){
             clearInterval(this.touch_sense);
