@@ -5,6 +5,7 @@ class Calendar {
         this.page_name = "calendar";
         this.window_height = window.innerHeight;
         this.pages_height = this.window_height - 102-45;
+        this.page_init = false;
 
         this.targetHTML = targetHTML;
         this.subtargetHTML = 'calendar_wrap';
@@ -57,7 +58,11 @@ class Calendar {
     init (cal_type){
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
+    
+        this.init_no_new(cal_type);
+    }
 
+    init_no_new(cal_type){
         if(cal_type == undefined){
             cal_type = this.cal_type;
         }
@@ -78,7 +83,7 @@ class Calendar {
 
         case "week":
             this.render_upper_box(cal_type);
-            this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
+            // this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
             
             //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
             if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
@@ -935,7 +940,7 @@ class Calendar {
             let url_to_create_new_schedule ='/schedule/add_schedule/';
             Plan_func.create(url_to_create_new_schedule, data2, ()=>{ //일정을 새로 등록한다.
                 this.mode_to_plan_change(OFF);
-                calendar.init();
+                this.init_no_new();
             });
         });
     }
