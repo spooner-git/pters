@@ -49,7 +49,6 @@ class Calendar {
         this.touch_timer = 0;
         this.touch_sense;
         this.long_touch_target = null;
-        this.long_touch_target_schedule_id = null;
     }
 
     get selected_plan(){
@@ -915,7 +914,7 @@ class Calendar {
             case ON:
                 this.long_touch = ON;
                 this.long_touch_target = event;
-                this.long_touch_target_schedule_id = event.target.dataset.scheduleid;
+                this.long_touch_schedule_id = event.target.dataset.scheduleid;
                 // $('.week_rows > .week_row').css({"background-color":"#ffb0ba61"});
                 $('#debug_toolbar').show().html(`<span style="margin-left:10px;line-height:60px;font-size:14px;">일정 변경을 위해 원하는 곳을 터치해주세요.</span>
                                                 <button style="float:right;width:70px;height:40px;margin:10px;border-radius:4px;background-color:#ffffff;border:1px solid #cccccc;" onclick="calendar.mode_to_plan_change(OFF)">취소</button>`)
@@ -929,7 +928,7 @@ class Calendar {
                 $('#debug_toolbar').hide();
                 document.querySelector('.long_touch_active').classList.remove('long_touch_active');
                 this.long_touch_target = null;
-                this.long_touch_target_schedule_id = null;
+                this.long_touch_schedule_id = null;
                 break;
         }
     }
