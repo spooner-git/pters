@@ -884,7 +884,7 @@ class Calendar {
         if(this.long_touch == OFF){
             this.long_touch_schedule_id = schedule_id;
             this.touch_sense = setInterval(()=>{this.touch_timer+= 100;
-                                        if(this.touch_timer >= 700){
+                                        if(this.touch_timer >= 900){
                                             this.mode_to_plan_change(ON, event);
                                             if(callback != undefined){
                                                 callback();
@@ -897,13 +897,13 @@ class Calendar {
     }
 
     longtouchend(event){
-        event.preventDefault();
         event.stopPropagation();
-        if(this.touch_timer < 700){
+        if(this.touch_timer < 900){
             clearInterval(this.touch_sense);
             this.touch_timer = 0;
             return false;
         }
+
         clearInterval(this.touch_sense);
         this.touch_timer = 0;
     }
@@ -911,35 +911,37 @@ class Calendar {
     mode_to_plan_change(switching, event){
         switch(switching){
             case ON:
-                // this.long_touch = ON;
-                // this.long_touch_target = event;
-                // $('.week_rows > .week_row').css({"background-color":"#ffb0ba61"});
-                // $('#debug_toolbar').show().html('<span>일정 변경을 위해 원하는 곳을 터치해주세요.</span><button style="float:right;width:70px;height:100%;" onclick="calendar.mode_to_plan_change(OFF)">취소</button>');
-                // this.long_touch_target.target.classList.add('long_touch_active');
+                this.long_touch = ON;
+                this.long_touch_target = event;
+                $('.week_rows > .week_row').css({"background-color":"#ffb0ba61"});
+                $('#debug_toolbar').show().html(`<span style="margin-left:10px;line-height:60px;font-size:14px;">일정 변경을 위해 원하는 곳을 터치해주세요.</span>
+                                                <button style="float:right;width:70px;height:40px;margin:10px;border-radius:4px;background-color:#ffffff;border:1px solid #cccccc;" onclick="calendar.mode_to_plan_change(OFF)">취소</button>`)
+                                          .css({"height":"60px", "line-height":"60px;"});
+                this.long_touch_target.target.classList.add('long_touch_active');
 
-                let user_option = {
-                    change:{text:"빠른 변경", callback:()=>{
-                            layer_popup.close_layer_popup();
-                            this.long_touch = ON;
-                            this.long_touch_target = event;
-                            $('.week_rows > .week_row').css({"background-color":"#ffb0ba61"});
-                            $('#debug_toolbar').show().html('<span>일정 변경을 위해 원하는 곳을 터치해주세요.</span><button style="float:right;width:70px;height:100%;" onclick="calendar.mode_to_plan_change(OFF)">취소</button>');
-                            this.long_touch_target.target.classList.add('long_touch_active');
-                        }
-                    },
-                    delete:{text:"일정 삭제", callback:()=>{
-                            layer_popup.close_layer_popup();
-                            let data_to_send = {"schedule_id": event.target.dataset.scheduleid};
-                            Plan_func.delete(data_to_send ,()=>{
-                                this.init_no_new();
-                            })
-                        }
-                    }
-                };
+                // let user_option = {
+                //     change:{text:"빠른 변경", callback:()=>{
+                //             layer_popup.close_layer_popup();
+                //             this.long_touch = ON;
+                //             this.long_touch_target = event;
+                //             $('.week_rows > .week_row').css({"background-color":"#ffb0ba61"});
+                //             $('#debug_toolbar').show().html('<span>일정 변경을 위해 원하는 곳을 터치해주세요.</span><button style="float:right;width:70px;height:100%;" onclick="calendar.mode_to_plan_change(OFF)">취소</button>');
+                //             this.long_touch_target.target.classList.add('long_touch_active');
+                //         }
+                //     },
+                //     delete:{text:"일정 삭제", callback:()=>{
+                //             layer_popup.close_layer_popup();
+                //             let data_to_send = {"schedule_id": event.target.dataset.scheduleid};
+                //             Plan_func.delete(data_to_send ,()=>{
+                //                 this.init_no_new();
+                //             })
+                //         }
+                //     }
+                // };
                 
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
-                    option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
-                });
+                // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                //     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+                // });
 
 
 
