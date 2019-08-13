@@ -157,7 +157,7 @@ class TwoTimeSelector{
                 }
                 if(snap > self.hour_scroll_snapped){
                     self.hour2_scroll.scrollTo(0, self.hour_scroll_snapped, 0, IScroll.utils.ease.bounce);
-                    show_error_message('종료시간이 시작시간보다 빠릅니다.')
+                    show_error_message('종료 시각이 시작 시각보다 빠릅니다.')
                 }else{
                     self.hour2_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
                 }
@@ -202,10 +202,10 @@ class TwoTimeSelector{
         let result = this.get_selected_data();
 
         if(result.start == undefined || result.start == ''){
-            show_error_message('시작시간 입력을 다시 해주세요.')
+            show_error_message('시작 시각 입력을 다시 해주세요.')
         }
         else if(result.end == undefined || result.end == ''){
-            show_error_message('종료시간 입력을 다시 해주세요.')
+            show_error_message('종료 시각 입력을 다시 해주세요.')
         }
         else{
             show_error_message('시작:' + result.start + ' ~ ' + '종료:'+ result.end)
@@ -944,7 +944,7 @@ class TimeSelector{
     upper_right_button(){
         let minimum_check = this.check_minimum_time();
         if(minimum_check == false){
-            show_error_message('종료시간은 시작시간보다 작을 수 없습니다.');
+            show_error_message('종료 시각은 시작 시각보다 작을 수 없습니다.');
             return false;
         }
 
@@ -1465,20 +1465,22 @@ class MemberSelector{
         }
         for(let i=0; i<length; i++){
             let data = this.received_data[i];
+            console.log(data);
             let member_id = data.member_id;
             let member_name = data.member_name;
             // let member_rem_count = data.member_ticket_rem_count;
             let member_avail_count = data.member_ticket_avail_count;
             let member_expiry = data.end_date;
+            let member_fix_state_cd = data.member_fix_state_cd;
             let checked = this.target_instance.member.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
             let html = CComponent.select_member_row (
-                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_avail_count, member_expiry, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_avail_count, member_expiry, member_fix_state_cd, (add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.id.push(member_id);
                         this.data.name.push(member_name);
                     }else if(add_or_substract == "substract"){
                         this.data.id.splice(this.data.id.indexOf(member_id), 1);
-                        this.data.name.splice(this.data.name.indexOf(member_name), 1);
+                        this.data.name.splice(this.data.id.indexOf(member_id), 1);
                     }else if(add_or_substract == "add_single"){
                         this.data.id = [];
                         this.data.name = [];
@@ -1923,11 +1925,11 @@ class RepeatSelector{
     }
 
     dom_list (){
-        let power = this.dom_row_repeat_power();
         let day = this.dom_row_day_select_button();
         let end = this.dom_row_end_date_select_button();
+        let power = this.dom_row_repeat_power();
 
-        let html = power + day + end;
+        let html = day + end + '<div class="gap" style="border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>' + power;
         return html;
     }
 
@@ -1943,7 +1945,6 @@ class RepeatSelector{
                 this.end_date = {year:null, month:null, date:null};
             }  
         );
-
         return html;
     }
 

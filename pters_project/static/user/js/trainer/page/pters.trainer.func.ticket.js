@@ -196,7 +196,7 @@ class Ticket{
             {    "ticket_upper_box":`   <div class="ticket_upper_box">
                                             <div style="display:inline-block;width:200px;">
                                                 <div style="display:inline-block;width:200px;">
-                                                    <span style="font-size:23px;font-weight:bold;color:#3b3d3d">수강권 <span style="color:#fe4e65;">${this.data_length}</span></span>
+                                                    <span style="font-size:23px;font-weight:bold;color:#3b3b3b">수강권 <span style="color:#fe4e65;">${this.data_length}</span></span>
                                                 </div>
                                                 
                                             </div>

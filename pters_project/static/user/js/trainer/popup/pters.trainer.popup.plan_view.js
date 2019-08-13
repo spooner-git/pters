@@ -96,7 +96,7 @@ class Plan_view{
 
     set end_time (data){
         this.data.end_time = TimeRobot.to_data(data.data.zone, data.data.hour, data.data.minute).complete;
-        this.data.end_time_text = data.text + ' 까지';
+        this.data.end_time_text = data.text + ' 까지 ('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)';
         this.render_content();
     }
 
@@ -140,7 +140,7 @@ class Plan_view{
         this.data.start_time = data.schedule_info[0].start_time;
         this.data.start_time_text = TimeRobot.to_text(data.schedule_info[0].start_time.split(':')[0], data.schedule_info[0].start_time.split(':')[1])+' 부터';
         this.data.end_time = data.schedule_info[0].end_time;
-        this.data.end_time_text = TimeRobot.to_text(data.schedule_info[0].end_time.split(':')[0], data.schedule_info[0].end_time.split(':')[1])+' 까지';
+        this.data.end_time_text = TimeRobot.to_text(data.schedule_info[0].end_time.split(':')[0], data.schedule_info[0].end_time.split(':')[1])+' 까지 ('+TimeRobot.diff_min(data.schedule_info[0].start_time, data.schedule_info[0].end_time)+'분 진행)';
         this.data.lecture_color = data.schedule_info[0].lecture_ing_color_cd;
         this.data.lecture_font_color = data.schedule_info[0].lecture_ing_font_color_cd;
         this.data.lecture_max_num = data.schedule_info[0].lecture_max_member_num;
@@ -198,7 +198,7 @@ class Plan_view{
         let memo_select_row = this.dom_row_memo_select();
 
         let display = "";
-        if(this.data.schedule_type == 0){ //0: OFF, 1: 개인, 2:그룹
+        if(this.data.schedule_type != 2){ //0: OFF, 1: 개인, 2:그룹
             display = 'none';
         }
         
@@ -215,8 +215,8 @@ class Plan_view{
         if(this.data.schedule_type == 0){
             lecture_name =`OFF 일정 ${this.data.memo != "" ? '('+this.data.memo+')' : ''}`;
         }else if(this.data.schedule_type == 1){
-            // lecture_name = this.data.member_name;
-            lecture_name = this.data.lecture_name;
+            lecture_name = this.data.member_name;
+            // lecture_name = this.data.lecture_name;
         }else if(this.data.schedule_type == 2){
             lecture_name = this.data.lecture_name;
         }
@@ -234,9 +234,6 @@ class Plan_view{
     dom_row_member_select (){
         let id = 'select_member';
         let title = this.data.member_id.length == 0 ? '회원*' : this.data.member_id.length+ '/' + this.data.lecture_max_num +' 명';
-        if(this.data.member_id.length==1&&this.data.lecture_max_num){
-            title = '개인';
-        }
         let icon = '/static/common/icon/icon_member.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "예약 목록";
@@ -294,7 +291,7 @@ class Plan_view{
                 })
             );
         }
-        let html = `<div>${html_to_join.join('')}</div>`;
+        let html = `<div style="padding-left:5px;">${html_to_join.join('')}</div>`;
 
         return html;
     }

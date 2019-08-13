@@ -38,7 +38,7 @@ class CComponent{
                                 <span class="cell_text">${title}</span>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
-                                ${icon_r_text}
+                                <span class="cell_text">${icon_r_text}</span>
                                 <img src="/static/common/icon/navigate_next_black.png">
                             </div>
                         </div>
@@ -251,9 +251,9 @@ class CComponent{
     }
 
     //회원 선택 팝업에 사용되는 행
-    static select_member_row (multiple_select, checked, location, member_id, member_name, member_avail_count, member_expiry, onclick){
+    static select_member_row (multiple_select, checked, location, member_id, member_name, member_avail_count, member_expiry, member_fix_state_cd, onclick){
         let fix_member_check = '';
-        if(checked==1){
+        if(member_fix_state_cd==FIX){
             fix_member_check = '고정회원'
         }
         let html = `
