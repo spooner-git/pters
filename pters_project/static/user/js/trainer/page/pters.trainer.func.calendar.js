@@ -58,7 +58,7 @@ class Calendar {
     init (cal_type){
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
-    
+        this.mode_to_plan_change(OFF)
         this.init_no_new(cal_type);
     }
 
@@ -778,7 +778,7 @@ class Calendar {
                             let styles = `width:${100/cell_divide}%;height:${height}%;top:${top}%;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style}`;
                             let long_touch_active = this.long_touch_schedule_id == plan.schedule_id ? "long_touch_active" : "";
 
-                            return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active}" style="${styles}" ontouchstart="${this.instance}.longtouchstart(event, ${plan.schedule_id},()=>{})" ontouchend="${this.instance}.longtouchend(event)">
+                            return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active}" style="${styles}" ontouchstart="${this.instance}.longtouchstart(event, ()=>{})" ontouchend="${this.instance}.longtouchend(event)">
                                         ${plan_name}
                                     </div>`;
                         })
@@ -880,10 +880,9 @@ class Calendar {
         });
     }
 
-    longtouchstart(event, schedule_id, callback){
+    longtouchstart(event, callback){
         event.stopPropagation();
         if(this.long_touch == OFF){
-            this.long_touch_schedule_id = schedule_id;
             this.touch_sense = setInterval(()=>{this.touch_timer+= 100;
                                         if(this.touch_timer >= 900){
                                             this.mode_to_plan_change(ON, event);
@@ -926,9 +925,9 @@ class Calendar {
                 this.long_touch = OFF;
                 // $('.week_rows > .week_row').css({"background-color":"#ffffff"});
                 $('#debug_toolbar').hide();
-                document.querySelector('.long_touch_active').classList.remove('long_touch_active');
                 this.long_touch_target = null;
                 this.long_touch_schedule_id = null;
+                $('.long_touch_active').removeClass('long_touch_active');
                 break;
         }
     }

@@ -437,6 +437,7 @@ onclick="layer_popup.close_layer_popup();"></div>
 
     function sideGoPage(page, context){
         current_page = page;
+        $('#debug_toolbar').hide();
 
         try{
             let context_loc = document.getElementById(page).offsetLeft;
