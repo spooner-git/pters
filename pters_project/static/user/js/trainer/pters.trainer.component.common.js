@@ -38,7 +38,7 @@ class CComponent{
                                 <span class="cell_text">${title}</span>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
-                                ${icon_r_text}
+                                <span class="cell_text">${icon_r_text}</span>
                                 <img src="/static/common/icon/navigate_next_black.png">
                             </div>
                         </div>

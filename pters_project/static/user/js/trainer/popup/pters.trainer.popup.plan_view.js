@@ -96,7 +96,7 @@ class Plan_view{
 
     set end_time (data){
         this.data.end_time = TimeRobot.to_data(data.data.zone, data.data.hour, data.data.minute).complete;
-        this.data.end_time_text = data.text + ' 까지';
+        this.data.end_time_text = data.text + ' 까지 ('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)';
         this.render_content();
     }
 
@@ -140,7 +140,7 @@ class Plan_view{
         this.data.start_time = data.schedule_info[0].start_time;
         this.data.start_time_text = TimeRobot.to_text(data.schedule_info[0].start_time.split(':')[0], data.schedule_info[0].start_time.split(':')[1])+' 부터';
         this.data.end_time = data.schedule_info[0].end_time;
-        this.data.end_time_text = TimeRobot.to_text(data.schedule_info[0].end_time.split(':')[0], data.schedule_info[0].end_time.split(':')[1])+' 까지';
+        this.data.end_time_text = TimeRobot.to_text(data.schedule_info[0].end_time.split(':')[0], data.schedule_info[0].end_time.split(':')[1])+' 까지 ('+TimeRobot.diff_min(data.schedule_info[0].start_time, data.schedule_info[0].end_time)+'분 진행)';
         this.data.lecture_color = data.schedule_info[0].lecture_ing_color_cd;
         this.data.lecture_font_color = data.schedule_info[0].lecture_ing_font_color_cd;
         this.data.lecture_max_num = data.schedule_info[0].lecture_max_member_num;

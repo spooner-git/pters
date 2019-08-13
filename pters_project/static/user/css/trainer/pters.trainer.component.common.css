@@ -96,6 +96,7 @@ input:disabled{
 	margin-right: 14px;
 	width: 24px;
 	height: 24px;
+	float: left;
 }
 
 .create_row .cell_value, .create_input_row .cell_value{
@@ -122,6 +123,7 @@ input:disabled{
 	width: 24px;
 	height: 24px;
 	padding-right:10px;
+	float: right;
 }
 
 
@@ -452,8 +454,10 @@ input:disabled{
 
 .select_row .cell_select_icon{
 	display: table-cell;
-	width: 33px;
+	width: 24px;
+	height: 24px;
 	vertical-align: middle;
+	padding-right: 18px;
 }
 
 .select_row .cell_select_title{

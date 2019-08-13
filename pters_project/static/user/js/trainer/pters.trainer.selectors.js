@@ -157,7 +157,7 @@ class TwoTimeSelector{
                 }
                 if(snap > self.hour_scroll_snapped){
                     self.hour2_scroll.scrollTo(0, self.hour_scroll_snapped, 0, IScroll.utils.ease.bounce);
-                    show_error_message('종료시간이 시작시간보다 빠릅니다.')
+                    show_error_message('종료 시각이 시작 시각보다 빠릅니다.')
                 }else{
                     self.hour2_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
                 }
@@ -202,10 +202,10 @@ class TwoTimeSelector{
         let result = this.get_selected_data();
 
         if(result.start == undefined || result.start == ''){
-            show_error_message('시작시간 입력을 다시 해주세요.')
+            show_error_message('시작 시각 입력을 다시 해주세요.')
         }
         else if(result.end == undefined || result.end == ''){
-            show_error_message('종료시간 입력을 다시 해주세요.')
+            show_error_message('종료 시각 입력을 다시 해주세요.')
         }
         else{
             show_error_message('시작:' + result.start + ' ~ ' + '종료:'+ result.end)
@@ -944,7 +944,7 @@ class TimeSelector{
     upper_right_button(){
         let minimum_check = this.check_minimum_time();
         if(minimum_check == false){
-            show_error_message('종료시간은 시작시간보다 작을 수 없습니다.');
+            show_error_message('종료 시각은 시작 시각보다 작을 수 없습니다.');
             return false;
         }
 
@@ -1925,11 +1925,11 @@ class RepeatSelector{
     }
 
     dom_list (){
-        let power = this.dom_row_repeat_power();
         let day = this.dom_row_day_select_button();
         let end = this.dom_row_end_date_select_button();
+        let power = this.dom_row_repeat_power();
 
-        let html = power + day + end;
+        let html = day + end + '<div class="gap" style="border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>' + power;
         return html;
     }
 
@@ -1945,7 +1945,6 @@ class RepeatSelector{
                 this.end_date = {year:null, month:null, date:null};
             }  
         );
-
         return html;
     }
 
