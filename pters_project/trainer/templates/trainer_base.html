@@ -435,7 +435,7 @@ onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);"></div>
     // 범용 셀렉터 인스턴스
 
     function root_content_quick_up(){
-        $root_content.scrollTop(1);
+        $root_content.animate({scrollTop:1}, 500);
     }
 
     function sideGoPage(page, context){
