@@ -4,9 +4,11 @@ class Alarm {
         this.targetHTML = targetHTML;
         this.instance = instance;
 
+        this.data;
+        this.paging = 0;
     }
 
-    init (list_type){
+    init (){
         if(current_page != this.page_name){
             return false;
         }
@@ -17,7 +19,9 @@ class Alarm {
 
         this.render_upper_box();
         Alarm_func.read((jsondata) => {
-            this.render_list(jsondata, list_type);
+            // this.render_list(jsondata);
+            this.data = this.dom_list(jsondata);
+            this.render_list(this.data);
             this.render_upper_box();
             $root_content.scrollTop(1);
         });
@@ -36,12 +40,32 @@ class Alarm {
     }
 
     //회원 리스트를 렌더링
-    render_list (jsondata){
+    render_list (data){
         if(current_page != this.page_name){
             return false;
         }
 
+        let page_data = data.slice(this.paging*10, (this.paging*10)+10);
+        let node = document.createElement("div");
+        node.setAttribute('id', `alarm_paging_${this.paging}`);
+        document.querySelector('#alarm_content_wrap').appendChild(node);
 
+        let node2 = document.createElement("div");
+        node2.setAttribute('id', `alarm_paging_${this.paging + 1}`);
+        document.querySelector('#alarm_content_wrap').appendChild(node2);
+
+        document.querySelector(`#alarm_paging_${this.paging}`).innerHTML = page_data.join("");
+        document.querySelector(`#alarm_paging_${this.paging+1}`).innerHTML = `<div style="text-align:center;font-size:12px;font-weight:500;height:30px;line-height:30px;background-color:#f5f5f5;" onclick="alarm.render_more();">
+                                                                                더 보기
+                                                                            </div>`;
+    }
+
+    render_more (){
+        this.paging++;
+        this.render_list(this.data);
+    }
+
+    dom_list (jsondata){
         let html_temp = [];
         for(let date in jsondata){
             let length = jsondata[date].length;
@@ -76,10 +100,10 @@ class Alarm {
                 html_temp.push(html);
             }
         }
-        document.querySelector('#alarm_content_wrap').innerHTML = html_temp.join("");
+
+        return html_temp;
     }
 
-  
 
     static_component (){
         return(
