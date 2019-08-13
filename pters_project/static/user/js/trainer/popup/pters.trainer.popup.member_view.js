@@ -289,6 +289,9 @@ class Member_view{
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
         let pattern_message = "공백, + - _ 제외 특수문자는 입력 불가";
         let required = "required";
+        if(this.data.active == 'True'){
+            disabled = true;
+        }
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
@@ -307,10 +310,19 @@ class Member_view{
 
     dom_row_member_user_id_input(){
         let onclick;
-        if(this.data.connection == CONNECTED || this.data.connection == CONNECT_WAIT){
+        if(this.data.connection == CONNECTED ){
             onclick = ()=>{
                 let user_option = {
                         connect:{text:"연결 해제", callback:()=>{alert('연결해제 함수 실행');layer_popup.close_layer_popup();}}
+                    };
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                    option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+                });
+            };
+        }else if(this.data.connection == CONNECT_WAIT){
+            onclick = ()=>{
+                let user_option = {
+                        connect:{text:"연결 요청 취소", callback:()=>{alert('연결 요청 취소 함수 실행');layer_popup.close_layer_popup();}}
                     };
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
@@ -330,8 +342,14 @@ class Member_view{
         let title = this.data.user_id == null ? '회원ID' : this.data.user_id;
         let icon = '/static/common/icon/person_black.png';
         let icon_r_visible = SHOW;
-        let icon_r_text = this.data.connection == CONNECTED || this.data.connection == CONNECT_WAIT ? "연결 해제" : "연결 요청";
-
+        let icon_r_text = '연결 해제';
+        if(this.data.connection == CONNECTED){
+            icon_r_text = "연결 해제";
+        }else if(this.data.connection == CONNECT_WAIT){
+            icon_r_text = "연결 요청 취소";
+        }else if(this.data.connection == UNCONNECTED){
+            icon_r_text = "연결 요청";
+        }
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
             onclick();
         });
@@ -351,7 +369,10 @@ class Member_view{
         let pattern = "[0-9]{10,11}";
         let pattern_message = "";
         let required = "";
-        if(this.data.connection != 1){
+        // if(this.data.connection != 1){
+        //     disabled = true;
+        // }
+        if(this.data.active == 'True'){
             disabled = true;
         }
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
@@ -369,6 +390,10 @@ class Member_view{
         let icon = '/static/common/icon/icon_cake.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
+        let disabled = false;
+        if(this.data.active == 'True'){
+            disabled = true;
+        }
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
@@ -397,6 +422,10 @@ class Member_view{
         let icon = '/static/common/icon/person_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
+        let disabled = false;
+        if(this.data.active == 'True'){
+            disabled = true;
+        }
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
             let user_option = {
                                 male:{text:"남성", callback:()=>{this.sex = "M";this.send_data();layer_popup.close_layer_popup();}},
@@ -747,7 +776,7 @@ class Member_simple_view{
         let icon_r_text = "";
         let icon_r_visible = HIDE;
         let onclick = ()=>{alert('연결 되어있음');};
-        if(this.data.connection != 1){
+        if(this.data.connection != CONNECTED){
             icon_r_visible = SHOW;
             onclick = ()=>{alert('연결 되어있지 않음');};
         }

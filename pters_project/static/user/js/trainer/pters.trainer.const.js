@@ -13,9 +13,9 @@ const OFF = 0;
 const CONFIRM = 1;
 const CANCEL = 0;
 
-const CONNECTED = 0;
-const UNCONNECTED = 1;
-const CONNECT_WAIT = 2;
+const UNCONNECTED = 0;
+const CONNECT_WAIT = 1;
+const CONNECTED = 2;
 
 const PROGRAM_SELECT = 0;
 const PROGRAM_LECTURE_CONNECT_ACCEPT = 1;

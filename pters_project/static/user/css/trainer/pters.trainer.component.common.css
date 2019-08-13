@@ -111,7 +111,7 @@ input:disabled{
 
 .create_row .cell_icon, .create_input_row .cell_icon{
 	/* width: 30px; */
-	width: 90px;
+	width: 120px;
 	font-size: 13px;
 	text-align: right;
 	color: #858282;

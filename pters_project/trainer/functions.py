@@ -226,14 +226,23 @@ def func_get_member_info(class_id, user_id, member_id):
 def func_check_member_connection_info(class_id, member_id):
     connection_check = 0
 
-    lecture_count = ClassMemberTicketTb.objects.select_related(
+    view_lecture_count = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__member').filter(class_tb_id=class_id,
                                            member_ticket_tb__member_id=member_id,
                                            member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                                            member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW,
                                            use=USE).count()
-    if lecture_count > 0:
-        connection_check = 1
+    wait_lecture_count = ClassMemberTicketTb.objects.select_related(
+        'member_ticket_tb__member').filter(class_tb_id=class_id,
+                                           member_ticket_tb__member_id=member_id,
+                                           member_ticket_tb__member_auth_cd=AUTH_TYPE_WAIT,
+                                           member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW,
+                                           use=USE).count()
+    if view_lecture_count > 0:
+        connection_check = 2
+    else:
+        if wait_lecture_count > 0:
+            connection_check = 1
 
     return connection_check
 
