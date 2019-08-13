@@ -323,10 +323,10 @@ function func_set_close_popup_animation ($popup_selector, animation_type){
 
 function func_set_shade (popup_array_length){
     if(popup_array_length > 0){
-        $('#shade_for_popup_basic').css({"display":'block',"z-index":100*popup_array_length-50});
+        $('#shade_for_popup_basic').css({"display":'block', "z-index":100*popup_array_length-50});
     }
     else{
-        $('#shade_for_popup_basic').css({"display":'none',"z-index":0});
+        $('#shade_for_popup_basic').css({"display":'none', "z-index":0});
     }
 }
 
