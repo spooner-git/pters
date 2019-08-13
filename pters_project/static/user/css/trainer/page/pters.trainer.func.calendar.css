@@ -268,15 +268,15 @@
 }
 
 @keyframes scale {
-	0% { transform: scale(1); }
-	50% { transform: scale(2); }
+	0% { transform: scale(1.2); }
+	50% { transform: scale(1.4); }
 	100% { transform: scale(1.2); }
 }
 .long_touch_active{
 	/* transition: 0.6s; */
 	/* transform: scale(1.2); */
-	animation: scale .5s;
-	transform: scale(1.2);
+	animation: scale 0.8s infinite;
+	/* transform: scale(1.2); */
 	border: 2px solid #fe4e65;
 	z-index: 3;
 }
