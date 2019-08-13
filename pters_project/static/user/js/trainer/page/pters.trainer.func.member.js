@@ -145,7 +145,7 @@ class Member {
                             <div class="member_data_c">
                                 <div class="member_name">${member_name}</div>
                                 <div class="member_counts">
-                                 ${list_type == "ing" ? member_rem+'회/ '+remain_date+'일'+remain_alert_text+'/ - '+end_date_text+'까지' : '종료됨'}
+                                 ${list_type == "ing" ? member_rem+'회 / '+remain_date+'일'+remain_alert_text+' / - '+end_date_text+' 까지' : '종료됨'}
                                 </div>
                             </div>
                             <div class="member_data_r">
@@ -228,7 +228,7 @@ class Member {
             {
                 member_upper_box:`   <div class="member_upper_box">
                                             <div style="display:inline-block;width:200px;">
-                                                <span style="font-size:23px;font-weight:bold;color:#3b3d3d">회원 <span style="color:#fe4e65;">${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</span></span>
+                                                <span style="font-size:23px;font-weight:bold;color:#3b3b3b">회원 <span style="color:#fe4e65;">${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</span></span>
                                             </div>
                                             <div class="member_tools_wrap">
                                                 <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">
@@ -252,7 +252,7 @@ class Member {
                                             </div>
                                         </div>`
                 ,
-                initial_page:`<div id="member_display_panel"></div><div id="member_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px"></div>`
+                initial_page:`<div id="member_display_panel"></div><div id="member_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px; padding-top:8px;"></div>`
             }
         );
     }

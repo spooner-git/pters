@@ -9,11 +9,11 @@
 }
 	.ticket_upper_box{
 		position: relative;
-		height: 50px;
-		line-height: 50px;
+		height: 68px;
+		line-height: 28px;
 		background-color: #ffffff;
 		/* border-bottom: 1px solid #cccccc; */
-		padding: 0 16px;
+		padding: 20px 16px;
 		box-sizing: border-box;
 	}
 	.ticket_tools_wrap{
@@ -55,6 +55,8 @@
 		border-bottom: 1px solid #cccccc;
 		padding: 0 16px;
 		font-size: 14px;
+		height: 28px;
+		line-height: 28px;
 	}
 
 
