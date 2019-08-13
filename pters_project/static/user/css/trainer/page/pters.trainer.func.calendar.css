@@ -266,6 +266,10 @@
 .week_private_schedule{
 	background-color: green;
 }
+.long_touch_active{
+	transform: scale(1.2);
+	border: 2px solid #fe4e65;
+}
 /* 스케쥴 표시 */
 
 .week_indicator{
