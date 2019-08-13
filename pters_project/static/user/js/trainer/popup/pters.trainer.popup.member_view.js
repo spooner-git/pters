@@ -263,8 +263,16 @@ class Member_view{
         // let memo = this.dom_row_member_memo_input();
         let ticket = this.dom_row_ticket();
 
-        let html =  '<div class="obj_box_full">' + CComponent.dom_tag('기본 정보') + user_id + phone + birth + sex + '</div>' + 
-                    '<div class="obj_box_full">' + CComponent.dom_tag('보유 수강권') + ticket + '</div>';
+        let html =
+            '<div class="obj_input_box_full">'
+                + CComponent.dom_tag('아이디') + user_id + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('휴대폰 번호') + phone + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('생년월일') + birth + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('성별') + sex +
+            '</div>' +
+            '<div class="obj_input_box_full">'
+                + CComponent.dom_tag('수강권') + ticket +
+            '</div>';
 
         return html;
     }
@@ -276,7 +284,7 @@ class Member_view{
         let icon = undefined;
         let icon_r_visible = HIDE;
         let icon_r_text;
-        let style = {"font-size":"20px", "font-weight":"bold"};
+        let style = {"font-size":"20px", "font-weight":"bold", "letter-spacing":"-1px", "color":"#3d3b3b"};
         let disabled = false;
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
         let pattern_message = "공백, + - _ 제외 특수문자는 입력 불가";
@@ -290,13 +298,11 @@ class Member_view{
         let html = `
         <div class="member_view_upper_box">
             <div style="display:inline-block;width:320px;">
-                <div style="display:inline-block;width:320px;">
                     ${sub_html}
-                </div>
             </div>
         </div>
         `;
-        return html;
+        return sub_html;
     }
 
     dom_row_member_user_id_input(){
@@ -335,7 +341,7 @@ class Member_view{
     dom_row_member_phone_input(){
         let unit = '';
         let id = 'member_phone_view';
-        let title = this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone;
+        let title = this.data.phone == null || this.data.phone == 'None' ? '휴대폰 번호' : this.data.phone;
         let placeholder = '휴대폰 번호';
         let icon = '/static/common/icon/icon_smartphone.png';
         let icon_r_visible = HIDE;
@@ -457,9 +463,9 @@ class Member_view{
                 let lecture_id = this.data.ticket[i].lecture_id[j];
                 let lecture_name = this.data.ticket[i].lecture_name[j];
                 let lecture_color = this.data.ticket[i].lecture_color[j];
-                let icon_button_style = {"display":"block", "padding":"0", "font-size":"13px"};
+                let icon_button_style = {"display":"block", "padding":"14px 0 14px 42px", "font-size":"13px", "height":"20px", "line-height":"20px"};
                 let lecture_name_set = `<div style="display:inline-block;width:10px;height:10px;border-radius:5px;background-color:${lecture_color};margin-right:10px;"></div>${lecture_name}`;
-                let html_lecture_list_info = CComponent.icon_button (lecture_id, lecture_name_set, NONE, icon_button_style, ()=>{
+                let html_lecture_list_info = CComponent.text_button (lecture_id, lecture_name_set, icon_button_style, ()=>{
                     // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id}, ()=>{
                     //     lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
                     // });
@@ -472,10 +478,10 @@ class Member_view{
                 html_to_join_lecture_list.push(html_lecture_list_info);
             }
             //티켓내 남은횟수, 남은 기간 표기 부분
-            let icon_button_style_remain_count_info = {"display":"block", "padding":0, "font-size":"12px", "height":"20px"};
-            let icon_button_style_remain_data_info = {"display":"block", "padding":0, "font-size":"12px"};
-            let html_remain_info = CComponent.icon_button('reg_count', `남은 횟수  <span style="color:#fe4e65">${this.data.ticket[i].ticket_rem_count}</span>`, NONE, icon_button_style_remain_count_info, ()=>{}) + 
-                                    CComponent.icon_button('reg_date', `남은 기간 <span style="color:#fe4e65">${this.data.ticket[i].end_date_text}</span>`, NONE, icon_button_style_remain_data_info, ()=>{});
+            let icon_button_style_remain_count_info = {"display":"block", "padding":"12px 0 0 38px", "font-size":"11px", "font-weight":"500", "color":"#858282", "height":"16px"};
+            let icon_button_style_remain_data_info = {"display":"block", "padding":"4px 0 12px 38px", "font-size":"11px", "font-weight":"500", "color":"#858282", "height":"16px"};
+            let html_remain_info = CComponent.text_button('reg_count', `남은 횟수  <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].ticket_rem_count}</span>`, icon_button_style_remain_count_info, ()=>{}) +
+                                    CComponent.text_button('reg_date', `남은 기간 <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_data_info, ()=>{});
             let html_ticket_lecture_list = `<div>${html_to_join_lecture_list.join('')}</div>`;
 
             html_to_join.push(html_ticket_name + html_ticket_lecture_list + html_remain_info);
@@ -754,7 +760,7 @@ class Member_simple_view{
     dom_row_member_phone_input(){
         let unit = '';
         let id = 'member_phone_view';
-        let title =  this.data.phone == null || this.data.phone == 'None' ? '미입력 (휴대폰 번호)' : this.data.phone;
+        let title =  this.data.phone == null || this.data.phone == 'None' ? '휴대폰 번호' : this.data.phone;
         let placeholder = '휴대폰 번호';
         let icon = '/static/common/icon/icon_smartphone.png';
         let icon_r_visible = HIDE;
@@ -775,7 +781,7 @@ class Member_simple_view{
         //등록하는 행을 만든다.
         let unit = '';
         let id = 'member_birth_view';
-        let title = this.data.birth == null || this.data.birth == 'None' ? '미입력 (생년월일)' : this.data.birth;
+        let title = this.data.birth == null || this.data.birth == 'None' ? '생년월일' : this.data.birth;
         let placeholder =  '생년월일';
         let icon = '/static/common/icon/icon_cake.png';
         let icon_r_visible = HIDE;
@@ -794,7 +800,7 @@ class Member_simple_view{
 
     dom_row_member_sex_input(){
         let id = 'member_sex_view';
-        let title = this.data.sex == null || this.data.sex == 'None' ? '미입력 (성별)' : this.data.sex;
+        let title = this.data.sex == null || this.data.sex == 'None' ? '성별' : this.data.sex;
         let icon = '/static/common/icon/person_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";

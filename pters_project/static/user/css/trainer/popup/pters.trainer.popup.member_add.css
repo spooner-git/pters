@@ -3,20 +3,25 @@
 }
 
 .popup_member_add .obj_box_full{
-	padding: 15px 16px;
+	padding: 16px 18px;
+}
+
+.popup_member_add .obj_input_box_full{
+	padding: 4px 0px 4px 18px;
 }
 
 .popup_member_add .popup_toolbox{
 	position: sticky;
 	position: -webkit-sticky;
 	top: 0;
-	padding: 0px 16px 10px 50px;
+	padding: 0 16px 20px 60px;
 }
 .popup_member_add .member_add_upper_box{
-	height: 40px;
-	line-height: 40px;
+	height: 24px;
+	line-height: 24px;
 }
 
 .popup_member_add .popup_content{
 	padding-top: 1px;
+	padding-bottom: 20px;
 }

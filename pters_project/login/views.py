@@ -116,8 +116,8 @@ def login_trainer(request):
                 if member.use == 1:
                     if user.is_active:
                         login(request, user)
-                        if auto_login_check == '0':
-                            request.session.set_expiry(0)
+                        # if auto_login_check == '0':
+                        #     request.session.set_expiry(0)
                     else:
                         group_list = user.groups.filter(user=user.id)
                         group_name = 'trainer'
@@ -125,8 +125,8 @@ def login_trainer(request):
                             group_name = group_list[0].name
                         if group_name == 'trainee' and not user.check_password('0000'):
                             login(request, user)
-                            if auto_login_check == '0':
-                                request.session.set_expiry(0)
+                            # if auto_login_check == '0':
+                            #     request.session.set_expiry(0)
                         else:
                             request.session['member_id'] = user.id
                             request.session['username'] = user.username

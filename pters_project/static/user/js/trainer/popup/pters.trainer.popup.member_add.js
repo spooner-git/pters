@@ -199,8 +199,21 @@ class Member_add{
         let reg_count = this.dom_row_member_reg_count_input();
         let reg_price = this.dom_row_member_reg_price_input();
 
-        let html =  '<div class="obj_box_full">' + CComponent.dom_tag('기본 정보 입력') + name + phone + birth + sex +  '</div>' + 
-                    '<div class="obj_box_full">' + CComponent.dom_tag('수강권 등록') + ticket + start_date + end_date + reg_count + reg_price + memo + '</div>';
+        let html =
+            '<div class="obj_input_box_full">'
+                + CComponent.dom_tag('회원명') + name + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('휴대폰 번호') + phone + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('생년월일') + birth + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('성별') + sex +
+            '</div>' +
+            '<div class="obj_input_box_full">'
+                + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('진행 기간') + end_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('특이사항') + memo +
+            '</div>';
 
         return html;
     }
@@ -210,7 +223,7 @@ class Member_add{
         <div class="member_add_upper_box">
             <div style="display:inline-block;width:200px;">
                 <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold;">${this.data_from_external == null ? '회원 등록' : '재등록'}</span>
+                    <span style="font-size:20px;font-weight:bold; letter-spacing: -1px;">${this.data_from_external == null ? '회원 등록' : '재등록'}</span>
                 </div>
             </div>
         </div>

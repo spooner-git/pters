@@ -14,10 +14,9 @@
         
     }
         .popup_mobile .wrapper_top{
-            padding: 16px;
-            line-height: 24px;
+            line-height: 28px;
             text-align: center;
-
+            padding: 20px 16px 16px;
             position: sticky;
             position: -webkit-sticky;
             top: 0;

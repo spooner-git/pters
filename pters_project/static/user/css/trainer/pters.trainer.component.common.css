@@ -47,7 +47,7 @@ input:disabled{
 	font-family: inherit;
 	letter-spacing: inherit;
 	color: inherit;
-	height: 24px;
+	/*height: 24px;*/
 	width: 100%;
 	/*vertical-align: middle;*/
 	padding: 0;
@@ -93,7 +93,7 @@ input:disabled{
 .create_row .cell_title > img, .create_input_row .cell_title > img{
 	/*vertical-align: middle;*/
 	/*margin-bottom: 2px;*/
-	margin-right: 14px;
+	margin-right: 18px;
 	width: 24px;
 	height: 24px;
 	float: left;

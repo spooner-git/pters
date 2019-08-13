@@ -10,14 +10,15 @@
 	position: sticky;
 	position: -webkit-sticky;
 	top: 0;
-	padding: 0px 16px 10px 50px;
+	padding: 0 16px 20px 60px;
 }
 
 .popup_ticket_add .ticket_add_upper_box{
-	height: 40px;
-	line-height: 40px;
+	height: 24px;
+	line-height: 24px;
 }
 
 .popup_ticket_add .popup_content{
 	padding-top: 1px;
+	padding-bottom: 20px;
 }

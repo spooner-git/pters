@@ -18,5 +18,7 @@
 
 .popup_program_add .popup_content{
 	/* padding-top: 20px; */
+	padding-top: 1px;
+	padding-bottom: 20px;
 }
 

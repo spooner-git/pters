@@ -407,7 +407,9 @@ class Plan_add{
         let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
-            this.memo = user_input_data;
+            if(user_input_data != null){
+                this.memo = user_input_data;
+            }
         }, pattern, pattern_message, required);
         return html;
     }
