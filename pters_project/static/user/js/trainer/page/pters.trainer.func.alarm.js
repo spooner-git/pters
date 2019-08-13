@@ -45,7 +45,7 @@ class Alarm {
             return false;
         }
 
-        let page_data = data.slice(this.paging*10, (this.paging*10)+10);
+        let page_data = data.slice(this.paging*40, (this.paging*40)+40);
         let node = document.createElement("div");
         node.setAttribute('id', `alarm_paging_${this.paging}`);
         document.querySelector('#alarm_content_wrap').appendChild(node);
