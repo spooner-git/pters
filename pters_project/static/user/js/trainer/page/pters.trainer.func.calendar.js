@@ -777,7 +777,7 @@ class Calendar {
                             let top = 100*( (plan_start.hour-work_start)*60 + 60*plan_start.minute/60 )/(24*60);
 
                             let styles = `width:${100/cell_divide}%;height:${height}%;top:${top}%;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style}`;
-                            return `<div onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week" style="${styles}" ontouchstart="${this.instance}.longtouchstart(event, ${plan.schedule_id},()=>{${this.instance}.mode_to_plan_change();})" ontouchend="${this.instance}.longtouchend(event)">
+                            return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week" style="${styles}" ontouchstart="${this.instance}.longtouchstart(event, ${plan.schedule_id},()=>{${this.instance}.mode_to_plan_change();})" ontouchend="${this.instance}.longtouchend(event)">
                                         ${plan_name}
                                     </div>`;
                         })
@@ -909,11 +909,38 @@ class Calendar {
     mode_to_plan_change(switching, event){
         switch(switching){
             case ON:
-                this.long_touch = ON;
-                this.long_touch_target = event;
-                $('.week_rows > .week_row').css({"background-color":"#ffb0ba61"});
-                $('#debug_toolbar').show().html('<span>일정 변경을 위해 원하는 곳을 터치해주세요.</span><button style="float:right;width:70px;height:100%;" onclick="calendar.mode_to_plan_change(OFF)">취소</button>');
-                this.long_touch_target.target.classList.add('long_touch_active');
+                // this.long_touch = ON;
+                // this.long_touch_target = event;
+                // $('.week_rows > .week_row').css({"background-color":"#ffb0ba61"});
+                // $('#debug_toolbar').show().html('<span>일정 변경을 위해 원하는 곳을 터치해주세요.</span><button style="float:right;width:70px;height:100%;" onclick="calendar.mode_to_plan_change(OFF)">취소</button>');
+                // this.long_touch_target.target.classList.add('long_touch_active');
+
+                let user_option = {
+                    change:{text:"빠른 변경", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            this.long_touch = ON;
+                            this.long_touch_target = event;
+                            $('.week_rows > .week_row').css({"background-color":"#ffb0ba61"});
+                            $('#debug_toolbar').show().html('<span>일정 변경을 위해 원하는 곳을 터치해주세요.</span><button style="float:right;width:70px;height:100%;" onclick="calendar.mode_to_plan_change(OFF)">취소</button>');
+                            this.long_touch_target.target.classList.add('long_touch_active');
+                        }
+                    },
+                    delete:{text:"일정 삭제", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let data_to_send = {"schedule_id": event.target.dataset.scheduleid};
+                            Plan_func.delete(data_to_send ,()=>{
+                                this.init_no_new();
+                            })
+                        }
+                    }
+                };
+                
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                    option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+                });
+
+
+
                 break;
             case OFF:
                 this.long_touch = OFF;
