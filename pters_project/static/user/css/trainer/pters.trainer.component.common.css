@@ -2,12 +2,12 @@
 	cursor: pointer;
 }
 .dom_tag{
-	padding: 0 42px;
 	font-size: 11px;
 	font-weight: 500;
 	color: #d6d2d2;
 	letter-spacing: -0.5px;
 	height: 16px;
+	padding: 12px 42px 0;
 }
 /* input{
 	color: #282828 !important;
@@ -20,14 +20,19 @@ input:disabled{
 	opacity: 1;
 }
 
+.create_row, .create_input_row, .cell_text{
+	vertical-align: super;
+}
 .create_row, .create_input_row{
 	list-style: none;
-	line-height: 50px;
-	height: 50px;
+	line-height: 24px;
+	height: 24px;
 	cursor: pointer;
 	font-size: 15px;
 	font-weight: 500;
 	letter-spacing: -0.5px;
+	padding-top: 8px;
+	padding-bottom: 12px;
 	/*color: #858282;*/
 }
 .create_input_row{
@@ -42,9 +47,9 @@ input:disabled{
 	font-family: inherit;
 	letter-spacing: inherit;
 	color: inherit;
-	height: 40px;
+	height: 24px;
 	width: 100%;
-	vertical-align: middle;
+	/*vertical-align: middle;*/
 	padding: 0;
 	margin: 0;
 	background-color: transparent
@@ -86,7 +91,7 @@ input:disabled{
 }
 
 .create_row .cell_title > img, .create_input_row .cell_title > img{
-	vertical-align: middle;
+	/*vertical-align: middle;*/
 	/*margin-bottom: 2px;*/
 	margin-right: 14px;
 	width: 24px;
@@ -111,10 +116,12 @@ input:disabled{
 	color: #858282;
 }
 .create_row .cell_icon > img, .create_input_row .cell_icon > img{
-	vertical-align: middle;
-	margin-bottom: 2px;
-	width: 16px;
-	height: 16px;
+	/*vertical-align: middle;*/
+	/*margin-bottom: 2px;*/
+	/*margin-top: 2px;*/
+	width: 24px;
+	height: 24px;
+	padding-right:10px;
 }
 
 
@@ -471,13 +478,13 @@ input:disabled{
 
 .select_attend_row{
 	list-style: none;
-	line-height: 50px;
-	height: 50px;
+	line-height: 52px;
+	height: 52px;
 	font-size: 15px;
 	font-weight: 500;
 	letter-spacing: -0.5px;
 	/* border-bottom: 1px solid #f5f2f3; */
-	padding: 0px 16px;
+	padding: 0 20px;
 }
 
 .select_attend_row .cell_member_name{
@@ -494,10 +501,12 @@ input:disabled{
 }
 .select_attend_row .cell_attend_select > div{
 	display: inline-block;
-	width: 80px;
+	width: 56px;
 	font-size: 13px;
 	color: #858282;
 	cursor: pointer;
+	letter-spacing: -0.5px;
+	margin-left: 12px;
 }
 .select_attend_row .cell_attend_select > div > span{
 	margin-right: 8px;
@@ -505,11 +514,11 @@ input:disabled{
 .pters_checkbox{
 	position: relative;
 	display: inline-block;
-	width: 14px;
-	height: 14px;
+	width: 16px;
+	height: 16px;
 	border: 2px solid #858282;
 	border-radius: 50%;
-	margin-bottom: 2px;
+	/*margin-bottom: 2px;*/
 	vertical-align: middle;
 }
 .checkbox_selected{

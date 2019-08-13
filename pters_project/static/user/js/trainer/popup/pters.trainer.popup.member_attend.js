@@ -8,6 +8,8 @@ class Member_attend{
         this.data = {
             id:{name:null, member_id:null, state_cd:null}
         };
+        this.lecture_max_num = null;
+        this.lecture_current_num = null;
         this.init();
     }
 
@@ -18,6 +20,7 @@ class Member_attend{
     }
 
     set_initial_data(data_){
+        console.log(data_)
         let data = data_.schedule_info[0];
         let length = data.lecture_schedule_data.length;
         let new_data = {};
@@ -35,6 +38,8 @@ class Member_attend{
         }
 
         this.data = new_data;
+        this.lecture_max_num = data.lecture_max_member_num;
+        this.lecture_current_num = data.lecture_current_member_num;
     }
 
     clear(){
@@ -56,9 +61,11 @@ class Member_attend{
 
     dom_row_check_entire(){
         let html;
-        html = `<div class="obj_table_raw" style="height:50px;padding:0px 16px;box-sizing:border-box;">
-                    <div style="display:table-cell;width:150px;"></div>
-                    <div style="display:table-cell;width:auto;font-size:13px;font-weight:500;text-align:right;vertical-align:middle;cursor:pointer;" id="check_entire_${this.schedule_id}">
+        html = `<div class="obj_table_raw" style="height:52px;padding:0px 20px;box-sizing:border-box;">
+                    <div style="display:table-cell;width:150px; height:20px; font-size:11px; font-weight:bold; letter-spacing: -0.5px; color:#858282; vertical-align: middle;">
+                        정원(${this.lecture_current_num}/${this.lecture_current_num})
+                    </div>
+                    <div style="display:table-cell;width:auto;font-size:13px;font-weight:500;text-align:right;vertical-align:middle;cursor:pointer; letter-spacing: -0.5px; color: #858282;" id="check_entire_${this.schedule_id}">
                         <span style="color:#858282">전원 출석</span>
                         ${this.check_entire == true 
                             ? `<div class="pters_checkbox checkbox_selected"><div class="checkbox_selected_inner"></div></div>`

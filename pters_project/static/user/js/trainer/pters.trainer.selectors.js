@@ -1465,20 +1465,22 @@ class MemberSelector{
         }
         for(let i=0; i<length; i++){
             let data = this.received_data[i];
+            console.log(data);
             let member_id = data.member_id;
             let member_name = data.member_name;
             // let member_rem_count = data.member_ticket_rem_count;
             let member_avail_count = data.member_ticket_avail_count;
             let member_expiry = data.end_date;
+            let member_fix_state_cd = data.member_fix_state_cd;
             let checked = this.target_instance.member.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
             let html = CComponent.select_member_row (
-                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_avail_count, member_expiry, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_avail_count, member_expiry, member_fix_state_cd, (add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.id.push(member_id);
                         this.data.name.push(member_name);
                     }else if(add_or_substract == "substract"){
                         this.data.id.splice(this.data.id.indexOf(member_id), 1);
-                        this.data.name.splice(this.data.name.indexOf(member_name), 1);
+                        this.data.name.splice(this.data.id.indexOf(member_id), 1);
                     }else if(add_or_substract == "add_single"){
                         this.data.id = [];
                         this.data.name = [];

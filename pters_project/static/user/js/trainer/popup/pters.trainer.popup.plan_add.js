@@ -160,6 +160,7 @@ class Plan_add{
         
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_plan_add .wrapper_top').style.border = 0;
+        document.querySelector('.popup_plan_add .wrapper_top').style.paddingTop = '20px';
     }
 
     render_toolbox(){
@@ -190,8 +191,8 @@ class Plan_add{
 
         let html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업') + lecture_select_row + '</div>' +
                     `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' +
-                    '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row + '<div class="gap"></div>' +
-                                                    CComponent.dom_tag('시간') + start_time_select_row + end_time_select_row +  '<div class="gap"></div>' +
+                    '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>' +
+                                                    CComponent.dom_tag('시간') + start_time_select_row + end_time_select_row +  '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
                     '<div class="obj_input_box_full">'+  CComponent.dom_tag('메모') + memo_select_row + '</div>';
 
@@ -228,6 +229,7 @@ class Plan_add{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1, {'title':'수업'}, (set_data)=>{
                     //수업을 추가
                     this.lecture = set_data;
+
                     //수업에 속한 고정회원들을 추가
                     Lecture_func.read({"lecture_id": set_data.id[0]}, (data)=>{
                         let member_length = data.lecture_member_list.length;

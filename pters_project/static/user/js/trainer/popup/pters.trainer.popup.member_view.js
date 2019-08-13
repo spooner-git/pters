@@ -702,7 +702,7 @@ class Member_simple_view{
         let memo = this.dom_row_member_memo_input();
         let ticket = this.dom_row_ticket();
 
-        let html =  '<div class="obj_box_full">'+phone+birth+sex+memo+'</div>' + 
+        let html =  '<div class="obj_box_full">'+phone+birth+sex+memo+'</div>' +
                     '<div class="obj_box_full">'+ticket+ '</div>';
 
         // document.getElementById(this.target.content).innerHTML = html;
