@@ -302,12 +302,12 @@ class Calendar {
             this.current_month = next.month;
             this.current_week = next.week;
 
-            /*페이지 삽입*/
-            // if(os == IOS){
-            //     this.current_page_num = this.current_page_num + 1;
-            //     this.append_child(this.subtargetHTML, 'div', this.current_page_num);
-            // }
-            /*페이지 삽입*/
+            /*스와이프 애니메이션*/
+            if(os == IOS){
+                this.current_page_num = this.current_page_num + 1;
+                this.append_child(this.subtargetHTML, 'div', this.current_page_num);
+            }
+            /*스와이프 애니메이션*/
 
             this.render_upper_box("month");
             this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
@@ -325,12 +325,12 @@ class Calendar {
             this.current_month = prev.month;
             this.current_week = prev.week;
 
-            /*페이지 삽입*/
-            // if(os == IOS){
-            //     this.current_page_num = this.current_page_num - 1;
-            //     this.prepend_child(this.subtargetHTML, 'div', this.current_page_num);
-            // }
-            /*페이지 삽입*/
+            /*스와이프 애니메이션*/
+            if(os == IOS){
+                this.current_page_num = this.current_page_num - 1;
+                this.prepend_child(this.subtargetHTML, 'div', this.current_page_num);
+            }
+            /*스와이프 애니메이션*/
 
             this.render_upper_box("month");
             this.render_month_cal(this.current_page_num, this.current_year, this.current_month);
@@ -353,12 +353,12 @@ class Calendar {
             this.current_week = next.week;
             
 
-            /*페이지 삽입*/
+            /*스와이프 애니메이션*/
             if(os == IOS){
                 this.current_page_num = this.current_page_num + 1;
                 this.append_child(this.subtargetHTML, 'div', this.current_page_num);
             }
-            /*페이지 삽입*/
+            /*스와이프 애니메이션*/
 
             this.render_upper_box("week");
             this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
@@ -385,12 +385,12 @@ class Calendar {
             this.current_week = prev.week;
             
 
-            /*페이지 삽입*/
+            /*스와이프 애니메이션*/
             if(os == IOS){
                 this.current_page_num = this.current_page_num - 1;
                 this.prepend_child(this.subtargetHTML, 'div', this.current_page_num);
             }
-            /*페이지 삽입*/
+            /*스와이프 애니메이션*/
 
             this.render_upper_box("week");
             this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
