@@ -41,11 +41,11 @@ class Calendar {
         };
 
         let interval = setInterval(()=>{
-            let realtime = new Date();
-            let realtime_today = `${realtime.getFullYear()}-${realtime.getMonth()+1}-${realtime.getDate()}`;
-            if(this.today != realtime_today){
-                window.location.reload();
-            }
+            // let realtime = new Date();
+            // let realtime_today = `${realtime.getFullYear()}-${realtime.getMonth()+1}-${realtime.getDate()}`;
+            // if(this.today != realtime_today){
+            //     window.location.reload();
+            // }
             this.relocate_current_time_indicator();
         }, 60000);//60000
 
@@ -63,7 +63,7 @@ class Calendar {
     init (cal_type){
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
-        this.mode_to_plan_change(OFF)
+        this.mode_to_plan_change(OFF);
         this.init_no_new(cal_type);
     }
 
