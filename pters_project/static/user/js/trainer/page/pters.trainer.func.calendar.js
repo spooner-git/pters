@@ -303,10 +303,10 @@ class Calendar {
             this.current_week = next.week;
 
             /*페이지 삽입*/
-            if(os == IOS){
-                this.current_page_num = this.current_page_num + 1;
-                this.append_child(this.subtargetHTML, 'div', this.current_page_num);
-            }
+            // if(os == IOS){
+            //     this.current_page_num = this.current_page_num + 1;
+            //     this.append_child(this.subtargetHTML, 'div', this.current_page_num);
+            // }
             /*페이지 삽입*/
 
             this.render_upper_box("month");
@@ -326,10 +326,10 @@ class Calendar {
             this.current_week = prev.week;
 
             /*페이지 삽입*/
-            if(os == IOS){
-                this.current_page_num = this.current_page_num - 1;
-                this.prepend_child(this.subtargetHTML, 'div', this.current_page_num);
-            }
+            // if(os == IOS){
+            //     this.current_page_num = this.current_page_num - 1;
+            //     this.prepend_child(this.subtargetHTML, 'div', this.current_page_num);
+            // }
             /*페이지 삽입*/
 
             this.render_upper_box("month");
