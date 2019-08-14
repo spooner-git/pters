@@ -41,8 +41,13 @@ class Calendar {
         };
 
         let interval = setInterval(()=>{
+            let realtime = new Date();
+            let realtime_today = `${realtime.getFullYear()}-${realtime.getMonth()+1}-${realtime.getDate()}`;
+            if(this.today != realtime_today){
+                window.location.reload();
+            }
             this.relocate_current_time_indicator();
-        }, 60000);
+        }, 60000);//60000
 
         this.long_touch = OFF;
         this.long_touch_schedule_id;
@@ -1229,7 +1234,7 @@ class Plan_func{
             url : url,
             type:'POST',
             data: data,
-            dataType : 'html',
+            dataType : 'json',
             async: async,
     
             beforeSend:function(xhr, settings) {
@@ -1245,8 +1250,7 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
-                let json = JSON.parse(data);
-                callback(json);
+                callback(data);
             },
     
             //통신 실패시 처리
