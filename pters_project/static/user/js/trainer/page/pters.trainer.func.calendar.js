@@ -938,6 +938,7 @@ class Calendar {
                 this.long_touch_schedule_id = null;
                 // $('.long_touch_active').removeClass('long_touch_active');
                 // $('.go_behind').removeClass('go_behind');
+                this.init_no_new();
                 break;
         }
     }
