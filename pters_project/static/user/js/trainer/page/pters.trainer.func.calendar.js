@@ -54,6 +54,8 @@ class Calendar {
         this.touch_timer = 0;
         this.touch_sense;
         this.long_touch_target = null;
+
+        this.latest_received_data;
     }
 
     get selected_plan(){
@@ -79,6 +81,7 @@ class Calendar {
             this.render_upper_box(cal_type);
             this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                this.latest_received_data = jsondata;
                 if(this.cal_type == cal_type){
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_month_cal( this.current_page_num, this.current_year, this.current_month, jsondata);
@@ -104,6 +107,7 @@ class Calendar {
             }
 
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                this.latest_received_data = jsondata;
                 if(this.cal_type == cal_type){
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
@@ -231,6 +235,7 @@ class Calendar {
         this.render_upper_box("month");
         this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
         this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+            this.latest_received_data = jsondata;
             if(date == `${this.current_year}-${this.current_month}-01`){
                 this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
             }
@@ -268,6 +273,7 @@ class Calendar {
         }
 
         this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+            this.latest_received_data = jsondata;
             if(date == `${this.current_year}-${this.current_month}-01`){
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
 
@@ -304,6 +310,7 @@ class Calendar {
             this.render_upper_box("month");
             this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                this.latest_received_data = jsondata;
                 if(date == `${this.current_year}-${this.current_month}-01`){
                     this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
                 }
@@ -326,6 +333,7 @@ class Calendar {
             this.render_upper_box("month");
             this.render_month_cal(this.current_page_num, this.current_year, this.current_month);
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                this.latest_received_data = jsondata;
                 if(date == `${this.current_year}-${this.current_month}-01`){
                     this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
                 }
@@ -357,6 +365,7 @@ class Calendar {
                 this.zoom_week_cal_vertical();
             }
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                this.latest_received_data = jsondata;
                 if(date == `${this.current_year}-${this.current_month}-01`){
                     this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
                     if(this.week_zoomed.vertical.activate == true){
@@ -388,6 +397,7 @@ class Calendar {
                 this.zoom_week_cal_vertical();
             }
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                this.latest_received_data = jsondata;
                 if(date == `${this.current_year}-${this.current_month}-01`){
                     this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
                     if(this.week_zoomed.vertical.activate == true){
@@ -927,8 +937,8 @@ class Calendar {
                 $('#debug_toolbar').show().html(`<span style="margin-left:10px;line-height:60px;font-size:14px;">일정 변경을 위해 원하는 곳을 터치해주세요.</span>
                                                 <button style="float:right;width:70px;height:40px;margin:10px;border-radius:4px;background-color:#ffffff;border:1px solid #cccccc;" onclick="calendar.mode_to_plan_change(OFF)">취소</button>`)
                                           .css({"height":"60px", "line-height":"60px;"});
-                // this.long_touch_target.target.classList.add('long_touch_active');
-                this.init_no_new();
+                // this.init_no_new();
+                this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
 
                 break;
             case OFF:
@@ -936,9 +946,8 @@ class Calendar {
                 $('#debug_toolbar').hide();
                 this.long_touch_target = null;
                 this.long_touch_schedule_id = null;
-                // $('.long_touch_active').removeClass('long_touch_active');
-                // $('.go_behind').removeClass('go_behind');
-                this.init_no_new();
+                // this.init_no_new();
+                this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
                 break;
         }
     }
