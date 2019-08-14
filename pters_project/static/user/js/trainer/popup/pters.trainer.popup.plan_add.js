@@ -453,7 +453,7 @@ class Plan_add{
             let url ='/schedule/add_schedule/';
             Plan_func.create(url, data, ()=>{
                 layer_popup.close_layer_popup();
-                calendar.init();
+                calendar.init_no_new();
             });
             
         }else if(this.data.repeat.power == ON){
@@ -466,7 +466,7 @@ class Plan_add{
                 let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm, "member_ids":this.data.member_id};
                 Plan_func.create(confirm_url, confirm_data, ()=>{
                     layer_popup.close_layer_popup();
-                    calendar.init();
+                    calendar.init_no_new();
                 });
             });
         }

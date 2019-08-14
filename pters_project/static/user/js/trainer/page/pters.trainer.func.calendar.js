@@ -938,7 +938,8 @@ class Calendar {
                     "start_dt": start_dt,
                     "end_dt":end_dt,
                     "note":data.schedule_info[0].note, "duplication_enable_flag": 1,
-                    "en_dis_type":data.schedule_info[0].schedule_type, "member_ids":data.schedule_info[0].lecture_schedule_data.map((el)=>{return el.member_id;})
+                    "en_dis_type":data.schedule_info[0].schedule_type, 
+                    "member_ids": data.schedule_info[0].member_id != "" ? [data.schedule_info[0].member_id] : data.schedule_info[0].lecture_schedule_data.map((el)=>{return el.member_id;})
         };
         //en_dis_type 0: off일정, 1:레슨일정
         //duplication_enable_flag 0: 중복불허 1:중복허용

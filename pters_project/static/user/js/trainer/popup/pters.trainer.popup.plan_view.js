@@ -424,7 +424,7 @@ class Plan_view{
         let user_option = [
             ()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
                     Plan_func.delete({"schedule_id":this.schedule_id}, ()=>{
-                        calendar.init();layer_popup.all_close_layer_popup();
+                        calendar.init_no_new();layer_popup.all_close_layer_popup();
                     });
                 });
             },
@@ -437,7 +437,7 @@ class Plan_view{
                             let send_data = {"schedule_id":this.schedule_id, "state_cd":state_cd};
                             Plan_func.status(send_data, ()=>{
                                 this.init();
-                                calendar.init();
+                                calendar.init_no_new();
                             });
                         }
                         for(let member in set_data){
@@ -448,7 +448,7 @@ class Plan_view{
                                 let send_data = {"schedule_id":this.data.member_schedule_id[member_id_index], "state_cd":state_cd};
                                 Plan_func.status(send_data, ()=>{
                                     this.init();
-                                    calendar.init();
+                                    calendar.init_no_new();
                                 });
                             }
                         }
@@ -486,7 +486,7 @@ class Plan_view{
         Plan_func.delete(data1, ()=>{ //일정을 지운다.
             let url_to_create_new_schedule ='/schedule/add_schedule/';
             Plan_func.create(url_to_create_new_schedule, data2, ()=>{ //일정을 새로 등록한다.
-                    calendar.init();
+                    calendar.init_no_new();
             });
         });
     }
