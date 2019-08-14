@@ -191,7 +191,7 @@
 	position: relative;
 	display: table-cell;
 	width: 12.5%;
-	background-color: #ffffff;
+	/* background-color: #ffffff; */
 	background-image: url("/static/user/res/new/calendar_hour_short.png?v2");
 	background-size: 30px 60px;
 	background-position: top;
@@ -279,6 +279,10 @@
 	/* transform: scale(1.2); */
 	border: 2px solid #fe4e65;
 	z-index: 3;
+}
+.go_behind{
+	z-index: -1 !important;
+	opacity: 0.6;
 }
 /* 스케쥴 표시 */
 
