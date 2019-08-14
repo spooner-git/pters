@@ -62,6 +62,7 @@ class Calendar {
         return this.user_data.user_selected_plan;
     }
 
+    //다른페이지에서 접근했을때 처음에 달력을 위해 필요한 최상위 컨테이너를 포함하여 초기화한다.
     init (cal_type){
         this.today = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`;
 
@@ -71,6 +72,7 @@ class Calendar {
         this.init_no_new(cal_type);
     }
 
+    //달력에 필요한 최상위 컨테이너가 이미 있는 상태에서 컨테이너 내용(달력)을 재초기화 할때 사용한다.
     init_no_new(cal_type){
         if(cal_type == undefined){
             cal_type = this.cal_type;
