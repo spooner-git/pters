@@ -113,6 +113,14 @@ class DateRobot{
         return `${year}년 ${month}월 ${date}일 (${day})`;
     }
 
+    static to_yyyymmdd(year, month, date){
+        let new_year = year;
+        let new_month = Number(month) < 10 ? '0'+Number(month) : Number(month);
+        let new_date = Number(date) < 10 ? '0'+Number(date) : Number(date);
+
+        return  `${new_year}-${new_month}-${new_date}`;
+    }
+
     static to_split(data){
         if(data == null || data == undefined || data == "None" || data == ""){
             return null;

@@ -39,7 +39,9 @@ class Plan_add{
                     repeat_end: {year:null, month:null, date:null}
                 }
             ,
-            memo:""
+            memo:"",
+
+            duplicate_plan_when_add:[]
         };
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
@@ -364,11 +366,19 @@ class Plan_add{
                                                                                                 data:{zone:zone_min, hour:zone_hour, minute:zone_minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.end_time = object;
+                                                                                                    this.check_duplicate_plan_exist((data)=>{
+                                                                                                        this.data.duplicate_plan_when_add = data;
+                                                                                                        this.render_content();
+                                                                                                    });
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
                                                                                                 }});
             });
         });
-        return html;
+        let html_duplication_alert = `<div style="font-size:11px;color:#fe4e65;padding-left:45px;box-sizing:border-box;display:${this.data.duplicate_plan_when_add.length == 0 ? 'none' : 'block'}">
+                                            ${this.data.duplicate_plan_when_add.length}건 겹치는 일정이 존재합니다.<br>
+                                            ${this.data.duplicate_plan_when_add.join(', ')}
+                                        </div>`;
+        return html + html_duplication_alert;
     }
 
     dom_row_repeat_select(){
@@ -469,8 +479,55 @@ class Plan_add{
                     calendar.init_no_new();
                 });
             });
+        }   
+    }
+
+    check_duplicate_plan_exist(callback){
+        let date = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date);
+        let days = 1;
+        let start_time = this.data.start_time;
+        let end_time = this.data.end_time;
+
+        if(start_time == null || end_time == null){
+            console.log("시작시간이나 종료시간이 설정되지 않음");
+            return false;
         }
-        
+
+        let data;
+        calendar.request_schedule_data (date, days, (schedules)=>{
+            data = schedules[date];
+            let who_is_duplicated = [];
+            let length = data.length;
+            for(let i=0; i<length; i++){
+                let plan_schedule_id = data[i].schedule_id;
+                if(plan_schedule_id == this.schedule_id){
+                    continue;
+                }
+                let plan_starttime = data[i].start_time;
+                let plan_endtime = data[i].end_time;
+                let plan_name;
+                if(data[i].schedule_type == 0 ){
+                    plan_name = 'OFF일정 ('+data[i].note+')';
+                }else if(data[i].schedule_type == 1){
+                    plan_name = data[i].member_name;
+                }else if(data[i].schedule_type == 2){
+                    plan_name = data[i].lecture_name;
+                }
+
+                let check = know_whether_plans_has_duplicates (start_time, end_time, plan_starttime, plan_endtime);
+                if(check > 0){
+                    who_is_duplicated.push(`${plan_starttime} - ${plan_endtime} ${plan_name}`);
+                }
+            }
+
+            let result;
+            if(who_is_duplicated.length == 0){
+                result = [];
+            }
+            result = who_is_duplicated;
+
+            callback(result);
+        });
     }
 
     check_before_send(){

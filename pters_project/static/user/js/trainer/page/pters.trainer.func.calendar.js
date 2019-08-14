@@ -1000,17 +1000,21 @@ class Calendar {
         }
     }
 
-    request_schedule_data (date, days, callback){
+    request_schedule_data (date, days, callback, async){
         let date_ = date;
         let days_ = days;
         if(date_ == undefined){date_ = `${this.current_year}-${this.current_month}-01`;}
         if(days_ == undefined){days_ = 31;}
+        if(async == undefined){
+            async = true;
+        }
 
         $.ajax({
             url: '/trainer/get_trainer_schedule_all/',
             type : 'GET',
             data : {"date":date_, "day":days_},
             dataType: "JSON",
+            async: async,
 
             beforeSend:function (){
                 ajax_load_image(SHOW);
@@ -1626,13 +1630,25 @@ function know_whether_plans_has_duplicates (starttime, endtime, starttime_compar
 }
 
 function compare_time (time1, time2){
-    var hour1 = time1.split(':')[0];
-    var min1  = time1.split(':')[1];
-    var hour2 = time2.split(':')[0];
-    var min2  = time2.split(':')[1];
+    var hour1 = Number(time1.split(':')[0]);
+    var min1  = Number(time1.split(':')[1]);
+    var hour2 = Number(time2.split(':')[0]);
+    var min2  = Number(time2.split(':')[1]);
+    if(hour1 < 10){
+        hour1 = '0' + hour1;
+    }
+    if(min1 < 10){
+        min1 = '0' + min1;
+    }
+    if(hour2 < 10){
+        hour2 = '0' + hour2;
+    }
+    if(min2 < 10){
+        min2 = '0' + min2;
+    }
 
-    var time1_num = hour1+min1;
-    var time2_num = hour2+min2;
+    var time1_num = `${hour1}${min1}`;
+    var time2_num = `${hour2}${min2}`;
 
     if(Number(time1_num) > Number(time2_num) ){
         return true;
