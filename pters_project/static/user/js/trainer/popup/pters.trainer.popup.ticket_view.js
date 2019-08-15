@@ -239,7 +239,8 @@ class Ticket_view{
                 });
             });
         });
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
 
         });
         return html;
@@ -357,7 +358,8 @@ class Ticket_view{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{});
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{});
         return html;
     }
 
@@ -640,7 +642,8 @@ class Ticket_simple_view{
         let icon = '/static/common/icon/icon_book.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
             //     lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999);
             // });
@@ -674,7 +677,8 @@ class Ticket_simple_view{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{});
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{});
         return html;
     }
 

@@ -1,7 +1,7 @@
 class Lecture_add{
-    constructor(install_target, data_from_external, instance){
+    constructor(install_target, callback){
         this.target = {install: install_target, toolbox:'section_lecture_add_toolbox', content:'section_lecture_add_content'};
-        this.instance = instance;
+        this.callback = callback;
         this.form_id = 'id_lecture_add_form';
 
         let d = new Date();
@@ -24,7 +24,10 @@ class Lecture_add{
                 fixed_member_name:[],
                 color_bg:[],
                 color_font:[],
-                color_name:[]
+                color_name:[],
+
+                ticket_id:[],
+                ticket_name:[]
         };
 
         this.init();
@@ -78,6 +81,16 @@ class Lecture_add{
         return {bg:this.data.color_bg, font:this.data.color_font, name:this.data.color_name};
     }
 
+    set ticket(data){
+        this.data.ticket_id = data.id;
+        this.data.ticket_name = data.name;
+        this.render_content();
+    }
+
+    get ticket(){
+        return {id:this.data.ticket_id, name:this.data.ticket_name, reg_price:null, reg_count:null, effective_days:null};
+    }
+
  
     init(){
         this.render();
@@ -122,10 +135,12 @@ class Lecture_add{
         let fixed_member = this.dom_row_fiexd_member_select();
         let fixed_member_list = this.dom_row_fixed_member_list();
         let color = this.dom_row_color_select();
+        let ticket = this.dom_row_ticket_select();
 
         let html =  '<div class="obj_box_full">'+CComponent.dom_tag('수업명') + name+'</div>' + 
                     '<div class="obj_box_full">'+CComponent.dom_tag('정원') + capacity + '</div>' + 
-                    '<div class="obj_box_full">'+CComponent.dom_tag('색상')+ color+ '</div>';
+                    '<div class="obj_box_full">'+CComponent.dom_tag('색상')+ color+ '</div>' + 
+                    '<div class="obj_box_full">'+CComponent.dom_tag('생성시 수강권에 추가')+ ticket+ '</div>';
 
         return html;
     }
@@ -210,8 +225,13 @@ class Lecture_add{
     }
 
     dom_row_fiexd_member_select(){
-        let fixed_member_text = this.data.fixed_member_name.length == 0 ? '고정 회원' : '고정회원 '+this.data.fixed_member_id.length+'명 선택됨';
-        let html = CComponent.create_row('select_member', fixed_member_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, '고정 회원',(data)=>{
+        let id = 'select_member';
+        let title = this.data.fixed_member_name.length == 0 ? '고정 회원' : '고정회원 '+this.data.fixed_member_id.length+'명 선택됨';
+        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = '고정 회원';
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, (data)=>{
             if(this.data.capacity != null){
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                     member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':null, "title":"고정 회원 선택"}, (set_data)=>{
@@ -249,12 +269,35 @@ class Lecture_add{
     }
 
     dom_row_color_select(){
-        let color_text = this.data.color_name.length == 0 ? '색상 태그' : `<span style="background-color:${this.data.color_bg};color:${this.data.color_font};padding:5px;border-radius:4px;">${this.data.color_name}</span>`;
-        let html = CComponent.create_row('input_color_select', color_text, '/static/common/icon/icon_rectangle_blank.png', SHOW, '', ()=>{ 
+        let id = 'input_color_select';
+        let title = this.data.color_name.length == 0 ? '색상 태그' : `<span style="background-color:${this.data.color_bg};color:${this.data.color_font};padding:5px;border-radius:4px;">${this.data.color_name}</span>`;
+        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = '';
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_COLOR_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 color_select = new ColorSelector('#wrapper_box_color_select', this, 1, (set_data)=>{
                     this.color = set_data;
                     this.render_content();
+                });
+            });
+        });
+        return html;
+    }
+
+    dom_row_ticket_select(){
+        let id = 'lecture_add_ticket_select';
+        let title = this.data.ticket_id.length == 0 ? '수강권' : this.data.ticket_name.join(', ');
+        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style= null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1, (set_data)=>{
+                    this.ticket = set_data;
+                    // this.render_content();
                 });
             });
         });
@@ -275,8 +318,13 @@ class Lecture_add{
                     "end_font_color_cd":""
         };
 
-        Lecture_func.create(data, ()=>{
-            // layer_popup.close_layer_popup();
+        Lecture_func.create(data, (received)=>{
+            //수업추가시 수강권에 바로 집어넣기 - Lecture_func.create에서 서버에서 lecture_id를 반환해줘야함
+            // let data_to_send = {"ticket_id":this.ticket.id, "lecture_id":lecture_to_be_update.add[i]};
+            // Ticket_func.update_lecture(ADD, data_to_send);
+            if(this.callback != undefined){
+                this.callback();
+            }
             lecture.init();
         });
         layer_popup.close_layer_popup();

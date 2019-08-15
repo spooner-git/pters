@@ -144,7 +144,8 @@ class Program_add{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CATEGORY_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 let multiple_select = 1;
                 let upper_category = null;
@@ -166,9 +167,10 @@ class Program_add{
         let icon = NONE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
+        let style = null;
         let multiple_select = 1;
         let upper_category = this.category.code[0];
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             if(upper_category == undefined){
                 show_error_message('상위 분야를 먼저 선택해주세요');
                 return false;

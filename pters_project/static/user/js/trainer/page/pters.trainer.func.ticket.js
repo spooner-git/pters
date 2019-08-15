@@ -203,7 +203,7 @@ class Ticket{
                                             <div class="ticket_tools_wrap">
                                                 <div class="search_ticket"></div>
                                                 <div class="add_ticket" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
-                                                    ticket_add_popup = new Ticket_add('.popup_ticket_add', null, 'ticket_add_popup');});"></div>
+                                                    ticket_add_popup = new Ticket_add('.popup_ticket_add');});"></div>
                                             </div>
                                         </div>
                                         <div class="ticket_bottom_tools_wrap">

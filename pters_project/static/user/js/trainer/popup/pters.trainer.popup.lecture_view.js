@@ -252,8 +252,8 @@ class Lecture_view{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_COLOR_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 color_select = new ColorSelector('#wrapper_box_color_select', this, 1, (set_data)=>{
                     this.color = set_data;
@@ -278,8 +278,8 @@ class Lecture_view{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{});
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{});
         return html;
     }
 
@@ -320,7 +320,8 @@ class Lecture_view{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             //고정 인원 선택
             if(this.data.capacity != null){
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
@@ -603,7 +604,8 @@ class Lecture_simple_view{
         let icon = '/static/common/icon/people_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             
         });
         return html;
@@ -615,7 +617,8 @@ class Lecture_simple_view{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             
         });
         return html;
@@ -627,7 +630,8 @@ class Lecture_simple_view{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{});
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{});
         return html;
     }
 

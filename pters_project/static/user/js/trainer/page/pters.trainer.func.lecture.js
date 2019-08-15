@@ -189,7 +189,7 @@ class Lecture {
                                                 <div class="swap_list" onclick="${this.instance}.switch_type();"></div>
                                                 <div class="search_lecture"></div>
                                                 <div class="add_lecture" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_LECTURE_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
-                                                    lecture_add_popup = new Lecture_add('.popup_lecture_add', null, 'lecture_add_popup');});"></div>
+                                                    lecture_add_popup = new Lecture_add('.popup_lecture_add');});"></div>
                                             </div>
                                         </div>
                                         <div class="lecture_bottom_tools_wrap">
@@ -229,7 +229,7 @@ class Lecture_func{
     
             //통신성공시 처리
             success:function(data){
-                callback();
+                callback(data);
             },
     
             //통신 실패시 처리

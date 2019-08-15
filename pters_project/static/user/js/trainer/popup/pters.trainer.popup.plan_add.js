@@ -226,7 +226,8 @@ class Plan_add{
         let icon = '/static/common/icon/icon_book.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1, {'title':'수업'}, (set_data)=>{
                     //수업을 추가
@@ -257,7 +258,8 @@ class Plan_add{
         let icon = '/static/common/icon/icon_member.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             if(this.data.lecture_id.length != 0){
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
                     member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num[0], {'lecture_id':this.data.lecture_id[0], "title":"회원"}, (set_data)=>{
@@ -279,7 +281,8 @@ class Plan_add{
         let icon = '/static/common/icon/icon_cal.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -312,7 +315,8 @@ class Plan_add{
         let icon = '/static/common/icon/icon_clock.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ //data : 직전 셋팅값
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ //data : 직전 셋팅값
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -343,7 +347,8 @@ class Plan_add{
         let icon = '/static/common/icon/icon_clock_white.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ //data : 직전 셋팅값
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ //data : 직전 셋팅값
             //행을 클릭했을때 실행할 내용
             if(this.data.start_time == null){
                 show_error_message('시작 시각을 먼저 선택해주세요');
@@ -392,7 +397,8 @@ class Plan_add{
         let icon = '/static/common/icon/icon_repeat.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_REPEAT_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 repeat_select = new RepeatSelector('#wrapper_box_repeat_select', this, this.data.date, (set_data)=>{
                     this.repeat = set_data;

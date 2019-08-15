@@ -1,7 +1,7 @@
 class Ticket_add{
-    constructor(install_target, instance){
+    constructor(install_target, callback){
         this.target = {install: install_target, toolbox:'section_ticket_add_toolbox', content:'section_ticket_add_content'};
-        this.instance = instance;
+        this.callback = callback;
         this.form_id = 'id_ticket_add_form';
 
         let d = new Date();
@@ -177,11 +177,12 @@ class Ticket_add{
 
     dom_row_lecture_select(){
         let id = 'input_lecture_select';
-        let title = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개 선택됨';
+        let title = this.data.lecture_id.length == 0 ? '수업' : this.data.lecture_name.length+'개 선택됨';
         let icon = '/static/common/icon/icon_book.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, {'title':'수업'}, (set_data)=>{
                     this.lecture = set_data; //타겟에 선택된 데이터를 set
@@ -297,6 +298,9 @@ class Ticket_add{
         
         Ticket_func.create(data, ()=>{
             // layer_popup.close_layer_popup();
+            if(this.callback != undefined){
+                this.callback();
+            }
             ticket.init();
         });
         layer_popup.close_layer_popup();

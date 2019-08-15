@@ -1169,8 +1169,9 @@ class OptionSelector{
             let icon = null;
             let icon_r_visible = HIDE;
             let icon_r_text = "";
+            let style = null;
             html_to_join.push(
-                CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
+                CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
                     option_callback();
                 })
             );
@@ -1220,9 +1221,9 @@ class TicketSelector{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();lecture_select.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();ticket_select.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_select.upper_right_menu();">완료</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="ticket_select.upper_right_menu();">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -1277,14 +1278,33 @@ class TicketSelector{
                         this.upper_right_menu();
                     }
                 }  
-
-                    
             );
             html_to_join.push(html);
         }
+        let dom_add_new_ticket = this.dom_add_new_ticket();
+        html_to_join.unshift(dom_add_new_ticket);
 
         // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
         return html_to_join.join('');
+    }
+
+    dom_add_new_ticket(){
+        let id = "add_new_ticket";
+        let title = "새로운 수강권 생성";
+        let icon = '/static/common/icon/icon_add_pink.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = {"padding":"15px 16px", "border-bottom":"1px solid #cccccc"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                ticket_add_popup = new Ticket_add('.popup_ticket_add', ()=>{
+                    this.init();
+                    return false;
+                });
+            });
+        });
+
+        return html;
     }
 
     request_list (callback){
@@ -1395,9 +1415,30 @@ class LectureSelector{
             );
             html_to_join.push(html);
         }
-
+        let dom_add_new_lecture = this.dom_add_new_lecture();
+        html_to_join.unshift(dom_add_new_lecture);
+        
         // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
         return html_to_join.join('');
+    }
+
+    dom_add_new_lecture(){
+        let id = "add_new_lecture";
+        let title = "새로운 수업 생성";
+        let icon = '/static/common/icon/icon_add_pink.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = {"padding":"15px 16px", "border-bottom":"1px solid #cccccc"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                lecture_add_popup = new Lecture_add('.popup_lecture_add', ()=>{
+                    this.init();
+                    return false;
+                });
+            });
+        });
+
+        return html;
     }
 
     request_list (callback){
@@ -1954,7 +1995,8 @@ class RepeatSelector{
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_day_select', 100, POPUP_FROM_RIGHT, null, ()=>{
                 day_select = new DaySelector('#wrapper_box_day_select', this, 7, (set_data)=>{
                     this.day = set_data.day;
@@ -1970,7 +2012,8 @@ class RepeatSelector{
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
                 let year = this.target_instance.date == null ? this.dates.current_year : this.target_instance.date.year; 
                 let month = this.target_instance.date == null ? this.dates.current_month : this.target_instance.date.month;

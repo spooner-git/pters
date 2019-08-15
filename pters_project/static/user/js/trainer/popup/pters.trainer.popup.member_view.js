@@ -343,6 +343,7 @@ class Member_view{
         let icon = '/static/common/icon/person_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = '연결 해제';
+        let style = null;
         if(this.data.connection == CONNECTED){
             icon_r_text = "연결 해제";
         }else if(this.data.connection == CONNECT_WAIT){
@@ -350,7 +351,7 @@ class Member_view{
         }else if(this.data.connection == UNCONNECTED){
             icon_r_text = "연결 요청";
         }
-        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             onclick();
         });
         return html;
@@ -390,11 +391,12 @@ class Member_view{
         let icon = '/static/common/icon/icon_cake.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
+        let style = null;
         let disabled = false;
         if(this.data.active == 'True'){
             disabled = true;
         }
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -422,11 +424,12 @@ class Member_view{
         let icon = '/static/common/icon/person_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
+        let style = null;
         let disabled = false;
         if(this.data.active == 'True'){
             disabled = true;
         }
-        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let user_option = {
                                 male:{text:"남성", callback:()=>{this.sex = "M";this.send_data();layer_popup.close_layer_popup();}},
                                 female:{text:"여성", callback:()=>{this.sex = "W";this.send_data();layer_popup.close_layer_popup();}}
@@ -474,7 +477,8 @@ class Member_view{
             let icon = '/static/common/icon/icon_rectangle_blank.png';
             let icon_r_visible = SHOW;
             let icon_r_text = "";
-            let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+            let style = null;
+            let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
                 let ticket_id =  this.data.ticket[i].ticket_id;
                 // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
                 //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
@@ -775,12 +779,13 @@ class Member_simple_view{
         let icon = '/static/common/icon/person_black.png';
         let icon_r_text = "";
         let icon_r_visible = HIDE;
+        let style = null;
         let onclick = ()=>{alert('연결 되어있음');};
         if(this.data.connection != CONNECTED){
             icon_r_visible = SHOW;
             onclick = ()=>{alert('연결 되어있지 않음');};
         }
-        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             onclick();
         });
         return html;
@@ -833,7 +838,8 @@ class Member_simple_view{
         let icon = '/static/common/icon/person_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let style = null;
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             
         });
         return html;
@@ -874,7 +880,8 @@ class Member_simple_view{
             let icon = '/static/common/icon/icon_rectangle_blank.png';
             let icon_r_visible = SHOW;
             let icon_r_text = "";
-            let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+            let style = null;
+            let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
                 let ticket_id =  this.data.ticket[i].ticket_id;
                 // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
                 //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
