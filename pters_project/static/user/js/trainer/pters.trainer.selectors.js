@@ -1211,6 +1211,7 @@ class TicketSelector{
     init(){
         this.request_list(()=>{
             this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
     }
 
@@ -1343,6 +1344,7 @@ class LectureSelector{
     init(){
         this.request_list(()=>{
             this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
     }
 
@@ -1476,6 +1478,7 @@ class MemberSelector{
     init(){
         this.request_list(()=>{
             this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
     }
 
@@ -1598,6 +1601,7 @@ class ColorSelector{
     init(){
         this.request_list(()=>{
             this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
     }
 

@@ -56,7 +56,7 @@ class Program_add{
 
     init(){
         this.render();
-        func_set_webkit_overflow_scrolling('.wrapper_middle');
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
     set_initial_data (){

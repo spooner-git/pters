@@ -47,6 +47,12 @@
                float: right;
                font-size: 14px;
             }
+        
+        .popup_mobile .wrapper_middle{
+            overflow-y:auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .popup_mobile.popup_full{
             /* background-color: #f2f2f2; */
             background-color: #ffffff;

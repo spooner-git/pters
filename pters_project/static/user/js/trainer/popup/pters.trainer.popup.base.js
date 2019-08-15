@@ -6,7 +6,7 @@ class PopupBase{
                             ${top_center}
                             ${top_right}
                         </div>
-                        <div class="wrapper_middle" style="height:${windowHeight-55}px;overflow-y:auto">
+                        <div class="wrapper_middle" style="height:${windowHeight-55}px;">
                             ${content}
                         </div>
                         <div class="wrapper_bottom">
