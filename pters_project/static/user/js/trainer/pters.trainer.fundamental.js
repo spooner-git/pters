@@ -1,24 +1,9 @@
-
-// //ajax로 불러오는 html내에 있는 script 파일을 가져와서 실행
-// function dynamic_added_script_exe(script_url, callback){
-//     let script = document.createElement("script");
-//     script.addEventListener("load", function(event) {
-//         callback();
-//     });
-//     script.src = script_url;
-//     script.async = true;
-//     document.getElementsByTagName("script")[0].parentNode.appendChild(script);
-// }
-
-
 // function func_set_webkit_overflow_scrolling(target_selector){
 //     if(os == IOS){
 //         let $selector = $(target_selector);
 
 //         $selector.off('touchstart').on('touchstart', function(){
-//             console.log($selector.scrollTop())
 //             if($selector.scrollTop() == 0){
-//                 console.log("실행")
 //                 $selector.scrollTop(1);
 //             }
 //         });
@@ -42,9 +27,7 @@ function func_set_webkit_overflow_scrolling(target_selector){
         let $selector = $(target_selector);
 
         $(document).off('touchstart', target_selector).on('touchstart', target_selector, function(){
-            console.log($selector.scrollTop())
             if($selector.scrollTop() == 0){
-                console.log("실행")
                 $selector.scrollTop(1);
             }
         });

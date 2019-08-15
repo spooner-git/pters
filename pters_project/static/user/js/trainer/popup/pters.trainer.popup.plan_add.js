@@ -325,7 +325,8 @@ class Plan_add{
                 let hour = this.data.start_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
                 let minute = this.data.start_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
                 
-                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{zone:zone, hour:hour, minute:minute},
+                console.log("starttime_data:", {zone:zone, hour:hour, minute:minute})
+                time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{zone:zone, hour:hour, minute:minute},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.start_time = object;
                                                                                                     if(this.data.end_time != null){
@@ -366,8 +367,9 @@ class Plan_add{
                 let zone_min = time_min_type_zone.zone;
                 let zone_hour = time_min_type_zone.hour;
                 let zone_minute = time_min_type_zone.minute;
+                console.log(zone_min, zone_hour, zone_minute)
 
-                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시각',
+                time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시각',
                                                                                                 data:{zone:zone_min, hour:zone_hour, minute:zone_minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.end_time = object;
@@ -489,6 +491,10 @@ class Plan_add{
     }
 
     check_duplicate_plan_exist(callback){
+        if(this.data.date == null){
+            return false;
+        }
+
         let date = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date);
         let days = 1;
         let start_time = this.data.start_time;
