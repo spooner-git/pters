@@ -165,7 +165,7 @@ class Member_view{
     init(){
         this.render();
         this.set_initial_data();
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        // func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
     set_initial_data (){
@@ -241,6 +241,7 @@ class Member_view{
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_member_view .wrapper_top').style.border = 0;
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
     render_toolbox(){

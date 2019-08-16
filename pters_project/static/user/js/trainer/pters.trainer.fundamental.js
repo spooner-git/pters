@@ -32,12 +32,12 @@ function func_set_webkit_overflow_scrolling(target_selector){
             }
         });
 
-        $(document).off('scroll', target_selector).on('scroll', target_selector, function(e){
+        $(target_selector).off('scroll').on('scroll', function(e){
             const popupHeight = $selector.height();
             const scrollHeight = $selector.prop('scrollHeight');
             const scrollLocation = $selector.scrollTop();
             if(scrollHeight >= popupHeight+1){
-                if(popupHeight + scrollLocation == scrollHeight){
+                if(popupHeight + scrollLocation >= scrollHeight -1){
                     $selector.animate({scrollTop : scrollLocation-1}, 10);
                 }else if(popupHeight + scrollLocation == popupHeight){
                     $selector.animate({scrollTop : scrollLocation+1}, 10);
