@@ -236,7 +236,7 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
         try:
             lecture_info = LectureTb.objects.get(class_tb_id=class_id,
                                                  lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
-            print(str(lecture_info))
+            # print(str(lecture_info))
         except ObjectDoesNotExist:
             lecture_info = None
     if lecture_info is not None:
