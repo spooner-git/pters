@@ -135,8 +135,8 @@ class Ticket_add{
         let price = this.dom_row_ticket_price_input();
         let memo = this.dom_row_ticket_memo_input();
 
-        let html =  '<div class="obj_box_full">' + CComponent.dom_tag('수강권명') + name + '<div class="gap"></div>' +
-                                                   CComponent.dom_tag('수업 구성') + lecture + lecture_list + '</div>' + 
+        let html =  '<div class="obj_box_full">' + CComponent.dom_tag('수강권명') + name + '</div>' +
+                    '<div class="obj_box_full">' + CComponent.dom_tag('수업 구성') + lecture + lecture_list + '</div>' + 
                     '<div class="obj_box_full">' + CComponent.dom_tag('설명') + memo + '</div>';
 
         // document.getElementById(this.target.content).innerHTML = html;
@@ -200,11 +200,12 @@ class Ticket_add{
         for(let i=0; i<length; i++){
             let lecture_id = this.data.lecture_id[i];
             let lecture_name = this.data.lecture_name[i];
-            let icon_button_style = null;
+            let icon_button_style = {"padding":"3px 1%", "width":"30%", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500"};
+            let icon = NONE;
             html_to_join.push(
-                CComponent.icon_button(lecture_id, lecture_name, null, icon_button_style, ()=>{
+                CComponent.icon_button(lecture_id, lecture_name, icon, icon_button_style, ()=>{
                     // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id});
-                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(235/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(235/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
                         lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
                         //수업 간단 정보 팝업 열기
                     });
