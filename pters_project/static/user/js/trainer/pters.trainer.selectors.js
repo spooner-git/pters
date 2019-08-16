@@ -1491,7 +1491,7 @@ class OptionSelector{
             let icon = null;
             let icon_r_visible = HIDE;
             let icon_r_text = "";
-            let style = null;
+            let style = {"padding-top":"13px", "padding-bottom":"13px"};
             html_to_join.push(
                 CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
                     option_callback();
