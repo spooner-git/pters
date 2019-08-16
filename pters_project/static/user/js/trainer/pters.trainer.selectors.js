@@ -1602,7 +1602,11 @@ class TicketSelector{
                     }
                 }  
             );
-            html_to_join.push(html);
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
         }
         let dom_add_new_ticket = this.dom_add_new_ticket();
         html_to_join.unshift(dom_add_new_ticket);
@@ -1737,7 +1741,11 @@ class LectureSelector{
                     }
                 }    
             );
-            html_to_join.push(html);
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
         }
         let dom_add_new_lecture = this.dom_add_new_lecture();
         html_to_join.unshift(dom_add_new_lecture);
@@ -1825,7 +1833,6 @@ class MemberSelector{
         let html_to_join = [];
         let length = this.received_data.length;
         let select_member_num = 0;
-        html_to_join.push('dummy');
         if(length == 0){
             html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.'));
         }
@@ -1863,9 +1870,13 @@ class MemberSelector{
             if(checked!=0){
                 select_member_num++;
             }
-            html_to_join.push(html);
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
         }
-        html_to_join[0] = (`<div class="select_member_max_num" >정원 (<span id="select_member_max_num">${select_member_num}</span>/${this.multiple_select}명) </div>`);
+        html_to_join.unshift(`<div class="select_member_max_num" >정원 (<span id="select_member_max_num">${select_member_num}</span>/${this.multiple_select}명) </div>`);
 
         // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
         return html_to_join.join('');
