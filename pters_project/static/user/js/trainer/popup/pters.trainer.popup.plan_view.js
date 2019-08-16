@@ -382,7 +382,6 @@ class Plan_view{
                 let zone_hour = time_min_type_zone.hour;
                 let zone_minute = time_min_type_zone.minute;
 
-                console.log("종료",{zone:zone, hour:hour, minute:minute})
                 time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시각',
                                                                                                 data:{zone:zone_min, hour:zone_hour, minute:zone_minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
                                                                                                 callback_when_set: (object)=>{
