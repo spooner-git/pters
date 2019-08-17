@@ -255,12 +255,12 @@ class Ticket_view{
             let lecture_name = this.data.lecture_name[i];
             let lecture_state_cd = this.data.lecture_state_cd[i];
             let lecture_color = this.data.lecture_color[i];
-            let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:#cccccc; text-decoration:line-through;' : 'none');
+            let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:#cccccc; text-decoration:line-through;' : '');
             let icon_button_style = {"display":"block", "padding":"0", "font-size":"15px",
                                      "font-weight":"500", "height":"50px", "line-height":"50px"};
 
-            let lecture_name_set = `<div style="display:inline-block;width:12px;height:12px;border-radius:6px;background-color:${lecture_color};margin-right:12px;"></div>
-                                    <span style="${text_decoration}">${lecture_name}</span>`;
+            let lecture_name_set = `<div style="display:inline-block;width: 4px;height:16px;border-radius:6px;background-color:${lecture_color};margin-right:12px;vertical-align:middle;"></div>
+                                    <span style="${text_decoration};vertical-align:middle;">${lecture_name}</span>`;
             html_to_join.push(
                 CComponent.icon_button (lecture_id, lecture_name_set, NONE, icon_button_style, ()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(235/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{

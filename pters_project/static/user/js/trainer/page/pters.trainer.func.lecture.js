@@ -140,9 +140,11 @@ class Lecture {
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'lecture_id':${lecture_id}}, ()=>{
                 lecture_view_popup = new Lecture_view('.popup_lecture_view', ${lecture_id}, 'lecture_view_popup');});`;
             let html = `<article class="lecture_wrapper" data-lectureid="${lecture_id}" onclick="${onclick}" style="color:${list_status_type == "ing" ? "" : '#a3a0a0'}">
+                            <div class="lecture_data_l">
+                                <div class="lecture_tag" style="background:${list_status_type == "ing" ? lecture_ing_bg_color : "#a3a0a0"}"></div>
+                            </div>
                             <div class="lecture_data_c">
                                 <div class="lecture_name">
-                                    <div class="lecture_tag" style="background:${list_status_type == "ing" ? lecture_ing_bg_color : "#a3a0a0"}"></div>
                                     ${lecture_name} 
                                     <div class="lecture_member_number">${list_status_type == "ing" ? lecture_member_number+' 명' : ""}</div>
                                 </div>

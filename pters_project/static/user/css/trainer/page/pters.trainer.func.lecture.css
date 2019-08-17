@@ -74,7 +74,7 @@
 .lecture_data_l{
 	display: table-cell;
 	vertical-align: middle;
-	width: 30px;
+	width: 12px;
 	text-align: left;
 	position: relative;
 }
@@ -85,28 +85,27 @@
 }
 
 .lecture_name{
-	font-size: 14px;
-	font-weight: bold;
-	margin-bottom: 4px;
+	font-size: 16px;
+	font-weight: 500;
 }
 .lecture_member_number{
 	float: right;
-	font-size: 14px;
+	font-size: 18px;
 	font-weight: 500;
 }
 .lecture_note{
 	/* margin-bottom: 5px; */
+	height: 20px;
 	color: #858282;
 	font-size: 11px;
 	font-weight: 500;
-	padding-left: 28px;
 	box-sizing: border-box;
 }
 
 .lecture_tag{
-	width: 12px;
-	height: 12px;
-	border-radius: 6px;
+	width: 4px;
+	height: 32px;
+	border-radius: 10px;
 	display: inline-block;
 	vertical-align: middle;
 	margin-bottom: 2px;
