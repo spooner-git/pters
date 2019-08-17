@@ -19,6 +19,7 @@ class Menu {
     render(){
         document.getElementById('menu_display_panel').innerHTML = this.dom_assembly_tool_box();
         document.querySelector('#menu_content_wrap').innerHTML = this.dom_assembly_content();
+        $root_content.scrollTop(1);
     }
 
     //상단을 렌더링
