@@ -173,7 +173,7 @@ class CComponent{
                             </div>
                             <div class="cell_ticket_info">
                                 <div>${ticket_name}</div>
-                                <div>가격 - ${ticket_price}원 / 횟수 - ${ticket_reg_count} / 유효기간 - ${ticket_effective_days}일</div>
+                                <div style="display:none">가격 - ${ticket_price}원 / 횟수 - ${ticket_reg_count} / 유효기간 - ${ticket_effective_days}일</div>
                             </div>
                             <div class="cell_ticket_selected">
                                 <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? 'none' : 'ticket_selected'}">

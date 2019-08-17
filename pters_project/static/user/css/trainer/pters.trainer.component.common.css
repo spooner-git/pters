@@ -131,18 +131,22 @@ input:disabled{
 	line-height: 50px;
 	height: 50px;
 	cursor: pointer;
-	font-size: 13px;
+	font-size: 15px;
 	font-weight: 500;
 	letter-spacing: -0.5px;
 
-	border-bottom: 1px solid #cccccc;
-	padding: 5px 16px;
+	/* border-bottom: 1px solid #cccccc; */
+	padding: 5px 20px;
+}
+.select_ticket_row > div{
+	height: 50px;
 }
 
 .select_ticket_row .cell_ticket_color{
-	display: table-cell;
-	width: 30px;
-	vertical-align: middle;
+	/* display: table-cell; */
+	/* width: 30px; */
+	/* vertical-align: middle; */
+	display: none;
 }
 
 .select_ticket_row .cell_ticket_color .ticket_color_bar{

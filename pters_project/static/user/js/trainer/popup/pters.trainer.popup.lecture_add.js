@@ -295,7 +295,7 @@ class Lecture_add{
         let style= null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1, (set_data)=>{
+                ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1, {"title":"수강권 선택"}, (set_data)=>{
                     this.ticket = set_data;
                     // this.render_content();
                 });

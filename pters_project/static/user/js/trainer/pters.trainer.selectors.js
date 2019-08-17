@@ -1512,12 +1512,13 @@ class OptionSelector{
 }
 
 class TicketSelector{
-    constructor(install_target, target_instance, multiple_select, callback){
+    constructor(install_target, target_instance, multiple_select, appendix, callback){
         // this.targetHTML = install_target;
         this.target = {install : install_target};
         this.target_instance = target_instance;
         this.unique_instance = install_target.replace(/#./gi, "");
         this.callback = callback;
+        this.appendix = appendix;
         this.received_data;
         this.multiple_select = multiple_select;
         this.data = {
@@ -1545,7 +1546,7 @@ class TicketSelector{
 
     render(){
         let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();ticket_select.clear();" class="obj_icon_prev">`;
-        let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
+        let top_center = `<span class="icon_center"><span id="">${this.appendix.title == null ? '$nbsp;' :this.appendix.title}</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="ticket_select.upper_right_menu();">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
@@ -1608,9 +1609,10 @@ class TicketSelector{
                 html_to_join.push(html);
             }
         }
-        let dom_add_new_ticket = this.dom_add_new_ticket();
-        html_to_join.unshift(dom_add_new_ticket);
-
+        if(this.appendix.new_add == SHOW){
+            let dom_add_new_ticket = this.dom_add_new_ticket();
+            html_to_join.unshift(dom_add_new_ticket);
+        }
         // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
         return html_to_join.join('');
     }
@@ -1747,9 +1749,10 @@ class LectureSelector{
                 html_to_join.push(html);
             }
         }
-        let dom_add_new_lecture = this.dom_add_new_lecture();
-        html_to_join.unshift(dom_add_new_lecture);
-        
+        if(this.appendix.new_add == SHOW){
+            let dom_add_new_lecture = this.dom_add_new_lecture();
+            html_to_join.unshift(dom_add_new_lecture);
+        }
         // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
         return html_to_join.join('');
     }
