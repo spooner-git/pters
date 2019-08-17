@@ -33,11 +33,12 @@ function func_set_webkit_overflow_scrolling(target_selector){
         });
 
         $(target_selector).off('scroll').on('scroll', function(e){
+            console.log("scoll")
             const popupHeight = $selector.height();
             const scrollHeight = $selector.prop('scrollHeight');
             const scrollLocation = $selector.scrollTop();
             if(scrollHeight >= popupHeight+1){
-                if(popupHeight + scrollLocation == scrollHeight -1){
+                if(popupHeight + scrollLocation == scrollHeight){
                     $selector.animate({scrollTop : scrollLocation-1}, 10);
                 }else if(popupHeight + scrollLocation == popupHeight){
                     $selector.animate({scrollTop : scrollLocation+1}, 10);
@@ -45,6 +46,18 @@ function func_set_webkit_overflow_scrolling(target_selector){
             }
         });
     }
+}
+
+function test_console(selector){
+    console.log(
+        "selector height:", $(selector).height()
+    );
+    console.log(
+        "selector scrollTop:", $(selector).scrollTop()
+    );
+    console.log(
+        "selector scrollHeight:", $(selector).prop('scrollHeight')
+    );
 }
 
 function ajax_load_image(option){
