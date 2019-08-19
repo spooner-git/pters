@@ -165,7 +165,7 @@ class Member_view{
     init(){
         this.render();
         this.set_initial_data();
-        func_set_webkit_overflow_scrolling('.wrapper_middle');
+        // func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
     set_initial_data (){
@@ -241,6 +241,7 @@ class Member_view{
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_member_view .wrapper_top').style.border = 0;
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
     render_toolbox(){
@@ -343,6 +344,7 @@ class Member_view{
         let icon = '/static/common/icon/person_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = '연결 해제';
+        let style = null;
         if(this.data.connection == CONNECTED){
             icon_r_text = "연결 해제";
         }else if(this.data.connection == CONNECT_WAIT){
@@ -350,7 +352,7 @@ class Member_view{
         }else if(this.data.connection == UNCONNECTED){
             icon_r_text = "연결 요청";
         }
-        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             onclick();
         });
         return html;
@@ -390,11 +392,12 @@ class Member_view{
         let icon = '/static/common/icon/icon_cake.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
+        let style = null;
         let disabled = false;
         if(this.data.active == 'True'){
             disabled = true;
         }
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -422,11 +425,12 @@ class Member_view{
         let icon = '/static/common/icon/person_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
+        let style = null;
         let disabled = false;
         if(this.data.active == 'True'){
             disabled = true;
         }
-        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let user_option = {
                                 male:{text:"남성", callback:()=>{this.sex = "M";this.send_data();layer_popup.close_layer_popup();}},
                                 female:{text:"여성", callback:()=>{this.sex = "W";this.send_data();layer_popup.close_layer_popup();}}
@@ -474,12 +478,13 @@ class Member_view{
             let icon = '/static/common/icon/icon_rectangle_blank.png';
             let icon_r_visible = SHOW;
             let icon_r_text = "";
-            let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+            let style = null;
+            let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
                 let ticket_id =  this.data.ticket[i].ticket_id;
                 // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
                 //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
                 // });
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(254/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(235/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                     ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
                     //수강권 간단 정보 팝업 열기
                 });
@@ -498,7 +503,7 @@ class Member_view{
                     // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id}, ()=>{
                     //     lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
                     // });
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(253/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(235/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
                         lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
                         //수업 간단 정보 팝업 열기
                     });
@@ -775,12 +780,13 @@ class Member_simple_view{
         let icon = '/static/common/icon/person_black.png';
         let icon_r_text = "";
         let icon_r_visible = HIDE;
+        let style = null;
         let onclick = ()=>{alert('연결 되어있음');};
         if(this.data.connection != CONNECTED){
             icon_r_visible = SHOW;
             onclick = ()=>{alert('연결 되어있지 않음');};
         }
-        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             onclick();
         });
         return html;
@@ -833,7 +839,8 @@ class Member_simple_view{
         let icon = '/static/common/icon/person_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let style = null;
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             
         });
         return html;
@@ -874,12 +881,13 @@ class Member_simple_view{
             let icon = '/static/common/icon/icon_rectangle_blank.png';
             let icon_r_visible = SHOW;
             let icon_r_text = "";
-            let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+            let style = null;
+            let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
                 let ticket_id =  this.data.ticket[i].ticket_id;
                 // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
                 //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
                 // });
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(254/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(235/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                     ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
                     //회원 간단 정보 팝업 열기
                 });

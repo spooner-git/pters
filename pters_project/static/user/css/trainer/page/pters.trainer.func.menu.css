@@ -9,31 +9,9 @@
 }
 	.menu_upper_box{
 		position: relative;
-		height: 50px;
-		line-height: 50px;
+		height: 68px;
+		line-height: 28px;
 		background-color: #ffffff;
-		border-bottom: 1px solid #cccccc;
-		padding: 0 20px;
+		padding: 20px 16px;
 		box-sizing: border-box;
-	}
-
-	
-	.menu_element_wrap{
-		width: 95%;
-		height: 55px;
-		padding: 10px 20px;
-		box-sizing: border-box;
-		background-color: #ffffff;
-		margin: 10px auto;
-		border: 1px solid #f1f1f1;
-		cursor: pointer;
-	}
-	.menu_element_wrap > span{
-		vertical-align: middle;
-		line-height: 33px;
-	}
-	.menu_element_wrap > img{
-		width: 30px;
-		vertical-align: middle;
-		margin-right: 10px;
 	}

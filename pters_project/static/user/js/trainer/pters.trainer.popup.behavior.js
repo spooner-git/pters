@@ -29,7 +29,8 @@ let layer_popup = (function (){
 
             //팝업 height 지정
            if(popup_size != POPUP_SIZE_WINDOW) {
-                $popup_name_selector.css({"height": popup_height + 'px', "overflow-y": "auto"});
+                // $popup_name_selector.css({"height": popup_height + 'px', "overflow-y": "auto"});
+                $popup_name_selector.css({"height": popup_height + 'px'});
             }
             $popup_selector.css({"z-index":100*popup_array.length});
         }

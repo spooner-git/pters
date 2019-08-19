@@ -108,7 +108,7 @@ class Ticket_view{
 
     init(){
         this.render();
-        func_set_webkit_overflow_scrolling('.wrapper_middle');
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
     set_initial_data (){
@@ -239,7 +239,8 @@ class Ticket_view{
                 });
             });
         });
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
 
         });
         return html;
@@ -254,15 +255,15 @@ class Ticket_view{
             let lecture_name = this.data.lecture_name[i];
             let lecture_state_cd = this.data.lecture_state_cd[i];
             let lecture_color = this.data.lecture_color[i];
-            let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:#cccccc; text-decoration:line-through;' : 'none');
+            let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:#cccccc; text-decoration:line-through;' : '');
             let icon_button_style = {"display":"block", "padding":"0", "font-size":"15px",
                                      "font-weight":"500", "height":"50px", "line-height":"50px"};
 
-            let lecture_name_set = `<div style="display:inline-block;width:12px;height:12px;border-radius:6px;background-color:${lecture_color};margin-right:12px;"></div>
-                                    <span style="${text_decoration}">${lecture_name}</span>`;
+            let lecture_name_set = `<div style="display:inline-block;width: 4px;height:16px;border-radius:6px;background-color:${lecture_color};margin-right:12px;vertical-align:middle;"></div>
+                                    <span style="${text_decoration};vertical-align:middle;">${lecture_name}</span>`;
             html_to_join.push(
                 CComponent.icon_button (lecture_id, lecture_name_set, NONE, icon_button_style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(253/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(235/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
                         lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
                         //수업 간단 정보 팝업 열기
                     });
@@ -357,7 +358,8 @@ class Ticket_view{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{});
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{});
         return html;
     }
 
@@ -640,7 +642,8 @@ class Ticket_simple_view{
         let icon = '/static/common/icon/icon_book.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
             //     lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999);
             // });
@@ -674,7 +677,8 @@ class Ticket_simple_view{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{});
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{});
         return html;
     }
 

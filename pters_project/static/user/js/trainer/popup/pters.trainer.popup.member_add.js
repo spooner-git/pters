@@ -138,7 +138,7 @@ class Member_add{
 
     init(){
         this.render();
-        func_set_webkit_overflow_scrolling('.wrapper_middle');
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
     set_initial_data(data){
@@ -277,7 +277,8 @@ class Member_add{
         let icon = '/static/common/icon/icon_cake.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             //행을 클릭했을때 실행할 내용
             if(this.data_from_external != null){
                 return false;
@@ -308,7 +309,8 @@ class Member_add{
         let icon = '/static/common/icon/person_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let style = null;
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             if(this.data_from_external != null){
                 return false;
             }
@@ -349,9 +351,10 @@ class Member_add{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1, (set_data)=>{
+                ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1, {"title":"수강권 선택"}, (set_data)=>{
                     this.ticket = set_data;
                     // this.render_content();
                 });
@@ -367,7 +370,8 @@ class Member_add{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
 
@@ -395,7 +399,8 @@ class Member_add{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
 

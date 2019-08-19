@@ -49,7 +49,9 @@ class Plan_view{
             lecture_font_color: null,
             lecture_current_num: null,
             lecture_state_cd: null,
-            schedule_type:null
+            schedule_type:null,
+
+            duplicate_plan_when_add:[]
         };
     
         this.init();
@@ -116,7 +118,7 @@ class Plan_view{
     init (){
         this.request_data(()=>{
             this.render();
-            func_set_webkit_overflow_scrolling('.wrapper_middle');
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
     }
 
@@ -237,7 +239,8 @@ class Plan_view{
         let icon = '/static/common/icon/icon_member.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "예약 목록";
-        let html_member_select = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
+        let style = null;
+        let html_member_select = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             //회원 선택 팝업 열기
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'data':null}, ()=>{
                 member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num, {'lecture_id':this.data.lecture_id, "title":"회원"}, (set_data)=>{
@@ -302,7 +305,8 @@ class Plan_view{
         let icon = '/static/common/icon/icon_cal.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DATE_SELECTOR, 100*305/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -328,7 +332,8 @@ class Plan_view{
         let icon = '/static/common/icon/icon_clock.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TIME_SELECTOR, 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -337,7 +342,7 @@ class Plan_view{
                 let hour = this.data.start_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
                 let minute = this.data.start_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
                 
-                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{zone:zone, hour:hour, minute:minute},
+                time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{zone:zone, hour:hour, minute:minute},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.start_time = object;
                                                                                                     if(this.data.end_time != null){
@@ -360,7 +365,8 @@ class Plan_view{
         let icon = '/static/common/icon/icon_clock_white.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TIME_SELECTOR, 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
@@ -376,16 +382,24 @@ class Plan_view{
                 let zone_hour = time_min_type_zone.hour;
                 let zone_minute = time_min_type_zone.minute;
 
-                time_selector = new TimeSelector('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시각',
-                                                                                                data:{zone:zone, hour:hour, minute:minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
+                time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시각',
+                                                                                                data:{zone:zone_min, hour:zone_hour, minute:zone_minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.end_time = object;
                                                                                                     this.if_user_changed_any_information = true;
+                                                                                                    this.check_duplicate_plan_exist((data)=>{
+                                                                                                        this.data.duplicate_plan_when_add = data;
+                                                                                                        this.render_content();
+                                                                                                    });
                                                                                                     //셀렉터에서 선택된 값(object)을 this.dataCenter에 셋팅하고 rerender 한다.
                                                                                                 }});
             });
         });
-        return html;
+        let html_duplication_alert = `<div style="font-size:11px;color:#fe4e65;padding-left:45px;box-sizing:border-box;display:${this.data.duplicate_plan_when_add.length == 0 ? 'none' : 'block'}">
+                                            ${this.data.duplicate_plan_when_add.length}건 겹치는 일정이 존재합니다.<br>
+                                            ${this.data.duplicate_plan_when_add.join(', ')}
+                                        </div>`;
+        return html + html_duplication_alert;
     }
 
     dom_row_memo_select (){
@@ -424,7 +438,7 @@ class Plan_view{
         let user_option = [
             ()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
                     Plan_func.delete({"schedule_id":this.schedule_id}, ()=>{
-                        calendar.init();layer_popup.all_close_layer_popup();
+                        calendar.init_no_new();layer_popup.all_close_layer_popup();
                     });
                 });
             },
@@ -437,7 +451,7 @@ class Plan_view{
                             let send_data = {"schedule_id":this.schedule_id, "state_cd":state_cd};
                             Plan_func.status(send_data, ()=>{
                                 this.init();
-                                calendar.init();
+                                calendar.init_no_new();
                             });
                         }
                         for(let member in set_data){
@@ -448,7 +462,7 @@ class Plan_view{
                                 let send_data = {"schedule_id":this.data.member_schedule_id[member_id_index], "state_cd":state_cd};
                                 Plan_func.status(send_data, ()=>{
                                     this.init();
-                                    calendar.init();
+                                    calendar.init_no_new();
                                 });
                             }
                         }
@@ -486,7 +500,7 @@ class Plan_view{
         Plan_func.delete(data1, ()=>{ //일정을 지운다.
             let url_to_create_new_schedule ='/schedule/add_schedule/';
             Plan_func.create(url_to_create_new_schedule, data2, ()=>{ //일정을 새로 등록한다.
-                    calendar.init();
+                    calendar.init_no_new();
             });
         });
     }
@@ -509,6 +523,54 @@ class Plan_view{
         }
 
         return {add:member_id_to_be_added, del:member_id_to_be_deleted};
+    }
+
+    check_duplicate_plan_exist(callback){
+        let date = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date);
+        let days = 1;
+        let start_time = this.data.start_time;
+        let end_time = this.data.end_time;
+
+        if(start_time == null || end_time == null){
+            console.log("시작시간이나 종료시간이 설정되지 않음");
+            return false;
+        }
+
+        let data;
+        calendar.request_schedule_data (date, days, (schedules)=>{
+            data = schedules[date];
+            let who_is_duplicated = [];
+            let length = data.length;
+            for(let i=0; i<length; i++){
+                let plan_schedule_id = data[i].schedule_id;
+                if(plan_schedule_id == this.schedule_id){
+                    continue;
+                }
+                let plan_starttime = data[i].start_time;
+                let plan_endtime = data[i].end_time;
+                let plan_name;
+                if(data[i].schedule_type == 0 ){
+                    plan_name = 'OFF일정 ('+data[i].note+')';
+                }else if(data[i].schedule_type == 1){
+                    plan_name = data[i].member_name;
+                }else if(data[i].schedule_type == 2){
+                    plan_name = data[i].lecture_name;
+                }
+
+                let check = know_whether_plans_has_duplicates (start_time, end_time, plan_starttime, plan_endtime);
+                if(check > 0){
+                    who_is_duplicated.push(`${plan_starttime} - ${plan_endtime} ${plan_name}`);
+                }
+            }
+
+            let result;
+            if(who_is_duplicated.length == 0){
+                result = [];
+            }
+            result = who_is_duplicated;
+
+            callback(result);
+        });
     }
 
     check_before_send(){

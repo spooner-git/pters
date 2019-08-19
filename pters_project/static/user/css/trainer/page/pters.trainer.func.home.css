@@ -9,11 +9,11 @@
 }
 	.home_upper_box{
 		position: relative;
-		height: 50px;
-		line-height: 50px;
+		height: 68px;
+		line-height: 28px;
 		background-color: #ffffff;
 		border-bottom: 1px solid #cccccc;
-		padding: 0 20px;
+		padding: 20px 16px;
 		box-sizing: border-box;
 	}
 

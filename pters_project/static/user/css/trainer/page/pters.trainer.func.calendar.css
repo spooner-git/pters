@@ -191,7 +191,7 @@
 	position: relative;
 	display: table-cell;
 	width: 12.5%;
-	background-color: #ffffff;
+	/* background-color: #ffffff; */
 	background-image: url("/static/user/res/new/calendar_hour_short.png?v2");
 	background-size: 30px 60px;
 	background-position: top;
@@ -268,9 +268,9 @@
 }
 
 @keyframes scale {
-	0% { transform: scale(1.2); }
-	50% { transform: scale(1.4); }
-	100% { transform: scale(1.2); }
+	0% { transform: scaleX(1.1) scaleY(1.0) }
+	50% { transform: scaleX(1.2) scaleY(1.1) }
+	100% { transform: scaleX(1.1) scaleY(1.0) }
 }
 .long_touch_active{
 	/* transition: 0.6s; */
@@ -279,6 +279,10 @@
 	/* transform: scale(1.2); */
 	border: 2px solid #fe4e65;
 	z-index: 3;
+}
+.go_behind{
+	z-index: -1 !important;
+	opacity: 0.6;
 }
 /* 스케쥴 표시 */
 

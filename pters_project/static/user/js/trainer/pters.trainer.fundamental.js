@@ -1,27 +1,38 @@
+// function func_set_webkit_overflow_scrolling(target_selector){
+//     if(os == IOS){
+//         let $selector = $(target_selector);
 
-// //ajax로 불러오는 html내에 있는 script 파일을 가져와서 실행
-// function dynamic_added_script_exe(script_url, callback){
-//     let script = document.createElement("script");
-//     script.addEventListener("load", function(event) {
-//         callback();
-//     });
-//     script.src = script_url;
-//     script.async = true;
-//     document.getElementsByTagName("script")[0].parentNode.appendChild(script);
+//         $selector.off('touchstart').on('touchstart', function(){
+//             if($selector.scrollTop() == 0){
+//                 $selector.scrollTop(1);
+//             }
+//         });
+
+//         $selector.off('scroll').scroll(function(e){
+//             const popupHeight = $selector.height();
+//             const scrollHeight = $selector.prop('scrollHeight');
+//             const scrollLocation = $selector.scrollTop();
+//             if(scrollHeight >= popupHeight+1){
+//                 if(popupHeight + scrollLocation == scrollHeight){
+//                     $selector.animate({scrollTop : scrollLocation-1}, 10);
+//                 }else if(popupHeight + scrollLocation == popupHeight){
+//                     $selector.animate({scrollTop : scrollLocation+1}, 10);
+//                 }
+//             }
+//         });
+//     }
 // }
-
-
 function func_set_webkit_overflow_scrolling(target_selector){
     if(os == IOS){
         let $selector = $(target_selector);
 
-        $selector.off('touchstart').on('touchstart', function(){
+        $(document).off('touchstart', target_selector).on('touchstart', target_selector, function(){
             if($selector.scrollTop() == 0){
                 $selector.scrollTop(1);
             }
         });
 
-        $selector.off('scroll').scroll(function(e){
+        $(target_selector).off('scroll').on('scroll', function(e){
             const popupHeight = $selector.height();
             const scrollHeight = $selector.prop('scrollHeight');
             const scrollLocation = $selector.scrollTop();
@@ -35,6 +46,18 @@ function func_set_webkit_overflow_scrolling(target_selector){
         });
     }
 }
+
+// function test_console(selector){
+//     console.log(
+//         "selector height:", $(selector).height()
+//     );
+//     console.log(
+//         "selector scrollTop:", $(selector).scrollTop()
+//     );
+//     console.log(
+//         "selector scrollHeight:", $(selector).prop('scrollHeight')
+//     );
+// }
 
 function ajax_load_image(option){
     let $ajax_load_image = $('img.ajax_loading_image');
@@ -122,7 +145,14 @@ class DateRobot{
         return `${year}년 ${month}월 ${date}일 (${day})`;
     }
 
-    // 날짜 값(yyyy-mm-dd)을 받아서 year, month, date 로 변환하는 함수
+    static to_yyyymmdd(year, month, date){
+        let new_year = year;
+        let new_month = Number(month) < 10 ? '0'+Number(month) : Number(month);
+        let new_date = Number(date) < 10 ? '0'+Number(date) : Number(date);
+
+        return  `${new_year}-${new_month}-${new_date}`;
+    }
+
     static to_split(data){
         if(data == null || data == undefined || data == "None" || data == ""){
             return null;

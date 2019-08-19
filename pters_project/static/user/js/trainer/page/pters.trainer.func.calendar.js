@@ -41,27 +41,38 @@ class Calendar {
         };
 
         let interval = setInterval(()=>{
+            // let realtime = new Date();
+            // let realtime_today = `${realtime.getFullYear()}-${realtime.getMonth()+1}-${realtime.getDate()}`;
+            // if(this.today != realtime_today){
+            //     window.location.reload();
+            // }
             this.relocate_current_time_indicator();
-        }, 60000);
+        }, 60000);//60000
 
         this.long_touch = OFF;
         this.long_touch_schedule_id;
         this.touch_timer = 0;
         this.touch_sense;
         this.long_touch_target = null;
+
+        this.latest_received_data;
     }
 
     get selected_plan(){
         return this.user_data.user_selected_plan;
     }
 
+    //다른페이지에서 접근했을때 처음에 달력을 위해 필요한 최상위 컨테이너를 포함하여 초기화한다.
     init (cal_type){
+        this.today = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`;
+
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
-        this.mode_to_plan_change(OFF)
+        this.mode_to_plan_change(OFF);
         this.init_no_new(cal_type);
     }
 
+    //달력에 필요한 최상위 컨테이너가 이미 있는 상태에서 컨테이너 내용(달력)을 재초기화 할때 사용한다.
     init_no_new(cal_type){
         if(cal_type == undefined){
             cal_type = this.cal_type;
@@ -72,6 +83,7 @@ class Calendar {
             this.render_upper_box(cal_type);
             this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                this.latest_received_data = jsondata;
                 if(this.cal_type == cal_type){
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_month_cal( this.current_page_num, this.current_year, this.current_month, jsondata);
@@ -97,6 +109,7 @@ class Calendar {
             }
 
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                this.latest_received_data = jsondata;
                 if(this.cal_type == cal_type){
                     if(date == `${this.current_year}-${this.current_month}-01`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
@@ -119,7 +132,6 @@ class Calendar {
             break;
         }
     }
-
 
     get_current_month (){
         return {
@@ -225,6 +237,7 @@ class Calendar {
         this.render_upper_box("month");
         this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
         this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+            this.latest_received_data = jsondata;
             if(date == `${this.current_year}-${this.current_month}-01`){
                 this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
             }
@@ -262,6 +275,7 @@ class Calendar {
         }
 
         this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+            this.latest_received_data = jsondata;
             if(date == `${this.current_year}-${this.current_month}-01`){
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
 
@@ -288,16 +302,17 @@ class Calendar {
             this.current_month = next.month;
             this.current_week = next.week;
 
-            /*페이지 삽입*/
+            /*스와이프 애니메이션*/
             if(os == IOS){
                 this.current_page_num = this.current_page_num + 1;
                 this.append_child(this.subtargetHTML, 'div', this.current_page_num);
             }
-            /*페이지 삽입*/
+            /*스와이프 애니메이션*/
 
             this.render_upper_box("month");
             this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                this.latest_received_data = jsondata;
                 if(date == `${this.current_year}-${this.current_month}-01`){
                     this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
                 }
@@ -310,16 +325,17 @@ class Calendar {
             this.current_month = prev.month;
             this.current_week = prev.week;
 
-            /*페이지 삽입*/
+            /*스와이프 애니메이션*/
             if(os == IOS){
                 this.current_page_num = this.current_page_num - 1;
                 this.prepend_child(this.subtargetHTML, 'div', this.current_page_num);
             }
-            /*페이지 삽입*/
+            /*스와이프 애니메이션*/
 
             this.render_upper_box("month");
             this.render_month_cal(this.current_page_num, this.current_year, this.current_month);
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                this.latest_received_data = jsondata;
                 if(date == `${this.current_year}-${this.current_month}-01`){
                     this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
                 }
@@ -337,12 +353,12 @@ class Calendar {
             this.current_week = next.week;
             
 
-            /*페이지 삽입*/
+            /*스와이프 애니메이션*/
             if(os == IOS){
                 this.current_page_num = this.current_page_num + 1;
                 this.append_child(this.subtargetHTML, 'div', this.current_page_num);
             }
-            /*페이지 삽입*/
+            /*스와이프 애니메이션*/
 
             this.render_upper_box("week");
             this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
@@ -351,6 +367,7 @@ class Calendar {
                 this.zoom_week_cal_vertical();
             }
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                this.latest_received_data = jsondata;
                 if(date == `${this.current_year}-${this.current_month}-01`){
                     this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
                     if(this.week_zoomed.vertical.activate == true){
@@ -368,12 +385,12 @@ class Calendar {
             this.current_week = prev.week;
             
 
-            /*페이지 삽입*/
+            /*스와이프 애니메이션*/
             if(os == IOS){
                 this.current_page_num = this.current_page_num - 1;
                 this.prepend_child(this.subtargetHTML, 'div', this.current_page_num);
             }
-            /*페이지 삽입*/
+            /*스와이프 애니메이션*/
 
             this.render_upper_box("week");
             this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
@@ -382,6 +399,7 @@ class Calendar {
                 this.zoom_week_cal_vertical();
             }
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                this.latest_received_data = jsondata;
                 if(date == `${this.current_year}-${this.current_month}-01`){
                     this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
                     if(this.week_zoomed.vertical.activate == true){
@@ -776,8 +794,12 @@ class Calendar {
                             let top = 100*( (plan_start.hour-work_start)*60 + 60*plan_start.minute/60 )/(24*60);
                             let styles = `width:${100/cell_divide}%;height:${height}%;top:${top}%;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style}`;
                             let long_touch_active = this.long_touch_schedule_id == plan.schedule_id ? "long_touch_active" : "";
+                            let go_behind =  "";
+                            if(this.long_touch == ON && this.long_touch_schedule_id != plan.schedule_id){
+                                go_behind = "go_behind";
+                            }
 
-                            return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active}" style="${styles}" ontouchstart="${this.instance}.longtouchstart(event, ()=>{})" ontouchend="${this.instance}.longtouchend(event)">
+                            return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active} ${go_behind}" style="${styles}" ontouchstart="${this.instance}.longtouchstart(event, ()=>{})" ontouchend="${this.instance}.longtouchend(event)">
                                         ${plan_name}
                                     </div>`;
                         })
@@ -913,20 +935,20 @@ class Calendar {
                 this.long_touch = ON;
                 this.long_touch_target = event;
                 this.long_touch_schedule_id = event.target.dataset.scheduleid;
-                // $('.week_rows > .week_row').css({"background-color":"#ffb0ba61"});
                 $('#debug_toolbar').show().html(`<span style="margin-left:10px;line-height:60px;font-size:14px;">일정 변경을 위해 원하는 곳을 터치해주세요.</span>
                                                 <button style="float:right;width:70px;height:40px;margin:10px;border-radius:4px;background-color:#ffffff;border:1px solid #cccccc;" onclick="calendar.mode_to_plan_change(OFF)">취소</button>`)
                                           .css({"height":"60px", "line-height":"60px;"});
-                this.long_touch_target.target.classList.add('long_touch_active');
+                // this.init_no_new();
+                this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
 
                 break;
             case OFF:
                 this.long_touch = OFF;
-                // $('.week_rows > .week_row').css({"background-color":"#ffffff"});
                 $('#debug_toolbar').hide();
                 this.long_touch_target = null;
                 this.long_touch_schedule_id = null;
-                $('.long_touch_active').removeClass('long_touch_active');
+                // this.init_no_new();
+                this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
                 break;
         }
     }
@@ -937,7 +959,8 @@ class Calendar {
                     "start_dt": start_dt,
                     "end_dt":end_dt,
                     "note":data.schedule_info[0].note, "duplication_enable_flag": 1,
-                    "en_dis_type":data.schedule_info[0].schedule_type == 2 ? 1 : data.schedule_info[0].schedule_type, "member_ids":data.schedule_info[0].lecture_schedule_data.map((el)=>{return el.member_id;})
+                    "en_dis_type":data.schedule_info[0].schedule_type == 2 ? 1 : data.schedule_info[0].schedule_type,
+                    "member_ids": data.schedule_info[0].member_id != "" ? [data.schedule_info[0].member_id] : data.schedule_info[0].lecture_schedule_data.map((el)=>{return el.member_id;})
         };
         //en_dis_type 0: off일정, 1:레슨일정
         //duplication_enable_flag 0: 중복불허 1:중복허용
@@ -987,17 +1010,21 @@ class Calendar {
         }
     }
 
-    request_schedule_data (date, days, callback){
+    request_schedule_data (date, days, callback, async){
         let date_ = date;
         let days_ = days;
         if(date_ == undefined){date_ = `${this.current_year}-${this.current_month}-01`;}
         if(days_ == undefined){days_ = 31;}
+        if(async == undefined){
+            async = true;
+        }
 
         $.ajax({
             url: '/trainer/get_trainer_schedule_all/',
             type : 'GET',
             data : {"date":date_, "day":days_},
             dataType: "JSON",
+            async: async,
 
             beforeSend:function (){
                 ajax_load_image(SHOW);
@@ -1227,7 +1254,7 @@ class Plan_func{
             url : url,
             type:'POST',
             data: data,
-            dataType : 'html',
+            dataType : 'json',
             async: async,
     
             beforeSend:function(xhr, settings) {
@@ -1243,8 +1270,7 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
-                let json = JSON.parse(data);
-                callback(json);
+                callback(data);
             },
     
             //통신 실패시 처리
@@ -1548,6 +1574,33 @@ function know_whether_plans_has_duplicates(start_time, end_time, start_time_comp
     else{
         //비교 대상 시간이 비교시간과 겹치지 않을때
         return 0;
+}
+
+function compare_time (time1, time2){
+    var hour1 = Number(time1.split(':')[0]);
+    var min1  = Number(time1.split(':')[1]);
+    var hour2 = Number(time2.split(':')[0]);
+    var min2  = Number(time2.split(':')[1]);
+    if(hour1 < 10){
+        hour1 = '0' + hour1;
+    }
+    if(min1 < 10){
+        min1 = '0' + min1;
+    }
+    if(hour2 < 10){
+        hour2 = '0' + hour2;
+    }
+    if(min2 < 10){
+        min2 = '0' + min2;
+    }
+
+    var time1_num = `${hour1}${min1}`;
+    var time2_num = `${hour2}${min2}`;
+
+    if(Number(time1_num) > Number(time2_num) ){
+        return true;
+    }else{
+        return false;
     }
 }
 

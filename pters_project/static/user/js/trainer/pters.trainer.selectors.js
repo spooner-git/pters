@@ -955,6 +955,328 @@ class TimeSelector{
 
 }
 
+//시간 선택 (오전오후, 시, 분)
+class TimeSelector2{
+    constructor(install_target, target_instance, user_option){
+        this.target = {install: install_target, result: target_instance};
+
+        this.zone_scroll;
+        this.hour_scroll;
+        this.minute_scroll;
+        this.user_scroll_zone = false;
+        this.user_scroll_hour = false;
+        this.user_scroll_minute = false;
+
+        this.current_time = TimeRobot.to_zone(new Date().getHours(), new Date().getMinutes());
+        this.time = {
+            current_zone : this.current_time.zone,
+            current_hour : this.current_time.hour,
+            current_minute : this.current_time.minute
+        };
+
+        this.option = {
+            myname:null,
+            title:null,
+            data:{
+                zone:null, hour:null, minute:null
+            },
+            min:null,
+            callback_when_set : ()=>{
+                return false;
+            }
+        };
+
+        this.store = {
+            text: null,
+            data: {zone:null, hour:null, minute:null}
+        };
+
+        if(user_option != undefined){
+            //user_option이 들어왔을경우 option의 값을 user_option값으로 바꿔준다.
+            for(let option in user_option){
+                if(user_option[option] != null){
+                    this.option[option] = user_option[option];
+                }
+            }
+        }
+        
+        this.init();
+    }
+
+    set dataset (object){
+        this.reset(object);
+    }
+
+    get dataset (){
+        return this.store;
+    }
+
+    init (){
+        this.init_html();
+        this.render_hour_list();
+        this.render_minute_list();
+        this.set_iscroll();
+        this.reset(this.option.data);
+    }
+
+    reset (object){
+        let zone = object.zone == null ? this.time.current_zone : object.zone;
+        let hour = object.hour == null ? this.time.current_hour : object.hour;
+        let minute = object.minute == null ? this.time.current_minute : object.minute;
+        this.store.value = {zone: zone, hour:hour, minute:minute};
+        this.store.text = TimeRobot.to_text(TimeRobot.to_data(zone, hour, minute).hour, TimeRobot.to_data(zone, hour, minute).minute);
+        
+        let hour_data = TimeRobot.to_data(zone, hour, minute).hour;
+        let minute_data = TimeRobot.to_data(zone, hour, minute).minute;
+
+        console.log("go_snap", hour_data, minute_data)
+
+        this.go_snap(hour_data, minute_data);
+        //값을 저장하고, 스크롤 위치를 들어온 값으로 보낸다.
+    }
+
+    init_html (){
+        //초기 html 생성
+        document.querySelector(this.target.install).innerHTML = this.static_component().initial_html;
+    }
+
+    delete (){
+        document.querySelector(this.target.install).innerHTML = "";
+    }
+
+
+    render_hour_list (){
+        let html_to_join = [];
+        let pos = 0;
+        for(let i=0; i<=24; i++){
+                let morningday;
+                let time_for_user;
+                if(i < 12 || i == 24){
+                    morningday = "오전";
+                    time_for_user = i;
+                    if(i == 24){
+                        time_for_user = 12;
+                    }
+                }else if(i >= 12){
+                    morningday = "오후";
+                    time_for_user = i - 12;
+                    if(i == 12){
+                        time_for_user = 12;
+                    }
+                }
+
+                html_to_join.push(`<li data-hpos=${pos} data-hour="${i}"><span style="margin-right:16px;">${morningday}</span>${time_for_user}</li>`);
+                pos = pos + 40;
+        }
+
+        let html = `
+                        <div id="hour_wrap_${this.instance}" class="select_wrapper_child">
+                            <ul>
+                                <li></li>
+                                <li></li>
+                                ${html_to_join.join('')}
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </div>
+                        <div class="selector_unit">시</div>
+                    `;
+
+        document.querySelector(`${this.target.install} .time_selector_hour_wrap`).innerHTML = html;
+    }
+
+    render_minute_list (){
+        let html_to_join = [];
+        let pos = 0;
+        for(let i=0; i<=55; i=i+5){
+                html_to_join.push(`<li data-mpos=${pos} data-min="${i}">${i}</li>`);
+                pos = pos + 40; 
+        }
+
+        let html = `
+                        <div id="minute_wrap_${this.instance}" class="select_wrapper_child">
+                            <ul>
+                                <li></li>
+                                <li></li>
+                                ${html_to_join.join('')}
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </div>
+                        <div class="selector_unit">분</div>
+                    `;
+
+        document.querySelector(`${this.target.install} .time_selector_minute_wrap`).innerHTML = html;
+    }
+
+    set_iscroll (){
+        this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`, {
+            mouseWheel : true,
+            deceleration:0.005,
+            bounce: false
+        });
+        this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
+            mouseWheel : true,
+            deceleration:0.005,
+            bounce: false
+        });
+        this.set_scroll_snap();
+    }
+
+    set_scroll_snap (){
+        let self = this;
+        self.hour_scroll.on('scrollEnd', function (){
+            if(self.user_scroll_month == true){
+                self.user_scroll_month = false;
+                let posY = this.y;
+                let min = posY-posY%40;
+                let max = min - 40;
+
+                let snap;
+                
+                if(Math.abs(posY - max) < Math.abs(posY - min)){
+                    snap = max;
+                }else{
+                    snap = min;
+                }
+                
+                    
+                self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+
+                if(self.check_minimum_time() == false){
+                    document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
+                }else{
+                    document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
+                }
+            }
+        });
+
+        self.hour_scroll.on('beforeScrollStart', function (){
+            self.user_scroll_month = true;
+        });
+
+        self.minute_scroll.on('scrollEnd', function (){
+            if(self.user_scroll_date == true){
+                self.user_scroll_date = false;
+                let posY = this.y;
+                let min = posY-posY%40;
+                let max = min - 40;
+
+                let snap;
+                
+                if(Math.abs(posY - max) < Math.abs(posY - min)){
+                    snap = max;
+                }else{
+                    snap = min;
+                }
+                
+                    
+                self.minute_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).css('color', '#1e1e1e');
+                
+                if(self.check_minimum_time() == false){
+                    document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
+                }else{
+                    document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
+                }
+            }
+        });
+
+        self.minute_scroll.on('beforeScrollStart', function (){
+            self.user_scroll_date = true;
+        });
+    }
+
+    go_snap (hour, minute){
+        let initial_pos_hour = (-hour)*40;
+        let initial_pos_minute = -(minute)*8;
+
+        this.hour_scroll.scrollTo(0, initial_pos_hour, 0, IScroll.utils.ease.bounce);
+        this.minute_scroll.scrollTo(0, initial_pos_minute, 0, IScroll.utils.ease.bounce);
+
+        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).css('color', '#1e1e1e');
+        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+    }
+
+    get_selected_data (){
+        let hour = $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`);
+        let minute = $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`);
+
+        let hour_text = hour.attr('data-hour');
+        let minute_text = minute.attr('data-min');
+
+        let zone_form = TimeRobot.to_zone(hour_text, minute_text);
+        let data_form = TimeRobot.to_data(zone_form.zone, zone_form.hour, zone_form.minute);
+        let text = TimeRobot.to_text(data_form.hour, data_form.minute);
+
+        return {
+            data:{
+                zone : zone_form.zone,
+                hour : zone_form.hour,
+                minute: zone_form.minute
+            },
+            text: text
+            
+        };
+    }
+
+
+    static_component (){
+        return{
+            "initial_html":`<div class="time_selector">
+                                <div class="time_selector_confirm">
+                                    <div style="float:left;margin-left:5px;">
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', null, ()=>{layer_popup.close_layer_popup();})}
+                                    </div>
+                                    <span class="time_selector_title">${this.option.title}</span>
+                                    <div style="float:right;margin-right:5px;color:#fe4e65;">
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', null, ()=>{this.upper_right_button();})}
+                                    </div>
+                                </div>
+                                <div class="time_selector_hour_wrap select_wrapper"></div>
+                                <div class="time_selector_minute_wrap select_wrapper"></div>
+                                <div class="selector_indicator"></div>
+                            </div>`
+        };
+    }
+
+    check_minimum_time(){
+        if(this.option.min != null){
+            let selected_time_data_form = TimeRobot.to_data(this.get_selected_data().data.zone, this.get_selected_data().data.hour, this.get_selected_data().data.minute).complete;
+            let min_time_data_form = TimeRobot.to_data(this.option.min.zone, this.option.min.hour, this.option.min.minute).complete;
+            if(selected_time_data_form == '0:0'){
+                selected_time_data_form = '24:00';
+            }
+            console.log(selected_time_data_form, min_time_data_form, TimeRobot.compare(selected_time_data_form, min_time_data_form))
+
+            let time_compare = TimeRobot.compare(selected_time_data_form, min_time_data_form); // > 일경우 true;
+            if(time_compare == false){
+                // show_error_message('종료시간은 시작시간보다 작을 수 없습니다.');
+                return false;
+            }
+        }
+        return true;
+    }
+
+    upper_right_button(){
+        let minimum_check = this.check_minimum_time();
+        if(minimum_check == false){
+            show_error_message('종료 시각은 시작 시각보다 작을 수 없습니다.');
+            return false;
+        }
+
+        this.store = this.get_selected_data();
+        this.option.callback_when_set(this.store); 
+        layer_popup.close_layer_popup();
+    }
+
+}
+
 //싱글 스피너 범용 (Data 받는다)
 class SpinSelector{
     //셀렉터가 설치될 Selector, 선택된 값을 전달할곳, 자기 인스턴스, 기타 유저 옵션(데이터값 등)
@@ -1169,8 +1491,9 @@ class OptionSelector{
             let icon = null;
             let icon_r_visible = HIDE;
             let icon_r_text = "";
+            let style = {"padding-top":"13px", "padding-bottom":"13px"};
             html_to_join.push(
-                CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{
+                CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
                     option_callback();
                 })
             );
@@ -1189,12 +1512,13 @@ class OptionSelector{
 }
 
 class TicketSelector{
-    constructor(install_target, target_instance, multiple_select, callback){
+    constructor(install_target, target_instance, multiple_select, appendix, callback){
         // this.targetHTML = install_target;
         this.target = {install : install_target};
         this.target_instance = target_instance;
         this.unique_instance = install_target.replace(/#./gi, "");
         this.callback = callback;
+        this.appendix = appendix;
         this.received_data;
         this.multiple_select = multiple_select;
         this.data = {
@@ -1210,6 +1534,7 @@ class TicketSelector{
     init(){
         this.request_list(()=>{
             this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
     }
 
@@ -1220,9 +1545,9 @@ class TicketSelector{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();lecture_select.clear();" class="obj_icon_prev">`;
-        let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_select.upper_right_menu();">완료</span></span>`;
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();ticket_select.clear();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center"><span id="">${this.appendix.title == null ? '$nbsp;' :this.appendix.title}</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="ticket_select.upper_right_menu();">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -1277,14 +1602,38 @@ class TicketSelector{
                         this.upper_right_menu();
                     }
                 }  
-
-                    
             );
-            html_to_join.push(html);
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
         }
-
+        if(this.appendix.new_add == SHOW){
+            let dom_add_new_ticket = this.dom_add_new_ticket();
+            html_to_join.unshift(dom_add_new_ticket);
+        }
         // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
         return html_to_join.join('');
+    }
+
+    dom_add_new_ticket(){
+        let id = "add_new_ticket";
+        let title = "새로운 수강권 생성";
+        let icon = '/static/common/icon/icon_add_pink.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = {"padding":"15px 16px", "border-bottom":"1px solid #cccccc"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                ticket_add_popup = new Ticket_add('.popup_ticket_add', ()=>{
+                    this.init();
+                    return false;
+                });
+            });
+        });
+
+        return html;
     }
 
     request_list (callback){
@@ -1323,6 +1672,7 @@ class LectureSelector{
     init(){
         this.request_list(()=>{
             this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
     }
 
@@ -1393,11 +1743,37 @@ class LectureSelector{
                     }
                 }    
             );
-            html_to_join.push(html);
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
         }
-
+        if(this.appendix.new_add == SHOW){
+            let dom_add_new_lecture = this.dom_add_new_lecture();
+            html_to_join.unshift(dom_add_new_lecture);
+        }
         // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
         return html_to_join.join('');
+    }
+
+    dom_add_new_lecture(){
+        let id = "add_new_lecture";
+        let title = "새로운 수업 생성";
+        let icon = '/static/common/icon/icon_add_pink.png';
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = {"padding":"15px 16px", "border-bottom":"1px solid #cccccc"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                lecture_add_popup = new Lecture_add('.popup_lecture_add', ()=>{
+                    this.init();
+                    return false;
+                });
+            });
+        });
+
+        return html;
     }
 
     request_list (callback){
@@ -1435,6 +1811,7 @@ class MemberSelector{
     init(){
         this.request_list(()=>{
             this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
     }
 
@@ -1459,7 +1836,6 @@ class MemberSelector{
         let html_to_join = [];
         let length = this.received_data.length;
         let select_member_num = 0;
-        html_to_join.push('dummy');
         if(length == 0){
             html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.'));
         }
@@ -1497,9 +1873,13 @@ class MemberSelector{
             if(checked!=0){
                 select_member_num++;
             }
-            html_to_join.push(html);
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
         }
-        html_to_join[0] = (`<div class="select_member_max_num" >정원 (<span id="select_member_max_num">${select_member_num}</span>/${this.multiple_select}명) </div>`);
+        html_to_join.unshift(`<div class="select_member_max_num" >정원 (<span id="select_member_max_num">${select_member_num}</span>/${this.multiple_select}명) </div>`);
 
         // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
         return html_to_join.join('');
@@ -1557,6 +1937,7 @@ class ColorSelector{
     init(){
         this.request_list(()=>{
             this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
     }
 
@@ -1954,7 +2335,8 @@ class RepeatSelector{
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_day_select', 100, POPUP_FROM_RIGHT, null, ()=>{
                 day_select = new DaySelector('#wrapper_box_day_select', this, 7, (set_data)=>{
                     this.day = set_data.day;
@@ -1970,7 +2352,8 @@ class RepeatSelector{
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
                 let year = this.target_instance.date == null ? this.dates.current_year : this.target_instance.date.year; 
                 let month = this.target_instance.date == null ? this.dates.current_month : this.target_instance.date.month;

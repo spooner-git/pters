@@ -1,7 +1,7 @@
 class Ticket_add{
-    constructor(install_target, instance){
+    constructor(install_target, callback){
         this.target = {install: install_target, toolbox:'section_ticket_add_toolbox', content:'section_ticket_add_content'};
-        this.instance = instance;
+        this.callback = callback;
         this.form_id = 'id_ticket_add_form';
 
         let d = new Date();
@@ -93,7 +93,7 @@ class Ticket_add{
 
     init(){
         this.render();
-        func_set_webkit_overflow_scrolling('.wrapper_middle');
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
     clear(){
@@ -135,8 +135,8 @@ class Ticket_add{
         let price = this.dom_row_ticket_price_input();
         let memo = this.dom_row_ticket_memo_input();
 
-        let html =  '<div class="obj_box_full">' + CComponent.dom_tag('수강권명') + name + '<div class="gap"></div>' +
-                                                   CComponent.dom_tag('수업 구성') + lecture + lecture_list + '</div>' + 
+        let html =  '<div class="obj_box_full">' + CComponent.dom_tag('수강권명') + name + '</div>' +
+                    '<div class="obj_box_full">' + CComponent.dom_tag('수업 구성') + lecture + lecture_list + '</div>' + 
                     '<div class="obj_box_full">' + CComponent.dom_tag('설명') + memo + '</div>';
 
         // document.getElementById(this.target.content).innerHTML = html;
@@ -177,11 +177,12 @@ class Ticket_add{
 
     dom_row_lecture_select(){
         let id = 'input_lecture_select';
-        let title = this.data.lecture_id.length == 0 ? '수업*' : this.data.lecture_name.length+'개 선택됨';
+        let title = this.data.lecture_id.length == 0 ? '수업' : this.data.lecture_name.length+'개 선택됨';
         let icon = '/static/common/icon/icon_book.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, ()=>{ 
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, {'title':'수업'}, (set_data)=>{
                     this.lecture = set_data; //타겟에 선택된 데이터를 set
@@ -199,11 +200,12 @@ class Ticket_add{
         for(let i=0; i<length; i++){
             let lecture_id = this.data.lecture_id[i];
             let lecture_name = this.data.lecture_name[i];
-            let icon_button_style = null;
+            let icon_button_style = {"padding":"3px 1%", "width":"30%", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500"};
+            let icon = NONE;
             html_to_join.push(
-                CComponent.icon_button(lecture_id, lecture_name, null, icon_button_style, ()=>{
+                CComponent.icon_button(lecture_id, lecture_name, icon, icon_button_style, ()=>{
                     // layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id});
-                    layer_popup.open_layer_popup(POPUP_AJAX_CALL, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(253/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(235/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
                         lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
                         //수업 간단 정보 팝업 열기
                     });
@@ -297,6 +299,9 @@ class Ticket_add{
         
         Ticket_func.create(data, ()=>{
             // layer_popup.close_layer_popup();
+            if(this.callback != undefined){
+                this.callback();
+            }
             ticket.init();
         });
         layer_popup.close_layer_popup();
