@@ -236,7 +236,6 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
         try:
             lecture_info = LectureTb.objects.get(class_tb_id=class_id,
                                                  lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
-            print(str(lecture_info))
         except ObjectDoesNotExist:
             lecture_info = None
     if lecture_info is not None:
@@ -499,11 +498,11 @@ def func_check_lecture_available_member_after(class_id, lecture_id, lecture_sche
 def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_end_dt, duplication_enable_flag):
     error = None
     if int(duplication_enable_flag) == SCHEDULE_DUPLICATION_DISABLE:
-        seven_days_ago = add_start_dt - datetime.timedelta(days=1)
-        seven_days_after = add_end_dt + datetime.timedelta(days=1)
+        one_days_ago = add_start_dt - datetime.timedelta(days=1)
+        one_days_after = add_end_dt + datetime.timedelta(days=1)
 
         schedule_data = ScheduleTb.objects.filter(~Q(state_cd=STATE_CD_ABSENCE), class_tb_id=class_id,
-                                                  start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after,
+                                                  start_dt__gte=one_days_ago, end_dt__lte=one_days_after,
                                                   use=USE).exclude(schedule_id=schedule_id)
 
         for schedule_info in schedule_data:

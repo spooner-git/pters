@@ -1628,7 +1628,7 @@ class GetMemberTicketListView(LoginRequiredMixin, AccessTestMixin, View):
         class_id = self.request.session.get('class_id', '')
         member_id = request.GET.get('member_id', '')
         error = None
-        member_ticket_list = {}
+        member_ticket_list = collections.OrderedDict()
 
         if class_id is None or class_id == '':
             error = '오류가 발생했습니다.'
@@ -1642,7 +1642,6 @@ class GetMemberTicketListView(LoginRequiredMixin, AccessTestMixin, View):
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
-
         return JsonResponse(member_ticket_list, json_dumps_params={'ensure_ascii': True})
 
 

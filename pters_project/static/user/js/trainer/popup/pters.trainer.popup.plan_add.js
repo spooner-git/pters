@@ -93,6 +93,7 @@ class Plan_add{
     }
 
     set end_time(data){
+        console.log(data);
         this.data.end_time = TimeRobot.to_data(data.data.zone, data.data.hour, data.data.minute).complete;
         this.data.end_time_text = data.text + ' 까지 ('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)';
         this.render_content();
@@ -325,7 +326,12 @@ class Plan_add{
                                                                                                     if(this.data.end_time != null){
                                                                                                         let compare = TimeRobot.compare_by_zone(object.data, TimeRobot.to_zone(this.data.end_time.split(':')[0],this.data.end_time.split(':')[1]));
                                                                                                         if(compare == true){
-                                                                                                            this.end_time = object;
+                                                                                                            //유저가 선택할 수 있는 최저 시간을 셋팅한다. 이시간보다 작은값을 선택하려면 메세지를 띄우기 위함
+                                                                                                            let end_time = TimeRobot.add_time(object.data.hour, object.data.minute, 0, 5);
+                                                                                                            let end_time_to_zone = TimeRobot.to_zone(end_time.hour, end_time.minute);
+                                                                                                            let end_time_text = TimeRobot.to_text(end_time.hour, end_time.minute);
+                                                                                                            this.end_time = {'data':{'zone':end_time_to_zone.zone,'hour':end_time_to_zone.hour, 'minute':end_time_to_zone.minute},
+                                                                                                                            'text':end_time_text};
                                                                                                         }
                                                                                                     }
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.

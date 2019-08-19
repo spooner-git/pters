@@ -96,42 +96,55 @@ function func_ajax_after_send(ajax_name, ajax_data){
 
 
 class DateRobot{
+    // 날짜를 Text 로 변환
     static to_text(year, month, date, short){
         year = String(year);
         month = String(month);
         date = String(date);
-        if(year.split('-').length == 3){
-            date = year.split('-')[2];
-            month = year.split('-')[1];
-            year = year.split('-')[0];
+
+        // year 값에 전체 날짜 값이 오는 경우 처리
+        let year_split = year.split('-');
+        if(year_split.length == 3){
+            year = year_split[0];
+            month = year_split[1];
+            date = year_split[2];
         }
+
+        // 요일 확인
         let day = DAYNAME_KR[new Date(year, month-1, date).getDay()];
+
+        // yyyy.mm.dd 형식
         if(short == SHORT){
             return `${year}.${month}.${date}`;
         }
 
+        // yyyy년 mm월 dd일 (요일 형식
         return `${year}년 ${month}월 ${date}일 (${day})`;
     }
 
+    // 날짜 값(yyyy-mm-dd)을 받아서 year, month, date 로 변환하는 함수
     static to_split(data){
         if(data == null || data == undefined || data == "None" || data == ""){
             return null;
         }
-        let split = data.split('-');
-        let year = split[0];
-        let month = split[1];
-        let date = split[2];
+        let year_split = data.split('-');
 
-        return {year:year, month:month, date:date};
+        return {year:year_split[0], month:year_split[1], date:year_split[2]};
     }
 
+    // 날짜값 비교
+    // true : date_form1 > date_form2
+    // false : date_form1 <= date_form2
     static compare(date_form_1, date_form_2){
-        let year1 = date_form_1.split('-')[0];
-        let month1 = date_form_1.split('-')[1];
-        let date1 = date_form_1.split('-')[2];
-        let year2 = date_form_2.split('-')[0];
-        let month2 = date_form_2.split('-')[1];
-        let date2 = date_form_2.split('-')[2];
+        let date_form_1_split = date_form_1.split('-');
+        let year1 = date_form_1_split[0];
+        let month1 = date_form_1_split[1];
+        let date1 = date_form_1_split[2];
+
+        let date_form_2_split = date_form_2.split('-');
+        let year2 = date_form_2_split[0];
+        let month2 = date_form_2_split[1];
+        let date2 = date_form_2_split[2];
 
         if(month1.length < 2){
             month1 = '0'+month1;
@@ -151,23 +164,25 @@ class DateRobot{
 
         if(yyyymmdd1 > yyyymmdd2){
             return true
-        }else{
-            return false;
         }
+        return false;
     }
 
+    // 날짜값 차이 계산
+    // return : 날짜(date1에서 date2 뺀 값)
     static diff_date(date1, date2){
-        let diff_date = Math.round((new Date(date1).getTime() - new Date(date2).getTime()) / (1000*60*60*24));
         // let diff_date_text = "일";
         // if(diff_date < 0){
         //     diff_date_text = "일 지남";
         //     diff_date = Math.abs(diff_date);
         // }
-        return diff_date;
+        return Math.round((new Date(date1).getTime() - new Date(date2).getTime()) / (1000*60*60*24));
     }
 }
 
 class TimeRobot{
+    // 시, 분을 통해 24시간 -> 12시간 형식으로 변경
+    // zone : 0(오전), 1(오후)
     static to_zone(hour, minute){
         if(hour == null && minute == null){
             return {zone:null, hour:null, minute:null};
@@ -177,26 +192,32 @@ class TimeRobot{
         let zone;
         let hour_new;
         let minute_new;
-        
+
+        // 12시가 넘는 경우
         hour_new = hour > 12 ? hour - 12 : hour;
         zone = hour >= 12 ? 1 : 0;
 
+        // 24시인 경우 오전 0시로 변환하기
         if(hour == 24 || hour == 0){
             zone = 0;
             hour_new = 12;
         }
-        
+        // 5분 단위 표시를 위해
         minute_new = Math.floor(minute/5)*5;
 
         return {zone:zone, hour:hour_new, minute:minute_new};
     }
 
+    // 12시간 형식을 24시간 형식으로 변경
+    // zone : 0(오전), 1(오후)
     static to_data(zone, hour, minute){
         zone = Number(zone);
         hour = Number(hour);
         minute = Number(minute);
+
         let hh = zone*12 + hour;
-        if(hour == 12){
+        // 오후 12시의 경우 12가 되기 위해 처리
+        if(hour == 12 || hour == 0){
             hh = zone*hour;
         }
         let mm = minute;
@@ -205,29 +226,36 @@ class TimeRobot{
         return {complete: result, hour:hh, minute:mm};
     }
 
+    // 시간을 Text 로 변환
     static to_text(hour, minute, short){
+        // hour 가 시간 전체로 넘어오는 경우
         if(String(hour).split(':').length == 3){
             minute = hour.split(':')[1];
             hour = hour.split(':')[0];
         }
-
         hour = Number(hour);
         minute = Number(minute);
-        let time = TimeRobot.to_zone(Number(hour), Number(minute) );
+
+        // 24시간제 -> 12시간제로 변경
+        let time = TimeRobot.to_zone(Number(hour), Number(minute));
         let zone = time.zone;
         let hh = time.hour;
         let mm = time.minute;
-        
+
+        // zone 이 0 인 경우 오전, 1 인경우 오후
         zone = zone == 0 ? "오전" : "오후";
 
-        let result = `${zone} ${hh}시 ${mm}분`;
+        // 분은 자르기
         if(short != undefined){
-            result = `${zone} ${hh}시`;
+            return `${zone} ${hh}시`;
         }
 
-        return result;
+        return `${zone} ${hh}시 ${mm}분`;
     }
 
+    // 24시간제 시간,분 비교하기
+    // true : time_data_form1 >= time_data_form2
+    // false : time_data_form1 < time_data_form2
     static compare(time_data_form1, time_data_form2){
 
         let hour1 = Number(time_data_form1.split(':')[0]);
@@ -238,126 +266,104 @@ class TimeRobot{
         if(hour1 < hour2){
             return false;
         }
-
-        if(hour1 > hour2){
-            return true
+        else if(hour1 > hour2){
+            return true;
         }
-
-        if(hour1 == hour2){
+        else if(hour1 == hour2){
+            // 시간이 같은 경우 분이 같거나 크면 true
+            // 시간이 같은 경우 분이 작으면 false
             if(minute1 >= minute2){
-                return true
+                return true;
             }else{
                 return false;
             }
         }
+
     }
 
+    // 12시간제 시간,분 비교하기
+    // true : zone_form_data1 >= zone_form_data2
+    // false : zone_form_data1 < zone_form_data2
     static compare_by_zone(zone_form_data1, zone_form_data2){
+        // 포맷 바꾸기
         let time_data_form1 = TimeRobot.to_data(zone_form_data1.zone, zone_form_data1.hour, zone_form_data1.minute).complete;
         let time_data_form2 = TimeRobot.to_data(zone_form_data2.zone, zone_form_data2.hour, zone_form_data2.minute).complete;
-        
+
         let hour1 = Number(time_data_form1.split(':')[0]);
         let minute1 = Number(time_data_form1.split(':')[1]);
         let hour2 = Number(time_data_form2.split(':')[0]);
         let minute2 = Number(time_data_form2.split(':')[1]);
 
-
         if(hour1 < hour2){
             return false;
         }
-
-        if(hour1 > hour2){
-            return true
+        else if(hour1 > hour2){
+            return true;
         }
-
-        if(hour1 == hour2){
+        else if(hour1 == hour2){
+            // 시간이 같은 경우 분이 같거나 크면 true
+            // 시간이 같은 경우 분이 작으면 false
             if(minute1 >= minute2){
-                return true
+                return true;
             }else{
                 return false;
             }
         }
     }
 
+    // 시간 더하기 24 시간제
     static add_time(hour, minute, plus_hour, plus_minute){
-        var shour = hour;
-        var smin = minute;
-        var addhour = plus_hour;
-        var addmin = plus_minute;
-        var resultHour;
-        var resultMin;
-        var hourplus;
-        
-
-        if(smin + addmin >= 60){
-            if(shour + addhour >= 24){  // 23 + 4 --> 3
-                if(shour + addhour == 24){
-                    resultHour = 25;
-                }else{
-                    resultHour = addhour - (24-shour);
-                }
-                resultMin = smin + addmin - 60;
-            }else if(shour + addhour < 24){
-                hourplus = parseInt((smin + addmin)/60);
-                resultHour = shour + addhour + hourplus;
-                resultMin = (smin + addmin)%60;
-            }
-        }else if(smin + addmin < 60){
-            if(shour + addhour >= 24){  //23 + 1 --> 00
-                if(shour + addhour == 24){
-                    resultHour = 24;
-                }else{
-                    resultHour = (shour + addhour) - 24;
-                }
-                resultMin = smin + addmin;
-            }else if(shour + addhour < 24){
-                resultHour = shour + addhour;
-                resultMin = smin + addmin;
-            }
+        hour = Number(hour);
+        minute = Number(minute);
+        plus_hour = Number(plus_hour);
+        plus_minute = Number(plus_minute);
+        hour = (hour + plus_hour + parseInt((minute + plus_minute)/60));
+        if(hour!=24){
+            hour = hour%24;
         }
-
-        return {hour:resultHour, minute:resultMin};
+        return {hour:hour, minute:(minute + plus_minute)%60};
     }
 
-    static diff(time1, time2){ //time1은 time2보다 작아야한다.
+    // 시간 비교하 (시, 분)
+    //time1은 time2보다 작아야한다.
+    static diff(time1, time2){
         let hour1 = Number(time1.split(':')[0]);
         let minute1 = Number(time1.split(':')[1]);
         let hour2 = Number(time2.split(':')[0]);
         let minute2 = Number(time2.split(':')[1]);
 
+        // 종료 시각이 0:0 인 경우 24:0 으로 변경
+        if(hour2 == 0 && minute2 == 0){
+            hour2 = 24;
+        }
+        let hour_diff = hour2 - hour1;
+        let min_diff = minute2 - minute1;
+        min_diff = hour_diff*60 + min_diff;
+
+        // console.log('hour_diff:'+hour_diff);
+        // console.log('min_diff:'+min_diff);
+        return {hour : parseInt(min_diff/60), min: min_diff%60};
+
+    }
+
+    // 시간 비교하 (분)
+    //time1은 time2보다 작아야한다.
+    static diff_min(time1, time2){
+        let hour1 = Number(time1.split(':')[0]);
+        let minute1 = Number(time1.split(':')[1]);
+        let hour2 = Number(time2.split(':')[0]);
+        let minute2 = Number(time2.split(':')[1]);
+
+        // 종료 시각이 0:0 인 경우 24:0 으로 변경
         if(hour2 == 0 && minute2 == 0){
             hour2 = 24;
         }
 
         let hour_diff = hour2 - hour1;
         let min_diff = minute2 - minute1;
-        if(min_diff < 0){
-            hour_diff = hour_diff - 1;
-        }
-
-        return {hour : hour_diff, min: Math.abs(min_diff)};
-
-    }
-
-    static diff_min(time1, time2){ //time1은 time2보다 작아야한다.
-        let hour1 = Number(time1.split(':')[0]);
-        let minute1 = Number(time1.split(':')[1]);
-        let hour2 = Number(time2.split(':')[0]);
-        let minute2 = Number(time2.split(':')[1]);
-
-        if(hour2 == 0 && minute2 == 0){
-            hour2 = 24;
-        }
-
-        let hour_diff = hour2 - hour1;
-        let min_diff = minute2 - minute1;
-        if(min_diff < 0){
-            hour_diff = hour_diff - 1;
-        }
         min_diff = hour_diff*60 + min_diff;
 
         return min_diff;
-
     }
 }
 

@@ -647,7 +647,7 @@ class TimeSelector{
     }
 
     init (){
-        
+
         this.init_html();
         this.render_zone_list();
         this.render_hour_list();
@@ -932,7 +932,7 @@ class TimeSelector{
             }
             console.log(selected_time_data_form, min_time_data_form, TimeRobot.compare(selected_time_data_form, min_time_data_form))
 
-            let time_compare = TimeRobot.compare(selected_time_data_form, min_time_data_form); // > 일경우 true;
+            let time_compare = TimeRobot.compare(selected_time_data_form, min_time_data_form); // >= 일경우 true;
             if(time_compare == false){
                 // show_error_message('종료시간은 시작시간보다 작을 수 없습니다.');
                 return false;

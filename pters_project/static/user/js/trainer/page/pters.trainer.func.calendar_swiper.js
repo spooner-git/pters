@@ -1317,36 +1317,65 @@ function clear_duplicated_time (jsondata){
 }
 
 function know_whether_plans_has_duplicates (starttime, endtime, starttime_compare, endtime_compare){
-    if( compare_time(starttime_compare, starttime) && compare_time(endtime, endtime_compare)  ){  //비교대상 시간이 비교시간안에 쏙 들어갈때
-        return 1;
-    }else if( compare_time(starttime, starttime_compare) == false  && compare_time(endtime, starttime_compare) && compare_time(endtime, endtime_compare) == false){ //비교 대상 시간의 시작시간이 비교시간안에 들어가 있을때
-        return 2;
-    }else if( compare_time(starttime_compare, starttime) == false && compare_time(endtime_compare, starttime) && compare_time(endtime_compare, endtime) == false){ //비교 대상 시간의 종료시간이 비교 시간 안에 들어가 있을때
-        return 3;
-    }else if( compare_time(starttime, starttime_compare) && compare_time(endtime_compare, endtime) ){ //비교 대상 시간이 비교시간을 완전히 감쌀때
-        return 4;
-    }else if(starttime == starttime_compare && endtime == endtime_compare){
+    // if( compare_time(starttime_compare, starttime) && compare_time(endtime, endtime_compare)  ){  //비교대상 시간이 비교시간안에 쏙 들어갈때
+    //     return 1;
+    // }else if( compare_time(starttime, starttime_compare) == false  && compare_time(endtime, starttime_compare) && compare_time(endtime, endtime_compare) == false){ //비교 대상 시간의 시작시간이 비교시간안에 들어가 있을때
+    //     return 2;
+    // }else if( compare_time(starttime_compare, starttime) == false && compare_time(endtime_compare, starttime) && compare_time(endtime_compare, endtime) == false){ //비교 대상 시간의 종료시간이 비교 시간 안에 들어가 있을때
+    //     return 3;
+    // }else if( compare_time(starttime, starttime_compare) && compare_time(endtime_compare, endtime) ){ //비교 대상 시간이 비교시간을 완전히 감쌀때
+    //     return 4;
+    // }else if(starttime == starttime_compare && endtime == endtime_compare){
+    //     return 5;
+    // }else{
+    //     return 0;
+    // }
+
+    if(starttime == starttime_compare && endtime == endtime_compare){
+        // 완전히 같은 경우
+        // a=b a'=b'
         return 5;
-    }else{
+    }
+    else if(TimeRobot.compare(starttime_compare, starttime) && TimeRobot.compare(endtime, endtime_compare)){
+        // 비교대상 시간이 비교시간안에 쏙 들어갈때
+        // a < b < b' < a'
+        return 1;
+    }
+    else if(TimeRobot.compare(starttime_compare, starttime) && TimeRobot.compare(starttime_compare, endtime)==false && TimeRobot.compare(endtime_compare, endtime)){
+        // 비교대상 시간의 시작시간이 비교시간 안에 들어가 있을때
+        // a <= b < a' <= b'
+        return 2;
+    }
+    else if(TimeRobot.compare(starttime, starttime_compare) && TimeRobot.compare(starttime, endtime_compare)==false && TimeRobot.compare(endtime, endtime_compare)){
+        //비교 대상 시간의 종료시간이 비교 시간 안에 들어가 있을때
+        // b <= a < b' <= a'
+        return 3;
+    }
+    else if(TimeRobot.compare(starttime, starttime_compare) && TimeRobot.compare(endtime_compare, endtime)){
+        //비교 대상 시간이 비교시간을 완전히 감쌀때
+        // b < a < a' < b'
+        return 4;
+    }
+    else{
         return 0;
     }
 }
 
-function compare_time (time1, time2){
-    var hour1 = time1.split(':')[0];
-    var min1  = time1.split(':')[1];
-    var hour2 = time2.split(':')[0];
-    var min2  = time2.split(':')[1];
-
-    var time1_num = hour1+min1;
-    var time2_num = hour2+min2;
-
-    if(Number(time1_num) > Number(time2_num) ){
-        return true;
-    }else{
-        return false;
-    }
-}
+// function compare_time (time1, time2){
+//     var hour1 = time1.split(':')[0];
+//     var min1  = time1.split(':')[1];
+//     var hour2 = time2.split(':')[0];
+//     var min2  = time2.split(':')[1];
+//
+//     var time1_num = hour1+min1;
+//     var time2_num = hour2+min2;
+//
+//     if(Number(time1_num) > Number(time2_num) ){
+//         return true;
+//     }else{
+//         return false;
+//     }
+// }
 
 function compare_times_to_merge_min_max (stime1, etime1, stime2, etime2){
     var timearray = [stime1, stime2, etime1, etime2];
