@@ -1571,9 +1571,10 @@ function know_whether_plans_has_duplicates(start_time, end_time, start_time_comp
         // b < a < a' < b'
         return 4;
     }
-    else{
+    else {
         //비교 대상 시간이 비교시간과 겹치지 않을때
         return 0;
+    }
 }
 
 function compare_time (time1, time2){
