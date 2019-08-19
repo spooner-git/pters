@@ -583,6 +583,8 @@ input:disabled{
 	line-height: 16px;
 	text-align: left;
 	padding-bottom: 12px;
+	letter-spacing: -0.6px;
+
 }
 .list_sort_select_wrap{
 	float: right;
@@ -603,7 +605,7 @@ input:disabled{
 	font-size: inherit;
 }
 .tab_selected{
-	color: #3b3d3d !important;
+	color: #1f1d1e !important;
 }
 .tab_selected_bar{
 	position: absolute;

@@ -128,7 +128,7 @@ class Member {
             let member_reg = data.member_ticket_reg_count;
             let member_rem = data.member_ticket_rem_count;
             let end_date = data.end_date;
-            let end_date_text = DateRobot.to_text(end_date);
+            let end_date_text = DateRobot.to_text(end_date, '', '', SHORT);;
             let remain_date = Math.round((new Date(end_date).getTime() - new Date().getTime()) / (1000*60*60*24));
             let remain_alert_text = "";
             if(remain_date < 0){
@@ -228,7 +228,7 @@ class Member {
             {
                 member_upper_box:`   <div class="member_upper_box">
                                             <div style="display:inline-block;width:200px;">
-                                                <span style="font-size:23px;font-weight:bold;color:#3b3b3b">회원 <span style="color:#fe4e65;">${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</span></span>
+                                                <span style="font-size:22px;font-weight:bold;color:#3b3b3b">회원 <span style="color:#fe4e65;font-weight:900;">${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</span></span>
                                             </div>
                                             <div class="member_tools_wrap">
                                                 <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">
@@ -361,7 +361,7 @@ class Member_func{
             url:'/trainer/get_member_info/',
             type:'GET',
             data: data,
-            dataType : 'html',
+            dataType : 'JSON',
     
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -376,8 +376,8 @@ class Member_func{
     
             //통신성공시 처리
             success:function(data){
-                let json = JSON.parse(data);
-                callback(json);
+                // let json = JSON.parse(data);
+                callback(data);
             },
     
             //통신 실패시 처리
@@ -394,7 +394,7 @@ class Member_func{
             url:'/trainer/get_member_ticket_list/',
             type:'GET',
             data: data,
-            dataType : 'html',
+            dataType : 'JSON',
     
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -409,8 +409,8 @@ class Member_func{
     
             //통신성공시 처리
             success:function(data){
-                let json = JSON.parse(data);
-                callback(json);
+                // let json = JSON.parse(data);
+                callback(data);
             },
     
             //통신 실패시 처리

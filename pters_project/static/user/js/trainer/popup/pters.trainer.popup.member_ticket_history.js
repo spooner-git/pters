@@ -37,9 +37,16 @@ class Member_ticket_history{
         let html;
 
         let numbering = 0;
-        for(let item in this.received_data){
+        let member_ticket_list = [];
+        for(let ticket in this.received_data){
+            member_ticket_list.push(this.received_data[ticket]);
+        }
+        member_ticket_list.sort(function(a, b){
+            return a.member_ticket_start_date < b.member_ticket_start_date ? -1 : a.member_ticket_start_date > b.member_ticket_start_date ? 1 : 0;
+        });
+        for(let i=0; i<member_ticket_list.length; i++){
             numbering++;
-            let data = this.received_data[item];
+            let data = member_ticket_list[i];
             let ticket_id = data.member_ticket_ticket_id;
             let ticket_name = data.member_ticket_name;
             let reg_count = data.member_ticket_reg_count;
@@ -52,7 +59,24 @@ class Member_ticket_history{
             html = CComponent.ticket_history_row (numbering, ticket_id, date, ticket_name, reg_count, remain_count, avail_count, status);
 
             html_to_join.push(html);
+
         }
+        // for(let item in this.received_data){
+        //     numbering++;
+        //     let data = this.received_data[item];
+        //     let ticket_id = data.member_ticket_ticket_id;
+        //     let ticket_name = data.member_ticket_name;
+        //     let reg_count = data.member_ticket_reg_count;
+        //     let remain_count = data.member_ticket_rem_count;
+        //     let avail_count = data.member_ticket_avail_count;
+        //     let status = TICKET_STATUS[data.member_ticket_state_cd];
+        //     let date_diff = DateRobot.diff_date(data.member_ticket_end_date, data.member_ticket_start_date);
+        //     let date = DateRobot.to_text(data.member_ticket_start_date) + ' - ' + DateRobot.to_text(data.member_ticket_end_date) + ' ('+date_diff+'일)';
+        //
+        //     html = CComponent.ticket_history_row (numbering, ticket_id, date, ticket_name, reg_count, remain_count, avail_count, status);
+        //
+        //     html_to_join.push(html);
+        // }
 
         return html_to_join.reverse().join('');
     }

@@ -183,12 +183,20 @@ class Member_view{
             Member_func.read_ticket_list({"member_id":this.member_id}, (data)=>{
                 let ticket_list = data;
                 this.data.ticket = [];
+                let member_ticket_list = [];
                 for(let ticket in ticket_list){
-                    let ticket_rem_count_of_this_member = ticket_list[ticket].member_ticket_rem_count;
-                    let ticket_reg_count_of_this_member = ticket_list[ticket].member_ticket_reg_count;
-                    let ticket_reg_price_of_this_member = ticket_list[ticket].member_ticket_price;
-                    let ticket_reg_date_of_this_member = ticket_list[ticket].member_ticket_start_date;
-                    let ticket_end_date_of_this_member = ticket_list[ticket].member_ticket_end_date;
+                    member_ticket_list.push(ticket_list[ticket]);
+                }
+                member_ticket_list.sort(function(a, b){
+                    return a.member_ticket_start_date > b.member_ticket_start_date ? -1 : a.member_ticket_start_date < b.member_ticket_start_date ? 1 : 0;
+                });
+                for(let i=0; i<member_ticket_list.length; i++){
+
+                    let ticket_rem_count_of_this_member = member_ticket_list[i].member_ticket_rem_count;
+                    let ticket_reg_count_of_this_member = member_ticket_list[i].member_ticket_reg_count;
+                    let ticket_reg_price_of_this_member = member_ticket_list[i].member_ticket_price;
+                    let ticket_reg_date_of_this_member = member_ticket_list[i].member_ticket_start_date;
+                    let ticket_end_date_of_this_member = member_ticket_list[i].member_ticket_end_date;
                     let ticket_remain_date = Math.round((new Date(ticket_end_date_of_this_member).getTime() - new Date().getTime()) / (1000*60*60*24));
                     let ticket_remain_alert_text = "";
                     if(ticket_remain_date < 0){
@@ -196,30 +204,30 @@ class Member_view{
                         ticket_remain_date = Math.abs(ticket_remain_date);
                     }
 
-                    Ticket_func.read({"ticket_id": ticket_list[ticket].member_ticket_ticket_id}, (data)=>{
+                    // Ticket_func.read({"ticket_id": ticket_list[ticket].member_ticket_ticket_id}, (data)=>{
                         let ticket_of_member = {
-                                            ticket_id:data.ticket_info.ticket_id,
-                                            ticket_name:data.ticket_info.ticket_name,
-                                            ticket_effective_days:data.ticket_info.ticket_effective_days,
+                                            ticket_id:member_ticket_list[i].ticket_id,
+                                            ticket_name:member_ticket_list[i].member_ticket_name,
+                                            ticket_effective_days:member_ticket_list[i].ticket_effective_days,
                                             ticket_reg_count:ticket_reg_count_of_this_member,
                                             ticket_rem_count:ticket_rem_count_of_this_member,
                                             ticket_price:ticket_reg_price_of_this_member,
-                                            ticket_state:data.ticket_info.ticket_state_cd,
+                                            ticket_state:member_ticket_list[i].ticket_state_cd,
                                             start_date:ticket_reg_date_of_this_member,
-                                            start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member),
+                                            start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
                                             end_date:ticket_end_date_of_this_member,
-                                            end_date_text:ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member)+' 까지',
-                                            lecture_id:data.ticket_info.ticket_lecture_id_list,
-                                            lecture_name:data.ticket_info.ticket_lecture_list,
-                                            lecture_state:data.ticket_info.ticket_lecture_state_cd_list,
-                                            lecture_color:data.ticket_info.ticket_lecture_ing_color_cd_list,
-                                        }
+                                            end_date_text:ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' 까지',
+                                            lecture_id:member_ticket_list[i].ticket_lecture_id_list,
+                                            lecture_name:member_ticket_list[i].ticket_lecture_list,
+                                            lecture_state:member_ticket_list[i].ticket_lecture_state_cd_list,
+                                            lecture_color:member_ticket_list[i].ticket_lecture_ing_color_cd_list,
+                                        };
                         this.data.ticket.push(ticket_of_member);
 
                         // this.init();
-                        this.render();
-                    });
+                    // });
                 }
+                this.render();
             });
         });
     }
@@ -465,13 +473,14 @@ class Member_view{
     dom_row_ticket(){
         let ticket_length = this.data.ticket.length;
 
+            console.log(this.data.ticket);
         let html_to_join = [];
         for(let i=0; i<ticket_length; i++){
             let ticket_name = this.data.ticket[i].ticket_name;
             if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
                 ticket_name = `<span style="color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;
             }
-
+            console.log( this.data.ticket[i].ticket_id);
             //티켓 이름 표기 부분
             let id = `input_ticket_select_${i}`;
             let title = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
@@ -514,7 +523,7 @@ class Member_view{
             //티켓내 남은횟수, 남은 기간 표기 부분
             let icon_button_style_remain_count_info = {"display":"block", "padding":"12px 0 0 38px", "font-size":"11px", "font-weight":"500", "color":"#858282", "height":"16px"};
             let icon_button_style_remain_data_info = {"display":"block", "padding":"4px 0 12px 38px", "font-size":"11px", "font-weight":"500", "color":"#858282", "height":"16px"};
-            let html_remain_info = CComponent.text_button('reg_count', `남은 횟수  <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].ticket_rem_count}</span>`, icon_button_style_remain_count_info, ()=>{}) +
+            let html_remain_info = CComponent.text_button('reg_count', `남은 횟수  <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].ticket_rem_count}회</span>`, icon_button_style_remain_count_info, ()=>{}) +
                                     CComponent.text_button('reg_date', `남은 기간 <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_data_info, ()=>{});
             let html_ticket_lecture_list = `<div>${html_to_join_lecture_list.join('')}</div>`;
 

@@ -811,7 +811,7 @@ def func_get_member_schedule_all(class_id, member_id):
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
                                                            [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by(
-        '-member_ticket_tb__member_ticket_id')
+        '-member_ticket_tb__start_date', '-member_ticket_tb__reg_dt')
 
     schedule_list = []
     temp_member_ticket_id = None

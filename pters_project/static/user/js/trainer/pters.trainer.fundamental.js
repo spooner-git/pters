@@ -138,7 +138,7 @@ class DateRobot{
 
         // yyyy.mm.dd 형식
         if(short == SHORT){
-            return `${year}.${month}.${date}`;
+            return `${year}.${month}.${date} (${day})`;
         }
 
         // yyyy년 mm월 dd일 (요일 형식

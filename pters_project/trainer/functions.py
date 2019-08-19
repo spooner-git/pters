@@ -284,6 +284,65 @@ def func_get_member_lecture_list(class_id, member_id):
 def func_get_member_ticket_list(class_id, member_id):
     member_ticket_list = collections.OrderedDict()
 
+    ticket_data = TicketTb.objects.filter(class_tb_id=class_id, use=USE).order_by('ticket_id')
+    ticket_lecture_data = TicketLectureTb.objects.select_related(
+        'ticket_tb', 'lecture_tb').filter(class_tb_id=class_id, ticket_tb__use=USE,
+                                          use=USE).order_by('ticket_tb_id', 'lecture_tb__state_cd', 'lecture_tb_id')
+
+    ticket_data_dict = {}
+    for ticket_lecture_info in ticket_lecture_data:
+        ticket_tb = ticket_lecture_info.ticket_tb
+        lecture_tb = ticket_lecture_info.lecture_tb
+        ticket_id = str(ticket_tb.ticket_id)
+        try:
+            ticket_data_dict[ticket_id]
+        except KeyError:
+            ticket_data_dict[ticket_id] = {'ticket_id': ticket_id,
+                                           'ticket_name': ticket_tb.name,
+                                           'ticket_note': ticket_tb.note,
+                                           'ticket_effective_days': ticket_tb.effective_days,
+                                           'ticket_price': ticket_tb.price,
+                                           'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
+                                           'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
+                                           'ticket_reg_count': ticket_tb.reg_count,
+                                           'ticket_lecture_list': [],
+                                           'ticket_lecture_state_cd_list': [],
+                                           'ticket_lecture_id_list': [],
+                                           'ticket_lecture_ing_color_cd_list': [],
+                                           'ticket_lecture_ing_font_color_cd_list': [],
+                                           'ticket_lecture_end_color_cd_list': [],
+                                           'ticket_lecture_end_font_color_cd_list': []}
+        if lecture_tb.use == USE:
+            ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
+            ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'].append(lecture_tb.state_cd)
+            ticket_data_dict[ticket_id]['ticket_lecture_id_list'].append(lecture_tb.lecture_id)
+            ticket_data_dict[ticket_id]['ticket_lecture_ing_color_cd_list'].append(lecture_tb.ing_color_cd)
+            ticket_data_dict[ticket_id]['ticket_lecture_ing_font_color_cd_list'].append(lecture_tb.ing_font_color_cd)
+            ticket_data_dict[ticket_id]['ticket_lecture_end_color_cd_list'].append(lecture_tb.end_color_cd)
+            ticket_data_dict[ticket_id]['ticket_lecture_end_font_color_cd_list'].append(lecture_tb.end_font_color_cd)
+
+    if len(ticket_data) != len(ticket_data_dict):
+        for ticket_info in ticket_data:
+            ticket_id = str(ticket_info.ticket_id)
+            try:
+                ticket_data_dict[ticket_id]
+            except KeyError:
+                ticket_data_dict[ticket_id] = {'ticket_id': ticket_id,
+                                               'ticket_name': ticket_info.name,
+                                               'ticket_note': ticket_info.note,
+                                               'ticket_effective_days': ticket_info.effective_days,
+                                               'ticket_price': ticket_info.price,
+                                               'ticket_week_schedule_enable': ticket_info.week_schedule_enable,
+                                               'ticket_day_schedule_enable': ticket_info.day_schedule_enable,
+                                               'ticket_reg_count': ticket_info.reg_count,
+                                               'ticket_lecture_list': [],
+                                               'ticket_lecture_state_cd_list': [],
+                                               'ticket_lecture_id_list': [],
+                                               'ticket_lecture_ing_color_cd_list': [],
+                                               'ticket_lecture_ing_font_color_cd_list': [],
+                                               'ticket_lecture_end_color_cd_list': [],
+                                               'ticket_lecture_end_font_color_cd_list': []}
+
     member_ticket_data = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__ticket_tb').filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
                                               member_ticket_tb__member_id=member_id,
@@ -296,7 +355,7 @@ def func_get_member_ticket_list(class_id, member_id):
         ticket_tb = member_ticket_tb.ticket_tb
         if '\r\n' in member_ticket_tb.note:
             member_ticket_tb.note = member_ticket_tb.note.replace('\r\n', ' ')
-
+        ticket_id = str(ticket_tb.ticket_id)
         member_ticket_info = {'member_ticket_id': str(member_ticket_tb.member_ticket_id),
                               'member_ticket_name': ticket_tb.name,
                               'member_ticket_ticket_id': str(ticket_tb.ticket_id),
@@ -309,7 +368,26 @@ def func_get_member_ticket_list(class_id, member_id):
                               'member_ticket_price': member_ticket_tb.price,
                               'member_ticket_refund_date': str(member_ticket_tb.refund_date),
                               'member_ticket_refund_price': member_ticket_tb.refund_price,
-                              'member_ticket_note': str(member_ticket_tb.note)}
+                              'member_ticket_note': str(member_ticket_tb.note),
+                              'ticket_id': ticket_id,
+                              'ticket_effective_days': ticket_tb.effective_days,
+                              'ticket_state_cd': ticket_tb.state_cd,
+                              'ticket_lecture_list':
+                                  ticket_data_dict[ticket_id]['ticket_lecture_list'],
+                              'ticket_lecture_state_cd_list':
+                                  ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'],
+                              'ticket_lecture_id_list':
+                                  ticket_data_dict[ticket_id]['ticket_lecture_id_list'],
+                              'ticket_lecture_ing_color_cd_list':
+                                  ticket_data_dict[ticket_id]['ticket_lecture_ing_color_cd_list'],
+                              'ticket_lecture_ing_font_color_cd_list':
+                                  ticket_data_dict[ticket_id]['ticket_lecture_ing_font_color_cd_list'],
+                              'ticket_lecture_end_color_cd_list':
+                                  ticket_data_dict[ticket_id]['ticket_lecture_end_color_cd_list'],
+                              'ticket_lecture_end_font_color_cd_list':
+                                  ticket_data_dict[ticket_id]['ticket_lecture_end_font_color_cd_list']
+
+                              }
         member_ticket_list[str(member_ticket_tb.member_ticket_id)] = member_ticket_info
     return member_ticket_list
 
