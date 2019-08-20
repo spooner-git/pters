@@ -40,8 +40,8 @@
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.home.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.calendar.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.member.css" %}>
-    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.ticket.css" %}>
-    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.lecture.css" %}>
+{#    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.ticket.css" %}>#}
+{#    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.lecture.css" %}>#}
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.alarm.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.menu.css" %}>
     <!-- 페이지 CSS 로드 -->
@@ -279,8 +279,10 @@ onclick="layer_popup.close_layer_popup();"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_view.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_list.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_view.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.ticket_list.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.ticket_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.ticket_view.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_list.js" %}></script>
@@ -384,8 +386,8 @@ onclick="layer_popup.close_layer_popup();"></div>
     // 페이지 인스턴스
     var home = new Home('#root_content', 'home');
     var calendar = new Calendar('#root_content', 'calendar');
-    var ticket = new Ticket('#root_content', 'ticket');
-    var lecture = new Lecture('#root_content', 'lecture');
+{#    var ticket = new Ticket('#root_content', 'ticket');#}
+    //var lecture = new Lecture('#root_content', 'lecture');
     var member = new Member('#root_content', 'member');
     var menu = new Menu('#root_content', 'menu');
     var alarm = new Alarm('#root_content', 'alarm');
@@ -401,11 +403,13 @@ onclick="layer_popup.close_layer_popup();"></div>
     var ticket_add_popup;
     var ticket_view_popup;
     var ticket_simple_view_popup;
-    var ticket_edit_popup
+    var ticket_edit_popup;
+    var ticket_list_popup;
     var lecture_add_popup;
     var lecture_view_popup;
     var lecture_simple_view_popup;
     var lecture_edit_popup;
+    var lecture_list_popup;
 
     var member_schedule_history;
     var member_ticket_history;
@@ -455,10 +459,14 @@ onclick="layer_popup.close_layer_popup();"></div>
                 calendar.init();
             break;
             case 'ticket':
-                ticket.init();
+{#                ticket.init();#}
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    ticket_list_popup = new Ticket_list('.popup_ticket_list', 'ticket_list_popup')});
             break;
             case 'lecture':
-                lecture.init();
+{#                lecture.init();#}
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    lecture_list_popup = new Lecture_list('.popup_lecture_list', 'lecture_list_popup')});
             break;
             case 'member':
                 member.init();

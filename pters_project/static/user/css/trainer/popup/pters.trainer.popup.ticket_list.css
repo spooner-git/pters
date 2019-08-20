@@ -1,0 +1,139 @@
+#ticket_display_panel{
+	position: sticky;
+	position: -webkit-sticky;
+	height: auto;
+	z-index: 10;
+	width: 100%;
+	top: 0;
+	/* text-align: center; */
+}
+	.ticket_upper_box{
+		position: relative;
+		height: 28px;
+		line-height: 28px;
+		background-color: #ffffff;
+		/* border-bottom: 1px solid #cccccc; */
+		/*padding: 14px 20px;*/
+		box-sizing: border-box;
+	}
+	.ticket_tools_wrap{
+		display: table;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 100px;
+		height: 100%;
+	}
+	.ticket_tools_wrap > .search_ticket{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_search.png");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	}
+	.ticket_tools_wrap > .add_ticket{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_add.png?v2");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	}
+	.ticket_tools_wrap > .swap_list{
+		/* display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_swap.png?v2");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px; */
+		display: none;
+	}
+
+	.ticket_bottom_tools_wrap{
+		background-color: #ffffff;
+		/*border-bottom: 1px solid #cccccc;*/
+		padding: 14px 0 0;
+		font-size: 14px;
+		height: 24px;
+		line-height: 24px;
+	}
+
+
+
+.ticket_wrapper{
+	width: calc(100% - 32px);
+	padding: 16px 20px;
+	background-color: #ffffff;
+	border: 1px solid #f5f5f5;
+	border-radius: 8px;
+	box-shadow: 0 0 16px 0 #e6e6e6;
+	margin: 16px;
+	box-sizing: border-box;
+	
+}
+
+.ticket_data_u{
+	position: relative;
+	border-bottom: 1px solid #f5f5f5;
+	padding-bottom: 8px;
+}
+.ticket_data_b{
+	padding: 0;
+}
+.ticket_name{
+	font-size: 16px;
+	font-weight: bold;
+	letter-spacing: -0.8px;
+	height: 24px;
+	line-height: 24px;
+	padding-bottom: 2px;
+}
+/* .ticket_member_number_wrap, .ticket_lectures_wrap{
+	display: table;
+	width: 100%;
+	font-size: 13px;
+	min-height: 22px;
+} */
+.ticket_data_title{
+	display: table-cell;
+	width: 80px;
+	color: #9c9c9c;
+}
+.ticket_member_number{
+	float: right;
+	width: auto;
+	font-size: 16px;
+	font-weight: 500;
+}
+.ticket_lectures{
+	font-size: 12px;
+	font-weight: 500;
+	color: #3d3b3b;
+	letter-spacing: -0.5px;
+}
+.ticket_lectures > div{
+	padding-top: 12px;
+	height: 16px;
+	line-height: 16px;
+}
+.ticket_note{
+	margin-bottom: 5px;
+	font-size: 12px;
+	color: #797979;
+}
+.ticket_lecture_color{
+	width: 8px;
+	height: 8px;
+	border-radius: 10px;
+	display: inline-block;
+	margin-right: 11px;
+}
+
+.popup_ticket_list .popup_toolbox{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+	padding: 0 16px 16px 20px;
+	z-index: 1;
+}

@@ -150,7 +150,7 @@ class Lecture_add{
         <div class="lecture_add_upper_box">
             <div style="display:inline-block;width:200px;">
                 <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold;">새로운 수업</span>
+                    <span style="font-size:20px;font-weight:bold;letter-spacing: -0.9px;">새로운 수업</span>
                 </div>
             </div>
         </div>

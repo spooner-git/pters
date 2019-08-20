@@ -3,7 +3,7 @@
 }
 .dom_tag{
 	font-size: 11px;
-	font-weight: 500;
+	font-weight: normal;
 	color: #d6d2d2;
 	letter-spacing: -0.5px;
 	height: 16px;
@@ -30,7 +30,7 @@ input:disabled{
 	cursor: pointer;
 	font-size: 15px;
 	font-weight: 500;
-	letter-spacing: -0.5px;
+	letter-spacing: -0.7px;
 	padding-top: 8px;
 	padding-bottom: 12px;
 }

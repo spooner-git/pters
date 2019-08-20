@@ -103,11 +103,13 @@ const POPUP_ADDRESS_LECTURE_VIEW = 'popup_lecture_view';
 const POPUP_ADDRESS_LECTURE_SIMPLE_VIEW = 'popup_lecture_simple_view';
 const POPUP_ADDRESS_LECTURE_ADD = 'popup_lecture_add';
 const POPUP_ADDRESS_LECTURE_EDIT = 'popup_lecture_edit';
+const POPUP_ADDRESS_LECTURE_LIST = 'popup_lecture_list';
 
 const POPUP_ADDRESS_TICKET_VIEW = 'popup_ticket_view';
 const POPUP_ADDRESS_TICKET_SIMPLE_VIEW = 'popup_ticket_simple_view';
 const POPUP_ADDRESS_TICKET_ADD = 'popup_ticket_add';
 const POPUP_ADDRESS_TICKET_EDIT = 'popup_ticket_edit';
+const POPUP_ADDRESS_TICKET_LIST = 'popup_ticket_list';
 
 const POPUP_MEMBER_SCHEDULE_HISTORY = 'popup_member_schedule_history';
 const POPUP_MEMBER_TICKET_HISTORY = 'popup_member_ticket_history';

@@ -148,7 +148,7 @@ class Ticket_add{
         <div class="ticket_add_upper_box">
             <div style="display:inline-block;width:200px;">
                 <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold;">새로운 수강권</span>
+                    <span style="font-size:20px;font-weight:bold;letter-spacing: -0.9px;">새로운 수강권</span>
                 </div>
             </div>
         </div>
