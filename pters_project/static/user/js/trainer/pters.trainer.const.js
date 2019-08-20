@@ -151,7 +151,7 @@ const COLOR_NAME_CODE = {"#fbf3bd":"바나나", "#dbe6f7":"하늘", "#ffd3d9": "
               "#ffe3c2":"살구", "#ceeac4":"키위", "#d8d6ff":"포도",
               "#ead8f2":"블루베리", "#d9c3ab":"고구마", "#ffacb7":"복숭아"};
 const SEX_CODE = {"M": "남성", "W": "여성"};
-const SCHEDULE_STATUS = {"NP" : "진행전", "PC": "결석", "PE": "출석완료"};
+const SCHEDULE_STATUS = {"NP" : "진행전", "PC": "결석", "PE": "출석"};
 const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};
 
 //  수업 종류 - 개인 레슨 자유형

@@ -442,21 +442,25 @@ class CComponent{
 
     //회원의 일정 이력에 사용되는 행
     static schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, callback){
-        let html = `<li class="schedule_history_row" id="schedule_history_row_${schedule_id}">
-                        <div class="obj_table_raw">
+        let html = `<li class="schedule_history_row" id="schedule_history_row_${schedule_id}">`;
+        let raw_1 = `<div class="obj_table_raw">
                             <div class="cell_schedule_num">${numbering}</div>
                             <div class="cell_schedule_info">${schedule_name}</div>
                             <div class="cell_schedule_attend">${attend_status}</div>
-                        </div>
-                        <div class="obj_table_raw table_date_info">
+                        </div>`;
+        let raw_2 = `<div class="obj_table_raw table_date_info">
                             <div class="cell_schedule_num"></div>
                             <div class="cell_schedule_info">${date}</div>
-                        </div>
-                        <div class="obj_table_raw table_memo_info">
+                        </div>`;
+        let raw_3 = `<div class="obj_table_raw table_memo_info">
                             <div class="cell_schedule_num"></div>
                             <div class="cell_schedule_info">${memo}</div>
-                        </div>
-                    </li>`;
+                        </div>`;
+        html += raw_1 + raw_2;
+        if(memo != ''){
+            html += raw_3;
+        }
+        html += '</li>';
         $(document).off('click', `#schedule_history_row_${schedule_id}`).on('click', `#schedule_history_row_${schedule_id}`, function(){
             callback();
         });

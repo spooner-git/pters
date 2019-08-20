@@ -37,16 +37,26 @@ class Member_schedule_history{
         let html;
 
         let item_length = Object.keys(this.received_data).length;
-        for(let item in this.received_data){
-            let length = this.received_data[item].length;
+
+        let member_ticket_list = [];
+        for(let ticket in this.received_data){
+            member_ticket_list.push(this.received_data[ticket]);
+        }
+        member_ticket_list.sort(function(a, b){
+            return a.member_ticket_start_date > b.member_ticket_start_date ? -1 : a.member_ticket_start_date < b.member_ticket_start_date ? 1 : 0;
+        });
+
+        for(let i=member_ticket_list.length-1; i>=0; i--){
+            let length = member_ticket_list[i].length;
             let html_sub_assembly_to_join = [];
             let expand_button;
             let expand_status;
             let expand_style;
-            for(let i=length-1; i>=0; i--){
-                let data = this.received_data[item][i];
+
+            for(let j=length-1; j>=0; j--){
+                let data = member_ticket_list[i][j];
                 let schedule_id = data.schedule_id;
-                let numbering = i;
+                let numbering = i+1 + '-' + Number(j+1);
                 let date =  DateRobot.to_text(data.start_dt.split(' ')[0]) +' '+ TimeRobot.to_text(data.start_dt.split(' ')[1]) + ' - '+
                             TimeRobot.to_text(data.end_dt.split(' ')[1]);
                 let schedule_name = data.lecture_name;
@@ -75,28 +85,31 @@ class Member_schedule_history{
                 });
                 html_sub_assembly_to_join.push(html);
             }
-            let button_onclick = ()=>{      let $target = $(`#member_schedule_history_${item}_list`);
+            let button_onclick = ()=>{      let $target = $(`#member_schedule_history_${i+1}_list`);
                                                 if($target.attr('data-expand') == HIDE){
                                                     $target.attr('data-expand', SHOW);
                                                     $target.show();
                                                 }else{
                                                     $target.attr('data-expand', HIDE);
                                                     $target.hide();
-                                                };
-                                      }
-            expand_button = CComponent.text_button(item, '접기/펼치기', {"float":"right", "font-size":"13px"}, ()=>{button_onclick();});
+                                                }
+                                      };
+            expand_button = CComponent.text_button(i+1, '접기/펼치기', {"float":"right", "font-size":"13px"}, ()=>{button_onclick();});
             //수강권이 두개 이상이면 모두 접어둔다, 1개이면 펴둔다.
-            if(item_length >= 2){
-                expand_status = HIDE;
-                expand_style = "none";
-            }else{
+            // if(item_length >= 2){
+            //     expand_status = HIDE;
+            //     expand_style = "none";
+            // }else{
                 expand_status = SHOW;
                 expand_style = "block";
-            }
-            let html_sub_assembly = `<div id="member_schedule_history_${item}" style="padding:16px;">
-                                        <div>${item} ${expand_button}</div>
-                                        <div id="member_schedule_history_${item}_list" data-expand="${expand_status}" style="display:${expand_style};">${html_sub_assembly_to_join.join('')}</div>
-                                    </div>`;
+            // }
+            // let html_sub_assembly = `<div id="member_schedule_history_${i+1}" style="padding:16px;">
+            //                             <div>${i+1} ${expand_button}</div>
+            //                             <div id="member_schedule_history_${i+1}_list" data-expand="${expand_status}" style="display:${expand_style};">${html_sub_assembly_to_join.join('')}</div>
+            //                         </div>`;
+            let html_sub_assembly = ` <div id="member_schedule_history_${i+1}">
+                                        <div id="member_schedule_history_${i+1}_list" data-expand="${expand_status}" style="display:${expand_style};">${html_sub_assembly_to_join.join('')}</div>
+                                     </div>`;
             html_to_join.push(html_sub_assembly);
         }
 

@@ -362,39 +362,52 @@ input:disabled{
 
 .schedule_history_row{
 	list-style: none;
-	height: auto;
+	/*height: 70px;*/
 	/*line-height: auto;*/
 	line-height: inherit;
 	cursor: pointer;
-	font-size: 10px;
-	font-weight: 500;
-	letter-spacing: -0.5px;
-
+	font-size: 12px;
+  	font-weight: 500;
+  	letter-spacing: -0.6px;
+	color: #1f1d1e;
+	padding-top:6px;
+	padding-bottom:6px;
+	padding-left:14px;
 	/* border-bottom: 1px solid #cccccc; */
-	padding: 10px 4px;
+	/*padding: 10px 4px;*/
 }
 
 .schedule_history_row .cell_schedule_num{
 	display: table-cell;
-	width: 45px;
+	width: 32px;
+	height: 20px;
 	vertical-align: middle;
+	padding-right: 14px;
 }
 
 .schedule_history_row .cell_schedule_info{
 	display: table-cell;
 	width: auto;
+	height: 20px;
 	vertical-align: middle;
 }
 
 .schedule_history_row .cell_schedule_attend{
 	display: table-cell;
-	width: 70px;
+	width: auto;
+	height: 20px;
 	vertical-align: middle;
 	text-align: right;
+	padding-right: 20px;
 }
 
 .schedule_history_row .table_date_info, .schedule_history_row .table_memo_info{
-	color: #5c5859;
+	padding-top:4px;
+	height: 16px;
+	font-size: 11px;
+  	font-weight: 500;
+  	letter-spacing: -0.5px;
+	color: #858282;
 }
 
 .ticket_history_row{

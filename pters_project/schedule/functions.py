@@ -811,7 +811,7 @@ def func_get_member_schedule_all(class_id, member_id):
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
                                                            [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by(
-        '-member_ticket_tb__start_date', '-member_ticket_tb__reg_dt')
+        '-member_ticket_tb__start_date', '-member_ticket_tb__reg_dt', 'start_dt')
 
     schedule_list = []
     temp_member_ticket_id = None
@@ -833,8 +833,8 @@ def func_get_member_schedule_all(class_id, member_id):
             schedule_type = 2
         except AttributeError:
             lecture_id = ''
-            lecture_name = ''
-            lecture_max_member_num = ''
+            lecture_name = '개인수업'
+            lecture_max_member_num = '1'
 
         # 일정 정보를 추가하고 수강권에 할당
         schedule_info = {'schedule_id': str(member_schedule_info.schedule_id),
