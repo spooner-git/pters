@@ -24,7 +24,7 @@ class Member_ticket_history{
         let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();member_ticket_history.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="">수강권 이력</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_ticket_history.upper_right_menu()">재등록</span></span>`;
-        let content =   `<section>${this.dom_list()}</section>`;
+        let content =   `<section style="margin-top:8px;">${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 

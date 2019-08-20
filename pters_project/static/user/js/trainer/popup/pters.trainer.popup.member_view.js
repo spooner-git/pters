@@ -191,7 +191,9 @@ class Member_view{
                     return a.member_ticket_start_date > b.member_ticket_start_date ? -1 : a.member_ticket_start_date < b.member_ticket_start_date ? 1 : 0;
                 });
                 for(let i=0; i<member_ticket_list.length; i++){
-
+                    if(member_ticket_list[i].member_ticket_state_cd != 'IP'){
+                        continue;
+                    }
                     let ticket_rem_count_of_this_member = member_ticket_list[i].member_ticket_rem_count;
                     let ticket_reg_count_of_this_member = member_ticket_list[i].member_ticket_reg_count;
                     let ticket_reg_price_of_this_member = member_ticket_list[i].member_ticket_price;
