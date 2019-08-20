@@ -772,6 +772,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
                         'lecture_ing_font_color_cd': lecture_tb.ing_font_color_cd,
                         'lecture_end_color_cd': lecture_tb.end_color_cd,
                         'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
+                        'lecture_type_cd': lecture_tb.lecture_type_cd,
                         'lecture_member_list': member_list}
     else:
         lecture_info = None

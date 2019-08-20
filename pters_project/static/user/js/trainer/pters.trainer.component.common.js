@@ -513,7 +513,7 @@ class CComponent{
     //텍스트만 있는 버튼
     static text_button (id, title, style, onclick){
         let style_code = CComponent.data_to_style_code(style);
-        let html = `<span id="text_button_${id}" style="cursor:pointer;padding:3px 8px;${style_code}">${title}</span>`;
+        let html = `<span id="text_button_${id}" style="cursor:pointer;padding:3px 0;${style_code}">${title}</span>`;
         
         $(document).off('click', `#text_button_${id}`).on('click', `#text_button_${id}`, function(e){
             onclick();

@@ -243,7 +243,7 @@ class Lecture_edit{
 
             layer_popup.close_layer_popup();
             lecture_view_popup.set_initial_data();
-            lecture.init();
+            lecture_list.init();
         });
     }
 

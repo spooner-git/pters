@@ -13,11 +13,10 @@ class Lecture_list {
         this.list_status_type = "ing"; //ing, end
 
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
-        this.init(this.list_status_type);
+        this.init();
     }
 
-    init(list_status_type){
-        this.list_status_type = list_status_type;
+    init(){
         this.set_initial_data();
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
@@ -168,7 +167,7 @@ class Lecture_list {
     
             //통신성공시 처리
             success:function (data){
-                console.log(data);
+                // console.log(data);
                 // var jsondata = JSON.parse(data);
                 // if(jsondata.messageArray.length>0){
                 //     console.log("에러:" + jsondata.messageArray);
@@ -201,11 +200,13 @@ class Lecture_list {
         }
         switch(type){
         case "ing":
-            this.init("ing");
+            this.list_status_type = "ing";
+            this.init();
             break;
 
         case "end":
-            this.init("end");
+            this.list_status_type = "end";
+            this.init();
             break;
         }
     }

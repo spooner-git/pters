@@ -36,11 +36,12 @@ class Lecture_view{
                 ticket_state:[],
                 memo:null,
                 lecture_state:null,
+                lecture_type_cd:null,
                 active_ticket_length:null
         };
 
         this.init();
-        this.set_initial_data();
+
     }
 
     set name(text){
@@ -80,6 +81,15 @@ class Lecture_view{
         return {id:this.data.fixed_member_id, name:this.data.fixed_member_name};
     }
 
+    set lecture_type_cd(type_cd){
+        this.data.lecture_type_cd = type_cd;
+        this.render_content();
+    }
+
+    get lecture_type_cd(){
+        return this.data.lecture_type_cd;
+    }
+
     set color(data){
         this.data.color_bg = data.bg;
         this.data.color_font = data.font;
@@ -93,7 +103,7 @@ class Lecture_view{
 
  
     init(){
-        this.render();
+        this.set_initial_data();
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
@@ -113,11 +123,13 @@ class Lecture_view{
             this.data.ticket_id = data.lecture_ticket_id_list;
             this.data.ticket_name = data.lecture_ticket_list;
             this.data.ticket_state = data.lecture_ticket_state_cd_list;
+            this.data.lecture_type_cd = data.lecture_type_cd;
             this.data.memo = data.lecture_note;
 
             this.data.lecture_state = data.lecture_state_cd;
 
-            this.init();
+            this.render();
+            // this.init();
         });   
     }
 
@@ -179,7 +191,7 @@ class Lecture_view{
         let style = {"font-size":"20px", "font-weight":"bold"};
         if(this.data.lecture_state == STATE_END_PROGRESS){
             style["color"] = "#888888";
-            title = title + ' (비활성)';
+            // title = title + ' (비활성)';
         }
         let placeholder =  '수업명*';
         let icon = undefined;
@@ -213,25 +225,32 @@ class Lecture_view{
         let title = this.data.capacity == null ? '' : this.data.capacity+unit;
         let placeholder = '정원*';
         let icon = '/static/common/icon/icon_member.png';
-        let icon_r_visible = SHOW;
-        let icon_r_text = CComponent.text_button ('lecture_fixed_member_select', "고정 회원", null, ()=>{
-            //고정 인원 선택
-            if(this.data.capacity != null){
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':this.lecture_id, "title":"고정 회원 선택"}, (set_data)=>{
-                        this.member = set_data;
-                        this.send_data();
-                    });
-                });
-            }else{
-                show_error_message('정원을 먼저 입력해주세요.');
-            }
-        });
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
         let style = null;
-        let disabled = false;
+        let disabled = true;
         let pattern = "[0-9]{0,4}";
         let pattern_message = "";
-        let required = "required";
+        let required = "";
+
+        if(this.data.lecture_type_cd!=LECTURE_TYPE_ONE_TO_ONE){
+            icon_r_text = CComponent.text_button ('lecture_fixed_member_select', "고정 회원", null, ()=>{
+                //고정 인원 선택
+                if(this.data.capacity != null){
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                        member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':this.lecture_id, "title":"고정 회원 선택"}, (set_data)=>{
+                            this.member = set_data;
+                            this.send_data();
+                        });
+                    });
+                }else{
+                    show_error_message('정원을 먼저 입력해주세요.');
+                }
+            });
+            disabled = false;
+            required = "required";
+            icon_r_visible = SHOW;
+        }
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
@@ -386,7 +405,7 @@ class Lecture_view{
             Lecture_func.update_fixed_member(data); //async false 함수
 
             this.set_initial_data();
-            lecture.init();
+            lecture_list_popup.init();
         });
     }
 
@@ -395,7 +414,7 @@ class Lecture_view{
             activate:{text:"활성화", callback:()=>{
                     show_user_confirm(`"${this.data.name}" 수업을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
                         Lecture_func.status({"lecture_id":this.lecture_id, "state_cd":STATE_IN_PROGRESS}, ()=>{
-                            lecture.init();
+                            lecture_list_popup.init();
                             layer_popup.all_close_layer_popup();
                         });
                         
@@ -405,7 +424,7 @@ class Lecture_view{
             deactivate:{text:"비활성화", callback:()=>{
                     show_user_confirm(`"${this.data.name}" 수업을 비활성화 하시겠습니까? <br> 비활성화 탭에서 다시 활성화 할 수 있습니다.`, ()=>{
                         Lecture_func.status({"lecture_id":this.lecture_id, "state_cd":STATE_END_PROGRESS}, ()=>{
-                            lecture.init();
+                            lecture_list_popup.init();
                             layer_popup.all_close_layer_popup();
                         });
                         
@@ -415,7 +434,7 @@ class Lecture_view{
             delete:{text:"삭제", callback:()=>{
                     show_user_confirm(`"${this.data.name}" 수업을 영구 삭제 하시겠습니까? <br> 데이터를 복구할 수 없습니다.`, ()=>{
                         Lecture_func.delete({"lecture_id":this.lecture_id}, ()=>{
-                            lecture.init();
+                            lecture_list_popup.init();
                             layer_popup.all_close_layer_popup();
                         });
                     });
@@ -468,6 +487,10 @@ class Lecture_view{
             return false;
         }
         else{
+            if(this.data.capacity <= 1){
+                show_error_message('정원은 2명보다 크게 설정해주세요.');
+                return false;
+            }
             return true;
         }
     }
@@ -582,7 +605,9 @@ class Lecture_simple_view{
 
         let lecture_name = this.data.name == null ? '' : this.data.name;
         if(this.data.lecture_state == STATE_END_PROGRESS){
-            lecture_name = `<span style="color:#888888;">${lecture_name}</span><span> (비활성)</span>`;
+            lecture_name = `<span style="color:#888888;">${lecture_name}</span>
+                            <!--<span> (비활성)</span>-->
+                            `;
         }
 
         let html = `
