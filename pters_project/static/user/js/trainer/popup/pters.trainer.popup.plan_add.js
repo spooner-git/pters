@@ -387,9 +387,10 @@ class Plan_add{
                                                                                                 }});
             });
         });
+
         let html_duplication_alert = `<div style="font-size:11px;color:#fe4e65;padding-left:45px;box-sizing:border-box;display:${this.data.duplicate_plan_when_add.length == 0 ? 'none' : 'block'}">
                                             ${this.data.duplicate_plan_when_add.length}건 겹치는 일정이 존재합니다.<br>
-                                            ${this.data.duplicate_plan_when_add.join(', ')}
+                                            ${this.data.duplicate_plan_when_add.join('<br/>')}
                                         </div>`;
         return html + html_duplication_alert;
     }
@@ -509,6 +510,9 @@ class Plan_add{
         if(start_time == null || end_time == null){
             console.log("시작시간이나 종료시간이 설정되지 않음");
             return false;
+        }
+        if(end_time=='0:0'){
+            end_time='24:00';
         }
 
         let data;

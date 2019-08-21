@@ -196,9 +196,9 @@ class Lecture {
                                         </div>
                                         <div class="lecture_bottom_tools_wrap">
                                             <div class="list_type_tab_wrap">
-                            <div onclick="${this.instance}.switch_type('ing');" class="${this.list_status_type == "ing" ? "tab_selected": ""}">활성화</div>
-                                                <div style="width: 2px; height: 8px;background-color: #f5f2f3; margin:8px;"></div>
-                            <div onclick="${this.instance}.switch_type('end');" style="width:48px;" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화</div>
+                                                <div onclick="${this.instance}.switch_type('ing');" class="${this.list_status_type == "ing" ? "tab_selected": ""}">활성화</div>
+                                                    <div style="width: 2px; height: 12px;background-color: #f5f2f3; margin:8px;"></div>
+                                                <div onclick="${this.instance}.switch_type('end');" style="width:48px;" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화</div>
                                             </div>
                                         </div>
                                             `
