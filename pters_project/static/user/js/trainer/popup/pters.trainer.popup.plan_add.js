@@ -511,9 +511,9 @@ class Plan_add{
             console.log("시작시간이나 종료시간이 설정되지 않음");
             return false;
         }
-        if(end_time=='0:0'){
-            end_time='24:00';
-        }
+        // if(end_time=='0:0'){
+        //     end_time='24:00';
+        // }
 
         let data;
         calendar.request_schedule_data (date, days, (schedules)=>{
