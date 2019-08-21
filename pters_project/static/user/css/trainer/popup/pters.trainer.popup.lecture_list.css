@@ -84,21 +84,30 @@
 	vertical-align: middle;
 }
 
+.lecture_data_r{
+	display: table-cell;
+	width: auto;
+	vertical-align: middle;
+}
+
 .lecture_name{
 	font-size: 16px;
 	font-weight: 500;
+	letter-spacing: -0.8px;
 }
 .lecture_member_number{
 	float: right;
 	font-size: 18px;
 	font-weight: 500;
+	letter-spacing: -0.8px;
 }
 .lecture_note{
 	/* margin-bottom: 5px; */
 	height: 20px;
 	color: #858282;
-	font-size: 11px;
+	font-size: 12px;
 	font-weight: 500;
+	letter-spacing: -0.6px;
 	box-sizing: border-box;
 }
 
@@ -108,15 +117,15 @@
 	border-radius: 10px;
 	display: inline-block;
 	vertical-align: middle;
-	margin-bottom: 2px;
-	margin-right: 16px;
+	/*margin-bottom: 2px;*/
+	margin-right: 12px;
 }
 
 .popup_lecture_list .popup_toolbox{
 	position: sticky;
 	position: -webkit-sticky;
 	top: 0;
-	padding: 0 16px 16px 20px;
+	padding: 8px 16px 16px 20px;
 	z-index: 1;
 }
 /* 

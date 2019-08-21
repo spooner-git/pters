@@ -591,21 +591,22 @@ input:disabled{
 .list_type_tab_wrap{
 	display: inline-block;
 	width: 140px;
-	height: 28px;
-	line-height: 28px;
+	height: 24px;
+	line-height: 24px;
 	/*vertical-align: middle;*/
 }
 .list_type_tab_wrap > div{
 	position: relative;
-	display: table-cell;
-	width: 55px;
+	display: inline-block;
+	width: 36px;
 	font-size: 13px;
 	color: #b8b4b4;
 	font-weight: bold;
-	line-height: 16px;
+	line-height: 24px;
 	text-align: left;
-	padding-bottom: 12px;
+	/*padding-bottom: 12px;*/
 	letter-spacing: -0.6px;
+	vertical-align: middle;
 
 }
 .list_sort_select_wrap{

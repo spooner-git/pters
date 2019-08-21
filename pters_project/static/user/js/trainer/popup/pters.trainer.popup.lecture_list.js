@@ -106,11 +106,13 @@ class Lecture_list {
                             <div class="lecture_data_c">
                                 <div class="lecture_name">
                                     ${lecture_name} 
-                                    <div class="lecture_member_number">${this.list_status_type == "ing" ? lecture_member_number+' 명' : ""}</div>
                                 </div>
                                 <div class="lecture_note">
                                     정원 - ${lecture_max_member_number}명
                                 </div>
+                            </div>
+                            <div class="lecture_data_r">
+                                    <div class="lecture_member_number">${this.list_status_type == "ing" ? lecture_member_number+' 명' : ""}</div>
                             </div>
                         </article>`;
             html_temp.push(html);
@@ -121,17 +123,16 @@ class Lecture_list {
 
     dom_row_toolbox(){
         let html = `<div class="lecture_upper_box">
-                        <div style="display:inline-block;width:200px;">
-                            <div style="display:inline-block;width:200px;">
-                                <span style="font-size:22px;font-weight:bold;color:#3b3b3b">수업 <span style="color:#fe4e65;">${this.data_length}</span></span>
-                            </div>
-                            
+                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                            <div style="display:inline-block;">수업 </div>
+                            <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->
                         </div>
                     </div>
                     <div class="lecture_bottom_tools_wrap">
                         <div class="list_type_tab_wrap">
-                            <div onclick="${this.instance}.switch_type('ing');" class="${this.list_status_type == "ing" ? "tab_selected": ""}">활성화 ${this.list_status_type == "ing" ? "<div class='tab_selected_bar'></div>" : ""}</div>
-                            <div onclick="${this.instance}.switch_type('end');" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화 ${this.list_status_type == "end" ? "<div class='tab_selected_bar'></div>" : ""}</div>
+                            <div onclick="${this.instance}.switch_type('ing');" class="${this.list_status_type == "ing" ? "tab_selected": ""}">활성화</div>
+                                                <div style="width: 2px; height: 8px;background-color: #f5f2f3; margin:8px;"></div>
+                            <div onclick="${this.instance}.switch_type('end');" style="width:48px;" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화</div>
                         </div>
                     </div>
                         `;

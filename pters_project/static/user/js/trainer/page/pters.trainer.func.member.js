@@ -227,8 +227,9 @@ class Member {
         return(
             {
                 member_upper_box:`   <div class="member_upper_box">
-                                            <div style="display:inline-block;width:200px;">
-                                                <span style="font-size:22px;font-weight:bold;color:#3b3b3b">회원 <span style="color:#fe4e65;font-weight:900;">${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</span></span>
+                                            <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                                                <div style="display:inline-block;">회원 </div>
+                                                <div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</div>
                                             </div>
                                             <div class="member_tools_wrap">
                                                 <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">
@@ -240,8 +241,9 @@ class Member {
                                         </div>
                                         <div class="member_bottom_tools_wrap">
                                             <div class="list_type_tab_wrap">
-                                                <div onclick="${this.instance}.switch_type('ing');" class="${this.list_type == "ing" ? "tab_selected": ""}">진행중 ${this.list_type == "ing" ? "<div class='tab_selected_bar'></div>" : ""}</div>
-                                                <div onclick="${this.instance}.switch_type('end');" class="${this.list_type == "end" ? "tab_selected" : ""}">종료 ${this.list_type == "end" ? "<div class='tab_selected_bar'></div>" : ""}</div>
+                                                <div onclick="${this.instance}.switch_type('ing');" class="${this.list_type == "ing" ? "tab_selected": ""}">진행중</div>
+                                                <div style="width: 2px; height: 8px;background-color: #f5f2f3; margin:8px;"></div>
+                                                <div onclick="${this.instance}.switch_type('end');" style="width:24px;" class="${this.list_type == "end" ? "tab_selected" : ""}">종료</div>
                                             </div>
                                             <div class="list_sort_select_wrap">
                                                 <select>
@@ -252,7 +254,7 @@ class Member {
                                             </div>
                                         </div>`
                 ,
-                initial_page:`<div id="member_display_panel"></div><div id="member_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px; padding-top:8px;"></div>`
+                initial_page:`<div id="member_display_panel"></div><div id="member_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px; padding-top:6px; padding-bottom:20px;"></div>`
             }
         );
     }

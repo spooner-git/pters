@@ -103,7 +103,6 @@
 .ticket_member_number{
 	float: right;
 	width: auto;
-	font-size: 16px;
 	font-weight: 500;
 }
 .ticket_lectures{
@@ -118,22 +117,24 @@
 	line-height: 16px;
 }
 .ticket_note{
-	margin-bottom: 5px;
 	font-size: 12px;
-	color: #797979;
+	font-weight: 500;
+	letter-spacing: -0.6px;
+	color: #858282;
 }
 .ticket_lecture_color{
 	width: 8px;
 	height: 8px;
 	border-radius: 10px;
 	display: inline-block;
-	margin-right: 11px;
+	margin-right: 10px;
+	line-height: 20px;
 }
 
 .popup_ticket_list .popup_toolbox{
 	position: sticky;
 	position: -webkit-sticky;
 	top: 0;
-	padding: 0 16px 16px 20px;
+	padding: 8px 16px 4px 20px;
 	z-index: 1;
 }

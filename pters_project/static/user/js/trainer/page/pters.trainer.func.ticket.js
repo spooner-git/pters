@@ -194,11 +194,9 @@ class Ticket{
     static_component(){
         return(
             {    "ticket_upper_box":`   <div class="ticket_upper_box">
-                                            <div style="display:inline-block;width:200px;">
-                                                <div style="display:inline-block;width:200px;">
-                                                    <span style="font-size:23px;font-weight:bold;color:#3b3b3b">수강권 <span style="color:#fe4e65;">${this.data_length}</span></span>
-                                                </div>
-                                                
+                                            <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                                                <div style="display:inline-block;">수강권 </div>
+                                            <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->
                                             </div>
                                             <div class="ticket_tools_wrap">
                                                 <div class="search_ticket"></div>
@@ -208,8 +206,9 @@ class Ticket{
                                         </div>
                                         <div class="ticket_bottom_tools_wrap">
                                             <div class="list_type_tab_wrap">
-                                                <div onclick="${this.instance}.switch_type('ing');" class="${this.list_status_type == "ing" ? "tab_selected": ""}">활성화 ${this.list_status_type == "ing" ? "<div class='tab_selected_bar'></div>" : ""}</div>
-                                                <div onclick="${this.instance}.switch_type('end');" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화 ${this.list_status_type == "end" ? "<div class='tab_selected_bar'></div>" : ""}</div>
+                            <div onclick="${this.instance}.switch_type('ing');" class="${this.list_status_type == "ing" ? "tab_selected": ""}">활성화</div>
+                                                <div style="width: 2px; height: 8px;background-color: #f5f2f3; margin:8px;"></div>
+                            <div onclick="${this.instance}.switch_type('end');" style="width:48px;" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화</div>
                                             </div>
                                         </div>
                                             `

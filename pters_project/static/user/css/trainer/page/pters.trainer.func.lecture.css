@@ -84,6 +84,12 @@
 	vertical-align: middle;
 }
 
+.lecture_data_r{
+	display: table-cell;
+	width: auto;
+	vertical-align: middle;
+}
+
 .lecture_name{
 	font-size: 16px;
 	font-weight: 500;
@@ -92,6 +98,7 @@
 	float: right;
 	font-size: 18px;
 	font-weight: 500;
+	letter-spacing: -0.8px;
 }
 .lecture_note{
 	/* margin-bottom: 5px; */

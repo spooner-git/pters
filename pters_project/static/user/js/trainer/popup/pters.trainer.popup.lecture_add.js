@@ -139,7 +139,7 @@ class Lecture_add{
 
         let html =  '<div class="obj_box_full">'+CComponent.dom_tag('수업명') + name+'</div>' + 
                     '<div class="obj_box_full">'+CComponent.dom_tag('정원') + capacity + '</div>' + 
-                    '<div class="obj_box_full">'+CComponent.dom_tag('색상')+ color+ '</div>' + 
+                    '<div class="obj_box_full">'+CComponent.dom_tag('색상 태그')+ color+ '</div>' +
                     '<div class="obj_box_full">'+CComponent.dom_tag('생성시 수강권에 추가')+ ticket+ '</div>';
 
         return html;
