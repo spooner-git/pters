@@ -25,13 +25,13 @@ class Program_list{
  
     init(){
         this.set_initial_data();
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
     set_initial_data (){
         Program_func.read((data)=>{
             this.data = data;
             this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });   
     }
 

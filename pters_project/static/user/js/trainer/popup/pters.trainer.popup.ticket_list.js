@@ -19,7 +19,6 @@ class Ticket_list {
     init(list_status_type){
         this.list_status_type = list_status_type;
         this.set_initial_data();
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
     set_initial_data (){
@@ -31,6 +30,7 @@ class Ticket_list {
                 this.data_length = this.data.finish_ticket_data.length;
             }
             this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
     }
         clear(){
