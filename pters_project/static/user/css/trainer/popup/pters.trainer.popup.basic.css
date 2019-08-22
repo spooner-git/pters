@@ -43,14 +43,16 @@
 .wrapper_popup_basic_buttons{
     text-align: center;
     border-top: 1px solid #cccccc;
-    height: 45px;
-    line-height: 45px;
+    height: 52px;
+    line-height: 52px;
     cursor: pointer;
+    padding-top:8px;
+    padding-bottom:8px;
 }
 
     .wrapper_popup_basic_buttons .popup_basic_cancel{
         cursor: pointer;
-        border-right: 1px solid #cccccc;
+        /*border-right: 1px solid #cccccc;*/
     }
 
     .wrapper_popup_basic_buttons .popup_basic_confirm{

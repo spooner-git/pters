@@ -57,8 +57,8 @@ class Member_schedule_history{
                 let data = member_ticket_list[i][j];
                 let schedule_id = data.schedule_id;
                 let numbering = i+1 + '-' + Number(j+1);
-                let date =  DateRobot.to_text(data.start_dt.split(' ')[0]) +' '+ TimeRobot.to_text(data.start_dt.split(' ')[1]) + ' - '+
-                            TimeRobot.to_text(data.end_dt.split(' ')[1]);
+                let date =  DateRobot.to_text(data.start_dt.split(' ')[0], '', '', SHORT) +' '+ TimeRobot.to_text(data.start_dt.split(' ')[1], '', SHORT) + ' - '+
+                            TimeRobot.to_text(data.end_dt.split(' ')[1], '', SHORT);
                 let schedule_name = data.lecture_name;
                 let attend_status = SCHEDULE_STATUS[data.state_cd];
                 let memo = data.note;
@@ -79,7 +79,7 @@ class Member_schedule_history{
                                                             member_view_popup.init();
                                                         });layer_popup.close_layer_popup();}}
                     };
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(45+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(16+68+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
                         option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                     });
                 });

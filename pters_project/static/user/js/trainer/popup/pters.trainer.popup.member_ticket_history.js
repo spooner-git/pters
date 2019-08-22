@@ -54,7 +54,7 @@ class Member_ticket_history{
             let avail_count = data.member_ticket_avail_count;
             let status = TICKET_STATUS[data.member_ticket_state_cd];
             let date_diff = DateRobot.diff_date(data.member_ticket_end_date, data.member_ticket_start_date);
-            let date = DateRobot.to_text(data.member_ticket_start_date) + ' - ' + DateRobot.to_text(data.member_ticket_end_date) + ' ('+date_diff+'일)';
+            let date = DateRobot.to_text(data.member_ticket_start_date, '', '', SHORT) + ' - ' + DateRobot.to_text(data.member_ticket_end_date, '', '', SHORT) + ' ('+date_diff+'일)';
 
             html = CComponent.ticket_history_row (numbering, ticket_id, date, ticket_name, reg_count, remain_count, avail_count, status);
 

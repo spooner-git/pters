@@ -275,10 +275,20 @@ class TimeRobot{
         // zone 이 0 인 경우 오전, 1 인경우 오후
         zone = zone == 0 ? "오전" : "오후";
 
-        // 분은 자르기
-        if(short != undefined){
-            return `${zone} ${hh}시`;
+        // 오전 00:00
+        if(short == SHORT){
+            if(hh < 10){
+                hh = '0'+hh;
+            }
+            if(mm < 10){
+                mm = '0'+mm;
+            }
+            return `${zone} ${hh}:${mm}`;
         }
+        // 분은 자르기
+        // if(short != undefined){
+        //     return `${zone} ${hh}시`;
+        // }
 
         return `${zone} ${hh}시 ${mm}분`;
     }
