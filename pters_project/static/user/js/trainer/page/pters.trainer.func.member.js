@@ -130,10 +130,9 @@ class Member {
             let end_date = data.end_date;
             let end_date_text = DateRobot.to_text(end_date, '', '', SHORT);;
             let remain_date = Math.round((new Date(end_date).getTime() - new Date().getTime()) / (1000*60*60*24));
-            let remain_alert_text = "";
-            if(remain_date < 0){
-                remain_alert_text = " <span style='color:#fe4e65;'>지남</span>";
-                remain_date = Math.abs(remain_date);
+            let member_counts_text = list_type == "ing" ? member_rem+'회 / '+remain_date+'일 / - '+end_date_text+' 까지' : '종료됨';
+            if(remain_date < 0 && list_type == "ing"){
+                member_counts_text = "<span style='color:#fe4e65;'>"+Math.abs(remain_date) +"일 지남</span>";
             }
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'member_id':${member_id}}, ()=>{
@@ -145,7 +144,7 @@ class Member {
                             <div class="member_data_c">
                                 <div class="member_name">${member_name}</div>
                                 <div class="member_counts">
-                                 ${list_type == "ing" ? member_rem+'회 / '+remain_date+'일'+remain_alert_text+' / - '+end_date_text+' 까지' : '종료됨'}
+                                    ${member_counts_text}
                                 </div>
                             </div>
                             <div class="member_data_r">

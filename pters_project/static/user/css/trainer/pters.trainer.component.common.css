@@ -31,8 +31,8 @@ input:disabled{
 	font-size: 15px;
 	font-weight: 500;
 	letter-spacing: -0.7px;
-	padding-top: 8px;
-	padding-bottom: 12px;
+	padding-top:12px;
+	padding-bottom: 16px;
 }
 .create_input_row{
 	cursor: unset;
@@ -53,6 +53,7 @@ input:disabled{
 	margin: 0;
 	background-color: transparent
 }
+
 .create_input_row textarea{
 	-webkit-appearance: none;
 	border: 0;
@@ -68,6 +69,16 @@ input:disabled{
 	padding: 0;
 	margin: 0;
 	background-color: transparent
+}
+
+.create_input_row input::-webkit-input-placeholder{
+	color: #b8b4b4;
+}
+.create_input_row input::-moz-placeholder{
+	color: #b8b4b4;
+}
+.create_input_row input:-ms-input-placeholder{
+	color: #b8b4b4;
 }
 .create_input_textarea_row{
 	height: auto;
@@ -121,7 +132,7 @@ input:disabled{
 	/*margin-top: 2px;*/
 	width: 24px;
 	height: 24px;
-	padding-right:10px;
+	padding-right:12px;
 	float: right;
 }
 

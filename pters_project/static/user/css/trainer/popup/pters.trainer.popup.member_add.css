@@ -14,11 +14,11 @@
 	position: sticky;
 	position: -webkit-sticky;
 	top: 0;
-	padding: 0 16px 20px 60px;
+	padding: 0 20px 24px 60px;
 }
 .popup_member_add .member_add_upper_box{
-	height: 24px;
-	line-height: 24px;
+	height: 28px;
+	line-height: 28px;
 }
 
 .popup_member_add .popup_content{

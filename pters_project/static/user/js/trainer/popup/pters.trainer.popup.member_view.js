@@ -271,8 +271,8 @@ class Member_view{
         let phone = this.dom_row_member_phone_input();
         let birth = this.dom_row_member_birth_input();
         let sex = this.dom_row_member_sex_input();
-        // let memo = this.dom_row_member_memo_input();
         let ticket = this.dom_row_ticket();
+        // let memo = this.dom_row_member_memo_input();
 
         let html =
             '<div class="obj_input_box_full">'
@@ -284,6 +284,9 @@ class Member_view{
             '<div class="obj_input_box_full">'
                 + CComponent.dom_tag('수강권') + ticket +
             '</div>';
+            // '<div class="obj_input_box_full">'
+            //     + CComponent.dom_tag('특이사항')  + memo +
+            // '</div>';
 
         return html;
     }
@@ -371,7 +374,7 @@ class Member_view{
     dom_row_member_phone_input(){
         let unit = '';
         let id = 'member_phone_view';
-        let title = this.data.phone == null || this.data.phone == 'None' ? '휴대폰 번호' : this.data.phone;
+        let title = this.data.phone == null || this.data.phone == 'None' ? '' : this.data.phone;
         let placeholder = '휴대폰 번호';
         let icon = '/static/common/icon/icon_smartphone.png';
         let icon_r_visible = HIDE;
@@ -402,7 +405,7 @@ class Member_view{
         let icon = '/static/common/icon/icon_cake.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = null;
+        let style = this.data.birth == null || this.data.birth == 'None' ? {"color":"#b8b4b4"} : null;
         let disabled = false;
         if(this.data.active == 'True'){
             disabled = true;
@@ -416,7 +419,7 @@ class Member_view{
                 let month = this.data.birth == null ? 2 : this.data.birth.month;
                 let date = this.data.birth == null ? 24 : this.data.birth.date;
                 
-                date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'생년월일 선택', data:{year:year, month:month, date:date}, 
+                date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'생년월일', data:{year:year, month:month, date:date},
                                                                                                 range:{start: this.dates.current_year - 90, end: this.dates.current_year}, 
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     this.birth = object; 
@@ -435,7 +438,7 @@ class Member_view{
         let icon = '/static/common/icon/person_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = null;
+        let style = this.data.sex == null || this.data.sex == 'None' ? {"color":"#b8b4b4"} : null;
         let disabled = false;
         if(this.data.active == 'True'){
             disabled = true;
@@ -465,8 +468,7 @@ class Member_view{
         let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
         let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            let user_input_data = input_data;
-            this.memo = user_input_data;
+            this.memo = input_data;
         }, pattern, pattern_message, required);
         return html;
     }
@@ -495,7 +497,7 @@ class Member_view{
                 // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
                 //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
                 // });
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(235/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(258/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                     ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
                     //수강권 간단 정보 팝업 열기
                 });
@@ -508,13 +510,14 @@ class Member_view{
                 let lecture_id = this.data.ticket[i].lecture_id[j];
                 let lecture_name = this.data.ticket[i].lecture_name[j];
                 let lecture_color = this.data.ticket[i].lecture_color[j];
-                let icon_button_style = {"display":"block", "padding":"14px 0 14px 42px", "font-size":"13px", "height":"20px", "line-height":"20px"};
-                let lecture_name_set = `<div style="display:inline-block;width:10px;height:10px;border-radius:5px;background-color:${lecture_color};margin-right:10px;"></div>${lecture_name}`;
+                let icon_button_style = {"display":"block", "padding":"12px 0 12px 42px", "font-size":"13px", "height":"24px", "line-height":"24px"};
+                let lecture_name_set = `<div style="display:inline-block;width:4px;height:16px;border-radius: 8px;background-color:${lecture_color};margin-right:10px;margin-top:4px;"></div>
+                                        <div style="display:inline-block;vertical-align:top;">${lecture_name}</div>`;
                 let html_lecture_list_info = CComponent.text_button (lecture_id, lecture_name_set, icon_button_style, ()=>{
                     // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id}, ()=>{
                     //     lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
                     // });
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(235/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(258/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
                         lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
                         //수업 간단 정보 팝업 열기
                     });
@@ -523,7 +526,7 @@ class Member_view{
                 html_to_join_lecture_list.push(html_lecture_list_info);
             }
             //티켓내 남은횟수, 남은 기간 표기 부분
-            let icon_button_style_remain_count_info = {"display":"block", "padding":"12px 0 0 38px", "font-size":"11px", "font-weight":"500", "color":"#858282", "height":"16px"};
+            let icon_button_style_remain_count_info = {"display":"block", "padding":"6px 0 0 38px", "font-size":"11px", "font-weight":"500", "color":"#858282", "height":"16px"};
             let icon_button_style_remain_data_info = {"display":"block", "padding":"4px 0 12px 38px", "font-size":"11px", "font-weight":"500", "color":"#858282", "height":"16px"};
             let html_remain_info = CComponent.text_button('reg_count', `남은 횟수  <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].ticket_rem_count}회</span>`, icon_button_style_remain_count_info, ()=>{}) +
                                     CComponent.text_button('reg_date', `남은 기간 <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_data_info, ()=>{});

@@ -209,7 +209,7 @@ class Member_add{
             '<div class="obj_input_box_full">'
                 + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('진행 기간') + end_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('특이사항') + memo +
@@ -222,9 +222,7 @@ class Member_add{
         let html = `
         <div class="member_add_upper_box">
             <div style="display:inline-block;width:200px;">
-                <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold; letter-spacing: -1px;">${this.data_from_external == null ? '회원 등록' : '재등록'}</span>
-                </div>
+                <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: #3d3b3b;">${this.data_from_external == null ? '새로운 회원' : '재등록'}</span>
             </div>
         </div>
         `;
@@ -244,8 +242,7 @@ class Member_add{
         let pattern_message = "공백, + - _ 제외 특수문자는 입력 불가";
         let required = "required";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
-            let user_input_data = input_data;
-            this.name = user_input_data;
+            this.name = input_data;
         }, pattern, pattern_message, required);
         return html;
     }
@@ -264,8 +261,7 @@ class Member_add{
         let pattern_message = "";
         let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
-            let user_input_data = input_data;
-            this.phone = user_input_data;
+            this.phone = input_data;
         }, pattern, pattern_message, required);
         return html;
     }
@@ -277,7 +273,7 @@ class Member_add{
         let icon = '/static/common/icon/icon_cake.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = null;
+        let style = this.data.birth == null ? {"color":"#b8b4b4"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             //행을 클릭했을때 실행할 내용
             if(this.data_from_external != null){
@@ -291,7 +287,7 @@ class Member_add{
                 let month = this.data.birth == null ? 2 : this.data.birth.month;
                 let date = this.data.birth == null ? 24 : this.data.birth.date;
                 
-                date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'생년월일 선택', data:{year:year, month:month, date:date}, 
+                date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'생년월일', data:{year:year, month:month, date:date},
                                                                                                 range:{start: this.dates.current_year - 90, end: this.dates.current_year}, 
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     this.birth = object; 
@@ -305,11 +301,19 @@ class Member_add{
 
     dom_row_member_sex_input(){
         let id = 'input_member_sex';
-        let title = this.data.sex == null ? '성별' : this.data.sex;
+        let title = '성별';
+        if(this.data.sex != null){
+            if(this.data.sex=='M'){
+                title = "남성";
+            }
+            else{
+                title = "여성";
+            }
+        }
         let icon = '/static/common/icon/person_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = null;
+        let style = this.data.sex == null ? {"color":"#b8b4b4"} : null;
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             if(this.data_from_external != null){
                 return false;
@@ -339,8 +343,7 @@ class Member_add{
         let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
         let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
-            let user_input_data = input_data;
-            this.memo = user_input_data;
+            this.memo = input_data;
         }, pattern, pattern_message, required);
         return html;
     }
@@ -351,7 +354,7 @@ class Member_add{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = null;
+        let style = this.data.ticket_id.length == 0 ? {"color":"#b8b4b4"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1, {"title":"수강권 선택"}, (set_data)=>{
@@ -370,7 +373,7 @@ class Member_add{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = null;
+        let style = this.data.start_date == null ? {"color":"#b8b4b4"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
@@ -380,7 +383,7 @@ class Member_add{
                 let month = this.data.start_date == null ? this.dates.current_month : this.data.start_date.month;
                 let date = this.data.start_date == null ? this.dates.current_date : this.data.start_date.date;
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'start_date', title:'시작일 선택', 
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'start_date', title:'시작일',
                                                                                                 data:{year:year, month:month, date:date},
                                                                                                 // min:{year:year, month:month, date:date},
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
@@ -399,7 +402,7 @@ class Member_add{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = null;
+        let style = this.data.end_date == null ? {"color":"#b8b4b4"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
@@ -412,7 +415,7 @@ class Member_add{
                 let min = this.data.start_date != null ? {year:this.data.start_date.year, month:this.data.start_date.month, date: this.data.start_date.date} : null;
 
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'end_date', title:'종료일 선택', 
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'end_date', title:'종료일',
                                                                                                 data:{year:year, month:month, date:date},  
                                                                                                 min:min,
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
@@ -441,8 +444,7 @@ class Member_add{
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
-            let user_input_data = input_data;
-            this.reg_count = user_input_data;
+            this.reg_count = input_data;
         }, pattern, pattern_message, required);
         return html;
     }
@@ -464,8 +466,7 @@ class Member_add{
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
-            let user_input_data = input_data;
-            this.reg_price = user_input_data;
+            this.reg_price = input_data;
         }, pattern, pattern_message, required);
         return html;
     }

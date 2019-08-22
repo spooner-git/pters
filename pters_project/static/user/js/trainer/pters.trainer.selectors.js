@@ -2072,7 +2072,7 @@ class DatePickerSelector{
         let month = object.data.month == null ? this.date.current_month : object.data.month;
         let date = object.data.date == null ? this.date.current_date : object.data.date;
         this.store.data = {year: year, month:month, date:date};
-        this.store.text = DateRobot.to_text(year, month, date);
+        this.store.text = DateRobot.to_text(year, month, date, SHORT);
     }
 
     get dataset (){
@@ -2212,7 +2212,7 @@ class DatePickerSelector{
 
         //상단의 연월 표기, 일월화수목 표기, 달력숫자를 합쳐서 화면에 그린다.
         document.querySelector(`${this.target.install} .date_picker_selector_wrap`).innerHTML = `${month_calendar_upper_tool}
-                                                                <div class="obj_box_full">
+                                                                <div class="obj_box_full" style="border:0">
                                                                 ${month_day_name_text}${calendar_assembled}
                                                                 </div>`;
     }

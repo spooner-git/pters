@@ -297,15 +297,7 @@ def func_get_member_ticket_list(class_id, member_id):
         try:
             ticket_data_dict[ticket_id]
         except KeyError:
-            ticket_data_dict[ticket_id] = {'ticket_id': ticket_id,
-                                           'ticket_name': ticket_tb.name,
-                                           'ticket_note': ticket_tb.note,
-                                           'ticket_effective_days': ticket_tb.effective_days,
-                                           'ticket_price': ticket_tb.price,
-                                           'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
-                                           'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
-                                           'ticket_reg_count': ticket_tb.reg_count,
-                                           'ticket_lecture_list': [],
+            ticket_data_dict[ticket_id] = {'ticket_lecture_list': [],
                                            'ticket_lecture_state_cd_list': [],
                                            'ticket_lecture_id_list': [],
                                            'ticket_lecture_ing_color_cd_list': [],
@@ -327,15 +319,7 @@ def func_get_member_ticket_list(class_id, member_id):
             try:
                 ticket_data_dict[ticket_id]
             except KeyError:
-                ticket_data_dict[ticket_id] = {'ticket_id': ticket_id,
-                                               'ticket_name': ticket_info.name,
-                                               'ticket_note': ticket_info.note,
-                                               'ticket_effective_days': ticket_info.effective_days,
-                                               'ticket_price': ticket_info.price,
-                                               'ticket_week_schedule_enable': ticket_info.week_schedule_enable,
-                                               'ticket_day_schedule_enable': ticket_info.day_schedule_enable,
-                                               'ticket_reg_count': ticket_info.reg_count,
-                                               'ticket_lecture_list': [],
+                ticket_data_dict[ticket_id] = {'ticket_lecture_list': [],
                                                'ticket_lecture_state_cd_list': [],
                                                'ticket_lecture_id_list': [],
                                                'ticket_lecture_ing_color_cd_list': [],
@@ -347,9 +331,9 @@ def func_get_member_ticket_list(class_id, member_id):
         'member_ticket_tb__ticket_tb').filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
                                               member_ticket_tb__member_id=member_id,
                                               member_ticket_tb__use=USE,
+                                              member_ticket_tb__ticket_tb__use=USE,
                                               use=USE).order_by('-member_ticket_tb__start_date',
                                                                 '-member_ticket_tb__reg_dt')
-
     for member_ticket_info in member_ticket_data:
         member_ticket_tb = member_ticket_info.member_ticket_tb
         ticket_tb = member_ticket_tb.ticket_tb
@@ -386,7 +370,6 @@ def func_get_member_ticket_list(class_id, member_id):
                                   ticket_data_dict[ticket_id]['ticket_lecture_end_color_cd_list'],
                               'ticket_lecture_end_font_color_cd_list':
                                   ticket_data_dict[ticket_id]['ticket_lecture_end_font_color_cd_list']
-
                               }
         member_ticket_list[str(member_ticket_tb.member_ticket_id)] = member_ticket_info
     return member_ticket_list
