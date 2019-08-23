@@ -135,9 +135,9 @@ class Ticket_add{
         let price = this.dom_row_ticket_price_input();
         let memo = this.dom_row_ticket_memo_input();
 
-        let html =  '<div class="obj_box_full">' + CComponent.dom_tag('수강권명') + name + '</div>' +
-                    '<div class="obj_box_full">' + CComponent.dom_tag('수업 구성') + lecture + lecture_list + '</div>' + 
-                    '<div class="obj_box_full">' + CComponent.dom_tag('설명') + memo + '</div>';
+        let html =  '<div class="obj_input_box_full">' + CComponent.dom_tag('수강권명') + name + '</div>' +
+                    '<div class="obj_input_box_full">' + CComponent.dom_tag('수업 구성') + lecture + lecture_list + '</div>' +
+                    '<div class="obj_input_box_full">' + CComponent.dom_tag('설명') + memo + '</div>';
 
         // document.getElementById(this.target.content).innerHTML = html;
         return html;
@@ -147,9 +147,7 @@ class Ticket_add{
         let html = `
         <div class="ticket_add_upper_box">
             <div style="display:inline-block;width:200px;">
-                <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold;letter-spacing: -0.9px;">새로운 수강권</span>
-                </div>
+                <span style="font-size:20px;font-weight:bold;letter-spacing: -0.9px;">새로운 수강권</span>
             </div>
         </div>
         `;
@@ -165,8 +163,8 @@ class Ticket_add{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
-        let pattern = '[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}';
-        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let pattern = '[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+:()[]一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}';
+        let pattern_message = "+ - _ : ()[] 제외 특수문자는 입력 불가";
         let required = "required";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;

@@ -176,10 +176,14 @@ class Lecture_view{
         let member_list = this.dom_row_member_list();
 
 
-        let html =  '<div class="obj_box_full">' + CComponent.dom_tag('정원') + capacity + '</div>' + 
-                    '<div class="obj_box_full">' + CComponent.dom_tag('색상 태그') + color +  '</div>' + 
-                    '<div class="obj_box_full">' + CComponent.dom_tag(`이 수업을 포함하는 수강권 (${this.data.active_ticket_length} 개)`, {"padding":"0", "color":"#858282"}) + ticket_list + '</div>' + 
-                    '<div class="obj_box_full">' + CComponent.dom_tag(`진행중 회원 (${this.data.member_number} 명)`, {"padding":"0", "color":"#858282"}) + member_list + '</div>';
+        let html =  '<div class="obj_input_box_full">' + CComponent.dom_tag('정원') + capacity + '</div>' +
+                    '<div class="obj_input_box_full">' + CComponent.dom_tag('색상 태그') + color +  '</div>' +
+                    '<div class="obj_input_box_full" style="padding-top:16px;">' + CComponent.dom_tag(`포함된 수강권 (${this.data.active_ticket_length} 개)`,
+                                                        {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
+                                                        + ticket_list + '</div>' +
+                    '<div class="obj_input_box_full" style="padding-top:20px; border:0;">' + CComponent.dom_tag(`진행중 회원 (${this.data.member_number} 명)`,
+                                                        {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
+                                                        + member_list + '</div>';
 
         return html;
     }
@@ -198,8 +202,8 @@ class Lecture_view{
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
-        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+:()[] 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "+ - _ :()[] 제외 특수문자는 입력 불가";
         let required = "required";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
@@ -210,9 +214,7 @@ class Lecture_view{
         let html = `
         <div class="lecture_view_upper_box" style="">
             <div style="display:inline-block;width:320px;">
-                <div style="display:inline-block;width:320px;">
-                    ${sub_html}
-                </div>
+                ${sub_html}
             </div>
         </div>
         `;
@@ -310,7 +312,7 @@ class Lecture_view{
             let ticket_id = this.data.ticket_id[i];
             let ticket_name = this.data.ticket_name[i];
             let ticket_state = this.data.ticket_state[i];
-            let style = {"display":"block", "font-size":"15px", "font-weight":"500",  "padding":"0", "height":"50px", "line-height":"50px"};
+            let style = {"display":"block", "font-size":"15px", "font-weight":"500",  "padding":"0", "height":"44px", "line-height":"44px", "letter-spacing":"-0.7px"};
             if(ticket_state == STATE_END_PROGRESS){
                 progress_end_ticket++;
                 style["text-decoration"] = "line-through";
@@ -364,7 +366,7 @@ class Lecture_view{
             let member_id = this.data.member[i].member_id;
             let member_name = this.data.member[i].member_name;
             let member_fix = this.data.member[i].member_fix_state_cd;
-            let style = {"font-size":"15px", "font-weight":"500", "padding":"0", "height":"50px", "line-height":"50px", "display":"table-cell", "width":"auto", "vertical-align":"middle"};
+            let style = {"font-size":"15px", "font-weight":"500", "padding":"0", "height":"44px", "line-height":"44px","color":"", "letter-spacing":"-0.7px", "display":"table-cell", "width":"auto", "vertical-align":"middle"};
             let member_fix_indicator = "";
             if(member_fix == FIX){
                 member_fix_indicator = '<span style="display:table-cell;width:50px;font-size:11px;font-weight:bold;color:#fe4e65;vertical-align:middle;">고정 회원</span>';

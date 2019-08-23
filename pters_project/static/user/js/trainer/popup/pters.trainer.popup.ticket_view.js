@@ -177,9 +177,9 @@ class Ticket_view{
         // let member = this.dom_row_member();
         let member_list = this.dom_row_member_list();
 
-        let html =  '<div class="obj_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>' + 
-                    '<div class="obj_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>' + 
-                    '<div class="obj_box_full">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, {"padding":"0", "color":"#858282"})+member_list+ '</div>';
+        let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, {"padding":"0", "color":"#858282"})+member_list+ '</div>';
         return html;
     }
 
@@ -197,8 +197,8 @@ class Ticket_view{
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
-        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+:()[] 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "+ - _ : ()[] 제외 특수문자는 입력 불가";
         let required = "required";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
@@ -209,9 +209,7 @@ class Ticket_view{
         let html = `
         <div class="member_add_upper_box" style="">
             <div style="display:inline-block;width:320px;">
-                <div style="display:inline-block;width:320px;">
                     ${sub_html}
-                </div>
             </div>
         </div>
         `;

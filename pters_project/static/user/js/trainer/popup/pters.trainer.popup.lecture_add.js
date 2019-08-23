@@ -137,10 +137,10 @@ class Lecture_add{
         let color = this.dom_row_color_select();
         let ticket = this.dom_row_ticket_select();
 
-        let html =  '<div class="obj_box_full">'+CComponent.dom_tag('수업명') + name+'</div>' + 
-                    '<div class="obj_box_full">'+CComponent.dom_tag('정원') + capacity + '</div>' + 
-                    '<div class="obj_box_full">'+CComponent.dom_tag('색상 태그')+ color+ '</div>' +
-                    '<div class="obj_box_full">'+CComponent.dom_tag('생성시 수강권에 추가')+ ticket+ '</div>';
+        let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업명') + name+'</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('정원') + capacity + '</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('색상 태그')+ color+ '</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 수강권에 추가')+ ticket+ '</div>';
 
         return html;
     }
@@ -149,9 +149,7 @@ class Lecture_add{
         let html = `
         <div class="lecture_add_upper_box">
             <div style="display:inline-block;width:200px;">
-                <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold;letter-spacing: -0.9px;">새로운 수업</span>
-                </div>
+                <span style="font-size:20px;font-weight:bold;letter-spacing: -0.9px;">새로운 수업</span>
             </div>
         </div>
         `;
@@ -167,12 +165,11 @@ class Lecture_add{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
-        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+:()[] 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "+ - _ : ()[] 제외 특수문자는 입력 불가";
         let required = "required";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            let user_input_data = input_data;
-            this.name = user_input_data;
+            this.name = input_data;
         }, pattern, pattern_message, required);
         return html;
     }
@@ -194,8 +191,7 @@ class Lecture_add{
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
-            let user_input_data = input_data;
-            this.time = user_input_data;
+            this.time = input_data;
         }, pattern, pattern_message, required);
         return html;
     }
@@ -218,8 +214,7 @@ class Lecture_add{
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
-            let user_input_data = input_data;
-            this.capacity = user_input_data;
+            this.capacity = input_data;
         }, pattern, pattern_message, required);
         return html;
     }
@@ -274,7 +269,7 @@ class Lecture_add{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = SHOW;
         let icon_r_text = '';
-        let style = null;
+        let style = this.data.color_name.length == 0 ? {"color":"#b8b4b4"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_COLOR_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 color_select = new ColorSelector('#wrapper_box_color_select', this, 1, (set_data)=>{
@@ -292,7 +287,7 @@ class Lecture_add{
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style= null;
+        let style = this.data.ticket_id.length == 0 ? {"color":"#b8b4b4"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1, {"title":"수강권 선택"}, (set_data)=>{
