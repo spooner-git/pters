@@ -2,18 +2,6 @@ class Setting_worktime{
     constructor(install_target){
         this.target = {install: install_target, toolbox:'section_setting_worktime_toolbox', content:'section_setting_worktime_content'};
 
-        let d = new Date();
-        this.dates = {
-            current_year: d.getFullYear(),
-            current_month: d.getMonth()+1,
-            current_date: d.getDate()
-        };
-        this.times = {
-            current_hour: TimeRobot.to_zone(d.getHours(), d.getMinutes()).hour,
-            current_minute: TimeRobot.to_zone(d.getHours(), d.getMinutes()).minute,
-            current_zone: TimeRobot.to_zone(d.getHours(), d.getMinutes()).zone
-        };
-
         this.data = {
                 GENERAL:{
                     "start_time":null, "end_time":null, "detail_switch":ON
@@ -53,11 +41,9 @@ class Setting_worktime{
                     "start_time_text":null, "end_time_text":null,
                     "dayoff":0
                 }
-                
         };
 
         this.init();
-        // this.set_initial_data();
     }
 
  
@@ -77,9 +63,9 @@ class Setting_worktime{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();program_list_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();setting_worktime_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"></span>`;
+        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_done.png" onclick="setting_worktime_popup.upper_right_menu();" class="obj_icon_prev"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -104,12 +90,22 @@ class Setting_worktime{
     dom_assembly_content(){
         let start_time_selector = this.dom_row_start_time_select("GENERAL");
         let end_time_selector = this.dom_row_end_time_select("GENERAL");
-        let detail_setting = "작업중";
+        let id = "worktime_general";
+        let power = this.data.GENERAL.detail_switch;
+        let style = null;
+        let detail_setting = CComponent.toggle_button (id, power, style, (data)=>{
+            this.data.GENERAL.detail_switch = data; // ON or OFF
+            this.render_content();
+        });
+        let title_row = CComponent.create_row ('123123', '요일별 설정', NONE, HIDE, '', null, ()=>{});
 
         let html = `<article class="setting_worktime_wrapper obj_input_box_full">
                         ${start_time_selector}
                         ${end_time_selector}
-                        ${detail_setting}
+                        <div style="display:table;width:100%;">
+                            <div style="display:table-cell;width:auto;">${title_row}</div>
+                            <div style="display:table-cell;width:50px;">${detail_setting}</div>
+                        </div>
                     </article>`;
 
         let sub_assembly = "";
@@ -125,15 +121,27 @@ class Setting_worktime{
         
         let html_to_join = [];
         for(let i=0; i<day_array.length; i++){
-            let tag = CComponent.dom_tag(DAYNAME_MATCH[day_array[i]]+'요일', {"font-size":"16px", "font-weight":"bold", "color":"#5c5859", "padding":"0", "height":"52px", "line-height":"52px"});
-            let start_time_selector = this.dom_row_start_time_select(day_array[i]);
-            let end_time_selector = this.dom_row_end_time_select(day_array[i]);
-            let detail_setting = "휴무 설정";
+            let day = day_array[i];
+            let tag = CComponent.dom_tag(DAYNAME_MATCH[day]+'요일', {"font-size":"16px", "font-weight":"bold", "color":"#5c5859", "padding":"0", "height":"52px", "line-height":"52px"});
+            let start_time_selector = this.dom_row_start_time_select(day);
+            let end_time_selector = this.dom_row_end_time_select(day);
+            let id = `worktime_${day}`;
+            let power = this.data[day].dayoff;
+            let style = null;
+            let dayoff_setting = CComponent.toggle_button (id, power, style, (data)=>{
+                                    this.data[day].dayoff = data; // ON or OFF
+                                    this.render_content();
+                                });
+            let title_row = CComponent.create_row ('123123', '휴무', NONE, HIDE, '', null, ()=>{});
+
             let html = `<article class="setting_worktime_wrapper obj_input_box_full">
                             ${tag}
                             ${start_time_selector}
                             ${end_time_selector}
-                            ${detail_setting}
+                            <div style="display:table;width:100%;">
+                                <div style="display:table-cell;width:auto;">${title_row}</div>
+                                <div style="display:table-cell;width:50px;">${dayoff_setting}</div>
+                            </div>
                         </article>`;
             html_to_join.push(html);
         }
@@ -143,7 +151,6 @@ class Setting_worktime{
 
 
     dom_row_start_time_select(day){
-        console.log(day)
         let id = `select_start_${day}`;
         let title = this.data[day].start_time_text == null ? '시작 시각*' : this.data[day].start_time_text;
         let icon = '/static/common/icon/icon_clock.png';
@@ -163,7 +170,7 @@ class Setting_worktime{
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.data[day].start_time = TimeRobot.to_data(object.data.zone, object.data.hour, object.data.minute).complete;
                                                                                                     this.data[day].start_time_text = object.text;
-                                                                                                    this.render();
+                                                                                                    this.render_content();
 
                                                                                                     if(this.data[day].end_time != null){
                                                                                                         let compare = TimeRobot.compare_by_zone(object.data, TimeRobot.to_zone(this.data[day].end_time.split(':')[0],this.data[day].end_time.split(':')[1]));
@@ -214,7 +221,7 @@ class Setting_worktime{
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.data[day].end_time = TimeRobot.to_data(object.data.zone, object.data.hour, object.data.minute).complete;
                                                                                                     this.data[day].end_time_text = object.text;
-                                                                                                    this.render();
+                                                                                                    this.render_content();
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
                                                                                                 }});
             });
@@ -222,10 +229,6 @@ class Setting_worktime{
 
         return html;
     }
-
-
-
-
 
     dom_row_toolbox(){
         let title = "업무 시간 <p style='font-size:14px;font-weight:500;'>설정된 시간만 일정표에 나타납니다.</p>";
@@ -241,144 +244,51 @@ class Setting_worktime{
         return html;
     }
 
-    // event_program_click(id, name, category, category_sub, selected){
-    //     let user_option = {
-    //         goto:{text:"프로그램 이동", callback:()=>{ 
-    //                 window.location.href=`/trainer/select_program_processing/?class_id=${id}&next_page=/trainer/`; 
-    //             }
-    //         },
-    //         edit:{text:"편집", callback:()=>{
-    //                 layer_popup.close_layer_popup();
-    //                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_VIEW, 100, POPUP_FROM_RIGHT, null, ()=>{
-    //                     let external_data = {   
-    //                                             id:id,
-    //                                             name:name, 
-    //                                             category:{name:[PROGRAM_CATEGORY[category].name], code:[category]}, 
-    //                                             category_sub:{name:[PROGRAM_CATEGORY[category].sub_category[category_sub].name], code:[category_sub]},
-    //                                             selected:selected
-    //                                         };
-    //                     program_view_popup = new Program_view('.popup_program_view', external_data);
-    //                 });
-    //             }
-    //         }
-    //     };
-    //     let options_padding_top_bottom = 16;
-    //     let button_height = 8 + 8 + 52;
-    //     let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-    //     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
-    //         option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
-    //     });
-    // }
+    art_data(start_time, end_time){
+        let merged;
+        if(start_time == null && end_time == null){
+            merged = `00:00-23:59`;
+        }else if(start_time == null && end_time != null){
+            merged = `00:00-${end_time}`;
+        }else if(start_time != null && end_time == null){
+            merged = `${start_time}-23:59`;
+        }else{
+            merged = start_time + '-' + end_time;
+        }
 
-    // upper_right_menu(){
-    //     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_ADD, 100, POPUP_FROM_RIGHT, null, ()=>{
-    //         program_add_popup = new Program_add('.popup_program_add');
-    //     });
-    // }
+        if(this.data.GENERAL.detail_switch == OFF){
+            merged = this.data.GENERAL.start_time + '-' + this.data.GENERAL.end_time;
+        }
+
+        return merged;
+    }
+
+    send_data(){
+        let data = {
+            "setting_trainer_work_sun_time_avail":this.art_data(this.data.SUN.start_time, this.data.SUN.end_time),
+            "setting_trainer_work_mon_time_avail":this.art_data(this.data.MON.start_time, this.data.MON.end_time),
+            "setting_trainer_work_tue_time_avail":this.art_data(this.data.TUE.start_time, this.data.TUE.end_time),
+            "setting_trainer_work_wed_time_avail":this.art_data(this.data.WED.start_time, this.data.WED.end_time),
+            "setting_trainer_work_ths_time_avail":this.art_data(this.data.THS.start_time, this.data.THS.end_time),
+            "setting_trainer_work_fri_time_avail":this.art_data(this.data.FRI.start_time, this.data.FRI.end_time),
+            "setting_trainer_work_sat_time_avail":this.art_data(this.data.SAT.start_time, this.data.SAT.end_time)
+        };
+        
+        Setting_worktime_func.update(data, ()=>{
+            this.render_content();
+        });
+    }
+
+    upper_right_menu(){
+        this.send_data();
+    }
 }
 
 class Setting_worktime_func{
-    static create(data, callback){
-        //프로그램 추가
-        $.ajax({
-            url:"/trainer/add_program_info/",
-            type:'POST',
-            data: data,
-            dataType : 'html',
-    
-            beforeSend:function(xhr, settings){
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            },
-    
-            //통신성공시 처리
-            success:function (data){
-                if(callback != undefined){
-                    callback(data);
-                }
-            },
-
-            //보내기후 팝업창 닫기
-            complete:function (){
-
-            },
-    
-            //통신 실패시 처리
-            error:function (){
-                console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-            }
-        });
-    }
-
-    static read(callback){
-        //프로그램 리스트 서버에서 불러오기
-        $.ajax({
-            url:"/trainer/get_program_list/",
-            dataType : 'JSON',
-            beforeSend:function (){
-                // ajax_load_image(SHOW);
-            },
-    
-            //통신성공시 처리
-            success:function (data){
-                console.log(data);
-                if(callback != undefined){
-                    callback(data);
-                }
-            },
-
-            //보내기후 팝업창 닫기
-            complete:function (){
-                // ajax_load_image(HIDE);
-            },
-    
-            //통신 실패시 처리
-            error:function (){
-                console.log('server error');
-            }
-        });
-    }
-
     static update(data, callback){
-        //프로그램 추가
+        //업무 시간 설정
         $.ajax({
-            url:"/trainer/update_program_info/",
-            type:'POST',
-            data: data,
-            dataType : 'html',
-    
-            beforeSend:function(xhr, settings){
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            },
-    
-            //통신성공시 처리
-            success:function (data){
-                if(callback != undefined){
-                    callback(data);
-                }
-            },
-
-            //보내기후 팝업창 닫기
-            complete:function (){
-
-            },
-    
-            //통신 실패시 처리
-            error:function (){
-                console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-            }
-        });
-    }
-
-    static delete(data, callback){
-        //프로그램 추가
-        $.ajax({
-            url:"/trainer/delete_program_info/",
+            url:"/trainer/update_setting_basic/",
             type:'POST',
             data: data,
             dataType : 'html',

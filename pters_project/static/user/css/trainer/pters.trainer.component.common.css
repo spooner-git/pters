@@ -576,6 +576,35 @@ input:disabled{
 	vertical-align: middle;
 }
 
+.toggle_button{
+	position: relative;
+	width: 48px;
+	height: 28px;
+	border-radius: 16px;
+	border: 2px solid #f5f2f3;
+	background-color: #ffffff;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+
+.toggle_button_ball{
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 24px;
+	height: 24px;
+	border-radius: 14px;
+	box-shadow: 0 1px 4px 0 rgba(112, 112, 112, 0.5);
+	background-color: #ffffff;
+}
+.toggle_button_active{
+	background-color: #fe4e65;
+}
+.toggle_button_ball_active{
+	left: 50%;
+}
+
 
 
 

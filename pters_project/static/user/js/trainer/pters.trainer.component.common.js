@@ -556,6 +556,22 @@ class CComponent{
         return html;
     }
 
+    static toggle_button (id, power, style, onclick){
+        let html = `<div id="toggle_button_${id}" style="${CComponent.data_to_style_code(style)}" class="toggle_button ${power == ON ? 'toggle_button_active': ''}">
+                        <div class="toggle_button_ball ${power == ON ? 'toggle_button_ball_active':''}"></div>
+                    </div>`;
+        
+        $(document).off('click', `#toggle_button_${id}`).on('click', `#toggle_button_${id}`, function(e){
+            let $this = $(`#toggle_button_${id}`);
+            if($this.hasClass('toggle_button_active')){
+                onclick(OFF);
+            }else{
+                onclick(ON);
+            }
+        });
+        return html;
+    }
+
     //스타일 코드를 인라인스타일 스타일 코드로 변환시켜주는 함수
     static data_to_style_code(data){
         if(data == null || data == undefined){
