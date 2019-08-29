@@ -329,7 +329,10 @@ class Member_view{
                 let user_option = {
                         connect:{text:"연결 해제", callback:()=>{alert('연결해제 함수 실행');layer_popup.close_layer_popup();}}
                     };
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(16+68+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                let options_padding_top_bottom = 16;
+                let button_height = 8 + 8 + 52;
+                let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                 });
             };
@@ -338,7 +341,10 @@ class Member_view{
                 let user_option = {
                         connect:{text:"연결 요청 취소", callback:()=>{alert('연결 요청 취소 함수 실행');layer_popup.close_layer_popup();}}
                     };
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(16+68+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                let options_padding_top_bottom = 16;
+                let button_height = 8 + 8 + 52;
+                let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                 });
             };
@@ -347,7 +353,10 @@ class Member_view{
                 let user_option = {
                         connect:{text:"연결 요청", callback:()=>{alert('연결요청 함수 실행');layer_popup.close_layer_popup();}}
                     };
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(16+68+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                let options_padding_top_bottom = 16;
+                let button_height = 8 + 8 + 52;
+                let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                 });
             };
@@ -448,8 +457,12 @@ class Member_view{
                                 male:{text:"남성", callback:()=>{this.sex = "M";this.send_data();layer_popup.close_layer_popup();}},
                                 female:{text:"여성", callback:()=>{this.sex = "W";this.send_data();layer_popup.close_layer_popup();}}
             };
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(16+68+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
-                var option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+
+            let options_padding_top_bottom = 16;
+            let button_height = 8 + 8 + 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
             });
         });
         return html;
@@ -599,8 +612,10 @@ class Member_view{
                 }
             }
         };
-        
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(16+68+50*Object.keys(user_option).length)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+        let options_padding_top_bottom = 16;
+        let button_height = 8 + 8 + 52;
+        let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
     }
