@@ -4,7 +4,7 @@ class Setting_worktime{
 
         this.data = {
                 GENERAL:{
-                    "start_time":null, "end_time":null, "detail_switch":ON
+                    "start_time":null, "end_time":null, "detail_switch":OFF
                 },
                 MON:{
                     "start_time":null, "end_time":null, 
