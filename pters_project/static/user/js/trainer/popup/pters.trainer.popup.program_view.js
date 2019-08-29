@@ -81,7 +81,7 @@ class Program_view{
     render(){
         let top_left = `<img src="/static/common/icon/close_black.png" onclick="program_view_popup.send_data();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="program_view_popup.upper_right_menu();"></span>`;
+        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_delete.png" class="obj_icon_basic" onclick="program_view_popup.upper_right_menu();"></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
@@ -116,7 +116,7 @@ class Program_view{
     dom_row_toolbox(){
         let id = 'program_name_edit';
         let title = this.name == null ? '' : this.name;
-        let style = {"font-size":"20px", "font-weight":"bold"};
+        let style = {"font-size":"20px", "font-weight":"bold", "padding":"0"};
         let placeholder =  '프로그램명*';
         let icon = undefined;
         let icon_r_visible = HIDE;
@@ -231,28 +231,40 @@ class Program_view{
     }
 
     upper_right_menu(){
-        let user_option = {
-            delete:{text:"프로그램 삭제", callback:()=>{
-                    if(this.data.program_selected == PROGRAM_SELECTED){
-                        show_error_message('선택되어 있는 프로그램은 삭제할 수 없습니다.<br>다른 프로그램으로 이동 후 삭제가 가능합니다.')
-                        return false;
-                    } 
-                    show_user_confirm(`"${this.data.program_name}" 프로그램을 삭제 하시겠습니까? <br> 모든 정보가 삭제되며 복구할 수 없습니다.`, ()=>{
-                        layer_popup.close_layer_popup(); // 옵션 셀렉터 팝업 닫기
-                        layer_popup.close_layer_popup(); // 확인 팝업 닫기
-                        Program_func.delete({"class_id":this.data.program_id}, ()=>{
-                            program_list_popup.init();
-                            layer_popup.close_layer_popup(); // 프로그램 정보 팝업 닫기 -> 즉, 프로그램 리스트 팝업으로 나가기
-                        });
-                    });
-                }
-            }
-        };
-        let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
-        let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
-            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        if(this.data.program_selected == PROGRAM_SELECTED){
+            show_error_message('선택되어 있는 프로그램은 삭제할 수 없습니다.<br>다른 프로그램으로 이동 후 삭제가 가능합니다.')
+            return false;
+        } 
+        show_user_confirm(`"${this.data.program_name}" 프로그램을 삭제 하시겠습니까? <br> 모든 정보가 삭제되며 복구할 수 없습니다.`, ()=>{
+            layer_popup.close_layer_popup(); // 확인 팝업 닫기
+            Program_func.delete({"class_id":this.data.program_id}, ()=>{
+                program_list_popup.init();
+                layer_popup.close_layer_popup(); // 프로그램 정보 팝업 닫기 -> 즉, 프로그램 리스트 팝업으로 나가기
+            });
         });
+
+        // let user_option = {
+        //     delete:{text:"프로그램 삭제", callback:()=>{
+        //             if(this.data.program_selected == PROGRAM_SELECTED){
+        //                 show_error_message('선택되어 있는 프로그램은 삭제할 수 없습니다.<br>다른 프로그램으로 이동 후 삭제가 가능합니다.')
+        //                 return false;
+        //             } 
+        //             show_user_confirm(`"${this.data.program_name}" 프로그램을 삭제 하시겠습니까? <br> 모든 정보가 삭제되며 복구할 수 없습니다.`, ()=>{
+        //                 layer_popup.close_layer_popup(); // 옵션 셀렉터 팝업 닫기
+        //                 layer_popup.close_layer_popup(); // 확인 팝업 닫기
+        //                 Program_func.delete({"class_id":this.data.program_id}, ()=>{
+        //                     program_list_popup.init();
+        //                     layer_popup.close_layer_popup(); // 프로그램 정보 팝업 닫기 -> 즉, 프로그램 리스트 팝업으로 나가기
+        //                 });
+        //             });
+        //         }
+        //     }
+        // };
+        // let options_padding_top_bottom = 16;
+        // let button_height = 8 + 8 + 52;
+        // let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+        // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+        //     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        // });
     }
 }

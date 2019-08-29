@@ -30,7 +30,8 @@
 .wrapper_popup_basic_comment > p{
     margin: 0;
     width:  100%;
-    padding: 0 15px;
+    /* padding: 0 15px; */
+    padding: 25px 15px;
     box-sizing: border-box;
     /* position: absolute;
     top: 50%;
@@ -43,11 +44,13 @@
 .wrapper_popup_basic_buttons{
     text-align: center;
     border-top: 1px solid #cccccc;
-    height: 52px;
-    line-height: 52px;
     cursor: pointer;
-    padding-top:8px;
-    padding-bottom:8px;
+    height: 65px;
+    line-height: 65px;
+    /* height: 52px;
+    line-height: 52px; */
+    /* padding-top:8px;
+    padding-bottom:8px; */
 }
 
     .wrapper_popup_basic_buttons .popup_basic_cancel{

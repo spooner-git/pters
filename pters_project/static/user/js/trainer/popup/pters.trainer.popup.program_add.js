@@ -99,8 +99,8 @@ class Program_add{
         let program_category_select_row = this.dom_row_program_category();
         let program_category_sub_select_row = this.dom_row_program_category_sub();
 
-        let html =  '<div class="obj_box_full">' +  CComponent.dom_tag('프로그램명') + program_name_input_row + '</div>' + 
-                    '<div class="obj_box_full">'+  CComponent.dom_tag('분야') + program_category_select_row + program_category_sub_select_row + '</div>';
+        let html =  '<div class="obj_input_box_full">' +  CComponent.dom_tag('프로그램명') + program_name_input_row + '</div>' + 
+                    '<div class="obj_input_box_full">'+  CComponent.dom_tag('분야') + program_category_select_row + program_category_sub_select_row + '</div>';
 
         return html;
     }
