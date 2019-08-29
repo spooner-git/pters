@@ -119,6 +119,10 @@ const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
 const POPUP_ADDRESS_PROGRAM_LIST = 'popup_program_list';
 const POPUP_ADDRESS_PROGRAM_ADD = 'popup_program_add';
 const POPUP_ADDRESS_PROGRAM_VIEW = 'popup_program_view';
+
+const POPUP_ADDRESS_SETTING_WORKTIME = 'popup_setting_worktime';
+const POPUP_ADDRESS_SETTING_AUTOCOMPLETE = 'popup_setting_autocomplete';
+const POPUP_ADDRESS_SETTING_RESERVE = 'popup_setting_reserve';
 // 풀페이지 팝업
 
 // User Input 팝업

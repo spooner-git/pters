@@ -292,6 +292,8 @@ onclick="layer_popup.close_layer_popup();"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_schedule_history.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_ticket_history.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_attend.js" %}></script>
+
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_worktime.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.selectors.js" %}></script>
@@ -418,6 +420,8 @@ onclick="layer_popup.close_layer_popup();"></div>
     var program_list_popup;
     var program_add_popup;
     var program_view_popup;
+
+    var setting_worktime_popup;
     // 팝업 인스턴스
 
     // 범용 셀렉터 인스턴스
@@ -459,12 +463,12 @@ onclick="layer_popup.close_layer_popup();"></div>
                 calendar.init();
             break;
             case 'ticket':
-{#                ticket.init();#}
+                // ticket.init();
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     ticket_list_popup = new Ticket_list('.popup_ticket_list', 'ticket_list_popup')});
             break;
             case 'lecture':
-{#                lecture.init();#}
+                // lecture.init();
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     lecture_list_popup = new Lecture_list('.popup_lecture_list', 'lecture_list_popup')});
             break;
@@ -481,6 +485,10 @@ onclick="layer_popup.close_layer_popup();"></div>
                 // menu.init();
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     program_list_popup = new Program_list('.popup_program_list')});
+            break;
+            case 'setting_worktime':
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_WORKTIME, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    setting_worktime_popup = new Setting_worktime('.popup_setting_worktime')});
             break;
             case 'attend_mode':
                 location.href = '/trainer/attend_mode/';
