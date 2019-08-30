@@ -2643,3 +2643,86 @@ class CustomSelector{
         this.clear();
     }
 }
+
+class PasswordFourDigitInput{
+    constructor(title, install_target, original_data, callback){
+        this.title = title;
+        this.target = {install:install_target};
+        this.unique_instance = install_target.replace(/#./gi, "");
+        this.callback = callback;
+        this.original_data = original_data;
+        this.data = {
+            password:null
+        };
+        this.init();
+        this.set_initial_data();
+    }
+
+    init(){
+        this.render();
+    }
+
+    set_initial_data(){
+        this.data.password = this.original_data;
+        this.init();
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="password_4d_input.upper_right_menu();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center">
+                            <span id="">${this.title}</span>
+                          </span>`;
+        let top_right = `<span class="icon_right">
+                            <span style="color:#fe4e65;font-weight: 500;" onclick="password_4d_input.upper_right_menu();">완료</span>
+                        </span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list (){
+        let html = this.dom_row_input() + 
+                    `<div style="font-size:12px;color:#5c5859;text-align:center;">초기 비밀번호는 0000입니다.<br>암호화 되어 저장되지 않으므로 일상적인 번호로 하세요.</div>`;
+
+        return html;
+    }
+
+    dom_row_input(){
+        let html = `<div style="margin:40px 0;">
+                        <div style="text-align:center;">
+                            <input id="password_4d_input_field" type="tel" maxlength=4 style="-webkit-appearance:none;border:0;background-color:unset;width:260px;letter-spacing:33px;font-size:40px;font-weight:500;text-align:left;margin:0 auto;padding-left:37px;box-sizing:border-box" value="${this.data.password}">
+                        </div>
+                        <div style="height:2px;width:220px;text-align:center;margin:0 auto">
+                            <div id="password_digit_1" class="password_4d_input_bar"></div>
+                            <div id="password_digit_2" class="password_4d_input_bar"></div>
+                            <div id="password_digit_3" class="password_4d_input_bar"></div>
+                            <div id="password_digit_4" class="password_4d_input_bar"></div>
+                        </div>
+                    </div>`;
+        let self = this;
+        $(document).off('focusout', '#password_4d_input_field').on('focusout', '#password_4d_input_field', function(e){
+            let user_input_data = e.target.value;
+            self.data.password = user_input_data;
+        });
+        return html;
+    }
+
+    request_list (callback){
+        // this.received_data = color_data;
+        // callback();
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}

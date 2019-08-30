@@ -297,6 +297,7 @@ onclick="layer_popup.close_layer_popup();"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_autocomplete.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_reserve.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_alarm.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_attendmode.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.selectors.js" %}></script>
@@ -425,6 +426,10 @@ onclick="layer_popup.close_layer_popup();"></div>
     var program_view_popup;
 
     var setting_worktime_popup;
+    var setting_autocomplete_popup;
+    var setting_reserve_popup;
+    var setting_alarm_popup;
+    var setting_attendmode_popup;
     // 팝업 인스턴스
 
     // 범용 셀렉터 인스턴스
@@ -437,6 +442,7 @@ onclick="layer_popup.close_layer_popup();"></div>
     var member_select;
     var color_select;
     var custom_selector;
+    var password_4d_input;
     
     var repeat_select;
     var day_select;
@@ -505,6 +511,10 @@ onclick="layer_popup.close_layer_popup();"></div>
             case 'setting_alarm':
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ALARM, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_alarm_popup = new Setting_alarm('.popup_setting_alarm')});
+            break;
+            case 'setting_attendmode':
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ATTENDMODE, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    setting_attendmode_popup = new Setting_attendmode('.popup_setting_attendmode')});
             break;
             case 'attend_mode':
                 location.href = '/trainer/attend_mode/';

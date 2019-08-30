@@ -51,7 +51,7 @@ class CComponent{
         return html;
     }
 
-     //추가 페이지들에서 사용되는 text input row 스타일
+    //추가 페이지들에서 사용되는 text input row 스타일
     static create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required){
         let disable = 'disabled';
         if(disabled == false){

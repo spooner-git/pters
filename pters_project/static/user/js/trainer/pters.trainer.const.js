@@ -128,6 +128,7 @@ const POPUP_ADDRESS_SETTING_WORKTIME = 'popup_setting_worktime';
 const POPUP_ADDRESS_SETTING_AUTOCOMPLETE = 'popup_setting_autocomplete';
 const POPUP_ADDRESS_SETTING_RESERVE = 'popup_setting_reserve';
 const POPUP_ADDRESS_SETTING_ALARM = 'popup_setting_alarm';
+const POPUP_ADDRESS_SETTING_ATTENDMODE = 'popup_setting_attendmode';
 // 풀페이지 팝업
 
 // User Input 팝업
@@ -146,6 +147,7 @@ const POPUP_ADDRESS_DAY_SELECT = 'popup_day_select';
 
 const POPUP_ADDRESS_CATEGORY_SELECT = 'popup_category_select';
 const POPUP_ADDRESS_CUSTOM_SELECT = 'popup_custom_select';
+const POPUP_ADDRESS_PASSWORD_4D_INPUT = 'popup_password_4d_input';
 // User Input 팝업
 
 /* 팝업 주소 */

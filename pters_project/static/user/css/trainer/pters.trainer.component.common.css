@@ -630,7 +630,14 @@ input:disabled{
 	background-color: #fe4e65;
 }
 
-
+.password_4d_input_bar{
+	display:inline-block;
+	width:40px;
+	height:2px;
+	background-color:#fe4e65;
+	margin: 0 6px;
+	vertical-align: top;
+}
 
 .no_data_row{
 	list-style: none;

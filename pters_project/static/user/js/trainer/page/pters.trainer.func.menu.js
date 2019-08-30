@@ -47,6 +47,7 @@ class Menu {
                         this.dom_menu_lecture() +
                         this.dom_menu_ticket() + 
                         this.dom_menu_statistics() + 
+                        this.dom_menu_attendmode() + 
                        CComponent.dom_tag('설정', dom_tag_style) + 
                         this.dom_menu_setting_worktime() + 
                         this.dom_menu_setting_autocomplete() +
@@ -155,6 +156,19 @@ class Menu {
         return html;
     }
 
+    dom_menu_attendmode(){
+        let id = 'menu_setting_attendmode';
+        let title = '출석 체크 (Beta)';
+        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = {"font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPage("attend_mode");
+        });
+        return html;
+    }
+
     dom_menu_setting_worktime(){
         let id = 'menu_setting_worktime';
         let title = '업무 시간';
@@ -209,13 +223,13 @@ class Menu {
 
     dom_menu_setting_attendmode(){
         let id = 'menu_setting_attendmode';
-        let title = '출석 체크 (Beta)';
+        let title = '출석 체크 모드 설정';
         let icon = '/static/common/icon/icon_rectangle_blank.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage("attend_mode");
+            sideGoPage("setting_attendmode");
         });
         return html;
     }
