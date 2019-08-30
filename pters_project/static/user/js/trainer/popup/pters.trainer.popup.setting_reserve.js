@@ -4,7 +4,11 @@ class Setting_reserve{
 
         this.data = {
                 stop_reserve:OFF,
-
+                time_for_private_reserve:{value:[], text:[]},
+                start_time_for_private_reserve:{value:[], text:[]},
+                available_reserve_date:{value:[], text:[]},
+                available_reserve_time:{value:[], text:[]},
+                available_cancel_time:{value:[], text:[]}
         };
 
         this.init();
@@ -88,10 +92,20 @@ class Setting_reserve{
         let title = "개인 수업 예약 시간";
         let icon = DELETE;
         let icon_r_visible = SHOW;
-        let icon_r_text = '';
+        let icon_r_text = this.data.time_for_private_reserve.text.length == 0 ? '' : this.data.time_for_private_reserve.text;
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-
+            let title = "개인 수업 예약 시간";
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = {value:[30, 60, 90, 120, 150, 180, 210, 240, 270, 300], text:["30 분", "1 시간", "1시간 30분", "2 시간", "2 시간 30분", "3 시간", "3 시간 30 분", "4 시간", "4 시간 30 분", "5 시간"]};
+            let selected_data = this.data.time_for_private_reserve;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.time_for_private_reserve = set_data;
+                    this.render_content();
+                });
+            });
         });
         let html = row;
         return html;
@@ -102,10 +116,20 @@ class Setting_reserve{
         let title = "개인 수업 예약 시작 시각";
         let icon = DELETE;
         let icon_r_visible = SHOW;
-        let icon_r_text = '';
+        let icon_r_text = this.data.start_time_for_private_reserve.text.length == 0 ? '' : this.data.start_time_for_private_reserve.text;
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-
+            let title = "개인 수업 예약 시간";
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = {value:[1, 2, 3], text:["매시각 정시", "매시각 30분", "매시각 30분 + 정시"]};
+            let selected_data = this.data.start_time_for_private_reserve;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.start_time_for_private_reserve = set_data;
+                    this.render_content();
+                });
+            });
         });
         let html = row;
         return html;
@@ -116,10 +140,20 @@ class Setting_reserve{
         let title = "예약 가능 날짜";
         let icon = DELETE;
         let icon_r_visible = SHOW;
-        let icon_r_text = '';
+        let icon_r_text = this.data.available_reserve_date.text.length == 0 ? '' : this.data.available_reserve_date.text;
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-
+            let title = "예약 가능 날짜";
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = {value:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], text:["1 일전", "2 일전", "3 일전", "4 일전", "5 일전", "6 일전", "7 일전", "8 일전", "9 일전", "10 일전"]};
+            let selected_data = this.data.available_reserve_date;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.available_reserve_date = set_data;
+                    this.render_content();
+                });
+            });
         });
         let html = row;
         return html;
@@ -130,10 +164,20 @@ class Setting_reserve{
         let title = "예약 가능 시간";
         let icon = DELETE;
         let icon_r_visible = SHOW;
-        let icon_r_text = '';
+        let icon_r_text = this.data.available_reserve_time.text.length == 0 ? '' : this.data.available_reserve_time.text;
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-
+            let title = "예약 가능 시간";
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = {value:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 48], text:["1 시간 전", "2 시간 전", "3 시간 전", "4 시간 전", "5 시간 전", "6 시간 전", "7 시간 전", "8 시간 전", "9 시간 전", "10 시간 전", "11 시간 전", "12 시간 전", "24 시간 전", "48시간 전"]};
+            let selected_data = this.data.available_reserve_time;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.available_reserve_time = set_data;
+                    this.render_content();
+                });
+            });
         });
         let html = row;
         return html;
@@ -144,10 +188,20 @@ class Setting_reserve{
         let title = "예약 취소 가능 시간";
         let icon = DELETE;
         let icon_r_visible = SHOW;
-        let icon_r_text = '';
+        let icon_r_text = this.data.available_cancel_time.text.length == 0 ? '' : this.data.available_cancel_time.text;
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-
+            let title = "예약 취소 가능 시간";
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = {value:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 48], text:["1 시간 전", "2 시간 전", "3 시간 전", "4 시간 전", "5 시간 전", "6 시간 전", "7 시간 전", "8 시간 전", "9 시간 전", "10 시간 전", "11 시간 전", "12 시간 전", "24 시간 전", "48시간 전"]};
+            let selected_data = this.data.available_cancel_time;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.available_cancel_time = set_data;
+                    this.render_content();
+                });
+            });
         });
         let html = row;
         return html;

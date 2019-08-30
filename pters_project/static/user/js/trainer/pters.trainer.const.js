@@ -144,6 +144,7 @@ const POPUP_ADDRESS_REPEAT_SELECT = 'popup_repeat_select';
 const POPUP_ADDRESS_DAY_SELECT = 'popup_day_select';
 
 const POPUP_ADDRESS_CATEGORY_SELECT = 'popup_category_select';
+const POPUP_ADDRESS_CUSTOM_SELECT = 'popup_custom_select';
 // User Input 팝업
 
 /* 팝업 주소 */

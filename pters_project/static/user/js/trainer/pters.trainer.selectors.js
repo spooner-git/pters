@@ -2552,3 +2552,94 @@ class CategorySelector{
         this.clear();
     }
 }
+
+class CustomSelector{
+    constructor(title, install_target, multiple_select, data, selected_data, callback){
+        this.title = title;
+        this.target = {install:install_target};
+        this.unique_instance = install_target.replace(/#./gi, "");
+        this.callback = callback;
+        this.full_data = data;
+        this.selected_data = selected_data;
+        this.multiple_select = multiple_select;
+        this.data = {
+            value:[],
+            text:[]
+        };
+        this.init();
+        this.set_initial_data();
+    }
+
+    init(){
+        this.render();
+    }
+
+    set_initial_data(){
+        this.data.value = this.selected_data.value;
+        this.data.text = this.selected_data.text;
+        this.init();
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="custom_selector.upper_right_menu();" class="obj_icon_prev">`;
+        let top_center = `<span class="icon_center">
+                            <span id="">${this.title}</span>
+                          </span>`;
+        let top_right = `<span class="icon_right">
+                            <span style="color:#fe4e65;font-weight: 500;" onclick="custom_selector.upper_right_menu();">${this.multiple_select == 1 ? '' : '완료'}</span>
+                        </span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list (){
+        let html_to_join = [];
+        let length = this.full_data.value.length;
+        for(let i=0; i<length; i++){
+            let checked = this.data.value.indexOf(this.full_data.value[i]) != -1 ? 1 : 0; //타겟이 이미 가진 데이터를 get
+            let id = `custom_selector_${this.unique_instance}_${i}`;
+            let title = this.full_data.text[i];
+            let icon = null;
+            let html = CComponent.select_row (this.multiple_select, checked, this.unique_instance, id, title, icon, (add_or_substract)=>{
+                    if(add_or_substract == "add"){
+                        this.data.value.push(this.full_data.value[i]);
+                        this.data.text.push(this.full_data.text[i]);
+                        this.render();
+                    }else if(add_or_substract == "substract"){
+                        this.data.value.splice(this.data.value.indexOf(this.full_data.value[i]), 1);
+                        this.data.text.splice(this.data.text.indexOf(this.full_data.value[i]), 1);
+                        this.render();
+                    }else if(add_or_substract == "add_single"){
+                        this.data.value = [this.full_data.value[i]];
+                        this.data.text = [this.full_data.text[i]];
+                        this.upper_right_menu();
+                    }
+                }  
+            );
+            html_to_join.push(html);
+        }
+
+
+        return html_to_join.join('');
+    }
+
+    request_list (callback){
+        // this.received_data = color_data;
+        // callback();
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
