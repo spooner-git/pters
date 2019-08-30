@@ -296,6 +296,7 @@ onclick="layer_popup.close_layer_popup();"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_worktime.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_autocomplete.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_reserve.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_alarm.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.selectors.js" %}></script>
@@ -500,6 +501,10 @@ onclick="layer_popup.close_layer_popup();"></div>
             case 'setting_reserve':
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_RESERVE, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_reserve_popup = new Setting_reserve('.popup_setting_reserve')});
+            break;
+            case 'setting_alarm':
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ALARM, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    setting_alarm_popup = new Setting_alarm('.popup_setting_alarm')});
             break;
             case 'attend_mode':
                 location.href = '/trainer/attend_mode/';
