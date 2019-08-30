@@ -90,8 +90,7 @@ class CComponent{
     }
     
     //추가 페이지들에서 사용되는 number input row 스타일
-    static
-    create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, required){
+    static create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, required){
         let disable = 'disabled';
         if(disabled == false){
             disable = '';
@@ -405,15 +404,15 @@ class CComponent{
                                 <div id="${member_id}_absence">
                                     <span>결석</span>
                                     ${checked_absence == 1 
-                                        ? `<div class="pters_checkbox checkbox_selected"><div class="checkbox_selected_inner"></div></div>`
-                                        : `<div class="pters_checkbox"></div>`
+                                        ? `<div class="pters_radio_button radio_button_selected"><div class="radio_button_selected_inner"></div></div>`
+                                        : `<div class="pters_radio_button"></div>`
                                     }
                                 </div>
                                 <div id="${member_id}_attend">
                                     <span>출석</span>
                                     ${checked_attend == 1 
-                                        ? `<div class="pters_checkbox checkbox_selected"><div class="checkbox_selected_inner"></div></div>`
-                                        : `<div class="pters_checkbox"></div>`
+                                        ? `<div class="pters_radio_button radio_button_selected"><div class="radio_button_selected_inner"></div></div>`
+                                        : `<div class="pters_radio_button"></div>`
                                     }
                                 </div>
                             </div>
@@ -422,7 +421,7 @@ class CComponent{
                     `;
 
         $(document).off('click', `#${member_id}_absence`).on('click', `#${member_id}_absence`, function(){
-            if($(this).find('.pters_checkbox').hasClass('checkbox_selected')){
+            if($(this).find('.pters_radio_button').hasClass('radio_button_selected')){
                 onclick('uncheck_absence');
             }else{
                 onclick('check_absence');
@@ -430,7 +429,7 @@ class CComponent{
         });
 
         $(document).off('click', `#${member_id}_attend`).on('click', `#${member_id}_attend`, function(){
-            if($(this).find('.pters_checkbox').hasClass('checkbox_selected')){
+            if($(this).find('.pters_radio_button').hasClass('radio_button_selected')){
                 onclick('uncheck_attend');
             }else{
                 onclick('check_attend');
@@ -564,6 +563,22 @@ class CComponent{
         $(document).off('click', `#toggle_button_${id}`).on('click', `#toggle_button_${id}`, function(e){
             let $this = $(`#toggle_button_${id}`);
             if($this.hasClass('toggle_button_active')){
+                onclick(OFF);
+            }else{
+                onclick(ON);
+            }
+        });
+        return html;
+    }
+
+    static radio_button (id, checked, style, onclick){
+        let html = `<div id="radio_button_${id}" style="${CComponent.data_to_style_code(style)}" class="radio_button ${checked == ON ? 'radio_button_active': ''}">
+                        <div class="radio_button_ball ${checked == ON ? 'radio_button_ball_active':''}"></div>
+                    </div>`;
+        
+        $(document).off('click', `#radio_button_${id}`).on('click', `#radio_button_${id}`, function(e){
+            let $this = $(`#radio_button_${id}`);
+            if($this.hasClass('radio_button_active')){
                 onclick(OFF);
             }else{
                 onclick(ON);

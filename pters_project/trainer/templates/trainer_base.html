@@ -294,6 +294,8 @@ onclick="layer_popup.close_layer_popup();"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_attend.js" %}></script>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_worktime.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_autocomplete.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_reserve.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.selectors.js" %}></script>
@@ -489,6 +491,14 @@ onclick="layer_popup.close_layer_popup();"></div>
             case 'setting_worktime':
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_WORKTIME, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_worktime_popup = new Setting_worktime('.popup_setting_worktime')});
+            break;
+            case 'setting_autocomplete':
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_AUTOCOMPLETE, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    setting_autocomplete_popup = new Setting_autocomplete('.popup_setting_autocomplete')});
+            break;
+            case 'setting_reserve':
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_RESERVE, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    setting_reserve_popup = new Setting_reserve('.popup_setting_reserve')});
             break;
             case 'attend_mode':
                 location.href = '/trainer/attend_mode/';

@@ -66,6 +66,7 @@ const FIREFOX = 'firefox';
 const CHROME = 'chrome';
 const EDGE = 'edge';
 
+
 // const SCHEDULE_NOT_FINISH = 0;
 // const SCHEDULE_FINISH = 1;
 // const SCHEDULE_ABSENCE = 2;
@@ -78,6 +79,9 @@ const SCHEDULE_ABSENCE = 'PC';
 const SCHEDULE_ALL = 3;
 const SCHEDULE_FINISH_ANYWAY = 4;
 
+const AUTOCOMPLETE_ABSENCE = 0;
+const AUTOCOMPLETE_ATTEND = 1;
+const AUTOCOMPLETE_CANCEL = 2;
 
 const FIX = 'FIX';
 

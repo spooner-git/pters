@@ -176,7 +176,7 @@ class Menu {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-
+            sideGoPage("setting_autocomplete");
         });
         return html;
     }
@@ -189,7 +189,7 @@ class Menu {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-
+            sideGoPage("setting_reserve");
         });
         return html;
     }
@@ -258,9 +258,7 @@ class Menu {
         });
         return html;
     }
-
-
-
+    
     static_component (){
         return(
             {

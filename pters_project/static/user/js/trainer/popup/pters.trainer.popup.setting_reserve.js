@@ -1,6 +1,6 @@
-class Setting_worktime{
+class Setting_reserve{
     constructor(install_target){
-        this.target = {install: install_target, toolbox:'section_setting_worktime_toolbox', content:'section_setting_worktime_content'};
+        this.target = {install: install_target, toolbox:'section_setting_reserve_toolbox', content:'section_setting_reserve_content'};
 
         this.data = {
                 GENERAL:{
@@ -63,16 +63,16 @@ class Setting_worktime{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();setting_worktime_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();setting_reserve_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_done.png" onclick="setting_worktime_popup.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_done.png" onclick="setting_reserve_popup.upper_right_menu();" class="obj_icon_prev"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
-        document.querySelector('.popup_setting_worktime .wrapper_top').style.border = 0;
+        document.querySelector('.popup_setting_reserve .wrapper_top').style.border = 0;
     }
 
     render_toolbox(){
@@ -90,7 +90,7 @@ class Setting_worktime{
     dom_assembly_content(){
         let start_time_selector = this.dom_row_start_time_select("GENERAL");
         let end_time_selector = this.dom_row_end_time_select("GENERAL");
-        let id = "worktime_general";
+        let id = "reserve_general";
         let power = this.data.GENERAL.detail_switch;
         let style = null;
         let detail_setting = CComponent.toggle_button (id, power, style, (data)=>{
@@ -99,7 +99,7 @@ class Setting_worktime{
         });
         let title_row = CComponent.create_row('nothing', '요일별 설정', NONE, HIDE, '', null, ()=>{});
 
-        let html = `<article class="setting_worktime_wrapper obj_input_box_full">
+        let html = `<article class="setting_reserve_wrapper obj_input_box_full">
                         ${start_time_selector}
                         ${end_time_selector}
                         <div style="display:table;width:100%;">
@@ -125,7 +125,7 @@ class Setting_worktime{
             let tag = CComponent.dom_tag(DAYNAME_MATCH[day]+'요일', {"font-size":"16px", "font-weight":"bold", "color":"#5c5859", "padding":"0", "height":"52px", "line-height":"52px"});
             let start_time_selector = this.dom_row_start_time_select(day);
             let end_time_selector = this.dom_row_end_time_select(day);
-            let id = `worktime_${day}`;
+            let id = `reserve_${day}`;
             let power = this.data[day].dayoff;
             let style = null;
             let dayoff_setting = CComponent.toggle_button (id, power, style, (data)=>{
@@ -134,7 +134,7 @@ class Setting_worktime{
                                 });
             let title_row = CComponent.create_row ('123123', '휴무', NONE, HIDE, '', null, ()=>{});
 
-            let html = `<article class="setting_worktime_wrapper obj_input_box_full">
+            let html = `<article class="setting_reserve_wrapper obj_input_box_full">
                             ${tag}
                             ${start_time_selector}
                             ${end_time_selector}
@@ -233,7 +233,7 @@ class Setting_worktime{
     dom_row_toolbox(){
         let title = "업무 시간 <p style='font-size:14px;font-weight:500;'>설정된 시간만 일정표에 나타납니다.</p>";
         let html = `
-        <div class="setting_worktime_upper_box" style="">
+        <div class="setting_reserve_upper_box" style="">
             <div style="display:inline-block;width:320px;">
                 <div style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
                     ${title}
@@ -274,7 +274,7 @@ class Setting_worktime{
             "setting_trainer_work_sat_time_avail":this.art_data(this.data.SAT.start_time, this.data.SAT.end_time)
         };
         
-        Setting_worktime_func.update(data, ()=>{
+        Setting_reserve_func.update(data, ()=>{
             this.render_content();
         });
     }
@@ -284,7 +284,7 @@ class Setting_worktime{
     }
 }
 
-class Setting_worktime_func{
+class Setting_reserve_func{
     static update(data, callback){
         //업무 시간 설정
         $.ajax({
