@@ -34,7 +34,7 @@ class CComponent{
         let html = `<li class="create_row" id="c_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
                             <div class="cell_title">
-                                ${icon != "" ? `<img src="${icon}">` : ""} 
+                                ${icon != DELETE ? `<img src="${icon}">` : ""} 
                                 <span class="cell_text">${title}</span>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
