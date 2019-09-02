@@ -404,15 +404,15 @@ class CComponent{
                                 <div id="${member_id}_absence">
                                     <span>결석</span>
                                     ${checked_absence == 1 
-                                        ? `<div class="pters_radio_button radio_button_selected"><div class="radio_button_selected_inner"></div></div>`
-                                        : `<div class="pters_radio_button"></div>`
+                                        ? `<div class="pters_checkbox checkbox_selected"><div class="checkbox_selected_inner"></div></div>`
+                                        : `<div class="pters_checkbox"></div>`
                                     }
                                 </div>
                                 <div id="${member_id}_attend">
                                     <span>출석</span>
                                     ${checked_attend == 1 
-                                        ? `<div class="pters_radio_button radio_button_selected"><div class="radio_button_selected_inner"></div></div>`
-                                        : `<div class="pters_radio_button"></div>`
+                                        ? `<div class="pters_checkbox checkbox_selected"><div class="checkbox_selected_inner"></div></div>`
+                                        : `<div class="pters_checkbox"></div>`
                                     }
                                 </div>
                             </div>
@@ -421,7 +421,7 @@ class CComponent{
                     `;
 
         $(document).off('click', `#${member_id}_absence`).on('click', `#${member_id}_absence`, function(){
-            if($(this).find('.pters_radio_button').hasClass('radio_button_selected')){
+            if($(this).find('.pters_checkbox').hasClass('checkbox_selected')){
                 onclick('uncheck_absence');
             }else{
                 onclick('check_absence');
@@ -429,7 +429,7 @@ class CComponent{
         });
 
         $(document).off('click', `#${member_id}_attend`).on('click', `#${member_id}_attend`, function(){
-            if($(this).find('.pters_radio_button').hasClass('radio_button_selected')){
+            if($(this).find('.pters_checkbox').hasClass('checkbox_selected')){
                 onclick('uncheck_attend');
             }else{
                 onclick('check_attend');
