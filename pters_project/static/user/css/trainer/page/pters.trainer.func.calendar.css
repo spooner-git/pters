@@ -30,7 +30,7 @@
 	.cal_tools_wrap > .add_plan{
 		display: table-cell;
 		height: 28px;
-		background-image: url("/static/common/icon/icon_add_pink.png");
+		background-image: url("/static/common/icon/schedule/icon_plus.png");
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 24px;
@@ -38,7 +38,7 @@
 	.cal_tools_wrap > .go_today{
 		display: table-cell;
 		height: 28px;
-		background-image: url("/static/common/icon/icon_today.png?v2");
+		background-image: url("/static/common/icon/schedule/icon_today.png");
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 24px;
@@ -49,7 +49,7 @@
 		width: 24px;
 		vertical-align: middle;
 		margin-bottom: 4px;
-		background-image: url("/static/common/icon/expand_more_black.png");
+		background-image: url("/static/common/icon/schedule/icon_expand.png");
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 24px;
@@ -89,7 +89,7 @@
 	top: 0;
 	height: 24px;
 	width: 24px;
-	background-image: url('/static/common/icon/icon_zoom.png');
+	background-image: url('/static/common/icon/schedule/icon_zoom_in.png');
 	background-repeat: no-repeat;
 	background-size: 24px;
 	background-position: center;

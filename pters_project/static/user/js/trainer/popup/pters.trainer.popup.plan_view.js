@@ -159,11 +159,11 @@ class Plan_view{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="plan_view_popup.upper_left_menu();" class="obj_icon_prev" style="width:28px; height:28px;">`;
+        let top_left = `<img src="/static/common/icon/schedule/icon_prev.png" onclick="plan_view_popup.upper_left_menu();" class="obj_icon_prev" style="width:28px; height:28px;">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
                             <img src="/static/common/icon/icon_delete.png" class="obj_icon_28px" onclick="plan_view_popup.upper_right_menu(0);">
-                            <img src="/static/common/icon/icon_done.png" class="obj_icon_28px" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};margin-left:20px">
+                            <img src="/static/common/icon/schedule/icon_confirm.png" class="obj_icon_28px" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};margin-left:20px">
                         </span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
@@ -236,7 +236,7 @@ class Plan_view{
     dom_row_member_select (){
         let id = 'select_member';
         let title = this.data.member_id.length == 0 ? '회원*' : this.data.member_id.length+ '/' + this.data.lecture_max_num +' 명';
-        let icon = '/static/common/icon/icon_member.png';
+        let icon = '/static/common/icon/schedule/icon_group.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "예약 목록";
         let style = null;
@@ -278,9 +278,9 @@ class Plan_view{
             let state = this.data.member_schedule_state[i];
             let state_icon_url;
             if(state == SCHEDULE_ABSENCE){
-                state_icon_url = '/static/common/icon/close_black.png';
+                state_icon_url = '/static/common/icon/schedule/icon_x.png';
             }else if(state == SCHEDULE_FINISH){
-                state_icon_url = '/static/common/icon/icon_done.png';
+                state_icon_url = '/static/common/icon/schedule/icon_confirm.png';
             }else if(state == SCHEDULE_NOT_FINISH){
                 state_icon_url = NONE;
             }
@@ -302,7 +302,7 @@ class Plan_view{
     dom_row_date_select (){
         let id = 'select_date';
         let title = this.data.date_text == null ? '일자*' : this.data.date_text;
-        let icon = '/static/common/icon/icon_cal.png';
+        let icon = '/static/common/icon/schedule/icon_cal.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -329,7 +329,7 @@ class Plan_view{
     dom_row_start_time_select (){
         let id = 'select_start_time';
         let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
-        let icon = '/static/common/icon/icon_clock.png';
+        let icon = '/static/common/icon/schedule/icon_clock.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -362,7 +362,7 @@ class Plan_view{
     dom_row_end_time_select (){
         let id = 'select_end_time';
         let title = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
-        let icon = '/static/common/icon/icon_clock_white.png';
+        let icon = '/static/common/icon/schedule/icon_clock_white.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -406,7 +406,7 @@ class Plan_view{
         let id = 'select_memo';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '일정 메모';
-        let icon = '/static/common/icon/icon_note.png';
+        let icon = '/static/common/icon/schedule/icon_memo.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
