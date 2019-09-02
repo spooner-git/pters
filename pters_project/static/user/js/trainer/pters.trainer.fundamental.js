@@ -47,6 +47,34 @@ function func_set_webkit_overflow_scrolling(target_selector){
     }
 }
 
+function input_adjust_location_for_android(){
+    if(os == ANDROID){
+        $(document).on('focus', 'input', function(e){
+            let shade = `<div id="input_shade_for_android" style="position:fixed;width:100%;height:100%;top:0;left:0;background-color:#282828;opacity:0.5;z-index:1"></div>`;
+            $(this).parents('li').addClass('input_focused');
+            $(this).parents('li').parent().append(shade);
+        });
+    
+        $(document).on('focusout', 'input', function(e){
+            $(this).parents('li').removeClass('input_focused');
+            $('#input_shade_for_android').remove();
+        });
+
+        $(document).on('click', '#input_shade_for_android', function(e){
+            $(this).parents('li').removeClass('input_focused');
+            $('input').blur();
+            $(this).remove();
+        });
+
+        $(document).on('keypress', 'input', function(e){
+            if (e.charCode == 13) {
+                e.preventDefault();
+                $('#input_shade_for_android').trigger('click');
+            }
+        });
+    }
+}
+
 // function test_console(selector){
 //     console.log(
 //         "selector height:", $(selector).height()

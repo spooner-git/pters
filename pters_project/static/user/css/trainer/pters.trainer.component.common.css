@@ -100,6 +100,19 @@ input:disabled{
 	width: auto;
 }
 
+.input_focused{
+	position: fixed;
+	/* top: 50%; */
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	border-top: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+	box-shadow: 0px 0px 5px 0px #cccccc;
+	background-color: #ffffff;
+	z-index: 10;
+}
+
 .create_row .cell_title > img, .create_input_row .cell_title > img{
 	/*vertical-align: middle;*/
 	/*margin-bottom: 2px;*/
