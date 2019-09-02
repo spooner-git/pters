@@ -122,7 +122,7 @@ class Setting_reserve{
             let title = "개인 수업 예약 시간";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
-            let data = {value:[1, 2, 3], text:["매시각 정시", "매시각 30분", "매시각 30분 + 정시"]};
+            let data = {value:["A-0", "A-30", "E-30"], text:["매시각 정시", "매시각 30분", "매시각 30분 + 정시"]};
             let selected_data = this.data.start_time_for_private_reserve;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
@@ -170,7 +170,7 @@ class Setting_reserve{
             let title = "예약 가능 시간";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
-            let data = {value:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 48], text:["1 시간 전", "2 시간 전", "3 시간 전", "4 시간 전", "5 시간 전", "6 시간 전", "7 시간 전", "8 시간 전", "9 시간 전", "10 시간 전", "11 시간 전", "12 시간 전", "24 시간 전", "48시간 전"]};
+            let data = {value:[30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 720, 1440], text:["1 시간 전", "2 시간 전", "3 시간 전", "4 시간 전", "5 시간 전", "6 시간 전", "7 시간 전", "8 시간 전", "9 시간 전", "10 시간 전", "11 시간 전", "12 시간 전", "24 시간 전", "48시간 전"]};
             let selected_data = this.data.available_reserve_time;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
@@ -194,7 +194,7 @@ class Setting_reserve{
             let title = "예약 취소 가능 시간";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
-            let data = {value:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 48], text:["1 시간 전", "2 시간 전", "3 시간 전", "4 시간 전", "5 시간 전", "6 시간 전", "7 시간 전", "8 시간 전", "9 시간 전", "10 시간 전", "11 시간 전", "12 시간 전", "24 시간 전", "48시간 전"]};
+            let data = {value:[30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 720, 1440], text:["1 시간 전", "2 시간 전", "3 시간 전", "4 시간 전", "5 시간 전", "6 시간 전", "7 시간 전", "8 시간 전", "9 시간 전", "10 시간 전", "11 시간 전", "12 시간 전", "24 시간 전", "48시간 전"]};
             let selected_data = this.data.available_cancel_time;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
@@ -221,37 +221,23 @@ class Setting_reserve{
         return html;
     }
 
-    art_data(start_time, end_time){
-        let merged;
-        if(start_time == null && end_time == null){
-            merged = `00:00-23:59`;
-        }else if(start_time == null && end_time != null){
-            merged = `00:00-${end_time}`;
-        }else if(start_time != null && end_time == null){
-            merged = `${start_time}-23:59`;
-        }else{
-            merged = start_time + '-' + end_time;
-        }
-
-        if(this.data.GENERAL.detail_switch == OFF){
-            merged = this.data.GENERAL.start_time + '-' + this.data.GENERAL.end_time;
-        }
-
-        return merged;
-    }
 
     send_data(){
         let data = {
-            "setting_trainer_work_sun_time_avail":this.art_data(this.data.SUN.start_time, this.data.SUN.end_time),
-            "setting_trainer_work_mon_time_avail":this.art_data(this.data.MON.start_time, this.data.MON.end_time),
-            "setting_trainer_work_tue_time_avail":this.art_data(this.data.TUE.start_time, this.data.TUE.end_time),
-            "setting_trainer_work_wed_time_avail":this.art_data(this.data.WED.start_time, this.data.WED.end_time),
-            "setting_trainer_work_ths_time_avail":this.art_data(this.data.THS.start_time, this.data.THS.end_time),
-            "setting_trainer_work_fri_time_avail":this.art_data(this.data.FRI.start_time, this.data.FRI.end_time),
-            "setting_trainer_work_sat_time_avail":this.art_data(this.data.SAT.start_time, this.data.SAT.end_time)
+            "setting_member_reserve_time_available":'00:00-23:59', //예약 가능 시간대
+            "setting_member_reserve_prohibition":this.data.stop_reserve, // 예약 일시 정지
+            "setting_member_reserve_time_duration":this.data.time_for_private_reserve.value[0], //개인 수업 예약 시간
+            "setting_member_start_time": this.data.start_time_for_private_reserve.value[0], //개인 수업 예약 시작 시각
+
+            "setting_member_reserve_date_available":this.data.available_reserve_date.value[0], //예약 가능 날짜
+            "setting_member_reserve_time_prohibition":this.data.available_reserve_time.value[0], //예약 가능 시간
+            "setting_member_cancel_time_prohibition":this.data.available_cancel_time.value[0], //예약 취소 가능 시간
+            "setting_member_cancel_time":'', //??
+            
         };
         
         Setting_reserve_func.update(data, ()=>{
+            console.log(data)
             this.render_content();
         });
     }
@@ -265,7 +251,7 @@ class Setting_reserve_func{
     static update(data, callback){
         //업무 시간 설정
         $.ajax({
-            url:"/trainer/update_setting_basic/",
+            url:"/trainer/update_setting_reserve/",
             type:'POST',
             data: data,
             dataType : 'html',
