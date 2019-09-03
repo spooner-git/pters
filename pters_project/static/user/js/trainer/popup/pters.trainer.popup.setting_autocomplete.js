@@ -219,15 +219,10 @@ class Setting_autocomplete{
 
     send_data(){
         let data = {
-            "setting_trainer_work_sun_time_avail":this.art_data(this.data.SUN.start_time, this.data.SUN.end_time),
-            "setting_trainer_work_mon_time_avail":this.art_data(this.data.MON.start_time, this.data.MON.end_time),
-            "setting_trainer_work_tue_time_avail":this.art_data(this.data.TUE.start_time, this.data.TUE.end_time),
-            "setting_trainer_work_wed_time_avail":this.art_data(this.data.WED.start_time, this.data.WED.end_time),
-            "setting_trainer_work_ths_time_avail":this.art_data(this.data.THS.start_time, this.data.THS.end_time),
-            "setting_trainer_work_fri_time_avail":this.art_data(this.data.FRI.start_time, this.data.FRI.end_time),
-            "setting_trainer_work_sat_time_avail":this.art_data(this.data.SAT.start_time, this.data.SAT.end_time)
+            "setting_schedule_auto_finish": this.data.plan.switch == OFF ? OFF : this.data.plan.complete_type,
+            "setting_lecture_auto_finish":this.data.member.switch
         };
-        
+
         Setting_autocomplete_func.update(data, ()=>{
             this.render_content();
         });

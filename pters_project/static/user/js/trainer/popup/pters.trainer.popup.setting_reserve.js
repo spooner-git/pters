@@ -98,7 +98,7 @@ class Setting_reserve{
             let title = "개인 수업 예약 시간";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
-            let data = {value:[30, 60, 90, 120, 150, 180, 210, 240, 270, 300], text:["30 분", "1 시간", "1시간 30분", "2 시간", "2 시간 30분", "3 시간", "3 시간 30 분", "4 시간", "4 시간 30 분", "5 시간"]};
+            let data = {value:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], text:["30 분", "1 시간", "1시간 30분", "2 시간", "2 시간 30분", "3 시간", "3 시간 30 분", "4 시간", "4 시간 30 분", "5 시간"]};
             let selected_data = this.data.time_for_private_reserve;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
