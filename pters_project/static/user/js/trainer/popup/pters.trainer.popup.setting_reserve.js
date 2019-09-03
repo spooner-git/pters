@@ -237,7 +237,6 @@ class Setting_reserve{
         };
         
         Setting_reserve_func.update(data, ()=>{
-            console.log(data)
             this.render_content();
         });
     }

@@ -27,9 +27,9 @@ class Setting_alarm{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();setting_autocomplete_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();setting_alarm_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_done.png" onclick="setting_autocomplete_popup.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_done.png" onclick="setting_alarm_popup.upper_right_menu();" class="obj_icon_prev"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -131,13 +131,8 @@ class Setting_alarm{
 
     send_data(){
         let data = {
-            "setting_trainer_work_sun_time_avail":this.art_data(this.data.SUN.start_time, this.data.SUN.end_time),
-            "setting_trainer_work_mon_time_avail":this.art_data(this.data.MON.start_time, this.data.MON.end_time),
-            "setting_trainer_work_tue_time_avail":this.art_data(this.data.TUE.start_time, this.data.TUE.end_time),
-            "setting_trainer_work_wed_time_avail":this.art_data(this.data.WED.start_time, this.data.WED.end_time),
-            "setting_trainer_work_ths_time_avail":this.art_data(this.data.THS.start_time, this.data.THS.end_time),
-            "setting_trainer_work_fri_time_avail":this.art_data(this.data.FRI.start_time, this.data.FRI.end_time),
-            "setting_trainer_work_sat_time_avail":this.art_data(this.data.SAT.start_time, this.data.SAT.end_time)
+            "setting_to_trainee_lesson_alarm":this.data.push_to_member,
+            "setting_from_trainee_lesson_alarm":this.data.push_to_me
         };
         
         Setting_autocomplete_func.update(data, ()=>{
@@ -154,7 +149,7 @@ class Setting_alarm_func{
     static update(data, callback){
         //업무 시간 설정
         $.ajax({
-            url:"/trainer/update_setting_basic/",
+            url:"/trainer/update_setting_push/",
             type:'POST',
             data: data,
             dataType : 'html',
