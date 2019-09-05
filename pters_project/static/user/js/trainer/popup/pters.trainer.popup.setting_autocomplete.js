@@ -26,7 +26,7 @@ class Setting_autocomplete{
             this.data.plan.switch = data.setting_schedule_auto_finish == OFF ? OFF : ON;
             this.data.plan.complete_type = data.setting_schedule_auto_finish;
             this.data.member.switch = data.setting_member_ticket_auto_finish;
-            this.render();
+            this.render_content();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
@@ -231,6 +231,7 @@ class Setting_autocomplete{
 
         Setting_autocomplete_func.update(data, ()=>{
             this.set_initial_data();
+            show_error_message('변경 내용이 저장되었습니다.');
             // this.render_content();
         });
     }

@@ -22,7 +22,7 @@ class Setting_attendmode{
             // this.display_session_start = data.;
             // this.display_session_end = data.;
             this.data.password = data.setting_admin_password;
-            this.render();
+            this.render_content();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
@@ -183,6 +183,7 @@ class Setting_attendmode{
         
         Setting_attendmode_func.update(data, ()=>{
             this.set_initial_data();
+            show_error_message('변경 내용이 저장되었습니다.');
             // this.render_content();
         });
     }

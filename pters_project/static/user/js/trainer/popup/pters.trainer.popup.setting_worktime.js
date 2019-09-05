@@ -4,7 +4,9 @@ class Setting_worktime{
 
         this.data = {
                 GENERAL:{
-                    "start_time":null, "end_time":null, "detail_switch":OFF
+                    "start_time":null, "end_time":null, 
+                    "start_time_text":null, "end_time_text":null,
+                    "detail_switch":OFF
                 },
                 MON:{
                     "start_time":null, "end_time":null, 
@@ -68,6 +70,8 @@ class Setting_worktime{
             let datas = [this.data.MON, this.data.TUE, this.data.WED, this.data.THS, this.data.FRI, this.data.SAT, this.data.SUN];
             this.data.GENERAL.start_time = worktime_all_same == true ? worktimes[0].split('-')[0] : null;
             this.data.GENERAL.end_time = worktime_all_same == true ? worktimes[0].split('-')[1] : null;
+            this.data.GENERAL.start_time_text = worktime_all_same == true ? TimeRobot.to_text(worktimes[0].split('-')[0]): null;
+            this.data.GENERAL.end_time_text = worktime_all_same == true ? TimeRobot.to_text(worktimes[0].split('-')[1]) : null;
             this.data.GENERAL.detail_switch = worktime_all_same == true ? OFF : ON;
 
             for(let j=0; j<datas.length; j++){
@@ -316,6 +320,7 @@ class Setting_worktime{
         };
         Setting_worktime_func.update(data, ()=>{
             this.set_initial_data();
+            show_error_message('변경 내용이 저장되었습니다.');
             // this.render_content();
         });
     }

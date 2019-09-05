@@ -20,7 +20,7 @@ class Setting_alarm{
         Setting_alarm_func.read((data)=>{
             this.data.push_to_me = data.setting_from_trainee_lesson_alarm;
             this.data.push_to_member = data.setting_to_trainee_lesson_alarm;
-            this.render();
+            this.render_content();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
@@ -142,6 +142,7 @@ class Setting_alarm{
         
         Setting_alarm_func.update(data, ()=>{
             this.set_initial_data();
+            show_error_message('변경 내용이 저장되었습니다.');
             // this.render_content();
         });
     }

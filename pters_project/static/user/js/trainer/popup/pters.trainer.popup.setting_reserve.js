@@ -269,6 +269,7 @@ class Setting_reserve{
         
         Setting_reserve_func.update(data, ()=>{
             this.set_initial_data();
+            show_error_message('변경 내용이 저장되었습니다.');
             // this.render_content();
         });
     }
