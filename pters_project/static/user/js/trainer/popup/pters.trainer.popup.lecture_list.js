@@ -40,7 +40,7 @@ class Lecture_list {
 
     render(){
 
-        let top_left = `<img src="/static/common/icon/icon_arrow_r_small_black.png" onclick="layer_popup.close_layer_popup();lecture_list_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();lecture_list_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
                                 <img src="/static/common/icon/icon_search_black.png" class="obj_icon_24px" style="padding-right:12px;">
