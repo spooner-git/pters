@@ -255,8 +255,13 @@ class TimeRobot{
         hour_new = hour > 12 ? hour - 12 : hour;
         zone = hour >= 12 ? 1 : 0;
 
-        // 24시인 경우 오전 0시로 변환하기
-        if(hour == 24 || hour == 0){
+        // 0시인 경우 오전 0시로 변환하기
+        if(hour == 0){
+            zone = 0;
+            hour_new = 0;
+        }
+        // 24시인 경우 오전 12시로 변환하기
+        if(hour == 24){
             zone = 0;
             hour_new = 12;
         }
@@ -279,7 +284,12 @@ class TimeRobot{
             hh = zone*hour;
         }
         let mm = minute;
+        if(zone == 0 && hour == 12 && minute == 0){
+            hh = 24;
+            mm = 0;
+        }
         let result = `${hh}:${mm}`;
+        
 
         return {complete: result, hour:hh, minute:mm};
     }
@@ -287,7 +297,7 @@ class TimeRobot{
     // 시간을 Text 로 변환
     static to_text(hour, minute, short){
         // hour 가 시간 전체로 넘어오는 경우
-        if(String(hour).split(':').length == 3){
+        if(String(hour).split(':').length >= 2){
             minute = hour.split(':')[1];
             hour = hour.split(':')[0];
         }
@@ -302,6 +312,14 @@ class TimeRobot{
 
         // zone 이 0 인 경우 오전, 1 인경우 오후
         zone = zone == 0 ? "오전" : "오후";
+
+        if(hour == 0){
+            zone = "오전";
+            hh = 0;
+        }else if(hour == 24 && minute == 0){
+            zone = "오전";
+            hh = 12;
+        }
 
         // 오전 00:00
         if(short == SHORT){

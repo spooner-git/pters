@@ -1029,8 +1029,6 @@ class TimeSelector2{
         let hour_data = TimeRobot.to_data(zone, hour, minute).hour;
         let minute_data = TimeRobot.to_data(zone, hour, minute).minute;
 
-        console.log("go_snap", hour_data, minute_data)
-
         this.go_snap(hour_data, minute_data);
         //값을 저장하고, 스크롤 위치를 들어온 값으로 보낸다.
     }
@@ -1211,8 +1209,9 @@ class TimeSelector2{
         let minute_text = minute.attr('data-min');
 
         let zone_form = TimeRobot.to_zone(hour_text, minute_text);
-        let data_form = TimeRobot.to_data(zone_form.zone, zone_form.hour, zone_form.minute);
-        let text = TimeRobot.to_text(data_form.hour, data_form.minute);
+        // let data_form = TimeRobot.to_data(zone_form.zone, zone_form.hour, zone_form.minute);
+        // let text = TimeRobot.to_text(data_form.hour, data_form.minute);
+        let text = TimeRobot.to_text(hour_text, minute_text);
 
         return {
             data:{
@@ -1252,7 +1251,6 @@ class TimeSelector2{
             if(selected_time_data_form == '0:0'){
                 selected_time_data_form = '24:00';
             }
-            console.log(selected_time_data_form, min_time_data_form, TimeRobot.compare(selected_time_data_form, min_time_data_form))
 
             let time_compare = TimeRobot.compare(selected_time_data_form, min_time_data_form); // > 일경우 true;
             if(time_compare == false){

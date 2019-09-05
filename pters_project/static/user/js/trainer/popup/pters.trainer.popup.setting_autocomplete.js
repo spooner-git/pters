@@ -4,8 +4,8 @@ class Setting_autocomplete{
 
         this.data = {
                 plan:{
-                    switch : ON,
-                    complete_type : AUTOCOMPLETE_ATTEND // SCHEDULE_FINISH, SCHEDULE_ABSENCE
+                    switch : OFF,
+                    complete_type : SCHEDULE_FINISH // SCHEDULE_FINISH, SCHEDULE_ABSENCE
                 },
                 member:{
                     switch : OFF
@@ -17,11 +17,17 @@ class Setting_autocomplete{
 
  
     init(){
+        this.render();
         this.set_initial_data();
     }
 
     set_initial_data (){
-        this.render();
+        Setting_autocomplete_func.read((data)=>{
+            this.data.plan.switch = data.setting_schedule_auto_finish == OFF ? OFF : ON;
+            this.data.plan.complete_type = data.setting_schedule_auto_finish;
+            this.data.member.switch = data.setting_member_ticket_auto_finish;
+            this.render();
+        });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
@@ -224,7 +230,8 @@ class Setting_autocomplete{
         };
 
         Setting_autocomplete_func.update(data, ()=>{
-            this.render_content();
+            this.set_initial_data();
+            // this.render_content();
         });
     }
 
@@ -241,6 +248,38 @@ class Setting_autocomplete_func{
             type:'POST',
             data: data,
             dataType : 'html',
+    
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //통신성공시 처리
+            success:function (data){
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+
+            },
+    
+            //통신 실패시 처리
+            error:function (){
+                console.log('server error');
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static read(callback){
+        $.ajax({
+            url:"/trainer/get_trainer_setting_data/",
+            type:'GET',
+            dataType : 'JSON',
     
             beforeSend:function(xhr, settings){
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

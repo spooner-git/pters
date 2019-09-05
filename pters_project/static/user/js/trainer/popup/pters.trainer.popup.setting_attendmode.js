@@ -13,11 +13,17 @@ class Setting_attendmode{
 
  
     init(){
+        this.render();
         this.set_initial_data();
     }
 
     set_initial_data (){
-        this.render();
+        Setting_attendmode_func.read((data)=>{
+            // this.display_session_start = data.;
+            // this.display_session_end = data.;
+            this.data.password = data.setting_admin_password;
+            this.render();
+        });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
@@ -175,11 +181,9 @@ class Setting_attendmode{
             "setting_attend_class_after_display_time":this.data.display_session_end.value[0],
         };
         
-        console.log(data)
-        return false;
-
-        Setting_reserve_func.update(data, ()=>{
-            this.render_content();
+        Setting_attendmode_func.update(data, ()=>{
+            this.set_initial_data();
+            // this.render_content();
         });
     }
 
@@ -196,6 +200,38 @@ class Setting_attendmode_func{
             type:'POST',
             data: data,
             dataType : 'html',
+    
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //통신성공시 처리
+            success:function (data){
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+
+            },
+    
+            //통신 실패시 처리
+            error:function (){
+                console.log('server error');
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static read(callback){
+        $.ajax({
+            url:"/trainer/get_trainer_setting_data/",
+            type:'GET',
+            dataType : 'JSON',
     
             beforeSend:function(xhr, settings){
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

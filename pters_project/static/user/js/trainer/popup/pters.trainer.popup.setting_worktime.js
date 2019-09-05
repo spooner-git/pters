@@ -9,50 +9,84 @@ class Setting_worktime{
                 MON:{
                     "start_time":null, "end_time":null, 
                     "start_time_text":null, "end_time_text":null,
-                    "dayoff":0
+                    "dayoff":OFF
                 },
                 TUE:{
                     "start_time":null, "end_time":null, 
                     "start_time_text":null, "end_time_text":null,
-                    "dayoff":0
+                    "dayoff":OFF
                 },
                 WED:{
                     "start_time":null, "end_time":null, 
                     "start_time_text":null, "end_time_text":null,
-                    "dayoff":0
+                    "dayoff":OFF
                 },
                 THS:{
                     "start_time":null, "end_time":null, 
                     "start_time_text":null, "end_time_text":null,
-                    "dayoff":0
+                    "dayoff":OFF
                 },
                 FRI:{
                     "start_time":null, "end_time":null, 
                     "start_time_text":null, "end_time_text":null,
-                    "dayoff":0
+                    "dayoff":OFF
                 },
                 SAT:{
                     "start_time":null, "end_time":null, 
                     "start_time_text":null, "end_time_text":null,
-                    "dayoff":0
+                    "dayoff":OFF
                 },
                 SUN:{
                     "start_time":null, "end_time":null, 
                     "start_time_text":null, "end_time_text":null,
-                    "dayoff":0
+                    "dayoff":OFF
                 }
         };
 
         this.init();
     }
 
- 
     init(){
+        this.render();
         this.set_initial_data();
     }
 
     set_initial_data (){
-        this.render();
+        Setting_worktime_func.read((data)=>{
+            //업무시간 데이터 체크
+            let worktime_all_same = true;
+            let worktimes = [data.setting_trainer_work_mon_time_avail, data.setting_trainer_work_tue_time_avail,
+                             data.setting_trainer_work_wed_time_avail, data.setting_trainer_work_ths_time_avail,
+                             data.setting_trainer_work_fri_time_avail, data.setting_trainer_work_sat_time_avail, data.setting_trainer_work_sun_time_avail];
+            for(let i=0; i<worktimes.length; i++){
+                if(worktimes[0] != worktimes[i]){
+                    worktime_all_same = false;
+                }
+            }
+            //업무시간 데이터 체크
+
+            let datas = [this.data.MON, this.data.TUE, this.data.WED, this.data.THS, this.data.FRI, this.data.SAT, this.data.SUN];
+            this.data.GENERAL.start_time = worktime_all_same == true ? worktimes[0].split('-')[0] : null;
+            this.data.GENERAL.end_time = worktime_all_same == true ? worktimes[0].split('-')[1] : null;
+            this.data.GENERAL.detail_switch = worktime_all_same == true ? OFF : ON;
+
+            for(let j=0; j<datas.length; j++){
+
+                let worktimes_start_hour = Number(worktimes[j].split('-')[0].split(':')[0]);
+                let worktimes_start_min = Number(worktimes[j].split('-')[0].split(':')[1]);
+                let worktimes_end_hour = Number(worktimes[j].split('-')[1].split(':')[0]);
+                let worktimes_end_min = Number(worktimes[j].split('-')[1].split(':')[1]);
+
+                if(worktimes_start_hour == 0 && worktimes_start_min == 0 && worktimes_end_hour == 0 && worktimes_end_min == 0){
+                    datas[j].dayoff = ON;
+                }
+                datas[j].start_time = worktimes[j].split('-')[0];
+                datas[j].end_time = worktimes[j].split('-')[1];
+                datas[j].start_time_text = TimeRobot.to_text(worktimes[j].split('-')[0]);
+                datas[j].end_time_text = TimeRobot.to_text(worktimes[j].split('-')[1]);
+            }
+            this.render_content();
+        });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
@@ -132,12 +166,12 @@ class Setting_worktime{
                                     this.data[day].dayoff = data; // ON or OFF
                                     this.render_content();
                                 });
-            let title_row = CComponent.create_row ('123123', '휴무', NONE, HIDE, '', null, ()=>{});
+            let title_row = CComponent.create_row ('id_null', '휴무', NONE, HIDE, '', null, ()=>{});
 
             let html = `<article class="setting_worktime_wrapper obj_input_box_full">
                             ${tag}
-                            ${start_time_selector}
-                            ${end_time_selector}
+                            ${power == OFF ? start_time_selector : ""}
+                            ${power == OFF ? end_time_selector: ""}
                             <div style="display:table;width:100%;">
                                 <div style="display:table-cell;width:auto;">${title_row}</div>
                                 <div style="display:table-cell;width:50px;">${dayoff_setting}</div>
@@ -247,17 +281,24 @@ class Setting_worktime{
     art_data(start_time, end_time){
         let merged;
         if(start_time == null && end_time == null){
-            merged = `00:00-23:59`;
+            merged = `00:00-24:00`;
         }else if(start_time == null && end_time != null){
             merged = `00:00-${end_time}`;
         }else if(start_time != null && end_time == null){
-            merged = `${start_time}-23:59`;
+            merged = `${start_time}-24:00`;
         }else{
             merged = start_time + '-' + end_time;
         }
 
         if(this.data.GENERAL.detail_switch == OFF){
             merged = this.data.GENERAL.start_time + '-' + this.data.GENERAL.end_time;
+            this.data.SUN.dayoff = OFF;
+            this.data.MON.dayoff = OFF;
+            this.data.TUE.dayoff = OFF;
+            this.data.WED.dayoff = OFF;
+            this.data.THS.dayoff = OFF;
+            this.data.FRI.dayoff = OFF;
+            this.data.SAT.dayoff = OFF;
         }
 
         return merged;
@@ -265,17 +306,17 @@ class Setting_worktime{
 
     send_data(){
         let data = {
-            "setting_trainer_work_sun_time_avail":this.art_data(this.data.SUN.start_time, this.data.SUN.end_time),
-            "setting_trainer_work_mon_time_avail":this.art_data(this.data.MON.start_time, this.data.MON.end_time),
-            "setting_trainer_work_tue_time_avail":this.art_data(this.data.TUE.start_time, this.data.TUE.end_time),
-            "setting_trainer_work_wed_time_avail":this.art_data(this.data.WED.start_time, this.data.WED.end_time),
-            "setting_trainer_work_ths_time_avail":this.art_data(this.data.THS.start_time, this.data.THS.end_time),
-            "setting_trainer_work_fri_time_avail":this.art_data(this.data.FRI.start_time, this.data.FRI.end_time),
-            "setting_trainer_work_sat_time_avail":this.art_data(this.data.SAT.start_time, this.data.SAT.end_time)
+            "setting_trainer_work_sun_time_avail":this.data.SUN.dayoff == OFF ? this.art_data(this.data.SUN.start_time, this.data.SUN.end_time) : "00:00-00:00",
+            "setting_trainer_work_mon_time_avail":this.data.MON.dayoff == OFF ? this.art_data(this.data.MON.start_time, this.data.MON.end_time) : "00:00-00:00",
+            "setting_trainer_work_tue_time_avail":this.data.TUE.dayoff == OFF ? this.art_data(this.data.TUE.start_time, this.data.TUE.end_time) : "00:00-00:00",
+            "setting_trainer_work_wed_time_avail":this.data.WED.dayoff == OFF ? this.art_data(this.data.WED.start_time, this.data.WED.end_time) : "00:00-00:00",
+            "setting_trainer_work_ths_time_avail":this.data.THS.dayoff == OFF ? this.art_data(this.data.THS.start_time, this.data.THS.end_time) : "00:00-00:00",
+            "setting_trainer_work_fri_time_avail":this.data.FRI.dayoff == OFF ? this.art_data(this.data.FRI.start_time, this.data.FRI.end_time) : "00:00-00:00",
+            "setting_trainer_work_sat_time_avail":this.data.SAT.dayoff == OFF ? this.art_data(this.data.SAT.start_time, this.data.SAT.end_time) : "00:00-00:00"
         };
-        
         Setting_worktime_func.update(data, ()=>{
-            this.render_content();
+            this.set_initial_data();
+            // this.render_content();
         });
     }
 
@@ -292,6 +333,38 @@ class Setting_worktime_func{
             type:'POST',
             data: data,
             dataType : 'html',
+    
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //통신성공시 처리
+            success:function (data){
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+
+            },
+    
+            //통신 실패시 처리
+            error:function (){
+                console.log('server error');
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static read(callback){
+        $.ajax({
+            url:"/trainer/get_trainer_setting_data/",
+            type:'GET',
+            dataType : 'JSON',
     
             beforeSend:function(xhr, settings){
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

@@ -11,16 +11,47 @@ class Setting_reserve{
                 available_cancel_time:{value:[], text:[]}
         };
 
+        this.data_for_selector = {
+            time_for_private_reserve : 
+                {value:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], text:["30 분", "1 시간", "1시간 30분", "2 시간", "2 시간 30분", "3 시간", "3 시간 30 분", "4 시간", "4 시간 30 분", "5 시간"]},
+            start_time_for_private_reserve:
+                {value:["A-0", "A-30", "E-30"], text:["매시각 정시", "매시각 30분", "매시각 30분 + 정시"]},
+            available_reserve_date:
+                {value:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], text:["1 일전", "2 일전", "3 일전", "4 일전", "5 일전", "6 일전", "7 일전", "8 일전", "9 일전", "10 일전"]},
+            available_reserve_time:
+                {value:[30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 720, 1440], text:["1 시간 전", "2 시간 전", "3 시간 전", "4 시간 전", "5 시간 전", "6 시간 전", "7 시간 전", "8 시간 전", "9 시간 전", "10 시간 전", "11 시간 전", "12 시간 전", "24 시간 전", "48시간 전"]},
+            available_cancel_time:
+                {value:[30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 720, 1440], text:["1 시간 전", "2 시간 전", "3 시간 전", "4 시간 전", "5 시간 전", "6 시간 전", "7 시간 전", "8 시간 전", "9 시간 전", "10 시간 전", "11 시간 전", "12 시간 전", "24 시간 전", "48시간 전"]}
+        }
+
         this.init();
     }
 
  
     init(){
+        this.render();
         this.set_initial_data();
     }
 
     set_initial_data (){
-        this.render();
+        Setting_reserve_func.read((data)=>{
+            this.data.stop_reserve = data.setting_member_reserve_prohibition;
+            this.data.time_for_private_reserve.value[0] = data.setting_member_time_duration;
+            this.data.time_for_private_reserve.text[0] = this.data_for_selector.time_for_private_reserve.text[ this.data_for_selector.time_for_private_reserve.value.indexOf(Number(data.setting_member_time_duration) ) ];
+
+            this.data.start_time_for_private_reserve.value[0] = data.setting_member_start_time;
+            this.data.start_time_for_private_reserve.text[0] = this.data_for_selector.start_time_for_private_reserve.text[ this.data_for_selector.start_time_for_private_reserve.value.indexOf(data.setting_member_start_time) ];
+
+            this.data.available_reserve_date.value[0] = data.setting_member_reserve_date_available;
+            this.data.available_reserve_date.text[0] = this.data_for_selector.available_reserve_date.text[ this.data_for_selector.available_reserve_date.value.indexOf(Number(data.setting_member_reserve_date_available) ) ];
+
+            this.data.available_reserve_time.value[0] = data.setting_member_reserve_enable_time;
+            this.data.available_reserve_time.text[0] = this.data_for_selector.available_reserve_time.text[ this.data_for_selector.available_reserve_time.value.indexOf(Number(data.setting_member_reserve_enable_time) ) ];
+
+            this.data.available_cancel_time.value[0] = data.setting_member_reserve_cancel_time;
+            this.data.available_cancel_time.text[0] = this.data_for_selector.available_cancel_time.text[ this.data_for_selector.available_cancel_time.value.indexOf(Number(data.setting_member_reserve_cancel_time) ) ];
+            this.render_content();
+        });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
@@ -98,7 +129,7 @@ class Setting_reserve{
             let title = "개인 수업 예약 시간";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
-            let data = {value:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], text:["30 분", "1 시간", "1시간 30분", "2 시간", "2 시간 30분", "3 시간", "3 시간 30 분", "4 시간", "4 시간 30 분", "5 시간"]};
+            let data = this.data_for_selector.time_for_private_reserve;
             let selected_data = this.data.time_for_private_reserve;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
@@ -122,7 +153,7 @@ class Setting_reserve{
             let title = "개인 수업 예약 시간";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
-            let data = {value:["A-0", "A-30", "E-30"], text:["매시각 정시", "매시각 30분", "매시각 30분 + 정시"]};
+            let data = this.data_for_selector.start_time_for_private_reserve;
             let selected_data = this.data.start_time_for_private_reserve;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
@@ -146,7 +177,7 @@ class Setting_reserve{
             let title = "예약 가능 날짜";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
-            let data = {value:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], text:["1 일전", "2 일전", "3 일전", "4 일전", "5 일전", "6 일전", "7 일전", "8 일전", "9 일전", "10 일전"]};
+            let data = this.data_for_selector.available_reserve_date;
             let selected_data = this.data.available_reserve_date;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
@@ -170,7 +201,7 @@ class Setting_reserve{
             let title = "예약 가능 시간";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
-            let data = {value:[30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 720, 1440], text:["1 시간 전", "2 시간 전", "3 시간 전", "4 시간 전", "5 시간 전", "6 시간 전", "7 시간 전", "8 시간 전", "9 시간 전", "10 시간 전", "11 시간 전", "12 시간 전", "24 시간 전", "48시간 전"]};
+            let data = this.data_for_selector.available_reserve_time;
             let selected_data = this.data.available_reserve_time;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
@@ -194,7 +225,7 @@ class Setting_reserve{
             let title = "예약 취소 가능 시간";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
-            let data = {value:[30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 720, 1440], text:["1 시간 전", "2 시간 전", "3 시간 전", "4 시간 전", "5 시간 전", "6 시간 전", "7 시간 전", "8 시간 전", "9 시간 전", "10 시간 전", "11 시간 전", "12 시간 전", "24 시간 전", "48시간 전"]};
+            let data = this.data_for_selector.available_cancel_time;
             let selected_data = this.data.available_cancel_time;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
@@ -237,7 +268,8 @@ class Setting_reserve{
         };
         
         Setting_reserve_func.update(data, ()=>{
-            this.render_content();
+            this.set_initial_data();
+            // this.render_content();
         });
     }
 
@@ -254,6 +286,38 @@ class Setting_reserve_func{
             type:'POST',
             data: data,
             dataType : 'html',
+    
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //통신성공시 처리
+            success:function (data){
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+
+            },
+    
+            //통신 실패시 처리
+            error:function (){
+                console.log('server error');
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static read(callback){
+        $.ajax({
+            url:"/trainer/get_trainer_setting_data/",
+            type:'GET',
+            dataType : 'JSON',
     
             beforeSend:function(xhr, settings){
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
