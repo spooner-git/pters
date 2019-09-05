@@ -3874,13 +3874,13 @@ def update_setting_push_logic(request):
 # 강사 기본 setting 업데이트 api
 def update_setting_basic_logic(request):
     # setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '00:00-23:59')
-    setting_trainer_work_sun_time_avail = request.POST.get('setting_trainer_work_sun_time_avail', '00:00-23:59')
-    setting_trainer_work_mon_time_avail = request.POST.get('setting_trainer_work_mon_time_avail', '00:00-23:59')
-    setting_trainer_work_tue_time_avail = request.POST.get('setting_trainer_work_tue_time_avail', '00:00-23:59')
-    setting_trainer_work_wed_time_avail = request.POST.get('setting_trainer_work_wed_time_avail', '00:00-23:59')
-    setting_trainer_work_ths_time_avail = request.POST.get('setting_trainer_work_ths_time_avail', '00:00-23:59')
-    setting_trainer_work_fri_time_avail = request.POST.get('setting_trainer_work_fri_time_avail', '00:00-23:59')
-    setting_trainer_work_sat_time_avail = request.POST.get('setting_trainer_work_sat_time_avail', '00:00-23:59')
+    setting_trainer_work_sun_time_avail = request.POST.get('setting_trainer_work_sun_time_avail', '00:00-24:00')
+    setting_trainer_work_mon_time_avail = request.POST.get('setting_trainer_work_mon_time_avail', '00:00-24:00')
+    setting_trainer_work_tue_time_avail = request.POST.get('setting_trainer_work_tue_time_avail', '00:00-24:00')
+    setting_trainer_work_wed_time_avail = request.POST.get('setting_trainer_work_wed_time_avail', '00:00-24:00')
+    setting_trainer_work_ths_time_avail = request.POST.get('setting_trainer_work_ths_time_avail', '00:00-24:00')
+    setting_trainer_work_fri_time_avail = request.POST.get('setting_trainer_work_fri_time_avail', '00:00-24:00')
+    setting_trainer_work_sat_time_avail = request.POST.get('setting_trainer_work_sat_time_avail', '00:00-24:00')
     setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_lecture_auto_finish = request.POST.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
     setting_admin_password = request.POST.get('setting_admin_password', '0000')
@@ -3899,19 +3899,19 @@ def update_setting_basic_logic(request):
     error = None
     if error is None:
         if setting_trainer_work_sun_time_avail is None or setting_trainer_work_sun_time_avail == '':
-            setting_trainer_work_sun_time_avail = '00:00-23:59'
+            setting_trainer_work_sun_time_avail = '00:00-24:00'
         if setting_trainer_work_mon_time_avail is None or setting_trainer_work_mon_time_avail == '':
-            setting_trainer_work_mon_time_avail = '00:00-23:59'
+            setting_trainer_work_mon_time_avail = '00:00-24:00'
         if setting_trainer_work_tue_time_avail is None or setting_trainer_work_tue_time_avail == '':
-            setting_trainer_work_tue_time_avail = '00:00-23:59'
+            setting_trainer_work_tue_time_avail = '00:00-24:00'
         if setting_trainer_work_wed_time_avail is None or setting_trainer_work_wed_time_avail == '':
-            setting_trainer_work_wed_time_avail = '00:00-23:59'
+            setting_trainer_work_wed_time_avail = '00:00-24:00'
         if setting_trainer_work_ths_time_avail is None or setting_trainer_work_ths_time_avail == '':
-            setting_trainer_work_ths_time_avail = '00:00-23:59'
+            setting_trainer_work_ths_time_avail = '00:00-24:00'
         if setting_trainer_work_fri_time_avail is None or setting_trainer_work_fri_time_avail == '':
-            setting_trainer_work_fri_time_avail = '00:00-23:59'
+            setting_trainer_work_fri_time_avail = '00:00-24:00'
         if setting_trainer_work_sat_time_avail is None or setting_trainer_work_sat_time_avail == '':
-            setting_trainer_work_sat_time_avail = '00:00-23:59'
+            setting_trainer_work_sat_time_avail = '00:00-24:00'
         if setting_schedule_auto_finish is None or setting_schedule_auto_finish == '':
             setting_schedule_auto_finish = AUTO_FINISH_OFF
         if setting_lecture_auto_finish is None or setting_lecture_auto_finish == '':
@@ -4034,7 +4034,7 @@ def update_setting_basic_logic(request):
 
 # 강사 예약허용시간 setting 업데이트 api
 def update_setting_reserve_logic(request):
-    setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '00:00-23:59')
+    setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '00:00-24:00')
     setting_member_reserve_time_prohibition = request.POST.get('setting_member_reserve_time_prohibition', '60')
     setting_member_cancel_time = request.POST.get('setting_member_cancel_time_prohibition', '60')
     setting_member_reserve_prohibition = request.POST.get('setting_member_reserve_prohibition',
@@ -4056,7 +4056,7 @@ def update_setting_reserve_logic(request):
 
     if error is None:
         if setting_member_reserve_time_available is None or setting_member_reserve_time_available == '':
-            setting_member_reserve_time_available = '00:00-23:59'
+            setting_member_reserve_time_available = '00:00-24:00'
         if setting_member_reserve_time_prohibition is None or setting_member_reserve_time_prohibition == '':
             setting_member_reserve_time_prohibition = '60'
         if setting_member_cancel_time is None or setting_member_cancel_time == '':

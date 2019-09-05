@@ -727,8 +727,15 @@ def func_check_select_date_reserve_setting(class_id, trainer_id, select_date):
 
         # 예약 가능 시간 확인
         reserve_avail_time_split = reserve_avail_time.split('-')
-        reserve_avail_start_time = datetime.datetime.strptime(reserve_avail_time_split[0], '%H:%M')
-        reserve_avail_end_time = datetime.datetime.strptime(reserve_avail_time_split[1], '%H:%M')
+        reserve_avail_start_time_temp = reserve_avail_time_split[0]
+        reserve_avail_end_time_temp = reserve_avail_time_split[1]
+        if reserve_avail_start_time_temp == '24:00':
+            reserve_avail_start_time_temp = '23:59'
+        if reserve_avail_end_time_temp == '24:00':
+            reserve_avail_end_time_temp = '23:59'
+
+        reserve_avail_start_time = datetime.datetime.strptime(reserve_avail_start_time_temp, '%H:%M')
+        reserve_avail_end_time = datetime.datetime.strptime(reserve_avail_end_time_temp, '%H:%M')
 
     # 예약 정지 상태 확인
     if reserve_stop == MEMBER_RESERVE_PROHIBITION_ON:
@@ -832,10 +839,15 @@ def func_check_select_time_reserve_setting(class_id, trainer_id, start_date, end
             lt_work_time_avail[6] = lt_work_time_legacy
 
         # 선택한 일자의 강사 업무 시간 확인
-        work_avail_start_time = datetime.datetime.strptime(
-            lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[0], '%H:%M')
-        work_avail_end_time = datetime.datetime.strptime(
-            lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[1], '%H:%M')
+        start_time_temp = lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[0]
+        end_time_temp = lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[1]
+        if start_time_temp == '24:00':
+            start_time_temp = '23:59'
+        if end_time_temp == '24:00':
+            end_time_temp = '23:59'
+
+        work_avail_start_time = datetime.datetime.strptime(start_time_temp, '%H:%M')
+        work_avail_end_time = datetime.datetime.strptime(end_time_temp, '%H:%M')
 
         # 근접 예약 등록 가능 시간 셋팅
         if add_del_type == ADD_SCHEDULE:
