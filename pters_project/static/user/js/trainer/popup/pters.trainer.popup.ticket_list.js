@@ -44,8 +44,8 @@ class Ticket_list {
         let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();ticket_list_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
-                                <img src="/static/common/icon/icon_search.png" class="obj_icon_28px" style="padding-right:12px;">
-                                <img src="/static/common/icon/icon_add.png" class="obj_icon_28px" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
+                                <img src="/static/common/icon/icon_search.png" class="obj_icon_24px" style="padding-right:12px;">
+                                <img src="/static/common/icon/icon_add.png" class="obj_icon_24px" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
                                     ticket_add_popup = new Ticket_add('.popup_ticket_add');});">
                         </span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>

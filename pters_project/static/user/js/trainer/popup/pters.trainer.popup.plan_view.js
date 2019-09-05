@@ -159,11 +159,11 @@ class Plan_view{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/schedule/icon_prev.png" onclick="plan_view_popup.upper_left_menu();" class="obj_icon_prev" style="width:28px; height:28px;">`;
+        let top_left = `<img src="/static/common/icon/schedule/icon_prev.png" onclick="plan_view_popup.upper_left_menu();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
-                            <img src="/static/common/icon/icon_delete.png" class="obj_icon_28px" onclick="plan_view_popup.upper_right_menu(0);">
-                            <img src="/static/common/icon/schedule/icon_confirm.png" class="obj_icon_28px" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};margin-left:20px">
+                            <img src="/static/common/icon/schedule/icon_delete_white.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(0);">
+                            <img src="/static/common/icon/schedule/icon_attend_white.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};margin-left:20px">
                         </span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
