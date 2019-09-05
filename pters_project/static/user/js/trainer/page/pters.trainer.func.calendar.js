@@ -29,7 +29,16 @@ class Calendar {
         this.current_year = d.getFullYear();
         this.current_month = d.getMonth()+1;
         this.current_date = d.getDate();
-        this.current_week = Math.ceil( (this.current_date + new Date(this.current_year, this.current_month-1, 1).getDay() )/7 ) - 1;
+        this.first_day_of_the_date = new Date(this.current_year, this.current_month-1, 1).getDay();
+        if(this.date_start == 1){
+            if(this.first_day_of_the_date == 0){
+                this.first_day_of_the_date = 6;
+            }else{
+                this.first_day_of_the_date--;
+            }
+        }
+        this.current_week = Math.ceil( (this.current_date +  this.first_day_of_the_date)/7 ) - 1;
+        
         this.current_hour = d.getHours() > 12 ? d.getHours() - 12 : d.getHours();
         this.current_minute = Math.floor(d.getMinutes()/5)*5;
         
@@ -162,8 +171,16 @@ class Calendar {
 
     get_week_number (year, month){
         let first_day = new Date(year, month-1, 1).getDay();
+        if(this.date_start == 1){
+            if(first_day == 0){
+                first_day = 6;
+            }else{
+                first_day--;
+            }
+        }
         let last_date = new Date(year, month, 0).getDate();
         let week_num_this_month = Math.ceil( (first_day + last_date)/7  ) - 1;
+        
         return week_num_this_month;
     }
 
@@ -184,6 +201,8 @@ class Calendar {
         if(this.date_start == 1){
             if(first_day == 0){
                 first_day = 6;
+            }else{
+                first_day--;
             }
         }
         //시작을 월요일부터 옵션을 위한 코드
@@ -226,6 +245,8 @@ class Calendar {
         if(this.date_start == 1){
             if(first_day == 0){
                 first_day = 6;
+            }else{
+                first_day--;
             }
             if(last_day_of_next_month != 5){
                 last_day_of_next_month--;
@@ -286,7 +307,17 @@ class Calendar {
         this.current_year = year;
         this.current_month = month;
         this.current_date = date;
-        this.current_week = Math.ceil( (date + new Date(year, month-1, 1).getDay() )/7 ) - 1;
+        let first_day_of_the_date = new Date(year, month-1, 1).getDay();
+        if(this.date_start == 1){
+            if(first_day_of_the_date == 0){
+                first_day_of_the_date = 6;
+            }else{
+                first_day_of_the_date--;
+            }
+        }
+        this.current_week = Math.ceil( (date + first_day_of_the_date )/7 ) - 1;
+        
+        
 
         this.render_upper_box("week");
         this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
