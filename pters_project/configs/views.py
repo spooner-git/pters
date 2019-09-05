@@ -206,30 +206,28 @@ def func_setting_data_update(request, group):
             request.session['class_center_name'] = class_info.get_center_name()
 
         context = func_get_trainer_setting_list(context, trainer_id, class_id)
+        request.session['setting_member_reserve_time_available'] = context['setting_member_reserve_time_available']
+        request.session['setting_member_reserve_time_prohibition'] = context['setting_member_reserve_time_prohibition']
+        request.session['setting_member_reserve_prohibition'] = context['setting_member_reserve_prohibition']
 
-        request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-        request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-        request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
+        request.session['setting_trainer_work_sun_time_avail'] = context['setting_trainer_work_sun_time_avail']
+        request.session['setting_trainer_work_mon_time_avail'] = context['setting_trainer_work_mon_time_avail']
+        request.session['setting_trainer_work_tue_time_avail'] = context['setting_trainer_work_tue_time_avail']
+        request.session['setting_trainer_work_wed_time_avail'] = context['setting_trainer_work_wed_time_avail']
+        request.session['setting_trainer_work_ths_time_avail'] = context['setting_trainer_work_ths_time_avail']
+        request.session['setting_trainer_work_fri_time_avail'] = context['setting_trainer_work_fri_time_avail']
+        request.session['setting_trainer_work_sat_time_avail'] = context['setting_trainer_work_sat_time_avail']
 
-        request.session['setting_trainer_work_sun_time_avail'] = context['lt_work_sun_time_avail']
-        request.session['setting_trainer_work_mon_time_avail'] = context['lt_work_mon_time_avail']
-        request.session['setting_trainer_work_tue_time_avail'] = context['lt_work_tue_time_avail']
-        request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
-        request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
-        request.session['setting_trainer_work_ths_time_avail'] = context['lt_work_ths_time_avail']
-        request.session['setting_trainer_work_fri_time_avail'] = context['lt_work_fri_time_avail']
-        request.session['setting_trainer_work_sat_time_avail'] = context['lt_work_sat_time_avail']
-
-        request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-        request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-        request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-        request.session['setting_member_time_duration'] = context['lt_res_member_time_duration']
-        request.session['setting_member_start_time'] = context['lt_res_member_start_time']
-        request.session['setting_schedule_auto_finish'] = context['lt_schedule_auto_finish']
-        request.session['setting_member_ticket_auto_finish'] = context['lt_member_ticket_auto_finish']
-        request.session['setting_to_trainee_lesson_alarm'] = context['lt_pus_to_trainee_lesson_alarm']
-        request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
-        request.session['setting_language'] = context['lt_lan_01']
+        request.session['setting_member_reserve_date_available'] = context['setting_member_reserve_date_available']
+        request.session['setting_member_reserve_enable_time'] = context['setting_member_reserve_enable_time']
+        request.session['setting_member_reserve_cancel_time'] = context['setting_member_reserve_cancel_time']
+        request.session['setting_member_time_duration'] = context['setting_member_time_duration']
+        request.session['setting_member_start_time'] = context['setting_member_start_time']
+        request.session['setting_schedule_auto_finish'] = context['setting_schedule_auto_finish']
+        request.session['setting_member_ticket_auto_finish'] = context['setting_member_ticket_auto_finish']
+        request.session['setting_to_trainee_lesson_alarm'] = context['setting_to_trainee_lesson_alarm']
+        request.session['setting_from_trainee_lesson_alarm'] = context['setting_from_trainee_lesson_alarm']
+        request.session['setting_language'] = context['setting_language']
         request.session['setting_admin_password'] = context['setting_admin_password']
 
         if group == 'trainee':
@@ -239,8 +237,10 @@ def func_setting_data_update(request, group):
             except ObjectDoesNotExist:
                 lt_lan_01 = 'KOR'
 
-            context['lt_lan_01'] = lt_lan_01
-            request.session['setting_language'] = context['lt_lan_01']
+            context['setting_language'] = lt_lan_01
+            # request.session['setting_language'] = context['lt_lan_01']
+
+        request.session['setting_data'] = context
 
 
 def get_function_auth_type_cd(request):

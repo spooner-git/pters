@@ -583,28 +583,28 @@ def func_get_trainer_setting_list(context, user_id, class_id):
         avail_date_list.append(str(today + datetime.timedelta(days=i)))
 
     context['avail_date_data'] = avail_date_list
-    context['lt_res_01'] = lt_res_01
-    context['lt_res_02'] = lt_res_02
-    context['lt_res_03'] = lt_res_03
-    context['lt_res_04'] = lt_res_04
-    context['lt_work_sun_time_avail'] = lt_work_sun_time_avail
-    context['lt_work_mon_time_avail'] = lt_work_mon_time_avail
-    context['lt_work_tue_time_avail'] = lt_work_tue_time_avail
-    context['lt_work_wed_time_avail'] = lt_work_wed_time_avail
-    context['lt_work_ths_time_avail'] = lt_work_ths_time_avail
-    context['lt_work_fri_time_avail'] = lt_work_fri_time_avail
-    context['lt_work_sat_time_avail'] = lt_work_sat_time_avail
-    context['lt_res_05'] = lt_res_05
-    context['lt_lan_01'] = lt_lan_01
-    context['lt_res_enable_time'] = lt_res_enable_time
-    context['lt_res_cancel_time'] = lt_res_cancel_time
-    context['lt_res_member_time_duration'] = lt_res_member_time_duration
-    context['lt_res_member_start_time'] = lt_res_member_start_time
-    context['lt_schedule_auto_finish'] = lt_schedule_auto_finish
-    context['lt_member_ticket_auto_finish'] = lt_member_ticket_auto_finish
-    context['lt_pus_to_trainee_lesson_alarm'] = lt_pus_to_trainee_lesson_alarm
-    context['lt_pus_from_trainee_lesson_alarm'] = lt_pus_from_trainee_lesson_alarm
+    context['setting_member_reserve_time_available'] = lt_res_01
+    context['setting_member_reserve_time_prohibition'] = lt_res_02
+    context['setting_member_reserve_prohibition'] = lt_res_03
+    # context['lt_res_04'] = lt_res_04
+    context['setting_trainer_work_sun_time_avail'] = lt_work_sun_time_avail
+    context['setting_trainer_work_mon_time_avail'] = lt_work_mon_time_avail
+    context['setting_trainer_work_tue_time_avail'] = lt_work_tue_time_avail
+    context['setting_trainer_work_wed_time_avail'] = lt_work_wed_time_avail
+    context['setting_trainer_work_ths_time_avail'] = lt_work_ths_time_avail
+    context['setting_trainer_work_fri_time_avail'] = lt_work_fri_time_avail
+    context['setting_trainer_work_sat_time_avail'] = lt_work_sat_time_avail
+    context['setting_member_reserve_date_available'] = lt_res_05
+    context['setting_member_reserve_enable_time'] = lt_res_enable_time
+    context['setting_member_reserve_cancel_time'] = lt_res_cancel_time
+    context['setting_member_time_duration'] = lt_res_member_time_duration
+    context['setting_member_start_time'] = lt_res_member_start_time
+    context['setting_schedule_auto_finish'] = lt_schedule_auto_finish
+    context['setting_member_ticket_auto_finish'] = lt_member_ticket_auto_finish
+    context['setting_to_trainee_lesson_alarm'] = lt_pus_to_trainee_lesson_alarm
+    context['setting_from_trainee_lesson_alarm'] = lt_pus_from_trainee_lesson_alarm
     context['setting_admin_password'] = setting_admin_password
+    context['setting_language'] = lt_lan_01
 
     return context
 

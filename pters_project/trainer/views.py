@@ -658,13 +658,13 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         # 업무 시간 고려
         context = func_get_trainer_setting_list(context, self.request.user.id, class_id)
 
-        setting_trainer_work_time_avail = [context['lt_work_sun_time_avail'],
-                                           context['lt_work_mon_time_avail'],
-                                           context['lt_work_tue_time_avail'],
-                                           context['lt_work_wed_time_avail'],
-                                           context['lt_work_ths_time_avail'],
-                                           context['lt_work_fri_time_avail'],
-                                           context['lt_work_sat_time_avail']]
+        setting_trainer_work_time_avail = [context['setting_trainer_work_sun_time_avail'],
+                                           context['setting_trainer_work_mon_time_avail'],
+                                           context['setting_trainer_work_tue_time_avail'],
+                                           context['setting_trainer_work_wed_time_avail'],
+                                           context['setting_trainer_work_ths_time_avail'],
+                                           context['setting_trainer_work_fri_time_avail'],
+                                           context['setting_trainer_work_sat_time_avail']]
         work_avail_start_time = 24
         work_avail_end_time = 0
         for i in range(0, 7):
@@ -4332,6 +4332,18 @@ def update_setting_language_logic(request):
         messages.error(request, error)
 
     return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetTrainerSettingDataView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        return JsonResponse(request.session['setting_data'], json_dumps_params={'ensure_ascii': True})
+
+
+class GetTrainerAuthDataView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        return JsonResponse(request.session['auth_info'], json_dumps_params={'ensure_ascii': True})
 
 
 # log 삭제
