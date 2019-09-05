@@ -188,6 +188,9 @@ urlpatterns = [
     # 언어 Setting 정보 수정
     url(r'^update_setting_language/$', views.update_setting_language_logic, name='update_setting_language'),
 
+    # Setting 정보 가져오기
+    url(r'^get_trainer_setting_data/$', views.GetTrainerSettingDataView.as_view(), name='get_trainer_setting_data'),
+    url(r'^get_trainer_auth_data/$', views.GetTrainerAuthDataView.as_view(), name='get_trainer_auth_data'),
 
     # 알람 기능 ##########################################################################################################
     # 알람 삭제
