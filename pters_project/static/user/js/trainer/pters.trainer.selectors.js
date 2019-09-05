@@ -1545,7 +1545,7 @@ class TicketSelector{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();ticket_select.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();ticket_select.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="">${this.appendix.title == null ? '$nbsp;' :this.appendix.title}</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="ticket_select.upper_right_menu();">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
@@ -1620,7 +1620,7 @@ class TicketSelector{
     dom_add_new_ticket(){
         let id = "add_new_ticket";
         let title = "새로운 수강권 생성";
-        let icon = '/static/common/icon/icon_add_pink.png';
+        let icon = '/static/common/icon/icon_plus_pink.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = {"padding":"15px 16px", "border-bottom":"1px solid #cccccc"};
@@ -1683,7 +1683,7 @@ class LectureSelector{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();lecture_select.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();lecture_select.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="">${this.appendix.title}</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_select.upper_right_menu();">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
@@ -1760,7 +1760,7 @@ class LectureSelector{
     dom_add_new_lecture(){
         let id = "add_new_lecture";
         let title = "새로운 수업 생성";
-        let icon = '/static/common/icon/icon_add_pink.png';
+        let icon = '/static/common/icon/icon_plus_pink.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = {"padding":"15px 16px", "border-bottom":"1px solid #cccccc"};
@@ -1822,7 +1822,7 @@ class MemberSelector{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();member_select.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_select.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="">${this.appendix.title}</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_select.upper_right_menu();">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
@@ -1948,7 +1948,7 @@ class ColorSelector{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();color_select.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();color_select.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="color_select.upper_right_menu();">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
@@ -2123,9 +2123,9 @@ class DatePickerSelector{
         let month_calendar_upper_tool = `<div class="pters_month_cal_upper_tool_box" style="text-align:center;height:30px;">
                                             <div class="pters_month_cal_tool_date_text">
                                                 <div class="obj_font_size_15_weight_bold">
-                                                    ${CComponent.image_button('date_picker_prev', '뒤로', '/static/common/icon/navigate_before_black.png', null, ()=>{this.prev();})}
+                                                    ${CComponent.image_button('date_picker_prev', '뒤로', '/static/common/icon/icon_circle_arrow_l_pink.png', null, ()=>{this.prev();})}
                                                     ${Number(reference_date_year)}년 ${Number(reference_date_month)}월
-                                                    ${CComponent.image_button('date_picker_next', '앞으로', '/static/common/icon/navigate_next_black.png', null, ()=>{this.next();})}
+                                                    ${CComponent.image_button('date_picker_next', '앞으로', '/static/common/icon/icon_circle_arrow_r_pink.png', null, ()=>{this.next();})}
                                                 </div>
                                             </div>
                                         </div>`;
@@ -2295,7 +2295,7 @@ class RepeatSelector{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="repeat_select.upper_right_menu();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="repeat_select.upper_right_menu();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="">반복 일정</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;">&nbsp;</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
@@ -2414,7 +2414,7 @@ class DaySelector{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="day_select.upper_right_menu();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="day_select.upper_right_menu();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="day_select.upper_right_menu();">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
@@ -2498,7 +2498,7 @@ class CategorySelector{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="category_select.upper_right_menu();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="category_select.upper_right_menu();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="category_select.upper_right_menu();">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
@@ -2587,7 +2587,7 @@ class CustomSelector{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="custom_selector.upper_right_menu();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="custom_selector.upper_right_menu();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center">
                             <span id="">${this.title}</span>
                           </span>`;
@@ -2674,7 +2674,7 @@ class PasswordFourDigitInput{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="password_4d_input.upper_right_menu();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="password_4d_input.upper_right_menu();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center">
                             <span id="">${this.title}</span>
                           </span>`;

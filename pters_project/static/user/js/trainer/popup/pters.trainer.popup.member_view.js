@@ -241,7 +241,7 @@ class Member_view{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();member_view_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_view_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="member_view_popup.upper_right_menu();"></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
@@ -363,7 +363,7 @@ class Member_view{
         }
         let id = 'member_user_id_view';
         let title = this.data.user_id == null ? '회원ID' : this.data.user_id;
-        let icon = '/static/common/icon/person_black.png';
+        let icon = '/static/common/icon/icon_member_card_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = '연결 해제';
         let style = null;
@@ -385,7 +385,7 @@ class Member_view{
         let id = 'member_phone_view';
         let title = this.data.phone == null || this.data.phone == 'None' ? '' : this.data.phone;
         let placeholder = '휴대폰 번호';
-        let icon = '/static/common/icon/icon_smartphone.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text;
         let style = null;
@@ -411,7 +411,7 @@ class Member_view{
         //등록하는 행을 만든다.
         let id = 'input_member_birth';
         let title = this.data.birth == null || this.data.birth == 'None' ? '생년월일' : Object.values(this.data.birth).join('.');
-        let icon = '/static/common/icon/icon_cake.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = this.data.birth == null || this.data.birth == 'None' ? {"color":"#b8b4b4"} : null;
@@ -444,7 +444,7 @@ class Member_view{
     dom_row_member_sex_input(){
         let id = 'input_member_sex';
         let title = this.data.sex == null ||this.data.sex == 'None' ? '성별' : SEX_CODE[this.data.sex];
-        let icon = '/static/common/icon/person_black.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = this.data.sex == null || this.data.sex == 'None' ? {"color":"#b8b4b4"} : null;
@@ -472,7 +472,7 @@ class Member_view{
         let id = 'member_memo_view';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '특이사항';
-        let icon = '/static/common/icon/icon_note.png';
+        let icon = '/static/common/icon/icon_note_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -501,7 +501,7 @@ class Member_view{
             //티켓 이름 표기 부분
             let id = `input_ticket_select_${i}`;
             let title = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
-            let icon = '/static/common/icon/icon_rectangle_blank.png';
+            let icon = '/static/common/icon/icon_ticket_black.png';
             let icon_r_visible = SHOW;
             let icon_r_text = "";
             let style = null;
@@ -806,7 +806,7 @@ class Member_simple_view{
     dom_row_member_name_input(){
         let id = 'member_name_view';
         let title = this.data.name == null ? '회원명*' : this.data.name;
-        let icon = '/static/common/icon/person_black.png';
+        let icon = '/static/common/icon/icon_people_black.png';
         let icon_r_text = "";
         let icon_r_visible = HIDE;
         let style = null;
@@ -826,7 +826,7 @@ class Member_simple_view{
         let id = 'member_phone_view';
         let title =  this.data.phone == null || this.data.phone == 'None' ? '휴대폰 번호' : this.data.phone;
         let placeholder = '휴대폰 번호';
-        let icon = '/static/common/icon/icon_smartphone.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -847,7 +847,7 @@ class Member_simple_view{
         let id = 'member_birth_view';
         let title = this.data.birth == null || this.data.birth == 'None' ? '생년월일' : this.data.birth;
         let placeholder =  '생년월일';
-        let icon = '/static/common/icon/icon_cake.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -865,7 +865,7 @@ class Member_simple_view{
     dom_row_member_sex_input(){
         let id = 'member_sex_view';
         let title = this.data.sex == null || this.data.sex == 'None' ? '성별' : this.data.sex;
-        let icon = '/static/common/icon/person_black.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -879,7 +879,7 @@ class Member_simple_view{
         let id = 'member_memo_view';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '특이사항';
-        let icon = '/static/common/icon/icon_note.png';
+        let icon = '/static/common/icon/icon_note_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -907,7 +907,7 @@ class Member_simple_view{
             //티켓 이름 표기 부분
             let id = `input_ticket_select_${i}`;
             let title = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
-            let icon = '/static/common/icon/icon_rectangle_blank.png';
+            let icon = '/static/common/icon/icon_gap_black.png';
             let icon_r_visible = SHOW;
             let icon_r_text = "";
             let style = null;
