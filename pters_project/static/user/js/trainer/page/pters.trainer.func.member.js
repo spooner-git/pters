@@ -139,7 +139,7 @@ class Member {
                 member_view_popup = new Member_view('.popup_member_view', ${member_id}, 'member_view_popup');});`;
             let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : '#a3a0a0'}">
                             <div class="member_data_l">
-                                <img src="/static/common/icon/icon_account.png">
+                                <img src="/static/common/icon/tab_bar/icon_member_off.png">
                             </div>                
                             <div class="member_data_c">
                                 <div class="member_name">${member_name}</div>
@@ -149,11 +149,11 @@ class Member {
                             </div>
                             <div class="member_data_r">
                                 <div class="member_phone" onclick="event.stopPropagation();location.href='tel:${member_phone}'" ${member_phone == "None" ? "style='display:none;'" : ""}>
-                                    <img src="/static/common/icon/icon_phone.png" class="icon_contact">
+                                    <img src="/static/common/icon/icon_gap_black.png" class="icon_contact">
                                 </div>
                                 <div class="member_sms" onclick="event.stopPropagation();location.href='sms:${member_phone}'" ${member_phone== "None" ? "style='display:none;'" : ""}>
 
-                                    <img src="/static/common/icon/icon_message.png" class="icon_contact">
+                                    <img src="/static/common/icon/icon_gap_black.png" class="icon_contact">
                                 </div>
                             </div>
                         </article>`;
@@ -193,7 +193,7 @@ class Member {
             setTimeout(()=>{
                 document.getElementsByClassName('search_input')[0].style.display = 'none';
             }, 0);
-            event.target.style.backgroundImage = 'url("/static/common/icon/icon_search.png")';
+            event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
             break;
         case false:
             this.search = true;
@@ -202,7 +202,7 @@ class Member {
             }, 0);
             document.getElementsByClassName('search_input')[0].style.transform = 'translateY(0)';
             document.getElementsByClassName('search_input')[0].value = '';
-            event.target.style.backgroundImage = 'url("/static/common/icon/close_black.png")';
+            event.target.style.backgroundImage = 'url("/static/common/icon/icon_x_black.png")';
             break;
         }
     }

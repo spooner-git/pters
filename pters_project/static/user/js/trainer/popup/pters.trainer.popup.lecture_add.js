@@ -104,7 +104,7 @@ class Lecture_add{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();lecture_add_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup();lecture_add_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_add_popup.send_data();">저장</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
@@ -160,7 +160,7 @@ class Lecture_add{
         let id = 'input_lecture_name';
         let title = this.data.name == null ? '' : this.data.name;
         let placeholder = '수업명*';
-        let icon = '/static/common/icon/icon_book.png';
+        let icon = '/static/common/icon/icon_lecture_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -179,7 +179,7 @@ class Lecture_add{
         let id = 'input_lecture_time';
         let title = this.data.time == null ? '' : this.data.time+unit;
         let placeholder = '진행 시간';
-        let icon = '/static/common/icon/icon_clock.png';
+        let icon = '/static/common/icon/icon_clock_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -202,7 +202,7 @@ class Lecture_add{
         let id = 'input_lecture_capacity';
         let title = this.data.capacity == null ? '' : this.data.capacity+unit;
         let placeholder =  '정원*';
-        let icon = '/static/common/icon/icon_member.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -222,7 +222,7 @@ class Lecture_add{
     dom_row_fiexd_member_select(){
         let id = 'select_member';
         let title = this.data.fixed_member_name.length == 0 ? '고정 회원' : '고정회원 '+this.data.fixed_member_id.length+'명 선택됨';
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = '고정 회원';
         let style = null;
@@ -266,7 +266,7 @@ class Lecture_add{
     dom_row_color_select(){
         let id = 'input_color_select';
         let title = this.data.color_name.length == 0 ? '색상 태그' : `<span style="background-color:${this.data.color_bg};color:${this.data.color_font};padding:5px;border-radius:4px;">${this.data.color_name}</span>`;
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = '';
         let style = this.data.color_name.length == 0 ? {"color":"#b8b4b4"} : null;
@@ -284,7 +284,7 @@ class Lecture_add{
     dom_row_ticket_select(){
         let id = 'lecture_add_ticket_select';
         let title = this.data.ticket_id.length == 0 ? '수강권' : this.data.ticket_name.join(', ');
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = this.data.ticket_id.length == 0 ? {"color":"#b8b4b4"} : null;

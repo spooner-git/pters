@@ -163,7 +163,7 @@ class Member_add{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();member_add_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup();member_add_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_add_popup.send_data()">등록</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
@@ -233,7 +233,7 @@ class Member_add{
         let id = 'input_member_name';
         let title = this.data.name == null ? '' : this.data.name;
         let placeholder = '회원명*';
-        let icon = '/static/common/icon/person_black.png';
+        let icon = '/static/common/icon/icon_people_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -252,7 +252,7 @@ class Member_add{
         let id = 'input_member_phone';
         let title = this.data.phone == null ? '' : this.data.phone;
         let placeholder = '휴대폰 번호';
-        let icon = '/static/common/icon/icon_smartphone.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -270,7 +270,7 @@ class Member_add{
         //등록하는 행을 만든다.
         let id = 'input_member_birth';
         let title = this.data.birth == null ? '생년월일' : Object.values(this.data.birth).join('.');
-        let icon = '/static/common/icon/icon_cake.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = this.data.birth == null ? {"color":"#b8b4b4"} : null;
@@ -310,7 +310,7 @@ class Member_add{
                 title = "여성";
             }
         }
-        let icon = '/static/common/icon/person_black.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = this.data.sex == null ? {"color":"#b8b4b4"} : null;
@@ -337,7 +337,7 @@ class Member_add{
         let id = 'input_member_memo';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '특이사항';
-        let icon = '/static/common/icon/icon_note.png';
+        let icon = '/static/common/icon/icon_note_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -354,7 +354,7 @@ class Member_add{
     dom_row_ticket_select(){
         let id = 'input_ticket_select';
         let title = this.data.ticket_id.length == 0 ? '수강권*' : this.data.ticket_name.join(', ');
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_ticket_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = this.data.ticket_id.length == 0 ? {"color":"#b8b4b4"} : null;
@@ -373,7 +373,7 @@ class Member_add{
         //등록하는 행을 만든다.
         let id = 'start_date_select';
         let title = this.data.start_date == null ? '시작일*' : this.data.start_date_text;
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_cal_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = this.data.start_date == null ? {"color":"#b8b4b4"} : null;
@@ -402,7 +402,7 @@ class Member_add{
         //등록하는 행을 만든다.
         let id = 'end_date_select';
         let title = this.data.end_date == null ? '종료일*' : this.data.end_date_text;
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_cal_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = this.data.end_date == null ? {"color":"#b8b4b4"} : null;
@@ -435,7 +435,7 @@ class Member_add{
         let id = 'input_reg_count';
         let title = this.data.ticket_reg_count == null ? '' : this.data.ticket_reg_count+unit;
         let placeholder = '횟수*';
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -457,7 +457,7 @@ class Member_add{
         let id = 'input_reg_price';
         let title = this.data.ticket_price == null ? '' : this.data.ticket_price+unit;
         let placeholder = '가격';
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

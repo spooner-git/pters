@@ -146,7 +146,7 @@ class Ticket_view{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();ticket_view_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();ticket_view_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="ticket_view_popup.upper_right_menu();"></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
@@ -226,7 +226,7 @@ class Ticket_view{
             }
         }
         let title = this.data.lecture_id.length == 0 ? '수업*' : ing_lecture_length+'개';
-        let icon = '/static/common/icon/icon_book.png';
+        let icon = '/static/common/icon/icon_lecture_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = CComponent.text_button ('ticket_lecture_list_view', "수업 목록", null, ()=>{
             //티켓에 포함될 수업 선택
@@ -278,7 +278,7 @@ class Ticket_view{
         let id = 'ticket_count_view';
         let title = this.data.count == null ? '' : this.data.count+unit;
         let placeholder = '횟수';
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -301,7 +301,7 @@ class Ticket_view{
         let id = 'ticket_price_view';
         let title = this.data.price == null ? '' : this.data.price+unit;
         let placeholder = '가격';
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -323,7 +323,7 @@ class Ticket_view{
         let id = 'ticket_memo_view';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '설명';
-        let icon = '/static/common/icon/icon_note.png';
+        let icon = '/static/common/icon/icon_note_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -353,7 +353,7 @@ class Ticket_view{
         // return html;
         let id = 'ing_member_view';
         let title = this.data.member_id.length == 0 ? '0 명' : this.data.member_id.length+' 명';
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -639,7 +639,7 @@ class Ticket_simple_view{
             }
         }
         let title = this.data.lecture_id.length == 0 ? '수업 0개' : ing_lecture_length+'개';
-        let icon = '/static/common/icon/icon_book.png';
+        let icon = '/static/common/icon/icon_lecture_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -655,7 +655,7 @@ class Ticket_simple_view{
         let id = 'ticket_memo_view';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '설명';
-        let icon = '/static/common/icon/icon_note.png';
+        let icon = '/static/common/icon/icon_note_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -674,7 +674,7 @@ class Ticket_simple_view{
     dom_row_member(){
         let id = 'ing_member_view';
         let title = this.data.member_id.length == 0 ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_id.length+' 명)';
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

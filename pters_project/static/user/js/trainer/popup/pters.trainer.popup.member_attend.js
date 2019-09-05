@@ -49,7 +49,7 @@ class Member_attend{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();member_attend.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_attend.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="">출석 체크</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_attend.upper_right_menu();">완료</span></span>`;
         let content =   `<section>${this.dom_row_check_entire()}</section><section>${this.dom_list()}</section>`;

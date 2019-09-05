@@ -153,7 +153,7 @@ class Plan_add{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/schedule/icon_x.png" onclick="layer_popup.close_layer_popup();plan_add_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup();plan_add_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="plan_add_popup.send_data()">등록</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
@@ -224,7 +224,7 @@ class Plan_add{
     dom_row_lecture_select(){
         let id = 'select_lecture';
         let title = this.data.lecture_name.length == 0 ? '수업*' : this.data.lecture_name.join(', ');
-        let icon = '/static/common/icon/schedule/icon_lecture.png';
+        let icon = '/static/common/icon/icon_lecture_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = null;
@@ -256,7 +256,7 @@ class Plan_add{
     dom_row_member_select(){
         let id = 'select_member';
         let title = this.data.member_name.length == 0 ? '회원*' : this.data.member_name.join(', ');
-        let icon = '/static/common/icon/schedule/icon_group.png';
+        let icon = '/static/common/icon/icon_people_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = null;
@@ -279,7 +279,7 @@ class Plan_add{
         //등록하는 행을 만든다.
         let id = 'select_date';
         let title = this.data.date_text == null ? '일자*' : this.data.date_text;
-        let icon = '/static/common/icon/schedule/icon_cal.png';
+        let icon = '/static/common/icon/icon_cal_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -313,7 +313,7 @@ class Plan_add{
     dom_row_start_time_select(){
         let id = 'select_start';
         let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
-        let icon = '/static/common/icon/schedule/icon_clock.png';
+        let icon = '/static/common/icon/icon_clock_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -350,7 +350,7 @@ class Plan_add{
     dom_row_end_time_select(){
         let id = 'select_end';
         let title = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
-        let icon = '/static/common/icon/schedule/icon_clock_white.png';
+        let icon = '/static/common/icon/icon_clock_white.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -402,7 +402,7 @@ class Plan_add{
             repeat_title = '매일';
         }
         let title =this.data.repeat.power == OFF ? '반복 일정' : repeat_title +' / '+ repeat_end_date_in_text;
-        let icon = '/static/common/icon/schedule/icon_repeat.png';
+        let icon = '/static/common/icon/icon_repeat_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = null;
@@ -421,7 +421,7 @@ class Plan_add{
         let id = 'select_memo';
         let title = this.data.memo == "" ? '' : this.data.memo;
         let placeholder = '일정 메모';
-        let icon = '/static/common/icon/schedule/icon_memo.png';
+        let icon = '/static/common/icon/icon_note_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

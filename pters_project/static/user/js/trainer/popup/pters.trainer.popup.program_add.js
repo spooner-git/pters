@@ -70,7 +70,7 @@ class Program_add{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();program_add_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup();program_add_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="program_add_popup.upper_right_menu()">등록</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
@@ -123,7 +123,7 @@ class Program_add{
         let id = 'program_name_input';
         let title = this.name == null ? "" : this.name;
         let placeholder = '프로그램명*';
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -141,7 +141,7 @@ class Program_add{
     dom_row_program_category(){
         let id = 'program_category_select';
         let title = this.category.name.length == 0 ? "분야*" : this.category.name;
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = null;

@@ -27,7 +27,7 @@
 	.member_tools_wrap > .search_member{
 		display: table-cell;
 		height: 100%;
-		background-image: url("/static/common/icon/icon_search.png");
+		background-image: url("/static/common/icon/icon_search_black.png");
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 23px;
@@ -49,7 +49,7 @@
 	.member_tools_wrap > .add_member{
 		display: table-cell;
 		height: 100%;
-		background-image: url("/static/common/icon/icon_add.png?v2");
+		background-image: url("/static/common/icon/icon_plus_pink.png");
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 23px;

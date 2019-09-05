@@ -7,7 +7,7 @@ class CComponent{
                         <div class="obj_table_raw" >
                             <div class="cell_title">${title}</div>
                             <div class="cell_value">${value}</div>
-                            <div class="cell_icon"><img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic"></div>
+                            <div class="cell_icon"><img src="/static/common/icon/icon_arrow_r_small_black.png" class="obj_icon_basic"></div>
                         </div>
                     </li>`;
         
@@ -28,7 +28,7 @@ class CComponent{
             icon = '/static/common/icon/icon_dissatisfied.png';
         }
         if(icon == NONE){
-            icon = '/static/common/icon/menu_white.png';
+            icon = '/static/common/icon/icon_gap_black.png';
         }
         
         let html = `<li class="create_row" id="c_r_${id}" style="${CComponent.data_to_style_code(style)}">
@@ -39,7 +39,7 @@ class CComponent{
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 <span class="cell_text">${icon_r_text}</span>
-                                <img src="/static/common/icon/navigate_next_black.png">
+                                <img src="/static/common/icon/icon_arrow_r_small_black.png">
                             </div>
                         </div>
                     </li>`;
@@ -71,7 +71,7 @@ class CComponent{
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
-                                <img src="/static/common/icon/navigate_next_black.png">
+                                <img src="/static/common/icon/icon_arrow_r_small_black.png">
                             </div>
                         </div>
                     </li>`;
@@ -108,7 +108,7 @@ class CComponent{
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
-                                <img src="/static/common/icon/navigate_next_black.png">
+                                <img src="/static/common/icon/icon_arrow_r_small_black.png">
                             </div>
                         </div>
                     </li>`;
@@ -144,7 +144,7 @@ class CComponent{
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
-                                <img src="/static/common/icon/navigate_next_black.png">
+                                <img src="/static/common/icon/icon_arrow_r_small_black.png">
                             </div>
                         </div>
                     </li>`;
@@ -175,7 +175,7 @@ class CComponent{
                                 <div style="display:none">가격 - ${ticket_price}원 / 횟수 - ${ticket_reg_count} / 유효기간 - ${ticket_effective_days}일</div>
                             </div>
                             <div class="cell_ticket_selected">
-                                <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? 'none' : 'ticket_selected'}">
+                                <img src="/static/common/icon/icon_confirm_black.png" class="obj_icon_basic ${checked == 0 ? 'none' : 'ticket_selected'}">
                             </div>
                         </div>
                     </li>
@@ -219,7 +219,7 @@ class CComponent{
                                 <div class="lecture_additional_info">정원: ${max_member_num} 명 / 진행중  ${ing_member_num} 명</div>
                             </div>
                             <div class="cell_lecture_selected">
-                                <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? 'none' : 'lecture_selected'}">
+                                <img src="/static/common/icon/icon_confirm_black.png" class="obj_icon_basic ${checked == 0 ? 'none' : 'lecture_selected'}">
                             </div>
                         </div>
                     </li>
@@ -269,7 +269,7 @@ class CComponent{
                                 ${fix_member_check}
                             </div>
                             <div class="cell_member_selected">
-                                <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? '' : 'member_selected'}">
+                                <img src="/static/common/icon/icon_confirm_black.png" class="obj_icon_basic ${checked == 0 ? '' : 'member_selected'}">
                             </div>
                         </div>
                     </li>
@@ -318,7 +318,7 @@ class CComponent{
                                 ${color_name}
                             </div>
                             <div class="cell_color_selected">
-                                <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? '' : 'color_selected'}">
+                                <img src="/static/common/icon/icon_confirm_black.png" class="obj_icon_basic ${checked == 0 ? '' : 'color_selected'}">
                             </div>
                         </div>
                     </li>
@@ -360,7 +360,7 @@ class CComponent{
                                 ${title}
                             </div>
                             <div class="cell_select_selected">
-                                <img src="/static/common/icon/icon_done.png" class="obj_icon_basic ${checked == 0 ? '' : 'option_selected'}">
+                                <img src="/static/common/icon/icon_confirm_black.png" class="obj_icon_basic ${checked == 0 ? '' : 'option_selected'}">
                             </div>
                         </div>
                     </li>
@@ -523,10 +523,10 @@ class CComponent{
     //왼쪽에 아이콘과 오른쪽에 텍스트가 있는 버튼
     static icon_button (id, title, url, style, onclick){
         if(url == null){
-            url = '/static/common/icon/icon_account.png';
+            url = '/static/common/icon/icon_dissatisfied.png';
         }
         if(url == NONE){
-            url = '/static/common/icon/menu_white.png';
+            url = '/static/common/icon/icon_gap_black.png';
         }
 
         let html = `<div id="icon_button_${id}" style="cursor:pointer;padding:3px 8px;display:inline-block;height:40px;width:auto;${CComponent.data_to_style_code(style)}">
@@ -543,7 +543,7 @@ class CComponent{
     //이미지만 있는 버튼
     static image_button (id, title, url, style, onclick){
         if(url == null){
-            url = '/static/common/icon/icon_account.png';
+            url = '/static/common/icon/icon_dissatisfied.png';
         }
         let html = `<div id="image_button_${id}" style="cursor:pointer;padding:3px 8px;display:inline-block;height:40px;width:auto;${CComponent.data_to_style_code(style)}">
                         <img src="${url}" style="width:24px;height:24px;vertical-align:middle;margin-bottom:4px;margin-right:5px;" alt="${title}">

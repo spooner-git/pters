@@ -79,9 +79,9 @@ class Program_view{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/close_black.png" onclick="program_view_popup.send_data();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_x_black.png" onclick="program_view_popup.send_data();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_delete.png" class="obj_icon_basic" onclick="program_view_popup.upper_right_menu();"></span>`;
+        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_delete_black.png" class="obj_icon_basic" onclick="program_view_popup.upper_right_menu();"></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
@@ -145,7 +145,7 @@ class Program_view{
     dom_row_program_category(){
         let id = 'program_category_select';
         let title = this.category.name.length == 0 ? "분야*" : this.category.name;
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = null;

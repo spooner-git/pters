@@ -103,7 +103,7 @@ class Ticket_add{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup();ticket_add_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup();ticket_add_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="ticket_add_popup.send_data();">등록</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
@@ -158,7 +158,7 @@ class Ticket_add{
         let id = 'input_ticket_name';
         let title = this.data.name == null ? '' : this.data.name;
         let placeholder = '수강권명*';
-        let icon = '/static/common/icon/person_black.png';
+        let icon = '/static/common/icon/icon_ticket_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -176,7 +176,7 @@ class Ticket_add{
     dom_row_lecture_select(){
         let id = 'input_lecture_select';
         let title = this.data.lecture_id.length == 0 ? '수업' : this.data.lecture_name.length+'개 선택됨';
-        let icon = '/static/common/icon/icon_book.png';
+        let icon = '/static/common/icon/icon_lecture_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = null;
@@ -220,7 +220,7 @@ class Ticket_add{
         let id = 'input_ticket_count';
         let title = this.data.count == null ? '' : this.data.count+unit;
         let placeholder = '횟수';
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text;
         let style = null;
@@ -243,7 +243,7 @@ class Ticket_add{
         let id = 'input_ticket_price';
         let title = this.data.price == null ? '' : this.data.price+unit;
         let placeholder = '가격';
-        let icon = '/static/common/icon/icon_rectangle_blank.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text;
         let style = null;
@@ -265,7 +265,7 @@ class Ticket_add{
         let id = 'input_ticket_memo';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '설명';
-        let icon = '/static/common/icon/icon_note.png';
+        let icon = '/static/common/icon/icon_note_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

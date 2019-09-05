@@ -11,6 +11,7 @@ class Calendar {
         this.subtargetHTML = 'calendar_wrap';
         this.instance = instance;
         
+        this.date_start = 1; //시작을 월요일부터 옵션을 위한 코드
         this.cal_type = "week";
         this.current_page_num = 1;
 
@@ -179,16 +180,31 @@ class Calendar {
         let first_day = new Date(year, month-1, 1).getDay();
         // let last_date = new Date(year, month, 0).getDate();
 
+        //시작을 월요일부터 옵션을 위한 코드
+        if(this.date_start == 1){
+            if(first_day == 0){
+                first_day = 6;
+            }
+        }
+        //시작을 월요일부터 옵션을 위한 코드
+
         let prev_year = year - 1;
         let prev_month = month - 1 < 1 ? 12 : month-1;
 
         week = week - 1;
         if(week == -1 && first_day == 0){
-            week = Math.ceil( ( new Date(prev_month == 12 ? prev_year: year, prev_month-1, 1).getDay() + new Date(prev_month == 12 ? prev_year: year, prev_month, 0).getDate()  )/7 - 1  );
+            let first_day_of_the_month = new Date(prev_month == 12 ? prev_year: year, prev_month-1, 1).getDay();
+            let last_date_of_the_month = new Date(prev_month == 12 ? prev_year: year, prev_month, 0).getDate();
+            
+
+            week = Math.ceil( (first_day_of_the_month + last_date_of_the_month)/7 - 1  );
             month = month - 1 < 1 ? 12  : month - 1;
             year = month == 12 ? year - 1 : year;   
         }else if(week == -1 && first_day !=0){
-            week = Math.ceil( ( new Date(prev_month == 12 ? prev_year: year, prev_month-1, 1).getDay() + new Date(prev_month == 12 ? prev_year: year, prev_month, 0).getDate()  )/7 - 2  );
+            let first_day_of_the_month = new Date(prev_month == 12 ? prev_year: year, prev_month-1, 1).getDay();
+            let last_date_of_the_month = new Date(prev_month == 12 ? prev_year: year, prev_month, 0).getDate();
+
+            week = Math.ceil( (first_day_of_the_month + last_date_of_the_month)/7 - 2 );
             month = month - 1 < 1 ? 12  : month - 1;
             year = month == 12 ? year - 1 : year;      
         }
@@ -204,13 +220,26 @@ class Calendar {
         let week = this.current_week;
         let first_day = new Date(year, month-1, 1).getDay();
         let last_date = new Date(year, month, 0).getDate();
+        let last_day_of_next_month = new Date(year, month, 0).getDay();
+
+        //시작을 월요일부터 옵션을 위한 코드
+        if(this.date_start == 1){
+            if(first_day == 0){
+                first_day = 6;
+            }
+            if(last_day_of_next_month != 5){
+                last_day_of_next_month--;
+            }
+        }
+        //시작을 월요일부터 옵션을 위한 코드
+
         let week_num_this_month = Math.ceil( (first_day + last_date)/7  );
 
         // let next_year = year + 1;
         // let next_month = month + 1 > 12 ? 1 : month + 1;
 
         week = week + 1;
-        if(week  == week_num_this_month && new Date(year, month, 0).getDay() != 6 ){
+        if(week  == week_num_this_month && last_day_of_next_month != 6 ){
             week = 1;
             month = month + 1 > 12 ? 1  : month + 1;
             year = month ==  1 ? year + 1 : year;
@@ -223,7 +252,7 @@ class Calendar {
         }
         
         return {
-            "year":year, "month":month, "week":week
+            "year":year, "month":month, "week":week, "tese":last_day_of_next_month
         };
     }
 
@@ -462,8 +491,12 @@ class Calendar {
             schedule_data = false;
         }
         let weeks_div = [`<div class="cal_week_line_dates" style="margin-top:4px; border:0;">
-                            <div class="no_border obj_font_color_sunday_red">일</div><div class="no_border">월</div><div class="no_border">화</div>
-                            <div class="no_border">수</div><div class="no_border">목</div><div class="no_border">금</div><div class="no_border obj_font_color_saturday_blue">토</div>
+                            ${this.date_start == 0 
+                            ?
+                                '<div class="no_border obj_font_color_sunday_red">일</div><div class="no_border">월</div><div class="no_border">화</div><div class="no_border">수</div><div class="no_border">목</div><div class="no_border">금</div><div class="no_border obj_font_color_saturday_blue">토</div>'
+                            :
+                                '<div class="no_border">월</div><div class="no_border">화</div><div class="no_border">수</div><div class="no_border">목</div><div class="no_border">금</div><div class="no_border obj_font_color_saturday_blue">토</div><div class="no_border obj_font_color_sunday_red">일</div>'
+                            }
                           </div>
                           <div style="margin-top:4px; border-bottom:1px solid #f5f2f3;"></div>`];
 
@@ -538,26 +571,130 @@ class Calendar {
         if(this.week_zoomed.vertical.activate == false){
             this.week_zoomed.vertical.activate = true;
             $('.week_rows article').css('height', '180px');
-            $('#week_zoom_vertical_button').css({'background-image':'url(/static/common/icon/schedule/icon_zoom_out.png)'});
+            $('#week_zoom_vertical_button').css({'background-image':'url(/static/common/icon/icon_zoom_out_black.png)'});
             $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_long2.png?v)', 'background-size': '30px 180px'});
         }else if(this.week_zoomed.vertical.activate == true){
             this.week_zoomed.vertical.activate = false;
             $('.week_rows article').css('height', '60px');
-            $('#week_zoom_vertical_button').css({'background-image':'url(/static/common/icon/schedule/icon_zoom_in.png)'});
+            $('#week_zoom_vertical_button').css({'background-image':'url(/static/common/icon/icon_zoom_in_black.png)'});
             $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_short.png?v2)', 'background-size': '30px 60px'});
         }
         this.relocate_current_time_indicator();
     }
 
+    // get_week_dates (year, month, week){
+    //     const firstday_this_month = (new Date(Number(year), Number(month)-1, 1)).getDay(); // 3
+    //     const lastday_this_month = (new Date(Number(year), Number(month), 0)).getDate(); // 3
+    //     const lastday_prev_month = (new Date(Number(year), Number(month)-1, 0)).getDate();
+
+    //     const number_of_weeks_this_month = (
+    //         Math.ceil(
+    //             (new Date(year, Number(month)-1, 1).getDay() + new Date(year, Number(month), 0).getDate() ) / 7
+    //         ) 
+    //     );
+    //     if(week >= number_of_weeks_this_month){
+    //         //해당 Week에 대한 정보가 없음
+    //         return false;
+    //     }
+        
+    //     let years_of_this_week = [];
+    //     let months_of_this_week = [];
+    //     let dates_of_this_week = [];
+    //     // let color_of_this_week = [];
+    //     let date_cache = 1;
+    //     let month_cache;
+    //     let finished = false;
+    //     for(let i=0; i<=week; i++){
+    //         let yearCellsToJoin = [];
+    //         let monthCellsToJoin = [];
+    //         let dateCellsToJoin = [];
+    //         // let dateColorClass = [];
+    //         for(let j=0; j<7; j++){
+    //             if(i==0 && j<firstday_this_month){ //첫번째 주일때 처리
+    //                 let _year = Number(month)-1 > 0 ? Number(year) : Number(year) - 1;
+    //                 let _month = Number(month)-1 < 1 ? 12 : Number(month)-1;
+    //                 let _date = lastday_prev_month-j;
+
+    //                 yearCellsToJoin.unshift(_year);
+    //                 monthCellsToJoin.unshift(_month);
+    //                 dateCellsToJoin.unshift(_date);
+
+    //                 // dateColorClass.unshift(`${_year}-${_month}-${_date}` == this.today ? 'cal_font_color_pink cal_fw_bd' : 'cal_font_color_grey');
+    //             }else if(date_cache > lastday_this_month || month_cache == month + 1){ // 마지막 날짜가 끝난 이후 처리
+    //                 if(date_cache == lastday_this_month+1){
+    //                     date_cache = 1;
+    //                     month_cache = month + 1;
+    //                     finished = true;
+    //                 }
+    //                 let _year = Number(month)+1 > 12 ? Number(year)+1 : year;
+    //                 let _month = Number(month)+1 > 12? 1 : Number(month)+1;
+    //                 let _date = date_cache;
+
+    //                 yearCellsToJoin.push(_year);
+    //                 monthCellsToJoin.push(_month);
+    //                 dateCellsToJoin.push(_date);
+    //                 // dateColorClass.push(`${_year}-${_month}-${_date}` == this.today ? 'cal_font_color_pink cal_fw_bd' : 'cal_font_color_grey');
+    //                 date_cache++;
+    //             }else{
+    //                 let _year = Number(year);
+    //                 let _month = Number(month);
+    //                 let _date = date_cache;
+
+
+    //                 yearCellsToJoin.push(_year);
+    //                 monthCellsToJoin.push(_month);
+    //                 dateCellsToJoin.push(_date);
+    //                 // dateColorClass.push(`${_year}-${_month}-${_date}` == this.today ? 'cal_font_color_pink cal_fw_bd' : 'cal_font_color_black');
+    //                 date_cache++;
+    //             }
+    //         }
+    //         years_of_this_week.push(yearCellsToJoin);
+    //         months_of_this_week.push(monthCellsToJoin);
+    //         dates_of_this_week.push(dateCellsToJoin);
+    //         // color_of_this_week.push(dateColorClass);
+    //     }
+        
+    //     let [year1, year2, year3, year4, year5, year6, year7] = years_of_this_week[week];
+    //     let [month1, month2, month3, month4, month5, month6, month7] = months_of_this_week[week];
+    //     let [date1, date2, date3, date4, date5, date6, date7] = dates_of_this_week[week];
+    //     // let [color1, color2, color3, color4, color5, color6, color7] = color_of_this_week[week];
+       
+        
+    //     return(
+    //         {
+    //             "year" :  years_of_this_week[week],
+    //             "month" : months_of_this_week[week],
+    //             "date" : dates_of_this_week[week],
+    //             // "color" : color_of_this_week[week],
+    //             "full_date" : [
+    //                 [year1, month1, date1], [year2, month2, date2], [year3, month3, date3], [year4, month4, date4], 
+    //                 [year5, month5, date5], [year6, month6, date6], [year7, month7, date7]
+    //             ]
+    //         }
+    //     );
+    // }
+
     get_week_dates (year, month, week){
-        const firstday_this_month = (new Date(Number(year), Number(month)-1, 1)).getDay(); // 3
-        const lastday_this_month = (new Date(Number(year), Number(month), 0)).getDate(); // 3
-        const lastday_prev_month = (new Date(Number(year), Number(month)-1, 0)).getDate();
+        let firstday_this_month = (new Date(Number(year), Number(month)-1, 1)).getDay(); // 3
+        let lastday_this_month = (new Date(Number(year), Number(month), 0)).getDate(); // 3
+        let lastday_prev_month = (new Date(Number(year), Number(month)-1, 0)).getDate();
+
+        //시작을 월요일부터 옵션을 위한 코드
+        if(this.date_start == 1){
+            if(firstday_this_month == 0){
+                firstday_this_month = 6;
+            }else{
+                firstday_this_month--;
+            }
+        }
 
         const number_of_weeks_this_month = (
+            // Math.ceil(
+            //     (new Date(year, Number(month)-1, 1).getDay() + new Date(year, Number(month), 0).getDate() ) / 7
+            // )
             Math.ceil(
-                (new Date(year, Number(month)-1, 1).getDay() + new Date(year, Number(month), 0).getDate() ) / 7
-            ) 
+                (firstday_this_month + lastday_this_month) / 7
+            )
         );
         if(week >= number_of_weeks_this_month){
             //해당 Week에 대한 정보가 없음
@@ -641,6 +778,9 @@ class Calendar {
         );
     }
 
+
+
+
     draw_week_line (year, month, week, schedule_data, month_or_week, row_height){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
         let week_dates_info = this.get_week_dates(year, month, week);
         let _year = week_dates_info.year;
@@ -689,13 +829,26 @@ class Calendar {
                 let today_marking = "";
                 let today_text_style = "";
                 border_style = month_or_week == "week" ? "no_border" : "";
-                if(i == 0){
-                    border_style = "no_border";
-                    sunday = "obj_font_color_sunday_red";
+
+                
+                if(this.date_start == 0){
+                    if(i == 0){
+                        border_style = "no_border";
+                        sunday = "obj_font_color_sunday_red";
+                    }
+                    if(i == 6){
+                        saturday = "obj_font_color_saturday_blue";
+                    }
+                }else if(this.date_start == 1){ //시작을 월요일부터 옵션을 위한 코드
+                    if(i == 5){
+                        border_style = "no_border";
+                        sunday = "obj_font_color_saturday_blue";
+                    }
+                    if(i == 6){
+                        saturday = "obj_font_color_sunday_red";
+                    }
                 }
-                if(i == 6){
-                    saturday = "obj_font_color_saturday_blue";
-                }
+                
                 
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
                     today_marking = `<div class="today_marking" style="${month_or_week == "week" ? '' : 'top:8%; width:20px; height:20px; border-radius:12px;'}"></div>`;
@@ -1095,9 +1248,12 @@ class Calendar {
                 "week_cal_upper_box_date_tool":`
                     <div class="cal_week_line_dates" style="border-bottom:0;font-size:11px;">
                         <div class="week_cal_time_text"></div>
-                        <div class="_week_row_1 obj_font_color_sunday_red">일</div><div class="_week_row_2">월</div><div class="_week_row_3">화</div>
-                        <div class="_week_row_4">수</div><div class="_week_row_5">목</div><div class="_week_row_6">금</div>
-                        <div class="_week_row_7 obj_font_color_saturday_blue">토</div>
+                        ${this.date_start == 0  //시작을 월요일부터 옵션을 위한 코드
+                            ? '<div class="_week_row_1 obj_font_color_sunday_red">일</div><div class="_week_row_2">월</div><div class="_week_row_3">화</div><div class="_week_row_4">수</div><div class="_week_row_5">목</div><div class="_week_row_6">금</div><div class="_week_row_7 obj_font_color_saturday_blue">토</div>'
+                            : '<div class="_week_row_1">월</div><div class="_week_row_2">화</div><div class="_week_row_3">수</div><div class="_week_row_4">목</div><div class="_week_row_5">금</div><div class="_week_row_6 obj_font_color_saturday_blue">토</div><div class="_week_row_7 obj_font_color_sunday_red">일</div>'}
+
+
+                        
                     </div>
                     `
                 ,

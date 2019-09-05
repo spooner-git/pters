@@ -63,9 +63,9 @@ class Setting_worktime{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/navigate_before_black.png" onclick="layer_popup.close_layer_popup();setting_worktime_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();setting_worktime_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_done.png" onclick="setting_worktime_popup.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_confirm_black.png" onclick="setting_worktime_popup.upper_right_menu();" class="obj_icon_prev"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -153,7 +153,7 @@ class Setting_worktime{
     dom_row_start_time_select(day){
         let id = `select_start_${day}`;
         let title = this.data[day].start_time_text == null ? '시작 시각*' : this.data[day].start_time_text;
-        let icon = '/static/common/icon/icon_clock.png';
+        let icon = '/static/common/icon/icon_clock_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -193,7 +193,7 @@ class Setting_worktime{
     dom_row_end_time_select(day){
         let id = `select_end_${day}`;
         let title = this.data[day].end_time_text == null ? '종료 시각*' : this.data[day].end_time_text;
-        let icon = '/static/common/icon/icon_clock_white.png';
+        let icon = '/static/common/icon/icon_gap_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

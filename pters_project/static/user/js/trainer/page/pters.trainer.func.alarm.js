@@ -81,7 +81,7 @@ class Alarm {
                 let html = `<article class="alarm_wrapper" data-alarm_id="${alarm_id}" style="background-color:${read_check == 1 ? "" : '#ffe8eb'}">
                                 <div class="alarm_data_u">
                                     <div>
-                                        <img src="/static/common/icon/icon_rectangle_blank.png" style="float:left;margin-right:16px;">
+                                        <img src="/static/common/icon/icon_gap_black.png" style="float:left;margin-right:16px;">
                                     </div>
                                     <div>
                                         <span>${alarm_how}</span>
