@@ -316,8 +316,6 @@ class Calendar {
             }
         }
         this.current_week = Math.ceil( (date + first_day_of_the_date )/7 ) - 1;
-        
-        
 
         this.render_upper_box("week");
         this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
@@ -325,7 +323,7 @@ class Calendar {
         //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
         if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
             this.week_zoomed.activate = false;
-            this.week_zoomed.target_row = new Date(year, month-1, date).getDay()+1;
+            // this.week_zoomed.target_row = new Date(year, month-1, date).getDay()+1;
             this.zoom_week_cal();
         }
 
@@ -562,6 +560,7 @@ class Calendar {
             return false;
         }
 
+        console.log("clicked", clicked_number, this.week_zoomed.target_row)
         if(this.week_zoomed.activate == false){
             for(let i=1; i<=7; i++){
                 if(i==clicked_number){
@@ -886,7 +885,7 @@ class Calendar {
                     today_text_style = 'color:#fe4e65;font-weight:bold;';
                 }
                 
-                let onclick = month_or_week == "week" ? `${this.instance}.zoom_week_cal(this, ${_year[i]}, ${_month[i]}, ${_date[i]})` : `calendar.week_zoomed.activate = true;calendar.week_zoomed.target_row = this.dataset.row;${this.instance}.go_week(${_year[i]}, ${_month[i]}, ${_date[i]});`;
+                let onclick = month_or_week == "week" ? `${this.instance}.zoom_week_cal(this, ${_year[i]}, ${_month[i]}, ${_date[i]})` : `;calendar.week_zoomed.activate = true;calendar.week_zoomed.target_row = this.dataset.row;${this.instance}.go_week(${_year[i]}, ${_month[i]}, ${_date[i]});`;
 
                 dates_to_join.push(
                     `
