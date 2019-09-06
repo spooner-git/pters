@@ -255,7 +255,7 @@ class Menu {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-
+            sideGoPage('service_inquiry');
         });
         return html;
     }

@@ -130,6 +130,7 @@ const POPUP_ADDRESS_SETTING_RESERVE = 'popup_setting_reserve';
 const POPUP_ADDRESS_SETTING_ALARM = 'popup_setting_alarm';
 const POPUP_ADDRESS_SETTING_ATTENDMODE = 'popup_setting_attendmode';
 const POPUP_ADDRESS_SERVICE_NOTICE = 'popup_service_notice';
+const POPUP_ADDRESS_SERVICE_INQUIRY = 'popup_service_inquiry';
 // 풀페이지 팝업
 
 // User Input 팝업

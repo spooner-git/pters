@@ -71,13 +71,13 @@ input:disabled{
 	background-color: transparent
 }
 
-.create_input_row input::-webkit-input-placeholder{
+.create_input_row input::-webkit-input-placeholder, .create_input_row textarea::-webkit-input-placeholder{
 	color: #b8b4b4;
 }
-.create_input_row input::-moz-placeholder{
+.create_input_row input::-moz-placeholder, .create_input_row textarea::-moz-placeholder{
 	color: #b8b4b4;
 }
-.create_input_row input:-ms-input-placeholder{
+.create_input_row input:-ms-input-placeholder, .create_input_row textarea:-ms-input-placeholder{
 	color: #b8b4b4;
 }
 .create_input_textarea_row{
