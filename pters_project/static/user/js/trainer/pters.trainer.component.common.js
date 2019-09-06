@@ -135,12 +135,12 @@ class CComponent{
     static create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout){
         
         let html = `<li class="create_input_row create_input_textarea_row" id="c_i_t_r_${id}" style="${CComponent.data_to_style_code(style)}">
-                        <div class="obj_table_raw">
+                        <div class="obj_table_raw" style="height:100%">
                             <div class="cell_title" style="display:${icon == undefined ? 'none' : ''}">
                                 ${icon != null ? `<img src="${icon}">` : ""} 
                             </div>
                             <div class="cell_content">
-                                <textarea class="cell_text" placeholder="${placeholder}" value="${title}">${title}</textarea>
+                                <textarea class="cell_text" placeholder="${placeholder}" value="${title}" style="height:100%;">${title}</textarea>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}

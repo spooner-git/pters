@@ -135,11 +135,10 @@ class Service_inquiry {
         let icon_r_visible = HIDE;
         let icon_r_text = '';
         let onfocusout = (data)=>{
-            console.log(data)
             this.data.inquiry_content = data;
             this.render_content();
         };
-        let style = null;
+        let style = {"height":`${windowHeight - 61 - 82 - 69 - 69 - 12 - 16 - 28}px`};
         let row = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout);
         let html = row;
         return html;
