@@ -79,7 +79,14 @@ class Calendar {
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
         this.mode_to_plan_change(OFF);
-        this.init_no_new(cal_type);
+        Setting_reserve_func.read((data)=>{
+            let work_time = this.calc_worktime(data);
+            this.worktime = [];
+            for(let i=work_time.start_hour; i<work_time.end_hour; i++){
+                this.worktime.push(i);
+            }
+            this.init_no_new(cal_type);
+        })
     }
 
     //달력에 필요한 최상위 컨테이너가 이미 있는 상태에서 컨테이너 내용(달력)을 재초기화 할때 사용한다.
@@ -141,6 +148,39 @@ class Calendar {
             this.toggle_touch_move('on', '#calendar_wrap');
             break;
         }
+    }
+
+    calc_worktime(data){
+        let datas = [data.setting_trainer_work_sun_time_avail, data.setting_trainer_work_mon_time_avail, data.setting_trainer_work_tue_time_avail,
+            data.setting_trainer_work_wed_time_avail, data.setting_trainer_work_ths_time_avail, data.setting_trainer_work_fri_time_avail,
+            data.setting_trainer_work_sat_time_avail];
+        
+        let length = datas.length;
+        let start_time_temp;
+        let end_time_temp;
+        for(let i=0; i<length; i++){
+            let start_time = datas[i].split('-')[0];
+            let end_time = datas[i].split('-')[1];
+            if(start_time_temp == undefined){
+                start_time_temp = start_time;
+            }
+            if(end_time_temp == undefined){
+                end_time_temp = end_time;
+            }
+
+            let start_time_compare = TimeRobot.compare(start_time, start_time_temp); // start_time_temp는 datas 값중 가장 작은(시간)값
+            let end_time_compare = TimeRobot.compare(end_time, end_time_temp); // end_time_temp는 datas 값중 가장 큰(시간)값
+
+            if(start_time_compare == false){
+                start_time_temp = start_time;
+            }
+            if(end_time_compare == true){
+                end_time_temp = end_time;
+            }
+        }
+        
+        let result = {complete:`${start_time_temp}:${end_time_temp}`, start:start_time_temp, end:end_time_temp, start_hour:Number(start_time_temp.split(':')[0]), end_hour:Number(end_time_temp.split(':')[0])};
+        return result;
     }
 
     get_current_month (){
@@ -560,7 +600,6 @@ class Calendar {
             return false;
         }
 
-        console.log("clicked", clicked_number, this.week_zoomed.target_row)
         if(this.week_zoomed.activate == false){
             for(let i=1; i<=7; i++){
                 if(i==clicked_number){
