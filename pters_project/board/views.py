@@ -20,6 +20,7 @@ def add_question_info_logic(request):
     title = request.POST.get('inquire_subject', '')
     contents = request.POST.get('inquire_body', '')
     next_page = request.POST.get('next_page')
+    
     error = None
 
     if qa_type_cd == '' or qa_type_cd is None:

@@ -22,8 +22,15 @@ class Service_inquiry {
         this.set_initial_data();
     }
 
+    init_data(){
+        this.data = {
+            inquiry_type:{value:[], text:[]},
+            inquiry_subject:null,
+            inquiry_content:null
+        };
+    }
+
     set_initial_data (){
-        
         this.render_content();
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
@@ -93,7 +100,7 @@ class Service_inquiry {
             let title = "문의 유형";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
-            let data = {value:[1, 2, 3, 4], text:["사용문의", "기능 제안", "기능 오류", "기타"]};
+            let data = {value:["USAGE", "SUGGEST", "ERROR", "OTHER"], text:["사용문의", "기능 제안", "기능 오류", "기타"]};
             let selected_data = this.data.inquiry_type;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
@@ -145,62 +152,83 @@ class Service_inquiry {
     }
 
     send_data(){
-        alert('보내기');
+        let data = {
+            "inquire_type":this.data.inquiry_type.value[0],
+            "inquire_subject":this.data.inquiry_subject,
+            "inquire_body":this.data.inquiry_content,
+            "next_page":""
+        };
+
+        Service_inquiry_func.create(data, ()=>{
+            show_error_message("문의를 접수하였습니다.");
+            this.init_data();
+            Service_inquiry.render_content();
+            Service_inquiry_func.read((data)=>{
+                console.log(data);
+            });
+        });
     }
 
+}
 
-    //수강권 리스트 서버에서 불러오기
-    request_lecture_list (status, callback){
-        //sort_order_by : lecture_type_seq, lecture_name, lecture_member_many, lecture_member_few, lecture_create_new, lecture_create_old
-        let url;
-        if(status=='ing'){
-            url = '/trainer/get_lecture_ing_list/';
-        }else if (status=='end'){
-            url = '/trainer/get_lecture_end_list/';
-        }
-        // else{
-        //     url = '/trainer/get_package_list/';
-        // }
-        let start_time;
-        let end_time;
+class Service_inquiry_func {
+    static create (data, callback){
         $.ajax({
-            url:url,
-            type:'GET',
-            // data: {"page": lecture_page_num, "sort_val": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
-            data: {"page": 1, "sort_val": 0, "sort_order_by":0, "keyword":""},
-            // dataType : 'html',
+            url : "/board/add_question_info/",
+            type:'POST',
+            data: data,
+            dataType : 'json',
     
-            beforeSend:function (){
-                start_time = performance.now();
-                ajax_load_image(SHOW);
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
             },
     
             //통신성공시 처리
-            success:function (data){
-                // console.log(data);
-                // var jsondata = JSON.parse(data);
-                // if(jsondata.messageArray.length>0){
-                //     console.log("에러:" + jsondata.messageArray);
-                // }else{
-                end_time = performance.now();
-                console.log((end_time-start_time)+'ms');
+            success:function(data){
                 callback(data);
-                return data;
-                // }
-            },
-
-            //보내기후 팝업창 닫기
-            complete:function (){
-                ajax_load_image(HIDE);
             },
     
             //통신 실패시 처리
-            error:function (){
-                console.log('server error');
+            error:function(data){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                // location.reload();
             }
         });
     }
 
+    static read (callback){
+        $.ajax({
+            url: '/board/get_question_list/',
+            type: 'GET',
+            dataType : 'html',
+
+            beforeSend:function(){
+                
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(callback != undefined){
+                    callback(jsondata);
+                }
+            },
+
+            complete:function(){
+               
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        });
+    }
 }
 
 /* global $, 
