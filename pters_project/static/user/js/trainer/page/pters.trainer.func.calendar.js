@@ -965,6 +965,7 @@ class Calendar {
         let _color = week_dates_info.color;
 
         let work_start = this.worktime[0];
+        console.log("work_start", work_start)
         let work_end = this.worktime[this.worktime.length - 1];
 
         let schedules = [];
@@ -1007,19 +1008,28 @@ class Calendar {
                             let end_hour = plan_end_split[0];
                             let end_min = plan_end_split[1];
 
-                            let plan_start = {full:`${start_hour < work_start ? work_start : start_hour}:${start_min}`, hour:`${start_hour < work_start ? work_start : start_hour}`, minute:start_min};
+                            let plan_start = {full:`${start_hour < work_start ? work_start : start_hour}:${start_min}`, hour:`${start_hour < work_start ? work_start : start_hour}`, minute:`${start_hour < work_start ? 0 : start_min}`};
                             let plan_end = {full:`${end_hour > work_end ? work_end+1 : end_hour }:${end_min}`, hour:`${end_hour > work_end ? work_end+1 : end_hour }`, minute:end_min};
 
                             let diff = TimeRobot.diff(plan_start.full, plan_end.full);
 
                             let cell_index = plan.duplicated_index;
                             let cell_divide = plan.duplicated_cell;
+
+                            let display = "";
+                            if( (start_hour <= work_start && end_hour <= work_start) || start_hour >= work_end + 1){
+                                display = "none";
+                            }
                             
-                            // let onclick = `layer_popup.open_layer_popup(${POPUP_AJAX_CALL}, '${POPUP_ADDRESS_PLAN_VIEW}', 90, ${POPUP_FROM_BOTTOM}, {'select_date':'${date_to_search}'})`;
                             let onclick = `${this.instance}.open_popup_plan_view(event, ${plan.schedule_id}, ${_year[i]},${_month[i]},${_date[i]})`;
-                            let height = 100*(diff.hour*60+60*diff.min/60)/(24*60);
-                            let top = 100*( (plan_start.hour-work_start)*60 + 60*plan_start.minute/60 )/(24*60);
-                            let styles = `width:${100/cell_divide}%;height:${height}%;top:${top}%;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style}`;
+
+                            //일정 표기 관련 계산
+                            let height = 100*(diff.hour*60+60*diff.min/60)/(this.worktime.length*60);
+                            let top = 100*( (plan_start.hour-work_start)*60 + 60*plan_start.minute/60 )/(this.worktime.length*60);
+                            
+                            
+                            
+                            let styles = `width:${100/cell_divide}%;height:${height}%;top:${top}%;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style};display:${display}`;
                             let long_touch_active = this.long_touch_schedule_id == plan.schedule_id ? "long_touch_active" : "";
                             let go_behind =  "";
                             if(this.long_touch == ON && this.long_touch_schedule_id != plan.schedule_id){
