@@ -517,6 +517,11 @@ class Plan_add{
         let data;
         calendar.request_schedule_data (date, days, (schedules)=>{
             data = schedules[date];
+            //입력하고자하는 날짜에 일정이 전혀 존재하지 않을때 처리
+            if(data == undefined){
+                return callback([]);
+            }
+            
             let who_is_duplicated = [];
             let length = data.length;
             for(let i=0; i<length; i++){
