@@ -205,10 +205,6 @@
 <div id="shade_for_popup_basic" style="position:fixed;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
 onclick="layer_popup.close_layer_popup();"></div>
 
-<div id="root_progress">
-    <progress id="progress_bar" value="0" max="100"></progress>
-</div>
-
 <div id="root_content">
     {% block content %}
     {% endblock %}
@@ -292,6 +288,7 @@ onclick="layer_popup.close_layer_popup();"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_schedule_history.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_ticket_history.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_attend.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.statistics.js" %}></script>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_worktime.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_autocomplete.js" %}></script>
@@ -381,22 +378,13 @@ onclick="layer_popup.close_layer_popup();"></div>
         }
     }
 
-    function progress_bar(percentage){
-        $root_progress = $('#root_progress');
-        $progress_bar = $('#progress_bar');
-        $progress_bar.val(percentage);
-
-        if(percentage == 100){
-            $root_progress.fadeOut();
-        }else{
-            $root_progress.fadeIn();
-        }
-    }
+    //피터스 패스
+    pass_inspector = new PassInspector();    
 
     // 페이지 인스턴스
     var home = new Home('#root_content', 'home');
     var calendar = new Calendar('#root_content', 'calendar');
-   var ticket = new Ticket('#root_content', 'ticket');
+    var ticket = new Ticket('#root_content', 'ticket');
     var lecture = new Lecture('#root_content', 'lecture');
     var member = new Member('#root_content', 'member');
     var menu = new Menu('#root_content', 'menu');
@@ -424,6 +412,7 @@ onclick="layer_popup.close_layer_popup();"></div>
     var member_schedule_history;
     var member_ticket_history;
     var member_attend;
+    var statistics;
 
     var program_list_popup;
     var program_add_popup;
@@ -539,6 +528,10 @@ onclick="layer_popup.close_layer_popup();"></div>
             break;
             case 'attend_mode':
                 location.href = '/trainer/attend_mode/';
+            break;
+            case 'statistics':
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    statistics = new Statistics('.popup_statistics')});
             break;
             case 'pters_pass':
                 location.href = '/payment/';

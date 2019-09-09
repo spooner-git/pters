@@ -42,7 +42,7 @@ class Lecture {
 
 
     //수강권 리스트 서버에서 불러오기
-    request_lecture_list (status, callback){
+    request_lecture_list (status, callback, async){
         //sort_order_by : lecture_type_seq, lecture_name, lecture_member_many, lecture_member_few, lecture_create_new, lecture_create_old
         let url;
         if(status=='ing'){
@@ -55,12 +55,16 @@ class Lecture {
         // }
         let start_time;
         let end_time;
+        if(async == undefined){
+            async = true;
+        }
         $.ajax({
             url:url,
             type:'GET',
             // data: {"page": lecture_page_num, "sort_val": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
             data: {"page": 1, "sort_val": 0, "sort_order_by":0, "keyword":""},
             // dataType : 'html',
+            async:async,
     
             beforeSend:function (){
                 start_time = performance.now();

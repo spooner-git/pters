@@ -965,7 +965,6 @@ class Calendar {
         let _color = week_dates_info.color;
 
         let work_start = this.worktime[0];
-        console.log("work_start", work_start)
         let work_end = this.worktime[this.worktime.length - 1];
 
         let schedules = [];

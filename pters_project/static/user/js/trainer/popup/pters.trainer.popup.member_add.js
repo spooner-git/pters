@@ -488,6 +488,12 @@ class Member_add{
     }
 
     send_data(){
+        let inspect = pass_inspector.member();
+        if(inspect.barrier == BLOCKED){
+            show_error_message(`[${inspect.limit_type}] 이용자께서는 회원을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.`);
+            return false;
+        }
+
         if(this.check_before_send() == false){
             return false;
         }

@@ -453,3 +453,143 @@ class TimeRobot{
     }
 }
 
+
+class PassInspector{
+    constructor(){
+        this.data;
+        this.init();
+    }
+    
+    init(){
+        this.get_pass((data)=>{
+            this.data = data;
+        });
+    }
+
+    get_pass(callback){
+        $.ajax({
+            url:"/trainer/get_trainer_auth_data/",
+            type:'GET',
+            dataType : 'JSON',
+    
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //통신성공시 처리
+            success:function (data){
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+
+            },
+    
+            //통신 실패시 처리
+            error:function (){
+                console.log('server error');
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    schedule(selected_date){
+
+    }
+
+    member(){
+        let async = false;
+        let data;
+        member.request_member_list("ing", (data1)=>{
+            data = data1;
+        }, async);
+        let current_member_number = data.current_member_data.length;
+        let finish_member_number = data.finish_member_num;
+        let total_member = current_member_number + finish_member_number;
+        let limit_number = this.data.auth_member_create.limit_num;
+        let limit_type = this.data.auth_member_create.limit_type;
+
+        if(total_member >= limit_number){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    lecture(){
+        let async = false;
+        let data1;
+        let data2;
+        lecture.request_lecture_list("ing", (d1)=>{
+            data1 = d1;
+        }, async);
+        lecture.request_lecture_list("end", (d2)=>{
+            data2 = d2;
+        }, async);
+        let current_lecture_number = data1.current_lecture_data.length;
+        let finish_lecture_number = data2.finish_lecture_data.length;
+        let total_number = current_lecture_number + finish_lecture_number;
+        let limit_number = this.data.auth_group_create.limit_num;
+        let limit_type = this.data.auth_group_create.limit_type;
+
+        if(total_number >= limit_number){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    ticket(){
+        let async = false;
+        let data1;
+        let data2;
+        ticket.request_ticket_list("ing", (d1)=>{
+            data1 = d1;
+        }, async);
+        ticket.request_ticket_list("end", (d2)=>{
+            data2 = d2;
+        }, async);
+        let current_ticket_number = data1.current_ticket_data.length;
+        let finish_ticket_number = data2.finish_ticket_data.length;
+        let total_number = current_ticket_number + finish_ticket_number;
+        let limit_number = this.data.auth_package_create.limit_num;
+        let limit_type = this.data.auth_package_create.limit_type;
+
+        if(total_number >= limit_number){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    statistics(selected_start_date, selected_end_date){
+
+    }
+
+    program(){
+        let async = false;
+        let data;
+        Program_func.read((d1)=>{
+            data = d1;
+        }, async);
+        let current_program_number = data.program_data.length;
+        let limit_number = this.data.auth_program_create.limit_num;
+        let limit_type = this.data.auth_program_create.limit_type;
+
+        if(current_program_number >= limit_number){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    settings(){
+
+    }
+
+    ads(){
+
+    }
+}
+

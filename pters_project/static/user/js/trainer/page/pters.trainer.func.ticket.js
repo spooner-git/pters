@@ -42,7 +42,7 @@ class Ticket{
 
 
     //수강권 리스트 서버에서 불러오기
-    request_ticket_list(status, callback){
+    request_ticket_list(status, callback, async){
         //sort_order_by : ticket_type_seq, ticket_name, ticket_member_many, ticket_member_few, ticket_create_new, ticket_create_old
         let url;
         if(status=='ing'){
@@ -52,12 +52,16 @@ class Ticket{
         }
         let start_time;
         let end_time;
+        if(async == undefined){
+            async = true;
+        }
         $.ajax({
             url:url,
             type:'GET',
             // data: {"page": ticket_page_num, "sort_val": ticket_sort_val, "sort_order_by":ticket_sort_order_by, "keyword":ticket_keyword},
             data: {"page": 1, "sort_val": 0, "sort_order_by":0, "keyword":""},
             // dataType : 'html',
+            async:async,
     
             beforeSend:function(){
                 start_time = performance.now();

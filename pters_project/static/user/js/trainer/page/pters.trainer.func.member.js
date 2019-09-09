@@ -42,10 +42,13 @@ class Member {
 
 
     //회원 리스트 서버에서 불러오기
-    request_member_list (list_type, callback){
+    request_member_list (list_type, callback, async){
         var start_time;
         var end_time;
         var url;
+        if(async == undefined){
+            async = true;
+        }
         if(list_type == 'ing'){
             url = '/trainer/get_member_ing_list/';
         }else if(list_type == 'end'){
@@ -54,6 +57,7 @@ class Member {
         $.ajax({
             url:url,
             dataType : 'JSON',
+            async:async,
     
             beforeSend:function (){
                 ajax_load_image(SHOW);
@@ -68,7 +72,9 @@ class Member {
                 //     console.log("에러:" + jsondata.messageArray);
                 // }else{
                 console.log(end_time-start_time+'ms');
-                callback(data);
+                if(callback != undefined){
+                    callback(data);
+                }
                 return data;
                 // }
             },

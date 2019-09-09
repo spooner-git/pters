@@ -1,0 +1,65 @@
+
+.popup_statistics_list{
+	-webkit-overflow-scrolling: touch;
+}
+
+.popup_statistics_list .obj_box_full{
+	padding: 15px 16px;
+	border: 0;
+}
+
+.popup_statistics_list .obj_input_box_full{
+	padding: 15px 16px;
+	/* border: 0; */
+}
+
+.popup_statistics_list .popup_toolbox{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+	padding: 8px 16px 4px 20px;
+	/* border-bottom: 1px solid #f5f5f5; */
+}
+
+.popup_statistics_list .popup_content{
+	padding-top: 20px;
+}
+
+
+.statistics_wrapper{
+	width: 100%;
+	padding: 10px 20px;
+	margin: 0px auto;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+.statistics_data_u{
+	display: table;
+	width: 100%;
+	text-align: left;
+	vertical-align: middle;
+	font-weight: 500;
+	/* margin-bottom: 8px; */
+	font-size: 16px;
+}
+	.statistics_data_u > div{
+		display: table-cell;
+		vertical-align: middle;
+	}
+	.statistics_data_u > div:first-child{
+		font-weight: bold;
+		width: auto;
+	}
+	.statistics_data_u > div:last-child{
+		font-weight: 500;
+		width: 80px;
+		text-align: right
+	}
+
+.statistics_data_b{
+	display: block;
+	width: 100%;
+	color: #858282;
+	font-size: 13px;
+	font-weight: 500;
+}

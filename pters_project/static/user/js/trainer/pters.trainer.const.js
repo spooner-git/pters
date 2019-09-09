@@ -119,6 +119,7 @@ const POPUP_MEMBER_SCHEDULE_HISTORY = 'popup_member_schedule_history';
 const POPUP_MEMBER_TICKET_HISTORY = 'popup_member_ticket_history';
 
 const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
+const POPUP_ADDRESS_STATISTICS = 'popup_statistics';
 
 const POPUP_ADDRESS_PROGRAM_LIST = 'popup_program_list';
 const POPUP_ADDRESS_PROGRAM_ADD = 'popup_program_add';
@@ -151,6 +152,10 @@ const POPUP_ADDRESS_CATEGORY_SELECT = 'popup_category_select';
 const POPUP_ADDRESS_CUSTOM_SELECT = 'popup_custom_select';
 const POPUP_ADDRESS_PASSWORD_4D_INPUT = 'popup_password_4d_input';
 // User Input 팝업
+
+// PassInspector
+const BLOCKED = false;
+const PASSED = true;
 
 /* 팝업 주소 */
 

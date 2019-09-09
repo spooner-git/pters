@@ -191,11 +191,16 @@ class Program_func{
         });
     }
 
-    static read(callback){
+    static read(callback, async){
+        if(async == undefined){
+            async = true;
+        }
         //프로그램 리스트 서버에서 불러오기
         $.ajax({
             url:"/trainer/get_program_list/",
             dataType : 'JSON',
+            async: async,
+            
             beforeSend:function (){
                 // ajax_load_image(SHOW);
             },
