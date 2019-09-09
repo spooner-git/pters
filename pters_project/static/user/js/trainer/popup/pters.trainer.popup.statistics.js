@@ -16,7 +16,14 @@ class Statistics{
         };
 
         this.data = {
-                
+                sales:{},
+                sales_detail:{},
+                member:{},
+                chart:{
+                    sales:{},
+                    sales_detail:{},
+                    member:{}
+                }
         };
 
         this.init();
@@ -25,18 +32,29 @@ class Statistics{
 
  
     init(){
-        this.render();
+        // this.render();
         this.set_initial_data();
     }
 
     set_initial_data (){
-        let data = {"start_date":`${this.dates.current_year}-${this.dates.current_month}-1`,
-                    "end_date":`${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`};
+        // let data = {"start_date":`${this.dates.current_year}-${this.dates.current_month}-1`,
+        //             "end_date":`${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`};
+        let data = {"start_date":`2018-5-1`,
+                    "end_date":`2019-4-30`};
         Statistics_func.read("sales", data, (data)=>{
-            this.data = data;
-            this.render_content();
+            this.data.sales = data;
+            this.data.chart.sales = this.data_convert_for_column_chart();
+            this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });   
+    }
+
+    load_google_chart(){
+        // Load the Visualization API and the corechart package.
+        google.charts.load('current', {'packages':['corechart']});
+    
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.charts.setOnLoadCallback(this.draw_sales_graph);
     }
 
     clear(){
@@ -46,9 +64,9 @@ class Statistics{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();statistics_list_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();statistics_popup.clear();" class="obj_icon_prev">`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_plus_pink.png" class="obj_icon_basic" onclick="statistics_list_popup.upper_right_menu();"></span>`;
+        let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -56,6 +74,7 @@ class Statistics{
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_statistics .wrapper_top').style.border = 0;
+        this.load_google_chart();
     }
 
     render_toolbox(){
@@ -71,7 +90,7 @@ class Statistics{
     }
     
     dom_assembly_content(){
-        let html = "content_assembly";
+        let html = this.dom_row_sales_summary() + this.dom_row_sales_graph() + this.dom_row_sales_list();
 
         return html;
     }
@@ -80,19 +99,131 @@ class Statistics{
         let title = "매출 통계";
         let title2 = "회원 통계";
         let html = `
-                    <div class="lecture_view_upper_box" style="">
+                    <div class="lecture_view_upper_box">
                         <div style="display:inline-block;width:320px;">
-                            <div style="display:inline-block;width:100px;font-size:23px;font-weight:bold">
+                            <div style="display:inline-block;width:100px;font-size:23px;font-weight:bold;text-align:center">
                                 ${title}
                             </div>
-                            <div style="background-color:#f5f2f3;width:2px;height:16px;vertical-align:middle;margin:0 8px;"></div>
-                            <div style="display:inline-block;width:100px;font-size:23px;font-weight:bold">
+                            <div style="display:inline-block;background-color:#f5f2f3;width:2px;height:16px;"></div>
+                            <div style="display:inline-block;width:100px;font-size:23px;font-weight:bold;text-align:center">
                                 ${title2}
                             </div>
                         </div>
                     </div>
                     `;
         return html;
+    }
+
+    dom_row_sales_summary(){
+        let data = this.data.sales;
+
+        let length = data.month_date.length;
+        let start_month_date = data.month_date[0].replace(/-/gi, ".");
+        let end_month_date = data.month_date[length-1];
+        
+        let last_date_of_end_month = new Date(end_month_date.split('-')[0], end_month_date.split('-')[1], 0).getDate();
+        let end_month_last_date = `${end_month_date.split('-')[0]}-${end_month_date.split('-')[1]}-${last_date_of_end_month}`;
+        end_month_date = end_month_last_date.replace(/-/gi, ".");
+        
+        let price_sum = MathRobot.array_sum(data.price);
+        let refund_sum = MathRobot.array_sum(data.refund_price);
+
+        let total_sales = UnitRobot.numberWithCommas(price_sum - refund_sum);
+
+        let html = `
+                    <div style="padding:0 20px 16px 20px;border-bottom:1px solid #f5f2f3;margin-bottom:20px;">
+                        <div style="line-height:24px;font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;">${start_month_date} - ${end_month_date}</div>
+                        <div style="line-height:16px;font-size:16px;font-weight:bold;letter-spacing:-0.7px;color:#fe4e65;">${total_sales} 원</div>
+                    </div>
+                    `;
+        return html;
+    }
+
+    dom_row_sales_graph(){
+        let html = `<section style="width:95%;text-align:center;margin:0 auto;box-sizing:border-box">
+                        <div style="font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;">월별 현황</div>
+                        <div style="font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#858282;">(단위 / 10,000원)</div>
+                        <div id="sales_graph"></div>
+                    </section>`;
+        return html;
+    }
+
+    dom_row_sales_list(){
+        let length = this.data.sales.month_date.length;
+        let html_to_join = []
+        html_to_join.push(`<div class="sales_list_row" style="font-size:11px;">
+                                <div class="sales_list_month" style="color:#999696;">기간</div>
+                                <div class="sales_list_price" style="color:#999696;">매출액 (환불 포함)</div>
+                                <div class="sales_list_detail"></div>
+                            </div>`);
+        for(let i=length-1; i>=0; i--){
+            let date = this.data.sales.month_date[i].split('-');
+            let price = Number(this.data.sales.price[i]) - Number(this.data.sales.refund_price[i]);
+            let html = `<div class="sales_list_row">
+                            <div class="sales_list_month">${date[0]}년 ${date[1]}월</div>
+                            <div class="sales_list_price">${UnitRobot.numberWithCommas(price)} 원</div>
+                            <div class="sales_list_detail">상세 정보 <img src="/static/common/icon/icon_arrow_r_small_black.png"></div>
+                        </div>`;
+            html_to_join.push(html);
+        }
+        return '<section style="border-top:1px solid #f5f2f3;margin-top:20px;">'+html_to_join.join('')+'</section>';
+    }
+
+    draw_sales_graph() {
+        let chart_data = statistics_popup.data.chart.sales;
+        var data = new google.visualization.arrayToDataTable(chart_data);
+
+
+        var options = {'title': "월별 매출 현황",
+            // 'width':windowWidth,
+            'height':250,
+            'chartArea':{width:'75%', height:'80%'},
+             'legend':{position:'none'},
+             titlePosition:'none',
+             colors:['#fe4e65', '#5d91f7'],
+             isStacked: true,
+             hAxis: {
+                        // viewWindow: {
+                        //     min: [7, 30, 0],
+                        //     max: [19, 30, 0]
+                        // }
+                        showTextEvery:1
+                    },
+            vAxis: {
+                        
+                        // title: 'Rating (scale of 1-12)'
+                    },
+            trendlines:{0:{
+                            // type:'linear',
+                            // type:'exponential',
+                            type:'polynomial',
+                            color:'blue',
+                            lineWidth:3,
+                            opacity:0.1,
+                            showR2:true,
+                            visibleInLegend:false
+                            }
+                         }
+            }
+        
+  
+        var chart = new google.visualization.ColumnChart(
+            document.getElementById('sales_graph'));
+  
+        chart.draw(data, options);
+    }
+
+    data_convert_for_column_chart(){
+        let new_data = [['Month', 'Sales']];
+
+        let length = this.data.sales.month_date.length;
+        for(let i=0; i<length; i++){
+            new_data.push(
+                [String(Number(this.data.sales.month_date[i].split('-')[1])), (Number(this.data.sales.price[i])-Number(this.data.sales.refund_price[i]))/10000]
+            );
+        }
+
+        return new_data;
     }
 
     event_statistics_click(){

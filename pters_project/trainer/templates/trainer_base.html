@@ -46,6 +46,7 @@
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.menu.css" %}>
     <!-- 페이지 CSS 로드 -->
 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/iscroll/iscroll-probe.js" %}></script>
@@ -378,6 +379,7 @@ onclick="layer_popup.close_layer_popup();"></div>
         }
     }
 
+
     //피터스 패스
     pass_inspector = new PassInspector();    
 
@@ -412,7 +414,7 @@ onclick="layer_popup.close_layer_popup();"></div>
     var member_schedule_history;
     var member_ticket_history;
     var member_attend;
-    var statistics;
+    var statistics_popup;
 
     var program_list_popup;
     var program_add_popup;
@@ -531,7 +533,7 @@ onclick="layer_popup.close_layer_popup();"></div>
             break;
             case 'statistics':
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    statistics = new Statistics('.popup_statistics')});
+                                                    statistics_popup = new Statistics('.popup_statistics')});
             break;
             case 'pters_pass':
                 location.href = '/payment/';

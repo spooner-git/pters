@@ -453,6 +453,22 @@ class TimeRobot{
     }
 }
 
+class MathRobot{
+    static array_sum(array){
+        let length = array.length;
+        let result = 0;
+        for(let i=0; i<length; i++){
+            result = result + Number(array[i]);
+        }
+        return result;
+    }
+}
+
+class UnitRobot{
+    static numberWithCommas(number){
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+}
 
 class PassInspector{
     constructor(){
