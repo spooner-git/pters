@@ -229,6 +229,8 @@ def func_setting_data_update(request, group):
         request.session['setting_from_trainee_lesson_alarm'] = context['setting_from_trainee_lesson_alarm']
         request.session['setting_language'] = context['setting_language']
         request.session['setting_admin_password'] = context['setting_admin_password']
+        request.session['setting_attend_class_prev_display_time'] = context['setting_attend_class_prev_display_time']
+        request.session['setting_attend_class_after_display_time'] = context['setting_attend_class_after_display_time']
 
         if group == 'trainee':
             try:
