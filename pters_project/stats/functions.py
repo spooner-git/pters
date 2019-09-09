@@ -247,19 +247,19 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
             # 결제 정보 가져오기
             price_data = ClassMemberTicketTb.objects.select_related(
                 'member_ticket_tb').filter(Q(member_ticket_tb__start_date__gte=month_first_day)
-                                     & Q(member_ticket_tb__start_date__lte=month_last_day),
-                                     class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
-                                     use=USE).order_by('member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
+                                           & Q(member_ticket_tb__start_date__lte=month_last_day),
+                                           class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
+                                           use=USE).order_by('member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
 
             for price_info in price_data:
                 try:
                     price_member_ticket_info = ClassMemberTicketTb.objects.select_related(
                         'member_ticket_tb').filter(~Q(member_ticket_tb_id=price_info.member_ticket_tb_id),
-                                             class_tb_id=class_id,
-                                             member_ticket_tb__member_id=price_info.member_ticket_tb.member_id,
-                                             member_ticket_tb__start_date__lte=price_info.member_ticket_tb.start_date,
-                                             member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW,
-                                             use=USE).latest('reg_dt')
+                                                   class_tb_id=class_id,
+                                                   member_ticket_tb__member_id=price_info.member_ticket_tb.member_id,
+                                                   member_ticket_tb__start_date__lte=price_info.member_ticket_tb.start_date,
+                                                   member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW,
+                                                   use=USE).latest('reg_dt')
                     if price_member_ticket_info.member_ticket_tb.start_date < price_info.member_ticket_tb.start_date:
                         month_re_reg_member += 1
                     else:
@@ -284,19 +284,20 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
                     month_all_refund_member += 1
 
             # 완료 수강 이력 가져오기
-            class_member_ticket_list = ClassMemberTicketTb.objects.select_related('member_ticket_tb').filter(
-                class_tb_id=class_id, member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW, use=USE)
+            # class_member_ticket_list = ClassMemberTicketTb.objects.select_related('member_ticket_tb').filter(
+            #     class_tb_id=class_id, member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW, use=USE)
             finish_schedule_num = 0
-            for class_member_ticket_info in class_member_ticket_list:
-                finish_schedule_num += ScheduleTb.objects.filter(
-                    Q(state_cd=STATE_CD_FINISH), class_tb_id=class_id, group_tb__isnull=True,
-                    member_ticket_tb_id=class_member_ticket_info.member_ticket_tb_id,
-                    start_dt__gte=month_first_day, start_dt__lt=month_last_day + datetime.timedelta(days=1),
-                    en_dis_type=ON_SCHEDULE_TYPE, use=USE).count()
+            # for class_member_ticket_info in class_member_ticket_list:
+            finish_schedule_num += ScheduleTb.objects.filter(
+                Q(state_cd=STATE_CD_FINISH), class_tb_id=class_id, lecture_tb__isnull=True,
+                # member_ticket_tb_id=class_member_ticket_info.member_ticket_tb_id,
+                start_dt__gte=month_first_day, start_dt__lt=month_last_day + datetime.timedelta(days=1),
+                en_dis_type=ON_SCHEDULE_TYPE, use=USE).count()
 
             finish_schedule_num += ScheduleTb.objects.filter(
-                Q(state_cd=STATE_CD_FINISH), class_tb_id=class_id, group_tb__isnull=False, member_ticket_tb__isnull=True,
-                start_dt__gte=month_first_day, start_dt__lt=month_last_day + datetime.timedelta(days=1),
+                Q(state_cd=STATE_CD_FINISH), class_tb_id=class_id, lecture_tb__isnull=False,
+                member_ticket_tb__isnull=True, start_dt__gte=month_first_day,
+                start_dt__lt=month_last_day + datetime.timedelta(days=1),
                 en_dis_type=ON_SCHEDULE_TYPE, use=USE).count()
             total_month_new_reg_member += month_new_reg_member
             total_month_re_reg_member += month_re_reg_member
