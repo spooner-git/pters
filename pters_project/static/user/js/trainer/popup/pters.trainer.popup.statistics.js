@@ -15,6 +15,8 @@ class Statistics{
             current_zone: TimeRobot.to_zone(d.getHours(), d.getMinutes()).zone
         };
 
+        this.tab = "sales"; //member
+
         this.data = {
                 sales:{},
                 sales_detail:{},
@@ -46,7 +48,10 @@ class Statistics{
             this.data.chart.sales = this.data_convert_for_column_chart();
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
-        });   
+        });
+        Statistics_func.read("member", data, (data)=>{
+            this.data.member = data;
+        });
     }
 
     load_google_chart(){
@@ -90,7 +95,12 @@ class Statistics{
     }
     
     dom_assembly_content(){
-        let html = this.dom_row_sales_summary() + this.dom_row_sales_graph() + this.dom_row_sales_list();
+        let html;
+        if(this.tab == "sales"){
+            html = this.dom_row_sales_summary() + this.dom_row_sales_graph() + this.dom_row_sales_list();
+        }else if(this.tab == "member"){
+            html = this.draw_reg_status_graph() + this.draw_refund_status_graph() + this.draw_contract_status_graph() + this.draw_lesson_complete_status_graph();
+        }
 
         return html;
     }
@@ -101,11 +111,11 @@ class Statistics{
         let html = `
                     <div class="lecture_view_upper_box">
                         <div style="display:inline-block;width:320px;">
-                            <div style="display:inline-block;width:100px;font-size:23px;font-weight:bold;text-align:center">
+                            <div style="display:inline-block;width:100px;font-size:23px;font-weight:bold;text-align:center;color:${this.tab=="sales" ? "#3d3b3b" :"#b8b4b4"}" onclick="statistics_popup.switch('member')">
                                 ${title}
                             </div>
                             <div style="display:inline-block;background-color:#f5f2f3;width:2px;height:16px;"></div>
-                            <div style="display:inline-block;width:100px;font-size:23px;font-weight:bold;text-align:center">
+                            <div style="display:inline-block;width:100px;font-size:23px;font-weight:bold;text-align:center;color:${this.tab=="member" ? "#3d3b3b" :"#b8b4b4"}" onclick="statistics_popup.switch('member')">
                                 ${title2}
                             </div>
                         </div>
@@ -213,6 +223,22 @@ class Statistics{
         chart.draw(data, options);
     }
 
+    draw_reg_status_graph(){
+
+    }
+
+    draw_refund_status_graph(){
+
+    }
+
+    draw_contract_status_graph(){
+
+    }
+
+    draw_lesson_complete_status_graph(){
+
+    }
+
     data_convert_for_column_chart(){
         let new_data = [['Month', 'Sales']];
 
@@ -226,8 +252,9 @@ class Statistics{
         return new_data;
     }
 
-    event_statistics_click(){
-        
+    switch(tab){
+        this.tab = tab;
+        this.render();
     }
 
     upper_right_menu(){
