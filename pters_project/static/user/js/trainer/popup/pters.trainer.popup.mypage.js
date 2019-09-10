@@ -201,7 +201,8 @@ class Mypage{
         let icon_r_text = "";
         let style = null;
         let onclick = ()=>{
-
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PASSWORD_MODIFY, 100, POPUP_FROM_RIGHT, null, ()=>{
+                password_modify_popup = new Password_modify('.popup_password_modify', 'password_modify_popup');});
         };
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);

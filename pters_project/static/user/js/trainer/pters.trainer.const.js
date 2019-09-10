@@ -135,6 +135,7 @@ const POPUP_ADDRESS_SERVICE_INQUIRY = 'popup_service_inquiry';
 
 const POPUP_ADDRESS_MYPAGE = 'popup_mypage';
 const POPUP_ADDRESS_MYPAGE_MODIFY = 'popup_mypage_modify';
+const POPUP_ADDRESS_PASSWORD_MODIFY = 'popup_password_modify';
 // 풀페이지 팝업
 
 // User Input 팝업

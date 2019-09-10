@@ -162,6 +162,43 @@ class CComponent{
         return html;
     }
 
+    static create_input_password_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required){
+        let disable = 'disabled';
+        if(disabled == false){
+            disable = '';
+        }
+        let min_max_length = pattern.split('{')[1].replace('}', '').split(',');
+
+        let html = `<li class="create_input_row" id="c_i_p_r_${id}" style="${CComponent.data_to_style_code(style)}">
+                        <div class="obj_table_raw">
+                            <div class="cell_title" style="display:${icon == undefined ? 'none' : ''}">
+                                ${icon != null ? `<img src="${icon}">` : ""} 
+                            </div>
+                            <div class="cell_content">
+                                <input type="password" class="cell_text" title="${placeholder}" placeholder="${placeholder}" pattern="${pattern}" value="${title}"
+                                 onkeyup="limit_char_auto_correction(event.target);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" 
+                                 data-error-message="${placeholder} : 필수 입력입니다." data-pattern-message="${pattern_message}" data-valid="false" ${disable} ${required}>
+                            </div>
+                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
+                                ${icon_r_text}
+                                <img src="/static/common/icon/icon_arrow_r_small_black.png">
+                            </div>
+                        </div>
+                    </li>`;
+        $(document).off('focusin', `#c_i_p_r_${id}`).on('focusin', `#c_i_p_r_${id}`, function(e){
+            // $(this).find('input').val('');
+        });
+
+        $(document).off('focusout', `#c_i_p_r_${id}`).on('focusout', `#c_i_p_r_${id}`, function(e){
+            let user_input_data = e.target.value;
+            if(user_input_data.length == 0){
+                user_input_data = null;
+            }
+            onfocusout(user_input_data);
+        });
+        return html;
+    }
+
     //수강권 선택 팝업에 사용되는 행
     static select_ticket_row (multiple_select, checked, location, ticket_id, ticket_name, ticket_price, ticket_reg_count, ticket_effective_days, onclick){
         let html = `
