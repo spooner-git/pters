@@ -140,7 +140,7 @@ def get_sales_info(class_id, month_first_day):
         month_last_day = next_month_first_day - datetime.timedelta(days=1)
 
         # 결제 정보 가져오기
-        price_data = ClassMemberTicketTb.objects.select_related('member_ticket_tb__member', 'member_ticket_tb__package_tb').filter(
+        price_data = ClassMemberTicketTb.objects.select_related('member_ticket_tb__member', 'member_ticket_tb__ticket_tb').filter(
                                 Q(member_ticket_tb__start_date__gte=month_first_day)
                                 & Q(member_ticket_tb__start_date__lte=month_last_day),
                                 class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
@@ -174,13 +174,13 @@ def get_sales_info(class_id, month_first_day):
                           'price': price_info.member_ticket_tb.price,
                           'member_db_id': price_info.member_ticket_tb.member_id,
                           'member_name': price_info.member_ticket_tb.member.name,
-                          'package_name': price_info.member_ticket_tb.package_tb.name}
+                          'package_name': price_info.member_ticket_tb.ticket_tb.name}
             price_list.append(price_info)
 
         # 환불 정보 가져오기
         refund_price_data = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__member',
-            'member_ticket_tb__package_tb').filter(Q(member_ticket_tb__refund_date__gte=month_first_day)
+            'member_ticket_tb__ticket_tb').filter(Q(member_ticket_tb__refund_date__gte=month_first_day)
                                              & Q(member_ticket_tb__refund_date__lte=month_last_day),
                                              class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
                                              use=USE).order_by('member_ticket_tb__refund_date', 'member_ticket_tb__reg_dt')
@@ -198,7 +198,7 @@ def get_sales_info(class_id, month_first_day):
                           'price': refund_price_info.member_ticket_tb.refund_price,
                           'member_db_id': refund_price_info.member_ticket_tb.member_id,
                           'member_name': refund_price_info.member_ticket_tb.member.name,
-                          'package_name': refund_price_info.member_ticket_tb.package_tb.name}
+                          'package_name': refund_price_info.member_ticket_tb.ticket_tb.name}
             price_list.append(price_info)
 
         price_list.sort(key=lambda x: x['date'], reverse=True)
