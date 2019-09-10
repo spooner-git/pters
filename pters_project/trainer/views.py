@@ -3576,7 +3576,6 @@ class DeleteBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
 
 
 class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'ajax/trainer_info_ajax.html'
 
     def get(self, request):
         context = {}
@@ -3584,30 +3583,8 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
         class_id = request.session.get('class_id', '')
         error = None
         class_info = None
-        now = timezone.now()
-        next_schedule_start_dt = ''
-        next_schedule_end_dt = ''
 
-        today = datetime.date.today()
-        month_first_day = today.replace(day=1)
-        next_year = int(month_first_day.strftime('%Y')) + 1
-        next_month = (int(month_first_day.strftime('%m')) + 1) % 13
-        if next_month == 0:
-            next_month = 1
-        next_month_first_day = month_first_day.replace(month=next_month)
-
-        if next_month == 1:
-            next_month_first_day = next_month_first_day.replace(year=next_year)
-
-        end_schedule_num = 0
-        new_member_num = 0
-        total_member_num = 0
-        current_total_member_num = 0
         center_name = '없음'
-        context['total_member_num'] = 0
-        context['current_total_member_num'] = 0
-        context['end_schedule_num'] = 0
-        context['new_member_num'] = 0
         user_member_info = None
         off_repeat_schedule_data = None
 
@@ -3621,6 +3598,16 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
+            member_data = {'member_id': request.user.id,
+                           'member_user_id': user_member_info.user.username,
+                           'member_name': user_member_info.name,
+                           'member_phone': str(user_member_info.phone),
+                           'member_email': str(user_member_info.user.email),
+                           'member_sex': str(user_member_info.sex),
+                           'member_birthday_dt': str(user_member_info.birthday_dt)
+                           }
+
+        if error is None:
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
@@ -3632,68 +3619,11 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
             off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                        en_dis_type=OFF_SCHEDULE_TYPE)
 
-        if error is None:
-            all_member = func_get_class_member_ing_list(class_id, '')
-            total_member_num = len(all_member)
-            for member_info in all_member:
-                # member_data = member_info
-
-                # 강좌에 해당하는 수강/회원 정보 가져오기
-                class_lecture_list = ClassMemberTicketTb.objects.filter(
-                    class_tb_id=class_id, member_ticket_tb__member_id=member_info,
-                    member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS, member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW,
-                    use=USE).order_by('-member_ticket_tb__start_date')
-
-                # if len(total_class_lecture_list) > 0:
-                #     total_member_num += 1
-
-                if len(class_lecture_list) > 0:
-                    # total_member_num += 1
-                    start_date = ''
-                    for lecture_info_data in class_lecture_list:
-                        lecture_info = lecture_info_data.member_ticket_tb
-                        if lecture_info.state_cd == STATE_CD_IN_PROGRESS:
-                            if start_date == '':
-                                start_date = lecture_info.start_date
-                            else:
-                                if start_date > lecture_info.start_date:
-                                    start_date = lecture_info.start_date
-                    if start_date != '':
-                        if month_first_day <= start_date < next_month_first_day:
-                            new_member_num += 1
-
-        if error is None:
-            # 남은 횟수 1개 이상인 경우 - 180314 hk.kim
-            context['total_member_num'] = total_member_num
-            # 남은 횟수 1개 이상 3개 미만인 경우 - 180314 hk.kim
-            context['current_total_member_num'] = current_total_member_num
-            context['new_member_num'] = new_member_num
-
-        if error is None:
-            end_schedule_num = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE),
-                                                         class_tb_id=class_id,
-                                                         en_dis_type=ON_SCHEDULE_TYPE, use=USE).count()
-            # new_member_num = MemberTicketTb.objects.filter(class_tb_id=class_info.class_id,
-            #                                          start_date__gte=month_first_day,
-            #                                          start_date__lt=next_month_first_day, use=USE).count()
-
-        pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
-                                                     en_dis_type=ON_SCHEDULE_TYPE,
-                                                     start_dt__gte=now,
-                                                     use=USE).order_by('start_dt')
-        if len(pt_schedule_data) > 0:
-            next_schedule_start_dt = pt_schedule_data[0].start_dt
-            next_schedule_end_dt = pt_schedule_data[0].end_dt
-
-        context['next_schedule_start_dt'] = str(next_schedule_start_dt)
-        context['next_schedule_end_dt'] = str(next_schedule_end_dt)
         context['member_info'] = user_member_info
-        context['end_schedule_num'] = end_schedule_num
         context['center_name'] = center_name
-
         context['off_repeat_schedule_data'] = off_repeat_schedule_data
 
-        return render(request, self.template_name, context)
+        return JsonResponse({'trainer_info': member_data}, json_dumps_params={'ensure_ascii': True})
 
 
 # 회원수정 api
