@@ -252,12 +252,13 @@ class Statistics{
                                 <div class="sales_list_detail"></div>
                             </div>`);
         for(let i=length-1; i>=0; i--){
-            let date = this.data.sales.month_date[i].split('-');
+            let full_date = this.data.sales.month_date[i];
+            let date = full_date.split('-');
             let price = Number(this.data.sales.price[i]) - Number(this.data.sales.refund_price[i]);
             let html = `<div class="sales_list_row">
                             <div class="sales_list_month">${date[0]}년 ${date[1]}월</div>
                             <div class="sales_list_price">${UnitRobot.numberWithCommas(price)} 원</div>
-                            <div class="sales_list_detail" onclick="statistics_popup.event_detail(${date})">상세 정보 <img src="/static/common/icon/icon_arrow_r_small_black.png"></div>
+                            <div class="sales_list_detail" onclick="statistics_popup.event_detail('${full_date}')">상세 정보 <img src="/static/common/icon/icon_arrow_r_small_black.png"></div>
                         </div>`;
             html_to_join.push(html);
         }

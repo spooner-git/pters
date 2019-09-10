@@ -42,6 +42,7 @@
 .popup_statistics_detail .sales_detail_price{
 	display: table-cell;
 	width: 100px;
+	text-align: right;
 }
 
 
