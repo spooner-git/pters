@@ -1,0 +1,51 @@
+
+.popup_statistics_detail{
+	-webkit-overflow-scrolling: touch;
+}
+
+.popup_statistics_detail .obj_box_full{
+	padding: 15px 20px;
+	border: 0;
+}
+
+.popup_statistics_detail .obj_input_box_full{
+	padding: 15px 20px;
+	/* border: 0; */
+}
+
+.popup_statistics_detail .sales_detail_row{
+	display: table;
+	width: 100%;
+	padding: 8px 20px;
+	box-sizing: border-box;
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: -0.6px;
+	color: #1f1d1e;
+}
+
+.popup_statistics_detail .sales_detail_date{
+	display: table-cell;
+	width: 76px;
+}
+
+.popup_statistics_detail .sales_detail_content{
+	display: table-cell;
+	width: auto;
+}
+.popup_statistics_detail .sales_detail_content > div{
+	font-size: 11px;
+	color: #858282;
+	letter-spacing: -0.5px;
+}
+
+.popup_statistics_detail .sales_detail_price{
+	display: table-cell;
+	width: 100px;
+}
+
+
+
+.popup_statistics_detail .popup_content{
+	padding-top: 20px;
+}

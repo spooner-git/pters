@@ -257,7 +257,7 @@ class Statistics{
             let html = `<div class="sales_list_row">
                             <div class="sales_list_month">${date[0]}년 ${date[1]}월</div>
                             <div class="sales_list_price">${UnitRobot.numberWithCommas(price)} 원</div>
-                            <div class="sales_list_detail">상세 정보 <img src="/static/common/icon/icon_arrow_r_small_black.png"></div>
+                            <div class="sales_list_detail" onclick="statistics_popup.event_detail(${date})">상세 정보 <img src="/static/common/icon/icon_arrow_r_small_black.png"></div>
                         </div>`;
             html_to_join.push(html);
         }
@@ -457,6 +457,11 @@ class Statistics{
 
         return new_data;
        
+    }
+
+    event_detail(month_date){
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS_DETAIL, 100, POPUP_FROM_RIGHT, null, ()=>{
+            statistics_detail_popup = new Statistics_detail('.popup_statistics_detail', month_date, 'statistics_detail_popup');});
     }
 
     switch(tab){

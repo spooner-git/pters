@@ -120,6 +120,7 @@ const POPUP_MEMBER_TICKET_HISTORY = 'popup_member_ticket_history';
 
 const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
 const POPUP_ADDRESS_STATISTICS = 'popup_statistics';
+const POPUP_ADDRESS_STATISTICS_DETAIL = 'popup_statistics_detail';
 
 const POPUP_ADDRESS_PROGRAM_LIST = 'popup_program_list';
 const POPUP_ADDRESS_PROGRAM_ADD = 'popup_program_add';
