@@ -299,6 +299,7 @@ onclick="layer_popup.close_layer_popup();"></div>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.service_notice.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.service_inquiry.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.mypage.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.selectors.js" %}></script>
@@ -415,6 +416,7 @@ onclick="layer_popup.close_layer_popup();"></div>
     var member_ticket_history;
     var member_attend;
     var statistics_popup;
+    var mypage_popup;
 
     var program_list_popup;
     var program_add_popup;
@@ -534,6 +536,10 @@ onclick="layer_popup.close_layer_popup();"></div>
             case 'statistics':
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     statistics_popup = new Statistics('.popup_statistics')});
+            break;
+            case 'mypage':
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    mypage_popup = new Mypage('.popup_mypage')});
             break;
             case 'pters_pass':
                 location.href = '/payment/';

@@ -42,8 +42,7 @@ class Statistics{
     set_initial_data (){
         // let data = {"start_date":`${this.dates.current_year}-${this.dates.current_month}-1`,
         //             "end_date":`${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`};
-        let data = {"start_date":`2018-5-1`,
-                    "end_date":`2019-4-30`};
+        let data = {"start_date":`2018-5-1`, "end_date":`2019-4-30`};
         Statistics_func.read("sales", data, (data)=>{
             this.data.sales = data;
             this.data.chart.sales = this.data_convert_for_column_chart('sales');
@@ -72,7 +71,6 @@ class Statistics{
             google.charts.setOnLoadCallback(this.draw_contract_status_graph);
             google.charts.setOnLoadCallback(this.draw_lesson_complete_status_graph);
         }
-        
     }
 
     clear(){
@@ -163,7 +161,12 @@ class Statistics{
 
         let html = `
                     <div style="padding:0 20px 16px 20px;border-bottom:1px solid #f5f2f3;margin-bottom:20px;">
-                        <div style="line-height:24px;font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;">${start_month_date} - ${end_month_date}</div>
+                        <div style="line-height:24px;font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;">
+                            <span>${start_month_date} - ${end_month_date}</span>
+                            <span style="float:right;font-size:13px;font-weight:500;letter-spacing:-0.6px;opacity:0.5;cursor:pointer;">기간별 조회 
+                                <img src="/static/common/icon/icon_arrow_expand_black.png" style="width:24px;vertical-align:middle;">
+                            </span>
+                        </div>
                         <div style="line-height:16px;font-size:16px;font-weight:bold;letter-spacing:-0.7px;color:#fe4e65;">${total_sales} 원</div>
                     </div>
                     `;
@@ -183,7 +186,12 @@ class Statistics{
 
         let html = `
                     <div style="padding:0 20px 16px 20px;border-bottom:1px solid #f5f2f3;margin-bottom:20px;">
-                        <div style="line-height:24px;font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;">${start_month_date} - ${end_month_date}</div>
+                        <div style="line-height:24px;font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;">
+                            <span>${start_month_date} - ${end_month_date}</span>
+                            <span style="float:right;font-size:13px;font-weight:500;letter-spacing:-0.6px;opacity:0.5;cursor:pointer;">기간별 조회 
+                                <img src="/static/common/icon/icon_arrow_expand_black.png" style="width:24px;vertical-align:middle;">
+                            </span>
+                        </div>
                     </div>
                     `;
         return html;

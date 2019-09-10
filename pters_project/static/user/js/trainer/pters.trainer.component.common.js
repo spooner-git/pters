@@ -33,7 +33,7 @@ class CComponent{
         
         let html = `<li class="create_row" id="c_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
-                            <div class="cell_title">
+                            <div class="cell_title" style="display:${icon == undefined ? 'none' : ''}">
                                 ${icon != DELETE ? `<img src="${icon}">` : ""} 
                                 <span class="cell_text">${title}</span>
                             </div>

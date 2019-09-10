@@ -236,6 +236,35 @@ class DateRobot{
         // }
         return Math.round((new Date(date1).getTime() - new Date(date2).getTime()) / (1000*60*60*24));
     }
+
+    static diff_month(date_1, date_2){
+        let date1 = date_1.split('-');
+        let date2 = date_2.split('-');
+
+        let yyyy1 = Number(date1[0]);
+        let mm1 = Number(date1[1]);
+        let yyyy2 = Number(date2[0]);
+        let mm2 = Number(date2[1]);
+
+        let diff_year = yyyy2 - yyyy1;
+        let diff_month = mm2 - mm1 + 12*diff_year;
+
+        return Math.abs(diff_month);
+    }
+
+    static add_month(date, add_month){
+        let split = date.split('-');
+        let yyyy = Number(split[0]);
+        let mm = Number(split[1]);
+        let dd = Number(split[2]);
+        let add = Number(add_month);
+
+        let added = new Date(yyyy, (mm-1)+add, dd);
+
+        let new_date = `${added.getFullYear()}-${added.getMonth()+1}-${added.getDate()}`;
+
+        return new_date;
+    }
 }
 
 class TimeRobot{

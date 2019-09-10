@@ -65,10 +65,10 @@ class Menu {
     dom_who_i_am(){
         let member_id = null;
         let member_name = "회원명 임시";
-        let onclick = `alert('회원 정보로 이동')`;
+        let onclick = `sideGoPage('mypage');`;
         let html = `<article class="who_am_i_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="display:table;width:100%;">
                         <div class="my_data_l" style="display:table-cell;width:38px;vertical-align:middle;">
-                            <img src="/static/common/icon/tab_bar/icon_member_on.png" style="width:100%;">
+                            <img src="/static/common/icon/icon_account.png" style="width:100%;">
                         </div>                
                         <div class="my_data_c" style="display:table-cell;width:auto;padding-left:8px;vertical-align:middle;">
                             <div class="my_name" style="font-size:17px;font-weight:500;">${member_name}</div>

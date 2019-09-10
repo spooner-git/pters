@@ -54,7 +54,8 @@
 	text-align: right;
 	width: 80px;
 	font-size: 13px;
-	color: #b8b4b4;
+	/* color: #b8b4b4; */
+	opacity: 0.5;
 }
 .sales_list_detail > img{
 	width: 24px;
