@@ -3,7 +3,14 @@ class Mypage{
         this.target = {install: install_target, toolbox:'section_mypage_toolbox', content:'section_mypage_content'};
 
         this.data = {
-            
+            db_id:null,
+            user_id:null,
+            name:null,
+            phone:null,
+            email:null,
+            sex:null,
+            birth:null,
+            photo:'/static/common/icon/sally.png'
         };
 
         this.init();
@@ -16,8 +23,15 @@ class Mypage{
 
     set_initial_data (){
         Mypage_func.read((data)=>{
-            console.log(data);
-            this.render_content();
+            this.data.db_id = data.trainer_info.member_id;
+            this.data.user_id = data.trainer_info.member_user_id;
+            this.data.name = data.trainer_info.member_name;
+            this.data.phone = data.trainer_info.member_phone;
+            this.data.email = data.trainer_info.member_email;
+            this.data.sex = data.trainer_info.member_sex;
+            this.data.birth = data.trainer_info.member_birthday_dt;
+
+            this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
         
@@ -31,8 +45,8 @@ class Mypage{
 
     render(){
         let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();mypage_popup.clear();" class="obj_icon_prev">`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">${''}님의 프로필</span></span>`;
-        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_confirm_black.png" onclick="mypage_popup.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">${this.data.name == null ? '' : this.data.name}님의 프로필</span></span>`;
+        let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -65,21 +79,21 @@ class Mypage{
         let logout = this.dom_row_logout();
 
 
-        let html =  my_id + my_name + my_phone + my_email + 
-                    my_pass + 
-                    profile_change + password_change + logout;
+        let html =  '<section id="basic_info_wrap">'+ my_id + my_name + my_phone + my_email + '</section>' + 
+                    '<section id="pass_info_wrap">'+ my_pass + '</section>' + 
+                    '<section id="edit_info_wrap">'+ profile_change + password_change + logout + '</section>';
 
 
-        return html + sub_assembly;
+        return html;
     }
 
 
     dom_row_toolbox(){
-        let title = "<img src='/static/common/icon/icon_account.png' style='width:100px;margin:0 auto;'>";
+        let title = `<img src=${this.data.photo == null ? '/static/common/icon/icon_account.png' : this.data.photo} style='width:100%;border-radius:50%'>`;
         let html = `
         <div class="mypage_upper_box" style="text-align:center;">
             <div style="display:inline-block;width:320px;">
-                <div style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
+                <div class="photo_wrap" onclick="mypage_popup.event_edit_photo();">
                     ${title}
                 </div>
             </div>
@@ -91,9 +105,9 @@ class Mypage{
     dom_row_my_id(){
         let id = "my_id";
         let title = "아이디";
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
-        let icon_r_text = "%user_id%";
+        let icon_r_text = this.data.user_id;
         let style = null;
         let onclick = ()=>{
 
@@ -106,9 +120,9 @@ class Mypage{
     dom_row_my_name(){
         let id = "my_name";
         let title = "이름";
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
-        let icon_r_text = "%user_name%";
+        let icon_r_text = this.data.name;
         let style = null;
         let onclick = ()=>{
 
@@ -121,9 +135,9 @@ class Mypage{
     dom_row_my_phone(){
         let id = "my_phone";
         let title = "휴대폰 번호";
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
-        let icon_r_text = "%user_phone%";
+        let icon_r_text = this.data.phone;
         let style = null;
         let onclick = ()=>{
 
@@ -136,9 +150,9 @@ class Mypage{
     dom_row_my_email(){
         let id = "my_email";
         let title = "이메일 주소";
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
-        let icon_r_text = "%user_email%";
+        let icon_r_text = this.data.email;
         let style = null;
         let onclick = ()=>{
 
@@ -151,7 +165,7 @@ class Mypage{
     dom_row_my_pass(){
         let id = "my_pass";
         let title = "PTERS 패스";
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = null;
@@ -166,7 +180,7 @@ class Mypage{
     dom_row_profile_change(){
         let id = "profile_change";
         let title = "프로필 수정";
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = null;
@@ -181,7 +195,7 @@ class Mypage{
     dom_row_password_change(){
         let id = "password_change";
         let title = "비밀번호 변경";
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = null;
@@ -196,7 +210,7 @@ class Mypage{
     dom_row_logout(){
         let id = "logout";
         let title = "로그아웃";
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"color":"#ff001f"};
@@ -206,6 +220,19 @@ class Mypage{
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         return html;
+    }
+
+    event_edit_photo(){
+        let user_option = {
+            change:{text:"프로필 사진 변경", callback:()=>{alert('사진 변경 페이지로');layer_popup.close_layer_popup();}},
+            delete:{text:"프로필 사진 삭제", callback:()=>{alert('사진 삭제 실행');layer_popup.close_layer_popup();}}
+        };
+        let options_padding_top_bottom = 16;
+        let button_height = 8 + 8 + 52;
+        let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        });
     }
 
 

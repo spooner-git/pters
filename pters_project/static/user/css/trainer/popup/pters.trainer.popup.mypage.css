@@ -1,19 +1,19 @@
 
-.popup_setting_worktime{
+.popup_mypage{
 	-webkit-overflow-scrolling: touch;
 }
 
-.popup_setting_worktime .obj_box_full{
+.popup_mypage .obj_box_full{
 	padding: 15px 20px;
 	border: 0;
 }
 
-.popup_setting_worktime .obj_input_box_full{
+.popup_mypage .obj_input_box_full{
 	padding: 15px 20px;
 	/* border: 0; */
 }
 
-.popup_setting_worktime .popup_toolbox{
+.popup_mypage .popup_toolbox{
 	position: sticky;
 	position: -webkit-sticky;
 	top: 0;
@@ -22,6 +22,26 @@
 	z-index: 1;
 }
 
-.popup_setting_worktime .popup_content{
+.popup_mypage #basic_info_wrap{
+	padding: 8px 20px;
+}
+
+.popup_mypage #pass_info_wrap{
+	padding: 8px 20px;
+	border-top: 1px solid #f5f2f3;
+	border-bottom: 1px solid #f5f2f3;
+}
+
+.popup_mypage .photo_wrap{
+	width: 100px;
+	height: 100px;
+	margin:0 auto;
+}
+
+.popup_mypage #edit_info_wrap{
+	padding: 8px 20px;
+}
+
+.popup_mypage .popup_content{
 	/* padding-top: 20px; */
 }

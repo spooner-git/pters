@@ -3,6 +3,11 @@ class Menu {
         this.page_name = "menu";
         this.targetHTML = targetHTML;
         this.instance = instance;
+
+        this.data = {
+            name:null,
+            photo:'/static/common/icon/sally.png'
+        };
     }
 
     init (){
@@ -12,14 +17,29 @@ class Menu {
 
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
-
         this.render();
+        this.set_initial_data();
+    }
+
+    set_initial_data(){
+        Mypage_func.read((data)=>{
+            this.data.name = data.trainer_info.member_name;
+            this.render_content();
+        });
     }
 
     render(){
         document.getElementById('menu_display_panel').innerHTML = this.dom_assembly_tool_box();
         document.querySelector('#menu_content_wrap').innerHTML = this.dom_assembly_content();
         $root_content.scrollTop(1);
+    }
+
+    render_toolbox(){
+        document.getElementById('menu_display_panel').innerHTML = this.dom_assembly_tool_box();
+    }
+
+    render_content(){
+        document.querySelector('#menu_content_wrap').innerHTML = this.dom_assembly_content();
     }
 
     //상단을 렌더링
@@ -64,11 +84,11 @@ class Menu {
 
     dom_who_i_am(){
         let member_id = null;
-        let member_name = "회원명 임시";
+        let member_name = this.data.name == null ? "" : this.data.name;
         let onclick = `sideGoPage('mypage');`;
         let html = `<article class="who_am_i_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="display:table;width:100%;">
                         <div class="my_data_l" style="display:table-cell;width:38px;vertical-align:middle;">
-                            <img src="/static/common/icon/icon_account.png" style="width:100%;">
+                            <img src=${this.data.photo == null ? '/static/common/icon/icon_account.png' : this.data.photo} style="width:100%;border-radius:50%;">
                         </div>                
                         <div class="my_data_c" style="display:table-cell;width:auto;padding-left:8px;vertical-align:middle;">
                             <div class="my_name" style="font-size:17px;font-weight:500;">${member_name}</div>

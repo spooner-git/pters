@@ -33,13 +33,13 @@ class CComponent{
         
         let html = `<li class="create_row" id="c_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
-                            <div class="cell_title" style="display:${icon == undefined ? 'none' : ''}">
+                            <div class="cell_title">
                                 ${icon != DELETE ? `<img src="${icon}">` : ""} 
                                 <span class="cell_text">${title}</span>
                             </div>
-                            <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
-                                <span class="cell_text">${icon_r_text}</span>
-                                <img src="/static/common/icon/icon_arrow_r_small_black.png">
+                            <div class="cell_icon">
+                                <span class="cell_text" ${icon_r_visible == "" || null ? 'style="display:none"' : ''}>${icon_r_text}</span>
+                                <img src="/static/common/icon/icon_arrow_r_small_black.png" ${icon_r_visible == HIDE ? 'style="display:none"' : ''}>
                             </div>
                         </div>
                     </li>`;

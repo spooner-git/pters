@@ -1486,7 +1486,7 @@ class OptionSelector{
 
             let id = option_value;
             let title = option_name;
-            let icon = null;
+            let icon = DELETE;
             let icon_r_visible = HIDE;
             let icon_r_text = "";
             let style = {"padding-top":"14px", "padding-bottom":"14px"};
