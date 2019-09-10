@@ -212,10 +212,26 @@ class Statistics{
                     layer_popup.close_layer_popup();}
                 },
                 user:{text:"직접 입력", callback:()=>{  
-                    this.target_date_start = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, 0);
-                    this.target_date_end = `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`;
-                    this.init();
-                    layer_popup.close_layer_popup();}
+                    layer_popup.close_layer_popup();
+                    layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                        date_selector = new TwoDateSelector('#wrapper_popup_date_selector_function', null, {myname:'twodateselector', title:'날짜 선택', data:null, callback_when_set: (selected_data)=>{
+                            let date1 = `${selected_data.data1.year}-${selected_data.data1.month}`;
+                            let date2 = `${selected_data.data2.year}-${selected_data.data2.month}`;
+                            let diff_month = DateRobot.diff_month(date1, date2);
+                            if(diff_month < 0){
+                                show_error_message("검색 종료일은 시작일보다 빠를 수 없습니다.");
+                                return false;
+                            }
+                            if(diff_month > 11){
+                                show_error_message("최대 12개월 단위로 조회가 가능합니다.");
+                                return false;
+                            }
+                            this.target_date_start = `${date1}-01`;
+                            this.target_date_end = `${date2}-01`;
+                            this.init();
+                            layer_popup.close_layer_popup();
+                        }});
+                    }); }
                 }
             };
             let options_padding_top_bottom = 16;

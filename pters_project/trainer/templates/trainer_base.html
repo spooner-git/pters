@@ -525,6 +525,7 @@ onclick="layer_popup.close_layer_popup();"></div>
                                                     setting_alarm_popup = new Setting_alarm('.popup_setting_alarm')});
             break;
             case 'setting_attendmode':
+                console.log("mode")
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ATTENDMODE, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_attendmode_popup = new Setting_attendmode('.popup_setting_attendmode')});
             break;
@@ -537,6 +538,7 @@ onclick="layer_popup.close_layer_popup();"></div>
                                                     service_inquiry_popup = new Service_inquiry('.popup_service_inquiry')});
             break;
             case 'attend_mode':
+                console.log('123123')
                 location.href = '/trainer/attend_mode/';
             break;
             case 'statistics':

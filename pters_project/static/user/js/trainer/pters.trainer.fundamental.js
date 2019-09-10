@@ -163,14 +163,21 @@ class DateRobot{
 
         // 요일 확인
         let day = DAYNAME_KR[new Date(year, month-1, date).getDay()];
+        
+        let result = `${year}년 ${month}월 ${date}일 (${day})`;
 
         // yyyy.mm.dd 형식
         if(short == SHORT){
-            return `${year}.${month}.${date} (${day})`;
+            result = `${year}.${month}.${date} (${day})`;
+            return result;
         }
 
         // yyyy년 mm월 dd일 (요일 형식
-        return `${year}년 ${month}월 ${date}일 (${day})`;
+        if(date == "undefined"){
+            result = `${year}년 ${month}월`;
+        }
+
+        return result;
     }
 
     static to_yyyymmdd(year, month, date){
@@ -249,7 +256,7 @@ class DateRobot{
         let diff_year = yyyy2 - yyyy1;
         let diff_month = mm2 - mm1 + 12*diff_year;
 
-        return Math.abs(diff_month);
+        return diff_month;
     }
 
     static add_month(date, add_month){

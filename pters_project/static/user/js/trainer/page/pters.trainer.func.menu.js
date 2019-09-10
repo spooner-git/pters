@@ -101,7 +101,7 @@ class Menu {
     dom_menu_program(){
         let id = 'menu_program';
         let title = '프로그램';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = '/static/common/icon/icon_program_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -166,7 +166,7 @@ class Menu {
     dom_menu_statistics(){
         let id = 'menu_statistics';
         let title = '통계';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = '/static/common/icon/icon_statistics_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -177,7 +177,7 @@ class Menu {
     }
 
     dom_menu_attendmode(){
-        let id = 'menu_setting_attendmode';
+        let id = 'menu_attendmode';
         let title = '출석 체크 (Beta)';
         let icon = '/static/common/icon/icon_attend_check_black.png';
         let icon_r_visible = HIDE;
@@ -192,7 +192,7 @@ class Menu {
     dom_menu_setting_worktime(){
         let id = 'menu_setting_worktime';
         let title = '업무 시간';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = '/static/common/icon/icon_setting_worktime_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -205,7 +205,7 @@ class Menu {
     dom_menu_setting_autocomplete(){
         let id = 'menu_setting_autocomplete';
         let title = '자동 완료';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = '/static/common/icon/icon_setting_autocomplete_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -218,7 +218,7 @@ class Menu {
     dom_menu_setting_reserve(){
         let id = 'menu_setting_reserve';
         let title = '회원 예약';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = '/static/common/icon/icon_setting_reserve_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -231,7 +231,7 @@ class Menu {
     dom_menu_setting_alarm(){
         let id = 'menu_setting_alarm';
         let title = '알림';
-        let icon = '/static/common/icon/tab_bar/icon_alarm_off.png';
+        let icon = '/static/common/icon/icon_setting_notification_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -257,7 +257,7 @@ class Menu {
     dom_menu_service_notice(){
         let id = 'menu_service_notice';
         let title = '공지사항';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = '/static/common/icon/icon_notice_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -270,7 +270,7 @@ class Menu {
     dom_menu_service_inquiry(){
         let id = 'menu_service_inquiry';
         let title = '이용 문의';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = '/static/common/icon/icon_inquiry_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -283,7 +283,7 @@ class Menu {
     dom_menu_service_help(){
         let id = 'menu_service_help';
         let title = '도움말';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = '/static/common/icon/icon_help_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};

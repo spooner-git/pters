@@ -588,6 +588,461 @@ class DateSelector{
     }
 }
 
+//날짜 선택 (년, 월, 일)
+class TwoDateSelector{
+    constructor (install_target, target_instance, user_option){
+        this.target = {install: install_target, result: target_instance};
+
+        // this.data;
+        // this.instance = instance;
+        this.year_scroll;
+        this.month_scroll;
+        this.year_scroll2;
+        this.month_scroll2;
+
+        this.user_scroll_year = false;
+        this.user_scroll_month = false;
+        this.user_scroll_year2 = false;
+        this.user_scroll_month2 = false;
+
+        let d = new Date();
+        this.date = {
+            current_year : d.getFullYear(),
+            current_month : d.getMonth()+1,
+            current_date : d.getDate()
+        };
+
+        this.option = {
+            myname:null,
+            title:null,
+            data1:{
+                year:null, month:null
+            },
+            data2:{
+                year:null, month:null
+            },
+            range1:{
+                start: 2018,
+                end: this.date.current_year
+            },
+            range2:{
+                start: 2018,
+                end: this.date.current_year
+            },
+            callback_when_set : ()=>{
+                return false;
+            }
+        };
+
+        this.store = {
+            text1: null,
+            text2: null,
+            data1: {year:null, month:null},
+            data2: {year:null, month:null}
+        };
+
+        if(user_option != undefined){
+            //user_option이 들어왔을경우 default_option의 값을 user_option값으로 바꿔준다.
+            for(let option in user_option){
+                if(user_option[option] != null){
+                    this.option[option] = user_option[option];
+                }
+            }
+        }
+        this.init();
+    }
+
+    set dataset (object){
+        this.reset(object);
+    }
+
+    get dataset (){
+        return this.store;
+    }
+
+    init (){
+        this.init_html();
+        this.render_year_list();
+        this.render_month_list();
+        this.render_year_list2();
+        this.render_month_list2();
+        this.set_iscroll();
+        this.reset(this.option);
+    }
+
+
+    reset (object){
+        let year = object.data1.year == null ? this.date.current_year : object.data1.year;
+        let month = object.data1.month == null ? this.date.current_month : object.data1.month;
+        
+        this.store.data1 = {year: year, month:month};
+        this.store.data2 = {year: year, month:month};
+        this.store.text1 = DateRobot.to_text(year, month);
+        this.store.text2 = DateRobot.to_text(year, month);
+        
+        this.go_snap(year, month);
+        //값을 저장하고, 스크롤 위치를 들어온 값으로 보낸다.
+    }
+
+    init_html (){
+        //초기 html 생성
+        document.querySelector(this.target.install).innerHTML = this.static_component().initial_html;
+    }
+
+    delete (){
+        document.querySelector(this.target.install).innerHTML = "";
+    }
+
+    render_year_list (){
+        let html_to_join = [];
+        let pos = 0;
+        let range_start = this.option.range1.start == null ? this.date.current_year - 100 : this.option.range1.start;
+        let range_end = this.option.range1.end == null ? this.date.current_year : this.option.range1.end;
+        for(let i=range_start; i<=range_end; i++){
+            html_to_join.push(`<li data-ypos=${pos}>${i}</li>`);
+            pos = pos + 40;
+                       
+        }
+
+        let html = `
+                        <div id="year_wrap_${this.instance}" class="select_wrapper_child">
+                            <ul>
+                                <li></li>
+                                <li></li>
+                                ${html_to_join.join('')}
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </div>
+                        <div class="selector_unit">년</div>
+                    `;
+
+
+        document.querySelector(`${this.target.install} .two_date_selector_year_wrap`).innerHTML = html;
+    }
+
+    render_month_list (){
+        let html_to_join = [];
+        let pos = 0;
+        for(let i=1; i<=12; i++){
+            html_to_join.push(`<li data-mpos=${pos}>${i}</li>`);
+            pos = pos + 40;
+        }
+
+        let html = `
+                        <div id="month_wrap_${this.instance}" class="select_wrapper_child">
+                            <ul>
+                                <li></li>
+                                <li></li>
+                                ${html_to_join.join('')}
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </div>
+                        <div class="selector_unit">월</div>
+                    `;
+
+        document.querySelector(`${this.target.install} .two_date_selector_month_wrap`).innerHTML = html;
+    }
+
+    render_year_list2 (){
+        let html_to_join = [];
+        let pos = 0;
+        let range_start = this.option.range2.start == null ? this.date.current_year - 100 : this.option.range2.start;
+        let range_end = this.option.range2.end == null ? this.date.current_year : this.option.range2.end;
+        for(let i=range_start; i<=range_end; i++){
+            html_to_join.push(`<li data-ypos2=${pos}>${i}</li>`);
+            pos = pos + 40;
+                       
+        }
+
+        let html = `
+                        <div id="year_wrap_${this.instance}2" class="select_wrapper_child">
+                            <ul>
+                                <li></li>
+                                <li></li>
+                                ${html_to_join.join('')}
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </div>
+                        <div class="selector_unit">년</div>
+                    `;
+
+
+        document.querySelector(`${this.target.install} .two_date_selector_year_wrap2`).innerHTML = html;
+    }
+
+    render_month_list2 (){
+        let html_to_join = [];
+        let pos = 0;
+        for(let i=1; i<=12; i++){
+            html_to_join.push(`<li data-mpos2=${pos}>${i}</li>`);
+            pos = pos + 40;
+        }
+
+        let html = `
+                        <div id="month_wrap_${this.instance}2" class="select_wrapper_child">
+                            <ul>
+                                <li></li>
+                                <li></li>
+                                ${html_to_join.join('')}
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </div>
+                        <div class="selector_unit">월</div>
+                    `;
+
+        document.querySelector(`${this.target.install} .two_date_selector_month_wrap2`).innerHTML = html;
+    }
+
+    set_iscroll (){
+        this.year_scroll = new IScroll(`#year_wrap_${this.instance}`,{
+                            mouseWheel : true,
+                            deceleration:0.003,
+                            bounce: false
+                            // snap: 'li'
+                        });
+
+        this.month_scroll = new IScroll(`#month_wrap_${this.instance}`,{
+                            mouseWheel : true,
+                            deceleration:0.005,
+                            bounce: false
+                            // snap: 'li'
+        });
+        this.year_scroll2 = new IScroll(`#year_wrap_${this.instance}2`,{
+            mouseWheel : true,
+            deceleration:0.003,
+            bounce: false
+            // snap: 'li'
+        });
+        this.month_scroll2 = new IScroll(`#month_wrap_${this.instance}2`,{
+                    mouseWheel : true,
+                    deceleration:0.005,
+                    bounce: false
+                    // snap: 'li'
+        });
+        
+        this.set_scroll_snap();
+    }
+
+    set_scroll_snap (){
+        let self = this;
+        
+        self.year_scroll.on('scrollEnd', function (){
+            if(self.user_scroll_year == true){
+                self.user_scroll_year = false;
+                let posY = this.y;
+                let min = posY-posY%40;
+                let max = min - 40;
+
+                let snap;
+                
+                if(Math.abs(posY - max) < Math.abs(posY - min)){
+                    snap = max;
+                }else{
+                    snap = min;
+                }
+                self.year_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                $(`${self.target.install} li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                $(`${self.target.install} li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).css('color', '#1e1e1e');
+                self.year_scroll_snapped = snap;
+            }
+        });
+
+        self.year_scroll.on('beforeScrollStart', function (){
+            self.user_scroll_year = true;
+        });
+
+        
+        self.month_scroll.on('scrollEnd', function (){
+            if(self.user_scroll_month == true){
+                self.user_scroll_month = false;
+                let posY = this.y;
+                let min = posY-posY%40;
+                let max = min - 40;
+
+                let snap;
+                
+                if(Math.abs(posY - max) < Math.abs(posY - min)){
+                    snap = max;
+                }else{
+                    snap = min;
+                }
+                
+                    
+                self.month_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).css('color', '#1e1e1e');
+                
+            }
+        });
+
+        self.month_scroll.on('beforeScrollStart', function (){
+            self.user_scroll_month = true;
+        });
+
+
+        self.year_scroll2.on('scrollEnd', function (){
+            if(self.user_scroll_year2 == true){
+                self.user_scroll_year2 = false;
+                let posY = this.y;
+                let min = posY-posY%40;
+                let max = min - 40;
+
+                let snap;
+                
+                if(Math.abs(posY - max) < Math.abs(posY - min)){
+                    snap = max;
+                }else{
+                    snap = min;
+                }
+                self.year_scroll2.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                $(`${self.target.install} li[data-ypos2="${Math.abs(self.year_scroll2.y)}"]`).siblings('li').css('color', '#cccccc');
+                $(`${self.target.install} li[data-ypos2="${Math.abs(self.year_scroll2.y)}"]`).css('color', '#1e1e1e');
+                self.year_scroll_snapped = snap;
+            }
+        });
+
+        self.year_scroll2.on('beforeScrollStart', function (){
+            self.user_scroll_year2 = true;
+        });
+
+        
+        self.month_scroll2.on('scrollEnd', function (){
+            if(self.user_scroll_month2 == true){
+                self.user_scroll_month2 = false;
+                let posY = this.y;
+                let min = posY-posY%40;
+                let max = min - 40;
+
+                let snap;
+                
+                if(Math.abs(posY - max) < Math.abs(posY - min)){
+                    snap = max;
+                }else{
+                    snap = min;
+                }
+                
+                    
+                self.month_scroll2.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                $(`${self.target.install} li[data-mpos2="${Math.abs(self.month_scroll2.y)}"]`).siblings('li').css('color', '#cccccc');
+                $(`${self.target.install} li[data-mpos2="${Math.abs(self.month_scroll2.y)}"]`).css('color', '#1e1e1e');
+                
+            }
+        });
+
+        self.month_scroll2.on('beforeScrollStart', function (){
+            self.user_scroll_month2 = true;
+        });
+        
+    }
+
+    go_snap (year, month){
+        let initial_pos_year = (this.option.range1.start-year)*40;
+        let initial_pos_month = (1-month)*40;
+
+        this.year_scroll.scrollTo(0, initial_pos_year, 0, IScroll.utils.ease.bounce);
+        this.month_scroll.scrollTo(0, initial_pos_month, 0, IScroll.utils.ease.bounce);
+
+        $(`${this.target.install} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).css('color', '#1e1e1e');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).css('color', '#1e1e1e');
+        $(`${this.target.install} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+
+        let initial_pos_year2 = (this.option.range1.start-year)*40;
+        let initial_pos_month2 = (1-month)*40;
+
+        this.year_scroll2.scrollTo(0, initial_pos_year2, 0, IScroll.utils.ease.bounce);
+        this.month_scroll2.scrollTo(0, initial_pos_month2, 0, IScroll.utils.ease.bounce);
+
+        $(`${this.target.install} li[data-ypos2="${Math.abs(this.year_scroll2.y)}"]`).css('color', '#1e1e1e');
+        $(`${this.target.install} li[data-mpos2="${Math.abs(this.month_scroll2.y)}"]`).css('color', '#1e1e1e');
+        $(`${this.target.install} li[data-ypos2="${Math.abs(this.year_scroll2.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.target.install} li[data-mpos2="${Math.abs(this.month_scroll2.y)}"]`).siblings('li').css('color', '#cccccc');
+        
+    }
+
+    show_selected_date (){
+        let year = $(`${this.target.install} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`);
+        let month = $(`${this.target.install} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`);
+        let year2 = $(`${this.target.install} li[data-ypos2="${Math.abs(this.year_scroll2.y)}"]`);
+        let month2 = $(`${this.target.install} li[data-mpos2="${Math.abs(this.month_scroll2.y)}"]`);
+
+        let year_text = year.text();
+        let month_text = month.text();
+        let year_text2 = year2.text();
+        let month_text2 = month2.text();
+
+        if(year_text == undefined || year_text == ''){
+            show_error_message('[연도]를 다시 선택 해주세요.');
+        }
+        else if(month_text == undefined || month_text == ''){
+            show_error_message('[월]을 다시 선택 해주세요.');
+        }else if(date_text == undefined || date_text == ''){
+            show_error_message('[일자]를 다시 선택 해주세요.');
+        }
+        else{
+            show_error_message(`${year_text}년 ${month_text}월 - ${year_text2}년 ${month_text2}월`);
+        }
+    }
+
+    get_selected_data (){
+        let year = $(`${this.target.install} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`);
+        let month = $(`${this.target.install} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`);
+        let year2 = $(`${this.target.install} li[data-ypos2="${Math.abs(this.year_scroll2.y)}"]`);
+        let month2 = $(`${this.target.install} li[data-mpos2="${Math.abs(this.month_scroll2.y)}"]`);
+
+        let year_text = year.text();
+        let month_text = month.text();
+        let year_text2 = year2.text();
+        let month_text2 = month2.text();
+        let text = DateRobot.to_text(year_text, month_text);
+        let text2 = DateRobot.to_text(year_text2, month_text2);
+
+        return {
+            data1:{
+                year : year_text,
+                month : month_text,
+            },
+            data2:{
+                year : year_text2,
+                month : month_text2,
+            },
+            text1: text,
+            text2: text2
+        };
+    }
+
+
+    static_component (){
+        return{
+            "initial_html":
+                            `<div class="date_selector2">
+                                <div class="date_selector_confirm">
+                                    <div style="float:left;margin-left:5px;">
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', null, ()=>{layer_popup.close_layer_popup();})}
+                                    </div>
+                                    <span class="date_selector_title">${this.option.title}</span>
+                                    <div style="float:right;margin-right:5px;color:#fe4e65;">
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', null, ()=>{ this.store = this.get_selected_data();
+                                                                                                                    this.option.callback_when_set(this.store); 
+                                                                                                                    // layer_popup.close_layer_popup();
+                                                                                                                })}
+                                    </div>
+                                </div>
+                                <div class="two_date_selector_year_wrap select_wrapper"></div>
+                                <div class="two_date_selector_month_wrap select_wrapper"></div>
+                                <div style="display:inline-block;margin:0 5%;"></div>
+                                <div class="two_date_selector_year_wrap2 select_wrapper"></div>
+                                <div class="two_date_selector_month_wrap2 select_wrapper"></div>
+                                <div class="selector_indicator" style="font-weight:bold;"> - </div>
+                            </div>`
+        };
+    }
+}
+
 //시간 선택 (오전오후, 시, 분)
 class TimeSelector{
     constructor(install_target, target_instance, user_option){
