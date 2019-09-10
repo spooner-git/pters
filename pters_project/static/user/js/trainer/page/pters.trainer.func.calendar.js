@@ -1070,13 +1070,15 @@ class Calendar {
         $('.week_indicator').remove();
 
         let pos = event.offsetY;
-        let pos_hour = pos/60;
+        let pos_hour = pos/60 + this.worktime[0];
         let offset_hour = pos_hour > Math.floor(pos_hour)+0.5 ? Math.floor(pos_hour) + 0.5 : Math.floor(pos_hour);
         let offset_px = offset_hour * 60;
         let indicator = document.createElement('div');
         let hour = Math.floor(offset_hour);
         let minute = 60*(offset_hour - hour);
         let period_min = 30;
+
+        console.log(pos, pos_hour, offset_hour, offset_px, hour)
 
         indicator.classList.add('week_indicator');
         indicator.style.top = offset_px+'px';
@@ -1107,7 +1109,7 @@ class Calendar {
 
         //롱터치 일정 변경
         if(this.long_touch == ON){
-            let end_dt = `${year}-${month}-${date} ${TimeRobot.add_time(hour, minute, 0, period_min).hour}:${TimeRobot.add_time(hour, minute, 0, period_min).minute}`;
+            // let end_dt = `${year}-${month}-${date} ${TimeRobot.add_time(hour, minute, 0, period_min).hour}:${TimeRobot.add_time(hour, minute, 0, period_min).minute}`;
             Plan_func.read_plan(this.long_touch_schedule_id, (received)=>{
                 let start_dt = `${year}-${month}-${date} ${hour}:${minute}`;
                 let diff = TimeRobot.diff(received.schedule_info[0].start_time, received.schedule_info[0].end_time);
