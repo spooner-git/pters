@@ -28,6 +28,9 @@ class Statistics{
                 }
         };
 
+        this.target_date_start = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, -2);
+        this.target_date_end = `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`;
+
         this.init();
         // this.set_initial_data();
     }
@@ -40,13 +43,13 @@ class Statistics{
     }
 
     set_initial_data (){
-        // let data = {"start_date":`${this.dates.current_year}-${this.dates.current_month}-1`,
-        //             "end_date":`${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`};
-        let data = {"start_date":`2018-5-1`, "end_date":`2019-4-30`};
+        let data = {"start_date":this.target_date_start, "end_date":this.target_date_end};
         Statistics_func.read("sales", data, (data)=>{
             this.data.sales = data;
             this.data.chart.sales = this.data_convert_for_column_chart('sales');
-            this.render();
+            if(this.tab == "sales"){
+                this.render();
+            }
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
         Statistics_func.read("member", data, (data)=>{
@@ -55,6 +58,10 @@ class Statistics{
             this.data.chart.member.refund = [["유형", "대상"], ["전체 환불", data.total_month_all_refund_member], ["부분 환불", data.total_month_part_refund_member]];
             this.data.chart.member.contract = this.data_convert_for_column_chart('contract');
             this.data.chart.member.lesson_complete = this.data_convert_for_column_chart('lesson_complete');
+            if(this.tab == "member"){
+                this.render();
+            }
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
     }
 
@@ -159,18 +166,67 @@ class Statistics{
 
         let total_sales = UnitRobot.numberWithCommas(price_sum - refund_sum);
 
+        let search_button = this.dom_search_button();
+
         let html = `
                     <div style="padding:0 20px 16px 20px;border-bottom:1px solid #f5f2f3;margin-bottom:20px;">
                         <div style="line-height:24px;font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;">
                             <span>${start_month_date} - ${end_month_date}</span>
-                            <span style="float:right;font-size:13px;font-weight:500;letter-spacing:-0.6px;opacity:0.5;cursor:pointer;">기간별 조회 
-                                <img src="/static/common/icon/icon_arrow_expand_black.png" style="width:24px;vertical-align:middle;">
-                            </span>
+                            ${search_button}
                         </div>
                         <div style="line-height:16px;font-size:16px;font-weight:bold;letter-spacing:-0.7px;color:#fe4e65;">${total_sales} 원</div>
                     </div>
                     `;
         return html;
+    }
+
+    dom_search_button(){
+        //기간별 조회 버튼
+        let id = "statistics_search_button";
+        let title = `기간별 조회 <img src="/static/common/icon/icon_arrow_expand_black.png" style="width:24px;vertical-align:middle;">`;
+        let style = {"float":"right", "font-size":"13px", "font-weight":"500", "letter-spacing":"-0.6px", "opacity":"0.5"};
+        let onclick = ()=>{
+            let user_option = {
+                one:{text:"1 개월", callback:()=>{  
+                    this.target_date_start = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, 0);
+                    this.target_date_end = `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`;
+                    this.init();
+                    layer_popup.close_layer_popup();}
+                },
+                three:{text:"3 개월", callback:()=>{  
+                    this.target_date_start = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, -2);
+                    this.target_date_end = `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`;
+                    this.init();
+                    layer_popup.close_layer_popup();}
+                },
+                six:{text:"6 개월", callback:()=>{  
+                    this.target_date_start = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, -5);
+                    this.target_date_end = `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`;
+                    this.init();
+                    layer_popup.close_layer_popup();}
+                },
+                twelve:{text:"12 개월", callback:()=>{  
+                    this.target_date_start = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, -11);
+                    this.target_date_end = `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`;
+                    this.init();
+                    layer_popup.close_layer_popup();}
+                },
+                user:{text:"직접 입력", callback:()=>{  
+                    this.target_date_start = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, 0);
+                    this.target_date_end = `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`;
+                    this.init();
+                    layer_popup.close_layer_popup();}
+                }
+            };
+            let options_padding_top_bottom = 16;
+            let button_height = 8 + 8 + 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        }
+        let search_button = CComponent.text_button (id, title, style, onclick);
+        return search_button;
     }
 
     dom_row_member_summary(){
@@ -184,13 +240,13 @@ class Statistics{
         let end_month_last_date = `${end_month_date.split('-')[0]}-${end_month_date.split('-')[1]}-${last_date_of_end_month}`;
         end_month_date = end_month_last_date.replace(/-/gi, ".");
 
+        let search_button = this.dom_search_button();
+
         let html = `
                     <div style="padding:0 20px 16px 20px;border-bottom:1px solid #f5f2f3;margin-bottom:20px;">
                         <div style="line-height:24px;font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;">
                             <span>${start_month_date} - ${end_month_date}</span>
-                            <span style="float:right;font-size:13px;font-weight:500;letter-spacing:-0.6px;opacity:0.5;cursor:pointer;">기간별 조회 
-                                <img src="/static/common/icon/icon_arrow_expand_black.png" style="width:24px;vertical-align:middle;">
-                            </span>
+                            ${search_button}
                         </div>
                     </div>
                     `;
@@ -431,7 +487,7 @@ class Statistics{
     data_convert_for_column_chart(type){
         let new_data;
         if(type == "sales"){
-            new_data = [['X', 'Y']];
+            new_data = [['X', '매출 (만원)']];
             let length = this.data.sales.month_date.length;
             for(let i=0; i<length; i++){
                 new_data.push(
@@ -439,7 +495,7 @@ class Statistics{
                 );
             }
         }else if(type == "contract"){
-            new_data = [['Month', 'Contract', 'Recontract']];
+            new_data = [['Month', '신규 등록', '재등록']];
             let length = this.data.member.month_date.length;
             for(let i=0; i<length; i++){
                 new_data.push(
@@ -447,7 +503,7 @@ class Statistics{
                 );
             }
         }else if(type == "lesson_complete"){
-            new_data = [['Month', 'complete']];
+            new_data = [['Month', '레슨 일정 완료']];
             let length = this.data.member.month_date.length;
             for(let i=0; i<length; i++){
                 new_data.push(

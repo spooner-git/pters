@@ -16,7 +16,6 @@ class Statistics_detail{
 
     set_initial_data (){
         let data = {"month_date": this.target_month_date};
-        console.log(this.target_month_date)
         Statistics_func.read("sales_detail", data, (data)=>{
             this.data = data;
             this.render();
