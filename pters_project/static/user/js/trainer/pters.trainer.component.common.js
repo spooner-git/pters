@@ -66,7 +66,7 @@ class CComponent{
                             </div>
                             <div class="cell_content">
                                 <input type="text" class="cell_text" title="${placeholder}" placeholder="${placeholder}" pattern="${pattern}" value="${title}"
-                                 onkeyup="limit_char_check(event.target);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" 
+                                 onkeyup="limit_char_auto_correction(event.target);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" 
                                  data-error-message="${placeholder} : 필수 입력입니다." data-pattern-message="${pattern_message}" data-valid="false" ${disable} ${required}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
@@ -666,7 +666,9 @@ function limit_char_check(event){
         }
     }
 
-    return limit_char_check
+    console.log(limit_char_check);
+
+    return limit_char_check;
 }
 
 function update_check_registration_form(forms){

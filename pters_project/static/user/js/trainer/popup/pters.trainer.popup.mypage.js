@@ -111,7 +111,7 @@ class Mypage{
         let style = null;
         let onclick = ()=>{
 
-        }
+        };
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         return html;
@@ -126,7 +126,7 @@ class Mypage{
         let style = null;
         let onclick = ()=>{
 
-        }
+        };
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         return html;
@@ -141,7 +141,7 @@ class Mypage{
         let style = null;
         let onclick = ()=>{
 
-        }
+        };
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         return html;
@@ -156,7 +156,7 @@ class Mypage{
         let style = null;
         let onclick = ()=>{
 
-        }
+        };
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         return html;
@@ -171,7 +171,7 @@ class Mypage{
         let style = null;
         let onclick = ()=>{
             alert('패스로 이동');
-        }
+        };
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         return html;
@@ -185,8 +185,9 @@ class Mypage{
         let icon_r_text = "";
         let style = null;
         let onclick = ()=>{
-            alert("프로필 수정으로 이동");
-        }
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE_MODIFY, 100, POPUP_FROM_RIGHT, null, ()=>{
+                mypage_modify_popup = new Mypage_modify('.popup_mypage_modify', 'mypage_modify_popup');});
+        };
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         return html;
@@ -201,7 +202,7 @@ class Mypage{
         let style = null;
         let onclick = ()=>{
 
-        }
+        };
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         return html;
@@ -216,7 +217,7 @@ class Mypage{
         let style = {"color":"#ff001f"};
         let onclick = ()=>{
             alert("로그아웃");
-        }
+        };
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         return html;
