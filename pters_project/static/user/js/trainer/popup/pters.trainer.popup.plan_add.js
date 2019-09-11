@@ -470,6 +470,11 @@ class Plan_add{
                     "repeat_end_date":this.data.repeat.repeat_end.year+'-'+this.data.repeat.repeat_end.month+'-'+this.data.repeat.repeat_end.date,
                     "repeat_start_time":this.data.start_time, "repeat_end_time":this.data.end_time, "repeat_day":this.data.repeat.day.join('/')
         };
+
+        let pass_inspect = this.pass_inspect(this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date);
+        if(pass_inspect == false){
+            return false;
+        }
         
         //en_dis_type 0: off일정, 1:레슨일정
         //duplication_enable_flag 0: 중복불허 1:중복허용
@@ -603,6 +608,14 @@ class Plan_add{
                 }
             }
             return true;
+        }
+    }
+
+    pass_inspect(selected_date){
+        let inspect = pass_inspector.schedule(selected_date);
+        if(inspect.barrier == BLOCKED){
+            show_error_message(`[${inspect.limit_type}] 이용자께서는 오늘 기준 전/후 ${inspect.limit_num}일간 일정 관리 하실 수 있습니다.`);
+            return false;
         }
     }
 }

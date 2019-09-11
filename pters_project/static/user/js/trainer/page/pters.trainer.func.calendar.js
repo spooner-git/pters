@@ -1016,7 +1016,8 @@ class Calendar {
                             let cell_divide = plan.duplicated_cell;
 
                             let display = "";
-                            if( (start_hour <= work_start && end_hour <= work_start) || start_hour >= work_end + 1){
+                            // if( (start_hour <= work_start && end_hour <= work_start) || start_hour >= work_end + 1){
+                            if( (TimeRobot.compare(work_start+':00', start_hour+':'+start_min) == true && TimeRobot.compare(work_start+':00', end_hour+':'+end_min) == true) || start_hour >= work_end + 1){
                                 display = "none";
                             }
                             
@@ -1035,7 +1036,8 @@ class Calendar {
                                 go_behind = "go_behind";
                             }
 
-                            return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active} ${go_behind}" style="${styles}" ontouchstart="${this.instance}.longtouchstart(event, ()=>{})" ontouchend="${this.instance}.longtouchend(event)">
+                            return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active} ${go_behind}" 
+                                        style="${styles}" ontouchstart="${this.instance}.longtouchstart(event, ()=>{})" ontouchend="${this.instance}.longtouchend(event)">
                                         ${plan_name}
                                     </div>`;
                         })
@@ -1234,8 +1236,12 @@ class Calendar {
     relocate_current_time_indicator(){
         let indicator = document.getElementById('current_time_indicator');
 
-        let hour = new Date().getHours();
+        let hour = new Date().getHours() - this.worktime[0]; 
         let min = new Date().getMinutes();
+
+        if(new Date().getHours() >= this.worktime[this.worktime.length-1] ){
+            hour = 0;
+        }
 
         let pos_y = hour * 60 + min;
 

@@ -551,7 +551,17 @@ class PassInspector{
     }
 
     schedule(selected_date){
+        let d = new Date();
+        let today = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
 
+        let diff_date = Math.abs(DateRobot.diff_date(today, selected_date));
+        let limit_number = Number(this.data.auth_plan_create.limit_num);
+        let limit_type = this.data.auth_plan_create.limit_type;
+
+        if(diff_date >= limit_number){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     member(){
