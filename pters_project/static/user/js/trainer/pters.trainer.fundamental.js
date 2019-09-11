@@ -50,17 +50,17 @@ function func_set_webkit_overflow_scrolling(target_selector){
 function input_adjust_location_for_android(){
     if(os == ANDROID){
         $(document).on('focus', 'input', function(e){
-            let shade = `<div id="input_shade_for_android" style="position:fixed;width:100%;height:100%;top:0;left:0;background-color:#282828;opacity:0.5;z-index:1"></div>`;
+            let shade = `<div id="android_input_shade"></div>`;
             $(this).parents('li').addClass('input_focused');
             $(this).parents('li').parent().append(shade);
         });
     
         $(document).on('focusout', 'input', function(e){
             $(this).parents('li').removeClass('input_focused');
-            $('#input_shade_for_android').remove();
+            $('#android_input_shade').remove();
         });
 
-        $(document).on('click', '#input_shade_for_android', function(e){
+        $(document).on('click', '#android_input_shade', function(e){
             $(this).parents('li').removeClass('input_focused');
             $('input').blur();
             $(this).remove();
@@ -69,7 +69,7 @@ function input_adjust_location_for_android(){
         $(document).on('keypress', 'input', function(e){
             if (e.charCode == 13) {
                 e.preventDefault();
-                $('#input_shade_for_android').trigger('click');
+                $('#android_input_shade').trigger('click');
             }
         });
     }
@@ -85,6 +85,48 @@ function input_adjust_location_for_android(){
 //     console.log(
 //         "selector scrollHeight:", $(selector).prop('scrollHeight')
 //     );
+// }
+
+// function input_adjust_location_for_android(){
+//     //안드로이드의 경우 input영역을 클릭했을때 자동으로 그쪽으로 이동되지 않아서 input필드가 키보드에 가리는 현상이 생김
+//     if(os == ANDROID){
+//         var $android_input_target;
+//         $(document).on('focus', 'input', function(e){
+//             $android_input_target = $(this);
+//             let shade = `<div id="android_input_shade"></div>`;
+//             let input = $(this).clone();
+//             if($('#android_input_wrap').length == 0){
+//                 let html = `<div id="android_input_wrap">
+//                                 <div id="android_input">
+//                                 </div>
+//                                 ${shade}
+//                             </div>`;
+//                 $('body').append(html);
+//                 $('#android_input').html(input);
+//             }
+//         });
+
+//         $(document).on('focusout', '#android_input > input', function(e){
+//             let user_input = $(this).val();
+//             $android_input_target.text(user_input).val(user_input);
+//             $('#android_input_wrap').remove();
+//         });
+
+//         $(document).on('click', '#android_input_shade', function(e){
+//             let user_input = $('#android_input > input').val();
+//             console.log(user_input,"user_input")
+//             $android_input_target.text(user_input).val(user_input);
+//             $('input').blur();
+//             $('#android_input_wrap').remove();
+//         });
+
+//         $(document).on('keypress', 'input', function(e){
+//             if (e.charCode == 13) {
+//                 e.preventDefault();
+//                 $('#android_input_shade').trigger('click');
+//             }
+//         });
+//     }
 // }
 
 function ajax_load_image(option){
