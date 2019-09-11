@@ -617,7 +617,14 @@ class PassInspector{
     }
 
     statistics(selected_start_date, selected_end_date){
+        let diff_month = Number(DateRobot.diff_month(selected_start_date, selected_end_date));
+        let limit_number = Number(this.data.auth_analytics_read.limit_num);
+        let limit_type = this.data.auth_analytics_read.limit_type;
 
+        if(diff_month >= limit_number){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     program(){

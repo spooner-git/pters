@@ -217,7 +217,7 @@ class Mypage{
         let icon_r_text = "";
         let style = {"color":"#ff001f"};
         let onclick = ()=>{
-            alert("로그아웃");
+            location.href='/login/logout/';
         };
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
