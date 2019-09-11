@@ -24,7 +24,7 @@
  /* 안드로이드 input 필드 키보드 가림현상 보정 */
  .input_focused{
 	position: fixed;
-	top: 50%;
+	/* top: 50%; */
 	bottom: 0;
 	left: 0;
 	width: 100%;
