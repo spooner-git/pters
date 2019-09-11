@@ -3019,6 +3019,7 @@ class CustomSelector{
             value:[],
             text:[]
         };
+        console.log(selected_data, this.data)
         this.init();
         this.set_initial_data();
     }

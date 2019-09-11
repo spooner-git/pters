@@ -8,6 +8,13 @@ class Setting_attendmode{
                 password:null
         };
 
+        this.data_for_selector = {
+            display_session_start : 
+                {value:[0, 5, 10, 15, 20, 25, 30], text:["시작 0 분 부터", "시작 5 분 전부터", "시작 10 분 전부터", "시작 15 분 전부터", "시작 20 분 전부터", "시작 25 분 전부터", "시작 30 분 전부터"]},
+            display_session_end:
+            {value:[0, 5, 10, 15, 20, 25, 30], text:["종료 0 분 후까지", "종료 5 분 후까지", "종료 10 분 후까지", "종료 15 분 후까지", "종료 20 분 후까지", "종료 25 분 후까지", "종료 30 분 후까지"]}
+        };
+
         this.init();
     }
 
@@ -19,8 +26,10 @@ class Setting_attendmode{
 
     set_initial_data (){
         Setting_attendmode_func.read((data)=>{
-            // this.display_session_start = data.;
-            // this.display_session_end = data.;
+            this.data.display_session_start.value[0] = data.setting_attend_class_prev_display_time;
+            this.data.display_session_start.text[0] = this.data_for_selector.display_session_start.text[ this.data_for_selector.display_session_start.value.indexOf(data.setting_attend_class_prev_display_time)  ];
+            this.data.display_session_end.value[0] = data.setting_attend_class_after_display_time;
+            this.data.display_session_end.text[0] = this.data_for_selector.display_session_end.text[ this.data_for_selector.display_session_end.value.indexOf(data.setting_attend_class_after_display_time)  ];
             this.data.password = data.setting_admin_password;
             this.render_content();
         });
@@ -81,7 +90,7 @@ class Setting_attendmode{
             let title = "수업 시작 표시";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
-            let data = {value:[0, 5, 10, 15, 20, 25, 30], text:["시작 0 분 부터", "시작 5 분 전부터", "시작 10 분 전부터", "시작 15 분 전부터", "시작 20 분 전부터", "시작 25 분 전부터", "시작 30 분 전부터"]};
+            let data = this.data_for_selector.display_session_start;
             let selected_data = this.data.display_session_start;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
@@ -105,7 +114,7 @@ class Setting_attendmode{
             let title = "수업 종료 표시";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
-            let data = {value:[0, 5, 10, 15, 20, 25, 30], text:["종료 0 분 후까지", "종료 5 분 후까지", "종료 10 분 후까지", "종료 15 분 후까지", "종료 20 분 후까지", "종료 25 분 후까지", "종료 30 분 후까지"]};
+            let data = this.data_for_selector.display_session_end;
             let selected_data = this.data.display_session_end;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
