@@ -51,8 +51,12 @@ function input_adjust_location_for_android(){
     if(os == ANDROID){
         $(document).on('focus', 'input', function(e){
             let shade = `<div id="android_input_shade"></div>`;
-            $(this).parents('li').addClass('input_focused');
-            $(this).parents('li').parent().append(shade);
+            
+            setTimeout(()=>{
+                $(this).parents('li').parent().append(shade);
+                $(this).parents('li').addClass('input_focused');
+            }, 100);
+            
         });
     
         $(document).on('focusout', 'input', function(e){
