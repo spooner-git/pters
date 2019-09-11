@@ -408,7 +408,7 @@ class CComponent{
                     <li class="select_row sr_${location}" id="select_row_${id}">
                         <div class="obj_table_raw">
                             <div class="cell_select_icon" style="display:${icon == DELETE ? 'none' : ''}">
-                               <img src="${icon == DELETE ? '' : icon}">
+                               <img src="${icon == DELETE ? '' : icon}" style="height:100%;">
                             </div>
                             <div class="cell_select_title">
                                 ${title}

@@ -1074,13 +1074,11 @@ class Calendar {
         let pos = event.offsetY;
         let pos_hour = pos/60 + this.worktime[0];
         let offset_hour = pos_hour > Math.floor(pos_hour)+0.5 ? Math.floor(pos_hour) + 0.5 : Math.floor(pos_hour);
-        let offset_px = offset_hour * 60;
+        let offset_px = (offset_hour - this.worktime[0]) * 60;
         let indicator = document.createElement('div');
         let hour = Math.floor(offset_hour);
         let minute = 60*(offset_hour - hour);
         let period_min = 30;
-
-        console.log(pos, pos_hour, offset_hour, offset_px, hour)
 
         indicator.classList.add('week_indicator');
         indicator.style.top = offset_px+'px';
