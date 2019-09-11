@@ -295,7 +295,7 @@ class Member_view{
         let id = 'member_name_view';
         let title = this.data.name == null ? '' : this.data.name;
         let placeholder = '회원명';
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text;
         let style = {"font-size":"20px", "font-weight":"bold", "letter-spacing":"-1px", "color":"#3d3b3b"};
@@ -385,7 +385,7 @@ class Member_view{
         let id = 'member_phone_view';
         let title = this.data.phone == null || this.data.phone == 'None' ? '' : this.data.phone;
         let placeholder = '휴대폰 번호';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text;
         let style = null;
@@ -411,7 +411,7 @@ class Member_view{
         //등록하는 행을 만든다.
         let id = 'input_member_birth';
         let title = this.data.birth == null || this.data.birth == 'None' ? '생년월일' : Object.values(this.data.birth).join('.');
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = this.data.birth == null || this.data.birth == 'None' ? {"color":"#b8b4b4"} : null;
@@ -444,7 +444,7 @@ class Member_view{
     dom_row_member_sex_input(){
         let id = 'input_member_sex';
         let title = this.data.sex == null ||this.data.sex == 'None' ? '성별' : SEX_CODE[this.data.sex];
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = this.data.sex == null || this.data.sex == 'None' ? {"color":"#b8b4b4"} : null;
@@ -826,7 +826,7 @@ class Member_simple_view{
         let id = 'member_phone_view';
         let title =  this.data.phone == null || this.data.phone == 'None' ? '휴대폰 번호' : this.data.phone;
         let placeholder = '휴대폰 번호';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -847,7 +847,7 @@ class Member_simple_view{
         let id = 'member_birth_view';
         let title = this.data.birth == null || this.data.birth == 'None' ? '생년월일' : this.data.birth;
         let placeholder =  '생년월일';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -865,7 +865,7 @@ class Member_simple_view{
     dom_row_member_sex_input(){
         let id = 'member_sex_view';
         let title = this.data.sex == null || this.data.sex == 'None' ? '성별' : this.data.sex;
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -907,7 +907,7 @@ class Member_simple_view{
             //티켓 이름 표기 부분
             let id = `input_ticket_select_${i}`;
             let title = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
-            let icon = '/static/common/icon/icon_gap_black.png';
+            let icon = NONE;
             let icon_r_visible = SHOW;
             let icon_r_text = "";
             let style = null;

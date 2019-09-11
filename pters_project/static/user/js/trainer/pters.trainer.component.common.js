@@ -24,9 +24,9 @@ class CComponent{
 
     //추가 페이지들에서 자주 사용되는 row 스타일
     static create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick){
-        if(icon == null){
-            icon = '/static/common/icon/icon_dissatisfied.png';
-        }
+        // if(icon == null){
+        //     icon = '/static/common/icon/icon_dissatisfied.png';
+        // }
         if(icon == NONE){
             icon = '/static/common/icon/icon_gap_black.png';
         }
@@ -34,7 +34,7 @@ class CComponent{
         let html = `<li class="create_row" id="c_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
                             <div class="cell_title">
-                                ${icon != DELETE ? `<img src="${icon}">` : ""} 
+                                ${icon == DELETE ? "" : `<img src="${icon}">`} 
                                 <span class="cell_text">${title}</span>
                             </div>
                             <div class="cell_icon">
@@ -59,10 +59,14 @@ class CComponent{
         }
         let min_max_length = pattern.split('{')[1].replace('}', '').split(',');
 
+        if(icon == NONE){
+            icon = '/static/common/icon/icon_gap_black.png';
+        }
+
         let html = `<li class="create_input_row" id="c_i_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
-                            <div class="cell_title" style="display:${icon == undefined ? 'none' : ''}">
-                                ${icon != null ? `<img src="${icon}">` : ""} 
+                            <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
+                                <img src="${icon == DELETE ? '' : icon}">
                             </div>
                             <div class="cell_content">
                                 <input type="text" class="cell_text" title="${placeholder}" placeholder="${placeholder}" pattern="${pattern}" value="${title}"
@@ -96,10 +100,14 @@ class CComponent{
             disable = '';
         }
         let min_max_length = pattern.split('{')[1].replace('}', '').split(',');
+
+        if(icon == NONE){
+            icon = '/static/common/icon/icon_gap_black.png';
+        }
         let html = `<li class="create_input_row" id="c_i_n_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
-                            <div class="cell_title" style="display:${icon == undefined ? 'none' : ''}">
-                                ${icon != null ? `<img src="${icon}">` : ""} 
+                            <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
+                                <img src="${icon == DELETE ? '' : icon}">
                             </div>
                             <div class="cell_content">
                                 <input class="cell_text" title="${placeholder}" placeholder="${placeholder}" type="tel" pattern="${pattern}" value="${title}"
@@ -133,11 +141,13 @@ class CComponent{
     }
 
     static create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout){
-        
+        if(icon == NONE){
+            icon = '/static/common/icon/icon_gap_black.png';
+        }
         let html = `<li class="create_input_row create_input_textarea_row" id="c_i_t_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw" style="height:100%">
-                            <div class="cell_title" style="display:${icon == undefined ? 'none' : ''}">
-                                ${icon != null ? `<img src="${icon}">` : ""} 
+                            <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
+                                <img src="${icon == DELETE ? '' : icon}">
                             </div>
                             <div class="cell_content">
                                 <textarea class="cell_text" placeholder="${placeholder}" value="${title}" style="height:100%;">${title}</textarea>
@@ -169,10 +179,14 @@ class CComponent{
         }
         let min_max_length = pattern.split('{')[1].replace('}', '').split(',');
 
+        if(icon == NONE){
+            icon = '/static/common/icon/icon_gap_black.png';
+        }
+
         let html = `<li class="create_input_row" id="c_i_p_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
-                            <div class="cell_title" style="display:${icon == undefined ? 'none' : ''}">
-                                ${icon != null ? `<img src="${icon}">` : ""} 
+                            <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
+                                <img src="${icon == DELETE ? '': icon}">
                             </div>
                             <div class="cell_content">
                                 <input type="password" class="cell_text" title="${placeholder}" placeholder="${placeholder}" pattern="${pattern}" value="${title}"
@@ -387,11 +401,14 @@ class CComponent{
 
     //일반(이미지 없음) 선택 팝업에 사용되는 행
     static select_row (multiple_select, checked, location, id, title, icon, onclick){
+        if(icon == NONE){
+            icon = '/static/common/icon/icon_gap_black.png';
+        }
         let html = `
                     <li class="select_row sr_${location}" id="select_row_${id}">
                         <div class="obj_table_raw">
-                            <div class="cell_select_icon">
-                                ${icon != null ? `<img src="${icon}">` : ""} 
+                            <div class="cell_select_icon" style="display:${icon == DELETE ? 'none' : ''}">
+                               <img src="${icon == DELETE ? '' : icon}">
                             </div>
                             <div class="cell_select_title">
                                 ${title}

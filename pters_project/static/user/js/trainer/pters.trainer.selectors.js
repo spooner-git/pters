@@ -2772,7 +2772,7 @@ class RepeatSelector{
         let checked = this.data.power == OFF ? 1 : 0; //타겟이 이미 가진 색상 데이터를 get
         let id = "repeat_power";
         let title = "반복 안함";
-        let icon = null;
+        let icon = NONE;
         let html = CComponent.select_row (multiple_select, checked, this.unique_instance, id, title, icon, ()=>{   
                 this.power = OFF;
                 this.day = [];
@@ -2883,7 +2883,7 @@ class DaySelector{
             let checked = this.data.day.indexOf(DAYNAME_EN_SHORT[i]) != -1 ? 1 : 0; //타겟이 이미 가진 데이터를 get
             let id = `day_${i}`;
             let title = DAYNAME_KR[i]+'요일';
-            let icon = null;
+            let icon = NONE;
             let html = CComponent.select_row (this.multiple_select, checked, this.unique_instance, id, title, icon, (add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.day.push(DAYNAME_EN_SHORT[i]);
@@ -2970,7 +2970,7 @@ class CategorySelector{
             let multiple_select = this.multiple_select;
             let title = category_to_be_drawn[item].name;
             let location = this.unique_instance;
-            let icon = null;
+            let icon = NONE;
             let html = CComponent.select_row (multiple_select, checked, location, id, title, icon, (add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.name.push(category_to_be_drawn[item].name);
@@ -3061,7 +3061,7 @@ class CustomSelector{
             let checked = this.data.value.indexOf(this.full_data.value[i]) != -1 ? 1 : 0; //타겟이 이미 가진 데이터를 get
             let id = `custom_selector_${this.unique_instance}_${i}`;
             let title = this.full_data.text[i];
-            let icon = null;
+            let icon = NONE;
             let html = CComponent.select_row (this.multiple_select, checked, this.unique_instance, id, title, icon, (add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.value.push(this.full_data.value[i]);

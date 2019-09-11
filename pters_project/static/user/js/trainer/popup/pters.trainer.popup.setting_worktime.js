@@ -231,7 +231,7 @@ class Setting_worktime{
     dom_row_end_time_select(day){
         let id = `select_end_${day}`;
         let title = this.data[day].end_time_text == null ? '종료 시각*' : this.data[day].end_time_text;
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

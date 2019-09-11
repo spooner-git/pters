@@ -117,7 +117,7 @@ class Service_inquiry {
         let id = "inquiry_subject_input";
         let title = this.data.inquiry_subject == null ? "" : this.data.inquiry_subject;
         let placeholder = "제목";
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -138,7 +138,7 @@ class Service_inquiry {
         let id = "inquiry_content_textarea";
         let title = this.data.inquiry_content == null ? "" : this.data.inquiry_content;
         let placeholder = "내용";
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = '';
         let onfocusout = (data)=>{

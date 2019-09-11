@@ -118,7 +118,7 @@ class Program_view{
         let title = this.name == null ? '' : this.name;
         let style = {"font-size":"20px", "font-weight":"bold", "padding":"0"};
         let placeholder =  '프로그램명*';
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let disabled = false;
@@ -145,7 +145,7 @@ class Program_view{
     dom_row_program_category(){
         let id = 'program_category_select';
         let title = this.category.name.length == 0 ? "분야*" : this.category.name;
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = null;

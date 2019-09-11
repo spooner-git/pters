@@ -220,7 +220,7 @@ class Ticket_add{
         let id = 'input_ticket_count';
         let title = this.data.count == null ? '' : this.data.count+unit;
         let placeholder = '횟수';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text;
         let style = null;
@@ -243,7 +243,7 @@ class Ticket_add{
         let id = 'input_ticket_price';
         let title = this.data.price == null ? '' : this.data.price+unit;
         let placeholder = '가격';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text;
         let style = null;

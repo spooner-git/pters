@@ -193,7 +193,7 @@ class Ticket_view{
             title = title + ' (비활성)';
         }
         let placeholder = '수강권명*';
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let disabled = false;
@@ -278,7 +278,7 @@ class Ticket_view{
         let id = 'ticket_count_view';
         let title = this.data.count == null ? '' : this.data.count+unit;
         let placeholder = '횟수';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -301,7 +301,7 @@ class Ticket_view{
         let id = 'ticket_price_view';
         let title = this.data.price == null ? '' : this.data.price+unit;
         let placeholder = '가격';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -353,7 +353,7 @@ class Ticket_view{
         // return html;
         let id = 'ing_member_view';
         let title = this.data.member_id.length == 0 ? '0 명' : this.data.member_id.length+' 명';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -674,7 +674,7 @@ class Ticket_simple_view{
     dom_row_member(){
         let id = 'ing_member_view';
         let title = this.data.member_id.length == 0 ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_id.length+' 명)';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

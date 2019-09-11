@@ -89,7 +89,7 @@ class Password_modify{
         let id = 'old_password';
         let title = this.data.old == null ? '' : this.data.old;
         let placeholder = '기존 비밀번호';
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
@@ -111,7 +111,7 @@ class Password_modify{
         let id = 'new_password';
         let title = this.data.new == null ? '' : this.data.new;
         let placeholder = '새로운 비밀번호';
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
@@ -133,7 +133,7 @@ class Password_modify{
         let id = 'new_password_confirm';
         let title = this.data.new_re == null ? '' : this.data.new_re;
         let placeholder = '새로운 비밀번호 확인';
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};

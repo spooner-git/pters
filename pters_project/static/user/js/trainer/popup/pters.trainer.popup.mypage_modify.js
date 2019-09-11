@@ -104,7 +104,7 @@ class Mypage_modify{
         let id = 'modify_my_name';
         let title = this.data.name == null ? '' : this.data.name;
         let placeholder = '이름';
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
@@ -125,7 +125,7 @@ class Mypage_modify{
         let id = 'modify_my_phone';
         let title = this.data.phone == null ? '' : this.data.phone;
         let placeholder = '휴대폰 번호';
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
@@ -145,7 +145,7 @@ class Mypage_modify{
         let id = 'modify_my_email';
         let title = this.data.email == null ? '' : this.data.email;
         let placeholder = '이메일';
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};

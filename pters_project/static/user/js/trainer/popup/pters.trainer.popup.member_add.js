@@ -252,7 +252,7 @@ class Member_add{
         let id = 'input_member_phone';
         let title = this.data.phone == null ? '' : this.data.phone;
         let placeholder = '휴대폰 번호';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -270,7 +270,7 @@ class Member_add{
         //등록하는 행을 만든다.
         let id = 'input_member_birth';
         let title = this.data.birth == null ? '생년월일' : Object.values(this.data.birth).join('.');
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = this.data.birth == null ? {"color":"#b8b4b4"} : null;
@@ -310,7 +310,7 @@ class Member_add{
                 title = "여성";
             }
         }
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = this.data.sex == null ? {"color":"#b8b4b4"} : null;
@@ -435,7 +435,7 @@ class Member_add{
         let id = 'input_reg_count';
         let title = this.data.ticket_reg_count == null ? '' : this.data.ticket_reg_count+unit;
         let placeholder = '횟수*';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -457,7 +457,7 @@ class Member_add{
         let id = 'input_reg_price';
         let title = this.data.ticket_price == null ? '' : this.data.ticket_price+unit;
         let placeholder = '가격';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

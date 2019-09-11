@@ -198,7 +198,7 @@ class Lecture_view{
             // title = title + ' (비활성)';
         }
         let placeholder =  '수업명*';
-        let icon = undefined;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let disabled = false;
@@ -270,7 +270,7 @@ class Lecture_view{
     dom_row_color_view(){
         let id = 'color_select_view';
         let title = this.data.color_bg.length == 0 ? '색상 태그' : `<span style="background-color:${this.data.color_bg};color:${this.data.color_font};padding:5px;border-radius:4px;">${COLOR_NAME_CODE[this.data.color_bg]}</span>`;
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = null;
@@ -296,7 +296,7 @@ class Lecture_view{
     dom_row_ticket(){
         let id = 'ticket_number_view';
         let title = this.data.ticket_id.length == 0 ? '0 개' : this.data.ticket_id.length+' 개';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -338,7 +338,7 @@ class Lecture_view{
     dom_row_member(){
         let id = 'select_member';
         let title = this.data.member_number == null ? '진행중 회원 (0 명)' : '진행중 회원 (' + this.data.member_number+' 명)';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = null;
@@ -643,7 +643,7 @@ class Lecture_simple_view{
     dom_row_color_view(){
         let id = 'lecture_color_view';
         let title = this.data.color_bg == null ? '색상명' : `<span style="background-color:${this.data.color_bg};color:${this.data.color_font};padding:5px;border-radius:4px;">${COLOR_NAME_CODE[this.data.color_bg]}</span>`;
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -656,7 +656,7 @@ class Lecture_simple_view{
     dom_row_member(){
         let id = 'member_number_view';
         let title = this.data.member_number == null ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_number+' 명)';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

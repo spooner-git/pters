@@ -244,7 +244,7 @@ class Menu {
     dom_menu_setting_attendmode(){
         let id = 'menu_setting_attendmode';
         let title = '출석 체크 모드 설정';
-        let icon = '/static/common/icon/icon_gap_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
