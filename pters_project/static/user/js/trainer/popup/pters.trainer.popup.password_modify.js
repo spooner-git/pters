@@ -157,19 +157,10 @@ class Password_modify{
             return false;
         }
 
-        alert("비번 바꾸기 요청")
-
-        // let data = {
-        //     "first_name":this.data.name, "phone":this.data.phone, "contents":null, "country":null, "address":null, "sex":null, "birthday":null
-        // };
-
-        // password_func.update(data, ()=>{
-        //     this.set_initial_data();
-        //     password_popup.set_initial_data();
-        //     // show_error_message('변경 내용이 저장되었습니다.');
-        //     layer_popup.close_layer_popup();
-        //     // this.render_content();
-        // });
+        let data = {"old_password":this.data.old, "new_password1":this.data.new, "new_password2":this.data.new_re};
+        Password_modify_func.update(data, ()=>{
+            layer_popup.close_layer_popup();
+        });
     }
 
     check_before_send(inspect_type){
@@ -239,6 +230,40 @@ class Password_modify{
 
     upper_right_menu(){
         this.send_data();
+    }
+}
+
+class Password_modify_func{
+    static update(data, callback){
+        $.ajax({
+            url:'/login/password/change/',
+            type:'POST',
+            data: data,
+            dataType : 'HTML',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                // let json = JSON.parse(data);
+                callback(data);
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                // location.reload();
+            }
+        });
     }
 }
 
