@@ -17,6 +17,10 @@ const UNCONNECTED = 0;
 const CONNECT_WAIT = 1;
 const CONNECTED = 2;
 
+const AUTH_TYPE_VIEW = 'VIEW';
+const AUTH_TYPE_DELETE = 'DELETE';
+const AUTH_TYPE_WAIT = 'WAIT';
+
 const PROGRAM_SELECT = 0;
 const PROGRAM_LECTURE_CONNECT_ACCEPT = 1;
 const PROGRAM_LECTURE_CONNECT_DELETE = 2;
@@ -117,6 +121,7 @@ const POPUP_ADDRESS_TICKET_LIST = 'popup_ticket_list';
 
 const POPUP_MEMBER_SCHEDULE_HISTORY = 'popup_member_schedule_history';
 const POPUP_MEMBER_TICKET_HISTORY = 'popup_member_ticket_history';
+const POPUP_MEMBER_TICKET_MODIFY = 'popup_member_ticket_modify';
 
 const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
 const POPUP_ADDRESS_STATISTICS = 'popup_statistics';

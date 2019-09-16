@@ -525,40 +525,32 @@ class Statistics{
                 layer_popup.close_layer_popup();}
             },
             user:{text:"직접 입력", callback:()=>{  
-                layer_popup.close_layer_popup();
-                layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
-                    date_selector = new TwoDateSelector('#wrapper_popup_date_selector_function', null, {myname:'twodateselector', title:'날짜 선택', data:null, callback_when_set: (selected_data)=>{
-                        let date_1 = `${selected_data.data1.year}-${selected_data.data1.month}`;
-                        let date_2 = `${selected_data.data2.year}-${selected_data.data2.month}`;
-                        let diff_month = DateRobot.diff_month(date_1, date_2);
-                        if(diff_month < 0){
-                            show_error_message("검색 종료일은 시작일보다 빠를 수 없습니다.");
-                            return false;
-                        }
-                        if(diff_month > 11){
-                            show_error_message("최대 12개월 단위로 조회가 가능합니다.");
-                            return false;
-                        }
-                        if(this.pass_inspect(date_1, date_2) == false){
-                            return false;
-                        }
-                        let date1 = date_1;
-                        let date2 = date_2;
-                        // let diff_month = DateRobot.diff_month(date1, date2);
-                        // if(diff_month < 0){
-                        //     show_error_message("검색 종료일은 시작일보다 빠를 수 없습니다.");
-                        //     return false;
-                        // }
-                        // if(diff_month > 11){
-                        //     show_error_message("최대 12개월 단위로 조회가 가능합니다.");
-                        //     return false;
-                        // }
-                        this.target_date_start = `${date1}-01`;
-                        this.target_date_end = `${date2}-01`;
-                        this.init();
-                        layer_popup.close_layer_popup();
-                    }});
-                }); }
+                    layer_popup.close_layer_popup();
+                    layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                        date_selector = new TwoDateSelector('#wrapper_popup_date_selector_function', null, {myname:'twodateselector', title:'날짜 선택', data:null, callback_when_set: (selected_data)=>{
+                            let date_1 = `${selected_data.data1.year}-${selected_data.data1.month}`;
+                            let date_2 = `${selected_data.data2.year}-${selected_data.data2.month}`;
+                            let diff_month = DateRobot.diff_month(date_1, date_2);
+                            if(diff_month < 0){
+                                show_error_message("검색 종료일은 시작일보다 빠를 수 없습니다.");
+                                return false;
+                            }
+                            if(diff_month > 11){
+                                show_error_message("최대 12개월 단위로 조회가 가능합니다.");
+                                return false;
+                            }
+                            if(this.pass_inspect(date_1, date_2) == false){
+                                return false;
+                            }
+                            let date1 = date_1;
+                            let date2 = date_2;
+                            this.target_date_start = `${date1}-01`;
+                            this.target_date_end = `${date2}-01`;
+                            this.init();
+                            layer_popup.close_layer_popup();
+                        }});
+                    });
+                }
             }
         };
         let options_padding_top_bottom = 16;

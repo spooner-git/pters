@@ -1,0 +1,32 @@
+.popup_member_ticket_modify{
+	-webkit-overflow-scrolling: touch;
+}
+
+.popup_member_ticket_modify .obj_box_full{
+	padding: 15px 0 15px 16px;
+}
+
+.popup_member_ticket_modify .obj_input_box_full{
+	padding: 4px 0px 4px 18px;
+}
+
+.popup_member_ticket_modify .popup_toolbox{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+	/* padding: 0 16px 20px 60px; */
+	padding: 0;
+}
+
+.popup_member_ticket_modify .popup_content{
+	padding-top: 1px;
+	padding-bottom: 20px;
+}
+
+
+/* 간단 보기 */
+.popup_member_simple_view{
+}
+.popup_member_simple_view .obj_box_full{
+	padding: 0 16px;
+}

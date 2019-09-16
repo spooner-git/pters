@@ -327,7 +327,13 @@ class Member_view{
         if(this.data.connection == CONNECTED ){
             onclick = ()=>{
                 let user_option = {
-                        connect:{text:"연결 해제", callback:()=>{alert('연결해제 함수 실행');layer_popup.close_layer_popup();}}
+                        connect:{text:"연결 해제", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let data = {"member_id":this.member_id, "member_auth_cd":AUTH_TYPE_DELETE};
+                            Member_func.connection(data, ()=>{
+                                this.set_initial_data();
+                            });
+                        }}
                     };
                 let options_padding_top_bottom = 16;
                 let button_height = 8 + 8 + 52;
@@ -339,7 +345,13 @@ class Member_view{
         }else if(this.data.connection == CONNECT_WAIT){
             onclick = ()=>{
                 let user_option = {
-                        connect:{text:"연결 요청 취소", callback:()=>{alert('연결 요청 취소 함수 실행');layer_popup.close_layer_popup();}}
+                        connect:{text:"연결 요청 취소", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let data = {"member_id":this.member_id, "member_auth_cd":AUTH_TYPE_DELETE};
+                            Member_func.connection(data, ()=>{
+                                this.set_initial_data();
+                            });
+                        }}
                     };
                 let options_padding_top_bottom = 16;
                 let button_height = 8 + 8 + 52;
@@ -351,7 +363,13 @@ class Member_view{
         }else if(this.data.connection == UNCONNECTED){
             onclick = ()=>{
                 let user_option = {
-                        connect:{text:"연결 요청", callback:()=>{alert('연결요청 함수 실행');layer_popup.close_layer_popup();}}
+                        connect:{text:"연결 요청", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let data = {"member_id":this.member_id, "member_auth_cd":AUTH_TYPE_WAIT};
+                            Member_func.connection(data, ()=>{
+                                this.set_initial_data();
+                            });
+                        }}
                     };
                 let options_padding_top_bottom = 16;
                 let button_height = 8 + 8 + 52;
@@ -367,6 +385,7 @@ class Member_view{
         let icon_r_visible = SHOW;
         let icon_r_text = '연결 해제';
         let style = null;
+        console.log(this.data.connection)
         if(this.data.connection == CONNECTED){
             icon_r_text = "연결 해제";
         }else if(this.data.connection == CONNECT_WAIT){
