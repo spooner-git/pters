@@ -689,6 +689,7 @@ class Phone_auth_func{
         // {'token':document.getElementById('g-recaptcha-response').value,
         // 'phone':document.getElementById('id_phone').value
         // }
+        console.log(data);
         $.ajax({
             url:'/login/activate_sms/',
             type:'POST',
@@ -703,13 +704,10 @@ class Phone_auth_func{
             //통신성공시 처리
             success:function(data){
                 let jsondata = JSON.parse(data);
-                if(jsondata.messageArray.length > 0){
-                    return jsondata.messageArray;
-                }else{
-                    if(callback != undefined){
-                        callback();
-                    }
+                if(callback != undefined){
+                    callback(jsondata);
                 }
+                
             },
             //보내기후 팝업창 닫기
             complete:function(){

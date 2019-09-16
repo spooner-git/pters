@@ -149,7 +149,7 @@ class Mypage_modify{
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px", "display":"inline-block"};
+        let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px", "display":"inline-block", "width":"180px"};
         let input_disabled = this.data_from_external == null ? false : true;
         let pattern = "[0-9]{10,11}";
         let pattern_message = "";
@@ -168,7 +168,7 @@ class Mypage_modify{
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px", "display":"inline-block"};
+        let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px", "display":"inline-block", "width":"180px"};
         let input_disabled = this.data_from_external == null ? false : true;
         let pattern = "[0-9]{10,11}";
         let pattern_message = "";
@@ -186,7 +186,11 @@ class Mypage_modify{
         let style = {"float":"right", "border":"1px solid #cccccc", "border-radius":"4px", "font-size":"13px", "height":"50px", "line-height":"50px", "width":"60px", "padding":"0", "box-sizing":"border-box", "vertical-align":"top"};
         let onclick = ()=>{
             let data = {'token':'', 'phone':this.data.phone};
-            Phone_auth_func.request_auth_number(data, ()=>{
+            Phone_auth_func.request_auth_number(data, (jsondata)=>{
+                    if(jsondata.messageArray.length > 0){
+                        show_error_message(jsondata.messageArray);
+                        return false;
+                    }
                     this.auth_phone.valid_time_count = 90;
                     this.auth_phone.request_status = true;
                     this.render_content();
