@@ -262,7 +262,7 @@ function func_set_popup_position ($popup_selector, animation_type, popup_size){
 function func_set_open_popup_animation ($popup_selector, animation_type, popup_size){
     let animation_info = "";
     if(animation_type != POPUP_FROM_PAGE){
-        animation_info = "transform 0.33s ease-in-out";
+        animation_info = "transform 0.3s ease-in-out";
     }
     let translate_x = 0;
     let translate_y = 0;
@@ -293,7 +293,7 @@ function func_set_open_popup_animation ($popup_selector, animation_type, popup_s
 function func_set_close_popup_animation ($popup_selector, animation_type){
     let animation_info = "";
     if(animation_type != POPUP_FROM_PAGE){
-        animation_info = "transform 0.33s ease-in-out";
+        animation_info = "transform 0.3s ease-in-out";
     }
     let translate_x = 0;
     let translate_y = 0;
