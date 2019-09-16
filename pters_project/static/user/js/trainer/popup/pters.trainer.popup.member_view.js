@@ -314,12 +314,12 @@ class Member_view{
         
         let html = `
         <div class="member_view_upper_box">
-            <div style="display:inline-block;width:320px;">
+            <div style="display:inline-block;width:100%;">
                     ${sub_html}
             </div>
         </div>
         `;
-        return sub_html;
+        return html;
     }
 
     dom_row_member_user_id_input(){
@@ -486,7 +486,6 @@ class Member_view{
         return html;
     }
 
-
     dom_row_ticket(){
         let ticket_length = this.data.ticket.length;
 
@@ -552,8 +551,6 @@ class Member_view{
         return html;
     }
 
-
-
     send_data(){
         if(this.check_before_send() == false){
             return false;
@@ -571,8 +568,6 @@ class Member_view{
             member.init();
         });
     }
-
-  
 
     upper_right_menu(){
         let user_option = {
@@ -619,6 +614,7 @@ class Member_view{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
     }
+
     check_before_send(){
 
         let forms = document.getElementById(`${this.form_id}`);
@@ -693,7 +689,6 @@ class Member_simple_view{
         this.set_initial_data();
     }
 
-
     init(){
         this.render();
     }
@@ -712,12 +707,22 @@ class Member_simple_view{
             Member_func.read_ticket_list({"member_id":this.member_id}, (data)=>{
                 let ticket_list = data;
                 this.data.ticket = [];
+                let member_ticket_list = [];
                 for(let ticket in ticket_list){
-                    let ticket_rem_count_of_this_member = ticket_list[ticket].member_ticket_rem_count;
-                    let ticket_reg_count_of_this_member = ticket_list[ticket].member_ticket_reg_count;
-                    let ticket_reg_price_of_this_member = ticket_list[ticket].member_ticket_price;
-                    let ticket_reg_date_of_this_member = ticket_list[ticket].member_ticket_start_date;
-                    let ticket_end_date_of_this_member = ticket_list[ticket].member_ticket_end_date;
+                    member_ticket_list.push(ticket_list[ticket]);
+                }
+                member_ticket_list.sort(function(a, b){
+                    return a.member_ticket_start_date > b.member_ticket_start_date ? -1 : a.member_ticket_start_date < b.member_ticket_start_date ? 1 : 0;
+                });
+                for(let i=0; i<member_ticket_list.length; i++){
+                    if(member_ticket_list[i].member_ticket_state_cd != 'IP'){
+                        continue;
+                    }
+                    let ticket_rem_count_of_this_member = member_ticket_list[i].member_ticket_rem_count;
+                    let ticket_reg_count_of_this_member = member_ticket_list[i].member_ticket_reg_count;
+                    let ticket_reg_price_of_this_member = member_ticket_list[i].member_ticket_price;
+                    let ticket_reg_date_of_this_member = member_ticket_list[i].member_ticket_start_date;
+                    let ticket_end_date_of_this_member = member_ticket_list[i].member_ticket_end_date;
                     let ticket_remain_date = Math.round((new Date(ticket_end_date_of_this_member).getTime() - new Date().getTime()) / (1000*60*60*24));
                     let ticket_remain_alert_text = "";
                     if(ticket_remain_date < 0){
@@ -725,28 +730,30 @@ class Member_simple_view{
                         ticket_remain_date = Math.abs(ticket_remain_date);
                     }
 
-                    Ticket_func.read({"ticket_id": ticket_list[ticket].member_ticket_ticket_id}, (data)=>{
+                    // Ticket_func.read({"ticket_id": ticket_list[ticket].member_ticket_ticket_id}, (data)=>{
                         let ticket_of_member = {
-                                            ticket_id:data.ticket_info.ticket_id,
-                                            ticket_name:data.ticket_info.ticket_name,
-                                            ticket_effective_days:data.ticket_info.ticket_effective_days,
+                                            ticket_id:member_ticket_list[i].ticket_id,
+                                            ticket_name:member_ticket_list[i].member_ticket_name,
+                                            ticket_effective_days:member_ticket_list[i].ticket_effective_days,
                                             ticket_reg_count:ticket_reg_count_of_this_member,
                                             ticket_rem_count:ticket_rem_count_of_this_member,
                                             ticket_price:ticket_reg_price_of_this_member,
-                                            ticket_state:data.ticket_info.ticket_state_cd,
+                                            ticket_state:member_ticket_list[i].ticket_state_cd,
                                             start_date:ticket_reg_date_of_this_member,
-                                            start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member),
+                                            start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
                                             end_date:ticket_end_date_of_this_member,
-                                            end_date_text:ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member)+' 까지',
-                                            lecture_id:data.ticket_info.ticket_lecture_id_list,
-                                            lecture_name:data.ticket_info.ticket_lecture_list,
-                                            lecture_state:data.ticket_info.ticket_lecture_state_cd_list,
-                                        }
+                                            end_date_text:ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' 까지',
+                                            lecture_id:member_ticket_list[i].ticket_lecture_id_list,
+                                            lecture_name:member_ticket_list[i].ticket_lecture_list,
+                                            lecture_state:member_ticket_list[i].ticket_lecture_state_cd_list,
+                                            lecture_color:member_ticket_list[i].ticket_lecture_ing_color_cd_list,
+                                        };
                         this.data.ticket.push(ticket_of_member);
 
-                        this.init();
-                    });
+                        // this.init();
+                    // });
                 }
+                this.render();
             });
         });
     }
@@ -792,7 +799,7 @@ class Member_simple_view{
 
         let html = `
         <div style="height:48px;line-height:48px;">
-            <div style="display:inline-block;float:left;width:275px;">
+            <div style="float:left;width:auto;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                 <span style="font-size:13px;font-weight:500;">${this.data.name == null ? '' : this.data.name}</span>
             </div>
             <div style="display:inline-block;float:right;width:65px;text-align:right;">
@@ -824,7 +831,7 @@ class Member_simple_view{
     dom_row_member_phone_input(){
         let unit = '';
         let id = 'member_phone_view';
-        let title =  this.data.phone == null || this.data.phone == 'None' ? '휴대폰 번호' : this.data.phone;
+        let title =  this.data.phone == null || this.data.phone == 'None' || this.data.phone == '' ? '휴대폰 번호' : this.data.phone;
         let placeholder = '휴대폰 번호';
         let icon = NONE;
         let icon_r_visible = HIDE;
@@ -845,7 +852,7 @@ class Member_simple_view{
         //등록하는 행을 만든다.
         let unit = '';
         let id = 'member_birth_view';
-        let title = this.data.birth == null || this.data.birth == 'None' ? '생년월일' : this.data.birth;
+        let title = this.data.birth == null || this.data.birth == 'None' || this.data.birth == '' ? '생년월일' : this.data.birth;
         let placeholder =  '생년월일';
         let icon = NONE;
         let icon_r_visible = HIDE;
@@ -864,7 +871,7 @@ class Member_simple_view{
 
     dom_row_member_sex_input(){
         let id = 'member_sex_view';
-        let title = this.data.sex == null || this.data.sex == 'None' ? '성별' : this.data.sex;
+        let title = this.data.sex == null || this.data.sex == 'None' || this.data.sex == '' ? '성별' : SEX_CODE[this.data.sex];
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -916,7 +923,7 @@ class Member_simple_view{
                 // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
                 //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
                 // });
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(235/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(258/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                     ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
                     //회원 간단 정보 팝업 열기
                 });

@@ -179,7 +179,9 @@ class Ticket_view{
 
         let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>' +
-                    '<div class="obj_input_box_full">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, {"padding":"0", "color":"#858282"})+member_list+ '</div>';
+                    '<div class="obj_input_box_full" style="padding-top:16px;">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
+                                                                            {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
+                                                                        +member_list+ '</div>';
         return html;
     }
 
@@ -207,8 +209,8 @@ class Ticket_view{
         }, pattern, pattern_message, required);
         
         let html = `
-        <div class="member_add_upper_box" style="">
-            <div style="display:inline-block;width:320px;">
+        <div class="member_add_upper_box">
+            <div style="display:inline-block;width:100%;">
                     ${sub_html}
             </div>
         </div>
@@ -254,7 +256,7 @@ class Ticket_view{
             let lecture_state_cd = this.data.lecture_state_cd[i];
             let lecture_color = this.data.lecture_color[i];
             let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:#cccccc; text-decoration:line-through;' : '');
-            let icon_button_style = {"display":"block", "padding":"0", "font-size":"15px",
+            let icon_button_style = {"display":"block", "padding":"0", "padding-left":"10px", "font-size":"15px",
                                      "font-weight":"500", "height":"50px", "line-height":"50px"};
 
             let lecture_name_set = `<div style="display:inline-block;width: 4px;height:16px;border-radius:6px;background-color:${lecture_color};margin-right:12px;vertical-align:middle;"></div>
@@ -618,7 +620,7 @@ class Ticket_simple_view{
 
         let html = `
         <div style="height:48px;line-height:48px;">
-            <div style="display:inline-block;float:left;width:275px;">
+            <div style="float:left;width:auto;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                 <span style="font-size:13px;font-weight:500;">${ticket_name}</span>
             </div>
             <div style="display:inline-block;float:right;width:65px;text-align:right;">

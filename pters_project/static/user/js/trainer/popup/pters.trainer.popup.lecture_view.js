@@ -212,8 +212,8 @@ class Lecture_view{
         }, pattern, pattern_message, required);
         
         let html = `
-        <div class="lecture_view_upper_box" style="">
-            <div style="display:inline-block;width:320px;">
+        <div class="lecture_view_upper_box">
+            <div style="display:inline-block;width:100%;">
                 ${sub_html}
             </div>
         </div>
@@ -321,7 +321,7 @@ class Lecture_view{
             }
             html_to_join.push(
                 CComponent.text_button(ticket_id, ticket_name, style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(235/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(258/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                         ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
                         //수강권 간단 정보 팝업 열기
                     });
@@ -616,7 +616,7 @@ class Lecture_simple_view{
 
         let html = `
         <div style="height:48px;line-height:48px;">
-            <div style="display:inline-block;float:left;width:275px;">
+            <div style="float:left;width:auto;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                 <span style="font-size:13px;font-weight:500;">${lecture_name}</span>
             </div>
             <div style="display:inline-block;float:right;width:65px;text-align:right;">
