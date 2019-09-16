@@ -1,27 +1,3 @@
-// function func_set_webkit_overflow_scrolling(target_selector){
-//     if(os == IOS){
-//         let $selector = $(target_selector);
-
-//         $selector.off('touchstart').on('touchstart', function(){
-//             if($selector.scrollTop() == 0){
-//                 $selector.scrollTop(1);
-//             }
-//         });
-
-//         $selector.off('scroll').scroll(function(e){
-//             const popupHeight = $selector.height();
-//             const scrollHeight = $selector.prop('scrollHeight');
-//             const scrollLocation = $selector.scrollTop();
-//             if(scrollHeight >= popupHeight+1){
-//                 if(popupHeight + scrollLocation == scrollHeight){
-//                     $selector.animate({scrollTop : scrollLocation-1}, 10);
-//                 }else if(popupHeight + scrollLocation == popupHeight){
-//                     $selector.animate({scrollTop : scrollLocation+1}, 10);
-//                 }
-//             }
-//         });
-//     }
-// }
 function func_set_webkit_overflow_scrolling(target_selector){
     if(os == IOS){
         let $selector = $(target_selector);
@@ -707,4 +683,76 @@ class PassInspector{
 
     }
 }
+
+class Phone_auth_func{
+    static request_auth_number(data, callback){
+        // {'token':document.getElementById('g-recaptcha-response').value,
+        // 'phone':document.getElementById('id_phone').value
+        // }
+        $.ajax({
+            url:'/login/activate_sms/',
+            type:'POST',
+            data:data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            //통신성공시 처리
+            success:function(data){
+                let jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length > 0){
+                    return jsondata.messageArray;
+                }else{
+                    if(callback != undefined){
+                        callback();
+                    }
+                }
+            },
+            //보내기후 팝업창 닫기
+            complete:function(){
+    
+            },
+            //통신 실패시 처리
+            error:function(){
+                alert("에러: 서버 통신 실패");
+            }
+        });
+    }
+
+    static send_auth_number(data, callback){
+        // {'user_activation_code': $id_activation_code.val()}
+        $.ajax({
+            url:'/login/activate_sms_confirm/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                let jsondata = JSON.parse(data);
+                
+                if(callback != undefined){
+                    callback(jsondata);
+                }
+                
+            },
+            complete:function(){
+    
+            },
+            error:function(){
+    
+            }
+        });
+    }
+}
+
 

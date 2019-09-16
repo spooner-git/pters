@@ -54,10 +54,13 @@ class Alarm {
         node2.setAttribute('id', `alarm_paging_${this.paging + 1}`);
         document.querySelector('#alarm_content_wrap').appendChild(node2);
 
+        let more = `<div style="text-align:center;font-size:12px;font-weight:500;height:30px;line-height:30px;background-color:#f5f5f5;" onclick="alarm.render_more();">더 보기</div>`;
+        if(page_data.length < 40){
+            more = "";
+        }
+
         document.querySelector(`#alarm_paging_${this.paging}`).innerHTML = page_data.join("");
-        document.querySelector(`#alarm_paging_${this.paging+1}`).innerHTML = `<div style="text-align:center;font-size:12px;font-weight:500;height:30px;line-height:30px;background-color:#f5f5f5;" onclick="alarm.render_more();">
-                                                                                더 보기
-                                                                            </div>`;
+        document.querySelector(`#alarm_paging_${this.paging+1}`).innerHTML = more;
     }
 
     render_more (){

@@ -10,7 +10,14 @@ class Mypage_modify{
             email:null,
             sex:null,
             birth:null,
-            photo:'/static/common/icon/sally.png'
+            photo:'/static/common/icon/sally.png',
+        };
+
+        this.auth_phone = {
+            request_status : false,
+            number_get : null,
+            valid_time_count : 0,
+            valid_time_count_func : null
         };
 
         this.init();
@@ -39,6 +46,9 @@ class Mypage_modify{
 
     clear(){
         setTimeout(()=>{
+            this.auth_phone.valid_time_count = 0;
+            this.auth_phone.request_status = false;
+            clearInterval(this.auth_phone.valid_time_count_func);
             document.querySelector(this.target.install).innerHTML = "";
         }, 300);
     }
@@ -64,14 +74,27 @@ class Mypage_modify{
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
     }
 
+    render_phone_auth_count(){
+        let auth_phone = this.dom_row_my_phone_auth_number() + this.dom_button_auth_confirm_phone();
+        if(this.auth_phone.request_status == false){
+            auth_phone = "";
+        }
+        document.getElementById('auth_phone_number_input').innerHTML = auth_phone;
+    }
+
     dom_assembly_toolbox(){
         return this.dom_row_toolbox();
     }
     
     dom_assembly_content(){
         let my_name = this.dom_row_my_name();
-        let my_phone = this.dom_row_my_phone();
+        let my_phone = '<div style="height:60px">' + this.dom_row_my_phone() + this.dom_button_auth_request_phone() + '</div>';
+        let auth_phone = '<div id="auth_phone_number_input" style="height:60px">' + this.dom_row_my_phone_auth_number() + this.dom_button_auth_confirm_phone() +'</div>';
         let my_email = this.dom_row_my_email();
+        if(this.auth_phone.request_status == false){
+            auth_phone = "";
+        }
+        
 
         let tag_my_name = CComponent.dom_tag("이름", {"color":"#858282", "padding":"8px 0", "font-weight":"bold"});
         let tag_my_phone = CComponent.dom_tag("휴대폰 번호", {"color":"#858282", "padding":"8px 0", "font-weight":"bold"});
@@ -79,7 +102,7 @@ class Mypage_modify{
 
         let html =  '<section id="basic_info_wrap">'+ 
                         tag_my_name + my_name + 
-                        tag_my_phone + my_phone + 
+                        tag_my_phone + my_phone + auth_phone + 
                         tag_my_email + my_email + '</section>';
 
         return html;
@@ -114,30 +137,92 @@ class Mypage_modify{
         let required = "required";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             this.data.name = input_data;
-            console.log(input_data)
             this.render_content();
         }, pattern, pattern_message, required);
         return html;
     }
 
     dom_row_my_phone(){
-        let unit = '';
         let id = 'modify_my_phone';
         let title = this.data.phone == null ? '' : this.data.phone;
         let placeholder = '휴대폰 번호';
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
+        let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px", "display":"inline-block"};
         let input_disabled = this.data_from_external == null ? false : true;
         let pattern = "[0-9]{10,11}";
         let pattern_message = "";
         let required = "required";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             this.data.phone = input_data;
-            console.log(input_data)
             this.render_content();
         }, pattern, pattern_message, required);
+        return html;
+    }
+
+    dom_row_my_phone_auth_number(){
+        let id = 'my_auth_number_phone';
+        let title = this.auth_phone.number_get == null ? '' : this.auth_phone.number_get;
+        let placeholder = '인증 번호 ' + '( ' + Math.floor(this.auth_phone.valid_time_count/60) + ' : ' + this.auth_phone.valid_time_count%60 + ' )';
+        let icon = DELETE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px", "display":"inline-block"};
+        let input_disabled = this.data_from_external == null ? false : true;
+        let pattern = "[0-9]{10,11}";
+        let pattern_message = "";
+        let required = "required";
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
+            this.auth_phone.number_get = input_data;
+            this.render_content();
+        }, pattern, pattern_message, required);
+        return html;
+    }
+
+    dom_button_auth_request_phone(){
+        let id = "auth_request_my_phone";
+        let title = "인증";
+        let style = {"float":"right", "border":"1px solid #cccccc", "border-radius":"4px", "font-size":"13px", "height":"50px", "line-height":"50px", "width":"60px", "padding":"0", "box-sizing":"border-box", "vertical-align":"top"};
+        let onclick = ()=>{
+            let data = {'token':'', 'phone':this.data.phone};
+            Phone_auth_func.request_auth_number(data, ()=>{
+                    this.auth_phone.valid_time_count = 90;
+                    this.auth_phone.request_status = true;
+                    this.render_content();
+
+                    this.auth_phone.valid_time_count_func = setInterval(()=>{
+                        if(this.auth_phone.valid_time_count == 0){
+                            this.auth_phone.request_status = false;
+                            clearInterval(this.auth_phone.valid_time_count_func);
+                            this.render_content();
+                            return false;
+                        }
+                        this.auth_phone.valid_time_count --;
+                        this.render_phone_auth_count();
+                    }, 1000);
+                }
+            );
+        };
+        let html = CComponent.button (id, title, style, onclick);
+        return html;
+    }
+
+    dom_button_auth_confirm_phone(){
+        let id = "auth_confirm_my_phone";
+        let title = "확인";
+        let style = {"float":"right", "border":"1px solid #cccccc", "border-radius":"4px", "font-size":"13px", "height":"50px", "line-height":"50px", "width":"60px", "padding":"0", "box-sizing":"border-box", "vertical-align":"top", "color":"#fe4e65"};
+        let onclick = ()=>{
+            let data = {'user_activation_code': this.auth_phone.number_get};
+            Phone_auth_func.send_auth_number(data, (data)=>{
+                if(data.messageArray.length > 0){
+                    show_error_message(data.messageArray);
+                }else{
+                    show_error_message("인증 되었습니다");
+                }
+            });
+        };
+        let html = CComponent.button (id, title, style, onclick);
         return html;
     }
 
