@@ -1,7 +1,8 @@
 class Member_ticket_history{
-    constructor(install_target, member_id, callback){
+    constructor(install_target, data, callback){
         this.target = {install : install_target};
-        this.member_id = member_id;
+        this.member_id = data.member_id;
+        this.member_name = data.member_name;
         this.callback = callback;
         this.received_data;
         this.data = null;
@@ -49,32 +50,20 @@ class Member_ticket_history{
             let data = member_ticket_list[i];
             let ticket_id = data.member_ticket_ticket_id;
             let ticket_name = data.member_ticket_name;
+            let ticket_start_date = data.member_ticket_start_date;
+            let ticket_end_date = data.member_ticket_end_date;
             let reg_count = data.member_ticket_reg_count;
+            let ticket_price = data.member_ticket_price;
             let remain_count = data.member_ticket_rem_count;
             let avail_count = data.member_ticket_avail_count;
+            let status_code = data.member_ticket_state_cd;
             let status = TICKET_STATUS[data.member_ticket_state_cd];
             let date_diff = DateRobot.diff_date(data.member_ticket_end_date, data.member_ticket_start_date);
             let date = DateRobot.to_text(data.member_ticket_start_date, '', '', SHORT) + ' - ' + DateRobot.to_text(data.member_ticket_end_date, '', '', SHORT) + ' ('+date_diff+'일)';
             let onclick = ()=>{
-                let user_option = {
-                    status:{text:"상태 변경", callback:()=>{
-                        this.ticket_status_change_option(ticket_id, data.member_ticket_state_cd);
-                    }},
-                    start_date:{text:"시작 날짜 변경", callback:()=>{
-                        this.ticket_start_date_change_selector(ticket_id, data.member_ticket_start_date);
-                    }},
-                    end_date:{text:"종료 날짜 변경", callback:()=>{
-                        this.ticket_end_date_change_selector(ticket_id, data.member_ticket_end_date);
-                    }},
-                    reg_count:{text:"등록 횟수 변경", callback:()=>{
-                        
-                    }}
-                };
-                let options_padding_top_bottom = 16;
-                let button_height = 8 + 8 + 52;
-                let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
-                    option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, POPUP_FROM_RIGHT, null, ()=>{
+                    let data = {"member_name":this.member_name, "member_ticket_id":ticket_id, "member_ticket_name":ticket_name, "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":reg_count, "price":ticket_price, "status":status_code};
+                    member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
             };
 

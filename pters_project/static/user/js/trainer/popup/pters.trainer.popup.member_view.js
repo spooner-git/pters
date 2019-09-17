@@ -385,7 +385,6 @@ class Member_view{
         let icon_r_visible = SHOW;
         let icon_r_text = '연결 해제';
         let style = null;
-        console.log(this.data.connection)
         if(this.data.connection == CONNECTED){
             icon_r_text = "연결 해제";
         }else if(this.data.connection == CONNECT_WAIT){
@@ -507,15 +506,17 @@ class Member_view{
 
     dom_row_ticket(){
         let ticket_length = this.data.ticket.length;
-
-            console.log(this.data.ticket);
         let html_to_join = [];
         for(let i=0; i<ticket_length; i++){
             let ticket_name = this.data.ticket[i].ticket_name;
+            let ticket_id =  this.data.ticket[i].ticket_id;
+            let ticket_start_date =  this.data.ticket[i].start_date;
+            let ticket_end_date =  this.data.ticket[i].end_date;
+            let ticket_reg_count =  this.data.ticket[i].ticket_reg_count;
+            let ticket_price =  this.data.ticket[i].ticket_price;
             if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
                 ticket_name = `<span style="color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;
             }
-            console.log( this.data.ticket[i].ticket_id);
             //티켓 이름 표기 부분
             let id = `input_ticket_select_${i}`;
             let title = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
@@ -524,14 +525,15 @@ class Member_view{
             let icon_r_text = "";
             let style = null;
             let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
-                let ticket_id =  this.data.ticket[i].ticket_id;
-                // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
-                //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
-                // });
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(258/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
-                    ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
-                    //수강권 간단 정보 팝업 열기
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, POPUP_FROM_RIGHT, null, ()=>{
+                    let data = {"member_name":this.name, "member_ticket_id":ticket_id, "member_ticket_name":ticket_name, "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":ticket_reg_count, "price":ticket_price, "status":"IP"};
+                    member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
+
+                // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(258/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
+                //     ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
+                //     //수강권 간단 정보 팝업 열기
+                // });
             });
 
             //티켓내 수업 리스트 표기 부분
@@ -614,7 +616,7 @@ class Member_view{
             ticket_history:{text:"수강권 이력", callback:()=>{
                     layer_popup.close_layer_popup();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
-                        member_ticket_history = new Member_ticket_history('.popup_member_ticket_history', this.member_id, null);
+                        member_ticket_history = new Member_ticket_history('.popup_member_ticket_history', {member_id:this.member_id, member_name:this.name}, null);
                     });
                 }
             },
