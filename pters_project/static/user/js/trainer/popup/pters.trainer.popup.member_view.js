@@ -33,6 +33,7 @@ class Member_view{
                 [
                     {
                         ticket_id:[],
+                        member_ticket_id:null,
                         ticket_name:null,
                         ticket_effective_days:null,
                         ticket_reg_count:null,
@@ -215,6 +216,7 @@ class Member_view{
                                             ticket_rem_count:ticket_rem_count_of_this_member,
                                             ticket_price:ticket_reg_price_of_this_member,
                                             ticket_state:member_ticket_list[i].ticket_state_cd,
+                                            member_ticket_id:member_ticket_list[i].member_ticket_id,
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
                                             end_date:ticket_end_date_of_this_member,
@@ -512,6 +514,7 @@ class Member_view{
         for(let i=0; i<ticket_length; i++){
             let ticket_name = this.data.ticket[i].ticket_name;
             let ticket_id =  this.data.ticket[i].ticket_id;
+            let member_ticket_id =  this.data.ticket[i].member_ticket_id;
             let ticket_start_date =  this.data.ticket[i].start_date;
             let ticket_end_date =  this.data.ticket[i].end_date;
             let ticket_reg_count =  this.data.ticket[i].ticket_reg_count;
@@ -528,7 +531,7 @@ class Member_view{
             let style = null;
             let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, POPUP_FROM_RIGHT, null, ()=>{
-                    let data = {"member_name":this.name, "member_ticket_id":ticket_id, "member_ticket_name":ticket_name, "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":ticket_reg_count, "price":ticket_price, "status":"IP"};
+                    let data = {"member_name":this.name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":ticket_reg_count, "price":ticket_price, "status":"IP"};
                     member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
 
@@ -694,6 +697,7 @@ class Member_simple_view{
                         ticket_rem_count:null,
                         ticket_price:null,
                         ticket_state:null,
+                        member_ticket_id:null,
                         start_date:null,
                         start_date_text:null,
                         end_date:null,

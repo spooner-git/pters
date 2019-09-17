@@ -48,7 +48,7 @@ class Member_ticket_history{
         for(let i=0; i<member_ticket_list.length; i++){
             numbering++;
             let data = member_ticket_list[i];
-            let ticket_id = data.member_ticket_ticket_id;
+            let ticket_id = data.member_ticket_id;
             let ticket_name = data.member_ticket_name;
             let ticket_start_date = data.member_ticket_start_date;
             let ticket_end_date = data.member_ticket_end_date;
