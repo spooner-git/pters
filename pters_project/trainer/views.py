@@ -1971,11 +1971,13 @@ def update_member_connection_info_logic(request):
             if not connection_check:
                 member_auth_cd = AUTH_TYPE_WAIT
             # 회원이 인증을 안하고 내가 등록한 회원이면 무조건 연결상태로
+            print(str(member.user.is_active))
             if not member.user.is_active and str(member.reg_info) == str(request.user.id):
                 member_auth_cd = AUTH_TYPE_VIEW
 
         for class_member_ticket_info in class_member_ticket_data:
             class_member_ticket_info.member_ticket_tb.member_auth_cd = member_auth_cd
+            class_member_ticket_info.member_ticket_tb.save()
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)

@@ -365,7 +365,7 @@ class Member_view{
                 let user_option = {
                         connect:{text:"연결 요청", callback:()=>{
                             layer_popup.close_layer_popup();
-                            let data = {"member_id":this.member_id, "member_auth_cd":AUTH_TYPE_WAIT};
+                            let data = {"member_id":this.member_id, "member_auth_cd":AUTH_TYPE_VIEW};
                             Member_func.connection(data, ()=>{
                                 this.set_initial_data();
                             });
