@@ -22,7 +22,7 @@ class Member_ticket_history{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_ticket_history.clear();" class="obj_icon_prev">`;
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_ticket_history.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="">수강권 이력</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_ticket_history.upper_right_menu()">재등록</span></span>`;
         let content =   `<section style="margin-top:8px;">${this.dom_list()}</section>`;

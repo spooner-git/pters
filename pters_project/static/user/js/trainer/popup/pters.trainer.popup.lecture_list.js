@@ -40,7 +40,7 @@ class Lecture_list {
 
     render(){
 
-        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();lecture_list_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();lecture_list_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
                                 <img src="/static/common/icon/icon_search_black.png" class="obj_icon_24px" style="padding-right:12px;">
@@ -54,6 +54,7 @@ class Lecture_list {
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_lecture_list .wrapper_top').style.border = 0;
+        PopupBase.top_menu_effect(this.target.install);
     }
 
     render_toolbox(){
@@ -122,9 +123,11 @@ class Lecture_list {
     }
 
     dom_row_toolbox(){
+        let title = "수업 ";
         let html = `<div class="lecture_upper_box">
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
-                            <div style="display:inline-block;">수업 </div>
+                            <span style="display:inline-block;">${title}</span>
+                            <span style="display:none;">${title}</span>
                             <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->
                         </div>
                     </div>

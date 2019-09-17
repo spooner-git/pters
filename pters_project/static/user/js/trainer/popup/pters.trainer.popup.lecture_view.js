@@ -140,7 +140,7 @@ class Lecture_view{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();lecture_view_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();lecture_view_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="lecture_view_popup.upper_right_menu();"></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
@@ -150,6 +150,7 @@ class Lecture_view{
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_lecture_view .wrapper_top').style.border = 0;
+        PopupBase.top_menu_effect(this.target.install);
     }
 
     render_toolbox(){
@@ -216,6 +217,7 @@ class Lecture_view{
             <div style="display:inline-block;width:100%;">
                 ${sub_html}
             </div>
+            <span style="display:none;">${title}</span>
         </div>
         `;
         return html;

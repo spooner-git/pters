@@ -30,7 +30,7 @@ class Statistics_detail{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();statistics_detail_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();statistics_detail_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">${this.target_yyyy_mm}</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;

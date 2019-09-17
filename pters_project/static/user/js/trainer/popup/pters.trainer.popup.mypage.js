@@ -44,7 +44,7 @@ class Mypage{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();mypage_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();mypage_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">${this.data.name == null ? '' : this.data.name}님의 프로필</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
@@ -54,6 +54,7 @@ class Mypage{
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_mypage .wrapper_top').style.border = 0;
+        PopupBase.top_menu_effect(this.target.install);
     }
 
     render_toolbox(){
@@ -93,9 +94,10 @@ class Mypage{
         let html = `
         <div class="mypage_upper_box" style="text-align:center;">
             <div style="display:inline-block;width:320px;">
-                <div class="photo_wrap" onclick="mypage_popup.event_edit_photo();">
+                <span class="photo_wrap" onclick="mypage_popup.event_edit_photo();">
                     ${title}
-                </div>
+                </span>
+                <span style="display:none;">${title}</span>
             </div>
         </div>
         `;

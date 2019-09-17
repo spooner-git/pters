@@ -53,7 +53,7 @@ class Member_ticket_refund{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_ticket_refund.clear();" class="obj_icon_prev">`;
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_ticket_refund.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_ticket_refund.send_data()">완료</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
@@ -63,6 +63,7 @@ class Member_ticket_refund{
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_member_ticket_refund .wrapper_top').style.border = 0;
+        PopupBase.top_menu_effect(this.target.install);
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
     }
 
@@ -96,10 +97,12 @@ class Member_ticket_refund{
     }
 
     dom_row_toolbox(){
+        let title = "수강권 환불";
         let html = `<div class="">
                         <div style="display:inline-block;padding-left:60px;">
-                            <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: #3d3b3b;">수강권 환불</span>
+                            <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: #3d3b3b;">${title}</span>
                             <p style="font-size:11px;color:#5c5859;margin:12px 0;">환불금액은 매출통계에 반영 됩니다.</p>
+                            <span style="display:none;">${title}</span>
                         </div>
                     </div>
                     `;

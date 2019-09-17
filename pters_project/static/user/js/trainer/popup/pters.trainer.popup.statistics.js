@@ -87,7 +87,7 @@ class Statistics{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();statistics_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();statistics_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
@@ -97,6 +97,7 @@ class Statistics{
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_statistics .wrapper_top').style.border = 0;
+        PopupBase.top_menu_effect(this.target.install);
         this.load_google_chart();
     }
 
@@ -137,13 +138,14 @@ class Statistics{
         let html = `
                     <div class="lecture_view_upper_box">
                         <div style="display:inline-block;width:320px;">
-                            <div style="display:inline-block;width:100px;font-size:23px;font-weight:bold;text-align:center;color:${this.tab=="sales" ? "#3d3b3b" :"#b8b4b4"}" onclick="statistics_popup.switch('sales')">
+                            <span style="display:inline-block;width:100px;font-size:23px;font-weight:bold;text-align:center;color:${this.tab=="sales" ? "#3d3b3b" :"#b8b4b4"}" onclick="statistics_popup.switch('sales')">
                                 ${title}
-                            </div>
+                            </span>
                             <div style="display:inline-block;background-color:#f5f2f3;width:2px;height:16px;"></div>
-                            <div style="display:inline-block;width:100px;font-size:23px;font-weight:bold;text-align:center;color:${this.tab=="member" ? "#3d3b3b" :"#b8b4b4"}" onclick="statistics_popup.switch('member')">
+                            <span style="display:inline-block;width:100px;font-size:23px;font-weight:bold;text-align:center;color:${this.tab=="member" ? "#3d3b3b" :"#b8b4b4"}" onclick="statistics_popup.switch('member')">
                                 ${title2}
-                            </div>
+                            </span>
+                            <span style="display:none">${this.tab=="sales"? "매출 통계" : "회원 통계"}</span>
                         </div>
                     </div>
                     `;

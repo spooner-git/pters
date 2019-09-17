@@ -146,7 +146,7 @@ class Ticket_view{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();ticket_view_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();ticket_view_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="ticket_view_popup.upper_right_menu();"></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
@@ -156,6 +156,7 @@ class Ticket_view{
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_ticket_view .wrapper_top').style.border = 0;
+        PopupBase.top_menu_effect(this.target.install);
     }
 
     render_toolbox(){
@@ -185,7 +186,6 @@ class Ticket_view{
         return html;
     }
 
-
     dom_row_toolbox(){
         let id = 'ticket_name_view';
         let style = {"font-size":"20px", "font-weight":"bold"};
@@ -211,7 +211,7 @@ class Ticket_view{
         let html = `
         <div class="member_add_upper_box">
             <div style="display:inline-block;width:100%;">
-                    ${sub_html}
+                ${sub_html}
             </div>
         </div>
         `;

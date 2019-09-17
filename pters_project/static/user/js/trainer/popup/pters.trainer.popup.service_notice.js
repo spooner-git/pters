@@ -35,7 +35,7 @@ class Service_notice {
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();service_notice_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();service_notice_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
@@ -45,6 +45,7 @@ class Service_notice {
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_service_notice .wrapper_top').style.border = 0;
+        PopupBase.top_menu_effect(this.target.install);
     }
 
     render_toolbox(){
@@ -78,9 +79,11 @@ class Service_notice {
     }
 
     dom_row_toolbox(){
+        let title = "PTERS 공지사항 ";
         let html = `<div class="notice_upper_box">
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
-                            <div style="display:inline-block;">PTERS 공지사항 </div>
+                            <span style="display:inline-block;">${title}</span>
+                            <span style="display:none;">${title}</span>
                             <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->
                         </div>
                     </div>

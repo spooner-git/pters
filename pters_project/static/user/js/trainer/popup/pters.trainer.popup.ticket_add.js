@@ -103,7 +103,7 @@ class Ticket_add{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup();ticket_add_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup();ticket_add_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="ticket_add_popup.send_data();">등록</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
@@ -113,6 +113,7 @@ class Ticket_add{
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_ticket_add .wrapper_top').style.border = 0;
+        PopupBase.top_menu_effect(this.target.install);
     }
 
     render_toolbox(){

@@ -43,7 +43,7 @@ class Setting_attendmode{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();setting_attendmode_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();setting_attendmode_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_confirm_black.png" onclick="setting_attendmode_popup.upper_right_menu();" class="obj_icon_prev"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
@@ -53,6 +53,7 @@ class Setting_attendmode{
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_setting_attendmode .wrapper_top').style.border = 0;
+        PopupBase.top_menu_effect(this.target.install);
     }
 
     render_toolbox(){
@@ -155,9 +156,10 @@ class Setting_attendmode{
         let html = `
         <div class="setting_reserve_upper_box" style="">
             <div style="display:inline-block;width:320px;">
-                <div style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
+                <span style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
                     ${title}
-                </div>
+                </span>
+                <span style="display:none;">${title}</span>
             </div>
         </div>
         `;

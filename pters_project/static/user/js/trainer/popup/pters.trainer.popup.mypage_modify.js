@@ -54,7 +54,7 @@ class Mypage_modify{
     }
 
     render(){
-        let top_left = `<img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();mypage_modify_popup.clear();" class="obj_icon_prev">`;
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();mypage_modify_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="mypage_modify_popup.send_data()">등록</span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
@@ -64,6 +64,7 @@ class Mypage_modify{
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_mypage_modify .wrapper_top').style.border = 0;
+        PopupBase.top_menu_effect(this.target.install);
     }
 
     render_toolbox(){
@@ -114,9 +115,10 @@ class Mypage_modify{
         let html = `
         <div class="mypage_modify_upper_box" style="">
             <div style="display:inline-block;width:320px;">
-                <div style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
+                <span style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
                     ${title}
-                </div>
+                </span>
+                <span style="display:none;">${title}</span>
             </div>
         </div>
         `;
