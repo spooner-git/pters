@@ -196,7 +196,7 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
             if class_info is not None:
                 context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
-                cancel_prohibition_time = context['lt_res_cancel_time']
+                cancel_prohibition_time = context['setting_member_reserve_cancel_time']
                 # 근접 취소 시간 확인
                 cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
                 context['cancel_disable_time'] = cancel_disable_time
@@ -1261,103 +1261,6 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
     return schedule_result
 
 
-def get_trainer_setting_data(context, user_id, class_id):
-
-    lt_res_01 = '00:00-23:59'
-    lt_res_02 = 0
-    lt_res_03 = '0'
-    lt_res_04 = '00:00-23:59'
-    lt_work_sun_time_avail = ''
-    lt_work_mon_time_avail = ''
-    lt_work_tue_time_avail = ''
-    lt_work_wed_time_avail = ''
-    lt_work_ths_time_avail = ''
-    lt_work_fri_time_avail = ''
-    lt_work_sat_time_avail = ''
-    lt_res_05 = '7'
-    lt_res_cancel_time = -1
-    lt_res_enable_time = -1
-    lt_res_member_time_duration = 1
-    lt_res_member_start_time = 'A-0'
-    lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
-    setting_data = SettingTb.objects.filter(member_id=user_id, class_tb_id=class_id, use=USE)
-
-    for setting_info in setting_data:
-        if setting_info.setting_type_cd == 'LT_RES_01':
-            lt_res_01 = setting_info.setting_info
-        if setting_info.setting_type_cd == 'LT_RES_02':
-            lt_res_02 = int(setting_info.setting_info)
-        if setting_info.setting_type_cd == 'LT_RES_03':
-            lt_res_03 = setting_info.setting_info
-        if setting_info.setting_type_cd == 'LT_RES_04':
-            lt_res_04 = setting_info.setting_info
-        if setting_info.setting_type_cd == 'LT_WORK_SUN_TIME_AVAIL':
-            lt_work_sun_time_avail = setting_info.setting_info
-        if setting_info.setting_type_cd == 'LT_WORK_MON_TIME_AVAIL':
-            lt_work_mon_time_avail = setting_info.setting_info
-        if setting_info.setting_type_cd == 'LT_WORK_TUE_TIME_AVAIL':
-            lt_work_tue_time_avail = setting_info.setting_info
-        if setting_info.setting_type_cd == 'LT_WORK_WED_TIME_AVAIL':
-            lt_work_wed_time_avail = setting_info.setting_info
-        if setting_info.setting_type_cd == 'LT_WORK_THS_TIME_AVAIL':
-            lt_work_ths_time_avail = setting_info.setting_info
-        if setting_info.setting_type_cd == 'LT_WORK_FRI_TIME_AVAIL':
-            lt_work_fri_time_avail = setting_info.setting_info
-        if setting_info.setting_type_cd == 'LT_WORK_SAT_TIME_AVAIL':
-            lt_work_sat_time_avail = setting_info.setting_info
-        if setting_info.setting_type_cd == 'LT_RES_05':
-            lt_res_05 = setting_info.setting_info
-        if setting_info.setting_type_cd == 'LT_RES_CANCEL_TIME':
-            lt_res_cancel_time = int(setting_info.setting_info)
-        if setting_info.setting_type_cd == 'LT_RES_ENABLE_TIME':
-            lt_res_enable_time = int(setting_info.setting_info)
-        if setting_info.setting_type_cd == 'LT_RES_MEMBER_TIME_DURATION':
-            lt_res_member_time_duration = int(setting_info.setting_info)
-        if setting_info.setting_type_cd == 'LT_RES_MEMBER_START_TIME':
-            lt_res_member_start_time = setting_info.setting_info
-        if setting_info.setting_type_cd == 'LT_PUS_FROM_TRAINEE_LESSON_ALARM':
-            lt_pus_from_trainee_lesson_alarm = int(setting_info.setting_info)
-
-    if lt_res_cancel_time == -1:
-        lt_res_cancel_time = lt_res_02*60
-    if lt_res_enable_time == -1:
-        lt_res_enable_time = lt_res_02*60
-    if lt_work_sun_time_avail == '':
-        lt_work_sun_time_avail = lt_res_04
-    if lt_work_mon_time_avail == '':
-        lt_work_mon_time_avail = lt_res_04
-    if lt_work_tue_time_avail == '':
-        lt_work_tue_time_avail = lt_res_04
-    if lt_work_wed_time_avail == '':
-        lt_work_wed_time_avail = lt_res_04
-    if lt_work_ths_time_avail == '':
-        lt_work_ths_time_avail = lt_res_04
-    if lt_work_fri_time_avail == '':
-        lt_work_fri_time_avail = lt_res_04
-    if lt_work_sat_time_avail == '':
-        lt_work_sat_time_avail = lt_res_04
-
-    context['lt_res_01'] = lt_res_01
-    context['lt_res_02'] = lt_res_02
-    context['lt_res_03'] = lt_res_03
-    # context['lt_res_04'] = lt_res_04
-    context['lt_work_sun_time_avail'] = lt_work_sun_time_avail
-    context['lt_work_mon_time_avail'] = lt_work_mon_time_avail
-    context['lt_work_tue_time_avail'] = lt_work_tue_time_avail
-    context['lt_work_wed_time_avail'] = lt_work_wed_time_avail
-    context['lt_work_ths_time_avail'] = lt_work_ths_time_avail
-    context['lt_work_fri_time_avail'] = lt_work_fri_time_avail
-    context['lt_work_sat_time_avail'] = lt_work_sat_time_avail
-    context['lt_res_05'] = lt_res_05
-    context['lt_res_enable_time'] = lt_res_enable_time
-    context['lt_res_cancel_time'] = lt_res_cancel_time
-    context['lt_res_member_time_duration'] = lt_res_member_time_duration
-    context['lt_res_member_start_time'] = lt_res_member_start_time
-    context['lt_pus_from_trainee_lesson_alarm'] = lt_pus_from_trainee_lesson_alarm
-
-    return context
-
-
 def get_trainee_setting_data(context, user_id):
 
     try:
@@ -1483,7 +1386,7 @@ class PopupCalendarPlanView(TemplateView):
 
             if class_info is not None:
                 context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
-                cancel_prohibition_time = context['lt_res_cancel_time']
+                cancel_prohibition_time = context['setting_member_reserve_cancel_time']
                 # 근접 예약 시간 확인
                 cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
                 context['cancel_disable_time'] = cancel_disable_time
@@ -1574,7 +1477,7 @@ class PopupCalendarPlanReserveCompleteView(LoginRequiredMixin, AccessTestMixin, 
         if schedule_info is not None:
 
             context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
-            cancel_prohibition_time = context['lt_res_cancel_time']
+            cancel_prohibition_time = context['setting_member_reserve_cancel_time']
             # 근접 취소 시간 확인
             cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
             context['cancel_disable_time'] = cancel_disable_time
