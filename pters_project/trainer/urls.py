@@ -65,9 +65,9 @@ urlpatterns = [
     url(r'^get_member_lecture_list/$', views.GetMemberLectureListView.as_view(), name='get_member_lecture_list'),
 
 
-    # 회원 정보 수정 - refactoring - 확인 필요
+    # 회원 정보 수정 - refactoring
     url(r'^update_member_info/$', views.update_member_info_logic, name='update_member_info'),
-    # 회원 정보 삭제 - refactoring - 확인 필요
+    # 회원 정보 삭제 - refactoring
     url(r'^delete_member_info/$', views.delete_member_info_logic, name='delete_member_info'),
     # 회원 리스트 엑셀 export 기능
     url(r'^export_excel_member_list/$', views.export_excel_member_list_logic, name='export_excel_member_list'),
@@ -83,7 +83,7 @@ urlpatterns = [
     # 회원 수강정보 상태 변경 - refactoring - 확인 필요
     url(r'^update_member_ticket_status_info/$', views.update_member_ticket_status_info_logic,
         name='update_member_ticket_status_info'),
-    # 회원 연동 상태 변경 - refactoring - 확인 필요
+    # 회원 연동 상태 변경 - refactoring
     url(r'^update_member_connection_info/$', views.update_member_connection_info_logic,
         name='update_member_connection_info'),
 
