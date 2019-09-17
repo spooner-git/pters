@@ -1971,7 +1971,6 @@ def update_member_connection_info_logic(request):
             if not connection_check:
                 member_auth_cd = AUTH_TYPE_WAIT
             # 회원이 인증을 안하고 내가 등록한 회원이면 무조건 연결상태로
-            print(str(member.user.is_active))
             if not member.user.is_active and str(member.reg_info) == str(request.user.id):
                 member_auth_cd = AUTH_TYPE_VIEW
 
