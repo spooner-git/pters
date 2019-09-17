@@ -240,12 +240,14 @@ class Setting_reserve{
     }
 
     dom_row_toolbox(){
-        let title = "회원 예약 <p style='font-size:14px;font-weight:500;'>회원에게 적용되는 예약 관련 설정입니다.</p>";
+        let title = "회원 예약";
+        let description = "<p style='font-size:14px;font-weight:500;'>회원에게 적용되는 예약 관련 설정입니다.</p>";
         let html = `
         <div class="setting_reserve_upper_box" style="">
             <div style="display:inline-block;width:320px;">
                 <span style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
                     ${title}
+                    ${description}
                 </span>
                 <span style="display:none">${title}</span>
             </div>

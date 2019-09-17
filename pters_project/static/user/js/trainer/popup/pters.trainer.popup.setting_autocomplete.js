@@ -79,11 +79,13 @@ class Setting_autocomplete{
 
     dom_row_toolbox(){
         let title = "자동 완료";
+        let description = "";
         let html = `
         <div class="setting_autocomplete_upper_box" style="">
             <div style="display:inline-block;width:320px;">
                 <span style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
                     ${title}
+                    ${description}
                 </span>
                 <span style="display:none;">${title}</span>
             </div>

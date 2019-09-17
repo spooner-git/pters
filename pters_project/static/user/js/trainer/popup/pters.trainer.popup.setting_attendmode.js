@@ -153,11 +153,13 @@ class Setting_attendmode{
 
     dom_row_toolbox(){
         let title = "출석 체크 모드 설정";
+        let description = "";
         let html = `
         <div class="setting_reserve_upper_box" style="">
             <div style="display:inline-block;width:320px;">
                 <span style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
                     ${title}
+                    ${description}
                 </span>
                 <span style="display:none;">${title}</span>
             </div>
