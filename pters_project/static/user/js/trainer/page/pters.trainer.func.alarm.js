@@ -103,6 +103,13 @@ class Alarm {
                 html_temp.push(html);
             }
         }
+        if(html_temp.length == 0){
+            html_temp.push(`<article class="alarm_wrapper">   
+                                <div>
+                                    <span>새로운 알림이 없습니다.</span>
+                                </div>
+                            </article>`);
+        }
 
         return html_temp;
     }

@@ -81,7 +81,9 @@ class Member_ticket_history{
             html = CComponent.ticket_history_row (numbering, ticket_id, date, ticket_name, reg_count, remain_count, avail_count, status, onclick);
 
             html_to_join.push(html);
-
+        }
+        if(html_to_join.length == 0){
+            html_to_join.push(`<div style="font-size:14px;padding:16px;">내역이 없습니다.</div>`);
         }
         return html_to_join.reverse().join('');
     }

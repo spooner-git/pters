@@ -116,7 +116,9 @@ class Member_schedule_history{
             html_to_join.push(html_sub_assembly);
         }
 
-        
+        if(member_ticket_list.length == 0){
+            html_to_join.push(`<div style="font-size:14px;padding:16px;">내역이 없습니다.</div>`);
+        }
         
         return html_to_join.join('');
     }

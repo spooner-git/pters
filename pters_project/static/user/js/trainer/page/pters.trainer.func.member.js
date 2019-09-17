@@ -134,7 +134,7 @@ class Member {
             let member_reg = data.member_ticket_reg_count;
             let member_rem = data.member_ticket_rem_count;
             let end_date = data.end_date;
-            let end_date_text = DateRobot.to_text(end_date, '', '', SHORT);;
+            let end_date_text = DateRobot.to_text(end_date, '', '', SHORT);
             let remain_date = Math.round((new Date(end_date).getTime() - new Date().getTime()) / (1000*60*60*24));
             let member_counts_text = list_type == "ing" ? member_rem+'회 / '+remain_date+'일 / - '+end_date_text+' 까지' : '종료됨';
             if(remain_date < 0 && list_type == "ing"){
@@ -164,6 +164,10 @@ class Member {
                             </div>
                         </article>`;
             html_temp.push(html);
+        }
+
+        if(html_temp.length == 0){
+            html_temp.push(`<div style="font-size:14px;padding:16px;">등록된 회원이 없습니다.</div>`);
         }
 
         document.querySelector('#member_content_wrap').innerHTML = html_temp.join("");
