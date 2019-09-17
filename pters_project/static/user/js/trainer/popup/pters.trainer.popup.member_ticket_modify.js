@@ -116,11 +116,63 @@ class Member_ticket_modify{
         let style = null;
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let user_option = {
-                finish:{text:"종료", callback:()=>{layer_popup.close_layer_popup();}},
-                resume:{text:"재개", callback:()=>{layer_popup.close_layer_popup();}},
-                refund:{text:"환불", callback:()=>{layer_popup.close_layer_popup();}},
-                delete:{text:"삭제", callback:()=>{layer_popup.close_layer_popup();}}
+                finish:{text:"종료", callback:()=>{
+                    Member_func.ticket_status({"member_ticket_id":this.data.member_ticket_id, "state_cd":"PE", "refund_price":"", "refund_date":""}, ()=>{
+                        this.data.status = "PE";
+                        this.render_content();
+                        try{
+                            member_ticket_modify.init();
+                        }catch(e){
+                            console.log(e);
+                        }
+                        member.init();
+                    });
+                    layer_popup.close_layer_popup();}
+                },
+                resume:{text:"재개", callback:()=>{
+                    Member_func.ticket_status({"member_ticket_id":this.data.member_ticket_id, "state_cd":"IP", "refund_price":"", "refund_date":""}, ()=>{
+                        this.data.status = "IP";
+                        try{
+                            member_ticket_modify.init();
+                        }catch(e){
+                            console.log(e);
+                        }
+                        this.render_content();
+                    });
+                    layer_popup.close_layer_popup();}
+                },
+                refund:{text:"환불", callback:()=>{
+                    Member_func.ticket_status({"member_ticket_id":this.data.member_ticket_id, "state_cd":"RF", "refund_price":"", "refund_date":""}, ()=>{
+                        this.data.status = "RF";
+                        try{
+                            member_ticket_modify.init();
+                        }catch(e){
+                            console.log(e);
+                        }
+                        this.render_content();
+                    });
+                    layer_popup.close_layer_popup();}
+                },
+                delete:{text:"삭제", callback:()=>{
+                    Member_func.ticket_delete({"member_ticket_id":this.data.member_ticket_id}, ()=>{
+                        try{
+                            member_ticket_modify.init();
+                        }catch(e){
+                            console.log(e);
+                        }
+                        layer_popup.close_layer_popup();
+                    });
+                    layer_popup.close_layer_popup();}
+                }
             };
+
+            if(this.data.status == "IP"){
+                delete user_option.resume;
+                delete user_option.delete;
+            }else{
+                delete user_option.refund;
+                delete user_option.finish;
+            }
 
             let options_padding_top_bottom = 16;
             let button_height = 8 + 8 + 52;
@@ -218,14 +270,13 @@ class Member_ticket_modify{
         return html;
     }
 
-
     send_data(){
         if(this.check_before_send() == false){
             return false;
         }
         let data = {"member_ticket_id":this.data.member_ticket_id, "note":"", "start_date":this.data.start_date, "end_date":this.data.end_date, 
                     "price":this.data.price, "refund_price":"", "refund_date":"", "member_ticket_reg_count":this.data.reg_count};
-                    
+
         Member_func.ticket_update(data, ()=>{
             this.set_initial_data();
             member.init();

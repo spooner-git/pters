@@ -588,7 +588,7 @@ class Member_func{
             //통신 실패시 처리
             error:function(){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                location.reload();
+                // location.reload();
             }
         });
     }
@@ -620,7 +620,7 @@ class Member_func{
             //통신 실패시 처리
             error:function(){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                location.reload();
+                // location.reload();
             }
         });
     }
@@ -652,10 +652,42 @@ class Member_func{
             //통신 실패시 처리
             error:function(){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                location.reload();
+                // location.reload();
             }
         });
     }
+
+    static ticket_delete(data, callback){
+        $.ajax({
+            url:'/trainer/delete_member_ticket_info/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                callback(data);
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                // location.reload();
+            }
+        });
+    }
+    
 }
 
 /* global $, 
