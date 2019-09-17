@@ -121,7 +121,7 @@ class Member_ticket_modify{
                         this.data.status = "PE";
                         this.render_content();
                         try{
-                            member_ticket_modify.init();
+                            member_ticket_history.init();
                         }catch(e){
                             console.log(e);
                         }
@@ -133,7 +133,7 @@ class Member_ticket_modify{
                     Member_func.ticket_status({"member_ticket_id":this.data.member_ticket_id, "state_cd":"IP", "refund_price":"", "refund_date":""}, ()=>{
                         this.data.status = "IP";
                         try{
-                            member_ticket_modify.init();
+                            member_ticket_history.init();
                         }catch(e){
                             console.log(e);
                         }
@@ -151,7 +151,7 @@ class Member_ticket_modify{
                 delete:{text:"삭제", callback:()=>{
                     Member_func.ticket_delete({"member_ticket_id":this.data.member_ticket_id}, ()=>{
                         try{
-                            member_ticket_modify.init();
+                            member_ticket_history.init();
                         }catch(e){
                             console.log(e);
                         }
