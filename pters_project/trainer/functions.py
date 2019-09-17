@@ -342,7 +342,6 @@ def func_get_member_ticket_list(class_id, member_id):
         ticket_id = str(ticket_tb.ticket_id)
         member_ticket_info = {'member_ticket_id': str(member_ticket_tb.member_ticket_id),
                               'member_ticket_name': ticket_tb.name,
-                              'member_ticket_ticket_id': str(ticket_tb.ticket_id),
                               'member_ticket_state_cd': member_ticket_tb.state_cd,
                               'member_ticket_reg_count': member_ticket_tb.member_ticket_reg_count,
                               'member_ticket_rem_count': member_ticket_tb.member_ticket_rem_count,

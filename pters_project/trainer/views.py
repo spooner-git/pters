@@ -1725,7 +1725,6 @@ def update_member_ticket_info_logic(request):
     refund_price = request.POST.get('refund_price', '')
     refund_date = request.POST.get('refund_date', '')
     member_ticket_reg_count = request.POST.get('member_ticket_reg_count', '')
-
     error = None
     member_ticket_info = None
 
