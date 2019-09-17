@@ -21,7 +21,9 @@
                             <span class="obj_font_size_12_weight_500">'{{ class_info.class_type_name }}'</span> 프로그램을 연결 요청했습니다.
                         </div>
                         {% for class_member_ticket_info in class_info.class_member_ticket_data %}
-                            <div class="obj_font_size_11_weight_normal obj_font_color_light_black">(수강권: {{ class_member_ticket_info.ticket_tb.name }}) </div>
+                            {% if class_member_ticket_info.state_cd == 'IP' %}
+                                <div class="obj_font_size_11_weight_normal obj_font_color_light_black">(수강권: {{ class_member_ticket_info.ticket_tb.name }}) </div>
+                            {% endif %}
                         {% endfor %}
                         <div class="wrapper_request_select_box">
                             <div class="obj_button_gen obj_font_bg_white_coral" onclick="func_program_select('{{ class_info.class_tb_id }}',`${PROGRAM_LECTURE_CONNECT_ACCEPT}`);">연결하기</div>
