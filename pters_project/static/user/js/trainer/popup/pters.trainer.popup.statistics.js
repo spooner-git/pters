@@ -571,6 +571,7 @@ class Statistics{
     switch(tab){
         this.tab = tab;
         this.render();
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     upper_right_menu(){
