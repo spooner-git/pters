@@ -142,16 +142,11 @@ class Member_ticket_modify{
                     layer_popup.close_layer_popup();}
                 },
                 refund:{text:"환불", callback:()=>{
-                    Member_func.ticket_status({"member_ticket_id":this.data.member_ticket_id, "state_cd":"RF", "refund_price":"", "refund_date":""}, ()=>{
-                        this.data.status = "RF";
-                        try{
-                            member_ticket_modify.init();
-                        }catch(e){
-                            console.log(e);
-                        }
-                        this.render_content();
-                    });
-                    layer_popup.close_layer_popup();}
+                    layer_popup.close_layer_popup();
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_REFUND, 100, POPUP_FROM_RIGHT, null, ()=>{
+                        let external_data = {"member_ticket_id":this.data.member_ticket_id, "member_ticket_name":this.data.member_ticket_name, "member_ticket_price":this.data.price};
+                        member_ticket_refund = new Member_ticket_refund('.popup_member_ticket_refund', external_data, 'member_ticket_refund');
+                    });}
                 },
                 delete:{text:"삭제", callback:()=>{
                     Member_func.ticket_delete({"member_ticket_id":this.data.member_ticket_id}, ()=>{
