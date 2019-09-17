@@ -1,5 +1,5 @@
 class PopupBase{
-    static base(top_left, top_center, top_right, content, bottom, unique_id){
+    static base(top_left, top_center, top_right, content, bottom){
         let html = `
                     <div class="wrapper_top">
                         ${top_left}
@@ -17,18 +17,34 @@ class PopupBase{
     }
 
     static top_menu_effect(install_target){
-        $(`${install_target} .wrapper_middle`).off('scroll').on('scroll', function(e){
-            let scroll_position = $(this).scrollTop();
-            let menu_text = $(`${install_target} .popup_toolbox span:last-child`).text();
-            if(scroll_position > 30){
-                $(`${install_target} .icon_center > span`).html(menu_text);
-                // $(`${install_target} .popup_toolbox`).hide();
-                $(`${install_target} .popup_toolbox`).css('visibility', 'hidden');
-            }else{
-                $(`${install_target} .icon_center > span`).html('&nbsp;');
-                // $(`${install_target} .popup_toolbox`).show();
-                $(`${install_target} .popup_toolbox`).css('visibility', 'visible');
-            }
-        });
+        if(os != IOS){
+            $(`${install_target} .wrapper_middle`).off('scroll').on('scroll', function(e){
+                let scroll_position = $(this).scrollTop();
+                let menu_text = $(`${install_target} .popup_toolbox span:last-child`).text();
+                if(scroll_position > 30){
+                    $(`${install_target} .icon_center > span`).html(menu_text);
+                    // $(`${install_target} .popup_toolbox`).hide();
+                    $(`${install_target} .popup_toolbox`).css('visibility', 'hidden');
+                }else{
+                    $(`${install_target} .icon_center > span`).html('&nbsp;');
+                    // $(`${install_target} .popup_toolbox`).show();
+                    $(`${install_target} .popup_toolbox`).css('visibility', 'visible');
+                }
+            });
+        }
+    }
+
+    static top_menu_effect_iphone(context, install_target){
+        let scroll_position = $(context).scrollTop();
+        let menu_text = $(`${install_target} .popup_toolbox span:last-child`).text();
+        if(scroll_position > 30){
+            $(`${install_target} .icon_center > span`).html(menu_text);
+            // $(`${install_target} .popup_toolbox`).hide();
+            $(`${install_target} .popup_toolbox`).css('visibility', 'hidden');
+        }else{
+            $(`${install_target} .icon_center > span`).html('&nbsp;');
+            // $(`${install_target} .popup_toolbox`).show();
+            $(`${install_target} .popup_toolbox`).css('visibility', 'visible');
+        }
     }
 }

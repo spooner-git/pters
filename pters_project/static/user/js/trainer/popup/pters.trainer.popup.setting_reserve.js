@@ -52,7 +52,7 @@ class Setting_reserve{
             this.data.available_cancel_time.text[0] = this.data_for_selector.available_cancel_time.text[ this.data_for_selector.available_cancel_time.value.indexOf(Number(data.setting_member_reserve_cancel_time) ) ];
             this.render_content();
         });
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     clear(){

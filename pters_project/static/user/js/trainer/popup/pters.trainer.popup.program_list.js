@@ -31,7 +31,7 @@ class Program_list{
         Program_func.read((data)=>{
             this.data = data;
             this.render();
-            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         });   
     }
 

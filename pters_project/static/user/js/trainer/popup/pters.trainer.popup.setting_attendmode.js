@@ -33,7 +33,7 @@ class Setting_attendmode{
             this.data.password = data.setting_admin_password;
             this.render_content();
         });
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     clear(){

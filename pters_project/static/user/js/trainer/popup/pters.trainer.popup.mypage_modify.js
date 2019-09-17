@@ -39,7 +39,7 @@ class Mypage_modify{
             this.data.birth = data.trainer_info.member_birthday_dt;
 
             this.render();
-            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         });
         
     }

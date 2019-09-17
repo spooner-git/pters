@@ -128,7 +128,7 @@ class Lecture_view{
             this.data.lecture_state = data.lecture_state_cd;
 
             this.render();
-            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
             // this.init();
         });   
     }

@@ -252,7 +252,7 @@ class Member_view{
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_member_view .wrapper_top').style.border = 0;
         PopupBase.top_menu_effect(this.target.install);
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     render_toolbox(){

@@ -35,7 +35,7 @@ class Member_ticket_refund{
     init(){
         // this.render();
         this.set_initial_data();
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     set_initial_data (){
@@ -64,7 +64,7 @@ class Member_ticket_refund{
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_member_ticket_refund .wrapper_top').style.border = 0;
         PopupBase.top_menu_effect(this.target.install);
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     render_toolbox(){

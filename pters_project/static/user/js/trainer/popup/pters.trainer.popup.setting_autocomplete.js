@@ -28,7 +28,7 @@ class Setting_autocomplete{
             this.data.member.switch = data.setting_member_ticket_auto_finish;
             this.render_content();
         });
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     clear(){

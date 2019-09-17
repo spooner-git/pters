@@ -130,7 +130,7 @@ class Plan_add{
         this.list_type = type;
 
         this.render();
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     set_initial_data(data){

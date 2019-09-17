@@ -50,7 +50,7 @@ class Statistics{
             if(this.tab == "sales"){
                 this.render();
             }
-            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         });
         Statistics_func.read("member", data, (data)=>{
             this.data.member = data;
@@ -61,7 +61,7 @@ class Statistics{
             if(this.tab == "member"){
                 this.render();
             }
-            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         });
     }
 

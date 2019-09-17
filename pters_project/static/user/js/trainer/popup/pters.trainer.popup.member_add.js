@@ -138,7 +138,7 @@ class Member_add{
 
     init(){
         this.render();
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     set_initial_data(data){
@@ -341,7 +341,7 @@ class Member_add{
         let id = 'input_member_memo';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '특이사항';
-        let icon = '/static/common/icon/icon_note_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -377,7 +377,7 @@ class Member_add{
         //등록하는 행을 만든다.
         let id = 'start_date_select';
         let title = this.data.start_date == null ? '시작일*' : this.data.start_date_text;
-        let icon = '/static/common/icon/icon_cal_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = this.data.start_date == null ? {"color":"#b8b4b4"} : null;
@@ -406,7 +406,7 @@ class Member_add{
         //등록하는 행을 만든다.
         let id = 'end_date_select';
         let title = this.data.end_date == null ? '종료일*' : this.data.end_date_text;
-        let icon = '/static/common/icon/icon_cal_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = this.data.end_date == null ? {"color":"#b8b4b4"} : null;

@@ -22,7 +22,7 @@ class Setting_alarm{
             this.data.push_to_member = data.setting_to_trainee_lesson_alarm;
             this.render_content();
         });
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     clear(){

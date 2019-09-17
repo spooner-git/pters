@@ -29,7 +29,7 @@ class Lecture_list {
                 this.data_length = this.data.finish_lecture_data.length;
             }
             this.render();
-            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         });
     }
         clear(){

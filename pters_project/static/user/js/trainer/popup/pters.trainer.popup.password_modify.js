@@ -18,7 +18,7 @@ class Password_modify{
 
     set_initial_data (){
         // this.render();
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     clear(){

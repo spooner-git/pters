@@ -1,4 +1,4 @@
-function func_set_webkit_overflow_scrolling(target_selector){
+function func_set_webkit_overflow_scrolling(target_selector, top_menu_effect_iphone){
     if(os == IOS){
         let $selector = $(target_selector);
 
@@ -18,6 +18,9 @@ function func_set_webkit_overflow_scrolling(target_selector){
                 }else if(popupHeight + scrollLocation == popupHeight){
                     $selector.animate({scrollTop : scrollLocation+1}, 10);
                 }
+            }
+            if(top_menu_effect_iphone == ON){
+                PopupBase.top_menu_effect_iphone(this, target_selector.split(' ')[0]);
             }
         });
     }
