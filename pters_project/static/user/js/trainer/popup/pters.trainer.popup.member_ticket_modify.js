@@ -247,7 +247,7 @@ class Member_ticket_modify{
     dom_row_price_input(){
         let unit = '';
         let id = 'member_ticket_price_modify';
-        let title = this.data.price == null || this.data.price == 'None' ? '' : this.data.price;
+        let title = this.data.price == null || this.data.price == 'None' ? '' : UnitRobot.numberWithCommas(this.data.price);
         let placeholder = '가격';
         let icon = NONE;
         let icon_r_visible = HIDE;

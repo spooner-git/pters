@@ -433,7 +433,7 @@ class Member_add{
     dom_row_member_reg_count_input(){
         let unit = '회';
         let id = 'input_reg_count';
-        let title = this.data.ticket_reg_count == null ? '' : this.data.ticket_reg_count+unit;
+        let title = this.data.ticket_reg_count == null ? '' : this.data.ticket_reg_count;
         let placeholder = '횟수*';
         let icon = NONE;
         let icon_r_visible = HIDE;
@@ -455,7 +455,7 @@ class Member_add{
     dom_row_member_reg_price_input(){
         let unit = '원';
         let id = 'input_reg_price';
-        let title = this.data.ticket_price == null ? '' : this.data.ticket_price+unit;
+        let title = this.data.ticket_price == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_price);
         let placeholder = '가격';
         let icon = NONE;
         let icon_r_visible = HIDE;

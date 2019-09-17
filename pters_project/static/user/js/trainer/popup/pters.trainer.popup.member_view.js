@@ -854,7 +854,7 @@ class Member_simple_view{
         let id = 'member_phone_view';
         let title =  this.data.phone == null || this.data.phone == 'None' || this.data.phone == '' ? '휴대폰 번호' : this.data.phone;
         let placeholder = '휴대폰 번호';
-        let icon = NONE;
+        let icon = '/static/common/icon/icon_member_card_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -907,7 +907,7 @@ class Member_simple_view{
         let id = 'member_memo_view';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '특이사항';
-        let icon = '/static/common/icon/icon_note_black.png';
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
