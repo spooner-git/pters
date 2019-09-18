@@ -78,6 +78,8 @@
 	.member_search_tool > input{
 		width: 95%;
 		height: 35px;
+		border: 1px solid #cccccc;
+		border-radius: 2px;
 	}
 	
 

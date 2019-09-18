@@ -148,8 +148,11 @@
 	background-color: #ffffff;
 	text-align: center;
 	padding-bottom: 5px;
+	z-index: 10;
 }
 .popup_ticket_list .search_bar > input{
 	width: 95%;
 	height: 35px;
+	border: 1px solid #cccccc;
+	border-radius: 2px;
 }
