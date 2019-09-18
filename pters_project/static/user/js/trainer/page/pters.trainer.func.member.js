@@ -173,6 +173,15 @@ class Member {
         document.querySelector('#member_content_wrap').innerHTML = html_temp.join("");
     }
 
+    render_search_tool(type){
+        let html = `<input type="text" class="search_input" placeholder="검색" onclick="event.stopPropagation();" onkeyup="${this.instance}.search_member_by_typing(event)">`;
+        if(type == "clear"){
+            html = '';
+        }
+        
+        document.querySelector('.member_search_tool').innerHTML = html;
+    }
+
 
     //리스트 타입을 스위치
     switch_type (type){
@@ -193,25 +202,45 @@ class Member {
         }
     }
 
+    // search_member_tool_visible (event){
+    //     event.stopPropagation();
+    //     event.preventDefault();
+    //     switch(this.search){
+    //     case true:
+    //         this.search = false;
+    //         document.getElementsByClassName('search_input')[0].style.transform = 'translateY(-50px)';
+    //         setTimeout(()=>{
+    //             document.getElementsByClassName('search_input')[0].style.display = 'none';
+    //         }, 0);
+    //         event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
+    //         break;
+    //     case false:
+    //         this.search = true;
+    //         setTimeout(()=>{
+    //             document.getElementsByClassName('search_input')[0].style.display = 'block';
+    //         }, 0);
+    //         document.getElementsByClassName('search_input')[0].style.transform = 'translateY(0)';
+    //         document.getElementsByClassName('search_input')[0].value = '';
+    //         event.target.style.backgroundImage = 'url("/static/common/icon/icon_x_black.png")';
+    //         break;
+    //     }
+    // }
+
     search_member_tool_visible (event){
         event.stopPropagation();
         event.preventDefault();
         switch(this.search){
         case true:
             this.search = false;
-            document.getElementsByClassName('search_input')[0].style.transform = 'translateY(-50px)';
-            setTimeout(()=>{
-                document.getElementsByClassName('search_input')[0].style.display = 'none';
-            }, 0);
+            document.getElementsByClassName('search_input')[0].value = '';
+            this.render_search_tool('clear');
             event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
             break;
         case false:
             this.search = true;
-            setTimeout(()=>{
-                document.getElementsByClassName('search_input')[0].style.display = 'block';
-            }, 0);
-            document.getElementsByClassName('search_input')[0].style.transform = 'translateY(0)';
+            this.render_search_tool('draw');
             document.getElementsByClassName('search_input')[0].value = '';
+            
             event.target.style.backgroundImage = 'url("/static/common/icon/icon_x_black.png")';
             break;
         }
@@ -236,34 +265,36 @@ class Member {
         return(
             {
                 member_upper_box:`   <div class="member_upper_box">
-                                            <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
-                                                <div style="display:inline-block;">회원 </div>
-                                                <div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</div>
-                                            </div>
-                                            <div class="member_tools_wrap">
-                                                <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">
-                                                    <input type="text" class="search_input" placeholder="검색" onclick="event.stopPropagation();" onkeyup="${this.instance}.search_member_by_typing(event)">
-                                                </div>
-                                                <div class="add_member" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_MEMBER_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
-                                                    member_add_popup = new Member_add('.popup_member_add', null, 'member_add_popup');});"></div>
-                                            </div>
+                                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                                            <div style="display:inline-block;">회원 </div>
+                                            <div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</div>
                                         </div>
-                                        <div class="member_bottom_tools_wrap">
-                                            <div class="list_type_tab_wrap">
-                                                <div onclick="${this.instance}.switch_type('ing');" class="${this.list_type == "ing" ? "tab_selected": ""}">진행중</div>
-                                                <div style="width: 2px; height: 12px;background-color: #f5f2f3; margin:8px;"></div>
-                                                <div onclick="${this.instance}.switch_type('end');" style="width:24px;" class="${this.list_type == "end" ? "tab_selected" : ""}">종료</div>
+                                        <div class="member_tools_wrap">
+                                            <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">
                                             </div>
-                                            <div class="list_sort_select_wrap">
-                                                <select>
-                                                    <option>이름순</option>
-                                                    <option>남은 횟수순</option>
-                                                    <option>등록 횟수순</option>
-                                                </select>
-                                            </div>
-                                        </div>`
+                                            <div class="add_member" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_MEMBER_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
+                                                member_add_popup = new Member_add('.popup_member_add', null, 'member_add_popup');});"></div>
+                                        </div>
+                                    </div>
+                                    <div class="member_search_tool"></div>
+                                    <div class="member_bottom_tools_wrap">
+                                        <div class="list_type_tab_wrap">
+                                            <div onclick="${this.instance}.switch_type('ing');" class="${this.list_type == "ing" ? "tab_selected": ""}">진행중</div>
+                                            <div style="width: 2px; height: 12px;background-color: #f5f2f3; margin:8px;"></div>
+                                            <div onclick="${this.instance}.switch_type('end');" style="width:24px;" class="${this.list_type == "end" ? "tab_selected" : ""}">종료</div>
+                                        </div>
+                                        <div class="list_sort_select_wrap">
+                                            <select>
+                                                <option>이름순</option>
+                                                <option>남은 횟수순</option>
+                                                <option>등록 횟수순</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    `
                 ,
-                initial_page:`<div id="member_display_panel"></div><div id="member_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px; padding-top:6px; padding-bottom:20px;"></div>`
+                initial_page:`<div id="member_display_panel"></div>
+                                <div id="member_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px; padding-top:6px; padding-bottom:20px;"></div>`
             }
         );
     }

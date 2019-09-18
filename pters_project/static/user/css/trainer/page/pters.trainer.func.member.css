@@ -70,6 +70,15 @@
 		height: 24px;
 		line-height: 24px;
 	}
+	.member_search_tool{
+		background-color: #ffffff;
+		padding-bottom: 5px;
+		text-align: center;
+	}
+	.member_search_tool > input{
+		width: 95%;
+		height: 35px;
+	}
 	
 
 
