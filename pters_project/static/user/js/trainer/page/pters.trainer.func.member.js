@@ -11,6 +11,7 @@ class Member {
         this.list_type = "ing";
 
         this.search = false;
+        this.search_value = "";
 
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
     }
@@ -232,14 +233,14 @@ class Member {
         switch(this.search){
         case true:
             this.search = false;
-            document.getElementsByClassName('search_input')[0].value = '';
+            document.getElementsByClassName('search_input')[0].value = this.search_value;
             this.render_search_tool('clear');
             event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
             break;
         case false:
             this.search = true;
             this.render_search_tool('draw');
-            document.getElementsByClassName('search_input')[0].value = '';
+            document.getElementsByClassName('search_input')[0].value = this.search_value;
             
             event.target.style.backgroundImage = 'url("/static/common/icon/icon_x_black.png")';
             break;
@@ -247,13 +248,13 @@ class Member {
     }
 
     search_member_by_typing (event){
-
         let value = event.target.value;
+        this.search_value = value;
         Array.from(document.getElementsByClassName('member_wrapper')).forEach((el)=>{
             let name = el.dataset.name;
             if(name.match(value)){
                 el.style.display = 'block';
-                $("#root_content").scrollTop(1);
+                // $("#root_content").scrollTop(1);
             }else{
                 el.style.display = 'none';
             }
