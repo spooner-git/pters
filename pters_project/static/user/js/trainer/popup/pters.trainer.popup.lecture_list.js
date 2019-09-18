@@ -12,6 +12,9 @@ class Lecture_list {
         this.list_status_type_text = "";
         this.list_status_type = "ing"; //ing, end
 
+        this.search = false;
+        this.search_value = "";
+
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
         this.init();
     }
@@ -43,11 +46,12 @@ class Lecture_list {
         let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();lecture_list_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
-                                <img src="/static/common/icon/icon_search_black.png" class="obj_icon_24px" style="padding-right:12px;">
+                                <img src="/static/common/icon/icon_search_black.png" class="obj_icon_24px" style="padding-right:12px;" onclick="${this.instance}.search_tool_visible(event);">
                                 <img src="/static/common/icon/icon_plus_pink.png" class="obj_icon_24px" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_LECTURE_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
                                     lecture_add_popup = new Lecture_add('.popup_lecture_add');});">
                         </span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
+        let content =   `<div class="search_bar"></div>
+                        <section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
 
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -100,7 +104,7 @@ class Lecture_list {
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'lecture_id':${lecture_id}}, ()=>{
                 lecture_view_popup = new Lecture_view('.popup_lecture_view', ${lecture_id}, 'lecture_view_popup');});`;
-            let html = `<article class="lecture_wrapper" data-lectureid="${lecture_id}" onclick="${onclick}" style="color:${this.list_status_type == "ing" ? "" : '#a3a0a0'}">
+            let html = `<article class="lecture_wrapper" data-text="${lecture_name}" data-lectureid="${lecture_id}" onclick="${onclick}" style="color:${this.list_status_type == "ing" ? "" : '#a3a0a0'}">
                             <div class="lecture_data_l">
                                 <div class="lecture_tag" style="background:${this.list_status_type == "ing" ? lecture_ing_bg_color : "#a3a0a0"}"></div>
                             </div>
@@ -140,6 +144,49 @@ class Lecture_list {
                     </div>
                         `;
         return html;
+    }
+
+    render_search_tool(type){
+        let html = `<input type="text" class="search_input" placeholder="검색" onclick="event.stopPropagation();" onkeyup="${this.instance}.search_by_typing(event)">`;
+        if(type == "clear"){
+            html = '';
+        }
+        
+        document.querySelector('.search_bar').innerHTML = html;
+    }
+
+    search_tool_visible (event){
+        event.stopPropagation();
+        event.preventDefault();
+        switch(this.search){
+        case true:
+            this.search = false;
+            document.getElementsByClassName('search_input')[0].value = this.search_value;
+            this.render_search_tool('clear');
+            event.target.src = '/static/common/icon/icon_search_black.png';
+            break;
+        case false:
+            this.search = true;
+            this.render_search_tool('draw');
+            document.getElementsByClassName('search_input')[0].value = this.search_value;
+            
+            event.target.src = '/static/common/icon/icon_x_black.png';
+            break;
+        }
+    }
+
+    search_by_typing (event){
+        let value = event.target.value;
+        this.search_value = value;
+        Array.from(document.getElementsByClassName('lecture_wrapper')).forEach((el)=>{
+            let name = el.dataset.text;
+            if(name.match(value)){
+                el.style.display = 'table';
+                // $("#root_content").scrollTop(1);
+            }else{
+                el.style.display = 'none';
+            }
+        });
     }
 
 

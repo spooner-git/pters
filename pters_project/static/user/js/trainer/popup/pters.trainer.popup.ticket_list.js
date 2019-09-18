@@ -12,6 +12,9 @@ class Ticket_list {
         this.list_status_type_text = "";
         this.list_status_type = "ing"; //ing, end
 
+        this.search = false;
+        this.search_value = "";
+
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
         this.init(this.list_status_type);
     }
@@ -44,11 +47,12 @@ class Ticket_list {
         let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();ticket_list_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
-                                <img src="/static/common/icon/icon_search_black.png" class="obj_icon_24px" style="padding-right:12px;">
+                                <img src="/static/common/icon/icon_search_black.png" class="obj_icon_24px" style="padding-right:12px;" onclick="${this.instance}.search_tool_visible(event);">
                                 <img src="/static/common/icon/icon_plus_pink.png" class="obj_icon_24px" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
                                     ticket_add_popup = new Ticket_add('.popup_ticket_add');});">
                         </span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
+        let content =   `<div class="search_bar"></div>
+                        <section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
 
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -121,7 +125,7 @@ class Ticket_list {
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'ticket_id':${ticket_id}}, ()=>{
                 ticket_view_popup = new Ticket_view('.popup_ticket_view', ${ticket_id}, 'ticket_view_popup');});`;
-            let html = `<article class="ticket_wrapper" data-ticketid="${ticket_id}" onclick="${onclick}" style="opacity:${this.list_status_type == "ing" ? "1" : '0.6'}">
+            let html = `<article class="ticket_wrapper" data-text="${ticket_name}" data-ticketid="${ticket_id}" onclick="${onclick}" style="opacity:${this.list_status_type == "ing" ? "1" : '0.6'}">
                             <div class="ticket_data_u">
                                 <div class="ticket_name">
                                     ${ticket_name}
@@ -160,6 +164,48 @@ class Ticket_list {
         return html;
     }
 
+    render_search_tool(type){
+        let html = `<input type="text" class="search_input" placeholder="검색" onclick="event.stopPropagation();" onkeyup="${this.instance}.search_by_typing(event)">`;
+        if(type == "clear"){
+            html = '';
+        }
+        
+        document.querySelector('.search_bar').innerHTML = html;
+    }
+
+    search_tool_visible (event){
+        event.stopPropagation();
+        event.preventDefault();
+        switch(this.search){
+        case true:
+            this.search = false;
+            document.getElementsByClassName('search_input')[0].value = this.search_value;
+            this.render_search_tool('clear');
+            event.target.src = '/static/common/icon/icon_search_black.png';
+            break;
+        case false:
+            this.search = true;
+            this.render_search_tool('draw');
+            document.getElementsByClassName('search_input')[0].value = this.search_value;
+            
+            event.target.src = '/static/common/icon/icon_x_black.png';
+            break;
+        }
+    }
+
+    search_by_typing (event){
+        let value = event.target.value;
+        this.search_value = value;
+        Array.from(document.getElementsByClassName('ticket_wrapper')).forEach((el)=>{
+            let name = el.dataset.text;
+            if(name.match(value)){
+                el.style.display = 'block';
+                // $("#root_content").scrollTop(1);
+            }else{
+                el.style.display = 'none';
+            }
+        });
+    }
 
     //수강권 리스트 서버에서 불러오기
     request_ticket_list (status, callback){

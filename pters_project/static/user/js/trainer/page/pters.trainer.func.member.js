@@ -203,30 +203,6 @@ class Member {
         }
     }
 
-    // search_member_tool_visible (event){
-    //     event.stopPropagation();
-    //     event.preventDefault();
-    //     switch(this.search){
-    //     case true:
-    //         this.search = false;
-    //         document.getElementsByClassName('search_input')[0].style.transform = 'translateY(-50px)';
-    //         setTimeout(()=>{
-    //             document.getElementsByClassName('search_input')[0].style.display = 'none';
-    //         }, 0);
-    //         event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
-    //         break;
-    //     case false:
-    //         this.search = true;
-    //         setTimeout(()=>{
-    //             document.getElementsByClassName('search_input')[0].style.display = 'block';
-    //         }, 0);
-    //         document.getElementsByClassName('search_input')[0].style.transform = 'translateY(0)';
-    //         document.getElementsByClassName('search_input')[0].value = '';
-    //         event.target.style.backgroundImage = 'url("/static/common/icon/icon_x_black.png")';
-    //         break;
-    //     }
-    // }
-
     search_member_tool_visible (event){
         event.stopPropagation();
         event.preventDefault();
@@ -260,7 +236,6 @@ class Member {
             }
         });
     }
-    
 
     static_component (){
         return(
