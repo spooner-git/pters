@@ -173,8 +173,8 @@ class Plan_view{
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_plan_view .wrapper_top').style.backgroundColor = this.data.lecture_color;
         document.querySelector('.popup_plan_view .wrapper_top').style.border = 0;
-        document.querySelector('.popup_plan_view .wrapper_top').style.paddingTop = '20px';
-        document.querySelector('.popup_plan_view .wrapper_top').style.lineHeight = '28px';
+        document.querySelector('.popup_plan_view .wrapper_top').style.paddingTop = '0px';
+        document.querySelector('.popup_plan_view .wrapper_top').style.lineHeight = '0px';
     }
 
     render_toolbox(){

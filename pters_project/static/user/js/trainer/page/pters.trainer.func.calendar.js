@@ -86,7 +86,7 @@ class Calendar {
                 this.worktime.push(i);
             }
             this.init_no_new(cal_type);
-        })
+        });
     }
 
     //달력에 필요한 최상위 컨테이너가 이미 있는 상태에서 컨테이너 내용(달력)을 재초기화 할때 사용한다.
@@ -1177,6 +1177,7 @@ class Calendar {
                                                 <button style="float:right;width:70px;height:40px;margin:10px;border-radius:4px;background-color:#ffffff;border:1px solid #cccccc;" onclick="calendar.mode_to_plan_change(OFF)">취소</button>`)
                                           .css({"height":"60px", "line-height":"60px;"});
                 // this.init_no_new();
+                this.render_upper_box(this.cal_type);
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
 
                 break;
@@ -1186,6 +1187,7 @@ class Calendar {
                 this.long_touch_target = null;
                 this.long_touch_schedule_id = null;
                 // this.init_no_new();
+                this.render_upper_box(this.cal_type);
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
                 break;
         }

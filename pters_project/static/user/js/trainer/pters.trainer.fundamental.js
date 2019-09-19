@@ -58,60 +58,6 @@ function input_adjust_location_for_android(){
     }
 }
 
-// function test_console(selector){
-//     console.log(
-//         "selector height:", $(selector).height()
-//     );
-//     console.log(
-//         "selector scrollTop:", $(selector).scrollTop()
-//     );
-//     console.log(
-//         "selector scrollHeight:", $(selector).prop('scrollHeight')
-//     );
-// }
-
-// function input_adjust_location_for_android(){
-//     //안드로이드의 경우 input영역을 클릭했을때 자동으로 그쪽으로 이동되지 않아서 input필드가 키보드에 가리는 현상이 생김
-//     if(os == ANDROID){
-//         var $android_input_target;
-//         $(document).on('focus', 'input', function(e){
-//             $android_input_target = $(this);
-//             let shade = `<div id="android_input_shade"></div>`;
-//             let input = $(this).clone();
-//             if($('#android_input_wrap').length == 0){
-//                 let html = `<div id="android_input_wrap">
-//                                 <div id="android_input">
-//                                 </div>
-//                                 ${shade}
-//                             </div>`;
-//                 $('body').append(html);
-//                 $('#android_input').html(input);
-//             }
-//         });
-
-//         $(document).on('focusout', '#android_input > input', function(e){
-//             let user_input = $(this).val();
-//             $android_input_target.text(user_input).val(user_input);
-//             $('#android_input_wrap').remove();
-//         });
-
-//         $(document).on('click', '#android_input_shade', function(e){
-//             let user_input = $('#android_input > input').val();
-//             console.log(user_input,"user_input")
-//             $android_input_target.text(user_input).val(user_input);
-//             $('input').blur();
-//             $('#android_input_wrap').remove();
-//         });
-
-//         $(document).on('keypress', 'input', function(e){
-//             if (e.charCode == 13) {
-//                 e.preventDefault();
-//                 $('#android_input_shade').trigger('click');
-//             }
-//         });
-//     }
-// }
-
 function ajax_load_image(option){
     let $ajax_load_image = $('img.ajax_loading_image');
 	switch(option){

@@ -17,7 +17,8 @@
             line-height: 20px;
             height: 60px;
             text-align: center;
-            padding: 20px 16px 20px 16px;
+            /* padding: 20px 16px 20px 16px; */
+            padding: 0;
             position: sticky;
             position: -webkit-sticky;
             top: 0;
@@ -52,10 +53,24 @@
                float: right;
                font-size: 14px;
             }
+            .popup_mobile .wrapper_top .icon_right > img{
+                padding: 18px 16px 18px 18px;
+            }
+            .popup_mobile .wrapper_top .icon_right > span{
+                padding: 18px 16px 18px 18px;
+                line-height: 60px;
+            }
             .popup_mobile .wrapper_top .icon_left{
                 float: left;
                 font-size: 14px;
              }
+             .popup_mobile .wrapper_top .icon_left > img{
+                padding: 18px 18px 18px 16px;
+             }
+             .popup_mobile .wrapper_top .icon_left > span{
+                padding: 18px 16px 18px 18px;
+                line-height: 60px;
+            }
         
         .popup_mobile .wrapper_middle{
             width: 100%;

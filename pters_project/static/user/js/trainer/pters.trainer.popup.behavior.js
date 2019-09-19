@@ -5,7 +5,7 @@ let layer_popup = (function (){
     let popup_array = [];
 
     function func_open_layer_popup (popup_name, popup_size, animation_type){
-        $('.content_page').css('overflow-y', 'hidden');
+        // $('.content_page').css('overflow-y', 'hidden');
 
         let $popup_selector;
         let popup_data = {"popup_name":popup_name, "popup_size":popup_size, "animation_type":animation_type};
@@ -39,15 +39,24 @@ let layer_popup = (function (){
             $popup_name_selector.remove();
             popup_data = {};
         }
+
         return popup_data;
     }
 
-    function func_close_layer_popup (popup_size){
+    function func_close_layer_popup (popup_size, popup_specified){
         let popup_data = {};
         //혹시 있을 pop 에러 방지
         if(popup_array.length > 0){
-            popup_data = popup_array.pop();
-            let $popup_selector = $(`.${popup_data.popup_name}`).parents('.popup_mobile');
+            let $popup_selector;
+            // if(popup_specified == undefined){ //특정 팝업을 지정하지 않았을 때
+                popup_data = popup_array.pop();
+                $popup_selector = $(`.${popup_data.popup_name}`).parents('.popup_mobile');
+            // }else{ //특정 팝업을 닫고자 지정했을 때
+            //     for(let i=0; i<popup_array.length; i++){
+
+            //     }
+            // }
+            
             //팝업이 옆으로 닫히는 애니메이션이 종료된후 해당 팝업의 html을 지운다.
             let delay_time = 250;
             if(popup_size == POPUP_SIZE_WINDOW){
@@ -59,9 +68,9 @@ let layer_popup = (function (){
             }, delay_time);
         }
 
-        if(popup_array.length == 0){
-            $('.content_page').css('overflow-y', 'auto');
-        }
+        // if(popup_array.length == 0){
+        //     $('.content_page').css('overflow-y', 'auto');
+        // }
 
         return popup_data;
     }
@@ -84,7 +93,7 @@ let layer_popup = (function (){
             }, 250);
         }
 
-        $('.content_page').css('overflow-y', 'auto');
+        // $('.content_page').css('overflow-y', 'auto');
         return popup_data;
     }
 
@@ -163,8 +172,11 @@ let layer_popup = (function (){
                 }
                 func_set_shade(popup_array.length);
             }
-        }
-    }
+        },
+
+        "stack": popup_array
+
+    };
 
 }());
 
