@@ -134,13 +134,21 @@ class Setting_worktime{
         let style = null;
         let detail_setting = CComponent.toggle_button (id, power, style, (data)=>{
             this.data.GENERAL.detail_switch = data; // ON or OFF
+            if(this.data.GENERAL.start_time == null){
+                this.data.GENERAL.start_time = '00:00';
+                this.data.GENERAL.start_time_text = TimeRobot.to_text(0, 0);
+            }
+            if(this.data.GENERAL.end_time == null){
+                this.data.GENERAL.end_time = '24:00';
+                this.data.GENERAL.end_time_text = TimeRobot.to_text(24, 0);
+            }
             this.render_content();
         });
         let title_row = CComponent.create_row('nothing', '요일별 설정', NONE, HIDE, '', null, ()=>{});
 
         let html = `<article class="setting_worktime_wrapper obj_input_box_full">
-                        ${start_time_selector}
-                        ${end_time_selector}
+                        ${power == OFF ? start_time_selector : ""}
+                        ${power == OFF ? end_time_selector : ""}
                         <div style="display:table;width:100%;">
                             <div style="display:table-cell;width:auto;">${title_row}</div>
                             <div style="display:table-cell;width:50px;">${detail_setting}</div>
@@ -324,7 +332,6 @@ class Setting_worktime{
         Setting_worktime_func.update(data, ()=>{
             this.set_initial_data();
             show_error_message('변경 내용이 저장되었습니다.');
-            // this.render_content();
         });
     }
 
