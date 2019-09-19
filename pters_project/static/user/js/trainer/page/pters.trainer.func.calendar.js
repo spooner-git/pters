@@ -943,7 +943,7 @@ class Calendar {
 
                 dates_to_join.push(
                     `
-                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" ${this.dayoff.indexOf(i+1) != -1 ? "style=display:none": ""} onclick="event.stopPropagation();${onclick}">
+                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" ${this.dayoff.indexOf(i) != -1 ? "style=display:none": ""} onclick="event.stopPropagation();${onclick}">
                         <span style="${today_text_style}">${_date[i]}</span>
                         <div class="${schedule_number_display} ${has_schedule}">${schedule_date}</div>
                         ${today_marking}
