@@ -414,7 +414,7 @@ class Ticket_view{
             }
 
             this.set_initial_data();
-            ticket.init();
+            ticket_list_popup.init();
         });
     }
 
@@ -423,7 +423,7 @@ class Ticket_view{
             activate:{text:"활성화", callback:()=>{
                     show_user_confirm(`"${this.data.name}" 수강권을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
                         Ticket_func.status({"ticket_id":this.ticket_id, "state_cd":STATE_IN_PROGRESS}, ()=>{
-                            ticket.init();
+                            ticket_list_popup.init();
                             layer_popup.all_close_layer_popup();
                         });
                         
@@ -433,7 +433,7 @@ class Ticket_view{
             deactivate:{text:"비활성화", callback:()=>{
                     show_user_confirm(`"${this.data.name}" 수강권을 비활성화 하시겠습니까? <br> 비활성화 탭에서 다시 활성화 할 수 있습니다.`, ()=>{
                         Ticket_func.status({"ticket_id":this.ticket_id, "state_cd":STATE_END_PROGRESS}, ()=>{
-                            ticket.init();
+                            ticket_list_popup.init();
                             layer_popup.all_close_layer_popup();
                         });
                         
@@ -443,7 +443,7 @@ class Ticket_view{
             delete:{text:"삭제", callback:()=>{
                     show_user_confirm(`"${this.data.name}" 수강권을 영구 삭제 하시겠습니까? <br> 데이터를 복구할 수 없습니다.`, ()=>{
                         Ticket_func.delete({"ticket_id":this.ticket_id}, ()=>{
-                            ticket.init();
+                            ticket_list_popup.init();
                             layer_popup.all_close_layer_popup();
                         });
                     });

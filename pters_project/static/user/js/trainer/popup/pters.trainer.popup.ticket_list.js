@@ -20,7 +20,10 @@ class Ticket_list {
     }
 
     init(list_status_type){
-        this.list_status_type = list_status_type;
+        // if(list_status_type == undefined){
+        //     list_status_type = this.list_status_type;
+        // }
+        // this.list_status_type = list_status_type;
         this.set_initial_data();
     }
 
@@ -268,10 +271,12 @@ class Ticket_list {
         }
         switch(type){
         case "ing":
+            this.list_status_type = "ing";
             this.init("ing");
             break;
 
         case "end":
+            this.list_status_type = "end";
             this.init("end");
             break;
         }

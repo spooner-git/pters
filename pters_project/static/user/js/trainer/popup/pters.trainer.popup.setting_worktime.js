@@ -188,7 +188,6 @@ class Setting_worktime{
         return html_to_join.join('');
     }
 
-
     dom_row_start_time_select(day){
         let id = `select_start_${day}`;
         let title = this.data[day].start_time_text == null ? '시작 시각*' : this.data[day].start_time_text;

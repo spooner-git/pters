@@ -329,7 +329,7 @@ class Lecture_add{
             if(this.callback != undefined){
                 this.callback();
             }
-            lecture.init();
+            lecture_list_popup.init();
         });
         layer_popup.close_layer_popup();
         lecture_add_popup.clear();
