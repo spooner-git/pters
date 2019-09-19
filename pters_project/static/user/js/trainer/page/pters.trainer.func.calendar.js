@@ -43,6 +43,7 @@ class Calendar {
         this.current_minute = Math.floor(d.getMinutes()/5)*5;
         
         this.worktime = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+        this.dayoff = [];
 
         this.user_data = {
             user_selected_date: {year:this.current_year, month:this.current_month, date:this.current_date},
@@ -85,6 +86,7 @@ class Calendar {
             for(let i=work_time.start_hour; i<work_time.end_hour; i++){
                 this.worktime.push(i);
             }
+            this.dayoff = work_time.dayoff;
             this.init_no_new(cal_type);
         });
     }
@@ -154,10 +156,16 @@ class Calendar {
         let datas = [data.setting_trainer_work_sun_time_avail, data.setting_trainer_work_mon_time_avail, data.setting_trainer_work_tue_time_avail,
             data.setting_trainer_work_wed_time_avail, data.setting_trainer_work_ths_time_avail, data.setting_trainer_work_fri_time_avail,
             data.setting_trainer_work_sat_time_avail];
+        if(this.date_start == 1){
+            datas = [data.setting_trainer_work_mon_time_avail, data.setting_trainer_work_tue_time_avail, data.setting_trainer_work_wed_time_avail, 
+            data.setting_trainer_work_ths_time_avail, data.setting_trainer_work_fri_time_avail, data.setting_trainer_work_sat_time_avail, 
+            data.setting_trainer_work_sun_time_avail];
+        }
         
         let length = datas.length;
         let start_time_temp;
         let end_time_temp;
+        let dayoff_temp = [];
         for(let i=0; i<length; i++){
             let start_time = datas[i].split('-')[0];
             let end_time = datas[i].split('-')[1];
@@ -177,9 +185,14 @@ class Calendar {
             if(end_time_compare == true){
                 end_time_temp = end_time;
             }
+
+            //시작시간과 종료시간이 같으면 휴무일
+            if(start_time == end_time){
+                dayoff_temp.push(i);
+            }
         }
         
-        let result = {complete:`${start_time_temp}:${end_time_temp}`, start:start_time_temp, end:end_time_temp, start_hour:Number(start_time_temp.split(':')[0]), end_hour:Number(end_time_temp.split(':')[0])};
+        let result = {complete:`${start_time_temp}:${end_time_temp}`, start:start_time_temp, end:end_time_temp, start_hour:Number(start_time_temp.split(':')[0]), end_hour:Number(end_time_temp.split(':')[0]), dayoff:dayoff_temp};
         return result;
     }
 
@@ -625,7 +638,9 @@ class Calendar {
                     continue;
                 }
                 Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
-                    el.style.display = "table-cell";
+                    if(this.dayoff.indexOf(i-1) == -1){
+                        el.style.display = "table-cell";
+                    }
                 });
             }
             
@@ -928,7 +943,7 @@ class Calendar {
 
                 dates_to_join.push(
                     `
-                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" onclick="event.stopPropagation();${onclick}">
+                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" ${this.dayoff.indexOf(i+1) != -1 ? "style=display:none": ""} onclick="event.stopPropagation();${onclick}">
                         <span style="${today_text_style}">${_date[i]}</span>
                         <div class="${schedule_number_display} ${has_schedule}">${schedule_date}</div>
                         ${today_marking}
@@ -939,7 +954,28 @@ class Calendar {
         }
 
         let result_html = dates_to_join.join("");
-        let week_date_name_data = this.static_component().week_cal_upper_box_date_tool;
+        // let week_date_name_data = this.static_component().week_cal_upper_box_date_tool;
+        let day_names = `<div class="_week_row_1 obj_font_color_sunday_red" ${this.dayoff.indexOf(0) != -1 ? "style=display:none": ""}>일</div>
+                        <div class="_week_row_2" ${this.dayoff.indexOf(1) != -1 ? "style=display:none": ""}>월</div>
+                        <div class="_week_row_3" ${this.dayoff.indexOf(2) != -1 ? "style=display:none": ""}>화</div>
+                        <div class="_week_row_4" ${this.dayoff.indexOf(3) != -1 ? "style=display:none": ""}>수</div>
+                        <div class="_week_row_5" ${this.dayoff.indexOf(4) != -1 ? "style=display:none": ""}>목</div>
+                        <div class="_week_row_6" ${this.dayoff.indexOf(5) != -1 ? "style=display:none": ""}>금</div>
+                        <div class="_week_row_7 obj_font_color_saturday_blue" ${this.dayoff.indexOf(6) != -1 ? "style=display:none": ""}>토</div>`;
+        if(this.date_start == 1){
+            day_names = `<div class="_week_row_1" ${this.dayoff.indexOf(0) != -1 ? "style=display:none": ""}>월</div>
+                        <div class="_week_row_2" ${this.dayoff.indexOf(1) != -1 ? "style=display:none": ""}>화</div>
+                        <div class="_week_row_3" ${this.dayoff.indexOf(2) != -1 ? "style=display:none": ""}>수</div>
+                        <div class="_week_row_4" ${this.dayoff.indexOf(3) != -1 ? "style=display:none": ""}>목</div>
+                        <div class="_week_row_5" ${this.dayoff.indexOf(4) != -1 ? "style=display:none": ""}>금</div>
+                        <div class="_week_row_6 obj_font_color_saturday_blue" ${this.dayoff.indexOf(5) != -1 ? "style=display:none": ""}>토</div>
+                        <div class="_week_row_7 obj_font_color_sunday_red" ${this.dayoff.indexOf(6) != -1 ? "style=display:none": ""}>일</div>`;
+        }
+        let week_date_name_data = `<div class="cal_week_line_dates" style="border-bottom:0;font-size:11px;">
+                                        <div class="week_cal_time_text"></div>
+                                        ${day_names}
+                                    </div>`;
+
         return(
             week_dates_info == false 
                 ? 
@@ -1055,13 +1091,13 @@ class Calendar {
                                         <div id="current_time_indicator" style="width:${this.window_height - (12.5)*this.window_height/100 }px;"><div></div></div>
                                         ${ (this.worktime.map( (t) => { return `<article><span>${TimeRobot.to_text(t, 0, 'short')}</span></article>`; } )).join('') }
                                     </div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1 week_row">${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2 week_row">${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3 week_row">${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})" class="_week_row_4 week_row">${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})" class="_week_row_5 week_row">${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})" class="_week_row_6 week_row">${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})" class="_week_row_7 week_row">${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1 week_row" ${this.dayoff.indexOf(0) != -1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2 week_row" ${this.dayoff.indexOf(1) != -1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3 week_row" ${this.dayoff.indexOf(2) != -1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})" class="_week_row_4 week_row" ${this.dayoff.indexOf(3) != -1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})" class="_week_row_5 week_row" ${this.dayoff.indexOf(4) != -1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})" class="_week_row_6 week_row" ${this.dayoff.indexOf(5) != -1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})" class="_week_row_7 week_row" ${this.dayoff.indexOf(6) != -1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
                                 </div>
                                 `;
         return week_html_template;
@@ -1336,10 +1372,7 @@ class Calendar {
                         <div class="week_cal_time_text"></div>
                         ${this.date_start == 0  //시작을 월요일부터 옵션을 위한 코드
                             ? '<div class="_week_row_1 obj_font_color_sunday_red">일</div><div class="_week_row_2">월</div><div class="_week_row_3">화</div><div class="_week_row_4">수</div><div class="_week_row_5">목</div><div class="_week_row_6">금</div><div class="_week_row_7 obj_font_color_saturday_blue">토</div>'
-                            : '<div class="_week_row_1">월</div><div class="_week_row_2">화</div><div class="_week_row_3">수</div><div class="_week_row_4">목</div><div class="_week_row_5">금</div><div class="_week_row_6 obj_font_color_saturday_blue">토</div><div class="_week_row_7 obj_font_color_sunday_red">일</div>'}
-
-
-                        
+                            : '<div class="_week_row_1">월</div><div class="_week_row_2">화</div><div class="_week_row_3">수</div><div class="_week_row_4">목</div><div class="_week_row_5">금</div><div class="_week_row_6 obj_font_color_saturday_blue">토</div><div class="_week_row_7 obj_font_color_sunday_red">일</div>'}   
                     </div>
                     `
                 ,
