@@ -1397,10 +1397,10 @@ class Calendar {
         let y_threshold;
         let swiper_x = false;
         if(this.cal_type == "week"){
-            x_threshold = 50;
+            x_threshold = 80;
             y_threshold = 200;
         }else if(this.cal_type == "month"){
-            x_threshold = 50;
+            x_threshold = 80;
             y_threshold = 200;
         }
 
