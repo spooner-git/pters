@@ -184,11 +184,13 @@ class Member_ticket_refund{
             try{
                 member_ticket_modify.init();
                 member_ticket_history.init();
+                member_view_popup.init();
+                member.init();
             }catch(e){
                 console.log(e);
             }
             layer_popup.close_layer_popup();
-            member.init();
+            // member.init();
         });
     }
 

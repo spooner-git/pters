@@ -163,7 +163,7 @@ class Plan_add{
         
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_plan_add .wrapper_top').style.border = 0;
-        document.querySelector('.popup_plan_add .wrapper_top').style.paddingTop = '20px';
+        // document.querySelector('.popup_plan_add .wrapper_top').style.paddingTop = '20px';
         PopupBase.top_menu_effect(this.target.install);
     }
 

@@ -121,23 +121,30 @@ class Member_ticket_modify{
                         this.data.status = "PE";
                         this.render_content();
                         try{
+                            member_view_popup.init();
+                            member.init();
                             member_ticket_history.init();
                         }catch(e){
                             console.log(e);
                         }
-                        member.init();
+                        // member_view_popup.init();
+                        // member.init();
                     });
                     layer_popup.close_layer_popup();}
                 },
                 resume:{text:"재개", callback:()=>{
                     Member_func.ticket_status({"member_ticket_id":this.data.member_ticket_id, "state_cd":"IP", "refund_price":"", "refund_date":""}, ()=>{
                         this.data.status = "IP";
+                        this.render_content();
                         try{
+                            member_view_popup.init();
+                            member.init();
                             member_ticket_history.init();
                         }catch(e){
                             console.log(e);
                         }
-                        this.render_content();
+                        // member_view_popup.init();
+                        // member.init();
                     });
                     layer_popup.close_layer_popup();}
                 },
@@ -151,10 +158,14 @@ class Member_ticket_modify{
                 delete:{text:"삭제", callback:()=>{
                     Member_func.ticket_delete({"member_ticket_id":this.data.member_ticket_id}, ()=>{
                         try{
+                            member_view_popup.init();
+                            member.init();
                             member_ticket_history.init();
                         }catch(e){
                             console.log(e);
                         }
+                        // member_view_popup.init();
+                        // member.init();
                         layer_popup.close_layer_popup();
                     });
                     layer_popup.close_layer_popup();}
@@ -260,7 +271,7 @@ class Member_ticket_modify{
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.data.price = user_input_data;
-
+            this.render_content();
         }, pattern, pattern_message, required);
         return html;
     }
@@ -273,8 +284,15 @@ class Member_ticket_modify{
                     "price":this.data.price, "refund_price":"", "refund_date":"", "member_ticket_reg_count":this.data.reg_count};
 
         Member_func.ticket_update(data, ()=>{
+            layer_popup.close_layer_popup();
             this.set_initial_data();
-            member.init();
+            try{
+                member_view_popup.init();
+                member.init();
+                member_ticket_history.init();
+            }catch(e){
+                console.log(e);
+            }
         });
     }
 
