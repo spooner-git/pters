@@ -605,6 +605,51 @@ class Calendar {
         this.relocate_current_time_indicator();
     }
     
+    // zoom_week_cal (context){
+    //     let clicked_number = context != undefined ? context.dataset.row : this.week_zoomed.target_row;
+
+
+    //     if(clicked_number == undefined){
+    //         return false;
+    //     }
+
+    //     if(this.week_zoomed.activate == false){
+    //         for(let i=1; i<=7; i++){
+    //             if(i==clicked_number){
+    //                 Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
+    //                     el.style.width = "87.5%";
+    //                 });
+    //                 continue;
+    //             }
+    //             Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
+    //                 el.style.display = "none";
+    //             });
+    //         }
+            
+    //         this.week_zoomed.activate = true;
+    //         this.week_zoomed.target_row = clicked_number;
+    //         this.toggle_touch_move('off', '#calendar_wrap');
+    //     }else if(this.week_zoomed.activate == true){
+    //         for(let i=1; i<=7; i++){
+    //             if(i==clicked_number){
+    //                 Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
+    //                     el.style.width = "12.5%";
+    //                 });
+    //                 continue;
+    //             }
+    //             Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
+    //                 if(this.dayoff.indexOf(i-1) == -1){
+    //                     el.style.display = "table-cell";
+    //                 }
+    //             });
+    //         }
+            
+    //         this.week_zoomed.activate = false;
+    //         this.week_zoomed.target_row = clicked_number;
+    //         this.toggle_touch_move('on', '#calendar_wrap');
+    //     }
+    // }
+
     zoom_week_cal (context){
         let clicked_number = context != undefined ? context.dataset.row : this.week_zoomed.target_row;
 
@@ -616,9 +661,9 @@ class Calendar {
         if(this.week_zoomed.activate == false){
             for(let i=1; i<=7; i++){
                 if(i==clicked_number){
-                    Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
-                        el.style.width = "87.5%";
-                    });
+                    // Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
+                    //     el.style.width = "87.5%";
+                    // });
                     continue;
                 }
                 Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
@@ -632,14 +677,15 @@ class Calendar {
         }else if(this.week_zoomed.activate == true){
             for(let i=1; i<=7; i++){
                 if(i==clicked_number){
-                    Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
-                        el.style.width = "12.5%";
-                    });
+                    // Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
+                    //     el.style.width = "12.5%";
+                    // });
                     continue;
                 }
                 Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
                     if(this.dayoff.indexOf(i-1) == -1){
-                        el.style.display = "table-cell";
+                        // el.style.display = "table-cell";
+                        el.style.display = "block";
                     }
                 });
             }
