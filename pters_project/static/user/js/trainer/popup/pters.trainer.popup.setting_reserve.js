@@ -98,6 +98,9 @@ class Setting_reserve{
                         this.dom_row_available_reserve_time() + 
                         this.dom_row_available_cancel_time() +
                     '</article>';
+        if(this.data.stop_reserve == ON){
+            html = this.dom_row_stop_reserve();
+        }
         return html;
     }
 

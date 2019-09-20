@@ -32,7 +32,7 @@ class Mypage{
             this.data.birth = data.trainer_info.member_birthday_dt;
 
             this.render();
-            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
         
     }
@@ -54,7 +54,7 @@ class Mypage{
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_mypage .wrapper_top').style.border = 0;
-        PopupBase.top_menu_effect(this.target.install);
+        // PopupBase.top_menu_effect(this.target.install);
     }
 
     render_toolbox(){
@@ -94,10 +94,10 @@ class Mypage{
         let html = `
         <div class="mypage_upper_box" style="text-align:center;">
             <div style="display:inline-block;width:320px;">
-                <span class="photo_wrap" onclick="mypage_popup.event_edit_photo();">
+                <div class="photo_wrap" onclick="mypage_popup.event_edit_photo();">
                     ${title}
-                </span>
-                <span style="display:none;">${title}</span>
+                </div>
+                <span style="display:none;">${this.data.name == null ? '나의 프로필' : this.data.name}님의 프로필</span>
             </div>
         </div>
         `;
