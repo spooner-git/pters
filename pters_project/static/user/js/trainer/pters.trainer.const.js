@@ -139,6 +139,7 @@ const POPUP_ADDRESS_SETTING_ALARM = 'popup_setting_alarm';
 const POPUP_ADDRESS_SETTING_ATTENDMODE = 'popup_setting_attendmode';
 const POPUP_ADDRESS_SERVICE_NOTICE = 'popup_service_notice';
 const POPUP_ADDRESS_SERVICE_INQUIRY = 'popup_service_inquiry';
+const POPUP_ADDRESS_SERVICE_INQUIRY_HISTORY = 'popup_service_inquiry_history';
 
 const POPUP_ADDRESS_MYPAGE = 'popup_mypage';
 const POPUP_ADDRESS_MYPAGE_MODIFY = 'popup_mypage_modify';

@@ -43,7 +43,7 @@ class Service_inquiry {
     render(){
         let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();service_inquiry_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="service_inquiry_popup.send_data()">보내기</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="service_inquiry_popup.go_to_inquiry_history()">문의 내역</span><span style="color:#fe4e65;font-weight: 500;" onclick="service_inquiry_popup.send_data()">보내기</span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
 
@@ -172,6 +172,11 @@ class Service_inquiry {
         });
     }
 
+    go_to_inquiry_history(){
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
+            service_inquiry_history_popup = new Service_inquiry_history('.popup_service_inquiry_history');});
+    }
+
 }
 
 class Service_inquiry_func {
@@ -209,6 +214,33 @@ class Service_inquiry_func {
     static read (callback){
         $.ajax({
             url: '/board/get_question_list/',
+            type: 'GET',
+            dataType : 'html',
+
+            beforeSend:function(){
+                
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(callback != undefined){
+                    callback(jsondata);
+                }
+            },
+
+            complete:function(){
+               
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        });
+    }
+
+    static read_check (callback){
+        $.ajax({
+            url: '/board/clear_question_list/',
             type: 'GET',
             dataType : 'html',
 
