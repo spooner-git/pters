@@ -970,8 +970,10 @@ class Calendar {
                         saturday = "obj_font_color_saturday_blue";
                     }
                 }else if(this.date_start == 1){ //시작을 월요일부터 옵션을 위한 코드
-                    if(i == 5){
+                    if(i == 0){
                         border_style = "no_border";
+                    }
+                    if(i == 5){
                         sunday = "obj_font_color_saturday_blue";
                     }
                     if(i == 6){
