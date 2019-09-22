@@ -1325,6 +1325,8 @@ class Calendar {
 
         if(new Date().getHours() >= this.worktime[this.worktime.length-1] ){
             hour = 0;
+            indicator.style.display = "none";
+            return false;
         }
 
         let pos_y = hour * 60 + min;
