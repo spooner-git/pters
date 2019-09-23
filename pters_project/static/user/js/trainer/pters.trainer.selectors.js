@@ -2522,7 +2522,7 @@ class DatePickerSelector{
         this.data = {
             year: this.option.data.year, month:this.option.data.month, date:this.option.data.date
         };
-        
+
         this.init();
     }
 
@@ -2636,7 +2636,7 @@ class DatePickerSelector{
                             <div style="position: absolute;top: -15px;left: 50%;color: #fe4e65;font-size: 10px;transform: translateX(-50%);">Today</div>`;
                     today_style = 'color:#ffffff;position:relative';
                 }else if(reference_date_year == this.option.data.year && reference_date_month == this.option.data.month && date_cache == this.option.data.date){
-                    date = `<div style="display:inline-block;height:25px;width:25px;line-height:26px;border-radius:50%;background-color:green;">${date_cache}</div>
+                    date = `<div style="display:inline-block;height:25px;width:25px;line-height:26px;border-radius:50%;background-color:#4747ff;">${date_cache}</div>
                             <div style="position: absolute;top: -15px;left: 50%;color: #ffffff;font-size: 10px;transform: translateX(-50%);">Today</div>`;
                     today_style = 'color:#ffffff;position:relative';
                 }
