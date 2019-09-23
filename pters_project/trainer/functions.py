@@ -174,6 +174,7 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, 
                            'member_phone': str(member_info.phone),
                            'member_email': str(member_info.user.email),
                            'member_sex': str(member_info.sex),
+                           'member_profile_url': member_info.profile_url,
                            'member_birthday_dt': str(member_info.birthday_dt),
                            'member_ticket_reg_count': member_ticket_reg_count,
                            'member_ticket_rem_count': member_ticket_rem_count,
@@ -222,7 +223,8 @@ def func_get_member_info(class_id, user_id, member_id):
                        'member_sex': str(member.sex),
                        'member_birthday_dt': str(member.birthday_dt),
                        'member_connection_check': connection_check,
-                       'member_is_active': str(member.user.is_active)
+                       'member_is_active': str(member.user.is_active),
+                       'member_profile_url': member.profile_url
                        }
 
     return {'member_info': member_info, 'error': error}
