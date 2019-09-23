@@ -414,10 +414,30 @@ class Member_add{
             //행을 클릭했을때 실행할 내용
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
 
+                let year;
+                let month;
+                let date;
+                //시작일자가 입력되어있다면 시작일자가 있는달을 그린다.
+                if(this.data.end_date != null){
+                    year = this.data.end_date.year;
+                    month = this.data.end_date.month;
+                    date = this.data.end_date.date;
+                }else if(this.data.end_date == null){
+                    if(this.data.start_date != null){
+                        year = this.data.start_date.year;
+                        month = this.data.start_date.month;
+                        date = this.data.start_date.date;
+                    }else{
+                        year = this.dates.current_year;
+                        month = this.dates.current_month;
+                        date = this.dates.current_year;
+                    }
+                }
+
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
-                let year = this.data.end_date == null ? this.dates.current_year : this.data.end_date.year; 
-                let month = this.data.end_date == null ? this.dates.current_month : this.data.end_date.month;
-                let date = this.data.end_date == null ? this.dates.current_date : this.data.end_date.date;
+                // let year = this.data.end_date == null ? this.dates.current_year : this.data.end_date.year; 
+                // let month = this.data.end_date == null ? this.dates.current_month : this.data.end_date.month;
+                // let date = this.data.end_date == null ? this.dates.current_date : this.data.end_date.date;    
                 
                 let min = this.data.start_date != null ? {year:this.data.start_date.year, month:this.data.start_date.month, date: this.data.start_date.date} : null;
 

@@ -2503,6 +2503,7 @@ class DatePickerSelector{
             }
         };
 
+        
 
         this.store = {
             text: null,
@@ -2517,6 +2518,11 @@ class DatePickerSelector{
                 }
             }
         }
+
+        this.data = {
+            year: this.option.data.year, month:this.option.data.month, date:this.option.data.date
+        };
+        
         this.init();
     }
 
@@ -2533,20 +2539,20 @@ class DatePickerSelector{
     }
 
     next(){
-        let next_year = this.option.data.month+1 > 12 ? this.option.data.year +1 :  this.option.data.year;
-        let next_month = this.option.data.month+1 > 12 ? 1 : this.option.data.month + 1;
+        let next_year = this.data.month+1 > 12 ? this.data.year +1 :  this.data.year;
+        let next_month = this.data.month+1 > 12 ? 1 : this.data.month + 1;
 
-        this.option.data.year = next_year;
-        this.option.data.month = next_month;
+        this.data.year = next_year;
+        this.data.month = next_month;
         this.render_datepicker();
     }
 
     prev(){
-        let prev_year = this.option.data.month-1 == 0 ? this.option.data.year -1 :  this.option.data.year;
-        let prev_month = this.option.data.month-1 == 0 ? 12 : this.option.data.month - 1;
+        let prev_year = this.data.month-1 == 0 ? this.data.year -1 :  this.data.year;
+        let prev_month = this.data.month-1 == 0 ? 12 : this.data.month - 1;
 
-        this.option.data.year = prev_year;
-        this.option.data.month = prev_month;
+        this.data.year = prev_year;
+        this.data.month = prev_month;
         this.render_datepicker();
     }
 
@@ -2566,9 +2572,9 @@ class DatePickerSelector{
     }
 
     render_datepicker(){
-        let reference_date_year = this.option.data.year;
-        let reference_date_month = this.option.data.month;
-        let reference_date_date = this.option.data.date;
+        let reference_date_year = this.data.year;
+        let reference_date_month = this.data.month;
+        let reference_date_date = this.data.date;
         let reference_date_month_last_day = new Date(reference_date_year, reference_date_month, 0).getDate();
         let current_month_first_date_day = new Date(reference_date_year, reference_date_month-1, 1).getDay();
 
@@ -2624,9 +2630,14 @@ class DatePickerSelector{
                     font_color = 'color:#cccccc';
                 }
 
+                //오늘 날짜 표기
                 if(this.date.current_year == reference_date_year && this.date.current_month == reference_date_month && this.date.current_date == date_cache){
                     date = `<div style="display:inline-block;height:25px;width:25px;line-height:26px;border-radius:50%;background-color:#fe4e65;">${date_cache}</div>
                             <div style="position: absolute;top: -15px;left: 50%;color: #fe4e65;font-size: 10px;transform: translateX(-50%);">Today</div>`;
+                    today_style = 'color:#ffffff;position:relative';
+                }else if(reference_date_year == this.option.data.year && reference_date_month == this.option.data.month && date_cache == this.option.data.date){
+                    date = `<div style="display:inline-block;height:25px;width:25px;line-height:26px;border-radius:50%;background-color:green;">${date_cache}</div>
+                            <div style="position: absolute;top: -15px;left: 50%;color: #ffffff;font-size: 10px;transform: translateX(-50%);">Today</div>`;
                     today_style = 'color:#ffffff;position:relative';
                 }
 
