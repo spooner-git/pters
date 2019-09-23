@@ -30,7 +30,7 @@ class Mypage{
             this.data.email = data.trainer_info.member_email;
             this.data.sex = data.trainer_info.member_sex;
             this.data.birth = data.trainer_info.member_birthday_dt;
-
+            this.data.photo = data.trainer_info.member_profile_url;
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });

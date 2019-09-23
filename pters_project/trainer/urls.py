@@ -192,6 +192,9 @@ urlpatterns = [
     url(r'^get_trainer_setting_data/$', views.GetTrainerSettingDataView.as_view(), name='get_trainer_setting_data'),
     url(r'^get_trainer_auth_data/$', views.GetTrainerAuthDataView.as_view(), name='get_trainer_auth_data'),
 
+
+    url(r'^update_trainer_profile_img/$', views.update_trainer_profile_img_logic, name='update_trainer_profile_img'),
+
     # 알람 기능 ##########################################################################################################
     # 알람 삭제
     url(r'^alarm_delete/$', views.alarm_delete_logic, name='alarm_delete'),

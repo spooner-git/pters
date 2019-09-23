@@ -24,6 +24,7 @@ class Menu {
     set_initial_data(){
         Mypage_func.read((data)=>{
             this.data.name = data.trainer_info.member_name;
+            this.data.photo = data.trainer_info.member_profile_url;
             this.render_content();
         });
     }
