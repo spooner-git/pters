@@ -34,6 +34,7 @@
     
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.component.common.css" %}>
     <link rel="stylesheet" href={% static_url "common/css/swiper.min.css" %}>
+    <link rel="stylesheet" href={% static_url "common/css/croppie.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.base.css" %}>
 
     <!-- 페이지 CSS 로드 -->
@@ -50,6 +51,7 @@
     <script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/iscroll/iscroll-probe.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/croppie.min.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/swiper.min.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
@@ -305,6 +307,7 @@ onclick="layer_popup.close_layer_popup();"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.service_inquiry_history.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.mypage.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.mypage_modify.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.mypage_photo_update.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.password_modify.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
@@ -428,6 +431,7 @@ onclick="layer_popup.close_layer_popup();"></div>
     var statistics_detail_popup
     var mypage_popup;
     var mypage_modify_popup;
+    var mypage_photo_update_popup;
     var password_modify_popup;
 
     var program_list_popup;

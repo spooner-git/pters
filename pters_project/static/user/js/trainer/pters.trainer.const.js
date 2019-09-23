@@ -143,6 +143,7 @@ const POPUP_ADDRESS_SERVICE_INQUIRY_HISTORY = 'popup_service_inquiry_history';
 
 const POPUP_ADDRESS_MYPAGE = 'popup_mypage';
 const POPUP_ADDRESS_MYPAGE_MODIFY = 'popup_mypage_modify';
+const POPUP_ADDRESS_MYPAGE_PHOTO_UPDATE = 'popup_mypage_photo_update';
 const POPUP_ADDRESS_PASSWORD_MODIFY = 'popup_password_modify';
 // 풀페이지 팝업
 

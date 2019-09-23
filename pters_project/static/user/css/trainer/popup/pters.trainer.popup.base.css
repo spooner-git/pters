@@ -52,6 +52,7 @@
             .popup_mobile .wrapper_top .icon_right{
                float: right;
                font-size: 14px;
+               height: 60px;
             }
             .popup_mobile .wrapper_top .icon_right > img{
                 padding: 18px 16px 18px 18px;
@@ -63,6 +64,7 @@
             .popup_mobile .wrapper_top .icon_left{
                 float: left;
                 font-size: 14px;
+                height: 60px;
              }
              .popup_mobile .wrapper_top .icon_left > img{
                 padding: 18px 18px 18px 16px;

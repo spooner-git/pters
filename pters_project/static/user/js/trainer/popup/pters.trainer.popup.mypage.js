@@ -228,7 +228,10 @@ class Mypage{
 
     event_edit_photo(){
         let user_option = {
-            change:{text:"프로필 사진 변경", callback:()=>{alert('사진 변경 페이지로');layer_popup.close_layer_popup();}},
+            change:{text:"프로필 사진 변경", callback:()=>{layer_popup.close_layer_popup();
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE_PHOTO_UPDATE, 100, POPUP_FROM_RIGHT, null, ()=>{
+                    mypage_photo_update_popup = new Mypage_photo_update('.popup_mypage_photo_update', 'mypage_photo_update_popup'); });
+            }},
             delete:{text:"프로필 사진 삭제", callback:()=>{alert('사진 삭제 실행');layer_popup.close_layer_popup();}}
         };
         let options_padding_top_bottom = 16;
