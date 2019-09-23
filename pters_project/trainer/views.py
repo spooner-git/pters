@@ -1852,6 +1852,10 @@ def update_member_ticket_status_info_logic(request):
 
     if member_ticket_id is None or member_ticket_id == '':
         error = '수강정보를 불러오지 못했습니다.'
+    if refund_price == '':
+        refund_price = 0
+    if refund_date == '':
+        refund_date = None
 
     if error is None:
         try:

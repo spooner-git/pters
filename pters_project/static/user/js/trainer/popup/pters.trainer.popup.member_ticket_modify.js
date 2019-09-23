@@ -164,7 +164,7 @@ class Member_ticket_modify{
                 refund:{text:"환불", callback:()=>{
                     layer_popup.close_layer_popup();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_REFUND, 100, POPUP_FROM_RIGHT, null, ()=>{
-                        let external_data = {"member_ticket_id":this.data.member_ticket_id, "member_ticket_name":this.data.member_ticket_name, "member_ticket_price":this.data.price, "member_ticket_start_date":this.data.start_date};
+                        let external_data = {"member_ticket_id":this.data.member_ticket_id,"state_cd":"RF", "member_ticket_name":this.data.member_ticket_name, "member_ticket_price":this.data.price, "member_ticket_start_date":this.data.start_date};
                         member_ticket_refund = new Member_ticket_refund('.popup_member_ticket_refund', external_data, 'member_ticket_refund');
                     });}
                 },

@@ -183,7 +183,7 @@ class Member_ticket_refund{
         if(this.check_before_send() == false){
             return false;
         }
-        let data = {"member_ticket_id":this.data.member_ticket_id, "note":"", "start_date":"", "end_date":"", 
+        let data = {"member_ticket_id":this.data.member_ticket_id, "state_cd":"RF", "note":"", "start_date":"", "end_date":"",
                     "price":"", "refund_price":this.data.refund_price, "refund_date":this.data.refund_date, "member_ticket_reg_count":""};
 
         Member_func.ticket_status(data, ()=>{
