@@ -387,14 +387,14 @@ class Member_view{
         let title = this.data.user_id == null ? '회원ID' : this.data.user_id;
         let icon = '/static/common/icon/icon_member_card_black.png';
         let icon_r_visible = SHOW;
-        let icon_r_text = '연결 해제';
+        let icon_r_text = '';
         let style = null;
         if(this.data.connection == CONNECTED){
-            icon_r_text = "연결 해제";
+            icon_r_text = "<span style='color:green'>연결 중</span>";
         }else if(this.data.connection == CONNECT_WAIT){
-            icon_r_text = "연결 요청 취소";
+            icon_r_text = "<span style='color:orange'>연결 대기</span>";
         }else if(this.data.connection == UNCONNECTED){
-            icon_r_text = "연결 요청";
+            icon_r_text = "<span style='color:#fe4e65'>미연결</span>";
         }
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             onclick();

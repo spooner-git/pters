@@ -1,5 +1,6 @@
 class Member_ticket_refund{
     constructor(install_target, data, instance){
+        console.log(data)
         this.target = {install: install_target, toolbox:'section_member_ticket_refund_toolbox', content:'section_member_ticket_refund_content'};
         this.instance = instance;
         this.external_data = data;
@@ -22,6 +23,7 @@ class Member_ticket_refund{
             member_ticket_id: null,
             member_ticket_name: null,
             member_ticket_price: null,
+            member_ticket_start_date: null,
             refund_price: null,
             refund_date: null
         };
@@ -43,6 +45,7 @@ class Member_ticket_refund{
         this.data.refund_date = `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_date}`;
         this.data.member_ticket_name = this.external_data.member_ticket_name;
         this.data.member_ticket_price = this.external_data.member_ticket_price;
+        this.data.member_ticket_start_date = this.external_data.member_ticket_start_date;
         this.render();
     }
 
@@ -123,8 +126,12 @@ class Member_ticket_refund{
                 let year = this.data.refund_date == null ? this.dates.current_year : this.data.refund_date.split('-')[0]; 
                 let month = this.data.refund_date == null ? this.dates.current_month : this.data.refund_date.split('-')[1]; 
                 let date = this.data.refund_date == null ? this.dates.current_date : this.data.refund_date.split('-')[2]; 
+
+                let year_min = this.data.member_ticket_start_date.split('-')[0];
+                let month_min = this.data.member_ticket_start_date.split('-')[1];
+                let date_min = this.data.member_ticket_start_date.split('-')[2];
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'refund_date', title:'환불 일자', data:{year:year, month:month, date:date}, callback_when_set: (object)=>{ 
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'refund_date', title:'환불 일자', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{ 
                     this.data.refund_date = `${object.data.year}-${object.data.month}-${object.data.date}`;
                     this.render_content();
                 }});

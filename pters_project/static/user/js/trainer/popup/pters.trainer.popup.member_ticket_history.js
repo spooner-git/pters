@@ -48,7 +48,7 @@ class Member_ticket_history{
         for(let i=0; i<member_ticket_list.length; i++){
             numbering++;
             let data = member_ticket_list[i];
-            let ticket_id = data.member_ticket_id;
+            let member_ticket_id = data.member_ticket_id;
             let ticket_name = data.member_ticket_name;
             let ticket_start_date = data.member_ticket_start_date;
             let ticket_end_date = data.member_ticket_end_date;
@@ -58,16 +58,20 @@ class Member_ticket_history{
             let avail_count = data.member_ticket_avail_count;
             let status_code = data.member_ticket_state_cd;
             let status = TICKET_STATUS[data.member_ticket_state_cd];
+            let refund_date = data.member_ticket_refund_date == "" ? null : data.member_ticket_refund_date;
+            let refund_price = data.member_ticket_refund_price == "" ? null : data.member_ticket_refund_price;
             let date_diff = DateRobot.diff_date(data.member_ticket_end_date, data.member_ticket_start_date);
             let date = DateRobot.to_text(data.member_ticket_start_date, '', '', SHORT) + ' - ' + DateRobot.to_text(data.member_ticket_end_date, '', '', SHORT) + ' ('+date_diff+'일)';
             let onclick = ()=>{
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, POPUP_FROM_RIGHT, null, ()=>{
-                    let data = {"member_name":this.member_name, "member_ticket_id":ticket_id, "member_ticket_name":ticket_name, "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":reg_count, "price":ticket_price, "status":status_code};
+                    let data = {"member_name":this.member_name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
+                                "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":reg_count, "price":ticket_price, "status":status_code,
+                                "refund_date":refund_date, "refund_price":refund_price};
                     member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
             };
 
-            html = CComponent.ticket_history_row (numbering, ticket_id, date, ticket_name, reg_count, remain_count, avail_count, status, onclick);
+            html = CComponent.ticket_history_row (numbering, member_ticket_id, date, ticket_name, reg_count, remain_count, avail_count, status, onclick);
 
             html_to_join.push(html);
         }
@@ -121,7 +125,6 @@ class Member_ticket_history{
             date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'dateselector', title:'날짜 선택', data:init_date, callback_when_set: (selected_data)=>{
                 let date = DateRobot.to_yyyymmdd(selected_data.data.year, selected_data.data.month, selected_data.data.date);
                 let data = {"member_ticket_id":ticket_id, "note":"", "start_date":date, "end_date":"", "price":"", "refund_price":"", "refund_date":"", "member_ticket_reg_count":""};
-                console.log(data)
                 Member_func.ticket_update(data, ()=>{
                     this.init();
                 });
