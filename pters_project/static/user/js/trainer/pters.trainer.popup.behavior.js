@@ -317,10 +317,12 @@ function func_set_close_popup_animation ($popup_selector, animation_type){
             translate_x = windowWidth;
             break;
         case POPUP_FROM_BOTTOM:
-            translate_y = windowHeight;
+            translate_y = windowHeight+60; 
+            //안드로이드 크롬이 하단 브라우저 영역을 숨기면서 windowHeight가 늘어나서, 밑에 숨어있던 팝업이 보이는 현상 해결 (60은 navbar 높이)
             break;
         case POPUP_FROM_TOP:
-            translate_y = -windowHeight;
+            translate_y = -windowHeight+60;
+            //안드로이드 크롬이 하단 브라우저 영역을 숨기면서 windowHeight가 늘어나서, 밑에 숨어있던 팝업이 보이는 현상 해결 (60은 navbar 높이)
             break;
         case POPUP_FROM_PAGE:
             translate_x = -windowWidth;

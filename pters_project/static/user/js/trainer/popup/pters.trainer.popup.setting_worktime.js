@@ -3,6 +3,7 @@ class Setting_worktime{
         this.target = {install: install_target, toolbox:'section_setting_worktime_toolbox', content:'section_setting_worktime_content'};
 
         this.data = {
+                dayoff_visibility: OFF,
                 GENERAL:{
                     "start_time":null, "end_time":null, 
                     "start_time_text":null, "end_time_text":null,
@@ -127,40 +128,17 @@ class Setting_worktime{
     }
     
     dom_assembly_content(){
-        let start_time_selector = this.dom_row_start_time_select("GENERAL");
-        let end_time_selector = this.dom_row_end_time_select("GENERAL");
-        let id = "worktime_general";
-        let power = this.data.GENERAL.detail_switch;
-        let style = null;
-        let detail_setting = CComponent.toggle_button (id, power, style, (data)=>{
-            this.data.GENERAL.detail_switch = data; // ON or OFF
-            if(this.data.GENERAL.start_time == null){
-                this.data.GENERAL.start_time = '00:00';
-                this.data.GENERAL.start_time_text = TimeRobot.to_text(0, 0);
-            }
-            if(this.data.GENERAL.end_time == null){
-                this.data.GENERAL.end_time = '24:00';
-                this.data.GENERAL.end_time_text = TimeRobot.to_text(24, 0);
-            }
-            this.render_content();
-        });
-        let title_row = CComponent.create_row('nothing', '요일별 설정', NONE, HIDE, '', null, ()=>{});
+        let general_worktime = this.dom_row_general_worktime();
+        let dayoff_visibility = this.dom_row_dayoff_visibility();
 
-        let html = `<article class="setting_worktime_wrapper obj_input_box_full">
-                        ${power == OFF ? start_time_selector : ""}
-                        ${power == OFF ? end_time_selector : ""}
-                        <div style="display:table;width:100%;">
-                            <div style="display:table-cell;width:auto;">${title_row}</div>
-                            <div style="display:table-cell;width:50px;">${detail_setting}</div>
-                        </div>
-                    </article>`;
+        let main_assembly = dayoff_visibility + general_worktime;
 
         let sub_assembly = "";
         if(this.data.GENERAL.detail_switch == ON){
             sub_assembly = this.dom_assembly_sub_content();
         }
 
-        return html + sub_assembly;
+        return main_assembly + sub_assembly;
     }
 
     dom_assembly_sub_content(){
@@ -194,6 +172,56 @@ class Setting_worktime{
         }
 
         return html_to_join.join('');
+    }
+
+    dom_row_general_worktime(){
+        let start_time_selector = this.dom_row_start_time_select("GENERAL");
+        let end_time_selector = this.dom_row_end_time_select("GENERAL");
+        let id = "worktime_general";
+        let power = this.data.GENERAL.detail_switch;
+        let style = null;
+        let detail_setting = CComponent.toggle_button (id, power, style, (data)=>{
+            this.data.GENERAL.detail_switch = data; // ON or OFF
+            if(this.data.GENERAL.start_time == null){
+                this.data.GENERAL.start_time = '00:00';
+                this.data.GENERAL.start_time_text = TimeRobot.to_text(0, 0);
+            }
+            if(this.data.GENERAL.end_time == null){
+                this.data.GENERAL.end_time = '24:00';
+                this.data.GENERAL.end_time_text = TimeRobot.to_text(24, 0);
+            }
+            this.render_content();
+        });
+        let title_row = CComponent.create_row('nothing', '요일별 설정', NONE, HIDE, '', null, ()=>{});
+
+        let html = `<article class="setting_worktime_wrapper obj_input_box_full">
+                        ${power == OFF ? start_time_selector : ""}
+                        ${power == OFF ? end_time_selector : ""}
+                        <div style="display:table;width:100%;">
+                            <div style="display:table-cell;width:auto;">${title_row}</div>
+                            <div style="display:table-cell;width:50px;">${detail_setting}</div>
+                        </div>
+                    </article>`;
+        return html;
+    }
+
+    dom_row_dayoff_visibility(){
+        let id = "dayoff_visibility";
+        let power = this.data.dayoff_visibility;
+        let style = null;
+        let detail_setting = CComponent.toggle_button (id, power, style, (data)=>{
+            this.data.dayoff_visibility = data; // ON or OFF
+            this.render_content();
+        });
+        let title_row = CComponent.create_row('nothing', '달력에서 휴무일 숨기기', NONE, NONE, '', null, ()=>{});
+
+        let html = `<article class="setting_worktime_wrapper obj_input_box_full">
+                        <div style="display:table;width:100%;">
+                            <div style="display:table-cell;width:auto;">${title_row}</div>
+                            <div style="display:table-cell;width:50px;">${detail_setting}</div>
+                        </div>
+                    </article>`;
+        return html;
     }
 
     dom_row_start_time_select(day){
