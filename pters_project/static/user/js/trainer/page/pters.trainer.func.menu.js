@@ -283,14 +283,14 @@ class Menu {
     }
 
     dom_menu_service_inquiry(){
-        let id = 'menu_service_inquiry';
+        let id = 'menu_service_inquiry_menu';
         let title = '이용 문의';
         let icon = '/static/common/icon/icon_inquiry_black.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage('service_inquiry');
+            sideGoPage('service_inquiry_menu');
         });
         return html;
     }
