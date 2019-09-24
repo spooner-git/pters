@@ -28,7 +28,9 @@ function func_set_webkit_overflow_scrolling(target_selector, top_menu_effect_iph
 
 function input_adjust_location_for_android(){
     if(os == ANDROID){
+        let target;
         $(document).on('focus', 'input', function(e){
+            target = this;
             let shade = `<div id="android_input_shade"></div>`;
             
             setTimeout(()=>{
@@ -45,7 +47,8 @@ function input_adjust_location_for_android(){
 
         $(document).on('click', '#android_input_shade', function(e){
             $(this).parents('li').removeClass('input_focused');
-            $('input').blur();
+            // $('input').blur();
+            $(target).blur();
             $(this).remove();
         });
 
