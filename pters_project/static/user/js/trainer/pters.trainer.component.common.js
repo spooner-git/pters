@@ -37,7 +37,7 @@ class CComponent{
                                 ${icon == DELETE ? "" : `<img src="${icon}">`} 
                                 <span class="cell_text">${title}</span>
                             </div>
-                            <div class="cell_icon">
+                            <div class="cell_icon" ${icon_r_visible == NONE ? "style='display:none'": ''}>
                                 <span class="cell_text" ${icon_r_visible == "" || null ? 'style="display:none"' : ''}>${icon_r_text}</span>
                                 <img src="/static/common/icon/icon_arrow_r_small_black.png" ${icon_r_visible == HIDE ? 'style="display:none"' : ''}>
                             </div>
