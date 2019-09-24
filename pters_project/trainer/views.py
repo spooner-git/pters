@@ -3605,7 +3605,7 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             if user_member_info.profile_url is None or user_member_info.profile_url == '':
-                member_profile_url = '/static/common/icon/sally.png'
+                member_profile_url = '/static/common/icon/icon_account.png'
             else:
                 member_profile_url = user_member_info.profile_url
 
