@@ -4288,7 +4288,7 @@ class GetTrainerAuthDataView(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse(request.session['auth_info'], json_dumps_params={'ensure_ascii': True})
 
 
-# 강사 언어 setting 업데이트 api
+# 강사 프로필 사진 수정
 def update_trainer_profile_img_logic(request):
     error = None
     member_info = None
@@ -4303,7 +4303,7 @@ def update_trainer_profile_img_logic(request):
             error = func_delete_profile_image_logic(member_info.profile_url)
 
     if error is None:
-        max_range = 99999
+        max_range = 9999999999
         random_file_name = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
         if request.method == 'POST':
             try:
@@ -4316,6 +4316,31 @@ def update_trainer_profile_img_logic(request):
 
     if error is None:
         member_info.profile_url = img_url
+        member_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 강사 프로필 사진 삭제
+def delete_trainer_profile_img_logic(request):
+    error = None
+    member_info = None
+
+    try:
+        member_info = MemberTb.objects.get(member_id=request.user.id)
+    except ObjectDoesNotExist:
+        error = '회원 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if member_info.profile_url is not None and member_info.profile_url != '':
+            error = func_delete_profile_image_logic(member_info.profile_url)
+
+    if error is None:
+        member_info.profile_url = ''
         member_info.save()
 
     if error is not None:
