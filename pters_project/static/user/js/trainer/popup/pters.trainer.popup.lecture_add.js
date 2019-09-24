@@ -314,15 +314,16 @@ class Lecture_add{
             return false;
         }
         let data = {
-                    "name":this.data.name,
-                    "member_num":this.data.capacity,
-                    "ing_color_cd":this.data.color_bg[0],
-                    "end_color_cd":"",
-                    "ing_font_color_cd":this.data.color_font[0],
-                    "end_font_color_cd":""
+            "name":this.data.name,
+            "member_num":this.data.capacity,
+            "ing_color_cd":this.data.color_bg[0],
+            "end_color_cd":"",
+            "ing_font_color_cd":this.data.color_font[0],
+            "end_font_color_cd":""
         };
 
         Lecture_func.create(data, (received)=>{
+            console.log("received", received);
             //수업추가시 수강권에 바로 집어넣기 - Lecture_func.create에서 서버에서 lecture_id를 반환해줘야함
             // let data_to_send = {"ticket_id":this.ticket.id, "lecture_id":lecture_to_be_update.add[i]};
             // Ticket_func.update_lecture(ADD, data_to_send);
