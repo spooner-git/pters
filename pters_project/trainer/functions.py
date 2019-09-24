@@ -1,7 +1,11 @@
+import base64
 import collections
 import datetime
 
+import boto3
+from botocore.exceptions import ClientError
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.files.base import ContentFile
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
@@ -11,6 +15,7 @@ from django.db.models.expressions import RawSQL
 from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, STATE_CD_IN_PROGRESS, STATE_CD_FINISH,\
     STATE_CD_ABSENCE, AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS
+from configs import settings
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.models import MemberTicketTb
@@ -169,6 +174,7 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, 
                            'member_phone': str(member_info.phone),
                            'member_email': str(member_info.user.email),
                            'member_sex': str(member_info.sex),
+                           'member_profile_url': member_info.profile_url,
                            'member_birthday_dt': str(member_info.birthday_dt),
                            'member_ticket_reg_count': member_ticket_reg_count,
                            'member_ticket_rem_count': member_ticket_rem_count,
@@ -217,7 +223,8 @@ def func_get_member_info(class_id, user_id, member_id):
                        'member_sex': str(member.sex),
                        'member_birthday_dt': str(member.birthday_dt),
                        'member_connection_check': connection_check,
-                       'member_is_active': str(member.user.is_active)
+                       'member_is_active': str(member.user.is_active),
+                       'member_profile_url': member.profile_url
                        }
 
     return {'member_info': member_info, 'error': error}
@@ -781,3 +788,73 @@ def func_update_lecture_member_fix_status_cd(class_id, member_id):
         except KeyError:
             member_lecture_fix_info.delete()
     return error
+
+
+def func_upload_profile_image_logic(file, file_name):
+
+    # project_id = request.POST.get('project_id', '')
+    # image = request.POST.get('upload_file', '')
+    # context = {'error': None}
+    bucket_name = getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", '')
+
+    s3 = boto3.resource('s3', aws_access_key_id=getattr(settings, "PTERS_AWS_ACCESS_KEY_ID", ''),
+                        aws_secret_access_key=getattr(settings, "PTERS_AWS_SECRET_ACCESS_KEY", ''))
+    bucket = s3.Bucket(bucket_name)
+    exists = True
+    img_url = None
+
+    try:
+        s3.meta.client.head_bucket(Bucket=getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", ''))
+    except ClientError as e:
+        # If a client error is thrown, then check that it was a 404 error.
+        # If it was a 404 error, then the bucket does not exist.
+        error_code = int(e.response['Error']['Code'])
+        if error_code == 404:
+            exists = False
+
+    if exists is True:
+        image_format, image_str = file.split(';base64,')
+        ext = image_format.split('/')[-1]
+        data = ContentFile(base64.b64decode(image_str), name='temp.' + ext)
+        # content = file.read()
+        s3_img_url = 'profile/trainer/'+file_name
+        bucket.put_object(Key=s3_img_url, Body=data, ContentType=ext, ACL='public-read')
+        img_url = 'https://pters-image-master.s3.ap-northeast-2.amazonaws.com/'+s3_img_url
+    return img_url
+
+
+def func_delete_profile_image_logic(file_name):
+
+    # project_id = request.POST.get('project_id', '')
+    # image = request.POST.get('upload_file', '')
+    # context = {'error': None}
+    bucket_name = getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", '')
+    s3 = boto3.resource('s3', aws_access_key_id=getattr(settings, "PTERS_AWS_ACCESS_KEY_ID", ''),
+                        aws_secret_access_key=getattr(settings, "PTERS_AWS_SECRET_ACCESS_KEY", ''))
+    bucket = s3.Bucket(bucket_name)
+    exists = True
+    error_code = None
+
+    try:
+        s3.meta.client.head_bucket(Bucket=getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", ''))
+    except ClientError as e:
+        # If a client error is thrown, then check that it was a 404 error.
+        # If it was a 404 error, then the bucket does not exist.
+        error_code = int(e.response['Error']['Code'])
+        if error_code == 404:
+            exists = False
+
+    if exists is True:
+        # image_format, image_str = content.split(';base64,')
+        # ext = image_format.split('/')[-1]
+        # data = ContentFile(base64.b64decode(image_str), name='temp.' + ext)
+        s3_img_url = file_name.split('https://pters-image-master.s3.ap-northeast-2.amazonaws.com/')[1]
+        objects_to_delete = [{'Key': s3_img_url}]
+        try:
+            bucket.delete_objects(
+                Delete={
+                    'Objects': objects_to_delete
+                })
+        except ClientError:
+            error_code = '프로필 변경중 오류가 발생했습니다.'
+    return error_code

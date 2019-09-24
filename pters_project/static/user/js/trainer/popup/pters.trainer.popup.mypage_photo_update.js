@@ -5,7 +5,8 @@ class Mypage_photo_update{
 
 
         this.data = {
-           src:null
+            src:null,
+            file:null
         };
         this.uploadCrop;
 
@@ -96,9 +97,9 @@ class Mypage_photo_update{
 
 		this.uploadCrop = $('#upload-croppie').croppie({
 			viewport: {
-				width: 100,
-				height: 100,
-				type: 'circle'
+				width: 300,
+				height: 300
+				// type: 'circle'
 			},
 			enableExif: true
 		});
@@ -106,11 +107,13 @@ class Mypage_photo_update{
 		$('#upload').on('change', function(){ self.readFile(this); });
 		$('.upload-result').on('click', function(){
 			self.uploadCrop.croppie('result', {
-				type: 'canvas',
-				size: 'viewport'
+				type: 'base64',
+				size: 'viewport',
+                format: 'png'
 			}).then(function (resp) {
                 // $('#result').attr('src', resp);
                 self.data.src = resp;
+                self.data.file = resp;
                 self.send_data();
 			});
 		});
@@ -130,7 +133,7 @@ class Mypage_photo_update{
                });
                
            }
-           
+           // self.data.file = input.files[0];
            reader.readAsDataURL(input.files[0]);
        }
        else {
@@ -140,7 +143,43 @@ class Mypage_photo_update{
 
     send_data(){
         let data = {"photo": this.data.src};
-        show_error_message(`<img src="${this.data.src}">`);
+        show_user_confirm(`<img src="${this.data.src}">`,  ()=>{
+                            let form_data = new FormData();
+                            form_data.append('profile_img_file', this.data.file);
+                            $.ajax({
+                                url: '/trainer/update_trainer_profile_img/',
+                                data: form_data,
+                                dataType : 'html',
+                                type:'POST',
+                                processData: false,
+                                contentType: false,
+                                enctype:'multipart/form-data',
+
+                                beforeSend: function (xhr, settings) {
+                                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                    }
+                                    ajax_load_image(SHOW);
+                                },
+
+                                success:function(data){
+                                    let jsondata = $.parseJSON(data);
+                                    if(jsondata.messageArray.length>0){
+                                        //alert(jsondata.messageArray);
+                                        show_error_message(jsondata.messageArray);
+                                    }
+                                },
+
+                                complete:function(){
+                                    ajax_load_image(HIDE);
+                                },
+
+                                error:function(){
+                                    //alert('통신이 불안정합니다.');
+                                    show_error_message('통신이 불안정합니다.');
+                                }
+                            });
+                        });
          
         // let data = {
         //             "center_id":"", 
