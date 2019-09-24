@@ -137,11 +137,13 @@ class Lecture_add{
         let fixed_member_list = this.dom_row_fixed_member_list();
         let color = this.dom_row_color_select();
         let ticket = this.dom_row_ticket_select();
+        let ticket_make = this.dom_row_ticket_make_select();
 
         let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업명') + name+'</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('정원') + capacity + '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('색상 태그')+ color+ '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 수강권에 추가')+ ticket+ '</div>';
+                    //  + '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 수강권 동시 생성')+ ticket_make+ '</div>';
 
         return html;
     }
@@ -198,7 +200,6 @@ class Lecture_add{
         }, pattern, pattern_message, required);
         return html;
     }
-
   
     dom_row_capacity_input(){
         let unit = '명';
@@ -299,6 +300,17 @@ class Lecture_add{
                 });
             });
         });
+        return html;
+    }
+
+    dom_row_ticket_make_select(){
+        let id = "lecture_add_ticket_new";
+        let power = OFF;
+        let style = null;
+        let onclick = ()=>{
+
+        };
+        let html = CComponent.toggle_button (id, power, style, onclick);
         return html;
     }
 

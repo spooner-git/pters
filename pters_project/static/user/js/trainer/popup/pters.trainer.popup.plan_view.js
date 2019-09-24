@@ -421,6 +421,7 @@ class Plan_view{
             let url_update_memo = '/schedule/update_memo_schedule/';
             Plan_func.update(url_update_memo, data_to_send, ()=>{
                 this.init();
+                this.if_user_changed_any_information = true;
             });
         }, pattern, pattern_message, required);
         return html;
