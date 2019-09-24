@@ -1,0 +1,30 @@
+.inquiry_menu_upper_box{
+	position: relative;
+	height: auto;
+	line-height: 28px;
+	background-color: #ffffff;
+	/* border-bottom: 1px solid #cccccc; */
+	/*padding: 14px 20px;*/
+	box-sizing: border-box;
+}
+
+.inquiry_menu_tools_wrap{
+	display: table;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 100px;
+	height: 100%;
+}
+
+#section_inquiry_menu_list_content .obj_input_box_full{
+	padding: 8px 20px;
+}
+
+.popup_service_inquiry_menu .popup_toolbox{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+	padding: 8px 16px 16px 20px;
+	z-index: 1;
+}

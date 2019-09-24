@@ -1,13 +1,13 @@
-class Service_inquiry {
+class Service_inquiry_menu {
     constructor (install_target, instance){
-        this.target = {install: install_target, toolbox:'section_inquiry_list_toolbox', content:'section_inquiry_list_content'};
+        this.target = {install: install_target, toolbox:'section_inquiry_menu_list_toolbox', content:'section_inquiry_menu_list_content'};
 
         this.instance = instance;
-        this.page_name = 'service_inquiry';
+        this.page_name = 'service_inquiry_menu';
         this.data = {
-            inquiry_type:{value:[], text:[]},
-            inquiry_subject:null,
-            inquiry_content:null
+            inquiry_menu_type:{value:[], text:[]},
+            inquiry_menu_subject:null,
+            inquiry_menu_content:null
         };
 
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
@@ -24,9 +24,9 @@ class Service_inquiry {
 
     init_data(){
         this.data = {
-            inquiry_type:{value:[], text:[]},
-            inquiry_subject:null,
-            inquiry_content:null
+            inquiry_menu_type:{value:[], text:[]},
+            inquiry_menu_subject:null,
+            inquiry_menu_content:null
         };
     }
 
@@ -41,16 +41,16 @@ class Service_inquiry {
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();service_inquiry_popup.clear();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();service_inquiry_menu_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;"></span><span style="color:#fe4e65;font-weight: 500;" onclick="service_inquiry_popup.send_data()">보내기</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;"></span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
 
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
-        document.querySelector('.popup_service_inquiry .wrapper_top').style.border = 0;
+        document.querySelector('.popup_service_inquiry_menu .wrapper_top').style.border = 0;
         PopupBase.top_menu_effect(this.target.install);
     }
 
@@ -67,119 +67,103 @@ class Service_inquiry {
     }
 
     dom_assembly_content(){
-        let type_select = this.dom_row_type_select();
-        let subject_input = this.dom_row_subject_input();
-        let inquiry_input = this.dom_row_inquiry_input();
+        let faq = this.dom_row_faq();
+        let history = this.dom_row_my_inquiry();
+        let write = this.dom_row_new_inquiry();
 
-        let assembled = '<div class="obj_input_box_full">' + type_select + '</div>' + 
-                        '<div class="obj_input_box_full">' + subject_input + '</div>'+
-                        '<div class="obj_input_box_full">' + inquiry_input + '</div>';
+        let assembled = '<div class="obj_input_box_full">' + faq + '</div>' + 
+                        '<div class="obj_input_box_full">' + history + '</div>'+
+                        '<div class="obj_input_box_full">' + write + '</div>';
 
         return assembled;
     }
 
     dom_row_toolbox(){
-        let title = "문의 작성";
-        let html = `<div class="inquiry_upper_box">
+        let title = "이용 문의 ";
+        let html = `<div class="inquiry_menu_upper_box">
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
                             <span style="display:none;">${title}</span>
                             <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->
                         </div>
-                        <div style="font-size:14px;font-weight:500;color:#5c5859;letter-spacing:-0.65px">아래 양식을 작성하면 등록하신 이메일로 답변드립니다.</div>
+                        <div style="font-size:14px;font-weight:500;color:#5c5859;letter-spacing:-0.65px"></div>
                     </div>
                     `;
         return html;
     }
 
-    dom_row_type_select(){
-        let id = "inquiry_type";
-        let title = this.data.inquiry_type.text.length == 0 ? '문의 유형' : this.data.inquiry_type.text;
+    dom_row_faq(){
+        let id = "inquiry_menu_new_inquiry";
+        let title = "자주 묻는 질문 & 사용방법";
         let icon = DELETE;
-        let icon_r_visible = SHOW;
+        let icon_r_visible = NONE;
         let icon_r_text = '';
-        let style = this.data.inquiry_type.text.length == 0 ? {"color":"#b8b4b4"} : null;
-        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let title = "문의 유형";
-            let install_target = "#wrapper_box_custom_select";
-            let multiple_select = 1;
-            let data = {value:["USAGE", "SUGGEST", "ERROR", "OTHER"], text:["사용문의", "기능 제안", "기능 오류", "기타"]};
-            let selected_data = this.data.inquiry_type;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
-                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
-                    this.data.inquiry_type = set_data;
-                    this.render_content();
-                });
-            });
-        });
-        let html = row;
-        return html;
-    }
-
-    dom_row_subject_input(){
-        let id = "inquiry_subject_input";
-        let title = this.data.inquiry_subject == null ? "" : this.data.inquiry_subject;
-        let placeholder = "제목";
-        let icon = DELETE;
-        let icon_r_visible = HIDE;
-        let icon_r_text = "";
         let style = null;
-        let disabled = false;
-        let onfocusout = (data)=>{
-            this.data.inquiry_subject = data;
-            this.render_content();
+        let onclick = ()=>{
+            // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY, 100, POPUP_FROM_RIGHT, null, ()=>{
+            //     service_inquiry_popup = new Service_inquiry('.popup_service_inquiry');});
+            alert('Hi')
         };
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
-        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
-        let required = "";
-        let row = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
-        let html = row;
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         return html;
     }
 
-    dom_row_inquiry_input(){
-        let id = "inquiry_content_textarea";
-        let title = this.data.inquiry_content == null ? "" : this.data.inquiry_content;
-        let placeholder = "내용";
+    dom_row_my_inquiry(){
+        let id = "inquiry_menu_inquiry_history";
+        let title = "내 문의 내역";
         let icon = DELETE;
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = '';
-        let onfocusout = (data)=>{
-            this.data.inquiry_content = data;
-            this.render_content();
+        let style = null;
+        let onclick = ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
+                service_inquiry_history_popup = new Service_inquiry_history('.popup_service_inquiry_history');});
         };
-        let style = {"height":`${windowHeight - 61 - 82 - 69 - 69 - 12 - 16 - 28}px`};
-        let row = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout);
-        let html = row;
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+        return html;
+    }
+
+    dom_row_new_inquiry(){
+        let id = "inquiry_menu_new_inquiry";
+        let title = "문의 하기";
+        let icon = DELETE;
+        let icon_r_visible = NONE;
+        let icon_r_text = '';
+        let style = null;
+        let onclick = ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY, 100, POPUP_FROM_RIGHT, null, ()=>{
+                service_inquiry_popup = new Service_inquiry('.popup_service_inquiry');});
+        };
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         return html;
     }
 
     send_data(){
         let data = {
-            "inquire_type":this.data.inquiry_type.value[0],
-            "inquire_subject":this.data.inquiry_subject,
-            "inquire_body":this.data.inquiry_content,
+            "inquire_type":this.data.inquiry_menu_type.value[0],
+            "inquire_subject":this.data.inquiry_menu_subject,
+            "inquire_body":this.data.inquiry_menu_content,
             "next_page":""
         };
 
-        Service_inquiry_func.create(data, ()=>{
+        Service_inquiry_menu_func.create(data, ()=>{
             show_error_message("문의를 접수하였습니다.");
             this.init_data();
-            Service_inquiry.render_content();
-            Service_inquiry_func.read((data)=>{
+            Service_inquiry_menu.render_content();
+            Service_inquiry_menu_func.read((data)=>{
                 console.log(data);
             });
         });
     }
 
-    go_to_inquiry_history(){
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
-            service_inquiry_history_popup = new Service_inquiry_history('.popup_service_inquiry_history');});
+    go_to_inquiry_menu_history(){
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_inquiry_menu_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
+            service_inquiry_menu_history_popup = new Service_inquiry_menu_history('.popup_service_inquiry_menu_history');});
     }
 
 }
 
-class Service_inquiry_func {
+class Service_inquiry_menu_func {
     static create (data, callback){
         $.ajax({
             url : "/board/add_question_info/",

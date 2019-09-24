@@ -10,7 +10,7 @@ class Mypage{
             email:null,
             sex:null,
             birth:null,
-            photo:'/static/common/icon/sally.png'
+            photo:'/static/common/icon/icon_account.png'
         };
 
         this.init();
