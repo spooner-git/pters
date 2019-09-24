@@ -232,7 +232,37 @@ class Mypage{
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE_PHOTO_UPDATE, 100, POPUP_FROM_RIGHT, null, ()=>{
                     mypage_photo_update_popup = new Mypage_photo_update('.popup_mypage_photo_update', 'mypage_photo_update_popup'); });
             }},
-            delete:{text:"프로필 사진 삭제", callback:()=>{alert('사진 삭제 실행');layer_popup.close_layer_popup();}}
+            delete:{text:"프로필 사진 삭제", callback:()=>{
+
+                $.ajax({
+                    url: '/trainer/delete_trainer_profile_img/',
+                    dataType : 'html',
+                    type:'POST',
+
+                    beforeSend: function (xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                        ajax_load_image(SHOW);
+                    },
+
+                    success:function(data){
+                        let jsondata = $.parseJSON(data);
+                        if(jsondata.messageArray.length>0){
+                            show_error_message(jsondata.messageArray);
+                        }
+                    },
+
+                    complete:function(){
+                        ajax_load_image(HIDE);
+                    },
+
+                    error:function(){
+                        //alert('통신이 불안정합니다.');
+                        show_error_message('통신이 불안정합니다.');
+                    }
+                });
+                layer_popup.close_layer_popup();}}
         };
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
