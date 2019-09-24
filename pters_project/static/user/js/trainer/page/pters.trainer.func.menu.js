@@ -6,7 +6,7 @@ class Menu {
 
         this.data = {
             name:null,
-            photo:'/static/common/icon/icon_account.png'
+            photo:null
         };
     }
 

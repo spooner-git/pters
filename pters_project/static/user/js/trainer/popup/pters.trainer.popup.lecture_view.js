@@ -419,7 +419,9 @@ class Lecture_view{
                     show_user_confirm(`"${this.data.name}" 수업을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
                         Lecture_func.status({"lecture_id":this.lecture_id, "state_cd":STATE_IN_PROGRESS}, ()=>{
                             lecture_list_popup.init();
-                            layer_popup.all_close_layer_popup();
+                            layer_popup.close_layer_popup(); //confirm팝업 닫기
+                            layer_popup.close_layer_popup(); //option 팝업 닫기
+                            layer_popup.close_layer_popup(); //수업 정보 팝업 닫기
                         });
                         
                     });
@@ -429,7 +431,9 @@ class Lecture_view{
                     show_user_confirm(`"${this.data.name}" 수업을 비활성화 하시겠습니까? <br> 비활성화 탭에서 다시 활성화 할 수 있습니다.`, ()=>{
                         Lecture_func.status({"lecture_id":this.lecture_id, "state_cd":STATE_END_PROGRESS}, ()=>{
                             lecture_list_popup.init();
-                            layer_popup.all_close_layer_popup();
+                            layer_popup.close_layer_popup(); //confirm팝업 닫기
+                            layer_popup.close_layer_popup(); //option 팝업 닫기
+                            layer_popup.close_layer_popup(); //수업 정보 팝업 닫기
                         });
                         
                     });
@@ -439,7 +443,9 @@ class Lecture_view{
                     show_user_confirm(`"${this.data.name}" 수업을 영구 삭제 하시겠습니까? <br> 데이터를 복구할 수 없습니다.`, ()=>{
                         Lecture_func.delete({"lecture_id":this.lecture_id}, ()=>{
                             lecture_list_popup.init();
-                            layer_popup.all_close_layer_popup();
+                            layer_popup.close_layer_popup(); //confirm팝업 닫기
+                            layer_popup.close_layer_popup(); //option 팝업 닫기
+                            layer_popup.close_layer_popup(); //수업 정보 팝업 닫기
                         });
                     });
                 }

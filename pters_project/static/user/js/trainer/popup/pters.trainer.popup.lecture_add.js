@@ -54,6 +54,7 @@ class Lecture_add{
     set capacity(number){
         this.data.capacity = number;
         this.render_content();
+        console.log("렌더 완료", this.data.capacity)
     }
 
     get capacity(){
@@ -107,7 +108,7 @@ class Lecture_add{
         let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup();lecture_add_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_add_popup.send_data();">저장</span></span>`;
-        let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
+        let content =   `<form id="${this.form_id}" onSubmit="return false"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -137,11 +138,13 @@ class Lecture_add{
         let fixed_member_list = this.dom_row_fixed_member_list();
         let color = this.dom_row_color_select();
         let ticket = this.dom_row_ticket_select();
+        let ticket_make = this.dom_row_ticket_make_select();
 
         let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업명') + name+'</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('정원') + capacity + '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('색상 태그')+ color+ '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 수강권에 추가')+ ticket+ '</div>';
+                    //  + '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 수강권 동시 생성')+ ticket_make+ '</div>';
 
         return html;
     }
@@ -198,7 +201,6 @@ class Lecture_add{
         }, pattern, pattern_message, required);
         return html;
     }
-
   
     dom_row_capacity_input(){
         let unit = '명';
@@ -218,6 +220,7 @@ class Lecture_add{
                 input_data = Number(input_data);
             }
             this.capacity = input_data;
+            console.log("1", input_data)
         }, pattern, pattern_message, required);
         return html;
     }
@@ -302,6 +305,17 @@ class Lecture_add{
         return html;
     }
 
+    dom_row_ticket_make_select(){
+        let id = "lecture_add_ticket_new";
+        let power = OFF;
+        let style = null;
+        let onclick = ()=>{
+
+        };
+        let html = CComponent.toggle_button (id, power, style, onclick);
+        return html;
+    }
+
 
     send_data(){
         let inspect = pass_inspector.lecture();
@@ -314,15 +328,16 @@ class Lecture_add{
             return false;
         }
         let data = {
-                    "name":this.data.name,
-                    "member_num":this.data.capacity,
-                    "ing_color_cd":this.data.color_bg[0],
-                    "end_color_cd":"",
-                    "ing_font_color_cd":this.data.color_font[0],
-                    "end_font_color_cd":""
+            "name":this.data.name,
+            "member_num":this.data.capacity,
+            "ing_color_cd":this.data.color_bg[0],
+            "end_color_cd":"",
+            "ing_font_color_cd":this.data.color_font[0],
+            "end_font_color_cd":""
         };
 
         Lecture_func.create(data, (received)=>{
+            console.log("received", received);
             //수업추가시 수강권에 바로 집어넣기 - Lecture_func.create에서 서버에서 lecture_id를 반환해줘야함
             // let data_to_send = {"ticket_id":this.ticket.id, "lecture_id":lecture_to_be_update.add[i]};
             // Ticket_func.update_lecture(ADD, data_to_send);
