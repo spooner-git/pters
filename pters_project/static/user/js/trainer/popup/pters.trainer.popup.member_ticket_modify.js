@@ -236,13 +236,13 @@ class Member_ticket_modify{
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
-                let year = this.data.end_date.split('-')[0]; 
-                let month = this.data.end_date.split('-')[1];
-                let date = this.data.end_date.split('-')[2];
+                let year = Number(this.data.end_date.split('-')[0]); 
+                let month = Number(this.data.end_date.split('-')[1]);
+                let date = Number(this.data.end_date.split('-')[2]);
 
-                let year_min = this.data.start_date.split('-')[0];
-                let month_min = this.data.start_date.split('-')[1];
-                let date_min = this.data.start_date.split('-')[2];
+                let year_min = Number(this.data.start_date.split('-')[0]);
+                let month_min = Number(this.data.start_date.split('-')[1]);
+                let date_min = Number(this.data.start_date.split('-')[2]);
                 
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'일자', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min}, callback_when_set: (object)=>{ 
                     this.data.end_date = `${object.data.year}-${object.data.month}-${object.data.date}`;

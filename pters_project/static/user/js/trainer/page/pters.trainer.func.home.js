@@ -109,8 +109,14 @@ class Home {
     }
 
     dom_row_today_plan(data){
-        let html_to_join = [];
         let date = this.today;
+        if(Object.keys(data).length == 0){
+            data[date] = [];
+        }
+
+
+        let html_to_join = [];
+        
 
         let plans = data[date];
         let length = plans.length;
@@ -134,6 +140,12 @@ class Home {
 
             html_to_join.push(dom);
         }
+        
+        if(html_to_join.length == 0){
+            html_to_join.push(`<article class="today_plan_wrapper">
+                                    <span style="font-size:13px;">오늘 일정이 없습니다.</span>
+                                </article>`);
+        }
 
         let id = "home_today_plan_expand_button";
         let title = "접기/펼치기";
@@ -152,7 +164,7 @@ class Home {
 
         let section_title = `<article class="today_plan_wrapper" style="font-weight:bold;font-size:15px;letter-spacing: -0.7px;display:block;">
                                 <span style="margin-right:5px;">오늘의 일정</span> <span style="color:#fe4e65;font-size:17px;"> ${length-off_plan_number}</span>
-                                ${expand_button}
+                                ${length > 0 ? expand_button : ""}
                             </article>`;
      
         
@@ -191,7 +203,7 @@ class Home {
             let icon = DELETE;
             let icon_r_visible = HIDE;
             let icon_r_text = `<span style="color:#ff0022;font-size:12px;font-weight:500;letter-spacing:-0.5px;">${end_info}</span>`;
-            let style = {"font-size":"14px"};
+            let style = {"font-size":"14px", "padding":"12px 0"};
             let onclick = ()=>{
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, null, ()=>{
                     member_view_popup = new Member_view('.popup_member_view', member_id, 'member_view_popup');});
@@ -221,7 +233,7 @@ class Home {
         let section_title =  `<article class="today_plan_wrapper" style="font-weight:bold;font-size:15px;letter-spacing: -0.7px;display:block;">
                                 <span style="margin-right:5px;">종료 임박 회원</span> 
                                 <span style="color:#fe4e65;font-size:17px;"> ${length-passed_number}</span>
-                                ${expand_button}
+                                ${length-passed_number > 0 ? expand_button : ""}
                             </article>`;
         
         let html = section_title + `<div id="${id}_target" ${this.view.end_alert == CLOSE ? "style=display:none;" : ""}>`+ html_to_join.join("") + '</div>';
