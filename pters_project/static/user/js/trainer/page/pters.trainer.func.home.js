@@ -13,6 +13,11 @@ class Home {
             program : ''
         };
 
+        this.view = {
+            today_plan: OPEN,
+            end_alert: OPEN
+        };
+
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
     }
 
@@ -71,9 +76,6 @@ class Home {
                 });
             });
         });
-
-        
-        
     }
 
     dom_row_program(data){
@@ -133,10 +135,28 @@ class Home {
             html_to_join.push(dom);
         }
 
-        html_to_join.unshift(`<article class="today_plan_wrapper" style="font-weight:bold;font-size:15px;letter-spacing: -0.7px;"><span style="margin-right:5px;">오늘의 일정</span> <span style="color:#fe4e65;font-size:17px;"> ${length-off_plan_number}</span></article>`);
+        let id = "home_today_plan_expand_button";
+        let title = "접기/펼치기";
+        let style = {"float":"right", "padding":"0", "font-size":"12px", "font-weight":"500", "color":"#858282"};
+        let onclick = ()=>{
+            if(this.view.today_plan == OPEN){
+                this.view.today_plan = CLOSE;
+                $(`#${id}_target`).hide();
+            }else{
+                this.view.today_plan = OPEN;
+                $(`#${id}_target`).show();
+            }
+        };
+        let expand_button = CComponent.text_button (id, title, style, onclick);
+        
+
+        let section_title = `<article class="today_plan_wrapper" style="font-weight:bold;font-size:15px;letter-spacing: -0.7px;display:block;">
+                                <span style="margin-right:5px;">오늘의 일정</span> <span style="color:#fe4e65;font-size:17px;"> ${length-off_plan_number}</span>
+                                ${expand_button}
+                            </article>`;
      
         
-        let html = html_to_join.join("");
+        let html = section_title + `<div id="${id}_target" ${this.view.today_plan == CLOSE ? "style=display:none;" : ""}>`+ html_to_join.join("")+'</div>';
         return html;
     }
 
@@ -184,9 +204,27 @@ class Home {
             html_to_join.push(dom);
         }
 
-        html_to_join.unshift(`<article class="today_plan_wrapper" style="font-weight:bold;font-size:15px;letter-spacing: -0.7px;"><span style="margin-right:5px;">종료 임박 회원</span> <span style="color:#fe4e65;font-size:17px;"> ${length-passed_number}</span></article>`);
+        let id = "home_end_alert_expand_button";
+        let title = "접기/펼치기";
+        let style = {"float":"right", "padding":"0", "font-size":"12px", "font-weight":"500", "color":"#858282"};
+        let onclick = ()=>{
+            if(this.view.end_alert == OPEN){
+                this.view.end_alert = CLOSE;
+                $(`#${id}_target`).hide();
+            }else{
+                this.view.end_alert = OPEN;
+                $(`#${id}_target`).show();
+            }
+        };
+        let expand_button = CComponent.text_button (id, title, style, onclick);
+
+        let section_title =  `<article class="today_plan_wrapper" style="font-weight:bold;font-size:15px;letter-spacing: -0.7px;display:block;">
+                                <span style="margin-right:5px;">종료 임박 회원</span> 
+                                <span style="color:#fe4e65;font-size:17px;"> ${length-passed_number}</span>
+                                ${expand_button}
+                            </article>`;
         
-        let html = html_to_join.join("");
+        let html = section_title + `<div id="${id}_target" ${this.view.today_plan == CLOSE ? "style=display:none;" : ""}>`+ html_to_join.join("") + '</div>';
         return html;
     }
 
