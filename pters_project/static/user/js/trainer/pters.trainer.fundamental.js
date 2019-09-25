@@ -294,9 +294,9 @@ class TimeRobot{
             hh = zone*hour;
         }
         let mm = minute;
-        if(zone == 0 && hour == 12 && minute == 0){
+        if(zone == 0 && hour == 12){
             hh = 24;
-            mm = 0;
+            // mm = 0;
         }
         let result = `${hh}:${mm}`;
         

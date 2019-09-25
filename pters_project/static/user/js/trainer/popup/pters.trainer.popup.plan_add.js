@@ -97,7 +97,7 @@ class Plan_add{
     set end_time(data){
         console.log(data);
         this.data.end_time = TimeRobot.to_data(data.data.zone, data.data.hour, data.data.minute).complete;
-        this.data.end_time_text = data.text + ' 까지 ('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)';
+        this.data.end_time_text = data.text + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
         this.render_content();
     }
 
@@ -336,7 +336,8 @@ class Plan_add{
                                                                                                         let compare = TimeRobot.compare_by_zone(object.data, TimeRobot.to_zone(this.data.end_time.split(':')[0],this.data.end_time.split(':')[1]));
                                                                                                         if(compare == true){
                                                                                                             //유저가 선택할 수 있는 최저 시간을 셋팅한다. 이시간보다 작은값을 선택하려면 메세지를 띄우기 위함
-                                                                                                            let end_time = TimeRobot.add_time(object.data.hour, object.data.minute, 0, 5);
+                                                                                                            let to_data = TimeRobot.to_data(object.data.zone, object.data.hour, object.data.minute);
+                                                                                                            let end_time = TimeRobot.add_time(to_data.hour, to_data.minute, 0, 5);
                                                                                                             let end_time_to_zone = TimeRobot.to_zone(end_time.hour, end_time.minute);
                                                                                                             let end_time_text = TimeRobot.to_text(end_time.hour, end_time.minute);
                                                                                                             this.end_time = {'data':{'zone':end_time_to_zone.zone,'hour':end_time_to_zone.hour, 'minute':end_time_to_zone.minute},
@@ -365,20 +366,24 @@ class Plan_add{
             }
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
-                let zone = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).zone;
-                let hour = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
-                let minute = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
+                let start_zone = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).zone;
+                let start_hour = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
+                let start_minute = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
 
                 //유저가 선택할 수 있는 최저 시간을 셋팅한다. 이시간보다 작은값을 선택하려면 메세지를 띄우기 위함
-                let time_min = TimeRobot.add_time(TimeRobot.to_data(zone, hour, minute).hour, TimeRobot.to_data(zone, hour, minute).minute, 0, 5);
+                let time_min = TimeRobot.add_time(TimeRobot.to_data(start_zone, start_hour, start_minute).hour, TimeRobot.to_data(start_zone, start_hour, start_minute).minute, 0, 5);
                 let time_min_type_zone = TimeRobot.to_zone(time_min.hour, time_min.minute);
                 let zone_min = time_min_type_zone.zone;
                 let zone_hour = time_min_type_zone.hour;
                 let zone_minute = time_min_type_zone.minute;
-                console.log(zone_min, zone_hour, zone_minute)
+
+                let zone = this.data.end_time == null ? zone_min : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).zone;
+                let hour = this.data.end_time == null ? zone_min : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).hour;
+                let minute = this.data.end_time == null ? zone_min : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).minute;
+
 
                 time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시각',
-                                                                                                data:{zone:zone_min, hour:zone_hour, minute:zone_minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
+                                                                                                data:{zone:zone, hour:hour, minute:minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.end_time = object;
                                                                                                     this.check_duplicate_plan_exist((data)=>{
@@ -544,6 +549,9 @@ class Plan_add{
                 }
                 let plan_starttime = data[i].start_time;
                 let plan_endtime = data[i].end_time;
+                if(plan_endtime == "00:00"){
+                    plan_endtime = "24:00";
+                }
                 let plan_name;
                 if(data[i].schedule_type == 0 ){
                     plan_name = 'OFF일정 ('+data[i].note+')';

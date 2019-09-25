@@ -1385,7 +1385,7 @@ class TimeSelector{
             if(selected_time_data_form == '0:0'){
                 selected_time_data_form = '24:00';
             }
-            console.log(selected_time_data_form, min_time_data_form, TimeRobot.compare(selected_time_data_form, min_time_data_form))
+            console.log(selected_time_data_form, min_time_data_form, TimeRobot.compare(selected_time_data_form, min_time_data_form));
 
             let time_compare = TimeRobot.compare(selected_time_data_form, min_time_data_form); // >= 일경우 true;
             if(time_compare == false){
@@ -1630,7 +1630,8 @@ class TimeSelector2{
                 $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
                 $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).css('color', '#1e1e1e');
                 
-                if(self.check_minimum_time() == false){
+                let data_check = self.check_minimum_time();
+                if(data_check != true){
                     document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
                 }else{
                     document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
@@ -1707,10 +1708,21 @@ class TimeSelector2{
                 selected_time_data_form = '24:00';
             }
 
+            //24시 00분 보다 큰 24시 05분등을 입력하지 못하게 막는다
+            if(this.get_selected_data().data.zone == 0 && this.get_selected_data().data.hour == 12 && this.get_selected_data().data.minute > 0){
+                return {message:"입력할 수 없는 시간입니다."};
+            }
+
             let time_compare = TimeRobot.compare(selected_time_data_form, min_time_data_form); // > 일경우 true;
             if(time_compare == false){
                 // show_error_message('종료시간은 시작시간보다 작을 수 없습니다.');
-                return false;
+                return {message:"종료시간은 시작시간보다 작을 수 없습니다."};
+            }
+        }else{
+            let selected_time_data_form = TimeRobot.to_data(this.get_selected_data().data.zone, this.get_selected_data().data.hour, this.get_selected_data().data.minute).complete;
+            //24시 00분 보다 큰 24시 05분등을 입력하지 못하게 막는다
+            if(this.get_selected_data().data.zone == 0 && this.get_selected_data().data.hour == 12 && this.get_selected_data().data.minute > 0){
+                return {message:"입력할 수 없는 시간입니다."};
             }
         }
         return true;
@@ -1718,8 +1730,8 @@ class TimeSelector2{
 
     upper_right_button(){
         let minimum_check = this.check_minimum_time();
-        if(minimum_check == false){
-            show_error_message('종료 시각은 시작 시각보다 작을 수 없습니다.');
+        if(minimum_check != true){
+            show_error_message(minimum_check.message);
             return false;
         }
 
