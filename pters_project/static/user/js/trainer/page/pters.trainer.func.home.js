@@ -31,10 +31,6 @@ class Home {
 
     //상단을 렌더링
     render_upper_box (){
-        if(current_page != this.page_name){
-            return false;
-        }
-
         Mypage_func.read((data)=>{
             this.data.user_name = data.trainer_info.member_name;
             this.data.user_photo = data.trainer_info.member_profile_url;
@@ -111,7 +107,6 @@ class Home {
     }
 
     dom_row_today_plan(data){
-        console.log(data)
         let html_to_join = [];
         let date = this.today;
 
@@ -253,6 +248,10 @@ class Home {
         });
     }
 
+    go_to_profile(){
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE, 100, POPUP_FROM_RIGHT, null, ()=>{mypage_popup = new Mypage('.popup_mypage');});
+    }
+
     static_component (){
         return(
             {
@@ -260,7 +259,7 @@ class Home {
                                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
                                             <div style="display:inline-block;">${this.data.user_name} </div>
                                         </div>
-                                        <div class="home_right_button" onclick="sideGoPage('mypage')"><img src="${this.data.user_photo}"></div>
+                                        <div class="home_right_button" onclick="${this.instance}.go_to_profile()"><img src="${this.data.user_photo}"></div>
                                     </div>
                                     `
                 ,

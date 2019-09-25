@@ -10,7 +10,7 @@ class Menu {
         };
     }
 
-    init (){
+    init (page_check){
         if(current_page != this.page_name){
             return false;
         }
@@ -20,6 +20,7 @@ class Menu {
         this.render();
         this.set_initial_data();
     }
+
 
     set_initial_data(){
         Mypage_func.read((data)=>{
@@ -87,7 +88,7 @@ class Menu {
     dom_who_i_am(){
         let member_id = null;
         let member_name = this.data.name == null ? "" : this.data.name;
-        let onclick = `sideGoPage('mypage');`;
+        let onclick = `${this.instance}.go_to_profile()`;
         let html = `<article class="who_am_i_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="display:table;width:100%;">
                         <div class="my_data_l" style="display:table-cell;width:38px;vertical-align:middle;">
                             <img src=${this.data.photo == null ? '/static/common/icon/icon_account.png' : this.data.photo} style="width:100%;border-radius:50%;">
@@ -98,6 +99,10 @@ class Menu {
                         </div>
                     </article>`;
         return html;
+    }
+
+    go_to_profile(){
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE, 100, POPUP_FROM_RIGHT, null, ()=>{mypage_popup = new Mypage('.popup_mypage');});
     }
 
     dom_menu_program(){

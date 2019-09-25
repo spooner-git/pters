@@ -250,6 +250,21 @@ class Mypage{
                         if(jsondata.messageArray.length>0){
                             show_error_message(jsondata.messageArray);
                         }
+                        try{
+                            mypage_popup.init();
+                        }catch(e){
+                            console.log(e);
+                        }
+                        try{
+                            home.init();
+                        }catch(e){
+                            console.log(e);
+                        }
+                        try{
+                            menu.init();
+                        }catch(e){
+                            console.log(e);
+                        }
                     },
 
                     complete:function(){

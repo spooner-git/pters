@@ -143,7 +143,7 @@ class Mypage_photo_update{
 
     send_data(){
         let data = {"photo": this.data.src};
-        show_user_confirm(`<img src="${this.data.src}">`,  ()=>{
+        show_user_confirm(`<img src="${this.data.src}" style="width:100%;border-radius:50%;">`,  ()=>{
                             let form_data = new FormData();
                             form_data.append('profile_img_file', this.data.file);
                             $.ajax({
@@ -167,6 +167,23 @@ class Mypage_photo_update{
                                     if(jsondata.messageArray.length>0){
                                         //alert(jsondata.messageArray);
                                         show_error_message(jsondata.messageArray);
+                                    }
+                                    layer_popup.close_layer_popup(); // confirm 팝업 닫기
+                                    layer_popup.close_layer_popup(); // 사진 조절 팝업 닫기
+                                    try{
+                                        mypage_popup.init();
+                                    }catch(e){
+                                        console.log(e);
+                                    }
+                                    try{
+                                        home.init();
+                                    }catch(e){
+                                        console.log(e);
+                                    }
+                                    try{
+                                        menu.init();
+                                    }catch(e){
+                                        console.log(e);
                                     }
                                 },
 
