@@ -88,7 +88,6 @@ class Mypage{
         return html;
     }
 
-
     dom_row_toolbox(){
         let title = `<img src=${this.data.photo == null ? '/static/common/icon/icon_account.png' : this.data.photo} style='width:100%;border-radius:50%'>`;
         let html = `

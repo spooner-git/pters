@@ -215,9 +215,8 @@ onclick="layer_popup.close_layer_popup();"></div>
 
 <nav id="root_nav">
     <div class="obj_table_raw" style="height:100%;position:relative;">
-        <div id="nav_indicator" style="position:absolute;left:0px;top:0px;height:3px;background-color:#fe4e65;width:20%"></div>
+        <!-- <div id="nav_indicator" style="position:absolute;left:0px;top:0px;height:3px;background-color:#fe4e65;width:20%"></div> -->
         <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('home', this)" id="home">
-        <!-- <div class="obj_table_cell_x5 nav_item" onclick="location.href='/trainer/trainer_main/' "> -->
             <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_home_off.png" %} alt=""></div>
             <!-- <div class="nav_text">홈</div> -->
         </div>
@@ -477,7 +476,7 @@ onclick="layer_popup.close_layer_popup();"></div>
 
         try{
             let context_loc = document.getElementById(page).offsetLeft;
-            $('#nav_indicator').css({'transform':`translateX(${context_loc}px)`,'transition':'0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'});
+            // $('#nav_indicator').css({'transform':`translateX(${context_loc}px)`,'transition':'0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'});
             
             $(`.nav_img > img`).each(function(e){
                let this_id = $(this).parents('.nav_item').attr('id');

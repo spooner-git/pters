@@ -179,7 +179,7 @@ class Lecture_view{
 
         let html =  '<div class="obj_input_box_full">' + CComponent.dom_tag('정원') + capacity + '</div>' +
                     '<div class="obj_input_box_full">' + CComponent.dom_tag('색상 태그') + color +  '</div>' +
-                    '<div class="obj_input_box_full" style="padding-top:16px;">' + CComponent.dom_tag(`포함된 수강권 (${this.data.active_ticket_length} 개)`,
+                    '<div class="obj_input_box_full" style="padding-top:16px;">' + CComponent.dom_tag(`이 수업을 포함하는 수강권 (${this.data.active_ticket_length} 개)`,
                                                         {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
                                                         + ticket_list + '</div>' +
                     '<div class="obj_input_box_full" style="padding-top:20px; border:0;">' + CComponent.dom_tag(`진행중 회원 (${this.data.member_number} 명)`,

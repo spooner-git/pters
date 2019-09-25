@@ -285,7 +285,7 @@ class Member_view{
                 + CComponent.dom_tag('성별') + sex +
             '</div>' +
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('수강권') + ticket +
+                + CComponent.dom_tag('진행중인 수강권') + ticket +
             '</div>';
             // '<div class="obj_input_box_full">'
             //     + CComponent.dom_tag('특이사항')  + memo +
