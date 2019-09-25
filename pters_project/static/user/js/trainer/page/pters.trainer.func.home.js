@@ -224,7 +224,7 @@ class Home {
                                 ${expand_button}
                             </article>`;
         
-        let html = section_title + `<div id="${id}_target" ${this.view.today_plan == CLOSE ? "style=display:none;" : ""}>`+ html_to_join.join("") + '</div>';
+        let html = section_title + `<div id="${id}_target" ${this.view.end_alert == CLOSE ? "style=display:none;" : ""}>`+ html_to_join.join("") + '</div>';
         return html;
     }
 
