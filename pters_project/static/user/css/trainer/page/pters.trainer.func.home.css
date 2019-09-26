@@ -11,9 +11,9 @@
 		position: relative;
 		height: 68px;
 		line-height: 28px;
-		/* background-color: #ffffff; */
+		background-color: #ffffff;
 		/* border-bottom: 1px solid #cccccc; */
-		background-image: linear-gradient(180deg, #ffffff, transparent);
+		/* background-image: linear-gradient(180deg, #ffffff, transparent); */
 		padding: 20px 16px;
 		box-sizing: border-box;
 	}
