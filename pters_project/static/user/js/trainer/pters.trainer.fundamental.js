@@ -58,8 +58,21 @@ function input_adjust_location_for_android(){
                 $('#android_input_shade').trigger('click');
             }
         });
+    }else if(os == IOS){
+        let target;
+        $(document).on('focus', 'input', function(e){
+            target = this;
+        });
+
+        $(document).on('keypress', 'input', function(e){
+            if (e.charCode == 13) {
+                e.preventDefault();
+                $(target).blur();
+            }
+        });
     }
 }
+
 
 function ajax_load_image(option){
     let $ajax_load_image = $('img.ajax_loading_image');
