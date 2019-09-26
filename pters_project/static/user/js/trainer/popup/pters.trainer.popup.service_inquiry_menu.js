@@ -184,6 +184,12 @@ class Service_inquiry_menu_func {
     
             //통신성공시 처리
             success:function(data){
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_errow_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 callback(data);
             },
     

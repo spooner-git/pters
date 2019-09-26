@@ -50,32 +50,30 @@ class Ticket{
         }else if (status=='end'){
             url = '/trainer/get_ticket_end_list/';
         }
-        let start_time;
-        let end_time;
         if(async == undefined){
             async = true;
         }
         $.ajax({
             url:url,
             type:'GET',
-            // data: {"page": ticket_page_num, "sort_val": ticket_sort_val, "sort_order_by":ticket_sort_order_by, "keyword":ticket_keyword},
             data: {"page": 1, "sort_val": 0, "sort_order_by":0, "keyword":""},
-            // dataType : 'html',
+            dataType : 'JSON',
             async:async,
     
             beforeSend:function(){
-                start_time = performance.now();
                 ajax_load_image(SHOW);
             },
     
             //통신성공시 처리
             success:function(data){
-                console.log(data);
-                end_time = performance.now();
-                console.log((end_time-start_time)+'ms');
-                    callback(data);
-                    return data;
-                // }
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_errow_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                callback(data);
+                return data;
             },
 
             //보내기후 팝업창 닫기

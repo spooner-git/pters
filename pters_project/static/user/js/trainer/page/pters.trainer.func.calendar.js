@@ -1367,7 +1367,12 @@ class Calendar {
                 ajax_load_image(SHOW);
             },
             success:function (data){
-                // console.log(data);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_errow_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 callback(data, date_);
                 return data;
             },
@@ -1607,6 +1612,12 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_errow_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 callback(data);
             },
     
@@ -1634,6 +1645,12 @@ class Plan_func{
                 ajax_load_image(SHOW);
             },
             success:function (data){
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_errow_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 callback(data, date_);
                 return data;
             },
@@ -1661,6 +1678,12 @@ class Plan_func{
                 ajax_load_image(SHOW);
             },
             success:function (datas){
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_errow_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 if(callback != undefined){
                     callback(datas);
                 }

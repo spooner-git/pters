@@ -44,8 +44,6 @@ class Member {
 
     //회원 리스트 서버에서 불러오기
     request_member_list (list_type, callback, async){
-        var start_time;
-        var end_time;
         var url;
         if(async == undefined){
             async = true;
@@ -62,22 +60,20 @@ class Member {
     
             beforeSend:function (){
                 ajax_load_image(SHOW);
-                start_time = performance.now();
             },
     
             //통신성공시 처리
             success:function (data){
-                // var jsondata = JSON.parse(data);
-                end_time = performance.now();
-                // if(jsondata.messageArray.length>0){
-                //     console.log("에러:" + jsondata.messageArray);
-                // }else{
-                console.log(end_time-start_time+'ms');
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_errow_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 if(callback != undefined){
                     callback(data);
                 }
                 return data;
-                // }
             },
 
             //보내기후 팝업창 닫기
@@ -394,7 +390,12 @@ class Member_func{
     
             //통신성공시 처리
             success:function(data){
-                // let json = JSON.parse(data);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_errow_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 callback(data);
             },
     
@@ -427,7 +428,12 @@ class Member_func{
     
             //통신성공시 처리
             success:function(data){
-                // let json = JSON.parse(data);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_errow_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 callback(data);
             },
     
