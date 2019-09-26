@@ -5,7 +5,10 @@ class Home {
         this.instance = instance;
 
         let d = new Date();
-        this.today = DateRobot.to_yyyymmdd(d.getFullYear(), d.getMonth()+1, d.getDate());
+        this.current_year = d.getFullYear();
+        this.current_month = d.getMonth()+1;
+        this.current_date = d.getDate();
+        this.today = DateRobot.to_yyyymmdd(this.current_year, this.current_month, this.current_date);
 
         this.data = {
             user_name : '',
@@ -114,7 +117,6 @@ class Home {
             data[date] = [];
         }
 
-
         let html_to_join = [];
         
 
@@ -132,7 +134,7 @@ class Home {
                 participants = "개인";   
             }
             let lecture_color = plans[i].lecture_ing_color_cd;
-            let dom = `<article class="today_plan_wrapper">
+            let dom = `<article class="today_plan_wrapper" onclick="${this.instance}.popup_plan_view(${plans[i].schedule_id})">
                             <div>${plans[i].start_time} - ${plans[i].end_time}</div>
                             <div><div class="today_plan_lecture_color" style="background-color:${lecture_color}"></div>${plans[i].lecture_name == "" ? plans[i].member_name : plans[i].lecture_name}</div>
                             <div>${participants}</div>
@@ -300,6 +302,13 @@ class Home {
             error:function (){
                 console.log('server error');
             }
+        });
+    }
+
+    popup_plan_view(schedule_id){
+        let user_selected_plan = {schedule_id:schedule_id, date:{year:this.current_year, month:this.current_month, date:this.current_date}};
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_VIEW, 100, POPUP_FROM_RIGHT, null, ()=>{
+            plan_view_popup = new Plan_view('.popup_plan_view', user_selected_plan, "plan_view_popup");
         });
     }
 

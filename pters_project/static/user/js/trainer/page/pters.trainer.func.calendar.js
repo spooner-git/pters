@@ -75,6 +75,10 @@ class Calendar {
 
     //다른페이지에서 접근했을때 처음에 달력을 위해 필요한 최상위 컨테이너를 포함하여 초기화한다.
     init (cal_type){
+        if(current_page != this.page_name){
+            return false;
+        }
+
         this.today = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`;
 
         let component = this.static_component();
@@ -93,6 +97,9 @@ class Calendar {
 
     //달력에 필요한 최상위 컨테이너가 이미 있는 상태에서 컨테이너 내용(달력)을 재초기화 할때 사용한다.
     init_no_new(cal_type){
+        if(current_page != this.page_name){
+            return false;
+        }
         if(cal_type == undefined){
             cal_type = this.cal_type;
         }
