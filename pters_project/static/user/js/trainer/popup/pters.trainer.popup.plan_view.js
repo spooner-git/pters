@@ -433,7 +433,6 @@ class Plan_view{
 
     request_data (callback){
         Plan_func.read_plan(this.schedule_id, (data)=>{
-            console.log(data)
             this.received_data = data;
             this.set_initial_data(data); // 초기값을 미리 셋팅한다.
             callback(data);
@@ -444,7 +443,13 @@ class Plan_view{
         let user_option = [
             ()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
                     Plan_func.delete({"schedule_id":this.schedule_id}, ()=>{
-                        calendar.init_no_new();layer_popup.all_close_layer_popup();
+                        try{
+                            calendar.init_no_new();
+                            home.init();
+                        }catch(e){
+                            console.log(e)
+                        }
+                        layer_popup.all_close_layer_popup();
                     });
                 });
             },
@@ -457,20 +462,39 @@ class Plan_view{
                             let send_data = {"schedule_id":this.schedule_id, "state_cd":state_cd};
                             Plan_func.status(send_data, ()=>{
                                 this.init();
-                                calendar.init_no_new();
+                                try{
+                                    calendar.init_no_new();
+                                    home.init();
+                                }catch(e){
+                                    console.log(e)
+                                }
                             });
                         }
+                        let data_to_send = [];
                         for(let member in set_data){
                             let member_id = member;
                             let state_cd = set_data[member].state_cd;
                             let member_id_index = this.data.member_id.indexOf(member_id);
                             if(this.data.member_schedule_state[member_id_index] != state_cd){
                                 let send_data = {"schedule_id":this.data.member_schedule_id[member_id_index], "state_cd":state_cd};
-                                Plan_func.status(send_data, ()=>{
-                                    this.init();
-                                    calendar.init_no_new();
-                                });
+                                data_to_send.push(send_data);
                             }
+                        }
+                        let length = data_to_send.length;
+                        let ajax_send_order = 0;
+                        for(let i=0; i<data_to_send.length; i++){
+                            Plan_func.status(data_to_send[i], ()=>{
+                                ajax_send_order++;
+                                if(ajax_send_order == length){
+                                    try{
+                                        this.init();
+                                        calendar.init_no_new();
+                                        home.init();
+                                    }catch(e){
+                                        console.log(e)
+                                    }
+                                }
+                            });
                         }
                     });
                 });

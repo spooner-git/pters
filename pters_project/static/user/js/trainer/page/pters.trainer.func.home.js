@@ -112,6 +112,7 @@ class Home {
     }
 
     dom_row_today_plan(data){
+        console.log(data)
         let date = this.today;
         if(Object.keys(data).length == 0){
             data[date] = [];
@@ -128,15 +129,16 @@ class Home {
                 off_plan_number++;
                 continue;
             }
+            let status = plans[i].state_cd;
             let type = plans[i].schedule_type;
             let participants = plans[i].lecture_current_member_num + '/' + plans[i].lecture_max_member_num;
             if(type == 1){
                 participants = "개인";   
             }
             let lecture_color = plans[i].lecture_ing_color_cd;
-            let dom = `<article class="today_plan_wrapper" onclick="${this.instance}.popup_plan_view(${plans[i].schedule_id})">
+            let dom = `<article class="today_plan_wrapper" onclick="${this.instance}.popup_plan_view(${plans[i].schedule_id})" ${status != SCHEDULE_NOT_FINISH ? "style='opacity:0.7'":""}>
                             <div>${plans[i].start_time} - ${plans[i].end_time}</div>
-                            <div><div class="today_plan_lecture_color" style="background-color:${lecture_color}"></div>${plans[i].lecture_name == "" ? plans[i].member_name : plans[i].lecture_name}</div>
+                            <div ${status != SCHEDULE_NOT_FINISH ? "style='text-decoration:line-through;'":""}><div class="today_plan_lecture_color" style="background-color:${lecture_color}"></div>${plans[i].lecture_name == "" ? plans[i].member_name : plans[i].lecture_name}</div>
                             <div>${participants}</div>
                         </article>`;
 
