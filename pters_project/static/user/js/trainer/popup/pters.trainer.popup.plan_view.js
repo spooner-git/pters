@@ -163,7 +163,7 @@ class Plan_view{
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
                             <img src="/static/common/icon/icon_delete_black.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(0);">
-                            <img src="/static/common/icon/icon_attend_check_black.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};margin-left:20px">
+                            <img src="/static/common/icon/icon_attend_check_black.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};">
                         </span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
