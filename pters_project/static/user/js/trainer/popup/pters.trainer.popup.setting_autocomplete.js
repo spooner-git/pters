@@ -12,6 +12,8 @@ class Setting_autocomplete{
                 }
         };
 
+        this.data_received;
+
         this.init();
     }
 
@@ -23,6 +25,7 @@ class Setting_autocomplete{
 
     set_initial_data (){
         Setting_autocomplete_func.read((data)=>{
+            this.data_received = this.data;
             this.data.plan.switch = data.setting_schedule_auto_finish == OFF ? OFF : ON;
             this.data.plan.complete_type = data.setting_schedule_auto_finish;
             this.data.member.switch = data.setting_member_ticket_auto_finish;
@@ -230,7 +233,15 @@ class Setting_autocomplete{
     send_data(){
         let data = {
             "setting_schedule_auto_finish": this.data.plan.switch == OFF ? OFF : this.data.plan.complete_type,
-            "setting_lecture_auto_finish":this.data.member.switch
+            "setting_lecture_auto_finish":this.data.member.switch,
+            "setting_trainer_work_sun_time_avail":this.data_received.setting_trainer_work_sun_time_avail,
+            "setting_trainer_work_mon_time_avail":this.data_received.setting_trainer_work_mon_time_avail,
+            "setting_trainer_work_tue_time_avail":this.data_received.setting_trainer_work_tue_time_avail,
+            "setting_trainer_work_wed_time_avail":this.data_received.setting_trainer_work_wed_time_avail,
+            "setting_trainer_work_ths_time_avail":this.data_received.setting_trainer_work_ths_time_avail,
+            "setting_trainer_work_fri_time_avail":this.data_received.setting_trainer_work_fri_time_avail,
+            "setting_trainer_work_sat_time_avail":this.data_received.setting_trainer_work_sat_time_avail,
+            "setting_admin_password":this.data_received.setting_admin_password
         };
 
         Setting_autocomplete_func.update(data, ()=>{

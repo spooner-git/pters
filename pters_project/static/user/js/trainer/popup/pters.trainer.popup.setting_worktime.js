@@ -45,6 +45,8 @@ class Setting_worktime{
                     "dayoff":OFF
                 }
         };
+        
+        this.data_received;
 
         this.init();
     }
@@ -56,6 +58,7 @@ class Setting_worktime{
 
     set_initial_data (){
         Setting_worktime_func.read((data)=>{
+            this.data_received = data;
             //업무시간 데이터 체크
             let worktime_all_same = true;
             let worktimes = [data.setting_trainer_work_mon_time_avail, data.setting_trainer_work_tue_time_avail,
@@ -355,7 +358,10 @@ class Setting_worktime{
             "setting_trainer_work_wed_time_avail":this.data.WED.dayoff == OFF ? this.art_data(this.data.WED.start_time, this.data.WED.end_time) : "00:00-00:00",
             "setting_trainer_work_ths_time_avail":this.data.THS.dayoff == OFF ? this.art_data(this.data.THS.start_time, this.data.THS.end_time) : "00:00-00:00",
             "setting_trainer_work_fri_time_avail":this.data.FRI.dayoff == OFF ? this.art_data(this.data.FRI.start_time, this.data.FRI.end_time) : "00:00-00:00",
-            "setting_trainer_work_sat_time_avail":this.data.SAT.dayoff == OFF ? this.art_data(this.data.SAT.start_time, this.data.SAT.end_time) : "00:00-00:00"
+            "setting_trainer_work_sat_time_avail":this.data.SAT.dayoff == OFF ? this.art_data(this.data.SAT.start_time, this.data.SAT.end_time) : "00:00-00:00",
+            "setting_schedule_auto_finish":this.data_received.setting_schedule_auto_finish, 
+            "setting_lecture_auto_finish":this.data_received.setting_member_ticket_auto_finish, 
+            "setting_admin_password":this.data_received.setting_admin_password
         };
         Setting_worktime_func.update(data, ()=>{
             this.set_initial_data();
