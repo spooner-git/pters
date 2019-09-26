@@ -491,7 +491,7 @@ class Plan_view{
                                         calendar.init_no_new();
                                         home.init();
                                     }catch(e){
-                                        console.log(e)
+                                        console.log(e);
                                     }
                                 }
                             });

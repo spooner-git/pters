@@ -4,7 +4,7 @@ class Member_attend{
         this.schedule_id = schedule_id;
         this.callback = callback;
         this.received_data;
-        this.check_entire = true;
+        this.check_entire = false;
         this.data = {
             id:{name:null, member_id:null, state_cd:null}
         };
@@ -20,7 +20,6 @@ class Member_attend{
     }
 
     set_initial_data(data_){
-        console.log(data_)
         let data = data_.schedule_info[0];
         let length = data.lecture_schedule_data.length;
         let new_data = {};
