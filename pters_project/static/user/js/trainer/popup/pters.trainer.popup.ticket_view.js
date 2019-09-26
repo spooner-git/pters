@@ -433,7 +433,11 @@ class Ticket_view{
                 }   
             },
             deactivate:{text:"비활성화", callback:()=>{
-                    show_user_confirm(`"${this.data.name}" 수강권을 비활성화 하시겠습니까? <br> 비활성화 탭에서 다시 활성화 할 수 있습니다.`, ()=>{
+                    show_user_confirm(`"${this.data.name}" 수강권을 비활성화 하시겠습니까?  <br> 비활성화 탭에서 다시 활성화 할 수 있습니다. <br><br>
+                                                            <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
+                                                            <span style="color:#fe4e65; font-size:12px;">이 수강권을 가진 회원들에게서 수강권이 삭제됩니다. <br>
+                                                            과거 일정은 완료 처리되며, 미래 일정은 삭제됩니다. <br>
+                                                            이 수강권 하나만 가진 회원은 종료탭으로 이동됩니다.</span>`, ()=>{
                         Ticket_func.status({"ticket_id":this.ticket_id, "state_cd":STATE_END_PROGRESS}, ()=>{
                             ticket_list_popup.init();
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
@@ -445,7 +449,9 @@ class Ticket_view{
                 }   
             },
             delete:{text:"삭제", callback:()=>{
-                    show_user_confirm(`"${this.data.name}" 수강권을 영구 삭제 하시겠습니까? <br> 데이터를 복구할 수 없습니다.`, ()=>{
+                    show_user_confirm(`"${this.data.name}" 수강권을 영구 삭제 하시겠습니까? <br> 데이터를 복구할 수 없습니다. <br><br>
+                                                            <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
+                                                            <span style="color:#fe4e65; font-size:12px;">수강권과 연결된 수업, 회원에게서 <br>이 수강권과 관련된 정보가 모두 삭제됩니다.</span>`, ()=>{
                         Ticket_func.delete({"ticket_id":this.ticket_id}, ()=>{
                             ticket_list_popup.init();
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
