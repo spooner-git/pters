@@ -431,8 +431,8 @@ class Lecture_view{
                     show_user_confirm(`"${this.data.name}" 수업을 비활성화 하시겠습니까? <br> 비활성화 탭에서 다시 활성화 할 수 있습니다.<br><br>
                                                             <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
                                                             <span style="color:#fe4e65; font-size:12px;">
-                                                            이 수업으로 일정을 등록 할 수 없게 됩니다.
-                                                            과거 일정은 완료 처리되며, 미래 일정은 삭제됩니다. <br>
+                                                            이 수업으로 일정을 등록 할 수 없게 됩니다.<br>
+                                                            과거 일정은 완료 처리, 미래 일정은 삭제됩니다. <br>
                                                             이 수업 하나만 포함하는 수강권은 비활성화 됩니다.`, ()=>{
                         Lecture_func.status({"lecture_id":this.lecture_id, "state_cd":STATE_END_PROGRESS}, ()=>{
                             lecture_list_popup.init();
