@@ -1677,7 +1677,7 @@ class Plan_func{
             beforeSend:function (){
                 ajax_load_image(SHOW);
             },
-            success:function (datas){
+            success:function (data){
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_errow_message(data.messageArray[0]);
@@ -1685,9 +1685,9 @@ class Plan_func{
                     }
                 }
                 if(callback != undefined){
-                    callback(datas);
+                    callback(data);
                 }
-                return datas;
+                return data;
             },
 
             complete:function (){
