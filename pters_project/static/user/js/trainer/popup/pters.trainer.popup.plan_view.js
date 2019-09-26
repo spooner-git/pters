@@ -552,6 +552,9 @@ class Plan_view{
                 }
                 let plan_starttime = data[i].start_time;
                 let plan_endtime = data[i].end_time;
+                if(plan_endtime == "00:00"){
+                    plan_endtime = "24:00";
+                }
                 let plan_name;
                 if(data[i].schedule_type == 0 ){
                     plan_name = 'OFF일정 ('+data[i].note+')';

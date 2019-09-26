@@ -194,9 +194,14 @@ class Home {
                 }
             }else if(diff_date > 7 && rem_count <= 3){
                 end_info = rem_count + ' 회';
-            }else( 
-                end_info = rem_count + '  회 / ' + diff_date + ' 일'
-            );
+            }else{
+                let date_info =  diff_date + ' 일';
+                if(diff_date < 0){
+                    date_info = Math.abs(diff_date) + ' 일 지남';
+                }
+                end_info = rem_count + '  회 / ' + date_info;
+                
+            };
             
             let id = `home_end_alert_${member_id}`;
             let title = data.current_member_data[i].member_name;
