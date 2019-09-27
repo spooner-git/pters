@@ -114,16 +114,19 @@ class Home {
     dom_row_today_plan(data){
         console.log(data)
         let date = this.today;
+        //받아온 데이터에 아무것도 없을 경우
         if(Object.keys(data).length == 0){
             data[date] = [];
         }
-
-        let html_to_join = [];
-        
-
+        //받아온 데이터에 오늘이 없을 경우
+        if(Object.keys(data).indexOf(date) == -1){
+            data[date] = [];
+        }
         let plans = data[date];
+
         let length = plans.length;
         let off_plan_number = 0;
+        let html_to_join = [];
         for(let i=0; i<length; i++){
             if(plans[i].schedule_type == 0){
                 off_plan_number++;

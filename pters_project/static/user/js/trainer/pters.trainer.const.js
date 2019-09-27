@@ -165,6 +165,9 @@ const POPUP_ADDRESS_DAY_SELECT = 'popup_day_select';
 const POPUP_ADDRESS_CATEGORY_SELECT = 'popup_category_select';
 const POPUP_ADDRESS_CUSTOM_SELECT = 'popup_custom_select';
 const POPUP_ADDRESS_PASSWORD_4D_INPUT = 'popup_password_4d_input';
+
+const POPUP_ADDRESS_PTERS_PASS_MAIN = 'popup_pters_pass_main';
+const POPUP_ADDRESS_PTERS_PASS_PAY_INFO = 'popup_pters_pass_pay_info';
 // User Input 팝업
 
 // PassInspector
@@ -188,6 +191,7 @@ const COLOR_NAME_CODE = {"#fbf3bd":"바나나", "#dbe6f7":"하늘", "#ffd3d9": "
 const SEX_CODE = {"M": "남성", "W": "여성"};
 const SCHEDULE_STATUS = {"NP" : "진행전", "PC": "결석", "PE": "출석"};
 const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};
+const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개월", "":"없음"};
 
 //  수업 종류 - 개인 레슨 자유형
 const LECTURE_TYPE_ONE_TO_ONE = 'ONE_TO_ONE';
@@ -243,3 +247,26 @@ const PROGRAM_CATEGORY = {
             ETC:{name:"기타"}
         }},
 };
+
+
+
+const TEXT = {
+    menu:{KR:"전체", EN:"Menu", JP:""},
+    home:{KR:"홈", EN:"Home", JP:""},
+    schedule:{KR:"일정", EN:"Schedule", JP:""},
+    member:{KR:"회원", EN:"Member", JP:""},
+    lecture:{KR:"수업", EN:"Lecture", JP:""},
+    ticket:{KR:"수강권", EN:"Ticket", JP:""},
+    statistics:{KR:"통계", EN:"Statistics", JP:""},
+    attend_check:{KR:"출석 체크", EN:"Attend check", JP:""},
+    notification:{KR:"알림", EN:"Notification", JP:""},
+    settings:{KR:"설정", EN:"Settings", JP:""},
+    work_time:{KR:"업무 시간", EN:"Working time", JP:""},
+    auto_complete:{KR:"자동 완료", EN:"Auto Complete", JP:""},
+    reserve:{KR:"예약", EN:"Reserve", JP:""},
+    attend_mode:{KR:"출석 체크 모드", EN:"Attend Mode", JP:""},
+    notice:{KR:"공지 사항", EN:"Notice", JP:""},
+    inquiry:{KR:"이용 문의", EN:"Q & A", JP:""},
+    help:{KR:"도움말", EN:"Help", JP:""}
+};
+

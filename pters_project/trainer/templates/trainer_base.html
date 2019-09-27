@@ -309,6 +309,9 @@ onclick="layer_popup.close_layer_popup();"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.mypage_modify.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.mypage_photo_update.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.password_modify.js" %}></script>
+
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_main.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_pay_info.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.selectors.js" %}></script>
@@ -447,6 +450,9 @@ onclick="layer_popup.close_layer_popup();"></div>
     var service_inquiry_menu_popup;
     var service_inquiry_popup;
     var service_inquiry_history_popup;
+
+    var pters_pass_main_popup;
+    var pters_pass_pay_info_popup;
     // 팝업 인스턴스
 
     // 범용 셀렉터 인스턴스
@@ -559,8 +565,9 @@ onclick="layer_popup.close_layer_popup();"></div>
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     mypage_popup = new Mypage('.popup_mypage')});
             break;
-            case 'pters_pass':
-                location.href = '/payment/';
+            case 'pters_pass_main':
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_MAIN, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    pters_pass_main_popup = new Pters_pass_main('.popup_pters_pass_main')});
             break;
         }
     }
