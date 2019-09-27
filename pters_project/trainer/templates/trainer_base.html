@@ -208,6 +208,18 @@
 <div id="shade_for_popup_basic" style="position:fixed;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
 onclick="layer_popup.close_layer_popup();"></div>
 
+<!-- Google reCapcha v3 -->
+<script src="https://www.google.com/recaptcha/api.js?render=6Lednq8UAAAAAPNCsPianArQHAITuhgzf-dkX03-"></script>
+<script stype="text/javascript">
+    grecaptcha.ready(function() {
+        grecaptcha.execute('6Lednq8UAAAAAPNCsPianArQHAITuhgzf-dkX03-', {action: 'homepage'}).then(function(token) {
+            document.getElementById('g-recaptcha-response').value = token;
+            console.log(token);
+        });
+    });
+</script>
+<input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
+
 <div id="root_content">
     {% block content %}
     {% endblock %}
@@ -352,6 +364,7 @@ onclick="layer_popup.close_layer_popup();"></div>
     const windowWidth = window.innerWidth;
     const $root_content = $('#root_content');
     var current_page = "home";
+
     input_adjust_location_for_android();
     func_set_webkit_overflow_scrolling('#root_content');
     // $root_content.css('height', `${windowHeight}px`);
@@ -566,6 +579,10 @@ onclick="layer_popup.close_layer_popup();"></div>
     }
     $('#home').trigger('click');
 
+    // 구글 reCAPTCHA 보이지 않게 하기
+    window.addEventListener('load', function () {
+        $('.grecaptcha-badge').css('display', 'none');
+    });
 </script>
 
 </body>

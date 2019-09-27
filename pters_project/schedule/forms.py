@@ -19,7 +19,7 @@ def date_time_validator(value):
     error = None
     date_time = value.split(' ')
     check_time = False
-    if date_time[1] == '24:00':
+    if date_time[1] == '24:00' or date_time[1] == '24:0':
         value = date_time[0] + ' 23:59'
         check_time = True
     try:
@@ -54,7 +54,7 @@ class AddScheduleTbForm(forms.Form):
         date_time = start_dt.split(' ')
         check_time = False
 
-        if date_time[1] == '24:00':
+        if date_time[1] == '24:00' or date_time[1] == '24:0':
             start_dt = date_time[0] + ' 23:59'
             check_time = True
 
@@ -69,7 +69,7 @@ class AddScheduleTbForm(forms.Form):
         date_time = end_dt.split(' ')
         check_time = False
 
-        if date_time[1] == '24:00':
+        if date_time[1] == '24:00' or date_time[1] == '24:0':
             end_dt = date_time[0] + ' 23:59'
             check_time = True
 

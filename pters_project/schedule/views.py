@@ -59,7 +59,6 @@ def add_schedule_logic(request):
     error = None
     info_message = None
     context = {}
-
     if schedule_input_form.is_valid():
         schedule_start_datetime = schedule_input_form.cleaned_data['start_dt']
         schedule_end_datetime = schedule_input_form.cleaned_data['end_dt']
@@ -70,6 +69,7 @@ def add_schedule_logic(request):
 
         lecture_info = schedule_input_form.get_lecture_info()
         member_list = schedule_input_form.get_member_list(class_id)
+
         # 폼 검사 종료
         lecture_schedule_id = None
 
@@ -629,7 +629,7 @@ def add_repeat_schedule_logic(request):
             temp_error_date = str(repeat_schedule_date_info).split(' ')[0]\
                               + week_info[int(repeat_schedule_date_info.strftime('%w'))]
             # 데이터 넣을 날짜,시간 setting
-            if repeat_end_time == '24:00':
+            if repeat_end_time == '24:00' or repeat_end_time == '24:0':
                 repeat_end_time = '23:59'
                 end_time_check = 1
             repeat_schedule_info_date = str(repeat_schedule_date_info).split(' ')[0]

@@ -731,6 +731,7 @@ class GetPaymentScheduleInfoView(LoginRequiredMixin, View):
         payment_info = None
         payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                     payment_type_cd='PERIOD',
+                                                    status='reserve',
                                                     use=UN_USE).order_by('-end_date')
         if len(payment_data) > 0:
             payment_info = payment_data[0]
@@ -745,7 +746,11 @@ class GetPaymentInfoView(LoginRequiredMixin, View):
     def get(self, request):
         context = {}
         payment_info = None
+
+        today = datetime.date.today()
         payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                    status='paid',
+                                                    start_date__lte=today, end_date__gte=today,
                                                     use=USE).order_by('-end_date')
         if len(payment_data) > 0:
             payment_info = payment_data[0]

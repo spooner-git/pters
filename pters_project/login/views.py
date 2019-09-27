@@ -1206,7 +1206,8 @@ def activate_sms_logic(request):
     if error is None:
         if int(sms_count) < sms_activation_count:
             if recaptcha_test_session != 'success':
-                error = func_recaptcha_test(recaptcha_secret_key, token)
+                # error = func_recaptcha_test(recaptcha_secret_key, token)
+                # 테스트
                 if error is None:
                     request.session['recaptcha_session'] = 'success'
                 else:

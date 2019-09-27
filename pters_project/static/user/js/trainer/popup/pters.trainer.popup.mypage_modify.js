@@ -16,7 +16,7 @@ class Mypage_modify{
         this.auth_phone = {
             request_status : false,
             number_get : null,
-            valid_time_count : 0,
+            valid_time_count : 180,
             valid_time_count_func : null
         };
 
@@ -46,11 +46,11 @@ class Mypage_modify{
 
     clear(){
         setTimeout(()=>{
-            this.auth_phone.valid_time_count = 0;
+            this.auth_phone.valid_time_count = 180;
             this.auth_phone.request_status = false;
             clearInterval(this.auth_phone.valid_time_count_func);
             document.querySelector(this.target.install).innerHTML = "";
-        }, 300);
+        }, 1000);
     }
 
     render(){
@@ -78,7 +78,7 @@ class Mypage_modify{
     render_phone_auth_count(){
         let auth_phone = this.dom_row_my_phone_auth_number() + this.dom_button_auth_confirm_phone();
         if(this.auth_phone.request_status == false){
-            auth_phone = "";
+            // auth_phone = "";
         }
         document.getElementById('auth_phone_number_input').innerHTML = auth_phone;
     }
@@ -93,7 +93,7 @@ class Mypage_modify{
         let auth_phone = '<div id="auth_phone_number_input" style="height:60px">' + this.dom_row_my_phone_auth_number() + this.dom_button_auth_confirm_phone() +'</div>';
         let my_email = this.dom_row_my_email();
         if(this.auth_phone.request_status == false){
-            auth_phone = "";
+            // auth_phone = "";
         }
         
 
@@ -166,19 +166,28 @@ class Mypage_modify{
     dom_row_my_phone_auth_number(){
         let id = 'my_auth_number_phone';
         let title = this.auth_phone.number_get == null ? '' : this.auth_phone.number_get;
-        let placeholder = '인증 번호 ' + '( ' + Math.floor(this.auth_phone.valid_time_count/60) + ' : ' + this.auth_phone.valid_time_count%60 + ' )';
+        let minutes = parseInt(this.auth_phone.valid_time_count/60);
+        let seconds = parseInt(this.auth_phone.valid_time_count%60);
+        if(seconds<10){
+            seconds = '0'+seconds;
+        }
+        let placeholder = '인증 번호 ';
         let icon = DELETE;
         let icon_r_visible = HIDE;
-        let icon_r_text = "";
-        let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px", "display":"inline-block", "width":"180px"};
+        let icon_r_text = minutes + ':' + seconds;
+        let style = {"padding":"12px", "width":"70%"};
         let input_disabled = this.data_from_external == null ? false : true;
-        let pattern = "[0-9]{10,11}";
+        let pattern = "[0-9]{1,5}";
         let pattern_message = "";
         let required = "required";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             this.auth_phone.number_get = input_data;
             this.render_content();
         }, pattern, pattern_message, required);
+        html = '<div style="border:solid 1px #d6d2d2; display:inline-block; width:200px;">'
+                    + html
+                    + '<div id="activation_timer" style="display: inline-block; margin-right: 12px; text-align:right; width:20%;">'+icon_r_text+'</div>' +
+               '</div>';
         return html;
     }
 
@@ -193,7 +202,7 @@ class Mypage_modify{
                         show_error_message(jsondata.messageArray);
                         return false;
                     }
-                    this.auth_phone.valid_time_count = 90;
+                    this.auth_phone.valid_time_count = 180;
                     this.auth_phone.request_status = true;
                     this.render_content();
 
