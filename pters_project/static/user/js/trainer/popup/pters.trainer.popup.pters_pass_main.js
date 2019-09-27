@@ -291,6 +291,11 @@ class Pters_pass_main_func{
             case "Pay_list":
                 url = '/payment/get_payment_list/';
             break;
+            case "Current_period":
+                url = '/payment/get_billing_info/';
+            break;
+            case "Payment_history":
+                url = '/payment/payment_history/';
         }
         
         $.ajax({
