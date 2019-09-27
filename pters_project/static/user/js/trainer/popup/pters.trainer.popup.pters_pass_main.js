@@ -348,9 +348,6 @@ class Pters_pass_func{
     }
 
     static check_payment(user_id, name, pay_method, payment_type_cd, product_id, price, period_month, callback){
-        let date = new Date();
-        let payment_date = DateRobot.to_yyyymmdd(date.getFullYear(), date.getMonth()+1, date.getDate());
-
         let merchant_uid = `m_${user_id}_${product_id}_${date.getTime()}`;
         let customer_uid = `c_${user_id}_${product_id}_${date.getTime()}`;
 
@@ -376,7 +373,7 @@ class Pters_pass_func{
                 data = JSON.parse(data);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_errow_message(data.messageArray[0]);
+                        show_error_message(data.messageArray[0]);
                         return false;
                     }
                 }
@@ -385,33 +382,6 @@ class Pters_pass_func{
                     callback(data);
                 }
                 console.log(data);
-
-
-                
-                // // 결제에 따른 이용권 기간 안내
-                // let confirm_message = data.next_start_date[0]+" ~ "+data.next_end_date[0]+" 이용권 결제를 진행하시겠습니까?";
-                // if(payment_date != data.next_start_date[0]){
-                //     if(payment_type_cd == 'PERIOD'){
-                //         confirm_message = data.next_start_date[0]+" ~ "+data.next_end_date[0]+" 이용권 결제를 예약하시겠습니까? \n" +
-                //                             "실제 결제는 "+data.next_start_date[0]+"에 진행됩니다.";
-                //     }
-                // }
-                // let con_test = confirm(confirm_message);
-
-                // // 이용권 결제 confirm ok 하는 경우 결제 수행
-                // if(con_test == true){
-                //     // 정기 결제 + 미래 예약 대기인 경우
-                //     if(payment_date != data.next_start_date[0]){
-                //         if(payment_type_cd == 'PERIOD'){
-                //             price = 0;
-                //         }
-                //     }
-                //     payment(name, pay_method, payment_type_cd, price, merchant_uid, customer_uid);
-                // }
-                // else if(con_test == false){
-                    
-                // }
-                
 
             },
             complete:function(){
@@ -427,15 +397,15 @@ class Pters_pass_func{
 
     static request_payment(product_name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid){
 
-        // if(os == IOS && device == MOBILE){
-        //     // ios 인앱 결제 호출
-        //     window.webkit.messageHandlers.payment_method.postMessage("9");
-        // }
-        // else if(os == ANDROID && device == MOBILE) {
-        //     // 안드로이드 인앱 결제 호출
-        //     window.android_payment_function.callMethodName("9");
-        // }
-        // else {
+        if(os == IOS && device == MOBILE){
+            // ios 인앱 결제 호출
+            window.webkit.messageHandlers.payment_method.postMessage("9");
+        }
+        else if(os == ANDROID && device == MOBILE) {
+            // 안드로이드 인앱 결제 호출
+            window.android_payment_function.callMethodName("9");
+        }
+        else {
             var request_pay_data = {
                 pg: 'danal', // version 1.1.0부터 지원.
                 pay_method: pay_method,
@@ -498,7 +468,7 @@ class Pters_pass_func{
                     // location.href = "/payment/";
                 }
             });
-        // }
+        }
     }
 }
 
