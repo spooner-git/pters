@@ -147,12 +147,13 @@ class Pters_pass_shop{
                             price = 0;
                         }
                     }
+                    layer_popup.close_layer_popup();
                     Pters_pass_func.request_payment(name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid);
                 });
             };
 
             Pters_pass_func.ready_payment();
-            Pters_pass_func.check_payment(user_id, name, pay_method, payment_type_cd, product_id, price, period_month, callback);
+            Pters_pass_func.check_payment(name, pay_method, payment_type_cd, product_id, price, period_month, merchant_uid, customer_uid, callback);
         });
 
         let html = row;

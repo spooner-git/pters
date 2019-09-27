@@ -347,10 +347,7 @@ class Pters_pass_func{
         IMP.init(payment_id); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
     }
 
-    static check_payment(user_id, name, pay_method, payment_type_cd, product_id, price, period_month, callback){
-        let merchant_uid = `m_${user_id}_${product_id}_${date.getTime()}`;
-        let customer_uid = `c_${user_id}_${product_id}_${date.getTime()}`;
-
+    static check_payment(name, pay_method, payment_type_cd, product_id, price, period_month, merchant_uid, customer_uid, callback){
         let data = {
             "payment_type_cd":payment_type_cd, "product_id":product_id,
             "price":price, "period_month":period_month, "pay_method":pay_method,
@@ -397,11 +394,11 @@ class Pters_pass_func{
 
     static request_payment(product_name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid){
 
-        if(os == IOS && device == MOBILE){
+        if(os == IOS && device == MOBILE && device_info != 'web'){
             // ios 인앱 결제 호출
             window.webkit.messageHandlers.payment_method.postMessage("9");
         }
-        else if(os == ANDROID && device == MOBILE) {
+        else if(os == ANDROID && device == MOBILE && device_info != 'web') {
             // 안드로이드 인앱 결제 호출
             window.android_payment_function.callMethodName("9");
         }
