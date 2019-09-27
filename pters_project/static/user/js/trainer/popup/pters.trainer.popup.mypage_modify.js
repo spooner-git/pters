@@ -76,11 +76,16 @@ class Mypage_modify{
     }
 
     render_phone_auth_count(){
-        let auth_phone = this.dom_row_my_phone_auth_number() + this.dom_button_auth_confirm_phone();
-        if(this.auth_phone.request_status == false){
-            // auth_phone = "";
+        // let auth_phone = this.dom_row_my_phone_auth_number() + this.dom_button_auth_confirm_phone();
+        // if(this.auth_phone.request_status == false){
+        //     // auth_phone = "";
+        // }
+        let minutes = parseInt(this.auth_phone.valid_time_count/60);
+        let seconds = parseInt(this.auth_phone.valid_time_count%60);
+        if(seconds<10){
+            seconds = '0'+seconds;
         }
-        document.getElementById('auth_phone_number_input').innerHTML = auth_phone;
+        $('#activation_timer').text(minutes+':'+seconds);
     }
 
     dom_assembly_toolbox(){
