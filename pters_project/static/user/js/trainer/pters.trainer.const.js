@@ -192,6 +192,8 @@ const SEX_CODE = {"M": "남성", "W": "여성"};
 const SCHEDULE_STATUS = {"NP" : "진행전", "PC": "결석", "PE": "출석"};
 const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};
 const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개월", "":"없음"};
+const PAY_STATUS = {"paid":"결제 완료", "failed":"결제 실패", "cancelled":"결제 취소"};
+const PAY_METHOD = {"card":"카드 결제", "iap": "인앱 결제", "":"-"};
 
 //  수업 종류 - 개인 레슨 자유형
 const LECTURE_TYPE_ONE_TO_ONE = 'ONE_TO_ONE';

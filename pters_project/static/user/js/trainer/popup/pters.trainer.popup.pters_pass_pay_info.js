@@ -134,6 +134,7 @@ class Pters_pass_pay_info{
             let pay_method = this.data.history.pay_method[i];
             let pay_price = this.data.history.price[i];
             let pay_status = this.data.history.status[i];
+            let pay_failed_reason = this.data.history.fail_reason[i];
 
             let html = `<article class="pay_history_wrapper">
                             <div class="pay_history_title">${pass_name} (${pass_type})</div>
@@ -142,13 +143,13 @@ class Pters_pass_pay_info{
                                     <div>결제일</div><div>${pay_date}</div>
                                 </div>
                                 <div class="pass_article_detail_row">
-                                    <div>결제수단</div><div>${pay_method}</div>
+                                    <div>결제수단</div><div>${PAY_METHOD[pay_method]}</div>
                                 </div>
                                 <div class="pass_article_detail_row">
                                     <div>금액</div><div>${UnitRobot.numberWithCommas(pay_price)}원 (부가세 포함)</div>
                                 </div>
                                 <div class="pass_article_detail_row">
-                                    <div>상태</div><div style="color:#fe4e65;font-weight:bold;">${pay_status}</div>
+                                    <div>상태</div><div style="color:#fe4e65;font-weight:bold;">${pay_status != "failed" ? PAY_STATUS[pay_status] : PAY_STATUS[pay_status]+' '+ pay_failed_reason}</div>
                                 </div>
                             </div>
                         </article>`;
