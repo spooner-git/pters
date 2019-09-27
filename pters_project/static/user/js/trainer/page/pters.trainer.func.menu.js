@@ -77,7 +77,7 @@ class Menu {
                         this.dom_menu_setting_alarm() + 
                         this.dom_menu_setting_attendmode() + 
                        CComponent.dom_tag('서비스', dom_tag_style) + 
-                        // this.dom_menu_pters_pass() + 
+                        this.dom_menu_pters_pass() + 
                         this.dom_menu_service_notice() + 
                         this.dom_menu_service_inquiry() + 
                         this.dom_menu_service_help();
@@ -269,7 +269,7 @@ class Menu {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage('service_notice');
+            sideGoPage('pters_pass_main');
         });
         return html;
     }

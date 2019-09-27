@@ -21,7 +21,7 @@ input:disabled{
 }
 
 .create_row, .create_input_row, .cell_text{
-	vertical-align: super;
+	vertical-align: inherit;
 }
 .create_row, .create_input_row{
 	list-style: none;
@@ -32,7 +32,7 @@ input:disabled{
 	font-weight: 500;
 	letter-spacing: -0.7px;
 	padding-top:12px;
-	padding-bottom: 16px;
+	padding-bottom: 12px;
 }
 .create_input_row{
 	cursor: unset;
@@ -86,6 +86,7 @@ input:disabled{
 
 .create_row .obj_table_raw > div, .create_input_row .obj_table_raw > div{
 	display: table-cell;
+	vertical-align: inherit;
 }
 
 .create_row .cell_title{
@@ -127,13 +128,10 @@ input:disabled{
 	color: #858282;
 }
 .create_row .cell_icon > img, .create_input_row .cell_icon > img{
-	/*vertical-align: middle;*/
-	/*margin-bottom: 2px;*/
-	/*margin-top: 2px;*/
 	width: 24px;
 	height: 24px;
-	/* padding-right:12px; */
-	float: right;
+	/* float: right; */
+	vertical-align: middle;
 }
 
 
