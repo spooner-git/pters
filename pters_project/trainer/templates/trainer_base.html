@@ -53,6 +53,8 @@
     <script type="text/javascript" src={% static_url "common/js/iscroll/iscroll-probe.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/croppie.min.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/swiper.min.js" %}></script>
+    <script type="text/javascript" src="https://service.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
 
@@ -324,6 +326,7 @@ onclick="layer_popup.close_layer_popup();"></div>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_main.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_pay_info.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_shop.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.selectors.js" %}></script>
@@ -467,6 +470,7 @@ onclick="layer_popup.close_layer_popup();"></div>
 
     var pters_pass_main_popup;
     var pters_pass_pay_info_popup;
+    var pters_pass_shop_popup;
     // 팝업 인스턴스
 
     // 범용 셀렉터 인스턴스
