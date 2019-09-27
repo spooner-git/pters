@@ -55,9 +55,9 @@ class Pters_pass_main{
     }
 
     set_initial_data (){
-        Pters_pass_main_func.read('Current', (data)=>{
+        Pters_pass_func.read('Current', (data)=>{
             this.data.current = data;
-            Pters_pass_main_func.read('Next', (data)=>{
+            Pters_pass_func.read('Next', (data)=>{
                 this.data.next = data;
                 this.render();
             });
@@ -119,15 +119,15 @@ class Pters_pass_main{
         let icon_r_text = "";
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_PAY_INFO, 100, POPUP_FROM_RIGHT, null, ()=>{
-                pters_pass_pay_info_popup = new Pters_pass_pay_info('.popup_pters_pass_pay_info');});
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP, 100, POPUP_FROM_RIGHT, null, ()=>{
+                pters_pass_shop_popup = new Pters_pass_shop('.popup_pters_pass_shop');});
         });
         let html = row;
         return html;
     }
 
     dom_row_payment_info(){
-        let id = "pters_pass_purchase";
+        let id = "pters_pass_payment_info";
         let title = "결제 정보";
         let icon = DELETE;
         let icon_r_visible = SHOW;
@@ -232,7 +232,7 @@ class Pters_pass_main{
             
         // };
         
-        // pters_pass_main_func.update(data, ()=>{
+        // Pters_pass_func.update(data, ()=>{
         //     this.set_initial_data();
         //     show_error_message('변경 내용이 저장되었습니다.');
         //     // this.render_content();
@@ -244,7 +244,7 @@ class Pters_pass_main{
     }
 }
 
-class Pters_pass_main_func{
+class Pters_pass_func{
     static update(data, callback){
         //업무 시간 설정
         $.ajax({
@@ -296,6 +296,10 @@ class Pters_pass_main_func{
             break;
             case "Payment_history":
                 url = '/payment/payment_history/';
+            break;
+            case "Product_list":
+                url = '/payment/get_product_info/';
+            break;
         }
         
         $.ajax({
@@ -336,6 +340,165 @@ class Pters_pass_main_func{
             }
         });
     }
-}
 
+    static ready_payment(){
+        let payment_id = PAYMENT_ID;
+        var IMP = window.IMP; // 생략가능
+        IMP.init(payment_id); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
+    }
+
+    static check_payment(user_id, name, pay_method, payment_type_cd, product_id, price, period_month, callback){
+        let date = new Date();
+        let payment_date = DateRobot.to_yyyymmdd(date.getFullYear(), date.getMonth()+1, date.getDate());
+
+        let merchant_uid = `m_${user_id}_${product_id}_${date.getTime()}`;
+        let customer_uid = `c_${user_id}_${product_id}_${date.getTime()}`;
+
+        let data = {
+            "payment_type_cd":payment_type_cd, "product_id":product_id,
+            "price":price, "period_month":period_month, "pay_method":pay_method,
+            "merchant_uid":merchant_uid, "customer_uid":customer_uid, "name":name
+        };
+
+        $.ajax({
+            url: "/payment/check_before_billing/", // 서비스 웹서버
+            type: "POST",
+            data: data,
+            dataType : 'html',
+
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            success:function(data){
+                data = JSON.parse(data);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_errow_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+
+                if(callback != undefined){
+                    callback(data);
+                }
+                console.log(data);
+
+
+                
+                // // 결제에 따른 이용권 기간 안내
+                // let confirm_message = data.next_start_date[0]+" ~ "+data.next_end_date[0]+" 이용권 결제를 진행하시겠습니까?";
+                // if(payment_date != data.next_start_date[0]){
+                //     if(payment_type_cd == 'PERIOD'){
+                //         confirm_message = data.next_start_date[0]+" ~ "+data.next_end_date[0]+" 이용권 결제를 예약하시겠습니까? \n" +
+                //                             "실제 결제는 "+data.next_start_date[0]+"에 진행됩니다.";
+                //     }
+                // }
+                // let con_test = confirm(confirm_message);
+
+                // // 이용권 결제 confirm ok 하는 경우 결제 수행
+                // if(con_test == true){
+                //     // 정기 결제 + 미래 예약 대기인 경우
+                //     if(payment_date != data.next_start_date[0]){
+                //         if(payment_type_cd == 'PERIOD'){
+                //             price = 0;
+                //         }
+                //     }
+                //     payment(name, pay_method, payment_type_cd, price, merchant_uid, customer_uid);
+                // }
+                // else if(con_test == false){
+                    
+                // }
+                
+
+            },
+            complete:function(){
+
+            },
+
+            error:function(){
+                console.log('server error');
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static request_payment(product_name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid){
+
+        // if(os == IOS && device == MOBILE){
+        //     // ios 인앱 결제 호출
+        //     window.webkit.messageHandlers.payment_method.postMessage("9");
+        // }
+        // else if(os == ANDROID && device == MOBILE) {
+        //     // 안드로이드 인앱 결제 호출
+        //     window.android_payment_function.callMethodName("9");
+        // }
+        // else {
+            var request_pay_data = {
+                pg: 'danal', // version 1.1.0부터 지원.
+                pay_method: pay_method,
+                merchant_uid: merchant_uid,
+                name: product_name,
+                amount: price,
+                buyer_email: user_email,
+                buyer_name: user_name,
+            };
+
+            if (payment_type_cd == 'PERIOD') {
+                request_pay_data['customer_uid'] = customer_uid;
+            }
+
+            IMP.request_pay(request_pay_data, function (rsp) {
+                var msg;
+                if (rsp.success) {
+                    $.ajax({
+                        url: "/payment/check_finish_billing/", // 서비스 웹서버
+                        type: "POST",
+                        data: {"imp_uid": rsp.imp_uid, "merchant_uid": rsp.merchant_uid},
+                        dataType: "html",
+
+                        beforeSend: function (xhr, settings) {
+                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                            }
+                        },
+
+                        success: function (data) {
+                            var jsondata = JSON.parse(data);
+                            let url_move = "/trainer/trainer_main/";
+                            msg = '결제가 완료되었습니다.';
+                            if (jsondata.messageArray.length > 0) {
+                                msg = '결제에 실패하였습니다.';
+                                msg += ' : ' + jsondata.messageArray;
+                                show_error_message(msg);
+                                return false;
+                            }
+                            show_error_message(msg);
+
+                            location.href = url_move;
+
+                        },
+
+                        complete: function () {
+
+                        },
+
+                        error: function () {
+                            console.log('server error');
+                            show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                        }
+                    });
+
+                } else {
+                    msg = '결제에 실패하였습니다.';
+                    msg += ' : ' + rsp.error_msg;
+                    show_error_message(msg);
+                    // location.href = "/payment/";
+                }
+            });
+        // }
+    }
+}
 

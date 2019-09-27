@@ -12,6 +12,7 @@ class Pters_pass_pay_info{
             history:null
         };
 
+
         this.init();
     }
 
@@ -22,12 +23,12 @@ class Pters_pass_pay_info{
     }
 
     set_initial_data (){
-        Pters_pass_main_func.read('Current', (data)=>{
+        Pters_pass_func.read('Current', (data)=>{
             this.data.current.card_name = data.card_name;
             this.data.current.pay_method = data.pay_method;
             this.data.current.start_date = data.start_date;
             this.data.current.payment_type_cd = data.payment_type_cd;
-            Pters_pass_main_func.read('Pay_list', (data)=>{
+            Pters_pass_func.read('Pay_list', (data)=>{
                 this.data.history = data;
                 this.render();
             });

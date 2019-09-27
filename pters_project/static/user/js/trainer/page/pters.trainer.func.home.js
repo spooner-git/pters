@@ -11,9 +11,12 @@ class Home {
         this.today = DateRobot.to_yyyymmdd(this.current_year, this.current_month, this.current_date);
 
         this.data = {
+            user_id : '',
             user_name : '',
             user_photo : '/static/common/icon/icon_account.png',
-            program : ''
+            user_email : '',
+            user_phone : '',
+            program : '',
         };
 
         this.view = {
@@ -40,6 +43,7 @@ class Home {
     //상단을 렌더링
     render_upper_box (){
         Mypage_func.read((data)=>{
+            this.data.user_id = data.trainer_info.member_id;
             this.data.user_name = data.trainer_info.member_name;
             this.data.user_photo = data.trainer_info.member_profile_url;
             let component = this.static_component();
