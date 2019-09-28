@@ -22,7 +22,7 @@ class Pters_pass_shop{
                 receipt_url:[""],
                 start_date:[""],
                 status:[""]
-                    },
+            },
             next:{
                 messageArray:[""],
                 buyer_email:[""],
@@ -107,6 +107,59 @@ class Pters_pass_shop{
     }
 
 
+    // dom_row_pters_pass_standard(){
+    //     let id = "pters_pass_standard_ticket";
+    //     let title = "스탠다드 이용권";
+    //     let icon = DELETE;
+    //     let icon_r_visible = SHOW;
+    //     let icon_r_text = "";
+    //     let style = null;
+    //     let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+    //         let date = new Date();
+    //         let payment_date = DateRobot.to_yyyymmdd(date.getFullYear(), date.getMonth()+1, date.getDate());
+    //         let user_id = home.data.user_id;
+    //         let user_name = home.data.user_name;
+    //         let user_email = home.data.user_email;
+    //         let name = PASS_PRODUCT["standard"].text;
+    //         let pay_method = CARD;
+    //         let payment_type_cd = PERIOD;
+    //         let product_id = PASS_PRODUCT["standard"].id;
+    //         let price = PASS_PRODUCT["standard"].price;
+    //         let period_month = 1;
+    //         let merchant_uid = `m_${user_id}_${product_id}_${date.getTime()}`;
+    //         let customer_uid = `c_${user_id}_${product_id}_${date.getTime()}`;
+
+    //         let callback = (data)=>{
+    //             // 결제에 따른 이용권 기간 안내
+    //             let confirm_message = data.next_start_date[0]+" ~ "+data.next_end_date[0]+" 이용권 결제를 진행하시겠습니까?";
+    //             if(payment_date != data.next_start_date[0]){
+    //                 if(payment_type_cd == PERIOD){
+    //                     confirm_message = data.next_start_date[0]+" ~ "+data.next_end_date[0]+" 이용권 결제를 예약하시겠습니까? \n" +
+    //                                         "실제 결제는 "+data.next_start_date[0]+"에 진행됩니다.";
+    //                 }
+    //             }
+
+    //             // 이용권 결제 confirm ok 하는 경우 결제 수행
+    //             show_user_confirm (confirm_message, ()=>{
+    //                 // 정기 결제 + 미래 예약 대기인 경우
+    //                 if(payment_date != data.next_start_date[0]){
+    //                     if(payment_type_cd == PERIOD){
+    //                         price = 0;
+    //                     }
+    //                 }
+    //                 layer_popup.close_layer_popup();
+    //                 Pters_pass_func.request_payment(name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid);
+    //             });
+    //         };
+
+    //         Pters_pass_func.ready_payment();
+    //         Pters_pass_func.check_payment(name, pay_method, payment_type_cd, product_id, price, period_month, merchant_uid, customer_uid, callback);
+    //     });
+
+    //     let html = row;
+    //     return html;
+    // }
+
     dom_row_pters_pass_standard(){
         let id = "pters_pass_standard_ticket";
         let title = "스탠다드 이용권";
@@ -115,45 +168,8 @@ class Pters_pass_shop{
         let icon_r_text = "";
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let date = new Date();
-            let payment_date = DateRobot.to_yyyymmdd(date.getFullYear(), date.getMonth()+1, date.getDate());
-            let user_id = home.data.user_id;
-            let user_name = home.data.user_name;
-            let user_email = home.data.user_email;
-            let name = PASS_PRODUCT["standard"].text;
-            let pay_method = CARD;
-            let payment_type_cd = PERIOD;
-            let product_id = PASS_PRODUCT["standard"].id;
-            let price = PASS_PRODUCT["standard"].price;
-            let period_month = 1;
-            let merchant_uid = `m_${user_id}_${product_id}_${date.getTime()}`;
-            let customer_uid = `c_${user_id}_${product_id}_${date.getTime()}`;
-
-            let callback = (data)=>{
-                // 결제에 따른 이용권 기간 안내
-                let confirm_message = data.next_start_date[0]+" ~ "+data.next_end_date[0]+" 이용권 결제를 진행하시겠습니까?";
-                if(payment_date != data.next_start_date[0]){
-                    if(payment_type_cd == PERIOD){
-                        confirm_message = data.next_start_date[0]+" ~ "+data.next_end_date[0]+" 이용권 결제를 예약하시겠습니까? \n" +
-                                            "실제 결제는 "+data.next_start_date[0]+"에 진행됩니다.";
-                    }
-                }
-
-                // 이용권 결제 confirm ok 하는 경우 결제 수행
-                show_user_confirm (confirm_message, ()=>{
-                    // 정기 결제 + 미래 예약 대기인 경우
-                    if(payment_date != data.next_start_date[0]){
-                        if(payment_type_cd == PERIOD){
-                            price = 0;
-                        }
-                    }
-                    layer_popup.close_layer_popup();
-                    Pters_pass_func.request_payment(name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid);
-                });
-            };
-
-            Pters_pass_func.ready_payment();
-            Pters_pass_func.check_payment(name, pay_method, payment_type_cd, product_id, price, period_month, merchant_uid, customer_uid, callback);
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement');});
         });
 
         let html = row;
