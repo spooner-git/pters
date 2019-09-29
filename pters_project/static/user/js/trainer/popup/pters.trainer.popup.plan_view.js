@@ -275,7 +275,7 @@ class Plan_view{
         for(let i=0; i<length; i++){
             let member_id = this.data.member_id[i];
             let member_name = this.data.member_name[i];
-            let icon_button_style = {"padding":"3px 1%", "width":"30%", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500"};
+            let icon_button_style = {"padding":"3px 1%", "width":"30%", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500", "text-align":"center"};
             let state = this.data.member_schedule_state[i];
             let state_icon_url;
             if(state == SCHEDULE_ABSENCE){
@@ -283,7 +283,7 @@ class Plan_view{
             }else if(state == SCHEDULE_FINISH){
                 state_icon_url = '/static/common/icon/icon_confirm_grey.png';
             }else if(state == SCHEDULE_NOT_FINISH){
-                state_icon_url = NONE;
+                state_icon_url = DELETE;
             }
 
             html_to_join.push(

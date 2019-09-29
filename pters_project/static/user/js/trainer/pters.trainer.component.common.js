@@ -591,7 +591,7 @@ class CComponent{
         }
 
         let html = `<div id="icon_button_${id}" style="cursor:pointer;padding:3px 8px;display:inline-block;height:40px;width:auto;${CComponent.data_to_style_code(style)}">
-                        <img src="${url}" style="width:24px;height:24px;vertical-align:middle;margin-bottom:4px;margin-right:5px;">
+                        <img src="${url}" style="width:24px;height:24px;vertical-align:middle;margin-bottom:4px;margin-right:5px;${url == DELETE ? 'display:none': ''}">
                         <span style="line-height:40px;">${title}</span>
                     </div>`;
         
