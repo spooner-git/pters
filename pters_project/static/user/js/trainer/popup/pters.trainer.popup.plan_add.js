@@ -241,12 +241,22 @@ class Plan_add{
                     Lecture_func.read({"lecture_id": set_data.id[0]}, (data)=>{
                         let member_length = data.lecture_member_list.length;
                         let data_to_set = {id:[], name:[]};
+
+                        let omitted_fixed_member_name = [];
                         for(let i=0; i<member_length; i++){
                             let member_data = data.lecture_member_list[i];
-                            if(member_data.member_fix_state_cd == FIX && member_data.member_ticket_avail_count > 0){
-                                data_to_set.id.push(member_data.member_id);
-                                data_to_set.name.push(member_data.member_name);
+                            if(member_data.member_fix_state_cd == FIX){
+                                if(member_data.member_ticket_avail_count > 0){
+                                    data_to_set.id.push(member_data.member_id);
+                                    data_to_set.name.push(member_data.member_name);
+                                }else{
+                                    omitted_fixed_member_name.push(member_data.member_name);
+                                }
                             }
+                        }
+                        if(omitted_fixed_member_name.length > 0){
+                            show_error_message(`예약 횟수가 없는 고정회원 ${omitted_fixed_member_name.length}명 
+                                            (${omitted_fixed_member_name.join(" ,")})은 제외 되었습니다.`);
                         }
                         this.member = data_to_set;
                     });
