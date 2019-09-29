@@ -243,7 +243,7 @@ class Plan_add{
                         let data_to_set = {id:[], name:[]};
                         for(let i=0; i<member_length; i++){
                             let member_data = data.lecture_member_list[i];
-                            if(member_data.member_fix_state_cd == FIX){
+                            if(member_data.member_fix_state_cd == FIX && member_data.member_ticket_avail_count > 0){
                                 data_to_set.id.push(member_data.member_id);
                                 data_to_set.name.push(member_data.member_name);
                             }
@@ -266,7 +266,8 @@ class Plan_add{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             if(this.data.lecture_id.length != 0){
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
-                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num[0], {'lecture_id':this.data.lecture_id[0], "title":"회원"}, (set_data)=>{
+                    let appendix = {lecture_id:this.data.lecture_id[0], title:"회원", disable_zero_avail_count:ON};
+                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num[0], appendix, (set_data)=>{
                         this.member = set_data;
                         this.render_content();
                     });

@@ -238,7 +238,7 @@ class Lecture_view{
         let required = "";
 
         if(this.data.lecture_type_cd!=LECTURE_TYPE_ONE_TO_ONE){
-            icon_r_text = CComponent.text_button ('lecture_fixed_member_select', "고정 회원", null, ()=>{
+            icon_r_text = CComponent.text_button ('lecture_fixed_member_select', `고정 회원(${this.data.fixed_member_id.length})`, null, ()=>{
                 //고정 인원 선택
                 if(this.data.capacity != null){
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
