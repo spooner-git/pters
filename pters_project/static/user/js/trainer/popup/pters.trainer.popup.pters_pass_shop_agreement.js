@@ -95,15 +95,27 @@ class Pters_pass_shop_agreement{
         let checked = this.data.agreement;
         let style = {"display":"inline-block", "margin-right":"8px", "vertical-align":"middle"};
         let onclick = (checked)=>{
-            this.data.agreement = checked;
-            this.render_content();
+            // this.data.agreement = checked;
+            // this.render_content();
         };
         let html_checkbox = CComponent.radio_button (id, checked, style, onclick);
         let text = `<span style="font-size:14px;font-weight:bold;line-height:30px;">약관에 동의합니다.</span>`;
 
-        let html = `<div style="height:30px;line-height:30px;margin:20px 0">` + html_checkbox + text + `</div>`;
+
+        let id2 = "pters_pass_agreement_check";
+        let title2 = html_checkbox + text;
+        let style2 = null;
+        let onclick2 = ()=>{
+            this.data.agreement == ON ? this.data.agreement = OFF : this.data.agreement = ON;
+            this.render_content();
+        };
+        let html_assembly = CComponent.text_button (id2, title2, style2, onclick2);
+
+
+        let html = `<div style="height:30px;line-height:30px;margin:20px 0">` + html_assembly + `</div>`;
         return html;
     }
+
 
     dom_row_pters_pass_button_go_to_page_2(){
         let id = "pters_pass_button_go_to_page_2";
@@ -135,7 +147,16 @@ class Pters_pass_shop_agreement{
 
         let text = `<span style="font-size:14px;font-weight:bold;line-height:30px;">신용카드</span>`;
 
-        let html = `<div style="height:30px;line-height:30px;margin:20px 0">` + html_checkbox + text + `</div>`;
+        let id2 = "pters_pass_pay_method_card";
+        let title2 = html_checkbox + text;
+        let style2 = null;
+        let onclick2 = ()=>{
+            this.data.pay_method.card == ON ? this.data.pay_method.card = OFF : this.data.pay_method.card = ON;
+            this.render_content();
+        };
+        let html_assembly = CComponent.text_button (id2, title2, style2, onclick2);
+
+        let html = `<div style="height:30px;line-height:30px;margin:20px 0">` + html_assembly + `</div>`;
         return html;
     }
 
