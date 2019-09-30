@@ -12,30 +12,39 @@
     <div id="root_content">
         <div id="registration_box">
             <!-- 헤더 영역 -->
-            <div class="registration_top">
-                <div class="registration_left" onclick="location.href='/'"><</div>
-                <div class="registration_title">회원가입</div>
+            <div class="registration_top" style="border-bottom: 0">
+                <div class="registration_left" onclick="location.href='/'"><img src="/static/common/icon/icon_arrow_l_black.png" style="width:24px; height:24px;"></div>
+                <div class="registration_title"></div>
                 <div class="registration_right"></div>
             </div>
-            <div class="registration_content" style="min-height: calc(100% - 250px);"></div>
+            <div class="registration_content" style="min-height: calc(100% - 340px);"></div>
             <div class="registration_foot">
                 <!-- 네이버 로그인 버튼 노출 영역 -->
                 <div class="social_login_box" onclick="location.href = '/?social_type=naver'" style="background-color: #0dd25a;">
-                    <div class="social_login_img"><img src="/static/user/res/login/naver.svg" style="width: 16px; height: 14.7px; vertical-align:middle;"></div>
+                    <div class="social_login_img"><img src="/static/common/icon/icon_naver_logo.png" style="width: 24px; height: 24px; vertical-align:middle;"></div>
                     <span class="social_login_text">네이버로 회원가입</span>
-                    <div style="display:table-cell; width:60px;"></div>
+                    <div style="display:table-cell; width:60px; vertical-align: middle; text-align:right; padding-right:8px;">
+                        <img src="/static/common/icon/icon_arrow_r_small_white.png" style="width: 24px; height: 24px; vertical-align:middle;">
+                    </div>
                 </div>
                 <!-- 카카오톡 로그인 버튼 노출 영역 -->
                 <div class="social_login_box" id="custom-login-btn" onclick="loginWithKakao();" style="background-color: #ffeb00; margin-top:12px;">
-                    <div class="social_login_img"><img src="/static/user/res/login/naver.svg" style="width: 16px; height: 14.7px; vertical-align:middle;"></div>
+                    <div class="social_login_img"><img src="/static/common/icon/icon_kakao_logo.png" style="width: 24px; height: 24px; vertical-align:middle;"></div>
                     <span class="social_login_text" style="color:#3a1c1d;">카카오톡으로 회원가입</span>
-                    <div style="display:table-cell; width:60px;"></div>
+                    <div style="display:table-cell; width:60px; vertical-align: middle; text-align:right; padding-right:8px;">
+                        <img src="/static/common/icon/icon_arrow_r_small_black.png" style="width: 24px; height: 24px; vertical-align:middle;">
+                    </div>
                 </div>
                 <!-- PTERS 로그인 버튼 노출 영역 -->
-                <div class="social_login_box" onclick="location.href = '{% url "login:registration_register" %}';" style="background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
-                    <div class="social_login_img"></div>
-                    <span class="social_login_text" style="color:#ffffff;">일반 회원가입</span>
-                    <div style="display:table-cell; width:60px;"></div>
+                <div class="social_login_box" onclick="location.href = '{% url "login:registration_register" %}';" style="background-color: #ffffff; margin-top:12px; margin-bottom:20px; border:1px solid #ebe6e6;">
+                    <div class="social_login_img"><img src="/static/common/icon/icon_pters_logo.png" style="width: 24px; height: 24px; vertical-align:middle;"></div>
+                    <span class="social_login_text" style="color:#3d3b3b;">일반 회원가입</span>
+                    <div style="display:table-cell; width:60px; vertical-align: middle; text-align:right; padding-right:8px;">
+                        <img src="/static/common/icon/icon_arrow_r_small_light_grey.png" style="width: 24px; height: 24px; vertical-align:middle;">
+                    </div>
+                </div>
+                <div class="general_text" style="display:table; width:100%; height: 48px; margin-top:24px; margin-bottom:20px; color:#858282">
+                    이미 계정이 있으십니까? &nbsp;&nbsp;&nbsp;<span onclick="location.href='{% url 'index' %}'" style="color:#fe4e65;font-weight:bold;text-decoration: underline;">로그인</span>
                 </div>
             </div>
         </div>
