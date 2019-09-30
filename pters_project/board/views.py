@@ -1,15 +1,18 @@
 import logging
 
+import collections
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import EmailMessage
 from django.db.models.expressions import RawSQL
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.utils import timezone
+from django.views import View
 from django.views.generic import TemplateView
 
 from configs.const import USE
-from .models import QATb
+from .models import QATb, BoardTb, NoticeTb
 
 logger = logging.getLogger(__name__)
 
@@ -79,3 +82,23 @@ class ClearQuestionDataView(LoginRequiredMixin, TemplateView):
         context['question_data'] = question_list
 
         return context
+
+
+class GetNoticeDataView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        notice_data_dict = collections.OrderedDict()
+        notice_data = NoticeTb.objects.filter().order_by('-reg_dt')
+
+        for notice_info in notice_data:
+            notice_data_dict[notice_info.notice_id] = {'notice_id': notice_info.notice_id,
+                                                       'notice_type_cd': notice_info.notice_type_cd,
+                                                       'notice_title': notice_info.title,
+                                                       'notice_contents': notice_info.contents,
+                                                       'notice_to_member_type_cd': notice_info.to_member_type_cd,
+                                                       'notice_hits': notice_info.hits,
+                                                       'notice_mod_dt': notice_info.mod_dt,
+                                                       'notice_reg_dt': notice_info.reg_dt,
+                                                       'notice_use': notice_info.use}
+
+        return JsonResponse(notice_data_dict, json_dumps_params={'ensure_ascii': True})

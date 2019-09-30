@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'stats',
     'board',
     'tasks',
+    'admin_spooner',
 ]
 
 MIDDLEWARE = [
@@ -216,6 +217,8 @@ LOG_FILE_TRAINEE = os.path.join(os.path.dirname(__file__), '..', 'logs/trainee_l
 LOG_FILE_TRAINER = os.path.join(os.path.dirname(__file__), '..', 'logs/trainer_log.log')
 LOG_FILE_PAYMENT = os.path.join(os.path.dirname(__file__), '..', 'logs/payment_log.log')
 LOG_FILE_TASKS = os.path.join(os.path.dirname(__file__), '..', 'logs/tasks_log.log')
+LOG_FILE_ADMIN_SPOONER = os.path.join(os.path.dirname(__file__), '..', 'logs/admin_spooner_log.log')
+LOG_FILE_BOARD = os.path.join(os.path.dirname(__file__), '..', 'logs/board_log.log')
 
 LOGGING = {
     'version': 1,
@@ -286,6 +289,22 @@ LOGGING = {
             'maxBytes': 1024*1024*10,
             'backupCount': 5,
         },
+        'admin_spooner_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'verbose',
+            'filename': LOG_FILE_ADMIN_SPOONER,
+            'maxBytes': 1024*1024*10,
+            'backupCount': 5,
+        },
+        'board_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'verbose',
+            'filename': LOG_FILE_BOARD,
+            'maxBytes': 1024*1024*10,
+            'backupCount': 5,
+        },
     },
     'loggers': {
         '': {
@@ -325,6 +344,14 @@ LOGGING = {
         },
         'tasks': {
             'handlers': ['tasks_file'],
+            'level': 'DEBUG',
+        },
+        'admin_spooner': {
+            'handlers': ['admin_spooner_file'],
+            'level': 'DEBUG',
+        },
+        'board': {
+            'handlers': ['board_file'],
             'level': 'DEBUG',
         },
     }

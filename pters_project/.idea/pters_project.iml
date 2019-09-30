@@ -34,6 +34,7 @@
         <option value="$MODULE_DIR$/board/templates" />
         <option value="$MODULE_DIR$/stats/templates" />
         <option value="$MODULE_DIR$/tasks/templates" />
+        <option value="$MODULE_DIR$/admin_spooner/templates" />
       </list>
     </option>
   </component>

@@ -45,7 +45,7 @@ class CheckView(LoginRequiredMixin, RedirectView):
             request.session['base_html'] = group.name + '_base.html'
             request.session['group_name'] = group.name
             if group.name == 'admin':
-                self.url = '/spooner_adm/'
+                self.url = '/admin_spooner/'
             else:
                 self.url = '/' + group.name + '/'
         else:
@@ -117,6 +117,9 @@ class AccessTestMixin(UserPassesTestMixin):
                     test_result = True
             if url[1] == 'center':
                 if group_name == 'center':
+                    test_result = True
+            if url[1] == 'admin_spooner':
+                if group_name == 'admin':
                     test_result = True
         return test_result
 
