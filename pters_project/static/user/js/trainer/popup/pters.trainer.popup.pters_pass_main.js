@@ -149,8 +149,8 @@ class Pters_pass_main{
         let icon_r_text = "";
         let style = {"color": "#ff001f", "font-weight":"normal"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_PAY_INFO, 100, POPUP_FROM_RIGHT, null, ()=>{
-                pters_pass_pay_info_popup = new Pters_pass_pay_info('.popup_pters_pass_pay_info');});
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_PAY_CANCEL, 100, POPUP_FROM_RIGHT, null, ()=>{
+                pters_pass_pay_cancel_popup = new Pters_pass_pay_cancel('.popup_pters_pass_pay_cancel');});
         });
         let html = row;
         return html;
@@ -642,5 +642,44 @@ class Pters_pass_func{
 
     }
 
+    static request_payment_close(customer_uid, cancel_type, cancel_reason, callback){
+        let data = {"customer_uid":customer_uid, "cancel_type":cancel_type, "cancel_reason":cancel_reason, "next_page":""};
+        $.ajax({
+            url: "/payment/cancel_period_billing/", // 서비스 웹서버
+            type: "POST",
+            data: data,
+            dataType : 'html',
+
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            success:function(data){
+                data = JSON.parse(data);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+
+                if(callback != undefined){
+                    callback(data);
+                }
+                console.log(data);
+
+            },
+            complete:function(){
+
+            },
+
+            error:function(){
+                console.log('server error');
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
 }
 
