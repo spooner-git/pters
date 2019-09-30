@@ -85,6 +85,7 @@ class Calendar {
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
         this.mode_to_plan_change(OFF);
         Setting_reserve_func.read((data)=>{
+            this.dayoff_hide = data.setting_holiday_hide;
             let work_time = this.calc_worktime(data);
             this.worktime = [];
             for(let i=work_time.start_hour; i<work_time.end_hour; i++){
@@ -690,8 +691,12 @@ class Calendar {
                     continue;
                 }
                 Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
-                    if(this.dayoff.indexOf(i-1) == -1){
-                        // el.style.display = "table-cell";
+                    if(this.dayoff_hide == 1){
+                        if(this.dayoff.indexOf(i-1) == -1){
+                            // el.style.display = "table-cell";
+                            el.style.display = "block";
+                        }
+                    }else{
                         el.style.display = "block";
                     }
                 });
@@ -998,7 +1003,7 @@ class Calendar {
 
                 dates_to_join.push(
                     `
-                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" ${this.dayoff.indexOf(i) != -1 ? "style=display:none": ""} onclick="event.stopPropagation();${onclick}">
+                    <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" ${this.dayoff.indexOf(i) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""} onclick="event.stopPropagation();${onclick}">
                         <span style="${today_text_style}">${_date[i]}</span>
                         <div class="${schedule_number_display} ${has_schedule}">${schedule_date}</div>
                         ${today_marking}
@@ -1011,20 +1016,20 @@ class Calendar {
         let result_html = dates_to_join.join("");
         // let week_date_name_data = this.static_component().week_cal_upper_box_date_tool;
         let day_names = `<div class="_week_row_1 obj_font_color_sunday_red" ${this.dayoff.indexOf(0) != -1 ? "style=display:none": ""}>일</div>
-                        <div class="_week_row_2" ${this.dayoff.indexOf(1) != -1 ? "style=display:none": ""}>월</div>
-                        <div class="_week_row_3" ${this.dayoff.indexOf(2) != -1 ? "style=display:none": ""}>화</div>
-                        <div class="_week_row_4" ${this.dayoff.indexOf(3) != -1 ? "style=display:none": ""}>수</div>
-                        <div class="_week_row_5" ${this.dayoff.indexOf(4) != -1 ? "style=display:none": ""}>목</div>
-                        <div class="_week_row_6" ${this.dayoff.indexOf(5) != -1 ? "style=display:none": ""}>금</div>
+                        <div class="_week_row_2" ${this.dayoff.indexOf(1) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>월</div>
+                        <div class="_week_row_3" ${this.dayoff.indexOf(2) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>화</div>
+                        <div class="_week_row_4" ${this.dayoff.indexOf(3) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>수</div>
+                        <div class="_week_row_5" ${this.dayoff.indexOf(4) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>목</div>
+                        <div class="_week_row_6" ${this.dayoff.indexOf(5) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>금</div>
                         <div class="_week_row_7 obj_font_color_saturday_blue" ${this.dayoff.indexOf(6) != -1 ? "style=display:none": ""}>토</div>`;
         if(this.date_start == 1){
-            day_names = `<div class="_week_row_1" ${this.dayoff.indexOf(0) != -1 ? "style=display:none": ""}>월</div>
-                        <div class="_week_row_2" ${this.dayoff.indexOf(1) != -1 ? "style=display:none": ""}>화</div>
-                        <div class="_week_row_3" ${this.dayoff.indexOf(2) != -1 ? "style=display:none": ""}>수</div>
-                        <div class="_week_row_4" ${this.dayoff.indexOf(3) != -1 ? "style=display:none": ""}>목</div>
-                        <div class="_week_row_5" ${this.dayoff.indexOf(4) != -1 ? "style=display:none": ""}>금</div>
-                        <div class="_week_row_6 obj_font_color_saturday_blue" ${this.dayoff.indexOf(5) != -1 ? "style=display:none": ""}>토</div>
-                        <div class="_week_row_7 obj_font_color_sunday_red" ${this.dayoff.indexOf(6) != -1 ? "style=display:none": ""}>일</div>`;
+            day_names = `<div class="_week_row_1" ${this.dayoff.indexOf(0) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>월</div>
+                        <div class="_week_row_2" ${this.dayoff.indexOf(1) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>화</div>
+                        <div class="_week_row_3" ${this.dayoff.indexOf(2) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>수</div>
+                        <div class="_week_row_4" ${this.dayoff.indexOf(3) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>목</div>
+                        <div class="_week_row_5" ${this.dayoff.indexOf(4) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>금</div>
+                        <div class="_week_row_6 obj_font_color_saturday_blue" ${this.dayoff.indexOf(5) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>토</div>
+                        <div class="_week_row_7 obj_font_color_sunday_red" ${this.dayoff.indexOf(6) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>일</div>`;
         }
         let week_date_name_data = `<div class="cal_week_line_dates" style="border-bottom:0;font-size:11px;">
                                         <div class="week_cal_time_text"></div>
@@ -1146,13 +1151,13 @@ class Calendar {
                                         <div id="current_time_indicator" style="width:${this.window_height - (12.5)*this.window_height/100 }px;"><div></div></div>
                                         ${ (this.worktime.map( (t) => { return `<article><span>${TimeRobot.to_text(t, 0, 'short')}</span></article>`; } )).join('') }
                                     </div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1 week_row" ${this.dayoff.indexOf(0) != -1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2 week_row" ${this.dayoff.indexOf(1) != -1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3 week_row" ${this.dayoff.indexOf(2) != -1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})" class="_week_row_4 week_row" ${this.dayoff.indexOf(3) != -1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})" class="_week_row_5 week_row" ${this.dayoff.indexOf(4) != -1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})" class="_week_row_6 week_row" ${this.dayoff.indexOf(5) != -1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})" class="_week_row_7 week_row" ${this.dayoff.indexOf(6) != -1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1 week_row" ${this.dayoff.indexOf(0) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2 week_row" ${this.dayoff.indexOf(1) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3 week_row" ${this.dayoff.indexOf(2) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})" class="_week_row_4 week_row" ${this.dayoff.indexOf(3) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})" class="_week_row_5 week_row" ${this.dayoff.indexOf(4) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})" class="_week_row_6 week_row" ${this.dayoff.indexOf(5) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})" class="_week_row_7 week_row" ${this.dayoff.indexOf(6) != -1  && this.dayoff_hide == 1? "style=display:none": ""}>${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
                                 </div>
                                 `;
         return week_html_template;
