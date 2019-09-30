@@ -189,9 +189,9 @@ class Mypage_modify{
             this.auth_phone.number_get = input_data;
             this.render_content();
         }, pattern, pattern_message, required);
-        html = '<div style="border:solid 1px #d6d2d2; display:inline-block; width:200px;">'
+        html = '<div style="border:solid 1px #d6d2d2; display:inline-block; width:200px;position:relative">'
                     + html
-                    + '<div id="activation_timer" style="display: inline-block; margin-right: 12px; text-align:right; width:20%;">'+icon_r_text+'</div>' +
+                    + '<div id="activation_timer" style="position:absolute;top:50%;transform:translateY(-50%);right:0;display: inline-block; margin-right: 12px; text-align:right; width:20%;color:#676767">'+icon_r_text+'</div>' +
                '</div>';
         return html;
     }
