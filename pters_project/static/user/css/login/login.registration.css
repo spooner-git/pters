@@ -44,7 +44,7 @@
 }
 .social_login_box{
     width: 320px;
-    height: 48px;
+    height: 52px;
     border-radius: 2px;
     display:table;
     cursor: pointer;
@@ -64,7 +64,7 @@
     font-stretch: normal;
     line-height: normal;
     letter-spacing: -0.5px;
-    text-align: center;
+    text-align: left;
     color: #ffffff;
     vertical-align: middle;
     display: table-cell;
@@ -73,8 +73,8 @@
     display:table-cell;
     width: 50%;
     height: 48px;
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: normal;
     font-style: normal;
     font-stretch: normal;
     line-height: normal;
@@ -91,7 +91,7 @@
     overflow-y:hidden;
     overflow-x:hidden;
     padding-top:40px;
-    min-height: calc(100% - 245px);
+    min-height: calc(100% - 320px);
 }
 .login_foot{
     /*position:fixed;*/

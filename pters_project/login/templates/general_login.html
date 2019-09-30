@@ -15,29 +15,38 @@
             {% endif %}
         {% endfor %}
 
-        <div id="login_box">
+        <div id="registration_box">
 
-            <div class="login_content" style="min-height: calc(100% - 450px);">
-                <div class="pters_logo"></div>
+            <div class="registration_top" style="border-bottom: 0">
+                <div class="registration_left" onclick="location.href='/'"><img src="/static/common/icon/icon_arrow_l_black.png" style="width:24px; height:24px;"></div>
+                <div class="registration_title"></div>
+                <div class="registration_right"></div>
             </div>
-            <div class="login_foot">
+            <div class="registration_content" style="min-height: calc(100% - 340px);">
+                <!--<div class="pters_logo"></div>-->
+            </div>
+            <div class="registration_foot">
                 <form action="{% url 'login:login' %}" id="login-form" method="post">
                     <input type="hidden" name="keyword" id="keyword">
                     <input type="hidden" name="auto_login_check" value="1">
                     <input type="hidden" name="next_page" value = '{% url 'login:index' %}'>
                     {% csrf_token %}
                     <!-- 네이버 로그인 버튼 노출 영역 -->
+                    <!--
                     <div class="social_login_box" onclick="location.href=naverLogin.generateAuthorizeUrl();" style="background-color: #0dd25a;">
                         <div class="social_login_img"><img src="/static/user/res/login/naver.svg" style="width: 16px; height: 14.7px; vertical-align:middle;"></div>
                         <span class="social_login_text">네이버 로그인</span>
                         <div style="display:table-cell; width:60px;"></div>
                     </div>
+                    -->
                     <!-- 카카오톡 로그인 버튼 노출 영역 -->
+                    <!--
                     <div class="social_login_box" id="custom-login-btn" onclick="javascript:loginWithKakao();" style="background-color: #ffeb00; margin-top:12px;">
                         <div class="social_login_img"><img src="/static/user/res/login/naver.svg" style="width: 16px; height: 14.7px; vertical-align:middle;"></div>
                         <span class="social_login_text" style="color:#3a1c1d;">카카오톡 로그인</span>
                         <div style="display:table-cell; width:60px;"></div>
                     </div>
+                    -->
                     <!-- 구글 로그인 버튼 노출 영역 -->
                     <!--<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" style="width:179px;margin-bottom:8px;"></div>-->
                     <!-- 페이스북 로그인 버튼 노출 영역 -->
@@ -45,7 +54,7 @@
                       scope="public_profile, email" onlogin="checkLoginState();" class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="text-align: center;display: block">
                     </fb:login-button> -->
 
-                    <div style="width:320px; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
+                    <!--<div style="width:320px; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>-->
 
                     <!-- PTERS 로그인 입력 영역 -->
                     <div>
@@ -57,7 +66,7 @@
                     <!-- PTERS 로그인 버튼 노출 영역 -->
                     <div class="social_login_box" onclick="document.getElementById('login-form').submit();" style="background-color: #fe4e65; margin-top:12px;">
                         <div class="social_login_img"></div>
-                        <span class="social_login_text" style="color:#ffffff;">로그인</span>
+                        <span class="social_login_text" style="color:#ffffff; text-align:center;">로그인</span>
                         <div style="display:table-cell; width:60px;"></div>
                     </div>
 
@@ -66,7 +75,7 @@
                     <!-- 회원가입, 비밀번호 재설정 버튼 노출 영역 -->
                     <div style="display:table; width:100%; height: 48px; margin-bottom:20px;">
                         <div class="general_text" style="color:#858282;" onclick="location.href='{% url 'login:check_registration' %}'">회원 가입</div>
-                        <div class="general_text" style="color:#858282;" onclick="location.href='{% url 'login:reset_password' %}'">비밀번호 재설정</div>
+                        <div class="general_text" style="color:#858282;" onclick="location.href='{% url 'login:reset_password' %}'">비밀번호 초기화</div>
                     </div>
                 </form>
             </div>

@@ -203,6 +203,7 @@
 onclick="layer_popup.close_layer_popup();"></div>
 
 <!-- Google reCapcha v3 -->
+<!--
 <script src="https://www.google.com/recaptcha/api.js?render=6Lednq8UAAAAAPNCsPianArQHAITuhgzf-dkX03-"></script>
 <script stype="text/javascript">
     grecaptcha.ready(function() {
@@ -213,6 +214,7 @@ onclick="layer_popup.close_layer_popup();"></div>
     });
 </script>
 <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
+-->
 
 <div id="root_content">
     {% block content %}
@@ -586,9 +588,11 @@ onclick="layer_popup.close_layer_popup();"></div>
     $('#home').trigger('click');
 
     // 구글 reCAPTCHA 보이지 않게 하기
+    /*
     window.addEventListener('load', function () {
         $('.grecaptcha-badge').css('display', 'none');
     });
+    */
 </script>
 
 </body>
