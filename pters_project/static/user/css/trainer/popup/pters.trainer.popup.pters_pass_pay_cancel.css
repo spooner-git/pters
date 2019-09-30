@@ -1,0 +1,27 @@
+
+.popup_pters_pass_pay_cancel{
+	-webkit-overflow-scrolling: touch;
+}
+
+.popup_pters_pass_pay_cancel .obj_box_full{
+	padding: 15px 20px;
+	border: 0;
+}
+
+.popup_pters_pass_pay_cancel .obj_input_box_full{
+	padding: 10px 20px;
+	border: 0;
+}
+
+.popup_pters_pass_pay_cancel .popup_toolbox{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+	padding: 8px 16px 4px 20px;
+	/* border-bottom: 1px solid #f5f5f5; */
+	z-index: 1;
+}
+
+.popup_pters_pass_pay_cancel .popup_content{
+	/* padding-top: 20px; */
+}
