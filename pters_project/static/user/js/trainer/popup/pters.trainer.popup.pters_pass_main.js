@@ -473,39 +473,48 @@ class Pters_pass_func{
         }
     }
 
-    static check_payment_for_modify(name, customer_uid, product_id, period_month){
-        var error_check = true;
-        var date = new Date();
-        var new_merchant_uid = 'm_{{request.user.id}}_'+product_id+'_' + date.getTime();
-        var new_customer_uid = 'c_{{request.user.id}}_'+product_id+'_' + date.getTime();
+    // static check_payment_for_update(name, current_customer_uid, product_id, period_month, merchant_uid, customer_uid, callback){
+    static check_payment_for_update(current_customer_uid, product_id, new_merchant_uid, new_customer_uid, callback){
+        // let error_check = true;
+        // let date = new Date();
+        // let new_merchant_uid = 'm_{{request.user.id}}_'+product_id+'_' + date.getTime();
+        // let new_customer_uid = 'c_{{request.user.id}}_'+product_id+'_' + date.getTime();
+        let data = {"customer_uid": current_customer_uid, "new_merchant_uid":new_merchant_uid, "new_customer_uid":new_customer_uid};
         $.ajax({
             url: "/payment/check_update_period_billing/", // 서비스 웹서버
             type: "POST",
-            data: {"customer_uid": customer_uid,
-                   "new_merchant_uid":new_merchant_uid, "new_customer_uid":new_customer_uid},
+            data: data,
             dataType : 'html',
 
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
-                beforeSend();
             },
 
             success:function(data){
-                var jsondata = JSON.parse(data);
-                if(jsondata.messageArray.length>0){
-                    error_check = false;
-                    alert(jsondata.messageArray);
-                }else {
-                    payment(name, 'card',  product_id, jsondata.next_start_date[0],
-                        customer_uid, period_month, jsondata.price[0], new_merchant_uid, new_customer_uid);
+                data = JSON.parse(data);
+                // if(jsondata.messageArray.length>0){
+                //     error_check = false;
+                //     alert(jsondata.messageArray);
+                // }else {
+                //     payment(name, 'card',  product_id, jsondata.next_start_date[0],
+                //         customer_uid, period_month, jsondata.price[0], new_merchant_uid, new_customer_uid);
+                // }
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+
+                if(callback != undefined){
+                    callback(data);
                 }
 
             },
 
             complete:function(){
-                completeSend();
             },
 
             error:function(){
@@ -514,10 +523,10 @@ class Pters_pass_func{
         });
 
 
-        return error_check;
+        // return error_check;
     }
 
-    static request_payment_modify(name, pay_method, product_id, start_date, before_customer_uid, period_month, input_price, merchant_uid, customer_uid){
+    static request_payment_update(name, pay_method, product_id, start_date, before_customer_uid, period_month, input_price, merchant_uid, customer_uid){
         var date = new Date();
         var month = date.getMonth()+1;
         var day = date.getDate();
@@ -549,7 +558,6 @@ class Pters_pass_func{
         IMP.request_pay(request_pay_period_data, function(rsp) {
             var msg;
             if ( rsp.success ) {
-                console.log(rsp);
 
                 $.ajax({
                     url: "/payment/check_finish_billing/", // 서비스 웹서버
@@ -567,13 +575,12 @@ class Pters_pass_func{
                         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                             xhr.setRequestHeader("X-CSRFToken", csrftoken);
                         }
-                        beforeSend();
                     },
 
                     success:function(data){
                         var jsondata = JSON.parse(data);
                         if(jsondata.messageArray.length>0){
-                            msg = '결제에 실패하였습니다.';
+                            msg = '결제 정보 변경에 실패하였습니다.';
                             msg += '에러내용 : ' + jsondata.messageArray;
                         }else {
                             msg = '결제가 완료되었습니다.';
@@ -601,12 +608,12 @@ class Pters_pass_func{
                                     }else {
                                         msg = '결제 정보 변경이 완료되었습니다.';
                                     }
-                                    alert(msg);
-                                    window.location.reload(true);
+                                    show_error_message(msg);
+                                    layer_popup.close_layer_popup();
+                                    // window.location.reload(true);
                                 },
 
                                 complete:function(){
-                                    completeSend();
                                 },
 
                                 error:function(){
@@ -614,12 +621,11 @@ class Pters_pass_func{
                                 }
                             });
                         }
-                        alert(msg);
+                        show_error_message(msg);
 
                     },
 
                     complete:function(){
-                        completeSend();
                     },
 
                     error:function(){
@@ -628,9 +634,9 @@ class Pters_pass_func{
                 });
 
             } else {
-                msg = '결제에 실패하였습니다.';
+                msg = '결제 정보 변경에 실패하였습니다.';
                 msg += '에러내용 : ' + rsp.error_msg;
-                alert(msg);
+                show_error_message(msg);
             }
         });
 

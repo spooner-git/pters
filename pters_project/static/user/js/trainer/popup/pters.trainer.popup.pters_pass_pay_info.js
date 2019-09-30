@@ -4,10 +4,12 @@ class Pters_pass_pay_info{
 
         this.data = {
             current:{
+                product_name:[""],
                 card_name:[""],
                 pay_method:[""],
                 start_date:[""],
-                payment_type_cd:[""]
+                payment_type_cd:[""],
+                customer_uid:[""],
             },
             history:null
         };
@@ -24,13 +26,13 @@ class Pters_pass_pay_info{
 
     set_initial_data (){
         Pters_pass_func.read('Current', (data)=>{
-            console.log(data)
+            this.data.current.product_name = data.name;
             this.data.current.card_name = data.card_name;
             this.data.current.pay_method = data.pay_method;
             this.data.current.start_date = data.start_date;
             this.data.current.payment_type_cd = data.payment_type_cd;
+            this.data.current.customer_uid = data.customer_uid;
             Pters_pass_func.read('Pay_list', (data)=>{
-                console.log(data)
                 this.data.history = data;
                 this.render();
             });
@@ -115,9 +117,22 @@ class Pters_pass_pay_info{
         let icon_r_text = "변경";
         let style = {"line-height":"20px"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_PAY_INFO, 100, POPUP_FROM_RIGHT, null, ()=>{
-            //     pters_pass_pay_info_popup = new Pters_pass_pay_info('.popup_pters_pass_pay_info');});
-            alert('결제 수단 변경하기');
+            let date = new Date();
+            let current_customer_uid = this.data.current.customer_uid[0];
+            let product_id = this.data.current.customer_uid[0].split('-')[2];
+            let new_merchant_uid = `m_${home.data.user_id}_${product_id}_${date.getTime()}`;
+            let new_customer_uid = `c_${home.data.user_id}_${product_id}_${date.getTime()}`;
+            let callback = (data)=>{
+                let product_name = this.data.current.product_name[0];
+                let pay_method = this.data.current.pay_method[0];
+                let start_date = data.next_start_date[0];
+                let period_month = 1;
+                let price = data.price[0];
+                Pters_pass_func.request_payment_update(product_name, pay_method, product_id, start_date, current_customer_uid, period_month, price, new_merchant_uid, new_customer_uid)
+            };
+
+            Pters_pass_func.ready_payment();
+            Pters_pass_func.check_payment_for_update(current_customer_uid, product_id, new_merchant_uid, new_customer_uid, callback);
         });
         let html = row;
         return html;
