@@ -10,9 +10,13 @@ class Service_inquiry_faq {
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
 
         this.temp_data_for_test = {
-            data:[{date:"2019-9-1", subject:"테스트 공지사항 입력 제목1", id:1}, {date:"2019-9-2", subject:"테스트 공지사항 입력 제목2", id:2}, {date:"2019-9-3", subject:"테스트 공지사항 입력 제목3", id:3},
-                    {date:"2019-9-4", subject:"테스트 공지사항 입력 제목4", id:4},{date:"2019-9-5", subject:"테스트 공지사항 입력 제목5", id:5}, {date:"2019-9-5", subject:"테스트 공지사항 입력 제목6", id:6}]
-        }
+            data:[  {type:"사용법", subject:"회원 등록하기", id:1}, {type:"사용법", subject:"수업 등록하기", id:1}, {type:"사용법", subject:"수강권 등록하기", id:1}, 
+                    {type:"사용법", subject:"일정 등록하기", id:1}, 
+                    {type:"사용법", subject:"수강 회원님과 연결하여 사용하기", id:2}, {type:"사용법", subject:"기존 회원 재등록 하기", id:6},
+                    {type:"자주 묻는 질문", subject:"결제 방법에는 무엇이 있나요?", id:5}, {type:"자주 묻는 질문", subject:"프로그램이 무엇인가요?", id:3},
+                    {type:"자주 묻는 질문", subject:"달력에 일부 요일이 보이지 않아요", id:7}
+                ]
+        };
 
 
         this.init();
@@ -63,14 +67,13 @@ class Service_inquiry_faq {
     dom_assembly_content(){
         let length = this.temp_data_for_test.data.length;
         let html_temp = [];
-        for(let i=length-1; i >= 0; i--){
+        for(let i=0; i <length ; i++){
             let id = this.temp_data_for_test.data[i].id;
             let subject = this.temp_data_for_test.data[i].subject;
-            let date_format_split = this.temp_data_for_test.data[i].date.split('-');
-            let date_text = DateRobot.to_text(date_format_split[0], date_format_split[1], date_format_split[2]);
+            let date_text = this.temp_data_for_test.data[i].type;
             let html = `<article class="inquiry_faq_wrapper" onclick="service_inquiry_faq_popup.open_detail(${id})">
+                            <div class="inquiry_faq_type">${date_text}</div>
                             <div class="inquiry_faq_subject">${subject}</div>
-                            <div class="inquiry_faq_date">${date_text}</div>
                         </article>`;
             html_temp.push(html);
         }
@@ -79,9 +82,9 @@ class Service_inquiry_faq {
     }
 
     dom_row_toolbox(){
-        let title = "PTERS 공지사항 ";
+        let title = "자주 묻는 질문 & 사용법";
         let html = `<div class="inquiry_faq_upper_box">
-                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                        <div style="display:inline-block;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
                             <span style="display:none;">${title}</span>
                             <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->

@@ -93,16 +93,15 @@ class Service_inquiry_menu {
     }
 
     dom_row_faq(){
-        let id = "inquiry_menu_new_inquiry";
+        let id = "inquiry_menu_faq";
         let title = "자주 묻는 질문 & 사용방법";
         let icon = DELETE;
         let icon_r_visible = NONE;
         let icon_r_text = '';
         let style = null;
         let onclick = ()=>{
-            // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY, 100, POPUP_FROM_RIGHT, null, ()=>{
-            //     service_inquiry_popup = new Service_inquiry('.popup_service_inquiry');});
-            alert('Hi')
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY_FAQ, 100, POPUP_FROM_RIGHT, null, ()=>{
+                service_inquiry_faq_popup = new Service_inquiry_faq('.popup_service_inquiry_faq');});
         };
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         return html;
