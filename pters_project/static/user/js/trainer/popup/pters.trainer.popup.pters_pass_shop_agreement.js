@@ -194,7 +194,7 @@ class Pters_pass_shop_agreement{
         let user_id = home.data.user_id;
         let user_name = home.data.user_name;
         let user_email = home.data.user_email;
-        let name = PASS_PRODUCT["standard"].text;
+        let product_name = PASS_PRODUCT["standard"].text;
         let pay_method = CARD;
         let payment_type_cd = PERIOD;
         let product_id = PASS_PRODUCT["standard"].id;
@@ -222,13 +222,12 @@ class Pters_pass_shop_agreement{
                     }
                 }
                 layer_popup.close_layer_popup();
-                console.log(name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid)
-                Pters_pass_func.request_payment(name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid);
+                Pters_pass_func.request_payment(product_name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid);
             });
         };
 
         Pters_pass_func.ready_payment();
-        Pters_pass_func.check_payment(name, pay_method, payment_type_cd, product_id, price, period_month, merchant_uid, customer_uid, callback);
+        Pters_pass_func.check_payment(product_name, pay_method, payment_type_cd, product_id, price, period_month, merchant_uid, customer_uid, callback);
     }
 
 
