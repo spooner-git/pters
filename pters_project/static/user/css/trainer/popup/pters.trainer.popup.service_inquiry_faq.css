@@ -1,4 +1,4 @@
-/* #faq_display_panel{
+/* #inquiry_faq_display_panel{
 	position: sticky;
 	position: -webkit-sticky;
 	height: auto;
@@ -7,7 +7,7 @@
 	top: 0;
 	/* text-align: center; */
 } */
-.faq_upper_box{
+.inquiry_faq_upper_box{
 	position: relative;
 	height: 28px;
 	line-height: 28px;
@@ -16,7 +16,7 @@
 	/*padding: 14px 20px;*/
 	box-sizing: border-box;
 }
-.faq_tools_wrap{
+.inquiry_faq_tools_wrap{
 	display: table;
 	position: absolute;
 	right: 0;
@@ -26,7 +26,7 @@
 }
 
 
-.faq_wrapper{
+.inquiry_faq_wrapper{
 	display: table;
 	width: 100%;
 	height: 72px;
@@ -38,21 +38,21 @@
 	cursor: pointer;
 }
 
-.faq_subject{
+.inquiry_faq_subject{
 	font-size: 16px;
 	font-weight: 500;
 	letter-spacing: -0.8px;
 	color: #1f1d1e;
 }
 
-.faq_date{
+.inquiry_faq_type{
 	font-size: 12px;
 	font-weight: 500;
 	letter-spacing: -0.6px;
 	color: #858282;
 }
 
-.popup_service_faq .popup_toolbox{
+.popup_service_inquiry_faq .popup_toolbox{
 	position: sticky;
 	position: -webkit-sticky;
 	top: 0;
