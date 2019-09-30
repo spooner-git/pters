@@ -246,38 +246,43 @@ class Pters_pass_main{
 
 class Pters_pass_func{
     static update(data, callback){
-        //업무 시간 설정
         $.ajax({
-            url:"/trainer/update_pters_pass_main/",
-            type:'POST',
-            data: data,
-            dataType : 'html',
-    
-            beforeSend:function(xhr, settings){
+            url: "/payment/update_period_billing/", // 서비스 웹서버
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            data: JSON.stringify({
+                customer_uid : before_customer_uid
+            }),
+
+            beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
+                beforeSend();
             },
-    
-            //통신성공시 처리
-            success:function (data){
-                if(callback != undefined){
-                    callback(data);
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    msg = '결제 정보 변경에 실패하였습니다.';
+                    msg += '에러내용 : ' + jsondata.messageArray;
+                }else {
+                    msg = '결제 정보 변경이 완료되었습니다.';
                 }
+                show_error_message(msg);
+                layer_popup.close_layer_popup();
             },
 
-            //보내기후 팝업창 닫기
-            complete:function (){
-
+            complete:function(){
+                completeSend();
             },
-    
-            //통신 실패시 처리
-            error:function (){
+
+            error:function(){
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
+    
 
     static read(what, callback){
         let url;

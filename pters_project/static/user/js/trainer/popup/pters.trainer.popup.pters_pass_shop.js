@@ -102,7 +102,9 @@ class Pters_pass_shop{
         let html =  '<article class="obj_input_box_full">' +
                         this.dom_row_pters_pass_standard() + 
                         this.dom_row_pters_pass_standard_explain() +
-                    '</article>'
+                        this.dom_row_pters_pass_light() + 
+                        this.dom_row_pters_pass_light_explain() +
+                    '</article>';
 
         return html;
     }
@@ -124,7 +126,7 @@ class Pters_pass_shop{
     }
 
     dom_row_pters_pass_standard_explain(){
-        let html = `<article class="pters_pass_explain_wrapper">
+        let html = `<article class="pters_pass_explain_wrapper" style="background-color:#fe4e6514">
                         <div class="product_explain_row">
                             <div class="product_explain_row_title">일정</div>
                             <div class="product_explain_row_detail">매일 오늘 기준 전후 1년 등록, 취소</div>
@@ -148,6 +150,56 @@ class Pters_pass_shop{
                         <div class="product_explain_row">
                             <div class="product_explain_row_title">프로그램</div>
                             <div class="product_explain_row_detail">10개</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">설정</div>
+                            <div class="product_explain_row_detail">제한 없음</div>
+                        </div>
+                    </article>`;
+        return html;
+    }
+
+    dom_row_pters_pass_light(){
+        let id = "pters_pass_standard_ticket";
+        let title = "라이트 이용권";
+        let icon = DELETE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = "구매 4,400원";
+        let style = {"color":"#22a900", "font-weight":"bold"};
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement');});
+        });
+
+        let html = row;
+        return html;
+    }
+
+    dom_row_pters_pass_light_explain(){
+        let html = `<article class="pters_pass_explain_wrapper" style="background-color:#22a90014">
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">일정</div>
+                            <div class="product_explain_row_detail">매일 오늘 기준 전후 1개월 등록, 취소</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">회원</div>
+                            <div class="product_explain_row_detail">50명</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">수업</div>
+                            <div class="product_explain_row_detail">20개</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">수강권</div>
+                            <div class="product_explain_row_detail">40개</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">통계</div>
+                            <div class="product_explain_row_detail">1년 단위 조회 가능</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">프로그램</div>
+                            <div class="product_explain_row_detail">3개</div>
                         </div>
                         <div class="product_explain_row">
                             <div class="product_explain_row_title">설정</div>
