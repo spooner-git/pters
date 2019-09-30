@@ -3,9 +3,8 @@
  html{
      font-family: 'Noto Sans KR', sans-serif !important;
      box-sizing: border-box !important;
-     color: #1f1d1e;
+     /* color: #1f1d1e; */
      letter-spacing: -0.5px;
- /* background-color: #f7f5f6;*/
  }
 
  html, body{
@@ -13,12 +12,6 @@
      margin: 0;
      user-select: none !important;
      -webkit-user-select: none !important;
-    /* overscroll-behavior-y: contain;  */
-
-    /* position: fixed; 
-    height: 100%;
-    width: 100%;
-    overflow: hidden; */
  }
 
  /* 안드로이드 input 필드 키보드 가림현상 보정 */

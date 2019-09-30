@@ -1,0 +1,12 @@
+@media(prefers-color-scheme: dark){
+    #root_content{
+        color: #ffffff;
+        background-color: #282828;
+    }
+    #home_content_wrap .contents{
+        background-color: unset;
+    }
+    #home_content_wrap .today_plan_wrapper{
+        color: #ffffff;
+    }
+}
