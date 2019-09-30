@@ -472,5 +472,169 @@ class Pters_pass_func{
             });
         }
     }
+
+    static check_payment_for_modify(name, customer_uid, product_id, period_month){
+        var error_check = true;
+        var date = new Date();
+        var new_merchant_uid = 'm_{{request.user.id}}_'+product_id+'_' + date.getTime();
+        var new_customer_uid = 'c_{{request.user.id}}_'+product_id+'_' + date.getTime();
+        $.ajax({
+            url: "/payment/check_update_period_billing/", // 서비스 웹서버
+            type: "POST",
+            data: {"customer_uid": customer_uid,
+                   "new_merchant_uid":new_merchant_uid, "new_customer_uid":new_customer_uid},
+            dataType : 'html',
+
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+                beforeSend();
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    error_check = false;
+                    alert(jsondata.messageArray);
+                }else {
+                    payment(name, 'card',  product_id, jsondata.next_start_date[0],
+                        customer_uid, period_month, jsondata.price[0], new_merchant_uid, new_customer_uid);
+                }
+
+            },
+
+            complete:function(){
+                completeSend();
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        });
+
+
+        return error_check;
+    }
+
+    static request_payment_modify(name, pay_method, product_id, start_date, before_customer_uid, period_month, input_price, merchant_uid, customer_uid){
+        var date = new Date();
+        var month = date.getMonth()+1;
+        var day = date.getDate();
+        var price = input_price;
+        var payment_type_cd = 'PERIOD';
+        if(month <10){
+            month = '0'+month;
+        }
+        if(day <10){
+            day = '0'+day;
+        }
+        var today = date.getFullYear()+'-'+month+'-'+day;
+
+        if(start_date != ''){
+            today = start_date;
+        }
+
+        var request_pay_period_data = {
+            pg : 'danal', // version 1.1.0부터 지원.
+            pay_method : pay_method,
+            merchant_uid : merchant_uid,
+            customer_uid : customer_uid, // 카드(빌링키)와 1:1로 대응하는 값
+            name : name,
+            amount : price,
+            buyer_email : '{{ request.user.email }}',
+            buyer_name : '{{ request.user.first_name }}',
+        };
+
+        IMP.request_pay(request_pay_period_data, function(rsp) {
+            var msg;
+            if ( rsp.success ) {
+                console.log(rsp);
+
+                $.ajax({
+                    url: "/payment/check_finish_billing/", // 서비스 웹서버
+                    type: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    data: JSON.stringify({
+                        product_id : product_id,
+                        payment_type_cd:payment_type_cd,
+                        paid_amount: rsp.paid_amount,
+                        start_date: today,
+                        period_month: period_month
+                    }),
+
+                    beforeSend:function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                        beforeSend();
+                    },
+
+                    success:function(data){
+                        var jsondata = JSON.parse(data);
+                        if(jsondata.messageArray.length>0){
+                            msg = '결제에 실패하였습니다.';
+                            msg += '에러내용 : ' + jsondata.messageArray;
+                        }else {
+                            msg = '결제가 완료되었습니다.';
+
+                            $.ajax({
+                                url: "/payment/update_period_billing/", // 서비스 웹서버
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                data: JSON.stringify({
+                                    customer_uid : before_customer_uid
+                                }),
+
+                                beforeSend:function(xhr, settings) {
+                                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                    }
+                                    beforeSend();
+                                },
+
+                                success:function(data){
+                                    var jsondata = JSON.parse(data);
+                                    if(jsondata.messageArray.length>0){
+                                        msg = '결제 정보 변경에 실패하였습니다.';
+                                        msg += '에러내용 : ' + jsondata.messageArray;
+                                    }else {
+                                        msg = '결제 정보 변경이 완료되었습니다.';
+                                    }
+                                    alert(msg);
+                                    window.location.reload(true);
+                                },
+
+                                complete:function(){
+                                    completeSend();
+                                },
+
+                                error:function(){
+                                    console.log('server error');
+                                }
+                            });
+                        }
+                        alert(msg);
+
+                    },
+
+                    complete:function(){
+                        completeSend();
+                    },
+
+                    error:function(){
+                        console.log('server error');
+                    }
+                });
+
+            } else {
+                msg = '결제에 실패하였습니다.';
+                msg += '에러내용 : ' + rsp.error_msg;
+                alert(msg);
+            }
+        });
+
+    }
+
 }
 
