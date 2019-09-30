@@ -1,5 +1,9 @@
 .DS_Store
 .idea/workspace.xml
+pters_project/admin_spooner/__pycache__/
+pters_project/admin_spooner/migrations/__pycache__/
+pters_project/logs/admin_spooner_log.log
+pters_project/logs/board_log.log
 pters_project/config/__pycache__/
 pters_project/configs/__pycache__/
 pters_project/configs/__init__.pyc
