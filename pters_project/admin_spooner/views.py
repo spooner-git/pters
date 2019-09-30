@@ -22,7 +22,6 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
 
         error = None
-
         qa_list = QATb.objects.filter().order_by('-reg_dt')
         notice_list = NoticeTb.objects.filter().order_by('-reg_dt')
         context['qa_list'] = qa_list

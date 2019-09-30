@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import QATb, BoardTb, CommentTb
+from .models import QATb, BoardTb, CommentTb, NoticeTb
 
 
 @admin.register(QATb)
@@ -16,6 +16,12 @@ class BoardTbAdmin(admin.ModelAdmin):
                     'hits', 'get', 'mod_dt', 'reg_dt', 'use')
 
 
+@admin.register(NoticeTb)
+class NoticeTbAdmin(admin.ModelAdmin):
+    list_display = ('notice_id', 'notice_type_cd', 'title', 'contents', 'to_member_type_cd',
+                    'hits', 'mod_dt', 'reg_dt', 'use')
+
+
 @admin.register(CommentTb)
 class CommentTbAdmin(admin.ModelAdmin):
-    list_display = ('comment_id', 'member', 'board_type_cd', 'board', 'contents', 'mod_dt', 'reg_dt', 'use')
+    list_display = ('comment_id', 'member', 'board_type_cd', 'board_id', 'title', 'contents', 'mod_dt', 'reg_dt', 'use')

@@ -19,4 +19,5 @@ from . import views
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^get_qa_all/$', views.GetQaAllView.as_view(), name='get_qa_all'),
+    url(r'^get_notice_all/$', views.GetNoticeAllView.as_view(), name='get_notice_all'),
 ]

@@ -193,6 +193,7 @@ class Setting_worktime{
                 this.data.GENERAL.end_time = '24:00';
                 this.data.GENERAL.end_time_text = TimeRobot.to_text(24, 0);
             }
+            this.art_data(this.data.GENERAL.end_time, this.data.GENERAL.end_time_text);
             this.render_content();
         });
         let title_row = CComponent.create_row('nothing', '요일별 설정', NONE, HIDE, '', null, ()=>{});
@@ -335,7 +336,6 @@ class Setting_worktime{
         }else{
             merged = start_time + '-' + end_time;
         }
-
         if(this.data.GENERAL.detail_switch == OFF){
             merged = this.data.GENERAL.start_time + '-' + this.data.GENERAL.end_time;
             this.data.SUN.dayoff = OFF;
