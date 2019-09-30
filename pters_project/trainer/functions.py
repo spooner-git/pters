@@ -92,9 +92,9 @@ def func_get_member_end_list(class_id, user_id, keyword):
     query_ip_member_ticket_count = "select count(*) from LECTURE_TB as C where C.MEMBER_ID" \
                                    " =(select B.MEMBER_ID from LECTURE_TB as B where B.ID =" \
                                    " `CLASS_LECTURE_TB`.`LECTURE_TB_ID`)" \
-                                   " and " + class_id +\
+                                   " and " + str(class_id) +\
                                    " = (select D.CLASS_TB_ID from CLASS_LECTURE_TB as D" \
-                                   " where D.LECTURE_TB_ID=C.ID and D.CLASS_TB_ID=" + class_id + ")" \
+                                   " where D.LECTURE_TB_ID=C.ID and D.CLASS_TB_ID=" + str(class_id) + ")" \
                                    " and C.STATE_CD=\'IP\' and C.USE=1"
 
     all_member_ticket_list = ClassMemberTicketTb.objects.select_related(

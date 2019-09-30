@@ -686,6 +686,7 @@ input:disabled{
 	height: 28px;
 	line-height: 28px;
 	vertical-align: middle;
+	color: #b8b4b4;
 }
 .list_sort_select_wrap select{
 	-webkit-appearance: none;

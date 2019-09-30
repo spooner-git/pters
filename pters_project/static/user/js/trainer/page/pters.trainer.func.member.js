@@ -12,7 +12,7 @@ class Member {
 
         this.search = false;
         this.search_value = "";
-
+        this.search_value_text = "이름순";
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
     }
 
@@ -234,6 +234,17 @@ class Member {
     }
 
     static_component (){
+        // 추가 정리 필요 - hkkim 2019-09-30
+        let user_option = `{
+                            name:{text:'이름순', callback:()=>{this.search_value = 'name';this.search_value_text = '이름순';this.send_data();layer_popup.close_layer_popup();}},
+                            rem_num:{text:'남은 횟수순', callback:()=>{this.search_value = 'rem';this.search_value_text = '남은 횟수순';this.send_data();layer_popup.close_layer_popup();}},
+                            reg_num:{text:'등록 횟수순', callback:()=>{this.search_value = 'reg';this.search_value_text = '등록 횟수순';this.send_data();layer_popup.close_layer_popup();}}
+                        }`;
+        let user_option_length = 3;
+        let options_padding_top_bottom = 16;
+        let button_height = 8*user_option_length + 52;
+        let layer_popup_height = options_padding_top_bottom + button_height + 52*user_option_length;
+
         return(
             {
                 member_upper_box:`   <div class="member_upper_box">
@@ -255,12 +266,17 @@ class Member {
                                             <div style="width: 2px; height: 12px;background-color: #f5f2f3; margin:8px;"></div>
                                             <div onclick="${this.instance}.switch_type('end');" style="width:24px;" class="${this.list_type == "end" ? "tab_selected" : ""}">종료</div>
                                         </div>
-                                        <div class="list_sort_select_wrap">
-                                            <select>
+                                        <div class="list_sort_select_wrap" 
+                                        onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_OPTION_SELECTOR}', 100*(${layer_popup_height})/${windowHeight}, ${POPUP_FROM_BOTTOM}, null, ()=>{
+                                            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, ${user_option}
+                                            );
+                                        });">
+                                            <!--<select>
                                                 <option>이름순</option>
                                                 <option>남은 횟수순</option>
                                                 <option>등록 횟수순</option>
-                                            </select>
+                                            </select>-->
+                                            ${this.search_value_text} <img src="/static/common/icon/icon_arrow_expand_light_grey.png" style="width:24px; height:24px; float:right; vertical-align: middle;">
                                         </div>
                                     </div>
                                     `
