@@ -116,7 +116,6 @@ class Home {
     }
 
     dom_row_today_plan(data){
-        console.log(data)
         let date = this.today;
         //받아온 데이터에 아무것도 없을 경우
         if(Object.keys(data).length == 0){
@@ -263,7 +262,7 @@ class Home {
         let title = "이번달 매출";
         let icon = DELETE;
         let icon_r_visible = HIDE;
-        let icon_r_text = `${UnitRobot.numberWithCommas(data.price[0])} 원 <img src='/static/common/icon/icon_arrow_r_small_grey.png' style='width: 25px;vertical-align: middle;'>`;
+        let icon_r_text = `${UnitRobot.numberWithCommas(Number(data.price[0]) - Number(data.refund_price[0]))} 원 <img src='/static/common/icon/icon_arrow_r_small_grey.png' style='width: 25px;vertical-align: middle;'>`;
         let style = {"font-size":"15px", "font-weight":"bold"};
         let onclick = ()=>{
             sideGoPage("statistics");
