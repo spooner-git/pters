@@ -126,6 +126,7 @@ input:disabled{
 	font-size: 13px;
 	text-align: right;
 	color: #858282;
+	white-space: nowrap;
 }
 .create_row .cell_icon > img, .create_input_row .cell_icon > img{
 	width: 24px;
