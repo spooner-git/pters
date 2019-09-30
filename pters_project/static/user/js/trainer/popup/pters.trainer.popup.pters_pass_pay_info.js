@@ -113,8 +113,9 @@ class Pters_pass_pay_info{
         let icon_r_text = "변경";
         let style = {"line-height":"20px"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_PAY_info, 100, POPUP_FROM_RIGHT, null, ()=>{
-                pters_pass_pay_info_popup = new Pters_pass_pay_info('.popup_pters_pass_pay_info');});
+            // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_PAY_INFO, 100, POPUP_FROM_RIGHT, null, ()=>{
+            //     pters_pass_pay_info_popup = new Pters_pass_pay_info('.popup_pters_pass_pay_info');});
+            alert('결제 수단 변경하기');
         });
         let html = row;
         return html;
