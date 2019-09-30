@@ -233,15 +233,7 @@ class Setting_autocomplete{
     send_data(){
         let data = {
             "setting_schedule_auto_finish": this.data.plan.switch == OFF ? OFF : this.data.plan.complete_type,
-            "setting_lecture_auto_finish":this.data.member.switch,
-            "setting_trainer_work_sun_time_avail":this.data_received.setting_trainer_work_sun_time_avail,
-            "setting_trainer_work_mon_time_avail":this.data_received.setting_trainer_work_mon_time_avail,
-            "setting_trainer_work_tue_time_avail":this.data_received.setting_trainer_work_tue_time_avail,
-            "setting_trainer_work_wed_time_avail":this.data_received.setting_trainer_work_wed_time_avail,
-            "setting_trainer_work_ths_time_avail":this.data_received.setting_trainer_work_ths_time_avail,
-            "setting_trainer_work_fri_time_avail":this.data_received.setting_trainer_work_fri_time_avail,
-            "setting_trainer_work_sat_time_avail":this.data_received.setting_trainer_work_sat_time_avail,
-            "setting_admin_password":this.data_received.setting_admin_password
+            "setting_lecture_auto_finish":this.data.member.switch
         };
 
         Setting_autocomplete_func.update(data, ()=>{
@@ -260,7 +252,7 @@ class Setting_autocomplete_func{
     static update(data, callback){
         //업무 시간 설정
         $.ajax({
-            url:"/trainer/update_setting_basic/",
+            url:"/trainer/update_setting_auto_complete/",
             type:'POST',
             data: data,
             dataType : 'html',

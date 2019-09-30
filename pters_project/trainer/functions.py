@@ -14,7 +14,7 @@ from django.db.models.expressions import RawSQL
 
 from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, STATE_CD_IN_PROGRESS, STATE_CD_FINISH,\
-    STATE_CD_ABSENCE, AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS
+    STATE_CD_ABSENCE, AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS, SHOW
 from configs import settings
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
@@ -519,6 +519,8 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     setting_attend_class_prev_display_time = 0
     setting_attend_class_after_display_time = 0
     avail_date_list = []
+    setting_week_start_date = 'SUN'
+    setting_holiday_hide = SHOW
     setting_data = SettingTb.objects.filter(member_id=user_id, class_tb_id=class_id, use=USE)
 
     for setting_info in setting_data:
@@ -570,6 +572,10 @@ def func_get_trainer_setting_list(context, user_id, class_id):
             setting_attend_class_prev_display_time = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_AFTER_DISPLAY_TIME':
             setting_attend_class_after_display_time = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_WEEK_START_DATE':
+            setting_week_start_date = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_HOLIDAY_HIDE':
+            setting_holiday_hide = setting_info.setting_info
 
     if lt_res_cancel_time == -1:
         lt_res_cancel_time = lt_res_02*60
@@ -619,6 +625,9 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     context['setting_language'] = lt_lan_01
     context['setting_attend_class_prev_display_time'] = setting_attend_class_prev_display_time
     context['setting_attend_class_after_display_time'] = setting_attend_class_after_display_time
+    context['setting_week_start_date'] = setting_week_start_date
+    context['setting_holiday_hide'] = setting_holiday_hide
+
     return context
 
 

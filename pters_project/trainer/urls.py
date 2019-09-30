@@ -180,7 +180,13 @@ urlpatterns = [
     # 푸시 Setting 수정
     url(r'^update_setting_push/$', views.update_setting_push_logic, name='update_setting_push'),
     # 일반 설정 관련 Setting 수정
-    url(r'^update_setting_basic/$', views.update_setting_basic_logic, name='update_setting_basic'),
+    url(r'^update_setting_work_time/$', views.update_setting_work_time_logic, name='update_setting_work_time'),
+    url(r'^update_setting_auto_complete/$', views.update_setting_auto_complete_logic, name='update_setting_auto_complete'),
+    # 출석체크 모드 Setting 수정
+    url(r'^update_attend_mode_setting/$', views.update_attend_mode_setting_logic, name='update_attend_mode_setting'),
+
+
+
     # 예약관련 Setting 수정
     url(r'^update_setting_reserve/$', views.update_setting_reserve_logic, name='update_setting_reserve'),
     # 금액 Setting 정보 수정
@@ -209,8 +215,6 @@ urlpatterns = [
     url(r'^attend_mode_check/$', views.attend_mode_check_logic, name='attend_mode_check'),
     # 휴대폰 번호 입력후 출석 완료 기능
     url(r'^attend_mode_finish/$', views.attend_mode_finish_logic, name='attend_mode_finish'),
-    # 출석체크 모드 Setting 수정
-    url(r'^update_attend_mode_setting/$', views.update_attend_mode_setting_logic, name='update_attend_mode_setting'),
     # 관리자 비밀번호 확인
     url(r'^check_admin_password/$', views.check_admin_password_logic, name='check_admin_password'),
     # 출석 체크 모드 스케쥴 조회

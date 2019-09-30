@@ -77,7 +77,7 @@ class Setting_worktime{
             this.data.GENERAL.start_time_text = worktime_all_same == true ? TimeRobot.to_text(worktimes[0].split('-')[0]): null;
             this.data.GENERAL.end_time_text = worktime_all_same == true ? TimeRobot.to_text(worktimes[0].split('-')[1]) : null;
             this.data.GENERAL.detail_switch = worktime_all_same == true ? OFF : ON;
-
+            this.data.dayoff_visibility = data.setting_holiday_hide;
             for(let j=0; j<datas.length; j++){
 
                 let worktimes_start_hour = Number(worktimes[j].split('-')[0].split(':')[0]);
@@ -359,9 +359,7 @@ class Setting_worktime{
             "setting_trainer_work_ths_time_avail":this.data.THS.dayoff == OFF ? this.art_data(this.data.THS.start_time, this.data.THS.end_time) : "00:00-00:00",
             "setting_trainer_work_fri_time_avail":this.data.FRI.dayoff == OFF ? this.art_data(this.data.FRI.start_time, this.data.FRI.end_time) : "00:00-00:00",
             "setting_trainer_work_sat_time_avail":this.data.SAT.dayoff == OFF ? this.art_data(this.data.SAT.start_time, this.data.SAT.end_time) : "00:00-00:00",
-            "setting_schedule_auto_finish":this.data_received.setting_schedule_auto_finish, 
-            "setting_lecture_auto_finish":this.data_received.setting_member_ticket_auto_finish, 
-            "setting_admin_password":this.data_received.setting_admin_password
+            "setting_holiday_hide":this.data.dayoff_visibility,
         };
         Setting_worktime_func.update(data, ()=>{
             this.set_initial_data();
@@ -378,7 +376,7 @@ class Setting_worktime_func{
     static update(data, callback){
         //업무 시간 설정
         $.ajax({
-            url:"/trainer/update_setting_basic/",
+            url:"/trainer/update_setting_work_time/",
             type:'POST',
             data: data,
             dataType : 'html',

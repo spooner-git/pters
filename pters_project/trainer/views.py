@@ -30,7 +30,7 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT, SORT_START_DATE, SORT_ASC, SORT_REG_COUNT, \
     GROUP_SCHEDULE, SCHEDULE_DUPLICATION_ENABLE, LECTURE_TYPE_ONE_TO_ONE, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, \
     STATE_CD_ABSENCE, STATE_CD_FINISH, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
-    LECTURE_TYPE_NORMAL
+    LECTURE_TYPE_NORMAL, SHOW
 from board.models import BoardTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -3814,7 +3814,7 @@ def update_setting_push_logic(request):
 
 
 # 강사 기본 setting 업데이트 api
-def update_setting_basic_logic(request):
+def update_setting_work_time_logic(request):
     # setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '00:00-23:59')
     setting_trainer_work_sun_time_avail = request.POST.get('setting_trainer_work_sun_time_avail', '00:00-24:00')
     setting_trainer_work_mon_time_avail = request.POST.get('setting_trainer_work_mon_time_avail', '00:00-24:00')
@@ -3823,9 +3823,7 @@ def update_setting_basic_logic(request):
     setting_trainer_work_ths_time_avail = request.POST.get('setting_trainer_work_ths_time_avail', '00:00-24:00')
     setting_trainer_work_fri_time_avail = request.POST.get('setting_trainer_work_fri_time_avail', '00:00-24:00')
     setting_trainer_work_sat_time_avail = request.POST.get('setting_trainer_work_sat_time_avail', '00:00-24:00')
-    setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
-    setting_lecture_auto_finish = request.POST.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
-    setting_admin_password = request.POST.get('setting_admin_password', '0000')
+    setting_holiday_hide = request.POST.get('setting_holiday_hide', SHOW)
     class_id = request.session.get('class_id', '')
     lt_work_sun_time_avail = None
     lt_work_mon_time_avail = None
@@ -3834,32 +3832,25 @@ def update_setting_basic_logic(request):
     lt_work_ths_time_avail = None
     lt_work_fri_time_avail = None
     lt_work_sat_time_avail = None
-    lt_schedule_auto_finish = None
-    admin_password = None
-    lt_lecture_auto_finish = None
+    holiday_hide = None
 
     error = None
-    if error is None:
-        if setting_trainer_work_sun_time_avail is None or setting_trainer_work_sun_time_avail == '':
-            setting_trainer_work_sun_time_avail = '00:00-24:00'
-        if setting_trainer_work_mon_time_avail is None or setting_trainer_work_mon_time_avail == '':
-            setting_trainer_work_mon_time_avail = '00:00-24:00'
-        if setting_trainer_work_tue_time_avail is None or setting_trainer_work_tue_time_avail == '':
-            setting_trainer_work_tue_time_avail = '00:00-24:00'
-        if setting_trainer_work_wed_time_avail is None or setting_trainer_work_wed_time_avail == '':
-            setting_trainer_work_wed_time_avail = '00:00-24:00'
-        if setting_trainer_work_ths_time_avail is None or setting_trainer_work_ths_time_avail == '':
-            setting_trainer_work_ths_time_avail = '00:00-24:00'
-        if setting_trainer_work_fri_time_avail is None or setting_trainer_work_fri_time_avail == '':
-            setting_trainer_work_fri_time_avail = '00:00-24:00'
-        if setting_trainer_work_sat_time_avail is None or setting_trainer_work_sat_time_avail == '':
-            setting_trainer_work_sat_time_avail = '00:00-24:00'
-        if setting_schedule_auto_finish is None or setting_schedule_auto_finish == '':
-            setting_schedule_auto_finish = AUTO_FINISH_OFF
-        if setting_lecture_auto_finish is None or setting_lecture_auto_finish == '':
-            setting_lecture_auto_finish = AUTO_FINISH_OFF
-        if setting_admin_password is None or setting_admin_password == '':
-            setting_admin_password = '0000'
+    if setting_trainer_work_sun_time_avail is None or setting_trainer_work_sun_time_avail == '':
+        setting_trainer_work_sun_time_avail = '00:00-24:00'
+    if setting_trainer_work_mon_time_avail is None or setting_trainer_work_mon_time_avail == '':
+        setting_trainer_work_mon_time_avail = '00:00-24:00'
+    if setting_trainer_work_tue_time_avail is None or setting_trainer_work_tue_time_avail == '':
+        setting_trainer_work_tue_time_avail = '00:00-24:00'
+    if setting_trainer_work_wed_time_avail is None or setting_trainer_work_wed_time_avail == '':
+        setting_trainer_work_wed_time_avail = '00:00-24:00'
+    if setting_trainer_work_ths_time_avail is None or setting_trainer_work_ths_time_avail == '':
+        setting_trainer_work_ths_time_avail = '00:00-24:00'
+    if setting_trainer_work_fri_time_avail is None or setting_trainer_work_fri_time_avail == '':
+        setting_trainer_work_fri_time_avail = '00:00-24:00'
+    if setting_trainer_work_sat_time_avail is None or setting_trainer_work_sat_time_avail == '':
+        setting_trainer_work_sat_time_avail = '00:00-24:00'
+    if setting_holiday_hide is None or setting_holiday_hide == '':
+        setting_holiday_hide = SHOW
 
     if error is None:
         try:
@@ -3905,27 +3896,11 @@ def update_setting_basic_logic(request):
             lt_work_sat_time_avail = SettingTb(member_id=request.user.id,
                                                class_tb_id=class_id, setting_type_cd='LT_WORK_SAT_TIME_AVAIL', use=USE)
         try:
-            lt_schedule_auto_finish = SettingTb.objects.get(member_id=request.user.id,
-                                                            class_tb_id=class_id,
-                                                            setting_type_cd='LT_SCHEDULE_AUTO_FINISH')
+            holiday_hide = SettingTb.objects.get(member_id=request.user.id,
+                                                 class_tb_id=class_id, setting_type_cd='LT_HOLIDAY_HIDE')
         except ObjectDoesNotExist:
-            lt_schedule_auto_finish = SettingTb(member_id=request.user.id,
-                                                class_tb_id=class_id, setting_type_cd='LT_SCHEDULE_AUTO_FINISH',
-                                                use=USE)
-        try:
-            lt_lecture_auto_finish = SettingTb.objects.get(member_id=request.user.id,
-                                                           class_tb_id=class_id,
-                                                           setting_type_cd='LT_LECTURE_AUTO_FINISH')
-        except ObjectDoesNotExist:
-            lt_lecture_auto_finish = SettingTb(member_id=request.user.id,
-                                               class_tb_id=class_id, setting_type_cd='LT_LECTURE_AUTO_FINISH',
-                                               use=USE)
-        try:
-            admin_password = SettingTb.objects.get(member_id=request.user.id,
-                                                   class_tb_id=class_id, setting_type_cd='LT_ADMIN_PASSWORD')
-        except ObjectDoesNotExist:
-            admin_password = SettingTb(member_id=request.user.id,
-                                       class_tb_id=class_id, setting_type_cd='LT_ADMIN_PASSWORD', use=USE)
+            holiday_hide = SettingTb(member_id=request.user.id,
+                                     class_tb_id=class_id, setting_type_cd='LT_HOLIDAY_HIDE', use=USE)
 
     if error is None:
         try:
@@ -3945,16 +3920,67 @@ def update_setting_basic_logic(request):
                 lt_work_ths_time_avail.save()
                 lt_work_fri_time_avail.save()
                 lt_work_sat_time_avail.save()
-                # lt_res_04.setting_info = setting_trainer_work_time_available
-                # lt_res_04.save()
+                holiday_hide.setting_info = setting_holiday_hide
+                holiday_hide.save()
 
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError:
+            error = '등록 값에 문제가 있습니다.'
+        except ValidationError:
+            error = '등록 값에 문제가 있습니다.'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 강사 기본 setting 업데이트 api
+def update_setting_auto_complete_logic(request):
+    setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
+    setting_lecture_auto_finish = request.POST.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
+    class_id = request.session.get('class_id', '')
+    lt_schedule_auto_finish = None
+    lt_lecture_auto_finish = None
+
+    error = None
+    if setting_schedule_auto_finish is None or setting_schedule_auto_finish == '':
+        setting_schedule_auto_finish = AUTO_FINISH_OFF
+    if setting_lecture_auto_finish is None or setting_lecture_auto_finish == '':
+        setting_lecture_auto_finish = AUTO_FINISH_OFF
+
+    if error is None:
+        try:
+            lt_schedule_auto_finish = SettingTb.objects.get(member_id=request.user.id,
+                                                            class_tb_id=class_id,
+                                                            setting_type_cd='LT_SCHEDULE_AUTO_FINISH')
+        except ObjectDoesNotExist:
+            lt_schedule_auto_finish = SettingTb(member_id=request.user.id,
+                                                class_tb_id=class_id, setting_type_cd='LT_SCHEDULE_AUTO_FINISH',
+                                                use=USE)
+        try:
+            lt_lecture_auto_finish = SettingTb.objects.get(member_id=request.user.id,
+                                                           class_tb_id=class_id,
+                                                           setting_type_cd='LT_LECTURE_AUTO_FINISH')
+        except ObjectDoesNotExist:
+            lt_lecture_auto_finish = SettingTb(member_id=request.user.id,
+                                               class_tb_id=class_id, setting_type_cd='LT_LECTURE_AUTO_FINISH',
+                                               use=USE)
+
+    if error is None:
+        try:
+            with transaction.atomic():
                 lt_schedule_auto_finish.setting_info = setting_schedule_auto_finish
                 lt_schedule_auto_finish.save()
 
                 lt_lecture_auto_finish.setting_info = setting_lecture_auto_finish
                 lt_lecture_auto_finish.save()
-                admin_password.setting_info = setting_admin_password
-                admin_password.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
