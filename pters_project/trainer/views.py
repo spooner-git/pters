@@ -3956,10 +3956,8 @@ def update_setting_reserve_logic(request):
     if setting_member_start_time is None or setting_member_start_time == '':
         setting_member_start_time = 'A-0'
 
-    setting_type_cd_data = ['LT_RES_01', 'LT_RES_03',
-                            'LT_RES_05', 'LT_RES_CANCEL_TIME',
-                            'LT_RES_ENABLE_TIME', 'LT_RES_MEMBER_TIME_DURATION',
-                            'LT_RES_MEMBER_START_TIME']
+    setting_type_cd_data = ['LT_RES_01', 'LT_RES_03', 'LT_RES_05', 'LT_RES_CANCEL_TIME',
+                            'LT_RES_ENABLE_TIME', 'LT_RES_MEMBER_TIME_DURATION', 'LT_RES_MEMBER_START_TIME']
     setting_info_data = [setting_member_reserve_time_available, setting_member_reserve_prohibition,
                          setting_member_reserve_date_available, setting_member_reserve_cancel_time,
                          setting_member_reserve_enable_time, setting_member_time_duration,
