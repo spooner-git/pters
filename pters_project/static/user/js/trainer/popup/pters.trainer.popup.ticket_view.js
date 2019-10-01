@@ -40,7 +40,8 @@ class Ticket_view{
             ticket_mod_dt:null,
 
             member_id:[],
-            member_name:[]
+            member_name:[],
+            member_profile_url:[]
         };
 
         this.init();
@@ -134,6 +135,7 @@ class Ticket_view{
             Ticket_func.read_member_list({"ticket_id":this.ticket_id}, (data)=>{
                 this.data.member_id = data.ticket_ing_member_list.map((el)=>{return el.member_id;});
                 this.data.member_name = data.ticket_ing_member_list.map((el)=>{return el.member_name;});
+                this.data.member_profile_url = data.ticket_ing_member_list.map((el)=>{return el.member_profile_url;});
                 this.init();
             });
         });
@@ -370,17 +372,23 @@ class Ticket_view{
         for(let i=0; i<length; i++){
             let member_id = this.data.member_id[i];
             let member_name = this.data.member_name[i];
-            let style = {"display":"block", "font-size":"15px", "font-weight":"500", "padding":"0", "height":"50px", "line-height":"50px"};
-            html_to_join.push(
+            let member_profile_url = this.data.member_profile_url[i];
+            let style = {"display":"block", "font-size":"15px", "font-weight":"500", "padding":"0", "height":"44px", "line-height":"44px"};
+            let member_button =
                 CComponent.text_button(member_id, member_name, style, ()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/windowHeight), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
                         member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
                         //회원 간단 정보 팝업 열기
                     });
                 })
+            ;
+
+            let member_img = '<div style="display: table-cell; width:40px; vertical-align:bottom;"><img src="'+member_profile_url+'" style="width:30px; height:30px; border-radius: 50%;"></div>';
+            html_to_join.push(
+                '<div style="display:table;width:100%;">'+member_img+'<div style="display: table-cell; width:60%;">'+member_button + '</div><div style="display: table-cell; line-height: 44px; float:right;"></div></div>'
             );
         }
-        let html = `<div>${html_to_join.join('')}</div>`;
+        let html = `${html_to_join.join('')}`;
 
         return html;
     }
@@ -553,7 +561,8 @@ class Ticket_simple_view{
             ticket_mod_dt:null,
 
             member_id:[],
-            member_name:[]
+            member_name:[],
+            member_profile_url:[]
         };
 
         this.init();
@@ -586,6 +595,7 @@ class Ticket_simple_view{
             Ticket_func.read_member_list({"ticket_id":this.ticket_id}, (data)=>{
                 this.data.member_id = data.ticket_ing_member_list.map((el)=>{return el.member_id;});
                 this.data.member_name = data.ticket_ing_member_list.map((el)=>{return el.member_name;});
+                this.data.member_profile_url = data.ticket_ing_member_list.map((el)=>{return el.member_profile_url;});
                 this.init();
             });
         });
