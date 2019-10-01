@@ -8,6 +8,7 @@ class Service_helper {
 
         this.swiper;
 
+        localStorage.setItem("tutorial_view", 1);
         this.init();
     }
 

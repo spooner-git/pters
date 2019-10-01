@@ -597,7 +597,15 @@ onclick="layer_popup.close_layer_popup();"></div>
             break;
         }
     }
+
+    //페이지에 들어오면 홈화면을 띄우기
     $('#home').trigger('click');
+
+    //튜토리얼을 본적이 없으면 튜토리얼을 띄우기
+    let tutorial_view = localStorage.getItem("tutorial_view");
+    if(tutorial_view != "1"){
+        sideGoPage("helper");
+    }
 
     // 구글 reCAPTCHA 보이지 않게 하기
     /*
