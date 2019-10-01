@@ -688,6 +688,7 @@ class Member_func{
 
             //통신성공시 처리
             success:function(data){
+                console.log(data)
                 callback(data);
             },
 

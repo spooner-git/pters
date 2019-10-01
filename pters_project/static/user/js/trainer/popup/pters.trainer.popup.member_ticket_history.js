@@ -58,7 +58,7 @@ class Member_ticket_history{
             let avail_count = data.member_ticket_avail_count;
             let status_code = data.member_ticket_state_cd;
             let status = TICKET_STATUS[data.member_ticket_state_cd];
-            let refund_date = data.member_ticket_refund_date == "" ? null : data.member_ticket_refund_date;
+            let refund_date = data.member_ticket_refund_date == "" || data.member_ticket_refund_date == "None" ? null : data.member_ticket_refund_date;
             let refund_price = data.member_ticket_refund_price == "" ? null : data.member_ticket_refund_price;
             let date_diff = DateRobot.diff_date(data.member_ticket_end_date, data.member_ticket_start_date);
             let date = DateRobot.to_text(data.member_ticket_start_date, '', '', SHORT) + ' - ' + DateRobot.to_text(data.member_ticket_end_date, '', '', SHORT) + ' ('+date_diff+'일)';

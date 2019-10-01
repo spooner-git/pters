@@ -350,6 +350,8 @@ class Member_ticket_modify{
         let data = {"member_ticket_id":this.data.member_ticket_id, "note":"", "start_date":this.data.start_date, "end_date":this.data.end_date, 
                     "price":this.data.price, "refund_price":this.data.refund_price, "refund_date":this.data.refund_date, "member_ticket_reg_count":this.data.reg_count};
 
+        console.log(data)
+
         Member_func.ticket_update(data, ()=>{
             layer_popup.close_layer_popup();
             this.set_initial_data();
