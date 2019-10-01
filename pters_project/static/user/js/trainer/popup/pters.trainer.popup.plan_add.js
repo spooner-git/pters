@@ -311,14 +311,6 @@ class Plan_add{
                                                                                                     this.date = object; 
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
                 }});
-
-                // date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'날짜 선택', data:{year:year, month:month, date:date}, 
-                //                                                                                 range:{start: this.dates.current_year - 5, end: this.dates.current_year+5}, 
-                //                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
-                //                                                                                     this.date = object; 
-                //                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
-                //                                                                                 }});
-                
             });
         });
         return html;

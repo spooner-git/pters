@@ -140,7 +140,7 @@ class Member {
             let remain_date = Math.round((new Date(end_date).getTime() - new Date().getTime()) / (1000*60*60*24));
             let member_counts_text = list_type == "ing" ? member_rem+'회 / '+remain_date+'일 / - '+end_date_text+' 까지' : '종료됨';
             if(remain_date < 0 && list_type == "ing"){
-                member_counts_text = "<span style='color:#fe4e65;'>"+Math.abs(remain_date) +"일 지남</span>";
+                member_counts_text = member_rem+'회 / ' + "<span style='color:#fe4e65;'>"+Math.abs(remain_date) +"일 지남</span>";
             }
 
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'member_id':${member_id}}, ()=>{
