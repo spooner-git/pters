@@ -8,6 +8,7 @@ class Service_helper {
 
         this.swiper;
 
+        localStorage.setItem("tutorial_view", 1);
         this.init();
     }
 
@@ -68,7 +69,6 @@ class Service_helper {
                             <div class="swiper-slide">${content_5}</div>
                         </div>
                         <div class="swiper-pagination"></div>
-                        <div class="swiper-scrollbar"></div>
                     </div>`;
 
         return html;
@@ -125,10 +125,10 @@ class Service_helper {
     swiper_init(){
         this.swiper = new Swiper('#service_helper_content_slide', {
             speed: 400,
-            spaceBetween: 100,
-            scrollbar: {
-                el: '.swiper-scrollbar',
-                draggable: true,
+            spaceBetween: 0,
+            pagination: {
+                el: '.swiper-pagination',
+                type: 'bullets',
             }
         });
     }
