@@ -2328,14 +2328,17 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         class_id = self.request.session.get('class_id', '')
         lecture_sort = self.request.GET.get('sort_val', SORT_TICKET_NAME)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
+        keyword = self.request.GET.get('keyword', '')
         sort_info = int(lecture_sort)
         error = None
 
         lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
+                                                name__contains=keyword,
                                                 use=USE).order_by('lecture_id')
 
         lecture_ticket_data = TicketLectureTb.objects.select_related(
             'lecture_tb', 'ticket_tb').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                              lecture_tb__name__contains=keyword,
                                               lecture_tb__use=USE,
                                               use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
 
@@ -2447,14 +2450,17 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         class_id = self.request.session.get('class_id', '')
         lecture_sort = self.request.GET.get('sort_val', SORT_TICKET_NAME)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
+        keyword = self.request.GET.get('keyword', '')
         sort_info = int(lecture_sort)
         error = None
 
         lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_FINISH,
+                                                name__contains=keyword,
                                                 use=USE).order_by('lecture_id')
 
         lecture_ticket_data = TicketLectureTb.objects.select_related(
             'ticket_tb', 'lecture_tb').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_FINISH,
+                                              lecture_tb__name__contains=keyword,
                                               lecture_tb__use=USE,
                                               use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
 
@@ -2959,14 +2965,16 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         # page = self.request.GET.get('page', 0)
         ticket_sort = self.request.GET.get('sort_val', SORT_TICKET_NAME)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
-        # keyword = self.request.GET.get('keyword', '')
+        keyword = self.request.GET.get('keyword', '')
         sort_info = int(ticket_sort)
         error = None
         # start_time = timezone.now()
         ticket_data = TicketTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
+                                              name__contains=keyword,
                                               use=USE).order_by('ticket_id')
         ticket_lecture_data = TicketLectureTb.objects.select_related(
             'ticket_tb', 'lecture_tb').filter(class_tb_id=class_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                              ticket_tb__name__contains=keyword,
                                               ticket_tb__use=USE,
                                               use=USE).order_by('ticket_tb_id', 'lecture_tb__state_cd', 'lecture_tb_id')
 
@@ -3079,15 +3087,17 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         # page = self.request.GET.get('page', 0)
         ticket_sort = self.request.GET.get('sort_val', SORT_TICKET_TYPE)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
-        # keyword = self.request.GET.get('keyword', '')
+        keyword = self.request.GET.get('keyword', '')
         sort_info = int(ticket_sort)
 
         error = None
 
         ticket_data = TicketTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_FINISH,
+                                              name__contains=keyword,
                                               use=USE).order_by('ticket_id')
         ticket_lecture_data = TicketLectureTb.objects.select_related(
             'ticket_tb', 'lecture_tb').filter(class_tb_id=class_id, ticket_tb__state_cd=STATE_CD_FINISH,
+                                              ticket_tb__name__contains=keyword,
                                               ticket_tb__use=USE, use=USE).order_by('ticket_tb_id',
                                                                                     'lecture_tb__state_cd',
                                                                                     'lecture_tb_id')
@@ -3884,6 +3894,7 @@ def update_setting_work_time_logic(request):
     setting_trainer_work_fri_time_avail = request.POST.get('setting_trainer_work_fri_time_avail', '00:00-24:00')
     setting_trainer_work_sat_time_avail = request.POST.get('setting_trainer_work_sat_time_avail', '00:00-24:00')
     setting_holiday_hide = request.POST.get('setting_holiday_hide', SHOW)
+    setting_week_start_date = request.POST.get('setting_week_start_date', 'SUN')
     class_id = request.session.get('class_id', '')
     lt_work_sun_time_avail = None
     lt_work_mon_time_avail = None
@@ -3893,6 +3904,7 @@ def update_setting_work_time_logic(request):
     lt_work_fri_time_avail = None
     lt_work_sat_time_avail = None
     holiday_hide = None
+    week_start_date = None
 
     error = None
     if setting_trainer_work_sun_time_avail is None or setting_trainer_work_sun_time_avail == '':
@@ -3911,6 +3923,8 @@ def update_setting_work_time_logic(request):
         setting_trainer_work_sat_time_avail = '00:00-24:00'
     if setting_holiday_hide is None or setting_holiday_hide == '':
         setting_holiday_hide = SHOW
+    if setting_week_start_date is None or setting_week_start_date == '':
+        setting_week_start_date = 'SUN'
 
     if error is None:
         try:
@@ -3961,6 +3975,12 @@ def update_setting_work_time_logic(request):
         except ObjectDoesNotExist:
             holiday_hide = SettingTb(member_id=request.user.id,
                                      class_tb_id=class_id, setting_type_cd='LT_HOLIDAY_HIDE', use=USE)
+        try:
+            week_start_date = SettingTb.objects.get(member_id=request.user.id,
+                                                    class_tb_id=class_id, setting_type_cd='LT_WEEK_START_DATE')
+        except ObjectDoesNotExist:
+            week_start_date = SettingTb(member_id=request.user.id,
+                                        class_tb_id=class_id, setting_type_cd='LT_WEEK_START_DATE', use=USE)
 
     if error is None:
         try:
@@ -3982,6 +4002,8 @@ def update_setting_work_time_logic(request):
                 lt_work_sat_time_avail.save()
                 holiday_hide.setting_info = setting_holiday_hide
                 holiday_hide.save()
+                week_start_date.setting_info = setting_week_start_date
+                week_start_date.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'

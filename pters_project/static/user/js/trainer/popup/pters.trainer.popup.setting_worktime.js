@@ -255,6 +255,7 @@ class Setting_worktime{
         let power = this.data.dayoff_visibility;
         let style = null;
         let detail_setting = CComponent.toggle_button (id, power, style, (data)=>{
+            console.log('data:::'+data);
             this.data.dayoff_visibility = data; // ON or OFF
             this.render_content();
         });
@@ -403,6 +404,7 @@ class Setting_worktime{
             "setting_holiday_hide":this.data.dayoff_visibility,
             "setting_week_start_date":this.data.start_day 
         };
+        console.log(data);
         Setting_worktime_func.update(data, ()=>{
             this.set_initial_data();
             show_error_message('변경 내용이 저장되었습니다.');
