@@ -241,6 +241,7 @@ class Calendar {
         }
         let last_date = new Date(year, month, 0).getDate();
         let week_num_this_month = Math.ceil( (first_day + last_date)/7  ) - 1;
+        console.log("year:", year, " month:",month, " week :", week_num_this_month);
         
         return week_num_this_month;
     }
@@ -268,75 +269,109 @@ class Calendar {
         }
         //시작을 월요일부터 옵션을 위한 코드
 
-        let prev_year = year - 1;
         let prev_month = month - 1 < 1 ? 12 : month-1;
+        let prev_year = prev_month == 12 ?year - 1 : year;
 
         week = week - 1;
         if(week == -1 && first_day == 0){
-            let first_day_of_the_month = new Date(prev_month == 12 ? prev_year: year, prev_month-1, 1).getDay();
-            let last_date_of_the_month = new Date(prev_month == 12 ? prev_year: year, prev_month, 0).getDate();
-            
-
-            week = Math.ceil( (first_day_of_the_month + last_date_of_the_month)/7 - 1  );
+            week = this.get_week_number(prev_year, prev_month);
             month = month - 1 < 1 ? 12  : month - 1;
             year = month == 12 ? year - 1 : year;   
-        }else if(week == -1 && first_day !=0){
-            let first_day_of_the_month = new Date(prev_month == 12 ? prev_year: year, prev_month-1, 1).getDay();
-            let last_date_of_the_month = new Date(prev_month == 12 ? prev_year: year, prev_month, 0).getDate();
 
-            week = Math.ceil( (first_day_of_the_month + last_date_of_the_month)/7 - 2 );
+        }else if(week == -1 && first_day !=0){
+            week = this.get_week_number(prev_year, prev_month) - 1;
             month = month - 1 < 1 ? 12  : month - 1;
             year = month == 12 ? year - 1 : year;      
+
         }
 
-        return {
-            "year":year, "month":month, "week":week
-        };
+        let result = {"year":year, "month":month, "week":week};
+        return result;
     }
 
     get_next_week (){
         let year = this.current_year;
         let month = this.current_month;
         let week = this.current_week;
-        let first_day = new Date(year, month-1, 1).getDay();
-        let last_date = new Date(year, month, 0).getDate();
-        let last_day_of_next_month = new Date(year, month, 0).getDay();
+        let first_day_of_next_month = new Date(year, month, 1).getDay();
 
         //시작을 월요일부터 옵션을 위한 코드
         if(this.date_start == 1){
-            if(first_day == 0){
-                first_day = 6;
+            if(first_day_of_next_month == 0){
+                first_day_of_next_month = 6;
             }else{
-                first_day--;
+                first_day_of_next_month--;
             }
-            if(last_day_of_next_month != 5){
-                last_day_of_next_month--;
-            }
+            // if(last_day_of_next_month != 5){
+            //     last_day_of_next_month--;
+            // }
         }
         //시작을 월요일부터 옵션을 위한 코드
 
-        let week_num_this_month = Math.ceil( (first_day + last_date)/7  );
-
-        // let next_year = year + 1;
-        // let next_month = month + 1 > 12 ? 1 : month + 1;
+        let week_num_this_month = this.get_week_number(year, month);
 
         week = week + 1;
-        if(week  == week_num_this_month && last_day_of_next_month != 6 ){
+        if(week  == week_num_this_month+1 && first_day_of_next_month != 0 ){
             week = 1;
             month = month + 1 > 12 ? 1  : month + 1;
             year = month ==  1 ? year + 1 : year;
 
-        }else if(week == week_num_this_month){
+        }else if(week == week_num_this_month+1){
             week = 0;
             month = month + 1 > 12 ? 1  : month + 1;
             year = month ==  1 ? year + 1 : year;
-
         }
+
         
         return {
-            "year":year, "month":month, "week":week, "tese":last_day_of_next_month
+            "year":year, "month":month, "week":week
         };
     }
+
+    // get_next_week (){
+    //     let year = this.current_year;
+    //     let month = this.current_month;
+    //     let week = this.current_week;
+    //     let first_day = new Date(year, month-1, 1).getDay();
+    //     let last_date = new Date(year, month, 0).getDate();
+    //     let last_day_of_next_month = new Date(year, month, 0).getDay();
+
+    //     //시작을 월요일부터 옵션을 위한 코드
+    //     if(this.date_start == 1){
+    //         if(first_day == 0){
+    //             first_day = 6;
+    //         }else{
+    //             first_day--;
+    //         }
+    //         // if(last_day_of_next_month != 5){
+    //         //     last_day_of_next_month--;
+    //         // }
+    //     }
+    //     //시작을 월요일부터 옵션을 위한 코드
+
+
+    //     // let week_num_this_month = Math.ceil( (first_day + last_date)/7  );
+    //     let week_num_this_month = this.get_week_number(year, month);
+    //     console.log(year, month, "총 몇주? ",week_num_this_month);
+
+    //     week = week + 1;
+    //     if(week  == week_num_this_month && last_day_of_next_month != 6 ){
+    //         week = 1;
+    //         month = month + 1 > 12 ? 1  : month + 1;
+    //         year = month ==  1 ? year + 1 : year;
+
+    //     }else if(week == week_num_this_month){
+    //         week = 0;
+    //         month = month + 1 > 12 ? 1  : month + 1;
+    //         year = month ==  1 ? year + 1 : year;
+    //     }
+
+        
+    //     return {
+    //         "year":year, "month":month, "week":week, "tese":last_day_of_next_month
+    //     };
+    // }
+
 
     go_month (year, month){
         if(year == undefined && month == undefined){
@@ -1015,13 +1050,13 @@ class Calendar {
 
         let result_html = dates_to_join.join("");
         // let week_date_name_data = this.static_component().week_cal_upper_box_date_tool;
-        let day_names = `<div class="_week_row_1 obj_font_color_sunday_red" ${this.dayoff.indexOf(0) != -1 ? "style=display:none": ""}>일</div>
+        let day_names = `<div class="_week_row_1 obj_font_color_sunday_red" ${this.dayoff.indexOf(0) != -1 && this.dayoff_hide == 1? "style=display:none": ""}>일</div>
                         <div class="_week_row_2" ${this.dayoff.indexOf(1) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>월</div>
                         <div class="_week_row_3" ${this.dayoff.indexOf(2) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>화</div>
                         <div class="_week_row_4" ${this.dayoff.indexOf(3) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>수</div>
                         <div class="_week_row_5" ${this.dayoff.indexOf(4) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>목</div>
                         <div class="_week_row_6" ${this.dayoff.indexOf(5) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>금</div>
-                        <div class="_week_row_7 obj_font_color_saturday_blue" ${this.dayoff.indexOf(6) != -1 ? "style=display:none": ""}>토</div>`;
+                        <div class="_week_row_7 obj_font_color_saturday_blue" ${this.dayoff.indexOf(6) != -1 && this.dayoff_hide == 1? "style=display:none": ""}>토</div>`;
         if(this.date_start == 1){
             day_names = `<div class="_week_row_1" ${this.dayoff.indexOf(0) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>월</div>
                         <div class="_week_row_2" ${this.dayoff.indexOf(1) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>화</div>
