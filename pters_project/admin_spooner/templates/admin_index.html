@@ -1,11 +1,28 @@
-{% extends "base.html" %}
+{% extends "admin_base.html" %}
 {% block content %}
     {% load static_url %}
-    <a href="{% url 'login:logout' %}">로그아웃</a>
-    <br/><br/><br/><br/><br/>
-    {% for qa_info in qa_list %}
-        {{ qa_info.member.name }} : {{ qa_info.email_address }}<br/>
-        {{ qa_info.title }} - {{ qa_info.contents }}<br/>
-        --------------------------------------------<br/>
-    {% endfor %}
+    <div id="base">
+        <section id="side_menu">
+            <article>
+                <img src="/static/user/res/PTERS_logo_pure.png" alt="" style="width: 100px;">
+                <p style="margin:0;font-size:11px;line-height:0">관리자 페이지</p>
+            </article>
+            <article>
+                <span class="text_button">PTERS 공지</span>
+            </article>
+            <article>
+                <span class="text_button" onclick="page_qa.init();">문의 관리</span>
+            </article>
+            <article>
+                    <span class="text_button">FAQ 관리</span>
+            </article>
+            <article style="margin-top: 50px;color:#fe4e65;font-size:12px;">
+                <span onclick="location.href='/login/logout/'" class="text_button">로그아웃</span>
+            </article>
+        </section>
+        <section id="main_content">
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:20px;font-weight:bold;">피터스 관리자 페이지</div>
+        </section>
+    </div>
+
 {% endblock %}
