@@ -3,6 +3,7 @@ class Setting_worktime{
         this.target = {install: install_target, toolbox:'section_setting_worktime_toolbox', content:'section_setting_worktime_content'};
 
         this.data = {
+                start_day: null,
                 dayoff_visibility: OFF,
                 GENERAL:{
                     "start_time":null, "end_time":null, 
@@ -78,6 +79,7 @@ class Setting_worktime{
             this.data.GENERAL.end_time_text = worktime_all_same == true ? TimeRobot.to_text(worktimes[0].split('-')[1]) : null;
             this.data.GENERAL.detail_switch = worktime_all_same == true ? OFF : ON;
             this.data.dayoff_visibility = data.setting_holiday_hide;
+            this.data.start_day = data.setting_week_start_date;
             for(let j=0; j<datas.length; j++){
 
                 let worktimes_start_hour = Number(worktimes[j].split('-')[0].split(':')[0]);
@@ -133,8 +135,9 @@ class Setting_worktime{
     dom_assembly_content(){
         let general_worktime = this.dom_row_general_worktime();
         let dayoff_visibility = this.dom_row_dayoff_visibility();
+        let start_day_setting = this.dom_row_start_day_setting();
 
-        let main_assembly = dayoff_visibility + general_worktime;
+        let main_assembly = start_day_setting + dayoff_visibility + general_worktime;
 
         let sub_assembly = "";
         if(this.data.GENERAL.detail_switch == ON){
@@ -206,6 +209,44 @@ class Setting_worktime{
                             <div style="display:table-cell;width:50px;">${detail_setting}</div>
                         </div>
                     </article>`;
+        return html;
+    }
+
+    dom_row_start_day_setting(){
+        let day_name = {"SUN": "일요일", "MON": "월요일"};
+        let id = "start_day_setting";
+        let title = "한 주의 시작요일";
+        let icon = NONE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = day_name[this.data.start_day] == null ? "" : day_name[this.data.start_day];
+        let style = null;
+        let onclick = ()=>{
+            let user_option = {
+                sunday:{text:"일요일", callback:()=>{
+                    this.data.start_day = "SUN";
+                    layer_popup.close_layer_popup();
+                    this.render_content();
+                }},
+                monday:{text:"월요일", callback:()=>{
+                    this.data.start_day = "MON";
+                    layer_popup.close_layer_popup();
+                    this.render_content();
+                }}
+            };
+            let options_padding_top_bottom = 16;
+            let button_height = 8 + 8 + 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        };
+
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+
+        let html = `<article class="setting_worktime_wrapper obj_input_box_full" style="padding-right:10px;">
+                        ${row}
+                    </article>
+                    `;
         return html;
     }
 
@@ -360,6 +401,7 @@ class Setting_worktime{
             "setting_trainer_work_fri_time_avail":this.data.FRI.dayoff == OFF ? this.art_data(this.data.FRI.start_time, this.data.FRI.end_time) : "00:00-00:00",
             "setting_trainer_work_sat_time_avail":this.data.SAT.dayoff == OFF ? this.art_data(this.data.SAT.start_time, this.data.SAT.end_time) : "00:00-00:00",
             "setting_holiday_hide":this.data.dayoff_visibility,
+            "setting_week_start_date":this.data.start_day 
         };
         Setting_worktime_func.update(data, ()=>{
             this.set_initial_data();

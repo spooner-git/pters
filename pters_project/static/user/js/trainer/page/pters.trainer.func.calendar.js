@@ -86,6 +86,8 @@ class Calendar {
         this.mode_to_plan_change(OFF);
         Setting_reserve_func.read((data)=>{
             this.dayoff_hide = data.setting_holiday_hide;
+            let date_start_array = {"SUN":0, "MON":1};
+            this.date_start = date_start_array[data.setting_week_start_date];
             let work_time = this.calc_worktime(data);
             this.worktime = [];
             for(let i=work_time.start_hour; i<work_time.end_hour; i++){
