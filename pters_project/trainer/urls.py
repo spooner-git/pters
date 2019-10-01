@@ -232,8 +232,6 @@ urlpatterns = [
     url(r'^attend_mode_detail/$', views.AttendModeDetailView.as_view(), name='attend_mode_detail'),
     # 강좌 선택 페이지
     url(r'^class_select/$', views.ClassSelectView.as_view(), name='class_select'),
-    # 강좌 추가 페이지
-    url(r'^add_class/$', views.AddClassView.as_view(), name='add_class'),
     # Mypage 페이지
     url(r'^trainer_mypage/$', views.MyPageView.as_view(), name='trainer_mypage'),
     # 회원 탈퇴 페이지
@@ -297,7 +295,8 @@ urlpatterns = [
     # 색상태그 선택 팝업 페이지
     url(r'^popup_color_select/$', views.PopupColorSelect.as_view(), name='popup_color_select'),
 
-
+    # 프로그램 추가 페이지
+    url(r'^add_program/$', views.AddProgramView.as_view(), name='add_program'),
     # url(r'^refresh_all_data/$', views.refresh_all_data_logic, name='refresh_all_data')
 
 ]
