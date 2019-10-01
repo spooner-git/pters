@@ -32,3 +32,8 @@
 .popup_service_helper .content_image_wrapper > img{
 	width: 100%;
 }
+
+.popup_service_helper .swiper-container-horizontal>.swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction{
+	position: fixed;
+	bottom: 0;
+}
