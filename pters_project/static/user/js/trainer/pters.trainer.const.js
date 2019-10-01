@@ -94,6 +94,14 @@ const AUTOCOMPLETE_CANCEL = 3;
 
 const FIX = 'FIX';
 
+const SORT_MEMBER_NAME = 0;
+const SORT_REMAIN_COUNT = 1;
+const SORT_START_DATE = 2;
+const SORT_REG_COUNT = 3;
+
+
+const SORT_ORDER_ASC = 0;
+const SORT_ORDER_DESC = 1;
 
 /* px */
 const MAX_WIDTH = 800;

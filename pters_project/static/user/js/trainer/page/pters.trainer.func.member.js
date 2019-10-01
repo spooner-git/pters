@@ -12,8 +12,11 @@ class Member {
 
         this.search = false;
         this.search_value = "";
-        this.search_value_text = "이름순";
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
+
+        this.sort_val = SORT_MEMBER_NAME;
+        this.sort_order_by = SORT_ORDER_ASC;
+        this.sort_value_text = '회원명 가나다순';
     }
 
     init (list_type){
@@ -57,6 +60,7 @@ class Member {
             url:url,
             dataType : 'JSON',
             async:async,
+            data: {'sort_val':this.sort_val, 'sort_order_by':this.sort_order_by},
     
             beforeSend:function (){
                 ajax_load_image(SHOW);
@@ -234,16 +238,24 @@ class Member {
     }
 
     static_component (){
-        // 추가 정리 필요 - hkkim 2019-09-30
-        let user_option = `{
-                            name:{text:'이름순', callback:()=>{this.search_value = 'name';this.search_value_text = '이름순';this.send_data();layer_popup.close_layer_popup();}},
-                            rem_num:{text:'남은 횟수순', callback:()=>{this.search_value = 'rem';this.search_value_text = '남은 횟수순';this.send_data();layer_popup.close_layer_popup();}},
-                            reg_num:{text:'등록 횟수순', callback:()=>{this.search_value = 'reg';this.search_value_text = '등록 횟수순';this.send_data();layer_popup.close_layer_popup();}}
-                        }`;
-        let user_option_length = 3;
+        // 계속 추가되더라도 동적으로 처리하기 위해 작성 - hkkim 20191001
+        let user_options_array = [];
+        user_options_array.push(`'${SORT_MEMBER_NAME+'_'+SORT_ORDER_ASC}':{text:'회원명 가나다순', callback:()=>{member.sort_val = ${SORT_MEMBER_NAME}; member.sort_order_by= ${SORT_ORDER_ASC}; member.sort_value_text = '회원명 가나다순';member.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_REG_COUNT+'_'+SORT_ORDER_ASC}':{text:'등록 횟수 많은 순', callback:()=>{member.sort_val = '${SORT_REG_COUNT}'; member.sort_order_by= ${SORT_ORDER_DESC}; member.sort_value_text = '등록 횟수 많은 순';member.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_REG_COUNT+'_'+SORT_ORDER_DESC}':{text:'등록 횟수 적은 순', callback:()=>{member.sort_val = '${SORT_REG_COUNT}'; member.sort_order_by= ${SORT_ORDER_ASC};member.sort_value_text = '등록 횟수 적은 순';member.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_REMAIN_COUNT+'_'+SORT_ORDER_ASC}':{text:'남은 횟수 많은 순', callback:()=>{member.sort_val = '${SORT_REMAIN_COUNT}'; member.sort_order_by= ${SORT_ORDER_DESC};member.sort_value_text = '남은 횟수 많은 순';member.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_REMAIN_COUNT+'_'+SORT_ORDER_DESC}':{text:'남은 횟수 적은 순', callback:()=>{member.sort_val = '${SORT_REMAIN_COUNT}'; member.sort_order_by= ${SORT_ORDER_ASC};member.sort_value_text = '남은 횟수 적은 순';member.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_START_DATE+'_'+SORT_ORDER_ASC}':{text:'시작 일자 최근 순', callback:()=>{member.sort_val = '${SORT_START_DATE}'; member.sort_order_by= ${SORT_ORDER_DESC};member.sort_value_text = '시작 일자 최근 순';member.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_START_DATE+'_'+SORT_ORDER_DESC}':{text:'시작 일자 과거 순', callback:()=>{member.sort_val = '${SORT_START_DATE}'; member.sort_order_by= ${SORT_ORDER_ASC};member.sort_value_text = '시작 일자 과거 순';member.init();layer_popup.close_layer_popup();}}`);
+        let user_option = `{`;
+        for(let i=0; i<user_options_array.length; i++){
+            user_option += user_options_array[i] + ',';
+        }
+        user_option += `}`;
+
         let options_padding_top_bottom = 16;
-        let button_height = 8*user_option_length + 52;
-        let layer_popup_height = options_padding_top_bottom + button_height + 52*user_option_length;
+        let button_height = 8*user_options_array.length + 16;
+        let layer_popup_height = options_padding_top_bottom + button_height + 52*user_options_array.length;
 
         return(
             {
@@ -276,7 +288,7 @@ class Member {
                                                 <option>남은 횟수순</option>
                                                 <option>등록 횟수순</option>
                                             </select>-->
-                                            ${this.search_value_text} <img src="/static/common/icon/icon_arrow_expand_light_grey.png" style="width:24px; height:24px; float:right; vertical-align: middle;">
+                                            ${this.sort_value_text} <img src="/static/common/icon/icon_arrow_expand_light_grey.png" style="width:24px; height:24px; vertical-align: middle;">
                                         </div>
                                     </div>
                                     `
