@@ -89,6 +89,10 @@
 	box-sizing: border-box;
 }
 
+#home_content_wrap .end_alert_wrapper .create_row .cell_title > img, .create_input_row .cell_title > img{
+	border-radius: 50%;
+}
+
 #home_content_wrap .sales_wrapper{
 	padding: 0 0 0 20px;
 	box-sizing: border-box;

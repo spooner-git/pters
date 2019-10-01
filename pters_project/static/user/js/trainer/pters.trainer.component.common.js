@@ -35,7 +35,7 @@ class CComponent{
                         <div class="obj_table_raw">
                             <div class="cell_title">
                                 ${icon == DELETE ? "" : `<img src="${icon}">`} 
-                                <span class="cell_text">${title}</span>
+                                <div class="cell_text">${title}</div>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == NONE ? "style='display:none'": ''}>
                                 <span class="cell_text" ${icon_r_visible == "" || null ? 'style="display:none"' : ''}>${icon_r_text}</span>
