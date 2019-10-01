@@ -210,7 +210,6 @@ def func_setting_data_update(request, group):
 
         context = func_get_trainer_setting_list(context, trainer_id, class_id)
         request.session['setting_member_reserve_time_available'] = context['setting_member_reserve_time_available']
-        request.session['setting_member_reserve_time_prohibition'] = context['setting_member_reserve_time_prohibition']
         request.session['setting_member_reserve_prohibition'] = context['setting_member_reserve_prohibition']
 
         request.session['setting_trainer_work_sun_time_avail'] = context['setting_trainer_work_sun_time_avail']

@@ -75,7 +75,7 @@ def get_setting_info(request):
         request.session['setting_member_time_duration'] = context['setting_member_time_duration']
         request.session['setting_member_start_time'] = context['setting_member_start_time']
         request.session['setting_schedule_auto_finish'] = context['setting_schedule_auto_finish']
-        request.session['setting_lecture_auto_finish'] = context['setting_lecture_auto_finish']
+        request.session['setting_member_ticket_auto_finish'] = context['setting_member_ticket_auto_finish']
         request.session['setting_to_trainee_lesson_alarm'] = context['setting_to_trainee_lesson_alarm']
         request.session['setting_from_trainee_lesson_alarm'] = context['setting_from_trainee_lesson_alarm']
         context = get_trainee_setting_data(context, request.user.id)
@@ -90,7 +90,7 @@ def get_setting_info(request):
                 not_finish_schedule_info.save()
                 func_refresh_member_ticket_count(class_id, not_finish_schedule_info.lecture_tb_id)
 
-        if context['setting_lecture_auto_finish'] == AUTO_FINISH_ON:
+        if context['setting_member_ticket_auto_finish'] == AUTO_FINISH_ON:
             class_lecture_data = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
                                                                                             auth_cd='VIEW',
                                                                                             lecture_tb__end_date__lt

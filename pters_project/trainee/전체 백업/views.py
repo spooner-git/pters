@@ -207,7 +207,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
         # request.session['setting_member_time_duration'] = context['lt_res_member_time_duration']
         # request.session['setting_member_start_time'] = context['lt_res_member_start_time']
         # request.session['setting_schedule_auto_finish'] = context['lt_schedule_auto_finish']
-        # request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
+        # request.session['setting_member_ticket_auto_finish'] = context['lt_lecture_auto_finish']
         # request.session['setting_to_trainee_lesson_alarm'] = context['lt_pus_to_trainee_lesson_alarm']
         # request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
         return render(request, self.template_name, context)
@@ -786,7 +786,7 @@ def lecture_processing(request):
             request.session['setting_member_time_duration'] = context['lt_res_member_time_duration']
             request.session['setting_member_start_time'] = context['lt_res_member_start_time']
             request.session['setting_schedule_auto_finish'] = context['lt_schedule_auto_finish']
-            request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
+            request.session['setting_member_ticket_auto_finish'] = context['lt_lecture_auto_finish']
             request.session['setting_to_trainee_lesson_alarm'] = context['lt_pus_to_trainee_lesson_alarm']
             request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
             context = get_trainee_setting_data(context, request.user.id)

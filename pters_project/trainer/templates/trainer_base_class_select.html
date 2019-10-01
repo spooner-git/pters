@@ -121,7 +121,7 @@
 
     var Options = {  "stoptimeStart": stoptimeStart ,             //강사가 설정한 예약불가 시간 (시작)
         "stoptimeEnd": stoptimeEnd ,                //강사가 설정한 예약불가 시간 (종료)
-        "limit":'{{ request.session.setting_member_reserve_time_prohibition }}',      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+        "limit":'{{ request.session.setting_member_reserve_enable_time }}',      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
         "reserve":'{{ request.session.setting_member_reserve_prohibition }}',    //회원 일정 기능을 enable 1/disable 0
 
         "firstPushToMember":'-',
