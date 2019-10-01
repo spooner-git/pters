@@ -65,7 +65,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         error = None
         if class_id is None or class_id == '':
             if len(class_auth_data) == 0:
-                self.url = '/trainer/add_class/'
+                self.url = '/trainer/add_program/'
             elif len(class_auth_data) == 1:
                 self.url = '/trainer/trainer_main/'
                 for class_info in class_auth_data:
@@ -965,17 +965,14 @@ class ClassSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-class AddClassView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = '백업/trainer_class_add.html'
+class AddProgramView(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'trainer_add_program.html'
 
     def get(self, request):
         context = {}
         cancel_redirect_url = request.GET.get('cancel_redirect_url', '/login/logout/')
         # context = super(AddClassView, self).get_context_data(**kwargs)
         class_type_cd_data = CommonCdTb.objects.filter(upper_common_cd='02', use=USE).order_by('order')
-        # class_type_cd_data = CommonCdTb.objects.filter(common_cd='TR', use=USE).order_by('order')
-        # class_type_cd_data |= CommonCdTb.objects.filter(common_cd='ETC', use=USE).order_by('order')
-
         for class_type_cd_info in class_type_cd_data:
             class_type_cd_info.subject_type_cd = CommonCdTb.objects.filter(upper_common_cd='03',
                                                                            group_cd=class_type_cd_info.common_cd,
