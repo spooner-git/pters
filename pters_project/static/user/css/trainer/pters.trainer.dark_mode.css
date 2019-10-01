@@ -3,10 +3,21 @@
         color: #ffffff;
         background-color: #282828;
     }
-    #home_content_wrap .contents{
-        background-color: unset;
+    
+    .f_c_black{
+        color: #3b3b3b;
     }
-    #home_content_wrap .today_plan_wrapper{
-        color: #ffffff;
+    .f_c_black_light{
+
     }
+    .f_c_grey{
+        color: #858282;
+    }
+    .f_c_grey_light{
+        color: #b8b4b4;
+    }
+    .f_c_red{
+        color: #ff0022;
+    }
+
 }

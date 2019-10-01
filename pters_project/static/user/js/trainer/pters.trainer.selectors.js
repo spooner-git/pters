@@ -2603,7 +2603,7 @@ class DatePickerSelector{
                                         </div>`;
 
         //달력의 월화수목금 표기를 만드는 부분
-        let month_day_name_text = `<div class="pters_month_cal_day_name_box obj_table_raw obj_font_size_11_weight_500" style="text-align:center;"> 
+        let month_day_name_text = `<div class="pters_month_cal_day_name_box obj_table_raw obj_font_size_11_weight_500" style="text-align:center;margin-bottom:10px;"> 
                                     <div class="obj_table_cell_x7">일</div>
                                     <div class="obj_table_cell_x7">월</div>
                                     <div class="obj_table_cell_x7">화</div>
@@ -2831,7 +2831,7 @@ class RepeatSelector{
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*315/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
                 let year = this.target_instance.date == null ? this.dates.current_year : this.target_instance.date.year; 
                 let month = this.target_instance.date == null ? this.dates.current_month : this.target_instance.date.month;
                 let date = this.target_instance.date == null ? this.dates.current_date : this.target_instance.date.date;

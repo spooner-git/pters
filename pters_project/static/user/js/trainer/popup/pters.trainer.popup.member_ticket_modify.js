@@ -211,7 +211,7 @@ class Member_ticket_modify{
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*315/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
                 let year = this.data.start_date.split('-')[0]; 
                 let month = this.data.start_date.split('-')[1];
@@ -234,7 +234,7 @@ class Member_ticket_modify{
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*315/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
                 let year = Number(this.data.end_date.split('-')[0]); 
                 let month = Number(this.data.end_date.split('-')[1]);
@@ -261,7 +261,7 @@ class Member_ticket_modify{
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*305/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*315/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
                 let year = this.data.refund_date.split('-')[0]; 
                 let month = this.data.refund_date.split('-')[1];
