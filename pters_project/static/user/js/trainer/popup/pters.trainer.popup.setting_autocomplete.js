@@ -233,7 +233,7 @@ class Setting_autocomplete{
     send_data(){
         let data = {
             "setting_schedule_auto_finish": this.data.plan.switch == OFF ? OFF : this.data.plan.complete_type,
-            "setting_lecture_auto_finish":this.data.member.switch
+            "setting_member_ticket_auto_finish":this.data.member.switch
         };
 
         Setting_autocomplete_func.update(data, ()=>{

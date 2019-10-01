@@ -233,14 +233,13 @@ class Pters_pass_shop{
         // let data = {
         //     "setting_member_reserve_time_available":'00:00-23:59', //예약 가능 시간대
         //     "setting_member_reserve_prohibition":this.data.stop_reserve, // 예약 일시 정지
-        //     "setting_member_reserve_time_duration":this.data.time_for_private_reserve.value[0], //개인 수업 예약 시간
+        //     "setting_member_time_duration":this.data.time_for_private_reserve.value[0], //개인 수업 예약 시간
         //     "setting_member_start_time": this.data.start_time_for_private_reserve.value[0], //개인 수업 예약 시작 시각
 
         //     "setting_member_reserve_date_available":this.data.available_reserve_date.value[0], //예약 가능 날짜
-        //     "setting_member_reserve_time_prohibition":this.data.available_reserve_time.value[0], //예약 가능 시간
-        //     "setting_member_cancel_time_prohibition":this.data.available_cancel_time.value[0], //예약 취소 가능 시간
-        //     "setting_member_cancel_time":'', //??
-            
+        //     "setting_member_reserve_enable_time":this.data.available_reserve_time.value[0], //예약 가능 시간
+        //     "setting_member_reserve_cancel_time":this.data.available_cancel_time.value[0], //예약 취소 가능 시간
+
         // };
         
         // Pters_pass_func.update(data, ()=>{

@@ -47,7 +47,7 @@ from .functions import func_get_trainer_setting_list, \
     func_check_member_connection_info, func_get_member_lecture_list, \
     func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info, func_get_ticket_info, \
     func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, func_upload_profile_image_logic, \
-    func_delete_profile_image_logic
+    func_delete_profile_image_logic, update_setting_data
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb
 
@@ -3824,58 +3824,16 @@ def update_trainer_info_logic(request):
 def update_setting_push_logic(request):
     setting_to_trainee_lesson_alarm = request.POST.get('setting_to_trainee_lesson_alarm', '0')
     setting_from_trainee_lesson_alarm = request.POST.get('setting_from_trainee_lesson_alarm', '1')
-    # setting_trainee_no_schedule_confirm = request.POST.get('setting_trainee_no_schedule_confirm', '')
-    # setting_trainer_schedule_confirm = request.POST.get('setting_trainer_schedule_confirm', '')
-    # setting_trainer_no_schedule_confirm1 = request.POST.get('setting_trainer_no_schedule_confirm1', '')
-    # setting_trainer_no_schedule_confirm2 = request.POST.get('setting_trainer_no_schedule_confirm2', '')
     class_id = request.session.get('class_id', '')
 
-    error = None
-    lt_pus_to_trainee_lesson_alarm = None
-    lt_pus_from_trainee_lesson_alarm = None
+    setting_type_cd_data = ['LT_PUS_TO_TRAINEE_LESSON_ALARM', 'LT_PUS_FROM_TRAINEE_LESSON_ALARM']
+    setting_info_data = [setting_to_trainee_lesson_alarm, setting_from_trainee_lesson_alarm]
+
+    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
 
     if error is None:
-        try:
-            lt_pus_to_trainee_lesson_alarm = SettingTb.objects.get(member_id=request.user.id,
-                                                                   class_tb_id=class_id,
-                                                                   setting_type_cd='LT_PUS_TO_TRAINEE_LESSON_ALARM')
-        except ObjectDoesNotExist:
-            lt_pus_to_trainee_lesson_alarm = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                                       setting_type_cd='LT_PUS_TO_TRAINEE_LESSON_ALARM', use=USE)
-
-        try:
-            lt_pus_from_trainee_lesson_alarm = SettingTb.objects.get(member_id=request.user.id,
-                                                                     class_tb_id=class_id,
-                                                                     setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM')
-        except ObjectDoesNotExist:
-            lt_pus_from_trainee_lesson_alarm = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                                         setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM', use=USE)
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                lt_pus_to_trainee_lesson_alarm.setting_info = setting_to_trainee_lesson_alarm
-                lt_pus_to_trainee_lesson_alarm.save()
-
-                lt_pus_from_trainee_lesson_alarm.setting_info = setting_from_trainee_lesson_alarm
-                lt_pus_from_trainee_lesson_alarm.save()
-
-        except ValueError:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError:
-            error = '등록 값에 문제가 있습니다.'
-        except ValidationError:
-            error = '등록 값에 문제가 있습니다.'
-        except InternalError:
-            error = '등록 값에 문제가 있습니다.'
-
-    if error is None:
-
-        request.session.setting_to_trainee_lesson_alarm = int(setting_to_trainee_lesson_alarm)
-        request.session.setting_from_trainee_lesson_alarm = int(setting_from_trainee_lesson_alarm)
-
+        request.session['setting_to_trainee_lesson_alarm'] = int(setting_to_trainee_lesson_alarm)
+        request.session['setting_from_trainee_lesson_alarm'] = int(setting_from_trainee_lesson_alarm)
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
@@ -3896,17 +3854,7 @@ def update_setting_work_time_logic(request):
     setting_holiday_hide = request.POST.get('setting_holiday_hide', SHOW)
     setting_week_start_date = request.POST.get('setting_week_start_date', 'SUN')
     class_id = request.session.get('class_id', '')
-    lt_work_sun_time_avail = None
-    lt_work_mon_time_avail = None
-    lt_work_tue_time_avail = None
-    lt_work_wed_time_avail = None
-    lt_work_ths_time_avail = None
-    lt_work_fri_time_avail = None
-    lt_work_sat_time_avail = None
-    holiday_hide = None
-    week_start_date = None
 
-    error = None
     if setting_trainer_work_sun_time_avail is None or setting_trainer_work_sun_time_avail == '':
         setting_trainer_work_sun_time_avail = '00:00-24:00'
     if setting_trainer_work_mon_time_avail is None or setting_trainer_work_mon_time_avail == '':
@@ -3926,97 +3874,29 @@ def update_setting_work_time_logic(request):
     if setting_week_start_date is None or setting_week_start_date == '':
         setting_week_start_date = 'SUN'
 
-    if error is None:
-        try:
-            lt_work_sun_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
-                                                           setting_type_cd='LT_WORK_SUN_TIME_AVAIL')
-        except ObjectDoesNotExist:
-            lt_work_sun_time_avail = SettingTb(member_id=request.user.id,
-                                               class_tb_id=class_id, setting_type_cd='LT_WORK_SUN_TIME_AVAIL', use=USE)
-        try:
-            lt_work_mon_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
-                                                           setting_type_cd='LT_WORK_MON_TIME_AVAIL')
-        except ObjectDoesNotExist:
-            lt_work_mon_time_avail = SettingTb(member_id=request.user.id,
-                                               class_tb_id=class_id, setting_type_cd='LT_WORK_MON_TIME_AVAIL', use=USE)
-        try:
-            lt_work_tue_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
-                                                           setting_type_cd='LT_WORK_TUE_TIME_AVAIL')
-        except ObjectDoesNotExist:
-            lt_work_tue_time_avail = SettingTb(member_id=request.user.id,
-                                               class_tb_id=class_id, setting_type_cd='LT_WORK_TUE_TIME_AVAIL', use=USE)
-        try:
-            lt_work_wed_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
-                                                           setting_type_cd='LT_WORK_WED_TIME_AVAIL')
-        except ObjectDoesNotExist:
-            lt_work_wed_time_avail = SettingTb(member_id=request.user.id,
-                                               class_tb_id=class_id, setting_type_cd='LT_WORK_WED_TIME_AVAIL', use=USE)
-        try:
-            lt_work_ths_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
-                                                           setting_type_cd='LT_WORK_THS_TIME_AVAIL')
-        except ObjectDoesNotExist:
-            lt_work_ths_time_avail = SettingTb(member_id=request.user.id,
-                                               class_tb_id=class_id, setting_type_cd='LT_WORK_THS_TIME_AVAIL', use=USE)
-        try:
-            lt_work_fri_time_avail = SettingTb.objects.get(member_id=request.user.id,  class_tb_id=class_id,
-                                                           setting_type_cd='LT_WORK_FRI_TIME_AVAIL')
-        except ObjectDoesNotExist:
-            lt_work_fri_time_avail = SettingTb(member_id=request.user.id,
-                                               class_tb_id=class_id, setting_type_cd='LT_WORK_FRI_TIME_AVAIL', use=USE)
-        try:
-            lt_work_sat_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
-                                                           setting_type_cd='LT_WORK_SAT_TIME_AVAIL')
-        except ObjectDoesNotExist:
-            lt_work_sat_time_avail = SettingTb(member_id=request.user.id,
-                                               class_tb_id=class_id, setting_type_cd='LT_WORK_SAT_TIME_AVAIL', use=USE)
-        try:
-            holiday_hide = SettingTb.objects.get(member_id=request.user.id,
-                                                 class_tb_id=class_id, setting_type_cd='LT_HOLIDAY_HIDE')
-        except ObjectDoesNotExist:
-            holiday_hide = SettingTb(member_id=request.user.id,
-                                     class_tb_id=class_id, setting_type_cd='LT_HOLIDAY_HIDE', use=USE)
-        try:
-            week_start_date = SettingTb.objects.get(member_id=request.user.id,
-                                                    class_tb_id=class_id, setting_type_cd='LT_WEEK_START_DATE')
-        except ObjectDoesNotExist:
-            week_start_date = SettingTb(member_id=request.user.id,
-                                        class_tb_id=class_id, setting_type_cd='LT_WEEK_START_DATE', use=USE)
+    setting_type_cd_data = ['LT_WORK_SUN_TIME_AVAIL', 'LT_WORK_MON_TIME_AVAIL',
+                            'LT_WORK_TUE_TIME_AVAIL', 'LT_WORK_WED_TIME_AVAIL',
+                            'LT_WORK_THS_TIME_AVAIL', 'LT_WORK_FRI_TIME_AVAIL',
+                            'LT_WORK_SAT_TIME_AVAIL', 'LT_HOLIDAY_HIDE', 'LT_WEEK_START_DATE']
+    setting_info_data = [setting_trainer_work_sun_time_avail, setting_trainer_work_mon_time_avail,
+                         setting_trainer_work_tue_time_avail, setting_trainer_work_wed_time_avail,
+                         setting_trainer_work_ths_time_avail, setting_trainer_work_fri_time_avail,
+                         setting_trainer_work_sat_time_avail, setting_holiday_hide, setting_week_start_date]
+
+    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
 
     if error is None:
-        try:
-            with transaction.atomic():
+        request.session['setting_trainer_work_sun_time_avail'] = setting_trainer_work_sun_time_avail
+        request.session['setting_trainer_work_mon_time_avail'] = setting_trainer_work_mon_time_avail
+        request.session['setting_trainer_work_tue_time_avail'] = setting_trainer_work_tue_time_avail
+        request.session['setting_trainer_work_wed_time_avail'] = setting_trainer_work_wed_time_avail
+        request.session['setting_trainer_work_ths_time_avail'] = setting_trainer_work_ths_time_avail
+        request.session['setting_trainer_work_fri_time_avail'] = setting_trainer_work_fri_time_avail
+        request.session['setting_trainer_work_sat_time_avail'] = setting_trainer_work_sat_time_avail
+        request.session['setting_week_start_date'] = setting_week_start_date
+        request.session['setting_holiday_hide'] = setting_holiday_hide
 
-                lt_work_sun_time_avail.setting_info = setting_trainer_work_sun_time_avail
-                lt_work_mon_time_avail.setting_info = setting_trainer_work_mon_time_avail
-                lt_work_tue_time_avail.setting_info = setting_trainer_work_tue_time_avail
-                lt_work_wed_time_avail.setting_info = setting_trainer_work_wed_time_avail
-                lt_work_ths_time_avail.setting_info = setting_trainer_work_ths_time_avail
-                lt_work_fri_time_avail.setting_info = setting_trainer_work_fri_time_avail
-                lt_work_sat_time_avail.setting_info = setting_trainer_work_sat_time_avail
-                lt_work_sun_time_avail.save()
-                lt_work_mon_time_avail.save()
-                lt_work_tue_time_avail.save()
-                lt_work_wed_time_avail.save()
-                lt_work_ths_time_avail.save()
-                lt_work_fri_time_avail.save()
-                lt_work_sat_time_avail.save()
-                holiday_hide.setting_info = setting_holiday_hide
-                holiday_hide.save()
-                week_start_date.setting_info = setting_week_start_date
-                week_start_date.save()
-
-        except ValueError:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError:
-            error = '등록 값에 문제가 있습니다.'
-        except ValidationError:
-            error = '등록 값에 문제가 있습니다.'
-        except InternalError:
-            error = '등록 값에 문제가 있습니다.'
-
-    if error is not None:
+    else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
@@ -4026,56 +3906,23 @@ def update_setting_work_time_logic(request):
 # 강사 기본 setting 업데이트 api
 def update_setting_auto_complete_logic(request):
     setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
-    setting_lecture_auto_finish = request.POST.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
+    setting_member_ticket_auto_finish = request.POST.get('setting_member_ticket_auto_finish', AUTO_FINISH_OFF)
     class_id = request.session.get('class_id', '')
-    lt_schedule_auto_finish = None
-    lt_lecture_auto_finish = None
 
-    error = None
     if setting_schedule_auto_finish is None or setting_schedule_auto_finish == '':
         setting_schedule_auto_finish = AUTO_FINISH_OFF
-    if setting_lecture_auto_finish is None or setting_lecture_auto_finish == '':
-        setting_lecture_auto_finish = AUTO_FINISH_OFF
+    if setting_member_ticket_auto_finish is None or setting_member_ticket_auto_finish == '':
+        setting_member_ticket_auto_finish = AUTO_FINISH_OFF
+
+    setting_type_cd_data = ['LT_SCHEDULE_AUTO_FINISH', 'LT_LECTURE_AUTO_FINISH']
+    setting_info_data = [setting_schedule_auto_finish, setting_member_ticket_auto_finish]
+    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
 
     if error is None:
-        try:
-            lt_schedule_auto_finish = SettingTb.objects.get(member_id=request.user.id,
-                                                            class_tb_id=class_id,
-                                                            setting_type_cd='LT_SCHEDULE_AUTO_FINISH')
-        except ObjectDoesNotExist:
-            lt_schedule_auto_finish = SettingTb(member_id=request.user.id,
-                                                class_tb_id=class_id, setting_type_cd='LT_SCHEDULE_AUTO_FINISH',
-                                                use=USE)
-        try:
-            lt_lecture_auto_finish = SettingTb.objects.get(member_id=request.user.id,
-                                                           class_tb_id=class_id,
-                                                           setting_type_cd='LT_LECTURE_AUTO_FINISH')
-        except ObjectDoesNotExist:
-            lt_lecture_auto_finish = SettingTb(member_id=request.user.id,
-                                               class_tb_id=class_id, setting_type_cd='LT_LECTURE_AUTO_FINISH',
-                                               use=USE)
+        request.session['setting_schedule_auto_finish'] = setting_schedule_auto_finish
+        request.session['setting_member_ticket_auto_finish'] = setting_member_ticket_auto_finish
 
-    if error is None:
-        try:
-            with transaction.atomic():
-                lt_schedule_auto_finish.setting_info = setting_schedule_auto_finish
-                lt_schedule_auto_finish.save()
-
-                lt_lecture_auto_finish.setting_info = setting_lecture_auto_finish
-                lt_lecture_auto_finish.save()
-
-        except ValueError:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError:
-            error = '등록 값에 문제가 있습니다.'
-        except ValidationError:
-            error = '등록 값에 문제가 있습니다.'
-        except InternalError:
-            error = '등록 값에 문제가 있습니다.'
-
-    if error is not None:
+    else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
@@ -4085,254 +3932,77 @@ def update_setting_auto_complete_logic(request):
 # 강사 예약허용시간 setting 업데이트 api
 def update_setting_reserve_logic(request):
     setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '00:00-24:00')
-    setting_member_reserve_time_prohibition = request.POST.get('setting_member_reserve_time_prohibition', '60')
-    setting_member_cancel_time = request.POST.get('setting_member_cancel_time_prohibition', '60')
+    setting_member_reserve_enable_time = request.POST.get('setting_member_reserve_enable_time', '60')
+    setting_member_reserve_cancel_time = request.POST.get('setting_member_reserve_cancel_time', '60')
     setting_member_reserve_prohibition = request.POST.get('setting_member_reserve_prohibition',
                                                           MEMBER_RESERVE_PROHIBITION_ON)
     setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '7')
-    # setting_member_cancel_time = request.POST.get('setting_member_cancel_time', '')
-    setting_member_reserve_time_duration = request.POST.get('setting_member_reserve_time_duration', '1')
+    setting_member_time_duration = request.POST.get('setting_member_time_duration', '1')
     setting_member_start_time = request.POST.get('setting_member_start_time', 'A-0')
     class_id = request.session.get('class_id', '')
 
-    error = None
-    lt_res_01 = None
-    lt_res_03 = None
-    lt_res_05 = None
-    lt_res_cancel_time = None
-    lt_res_enable_time = None
-    lt_res_member_time_duration = None
-    lt_res_member_start_time = None
+    if setting_member_reserve_time_available is None or setting_member_reserve_time_available == '':
+        setting_member_reserve_time_available = '00:00-24:00'
+    if setting_member_reserve_enable_time is None or setting_member_reserve_enable_time == '':
+        setting_member_reserve_enable_time = '60'
+    if setting_member_reserve_cancel_time is None or setting_member_reserve_cancel_time == '':
+        setting_member_reserve_cancel_time = '60'
+    if setting_member_reserve_prohibition is None or setting_member_reserve_prohibition == '':
+        setting_member_reserve_prohibition = MEMBER_RESERVE_PROHIBITION_ON
+    if setting_member_reserve_date_available is None or setting_member_reserve_date_available == '':
+        setting_member_reserve_date_available = '7'
+    if setting_member_time_duration is None or setting_member_time_duration == '':
+        setting_member_time_duration = '1'
+    if setting_member_start_time is None or setting_member_start_time == '':
+        setting_member_start_time = 'A-0'
+
+    setting_type_cd_data = ['LT_RES_01', 'LT_RES_03',
+                            'LT_RES_05', 'LT_RES_CANCEL_TIME',
+                            'LT_RES_ENABLE_TIME', 'LT_RES_MEMBER_TIME_DURATION',
+                            'LT_RES_MEMBER_START_TIME']
+    setting_info_data = [setting_member_reserve_time_available, setting_member_reserve_prohibition,
+                         setting_member_reserve_date_available, setting_member_reserve_cancel_time,
+                         setting_member_reserve_enable_time, setting_member_time_duration,
+                         setting_member_start_time]
+    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
 
     if error is None:
-        if setting_member_reserve_time_available is None or setting_member_reserve_time_available == '':
-            setting_member_reserve_time_available = '00:00-24:00'
-        if setting_member_reserve_time_prohibition is None or setting_member_reserve_time_prohibition == '':
-            setting_member_reserve_time_prohibition = '60'
-        if setting_member_cancel_time is None or setting_member_cancel_time == '':
-            setting_member_cancel_time = '60'
-        if setting_member_reserve_prohibition is None or setting_member_reserve_prohibition == '':
-            setting_member_reserve_prohibition = MEMBER_RESERVE_PROHIBITION_ON
-        if setting_member_reserve_date_available is None or setting_member_reserve_date_available == '':
-            setting_member_reserve_date_available = '7'
-        if setting_member_reserve_time_duration is None or setting_member_reserve_time_duration == '':
-            setting_member_reserve_time_duration = '1'
-        if setting_member_start_time is None or setting_member_start_time == '':
-            setting_member_start_time = 'A-0'
+        request.session['setting_member_reserve_time_available'] = setting_member_reserve_time_available
+        request.session['setting_member_reserve_prohibition'] = setting_member_reserve_prohibition
+        request.session['setting_member_reserve_enable_time'] = setting_member_reserve_enable_time
+        request.session['setting_member_reserve_cancel_time'] = setting_member_reserve_cancel_time
+        request.session['setting_member_reserve_date_available'] = setting_member_reserve_date_available
+        request.session['setting_member_time_duration'] = setting_member_time_duration
+        request.session['setting_member_start_time'] = setting_member_start_time
 
-    if error is None:
-        try:
-            lt_res_01 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_RES_01')
-        except ObjectDoesNotExist:
-            lt_res_01 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_RES_01', use=USE)
-        try:
-            lt_res_03 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_RES_03')
-        except ObjectDoesNotExist:
-            lt_res_03 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_RES_03', use=USE)
-        try:
-            lt_res_05 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_RES_05')
-        except ObjectDoesNotExist:
-            lt_res_05 = SettingTb(member_id=request.user.id,
-                                  class_tb_id=class_id, setting_type_cd='LT_RES_05', use=USE)
-        try:
-            lt_res_cancel_time = SettingTb.objects.get(member_id=request.user.id,
-                                                       class_tb_id=class_id, setting_type_cd='LT_RES_CANCEL_TIME')
-        except ObjectDoesNotExist:
-            lt_res_cancel_time = SettingTb(member_id=request.user.id,
-                                           class_tb_id=class_id, setting_type_cd='LT_RES_CANCEL_TIME', use=USE)
-        try:
-            lt_res_enable_time = SettingTb.objects.get(member_id=request.user.id,
-                                                       class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE_TIME')
-        except ObjectDoesNotExist:
-            lt_res_enable_time = SettingTb(member_id=request.user.id,
-                                           class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE_TIME', use=USE)
-        try:
-            lt_res_member_time_duration = SettingTb.objects.get(member_id=request.user.id,
-                                                                class_tb_id=class_id,
-                                                                setting_type_cd='LT_RES_MEMBER_TIME_DURATION')
-        except ObjectDoesNotExist:
-            lt_res_member_time_duration = SettingTb(member_id=request.user.id,
-                                                    class_tb_id=class_id, setting_type_cd='LT_RES_MEMBER_TIME_DURATION',
-                                                    use=USE)
-        try:
-            lt_res_member_start_time = SettingTb.objects.get(member_id=request.user.id,
-                                                             class_tb_id=class_id,
-                                                             setting_type_cd='LT_RES_MEMBER_START_TIME')
-        except ObjectDoesNotExist:
-            lt_res_member_start_time = SettingTb(member_id=request.user.id,
-                                                 class_tb_id=class_id, setting_type_cd='LT_RES_MEMBER_START_TIME',
-                                                 use=USE)
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                lt_res_01.setting_info = setting_member_reserve_time_available
-                lt_res_01.save()
-
-                lt_res_03.setting_info = setting_member_reserve_prohibition
-                lt_res_03.save()
-
-                lt_res_05.setting_info = setting_member_reserve_date_available
-                lt_res_05.save()
-
-                lt_res_cancel_time.setting_info = setting_member_cancel_time
-                lt_res_cancel_time.save()
-
-                lt_res_enable_time.setting_info = setting_member_reserve_time_prohibition
-                lt_res_enable_time.save()
-
-                lt_res_member_time_duration.setting_info = setting_member_reserve_time_duration
-                lt_res_member_time_duration.save()
-
-                lt_res_member_start_time.setting_info = setting_member_start_time
-                lt_res_member_start_time.save()
-
-        except ValueError:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError:
-            error = '등록 값에 문제가 있습니다.'
-        except ValidationError:
-            error = '등록 값에 문제가 있습니다.'
-        except InternalError:
-            error = '등록 값에 문제가 있습니다.'
-
-    if error is not None:
+    else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 강사 예약허용시간 setting 업데이트 api
+# 강사 매출 통계 관련 설정?
 def update_setting_sales_logic(request):
-    setting_sales_10 = request.POST.get('setting_sales_10', '')
-    setting_sales_20 = request.POST.get('setting_sales_20', '')
-    setting_sales_30 = request.POST.get('setting_sales_30', '')
-    setting_sales_40 = request.POST.get('setting_sales_40', '')
-    setting_sales_50 = request.POST.get('setting_sales_50', '')
-    setting_sales = request.POST.get('setting_sales', '')
-    setting_sales_type = request.POST.get('setting_sales_type', '0')
+    setting_sal_01 = request.POST.get('setting_sales_10', '')
+    setting_sal_02 = request.POST.get('setting_sales_20', '')
+    setting_sal_03 = request.POST.get('setting_sales_30', '')
+    setting_sal_04 = request.POST.get('setting_sales_40', '')
+    setting_sal_05 = request.POST.get('setting_sales_50', '')
+    setting_sal_00 = request.POST.get('setting_sales', '')
+    setting_sal_type = request.POST.get('setting_sales_type', '0')
     class_id = request.session.get('class_id', '')
 
-    error = None
-    lt_sal_01 = ''
-    lt_sal_02 = ''
-    lt_sal_03 = ''
-    lt_sal_04 = ''
-    lt_sal_05 = ''
-    lt_sal_00 = ''
-    setting_sal_00 = ''
-    setting_sal_01 = ''
-    setting_sal_02 = ''
-    setting_sal_03 = ''
-    setting_sal_04 = ''
-    setting_sal_05 = ''
+    if setting_sal_type != '0':
+        setting_sal_01 = ''
+        setting_sal_02 = ''
+        setting_sal_03 = ''
+        setting_sal_04 = ''
+        setting_sal_05 = ''
 
-    if error is None:
-        if setting_sales_type == '0':
-            setting_sal_01 = setting_sales_10
-            setting_sal_02 = setting_sales_20
-            setting_sal_03 = setting_sales_30
-            setting_sal_04 = setting_sales_40
-            setting_sal_05 = setting_sales_50
-        else:
-            setting_sal_00 = setting_sales
-
-    if error is None:
-        try:
-            lt_sal_01 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_SAL_01', use=USE)
-        except ObjectDoesNotExist:
-            lt_sal_01 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_SAL_01', use=USE)
-        try:
-            lt_sal_02 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_SAL_02', use=USE)
-        except ObjectDoesNotExist:
-            lt_sal_02 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_SAL_02', use=USE)
-        try:
-            lt_sal_03 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_SAL_03', use=USE)
-        except ObjectDoesNotExist:
-            lt_sal_03 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_SAL_03', use=USE)
-        try:
-            lt_sal_04 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_SAL_04', use=USE)
-        except ObjectDoesNotExist:
-            lt_sal_04 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_SAL_04', use=USE)
-        try:
-            lt_sal_05 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_SAL_05', use=USE)
-        except ObjectDoesNotExist:
-            lt_sal_05 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_SAL_05', use=USE)
-        try:
-            lt_sal_00 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_SAL_00', use=USE)
-        except ObjectDoesNotExist:
-            lt_sal_00 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_SAL_00', use=USE)
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                if setting_sales_type == '0':
-                    lt_sal_01.setting_info = setting_sal_01
-                    lt_sal_01.save()
-
-                    lt_sal_02.setting_info = setting_sal_02
-                    lt_sal_02.save()
-
-                    lt_sal_03.setting_info = setting_sal_03
-                    lt_sal_03.save()
-
-                    lt_sal_04.setting_info = setting_sal_04
-                    lt_sal_04.save()
-
-                    lt_sal_05.setting_info = setting_sal_05
-                    lt_sal_05.save()
-
-                    lt_sal_00.setting_info = ''
-                    lt_sal_00.save()
-                else:
-                    lt_sal_01.setting_info = ''
-                    lt_sal_01.save()
-
-                    lt_sal_02.setting_info = ''
-                    lt_sal_02.save()
-
-                    lt_sal_03.setting_info = ''
-                    lt_sal_03.save()
-
-                    lt_sal_04.setting_info = ''
-                    lt_sal_04.save()
-
-                    lt_sal_05.setting_info = ''
-                    lt_sal_05.save()
-
-                    lt_sal_00.setting_info = setting_sal_00
-                    lt_sal_00.save()
-
-        except ValueError:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError:
-            error = '등록 값에 문제가 있습니다.'
-        except ValidationError:
-            error = '등록 값에 문제가 있습니다.'
-        except InternalError:
-            error = '등록 값에 문제가 있습니다.'
+    setting_type_cd_data = ['LT_SAL_01', 'LT_SAL_02', 'LT_SAL_03', 'LT_SAL_04', 'LT_SAL_05', 'LT_SAL_00']
+    setting_info_data = [setting_sal_01, setting_sal_02, setting_sal_03, setting_sal_04, setting_sal_05, setting_sal_00]
+    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -4669,78 +4339,27 @@ def update_attend_mode_setting_logic(request):
     setting_admin_password = request.POST.get('setting_admin_password', '0000')
     setting_attend_class_prev_display_time = request.POST.get('setting_attend_class_prev_display_time', '5')
     setting_attend_class_after_display_time = request.POST.get('setting_attend_class_after_display_time', '5')
-    setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
 
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page', '/trainer/attend_mode/')
-    admin_password = None
-    attend_class_prev_display_time = None
-    attend_class_after_display_time = None
-    schedule_auto_finish = None
 
-    error = None
-    if error is None:
-        if setting_attend_class_prev_display_time is None or setting_attend_class_prev_display_time == '':
-            setting_attend_class_prev_display_time = '5'
-        if setting_attend_class_after_display_time is None or setting_attend_class_after_display_time == '':
-            setting_attend_class_after_display_time = '5'
-        if setting_schedule_auto_finish is None or setting_schedule_auto_finish == '':
-            setting_schedule_auto_finish = AUTO_FINISH_OFF
+    if setting_admin_password is None or setting_admin_password == '':
+        setting_admin_password = '0000'
+    if setting_attend_class_prev_display_time is None or setting_attend_class_prev_display_time == '':
+        setting_attend_class_prev_display_time = '5'
+    if setting_attend_class_after_display_time is None or setting_attend_class_after_display_time == '':
+        setting_attend_class_after_display_time = '5'
 
-    if error is None:
-        try:
-            admin_password = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
-                                                   setting_type_cd='LT_ADMIN_PASSWORD')
-        except ObjectDoesNotExist:
-            admin_password = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                       setting_type_cd='LT_ADMIN_PASSWORD', use=USE)
-        try:
-            attend_class_prev_display_time = SettingTb.objects.get(member_id=request.user.id,
-                                                                   class_tb_id=class_id,
-                                                                   setting_type_cd='LT_ATTEND_CLASS_PREV_DISPLAY_TIME')
-        except ObjectDoesNotExist:
-            attend_class_prev_display_time = SettingTb(member_id=request.user.id,
-                                                       class_tb_id=class_id,
-                                                       setting_type_cd='LT_ATTEND_CLASS_PREV_DISPLAY_TIME', use=USE)
-        try:
-            attend_class_after_display_time =\
-                SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
-                                      setting_type_cd='LT_ATTEND_CLASS_AFTER_DISPLAY_TIME')
-        except ObjectDoesNotExist:
-            attend_class_after_display_time = SettingTb(member_id=request.user.id,
-                                                        class_tb_id=class_id,
-                                                        setting_type_cd='LT_ATTEND_CLASS_AFTER_DISPLAY_TIME', use=USE)
-        try:
-            schedule_auto_finish = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
-                                                         setting_type_cd='LT_SCHEDULE_AUTO_FINISH')
-        except ObjectDoesNotExist:
-            schedule_auto_finish = SettingTb(member_id=request.user.id,
-                                             class_tb_id=class_id, setting_type_cd='LT_SCHEDULE_AUTO_FINISH', use=USE)
+    setting_type_cd_data = ['LT_ADMIN_PASSWORD', 'LT_ATTEND_CLASS_PREV_DISPLAY_TIME',
+                            'LT_ATTEND_CLASS_AFTER_DISPLAY_TIME']
+    setting_info_data = [setting_admin_password, setting_attend_class_prev_display_time, setting_attend_class_after_display_time]
+    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
 
     if error is None:
-        try:
-            with transaction.atomic():
-                admin_password.setting_info = setting_admin_password
-                admin_password.save()
-                attend_class_prev_display_time.setting_info = setting_attend_class_prev_display_time
-                attend_class_prev_display_time.save()
-                attend_class_after_display_time.setting_info = setting_attend_class_after_display_time
-                attend_class_after_display_time.save()
-                schedule_auto_finish.setting_info = setting_schedule_auto_finish
-                schedule_auto_finish.save()
-
-        except ValueError:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError:
-            error = '등록 값에 문제가 있습니다.'
-        except ValidationError:
-            error = '등록 값에 문제가 있습니다.'
-        except InternalError:
-            error = '등록 값에 문제가 있습니다.'
-
-    if error is not None:
+        request.session['setting_admin_password'] = setting_admin_password
+        request.session['setting_attend_class_prev_display_time'] = setting_attend_class_prev_display_time
+        request.session['setting_attend_class_after_display_time'] = setting_attend_class_after_display_time
+    else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 

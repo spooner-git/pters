@@ -526,8 +526,6 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     for setting_info in setting_data:
         if setting_info.setting_type_cd == 'LT_RES_01':
             lt_res_01 = setting_info.setting_info
-        if setting_info.setting_type_cd == 'LT_RES_02':
-            lt_res_02 = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_RES_03':
             lt_res_03 = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_RES_04':
@@ -602,7 +600,6 @@ def func_get_trainer_setting_list(context, user_id, class_id):
 
     context['avail_date_data'] = avail_date_list
     context['setting_member_reserve_time_available'] = lt_res_01
-    context['setting_member_reserve_time_prohibition'] = lt_res_02
     context['setting_member_reserve_prohibition'] = lt_res_03
     # context['lt_res_04'] = lt_res_04
     context['setting_trainer_work_sun_time_avail'] = lt_work_sun_time_avail
@@ -867,3 +864,34 @@ def func_delete_profile_image_logic(file_name):
         except ClientError:
             error_code = '프로필 변경중 오류가 발생했습니다.'
     return error_code
+
+
+def update_setting_data(class_id, user_id, setting_type_cd_data, setting_info_data):
+
+    error = None
+    try:
+        with transaction.atomic():
+
+            for idx, setting_type_cd_info in enumerate(setting_type_cd_data):
+                try:
+                    setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
+                                                         setting_type_cd=setting_type_cd_info)
+                except ObjectDoesNotExist:
+                    setting_data = SettingTb(member_id=user_id,
+                                             class_tb_id=class_id, setting_type_cd=setting_type_cd_info, use=USE)
+
+                setting_data.setting_info = setting_info_data[idx]
+                setting_data.save()
+
+    except ValueError:
+        error = '등록 값에 문제가 있습니다.'
+    except IntegrityError:
+        error = '등록 값에 문제가 있습니다.'
+    except TypeError:
+        error = '등록 값에 문제가 있습니다.'
+    except ValidationError:
+        error = '등록 값에 문제가 있습니다.'
+    except InternalError:
+        error = '등록 값에 문제가 있습니다.'
+
+    return error
