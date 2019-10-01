@@ -92,7 +92,7 @@ function pters_month_calendar(calendar_name, calendar_options){
 
         let month_calendar_upper_tool = `<div class="pters_month_cal_upper_tool_box">
                                             <div id="${calendar_name}_go_prev_month" class="next_prev_month" style="display:${design_options.move_buttons};">
-                                                <img src="/static/common/icon/navigate_before_black.png" class="obj_icon_basic"> 
+                                                <img src="/static/common/icon/icon_arrow_l_black.png" class="obj_icon_basic"> 
                                             </div>
                                             <div class="pters_month_cal_tool_date_text">
                                                 
@@ -104,7 +104,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                                                 <img src="/static/common/icon/expand_less_black.png" class="obj_icon_basic">
                                             </div>
                                             <div id="${calendar_name}_go_next_month" class="next_prev_month" style="display:${design_options.move_buttons};">
-                                                <img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic">
+                                                <img src="/static/common/icon/icon_arrow_r_small_black.png" class="obj_icon_basic">
                                             </div>
                                             <div class="help_calendar_indicator obj_font_size_10_weight_500">
                                                 <div style="background-color:rgba(255, 59, 68, 0.07)">개인 수업 예약</div>
