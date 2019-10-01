@@ -36,7 +36,7 @@ def func_get_member_ticket_id(class_id, member_id):
                                    member_ticket_tb__member_id=member_id,
                                    member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                    member_ticket_tb__member_ticket_avail_count__gt=0,
-                                   member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
+                                   # member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                                    # member_ticket_tb__end_date__gte=today,
                                    member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
                                                                        'member_ticket_tb__reg_dt')
