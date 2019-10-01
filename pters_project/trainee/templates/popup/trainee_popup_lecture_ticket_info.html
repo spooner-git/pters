@@ -13,9 +13,9 @@
 {#            <div class="obj_font_size_12_weight_500 obj_font_color_white">{{ member_ticket_info.ticket_tb.ticket_type_cd_nm }}</div>#}
             <div class="wrapper_my_ticket_title">
             {% if lecture_info.member_num == 1 %}
-                <img src="{% static_url "common/icon/person_black.png" %}">
+                <img src="{% static_url "common/icon/member_icon_person_black.png" %}">
             {% else %}
-                <img src="{% static_url "common/icon/people_black.png" %}">
+                <img src="{% static_url "common/icon/member_icon_people_black.png" %}">
             {% endif %}
                 <div class="obj_font_size_18_weight_bold obj_font_color_white">{{ lecture_info.name }}</div>
             </div>
@@ -62,8 +62,8 @@
             {% for class_info in class_data %}
             <div class="obj_table_raw wrapper_my_ticket_detail_teacher obj_box_full">
                 <div class="obj_table_cell_x3" style="width:75px;">
-                    <!-- <div class="obj_box_photo"></div> -->
-                    <div class="obj_font_size_11_weight_normal obj_font_color_light_grey">강사</div>
+                    <img src="{{ class_info.class_tb.member.profile_url }}" class="obj_box_photo">
+                    <!--<div class="obj_font_size_11_weight_normal obj_font_color_light_grey">강사</div>-->
                 </div>
                 <div class="obj_table_cell_x3 wrapper_teacher_name">
                     <div class="obj_font_size_12_weight_500">{{ class_info.class_tb.member.name }}</div>

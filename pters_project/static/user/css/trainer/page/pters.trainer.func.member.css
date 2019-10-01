@@ -96,15 +96,17 @@
 }
 
 .member_data_l{
-	/* display: table-cell; */
-	display: none;
-	width: 50px;
+	 display: table-cell;
+	/*display: none;*/
+	width: 40px;
 	text-align: left;
 	vertical-align: middle;
+	padding-right: 10px;
 }
 	.member_data_l > img{
 		width: 40px;
 		vertical-align: middle;
+		border-radius: 50%;
 	}
 .member_data_c{
 	display: table-cell;

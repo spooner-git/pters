@@ -22,6 +22,7 @@ const POPUP_SIZE_WINDOW = 0;
 
 const SHOW = 'show';
 const HIDE = 'hide';
+const NONE = 'None';
 
 const CALL_AJAX = 0;
 const CALL_PAGE_MOVE = 1;

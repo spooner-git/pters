@@ -405,7 +405,6 @@ def func_get_class_list_only_view(context, member_id):
         member_ticket_tb__member_id=member_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
         use=USE).annotate(class_type_name=RawSQL(query_type_cd, [])
                           ).order_by('class_tb_id')
-
     class_list = []
     # wait_class_list = []
     if len(class_member_ticket_data) > 0:
@@ -439,7 +438,6 @@ def func_get_class_list_only_view(context, member_id):
                     += class_member_ticket_info.member_ticket_tb.member_ticket_rem_count
 
     context['class_data'] = class_list
-
     if error is not None:
         context['error'] = error
 

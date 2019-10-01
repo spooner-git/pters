@@ -98,7 +98,7 @@
                 </div>
                 <div class="nav_trainee_menu_box_r">
 
-                    <a><div id="nav_btn_menu" onclick="layer_popup.open_layer_popup(POPUP_INNER_HTML, 'pters_mobile_side_menu', 70, POPUP_FROM_RIGHT)"><img src="/static/common/icon/menu_white.png" class="obj_icon_basic"></div></a>
+                    <a><div id="nav_btn_menu" onclick="layer_popup.open_layer_popup(POPUP_INNER_HTML, 'pters_mobile_side_menu', 70, POPUP_FROM_RIGHT)"><img src="/static/common/icon/member_icon_menu_white.png" class="obj_icon_basic"></div></a>
                 </div>
             </nav>
             <!-- 회원 mobile side menu 팝업 include -->
@@ -114,6 +114,13 @@
         {% include 'popup/trainee_popup_basic.html' %}
         {% block popup %}
         {% endblock %}
+
+        <div class="popup_mobile">
+            <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.mypage_photo_update.css" %}>
+            <div class="popup_mypage_photo_update">
+            </div>
+        </div>
+
 
         <form action="{% url "trainee:add_trainee_schedule" %}" id="form_plan_add" method="post">
             {% csrf_token %}

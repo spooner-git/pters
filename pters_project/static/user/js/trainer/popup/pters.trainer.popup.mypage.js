@@ -234,7 +234,7 @@ class Mypage{
             delete:{text:"프로필 사진 삭제", callback:()=>{
 
                 $.ajax({
-                    url: '/trainer/delete_trainer_profile_img/',
+                    url: '/delete_profile_img/',
                     dataType : 'html',
                     type:'POST',
 

@@ -147,7 +147,7 @@ class Member {
                 member_view_popup = new Member_view('.popup_member_view', ${member_id}, 'member_view_popup');});`;
             let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : '#a3a0a0'}">
                             <div class="member_data_l">
-                                <img src="/static/common/icon/tab_bar/icon_member_off.png">
+                                <img src="${data.member_profile_url}">
                             </div>                
                             <div class="member_data_c">
                                 <div class="member_name">${member_name}</div>

@@ -368,6 +368,7 @@ class Lecture_view{
             let member_id = this.data.member[i].member_id;
             let member_name = this.data.member[i].member_name;
             let member_fix = this.data.member[i].member_fix_state_cd;
+            let member_profile_url = this.data.member[i].member_profile_url;
             let style = {"font-size":"15px", "font-weight":"500", "padding":"0", "height":"44px", "line-height":"44px","color":"", "letter-spacing":"-0.7px", "display":"table-cell", "width":"auto", "vertical-align":"middle"};
             let member_fix_indicator = "";
             if(member_fix == FIX){
@@ -380,11 +381,12 @@ class Lecture_view{
                 });
             });
 
+            let member_img = '<div style="display: table-cell; width:40px; vertical-align:bottom;"><img src="'+member_profile_url+'" style="width:30px; height:30px; border-radius: 50%;"></div>';
             html_to_join.push(
-                '<div style="display:table;width:100%;">'+member_button + member_fix_indicator+'</div>'
+                '<div style="display:table;width:100%;">'+member_img+'<div style="display: table-cell; width:60%;">'+member_button + '</div><div style="display: table-cell; line-height: 44px; float:right;">'+member_fix_indicator+'</div></div>'
             );
         }
-        let html = `<div>${html_to_join.join('')}</div>`;
+        let html = `${html_to_join.join('')}`;
 
         return html;
     }

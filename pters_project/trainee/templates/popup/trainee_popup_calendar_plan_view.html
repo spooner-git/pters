@@ -23,9 +23,9 @@
                     </div> -->
                     <div  class="wrapper_img_lesson_type">
                         {% if schedule_info.lecture_tb %}
-                        <img src="{% static_url "common/icon/people_black.png" %}">
+                        <img src="{% static_url "common/icon/member_icon_people_black.png" %}">
                         {% else %}
-                        <img src="{% static_url "common/icon/person_black.png" %}">
+                        <img src="{% static_url "common/icon/member_icon_person_black.png" %}">
                         {% endif %}
                     </div>
                     
@@ -79,9 +79,9 @@
                         </div>
                         {% if schedule_info.state_cd != 'PE' and schedule_info.state_cd != 'PC' %}
                             <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_coral_trans"
-                                 onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-                                                                       {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
-                                                                       'onclick_function':`func_schedule({'schedule_id':'{{ schedule_info.schedule_id }}'}, ${CALL_AJAX}, '${DELETE}')`})">취소하기</div>
+                                 onclick="show_user_confirm(`정말 취소하시겠습니까?`, ()=>{
+                                            func_schedule({'schedule_id':'{{ schedule_info.schedule_id }}'}, `${CALL_AJAX}`, `${DELETE}`);
+                                            });">취소하기</div>
                         {% endif %}
                     {% endif %}
                 </div>

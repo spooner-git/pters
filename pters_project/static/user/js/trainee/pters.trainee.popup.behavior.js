@@ -84,12 +84,12 @@ let layer_popup = (function(){
         }
 
         $('.content_page').css('overflow-y', 'auto');
-        
+
         return popup_data;
     }
 
     return {
-        "open_layer_popup":function(call_method, popup_name, popup_size, animation_type, data){
+        "open_layer_popup":function(call_method, popup_name, popup_size, animation_type, data, callback){
             // if(func_prevent_double_click_set()) return;
 
             if(call_method == POPUP_AJAX_CALL){
@@ -106,6 +106,9 @@ let layer_popup = (function(){
                 let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
                 if(popup_data!=undefined && Object.keys(popup_data).length > 0){
                     func_animation_set(OPEN, popup_data);
+                }
+                if(callback != undefined){
+                    callback();
                 }
                   // func_prevent_double_click_free();
             }, 10);
@@ -314,7 +317,11 @@ function func_set_popup_basic(popup_name, data){
         $popup.find('.wrapper_popup_basic_comment').html(`<p>${data.popup_comment}</p>`);
     }
     if(data != undefined && data.onclick_function!=undefined){
-        $popup.find('.popup_basic_confirm').attr('onclick', data.onclick_function);
+        // $popup.find('.popup_basic_confirm').attr('onclick', data.onclick_function);
+        $popup.find('.popup_basic_confirm').off('click').click(function(){
+            data.onclick_function();
+        });
+
     }
 }
 
@@ -325,4 +332,12 @@ function show_error_message(message){
                                  {'popup_title':'',
                                   'popup_comment':`${message}`,
                                   'onclick_function':`layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
+}
+function show_user_confirm (message, callback){
+    layer_popup.open_layer_popup(POPUP_BASIC,
+                                 'popup_basic_user_select',
+                                 POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
+                                 {'popup_title':'',
+                                  'popup_comment':`${message}`,
+                                  'onclick_function':()=>{callback();}});
 }

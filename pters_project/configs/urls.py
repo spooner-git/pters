@@ -51,6 +51,8 @@ urlpatterns = [
     # url(r'^static/(?P<path>.*)$', django.views.static.serve, {'document_root': settings.STATIC_URL}),
     url(r'^__debug__/', include(debug_toolbar.urls)),
 
+    url(r'^update_profile_img', views.update_profile_img_logic, name='update_profile_img'),
+    url(r'^delete_profile_img', views.delete_profile_img_logic, name='delete_profile_img'),
 
 
 ]
