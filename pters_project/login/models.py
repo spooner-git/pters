@@ -24,7 +24,8 @@ class MemberTb(TimeStampedModel):
     address = models.CharField(db_column='ADDRESS', max_length=255, blank=True, default='')
     job = models.CharField(db_column='JOB', max_length=20, blank=True, default='')  # Field name made lowercase.
     contents = models.CharField(db_column='CONTENTS', max_length=255, blank=True, default='')
-    profile_url = models.CharField(db_column='PROFILE_URL', max_length=255, blank=True, null=True, default='')
+    profile_url = models.CharField(db_column='PROFILE_URL', max_length=255, blank=True, null=True,
+                                   default='/static/common/icon/icon_account.png')
     reg_info = models.CharField(db_column='REG_INFO', max_length=20, blank=True, default='')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.

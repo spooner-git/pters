@@ -299,6 +299,8 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                                     member_info.phone[7:11]
             if member_info.birthday_dt is None:
                 member_info.birthday_dt = ''
+            if member_info.profile_url is None or member_info.profile_url == '':
+                member_info.profile_url = '/static/common/icon/icon_account.png'
             context['member_info'] = member_info
 
         if error is None:
@@ -1509,7 +1511,8 @@ class PopupLectureTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVi
                 class_info.class_tb.member.phone = class_info.class_tb.member.phone[0:3] + '-' + \
                                                    class_info.class_tb.member.phone[3:7] + '-' +\
                                                    class_info.class_tb.member.phone[7:11]
-
+            if class_info.class_tb.member.profile_url is None or class_info.class_tb.member.profile_url == '':
+                class_info.class_tb.member.profile_url = '/static/common/icon/icon_account.png'
         try:
             member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
         except ObjectDoesNotExist:
@@ -1570,6 +1573,8 @@ class PopupTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 member_ticket_info.class_tb.member.phone = member_ticket_info.class_tb.member.phone[0:3] + '-' + \
                                                      member_ticket_info.class_tb.member.phone[3:7] + '-' + \
                                                      member_ticket_info.class_tb.member.phone[7:11]
+            if member_ticket_info.class_tb.member.profile_url is None or member_ticket_info.class_tb.member.profile_url == '':
+                member_ticket_info.class_tb.member.profile_url = '/static/common/icon/icon_account.png'
             try:
                 member_ticket_info.status \
                     = CommonCdTb.objects.get(common_cd=member_ticket_info.member_ticket_tb.state_cd).common_cd_nm

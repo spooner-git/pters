@@ -2,6 +2,8 @@
 {% load static_url %}
 
 {% block local_css %}
+    <link rel="stylesheet" href={% static_url "common/css/croppie.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.component.common.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainee/page/pters.trainee.page.mypage.css" %}>
 {% endblock %}
 
@@ -12,6 +14,9 @@
         <div class="wrapper_box_basic_info">
             <div class="obj_box_full">
                 <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">내 정보</div>
+                    <section id="section_mypage_toolbox" class="obj_box_full" onclick="update_trainee_profile_photo();" style="text-align: center;">
+                        <img src="{{ member_info.profile_url }}" style="width:100px; height:100px; border-radius:50%">
+                    </section>
                     <h2 class="obj_font_size_15_weight_bold" id="trainee_info_name">{{ member_info.name }} ({{ member_info.user.username }})</h2>
                     <div class="obj_button obj_font_size_13_weight_500 obj_font_color_coral" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_my_info_change', 90, POPUP_FROM_BOTTOM, {} )">변경하기</div>
                     <div class="obj_font_size_12_weight_normal" id="trainee_info_birth">{{ member_info.birthday_dt | date:'Y.m.d' }}</div>
@@ -43,7 +48,11 @@
 {% endblock %}
 
 {% block local_js_footer %}
+    <script type="text/javascript" src={% static_url "common/js/croppie.min.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainee/func/pters.trainee.func.schedule.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.component.common.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.base.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainee/popup/pters.trainee.popup.mypage_photo_update.js" %}></script>
     <script type="text/javascript">
     	//Nav바에 현재 페이지에 밑줄 표기
 

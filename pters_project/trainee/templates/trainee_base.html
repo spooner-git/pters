@@ -115,6 +115,13 @@
         {% block popup %}
         {% endblock %}
 
+        <div class="popup_mobile">
+            <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.mypage_photo_update.css" %}>
+            <div class="popup_mypage_photo_update">
+            </div>
+        </div>
+
+
         <form action="{% url "trainee:add_trainee_schedule" %}" id="form_plan_add" method="post">
             {% csrf_token %}
             <input type="hidden" name="class_id" id="form_content_class_id">

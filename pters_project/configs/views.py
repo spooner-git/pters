@@ -177,7 +177,6 @@ def func_setting_data_update(request, group):
     class_id = request.session.get('class_id', '')
     device_id = request.session.get('device_id', 'pc')
     trainer_id = request.session.get('trainer_id', '')
-
     if device_id == 'pc':
         request.session['device_info'] = 'web'
     else:

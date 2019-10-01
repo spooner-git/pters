@@ -147,7 +147,8 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, 
                     else:
                         member_info.phone = '***-****-' + member_info.phone[7:]
                     member_info.user.email = ''
-
+            if member_info.profile_url is None or member_info.profile_url == '':
+                member_info.profile_url = '/static/common/icon/icon_account.png'
             if start_date is None:
                 start_date = member_ticket_info.start_date
             else:
