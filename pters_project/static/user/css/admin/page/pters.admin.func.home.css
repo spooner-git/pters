@@ -1,0 +1,81 @@
+#base{
+	display: flex;
+	height: 100%;
+	font-size: 14px;
+}
+	#side_menu{
+		flex: 0 0 200px;
+		background-color: #f2f2f2;
+
+	}
+		#side_menu > article{
+			height: 50px;
+			line-height: 50px;
+			padding: 5px 16px;
+			font-weight: bold;
+		}
+
+	#main_content{
+		position: relative;
+		padding: 20px;
+		background-color: #282828;
+		color: #ffffff;
+		font-size: 13px;
+		flex: 1 0 0;
+		overflow-y: auto;
+	}
+
+.page_loading_image{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+}
+
+
+.text_button{
+	cursor: pointer;
+}
+
+
+
+.qa_article_wrapper{
+	max-width: 1280px;
+	min-width: 800px;
+	display: flex;
+	flex-direction: column-reverse;
+	margin: 0 auto;
+}
+
+.qa_article_row{
+	display: flex;
+	padding: 5px 20px;
+	box-sizing: border-box;
+	border-bottom: 1px solid #545454;
+	cursor: pointer;
+}
+	.qa_article_row > .qa_number{
+		flex-basis: 40px
+	}
+	.qa_article_row > .qa_type{
+		flex-basis: 80px;
+	}
+	.qa_article_row > .qa_title{
+		flex:1 0 0; 
+	}
+	.qa_article_row > .qa_member{
+		flex-basis: 200px;
+	}
+	.qa_article_row > .qa_reg_date{
+		flex-basis: 100px;
+	}
+	.qa_article_row > .qa_status{
+		flex-basis: 100px;
+	}
+.qa_article_row:hover{
+	background-color: #212121;
+	color: #fe4e65;
+	transition: 0.5s background-color;
+	font-weight: bold;
+}

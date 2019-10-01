@@ -3,8 +3,6 @@
 
 let layer_popup = (function (){
     let popup_array = [];
-    let windowHeight = window.innerHeight;
-    
 
     function func_open_layer_popup (popup_name, popup_size, animation_type){
         // $('.content_page').css('overflow-y', 'hidden');
@@ -224,8 +222,6 @@ function func_set_popup_position ($popup_selector, animation_type, popup_size){
     let height = 100;
     let left = 0;
 
-    let windowWidth = window.innerWidth;
-    let windowHeight = window.innerHeight;
     switch (animation_type) {
         case POPUP_FROM_LEFT:
             translate_x = -windowWidth;
@@ -276,9 +272,6 @@ function func_set_popup_position ($popup_selector, animation_type, popup_size){
 }
 
 function func_set_open_popup_animation ($popup_selector, animation_type, popup_size){
-    let windowWidth = window.innerWidth;
-    let windowHeight = window.innerHeight;
-
     let animation_info = "";
     if(animation_type != POPUP_FROM_PAGE){
         animation_info = "transform 0.3s ease-in-out";
@@ -302,17 +295,14 @@ function func_set_open_popup_animation ($popup_selector, animation_type, popup_s
         case POPUP_FROM_PAGE:
             break;
     }
-    
     $popup_selector.css({
         "transform": `translate(${translate_x}px, ${translate_y}px)`,
-        "transition": `${animation_info}`, "visibility":"visible"
+        "transition": `${animation_info}`
     });
+
 }
 
 function func_set_close_popup_animation ($popup_selector, animation_type){
-    let windowWidth = window.innerWidth;
-    let windowHeight = window.innerHeight;
-
     let animation_info = "";
     if(animation_type != POPUP_FROM_PAGE){
         animation_info = "transform 0.3s ease-in-out";
@@ -343,9 +333,7 @@ function func_set_close_popup_animation ($popup_selector, animation_type){
         "transform": `translate(${translate_x}px, ${translate_y}px)`,
         "transition": `${animation_info}`
     });
-    setTimeout(()=>{
-        $popup_selector.css({"visibility":"hidden"});
-    }, 300);
+
 }
 
 function func_set_shade (popup_array_length){
