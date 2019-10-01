@@ -17,6 +17,7 @@ class Member {
         this.sort_val = SORT_MEMBER_NAME;
         this.sort_order_by = SORT_ORDER_ASC;
         this.sort_value_text = '회원명 가나다순';
+
     }
 
     init (list_type){
@@ -60,7 +61,7 @@ class Member {
             url:url,
             dataType : 'JSON',
             async:async,
-            data: {'sort_val':this.sort_val, 'sort_order_by':this.sort_order_by},
+            data: {'sort_val':this.sort_val, 'sort_order_by':this.sort_order_by, "keyword":""},
     
             beforeSend:function (){
                 ajax_load_image(SHOW);
