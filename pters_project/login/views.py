@@ -123,7 +123,8 @@ def login_trainer(request):
                         group_name = 'trainer'
                         if len(group_list) == 1:
                             group_name = group_list[0].name
-                        if group_name == 'trainee' and not user.check_password('0000'):
+                        # if group_name == 'trainee' and not user.check_password('0000'):
+                        if group_name == 'trainee':
                             login(request, user)
                             # if auto_login_check == '0':
                             #     request.session.set_expiry(0)

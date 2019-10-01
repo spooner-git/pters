@@ -331,7 +331,7 @@ function show_error_message(message){
                                  POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
                                  {'popup_title':'',
                                   'popup_comment':`${message}`,
-                                  'onclick_function':`layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)`});
+                                  'onclick_function':()=>layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)});
 }
 function show_user_confirm (message, callback){
     layer_popup.open_layer_popup(POPUP_BASIC,
