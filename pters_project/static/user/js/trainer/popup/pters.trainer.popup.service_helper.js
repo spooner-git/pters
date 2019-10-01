@@ -138,7 +138,8 @@ class Service_helper {
                         언제든 다시 볼 수 있습니다.
                        <span style="display:block;color:#fe4e65;margin:0;">( 전체 메뉴 > 튜토리얼 )</span>`;
         show_user_confirm (message, ()=>{
-            layer_popup.close_layer_popup();
+            layer_popup.close_layer_popup(); //컨펌 팝업 닫기
+            layer_popup.close_layer_popup(); //튜토리얼 닫기
             service_helper_popup.clear();
         });
     }
