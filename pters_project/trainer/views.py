@@ -418,7 +418,6 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         member_sort = request.GET.get('sort_val', SORT_MEMBER_NAME)
         sort_order_by = request.GET.get('sort_order_by', SORT_ASC)
         keyword = request.GET.get('keyword', '')
-
         current_member_data = func_get_member_ing_list(class_id, request.user.id, keyword)
         finish_member_num = len(func_get_class_member_end_list(class_id, keyword))
         sort_info = int(member_sort)

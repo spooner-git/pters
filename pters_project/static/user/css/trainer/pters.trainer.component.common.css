@@ -681,12 +681,13 @@ input:disabled{
 }
 .list_sort_select_wrap{
 	float: right;
-	width: 90px;
+	width: 120px;
 	display: inline-block;
 	height: 28px;
 	line-height: 28px;
 	vertical-align: middle;
 	color: #b8b4b4;
+	text-align: right;
 }
 .list_sort_select_wrap select{
 	-webkit-appearance: none;
