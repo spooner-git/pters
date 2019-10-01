@@ -170,7 +170,7 @@ class Ticket_list {
         user_option += `}`;
 
         let options_padding_top_bottom = 16;
-        let button_height = 8*user_options_array.length + 16;
+        let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*user_options_array.length;
 
         let html = `<div class="ticket_upper_box">
