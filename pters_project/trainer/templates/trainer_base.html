@@ -324,6 +324,8 @@ onclick="layer_popup.close_layer_popup();"></div>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_shop.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_shop_agreement.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_pay_cancel.js" %}></script>
+
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.service_helper.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.selectors.js" %}></script>
@@ -465,12 +467,14 @@ onclick="layer_popup.close_layer_popup();"></div>
     var service_inquiry_popup;
     var service_inquiry_history_popup;
     var service_inquiry_faq_popup;
+    var service_helper_popup;
 
     var pters_pass_main_popup;
     var pters_pass_pay_info_popup;
     var pters_pass_shop_popup;
     var pters_pass_shop_agreement_popup;
     var pters_pass_pay_cancel_popup;
+
     // 팝업 인스턴스
 
     // 범용 셀렉터 인스턴스
@@ -586,6 +590,10 @@ onclick="layer_popup.close_layer_popup();"></div>
             case 'pters_pass_main':
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_MAIN, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     pters_pass_main_popup = new Pters_pass_main('.popup_pters_pass_main')});
+            break;
+            case 'helper':
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_HELPER, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    service_helper_popup = new Service_helper('.popup_service_helper')});
             break;
         }
     }

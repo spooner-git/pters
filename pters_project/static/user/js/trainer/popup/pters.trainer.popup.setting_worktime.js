@@ -3,48 +3,48 @@ class Setting_worktime{
         this.target = {install: install_target, toolbox:'section_setting_worktime_toolbox', content:'section_setting_worktime_content'};
 
         this.data = {
-                start_day: null,
-                dayoff_visibility: OFF,
-                GENERAL:{
-                    "start_time":null, "end_time":null, 
-                    "start_time_text":null, "end_time_text":null,
-                    "detail_switch":OFF
-                },
-                MON:{
-                    "start_time":null, "end_time":null, 
-                    "start_time_text":null, "end_time_text":null,
-                    "dayoff":OFF
-                },
-                TUE:{
-                    "start_time":null, "end_time":null, 
-                    "start_time_text":null, "end_time_text":null,
-                    "dayoff":OFF
-                },
-                WED:{
-                    "start_time":null, "end_time":null, 
-                    "start_time_text":null, "end_time_text":null,
-                    "dayoff":OFF
-                },
-                THS:{
-                    "start_time":null, "end_time":null, 
-                    "start_time_text":null, "end_time_text":null,
-                    "dayoff":OFF
-                },
-                FRI:{
-                    "start_time":null, "end_time":null, 
-                    "start_time_text":null, "end_time_text":null,
-                    "dayoff":OFF
-                },
-                SAT:{
-                    "start_time":null, "end_time":null, 
-                    "start_time_text":null, "end_time_text":null,
-                    "dayoff":OFF
-                },
-                SUN:{
-                    "start_time":null, "end_time":null, 
-                    "start_time_text":null, "end_time_text":null,
-                    "dayoff":OFF
-                }
+            start_day: null,
+            dayoff_visibility: OFF,
+            GENERAL:{
+                "start_time":null, "end_time":null, 
+                "start_time_text":null, "end_time_text":null,
+                "detail_switch":OFF
+            },
+            MON:{
+                "start_time":null, "end_time":null, 
+                "start_time_text":null, "end_time_text":null,
+                "dayoff":OFF
+            },
+            TUE:{
+                "start_time":null, "end_time":null, 
+                "start_time_text":null, "end_time_text":null,
+                "dayoff":OFF
+            },
+            WED:{
+                "start_time":null, "end_time":null, 
+                "start_time_text":null, "end_time_text":null,
+                "dayoff":OFF
+            },
+            THS:{
+                "start_time":null, "end_time":null, 
+                "start_time_text":null, "end_time_text":null,
+                "dayoff":OFF
+            },
+            FRI:{
+                "start_time":null, "end_time":null, 
+                "start_time_text":null, "end_time_text":null,
+                "dayoff":OFF
+            },
+            SAT:{
+                "start_time":null, "end_time":null, 
+                "start_time_text":null, "end_time_text":null,
+                "dayoff":OFF
+            },
+            SUN:{
+                "start_time":null, "end_time":null, 
+                "start_time_text":null, "end_time_text":null,
+                "dayoff":OFF
+            }
         };
         
         this.data_received;
@@ -63,8 +63,8 @@ class Setting_worktime{
             //업무시간 데이터 체크
             let worktime_all_same = true;
             let worktimes = [data.setting_trainer_work_mon_time_avail, data.setting_trainer_work_tue_time_avail,
-                             data.setting_trainer_work_wed_time_avail, data.setting_trainer_work_ths_time_avail,
-                             data.setting_trainer_work_fri_time_avail, data.setting_trainer_work_sat_time_avail, data.setting_trainer_work_sun_time_avail];
+                data.setting_trainer_work_wed_time_avail, data.setting_trainer_work_ths_time_avail,
+                data.setting_trainer_work_fri_time_avail, data.setting_trainer_work_sat_time_avail, data.setting_trainer_work_sun_time_avail];
             for(let i=0; i<worktimes.length; i++){
                 if(worktimes[0] != worktimes[i]){
                     worktime_all_same = false;
