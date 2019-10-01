@@ -20,7 +20,7 @@
         <!-- <div class="obj_box_full obj_font_bg_white_dark_grey" style="display: none;">
             <div class="obj_table_raw">
                 <div class="obj_table_cell_x2 obj_font_size_13_weight_500">나의 예약 가능 횟수 보기</div>
-                <div class="obj_table_cell_x2"><img src="/static/common/icon/expand_more_black.png" class="obj_icon_expand" id="id_ticket_detail_expand_in_reserve" data-open></div>
+                <div class="obj_table_cell_x2"><img src="/static/common/icon/member_icon_expand_more_black.png" class="obj_icon_expand" id="id_ticket_detail_expand_in_reserve" data-open></div>
             </div>
             <div id="wrapper_ticket_info" class="wrapper_ticket_info">
                 <div class="obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
@@ -37,7 +37,7 @@
         <div class="wrapper_reserve_form _target_link_to_tab" id="reserve_form_personal">
             <div class="obj_box_full">
                 <div class="obj_table_raw wrapper_ticket_info">
-                    <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/person_black.png"></div>
+                    <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/member_icon_person_black.png"></div>
                     <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal ">개인 수업</div>
                     <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능:{{ member_ticket_avail_count }}  번)</div>
                 </div>
@@ -49,7 +49,7 @@
                             <option data-start="2019-03-04 11:00" data-end="2019-03-04 13:00">11:00 ~ 13:00</option>
                             <option data-start="2019-03-04 21:00" data-end="2019-03-04 22:00">21:00 ~ 22:00</option>
                         </select>
-                        <img src="/static/common/icon/expand_more_black.png" class="obj_icon_arrow">
+                        <img src="/static/common/icon/member_icon_expand_more_black.png" class="obj_icon_arrow">
                     </div>
                 </div>
                 <div class="wrapper_reserve_caution obj_font_size_11_weight_500 obj_font_color_grey">
@@ -65,7 +65,7 @@
                 {% for lecture_info in lecture_data %}
                     <div class="obj_box_full">
                         <div class="obj_table_raw wrapper_ticket_info">
-                            <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/people_black.png"></div>
+                            <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/member_icon_people_black.png"></div>
                             <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal ">{{ lecture_info.lecture_name }}</div>
                             <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: {{ lecture_info.lecture_member_ticket_avail_count }} 번)</div>
                         </div>

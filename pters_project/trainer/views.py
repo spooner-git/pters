@@ -4,7 +4,7 @@ import datetime
 import logging
 import random
 import urllib
-from operator import attrgetter, itemgetter
+from operator import attrgetter
 from urllib.parse import quote
 
 from django.contrib import messages
@@ -17,10 +17,8 @@ from django.db.models.expressions import RawSQL
 from django.http import HttpResponse, JsonResponse, request
 from django.shortcuts import redirect, render
 from django.utils import timezone
-from django.utils.datastructures import MultiValueDictKeyError
 from django.views import View
 from django.views.generic import TemplateView, RedirectView
-from el_pagination.views import AjaxListView
 from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
@@ -31,7 +29,7 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     GROUP_SCHEDULE, SCHEDULE_DUPLICATION_ENABLE, LECTURE_TYPE_ONE_TO_ONE, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, \
     STATE_CD_ABSENCE, STATE_CD_FINISH, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
     LECTURE_TYPE_NORMAL, SHOW, SORT_TICKET_TYPE, SORT_TICKET_NAME, SORT_TICKET_MEMBER_COUNT, SORT_TICKET_CREATE_DATE, \
-    SORT_DESC, SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE
+    SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE
 from board.models import BoardTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -46,8 +44,7 @@ from .functions import func_get_trainer_setting_list, \
     func_get_member_info, func_get_member_from_member_ticket_list, \
     func_check_member_connection_info, func_get_member_lecture_list, \
     func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info, func_get_ticket_info, \
-    func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, func_upload_profile_image_logic, \
-    func_delete_profile_image_logic, update_setting_data
+    func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, update_setting_data
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb
 
@@ -4062,68 +4059,6 @@ class GetTrainerAuthDataView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         return JsonResponse(request.session['auth_info'], json_dumps_params={'ensure_ascii': True})
-
-
-# 강사 프로필 사진 수정
-def update_trainer_profile_img_logic(request):
-    error = None
-    member_info = None
-    img_url = None
-
-    try:
-        member_info = MemberTb.objects.get(member_id=request.user.id)
-    except ObjectDoesNotExist:
-        error = '회원 정보를 불러오지 못했습니다.'
-    if error is None:
-        if member_info.profile_url is not None and member_info.profile_url != '':
-            error = func_delete_profile_image_logic(member_info.profile_url)
-
-    if error is None:
-        max_range = 9999999999
-        random_file_name = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
-        if request.method == 'POST':
-            try:
-                img_url = func_upload_profile_image_logic(request.POST.get('profile_img_file'),
-                                                          str(request.user.id)+'/'+str(random_file_name))
-                if img_url is None:
-                    error = '프로필 이미지 변경에 실패했습니다.[1]'
-            except MultiValueDictKeyError:
-                error = '프로필 이미지 변경에 실패했습니다.[2]'
-
-    if error is None:
-        member_info.profile_url = img_url
-        member_info.save()
-
-    if error is not None:
-        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-
-    return render(request, 'ajax/trainer_error_ajax.html')
-
-
-# 강사 프로필 사진 삭제
-def delete_trainer_profile_img_logic(request):
-    error = None
-    member_info = None
-
-    try:
-        member_info = MemberTb.objects.get(member_id=request.user.id)
-    except ObjectDoesNotExist:
-        error = '회원 정보를 불러오지 못했습니다.'
-
-    if error is None:
-        if member_info.profile_url is not None and member_info.profile_url != '':
-            error = func_delete_profile_image_logic(member_info.profile_url)
-
-    if error is None:
-        member_info.profile_url = ''
-        member_info.save()
-
-    if error is not None:
-        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-
-    return render(request, 'ajax/trainer_error_ajax.html')
 
 
 # log 삭제

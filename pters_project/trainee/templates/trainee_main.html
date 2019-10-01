@@ -39,10 +39,10 @@
                                 <div class="obj_tag obj_font_bg_white_black">예약완료</div>
                             </div> -->
                             <div  class="wrapper_img_lesson_type">
-                                {% if schedule_info.lecture_tb %}
-                                <img src="{% static_url "common/icon/people_black.png" %}">
+                                {% if next_schedule_info.lecture_tb %}
+                                <img src="{% static_url "common/icon/member_icon_people_black.png" %}">
                                 {% else %}
-                                <img src="{% static_url "common/icon/person_black.png" %}">
+                                <img src="{% static_url "common/icon/member_icon_person_black.png" %}">
                                 {% endif %}
                             </div>
                             <div class="wrapper_member_ticket_title obj_font_size_15_weight_500">
@@ -144,9 +144,9 @@
                             <div class="wrapper_my_ticket_type obj_table_cell_x3">
 {#                                <div class="obj_font_size_12_weight_bold">{{ ing_member_ticket_info.member_ticket_tb.ticket_tb.ticket_type_cd_nm }}</div>#}
                                 {% if ing_lecture_info.lecture_tb.member_num == 1 %}
-                                    <img src="{% static_url "common/icon/person_black.png" %}">
+                                    <img src="{% static_url "common/icon/member_icon_person_black.png" %}">
                                 {% else %}
-                                    <img src="{% static_url "common/icon/people_black.png" %}">
+                                    <img src="{% static_url "common/icon/member_icon_people_black.png" %}">
                                 {% endif %}
                             </div>
                             <div class="wrapper_my_ticket_title obj_table_cell_x3">

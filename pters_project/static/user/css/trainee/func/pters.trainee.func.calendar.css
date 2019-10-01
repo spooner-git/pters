@@ -75,7 +75,7 @@
 		cursor: pointer;
 	}
 	.pters_calendar .pters_timeline_cal_upper_tool_box .pters_timeline_cal_expand_button_on_timeline{
-		background-image: url("/static/common/icon/expand_less_black.png");
+		background-image: url("/static/common/icon/member_icon_expand_less_black.png");
 		background-size: 24px;
 		background-position: center;
 		background-repeat: no-repeat;

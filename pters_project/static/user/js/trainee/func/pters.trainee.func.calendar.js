@@ -101,7 +101,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                                                 </div>
                                             </div>
                                             <div class="expand_button ${calendar_name}_expand_button" style="display:${design_options.expand_buttons};">
-                                                <img src="/static/common/icon/expand_less_black.png" class="obj_icon_basic">
+                                                <img src="/static/common/icon/member_icon_expand_less_black.png" class="obj_icon_basic">
                                             </div>
                                             <div id="${calendar_name}_go_next_month" class="next_prev_month" style="display:${design_options.move_buttons};">
                                                 <img src="/static/common/icon/icon_arrow_r_small_black.png" class="obj_icon_basic">
@@ -617,9 +617,9 @@ function pters_month_calendar(calendar_name, calendar_options){
             let data = $(`.${calendar_name}_expand_button`).attr('data-open');
             func_time_line_wide_view(data, calendar_month_height);
             if(data == SHOW){
-                $(this).css('background-image', `url("/static/common/icon/expand_less_black.png")`);
+                $(this).css('background-image', `url("/static/common/icon/member_icon_expand_less_black.png")`);
             }else if(data == HIDE || data == undefined){
-                $(this).css('background-image', `url("/static/common/icon/expand_more_black.png")`);
+                $(this).css('background-image', `url("/static/common/icon/member_icon_expand_more_black.png")`);
             }
         });
 
@@ -634,7 +634,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         switch(type){
             case SHOW:
                 $calendar_name_expand_button.attr('data-open', HIDE);
-                $calendar_name_expand_button_img.attr('src', '/static/common/icon/expand_less_black.png');
+                $calendar_name_expand_button_img.attr('src', '/static/common/icon/member_icon_expand_less_black.png');
                 // $calendar_name_wrapper_month_cal.show();
                 $calendar_name_wrapper_month_cal.animate({'height': `${calendar_month_height}px`}, 200);
                 $wrapper_cal_timeline.css('height', `${original_height}px`);
@@ -642,7 +642,7 @@ function pters_month_calendar(calendar_name, calendar_options){
 
             case HIDE:
                 $calendar_name_expand_button.attr('data-open', SHOW);
-                $calendar_name_expand_button_img.attr('src', '/static/common/icon/expand_more_black.png');
+                $calendar_name_expand_button_img.attr('src', '/static/common/icon/member_icon_expand_more_black.png');
                 // $calendar_name_wrapper_month_cal.hide();
                 $calendar_name_wrapper_month_cal.animate({height: 0}, 200);
                 $wrapper_cal_timeline.css('height', `${expand_height}px`);
@@ -653,7 +653,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                 expand_height = calendar_height - calendar_toolbox_height - calendar_timeline_toolbox_height;
 
                 $calendar_name_expand_button.attr('data-open', SHOW);
-                $calendar_name_expand_button_img.attr('src', '/static/common/icon/expand_more_black.png');
+                $calendar_name_expand_button_img.attr('src', '/static/common/icon/member_icon_expand_more_black.png');
                 // $calendar_name_wrapper_month_cal.hide();
                 $calendar_name_wrapper_month_cal.animate({height: 0}, 200);
                 $wrapper_cal_timeline.css('height', `${expand_height}px`);

@@ -63,7 +63,7 @@
 
 		.popup_my_info_change > .obj_box_full .wrapper_auth_input{
 			-webkit-appearance:none;
-			width: 70%;
+			width: 60%;
 			border: 0;
 			border-bottom: 1px solid #f2f2f2;
 			-webkit-text-fill-color: #000000;
@@ -74,14 +74,14 @@
 		}
 
 		.popup_my_info_change > .obj_box_full .wrapper_password_change_button{
-			width: 140px;
+			width: 35%;
 			display: inline-block;
 			float: right;
 			border: 1px solid #ff3b44;
 		}
 
 		.popup_my_info_change > .obj_box_full .wrapper_auth_button{
-			width: 140px;
+			width: 35%;
 			display: inline-block;
 			float: right;
 			border: 1px solid #ff3b44;

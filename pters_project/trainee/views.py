@@ -690,6 +690,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             if context['error'] is not None:
                 logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + context['error'])
                 messages.error(self.request, context['error'])
+
         return context
 
 

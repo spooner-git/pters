@@ -147,7 +147,7 @@ class Mypage_photo_update{
                             let form_data = new FormData();
                             form_data.append('profile_img_file', this.data.file);
                             $.ajax({
-                                url: '/trainer/update_trainer_profile_img/',
+                                url: '/update_profile_img/',
                                 data: form_data,
                                 dataType : 'html',
                                 type:'POST',

@@ -16,13 +16,13 @@ $(document).on("click", '#id_ticket_detail_expand_in_reserve', function(){
     switch(option){
         case OPEN:
             $this.attr({"data-open": CLOSE,
-                        "src": "/static/common/icon/expand_more_black.png"});
+                        "src": "/static/common/icon/member_icon_expand_more_black.png"});
             wrapper_my_ticket_detail_in_reserve.hide();
         break;
 
         case CLOSE:
             $this.attr({"data-open": OPEN,
-                        "src": "/static/common/icon/expand_less_black.png"});
+                        "src": "/static/common/icon/member_icon_expand_less_black.png"});
             wrapper_my_ticket_detail_in_reserve.show();
         break;
     }
