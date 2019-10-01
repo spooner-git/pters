@@ -15,6 +15,10 @@ class Ticket_list {
         this.search = false;
         this.search_value = "";
 
+        this.sort_val = SORT_TICKET_NAME;
+        this.sort_order_by = SORT_ORDER_ASC;
+        this.sort_value_text = '수강권명 가나다순';
+
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
         this.init(this.list_status_type);
     }
@@ -151,6 +155,24 @@ class Ticket_list {
     }
 
     dom_row_toolbox(){
+
+        // 계속 추가되더라도 동적으로 처리하기 위해 작성 - hkkim 20191001
+        let user_options_array = [];
+        user_options_array.push(`'${SORT_TICKET_NAME+'_'+SORT_ORDER_ASC}':{text:'수강권명 가나다순', callback:()=>{ticket_list_popup.sort_val = ${SORT_TICKET_NAME}; ticket_list_popup.sort_order_by= ${SORT_ORDER_ASC}; ticket_list_popup.sort_value_text = '수강권명 가나다순';ticket_list_popup.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_TICKET_MEMBER_COUNT+'_'+SORT_ORDER_ASC}':{text:'참여중 회원 많은 순', callback:()=>{ticket_list_popup.sort_val = '${SORT_TICKET_MEMBER_COUNT}'; ticket_list_popup.sort_order_by= ${SORT_ORDER_DESC}; ticket_list_popup.sort_value_text = '참여중 회원 많은 순';ticket_list_popup.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_TICKET_MEMBER_COUNT+'_'+SORT_ORDER_DESC}':{text:'참여중 회원 적은 순', callback:()=>{ticket_list_popup.sort_val = '${SORT_TICKET_MEMBER_COUNT}'; ticket_list_popup.sort_order_by= ${SORT_ORDER_ASC};ticket_list_popup.sort_value_text = '참여중 회원 적은 순';ticket_list_popup.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_TICKET_CREATE_DATE+'_'+SORT_ORDER_ASC}':{text:'생성 일자 최근 순', callback:()=>{ticket_list_popup.sort_val = '${SORT_TICKET_CREATE_DATE}'; ticket_list_popup.sort_order_by= ${SORT_ORDER_DESC};ticket_list_popup.sort_value_text = '생성 일자 최근 순';ticket_list_popup.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_TICKET_CREATE_DATE+'_'+SORT_ORDER_DESC}':{text:'생성 일자 과거 순', callback:()=>{ticket_list_popup.sort_val = '${SORT_TICKET_CREATE_DATE}'; ticket_list_popup.sort_order_by= ${SORT_ORDER_ASC};ticket_list_popup.sort_value_text = '생성 일자 과거 순';ticket_list_popup.init();layer_popup.close_layer_popup();}}`);
+        let user_option = `{`;
+        for(let i=0; i<user_options_array.length; i++){
+            user_option += user_options_array[i] + ',';
+        }
+        user_option += `}`;
+
+        let options_padding_top_bottom = 16;
+        let button_height = 8*user_options_array.length + 16;
+        let layer_popup_height = options_padding_top_bottom + button_height + 52*user_options_array.length;
+
         let html = `<div class="ticket_upper_box">
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">수강권 </span>
@@ -162,6 +184,18 @@ class Ticket_list {
                             <div onclick="${this.instance}.switch_type('ing');" class="${this.list_status_type == "ing" ? "tab_selected": ""}">활성화</div>
                                 <div style="width: 2px; height: 12px;background-color: #f5f2f3; margin:8px;"></div>
                             <div onclick="${this.instance}.switch_type('end');" style="width:48px;" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화</div>
+                        </div>
+                        <div class="list_sort_select_wrap" 
+                        onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_OPTION_SELECTOR}', 100*(${layer_popup_height})/${windowHeight}, ${POPUP_FROM_BOTTOM}, null, ()=>{
+                            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, ${user_option}
+                            );
+                        });">
+                            <!--<select>
+                                <option>이름순</option>
+                                <option>남은 횟수순</option>
+                                <option>등록 횟수순</option>
+                            </select>-->
+                            ${this.sort_value_text} <img src="/static/common/icon/icon_arrow_expand_light_grey.png" style="width:24px; height:24px; vertical-align: middle;">
                         </div>
                     </div> `;
         return html;
@@ -223,7 +257,7 @@ class Ticket_list {
         $.ajax({
             url:url,
             type:'GET',
-            data: {"page": 1, "sort_val": 0, "sort_order_by":0, "keyword":""},
+            data: {"sort_val": this.sort_val, "sort_order_by":this.sort_order_by, "keyword":""},
             dataType : 'JSON',
 
             beforeSend:function (){

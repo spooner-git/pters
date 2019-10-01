@@ -30,7 +30,8 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT, SORT_START_DATE, SORT_ASC, SORT_REG_COUNT, \
     GROUP_SCHEDULE, SCHEDULE_DUPLICATION_ENABLE, LECTURE_TYPE_ONE_TO_ONE, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, \
     STATE_CD_ABSENCE, STATE_CD_FINISH, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
-    LECTURE_TYPE_NORMAL, SHOW
+    LECTURE_TYPE_NORMAL, SHOW, SORT_TICKET_TYPE, SORT_TICKET_NAME, SORT_TICKET_MEMBER_COUNT, SORT_TICKET_CREATE_DATE, \
+    SORT_DESC, SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE
 from board.models import BoardTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -2325,6 +2326,9 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
+        lecture_sort = self.request.GET.get('sort_val', SORT_TICKET_NAME)
+        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
+        sort_info = int(lecture_sort)
         error = None
 
         lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
@@ -2353,6 +2357,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_end_color_cd': lecture_tb.end_color_cd,
                                                  'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
                                                  'lecture_type_cd': lecture_tb.lecture_type_cd,
+                                                 'lecture_reg_dt': lecture_tb.reg_dt,
                                                  'lecture_ticket_list': [],
                                                  'lecture_ticket_state_cd_list': [],
                                                  'lecture_ticket_id_list': []}
@@ -2377,19 +2382,20 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_end_color_cd': lecture_info.end_color_cd,
                                                      'lecture_end_font_color_cd': lecture_info.end_font_color_cd,
                                                      'lecture_type_cd': lecture_info.lecture_type_cd,
+                                                     'lecture_reg_dt': lecture_info.reg_dt,
                                                      'lecture_ticket_list': [],
                                                      'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}
 
-        lecture_data_dict = sorted(lecture_data_dict.items(), key=lambda x: (x[1]['lecture_type_cd']), reverse=True)
-
-        if len(lecture_data_dict) > 0:
-            if lecture_data_dict[0][1]['lecture_type_cd'] == 'ONE_TO_ONE':
-                lecture_data_dict = collections.OrderedDict(
-                    lecture_data_dict[0:1]+sorted(lecture_data_dict[1:], key=lambda x: (x[1]['lecture_name'])))
-            else:
-                lecture_data_dict = collections.OrderedDict(sorted(lecture_data_dict,
-                                                                   key=lambda x: (x[1]['lecture_name'])))
+        # lecture_data_dict = sorted(lecture_data_dict.items(), key=lambda x: (x[1]['lecture_type_cd']), reverse=True)
+        #
+        # if len(lecture_data_dict) > 0:
+        #     if lecture_data_dict[0][1]['lecture_type_cd'] == 'ONE_TO_ONE':
+        #         lecture_data_dict = collections.OrderedDict(
+        #             lecture_data_dict[0:1]+sorted(lecture_data_dict[1:], key=lambda x: (x[1]['lecture_name'])))
+        #     else:
+        #         lecture_data_dict = collections.OrderedDict(sorted(lecture_data_dict,
+        #                                                            key=lambda x: (x[1]['lecture_name'])))
 
         lecture_list = []
 
@@ -2418,6 +2424,19 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
+        else:
+            if sort_info == SORT_LECTURE_NAME:
+                lecture_list = sorted(lecture_list, key=lambda elem: elem['lecture_name'],
+                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_MEMBER_COUNT:
+                lecture_list = sorted(lecture_list, key=lambda elem: elem['lecture_ing_member_num'],
+                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_CAPACITY_COUNT:
+                lecture_list = sorted(lecture_list, key=lambda elem: elem['lecture_max_num'],
+                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_CREATE_DATE:
+                lecture_list = sorted(lecture_list, key=lambda elem: elem['lecture_reg_dt'],
+                                      reverse=int(sort_order_by))
 
         return JsonResponse({'current_lecture_data': lecture_list}, json_dumps_params={'ensure_ascii': True})
 
@@ -2426,6 +2445,9 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
+        lecture_sort = self.request.GET.get('sort_val', SORT_TICKET_NAME)
+        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
+        sort_info = int(lecture_sort)
         error = None
 
         lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_FINISH,
@@ -2454,6 +2476,7 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_end_color_cd': lecture_tb.end_color_cd,
                                                  'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
                                                  'lecture_type_cd': lecture_tb.lecture_type_cd,
+                                                 'lecture_reg_dt': lecture_tb.reg_dt,
                                                  'lecture_ticket_list': [],
                                                  'lecture_ticket_state_cd_list': [],
                                                  'lecture_ticket_id_list': []}
@@ -2478,17 +2501,18 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_end_color_cd': lecture_info.end_color_cd,
                                                      'lecture_end_font_color_cd': lecture_info.end_font_color_cd,
                                                      'lecture_type_cd': lecture_info.lecture_type_cd,
+                                                     'lecture_reg_dt': lecture_info.reg_dt,
                                                      'lecture_ticket_list': [],
                                                      'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}
-        lecture_data_dict = sorted(lecture_data_dict.items(), key=lambda x: (x[1]['lecture_type_cd']), reverse=True)
-        if len(lecture_data_dict) > 0:
-            if lecture_data_dict[0][1]['lecture_type_cd'] == 'ONE_TO_ONE':
-                lecture_data_dict = collections.OrderedDict(
-                    lecture_data_dict[0:1]+sorted(lecture_data_dict[1:], key=lambda x: (x[1]['lecture_name'])))
-            else:
-                lecture_data_dict = collections.OrderedDict(sorted(lecture_data_dict,
-                                                                   key=lambda x: (x[1]['lecture_name'])))
+        # lecture_data_dict = sorted(lecture_data_dict.items(), key=lambda x: (x[1]['lecture_type_cd']), reverse=True)
+        # if len(lecture_data_dict) > 0:
+        #     if lecture_data_dict[0][1]['lecture_type_cd'] == 'ONE_TO_ONE':
+        #         lecture_data_dict = collections.OrderedDict(
+        #             lecture_data_dict[0:1]+sorted(lecture_data_dict[1:], key=lambda x: (x[1]['lecture_name'])))
+        #     else:
+        #         lecture_data_dict = collections.OrderedDict(sorted(lecture_data_dict,
+        #                                                            key=lambda x: (x[1]['lecture_name'])))
 
         lecture_list = []
 
@@ -2498,6 +2522,19 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
+        else:
+            if sort_info == SORT_LECTURE_NAME:
+                lecture_list = sorted(lecture_list, key=lambda elem: elem['lecture_name'],
+                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_MEMBER_COUNT:
+                lecture_list = sorted(lecture_list, key=lambda elem: elem['lecture_ing_member_num'],
+                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_CAPACITY_COUNT:
+                lecture_list = sorted(lecture_list, key=lambda elem: elem['lecture_max_num'],
+                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_CREATE_DATE:
+                lecture_list = sorted(lecture_list, key=lambda elem: elem['lecture_reg_dt'],
+                                      reverse=int(sort_order_by))
 
         return JsonResponse({'finish_lecture_data': lecture_list}, json_dumps_params={'ensure_ascii': True})
 
@@ -2920,10 +2957,10 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
         # page = self.request.GET.get('page', 0)
-        # package_sort = self.request.GET.get('sort_val', SORT_PACKAGE_TYPE)
-        # sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
+        ticket_sort = self.request.GET.get('sort_val', SORT_TICKET_NAME)
+        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         # keyword = self.request.GET.get('keyword', '')
-        # sort_info = int(package_sort)
+        sort_info = int(ticket_sort)
         error = None
         # start_time = timezone.now()
         ticket_data = TicketTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
@@ -2949,6 +2986,8 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
                                                'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
                                                'ticket_reg_count': ticket_tb.reg_count,
+                                               'ticket_type_cd': ticket_tb.ticket_type_cd,
+                                               'ticket_reg_dt': ticket_tb.reg_dt,
                                                'ticket_lecture_list': [],
                                                'ticket_lecture_state_cd_list': [],
                                                'ticket_lecture_id_list': [],
@@ -2979,6 +3018,8 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_week_schedule_enable': ticket_info.week_schedule_enable,
                                                    'ticket_day_schedule_enable': ticket_info.day_schedule_enable,
                                                    'ticket_reg_count': ticket_info.reg_count,
+                                                   'ticket_type_cd': ticket_info.ticket_type_cd,
+                                                   'ticket_reg_dt': ticket_info.reg_dt,
                                                    'ticket_lecture_list': [],
                                                    'ticket_lecture_state_cd_list': [],
                                                    'ticket_lecture_id_list': [],
@@ -2986,9 +3027,6 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_lecture_ing_font_color_cd_list': [],
                                                    'ticket_lecture_end_color_cd_list': [],
                                                    'ticket_lecture_end_font_color_cd_list': []}
-
-        ticket_data_dict = collections.OrderedDict(sorted(ticket_data_dict.items(),
-                                                          key=lambda x: (x[1]['ticket_name'])))
 
         ticket_list = []
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
@@ -3015,6 +3053,19 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
+        else:
+            if sort_info == SORT_TICKET_TYPE:
+                ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_type_cd'],
+                                     reverse=int(sort_order_by))
+            elif sort_info == SORT_TICKET_NAME:
+                ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_name'],
+                                     reverse=int(sort_order_by))
+            elif sort_info == SORT_TICKET_MEMBER_COUNT:
+                ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_ing_member_num'],
+                                     reverse=int(sort_order_by))
+            elif sort_info == SORT_TICKET_CREATE_DATE:
+                ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_reg_dt'],
+                                     reverse=int(sort_order_by))
 
         # end_time = timezone.now()
         return JsonResponse({'current_ticket_data': ticket_list}, json_dumps_params={'ensure_ascii': True})
@@ -3026,10 +3077,10 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         class_id = self.request.session.get('class_id', '')
 
         # page = self.request.GET.get('page', 0)
-        # package_sort = self.request.GET.get('sort_val', SORT_PACKAGE_TYPE)
-        # sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
+        ticket_sort = self.request.GET.get('sort_val', SORT_TICKET_TYPE)
+        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         # keyword = self.request.GET.get('keyword', '')
-        # sort_info = int(package_sort)
+        sort_info = int(ticket_sort)
 
         error = None
 
@@ -3095,9 +3146,6 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_lecture_end_color_cd_list': [],
                                                    'ticket_lecture_end_font_color_cd_list': []}
 
-        ticket_data_dict = collections.OrderedDict(sorted(ticket_data_dict.items(),
-                                                          key=lambda x: (x[1]['ticket_name'])))
-
         ticket_list = []
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb',
@@ -3121,6 +3169,19 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
+        else:
+            if sort_info == SORT_TICKET_TYPE:
+                ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_type_cd'],
+                                     reverse=int(sort_order_by))
+            elif sort_info == SORT_TICKET_NAME:
+                ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_name'],
+                                     reverse=int(sort_order_by))
+            elif sort_info == SORT_TICKET_MEMBER_COUNT:
+                ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_ing_member_num'],
+                                     reverse=int(sort_order_by))
+            elif sort_info == SORT_TICKET_CREATE_DATE:
+                ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_reg_dt'],
+                                     reverse=int(sort_order_by))
 
         return JsonResponse({'finish_ticket_data': ticket_list}, json_dumps_params={'ensure_ascii': True})
 
