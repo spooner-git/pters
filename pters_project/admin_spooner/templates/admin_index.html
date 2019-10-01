@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
     {% load static_url %}
-
+    <a href="{% url 'login:logout' %}">로그아웃</a>
+    <br/><br/><br/><br/><br/>
     {% for qa_info in qa_list %}
         {{ qa_info.member.name }} : {{ qa_info.email_address }}<br/>
         {{ qa_info.title }} - {{ qa_info.contents }}<br/>
