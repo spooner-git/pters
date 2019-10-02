@@ -107,8 +107,8 @@ class GetNoticeDataView(LoginRequiredMixin, View):
                                 'notice_contents': notice_info.contents,
                                 'notice_to_member_type_cd': notice_info.to_member_type_cd,
                                 'notice_hits': notice_info.hits,
-                                'notice_mod_dt': notice_info.mod_dt,
-                                'notice_reg_dt': notice_info.reg_dt,
+                                'notice_mod_dt': str(notice_info.mod_dt),
+                                'notice_reg_dt': str(notice_info.reg_dt),
                                 'notice_use': notice_info.use})
 
         return JsonResponse({'notice_data': notice_list}, json_dumps_params={'ensure_ascii': True})
