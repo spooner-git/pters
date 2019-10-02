@@ -138,6 +138,10 @@ def add_schedule_logic(request):
                                 lecture_id = None
                                 lecture_schedule_id = None
 
+                            else:
+                                if lecture_id is None:
+                                    raise InternalError
+
                             schedule_result = func_add_schedule(class_id, member_info['member_ticket_id'], None,
                                                                 lecture_id, lecture_schedule_id,
                                                                 schedule_start_datetime, schedule_end_datetime,
@@ -260,7 +264,7 @@ def delete_schedule_logic(request):
                              to_member_name=member_name,
                              class_tb_id=class_id,
                              member_ticket_tb_id=member_ticket_id,
-                             log_info='개인 레슨 수업',
+                             log_info='개인 수업',
                              log_how='예약 취소',
                              log_detail=str(start_dt) + '/' + str(end_dt), use=USE)
             log_data.save()
@@ -324,6 +328,87 @@ def delete_schedule_logic(request):
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/schedule_error_info.html')
+
+
+def update_schedule_logic(request):
+
+    # 폼 검사 시작
+    schedule_ids = request.GET.getlist('schedule_ids[]', '')
+    schedule_start_datetime = request.GET.get('start_dt', '')
+    schedule_end_datetime = request.GET.get('end_dt', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+    start_dt = schedule_start_datetime
+    end_dt = schedule_end_datetime
+
+    if end_dt is None or end_dt == '':
+        error = '종료 시각을 선택해주세요.'
+    if start_dt is None or start_dt == '':
+        error = '시작 시각을 선택해주세요.'
+
+    if error is None:
+        for schedule_id in schedule_ids:
+            try:
+                schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+            except ObjectDoesNotExist:
+                error = '일정 정보를 불러오지 못했습니다.'
+
+            if error is None:
+                check_time = False
+                schedule_end_datetime_split = schedule_end_datetime.split(' ')
+                if schedule_end_datetime_split[1] == '24:00' or schedule_end_datetime_split[1] == '24:0':
+                    end_dt = schedule_end_datetime_split[0] + ' 23:59'
+                    check_time = True
+
+                try:
+                    start_dt = datetime.datetime.strptime(start_dt, '%Y-%m-%d %H:%M')
+                    end_dt = datetime.datetime.strptime(end_dt, '%Y-%m-%d %H:%M')
+                    if check_time:
+                        end_dt = end_dt + datetime.timedelta(minutes=1)
+                except ValueError:
+                    error = '날짜 오류가 발생했습니다.[0]'
+                except IntegrityError:
+                    error = '날짜 오류가 발생했습니다.[1]'
+                except TypeError:
+                    error = '날짜 오류가 발생했습니다.[2]'
+
+            if error is None:
+                if schedule_info.lecture_tb is None or schedule_info.lecture_tb == '':
+                    lecture_name = '개인 수업'
+                else:
+                    lecture_name = schedule_info.lecture_tb.name
+
+                if schedule_info.member_ticket_tb is None or schedule_info.member_ticket_tb == '':
+                    log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+                                     from_member_name=request.user.first_name,
+                                     class_tb_id=class_id,
+                                     log_info=lecture_name + ' 수업',
+                                     log_how='예약 변경',
+                                     log_detail=str(schedule_info.start_dt)
+                                                + '/' + str(schedule_info.end_dt)
+                                                + '->' + str(start_dt) + '/' + str(end_dt), use=USE)
+                    log_data.save()
+                else:
+                    log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+                                     from_member_name=request.user.first_name,
+                                     to_member_name=schedule_info.member_ticket_tb.member.name,
+                                     class_tb_id=class_id,
+                                     member_ticket_tb_id=schedule_info.member_ticket_tb_id,
+                                     log_info=lecture_name + ' 수업',
+                                     log_how='예약 변경',
+                                     log_detail=str(schedule_info.start_dt)
+                                                + '/' + str(schedule_info.end_dt)
+                                                + '->' + str(start_dt) + '/' + str(end_dt), use=USE)
+                    log_data.save()
+                schedule_info.start_dt = start_dt
+                schedule_info.end_dt = end_dt
+                schedule_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     return render(request, 'ajax/schedule_error_info.html')

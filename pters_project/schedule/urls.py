@@ -23,12 +23,16 @@ urlpatterns = [
     url(r'^add_schedule/$', views.add_schedule_logic, name='add_schedule'),
     # 일정 삭제 - refactoring 진행중, push 관련 내용 추가 필요
     url(r'^delete_schedule/$', views.delete_schedule_logic, name='delete_schedule'),
+    url(r'^update_schedule/$', views.update_schedule_logic, name='update_schedule'),
+
     # 일정 완료
     url(r'^update_schedule_state_cd/$', views.update_schedule_state_cd_logic, name='update_schedule_state_cd'),
     # 사인 이미지 업로드
     url(r'^upload_sign_image/$', views.upload_sign_image_logic, name='upload_sign_image'),
     # 일정 메모 수정
     url(r'^update_memo_schedule/$', views.update_memo_schedule_logic, name='update_memo_schedule'),
+
+
 
     # 반복일정 등록
     url(r'^add_repeat_schedule/$', views.add_repeat_schedule_logic, name='add_repeat_schedule'),
