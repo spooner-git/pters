@@ -92,7 +92,8 @@ class Home {
         let html = `<div style="padding:16px;margin-top:200px;">
                         <div style="font-size:16px;font-weight:bold;">${year}. ${month}. ${date}. (${day})</div>
                         <div>현재 시간 ${hour}:${minute}:${second}</div>
-                    </div>`;
+                    </div>
+                    <div onclick="location.href='/login/logout/'" style="position:fixed;left:20px;bottom:70px;width:100px;cursor:pointer;">로그아웃</div>`;
         return html;
     }
 
