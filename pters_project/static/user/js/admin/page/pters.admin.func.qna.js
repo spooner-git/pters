@@ -102,6 +102,7 @@ class Qna {
         let qa_title = data.qa_title;
         let qa_contents = data.qa_contents;
         let member_name = data.qa_member_name; 
+        let member_email = data.qa_email_address;
         let qa_reg_date = data.qa_reg_dt;
         let qa_status = data.qa_status_type_cd;
         let alert_style = qa_status == "QA_WAIT" ? "style='background-color:#fe4e6513'" : "";
@@ -118,7 +119,10 @@ class Qna {
                             <div class="qa_article_status" ${alert_text_style}>${QA_STATUS[qa_status]}</div>
                         </div>
                         <div class="qa_contents" style="display:none;">
-                            <div>${qa_contents}</div>
+                            <div>
+                                <p style="margin-top:0">${member_email}</p>
+                                ${qa_contents}
+                            </div>
                             <div>
                                 <div>${CComponent.text_button ("qa_answer_"+qa_id, "답변", null, ()=>{alert('qa_answer ', qa_id);})}</div>
                             </div>
