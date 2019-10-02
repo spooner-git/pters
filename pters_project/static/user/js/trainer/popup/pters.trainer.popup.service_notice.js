@@ -70,10 +70,8 @@ class Service_notice {
         for(let i=length-1; i >= 0; i--){
             let notice_id = this.data[i].notice_id;
             let notice_title = this.data[i].notice_title;
-            console.log(this.data[i].notice_reg_dt)
             let notice_reg_date =  this.data[i].notice_reg_dt.split(' ')[0];
             let date_format_split = notice_reg_date.split('-');
-            console.log(date_format_split);
             let date_text = DateRobot.to_text(date_format_split[0], date_format_split[1], date_format_split[2]);
             let html = `<article class="notice_wrapper" onclick="service_notice_popup.open_detail(${notice_id})">
                             <div class="notice_subject">${notice_title}</div>
