@@ -597,14 +597,7 @@ class Member_view{
 
     upper_right_menu(){
         let user_option = {
-            delete:{text:"회원 삭제", callback:()=>{
-                    show_user_confirm(`"${this.data.name}" 님 정보를 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
-                        Member_func.delete({"member_id":this.member_id}, ()=>{
-                            member.init();layer_popup.all_close_layer_popup();
-                        });
-                    });
-                }
-            },
+            
             // deactivate:{text:"비활성화", callback:()=>{
             //         show_user_confirm(`"${this.data.name}" 님을 비활성화 하시겠습니까? <br> 비활성화 탭에서 확인할 수 있습니다.`, ()=>{
             //             alert('작업중');
@@ -618,6 +611,13 @@ class Member_view{
             //         });
             //     }
             // },
+            recontract:{text:"재등록", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let member_add_initial_data = {member_id: this.member_id};
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                        member_add_popup = new Member_add('.popup_member_add', member_add_initial_data, 'member_add_popup');});
+                }
+            },
             ticket_history:{text:"수강권 이력", callback:()=>{
                     layer_popup.close_layer_popup();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
@@ -629,6 +629,14 @@ class Member_view{
                     layer_popup.close_layer_popup();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
                         member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.member_id, null);
+                    });
+                }
+            },
+            delete:{text:"회원 삭제", callback:()=>{
+                    show_user_confirm(`"${this.data.name}" 님 정보를 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
+                        Member_func.delete({"member_id":this.member_id}, ()=>{
+                            member.init();layer_popup.all_close_layer_popup();
+                        });
                     });
                 }
             }

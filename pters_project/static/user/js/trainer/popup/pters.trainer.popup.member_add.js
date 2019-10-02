@@ -548,7 +548,13 @@ class Member_add{
         }else{ // 재등록
             Member_func.create_ticket_re(data, ()=>{
                 member_view_popup.set_initial_data();
-                member_ticket_history.init();
+                // member_ticket_history.init();
+                try{
+                    member.init();
+                    home.init();
+                }catch(e){
+                    console.log(e);
+                }
             });
         }
 
