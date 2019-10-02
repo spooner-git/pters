@@ -29,7 +29,6 @@ class Qna {
         this.render_loading_image();
         Qna_func.read_all((data)=>{
             this.data.all = data;
-            console.log(this.data.all)
             this.render_content();
         });
     }
@@ -101,6 +100,7 @@ class Qna {
         let qa_id = data.qa_id;
         let qa_type = data.qa_type_cd;
         let qa_title = data.qa_title;
+        let qa_contents = data.qa_contents;
         let member_name = data.qa_member_name; 
         let qa_reg_date = data.qa_reg_dt;
         let qa_status = data.qa_status_type_cd;
@@ -117,9 +117,20 @@ class Qna {
                             <div class="qa_article_reg_date">${qa_reg_date.split('T')[0]}  ${qa_reg_date.split('T')[1]}</div>
                             <div class="qa_article_status" ${alert_text_style}>${QA_STATUS[qa_status]}</div>
                         </div>
+                        <div class="qa_contents" style="display:none;">
+                            <div>${qa_contents}</div>
+                            <div>
+                                <div>${CComponent.text_button ("qa_answer_"+qa_id, "답변", null, ()=>{alert('qa_answer ', qa_id);})}</div>
+                            </div>
+                        </div>
                     </article>`;
-        $(document).off('click', `#qa_article_${qa_id}`).on('click', `#qa_article_${qa_id}`, ()=>{
-            console.log(qa_id);
+        $(document).off('click', `#qa_article_${qa_id}`).on('click', `#qa_article_${qa_id}`, function(){
+            let qa_contents =  $(this).find(".qa_contents");
+            if(qa_contents.css('display') == 'none'){
+                qa_contents.show();
+            }else{
+                qa_contents.hide();
+            }
         });
         
         return html;

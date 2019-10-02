@@ -64,6 +64,13 @@
 	display: flex;
 	font-size: 13px;
 }
+#section_admin_qna_content .qa_contents{
+	font-size: 13px;
+}
+#section_admin_qna_content .qa_contents > div:first-child{
+	padding: 10px 5px;
+	background-color: #f5f2f2;
+}
 
 #section_admin_qna_content .qa_article_id{
 	flex-basis: 40px;
