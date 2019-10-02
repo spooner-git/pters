@@ -19,16 +19,20 @@ class Service_notice {
     }
 
     init(){
-        this.render();
+        // this.render();
         this.set_initial_data();
     }
 
     set_initial_data (){
-        
-        this.render_content();
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
+        // this.render_content();
+        this.request_notice_list((data)=>{
+            this.data = data.notice_data;
+            this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
+        });
     }
-        clear(){
+
+    clear(){
         setTimeout(()=>{
             document.querySelector(this.target.install).innerHTML = "";
         }, 300);
@@ -61,15 +65,16 @@ class Service_notice {
     }
 
     dom_assembly_content(){
-        let length = this.temp_data_for_test.data.length;
+        let length = this.data.length;
         let html_temp = [];
         for(let i=length-1; i >= 0; i--){
-            let id = this.temp_data_for_test.data[i].id;
-            let subject = this.temp_data_for_test.data[i].subject;
-            let date_format_split = this.temp_data_for_test.data[i].date.split('-');
+            let notice_id = this.data[i].notice_id;
+            let notice_title = this.data[i].notice_title;
+            let notice_reg_date =  this.data[i].notice_reg_dt.split(' ')[0];
+            let date_format_split = notice_reg_date.split('-');
             let date_text = DateRobot.to_text(date_format_split[0], date_format_split[1], date_format_split[2]);
-            let html = `<article class="notice_wrapper" onclick="service_notice_popup.open_detail(${id})">
-                            <div class="notice_subject">${subject}</div>
+            let html = `<article class="notice_wrapper" onclick="service_notice_popup.open_detail(${notice_id})">
+                            <div class="notice_subject">${notice_title}</div>
                             <div class="notice_date">${date_text}</div>
                         </article>`;
             html_temp.push(html);
@@ -97,19 +102,13 @@ class Service_notice {
 
 
     //수강권 리스트 서버에서 불러오기
-    request_lecture_list (status, callback){
-        //sort_order_by : lecture_type_seq, lecture_name, lecture_member_many, lecture_member_few, lecture_create_new, lecture_create_old
-        let url;
-        if(status=='ing'){
-            url = '/trainer/get_lecture_ing_list/';
-        }else if (status=='end'){
-            url = '/trainer/get_lecture_end_list/';
-        }
+    request_notice_list (callback){
+        let url = '/board/get_notice_list/';
 
         $.ajax({
             url:url,
             type:'GET',
-            data: {"page": 1, "sort_val": 0, "sort_order_by":0, "keyword":""},
+            data: {"notice_type": [NOTICE]},
             dataType : 'JSON',
     
             beforeSend:function (){

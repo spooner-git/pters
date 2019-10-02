@@ -9,30 +9,33 @@ class Service_inquiry_faq {
 
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
 
-        this.temp_data_for_test = {
-            data:[  {type:"사용법", subject:"회원 등록하기", id:1}, {type:"사용법", subject:"수업 등록하기", id:1}, {type:"사용법", subject:"수강권 등록하기", id:1}, 
-                    {type:"사용법", subject:"일정 등록하기", id:1}, 
-                    {type:"사용법", subject:"수강 회원님과 연결하여 사용하기", id:2}, {type:"사용법", subject:"기존 회원 재등록 하기", id:6},
-                    {type:"자주 묻는 질문", subject:"결제 방법에는 무엇이 있나요?", id:5}, {type:"자주 묻는 질문", subject:"프로그램이 무엇인가요?", id:3},
-                    {type:"자주 묻는 질문", subject:"달력에 일부 요일이 보이지 않아요", id:7}
-                ]
-        };
+        // this.temp_data_for_test = {
+        //     data:[  {type:"사용법", subject:"회원 등록하기", id:1}, {type:"사용법", subject:"수업 등록하기", id:1}, {type:"사용법", subject:"수강권 등록하기", id:1},
+        //             {type:"사용법", subject:"일정 등록하기", id:1},
+        //             {type:"사용법", subject:"수강 회원님과 연결하여 사용하기", id:2}, {type:"사용법", subject:"기존 회원 재등록 하기", id:6},
+        //             {type:"자주 묻는 질문", subject:"결제 방법에는 무엇이 있나요?", id:5}, {type:"자주 묻는 질문", subject:"프로그램이 무엇인가요?", id:3},
+        //             {type:"자주 묻는 질문", subject:"달력에 일부 요일이 보이지 않아요", id:7}
+        //         ]
+        // };
 
 
         this.init();
     }
 
     init(){
-        this.render();
+        // this.render();
         this.set_initial_data();
     }
 
     set_initial_data (){
-        
-        this.render_content();
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
+        // this.render_content();
+        this.request_faq_list((data)=>{
+            this.data = data.notice_data;
+            this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
+        });
     }
-        clear(){
+    clear(){
         setTimeout(()=>{
             document.querySelector(this.target.install).innerHTML = "";
         }, 300);
@@ -65,15 +68,16 @@ class Service_inquiry_faq {
     }
 
     dom_assembly_content(){
-        let length = this.temp_data_for_test.data.length;
+        let length = this.data.length;
+        console.log('length::'+length);
         let html_temp = [];
         for(let i=0; i <length ; i++){
-            let id = this.temp_data_for_test.data[i].id;
-            let subject = this.temp_data_for_test.data[i].subject;
-            let date_text = this.temp_data_for_test.data[i].type;
+            let id = this.data[i].notice_id;
+            let notice_type_cd_name = this.data[i].notice_type_cd_name;
+            let title = this.data[i].notice_title;
             let html = `<article class="inquiry_faq_wrapper" onclick="service_inquiry_faq_popup.open_detail(${id})">
-                            <div class="inquiry_faq_type">${date_text}</div>
-                            <div class="inquiry_faq_subject">${subject}</div>
+                            <div class="inquiry_faq_type">${notice_type_cd_name}</div>
+                            <div class="inquiry_faq_subject">${title}</div>
                         </article>`;
             html_temp.push(html);
         }
@@ -100,19 +104,13 @@ class Service_inquiry_faq {
 
 
     //수강권 리스트 서버에서 불러오기
-    request_lecture_list (status, callback){
-        //sort_order_by : lecture_type_seq, lecture_name, lecture_member_many, lecture_member_few, lecture_create_new, lecture_create_old
-        let url;
-        if(status=='ing'){
-            url = '/trainer/get_lecture_ing_list/';
-        }else if (status=='end'){
-            url = '/trainer/get_lecture_end_list/';
-        }
+    request_faq_list (callback){
+        let url = '/board/get_notice_list/';
 
         $.ajax({
             url:url,
             type:'GET',
-            data: {"page": 1, "sort_val": 0, "sort_order_by":0, "keyword":""},
+            data: {"notice_type": [NOTICE_FAQ, NOTICE_USAGE]},
             dataType : 'JSON',
     
             beforeSend:function (){

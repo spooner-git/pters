@@ -4,9 +4,10 @@ import collections
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import EmailMessage
+from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.http import JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView
@@ -87,18 +88,57 @@ class ClearQuestionDataView(LoginRequiredMixin, TemplateView):
 class GetNoticeDataView(LoginRequiredMixin, View):
 
     def get(self, request):
-        notice_data_dict = collections.OrderedDict()
-        notice_data = NoticeTb.objects.filter().order_by('-reg_dt')
+        notice_type_cd = request.GET.getlist('notice_type[]')
+        member_type_cd = request.session.get('group_name')
 
+        query_notice_type_list = Q()
+        for notice_type_cd_info in notice_type_cd:
+            query_notice_type_list |= Q(notice_type_cd=notice_type_cd_info)
+        query_notice_group_cd = Q(to_member_type_cd='ALL') | Q(to_member_type_cd=member_type_cd)
+
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `NOTICE_TB`.`NOTICE_TYPE_CD`"
+        notice_data = NoticeTb.objects.filter(query_notice_type_list, query_notice_group_cd,
+                                              use=USE
+                                              ).annotate(notice_type_cd_name=RawSQL(query_type_cd, []),
+                                                         ).order_by('-reg_dt')
+        notice_list = []
         for notice_info in notice_data:
-            notice_data_dict[notice_info.notice_id] = {'notice_id': notice_info.notice_id,
-                                                       'notice_type_cd': notice_info.notice_type_cd,
-                                                       'notice_title': notice_info.title,
-                                                       'notice_contents': notice_info.contents,
-                                                       'notice_to_member_type_cd': notice_info.to_member_type_cd,
-                                                       'notice_hits': notice_info.hits,
-                                                       'notice_mod_dt': notice_info.mod_dt,
-                                                       'notice_reg_dt': notice_info.reg_dt,
-                                                       'notice_use': notice_info.use}
+            notice_list.append({'notice_id': notice_info.notice_id,
+                                'notice_type_cd': notice_info.notice_type_cd,
+                                'notice_type_cd_name': notice_info.notice_type_cd_name,
+                                'notice_title': notice_info.title,
+                                'notice_contents': notice_info.contents,
+                                'notice_to_member_type_cd': notice_info.to_member_type_cd,
+                                'notice_hits': notice_info.hits,
+                                'notice_mod_dt': str(notice_info.mod_dt),
+                                'notice_reg_dt': str(notice_info.reg_dt),
+                                'notice_use': notice_info.use})
 
-        return JsonResponse(notice_data_dict, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse({'notice_data': notice_list}, json_dumps_params={'ensure_ascii': True})
+
+
+def add_notice_info_logic(request):
+    notice_type_cd = request.POST.get('notice_type_cd', '')
+    title = request.POST.get('title', '')
+    contents = request.POST.get('contents', '')
+    to_member_type_cd = request.POST.get('to_member_type_cd')
+    member_type_cd = request.session.get('group_name')
+
+    error = None
+    if member_type_cd != 'admin':
+        error = '관리자만 접근 가능합니다.'
+
+    if notice_type_cd == '' or notice_type_cd is None:
+        error = '공지 유형을 선택해주세요.'
+
+    if error is None:
+        notice_info = NoticeTb(member_id=request.user.id, notice_type_cd=notice_type_cd,
+                               title=title, contents=contents, to_member_type_cd=to_member_type_cd,
+                               use=USE)
+        notice_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/board_error_ajax.html')

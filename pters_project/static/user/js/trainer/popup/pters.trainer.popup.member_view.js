@@ -949,7 +949,7 @@ class Member_simple_view{
             //티켓 이름 표기 부분
             let id = `input_ticket_select_${i}`;
             let title = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
-            let icon = NONE;
+            let icon = '/static/common/icon/icon_ticket_black.png';
             let icon_r_visible = SHOW;
             let icon_r_text = "";
             let style = null;

@@ -39,7 +39,7 @@ class Lecture_list {
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         });
     }
-        clear(){
+    clear(){
         setTimeout(()=>{
             document.querySelector(this.target.install).innerHTML = "";
         }, 300);

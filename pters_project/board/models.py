@@ -53,7 +53,7 @@ class CommentTb(TimeStampedModel):
 
 class NoticeTb(TimeStampedModel):
     notice_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    notice_type_cd = models.CharField(db_column='BOARD_TYPE_CD', max_length=20,
+    notice_type_cd = models.CharField(db_column='NOTICE_TYPE_CD', max_length=20,
                                       blank=True, default=NOTICE_TYPE_CD_NORMAL)
     title = models.CharField(db_column='TITLE', max_length=255, blank=True, default='')
     contents = models.CharField(db_column='CONTENTS', max_length=3000, blank=True, default='')

@@ -374,16 +374,19 @@ class Lecture_view{
             if(member_fix == FIX){
                 member_fix_indicator = '<span style="display:table-cell;width:50px;font-size:11px;font-weight:bold;color:#fe4e65;vertical-align:middle;">고정 회원</span>';
             }
-            let member_button = CComponent.text_button (member_id, member_name, style, ()=>{
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/windowHeight), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
-                    member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
-                    //회원 간단 정보 팝업 열기
-                });
-            });
+            let member_button = CComponent.text_button (member_id, member_name, style);
 
             let member_img = '<div style="display: table-cell; width:40px; vertical-align:bottom;"><img src="'+member_profile_url+'" style="width:30px; height:30px; border-radius: 50%;"></div>';
             html_to_join.push(
-                '<div style="display:table;width:100%;">'+member_img+'<div style="display: table-cell; width:60%;">'+member_button + '</div><div style="display: table-cell; line-height: 44px; float:right;">'+member_fix_indicator+'</div></div>'
+                `<div style="display:table;width:100%;" onclick="
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/windowHeight), POPUP_FROM_BOTTOM, {'member_id':${member_id}},()=>{
+                            member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', ${member_id}, 'member_simple_view_popup');
+                            //회원 간단 정보 팝업 열기
+                    });">
+                    ${member_img}
+                    <div style="display: table-cell; width:60%;">${member_button}</div>
+                    <div style="display: table-cell; line-height: 44px; float:right;">${member_fix_indicator}</div>
+                 </div>`
             );
         }
         let html = `${html_to_join.join('')}`;
