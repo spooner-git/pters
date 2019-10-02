@@ -184,6 +184,28 @@ class Member {
         document.querySelector('.member_search_tool').innerHTML = html;
     }
 
+    event_add_member(){
+        let user_option = {
+            new:{text:"직접 작성해서 등록", callback:()=>{
+                layer_popup.close_layer_popup();
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                    member_add_popup = new Member_add('.popup_member_add', null, 'member_add_popup');});
+            }},
+            old:{text:"검색으로 등록", callback:()=>{
+                layer_popup.close_layer_popup();
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                    member_add_popup = new Member_add('.popup_member_add', null, 'member_add_popup');});
+            }},
+
+        };
+        let options_padding_top_bottom = 16;
+        let button_height = 8 + 8 + 52;
+        let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        });
+    }
+
 
     //리스트 타입을 스위치
     switch_type (type){
@@ -268,8 +290,7 @@ class Member {
                                         <div class="member_tools_wrap">
                                             <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">
                                             </div>
-                                            <div class="add_member" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_MEMBER_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
-                                                member_add_popup = new Member_add('.popup_member_add', null, 'member_add_popup');});"></div>
+                                            <div class="add_member" onclick="${this.instance}.event_add_member()"></div>
                                         </div>
                                     </div>
                                     <div class="member_search_tool"></div>
