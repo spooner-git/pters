@@ -53,6 +53,8 @@ class Plan_view{
 
             duplicate_plan_when_add:[]
         };
+
+        this.work_time = {start_hour:0, end_hour:24};
     
         this.init();
     }
@@ -118,6 +120,10 @@ class Plan_view{
     init (){
         this.request_data(()=>{
             this.render();
+            Setting_reserve_func.read((data)=>{
+                this.work_time = calendar.calc_worktime(data);
+                this.render();
+            });
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
     }
@@ -342,8 +348,11 @@ class Plan_view{
                 let zone = this.data.start_time == null ? this.times.current_zone : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).zone;
                 let hour = this.data.start_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
                 let minute = this.data.start_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
-                
-                time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{zone:zone, hour:hour, minute:minute},
+
+                let range_start = this.work_time.start_hour;
+                let range_end = this.work_time.end_hour;
+
+                time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{zone:zone, hour:hour, minute:minute}, range:{start:range_start, end:range_end},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.start_time = object;
                                                                                                     if(this.data.end_time != null){
@@ -383,12 +392,15 @@ class Plan_view{
                 let zone_minute = time_min_type_zone.minute;
 
                 let zone = this.data.end_time == null ? zone_min : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).zone;
-                let hour = this.data.end_time == null ? zone_min : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).hour;
-                let minute = this.data.end_time == null ? zone_min : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).minute;
+                let hour = this.data.end_time == null ? zone_hour : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).hour;
+                let minute = this.data.end_time == null ? zone_minute : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).minute;
 
+                let range_start = this.work_time.start_hour;
+                let range_end = this.work_time.end_hour;
 
                 time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시각',
                                                                                                 data:{zone:zone, hour:hour, minute:minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
+                                                                                                range:{start:range_start, end:range_end},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.end_time = object;
                                                                                                     this.if_user_changed_any_information = true;

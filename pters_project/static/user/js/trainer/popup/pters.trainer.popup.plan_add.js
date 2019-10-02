@@ -44,6 +44,8 @@ class Plan_add{
             duplicate_plan_when_add:[]
         };
 
+        this.work_time = {start_hour:0, end_hour:24};
+
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
         this.set_initial_data(data_from_external);
         this.init();
@@ -95,7 +97,6 @@ class Plan_add{
     }
 
     set end_time(data){
-        console.log(data);
         this.data.end_time = TimeRobot.to_data(data.data.zone, data.data.hour, data.data.minute).complete;
         this.data.end_time_text = data.text + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
         this.render_content();
@@ -130,6 +131,10 @@ class Plan_add{
         this.list_type = type;
 
         this.render();
+        Setting_reserve_func.read((data)=>{
+            this.work_time = calendar.calc_worktime(data);
+            this.render();
+        });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
@@ -331,8 +336,11 @@ class Plan_add{
                 let zone = this.data.start_time == null ? this.times.current_zone : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).zone;
                 let hour = this.data.start_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
                 let minute = this.data.start_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
+
+                let range_start = this.work_time.start_hour;
+                let range_end = this.work_time.end_hour;
                 
-                time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{zone:zone, hour:hour, minute:minute},
+                time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{zone:zone, hour:hour, minute:minute}, range:{start:range_start, end:range_end},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.start_time = object;
                                                                                                     if(this.data.end_time != null){
@@ -381,12 +389,15 @@ class Plan_add{
                 let zone_minute = time_min_type_zone.minute;
 
                 let zone = this.data.end_time == null ? zone_min : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).zone;
-                let hour = this.data.end_time == null ? zone_min : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).hour;
-                let minute = this.data.end_time == null ? zone_min : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).minute;
+                let hour = this.data.end_time == null ? zone_hour : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).hour;
+                let minute = this.data.end_time == null ? zone_minute : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).minute;
 
+                let range_start = this.work_time.start_hour;
+                let range_end = this.work_time.end_hour;
 
                 time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시각',
                                                                                                 data:{zone:zone, hour:hour, minute:minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
+                                                                                                range:{start:range_start, end:range_end},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.end_time = object;
                                                                                                     this.check_duplicate_plan_exist((data)=>{

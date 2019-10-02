@@ -1436,6 +1436,7 @@ class TimeSelector2{
                 zone:null, hour:null, minute:null
             },
             min:null,
+            range:{start:0, end:24},
             callback_when_set : ()=>{
                 return false;
             }
@@ -1481,7 +1482,7 @@ class TimeSelector2{
         this.store.value = {zone: zone, hour:hour, minute:minute};
         this.store.text = TimeRobot.to_text(TimeRobot.to_data(zone, hour, minute).hour, TimeRobot.to_data(zone, hour, minute).minute);
         
-        let hour_data = TimeRobot.to_data(zone, hour, minute).hour;
+        let hour_data = TimeRobot.to_data(zone, hour, minute).hour - this.option.range.start;
         let minute_data = TimeRobot.to_data(zone, hour, minute).minute;
 
         this.go_snap(hour_data, minute_data);
@@ -1501,7 +1502,10 @@ class TimeSelector2{
     render_hour_list (){
         let html_to_join = [];
         let pos = 0;
-        for(let i=0; i<=24; i++){
+        let hour_range_start = this.option.range.start;
+        let hour_range_end = this.option.range.end;
+    
+        for(let i=hour_range_start; i<=hour_range_end; i++){
                 let morningday;
                 let time_for_user;
                 if(i < 12 || i == 24){
@@ -1598,7 +1602,8 @@ class TimeSelector2{
                 $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
                 $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
 
-                if(self.check_minimum_time() == false){
+                let data_check = self.check_minimum_time();
+                if(data_check != true){
                     document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
                 }else{
                     document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
@@ -1665,8 +1670,6 @@ class TimeSelector2{
         let minute_text = minute.attr('data-min');
 
         let zone_form = TimeRobot.to_zone(hour_text, minute_text);
-        // let data_form = TimeRobot.to_data(zone_form.zone, zone_form.hour, zone_form.minute);
-        // let text = TimeRobot.to_text(data_form.hour, data_form.minute);
         let text = TimeRobot.to_text(hour_text, minute_text);
 
         return {
