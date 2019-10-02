@@ -4,6 +4,7 @@ import collections
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import EmailMessage
+from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.http import JsonResponse
 from django.shortcuts import redirect
@@ -87,18 +88,27 @@ class ClearQuestionDataView(LoginRequiredMixin, TemplateView):
 class GetNoticeDataView(LoginRequiredMixin, View):
 
     def get(self, request):
-        notice_data_dict = collections.OrderedDict()
-        notice_data = NoticeTb.objects.filter().order_by('-reg_dt')
+        notice_type_cd = request.GET.getlist('notice_type[]')
 
+        query_notice_type_list = Q()
+        for notice_type_cd_info in notice_type_cd:
+            query_notice_type_list |= Q(notice_type_cd=notice_type_cd_info)
+
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `NOTICE_TB`.`NOTICE_TYPE_CD`"
+        notice_data = NoticeTb.objects.filter(query_notice_type_list, use=USE
+                                              ).annotate(notice_type_cd_name=RawSQL(query_type_cd, []),
+                                                         ).order_by('-reg_dt')
+        notice_list = []
         for notice_info in notice_data:
-            notice_data_dict[notice_info.notice_id] = {'notice_id': notice_info.notice_id,
-                                                       'notice_type_cd': notice_info.notice_type_cd,
-                                                       'notice_title': notice_info.title,
-                                                       'notice_contents': notice_info.contents,
-                                                       'notice_to_member_type_cd': notice_info.to_member_type_cd,
-                                                       'notice_hits': notice_info.hits,
-                                                       'notice_mod_dt': notice_info.mod_dt,
-                                                       'notice_reg_dt': notice_info.reg_dt,
-                                                       'notice_use': notice_info.use}
+            notice_list.append({'notice_id': notice_info.notice_id,
+                                'notice_type_cd': notice_info.notice_type_cd,
+                                'notice_type_cd_name': notice_info.notice_type_cd_name,
+                                'notice_title': notice_info.title,
+                                'notice_contents': notice_info.contents,
+                                'notice_to_member_type_cd': notice_info.to_member_type_cd,
+                                'notice_hits': notice_info.hits,
+                                'notice_mod_dt': notice_info.mod_dt,
+                                'notice_reg_dt': notice_info.reg_dt,
+                                'notice_use': notice_info.use})
 
-        return JsonResponse(notice_data_dict, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse({'notice_data': notice_list}, json_dumps_params={'ensure_ascii': True})

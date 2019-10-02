@@ -566,7 +566,9 @@ class CComponent{
         let html = `<div id="button_${id}" style="text-align:center;cursor:pointer;padding:3px 8px;${style_code}">${title}</div>`;
         
         $(document).off('click', `#button_${id}`).on('click', `#button_${id}`, function(e){
-            onclick();
+            if(onclick!=undefined){
+                onclick();
+            }
         });
         return html;
     }
@@ -576,7 +578,9 @@ class CComponent{
         let html = `<span id="text_button_${id}" style="cursor:pointer;padding:3px 0;${style_code}">${title}</span>`;
         
         $(document).off('click', `#text_button_${id}`).on('click', `#text_button_${id}`, function(e){
-            onclick();
+            if(onclick!=undefined){
+                onclick();
+            }
         });
         return html;
     }

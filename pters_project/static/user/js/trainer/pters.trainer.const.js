@@ -120,6 +120,11 @@ const MAX_WIDTH = 800;
 
 /**/
 
+/* 공지사항 type */
+const NOTICE = 'NOTICE';
+const NOTICE_FAQ = 'FAQ';
+const NOTICE_USAGE = 'SYS_USAGE';
+
 
 /* 팝업 주소 */
 

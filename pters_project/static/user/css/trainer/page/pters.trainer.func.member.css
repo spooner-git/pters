@@ -98,13 +98,13 @@
 .member_data_l{
 	 display: table-cell;
 	/*display: none;*/
-	width: 40px;
+	width: 36px;
 	text-align: left;
 	vertical-align: middle;
 	padding-right: 10px;
 }
 	.member_data_l > img{
-		width: 40px;
+		width: 36px;
 		vertical-align: middle;
 		border-radius: 50%;
 	}
