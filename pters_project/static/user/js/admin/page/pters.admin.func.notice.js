@@ -1,7 +1,7 @@
-class Home {
+class Notice {
     constructor (targetHTML, instance){
-        this.target = {install:targetHTML, toolbox:'section_admin_home_toolbox', content:'section_admin_home_content'};
-        this.page_name = "home";
+        this.target = {install:targetHTML, toolbox:'section_admin_notice_toolbox', content:'section_admin_notice_content'};
+        this.page_name = "notice";
         this.instance = instance;
 
         let d = new Date();
@@ -22,17 +22,6 @@ class Home {
             return false;
         }
         this.render();
-        clearInterval(this.time_interval);
-        this.time_interval = setInterval(() => {
-            if(current_page != this.page_name){
-                clearInterval(this.time_interval);
-            }
-            try{
-                this.render_content();
-            }catch(e){
-                console.log(e);
-            }
-        }, 1000);
     }
 
     set_initail_data(){
@@ -72,9 +61,9 @@ class Home {
     }
 
     dom_assembly_toolbox(){
-        let html = `<div class="home_upper_box">
+        let html = `<div class="notice_upper_box">
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
-                            <div style="display:inline-block;">관리자 홈</div>
+                            <div style="display:inline-block;">공지 관리</div>
                         </div>
                     </div>`;
         return html;
@@ -82,17 +71,11 @@ class Home {
 
     dom_assembly_content(){
         let time = new Date();
-        let year = time.getFullYear();
-        let month = time.getMonth()+1;
-        let date = time.getDate();
-        let day = DAYNAME_KR[time.getDay()] + '요일';
         let hour = time.getHours();
         let minute = time.getMinutes();
         let second = time.getSeconds();
-        let html = `<div style="padding:16px;margin-top:200px;">
-                        <div style="font-size:16px;font-weight:bold;">${year}. ${month}. ${date}. (${day})</div>
-                        <div>현재 시간 ${hour}:${minute}:${second}</div>
-                    </div>`;
+        let html = `<div style="margin-top:50px;font-size:18px;font-weight:bold;">피터스 관리자 페이지!</div>
+                    <div>현재 시간 ${hour}:${minute}:${second}</div>`;
         return html;
     }
 
@@ -102,7 +85,7 @@ class Home {
 
 
 
-class Home_func{
+class notice_func{
     static read_qa_all(callback){
         $.ajax({
             url:'/trainer/get_qa_all/',
