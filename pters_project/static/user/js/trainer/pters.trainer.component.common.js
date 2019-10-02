@@ -146,11 +146,11 @@ class CComponent{
         }
         let html = `<li class="create_input_row create_input_textarea_row" id="c_i_t_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw" style="height:100%">
-                            <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
+                            <div class="cell_title" style="vertical-align:top;display:${icon == DELETE ? 'none' : ''}">
                                 <img src="${icon == DELETE ? '' : icon}">
                             </div>
                             <div class="cell_content">
-                                <textarea class="cell_text" placeholder="${placeholder}" value="${title}" style="height:100%;">${title}</textarea>
+                                <textarea class="cell_text" placeholder="${placeholder}" value="${title}" style="height:100%;min-height:55px;">${title}</textarea>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
@@ -159,7 +159,7 @@ class CComponent{
                         </div>
                     </li>`;
         $(document).off('focusin', `#c_i_t_r_${id}`).on('focusin', `#c_i_t_r_${id}`, function(e){
-            $(this).find('textarea').val('');
+            // $(this).find('textarea').val('');
         });
 
         $(document).off('focusout', `#c_i_t_r_${id}`).on('focusout', `#c_i_t_r_${id}`, function(e){
