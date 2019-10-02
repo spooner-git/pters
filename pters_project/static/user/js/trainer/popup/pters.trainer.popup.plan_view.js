@@ -407,6 +407,30 @@ class Plan_view{
         return html + html_duplication_alert;
     }
 
+    // dom_row_memo_select (){
+    //     let id = 'select_memo';
+    //     let title = this.data.memo == null ? '' : this.data.memo;
+    //     let placeholder = '일정 메모';
+    //     let icon = '/static/common/icon/icon_note_black.png';
+    //     let icon_r_visible = HIDE;
+    //     let icon_r_text = "";
+    //     let style = null;
+    //     let disabled = false;
+    //     let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+    //     let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+    //     let required = "";
+    //     let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+    //         let user_input_data = input_data;
+    //         this.memo = user_input_data;
+    //         let data_to_send = {"schedule_id": this.schedule_id, "add_memo":this.memo};
+    //         let url_update_memo = '/schedule/update_memo_schedule/';
+    //         Plan_func.update(url_update_memo, data_to_send, ()=>{
+    //             this.init();
+    //             this.if_user_changed_any_information = true;
+    //         });
+    //     }, pattern, pattern_message, required);
+    //     return html;
+    // }
     dom_row_memo_select (){
         let id = 'select_memo';
         let title = this.data.memo == null ? '' : this.data.memo;
@@ -419,7 +443,7 @@ class Plan_view{
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
         let required = "";
-        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+        let html = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
             let data_to_send = {"schedule_id": this.schedule_id, "add_memo":this.memo};

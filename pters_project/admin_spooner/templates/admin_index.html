@@ -1,28 +1,28 @@
 {% extends "admin_base.html" %}
-{% block content %}
-    {% load static_url %}
-    <div id="base">
-        <section id="side_menu">
-            <article>
-                <img src="/static/user/res/PTERS_logo_pure.png" alt="" style="width: 100px;">
-                <p style="margin:0;font-size:11px;line-height:0">관리자 페이지</p>
-            </article>
-            <article>
-                <span class="text_button">PTERS 공지</span>
-            </article>
-            <article>
-                <span class="text_button" onclick="page_qa.init();">문의 관리</span>
-            </article>
-            <article>
-                    <span class="text_button">FAQ 관리</span>
-            </article>
-            <article style="margin-top: 50px;color:#fe4e65;font-size:12px;">
-                <span onclick="location.href='/login/logout/'" class="text_button">로그아웃</span>
-            </article>
-        </section>
-        <section id="main_content">
-            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:20px;font-weight:bold;">피터스 관리자 페이지</div>
-        </section>
-    </div>
 
+
+
+{% load static_url %}
+
+{% block local_css %}
+    <meta name="description" content="main">
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    
+{% endblock %}
+
+
+{% block local_js_footer %}
+    <script>
+        var class_center_name = `{{ request.session.class_center_name }}`;
+        var class_type_name = `{{ request.session.class_type_name }}`;
+        var today_schedule_num = `{{ today_schedule_num }}`;
+        var total_member_num = `{{total_member_num}}`;
+        var new_member_num = `{{ new_member_num }}`;
+        var to_be_ended_member_num = `{{ to_be_end_member_num }}`;
+    </script>
 {% endblock %}
