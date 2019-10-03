@@ -94,11 +94,12 @@
         }
 
         #root_content{
-            position: fixed;
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate3D(-50%, -50%, 0);
-            max-width: 800px;
+            /* max-width: 800px; */
+            max-width: 1024px;
             width: 100%;
             overflow-y: auto;
             overflow-x: hidden;
@@ -111,11 +112,11 @@
             margin: 0 auto;
         }
         
-        
         #root_nav{
-            position: fixed;
+            position: absolute;
             width: 100%;
-            max-width: 800px;
+            /* max-width: 800px; */
+            max-width: 1024px;
             height: 56px;
             background-color: #fdfdfd;
             border-top:  1px solid #cccccc;
@@ -142,7 +143,7 @@
                 color: #858282;
             }
         #root_nav_quick{
-            position: fixed;
+            position: absolute;
             width: 40px;
             height: 40px;
             right: 16px;
@@ -174,6 +175,77 @@
         .gap{
             margin-top: 10px;
         }
+
+        #base{
+            display: flex;
+        }
+            #section_side{
+                flex:0 0 200px;
+                background-color: #f5f2f3;
+            }
+            #section_center{
+                flex: 1 0 auto;
+            }
+            #section_content{
+                position: relative;
+                flex: 1 1 auto;
+                padding: 36px;
+                box-sizing: border-box;
+            }
+                #content_wrapper{
+                    position: relative;
+                    max-width: 1024px;
+                    box-shadow: 0 0 24px 0 #ebebeb;
+                }
+            #section_up_menu{
+                height: 60px;
+                border-bottom: 1px solid #f5f2f3;
+            }
+            .top_logo{
+                padding: 16px 22px;
+                cursor: pointer;
+            }
+            .side_menu{
+                list-style: none;
+                padding-left: 22px;
+            }
+            .side_menu_item{
+                font-size: 12px;
+                font-weight: 500;
+                letter-spacing: -0.5px;
+                padding: 10px 0;
+                cursor: pointer;
+            }
+            .side_menu_item > img{
+                width: 24px;
+                vertical-align: middle;
+                margin-right: 18px;
+            }
+        @media(max-width:650px){
+            #section_side{
+                display: none;
+            }
+            #section_up_menu{
+                display: none;
+            }
+            #section_content{
+                padding: 0;
+            }
+            #root_nav{
+                display: block;
+            }
+            #root_nav_quick{
+                display: block;
+            }
+        }
+        @media(min-width:651px){
+            #root_nav{
+                display: none;
+            }
+            #root_nav_quick{
+                display: none;
+            }
+        }
         
     </style>
     {% block local_css %}
@@ -194,41 +266,75 @@
 <div id="shade_for_popup_basic" style="position:fixed;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
 onclick="layer_popup.close_layer_popup();"></div>
 
+<div id="base">
+    <section id="section_side">
+        <div class="top_logo">
+            <img src="/static/user/res/PTERS_logo_pure.png" alt="" style="width: 64px;">
+        </div>
+        <div class="side_menu">
+            <div class="side_menu_item" onclick="sideGoPage('home')">
+                <img src={% static_url "common/icon/tab_bar/icon_home_off.png" %} alt=""><span>홈</span>
+            </div>
+            <div class="side_menu_item" onclick="sideGoPage('notice')">
+                <img src={% static_url "common/icon/tab_bar/icon_calendar_off.png" %} alt=""><span>공지</span>
+            </div>
+            <div class="side_menu_item" onclick="sideGoPage('qna')">
+                <img src={% static_url "common/icon/tab_bar/icon_member_off.png" %} alt=""><span>문의</span>
+            </div>
+            <div class="side_menu_item" onclick="sideGoPage('faq')">
+                <img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""><span>FAQ</span>
+            </div>
+            <div class="side_menu_item" onclick="sideGoPage('menu')">
+                <img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""><span>설정</span>
+            </div>
+        </div>
 
-<div id="root_content">
-    {% block content %}
-    {% endblock %}
+    </section>
+    <section id="section_center">
+        <div id="section_up_menu">
+
+        </div>
+        <div id="section_content">
+            <div id="content_wrapper">
+                <div id="root_content">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+                <nav id="root_nav">
+                    <div class="obj_table_raw" style="height:100%;position:relative;">
+                        <div id="nav_indicator" style="position:absolute;left:0px;top:0px;height:3px;background-color:#fe4e65;width:20%"></div>
+                        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('home', this)" id="home">
+                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_home_off.png" %} alt=""></div>
+                            <div class="nav_text">홈</div>
+                        </div>
+                        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('notice', this)" id="notice">
+                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_calendar_off.png" %} alt=""></div>
+                            <div class="nav_text">공지</div>
+                        </div>
+                        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('qna', this)" id="qna">
+                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_member_off.png" %} alt=""></div>
+                            <div class="nav_text">문의</div>
+                        </div>
+                        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('faq', this)" id="faq">
+                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""></div>
+                            <div class="nav_text">FAQ</div>
+                        </div>
+                        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('menu', this)" id="menu">
+                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""></div>
+                            <div class="nav_text">전체</div>
+                        </div>
+                    </div>
+                </nav>
+                <nav id="root_nav_quick">
+                    <div onclick="root_content_quick_up();"><img src={% static_url "common/icon/icon_arrow_up.png" %}></div>
+                </nav>
+            </div>
+        </div>
+    </section>
 </div>
 
-<nav id="root_nav">
-    <div class="obj_table_raw" style="height:100%;position:relative;">
-        <div id="nav_indicator" style="position:absolute;left:0px;top:0px;height:3px;background-color:#fe4e65;width:20%"></div>
-        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('home', this)" id="home">
-            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_home_off.png" %} alt=""></div>
-            <div class="nav_text">홈</div>
-        </div>
-        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('notice', this)" id="notice">
-            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_calendar_off.png" %} alt=""></div>
-            <div class="nav_text">공지</div>
-        </div>
-        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('qna', this)" id="qna">
-            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_member_off.png" %} alt=""></div>
-            <div class="nav_text">문의</div>
-        </div>
-        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('faq', this)" id="faq">
-            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""></div>
-            <div class="nav_text">FAQ</div>
-        </div>
-        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('menu', this)" id="menu">
-            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""></div>
-            <div class="nav_text">전체</div>
-        </div>
-    </div>
-</nav>
 
-<nav id="root_nav_quick">
-    <div onclick="root_content_quick_up();"><img src={% static_url "common/icon/icon_arrow_up.png" %}></div>
-</nav>
+
 
 {% include 'popup/admin_popup_basic.html' %}
 {% include 'popup/admin_popup_pages.html' %}
@@ -298,14 +404,25 @@ onclick="layer_popup.close_layer_popup();"></div>
         browser = EDGE;
     }
 
-    const windowHeight = window.innerHeight;
-    const windowWidth = window.innerWidth;
-    const $root_content = $('#root_content');
+    var windowHeight = window.innerHeight;
+    var windowWidth = window.innerWidth;
+    var $root_content = $('#root_content');
     var current_page = "home";
+
+    // $(window).resize(function(){
+    //     windowHeight = window.innerHeight;
+    //     windowWidth = window.innerWidth;
+    // });
 
     input_adjust_location_for_android();
     func_set_webkit_overflow_scrolling('#root_content');
     // $root_content.css('height', `${windowHeight}px`);
+    if(windowWidth >650){
+        $('#content_wrapper').css('height', windowHeight-60-36-36+'px');
+    }else if(windowWidth <= 650){
+        $('#content_wrapper').css('height', windowHeight+'px');
+    }
+        
     $root_content.css('height', `100%`);
     $root_content.scroll(function(){
         let scroll_loc = $(this).scrollTop();

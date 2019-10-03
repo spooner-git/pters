@@ -52,6 +52,7 @@ class Qna {
         let html = content;
 
         document.querySelector(this.target.install).innerHTML = html;
+        $(this.target.install).html(html)
         // document.querySelector('.popup_member_view .wrapper_top').style.border = 0;
         // PopupBase.top_menu_effect(this.target.install);
         // func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
