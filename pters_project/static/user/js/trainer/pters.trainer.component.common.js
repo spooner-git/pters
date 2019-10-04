@@ -301,7 +301,7 @@ class CComponent{
     }
 
     //회원 선택 팝업에 사용되는 행
-    static select_member_row (multiple_select, checked, location, member_id, member_name, member_avail_count, member_expiry, member_fix_state_cd, disable_zero_avail_count, onclick){
+    static select_member_row (multiple_select, checked, location, member_id, member_name, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, disable_zero_avail_count, onclick){
         let fix_member_check = '';
         if(member_fix_state_cd==FIX){
             fix_member_check = '고정회원';
@@ -309,17 +309,22 @@ class CComponent{
         let html = `
                     <li class="select_member_row smr_${location}" id="select_member_row_${member_id}" ${disable_zero_avail_count == ON && member_avail_count == 0? "style='opacity:0.6;'": ""}>
                         <div class="obj_table_raw">
-                            <div class="cell_member_name">
-                                ${member_name}
+                            <div style="display:table-cell; width:35px; height:35px; padding-right:10px;">
+                                <img src="${member_profile_url}" style="width:35px; height:35px; border-radius: 50%;">
                             </div>
-                            <div class="cell_member_info">
-                                예약 가능 횟수 - ${member_avail_count}회 / ${member_expiry}까지
-                            </div>
-                            <div class="cell_member_fix">
-                                ${fix_member_check}
-                            </div>
-                            <div class="cell_member_selected">
-                                <img src="/static/common/icon/icon_confirm_black.png" class="obj_icon_basic ${checked == 0 ? '' : 'member_selected'}">
+                            <div style="display:table-cell; vertical-align: middle;">
+                                <div class="cell_member_name">
+                                    ${member_name}
+                                </div>
+                                <div class="cell_member_info">
+                                    예약 가능 횟수 - ${member_avail_count}회 / ${member_expiry}까지
+                                </div>
+                                <div class="cell_member_fix">
+                                    ${fix_member_check}
+                                </div>
+                                <div class="cell_member_selected">
+                                    <img src="/static/common/icon/icon_confirm_black.png" class="obj_icon_basic ${checked == 0 ? '' : 'member_selected'}">
+                                </div>
                             </div>
                         </div>
                     </li>
