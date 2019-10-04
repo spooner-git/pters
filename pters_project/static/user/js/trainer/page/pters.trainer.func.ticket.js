@@ -11,6 +11,10 @@ class Ticket{
         this.list_status_type_text = "";
         this.list_status_type = "ing"; //ing, end
 
+        this.sort_val = SORT_TICKET_NAME;
+        this.sort_order_by = SORT_ORDER_ASC;
+        this.sort_value_text = '수강권명 가나다순';
+
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
     }
 
@@ -56,7 +60,7 @@ class Ticket{
         $.ajax({
             url:url,
             type:'GET',
-            data: {"page": 1, "sort_val": 0, "sort_order_by":0, "keyword":""},
+            data: {"sort_val": this.sort_val, "sort_order_by":this.sort_order_by, "keyword":""},
             dataType : 'JSON',
             async:async,
     
