@@ -176,8 +176,13 @@
             margin-top: 10px;
         }
 
+        /* 새로운 코드 시작 */
+        html, body{
+            height: 100%;
+        }
         #base{
             display: flex;
+            height: 100%;
         }
             #section_side{
                 flex:0 0 200px;
@@ -190,14 +195,19 @@
                 position: relative;
                 flex: 1 1 auto;
                 padding: 36px;
+                padding-top: 96px;
                 box-sizing: border-box;
+                height: 100%;
             }
                 #content_wrapper{
                     position: relative;
                     max-width: 1024px;
                     box-shadow: 0 0 24px 0 #ebebeb;
+                    height: 100%;
                 }
             #section_up_menu{
+                position: fixed;
+                width: 100%;
                 height: 60px;
                 border-bottom: 1px solid #f5f2f3;
             }
@@ -417,11 +427,12 @@ onclick="layer_popup.close_layer_popup();"></div>
     input_adjust_location_for_android();
     func_set_webkit_overflow_scrolling('#root_content');
     // $root_content.css('height', `${windowHeight}px`);
-    if(windowWidth >650){
-        $('#content_wrapper').css('height', windowHeight-60-36-36+'px');
-    }else if(windowWidth <= 650){
-        $('#content_wrapper').css('height', windowHeight+'px');
-    }
+    
+    // if(windowWidth >650){
+    //     $('#content_wrapper').css('height', windowHeight-60-36-36+'px');
+    // }else if(windowWidth <= 650){
+    //     $('#content_wrapper').css('height', windowHeight+'px');
+    // }
         
     $root_content.css('height', `100%`);
     $root_content.scroll(function(){
