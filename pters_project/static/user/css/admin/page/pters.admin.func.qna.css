@@ -90,7 +90,8 @@
 	flex: 1 1 0;
 }
 #section_admin_qna_content .qa_article_reg_date{
-	flex: 1 1 0;
+	/* flex: 1 1 0; */
+	flex-basis: 150px;
 }
 #section_admin_qna_content .qa_article_reg_status{
 	flex: 1 1 0;

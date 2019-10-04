@@ -566,6 +566,7 @@ class CComponent{
         let html = `<div id="button_${id}" style="text-align:center;cursor:pointer;padding:3px 8px;${style_code}">${title}</div>`;
         
         $(document).off('click', `#button_${id}`).on('click', `#button_${id}`, function(e){
+            e.stopPropagation();
             onclick();
         });
         return html;
@@ -576,6 +577,7 @@ class CComponent{
         let html = `<span id="text_button_${id}" style="cursor:pointer;padding:3px 0;${style_code}">${title}</span>`;
         
         $(document).off('click', `#text_button_${id}`).on('click', `#text_button_${id}`, function(e){
+            e.stopPropagation();
             onclick();
         });
         return html;
@@ -596,6 +598,7 @@ class CComponent{
                     </div>`;
         
         $(document).off('click', `#icon_button_${id}`).on('click', `#icon_button_${id}`, function(e){
+            e.stopPropagation();
             onclick();
         });
         return html;
@@ -611,6 +614,7 @@ class CComponent{
                     </div>`;
         
         $(document).off('click', `#image_button_${id}`).on('click', `#image_button_${id}`, function(e){
+            e.stopPropagation();
             onclick();
         });
         return html;
@@ -622,6 +626,7 @@ class CComponent{
                     </div>`;
         
         $(document).off('click', `#toggle_button_${id}`).on('click', `#toggle_button_${id}`, function(e){
+            e.stopPropagation();
             let $this = $(`#toggle_button_${id}`);
             if($this.hasClass('toggle_button_active')){
                 onclick(OFF);

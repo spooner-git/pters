@@ -124,55 +124,7 @@ const MAX_WIDTH = 800;
 /* 팝업 주소 */
 
 // 풀페이지 팝업
-const POPUP_ADDRESS_PLAN_VIEW = 'popup_plan_view';
-const POPUP_ADDRESS_PLAN_ADD = 'popup_plan_add';
-
-const POPUP_ADDRESS_MEMBER_VIEW = 'popup_member_view';
-const POPUP_ADDRESS_MEMBER_SIMPLE_VIEW = 'popup_member_simple_view';
-const POPUP_ADDRESS_MEMBER_ADD = 'popup_member_add';
-const POPUP_ADDRESS_MEMBER_EDIT = 'popup_member_edit';
-
-const POPUP_ADDRESS_LECTURE_VIEW = 'popup_lecture_view';
-const POPUP_ADDRESS_LECTURE_SIMPLE_VIEW = 'popup_lecture_simple_view';
-const POPUP_ADDRESS_LECTURE_ADD = 'popup_lecture_add';
-const POPUP_ADDRESS_LECTURE_EDIT = 'popup_lecture_edit';
-const POPUP_ADDRESS_LECTURE_LIST = 'popup_lecture_list';
-
-const POPUP_ADDRESS_TICKET_VIEW = 'popup_ticket_view';
-const POPUP_ADDRESS_TICKET_SIMPLE_VIEW = 'popup_ticket_simple_view';
-const POPUP_ADDRESS_TICKET_ADD = 'popup_ticket_add';
-const POPUP_ADDRESS_TICKET_EDIT = 'popup_ticket_edit';
-const POPUP_ADDRESS_TICKET_LIST = 'popup_ticket_list';
-
-const POPUP_MEMBER_SCHEDULE_HISTORY = 'popup_member_schedule_history';
-const POPUP_MEMBER_TICKET_HISTORY = 'popup_member_ticket_history';
-const POPUP_MEMBER_TICKET_MODIFY = 'popup_member_ticket_modify';
-const POPUP_MEMBER_TICKET_REFUND = 'popup_member_ticket_refund';
-
-const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
-const POPUP_ADDRESS_STATISTICS = 'popup_statistics';
-const POPUP_ADDRESS_STATISTICS_DETAIL = 'popup_statistics_detail';
-
-const POPUP_ADDRESS_PROGRAM_LIST = 'popup_program_list';
-const POPUP_ADDRESS_PROGRAM_ADD = 'popup_program_add';
-const POPUP_ADDRESS_PROGRAM_VIEW = 'popup_program_view';
-
-const POPUP_ADDRESS_SETTING_WORKTIME = 'popup_setting_worktime';
-const POPUP_ADDRESS_SETTING_AUTOCOMPLETE = 'popup_setting_autocomplete';
-const POPUP_ADDRESS_SETTING_RESERVE = 'popup_setting_reserve';
-const POPUP_ADDRESS_SETTING_ALARM = 'popup_setting_alarm';
-const POPUP_ADDRESS_SETTING_ATTENDMODE = 'popup_setting_attendmode';
-const POPUP_ADDRESS_SERVICE_NOTICE = 'popup_service_notice';
-const POPUP_ADDRESS_SERVICE_INQUIRY_MENU = 'popup_service_inquiry_menu';
-const POPUP_ADDRESS_SERVICE_INQUIRY = 'popup_service_inquiry';
-const POPUP_ADDRESS_SERVICE_INQUIRY_HISTORY = 'popup_service_inquiry_history';
-const POPUP_ADDRESS_SERVICE_INQUIRY_FAQ = 'popup_service_inquiry_faq';
-const POPUP_ADDRESS_SERVICE_HELPER = 'popup_service_helper';
-
-const POPUP_ADDRESS_MYPAGE = 'popup_mypage';
-const POPUP_ADDRESS_MYPAGE_MODIFY = 'popup_mypage_modify';
-const POPUP_ADDRESS_MYPAGE_PHOTO_UPDATE = 'popup_mypage_photo_update';
-const POPUP_ADDRESS_PASSWORD_MODIFY = 'popup_password_modify';
+const POPUP_ADDRESS_QNA_DETAIL = 'popup_qna_detail';
 // 풀페이지 팝업
 
 // User Input 팝업

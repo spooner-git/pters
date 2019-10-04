@@ -179,6 +179,7 @@
         /* 새로운 코드 시작 */
         html, body{
             height: 100%;
+            color: #3b3b3b;
         }
         #base{
             display: flex;
@@ -189,6 +190,7 @@
                 background-color: #f5f2f3;
             }
             #section_center{
+                position: relative;
                 flex: 1 0 auto;
             }
             #section_content{
@@ -206,10 +208,11 @@
                     height: 100%;
                 }
             #section_up_menu{
-                position: fixed;
+                position: absolute;
                 width: 100%;
                 height: 60px;
                 border-bottom: 1px solid #f5f2f3;
+                z-index: 2;
             }
             .top_logo{
                 padding: 16px 22px;
@@ -231,6 +234,7 @@
                 vertical-align: middle;
                 margin-right: 18px;
             }
+            
         @media(max-width:650px){
             #section_side{
                 display: none;
@@ -256,6 +260,21 @@
                 display: none;
             }
         }
+
+        .up_menu_tool{
+            display:flex;
+            float:right;
+            font-size: 12px;
+            font-weight: 500;
+            width: 220px;
+            line-height: 60px;
+            padding: 0 20px;
+        }
+        .up_menu_img{
+            width: 24px;
+            vertical-align: middle;
+            margin: 0 8px 4px 8px;
+        }
         
     </style>
     {% block local_css %}
@@ -273,8 +292,6 @@
 {% endblock %}
 <div id="debug_toolbar" style="position:fixed;top:0;font-size:13px;background-color:#fe4e65ba;color:#ffffff;width:100%;left:0;z-index:1500"></div>
 
-<div id="shade_for_popup_basic" style="position:fixed;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
-onclick="layer_popup.close_layer_popup();"></div>
 
 <div id="base">
     <section id="section_side">
@@ -302,10 +319,20 @@ onclick="layer_popup.close_layer_popup();"></div>
     </section>
     <section id="section_center">
         <div id="section_up_menu">
-
+            <div class="up_menu_tool">
+                <div style="flex:1 0 140px"><img src="/static/common/icon/icon_account.png" alt="" class="up_menu_img"><span>사용자명</span></div>
+                <div style="flex:1 0 0"><img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img"></div>
+                <div style="flex:1 0 0"><img src="/static/common/icon/icon_help_black.png" alt="" class="up_menu_img"></div>
+            </div>
         </div>
         <div id="section_content">
+            <div id="shade_for_popup_basic" style="position: absolute;;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
+            onclick="layer_popup.close_layer_popup();"></div>
             <div id="content_wrapper">
+                    
+                    {% include 'popup/admin_popup_basic.html' %}
+                    {% include 'popup/admin_popup_pages.html' %}
+                    {% include 'popup/admin_popup_user_input.html' %}
                 <div id="root_content">
                     {% block content %}
                     {% endblock %}
@@ -346,9 +373,7 @@ onclick="layer_popup.close_layer_popup();"></div>
 
 
 
-{% include 'popup/admin_popup_basic.html' %}
-{% include 'popup/admin_popup_pages.html' %}
-{% include 'popup/admin_popup_user_input.html' %}
+
 
 <footer>
 
@@ -373,7 +398,7 @@ onclick="layer_popup.close_layer_popup();"></div>
 <!-- 페이지 스크립트 로드-->
 
 <!-- ajax 팝업 JS 로드 -->
-<script type="text/javascript" src={% static_url "user/js/admin/popup/pters.admin.popup.service_notice.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/admin/popup/pters.admin.popup.qna_detail.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
 <script type="text/javascript" src={% static_url "user/js/admin/pters.admin.selectors.js" %}></script>
@@ -478,7 +503,7 @@ onclick="layer_popup.close_layer_popup();"></div>
     // 페이지 인스턴스
 
     // 팝업 인스턴스
-    var service_notice_popup;
+    var qna_detail_popup;
     // 팝업 인스턴스
 
     // 범용 셀렉터 인스턴스
@@ -534,14 +559,6 @@ onclick="layer_popup.close_layer_popup();"></div>
             case 'faq':
                 faq.init();
             break;
-            // case 'calendar':
-            //     calendar.init();
-            // break;
-            // case 'ticket':
-            //     // ticket.init();
-            //     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
-            //                                         ticket_list_popup = new Ticket_list('.popup_ticket_list', 'ticket_list_popup')});
-            // break;
         }
     }
 

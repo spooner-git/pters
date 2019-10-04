@@ -125,7 +125,12 @@ class Qna {
                                 ${qa_contents}
                             </div>
                             <div>
-                                <div>${CComponent.text_button ("qa_answer_"+qa_id, "답변", null, ()=>{alert('qa_answer ', qa_id);})}</div>
+                                <div>${CComponent.button ("qa_answer_"+qa_id, "답변", {"border":"1px solid #e8e8e8", "padding":"12px"}, ()=>{
+                                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_QNA_DETAIL, 100, POPUP_FROM_PAGE, null, ()=>{
+                                            qna_detail_popup = new Qna_detail('.popup_qna_detail', qa_id, this.data);});
+                                    })
+                                    }
+                                </div>
                             </div>
                         </div>
                     </article>`;
