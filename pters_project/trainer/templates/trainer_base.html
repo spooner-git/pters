@@ -215,7 +215,6 @@ onclick="layer_popup.close_layer_popup();"></div>
 </script>
 <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
 -->
-
 <div id="root_content">
     {% block content %}
     {% endblock %}
@@ -250,7 +249,6 @@ onclick="layer_popup.close_layer_popup();"></div>
 <nav id="root_nav_quick">
     <div onclick="root_content_quick_up();"><img src={% static_url "common/icon/icon_arrow_up.png" %}></div>
 </nav>
-
 {% include 'popup/trainer_popup_basic.html' %}
 {% include 'popup/trainer_popup_pages.html' %}
 {% include 'popup/trainer_popup_user_input.html' %}
