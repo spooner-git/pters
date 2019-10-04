@@ -70,7 +70,7 @@ class CComponent{
                             </div>
                             <div class="cell_content">
                                 <input type="text" class="cell_text" title="${placeholder}" placeholder="${placeholder}" pattern="${pattern}" value="${title}"
-                                 onkeyup="limit_char_auto_correction(event.target);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" 
+                                 onkeyup="limit_char_auto_correction(event.target);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" 
                                  data-error-message="${placeholder} : 필수 입력입니다." data-pattern-message="${pattern_message}" data-valid="false" ${disable} ${required}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
@@ -111,7 +111,7 @@ class CComponent{
                             </div>
                             <div class="cell_content">
                                 <input class="cell_text" title="${placeholder}" placeholder="${placeholder}" type="tel" pattern="${pattern}" value="${title}"
-                                 onkeyup="limit_char_auto_correction(event.target);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" 
+                                 onkeyup="limit_char_auto_correction(event.target);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" 
                                  data-error-message="${placeholder} : 필수 입력입니다." data-valid="false" ${disable} ${required}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
@@ -150,7 +150,7 @@ class CComponent{
                                 <img src="${icon == DELETE ? '' : icon}">
                             </div>
                             <div class="cell_content">
-                                <textarea class="cell_text" placeholder="${placeholder}" value="${title}" style="height:100%;min-height:55px;">${title}</textarea>
+                                <textarea class="cell_text" placeholder="${placeholder}" value="${title}" style="height:100%;min-height:55px;" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">${title}</textarea>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
