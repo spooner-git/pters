@@ -8,7 +8,7 @@ class PopupBase{
                         ${top_center}
                         ${top_right}
                     </div>
-                    <div class="wrapper_middle" style="height:${windowHeight-66}px;">
+                    <div class="wrapper_middle" style="height:100%;padding-bottom:100px;box-sizing:border-box;">
                         ${content}
                     </div>
                     <div class="wrapper_bottom">
