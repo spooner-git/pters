@@ -6,6 +6,7 @@ let layer_popup = (function (){
 
     function func_open_layer_popup (popup_name, popup_size, animation_type){
         // $('.content_page').css('overflow-y', 'hidden');
+        let windowHeight = $root_content.height();
 
         let $popup_selector;
         let popup_data = {"popup_name":popup_name, "popup_size":popup_size, "animation_type":animation_type};
@@ -43,19 +44,13 @@ let layer_popup = (function (){
         return popup_data;
     }
 
-    function func_close_layer_popup (popup_size, popup_specified){
+    function func_close_layer_popup (popup_size){
         let popup_data = {};
         //혹시 있을 pop 에러 방지
         if(popup_array.length > 0){
             let $popup_selector;
-            // if(popup_specified == undefined){ //특정 팝업을 지정하지 않았을 때
                 popup_data = popup_array.pop();
                 $popup_selector = $(`.${popup_data.popup_name}`).parents('.popup_mobile');
-            // }else{ //특정 팝업을 닫고자 지정했을 때
-            //     for(let i=0; i<popup_array.length; i++){
-
-            //     }
-            // }
             
             //팝업이 옆으로 닫히는 애니메이션이 종료된후 해당 팝업의 html을 지운다.
             let delay_time = 250;
@@ -221,6 +216,7 @@ function func_set_popup_position ($popup_selector, animation_type, popup_size){
     let width = 100;
     let height = 100;
     let left = 0;
+    let windowHeight = $root_content.height();
 
     switch (animation_type) {
         case POPUP_FROM_LEFT:
@@ -272,6 +268,7 @@ function func_set_popup_position ($popup_selector, animation_type, popup_size){
 }
 
 function func_set_open_popup_animation ($popup_selector, animation_type, popup_size){
+    let windowHeight = $root_content.height();
     let animation_info = "";
     if(animation_type != POPUP_FROM_PAGE){
         animation_info = "transform 0.3s ease-in-out";
@@ -297,12 +294,14 @@ function func_set_open_popup_animation ($popup_selector, animation_type, popup_s
     }
     $popup_selector.css({
         "transform": `translate(${translate_x}px, ${translate_y}px)`,
-        "transition": `${animation_info}`
+        "transition": `${animation_info}`, "visibility":"visible"
     });
 
 }
 
 function func_set_close_popup_animation ($popup_selector, animation_type){
+    let windowHeight = $root_content.height();
+    let windowWidth = $root_content.width();
     let animation_info = "";
     if(animation_type != POPUP_FROM_PAGE){
         animation_info = "transform 0.3s ease-in-out";
@@ -333,7 +332,13 @@ function func_set_close_popup_animation ($popup_selector, animation_type){
         "transform": `translate(${translate_x}px, ${translate_y}px)`,
         "transition": `${animation_info}`
     });
-
+    if(animation_type == POPUP_FROM_PAGE){
+        $popup_selector.css({"visibility":"hidden"});
+    }else{
+        setTimeout(()=>{
+            $popup_selector.css({"visibility":"hidden"});
+        }, 300);
+    }
 }
 
 function func_set_shade (popup_array_length){
