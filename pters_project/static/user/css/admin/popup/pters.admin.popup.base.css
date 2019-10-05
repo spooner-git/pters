@@ -19,14 +19,15 @@
             line-height: 20px;
             height: 60px;
             text-align: center;
-            /* padding: 20px 16px 20px 16px; */
             padding: 0;
-            position: sticky;
-            position: -webkit-sticky;
+            /* position: sticky;
+            position: -webkit-sticky; */
             top: 0;
             background-color: #ffffff;
             box-sizing: border-box;
             border-bottom: 1px solid #f5f2f3;
+            position: fixed;
+            width: 100%;
         }
             .popup_mobile .wrapper_top .logo_pters{
                 width: 80px;
@@ -80,6 +81,10 @@
             width: 100%;
             overflow-y:auto;
             -webkit-overflow-scrolling: touch;
+
+            height:100%;
+            padding:60px 0;
+            box-sizing:border-box;
         }
 
         .popup_mobile.popup_full{
