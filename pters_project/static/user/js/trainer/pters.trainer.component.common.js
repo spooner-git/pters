@@ -94,7 +94,7 @@ class CComponent{
     }
     
     //추가 페이지들에서 사용되는 number input row 스타일
-    static create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, required){
+    static create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required){
         let disable = 'disabled';
         if(disabled == false){
             disable = '';
@@ -112,7 +112,7 @@ class CComponent{
                             <div class="cell_content">
                                 <input class="cell_text" title="${placeholder}" placeholder="${placeholder}" type="tel" pattern="${pattern}" value="${title}"
                                  onkeyup="limit_char_auto_correction(event.target);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" 
-                                 data-error-message="${placeholder} : 필수 입력입니다." data-valid="false" ${disable} ${required}>
+                                 data-error-message="${placeholder} : 필수 입력입니다." data-pattern-message="${pattern_message}" data-valid="false" ${disable} ${required}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
@@ -319,6 +319,8 @@ class CComponent{
                                 <div class="cell_member_info">
                                     예약 가능 횟수 - ${member_avail_count}회 / ${member_expiry}까지
                                 </div>
+                            </div>
+                            <div style="display:table-cell; line-height:35px; float:right;">
                                 <div class="cell_member_fix">
                                     ${fix_member_check}
                                 </div>
