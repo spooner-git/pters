@@ -309,17 +309,24 @@ class CComponent{
         let html = `
                     <li class="select_member_row smr_${location}" id="select_member_row_${member_id}" ${disable_zero_avail_count == ON && member_avail_count == 0? "style='opacity:0.6;'": ""}>
                         <div class="obj_table_raw">
-                            <div class="cell_member_name">
-                                ${member_name}
+                            <div style="display:table-cell; width:35px; height:35px; padding-right:10px;">
+                                <img src="${member_profile_url}" style="width:35px; height:35px; border-radius: 50%;">
                             </div>
-                            <div class="cell_member_info">
-                                예약 가능 횟수 - ${member_avail_count}회 / ${member_expiry}까지
+                            <div style="display:table-cell; vertical-align: middle;">
+                                <div class="cell_member_name">
+                                    ${member_name}
+                                </div>
+                                <div class="cell_member_info">
+                                    예약 가능 횟수 - ${member_avail_count}회 / ${member_expiry}까지
+                                </div>
                             </div>
-                            <div class="cell_member_fix">
-                                ${fix_member_check}
-                            </div>
-                            <div class="cell_member_selected">
-                                <img src="/static/common/icon/icon_confirm_black.png" class="obj_icon_basic ${checked == 0 ? '' : 'member_selected'}">
+                            <div style="display:table-cell; line-height:35px; float:right;">
+                                <div class="cell_member_fix">
+                                    ${fix_member_check}
+                                </div>
+                                <div class="cell_member_selected">
+                                    <img src="/static/common/icon/icon_confirm_black.png" class="obj_icon_basic ${checked == 0 ? '' : 'member_selected'}">
+                                </div>
                             </div>
                         </div>
                     </li>

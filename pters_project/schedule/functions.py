@@ -13,7 +13,7 @@ from django.utils import timezone
 from configs import settings
 from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, USE, UN_USE, SCHEDULE_DUPLICATION_DISABLE, \
     STATE_CD_ABSENCE, STATE_CD_FINISH, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, LECTURE_TYPE_ONE_TO_ONE, \
-    AUTH_TYPE_VIEW, GROUP_SCHEDULE
+    AUTH_TYPE_VIEW, GROUP_SCHEDULE, OFF_SCHEDULE
 from configs.settings import DEBUG
 from login.models import PushInfoTb
 from trainee.models import MemberTicketTb
@@ -244,6 +244,13 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
         end_color_cd = lecture_info.end_color_cd
         ing_font_color_cd = lecture_info.ing_font_color_cd
         end_font_color_cd = lecture_info.end_font_color_cd
+
+    if str(en_dis_type) == str(OFF_SCHEDULE):
+        ing_color_cd = '#d2d1cf'
+        end_color_cd = '#d2d1cf'
+        ing_font_color_cd = '#3b3b3b'
+        end_font_color_cd = '#3b3b3b'
+
     try:
         with transaction.atomic():
             add_schedule_info = ScheduleTb(class_tb_id=class_id,
@@ -351,7 +358,7 @@ def func_delete_schedule(class_id, schedule_id,  user_id):
             delete_schedule_info.save()
             schedule_info.delete()
 
-            if delete_schedule_info.en_dis_type == ON_SCHEDULE_TYPE:
+            if str(delete_schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE):
                 if delete_schedule_info.member_ticket_tb is not None:
                     error = func_refresh_member_ticket_count(class_id, delete_schedule_info.member_ticket_tb_id)
                     if error is not None:
