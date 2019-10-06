@@ -101,12 +101,11 @@
         }
 
         #root_content{
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate3D(-50%, -50%, 0);
-            /* max-width: 800px; */
-            max-width: 1024px;
+            max-width: 800px;
             width: 100%;
             overflow-y: auto;
             overflow-x: hidden;
@@ -119,11 +118,11 @@
             margin: 0 auto;
         }
         
+        
         #root_nav{
-            position: absolute;
+            position: fixed;
             width: 100%;
-            /* max-width: 800px; */
-            max-width: 1024px;
+            max-width: 800px;
             height: 56px;
             background-color: #fdfdfd;
             border-top:  1px solid #cccccc;
@@ -150,7 +149,7 @@
                 color: #858282;
             }
         #root_nav_quick{
-            position: absolute;
+            position: fixed;
             width: 40px;
             height: 40px;
             right: 16px;
@@ -182,106 +181,7 @@
         .gap{
             margin-top: 10px;
         }
-
-        /*PC버전 Wrapper 코드 시작 */
-        html, body{
-            height: 100%;
-            color: #3b3b3b;
-        }
-        #base{
-            display: flex;
-            height: 100%;
-        }
-            #section_side{
-                flex:0 0 200px;
-                background-color: #f5f2f3;
-            }
-            #section_center{
-                position: relative;
-                flex: 1 0 auto;
-            }
-            #section_content{
-                position: relative;
-                flex: 1 1 auto;
-                padding: 36px;
-                padding-top: 96px;
-                box-sizing: border-box;
-                height: 100%;
-            }
-                #content_wrapper{
-                    position: relative;
-                    max-width: 1024px;
-                    box-shadow: 0 0 24px 0 #ebebeb;
-                    height: 100%;
-                }
-            #section_up_menu{
-                position: absolute;
-                width: 100%;
-                height: 60px;
-                border-bottom: 1px solid #f5f2f3;
-                z-index: 2;
-            }
-            .top_logo{
-                padding: 16px 22px;
-                cursor: pointer;
-            }
-            .side_menu{
-                list-style: none;
-                padding-left: 22px;
-            }
-            .side_menu_item{
-                font-size: 12px;
-                font-weight: 500;
-                letter-spacing: -0.5px;
-                padding: 10px 0;
-                cursor: pointer;
-            }
-            .side_menu_item > img{
-                width: 24px;
-                vertical-align: middle;
-                margin-right: 18px;
-            }
-            
-        @media(max-width:650px){
-            #section_side{
-                display: none;
-            }
-            #section_up_menu{
-                display: none;
-            }
-            #section_content{
-                padding: 0;
-            }
-            #root_nav{
-                display: block;
-            }
-            #root_nav_quick{
-                display: block;
-            }
-        }
-        @media(min-width:651px){
-            #root_nav{
-                display: none;
-            }
-            #root_nav_quick{
-                display: none;
-            }
-        }
-
-        .up_menu_tool{
-            display:flex;
-            float:right;
-            font-size: 12px;
-            font-weight: 500;
-            width: 220px;
-            line-height: 60px;
-            padding: 0 20px;
-        }
-        .up_menu_img{
-            width: 24px;
-            vertical-align: middle;
-            margin: 0 8px 4px 8px;
-        }
+        
         
     </style>
     <!-- <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.dark_mode.css" %}> -->
@@ -300,85 +200,59 @@
 {% endblock %}
 <div id="debug_toolbar" style="position:fixed;top:0;font-size:13px;background-color:#fe4e65ba;color:#ffffff;width:100%;left:0;z-index:1500"></div>
 
-<!-- <div id="shade_for_popup_basic" style="position:fixed;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
-onclick="layer_popup.close_layer_popup();"></div> -->
+<div id="shade_for_popup_basic" style="position:fixed;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
+onclick="layer_popup.close_layer_popup();"></div>
 
-<div id="base">
-    <section id="section_side">
-        <div class="top_logo">
-            <img src="/static/user/res/PTERS_logo_pure.png" alt="" style="width: 64px;">
-        </div>
-        <div class="side_menu">
-            <div class="side_menu_item" onclick="sideGoPage('home')">
-                <img src={% static_url "common/icon/tab_bar/icon_home_off.png" %} alt=""><span>홈</span>
-            </div>
-            <div class="side_menu_item" onclick="sideGoPage('calendar')">
-                <img src={% static_url "common/icon/tab_bar/icon_calendar_off.png" %} alt=""><span>일정</span>
-            </div>
-            <div class="side_menu_item" onclick="sideGoPage('member')">
-                <img src={% static_url "common/icon/tab_bar/icon_member_off.png" %} alt=""><span>회원</span>
-            </div>
-            <div class="side_menu_item" onclick="sideGoPage('alarm')">
-                <img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""><span>알림</span>
-            </div>
-            <div class="side_menu_item" onclick="sideGoPage('menu')">
-                <img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""><span>전체 메뉴</span>
-            </div>
-        </div>
-
-    </section>
-    <section id="section_center">
-        <div id="section_up_menu">
-            <div class="up_menu_tool">
-                <div style="flex:1 0 140px"><img src="/static/common/icon/icon_account.png" alt="" class="up_menu_img"><span>사용자명</span></div>
-                <div style="flex:1 0 0"><img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img"></div>
-                <div style="flex:1 0 0"><img src="/static/common/icon/icon_help_black.png" alt="" class="up_menu_img"></div>
-            </div>
-        </div>
-        <div id="section_content">
-            <div id="shade_for_popup_basic" style="position: absolute;;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
-            onclick="layer_popup.close_layer_popup();"></div>
-            <div id="content_wrapper">
-                {% include 'popup/trainer_popup_basic.html' %}
-                {% include 'popup/trainer_popup_pages.html' %}
-                {% include 'popup/trainer_popup_user_input.html' %}
-                <div id="root_content">
-                    {% block content %}
-                    {% endblock %}
-                </div>
-                <nav id="root_nav">
-                    <div class="obj_table_raw" style="height:100%;position:relative;">
-                        <!-- <div id="nav_indicator" style="position:absolute;left:0px;top:0px;height:3px;background-color:#fe4e65;width:20%"></div> -->
-                        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('home', this)" id="home">
-                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_home_off.png" %} alt=""></div>
-                            <!-- <div class="nav_text">홈</div> -->
-                        </div>
-                        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('calendar', this)" id="calendar">
-                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_calendar_off.png" %} alt=""></div>
-                            <!-- <div class="nav_text">일정</div> -->
-                        </div>
-                        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('member', this)" id="member">
-                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_member_off.png" %} alt=""></div>
-                            <!-- <div class="nav_text">회원</div> -->
-                        </div>
-                        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('alarm', this)" id="alarm">
-                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""></div>
-                            <!-- <div class="nav_text">알림</div> -->
-                        </div>
-                        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('menu', this)" id="menu">
-                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""></div>
-                            <!-- <div class="nav_text">전체</div> -->
-                        </div>
-                    </div>
-                </nav>
-                <nav id="root_nav_quick">
-                    <div onclick="root_content_quick_up();"><img src={% static_url "common/icon/icon_arrow_up.png" %}></div>
-                </nav>
-            </div>
-        </div>
-    </section>
+<!-- Google reCapcha v3 -->
+<!--
+<script src="https://www.google.com/recaptcha/api.js?render=6Lednq8UAAAAAPNCsPianArQHAITuhgzf-dkX03-"></script>
+<script stype="text/javascript">
+    grecaptcha.ready(function() {
+        grecaptcha.execute('6Lednq8UAAAAAPNCsPianArQHAITuhgzf-dkX03-', {action: 'homepage'}).then(function(token) {
+            document.getElementById('g-recaptcha-response').value = token;
+            console.log(token);
+        });
+    });
+</script>
+<input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
+-->
+<div id="root_content">
+    {% block content %}
+    {% endblock %}
 </div>
 
+<nav id="root_nav">
+    <div class="obj_table_raw" style="height:100%;position:relative;">
+        <!-- <div id="nav_indicator" style="position:absolute;left:0px;top:0px;height:3px;background-color:#fe4e65;width:20%"></div> -->
+        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('home', this)" id="home">
+            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_home_off.png" %} alt=""></div>
+            <!-- <div class="nav_text">홈</div> -->
+        </div>
+        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('calendar', this)" id="calendar">
+            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_calendar_off.png" %} alt=""></div>
+            <!-- <div class="nav_text">일정</div> -->
+        </div>
+        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('member', this)" id="member">
+            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_member_off.png" %} alt=""></div>
+            <!-- <div class="nav_text">회원</div> -->
+        </div>
+        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('alarm', this)" id="alarm">
+            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""></div>
+            <!-- <div class="nav_text">알림</div> -->
+        </div>
+        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('menu', this)" id="menu">
+            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""></div>
+            <!-- <div class="nav_text">전체</div> -->
+        </div>
+    </div>
+</nav>
+
+<nav id="root_nav_quick">
+    <div onclick="root_content_quick_up();"><img src={% static_url "common/icon/icon_arrow_up.png" %}></div>
+</nav>
+{% include 'popup/trainer_popup_basic.html' %}
+{% include 'popup/trainer_popup_pages.html' %}
+{% include 'popup/trainer_popup_user_input.html' %}
 
 <footer>
 
