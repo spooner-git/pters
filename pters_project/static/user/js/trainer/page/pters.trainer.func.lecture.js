@@ -213,7 +213,7 @@ class Lecture_func{
             url:'/trainer/add_lecture_info/',
             type:'POST',
             data: data,
-            dataType : 'html',
+            dataType : 'JSON',
     
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

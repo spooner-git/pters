@@ -35,10 +35,12 @@ class GetSalesListViewAjax(LoginRequiredMixin, TemplateView):
             error = '시작 일자를 선택해주세요.'
         elif end_date == '' or end_date is None:
             error = '종료 일자를 선택해주세요.'
+
         if error is None:
             try:
                 finish_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
                 month_first_day = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+                month_first_day = month_first_day.replace(day=1)
                 self.request.session['sales_start_date'] = str(month_first_day.date())
                 self.request.session['sales_finish_date'] = str(finish_date.date())
                 sales_data_result = get_sales_data(class_id, month_first_day, finish_date)
@@ -74,6 +76,7 @@ class GetSalesInfoViewAjax(LoginRequiredMixin, TemplateView):
         if error is None:
             try:
                 month_first_day = datetime.datetime.strptime(month_date, '%Y-%m-%d')
+                month_first_day = month_first_day.replace(day=1)
                 sales_data_result = get_sales_info(class_id, month_first_day)
             except TypeError:
                 error = '날짜 형식에 문제 있습니다.'

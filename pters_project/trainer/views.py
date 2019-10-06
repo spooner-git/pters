@@ -1188,6 +1188,7 @@ class ManageWorkView(LoginRequiredMixin, AccessTestMixin, View):
         else:
             try:
                 month_first_day = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+                month_first_day = month_first_day.replace(day=1)
             except TypeError:
                 error = '날짜 형식에 문제 있습니다.'
             except ValueError:
@@ -1994,6 +1995,7 @@ def add_lecture_info_logic(request):
     ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
     end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
     error = None
+    lecture_id = None
 
     try:
         with transaction.atomic():
@@ -2003,6 +2005,7 @@ def add_lecture_info_logic(request):
                                      state_cd=STATE_CD_IN_PROGRESS, use=USE)
 
             lecture_info.save()
+            lecture_id = lecture_info.lecture_id
     except ValueError:
         error = '오류가 발생했습니다. [1]'
     except IntegrityError:
@@ -2017,7 +2020,7 @@ def add_lecture_info_logic(request):
     if error is not None:
         messages.error(request, error)
 
-    return render(request, 'ajax/trainer_error_ajax.html')
+    return JsonResponse({'lecture_id': str(lecture_id)}, json_dumps_params={'ensure_ascii': True})
 
 
 def delete_lecture_info_logic(request):
@@ -2804,7 +2807,6 @@ def delete_ticket_lecture_info_logic(request):
     ticket_id = request.POST.get('ticket_id', '')
     lecture_id = request.POST.get('lecture_id', '')
     error = None
-
     if error is None:
         try:
             with transaction.atomic():

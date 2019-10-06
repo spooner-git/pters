@@ -2,6 +2,7 @@ import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from django.db.models.expressions import RawSQL
 
 from configs.const import USE, ON_SCHEDULE_TYPE, STATS_RE_REG, STATS_NEW_REG, STATS_PART_REFUND, STATS_ALL_REFUND, \
     STATE_CD_FINISH, AUTH_TYPE_VIEW
@@ -16,8 +17,6 @@ def get_sales_data(class_id, month_first_day, finish_date):
     error = None
     if month_first_day is None or month_first_day == '':
         error = '시작 날짜를 선택해주세요.'
-    else:
-        month_first_day = month_first_day.replace(day=1)
     if finish_date is None or finish_date == '':
         error = '종료 날짜를 선택해주세요.'
 
@@ -33,40 +32,37 @@ def get_sales_data(class_id, month_first_day, finish_date):
             if counter > 40:
                 error = '매출 통계를 계산할수 있는 범위가 넘었습니다.'
                 break
+
+            # 다음달 첫째날 구하기
             next_year = int(month_first_day.strftime('%Y')) + 1
-            next_month = (int(month_first_day.strftime('%m')) + 1) % 13
-            if next_month == 0:
+            next_month = int(month_first_day.strftime('%m')) + 1
+            if next_month == 13:
                 next_month = 1
             next_month_first_day = month_first_day.replace(month=next_month)
 
             if next_month == 1:
                 next_month_first_day = next_month_first_day.replace(year=next_year)
+
+            # 이번달 마지막날 구하기
             month_last_day = next_month_first_day - datetime.timedelta(days=1)
-
-            # try:
-            #     price_info = ClassMemberTicketTb.objects.filter(
-            #                             Q(member_ticket_tb__start_date__gte=month_first_day)
-            #                             & Q(member_ticket_tb__start_date__lte=month_last_day),
-            #                             class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
-            #                             use=USE).aggregate(Sum('member_ticket_tb__price'))
-            #     new_reg_price = int(price_info['member_ticket_tb__price__sum'])
-            # except TypeError:
-            #     new_reg_price = 0
-
-            # 결제 정보 가져오기
+            # 이달의 결제 정보 가져오기
             price_data = ClassMemberTicketTb.objects.select_related(
-                'member_ticket_tb__member').filter(Q(member_ticket_tb__start_date__gte=month_first_day)
-                                             & Q(member_ticket_tb__start_date__lte=month_last_day),
-                                             class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
-                                             use=USE).order_by('member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
+                'member_ticket_tb__member'
+            ).filter(Q(member_ticket_tb__start_date__gte=month_first_day)
+                     & Q(member_ticket_tb__start_date__lte=month_last_day),
+                     class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
+                     use=USE).order_by('member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
 
             for price_info in price_data:
+                # 회원의 재등록 여부 확인을 위한 로직
                 try:
                     price_member_ticket_info = ClassMemberTicketTb.objects.select_related(
-                        'member_ticket_tb').filter(~Q(member_ticket_tb_id=price_info.member_ticket_tb_id), class_tb_id=class_id,
-                                             member_ticket_tb__member_id=price_info.member_ticket_tb.member_id,
-                                             member_ticket_tb__start_date__lte=price_info.member_ticket_tb.start_date,
-                                             member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW, use=USE).latest('reg_dt')
+                        'member_ticket_tb').filter(
+                        ~Q(member_ticket_tb_id=price_info.member_ticket_tb_id), class_tb_id=class_id,
+                        member_ticket_tb__member_id=price_info.member_ticket_tb.member_id,
+                        member_ticket_tb__start_date__lte=price_info.member_ticket_tb.start_date,
+                        member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW, use=USE).latest('reg_dt')
+
                     if price_member_ticket_info.member_ticket_tb.start_date < price_info.member_ticket_tb.start_date:
                         re_reg_price += price_info.member_ticket_tb.price
                     else:
@@ -74,20 +70,13 @@ def get_sales_data(class_id, month_first_day, finish_date):
                             re_reg_price += price_info.member_ticket_tb.price
                         else:
                             new_reg_price += price_info.member_ticket_tb.price
+
                 except ObjectDoesNotExist:
                     new_reg_price += price_info.member_ticket_tb.price
+
                 price += price_info.member_ticket_tb.price
 
             # 환불 정보 가져오기
-            # try:
-            #     refund_price_info = ClassMemberTicketTb.objects.filter(
-            #                             Q(member_ticket_tb__refund_date__gte=month_first_day)
-            #                             & Q(member_ticket_tb__refund_date__lte=month_last_day),
-            #                             class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
-            #                             use=USE).aggregate(Sum('member_ticket_tb__refund_price'))
-            #     all_refund_price = int(refund_price_info['member_ticket_tb__refund_price__sum'])
-            # except TypeError:
-            #     all_refund_price = 0
             refund_price_data = ClassMemberTicketTb.objects.select_related('member_ticket_tb').filter(
                                     Q(member_ticket_tb__refund_date__gte=month_first_day)
                                     & Q(member_ticket_tb__refund_date__lte=month_last_day),
@@ -125,13 +114,11 @@ def get_sales_info(class_id, month_first_day):
     error = None
     if month_first_day is None or month_first_day == '':
         error = '시작 날짜를 선택해주세요.'
-    else:
-        month_first_day = month_first_day.replace(day=1)
 
     if error is None:
         next_year = int(month_first_day.strftime('%Y')) + 1
-        next_month = (int(month_first_day.strftime('%m')) + 1) % 13
-        if next_month == 0:
+        next_month = int(month_first_day.strftime('%m')) + 1
+        if next_month == 13:
             next_month = 1
         next_month_first_day = month_first_day.replace(month=next_month)
 
@@ -140,20 +127,21 @@ def get_sales_info(class_id, month_first_day):
         month_last_day = next_month_first_day - datetime.timedelta(days=1)
 
         # 결제 정보 가져오기
-        price_data = ClassMemberTicketTb.objects.select_related('member_ticket_tb__member', 'member_ticket_tb__ticket_tb').filter(
-                                Q(member_ticket_tb__start_date__gte=month_first_day)
-                                & Q(member_ticket_tb__start_date__lte=month_last_day),
-                                class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
-                                use=USE).order_by('member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
+        price_data = ClassMemberTicketTb.objects.select_related(
+            'member_ticket_tb__member', 'member_ticket_tb__ticket_tb').filter(
+            Q(member_ticket_tb__start_date__gte=month_first_day) & Q(member_ticket_tb__start_date__lte=month_last_day),
+            class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
+            use=USE).order_by('member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
 
         for price_info in price_data:
             try:
                 price_member_ticket_info = ClassMemberTicketTb.objects.select_related(
-                    'member_ticket_tb__member').filter(~Q(member_ticket_tb_id=price_info.member_ticket_tb_id),
-                                                 class_tb_id=class_id,
-                                                 member_ticket_tb__member_id=price_info.member_ticket_tb.member_id,
-                                                 member_ticket_tb__start_date__lte=price_info.member_ticket_tb.start_date,
-                                                 member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW, use=USE).latest('reg_dt')
+                    'member_ticket_tb__member').filter(
+                    ~Q(member_ticket_tb_id=price_info.member_ticket_tb_id), class_tb_id=class_id,
+                    member_ticket_tb__member_id=price_info.member_ticket_tb.member_id,
+                    member_ticket_tb__start_date__lte=price_info.member_ticket_tb.start_date,
+                    member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW, use=USE).latest('reg_dt')
+
                 if price_member_ticket_info.member_ticket_tb.start_date < price_info.member_ticket_tb.start_date:
                     trade_info = '추가'
                     trade_type = STATS_RE_REG
@@ -181,9 +169,11 @@ def get_sales_info(class_id, month_first_day):
         refund_price_data = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__member',
             'member_ticket_tb__ticket_tb').filter(Q(member_ticket_tb__refund_date__gte=month_first_day)
-                                             & Q(member_ticket_tb__refund_date__lte=month_last_day),
-                                             class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
-                                             use=USE).order_by('member_ticket_tb__refund_date', 'member_ticket_tb__reg_dt')
+                                                  & Q(member_ticket_tb__refund_date__lte=month_last_day),
+                                                  class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+                                                  member_ticket_tb__use=USE,
+                                                  use=USE).order_by('member_ticket_tb__refund_date',
+                                                                    'member_ticket_tb__reg_dt')
 
         for refund_price_info in refund_price_data:
             if refund_price_info.member_ticket_tb.price != refund_price_info.member_ticket_tb.refund_price:

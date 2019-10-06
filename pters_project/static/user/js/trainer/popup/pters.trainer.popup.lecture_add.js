@@ -339,10 +339,13 @@ class Lecture_add{
         Lecture_func.create(data, (received)=>{
             console.log("received", received);
             //수업추가시 수강권에 바로 집어넣기 - Lecture_func.create에서 서버에서 lecture_id를 반환해줘야함
-            // let data_to_send = {"ticket_id":this.ticket.id, "lecture_id":lecture_to_be_update.add[i]};
-            // Ticket_func.update_lecture(ADD, data_to_send);
-            if(this.callback != undefined){
-                this.callback();
+            for(let i=0; i<this.ticket.id.length; i++){
+                let data_to_send = {"ticket_id":this.ticket.id[i], "lecture_id":received.lecture_id};
+                console.log(data_to_send);
+                Ticket_func.update_lecture(ADD, data_to_send);
+                if(this.callback != undefined){
+                    this.callback();
+                }
             }
             lecture_list_popup.init();
         });
