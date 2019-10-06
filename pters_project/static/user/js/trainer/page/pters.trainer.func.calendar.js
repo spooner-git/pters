@@ -1244,9 +1244,11 @@ class Calendar {
         if(this.long_touch == ON){
             // let end_dt = `${year}-${month}-${date} ${TimeRobot.add_time(hour, minute, 0, period_min).hour}:${TimeRobot.add_time(hour, minute, 0, period_min).minute}`;
             Plan_func.read_plan(this.long_touch_schedule_id, (received)=>{
-                let start_dt = `${year}-${month}-${date} ${hour}:${minute}`;
+                let start_dt = `${year}-${month}-${date} ${TimeRobot.to_hhmm(hour, minute)}`;
                 let diff = TimeRobot.diff(received.schedule_info[0].start_time, received.schedule_info[0].end_time);
-                let end_dt = `${year}-${month}-${date} ${TimeRobot.add_time(hour, minute, diff.hour, diff.min).hour}:${TimeRobot.add_time(hour, minute, diff.hour, diff.min).minute}`;
+                let diff_hour = TimeRobot.add_time(hour, minute, diff.hour, diff.min).hour;
+                let diff_minute = TimeRobot.add_time(hour, minute, diff.hour, diff.min).minute;
+                let end_dt = `${year}-${month}-${date} ${TimeRobot.to_hhmm(diff_hour, diff_minute)}`;
                 this.simple_plan_change(received, start_dt, end_dt);
             });
 
@@ -1326,24 +1328,41 @@ class Calendar {
         }
     }
 
-    simple_plan_change(data, start_dt, end_dt){
-        let data1 = {"schedule_id": data.schedule_info[0].schedule_id};
-        let data2 = {"lecture_id": data.schedule_info[0].schedule_type == 0 ? "" : data.schedule_info[0].lecture_id,
-                    "start_dt": start_dt,
-                    "end_dt":end_dt,
-                    "note":data.schedule_info[0].note, "duplication_enable_flag": 1,
-                    "en_dis_type":data.schedule_info[0].schedule_type == 2 ? 1 : data.schedule_info[0].schedule_type,
-                    "member_ids": data.schedule_info[0].member_id != "" ? [data.schedule_info[0].member_id] : data.schedule_info[0].lecture_schedule_data.map((el)=>{return el.member_id;})
-        };
-        //en_dis_type 0: off일정, 1:레슨일정
-        //duplication_enable_flag 0: 중복불허 1:중복허용
+    // simple_plan_change(data, start_dt, end_dt){
+    //     let data1 = {"schedule_id": data.schedule_info[0].schedule_id};
+    //     let data2 = {"lecture_id": data.schedule_info[0].schedule_type == 0 ? "" : data.schedule_info[0].lecture_id,
+    //                 "start_dt": start_dt,
+    //                 "end_dt":end_dt,
+    //                 "note":data.schedule_info[0].note, "duplication_enable_flag": 1,
+    //                 "en_dis_type":data.schedule_info[0].schedule_type == 2 ? 1 : data.schedule_info[0].schedule_type,
+    //                 "member_ids": data.schedule_info[0].member_id != "" ? [data.schedule_info[0].member_id] : data.schedule_info[0].lecture_schedule_data.map((el)=>{return el.member_id;})
+    //     };
+    //     //en_dis_type 0: off일정, 1:레슨일정
+    //     //duplication_enable_flag 0: 중복불허 1:중복허용
 
-        Plan_func.delete(data1, ()=>{ //일정을 지운다.
-            let url_to_create_new_schedule ='/schedule/add_schedule/';
-            Plan_func.create(url_to_create_new_schedule, data2, ()=>{ //일정을 새로 등록한다.
-                this.mode_to_plan_change(OFF);
-                this.init_no_new();
-            });
+    //     Plan_func.delete(data1, ()=>{ //일정을 지운다.
+    //         let url_to_create_new_schedule ='/schedule/add_schedule/';
+    //         Plan_func.create(url_to_create_new_schedule, data2, ()=>{ //일정을 새로 등록한다.
+    //             this.mode_to_plan_change(OFF);
+    //             this.init_no_new();
+    //         });
+    //     });
+    // }
+    simple_plan_change(data, start_dt, end_dt){
+        let schedule_ids = [];
+        schedule_ids.push(data.schedule_info[0].schedule_id);
+        for(let i=0; i<data.schedule_info[0].lecture_schedule_data.length; i++){
+            schedule_ids.push(
+                data.schedule_info[0].lecture_schedule_data[i].schedule_id
+            );
+        }
+
+        let data_to_send = {"schedule_ids[]":schedule_ids, "start_dt":start_dt, "end_dt":end_dt};
+
+        let url = '/schedule/update_schedule/';
+        Plan_func.update(url, data_to_send, ()=>{
+            this.mode_to_plan_change(OFF);
+            this.init_no_new();
         });
     }
 
@@ -1792,7 +1811,7 @@ class Plan_func{
             url:url,
             type:'POST',
             data: data,
-            dataType : 'html',
+            dataType : 'JSON',
             async: async,
     
             beforeSend:function(xhr, settings) {
@@ -1808,7 +1827,9 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
-                callback();
+                if(callback != undefined){
+                    callback();
+                }
             },
     
             //통신 실패시 처리

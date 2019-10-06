@@ -317,6 +317,21 @@ class TimeRobot{
         return {complete: result, hour:hh, minute:mm};
     }
 
+    static to_hhmm(h, m){
+        let hh = Number(h);
+        let mm = Number(m);
+        if(hh < 10){
+            hh = '0' + hh;
+        }
+        if(mm < 10){
+            mm = '0' + mm;
+        }
+        
+        return {
+            complete: `${hh}:${mm}`, hour:hh, minute:mm
+        };
+    }
+
     // 시간을 Text 로 변환
     static to_text(hour, minute, short){
         // hour 가 시간 전체로 넘어오는 경우
