@@ -231,7 +231,7 @@ class Plan_view{
 
         let html = `
                     <div class="info_popup_title_wrap" style="height:24px;background-color:${this.data.lecture_color}">
-                        <div class="info_popup_title" style="display:inline-block;line-height:24px;font-size:20px;font-weight:bold;letter-spacing:-1px;color:${this.data.lecture_font_color}">
+                        <div class="info_popup_title" style="display:inline-block;width:100%;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;line-height:24px;font-size:20px;font-weight:bold;letter-spacing:-1px;color:${this.data.lecture_font_color}">
                             ${lecture_name}
                         </div>
                     </div>

@@ -330,9 +330,9 @@ onclick="layer_popup.close_layer_popup();"></div> -->
     <section id="section_center">
         <div id="section_up_menu">
             <div class="up_menu_tool">
-                <div style="flex:1 0 140px"><img src="/static/common/icon/icon_account.png" alt="" class="up_menu_img"><span>사용자명</span></div>
-                <div style="flex:1 0 0"><img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img"></div>
-                <div style="flex:1 0 0"><img src="/static/common/icon/icon_help_black.png" alt="" class="up_menu_img"></div>
+                <div style="flex:1 0 140px" id="up_menu_user_info" onclick="sideGoPage('mypage')"><img src={% static_url "common/loading.svg" %} alt="" class="up_menu_img"><span>불러오는 중</span></div>
+                <div style="flex:1 0 0"><img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img" onclick="sideGoPage('alarm')"></div>
+                <div style="flex:1 0 0"><img src="/static/common/icon/icon_help_black.png" alt="" class="up_menu_img" onclick="sideGoPage('helper')"></div>
             </div>
         </div>
         <div id="section_content">
@@ -731,6 +731,17 @@ onclick="layer_popup.close_layer_popup();"></div> -->
     if(tutorial_view != "1"){
         sideGoPage("helper");
     }
+
+    //PC버전 상단 툴바에 사용자 정보 채우기
+    Mypage_func.read((data)=>{
+        let user_id = data.trainer_info.member_id;
+        let user_name = data.trainer_info.member_name;
+        let user_photo = data.trainer_info.member_profile_url;
+        let target = document.getElementById('up_menu_user_info')
+        target.innerHTML = `<img src="${user_photo}" alt="" class="up_menu_img" style="border-radius:50%"><span>${user_name}</span>`;
+        console.log("asdf")
+    });
+
 
     // 구글 reCAPTCHA 보이지 않게 하기
     /*
