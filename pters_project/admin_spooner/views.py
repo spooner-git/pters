@@ -6,10 +6,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 from django.http import JsonResponse
+from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView
 
 from board.models import QATb, NoticeTb
+from configs.const import USE
 from configs.views import AccessTestMixin
 
 logger = logging.getLogger(__name__)
@@ -36,8 +38,9 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 class GetQaAllView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
+        # start_time = timezone.now()
         qa_data_dict = collections.OrderedDict()
-        qa_data = QATb.objects.filter().order_by('-reg_dt')
+        qa_data = QATb.objects.select_related('member').filter(use=USE).order_by('-reg_dt')
 
         for qa_info in qa_data:
             qa_data_dict[qa_info.qa_id] = {'qa_id': qa_info.qa_id,
@@ -51,7 +54,8 @@ class GetQaAllView(LoginRequiredMixin, AccessTestMixin, View):
                                            'qa_read': qa_info.read,
                                            'qa_mod_dt': qa_info.mod_dt,
                                            'qa_reg_dt': qa_info.reg_dt}
-
+        # end_time = timezone.now()
+        # print(str(end_time-start_time))
         return JsonResponse(qa_data_dict, json_dumps_params={'ensure_ascii': True})
 
 

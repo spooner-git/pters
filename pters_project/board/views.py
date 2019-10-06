@@ -59,10 +59,11 @@ class GetQuestionDataView(LoginRequiredMixin, TemplateView):
         context = super(GetQuestionDataView, self).get_context_data(**kwargs)
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `QA_TB`.`QA_TYPE_CD`"
         query_status = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `QA_TB`.`STATUS`"
-        question_list = QATb.objects.filter(member_id=self.request.user.id, use=USE
-                                            ).annotate(qa_type_cd_name=RawSQL(query_type_cd, []),
-                                                       status_type_cd_name=RawSQL(query_status, [])
-                                                       ).order_by('-reg_dt')
+        question_list = QATb.objects.select_related(
+            'member').filter(member_id=self.request.user.id, use=USE
+                             ).annotate(qa_type_cd_name=RawSQL(query_type_cd, []),
+                                        status_type_cd_name=RawSQL(query_status, [])
+                                        ).order_by('-reg_dt')
         for question_info in question_list:
             if question_info.read == 0 and question_info.status_type_cd == 'QA_COMPLETE':
                 question_info.read = 1
