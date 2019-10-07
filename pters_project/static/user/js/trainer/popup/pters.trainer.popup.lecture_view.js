@@ -417,7 +417,12 @@ class Lecture_view{
             Lecture_func.update_fixed_member(data); //async false 함수
 
             this.set_initial_data();
-            lecture_list_popup.init();
+            try{
+                lecture.init();
+                lecture_list_popup.init();
+            }catch(e){
+
+            }
         });
     }
 
@@ -426,7 +431,12 @@ class Lecture_view{
             activate:{text:"활성화", callback:()=>{
                     show_user_confirm(`"${this.data.name}" 수업을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
                         Lecture_func.status({"lecture_id":this.lecture_id, "state_cd":STATE_IN_PROGRESS}, ()=>{
-                            lecture_list_popup.init();
+                            try{
+                                lecture.init();
+                                lecture_list_popup.init();
+                            }catch(e){
+                
+                            }
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
                             layer_popup.close_layer_popup(); //수업 정보 팝업 닫기
@@ -443,7 +453,12 @@ class Lecture_view{
                                                             과거 일정은 완료 처리, 미래 일정은 삭제됩니다. <br>
                                                             이 수업 하나만 포함하는 수강권은 비활성화 됩니다.`, ()=>{
                         Lecture_func.status({"lecture_id":this.lecture_id, "state_cd":STATE_END_PROGRESS}, ()=>{
-                            lecture_list_popup.init();
+                            try{
+                                lecture.init();
+                                lecture_list_popup.init();
+                            }catch(e){
+                
+                            }
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
                             layer_popup.close_layer_popup(); //수업 정보 팝업 닫기
@@ -457,7 +472,12 @@ class Lecture_view{
                                                             <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
                                                             <span style="color:#fe4e65; font-size:12px;">이 수업을 포함하는 수강권에서 수업이 삭제됩니다.</span>`, ()=>{
                         Lecture_func.delete({"lecture_id":this.lecture_id}, ()=>{
-                            lecture_list_popup.init();
+                            try{
+                                lecture.init();
+                                lecture_list_popup.init();
+                            }catch(e){
+                
+                            }
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
                             layer_popup.close_layer_popup(); //수업 정보 팝업 닫기

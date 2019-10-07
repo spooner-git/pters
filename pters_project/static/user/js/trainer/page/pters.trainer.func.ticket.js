@@ -484,7 +484,7 @@ class Ticket{
     }
 
     //수강권 리스트 서버에서 불러오기
-    request_ticket_list (status, callback){
+    request_ticket_list (status, callback, async){
         //sort_order_by : ticket_type_seq, ticket_name, ticket_member_many, ticket_member_few, ticket_create_new, ticket_create_old
         let url;
         if(status=='ing'){
@@ -498,6 +498,7 @@ class Ticket{
             type:'GET',
             data: {"sort_val": this.sort_val, "sort_order_by":this.sort_order_by, "keyword":""},
             dataType : 'JSON',
+            async: async,
 
             beforeSend:function (){
                 ajax_load_image(SHOW);

@@ -350,7 +350,12 @@ class Lecture_add{
                     this.callback();
                 }
             }
-            lecture_list_popup.init();
+            try{
+                lecture.init();
+                lecture_list_popup.init();
+            }catch(e){
+
+            }
         });
         layer_popup.close_layer_popup();
         lecture_add_popup.clear();

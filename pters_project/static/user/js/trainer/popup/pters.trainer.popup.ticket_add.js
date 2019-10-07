@@ -307,7 +307,12 @@ class Ticket_add{
             if(this.callback != undefined){
                 this.callback();
             }
-            ticket_list_popup.init();
+            try{
+                ticket.init();
+                ticket_list_popup.init();
+            }catch(e){
+
+            }
         });
         layer_popup.close_layer_popup();
         ticket_add_popup.clear();

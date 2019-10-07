@@ -461,6 +461,7 @@ class Lecture {
             type:'GET',
             data: {"sort_val": this.sort_val, "sort_order_by":this.sort_order_by, "keyword":""},
             dataType : 'JSON',
+            async: async,
     
             beforeSend:function (){
                 ajax_load_image(SHOW);

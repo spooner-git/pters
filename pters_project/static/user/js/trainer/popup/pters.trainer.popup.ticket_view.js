@@ -423,7 +423,12 @@ class Ticket_view{
             }
 
             this.set_initial_data();
-            ticket_list_popup.init();
+            try{
+                ticket.init();
+                ticket_list_popup.init();
+            }catch(e){
+
+            }
         });
     }
 
@@ -432,7 +437,12 @@ class Ticket_view{
             activate:{text:"활성화", callback:()=>{
                     show_user_confirm(`"${this.data.name}" 수강권을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
                         Ticket_func.status({"ticket_id":this.ticket_id, "state_cd":STATE_IN_PROGRESS}, ()=>{
-                            ticket_list_popup.init();
+                            try{
+                                ticket.init();
+                                ticket_list_popup.init();
+                            }catch(e){
+                
+                            }
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
                             layer_popup.close_layer_popup(); //수강권 정보 팝업 닫기
@@ -448,7 +458,12 @@ class Ticket_view{
                                                             과거 일정은 완료 처리, 미래 일정은 삭제됩니다. <br>
                                                             이 수강권 하나만 가진 회원은 종료탭으로 이동됩니다.</span>`, ()=>{
                         Ticket_func.status({"ticket_id":this.ticket_id, "state_cd":STATE_END_PROGRESS}, ()=>{
-                            ticket_list_popup.init();
+                            try{
+                                ticket.init();
+                                ticket_list_popup.init();
+                            }catch(e){
+                
+                            }
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
                             layer_popup.close_layer_popup(); //수강권 정보 팝업 닫기
@@ -462,7 +477,12 @@ class Ticket_view{
                                                             <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
                                                             <span style="color:#fe4e65; font-size:12px;">수강권과 연결된 수업, 회원에게서 <br>이 수강권과 관련된 정보가 모두 삭제됩니다.</span>`, ()=>{
                         Ticket_func.delete({"ticket_id":this.ticket_id}, ()=>{
-                            ticket_list_popup.init();
+                            try{
+                                ticket.init();
+                                ticket_list_popup.init();
+                            }catch(e){
+                
+                            }
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
                             layer_popup.close_layer_popup(); //수강권 정보 팝업 닫기
