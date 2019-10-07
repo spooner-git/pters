@@ -1,4 +1,6 @@
-    {
+
+    {% autoescape off %}
+{
       "classTimeArray_start_date" :
       [{% for schedule_info in schedule_data %}"{{ schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_end_date" : 
@@ -12,7 +14,7 @@
       "classTimeArray_member_name" :
       [{% for schedule_info in schedule_data %}"{{ schedule_info.member_ticket_tb.member.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleNoteArray":
-      [{% for schedule_info in schedule_data %}"{{ schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.note | linebreaks }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleIdxArray":
       [{% for schedule_info in schedule_data %}"{{ schedule_info.idx }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "schedule_lecture_name":
@@ -48,7 +50,7 @@
       "lecture_schedule_finish_check":
       [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.finish_check }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lecture_schedule_note":
-      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.note | linebreaks }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lecture_schedule_ing_color_cd":
       [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.ing_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lecture_schedule_end_color_cd":
@@ -75,3 +77,4 @@
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
     }
+{% endautoescape %}

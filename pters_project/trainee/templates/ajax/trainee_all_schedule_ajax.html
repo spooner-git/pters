@@ -1,3 +1,5 @@
+
+    {% autoescape off %}
     {
       "messageArray" :
       [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}],
@@ -15,7 +17,7 @@
       "ptSchedulePermissionStateCdArray" :
       [{% for schedule_info in schedule_data %}"{{ schedule_info.permission_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "ptScheduleNoteArray" :
-      [{% for schedule_info in schedule_data %}"{{ schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.note | linebreaks }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "ptScheduleIdxArray" :
       [{% for schedule_info in schedule_data %}"{{ schedule_info.idx }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "ptScheduleRegDtArray" :
@@ -24,3 +26,4 @@
       [{% for schedule_info in schedule_data %}"{{ schedule_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
 
     }
+    {% endautoescape %}

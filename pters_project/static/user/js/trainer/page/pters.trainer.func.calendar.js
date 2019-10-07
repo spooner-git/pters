@@ -1657,7 +1657,7 @@ class Plan_func{
             url : url,
             type:'POST',
             data: data,
-            dataType : 'json',
+            dataType : 'JSON',
             async: async,
     
             beforeSend:function(xhr, settings) {
@@ -1772,7 +1772,7 @@ class Plan_func{
             url:'/schedule/delete_schedule/',
             type:'POST',
             data: data,
-            dataType : 'html',
+            dataType : 'JSON',
             async: async,
     
             beforeSend:function(xhr, settings) {
@@ -1788,6 +1788,12 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 if(callback != undefined){
                     callback();
                 }
@@ -1827,6 +1833,15 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
+                console.log('@@@@@@@@@@@@@');
+                console.log(data);
+                console.log('@@@@@@@@@@@@@');
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray);
+                        return false;
+                    }
+                }
                 if(callback != undefined){
                     callback();
                 }
@@ -1850,7 +1865,7 @@ class Plan_func{
             url:'/schedule/update_schedule_state_cd/',
             type:'POST',
             data: data,
-            dataType : 'html',
+            dataType : 'JSON',
             async: async,
     
             beforeSend:function(xhr, settings) {
@@ -1866,6 +1881,12 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 callback(data);
             },
     

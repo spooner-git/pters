@@ -6,7 +6,7 @@
       "name":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "note":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.note | linebreaks }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "reg_dt":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "mod_dt":
