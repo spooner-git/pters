@@ -2990,7 +2990,7 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
                                                'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
                                                'ticket_reg_count': ticket_tb.reg_count,
-                                               'ticket_type_cd': ticket_tb.ticket_type_cd,
+                                               # 'ticket_type_cd': ticket_tb.ticket_type_cd,
                                                'ticket_reg_dt': ticket_tb.reg_dt,
                                                'ticket_lecture_list': [],
                                                'ticket_lecture_state_cd_list': [],
@@ -3022,7 +3022,7 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_week_schedule_enable': ticket_info.week_schedule_enable,
                                                    'ticket_day_schedule_enable': ticket_info.day_schedule_enable,
                                                    'ticket_reg_count': ticket_info.reg_count,
-                                                   'ticket_type_cd': ticket_info.ticket_type_cd,
+                                                   # 'ticket_type_cd': ticket_info.ticket_type_cd,
                                                    'ticket_reg_dt': ticket_info.reg_dt,
                                                    'ticket_lecture_list': [],
                                                    'ticket_lecture_state_cd_list': [],
@@ -3058,10 +3058,10 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
         else:
-            if sort_info == SORT_TICKET_TYPE:
-                ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_type_cd'],
-                                     reverse=int(sort_order_by))
-            elif sort_info == SORT_TICKET_NAME:
+            # if sort_info == SORT_TICKET_TYPE:
+            #     ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_type_cd'],
+            #                          reverse=int(sort_order_by))
+            if sort_info == SORT_TICKET_NAME:
                 ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_name'],
                                      reverse=int(sort_order_by))
             elif sort_info == SORT_TICKET_MEMBER_COUNT:
@@ -3176,10 +3176,10 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
         else:
-            if sort_info == SORT_TICKET_TYPE:
-                ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_type_cd'],
-                                     reverse=int(sort_order_by))
-            elif sort_info == SORT_TICKET_NAME:
+            # if sort_info == SORT_TICKET_TYPE:
+            #     ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_type_cd'],
+            #                          reverse=int(sort_order_by))
+            if sort_info == SORT_TICKET_NAME:
                 ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_name'],
                                      reverse=int(sort_order_by))
             elif sort_info == SORT_TICKET_MEMBER_COUNT:
