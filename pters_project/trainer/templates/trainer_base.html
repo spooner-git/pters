@@ -673,6 +673,15 @@ onclick="layer_popup.close_layer_popup();"></div> -->
         }catch(e){
 
         }
+        try{
+            //메뉴 이동시 팝업이 열려있으면 모두 닫고 이동
+            $('#root_content').scrollTop(0);
+            if(layer_popup.stack.length > 0){
+                layer_popup.all_close_layer_popup()
+            }
+        }catch(e){
+            console.log(e);
+        }
 
         switch(page){
             case 'home':
@@ -759,15 +768,7 @@ onclick="layer_popup.close_layer_popup();"></div> -->
                                                     service_helper_popup = new Service_helper('.popup_service_helper')});
             break;
         }
-        try{
-            //메뉴 이동시 팝업이 열려있으면 모두 닫고 이동
-            $('#root_content').scrollTop(0);
-            if(layer_popup.stack.length > 0){
-                layer_popup.all_close_layer_popup()
-            }
-        }catch(e){
-            console.log(e);
-        }
+        
     }
 
     //페이지에 들어오면 홈화면을 띄우기
