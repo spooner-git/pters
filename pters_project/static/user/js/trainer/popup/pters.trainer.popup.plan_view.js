@@ -248,7 +248,8 @@ class Plan_view{
         let style = null;
         let html_member_select = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             //회원 선택 팝업 열기
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'data':null}, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, {'data':null}, ()=>{
                 let appendix =  {lecture_id:this.data.lecture_id, title:"회원", disable_zero_avail_count:ON};
                 member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num, appendix, (set_data)=>{
                     this.member = set_data;
@@ -315,7 +316,8 @@ class Plan_view{
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DATE_SELECTOR, 100*315/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DATE_SELECTOR, 100*320/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
                 let year = this.data.date == null ? this.dates.current_year : this.data.date.year; 
@@ -342,7 +344,8 @@ class Plan_view{
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TIME_SELECTOR, 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TIME_SELECTOR, 100*255/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
                 //dataCenter의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
                 let zone = this.data.start_time == null ? this.times.current_zone : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).zone;
@@ -378,7 +381,8 @@ class Plan_view{
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TIME_SELECTOR, 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TIME_SELECTOR, 100*255/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
                 let start_zone = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).zone;
                 let start_hour = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
@@ -397,7 +401,7 @@ class Plan_view{
 
                 let range_start = this.work_time.start_hour;
                 let range_end = this.work_time.end_hour;
-
+                
                 time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시각',
                                                                                                 data:{zone:zone, hour:hour, minute:minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
                                                                                                 range:{start:range_start, end:range_end},
@@ -491,7 +495,8 @@ class Plan_view{
                 });
             },
             ()=>{
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ATTEND, 100, POPUP_FROM_RIGHT, null, ()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ATTEND, 100, popup_style, null, ()=>{
                     member_attend = new Member_attend('.popup_member_attend', this.schedule_id, (set_data)=>{
                         //출석체크 팝업에서 완료버튼을 눌렀을때 할 행동
                         if(this.data.schedule_type == 1){

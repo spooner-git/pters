@@ -237,7 +237,8 @@ class Plan_add{
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, {'member_id':null}, ()=>{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1, {'title':'수업'}, (set_data)=>{
                     //수업을 추가
                     this.lecture = set_data;
@@ -280,7 +281,8 @@ class Plan_add{
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             if(this.data.lecture_id.length != 0){
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, {'member_id':null}, ()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, {'member_id':null}, ()=>{
                     let appendix = {lecture_id:this.data.lecture_id[0], title:"회원", disable_zero_avail_count:ON};
                     member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num[0], appendix, (set_data)=>{
                         this.member = set_data;
@@ -304,7 +306,8 @@ class Plan_add{
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*315/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*320/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
                 let year = this.data.date == null ? this.dates.current_year : this.data.date.year; 
@@ -330,8 +333,8 @@ class Plan_add{
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ //data : 직전 셋팅값
             //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
-
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*255/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
                 let zone = this.data.start_time == null ? this.times.current_zone : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).zone;
                 let hour = this.data.start_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
@@ -375,7 +378,8 @@ class Plan_add{
                 show_error_message('시작 시각을 먼저 선택해주세요');
                 return false;
             }
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*255/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
                 let start_zone = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).zone;
                 let start_hour = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
@@ -429,7 +433,8 @@ class Plan_add{
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_REPEAT_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_REPEAT_SELECT, 100, popup_style, null, ()=>{
                 repeat_select = new RepeatSelector('#wrapper_box_repeat_select', this, this.data.date, (set_data)=>{
                     this.repeat = set_data;
                     this.render_content();

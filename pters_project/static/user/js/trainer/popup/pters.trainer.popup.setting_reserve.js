@@ -135,7 +135,8 @@ class Setting_reserve{
             let multiple_select = 1;
             let data = this.data_for_selector.time_for_private_reserve;
             let selected_data = this.data.time_for_private_reserve;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
                     this.data.time_for_private_reserve = set_data;
                     this.render_content();
@@ -159,7 +160,8 @@ class Setting_reserve{
             let multiple_select = 1;
             let data = this.data_for_selector.start_time_for_private_reserve;
             let selected_data = this.data.start_time_for_private_reserve;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
                     this.data.start_time_for_private_reserve = set_data;
                     this.render_content();
@@ -183,7 +185,8 @@ class Setting_reserve{
             let multiple_select = 1;
             let data = this.data_for_selector.available_reserve_date;
             let selected_data = this.data.available_reserve_date;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
                     this.data.available_reserve_date = set_data;
                     this.render_content();
@@ -207,7 +210,8 @@ class Setting_reserve{
             let multiple_select = 1;
             let data = this.data_for_selector.available_reserve_time;
             let selected_data = this.data.available_reserve_time;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
                     this.data.available_reserve_time = set_data;
                     this.render_content();
@@ -231,7 +235,8 @@ class Setting_reserve{
             let multiple_select = 1;
             let data = this.data_for_selector.available_cancel_time;
             let selected_data = this.data.available_cancel_time;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
                     this.data.available_cancel_time = set_data;
                     this.render_content();

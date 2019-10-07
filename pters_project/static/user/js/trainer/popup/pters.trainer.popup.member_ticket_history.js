@@ -64,7 +64,8 @@ class Member_ticket_history{
             let date_diff = DateRobot.diff_date(data.member_ticket_end_date, data.member_ticket_start_date);
             let date = DateRobot.to_text(data.member_ticket_start_date, '', '', SHORT) + ' - ' + DateRobot.to_text(data.member_ticket_end_date, '', '', SHORT) + ' ('+date_diff+'일)';
             let onclick = ()=>{
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, POPUP_FROM_RIGHT, null, ()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, popup_style, null, ()=>{
                     let data = {"member_name":this.member_name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
                                 "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":reg_count, "price":ticket_price, "status":status_code,
                                 "refund_date":refund_date, "refund_price":refund_price};
@@ -110,7 +111,8 @@ class Member_ticket_history{
             data = {value:["complete", "refund"], text:["강제 종료", "환불"]};
         }
         let selected_data = {value:[], text:[]};
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
             custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
                 layer_popup.close_layer_popup();
                 Member_func.ticket_status({"member_ticket_id":ticket_id, "state_cd":set_data.value[0]}, ()=>{

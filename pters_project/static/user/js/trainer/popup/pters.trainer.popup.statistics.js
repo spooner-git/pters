@@ -558,13 +558,15 @@ class Statistics{
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
         option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
     }
 
     event_detail(month_date){
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS_DETAIL, 100, POPUP_FROM_RIGHT, null, ()=>{
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS_DETAIL, 100, popup_style, null, ()=>{
             statistics_detail_popup = new Statistics_detail('.popup_statistics_detail', month_date, 'statistics_detail_popup');});
     }
 
@@ -575,7 +577,8 @@ class Statistics{
     }
 
     upper_right_menu(){
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_statistics_ADD, 100, POPUP_FROM_RIGHT, null, ()=>{
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_statistics_ADD, 100, popup_style, null, ()=>{
             statistics_add_popup = new statistics_add('.popup_statistics_add');
         });
     }

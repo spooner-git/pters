@@ -234,7 +234,8 @@ class Ticket_view{
         let icon_r_visible = SHOW;
         let icon_r_text = CComponent.text_button ('ticket_lecture_list_view', "수업 목록", null, ()=>{
             //티켓에 포함될 수업 선택
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, null, ()=>{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, {'title':'수업'}, (set_data)=>{
                     this.lecture = set_data; //타겟에 선택된 데이터를 set
                     this.send_data();
@@ -422,7 +423,12 @@ class Ticket_view{
             }
 
             this.set_initial_data();
-            ticket_list_popup.init();
+            try{
+                ticket.init();
+                ticket_list_popup.init();
+            }catch(e){
+
+            }
         });
     }
 
@@ -431,7 +437,12 @@ class Ticket_view{
             activate:{text:"활성화", callback:()=>{
                     show_user_confirm(`"${this.data.name}" 수강권을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
                         Ticket_func.status({"ticket_id":this.ticket_id, "state_cd":STATE_IN_PROGRESS}, ()=>{
-                            ticket_list_popup.init();
+                            try{
+                                ticket.init();
+                                ticket_list_popup.init();
+                            }catch(e){
+                
+                            }
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
                             layer_popup.close_layer_popup(); //수강권 정보 팝업 닫기
@@ -447,7 +458,12 @@ class Ticket_view{
                                                             과거 일정은 완료 처리, 미래 일정은 삭제됩니다. <br>
                                                             이 수강권 하나만 가진 회원은 종료탭으로 이동됩니다.</span>`, ()=>{
                         Ticket_func.status({"ticket_id":this.ticket_id, "state_cd":STATE_END_PROGRESS}, ()=>{
-                            ticket_list_popup.init();
+                            try{
+                                ticket.init();
+                                ticket_list_popup.init();
+                            }catch(e){
+                
+                            }
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
                             layer_popup.close_layer_popup(); //수강권 정보 팝업 닫기
@@ -461,7 +477,12 @@ class Ticket_view{
                                                             <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
                                                             <span style="color:#fe4e65; font-size:12px;">수강권과 연결된 수업, 회원에게서 <br>이 수강권과 관련된 정보가 모두 삭제됩니다.</span>`, ()=>{
                         Ticket_func.delete({"ticket_id":this.ticket_id}, ()=>{
-                            ticket_list_popup.init();
+                            try{
+                                ticket.init();
+                                ticket_list_popup.init();
+                            }catch(e){
+                
+                            }
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
                             layer_popup.close_layer_popup(); //수강권 정보 팝업 닫기
@@ -480,7 +501,8 @@ class Ticket_view{
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
     }
@@ -629,7 +651,8 @@ class Ticket_simple_view{
             show_user_confirm(`작업중이던 항목을 모두 닫고 수강권 메뉴로 이동합니다.`, ()=>{
                 layer_popup.all_close_layer_popup();
                 sideGoPage("ticket");
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':this.ticket_id} ,()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, popup_style, {'ticket_id':this.ticket_id} ,()=>{
                     ticket_view_popup = new Ticket_view('.popup_ticket_view', this.ticket_id, 'ticket_view_popup');
                 });
             });
@@ -668,7 +691,8 @@ class Ticket_simple_view{
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
-            // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            // let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, null, ()=>{
             //     lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999);
             // });
         });

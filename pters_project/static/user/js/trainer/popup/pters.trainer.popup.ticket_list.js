@@ -126,8 +126,8 @@ class Ticket_list {
                 }
                 ticket_lectures_included_name_html.push(html);
             }
-
-            let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'ticket_id':${ticket_id}}, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${popup_style}, {'ticket_id':${ticket_id}}, ()=>{
                 ticket_view_popup = new Ticket_view('.popup_ticket_view', ${ticket_id}, 'ticket_view_popup');});`;
             let html = `<article class="ticket_wrapper" data-text="${ticket_name}" data-ticketid="${ticket_id}" onclick="${onclick}" style="opacity:${this.list_status_type == "ing" ? "1" : '0.6'}">
                             <div class="ticket_data_u">
@@ -169,6 +169,7 @@ class Ticket_list {
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*user_options_array.length;
+        let root_content_height = $root_content.height();
 
         let html = `<div class="ticket_upper_box">
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
@@ -183,7 +184,7 @@ class Ticket_list {
                             <div onclick="${this.instance}.switch_type('end');" style="width:48px;" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화</div>
                         </div>
                         <div class="list_sort_select_wrap" 
-                        onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_OPTION_SELECTOR}', 100*(${layer_popup_height})/${windowHeight}, ${POPUP_FROM_BOTTOM}, null, ()=>{
+                        onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_OPTION_SELECTOR}', 100*(${layer_popup_height})/${root_content_height}, ${POPUP_FROM_BOTTOM}, null, ()=>{
                             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, ${user_option}
                             );
                         });">

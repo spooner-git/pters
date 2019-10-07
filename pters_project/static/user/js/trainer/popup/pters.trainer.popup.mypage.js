@@ -186,7 +186,8 @@ class Mypage{
         let icon_r_text = "";
         let style = null;
         let onclick = ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE_MODIFY, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE_MODIFY, 100, popup_style, null, ()=>{
                 mypage_modify_popup = new Mypage_modify('.popup_mypage_modify', 'mypage_modify_popup');});
         };
 
@@ -202,7 +203,8 @@ class Mypage{
         let icon_r_text = "";
         let style = null;
         let onclick = ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PASSWORD_MODIFY, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PASSWORD_MODIFY, 100, popup_style, null, ()=>{
                 password_modify_popup = new Password_modify('.popup_password_modify', 'password_modify_popup');});
         };
 
@@ -228,7 +230,8 @@ class Mypage{
     event_edit_photo(){
         let user_option = {
             change:{text:"프로필 사진 변경", callback:()=>{layer_popup.close_layer_popup();
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE_PHOTO_UPDATE, 100, POPUP_FROM_RIGHT, null, ()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE_PHOTO_UPDATE, 100, popup_style, null, ()=>{
                     mypage_photo_update_popup = new Mypage_photo_update('.popup_mypage_photo_update', 'mypage_photo_update_popup'); });
             }},
             delete:{text:"프로필 사진 삭제", callback:()=>{
@@ -281,7 +284,8 @@ class Mypage{
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
     }
