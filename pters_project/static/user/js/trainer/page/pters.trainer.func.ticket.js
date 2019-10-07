@@ -290,7 +290,7 @@ class Ticket{
                         <div id="ticket_display_panel">
                             ${this.dom_assembly_toolbox()}
                         </div>
-                        <div id="ticket_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px;padding:0 16px;box-sizing:border-box;">
+                        <div id="ticket_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:calc(100% - 68px);padding:0 16px;box-sizing:border-box;">
                             ${this.dom_assembly_content()}
                         </div>
                     </div>`;

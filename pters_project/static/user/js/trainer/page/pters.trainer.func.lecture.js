@@ -273,7 +273,7 @@ class Lecture {
                         <div id="lecture_display_panel">
                             ${this.dom_assembly_toolbox()}
                         </div>
-                        <div id="lecture_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:${windowHeight}px;padding-top:12px;">
+                        <div id="lecture_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:calc(100% - 68px);padding-top:12px;">
                             ${this.dom_assembly_content()}
                         </div>
                     </div>`;
