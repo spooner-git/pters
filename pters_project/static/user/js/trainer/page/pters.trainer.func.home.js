@@ -78,7 +78,7 @@ class Home {
                         
                         let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom;
                         document.querySelector('#home_content_wrap').innerHTML = html;
-
+                        // $('#root_content').scrollTop(0);
                     });
                 });
             });

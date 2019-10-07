@@ -736,6 +736,11 @@ onclick="layer_popup.close_layer_popup();"></div> -->
                                                     service_helper_popup = new Service_helper('.popup_service_helper')});
             break;
         }
+        try{
+            $('#root_content').scrollTop(0);
+        }catch(e){
+            console.log(e);
+        }
     }
 
     //페이지에 들어오면 홈화면을 띄우기
