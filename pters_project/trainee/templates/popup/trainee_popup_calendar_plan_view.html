@@ -44,8 +44,8 @@
                             <div class="obj_table_cell_x3">{{ schedule_info.start_dt | time:'H:i' }} ~ {{ schedule_info.end_dt | time:'H:i' }}</div>
                         </div>
                     </div>
-                    {% if next_schedule_info.note %}
-                    <div class="wrapper_teacher_memo_text obj_font_size_12_weight_normal"><span>"{{ schedule_info.note }}"</span></div>
+                    {% if schedule_info.note %}
+                    <div class="wrapper_teacher_memo_text obj_font_size_12_weight_normal"><span>"{{ schedule_info.note | linebreaks }}"</span></div>
                     {% endif %}
                 </div>
                 <div class="obj_table_raw wrapper_cancel_notice">

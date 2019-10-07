@@ -169,6 +169,7 @@
     }
     .wrapper_box_next_plan .wrapper_teacher_memo_text{
         text-align: center;
+        height: auto;
     }
 
     .wrapper_box_next_plan .wrapper_plan_info{

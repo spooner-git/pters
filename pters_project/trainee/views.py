@@ -1088,6 +1088,8 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                         log_info.log_detail = before_day + '~' + after_day
                     else:
                         log_info.log_detail = before_day + '~' + after_day.split(' ')[1]
+                        if len(log_detail_split) > 2:
+                            log_info.log_detail = before_day + '~' + after_day + '~' + log_detail_split[2].split(' ')[1]
 
                 day = int(log_info.time_ago.days)
                 hour = int(log_info.time_ago.seconds/3600)

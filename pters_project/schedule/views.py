@@ -11,6 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.files.base import ContentFile
 from django.db import IntegrityError, InternalError, transaction
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 from django.views import View
@@ -204,9 +205,12 @@ def add_schedule_logic(request):
             context['lecture_schedule_info'] = info_message
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
+        # messages.error(request, error)
+        context['messageArray'] = error
     # end_time = timezone.now()
-    return render(request, 'ajax/schedule_error_info.html', context)
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/schedule_error_info.html', context)
 
 
 # 일정 취소
@@ -225,7 +229,7 @@ def delete_schedule_logic(request):
     start_dt = None
     end_dt = None
     push_schedule_info = None
-
+    context = {}
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
 
@@ -328,9 +332,11 @@ def delete_schedule_logic(request):
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
+        # messages.error(request, error)
+        context['messageArray'] = error
 
-    return render(request, 'ajax/schedule_error_info.html')
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/schedule_error_info.html')
 
 
 def update_schedule_logic(request):
@@ -340,9 +346,15 @@ def update_schedule_logic(request):
     schedule_start_datetime = request.POST.get('start_dt', '')
     schedule_end_datetime = request.POST.get('end_dt', '')
     class_id = request.session.get('class_id', '')
+    class_type_name = request.session.get('class_type_name', '')
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
     error = None
     start_dt = schedule_start_datetime
     end_dt = schedule_end_datetime
+    log_detail_info = ''
+    lecture_name = '개인 수업'
+    context = {}
 
     if end_dt is None or end_dt == '':
         error = '종료 시각을 선택해주세요.'
@@ -376,9 +388,10 @@ def update_schedule_logic(request):
                     error = '날짜 오류가 발생했습니다.[2]'
 
             if error is None:
-                if schedule_info.lecture_tb is None or schedule_info.lecture_tb == '':
-                    lecture_name = '개인 수업'
-                else:
+                log_detail_info = str(schedule_info.start_dt)\
+                                  + '/' + str(schedule_info.end_dt)\
+                                  + '->' + str(start_dt) + '/' + str(end_dt)
+                if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
                     lecture_name = schedule_info.lecture_tb.name
 
                 if schedule_info.member_ticket_tb is None or schedule_info.member_ticket_tb == '':
@@ -387,9 +400,7 @@ def update_schedule_logic(request):
                                      class_tb_id=class_id,
                                      log_info=lecture_name + ' 수업',
                                      log_how='예약 변경',
-                                     log_detail=str(schedule_info.start_dt)
-                                                + '/' + str(schedule_info.end_dt)
-                                                + '->' + str(start_dt) + '/' + str(end_dt), use=USE)
+                                     log_detail=log_detail_info, use=USE)
                     log_data.save()
                 else:
                     log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
@@ -399,19 +410,29 @@ def update_schedule_logic(request):
                                      member_ticket_tb_id=schedule_info.member_ticket_tb_id,
                                      log_info=lecture_name + ' 수업',
                                      log_how='예약 변경',
-                                     log_detail=str(schedule_info.start_dt)
-                                                + '/' + str(schedule_info.end_dt)
-                                                + '->' + str(start_dt) + '/' + str(end_dt), use=USE)
+                                     log_detail=log_detail_info, use=USE)
                     log_data.save()
                 schedule_info.start_dt = start_dt
                 schedule_info.end_dt = end_dt
                 schedule_info.save()
+            if error is None:
+
+                if schedule_info.member_ticket_tb is not None and schedule_info.member_ticket_tb != '':
+                    if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
+                        log_detail_info = log_detail_info.replace('/', '~')
+                        func_send_push_trainer(schedule_info.member_ticket_tb_id,
+                                               class_type_name + ' - 수업 알림',
+                                               request.user.first_name + '님이 '
+                                               + log_detail_info
+                                               + ' [' + lecture_name + '] 수업을 수정했습니다')
 
     if error is not None:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
+        # messages.error(request, error)
+        context['messageArray'] = error
 
-    return render(request, 'ajax/schedule_error_info.html')
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/schedule_error_info.html')
 
 
 # 일정 완료
@@ -535,8 +556,10 @@ def update_schedule_state_cd_logic(request):
 
     if error is not None:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
-    return render(request, 'ajax/schedule_error_info.html', context)
+        # messages.error(request, error)
+        context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/schedule_error_info.html', context)
 
 
 def upload_sign_image_logic(request):
@@ -577,6 +600,8 @@ def update_memo_schedule_logic(request):
     note = request.POST.get('add_memo', '')
     error = None
     schedule_info = None
+    context = {}
+
     if schedule_id == '':
         error = '일정을 선택하세요.'
 
@@ -596,8 +621,10 @@ def update_memo_schedule_logic(request):
 
     if error is not None:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
-    return render(request, 'ajax/schedule_error_info.html', None)
+        # messages.error(request, error)
+        context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/schedule_error_info.html', None)
 
 
 # 반복 일정 추가
@@ -816,9 +843,11 @@ def add_repeat_schedule_logic(request):
         context['repeat_success_date_data'] = repeat_success_date_data
     else:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
+        # messages.error(request, error)
 
-    return render(request, 'ajax/repeat_schedule_result_ajax.html', context)
+        context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/repeat_schedule_result_ajax.html', context)
 
 
 def add_repeat_schedule_confirm(request):
@@ -838,6 +867,7 @@ def add_repeat_schedule_confirm(request):
     information = None
     member_ticket_id = ''
     lecture_info = None
+    context = {}
 
     if repeat_schedule_id == '':
         error = '확인할 반복 일정을 선택해주세요.'
@@ -1019,8 +1049,10 @@ def add_repeat_schedule_confirm(request):
             messages.info(request, information)
     else:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
-    return render(request, 'ajax/schedule_error_info.html')
+        # messages.error(request, error)
+        context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/schedule_error_info.html')
 
 
 def delete_repeat_schedule_logic(request):
@@ -1154,8 +1186,9 @@ def delete_repeat_schedule_logic(request):
 
     else:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
-    return render(request, 'ajax/schedule_error_info.html', context)
+        # messages.error(request, error)
+        context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
 
 class CheckScheduleUpdateViewAjax(LoginRequiredMixin, View):
@@ -1432,8 +1465,10 @@ def finish_lecture_schedule_logic(request):
             context['push_message'] = push_message
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-    return render(request, 'ajax/schedule_error_info.html', context)
+        # messages.error(request, error)
+        context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/schedule_error_info.html', context)
 
 
 # 일정 추가
@@ -1572,8 +1607,10 @@ def add_member_lecture_schedule_logic(request):
 
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-    return render(request, 'ajax/schedule_error_info.html', context)
+        # messages.error(request, error)
+        context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/schedule_error_info.html', context)
 
 
 # 일정 추가
@@ -1711,7 +1748,9 @@ def add_other_member_lecture_schedule_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return render(request, 'ajax/schedule_error_info.html', context)
+        context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/schedule_error_info.html', context)
 
 
 # 그룹 반복 일정 취소
@@ -1874,8 +1913,10 @@ def delete_lecture_repeat_schedule_logic(request):
 
     else:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+str(error))
-        messages.error(request, error)
-    return render(request, 'ajax/schedule_error_info.html', context)
+        # messages.error(request, error)
+        context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/schedule_error_info.html', context)
 
 
 def send_push_to_trainer_logic(request):
@@ -1884,6 +1925,7 @@ def send_push_to_trainer_logic(request):
     message = request.POST.get('message', '')
 
     error = None
+    context = {}
 
     if class_id == '':
         error = 'push를 전송하는중 오류가 발생했습니다.'
@@ -1893,14 +1935,17 @@ def send_push_to_trainer_logic(request):
 
     if error is not None:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+str(error))
-        messages.error(request, error)
-    return render(request, 'ajax/schedule_error_info.html')
+        # messages.error(request, error)
+        context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/schedule_error_info.html')
 
 
 def send_push_to_trainee_logic(request):
     member_ticket_id = request.POST.get('member_ticket_id', '')
     title = request.POST.get('title', '')
     message = request.POST.get('message', '')
+    context = {}
 
     error = None
     if member_ticket_id == '':
@@ -1911,5 +1956,7 @@ def send_push_to_trainee_logic(request):
 
     if error is not None:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+str(error))
-        messages.error(request, error)
-    return render(request, 'ajax/schedule_error_info.html')
+        # messages.error(request, error)
+        context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/schedule_error_info.html')
