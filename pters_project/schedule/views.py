@@ -336,9 +336,9 @@ def delete_schedule_logic(request):
 def update_schedule_logic(request):
 
     # 폼 검사 시작
-    schedule_ids = request.GET.getlist('schedule_ids[]', '')
-    schedule_start_datetime = request.GET.get('start_dt', '')
-    schedule_end_datetime = request.GET.get('end_dt', '')
+    schedule_ids = request.POST.getlist('schedule_ids[]', '')
+    schedule_start_datetime = request.POST.get('start_dt', '')
+    schedule_end_datetime = request.POST.get('end_dt', '')
     class_id = request.session.get('class_id', '')
     error = None
     start_dt = schedule_start_datetime

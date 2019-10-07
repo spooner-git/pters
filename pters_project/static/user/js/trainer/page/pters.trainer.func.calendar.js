@@ -1244,11 +1244,11 @@ class Calendar {
         if(this.long_touch == ON){
             // let end_dt = `${year}-${month}-${date} ${TimeRobot.add_time(hour, minute, 0, period_min).hour}:${TimeRobot.add_time(hour, minute, 0, period_min).minute}`;
             Plan_func.read_plan(this.long_touch_schedule_id, (received)=>{
-                let start_dt = `${year}-${month}-${date} ${TimeRobot.to_hhmm(hour, minute)}`;
+                let start_dt = `${year}-${month}-${date} ${TimeRobot.to_hhmm(hour, minute).complete}`;
                 let diff = TimeRobot.diff(received.schedule_info[0].start_time, received.schedule_info[0].end_time);
                 let diff_hour = TimeRobot.add_time(hour, minute, diff.hour, diff.min).hour;
                 let diff_minute = TimeRobot.add_time(hour, minute, diff.hour, diff.min).minute;
-                let end_dt = `${year}-${month}-${date} ${TimeRobot.to_hhmm(diff_hour, diff_minute)}`;
+                let end_dt = `${year}-${month}-${date} ${TimeRobot.to_hhmm(diff_hour, diff_minute).complete}`;
                 this.simple_plan_change(received, start_dt, end_dt);
             });
 
