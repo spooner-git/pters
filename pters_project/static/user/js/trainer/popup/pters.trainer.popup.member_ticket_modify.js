@@ -163,7 +163,8 @@ class Member_ticket_modify{
                 },
                 refund:{text:"환불", callback:()=>{
                     layer_popup.close_layer_popup();
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_REFUND, 100, POPUP_FROM_RIGHT, null, ()=>{
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_REFUND, 100, popup_style, null, ()=>{
                         let external_data = {"member_ticket_id":this.data.member_ticket_id,"state_cd":"RF", "member_ticket_name":this.data.member_ticket_name, "member_ticket_price":this.data.price, "member_ticket_start_date":this.data.start_date};
                         member_ticket_refund = new Member_ticket_refund('.popup_member_ticket_refund', external_data, 'member_ticket_refund');
                     });}
@@ -196,7 +197,8 @@ class Member_ticket_modify{
             let options_padding_top_bottom = 16;
             let button_height = 8 + 8 + 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                 option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
             });
         });
@@ -211,7 +213,8 @@ class Member_ticket_modify{
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*315/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*320/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
                 let year = this.data.start_date.split('-')[0]; 
                 let month = this.data.start_date.split('-')[1];
@@ -234,7 +237,8 @@ class Member_ticket_modify{
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*315/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*320/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
                 let year = Number(this.data.end_date.split('-')[0]); 
                 let month = Number(this.data.end_date.split('-')[1]);
@@ -261,7 +265,8 @@ class Member_ticket_modify{
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*315/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*320/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
                 let year = this.data.refund_date.split('-')[0]; 
                 let month = this.data.refund_date.split('-')[1];

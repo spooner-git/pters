@@ -93,7 +93,8 @@ class Setting_attendmode{
             let multiple_select = 1;
             let data = this.data_for_selector.display_session_start;
             let selected_data = this.data.display_session_start;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
                     this.data.display_session_start = set_data;
                     this.render_content();
@@ -117,7 +118,8 @@ class Setting_attendmode{
             let multiple_select = 1;
             let data = this.data_for_selector.display_session_end;
             let selected_data = this.data.display_session_end;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
                     this.data.display_session_end = set_data;
                     this.render_content();
@@ -139,7 +141,8 @@ class Setting_attendmode{
             let title = "비밀번호 설정";
             let install_target = "#wrapper_box_password_4d_input";
             let original_data = "0000";
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PASSWORD_4D_INPUT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PASSWORD_4D_INPUT, 100, popup_style, null, ()=>{
                 password_4d_input = new PasswordFourDigitInput(title, install_target, original_data, (set_data)=>{
                     this.data.password = set_data.password;
                     this.render_content();

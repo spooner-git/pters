@@ -136,7 +136,7 @@ class TwoTimeSelector{
             }
         })
 
-        self.hour_scroll.on('beforeScrollStart', function (){
+        self.hour_scroll.on('scrollStart', function (){
             self.user_scroll_hour = true;
         })
 
@@ -168,7 +168,7 @@ class TwoTimeSelector{
             }
         })
 
-        self.hour2_scroll.on('beforeScrollStart', function (){
+        self.hour2_scroll.on('scrollStart', function (){
             self.user_scroll_minute = true;
         })
     }
@@ -442,7 +442,7 @@ class DateSelector{
             }
         });
 
-        self.year_scroll.on('beforeScrollStart', function (){
+        self.year_scroll.on('scrollStart', function (){
             self.user_scroll_year = true;
         });
 
@@ -470,7 +470,7 @@ class DateSelector{
             }
         });
 
-        self.month_scroll.on('beforeScrollStart', function (){
+        self.month_scroll.on('scrollStart', function (){
             self.user_scroll_month = true;
         });
 
@@ -497,7 +497,7 @@ class DateSelector{
             }
         });
 
-        self.date_scroll.on('beforeScrollStart', function (){
+        self.date_scroll.on('scrollStart', function (){
             self.user_scroll_date = true;
         });
     }
@@ -851,7 +851,7 @@ class TwoDateSelector{
             }
         });
 
-        self.year_scroll.on('beforeScrollStart', function (){
+        self.year_scroll.on('scrollStart', function (){
             self.user_scroll_year = true;
         });
 
@@ -879,7 +879,7 @@ class TwoDateSelector{
             }
         });
 
-        self.month_scroll.on('beforeScrollStart', function (){
+        self.month_scroll.on('scrollStart', function (){
             self.user_scroll_month = true;
         });
 
@@ -905,7 +905,7 @@ class TwoDateSelector{
             }
         });
 
-        self.year_scroll2.on('beforeScrollStart', function (){
+        self.year_scroll2.on('scrollStart', function (){
             self.user_scroll_year2 = true;
         });
 
@@ -933,7 +933,7 @@ class TwoDateSelector{
             }
         });
 
-        self.month_scroll2.on('beforeScrollStart', function (){
+        self.month_scroll2.on('scrollStart', function (){
             self.user_scroll_month2 = true;
         });
         
@@ -1246,7 +1246,7 @@ class TimeSelector{
             }
         });
 
-        self.zone_scroll.on('beforeScrollStart', function (){
+        self.zone_scroll.on('scrollStart', function (){
             self.user_scroll_year = true;
         });
 
@@ -1279,7 +1279,7 @@ class TimeSelector{
             }
         });
 
-        self.hour_scroll.on('beforeScrollStart', function (){
+        self.hour_scroll.on('scrollStart', function (){
             self.user_scroll_month = true;
         });
 
@@ -1311,7 +1311,7 @@ class TimeSelector{
             }
         });
 
-        self.minute_scroll.on('beforeScrollStart', function (){
+        self.minute_scroll.on('scrollStart', function (){
             self.user_scroll_date = true;
         });
     }
@@ -1570,12 +1570,13 @@ class TimeSelector2{
         this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
-            bounce: false
+            bounce: false,
         });
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
-            bounce: false
+            bounce: false,
+            
         });
         this.set_scroll_snap();
     }
@@ -1583,8 +1584,8 @@ class TimeSelector2{
     set_scroll_snap (){
         let self = this;
         self.hour_scroll.on('scrollEnd', function (){
-            if(self.user_scroll_month == true){
-                self.user_scroll_month = false;
+            if(self.user_scroll_hour == true){
+                self.user_scroll_hour = false;
                 let posY = this.y;
                 let min = posY-posY%40;
                 let max = min - 40;
@@ -1611,13 +1612,13 @@ class TimeSelector2{
             }
         });
 
-        self.hour_scroll.on('beforeScrollStart', function (){
-            self.user_scroll_month = true;
+        self.hour_scroll.on('scrollStart', function (){
+            self.user_scroll_hour = true;
         });
 
         self.minute_scroll.on('scrollEnd', function (){
-            if(self.user_scroll_date == true){
-                self.user_scroll_date = false;
+            if(self.user_scroll_minute == true){
+                self.user_scroll_minute = false;
                 let posY = this.y;
                 let min = posY-posY%40;
                 let max = min - 40;
@@ -1644,8 +1645,8 @@ class TimeSelector2{
             }
         });
 
-        self.minute_scroll.on('beforeScrollStart', function (){
-            self.user_scroll_date = true;
+        self.minute_scroll.on('scrollStart', function (){
+            self.user_scroll_minute = true;
         });
     }
 
@@ -1876,7 +1877,7 @@ class SpinSelector{
             }
         });
 
-        self.page_scroll.on('beforeScrollStart', function (){
+        self.page_scroll.on('scrollStart', function (){
             self.user_scroll_page = true;
         });
     }
@@ -2818,7 +2819,8 @@ class RepeatSelector{
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_day_select', 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_day_select', 100, popup_style, null, ()=>{
                 day_select = new DaySelector('#wrapper_box_day_select', this, 7, (set_data)=>{
                     this.day = set_data.day;
                 });
@@ -2835,7 +2837,8 @@ class RepeatSelector{
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*315/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*320/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                 let year = this.target_instance.date == null ? this.dates.current_year : this.target_instance.date.year; 
                 let month = this.target_instance.date == null ? this.dates.current_month : this.target_instance.date.month;
                 let date = this.target_instance.date == null ? this.dates.current_date : this.target_instance.date.date;

@@ -121,7 +121,8 @@ class Member_ticket_refund{
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*315/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*320/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
                 let year = this.data.refund_date == null ? this.dates.current_year : this.data.refund_date.split('-')[0]; 
                 let month = this.data.refund_date == null ? this.dates.current_month : this.data.refund_date.split('-')[1]; 

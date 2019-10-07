@@ -119,7 +119,8 @@ class Pters_pass_main{
         let icon_r_text = "";
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP, 100, popup_style, null, ()=>{
                 pters_pass_shop_popup = new Pters_pass_shop('.popup_pters_pass_shop');});
         });
         let html = row;
@@ -134,7 +135,8 @@ class Pters_pass_main{
         let icon_r_text = "";
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_PAY_INFO, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_PAY_INFO, 100, popup_style, null, ()=>{
                 pters_pass_pay_info_popup = new Pters_pass_pay_info('.popup_pters_pass_pay_info');});
         });
         let html = row;
@@ -149,7 +151,8 @@ class Pters_pass_main{
         let icon_r_text = "";
         let style = {"color": "#ff001f", "font-weight":"normal"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_PAY_CANCEL, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_PAY_CANCEL, 100, popup_style, null, ()=>{
                 pters_pass_pay_cancel_popup = new Pters_pass_pay_cancel('.popup_pters_pass_pay_cancel');});
         });
         let html = row;
@@ -175,7 +178,8 @@ class Pters_pass_main{
             let options_padding_top_bottom = 16;
             let button_height = 8 + 8 + 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                 option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
             });
         };

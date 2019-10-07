@@ -204,7 +204,8 @@
                 position: relative;
                 flex: 1 1 auto;
                 padding: 36px;
-                padding-top: 96px;
+                /* padding-top: 96px; */
+                padding-top: 76px;
                 box-sizing: border-box;
                 height: 100%;
             }
@@ -282,6 +283,11 @@
             vertical-align: middle;
             margin: 0 8px 4px 8px;
         }
+
+        ::-webkit-scrollbar{width: 6px;}
+        ::-webkit-scrollbar-track {background-color:#ffffff;}
+        ::-webkit-scrollbar-thumb {background-color:#cccccc;border-radius: 6px;}
+        ::-webkit-scrollbar-thumb:hover {background: #fe4e65;}
         
     </style>
     <!-- <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.dark_mode.css" %}> -->
@@ -737,7 +743,11 @@ onclick="layer_popup.close_layer_popup();"></div> -->
             break;
         }
         try{
+            //메뉴 이동시 팝업이 열려있으면 모두 닫고 이동
             $('#root_content').scrollTop(0);
+            if(layer_popup.stack.length > 0){
+                layer_popup.all_close_layer_popup()
+            }
         }catch(e){
             console.log(e);
         }
@@ -768,6 +778,7 @@ onclick="layer_popup.close_layer_popup();"></div> -->
         $('.grecaptcha-badge').css('display', 'none');
     });
     */
+    
 </script>
 
 </body>

@@ -100,7 +100,8 @@ class Service_inquiry_menu {
         let icon_r_text = '';
         let style = null;
         let onclick = ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY_FAQ, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY_FAQ, 100, popup_style, null, ()=>{
                 service_inquiry_faq_popup = new Service_inquiry_faq('.popup_service_inquiry_faq');});
         };
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
@@ -115,7 +116,8 @@ class Service_inquiry_menu {
         let icon_r_text = '';
         let style = null;
         let onclick = ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY_HISTORY, 100, popup_style, null, ()=>{
                 service_inquiry_history_popup = new Service_inquiry_history('.popup_service_inquiry_history');});
         };
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
@@ -130,7 +132,8 @@ class Service_inquiry_menu {
         let icon_r_text = '';
         let style = null;
         let onclick = ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY, 100, popup_style, null, ()=>{
                 service_inquiry_popup = new Service_inquiry('.popup_service_inquiry');});
         };
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
@@ -156,7 +159,8 @@ class Service_inquiry_menu {
     }
 
     go_to_inquiry_menu_history(){
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_inquiry_menu_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_inquiry_menu_HISTORY, 100, popup_style, null, ()=>{
             service_inquiry_menu_history_popup = new Service_inquiry_menu_history('.popup_service_inquiry_menu_history');});
     }
 

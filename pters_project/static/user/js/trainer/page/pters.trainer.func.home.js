@@ -101,7 +101,9 @@ class Home {
             let icon_r_text = "변경 <img src='/static/common/icon/icon_arrow_r_small_grey.png' style='width: 25px;vertical-align: middle;'>";
             let style = {"font-size":"15px", "font-weight":"bold"};
             let onclick = ()=>{
-                sideGoPage("program");
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_LIST, 100, popup_style, null, ()=>{
+                    program_list_popup = new Program_list('.popup_program_list')});
             };
             let selected_program = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
             let dom = `<article class="program_wrapper">
@@ -220,7 +222,8 @@ class Home {
             let icon_r_text = `<span style="color:#ff0022;font-size:12px;font-weight:500;letter-spacing:-0.5px;">${end_info}</span>`;
             let style = {"font-size":"14px", "padding":"12px 0"};
             let onclick = ()=>{
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, null, ()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_VIEW, 100, popup_style, null, ()=>{
                     member_view_popup = new Member_view('.popup_member_view', member_id, 'member_view_popup');});
             };
 
@@ -265,7 +268,9 @@ class Home {
         let icon_r_text = `${UnitRobot.numberWithCommas(Number(data.price[0]) - Number(data.refund_price[0]))} 원 <img src='/static/common/icon/icon_arrow_r_small_grey.png' style='width: 25px;vertical-align: middle;'>`;
         let style = {"font-size":"15px", "font-weight":"bold"};
         let onclick = ()=>{
-            sideGoPage("statistics");
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, popup_style, null, ()=>{
+                statistics_popup = new Statistics('.popup_statistics')});
         };
         let sales_data = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         let dom = `<article class="sales_wrapper">
@@ -321,13 +326,15 @@ class Home {
 
     popup_plan_view(schedule_id){
         let user_selected_plan = {schedule_id:schedule_id, date:{year:this.current_year, month:this.current_month, date:this.current_date}};
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_VIEW, 100, POPUP_FROM_RIGHT, null, ()=>{
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_VIEW, 100, popup_style, null, ()=>{
             plan_view_popup = new Plan_view('.popup_plan_view', user_selected_plan, "plan_view_popup");
         });
     }
 
     go_to_profile(){
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE, 100, POPUP_FROM_RIGHT, null, ()=>{mypage_popup = new Mypage('.popup_mypage');});
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_TOP : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE, 100, popup_style, null, ()=>{mypage_popup = new Mypage('.popup_mypage');});
     }
 
     static_component (){

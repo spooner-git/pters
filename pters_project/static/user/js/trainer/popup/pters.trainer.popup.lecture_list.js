@@ -107,7 +107,8 @@ class Lecture_list {
             let lecture_member_number = data.lecture_ing_member_num;
             let lecture_ing_bg_color = data.lecture_ing_color_cd;
 
-            let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'lecture_id':${lecture_id}}, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${popup_style}, {'lecture_id':${lecture_id}}, ()=>{
                 lecture_view_popup = new Lecture_view('.popup_lecture_view', ${lecture_id}, 'lecture_view_popup');});`;
             let html = `<article class="lecture_wrapper" data-text="${lecture_name}" data-lectureid="${lecture_id}" onclick="${onclick}" style="color:${this.list_status_type == "ing" ? "" : '#a3a0a0'}">
                             <div class="lecture_data_l">
@@ -151,6 +152,7 @@ class Lecture_list {
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*user_options_array.length;
+        let root_content_height = $root_content.height();
 
         let title = "수업 ";
         let html = `<div class="lecture_upper_box">
@@ -167,7 +169,7 @@ class Lecture_list {
                             <div onclick="${this.instance}.switch_type('end');" style="width:48px;" class="${this.list_status_type == "end" ? "tab_selected" : ""}">비활성화</div>
                         </div>
                         <div class="list_sort_select_wrap" 
-                        onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_OPTION_SELECTOR}', 100*(${layer_popup_height})/${windowHeight}, ${POPUP_FROM_BOTTOM}, null, ()=>{
+                        onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_OPTION_SELECTOR}', 100*(${layer_popup_height})/${root_content_height}, ${POPUP_FROM_BOTTOM}, null, ()=>{
                             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, ${user_option}
                             );
                         });">

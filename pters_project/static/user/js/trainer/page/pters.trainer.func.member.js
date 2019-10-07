@@ -143,7 +143,8 @@ class Member {
                 member_counts_text = member_rem+'회 / ' + "<span style='color:#fe4e65;'>"+Math.abs(remain_date) +"일 지남</span>";
             }
 
-            let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${POPUP_FROM_RIGHT}, {'member_id':${member_id}}, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${popup_style}, {'member_id':${member_id}}, ()=>{
                 member_view_popup = new Member_view('.popup_member_view', ${member_id}, 'member_view_popup');});`;
             let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : '#a3a0a0'}">
                             <div class="member_data_l">
@@ -188,12 +189,14 @@ class Member {
         let user_option = {
             new:{text:"직접 작성해서 등록", callback:()=>{
                 layer_popup.close_layer_popup();
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, popup_style, null, ()=>{
                     member_add_popup = new Member_add('.popup_member_add', null, 'member_add_popup');});
             }},
             old:{text:"검색으로 등록", callback:()=>{
                 layer_popup.close_layer_popup();
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, popup_style, null, ()=>{
                     member_add_popup = new Member_add('.popup_member_add', null, 'member_add_popup');});
             }},
 
@@ -201,7 +204,8 @@ class Member {
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
     }
@@ -279,6 +283,7 @@ class Member {
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*user_options_array.length;
+        let root_content_height = $root_content.height();
 
         return(
             {
@@ -301,7 +306,7 @@ class Member {
                                             <div onclick="${this.instance}.switch_type('end');" style="width:24px;" class="${this.list_type == "end" ? "tab_selected" : ""}">종료</div>
                                         </div>
                                         <div class="list_sort_select_wrap" 
-                                        onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_OPTION_SELECTOR}', 100*(${layer_popup_height})/${windowHeight}, ${POPUP_FROM_BOTTOM}, null, ()=>{
+                                        onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_OPTION_SELECTOR}', 100*(${layer_popup_height})/${root_content_height}, ${POPUP_FROM_BOTTOM}, null, ()=>{
                                             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, ${user_option}
                                             );
                                         });">

@@ -236,7 +236,8 @@ class Setting_worktime{
             let options_padding_top_bottom = 16;
             let button_height = 8 + 8 + 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                 option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
             });
         };
@@ -279,7 +280,8 @@ class Setting_worktime{
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ //data : 직전 셋팅값
             //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*255/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
                 //data의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
                 let zone = this.data[day].start_time == null ? 0  :TimeRobot.to_zone(this.data[day].start_time.split(':')[0], this.data[day].start_time.split(':')[1]).zone;
@@ -323,7 +325,8 @@ class Setting_worktime{
                 show_error_message('시작 시각을 먼저 선택해주세요');
                 return false;
             }
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*255/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택 시작시간이 빈값이라면 시작 시간으로 셋팅한다.
                 let zone = TimeRobot.to_zone(this.data[day].start_time.split(':')[0], this.data[day].start_time.split(':')[1]).zone;
                 let hour = TimeRobot.to_zone(this.data[day].start_time.split(':')[0], this.data[day].start_time.split(':')[1]).hour;

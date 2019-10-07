@@ -234,7 +234,8 @@ class Lecture_add{
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, (data)=>{
             if(this.data.capacity != null){
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, null, ()=>{
                     member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':null, "title":"고정 회원 선택"}, (set_data)=>{
                         this.member = set_data;
                         this.render_content();
@@ -277,7 +278,8 @@ class Lecture_add{
         let icon_r_text = '';
         let style = this.data.color_name.length == 0 ? {"color":"#b8b4b4"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_COLOR_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_COLOR_SELECT, 100, popup_style, null, ()=>{
                 color_select = new ColorSelector('#wrapper_box_color_select', this, 1, (set_data)=>{
                     this.color = set_data;
                     this.render_content();
@@ -295,7 +297,8 @@ class Lecture_add{
         let icon_r_text = "";
         let style = this.data.ticket_id.length == 0 ? {"color":"#b8b4b4"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SELECT, 100, popup_style, null, ()=>{
                 ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1, {"title":"수강권 선택"}, (set_data)=>{
                     this.ticket = set_data;
                     // this.render_content();

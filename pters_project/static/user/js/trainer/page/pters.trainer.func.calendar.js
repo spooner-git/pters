@@ -577,7 +577,8 @@ class Calendar {
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
         option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
 
@@ -1256,7 +1257,8 @@ class Calendar {
         }
 
         //일반 일정 등록
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_ADD, 100, popup_style, {'select_date':null}, ()=>{
             plan_add_popup = new Plan_add('.popup_plan_add', this.user_data, "plan_add_popup");
         });
     }
@@ -1269,7 +1271,8 @@ class Calendar {
         this.user_data.user_selected_plan.date.year = year;
         this.user_data.user_selected_plan.date.month = month;
         this.user_data.user_selected_plan.date.date = date;
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_VIEW, 100, POPUP_FROM_RIGHT, {'schedule_id':schedule_id}, ()=>{
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_VIEW, 100, popup_style, {'schedule_id':schedule_id}, ()=>{
             plan_view_popup = new Plan_view('.popup_plan_view', this.user_data.user_selected_plan, "plan_view_popup");
         });
     }
@@ -1379,8 +1382,9 @@ class Calendar {
         this.user_data.user_selected_time.minute2 = null;
         this.user_data.user_selected_time.text = null;
         this.user_data.user_selected_time.text2 = null;
-
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_ADD, 100, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+        
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_ADD, 100, popup_style, {'select_date':null}, ()=>{
             plan_add_popup = new Plan_add('.popup_plan_add', this.user_data, "plan_add_popup");
         });
     }

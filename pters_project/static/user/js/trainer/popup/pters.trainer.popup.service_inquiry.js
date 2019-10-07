@@ -105,7 +105,8 @@ class Service_inquiry {
             let multiple_select = 1;
             let data = {value:["USAGE", "SUGGEST", "ERROR", "OTHER"], text:["사용문의", "기능 제안", "기능 오류", "기타"]};
             let selected_data = this.data.inquiry_type;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, POPUP_FROM_RIGHT, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
                     this.data.inquiry_type = set_data;
                     this.render_content();
@@ -173,7 +174,8 @@ class Service_inquiry {
     }
 
     go_to_inquiry_history(){
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY_HISTORY, 100, popup_style, null, ()=>{
             service_inquiry_history_popup = new Service_inquiry_history('.popup_service_inquiry_history');});
     }
 

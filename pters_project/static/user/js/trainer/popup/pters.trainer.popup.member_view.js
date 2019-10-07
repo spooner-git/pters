@@ -342,7 +342,8 @@ class Member_view{
                 let options_padding_top_bottom = 16;
                 let button_height = 8 + 8 + 52;
                 let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                let root_content_height = $root_content.height();
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                 });
             };
@@ -360,7 +361,8 @@ class Member_view{
                 let options_padding_top_bottom = 16;
                 let button_height = 8 + 8 + 52;
                 let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                let root_content_height = $root_content.height();
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                 });
             };
@@ -378,7 +380,8 @@ class Member_view{
                 let options_padding_top_bottom = 16;
                 let button_height = 8 + 8 + 52;
                 let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                let root_content_height = $root_content.height();
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                 });
             };
@@ -483,7 +486,8 @@ class Member_view{
             let options_padding_top_bottom = 16;
             let button_height = 8 + 8 + 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                 option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
             });
         });
@@ -530,7 +534,8 @@ class Member_view{
             let icon_r_text = "";
             let style = null;
             let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, POPUP_FROM_RIGHT, null, ()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, popup_style, null, ()=>{
                     let data = {"member_name":this.name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":ticket_reg_count, "price":ticket_price, "status":"IP"};
                     member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
@@ -552,9 +557,6 @@ class Member_view{
                 let lecture_name_set = `<div style="display:inline-block;width:4px;height:16px;border-radius: 8px;background-color:${lecture_color};margin-right:10px;margin-top:4px;"></div>
                                         <div style="display:inline-block;vertical-align:top;">${lecture_name}</div>`;
                 let html_lecture_list_info = CComponent.text_button (lecture_id, lecture_name_set, icon_button_style, ()=>{
-                    // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_VIEW, 100, POPUP_FROM_RIGHT, {'lecture_id':lecture_id}, ()=>{
-                    //     lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
-                    // });
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(258/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
                         lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
                         //수업 간단 정보 팝업 열기
@@ -620,14 +622,16 @@ class Member_view{
             },
             ticket_history:{text:"수강권 이력", callback:()=>{
                     layer_popup.close_layer_popup();
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_HISTORY, 100, popup_style, null, ()=>{
                         member_ticket_history = new Member_ticket_history('.popup_member_ticket_history', {member_id:this.member_id, member_name:this.name}, null);
                     });
                 }
             },
             lesson_history:{text:"수업 이력", callback:()=>{
                     layer_popup.close_layer_popup();
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, POPUP_FROM_RIGHT, null, ()=>{
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
                         member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.member_id, null);
                     });
                 }
@@ -644,7 +648,8 @@ class Member_view{
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
     }
@@ -825,7 +830,8 @@ class Member_simple_view{
         let text_button = CComponent.text_button ("detail_user_info", "더보기", text_button_style, ()=>{
             show_user_confirm(`작업중이던 항목을 모두 닫고 회원 메뉴로 이동합니다.`, ()=>{
                 layer_popup.all_close_layer_popup();
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_VIEW, 100, POPUP_FROM_RIGHT, {'member_id':this.member_id}, ()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_VIEW, 100, popup_style, {'member_id':this.member_id}, ()=>{
                     member_view_popup = new Member_view('.popup_member_view', this.member_id, 'member_view_popup');
                 });
                 sideGoPage("member");
@@ -954,10 +960,7 @@ class Member_simple_view{
             let icon_r_text = "";
             let style = null;
             let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
-                let ticket_id =  this.data.ticket[i].ticket_id;
-                // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, POPUP_FROM_RIGHT, {'ticket_id':ticket_id}, ()=>{
-                //     ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
-                // });
+                let ticket_id =  this.data.ticket[i].ticket_id;;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(258/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                     ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
                     //회원 간단 정보 팝업 열기
