@@ -228,19 +228,31 @@
             }
             .side_menu{
                 list-style: none;
-                padding-left: 22px;
             }
             .side_menu_item{
+                width: 90%;
+                margin: 0 auto;
+                border-radius: 10px;
                 font-size: 12px;
                 font-weight: 500;
                 letter-spacing: -0.5px;
                 padding: 10px 0;
+                padding-left: 22px;
+                box-sizing: border-box;
                 cursor: pointer;
+            }
+            .side_menu_item:hover{
+                background-color: #fe4e6510
             }
             .side_menu_item > img{
                 width: 24px;
                 vertical-align: middle;
                 margin-right: 18px;
+            }
+            .side_menu_selected{
+                background-color: #d4233a !important;
+                color: #ffffff;
+                filter: brightness(2);
             }
             
         @media(max-width:650px){
@@ -315,28 +327,28 @@ onclick="layer_popup.close_layer_popup();"></div> -->
             <img src="/static/user/res/PTERS_logo_pure.png" alt="" style="width: 64px;">
         </div>
         <div class="side_menu">
-            <div class="side_menu_item" onclick="sideGoPage('home')">
+            <div class="side_menu_item" onclick="sideGoPage('home')" id="side_home">
                 <img src={% static_url "common/icon/tab_bar/icon_home_off.png" %} alt=""><span>홈</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('calendar')">
+            <div class="side_menu_item" onclick="sideGoPage('calendar')" id="side_calendar">
                 <img src={% static_url "common/icon/tab_bar/icon_calendar_off.png" %} alt=""><span>일정</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('member')">
+            <div class="side_menu_item" onclick="sideGoPage('member')" id="side_member">
                 <img src={% static_url "common/icon/tab_bar/icon_member_off.png" %} alt=""><span>회원</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('lecture_page_type')">
+            <div class="side_menu_item" onclick="sideGoPage('lecture_page_type')" id="side_lecture_page_type">
                 <img src={% static_url "common/icon/icon_lecture_grey.png" %} alt=""><span>수업</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('ticket_page_type')">
+            <div class="side_menu_item" onclick="sideGoPage('ticket_page_type')" id="side_ticket_page_type">
                 <img src={% static_url "common/icon/icon_ticket_grey.png" %} alt=""><span>수강권</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('member')">
+            <div class="side_menu_item" onclick="sideGoPage('member')" id="side_statistics">
                 <img src={% static_url "common/icon/icon_statistics_grey.png" %} alt=""><span>통계</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('member')">
+            <div class="side_menu_item" onclick="sideGoPage('member')" id="side_settings">
                 <img src={% static_url "common/icon/icon_setting_worktime_grey.png" %} alt=""><span>설정</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('menu')">
+            <div class="side_menu_item" onclick="sideGoPage('menu')" id="side_menu">
                 <img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""><span>전체 메뉴</span>
             </div>
         </div>
@@ -651,9 +663,14 @@ onclick="layer_popup.close_layer_popup();"></div> -->
                 $(this).attr('src', `/static/common/icon/tab_bar/icon_${this_id}_off.png`) 
             });
             $(`#${page} .nav_img > img`).attr('src', `/static/common/icon/tab_bar/icon_${page}_on.png`);
-            
         }
-        catch(error){
+        catch(e){
+
+        }
+        try{
+            $('.side_menu_selected').removeClass('side_menu_selected');
+            $(`#side_${page}`).addClass('side_menu_selected');
+        }catch(e){
 
         }
 
