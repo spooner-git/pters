@@ -447,7 +447,7 @@ class Lecture {
     }
 
     //수업 리스트 서버에서 불러오기
-    request_lecture_list (status, callback){
+    request_lecture_list (status, callback, async){
         //sort_order_by : lecture_type_seq, lecture_name, lecture_member_many, lecture_member_few, lecture_create_new, lecture_create_old
         let url;
         if(status=='ing'){
