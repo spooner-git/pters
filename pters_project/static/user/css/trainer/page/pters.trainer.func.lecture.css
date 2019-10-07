@@ -9,11 +9,11 @@
 }
 	.lecture_upper_box{
 		position: relative;
-		height: 68px;
+		height: 60px;
 		line-height: 28px;
 		background-color: #ffffff;
 		/* border-bottom: 1px solid #cccccc; */
-		padding: 14px 20px;
+		padding: 20px 16px 12px;
 		box-sizing: border-box;
 	}
 	.lecture_tools_wrap{
@@ -32,6 +32,20 @@
 		background-position: center;
 		background-size: 23px;
 	}
+	.lecture_tools_wrap > .search_lecture > .search_input{
+		position: absolute;
+		display: none;
+		-webkit-appearance: none;
+		width: 200%;
+		height: 50px;
+		left: -200%;
+		border: 1px solid #cccccc;
+		background-color: #ffffff;
+		border-radius: 0;
+		transform: translateY(-50px);
+		box-sizing: border-box;
+		transition: 0.25s;
+	}
 	.lecture_tools_wrap > .add_lecture{
 		display: table-cell;
 		height: 100%;
@@ -40,23 +54,32 @@
 		background-position: center;
 		background-size: 23px;
 	}
-	.lecture_tools_wrap > .swap_list{
-		/* display: table-cell;
+	/* .lecture_tools_wrap > .swap_list{
+		display: table-cell;
 		height: 100%;
 		background-image: url("/static/common/icon/icon_swap.png?v2");
 		background-repeat: no-repeat;
 		background-position: center;
-		background-size: 23px; */
-		display: none;
-	}
-
+		background-size: 23px;
+	} */
 	.lecture_bottom_tools_wrap{
 		background-color: #ffffff;
 		/*border-bottom: 1px solid #cccccc;*/
-		padding: 0 20px 22px;
-		font-size: 14px;
-		height: 28px;
-		line-height: 28px;
+		padding: 6px 16px;
+		font-size: 13px;
+		height: 24px;
+		line-height: 24px;
+	}
+	.lecture_search_tool{
+		background-color: #ffffff;
+		padding-bottom: 5px;
+		text-align: center;
+	}
+	.lecture_search_tool > input{
+		width: 95%;
+		height: 35px;
+		border: 1px solid #cccccc;
+		border-radius: 2px;
 	}
 
 

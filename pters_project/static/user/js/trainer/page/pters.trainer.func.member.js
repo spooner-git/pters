@@ -305,11 +305,6 @@ class Member {
                                             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, ${user_option}
                                             );
                                         });">
-                                            <!--<select>
-                                                <option>이름순</option>
-                                                <option>남은 횟수순</option>
-                                                <option>등록 횟수순</option>
-                                            </select>-->
                                             ${this.sort_value_text} <img src="/static/common/icon/icon_arrow_expand_light_grey.png" style="width:24px; height:24px; vertical-align: middle;">
                                         </div>
                                     </div>

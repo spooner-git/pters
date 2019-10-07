@@ -41,8 +41,8 @@
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.home.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.calendar.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.member.css" %}>
-{#    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.ticket.css" %}>#}
-{#    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.lecture.css" %}>#}
+    <!-- <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.ticket.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.lecture.css" %}> -->
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.alarm.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.menu.css" %}>
     <!-- 페이지 CSS 로드 -->
@@ -318,10 +318,10 @@ onclick="layer_popup.close_layer_popup();"></div> -->
             <div class="side_menu_item" onclick="sideGoPage('member')">
                 <img src={% static_url "common/icon/tab_bar/icon_member_off.png" %} alt=""><span>회원</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('member')">
+            <div class="side_menu_item" onclick="sideGoPage('lecture_page_type')">
                 <img src={% static_url "common/icon/icon_lecture_grey.png" %} alt=""><span>수업</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('member')">
+            <div class="side_menu_item" onclick="sideGoPage('ticket_page_type')">
                 <img src={% static_url "common/icon/icon_ticket_grey.png" %} alt=""><span>수강권</span>
             </div>
             <div class="side_menu_item" onclick="sideGoPage('member')">
@@ -657,6 +657,12 @@ onclick="layer_popup.close_layer_popup();"></div> -->
             break;
             case 'calendar':
                 calendar.init();
+            break;
+            case 'ticket_page_type':
+                ticket.init();
+            break;
+            case 'lecture_page_type':
+                lecture.init();
             break;
             case 'ticket':
                 // ticket.init();

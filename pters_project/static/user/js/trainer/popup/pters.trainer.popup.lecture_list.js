@@ -39,6 +39,7 @@ class Lecture_list {
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         });
     }
+
     clear(){
         setTimeout(()=>{
             document.querySelector(this.target.install).innerHTML = "";
@@ -225,8 +226,7 @@ class Lecture_list {
         });
     }
 
-
-    //수강권 리스트 서버에서 불러오기
+    //수업 리스트 서버에서 불러오기
     request_lecture_list (status, callback){
         //sort_order_by : lecture_type_seq, lecture_name, lecture_member_many, lecture_member_few, lecture_create_new, lecture_create_old
         let url;
@@ -269,7 +269,6 @@ class Lecture_list {
             }
         });
     }
-
 
     //리스트 타입을 스위치
     switch_type (type){

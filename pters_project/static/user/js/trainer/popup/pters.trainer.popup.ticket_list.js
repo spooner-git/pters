@@ -20,14 +20,10 @@ class Ticket_list {
         this.sort_value_text = '수강권명 가나다순';
 
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
-        this.init(this.list_status_type);
+        this.init();
     }
 
-    init(list_status_type){
-        // if(list_status_type == undefined){
-        //     list_status_type = this.list_status_type;
-        // }
-        // this.list_status_type = list_status_type;
+    init(){
         this.set_initial_data();
     }
 
@@ -43,7 +39,8 @@ class Ticket_list {
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         });
     }
-        clear(){
+    
+    clear(){
         setTimeout(()=>{
             document.querySelector(this.target.install).innerHTML = "";
         }, 300);
@@ -288,7 +285,6 @@ class Ticket_list {
             }
         });
     }
-
 
     //리스트 타입을 스위치
     switch_type (type){
