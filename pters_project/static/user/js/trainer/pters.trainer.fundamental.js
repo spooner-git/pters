@@ -616,14 +616,16 @@ class PassInspector{
         let async = false;
         let data1;
         let data2;
+        let current_ticket_number = 0;
+        let finish_ticket_number = 0;
         ticket.request_ticket_list("ing", (d1)=>{
             data1 = d1;
+            current_ticket_number = data1.current_ticket_data.length;
         }, async);
         ticket.request_ticket_list("end", (d2)=>{
             data2 = d2;
+            finish_ticket_number = data2.finish_ticket_data.length;
         }, async);
-        let current_ticket_number = data1.current_ticket_data.length;
-        let finish_ticket_number = data2.finish_ticket_data.length;
         let total_number = current_ticket_number + finish_ticket_number;
         let limit_number = this.data.auth_package_create.limit_num;
         let limit_type = this.data.auth_package_create.limit_type;
