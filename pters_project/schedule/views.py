@@ -362,6 +362,25 @@ def update_schedule_logic(request):
         error = '시작 시각을 선택해주세요.'
 
     if error is None:
+        check_time = False
+        schedule_end_datetime_split = schedule_end_datetime.split(' ')
+        if schedule_end_datetime_split[1] == '24:00' or schedule_end_datetime_split[1] == '24:0':
+            end_dt = schedule_end_datetime_split[0] + ' 23:59'
+            check_time = True
+
+        try:
+            start_dt = datetime.datetime.strptime(start_dt, '%Y-%m-%d %H:%M')
+            end_dt = datetime.datetime.strptime(end_dt, '%Y-%m-%d %H:%M')
+            if check_time:
+                end_dt = end_dt + datetime.timedelta(minutes=1)
+        except ValueError:
+            error = '날짜 오류가 발생했습니다.[0]'
+        except IntegrityError:
+            error = '날짜 오류가 발생했습니다.[1]'
+        except TypeError:
+            error = '날짜 오류가 발생했습니다.[2]'
+
+    if error is None:
         for schedule_id in schedule_ids:
             try:
                 schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
@@ -369,49 +388,31 @@ def update_schedule_logic(request):
                 error = '일정 정보를 불러오지 못했습니다.'
 
             if error is None:
-                check_time = False
-                schedule_end_datetime_split = schedule_end_datetime.split(' ')
-                if schedule_end_datetime_split[1] == '24:00' or schedule_end_datetime_split[1] == '24:0':
-                    end_dt = schedule_end_datetime_split[0] + ' 23:59'
-                    check_time = True
-
-                try:
-                    start_dt = datetime.datetime.strptime(start_dt, '%Y-%m-%d %H:%M')
-                    end_dt = datetime.datetime.strptime(end_dt, '%Y-%m-%d %H:%M')
-                    if check_time:
-                        end_dt = end_dt + datetime.timedelta(minutes=1)
-                except ValueError:
-                    error = '날짜 오류가 발생했습니다.[0]'
-                except IntegrityError:
-                    error = '날짜 오류가 발생했습니다.[1]'
-                except TypeError:
-                    error = '날짜 오류가 발생했습니다.[2]'
-
-            if error is None:
                 log_detail_info = str(schedule_info.start_dt)\
                                   + '/' + str(schedule_info.end_dt)\
                                   + '->' + str(start_dt) + '/' + str(end_dt)
-                if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
-                    lecture_name = schedule_info.lecture_tb.name
+                if str(schedule_info.en_dis_type) != str(OFF_SCHEDULE_TYPE):
+                    if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
+                        lecture_name = schedule_info.lecture_tb.name
 
-                if schedule_info.member_ticket_tb is None or schedule_info.member_ticket_tb == '':
-                    log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                                     from_member_name=request.user.first_name,
-                                     class_tb_id=class_id,
-                                     log_info=lecture_name + ' 수업',
-                                     log_how='예약 변경',
-                                     log_detail=log_detail_info, use=USE)
-                    log_data.save()
-                else:
-                    log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                                     from_member_name=request.user.first_name,
-                                     to_member_name=schedule_info.member_ticket_tb.member.name,
-                                     class_tb_id=class_id,
-                                     member_ticket_tb_id=schedule_info.member_ticket_tb_id,
-                                     log_info=lecture_name + ' 수업',
-                                     log_how='예약 변경',
-                                     log_detail=log_detail_info, use=USE)
-                    log_data.save()
+                    if schedule_info.member_ticket_tb is None or schedule_info.member_ticket_tb == '':
+                        log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+                                         from_member_name=request.user.first_name,
+                                         class_tb_id=class_id,
+                                         log_info=lecture_name + ' 수업',
+                                         log_how='예약 변경',
+                                         log_detail=log_detail_info, use=USE)
+                        log_data.save()
+                    else:
+                        log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+                                         from_member_name=request.user.first_name,
+                                         to_member_name=schedule_info.member_ticket_tb.member.name,
+                                         class_tb_id=class_id,
+                                         member_ticket_tb_id=schedule_info.member_ticket_tb_id,
+                                         log_info=lecture_name + ' 수업',
+                                         log_how='예약 변경',
+                                         log_detail=log_detail_info, use=USE)
+                        log_data.save()
                 schedule_info.start_dt = start_dt
                 schedule_info.end_dt = end_dt
                 schedule_info.save()
