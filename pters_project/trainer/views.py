@@ -368,33 +368,45 @@ class SearchMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
-        search_id = request.GET.get('search_id', '')
+        search_val = request.GET.get('search_val', '')
         error = None
         user_info = None
-        member_result = {}
-
-        if search_id == '':
-            error = '회원 ID를 입력해 주세요.'
+        member_list = None
+        member_result_list = []
+        if search_val == '':
+            error = '회원 정보를 입력해 주세요.'
 
         if error is None:
-            if len(search_id) < 3:
+            if len(search_val) < 3:
                 error = '3글자 이상 입력해주세요.'
 
         if error is None:
             try:
-                user_info = User.objects.get(username=search_id)
+                user_info = User.objects.get(username=search_val)
             except ObjectDoesNotExist:
                 error = '회원 ID를 확인해 주세요.'
 
-        if error is None:
-            member_result = func_get_member_info(class_id, request.user.id, user_info.id)
-            error = member_result.error
+            if error is not None:
+                member_list = MemberTb.objects.select_related('user').filter(phone=search_val)
+                if len(member_list) == 0:
+                    error = '회원 정보를 확인해 주세요.'
+                else:
+                    error = None
 
+        if error is None:
+            if user_info is not None:
+                member_result = func_get_member_info(class_id, request.user.id, user_info.id)
+                error = member_result['error']
+                member_result_list.append(member_result['member_info'])
+            else:
+                for member_info in member_list:
+                    member_result = func_get_member_info(class_id, request.user.id, member_info.user.id)
+                    member_result_list.append(member_result['member_info'])
         if error is not None:
             logger.error(request.user.first_name + ' ' + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        return JsonResponse(member_result.member_info, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse({'member_list': member_result_list}, json_dumps_params={'ensure_ascii': True})
 
 
 class GetMemberListView(LoginRequiredMixin, AccessTestMixin, View):
