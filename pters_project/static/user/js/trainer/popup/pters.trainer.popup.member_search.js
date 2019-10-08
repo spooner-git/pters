@@ -105,7 +105,7 @@ class Member_search {
             style = {"background-color":"#cccccc", "color":"#ffffff", "height":"50px", "line-height":"50px"};
         }
         let onclick = ()=>{
-            let data = {"search_id":this.data.search_id};
+            let data = {"search_val":this.data.search_id};
             Member_func.search(data, (data)=>{
                 console.log(data);
             });

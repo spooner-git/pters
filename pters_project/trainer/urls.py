@@ -37,6 +37,8 @@ urlpatterns = [
     # 수업 스케쥴 조회 - refactoring
     url(r'^get_lecture_schedule_list/$', views.GetLectureScheduleListView.as_view(), name='get_lecture_schedule_list'),
 
+    # 전체 반복 일정 조회
+    url(r'^get_repeat_schedule_all/$', views.GetRepeatScheduleAllView.as_view(), name='get_repeat_schedule_all'),
     # OFF 반복 일정 조회 - refactoring
     url(r'^get_off_repeat_schedule/$', views.GetOffRepeatScheduleView.as_view(), name='get_off_repeat_schedule'),
     # 수업 반복 일정 조회 - refactoring
