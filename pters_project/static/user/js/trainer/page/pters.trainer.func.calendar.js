@@ -57,7 +57,12 @@ class Calendar {
             // if(this.today != realtime_today){
             //     window.location.reload();
             // }
-            this.relocate_current_time_indicator();
+            if(this.page_name == current_page){
+                this.relocate_current_time_indicator();
+            }else{
+                clearInterval(interval);
+            }
+            
         }, 60000);//60000
 
         this.long_touch = OFF;

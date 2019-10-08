@@ -220,7 +220,7 @@ class Member_add{
     }
 
     dom_row_toolbox(){
-        let title = this.data_from_external == null ? '새로운 회원' : '재등록';
+        let title = this.data_from_external == null ? '새로운 회원' : '등록';
         let html = `
         <div class="member_add_upper_box">
             <div style="display:inline-block;width:200px;">
