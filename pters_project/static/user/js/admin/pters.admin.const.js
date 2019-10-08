@@ -150,6 +150,7 @@ const POPUP_ADDRESS_DAY_SELECT = 'popup_day_select';
 const POPUP_ADDRESS_CATEGORY_SELECT = 'popup_category_select';
 const POPUP_ADDRESS_CUSTOM_SELECT = 'popup_custom_select';
 const POPUP_ADDRESS_PASSWORD_4D_INPUT = 'popup_password_4d_input';
+const POPUP_ADDRESS_BOARD_WRITER = 'popup_board_writer';
 
 const POPUP_ADDRESS_PTERS_PASS_MAIN = 'popup_pters_pass_main';
 const POPUP_ADDRESS_PTERS_PASS_PAY_INFO = 'popup_pters_pass_pay_info';

@@ -3210,3 +3210,144 @@ class PasswordFourDigitInput{
         this.clear();
     }
 }
+
+class BoardWriter{
+    constructor(title, install_target, instance, data, callback){
+        this.title = title;
+        this.target = {install:install_target, instance:instance};
+        this.callback = callback;
+        this.external_data = data;
+        this.data = {
+            title:null,
+            content:null
+        };
+        // this.init();
+        this.set_initial_data();
+        this.init();
+    }
+
+    init(){
+        this.render();
+    }
+
+    set_initial_data(){
+        this.data.title = this.external_data.title != null ? this.external_data.title : null;
+        this.data.content = this.external_data.content != null ? this.external_data.content : null;
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="${this.target.instance}.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_center = `<span class="icon_center">
+                            <span id="">${this.title}</span>
+                          </span>`;
+        let top_right = `<span class="icon_right">
+                            <span style="color:#fe4e65;font-weight: 500;" onclick="${this.target.instance}.upper_right_menu();">저장</span>
+                        </span>`;
+        let content =   `<section>${this.dom_assembly()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+        this.init_summernote();
+    }
+
+    dom_assembly (){
+        let title_input = this.dom_row_subject_input();
+        let content_input = this.dom_row_content_input();
+
+
+        let html = `<div class="obj_input_box_full" style="padding:8px 16px;">`+ title_input + `</div>` + 
+                    `<div class="obj_input_box_full">` + content_input + `</div>`;
+
+        return html;
+    }
+
+    dom_row_subject_input(){
+        let id = "dom_row_subject_input";
+        let title = this.data.title != null ? this.data.title : "";
+        let placeholder = "제목";
+        let icon = DELETE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let disabled = false;
+        let onfocusout = (data)=>{
+            this.data.title = data;
+            // this.render_content();
+        };
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let required = "";
+        let row = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
+        let html = row;
+        return html;
+    }
+
+    dom_row_content_input(){
+        let row = `<div id="board_writer_content_input"></div>`;
+        let html = row;
+        return html;
+    }
+
+    init_summernote(){
+        $(`#board_writer_content_input`).summernote({
+            minHeight: 150,
+            fontSizes:['12', '14', '16'],
+            placeholder: "내용을 입력해주세요.",
+            tabsize: 2,
+            lang: 'ko-KR',
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                // ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['insert', ['picture', 'video']]
+            ],
+            focus: false,
+            // fontSize: 14,
+            maximumImageFileSize: 10485760,
+            callbacks:{
+                onImageUpload: function(files) {
+                    // upload image to server and create imgNode...
+                    let img_error_flag = false;
+                    for (let i = files.length - 1; i >= 0; i--) {
+                        if(files[i].size > 10485760){
+                            show_error_message('이미지는 최대 10mb까지 업로드 가능합니다.');
+                            img_error_flag = true;
+                            break;
+                        }
+                    }
+                    if(!img_error_flag){
+                        for (let i = files.length - 1; i >= 0; i--) {
+                            summernote_attachment["name"].push(files[i].name);
+                            summernote_attachment["size"].push(files[i].size/1024000);
+                            update_room_content_img(files[i]);
+                        }
+                    }
+                }
+            },
+        });
+        if(this.data.content == ""){
+            this.data.content = " "
+        }
+        $(`#board_writer_content_input`).summernote('pasteHTML', this.data.content);
+    }
+
+    request_list (callback){
+        // this.received_data = color_data;
+        // callback();
+    }
+
+    upper_right_menu(){
+        let content_value = $('#board_writer_content_input').summernote('code');
+        this.data.content = content_value;
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}

@@ -34,6 +34,7 @@
     <link rel="stylesheet" href={% static_url "user/css/admin/popup/pters.admin.popup.base.css" %}>
     <link rel="stylesheet" href={% static_url "common/css/swiper.min.css" %}>
     <link rel="stylesheet" href={% static_url "common/css/croppie.css" %}>
+    <link rel="stylesheet" href={% static_url "common/css/summernote-lite.css" %}>
 
     <!-- 페이지 CSS 로드 -->
     <link rel="stylesheet" href={% static_url "user/css/admin/page/pters.admin.func.home.css" %}>
@@ -48,6 +49,8 @@
     <script type="text/javascript" src={% static_url "common/js/iscroll/iscroll-probe.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/croppie.min.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/swiper.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/summernote/summernote-lite.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/summernote/summernote-ko-KR.js" %}></script>
 
     <script type="text/javascript" src={% static_url "user/js/admin/pters.admin.const.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/admin/pters.admin.fundamental.js" %}></script>
@@ -75,19 +78,19 @@
             <img src="/static/user/res/PTERS_logo_pure.png" alt="" style="width: 64px;">
         </div>
         <div class="side_menu">
-            <div class="side_menu_item" onclick="sideGoPage('home')">
+            <div class="side_menu_item" onclick="sideGoPage('home')" id="side_home">
                 <img src={% static_url "common/icon/tab_bar/icon_home_off.png" %} alt=""><span>홈</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('notice')">
+            <div class="side_menu_item" onclick="sideGoPage('notice')" id="side_notice">
                 <img src={% static_url "common/icon/tab_bar/icon_calendar_off.png" %} alt=""><span>공지</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('qna')">
+            <div class="side_menu_item" onclick="sideGoPage('qna')" id="side_qna">
                 <img src={% static_url "common/icon/tab_bar/icon_member_off.png" %} alt=""><span>문의</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('faq')">
+            <div class="side_menu_item" onclick="sideGoPage('faq')" id="side_faq">
                 <img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""><span>FAQ</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('menu')">
+            <div class="side_menu_item" onclick="sideGoPage('menu')" id="side_menu">
                 <img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""><span>설정</span>
             </div>
         </div>
@@ -169,7 +172,7 @@
 <script type="text/javascript" src={% static_url "user/js/admin/page/pters.admin.func.notice.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/admin/page/pters.admin.func.qna.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/admin/page/pters.admin.func.faq.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.component.common.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/admin/pters.admin.component.common.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/admin/popup/pters.admin.popup.base.js" %}></script>
 <!-- 페이지 스크립트 로드-->
 
@@ -297,6 +300,7 @@
     var repeat_select;
     var day_select;
     var category_select;
+    var board_writer;
     // 범용 셀렉터 인스턴스
 
     function root_content_quick_up(){
@@ -340,6 +344,22 @@
 
     //페이지에 들어오면 홈화면을 띄우기
     $('#home').trigger('click');
+
+    Qna_func.read_all((data)=>{
+        let qna_uncomplete = 0;
+        for(let item in data){
+            let complete_status = data[item].qa_status_type_cd;
+            if(complete_status != "QA_COMPLETE"){
+                qna_uncomplete++;
+            }
+        }
+        if(qna_uncomplete > 0){
+            $('#side_qna > span').html(
+                `문의(${qna_uncomplete}) <span class="side_unread"></span>`
+            )
+        }
+    });
+
 
 </script>
 

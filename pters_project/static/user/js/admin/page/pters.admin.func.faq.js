@@ -135,13 +135,16 @@ class Faq {
                             </div>
                             <div style="text-align:right;margin-top:10px;">
                                 ${CComponent.button ("faq_modify_"+id, "수정", {"border":"1px solid #e8e8e8", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
-                                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_FAQ_DETAIL, 100, POPUP_FROM_PAGE, null, ()=>{
-                                            faq_detail_popup = new faq_detail('.popup_faq_detail', id, this.data);});
+                                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
+                                            let external_data = {title:title, content:content};
+                                            board_writer = new BoardWriter("수정", '.popup_board_writer', 'board_writer', external_data, (data)=>{
+                                                console.log(data);
+                                            });
+                                        });
                                     })
                                 }
                                 ${CComponent.button ("faq_delete_"+id, "삭제", {"border":"1px solid #e8e8e8", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
-                                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_FAQ_DETAIL, 100, POPUP_FROM_PAGE, null, ()=>{
-                                            faq_detail_popup = new faq_detail('.popup_faq_detail', id, this.data);});
+                                        alert('삭제 실행');
                                     })
                                 }
                             </div>

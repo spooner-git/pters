@@ -235,6 +235,17 @@ html, body{
     margin: 0 8px 4px 8px;
 }
 
+.side_unread{
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: #fe4e65;
+    border-radius: 50%;
+    margin-left: 5px;
+    vertical-align: middle;
+    margin-bottom: 2px;
+}
+
 ::-webkit-scrollbar{width: 6px;}
 ::-webkit-scrollbar-track {background-color:#ffffff;}
 ::-webkit-scrollbar-thumb {background-color:#cccccc;border-radius: 6px;}
