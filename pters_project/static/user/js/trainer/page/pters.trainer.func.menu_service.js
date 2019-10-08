@@ -115,7 +115,7 @@ class Menu_service {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage("program");
+            sideGoPopup("program");
         });
         return html;
     }
@@ -154,7 +154,7 @@ class Menu_service {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage("lecture");
+            sideGoPopup("lecture");
         });
         return html;
     }
@@ -167,7 +167,7 @@ class Menu_service {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage("ticket");
+            sideGoPopup("ticket");
         });
         return html;
     }
@@ -180,7 +180,7 @@ class Menu_service {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage("statistics");
+            sideGoPopup("statistics");
         });
         return html;
     }
@@ -206,7 +206,7 @@ class Menu_service {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage("setting_worktime");
+            sideGoPopup("setting_worktime");
         });
         return html;
     }
@@ -219,7 +219,7 @@ class Menu_service {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage("setting_autocomplete");
+            sideGoPopup("setting_autocomplete");
         });
         return html;
     }
@@ -232,7 +232,7 @@ class Menu_service {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage("setting_reserve");
+            sideGoPopup("setting_reserve");
         });
         return html;
     }
@@ -245,7 +245,7 @@ class Menu_service {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage("setting_alarm");
+            sideGoPopup("setting_alarm");
         });
         return html;
     }
@@ -258,7 +258,7 @@ class Menu_service {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage("setting_attendmode");
+            sideGoPopup("setting_attendmode");
         });
         return html;
     }
@@ -271,7 +271,7 @@ class Menu_service {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage('pters_pass_main');
+            sideGoPopup('pters_pass_main');
         });
         return html;
     }
@@ -284,7 +284,7 @@ class Menu_service {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage('service_notice');
+            sideGoPopup('service_notice');
         });
         return html;
     }
@@ -297,7 +297,7 @@ class Menu_service {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage('service_inquiry_menu');
+            sideGoPopup('service_inquiry_menu');
         });
         return html;
     }
@@ -310,7 +310,7 @@ class Menu_service {
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage('helper');
+            sideGoPopup('helper');
         });
         return html;
     }
