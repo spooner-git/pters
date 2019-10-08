@@ -21,9 +21,10 @@
 	}
 	.cal_tools_wrap{
 		display: table;
-		position: absolute;
-		right: 0;
-		top: 0;
+		/* position: absolute; */
+		/* right: 0; */
+		/* top: 0; */
+		float: right;
 		width: 100px;
 		height: 100%;
 	}
@@ -42,6 +43,15 @@
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 24px;
+	}
+	.cal_pc_tools_wrap{
+		float: right;
+		margin-right:20px;
+	}
+	@media(max-width:650px){
+		.cal_pc_tools_wrap{
+			display: none;
+		}
 	}
 	.cal_upper_box .swap_cal{
 		display: inline-block;
