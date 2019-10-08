@@ -54,8 +54,17 @@
 {% block local_js_footer %}
     <script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
     <script>
+    var kakao_login_test = true;
+
+    window.addEventListener('load', function () {
+        kakao_login_test = true;
+    }
+    );
     function loginWithKakao() {
-        Kakao.init('4533bb10ac61e20907cd273f0941210a');
+        if(kakao_login_test){
+            Kakao.init('4533bb10ac61e20907cd273f0941210a');
+            kakao_login_test = false;
+        }
         // 로그인 창을 띄웁니다.
         Kakao.Auth.login({
             success: function(authObj) {
