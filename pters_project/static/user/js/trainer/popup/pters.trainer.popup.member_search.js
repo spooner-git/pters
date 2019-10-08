@@ -25,6 +25,15 @@ class Member_search {
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
+    clear_data(){
+        this.step = 0;
+        this.data = {
+            searched_data : [],
+            search_id:null,
+            selected_member_id:null
+        };
+    }
+
     clear(){
         setTimeout(()=>{
             document.querySelector(this.target.install).innerHTML = "";
@@ -61,14 +70,16 @@ class Member_search {
         let search_input = this.dom_row_search_input();
         let search_button = this.dom_row_search_button();
         let reg_button = this.dom_row_reg_button();
+        let reset_button = this.dom_row_reset_button();
         let member_list = this.dom_row_member_list();
 
         let content = search_input;
+        let button = this.step == 0 ? search_button : reg_button + reset_button;
         if(this.step == 1 || this.step == 2){
             content = search_input + member_list;
         }
 
-        let button = this.step == 0 ? search_button : reg_button;
+        
 
         let assembled = 
                         '<div class="obj_input_box_full" style="border:0">' + content + '</div>' +
@@ -98,6 +109,10 @@ class Member_search {
             style = {"background-color":"#cccccc", "color":"#ffffff", "height":"50px", "line-height":"50px"};
         }
         let onclick = ()=>{
+            if(this.data.search_id == null){
+                show_error_message("검색 조건을 입력해주세요.");
+                return false;
+            }
             let data = {"search_val":this.data.search_id};
             Member_func.search(data, (data)=>{
                 this.data.searched_data = data.member_list;
@@ -113,12 +128,31 @@ class Member_search {
         let id = "dom_row_reg_button";
         let title = "등록";
         let style = {"background-color":"#fe4e65", "color":"#ffffff", "height":"50px", "line-height":"50px"};
+        if(this.data.selected_member_id == null){
+            style = {"background-color":"#cccccc", "color":"#ffffff", "height":"50px", "line-height":"50px"};
+        }
         let onclick = ()=>{
+            if(this.data.selected_member_id == null){
+                show_error_message('회원을 선택해주세요.');
+                return false;
+            }
             layer_popup.close_layer_popup();
             this.clear();
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, popup_style, null, ()=>{
                 member_add_popup = new Member_add('.popup_member_add', {member_id: this.data.selected_member_id}, 'member_add_popup');});
+        };
+        let html = CComponent.button (id, title, style, onclick);
+        return html;
+    }
+
+    dom_row_reset_button(){
+        let id = "dom_row_reset_button";
+        let title = "재검색";
+        let style = {"background-color":"#ffffff", "height":"48px", "line-height":"48px", "margin-top":"10px", 'border':"1px solid #ebe6e6"};
+        let onclick = ()=>{
+            this.clear_data();
+            this.render_content();
         };
         let html = CComponent.button (id, title, style, onclick);
         return html;
@@ -167,7 +201,6 @@ class Member_search {
             $(document).off('click', `#member_searched_${data.member_id}`).on('click', `#member_searched_${data.member_id}`, ()=>{
                 this.step = 2;
                 this.data.selected_member_id = data.member_id;
-                console.log("clicked", data.member_id)
                 this.render_content();
             });
 
@@ -180,6 +213,15 @@ class Member_search {
         
 
         return html_to_join.join("");
+    }
+
+    dom_row_loading_image(){
+        let html = 
+                    `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
+                        <img src="/static/common/loading.svg">
+                        <div style="font-size:12px;color:#858282">사용자 데이터를 불러오고 있습니다.</div>
+                    </div>`;
+        return html;
     }
 
 
