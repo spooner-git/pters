@@ -52,7 +52,6 @@ class Qna {
         let html = content;
 
         document.querySelector(this.target.install).innerHTML = html;
-        $(this.target.install).html(html)
         // document.querySelector('.popup_member_view .wrapper_top').style.border = 0;
         // PopupBase.top_menu_effect(this.target.install);
         // func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -76,8 +75,8 @@ class Qna {
 
     dom_assembly_toolbox(){
         let html = `<div class="qna_upper_box">
-                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
-                            <div style="display:inline-block;">QnA 관리</div>
+                        <div style="display:inline-block;width:auto;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                            <div style="display:inline-block;">문의(Q&A) 관리</div>
                         </div>
                     </div>`;
         return html;
@@ -89,6 +88,11 @@ class Qna {
         for(let item in this.data.all){
             let article = this.dom_row_qna_article(this.data.all[item]);
             html_to_join.push(article);
+        }
+        if(html_to_join.length == 0){
+            html_to_join.push(
+                `<p style="font-size:14px;">데이터가 없습니다.</p>`
+            );
         }
 
         let html = '<div class="qa_article_wrapper">' + html_to_join.join('') + '</div>';

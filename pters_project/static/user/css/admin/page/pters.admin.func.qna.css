@@ -52,6 +52,7 @@
 	padding: 10px 16px;
 	box-sizing: border-box;
 	border-bottom: 1px solid #cccccc;
+	cursor: pointer;
 }
 
 #section_admin_qna_content .qa_article_upper{
@@ -66,6 +67,7 @@
 }
 #section_admin_qna_content .qa_contents{
 	font-size: 13px;
+	margin-top: 10px;
 }
 #section_admin_qna_content .qa_contents > div:first-child{
 	padding: 10px 5px;

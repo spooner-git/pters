@@ -41,59 +41,55 @@
 	padding: 4px 0;
 }
 
-#notice_content_wrap .program_wrapper{
-	padding: 0 0 0 20px;
-	box-sizing: border-box;
-}
 
-#notice_content_wrap .today_plan_wrapper{
+
+#section_admin_notice_content .notice_article_wrapper{
 	display: flex;
-	height: 48px;
-	line-height: 22px;
-	padding: 12px 20px;
-	color: #3d3b3b;
-	letter-spacing: -0.5px;
-	font-weight: 500;
+	flex-direction: column-reverse;
+}
+
+#section_admin_notice_content .notice_article{
+	padding: 10px 16px;
 	box-sizing: border-box;
+	border-bottom: 1px solid #cccccc;
+	cursor: pointer;
 }
 
-.today_plan_lecture_color{
-	display:inline-block;
-	width: 4px;
-	height:16px;
-	border-radius:6px;
-	/* background-color:#ceeac4; */
-	margin-right:8px;
-	vertical-align:middle;
+#section_admin_notice_content .notice_article_upper{
+	display: flex;
+	font-size: 14px;
+	font-weight: bold;
+	margin-bottom: 8px;
+}
+#section_admin_notice_content .notice_article_bottom{
+	display: flex;
+	font-size: 13px;
+}
+#section_admin_notice_content .notice_contents{
+	font-size: 13px;
+	margin-top: 10px;
+}
+#section_admin_notice_content .notice_contents > div:first-child{
+	padding: 10px 5px;
+	background-color: #f5f2f2;
 }
 
-#notice_content_wrap .today_plan_wrapper > div:nth-child(1){
-	flex: 0 0 80px;
-	font-size: 12px;	
+#section_admin_notice_content .notice_article_id{
+	flex-basis: 40px;
 }
-#notice_content_wrap .today_plan_wrapper > div:nth-child(2){
+#section_admin_notice_content .notice_article_title{
 	flex: 1 1 0;
-	font-size: 14px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 }
-#notice_content_wrap .today_plan_wrapper > div:nth-child(3){
-	flex: 0 0 60px;
-	font-size: 14px;
+
+#section_admin_notice_content .notice_article_use{
+ 	flex-basis: 50px;
+}
+
+#section_admin_notice_content .notice_article_target{
+	flex: 1 0 0;
+}
+
+#section_admin_notice_content .notice_article_reg_date{
+	flex-basis: 150px;
 	text-align: right;
-}
-
-#notice_content_wrap .end_alert_wrapper{
-	padding: 0 20px;
-	box-sizing: border-box;
-}
-
-#notice_content_wrap .end_alert_wrapper .create_row .cell_title > img, .create_input_row .cell_title > img{
-	border-radius: 50%;
-}
-
-#notice_content_wrap .sales_wrapper{
-	padding: 0 0 0 20px;
-	box-sizing: border-box;
 }

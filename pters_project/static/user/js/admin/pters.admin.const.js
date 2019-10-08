@@ -120,6 +120,12 @@ const MAX_WIDTH = 800;
 
 /**/
 
+/* 공지사항 type */
+const NOTICE = 'NOTICE';
+const NOTICE_FAQ = 'FAQ';
+const NOTICE_USAGE = 'SYS_USAGE';
+const NOTICE_USE = {1:{text:"게시중", color:"green"}, 0:{text:"비공개", color:"#676767"} };
+const NOTICE_TARGET = {ALL:"전체", trainer:"강사", trainee:"수강회원"};
 
 /* 팝업 주소 */
 
