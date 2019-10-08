@@ -128,12 +128,14 @@
         $('#IE_block_explain').css('display','block');
     }
     */
+    var kakao_login_test = true;
 
     $('#errorMessageBar span:nth-child(2)').click(function(){
         $('#errorMessageBar').fadeOut('fast')
     });
 
     window.addEventListener('load', function () {
+        kakao_login_test = true;
         var val = location.href.substr(
             location.href.lastIndexOf('=') + 1
         );
@@ -184,7 +186,10 @@
 
     // <!-- 카카오 로그인  Script -->
     function loginWithKakao() {
-        Kakao.init('4533bb10ac61e20907cd273f0941210a');
+        if(kakao_login_test){
+            Kakao.init('4533bb10ac61e20907cd273f0941210a');
+            kakao_login_test = false;
+        }
         // 로그인 창을 띄웁니다.
         Kakao.Auth.login({
             success: function(authObj) {
