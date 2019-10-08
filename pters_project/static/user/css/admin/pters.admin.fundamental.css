@@ -10,8 +10,8 @@
  html, body{
      overflow: hidden;
      margin: 0;
-     user-select: none !important;
-     -webkit-user-select: none !important;
+     /* user-select: none !important;
+     -webkit-user-select: none !important; */
  }
 
  /* 안드로이드 input 필드 키보드 가림현상 보정 */
