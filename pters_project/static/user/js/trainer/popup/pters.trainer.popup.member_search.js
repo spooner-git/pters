@@ -5,12 +5,10 @@ class Member_search {
         this.instance = instance;
         this.page_name = 'member_search';
         this.data = {
-            member_search_type:{value:[], text:[]},
-            member_search_subject:null,
-            member_search_content:null
+            searched_data : [],
+            search_id:null,
+            selected_member_id:null
         };
-
-        this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
 
         this.step = 0;
 
@@ -22,17 +20,12 @@ class Member_search {
         this.set_initial_data();
     }
 
-    init_data(){
-        this.data = {
-            search_id:null
-        };
-    }
-
     set_initial_data (){
         this.render_content();
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
-        clear(){
+
+    clear(){
         setTimeout(()=>{
             document.querySelector(this.target.install).innerHTML = "";
         }, 300);
@@ -71,7 +64,7 @@ class Member_search {
         let member_list = this.dom_row_member_list();
 
         let content = search_input;
-        if(this.step == 1){
+        if(this.step == 1 || this.step == 2){
             content = search_input + member_list;
         }
 
@@ -107,7 +100,9 @@ class Member_search {
         let onclick = ()=>{
             let data = {"search_val":this.data.search_id};
             Member_func.search(data, (data)=>{
-                console.log(data);
+                this.data.searched_data = data.member_list;
+                this.step = 1;
+                this.render_content();
             });
         };
         let html = CComponent.button (id, title, style, onclick);
@@ -119,7 +114,11 @@ class Member_search {
         let title = "등록";
         let style = {"background-color":"#fe4e65", "color":"#ffffff", "height":"50px", "line-height":"50px"};
         let onclick = ()=>{
-            alert('등록');
+            layer_popup.close_layer_popup();
+            this.clear();
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, popup_style, null, ()=>{
+                member_add_popup = new Member_add('.popup_member_add', {member_id: this.data.selected_member_id}, 'member_add_popup');});
         };
         let html = CComponent.button (id, title, style, onclick);
         return html;
@@ -148,31 +147,39 @@ class Member_search {
 
     dom_row_member_list(){
 
-        let checked = OFF;
-        let style_radio = {"display":"inline-block"};
-        let onclick_radio = ()=>{
+        let length = this.data.searched_data.length;
+        let html_to_join = [];
+        for(let i=0; i<length; i++){
+            let data = this.data.searched_data[i];
+            let checked = this.data.selected_member_id == data.member_id ? ON : OFF;
+            let style_radio = {"display":"inline-block"};
+            let onclick_radio = ()=>{
 
-        };
-        let radio_button = CComponent.radio_button (`radio_dom_row_member_list`, checked, style_radio, onclick_radio);
+            };
+            let radio_button = CComponent.radio_button (`radio_dom_row_member_list`, checked, style_radio, onclick_radio);
 
-        // let id = `dom_row_member_list`;
-        // let title = `회원명 ${radio_button}`;
-        // let icon = '/static/common/icon/icon_account.png';
-        // let icon_r_visible = NONE;
-        // let icon_r_text = "";
-        // let style = null;
-        // let onclick = ()=>{
+            let html = `<article style="display: flex;height: 40px;line-height: 40px;padding: 10px 0;" id="member_searched_${data.member_id}">
+                            <div style="flex-basis:70px;background-image:url('${data.member_profile_url}');background-size:contain;background-repeat:no-repeat;"></div>
+                            <div style="flex:1 0 0;">${data.member_name} <span style="font-size:12px;color:#858282">(${data.member_phone})</span></div>
+                            <div style="flex-basis:50px;text-align:right;">${radio_button}</div>
+                        </article>`;
+            
+            $(document).off('click', `#member_searched_${data.member_id}`).on('click', `#member_searched_${data.member_id}`, ()=>{
+                this.step = 2;
+                this.data.selected_member_id = data.member_id;
+                console.log("clicked", data.member_id)
+                this.render_content();
+            });
 
-        // }
-        // let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+            html_to_join.push(html);
+        }
 
-        let html = `<article style="display: flex;height: 40px;line-height: 40px;padding: 10px 0;">
-                        <div style="flex-basis:70px;background-image:url('/static/common/icon/icon_account.png');background-size:contain;background-repeat:no-repeat;"></div>
-                        <div style="flex:1 0 0;">회원명</div>
-                        <div style="flex-basis:50px;text-align:right;">${radio_button}</div>
-                    </article>`;
+        if(html_to_join.length == 0){
+            html_to_join.push('<p style="font-size:14px;font-weight:500;color:#858282;">검색된 결과가 없습니다.</p>');
+        }
+        
 
-        return html;
+        return html_to_join.join("");
     }
 
 
@@ -186,7 +193,6 @@ class Member_search {
 
         member_search_func.create(data, ()=>{
             show_error_message("문의를 접수하였습니다.");
-            this.init_data();
             member_search.render_content();
             member_search_func.read((data)=>{
                 console.log(data);
