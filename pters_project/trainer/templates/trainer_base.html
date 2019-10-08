@@ -106,12 +106,15 @@ onclick="layer_popup.close_layer_popup();"></div> -->
             <div class="side_menu_item" onclick="sideGoPage('statistics')" id="side_statistics">
                 <img src={% static_url "common/icon/icon_statistics_grey.png" %} alt=""><span>통계</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('menu')" id="side_settings">
+            <div class="side_menu_item" onclick="sideGoPage('settings')" id="side_settings">
                 <img src={% static_url "common/icon/icon_setting_worktime_grey.png" %} alt=""><span>설정</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('menu')" id="side_menu">
-                <img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""><span>전체 메뉴</span>
+            <div class="side_menu_item" onclick="sideGoPage('service')" id="side_service">
+                <img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""><span>서비스</span>
             </div>
+            <!-- <div class="side_menu_item" onclick="sideGoPage('menu')" id="side_menu">
+                <img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""><span>전체 메뉴</span>
+            </div> -->
         </div>
 
     </section>
@@ -188,6 +191,8 @@ onclick="layer_popup.close_layer_popup();"></div> -->
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.lecture.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.member.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.menu.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.menu_settings.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.menu_service.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.alarm.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.component.common.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.base.js" %}></script>
@@ -334,6 +339,8 @@ onclick="layer_popup.close_layer_popup();"></div> -->
     var member = new Member('#root_content', 'member');
     var menu = new Menu('#root_content', 'menu');
     var alarm = new Alarm('#root_content', 'alarm');
+    var service = new Menu_service('#root_content', 'service');
+    var settings = new Menu_settings('#root_content', 'settings');
     // 페이지 인스턴스
 
     // 팝업 인스턴스
@@ -528,6 +535,12 @@ onclick="layer_popup.close_layer_popup();"></div> -->
             case 'helper':
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_HELPER, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     service_helper_popup = new Service_helper('.popup_service_helper')});
+            break;
+            case 'settings':
+                settings.init();
+            break;
+            case 'service':
+                service.init();
             break;
         }
         
