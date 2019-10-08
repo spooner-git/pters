@@ -202,6 +202,7 @@ onclick="layer_popup.close_layer_popup();"></div> -->
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_view.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_add.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_search.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_view.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_list.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_add.js" %}></script>
@@ -287,7 +288,7 @@ onclick="layer_popup.close_layer_popup();"></div> -->
     const windowHeight = window.innerHeight;
     const windowWidth = window.innerWidth;
     const $root_content = $('#root_content');
-    var current_page = "home";
+    var current_page = "";
 
     input_adjust_location_for_android();
     func_set_webkit_overflow_scrolling('#root_content');
@@ -347,6 +348,7 @@ onclick="layer_popup.close_layer_popup();"></div> -->
     var plan_view_popup;
     var plan_add_popup;
     var member_add_popup;
+    var member_search_popup;
     var member_view_popup;
     var member_simple_view_popup;
     var member_edit_popup;

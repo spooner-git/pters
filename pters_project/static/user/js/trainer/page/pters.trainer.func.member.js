@@ -187,19 +187,18 @@ class Member {
 
     event_add_member(){
         let user_option = {
-            new:{text:"직접 작성해서 등록", callback:()=>{
+            old:{text:"PTERS 아이디가 있는 회원", callback:()=>{
+                layer_popup.close_layer_popup();
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SEARCH, 100, popup_style, null, ()=>{
+                    member_search_popup = new Member_search('.popup_member_search', null, 'member_search_popup');});
+            }},
+            new:{text:"새로운 회원", callback:()=>{
                 layer_popup.close_layer_popup();
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, popup_style, null, ()=>{
                     member_add_popup = new Member_add('.popup_member_add', null, 'member_add_popup');});
-            }},
-            old:{text:"검색으로 등록", callback:()=>{
-                layer_popup.close_layer_popup();
-                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, popup_style, null, ()=>{
-                    member_add_popup = new Member_add('.popup_member_add', null, 'member_add_popup');});
-            }},
-
+            }}
         };
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
@@ -751,8 +750,40 @@ class Member_func{
             }
         });
     }
+
+    static search(data, callback){
+        $.ajax({
+            url:'/trainer/search_member_info/',
+            type:'GET',
+            data: data,
+            dataType : 'JSON',
+
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                callback(data);
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                // location.reload();
+            }
+        });
+    }
     
 }
+
 
 /* global $, 
 ajax_load_image, 
