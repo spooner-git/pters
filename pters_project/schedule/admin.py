@@ -37,7 +37,7 @@ class DeleteScheduleTbAdmin(admin.ModelAdmin):
     list_display = ('schedule_id', 'class_tb', 'member_ticket_tb', 'lecture_tb', 'lecture_schedule_id',
                     'delete_repeat_schedule_tb', 'start_dt', 'end_dt',
                     'permission_state_cd', 'state_cd', 'sign_data_url', 'note', 'member_note', 'en_dis_type',
-                    'reg_member', 'del_member_id', 'reg_dt', 'mod_dt', 'use')
+                    'reg_member', 'del_member', 'reg_dt', 'mod_dt', 'use')
     search_fields = ['class_tb__member__name', 'member_ticket_tb__member__name', 'lecture_tb__name']
 
 
