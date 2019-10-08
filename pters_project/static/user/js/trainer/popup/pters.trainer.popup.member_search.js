@@ -27,11 +27,9 @@ class Member_search {
 
     clear_data(){
         this.step = 0;
-        this.data = {
-            searched_data : [],
-            search_id:null,
-            selected_member_id:null
-        };
+        this.data.searched_data = [];
+        this.data.search_id = null;
+        this.data.selected_member_id = null;
     }
 
     clear(){
@@ -78,8 +76,6 @@ class Member_search {
         if(this.step == 1 || this.step == 2){
             content = search_input + member_list;
         }
-
-        
 
         let assembled = 
                         '<div class="obj_input_box_full" style="border:0">' + content + '</div>' +
@@ -151,8 +147,19 @@ class Member_search {
         let title = "재검색";
         let style = {"background-color":"#ffffff", "height":"48px", "line-height":"48px", "margin-top":"10px", 'border':"1px solid #ebe6e6"};
         let onclick = ()=>{
-            this.clear_data();
-            this.render_content();
+            // this.clear_data();
+            // this.render_content();
+            
+            if(this.data.search_id == null){
+                show_error_message("검색 조건을 입력해주세요.");
+                return false;
+            }
+            let data = {"search_val":this.data.search_id};
+            Member_func.search(data, (data)=>{
+                this.data.searched_data = data.member_list;
+                this.step = 1;
+                this.render_content();
+            });
         };
         let html = CComponent.button (id, title, style, onclick);
         return html;
@@ -176,6 +183,14 @@ class Member_search {
         let required = "";
         let row = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
         let html = row;
+        // $(document).off('focusin', '#c_i_r_member_search_subject_input').on('focusin', '#c_i_r_member_search_subject_input', ()=>{
+
+        //     if(this.data.search_id != null){
+        //         this.clear_data();
+        //         this.render_content();
+        //     }
+        // });
+
         return html;
     }
 
