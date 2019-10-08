@@ -229,56 +229,86 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=OFF_SCHEDULE_TYPE)
 
         for off_repeat_schedule_info in off_repeat_schedule_data:
-            off_repeat_schedule = {'repeat_schedule_id': off_repeat_schedule_info.repeat_schedule_id,
-                                   'repeat_type_cd': off_repeat_schedule_info.repeat_type_cd,
-                                   'start_date': off_repeat_schedule_info.start_date,
-                                   'end_date': off_repeat_schedule_info.end_date,
-                                   'start_time': off_repeat_schedule_info.start_time,
-                                   'end_time': off_repeat_schedule_info.end_time,
-                                   'time_duration': off_repeat_schedule_info.time_duration,
-                                   'state_cd': off_repeat_schedule_info.state_cd}
+            off_repeat_schedule = collections.OrderedDict(
+                [('repeat_schedule_id', off_repeat_schedule_info.repeat_schedule_id),
+                 ('repeat_type_cd', off_repeat_schedule_info.repeat_type_cd),
+                 ('start_date', off_repeat_schedule_info.start_date),
+                 ('end_date', off_repeat_schedule_info.end_date),
+                 ('start_time', off_repeat_schedule_info.start_time),
+                 ('end_time', off_repeat_schedule_info.end_time),
+                 ('time_duration', off_repeat_schedule_info.time_duration),
+                 ('state_cd', off_repeat_schedule_info.state_cd)])
             off_repeat_schedule_list.append(off_repeat_schedule)
 
         # 수업 반복 일정 정보 불러오기
         repeat_schedule_data = RepeatScheduleTb.objects.select_related(
-            'lecture_tb').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE).order_by('start_date')
+            'lecture_tb').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE).order_by('lecture_tb',
+                                                                                              'lecture_schedule_id',
+                                                                                              'start_date')
 
         for repeat_schedule_info in repeat_schedule_data:
             # 그룹 수업 반복일정인 경우 존재함
             lecture_tb = repeat_schedule_info.lecture_tb
-            # 그룹 수업에 추가된 회원 반복일정인 경우 존재함
-            repeat_schedule_id = repeat_schedule_info.lecture_repeat_schedule_id
+            lecture_id = ''
+            lecture_name = ''
+            lecture_max_member_num = ''
+            lecture_ing_color_cd = ''
+            lecture_end_color_cd = ''
+            lecture_ing_font_color_cd = ''
+            lecture_end_font_color_cd = ''
+            if lecture_tb is not None and lecture_tb != '':
+                lecture_id = lecture_tb.lecture_id
+                lecture_name = lecture_tb.name
+                lecture_max_member_num = lecture_tb.member_num
+                lecture_ing_color_cd = lecture_tb.ing_color_cd
+                lecture_end_color_cd = lecture_tb.end_color_cd
+                lecture_ing_font_color_cd = lecture_tb.ing_font_color_cd
+                lecture_end_font_color_cd = lecture_tb.ing_font_color_cd
 
-            repeat_schedule_dict = {'repeat_schedule_id': repeat_schedule_info.repeat_schedule_id,
-                                    'repeat_type_cd': repeat_schedule_info.repeat_type_cd,
-                                    'start_date': repeat_schedule_info.start_date,
-                                    'end_date': repeat_schedule_info.end_date,
-                                    'start_time': repeat_schedule_info.start_time,
-                                    'end_time': repeat_schedule_info.end_time,
-                                    'time_duration': repeat_schedule_info.time_duration,
-                                    'state_cd': repeat_schedule_info.state_cd,
-                                    'lecture_repeat_schedule_id': '',
-                                    'lecture_id': '',
-                                    'lecture_name': '',
-                                    'lecture_max_member_num': '',
-                                    'schedule_type': ON_SCHEDULE}
+            # 회원의 반복일정
+            member_ticket_tb = repeat_schedule_info.member_ticket_tb
+            member_ticket_id = ''
+            member_id = ''
+            member_name = ''
+            if member_ticket_tb is not None and member_ticket_tb != '':
+                member_ticket_id = member_ticket_tb.member_ticket_id
+                member_id = member_ticket_tb.member.member_id
+                member_name = member_ticket_tb.member.name
+
+            # 그룹 수업에 추가된 회원 반복일정인 경우 존재함
+            repeat_lecture_schedule_id = repeat_schedule_info.lecture_schedule_id
+            repeat_schedule_dict = collections.OrderedDict(
+                [('repeat_schedule_id', repeat_schedule_info.repeat_schedule_id),
+                 ('repeat_type_cd', repeat_schedule_info.repeat_type_cd),
+                 ('start_date', repeat_schedule_info.start_date),
+                 ('end_date', repeat_schedule_info.end_date),
+                 ('start_time', repeat_schedule_info.start_time),
+                 ('end_time', repeat_schedule_info.end_time),
+                 ('time_duration', repeat_schedule_info.time_duration),
+                 ('state_cd', repeat_schedule_info.state_cd),
+                 ('member_ticket_id', member_ticket_id),
+                 ('member_id', member_id),
+                 ('member_name', member_name),
+                 ('repeat_lecture_schedule_id', repeat_lecture_schedule_id),
+                 ('lecture_id', lecture_id),
+                 ('lecture_name', lecture_name),
+                 ('lecture_max_member_num', lecture_max_member_num),
+                 ('lecture_ing_color_cd', lecture_ing_color_cd),
+                 ('lecture_end_color_cd', lecture_end_color_cd),
+                 ('lecture_ing_font_color_cd', lecture_ing_font_color_cd),
+                 ('lecture_end_font_color_cd', lecture_end_font_color_cd)])
+
             # 일반 회원의 반복일정
             if lecture_tb is None or lecture_tb == '':
                 member_repeat_schedule_list.append(repeat_schedule_dict)
             else:
-                repeat_schedule_dict['lecture_id'] = lecture_tb.lecture_id
-                repeat_schedule_dict['lecture_name'] = lecture_tb.name
-                repeat_schedule_dict['lecture_max_member_num'] = lecture_tb.member_num
-                # 수업 일정인 경우
-                if repeat_schedule_id is None or repeat_schedule_id == '':
-                    repeat_schedule_dict['schedule_type'] = GROUP_SCHEDULE
-                    repeat_schedule_dict['repeat_schedule_dict'] = lecture_tb.lecture_id
-                # 수업에 속해있는 회원 반복일정
-                else:
-                    repeat_schedule_dict['schedule_type'] = GROUP_SCHEDULE
+                lecture_repeat_schedule_list.append(repeat_schedule_dict)
 
-        return JsonResponse({'off_repeat_schedule_data': off_repeat_schedule_list},
-                            json_dumps_params={'ensure_ascii': True})
+        repeat_schedule = collections.OrderedDict()
+        repeat_schedule['off_repeat_schedule_data'] = off_repeat_schedule_list
+        repeat_schedule['member_repeat_schedule_list'] = member_repeat_schedule_list
+        repeat_schedule['lecture_repeat_schedule_list'] = lecture_repeat_schedule_list
+        return JsonResponse(repeat_schedule, json_dumps_params={'ensure_ascii': True})
 
 
 class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
