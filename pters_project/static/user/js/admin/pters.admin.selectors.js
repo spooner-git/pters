@@ -3213,7 +3213,13 @@ class BoardWriter{
         this.external_data = data;
         this.data = {
             title:null,
-            content:null
+            content:null,
+            category:[
+                
+            ],
+            category_selected:{
+                
+            }
         };
         // this.init();
         this.set_initial_data();
@@ -3225,8 +3231,11 @@ class BoardWriter{
     }
 
     set_initial_data(){
-        this.data.title = this.external_data.title != null ? this.external_data.title : null;
-        this.data.content = this.external_data.content != null ? this.external_data.content : null;
+        for(let item in this.external_data){
+            if(this.external_data[item] != undefined){
+                this.data[item] = this.external_data[item];
+            }
+        }
     }
 
     clear(){
@@ -3236,7 +3245,7 @@ class BoardWriter{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="${this.target.instance}.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="${this.target.instance}.close();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center">
                             <span id="">${this.title}</span>
                           </span>`;
@@ -3254,12 +3263,24 @@ class BoardWriter{
     dom_assembly (){
         let title_input = this.dom_row_subject_input();
         let content_input = this.dom_row_content_input();
+        let category = this.dom_assembly_category();
 
 
-        let html = `<div class="obj_input_box_full" style="padding:8px 16px;">`+ title_input + `</div>` + 
+        let html =  category + 
+                    `<div class="obj_input_box_full" style="padding:8px 16px;">`+ title_input + `</div>` + 
                     `<div class="obj_input_box_full">` + content_input + `</div>`;
 
         return html;
+    }
+
+    dom_assembly_category(){
+        let length = this.data.category.length;
+        let html_to_join = [];
+        for(let i=0; i<length; i++){
+            let html = this.dom_row_category(this.data.category[i]);
+            html_to_join.push(html);
+        }
+        return html_to_join.join("");
     }
 
     dom_row_subject_input(){
@@ -3285,6 +3306,35 @@ class BoardWriter{
 
     dom_row_content_input(){
         let row = `<div id="board_writer_content_input"></div>`;
+        let html = row;
+        return html;
+    }
+
+    dom_row_category(data){
+        let category_id = data.id;
+        let category_title = data.title;
+        let category_data = data.data;
+
+        let id = `dom_row_category_${category_id}`;
+        let title = category_title;
+        let icon = DELETE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = this.data.category_selected[category_id].text.length == 0 ? '' : this.data.category_selected[category_id].text;
+        let style = {'padding':"16px", "display":"inline-block", "width":"43%"};
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let title = category_title;
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = category_data;
+            let selected_data = this.data.category_selected[category_id];
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.category_selected[category_id] = set_data;
+                    this.render();
+                });
+            });
+        });
         let html = row;
         return html;
     }
@@ -3326,7 +3376,7 @@ class BoardWriter{
                 }
             },
         });
-        if(this.data.content == ""){
+        if(this.data.content == "" || this.data.content == null){
             this.data.content = " "
         }
         $(`#board_writer_content_input`).summernote('pasteHTML', this.data.content);
@@ -3337,9 +3387,36 @@ class BoardWriter{
         // callback();
     }
 
+    close(){
+        this.clear();
+        layer_popup.close_layer_popup();
+    }
+
     upper_right_menu(){
         let content_value = $('#board_writer_content_input').summernote('code');
         this.data.content = content_value;
+
+        if(this.data.title == null){
+            show_error_message("제목을 입력해주세요.");
+            return false;
+        }
+        if($(content_value).text().length <= 1){
+            show_error_message("내용을 입력해주세요.");
+            return false;
+        }
+        if(this.data.category.length > 0){
+            let selected_value_ok = true;
+            for(let item in this.data.category_selected){
+                if(this.data.category_selected[item].value.length == 0){
+                    selected_value_ok = false;
+                }
+            }
+            if(selected_value_ok == false){
+                show_error_message("카테고리를 선택해주세요.")
+                return false;
+            }
+        }
+
         this.callback(this.data);
         layer_popup.close_layer_popup();
         this.clear();

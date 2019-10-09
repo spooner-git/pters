@@ -77,7 +77,11 @@ class Notice {
     dom_assembly_toolbox(){
         let html = `<div class="notice_upper_box">
                         <div style="display:inline-block;width:auto;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
-                            <div style="display:inline-block;">공지사항 관리</div>
+                            <div style="display:inline-block;">
+                                공지사항 관리
+                            </div>
+                        </div>
+                        <div style="float:right;width:25px;height:25px;background-image:url('/static/common/icon/icon_plus_pink.png');background-size:contain;" onclick="${this.instance}.event_add_new()">
                         </div>
                     </div>`;
         return html;
@@ -135,11 +139,28 @@ class Notice {
                             </div>
                             <div style="text-align:right;margin-top:10px;">
                                 ${CComponent.button ("notice_modify_"+id, "수정", {"border":"1px solid #e8e8e8", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
+
                                         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
-                                            let external_data = {title:title, content:content};
-                                            board_writer = new BoardWriter("수정", '.popup_board_writer', 'board_writer', external_data, (data)=>{
-                                                console.log(data);
+                                            let external_data = {   title:title, content:content,
+                                                                    category:[
+                                                                        {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
+                                                                        {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
+                                                                        {id:"status", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
+                                                                    ],
+                                                                    category_selected:{
+                                                                        open:{text:[target], value:[data.notice_to_member_type_cd]},
+                                                                        type:{text:[NOTICE_TYPE[type] ], value:[type]},
+                                                                        status:{text:[NOTICE_USE[use].text], value:[ON]}
+                                                                    }
+                                            };
+                                            board_writer = new BoardWriter("공지 수정", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
+                                                let data = {"notice_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
+                                                            "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0]};
+                                                Notice_func.create(data, ()=>{
+                                                    this.init();
+                                                });
                                             });
+
                                         });
                                     })
                                 }
@@ -162,8 +183,29 @@ class Notice {
         return html;
     }
 
-    
-
+    event_add_new(){
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
+            let external_data = {   
+                                        category:[
+                                            {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
+                                            {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
+                                            {id:"status", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
+                                        ],
+                                        category_selected:{
+                                            open:{text:[], value:[]},
+                                            type:{text:[], value:[]},
+                                            status:{text:[], value:[]}
+                                        }
+            };
+            board_writer = new BoardWriter("새 공지사항", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
+                let data = {"notice_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
+                            "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0]};
+                Notice_func.create(data, ()=>{
+                    this.init();
+                });
+            });
+        });
+    }
 }
 
 
@@ -200,6 +242,40 @@ class Notice_func{
             //통신 실패시 처리
             error:function(){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static create(data, callback){
+        $.ajax({
+            url:'/board/add_notice_info/',
+            type:'POST',
+            data: data,
+            dataType : 'JSON',
+    
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                // let data = JSON.parse(received_data);
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                // location.reload();
             }
         });
     }

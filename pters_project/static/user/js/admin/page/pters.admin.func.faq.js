@@ -79,6 +79,8 @@ class Faq {
                         <div style="display:inline-block;width:auto;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
                             <div style="display:inline-block;">자주묻는 질문(FAQ) 관리</div>
                         </div>
+                        <div style="float:right;width:25px;height:25px;background-image:url('/static/common/icon/icon_plus_pink.png');background-size:contain;" onclick="${this.instance}.event_add_new()">
+                        </div>
                     </div>`;
         return html;
     }
@@ -136,9 +138,24 @@ class Faq {
                             <div style="text-align:right;margin-top:10px;">
                                 ${CComponent.button ("faq_modify_"+id, "수정", {"border":"1px solid #e8e8e8", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
                                         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
-                                            let external_data = {title:title, content:content};
-                                            board_writer = new BoardWriter("수정", '.popup_board_writer', 'board_writer', external_data, (data)=>{
-                                                console.log(data);
+                                            let external_data = {   
+                                                                        category:[
+                                                                            {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
+                                                                            {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
+                                                                            {id:"status", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
+                                                                        ],
+                                                                        category_selected:{
+                                                                            open:{text:[], value:[]},
+                                                                            type:{text:[], value:[]},
+                                                                            status:{text:[], value:[]}
+                                                                        }
+                                            };
+                                            board_writer = new BoardWriter("FAQ 수정", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
+                                                let data = {"notice_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
+                                                            "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0]};
+                                                Notice_func.create(data, ()=>{
+                                                    this.init();
+                                                });
                                             });
                                         });
                                     })
@@ -162,6 +179,29 @@ class Faq {
         return html;
     }
 
+    event_add_new(){
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
+            let external_data = {   
+                                        category:[
+                                            {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
+                                            {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
+                                            {id:"status", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
+                                        ],
+                                        category_selected:{
+                                            open:{text:[], value:[]},
+                                            type:{text:[], value:[]},
+                                            status:{text:[], value:[]}
+                                        }
+            };
+            board_writer = new BoardWriter("새 FAQ", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
+                let data = {"notice_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
+                            "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0]};
+                Notice_func.create(data, ()=>{
+                    this.init();
+                });
+            });
+        });
+    }
     
 
 }
