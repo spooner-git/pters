@@ -145,7 +145,8 @@ class Service_inquiry_history {
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_READER, 100, popup_style, null, ()=>{
             let data = {
-                title:title, content:content, date:date, status:status, type:type
+                title:title, content:content, date:date, status:status, type:type,
+                answer_title:"답변 타이틀", answer_content:"답변 내용쓰", answer_date:date
             };
             board_reader = new BoardReader("문의 내용", '.popup_board_reader', "board_reader", data);});
     }

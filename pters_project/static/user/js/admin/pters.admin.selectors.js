@@ -3439,7 +3439,7 @@ class BoardReader{
         let title = this.dom_row_answer_title();
         let content = this.dom_row_answer_content();
 
-        let html = `<div class="obj_input_box_full">` + title + content + `</div>`;
+        let html = `<div class="obj_input_box_full" style="padding:20px 20px 20px 40px;">` + title + content + `</div>`;
         return html;
     }
 
