@@ -5,10 +5,17 @@ class Service_inquiry_history {
         this.instance = instance;
         this.page_name = 'service_inquiry_history';
         this.data = {
-            inquiry_history_type:{value:[], text:[]},
-            inquiry_history_subject:null,
-            inquiry_history_content:null
-        };
+                        title:[],
+                        contents: [],
+                        email_address: [],
+                        qa_type_cd: [],
+                        qa_type_cd_name: [],
+                        question_id: [],
+                        reg_dt: [],
+                        mod_dt: [],
+                        status_type_cd: [],
+                        status_type_cd_name: []
+                    };
 
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
 
@@ -107,6 +114,10 @@ class Service_inquiry_history {
             html_temp.push(html);
         }
 
+        if(html_temp.length == 0){
+            html_temp.push('<div class="inquiry_wrapper" style="font-size:14px;">문의 내역이 없습니다.</div>');
+        }
+
         return html_temp.join("");
     }
 
@@ -124,26 +135,23 @@ class Service_inquiry_history {
     }
 
     open_detail(question_id){
-        alert("question_id: ", question_id);
-        console.log(question_id)
+        let index = this.data.question_id.indexOf(String(question_id) );
+        let title = this.data.title[index];
+        let content = this.data.contents[index];
+        let date = this.data.reg_dt[index];
+        let status = this.data.status_type_cd_name[index];
+        let type = this.data.qa_type_cd_name[index];
+
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_READER, 100, popup_style, null, ()=>{
+            let data = {
+                title:title, content:content, date:date, status:status, type:type
+            };
+            board_reader = new BoardReader("문의 내용", '.popup_board_reader', "board_reader", data);});
     }
 
     send_data(){
-        // let data = {
-        //     "inquire_type":this.data.inquiry_history_type.value[0],
-        //     "inquire_subject":this.data.inquiry_history_subject,
-        //     "inquire_body":this.data.inquiry_history_content,
-        //     "next_page":""
-        // };
-
-        // Service_inquiry_history_func.create(data, ()=>{
-        //     show_error_message("문의를 접수하였습니다.");
-        //     this.init_data();
-        //     Service_inquiry_history.render_content();
-        //     Service_inquiry_history_func.read((data)=>{
-        //         console.log(data);
-        //     });
-        // });
+        
     }
 }
 

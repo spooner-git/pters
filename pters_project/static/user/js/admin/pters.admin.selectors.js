@@ -3345,3 +3345,125 @@ class BoardWriter{
         this.clear();
     }
 }
+
+class BoardReader{
+    constructor(title, install_target, instance, data){
+        this.title = title;
+        this.target = {install:install_target, instance:instance};
+        this.external_data = data;
+        this.data = {
+            title:null,
+            content:null,
+            date:null,
+            writer:null,
+            status:null,
+            type:null,
+
+            answer_title:null,
+            answer_content:null,
+            answer_date:null,
+            answer_writer:null,
+            andwer_type:null
+        };
+        this.set_initial_data();
+        this.init();
+    }
+
+    init(){
+        this.render();
+    }
+
+    set_initial_data(){
+        for(let item in this.external_data){
+            if(this.external_data[item] != undefined){
+                this.data[item] = this.external_data[item];
+            }
+        }
+        // this.data.title = this.external_data.title != null ? this.external_data.title : null;
+        // this.data.content = this.external_data.content != null ? this.external_data.content : null;
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="${this.target.instance}.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_center = `<span class="icon_center">
+                            <span id="">${this.title}</span>
+                          </span>`;
+        let top_right = `<span class="icon_right">
+                        </span>`;
+        let content =   `<section>${this.dom_assembly()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_assembly (){
+        let title = this.dom_row_title();
+        let content = this.dom_row_content();
+        let answer = this.dom_assemble_answer();
+        if(this.data.answer_title == null && this.data.answer_content == null){
+            answer = "";
+        }
+
+        let html = `<div style="padding:20px;">`+ title + `</div>` + 
+                    `<div style="padding:20px;">` + content + `</div>` +
+                    answer;
+
+        return html;
+    }
+
+    dom_row_title(){
+        let html = `<div style="font-size:20px;font-weight:bold;color:#3d3b3b;letter-spacing:-0.9px;">
+                        <span>${this.data.type == null ? "" : '['+this.data.type+']'}</span> 
+                        ${this.data.title == null ? "" : this.data.title} 
+                        <span style="float:right;font-size:13px;letter-spacing:-0.6px">${this.data.status == null ? "" : this.data.status}</span>
+                        <div style="font-size:12px;font-weight:500;letter-spacing:-0.6px;color:#858282;">${this.data.date == null ? "" : this.data.date}</div>
+                    </div>`;
+        return html;
+    }
+
+    dom_row_content(){
+        let html = `<div style="font-size:15px;font-weight:500;letter-spacing:-0.6px;color:#5c5859;">
+                        ${this.data.content == null ? "" : this.data.content}
+                    </div>`;
+        return html;
+    }
+
+    dom_assemble_answer(){
+        let title = this.dom_row_answer_title();
+        let content = this.dom_row_answer_content();
+
+        let html = `<div class="obj_input_box_full">` + title + content + `</div>`;
+        return html;
+    }
+
+    dom_row_answer_title(){
+        let html = `<div style="font-size:16px;font-weight:bold;color:#3d3b3b;letter-spacing:-0.9px;margin-bottom:40px;">
+                        답글 : ${this.data.answer_title == null ? "" : this.data.answer_title}
+                        <div style="font-size:12px;font-weight:500;letter-spacing:#858282;color:#858282;">${this.data.answer_date}</div>
+                    </div>`;
+        return html;
+    }
+
+    dom_row_answer_content(){
+        let html = `<div style="font-size:15px;font-weight:500;letter-spacing:-0.6px;color:#5c5859;">
+                        ${this.data.answer_content == null ? "" : this.data.answer_content}
+                    </div>`;
+        return html;
+    }
+
+
+    request_list (callback){
+    }
+
+    upper_right_menu(){
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
