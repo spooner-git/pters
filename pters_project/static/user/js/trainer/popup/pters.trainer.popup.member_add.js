@@ -262,6 +262,9 @@ class Member_add{
         let style = null;
         let input_disabled = this.data_from_external == null ? false : true;
         let pattern = "[0-9]{10,11}";
+        if(this.data_from_external != null){ //재등록일 경우, 전화번호 일부값이 ***로 넘어오기때문에 패턴에 추가
+            pattern = "[0-9*]{10,11}";
+        }
         let pattern_message = "";
         let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
@@ -502,7 +505,6 @@ class Member_add{
         return html;
     }
 
-
     switch_type(){
         switch(this.list_type){
             case "lesson":
@@ -526,7 +528,7 @@ class Member_add{
             return false;
         }
 
-        let data = {
+        let data_for_new = {
                     "member_id":this.data.member_id,
                     "first_name": this.data.name,
                     "name":this.data.name,
@@ -541,18 +543,37 @@ class Member_add{
                     "price":this.data.ticket_price
         };
 
+        let data_for_re = {
+            "member_id":this.data.member_id,
+            // "first_name": this.data.name,
+            // "name":this.data.name,
+            // "phone":this.data.phone,
+            // "birthday": `${this.data.birth != null ? this.data.birth.year+'-'+this.data.birth.month+'-'+this.data.birth.date : ''}`,
+            // "sex":this.data.sex,
+            "contents":this.data.memo,
+            "ticket_id":this.data.ticket_id[0],
+            "start_date": `${this.data.start_date.year}-${this.data.start_date.month}-${this.data.start_date.date}`,
+            "end_date":`${this.data.end_date.year}-${this.data.end_date.month}-${this.data.end_date.date}`,
+            "counts":this.data.ticket_reg_count,
+            "price":this.data.ticket_price
+};
+
         if(this.data_from_external == null){ //신규 회원 등록
-            Member_func.create_pre(data, (received)=>{
-                data.member_id = received.user_db_id[0];
-                Member_func.create(data, ()=>{
+            Member_func.create_pre(data_for_new, (received)=>{
+                data_for_new.member_id = received.user_db_id[0];
+                Member_func.create(data_for_new, ()=>{
                     // layer_popup.close_layer_popup();
                     member.init();
                 });
             });
         }else{ // 재등록
-            Member_func.create_ticket_re(data, ()=>{
-                member_view_popup.set_initial_data();
+            Member_func.create_ticket_re(data_for_re, ()=>{
                 // member_ticket_history.init();
+                try{
+                    member_view_popup.set_initial_data();
+                }catch(e){
+                    console.log(e);
+                }
                 try{
                     member.init();
                     home.init();
