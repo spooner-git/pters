@@ -3320,7 +3320,7 @@ class BoardWriter{
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.category_selected[category_id].text.length == 0 ? '' : this.data.category_selected[category_id].text;
-        let style = {'padding':"16px", "display":"inline-block", "width":"43%"};
+        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"170px", "max-width":"208px", "font-size":"14px"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let title = category_title;
             let install_target = "#wrapper_box_custom_select";
