@@ -16,6 +16,7 @@
 		background-color: #ffffff;
 		/* border-bottom: 1px solid #cccccc; */
 		padding: 0 16px;
+		padding-right: 0;
 		box-sizing: border-box;
 		/*margin-bottom: 4px;*/
 	}
