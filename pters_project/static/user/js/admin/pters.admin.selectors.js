@@ -3340,6 +3340,7 @@ class BoardWriter{
     }
 
     init_summernote(){
+        let self = this;
         $(`#board_writer_content_input`).summernote({
             minHeight: 150,
             fontSizes:['12', '14', '16'],
@@ -3374,12 +3375,13 @@ class BoardWriter{
                         }
                     }
                 }
-            },
+            }
         });
         if(this.data.content == "" || this.data.content == null){
             this.data.content = " "
         }
         $(`#board_writer_content_input`).summernote('pasteHTML', this.data.content);
+        $('.note-editable').blur();
     }
 
     request_list (callback){

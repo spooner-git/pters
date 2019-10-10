@@ -290,9 +290,9 @@ onclick="layer_popup.close_layer_popup();"></div> -->
     const $root_content = $('#root_content');
     var current_page = "";
 
-    input_adjust_location_for_android();
+    // input_adjust_location_for_android();
     func_set_webkit_overflow_scrolling('#root_content');
-    // $root_content.css('height', `${windowHeight}px`);
+    
     $root_content.css('height', `100%`);
     $root_content.scroll(function(){
         let scroll_loc = $(this).scrollTop();

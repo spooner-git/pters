@@ -223,20 +223,9 @@
     var $root_content = $('#root_content');
     var current_page = "home";
 
-    // $(window).resize(function(){
-    //     windowHeight = window.innerHeight;
-    //     windowWidth = window.innerWidth;
-    // });
 
-    input_adjust_location_for_android();
+    // input_adjust_location_for_android();
     func_set_webkit_overflow_scrolling('#root_content');
-    // $root_content.css('height', `${windowHeight}px`);
-    
-    // if(windowWidth >650){
-    //     $('#content_wrapper').css('height', windowHeight-60-36-36+'px');
-    // }else if(windowWidth <= 650){
-    //     $('#content_wrapper').css('height', windowHeight+'px');
-    // }
         
     $root_content.css('height', `100%`);
     $root_content.scroll(function(){

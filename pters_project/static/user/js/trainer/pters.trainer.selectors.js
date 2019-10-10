@@ -3386,6 +3386,7 @@ class BoardWriter{
             this.data.content = " "
         }
         $(`#board_writer_content_input`).summernote('pasteHTML', this.data.content);
+        $('.note-editable').blur();
     }
 
     request_list (callback){
