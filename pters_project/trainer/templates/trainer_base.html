@@ -79,9 +79,6 @@
 {% endblock %}
 <div id="debug_toolbar" style="position:fixed;top:0;font-size:13px;background-color:#fe4e65ba;color:#ffffff;width:100%;left:0;z-index:1500"></div>
 
-<!-- <div id="shade_for_popup_basic" style="position:fixed;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
-onclick="layer_popup.close_layer_popup();"></div> -->
-
 <div id="base">
     <section id="section_side">
         <div class="top_logo">
@@ -112,9 +109,6 @@ onclick="layer_popup.close_layer_popup();"></div> -->
             <div class="side_menu_item" onclick="sideGoPage('service')" id="side_service">
                 <img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""><span class="sidemenu_text">서비스</span>
             </div>
-            <!-- <div class="side_menu_item" onclick="sideGoPage('menu')" id="side_menu">
-                <img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""><span>전체 메뉴</span>
-            </div> -->
         </div>
 
     </section>
@@ -204,6 +198,7 @@ onclick="layer_popup.close_layer_popup();"></div> -->
 <!-- ajax 팝업 JS 로드 -->
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_view.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_add.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_repeat_list.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_search.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_view.js" %}></script>
@@ -350,6 +345,7 @@ onclick="layer_popup.close_layer_popup();"></div> -->
     // 팝업 인스턴스
     var plan_view_popup;
     var plan_add_popup;
+    var plan_repeat_list_popup;
     var member_add_popup;
     var member_search_popup;
     var member_view_popup;

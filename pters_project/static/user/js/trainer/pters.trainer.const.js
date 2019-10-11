@@ -133,6 +133,7 @@ const NOTICE_USAGE = 'SYS_USAGE';
 // 풀페이지 팝업
 const POPUP_ADDRESS_PLAN_VIEW = 'popup_plan_view';
 const POPUP_ADDRESS_PLAN_ADD = 'popup_plan_add';
+const POPUP_ADDRESS_PLAN_REPEAT_LIST = 'popup_plan_repeat_list';
 
 const POPUP_ADDRESS_MEMBER_VIEW = 'popup_member_view';
 const POPUP_ADDRESS_MEMBER_SIMPLE_VIEW = 'popup_member_simple_view';

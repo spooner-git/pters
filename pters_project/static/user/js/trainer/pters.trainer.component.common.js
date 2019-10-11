@@ -554,6 +554,7 @@ class CComponent{
         return html;
     }
 
+    
 
     static no_data_row(text){
         let html = `<li class="no_data_row">

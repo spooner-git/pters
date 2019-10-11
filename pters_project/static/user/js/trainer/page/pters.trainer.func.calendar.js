@@ -556,7 +556,13 @@ class Calendar {
             month:{text:"월간 달력", callback:()=>{this.init("month");layer_popup.close_layer_popup();}},
             week:{text:"주간 달력", callback:()=>{this.init("week");layer_popup.close_layer_popup();}},
             plans:{text:"일정 리스트", callback:()=>{layer_popup.close_layer_popup();}},
-            repeat:{text:"반복 일정 리스트", callback:()=>{layer_popup.close_layer_popup();}},
+            repeat:{text:"반복 일정 리스트", callback:()=>{
+                layer_popup.close_layer_popup();
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_REPEAT_LIST, 100, popup_style, null, ()=>{
+                    plan_repeat_list_popup = new Plan_repeat_list('.popup_plan_repeat_list');
+                });
+            }},
         };
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
@@ -1791,6 +1797,39 @@ class Plan_func{
     
             //통신 실패시 처리
             error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                // location.reload();
+            }
+        });
+    }
+
+    static read_plan_repeat(callback){
+        $.ajax({
+            url: '/trainer/get_repeat_schedule_all/',
+            type : 'GET',
+            // data : {"date":date_, "day":days_},
+            dataType: "JSON",
+
+            beforeSend:function (){
+                ajax_load_image(SHOW);
+            },
+            success:function (data){
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            complete:function (){
+                ajax_load_image(HIDE);
+            },
+
+            error:function (){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }
