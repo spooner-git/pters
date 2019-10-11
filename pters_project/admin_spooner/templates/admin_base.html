@@ -75,29 +75,32 @@
 <div id="base">
     <section id="section_side">
         <div class="top_logo">
-            <img src="/static/user/res/PTERS_logo_pure.png" alt="" style="width: 64px;">
+            <img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">
         </div>
         <div class="side_menu">
             <div class="side_menu_item" onclick="sideGoPage('home')" id="side_home">
-                <img src={% static_url "common/icon/tab_bar/icon_home_off.png" %} alt=""><span>홈</span>
+                <img src={% static_url "common/icon/tab_bar/icon_home_off.png" %} alt=""><span class="sidemenu_text">홈</span>
             </div>
             <div class="side_menu_item" onclick="sideGoPage('notice')" id="side_notice">
-                <img src={% static_url "common/icon/tab_bar/icon_calendar_off.png" %} alt=""><span>공지</span>
+                <img src={% static_url "common/icon/tab_bar/icon_calendar_off.png" %} alt=""><span class="sidemenu_text">공지</span>
             </div>
             <div class="side_menu_item" onclick="sideGoPage('qna')" id="side_qna">
-                <img src={% static_url "common/icon/tab_bar/icon_member_off.png" %} alt=""><span>문의</span>
+                <img src={% static_url "common/icon/tab_bar/icon_member_off.png" %} alt=""><span class="sidemenu_text">문의</span>
             </div>
             <div class="side_menu_item" onclick="sideGoPage('faq')" id="side_faq">
-                <img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""><span>FAQ</span>
+                <img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""><span class="sidemenu_text">FAQ</span>
             </div>
             <div class="side_menu_item" onclick="sideGoPage('menu')" id="side_menu">
-                <img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""><span>설정</span>
+                <img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""><span class="sidemenu_text">설정</span>
             </div>
         </div>
 
     </section>
     <section id="section_center">
         <div id="section_up_menu">
+            <div style="display:inline-block;line-height:60px;" onclick="toggle_sidemenu(this)">
+                <img src="/static/common/icon/icon_toggle_sidemenu.png" alt="" style="width:30px;transform:rotate(90deg);vertical-align:middle;padding:15px;transition:0.3s">
+            </div>
             <div class="up_menu_tool">
                 <div style="flex:1 0 140px"><img src="/static/common/icon/icon_account.png" alt="" class="up_menu_img"><span>사용자명</span></div>
                 <div style="flex:1 0 0"><img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img"></div>
@@ -329,6 +332,37 @@
             case 'faq':
                 faq.init();
             break;
+        }
+    }
+
+    //PC사이드 메뉴 토글
+    function toggle_sidemenu(context){
+        $this = $(context);
+        $sidemenu = $('#section_side');
+        $sidemenu_button = $this.find('img');
+        $sidemenu_text = $('.sidemenu_text');
+        $toplogo = $('.top_logo');
+
+        let status = $this.hasClass('sidemenu_off');
+
+        if(status){
+            $this.removeClass('sidemenu_off');
+            $sidemenu.css('flex-basis', '200px');
+            setTimeout(()=>{ 
+                $sidemenu_text.show();
+            }, 150);
+            $toplogo.html(
+                `<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">`
+            )
+            $sidemenu_button.css('transform', 'rotate(90deg)');
+        }else{
+            $sidemenu.css('flex-basis', '70px');
+            $this.addClass('sidemenu_off');
+            $sidemenu_text.hide();
+            $toplogo.html(
+                `<img src="/static/common/icon/logo/PTERS_logo_short.png" alt="" style="width: 32px;vertical-align:middle" id="top_logo_image">`
+            )
+            $sidemenu_button.css('transform', 'rotate(-90deg)');
         }
     }
 

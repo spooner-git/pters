@@ -1013,7 +1013,7 @@ class Calendar {
         let week_html_template = `
                                 <div class="week_rows">
                                     <div class="week_cal_time_text" onclick="${this.instance}.zoom_week_cal_vertical()">
-                                        <div id="current_time_indicator" style="width:${this.window_height - (12.5)*this.window_height/100 }px;"><div></div></div>
+                                        <div id="current_time_indicator" style="width:1024px;"><div></div></div>
                                         ${ (this.worktime.map( (t) => { return `<article><span>${TimeRobot.to_text(t, 0, 'short')}</span></article>`; } )).join('') }
                                     </div>
                                     <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1 week_row" ${this.dayoff.indexOf(0) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>
