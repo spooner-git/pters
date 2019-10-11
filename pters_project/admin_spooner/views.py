@@ -164,6 +164,7 @@ class UpdateQaStatusInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
     def post(self, request):
         qa_id = request.POST.get('qa_id')
+        # QA_WAIT : 답변 대기 / QA_COMPLETE : 답변 완료
         status_type_cd = request.POST.get('status_type_cd', 'QA_COMPLETE')
         member_type_cd = request.session.get('group_name')
 
