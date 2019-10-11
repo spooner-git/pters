@@ -95,7 +95,7 @@ class Calendar {
             this.dayoff_hide = data.setting_holiday_hide;
             let date_start_array = {"SUN":0, "MON":1};
             this.date_start = date_start_array[data.setting_week_start_date];
-            let work_time = this.calc_worktime(data);
+            let work_time = this.calc_worktime_display(data);
             this.work_time_info.calc = work_time;
             this.worktime = [];
             for(let i=work_time.start_hour; i<work_time.end_hour; i++){
@@ -170,7 +170,7 @@ class Calendar {
         }
     }
 
-    calc_worktime(data){
+    calc_worktime_display(data){
         let datas = [data.setting_trainer_work_sun_time_avail, data.setting_trainer_work_mon_time_avail, data.setting_trainer_work_tue_time_avail,
             data.setting_trainer_work_wed_time_avail, data.setting_trainer_work_ths_time_avail, data.setting_trainer_work_fri_time_avail,
             data.setting_trainer_work_sat_time_avail];
@@ -209,11 +209,28 @@ class Calendar {
             if(end_time_compare == true){
                 end_time_temp = end_time;
             }
-
-            
+        }
+        let start_time_hour = Number(start_time_temp.split(':')[0]);
+        let start_time_minute = Number(start_time_temp.split(':')[1]);
+        let end_time_hour = Number(end_time_temp.split(':')[0]);
+        let end_time_minute = Number(end_time_temp.split(':')[1]);
+        if(end_time_minute > 0){
+            end_time_hour++;
         }
         
-        let result = {complete:`${start_time_temp}:${end_time_temp}`, start:start_time_temp, end:end_time_temp, start_hour:Number(start_time_temp.split(':')[0]), end_hour:Number(end_time_temp.split(':')[0]), dayoff:dayoff_temp};
+        let start_time = start_time_hour + ':00';
+        let end_time = end_time_hour + ':00';
+        
+        // let result = {complete:`${start_time_temp}:${end_time_temp}`, start:start_time_temp, end:end_time_temp, start_hour:Number(start_time_temp.split(':')[0]), end_hour:Number(end_time_temp.split(':')[0]), dayoff:dayoff_temp};
+        let result = {
+                        complete:`${start_time}:${end_time}`, 
+                        start:start_time, 
+                        end:end_time,
+                        start_hour:start_time_hour, 
+                        end_hour:end_time_hour,
+                        dayoff:dayoff_temp
+                    };
+
         return result;
     }
 
@@ -1118,6 +1135,9 @@ class Calendar {
                 let general_work_end = this.work_time_info.calc.end; // 전체 요일로 계산된 업무 종료 시간
 
                 let height_start = 100*( TimeRobot.diff(general_work_start, daily_work_start).hour*60 + TimeRobot.diff(general_work_start, daily_work_start).min)/(this.worktime.length*60);
+                if(general_work_start != daily_work_start && height_start == 100){ // 업무시간 00:00 - 24:00가 TimeRobot.diff에서 24로 표기되어서 모든시간이 disabled되어버리는 현상보정
+                    height_start = 0;
+                }
                 let top_start = 0;
                 // let top_start = 100*( TimeRobot.diff(general_work_start, daily_work_end).hour*60 + TimeRobot.diff(general_work_start, daily_work_end).min)/(this.worktime.length*60);
 
@@ -1128,8 +1148,10 @@ class Calendar {
                     height_start = 100;
                     top_start  = 0;
                     height_end = 0;
-                    top_start = 0;
+                    top_end = 0;
                 }
+                console.log(i,daily_work_start, daily_work_end,
+                    "height_start",height_start,"top_start",top_start, "height_end",height_end, "top_end",top_end);
 
                 let styles_start = `width:100%;height:${height_start}%;top:${top_start}%;`;
                 let styles_end = `width:100%;height:${height_end}%;top:${top_end}%;`;
