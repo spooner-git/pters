@@ -42,6 +42,7 @@ class Calendar {
         this.current_hour = d.getHours() > 12 ? d.getHours() - 12 : d.getHours();
         this.current_minute = Math.floor(d.getMinutes()/5)*5;
         
+        this.work_time_info = {full:null, calc:null};
         this.worktime = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
         this.dayoff = [];
 
@@ -90,10 +91,12 @@ class Calendar {
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
         this.mode_to_plan_change(OFF);
         Setting_reserve_func.read((data)=>{
+            this.work_time_info.full = data;
             this.dayoff_hide = data.setting_holiday_hide;
             let date_start_array = {"SUN":0, "MON":1};
             this.date_start = date_start_array[data.setting_week_start_date];
             let work_time = this.calc_worktime(data);
+            this.work_time_info.calc = work_time;
             this.worktime = [];
             for(let i=work_time.start_hour; i<work_time.end_hour; i++){
                 this.worktime.push(i);
@@ -184,6 +187,12 @@ class Calendar {
         for(let i=0; i<length; i++){
             let start_time = datas[i].split('-')[0];
             let end_time = datas[i].split('-')[1];
+            //시작시간과 종료시간이 같으면 휴무일
+            if(start_time == end_time){
+                dayoff_temp.push(i);
+                continue;
+            }
+
             if(start_time_temp == undefined){
                 start_time_temp = start_time;
             }
@@ -201,10 +210,7 @@ class Calendar {
                 end_time_temp = end_time;
             }
 
-            //시작시간과 종료시간이 같으면 휴무일
-            if(start_time == end_time){
-                dayoff_temp.push(i);
-            }
+            
         }
         
         let result = {complete:`${start_time_temp}:${end_time_temp}`, start:start_time_temp, end:end_time_temp, start_hour:Number(start_time_temp.split(':')[0]), end_hour:Number(end_time_temp.split(':')[0]), dayoff:dayoff_temp};
@@ -248,7 +254,6 @@ class Calendar {
         }
         let last_date = new Date(year, month, 0).getDate();
         let week_num_this_month = Math.ceil( (first_day + last_date)/7  ) - 1;
-        console.log("year:", year, " month:",month, " week :", week_num_this_month);
         
         return week_num_this_month;
     }
@@ -334,51 +339,6 @@ class Calendar {
             "year":year, "month":month, "week":week
         };
     }
-
-    // get_next_week (){
-    //     let year = this.current_year;
-    //     let month = this.current_month;
-    //     let week = this.current_week;
-    //     let first_day = new Date(year, month-1, 1).getDay();
-    //     let last_date = new Date(year, month, 0).getDate();
-    //     let last_day_of_next_month = new Date(year, month, 0).getDay();
-
-    //     //시작을 월요일부터 옵션을 위한 코드
-    //     if(this.date_start == 1){
-    //         if(first_day == 0){
-    //             first_day = 6;
-    //         }else{
-    //             first_day--;
-    //         }
-    //         // if(last_day_of_next_month != 5){
-    //         //     last_day_of_next_month--;
-    //         // }
-    //     }
-    //     //시작을 월요일부터 옵션을 위한 코드
-
-
-    //     // let week_num_this_month = Math.ceil( (first_day + last_date)/7  );
-    //     let week_num_this_month = this.get_week_number(year, month);
-    //     console.log(year, month, "총 몇주? ",week_num_this_month);
-
-    //     week = week + 1;
-    //     if(week  == week_num_this_month && last_day_of_next_month != 6 ){
-    //         week = 1;
-    //         month = month + 1 > 12 ? 1  : month + 1;
-    //         year = month ==  1 ? year + 1 : year;
-
-    //     }else if(week == week_num_this_month){
-    //         week = 0;
-    //         month = month + 1 > 12 ? 1  : month + 1;
-    //         year = month ==  1 ? year + 1 : year;
-    //     }
-
-        
-    //     return {
-    //         "year":year, "month":month, "week":week, "tese":last_day_of_next_month
-    //     };
-    // }
-
 
     go_month (year, month){
         if(year == undefined && month == undefined){
@@ -577,26 +537,17 @@ class Calendar {
 
         let user_option = {
             month:{text:"월간 달력", callback:()=>{this.init("month");layer_popup.close_layer_popup();}},
-            week:{text:"주간 달력", callback:()=>{this.init("week");layer_popup.close_layer_popup();}}
+            week:{text:"주간 달력", callback:()=>{this.init("week");layer_popup.close_layer_popup();}},
+            plans:{text:"일정 리스트", callback:()=>{layer_popup.close_layer_popup();}},
+            repeat:{text:"반복 일정 리스트", callback:()=>{layer_popup.close_layer_popup();}},
         };
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
-        option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
-
-
-        // switch(this.cal_type){
-        //     case "month":
-        //         this.init("week");
-        //         break;
-
-        //     case "week":
-        //         this.init("month");
-        //         break;
-        //     }
     }
 
     render_upper_box (type){
@@ -655,51 +606,6 @@ class Calendar {
 
         this.relocate_current_time_indicator();
     }
-    
-    // zoom_week_cal (context){
-    //     let clicked_number = context != undefined ? context.dataset.row : this.week_zoomed.target_row;
-
-
-    //     if(clicked_number == undefined){
-    //         return false;
-    //     }
-
-    //     if(this.week_zoomed.activate == false){
-    //         for(let i=1; i<=7; i++){
-    //             if(i==clicked_number){
-    //                 Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
-    //                     el.style.width = "87.5%";
-    //                 });
-    //                 continue;
-    //             }
-    //             Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
-    //                 el.style.display = "none";
-    //             });
-    //         }
-            
-    //         this.week_zoomed.activate = true;
-    //         this.week_zoomed.target_row = clicked_number;
-    //         this.toggle_touch_move('off', '#calendar_wrap');
-    //     }else if(this.week_zoomed.activate == true){
-    //         for(let i=1; i<=7; i++){
-    //             if(i==clicked_number){
-    //                 Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
-    //                     el.style.width = "12.5%";
-    //                 });
-    //                 continue;
-    //             }
-    //             Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
-    //                 if(this.dayoff.indexOf(i-1) == -1){
-    //                     el.style.display = "table-cell";
-    //                 }
-    //             });
-    //         }
-            
-    //         this.week_zoomed.activate = false;
-    //         this.week_zoomed.target_row = clicked_number;
-    //         this.toggle_touch_move('on', '#calendar_wrap');
-    //     }
-    // }
 
     zoom_week_cal (context){
         let clicked_number = context != undefined ? context.dataset.row : this.week_zoomed.target_row;
@@ -712,9 +618,6 @@ class Calendar {
         if(this.week_zoomed.activate == false){
             for(let i=1; i<=7; i++){
                 if(i==clicked_number){
-                    // Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
-                    //     el.style.width = "87.5%";
-                    // });
                     continue;
                 }
                 Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
@@ -728,15 +631,11 @@ class Calendar {
         }else if(this.week_zoomed.activate == true){
             for(let i=1; i<=7; i++){
                 if(i==clicked_number){
-                    // Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
-                    //     el.style.width = "12.5%";
-                    // });
                     continue;
                 }
                 Array.from(document.getElementsByClassName(`_week_row_${i}`)).forEach( (el) =>{
                     if(this.dayoff_hide == 1){
                         if(this.dayoff.indexOf(i-1) == -1){
-                            // el.style.display = "table-cell";
                             el.style.display = "block";
                         }
                     }else{
@@ -766,98 +665,6 @@ class Calendar {
         }
         this.relocate_current_time_indicator();
     }
-
-    // get_week_dates (year, month, week){
-    //     const firstday_this_month = (new Date(Number(year), Number(month)-1, 1)).getDay(); // 3
-    //     const lastday_this_month = (new Date(Number(year), Number(month), 0)).getDate(); // 3
-    //     const lastday_prev_month = (new Date(Number(year), Number(month)-1, 0)).getDate();
-
-    //     const number_of_weeks_this_month = (
-    //         Math.ceil(
-    //             (new Date(year, Number(month)-1, 1).getDay() + new Date(year, Number(month), 0).getDate() ) / 7
-    //         ) 
-    //     );
-    //     if(week >= number_of_weeks_this_month){
-    //         //해당 Week에 대한 정보가 없음
-    //         return false;
-    //     }
-        
-    //     let years_of_this_week = [];
-    //     let months_of_this_week = [];
-    //     let dates_of_this_week = [];
-    //     // let color_of_this_week = [];
-    //     let date_cache = 1;
-    //     let month_cache;
-    //     let finished = false;
-    //     for(let i=0; i<=week; i++){
-    //         let yearCellsToJoin = [];
-    //         let monthCellsToJoin = [];
-    //         let dateCellsToJoin = [];
-    //         // let dateColorClass = [];
-    //         for(let j=0; j<7; j++){
-    //             if(i==0 && j<firstday_this_month){ //첫번째 주일때 처리
-    //                 let _year = Number(month)-1 > 0 ? Number(year) : Number(year) - 1;
-    //                 let _month = Number(month)-1 < 1 ? 12 : Number(month)-1;
-    //                 let _date = lastday_prev_month-j;
-
-    //                 yearCellsToJoin.unshift(_year);
-    //                 monthCellsToJoin.unshift(_month);
-    //                 dateCellsToJoin.unshift(_date);
-
-    //                 // dateColorClass.unshift(`${_year}-${_month}-${_date}` == this.today ? 'cal_font_color_pink cal_fw_bd' : 'cal_font_color_grey');
-    //             }else if(date_cache > lastday_this_month || month_cache == month + 1){ // 마지막 날짜가 끝난 이후 처리
-    //                 if(date_cache == lastday_this_month+1){
-    //                     date_cache = 1;
-    //                     month_cache = month + 1;
-    //                     finished = true;
-    //                 }
-    //                 let _year = Number(month)+1 > 12 ? Number(year)+1 : year;
-    //                 let _month = Number(month)+1 > 12? 1 : Number(month)+1;
-    //                 let _date = date_cache;
-
-    //                 yearCellsToJoin.push(_year);
-    //                 monthCellsToJoin.push(_month);
-    //                 dateCellsToJoin.push(_date);
-    //                 // dateColorClass.push(`${_year}-${_month}-${_date}` == this.today ? 'cal_font_color_pink cal_fw_bd' : 'cal_font_color_grey');
-    //                 date_cache++;
-    //             }else{
-    //                 let _year = Number(year);
-    //                 let _month = Number(month);
-    //                 let _date = date_cache;
-
-
-    //                 yearCellsToJoin.push(_year);
-    //                 monthCellsToJoin.push(_month);
-    //                 dateCellsToJoin.push(_date);
-    //                 // dateColorClass.push(`${_year}-${_month}-${_date}` == this.today ? 'cal_font_color_pink cal_fw_bd' : 'cal_font_color_black');
-    //                 date_cache++;
-    //             }
-    //         }
-    //         years_of_this_week.push(yearCellsToJoin);
-    //         months_of_this_week.push(monthCellsToJoin);
-    //         dates_of_this_week.push(dateCellsToJoin);
-    //         // color_of_this_week.push(dateColorClass);
-    //     }
-        
-    //     let [year1, year2, year3, year4, year5, year6, year7] = years_of_this_week[week];
-    //     let [month1, month2, month3, month4, month5, month6, month7] = months_of_this_week[week];
-    //     let [date1, date2, date3, date4, date5, date6, date7] = dates_of_this_week[week];
-    //     // let [color1, color2, color3, color4, color5, color6, color7] = color_of_this_week[week];
-       
-        
-    //     return(
-    //         {
-    //             "year" :  years_of_this_week[week],
-    //             "month" : months_of_this_week[week],
-    //             "date" : dates_of_this_week[week],
-    //             // "color" : color_of_this_week[week],
-    //             "full_date" : [
-    //                 [year1, month1, date1], [year2, month2, date2], [year3, month3, date3], [year4, month4, date4], 
-    //                 [year5, month5, date5], [year6, month6, date6], [year7, month7, date7]
-    //             ]
-    //         }
-    //     );
-    // }
 
     get_week_dates (year, month, week){
         let firstday_this_month = (new Date(Number(year), Number(month)-1, 1)).getDay(); // 3
@@ -962,9 +769,6 @@ class Calendar {
             }
         );
     }
-
-
-
 
     draw_week_line (year, month, week, schedule_data, month_or_week, row_height){ //(연,월, 몇번째 주, 날짜 클릭 콜백함수 이름)
         let week_dates_info = this.get_week_dates(year, month, week);
@@ -1166,8 +970,6 @@ class Calendar {
                             let height = 100*(diff.hour*60+60*diff.min/60)/(this.worktime.length*60);
                             let top = 100*( (plan_start.hour-work_start)*60 + 60*plan_start.minute/60 )/(this.worktime.length*60);
                             
-                            
-                            
                             let styles = `width:${100/cell_divide}%;height:${height}%;top:${top}%;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style};display:${display}`;
                             let long_touch_active = this.long_touch_schedule_id == plan.schedule_id ? "long_touch_active" : "";
                             let go_behind =  "";
@@ -1188,19 +990,43 @@ class Calendar {
         }else{
             schedules = [];
         }
+
+        let work_time_dom = this.dom_disabled_work_time();
+
         let week_html_template = `
                                 <div class="week_rows">
                                     <div class="week_cal_time_text" onclick="${this.instance}.zoom_week_cal_vertical()">
                                         <div id="current_time_indicator" style="width:${this.window_height - (12.5)*this.window_height/100 }px;"><div></div></div>
                                         ${ (this.worktime.map( (t) => { return `<article><span>${TimeRobot.to_text(t, 0, 'short')}</span></article>`; } )).join('') }
                                     </div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1 week_row" ${this.dayoff.indexOf(0) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[0].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2 week_row" ${this.dayoff.indexOf(1) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[1].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3 week_row" ${this.dayoff.indexOf(2) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[2].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})" class="_week_row_4 week_row" ${this.dayoff.indexOf(3) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[3].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})" class="_week_row_5 week_row" ${this.dayoff.indexOf(4) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[4].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})" class="_week_row_6 week_row" ${this.dayoff.indexOf(5) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>${schedules.length > 0 ?  schedules[5].join('') : ""}</div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})" class="_week_row_7 week_row" ${this.dayoff.indexOf(6) != -1  && this.dayoff_hide == 1? "style=display:none": ""}>${schedules.length > 0 ?  schedules[6].join('') : ""}</div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1 week_row" ${this.dayoff.indexOf(0) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>
+                                        ${work_time_dom[0] == undefined ? "" : work_time_dom[0]}
+                                        ${schedules.length > 0 ?  schedules[0].join('') : ""}
+                                    </div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2 week_row" ${this.dayoff.indexOf(1) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>
+                                        ${work_time_dom[1] == undefined ? "" : work_time_dom[1]}
+                                        ${schedules.length > 0 ?  schedules[1].join('') : ""}
+                                    </div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3 week_row" ${this.dayoff.indexOf(2) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>
+                                        ${work_time_dom[2] == undefined ? "" : work_time_dom[2]}
+                                        ${schedules.length > 0 ?  schedules[2].join('') : ""}
+                                    </div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})" class="_week_row_4 week_row" ${this.dayoff.indexOf(3) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>
+                                        ${work_time_dom[3] == undefined ? "" : work_time_dom[3]}
+                                        ${schedules.length > 0 ?  schedules[3].join('') : ""}
+                                    </div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})" class="_week_row_5 week_row" ${this.dayoff.indexOf(4) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>
+                                        ${work_time_dom[4] == undefined ? "" : work_time_dom[4]}
+                                        ${schedules.length > 0 ?  schedules[4].join('') : ""}
+                                    </div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})" class="_week_row_6 week_row" ${this.dayoff.indexOf(5) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>
+                                        ${work_time_dom[5] == undefined ? "" : work_time_dom[5]}
+                                        ${schedules.length > 0 ?  schedules[5].join('') : ""}
+                                    </div>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})" class="_week_row_7 week_row" ${this.dayoff.indexOf(6) != -1  && this.dayoff_hide == 1? "style=display:none": ""}>
+                                        ${work_time_dom[6] == undefined ? "" : work_time_dom[6]}
+                                        ${schedules.length > 0 ?  schedules[6].join('') : ""}
+                                    </div>
                                 </div>
                                 `;
         return week_html_template;
@@ -1266,6 +1092,53 @@ class Calendar {
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_ADD, 100, popup_style, {'select_date':null}, ()=>{
             plan_add_popup = new Plan_add('.popup_plan_add', this.user_data, "plan_add_popup");
         });
+    }
+
+    dom_disabled_work_time(){
+        let work_time_dom = [];
+        if(this.work_time_info.full != null){
+            let work_time_list = [   
+                            this.work_time_info.full.setting_trainer_work_sun_time_avail, this.work_time_info.full.setting_trainer_work_mon_time_avail, this.work_time_info.full.setting_trainer_work_tue_time_avail,
+                            this.work_time_info.full.setting_trainer_work_wed_time_avail, this.work_time_info.full.setting_trainer_work_ths_time_avail, this.work_time_info.full.setting_trainer_work_fri_time_avail,
+                            this.work_time_info.full.setting_trainer_work_sat_time_avail
+                        ];
+            if(this.date_start == 1){
+            work_time_list = [   
+                            this.work_time_info.full.setting_trainer_work_mon_time_avail, this.work_time_info.full.setting_trainer_work_tue_time_avail,
+                            this.work_time_info.full.setting_trainer_work_wed_time_avail, this.work_time_info.full.setting_trainer_work_ths_time_avail, this.work_time_info.full.setting_trainer_work_fri_time_avail,
+                            this.work_time_info.full.setting_trainer_work_sat_time_avail, this.work_time_info.full.setting_trainer_work_sun_time_avail
+                        ];
+            }
+            
+            for(let i=0; i<work_time_list.length; i++){
+                // 일정 표기 관련 계산
+                let daily_work_start = work_time_list[i].split('-')[0]; //해당 요일의 업무 시작시간
+                let daily_work_end = work_time_list[i].split('-')[1]; //해당 요일의 업무 종료시간
+                let general_work_start = this.work_time_info.calc.start; //전체 요일로 계산된 업무 시간
+                let general_work_end = this.work_time_info.calc.end; // 전체 요일로 계산된 업무 종료 시간
+
+                let height_start = 100*( TimeRobot.diff(general_work_start, daily_work_start).hour*60 + TimeRobot.diff(general_work_start, daily_work_start).min)/(this.worktime.length*60);
+                let top_start = 0;
+                // let top_start = 100*( TimeRobot.diff(general_work_start, daily_work_end).hour*60 + TimeRobot.diff(general_work_start, daily_work_end).min)/(this.worktime.length*60);
+
+                let height_end = 100*( TimeRobot.diff(daily_work_end, general_work_end).hour*60 + TimeRobot.diff(daily_work_end, general_work_end).min)/(this.worktime.length*60);
+                let top_end = 100*( TimeRobot.diff(general_work_start, daily_work_end).hour*60 + TimeRobot.diff(general_work_start, daily_work_end).min)/(this.worktime.length*60);
+
+                if(daily_work_start == daily_work_end){
+                    height_start = 100;
+                    top_start  = 0;
+                    height_end = 0;
+                    top_start = 0;
+                }
+
+                let styles_start = `width:100%;height:${height_start}%;top:${top_start}%;`;
+                let styles_end = `width:100%;height:${height_end}%;top:${top_end}%;`;
+                let html = `<div style="${styles_start}" class="work_time_disabled"></div>
+                             <div style="${styles_end}" class="work_time_disabled"></div>`;
+                work_time_dom.push(html);
+            }
+        }
+        return work_time_dom;
     }
 
     open_popup_plan_view (event, schedule_id, year, month, date){
