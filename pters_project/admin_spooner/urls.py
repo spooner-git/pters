@@ -20,4 +20,7 @@ urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^get_qa_all/$', views.GetQaAllView.as_view(), name='get_qa_all'),
     url(r'^get_notice_all/$', views.GetNoticeAllView.as_view(), name='get_notice_all'),
+    url(r'^add_notice_info/$', views.AddNoticeInfoView.as_view(), name='add_notice_info'),
+    url(r'^update_notice_info/$', views.UpdateNoticeInfoView.as_view(), name='update_notice_info'),
+
 ]

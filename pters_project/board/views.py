@@ -24,7 +24,7 @@ def add_question_info_logic(request):
     title = request.POST.get('inquire_subject', '')
     contents = request.POST.get('inquire_body', '')
     next_page = request.POST.get('next_page')
-    
+
     error = None
 
     if qa_type_cd == '' or qa_type_cd is None:
@@ -116,30 +116,3 @@ class GetNoticeDataView(LoginRequiredMixin, View):
                                 'notice_use': notice_info.use})
 
         return JsonResponse({'notice_data': notice_list}, json_dumps_params={'ensure_ascii': True})
-
-
-def add_notice_info_logic(request):
-    notice_type_cd = request.POST.get('notice_type_cd', '')
-    title = request.POST.get('title', '')
-    contents = request.POST.get('contents', '')
-    to_member_type_cd = request.POST.get('to_member_type_cd')
-    member_type_cd = request.session.get('group_name')
-
-    error = None
-    if member_type_cd != 'admin':
-        error = '관리자만 접근 가능합니다.'
-
-    if notice_type_cd == '' or notice_type_cd is None:
-        error = '공지 유형을 선택해주세요.'
-
-    if error is None:
-        notice_info = NoticeTb(member_id=request.user.id, notice_type_cd=notice_type_cd,
-                               title=title, contents=contents, to_member_type_cd=to_member_type_cd,
-                               use=USE)
-        notice_info.save()
-
-    if error is not None:
-        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-
-    return render(request, 'ajax/board_error_ajax.html')

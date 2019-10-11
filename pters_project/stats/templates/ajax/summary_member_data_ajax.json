@@ -20,5 +20,6 @@
         "total_month_part_refund_member":
         {{ total_month_part_refund_member }},
       "messageArray" :
-      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+        "{{ messageArray }}"
+{#      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]#}
     }

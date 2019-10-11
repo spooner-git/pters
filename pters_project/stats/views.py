@@ -21,7 +21,7 @@ class IndexView(TemplateView):
 
 
 class GetSalesListViewAjax(LoginRequiredMixin, TemplateView):
-    template_name = "ajax/summary_sales_data_ajax.html"
+    template_name = "ajax/summary_sales_data_ajax.json"
 
     def get_context_data(self, **kwargs):
         context = super(GetSalesListViewAjax, self).get_context_data(**kwargs)
@@ -57,13 +57,14 @@ class GetSalesListViewAjax(LoginRequiredMixin, TemplateView):
 
         if error is not None:
             logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
+            # messages.error(self.request, error)
+            context['messageArray'] = error
 
         return context
 
 
 class GetSalesInfoViewAjax(LoginRequiredMixin, TemplateView):
-    template_name = "ajax/detail_sales_data_ajax.html"
+    template_name = "ajax/detail_sales_data_ajax.json"
 
     def get_context_data(self, **kwargs):
         context = super(GetSalesInfoViewAjax, self).get_context_data(**kwargs)
@@ -90,13 +91,14 @@ class GetSalesInfoViewAjax(LoginRequiredMixin, TemplateView):
 
         if error is not None:
             logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
+            # messages.error(self.request, error)
+            context['messageArray'] = error
 
         return context
 
 
 class GetStatsMemberListViewAjax(LoginRequiredMixin, TemplateView):
-    template_name = "ajax/summary_member_data_ajax.html"
+    template_name = "ajax/summary_member_data_ajax.json"
 
     def get_context_data(self, **kwargs):
         context = {}
@@ -124,5 +126,6 @@ class GetStatsMemberListViewAjax(LoginRequiredMixin, TemplateView):
 
         if error is not None:
             logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
+            # messages.error(self.request, error)
+            context['messageArray'] = error
         return context
