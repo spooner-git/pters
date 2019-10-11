@@ -1150,8 +1150,6 @@ class Calendar {
                     height_end = 0;
                     top_end = 0;
                 }
-                console.log(i,daily_work_start, daily_work_end,
-                    "height_start",height_start,"top_start",top_start, "height_end",height_end, "top_end",top_end);
 
                 let styles_start = `width:100%;height:${height_start}%;top:${top_start}%;`;
                 let styles_end = `width:100%;height:${height_end}%;top:${top_end}%;`;
@@ -1737,9 +1735,6 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
-                console.log('@@@@@@@@@@@@@');
-                console.log(data);
-                console.log('@@@@@@@@@@@@@');
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray);
@@ -2097,7 +2092,6 @@ function duplicated_plans (jsondata){
             pp++;
         }
     }
-    console.log(result_data);
     return result_data;
 }
 // 중복일정 관련 함수

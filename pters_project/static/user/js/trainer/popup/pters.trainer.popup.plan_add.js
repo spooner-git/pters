@@ -132,7 +132,7 @@ class Plan_add{
 
         this.render();
         Setting_reserve_func.read((data)=>{
-            this.work_time = calendar.calc_worktime(data);
+            this.work_time = calendar.calc_worktime_display(data);
             this.render();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -546,7 +546,6 @@ class Plan_add{
         let end_time = this.data.end_time;
 
         if(start_time == null || end_time == null){
-            console.log("시작시간이나 종료시간이 설정되지 않음");
             return false;
         }
         // if(end_time=='0:0'){
@@ -633,7 +632,6 @@ class Plan_add{
                 show_error_message('종료 시각을 선택 해주세요.');
                 return false;
             }
-            console.log(this.data.repeat);
             if(this.data.repeat.power == ON){
                 if(this.data.repeat.day.length == 0){
                     show_error_message('반복일정 요일을 선택 해주세요.');
