@@ -145,17 +145,18 @@ class Notice {
                                                                     category:[
                                                                         {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
                                                                         {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
-                                                                        {id:"status", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
+                                                                        {id:"use", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
                                                                     ],
                                                                     category_selected:{
                                                                         open:{text:[target], value:[data.notice_to_member_type_cd]},
                                                                         type:{text:[NOTICE_TYPE[type] ], value:[type]},
-                                                                        status:{text:[NOTICE_USE[use].text], value:[ON]}
+                                                                        use:{text:[NOTICE_USE[use].text], value:[ON]}
                                                                     }
                                             };
                                             board_writer = new BoardWriter("공지 수정", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
                                                 let data = {"notice_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
-                                                            "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0]};
+                                                            "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0],
+                                                            "use":data_written.category_selected.use.value[0]};
                                                 Notice_func.create(data, ()=>{
                                                     this.init();
                                                 });
@@ -189,17 +190,18 @@ class Notice {
                                         category:[
                                             {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
                                             {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
-                                            {id:"status", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
+                                            {id:"use", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
                                         ],
                                         category_selected:{
                                             open:{text:[], value:[]},
                                             type:{text:[], value:[]},
-                                            status:{text:[], value:[]}
+                                            use:{text:[], value:[]}
                                         }
             };
             board_writer = new BoardWriter("새 공지사항", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
                 let data = {"notice_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
-                            "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0]};
+                            "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0],
+                            "use":data_written.category_selected.use.value[0]};
                 Notice_func.create(data, ()=>{
                     this.init();
                 });
@@ -272,6 +274,39 @@ class Notice_func{
                 }
             },
     
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                // location.reload();
+            }
+        });
+    }
+    static update(data, callback){
+        $.ajax({
+            url:'/admin_spooner/update_notice_info/',
+            type:'POST',
+            data: data,
+            dataType : 'JSON',
+
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                // let data = JSON.parse(received_data);
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
             //통신 실패시 처리
             error:function(){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');

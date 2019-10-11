@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
@@ -87,6 +88,7 @@ class AddNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
         title = request.POST.get('title', '')
         contents = request.POST.get('contents', '')
         to_member_type_cd = request.POST.get('to_member_type_cd')
+        use = request.POST.get('use', USE)
         member_type_cd = request.session.get('group_name')
 
         context = {}
@@ -100,7 +102,7 @@ class AddNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             notice_info = NoticeTb(member_id=request.user.id, notice_type_cd=notice_type_cd,
                                    title=title, contents=contents, to_member_type_cd=to_member_type_cd,
-                                   use=USE)
+                                   use=use)
             notice_info.save()
 
         if error is not None:
@@ -114,25 +116,76 @@ class AddNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
 class UpdateNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
     def post(self, request):
+        notice_id = request.POST.get('notice_id')
         notice_type_cd = request.POST.get('notice_type_cd', '')
         title = request.POST.get('title', '')
         contents = request.POST.get('contents', '')
         to_member_type_cd = request.POST.get('to_member_type_cd')
+        use = request.POST.get('use', USE)
         member_type_cd = request.session.get('group_name')
 
         context = {}
         error = None
+        notice_info = None
+
         if member_type_cd != 'admin':
             error = '관리자만 접근 가능합니다.'
+
+        if notice_id is None or notice_id == '':
+            error = '변경할 게시글을 선택해주세요.'
 
         if notice_type_cd == '' or notice_type_cd is None:
             error = '공지 유형을 선택해주세요.'
 
         if error is None:
-            notice_info = NoticeTb(member_id=request.user.id, notice_type_cd=notice_type_cd,
-                                   title=title, contents=contents, to_member_type_cd=to_member_type_cd,
-                                   use=USE)
+            try:
+                notice_info = NoticeTb.objects.get(notice_id=notice_id)
+            except ObjectDoesNotExist:
+                error = '게시글을 불러오지 못했습니다.'
+
+        if error is None:
+            notice_info.member_id = request.user.id
+            notice_info.notice_type_cd = notice_type_cd,
+            notice_info.title = title
+            notice_info.contents = contents
+            notice_info.to_member_type_cd = to_member_type_cd
+            notice_info.use = use
             notice_info.save()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+class UpdateQaStatusInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+        qa_id = request.POST.get('qa_id')
+        status_type_cd = request.POST.get('status_type_cd', 'QA_COMPLETE')
+        member_type_cd = request.session.get('group_name')
+
+        context = {}
+        error = None
+        qa_info = None
+
+        if member_type_cd != 'admin':
+            error = '관리자만 접근 가능합니다.'
+
+        if qa_id is None or qa_id == '':
+            error = '변경할 문의 글을 선택해주세요.'
+
+        if error is None:
+            try:
+                qa_info = QATb.objects.get(qa_id=qa_id)
+            except ObjectDoesNotExist:
+                error = '문의 글을 불러오지 못했습니다.'
+
+        if error is None:
+            qa_info.status_type_cd = status_type_cd
+            qa_info.save()
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
