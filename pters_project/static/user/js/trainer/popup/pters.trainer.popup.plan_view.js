@@ -483,7 +483,6 @@ class Plan_view{
     upper_right_menu(number){
         let user_option = [
             ()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
-                    console.log({"schedule_id":this.schedule_id})
                     Plan_func.delete({"schedule_id":this.schedule_id}, ()=>{
                         try{
                             calendar.init_no_new();

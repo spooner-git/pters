@@ -343,7 +343,6 @@ class Plan_add{
                 let range_start = this.work_time.start_hour;
                 let range_end = this.work_time.end_hour;
                 
-                console.log("range", range_start, range_end)
                 time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{zone:zone, hour:hour, minute:minute}, range:{start:range_start, end:range_end},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.start_time = object;
@@ -545,7 +544,6 @@ class Plan_add{
         let end_time = this.data.end_time;
 
         if(start_time == null || end_time == null){
-            console.log("시작시간이나 종료시간이 설정되지 않음");
             return false;
         }
         // if(end_time=='0:0'){
@@ -632,7 +630,6 @@ class Plan_add{
                 show_error_message('종료 시각을 선택 해주세요.');
                 return false;
             }
-            console.log(this.data.repeat);
             if(this.data.repeat.power == ON){
                 if(this.data.repeat.day.length == 0){
                     show_error_message('반복일정 요일을 선택 해주세요.');
