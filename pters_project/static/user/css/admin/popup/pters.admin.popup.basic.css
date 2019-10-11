@@ -28,7 +28,7 @@
     display: table;
     width: 100%;
 }
-.wrapper_popup_basic_comment > p{
+.wrapper_popup_basic_comment > div{
     margin: 0;
     width:  100%;
     /* padding: 0 15px; */

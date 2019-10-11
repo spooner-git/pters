@@ -192,13 +192,19 @@ class Plan_repeat_list{
             let user_option = {
                 delete:{text:"삭제", callback:()=>{
                     layer_popup.close_layer_popup();
-                    show_user_confirm(`정말 ${repeat_name}의 반복 일정을 취소하시겠습니까?`, ()=>{
+                    show_user_confirm(`정말 ${repeat_name}의 반복 일정을 취소하시겠습니까? <br><br>
+                                        <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
+                                        <div style="text-align:center;margin-top:5px;">
+                                            <span style="color:#fe4e65; font-size:12px;">
+                                        하위에 다른 반복일정이 존재할 경우 함께 취소됩니다. <br>
+                                        과거일정은 보존되지만, 등록한 미래일정은 취소됩니다.</div>`, ()=>{
+                        layer_popup.close_layer_popup();
                         Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
                             try{
                                 this.init();
                                 calendar.init_no_new();
                             }catch(e){
-                                console.log(e)
+                                console.log(e);
                             }
                             layer_popup.close_layer_popup();
                         });
@@ -226,13 +232,14 @@ class Plan_repeat_list{
             let user_option = {
                 delete:{text:"삭제", callback:()=>{
                     layer_popup.close_layer_popup();
-                    show_user_confirm(`정말 ${member_id}회원님의 반복 일정을 취소하시겠습니까?`, ()=>{
+                    show_user_confirm(`정말 ${member_name}회원님의 반복 일정을 취소하시겠습니까?`, ()=>{
+                        layer_popup.close_layer_popup();
                         Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
                             try{
                                 this.init();
                                 calendar.init_no_new();
                             }catch(e){
-                                console.log(e)
+                                console.log(e);
                             }
                             layer_popup.close_layer_popup();
                         });

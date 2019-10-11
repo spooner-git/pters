@@ -361,7 +361,7 @@ function func_set_shade (popup_array_length){
 function func_set_popup_basic (popup_name, data){
     let $popup = $(`.${popup_name}`);
     if(data != undefined && data.popup_comment!=undefined){
-        $popup.find('.wrapper_popup_basic_comment').html(`<p>${data.popup_comment}</p>`);
+        $popup.find('.wrapper_popup_basic_comment').html(`<div>${data.popup_comment}</div>`);
     }
     if(data != undefined && data.onclick_function!=undefined){
         // $popup.find('.popup_basic_confirm').attr('onclick', data.onclick_function);
