@@ -138,7 +138,7 @@ html, body{
     }
     #section_center{
         position: relative;
-        flex: 1 0 auto;
+        flex: 1 0 0;
     }
     #section_content{
         position: relative;

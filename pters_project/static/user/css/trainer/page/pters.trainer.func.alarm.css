@@ -53,6 +53,9 @@
 		width: 20px;
 		vertical-align: middle
 	}
+.alarm_data_u > div:nth-of-type(2){
+	
+}
 .alarm_data_u > div:last-child{
 	width: 70px;
 	text-align: right;
@@ -60,7 +63,7 @@
 
 .alarm_data_b{
 	display: table;
-	width: auto;
+	width: 100%;
 	color: #3d3b3b;
 }
 	.alarm_data_b > div{
@@ -69,4 +72,7 @@
 	}
 	.alarm_data_b > div:first-child{
 		width: 35px;
+	}
+	.alarm_data_b > div:last-child{
+		width: calc(100% - 55px);
 	}
