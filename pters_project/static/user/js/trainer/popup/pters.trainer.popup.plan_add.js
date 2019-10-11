@@ -132,7 +132,7 @@ class Plan_add{
 
         this.render();
         Setting_reserve_func.read((data)=>{
-            this.work_time = calendar.calc_worktime(data);
+            this.work_time = calendar.calc_worktime_display(data);
             this.render();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -343,6 +343,7 @@ class Plan_add{
                 let range_start = this.work_time.start_hour;
                 let range_end = this.work_time.end_hour;
                 
+                console.log("range", range_start, range_end)
                 time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{zone:zone, hour:hour, minute:minute}, range:{start:range_start, end:range_end},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.start_time = object;

@@ -121,7 +121,7 @@ class Plan_view{
         this.request_data(()=>{
             this.render();
             Setting_reserve_func.read((data)=>{
-                this.work_time = calendar.calc_worktime(data);
+                this.work_time = calendar.calc_worktime_display(data);
                 this.render();
             });
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
