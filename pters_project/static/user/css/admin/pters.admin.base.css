@@ -135,6 +135,8 @@ html, body{
     #section_side{
         flex:0 0 200px;
         background-color: #f5f2f3;
+        transition: 0.2s;
+        overflow: hidden;
     }
     #section_center{
         position: relative;
@@ -163,7 +165,10 @@ html, body{
         z-index: 2;
     }
     .top_logo{
-        padding: 16px 22px;
+        /* padding: 16px 22px; */
+        padding: 0 22px;
+        height: 60px;
+        line-height: 60px;
         cursor: pointer;
     }
     .side_menu{
