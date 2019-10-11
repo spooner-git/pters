@@ -65,13 +65,17 @@ def func_delete_profile_image_logic(file_name):
         # image_format, image_str = content.split(';base64,')
         # ext = image_format.split('/')[-1]
         # data = ContentFile(base64.b64decode(image_str), name='temp.' + ext)
-        s3_img_url = file_name.split('https://pters-image-master.s3.ap-northeast-2.amazonaws.com/')[1]
-        objects_to_delete = [{'Key': s3_img_url}]
-        try:
-            bucket.delete_objects(
-                Delete={
-                    'Objects': objects_to_delete
-                })
-        except ClientError:
-            error_code = '프로필 변경중 오류가 발생했습니다.'
+        file_name_split = file_name.split('https://pters-image-master.s3.ap-northeast-2.amazonaws.com/')
+        if len(file_name_split) >= 2:
+            s3_img_url = file_name.split('https://pters-image-master.s3.ap-northeast-2.amazonaws.com/')[1]
+            objects_to_delete = [{'Key': s3_img_url}]
+            try:
+                bucket.delete_objects(
+                    Delete={
+                        'Objects': objects_to_delete
+                    })
+            except ClientError:
+                error_code = '프로필 변경중 오류가 발생했습니다.'
+        else:
+            error_code = None
     return error_code
