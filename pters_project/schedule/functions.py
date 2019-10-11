@@ -351,8 +351,8 @@ def func_delete_schedule(class_id, schedule_id,  user_id):
                                                     state_cd=schedule_info.state_cd, note=schedule_info.note,
                                                     en_dis_type=schedule_info.en_dis_type,
                                                     member_note=schedule_info.member_note,
-                                                    reg_member_id=schedule_info.reg_member_id,
-                                                    del_member_id=user_id,
+                                                    reg_member=schedule_info.reg_member,
+                                                    del_member=user_id,
                                                     reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=UN_USE)
 
             delete_schedule_info.save()
