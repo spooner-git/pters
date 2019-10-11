@@ -463,9 +463,7 @@ class TimeRobot{
         let hour_diff = hour2 - hour1;
         let min_diff = minute2 - minute1;
         min_diff = hour_diff*60 + min_diff;
-
-        // console.log('hour_diff:'+hour_diff);
-        // console.log('min_diff:'+min_diff);
+        
         return {hour : parseInt(min_diff/60), min: min_diff%60};
 
     }
