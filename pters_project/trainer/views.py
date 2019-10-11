@@ -223,91 +223,113 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         class_id = self.request.session.get('class_id', '')
         off_repeat_schedule_list = []
         member_repeat_schedule_list = []
-        lecture_repeat_schedule_list = []
+        lecture_member_repeat_schedule_ordered_dict = collections.OrderedDict()
 
         # OFF 반복 일정 정보 불러오기
         off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=OFF_SCHEDULE_TYPE)
 
-        for off_repeat_schedule_info in off_repeat_schedule_data:
-            off_repeat_schedule = collections.OrderedDict(
-                [('repeat_schedule_id', off_repeat_schedule_info.repeat_schedule_id),
-                 ('repeat_type_cd', off_repeat_schedule_info.repeat_type_cd),
-                 ('start_date', off_repeat_schedule_info.start_date),
-                 ('end_date', off_repeat_schedule_info.end_date),
-                 ('start_time', off_repeat_schedule_info.start_time),
-                 ('end_time', off_repeat_schedule_info.end_time),
-                 ('time_duration', off_repeat_schedule_info.time_duration),
-                 ('state_cd', off_repeat_schedule_info.state_cd)])
-            off_repeat_schedule_list.append(off_repeat_schedule)
+        # 회원의 반복 일정 정보 불러오기
+        member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
+            'member_ticket_tb__member').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
+                                               lecture_tb__isnull=True,
+                                               lecture_schedule_id__isnull=True).order_by('lecture_tb',
+                                                                                          'lecture_schedule_id',
+                                                                                          'start_date')
 
         # 수업 반복 일정 정보 불러오기
-        repeat_schedule_data = RepeatScheduleTb.objects.select_related(
-            'lecture_tb').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE).order_by('lecture_tb',
-                                                                                              'lecture_schedule_id',
-                                                                                              'start_date')
+        lecture_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
+            'lecture_tb').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=False,
+                                 lecture_schedule_id__isnull=True).order_by('lecture_tb', 'lecture_schedule_id',
+                                                                            'start_date')
 
-        for repeat_schedule_info in repeat_schedule_data:
-            # 그룹 수업 반복일정인 경우 존재함
-            lecture_tb = repeat_schedule_info.lecture_tb
-            lecture_id = ''
-            lecture_name = ''
-            lecture_max_member_num = ''
-            lecture_ing_color_cd = ''
-            lecture_end_color_cd = ''
-            lecture_ing_font_color_cd = ''
-            lecture_end_font_color_cd = ''
-            if lecture_tb is not None and lecture_tb != '':
-                lecture_id = lecture_tb.lecture_id
-                lecture_name = lecture_tb.name
-                lecture_max_member_num = lecture_tb.member_num
-                lecture_ing_color_cd = lecture_tb.ing_color_cd
-                lecture_end_color_cd = lecture_tb.end_color_cd
-                lecture_ing_font_color_cd = lecture_tb.ing_font_color_cd
-                lecture_end_font_color_cd = lecture_tb.ing_font_color_cd
+        # 수업에 속한 회원의 반복 일정 정보 불러오기
+        lecture_member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
+            'lecture_tb', 'member_ticket_tb__member').filter(
+            class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=False,
+            lecture_schedule_id__isnull=False).order_by('lecture_tb', 'lecture_schedule_id', 'start_date')
 
-            # 회원의 반복일정
-            member_ticket_tb = repeat_schedule_info.member_ticket_tb
-            member_ticket_id = ''
-            member_id = ''
-            member_name = ''
-            if member_ticket_tb is not None and member_ticket_tb != '':
-                member_ticket_id = member_ticket_tb.member_ticket_id
-                member_id = member_ticket_tb.member.member_id
-                member_name = member_ticket_tb.member.name
+        for off_repeat_schedule_info in off_repeat_schedule_data:
+            off_repeat_schedule = {
+                'repeat_schedule_id': off_repeat_schedule_info.repeat_schedule_id,
+                'repeat_type_cd': off_repeat_schedule_info.repeat_type_cd,
+                'start_date': off_repeat_schedule_info.start_date,
+                'end_date': off_repeat_schedule_info.end_date,
+                'start_time': off_repeat_schedule_info.start_time,
+                'end_time': off_repeat_schedule_info.end_time,
+                'time_duration': off_repeat_schedule_info.time_duration,
+                'state_cd': off_repeat_schedule_info.state_cd
+            }
+            off_repeat_schedule_list.append(off_repeat_schedule)
 
-            # 그룹 수업에 추가된 회원 반복일정인 경우 존재함
-            repeat_lecture_schedule_id = repeat_schedule_info.lecture_schedule_id
-            repeat_schedule_dict = collections.OrderedDict(
-                [('repeat_schedule_id', repeat_schedule_info.repeat_schedule_id),
-                 ('repeat_type_cd', repeat_schedule_info.repeat_type_cd),
-                 ('start_date', repeat_schedule_info.start_date),
-                 ('end_date', repeat_schedule_info.end_date),
-                 ('start_time', repeat_schedule_info.start_time),
-                 ('end_time', repeat_schedule_info.end_time),
-                 ('time_duration', repeat_schedule_info.time_duration),
-                 ('state_cd', repeat_schedule_info.state_cd),
-                 ('member_ticket_id', member_ticket_id),
-                 ('member_id', member_id),
-                 ('member_name', member_name),
-                 ('repeat_lecture_schedule_id', repeat_lecture_schedule_id),
-                 ('lecture_id', lecture_id),
-                 ('lecture_name', lecture_name),
-                 ('lecture_max_member_num', lecture_max_member_num),
-                 ('lecture_ing_color_cd', lecture_ing_color_cd),
-                 ('lecture_end_color_cd', lecture_end_color_cd),
-                 ('lecture_ing_font_color_cd', lecture_ing_font_color_cd),
-                 ('lecture_end_font_color_cd', lecture_end_font_color_cd)])
+        for member_repeat_schedule_info in member_repeat_schedule_data:
+            member_profile_url = '/static/common/icon/icon_account.png'
+            if member_repeat_schedule_info.member_ticket_tb.member.profile_url is not None \
+                    and member_repeat_schedule_info.member_ticket_tb.member.profile_url != '':
+                member_profile_url = member_repeat_schedule_info.member_ticket_tb.member.profile_url
 
-            # 일반 회원의 반복일정
-            if lecture_tb is None or lecture_tb == '':
-                member_repeat_schedule_list.append(repeat_schedule_dict)
-            else:
-                lecture_repeat_schedule_list.append(repeat_schedule_dict)
+            member_repeat_schedule = {
+                'repeat_schedule_id': member_repeat_schedule_info.repeat_schedule_id,
+                'repeat_type_cd': member_repeat_schedule_info.repeat_type_cd,
+                'repeat_start_date': member_repeat_schedule_info.start_date,
+                'repeat_end_date': member_repeat_schedule_info.end_date,
+                'repeat_start_time': member_repeat_schedule_info.start_time,
+                'repeat_end_time': member_repeat_schedule_info.end_time,
+                'repeat_time_duration': member_repeat_schedule_info.time_duration,
+                'repeat_state_cd': member_repeat_schedule_info.state_cd,
+                'member_id': member_repeat_schedule_info.member_ticket_tb.member.member_id,
+                'member_name': member_repeat_schedule_info.member_ticket_tb.member.name,
+                'member_profile_url': member_profile_url
+
+            }
+            member_repeat_schedule_list.append(member_repeat_schedule)
+
+        for lecture_repeat_schedule_info in lecture_repeat_schedule_data:
+            lecture_member_repeat_schedule_ordered_dict[lecture_repeat_schedule_info.repeat_schedule_id] = {
+                'repeat_schedule_id': lecture_repeat_schedule_info.repeat_schedule_id,
+                'repeat_type_cd': lecture_repeat_schedule_info.repeat_type_cd,
+                'start_date': lecture_repeat_schedule_info.start_date,
+                'end_date': lecture_repeat_schedule_info.end_date,
+                'start_time': lecture_repeat_schedule_info.start_time,
+                'end_time': lecture_repeat_schedule_info.end_time,
+                'time_duration': lecture_repeat_schedule_info.time_duration,
+                'state_cd': lecture_repeat_schedule_info.state_cd,
+                'lecture_id': lecture_repeat_schedule_info.lecture_tb.lecture_id,
+                'lecture_name': lecture_repeat_schedule_info.lecture_tb.name,
+                'lecture_max_member_num': lecture_repeat_schedule_info.lecture_tb.member_num,
+                'lecture_ing_color_cd': lecture_repeat_schedule_info.lecture_tb.ing_color_cd,
+                'lecture_end_color_cd': lecture_repeat_schedule_info.lecture_tb.end_color_cd,
+                'lecture_ing_font_color_cd': lecture_repeat_schedule_info.lecture_tb.ing_font_color_cd,
+                'lecture_end_font_color_cd': lecture_repeat_schedule_info.lecture_tb.end_font_color_cd,
+                'lecture_member_repeat_schedule_list': []
+            }
+
+        for lecture_member_repeat_schedule_info in lecture_member_repeat_schedule_data:
+            member_profile_url = '/static/common/icon/icon_account.png'
+            if lecture_member_repeat_schedule_info.member_ticket_tb.member.profile_url is not None \
+                    and lecture_member_repeat_schedule_info.member_ticket_tb.member.profile_url != '':
+                member_profile_url = lecture_member_repeat_schedule_info.member_ticket_tb.member.profile_url
+
+            lecture_member_repeat_schedule_dict = {
+                'repeat_schedule_id': lecture_member_repeat_schedule_info.repeat_schedule_id,
+                'repeat_type_cd': lecture_member_repeat_schedule_info.repeat_type_cd,
+                'start_date': lecture_member_repeat_schedule_info.start_date,
+                'end_date': lecture_member_repeat_schedule_info.end_date,
+                'start_time': lecture_member_repeat_schedule_info.start_time,
+                'end_time': lecture_member_repeat_schedule_info.end_time,
+                'time_duration': lecture_member_repeat_schedule_info.time_duration,
+                'state_cd': lecture_member_repeat_schedule_info.state_cd,
+                'member_id': lecture_member_repeat_schedule_info.member_ticket_tb.member.member_id,
+                'member_name': lecture_member_repeat_schedule_info.member_ticket_tb.member.name,
+                'member_profile_url': member_profile_url
+            }
+            lecture_schedule_id = lecture_member_repeat_schedule_info.lecture_schedule_id
+            lecture_member_repeat_schedule_ordered_dict[
+                lecture_schedule_id]['lecture_member_repeat_schedule_list'].append(lecture_member_repeat_schedule_dict)
 
         repeat_schedule = collections.OrderedDict()
         repeat_schedule['off_repeat_schedule_data'] = off_repeat_schedule_list
         repeat_schedule['member_repeat_schedule_list'] = member_repeat_schedule_list
-        repeat_schedule['lecture_repeat_schedule_list'] = lecture_repeat_schedule_list
+        repeat_schedule['lecture_repeat_schedule_list'] = lecture_member_repeat_schedule_ordered_dict
         return JsonResponse(repeat_schedule, json_dumps_params={'ensure_ascii': True})
 
 
