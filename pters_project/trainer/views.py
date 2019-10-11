@@ -252,6 +252,7 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             off_repeat_schedule = {
                 'repeat_schedule_id': off_repeat_schedule_info.repeat_schedule_id,
                 'repeat_type_cd': off_repeat_schedule_info.repeat_type_cd,
+                'week_info': off_repeat_schedule_info.week_info,
                 'start_date': off_repeat_schedule_info.start_date,
                 'end_date': off_repeat_schedule_info.end_date,
                 'start_time': off_repeat_schedule_info.start_time,
@@ -271,6 +272,7 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             member_repeat_schedule = {
                 'repeat_schedule_id': member_repeat_schedule_info.repeat_schedule_id,
                 'repeat_type_cd': member_repeat_schedule_info.repeat_type_cd,
+                'week_info': member_repeat_schedule_info.week_info,
                 'repeat_start_date': member_repeat_schedule_info.start_date,
                 'repeat_end_date': member_repeat_schedule_info.end_date,
                 'repeat_start_time': member_repeat_schedule_info.start_time,
@@ -289,6 +291,7 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             lecture_member_repeat_schedule_ordered_dict[lecture_repeat_schedule_info.repeat_schedule_id] = {
                 'repeat_schedule_id': lecture_repeat_schedule_info.repeat_schedule_id,
                 'repeat_type_cd': lecture_repeat_schedule_info.repeat_type_cd,
+                'week_info': lecture_repeat_schedule_info.week_info,
                 'start_date': lecture_repeat_schedule_info.start_date,
                 'end_date': lecture_repeat_schedule_info.end_date,
                 'start_time': lecture_repeat_schedule_info.start_time,
@@ -315,6 +318,7 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             lecture_member_repeat_schedule_dict = {
                 'repeat_schedule_id': lecture_member_repeat_schedule_info.repeat_schedule_id,
                 'repeat_type_cd': lecture_member_repeat_schedule_info.repeat_type_cd,
+                'week_info': lecture_member_repeat_schedule_info.week_info,
                 'start_date': lecture_member_repeat_schedule_info.start_date,
                 'end_date': lecture_member_repeat_schedule_info.end_date,
                 'start_time': lecture_member_repeat_schedule_info.start_time,

@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 from django.http import JsonResponse
+from django.shortcuts import render
 from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView
@@ -77,3 +78,65 @@ class GetNoticeAllView(LoginRequiredMixin, AccessTestMixin, View):
                                                        'notice_use': notice_info.use}
 
         return JsonResponse(notice_data_dict, json_dumps_params={'ensure_ascii': True})
+
+
+class AddNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+        notice_type_cd = request.POST.get('notice_type_cd', '')
+        title = request.POST.get('title', '')
+        contents = request.POST.get('contents', '')
+        to_member_type_cd = request.POST.get('to_member_type_cd')
+        member_type_cd = request.session.get('group_name')
+
+        context = {}
+        error = None
+        if member_type_cd != 'admin':
+            error = '관리자만 접근 가능합니다.'
+
+        if notice_type_cd == '' or notice_type_cd is None:
+            error = '공지 유형을 선택해주세요.'
+
+        if error is None:
+            notice_info = NoticeTb(member_id=request.user.id, notice_type_cd=notice_type_cd,
+                                   title=title, contents=contents, to_member_type_cd=to_member_type_cd,
+                                   use=USE)
+            notice_info.save()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+class UpdateNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+        notice_type_cd = request.POST.get('notice_type_cd', '')
+        title = request.POST.get('title', '')
+        contents = request.POST.get('contents', '')
+        to_member_type_cd = request.POST.get('to_member_type_cd')
+        member_type_cd = request.session.get('group_name')
+
+        context = {}
+        error = None
+        if member_type_cd != 'admin':
+            error = '관리자만 접근 가능합니다.'
+
+        if notice_type_cd == '' or notice_type_cd is None:
+            error = '공지 유형을 선택해주세요.'
+
+        if error is None:
+            notice_info = NoticeTb(member_id=request.user.id, notice_type_cd=notice_type_cd,
+                                   title=title, contents=contents, to_member_type_cd=to_member_type_cd,
+                                   use=USE)
+            notice_info.save()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})

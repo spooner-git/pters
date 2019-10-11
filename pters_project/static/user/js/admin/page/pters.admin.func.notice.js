@@ -248,7 +248,7 @@ class Notice_func{
 
     static create(data, callback){
         $.ajax({
-            url:'/board/add_notice_info/',
+            url:'/admin_spooner/add_notice_info/',
             type:'POST',
             data: data,
             dataType : 'JSON',
