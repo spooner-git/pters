@@ -54,7 +54,7 @@ def get_setting_info(request):
             request.session['class_type_name'] = class_info.get_class_type_cd_name()
             request.session['class_center_name'] = class_info.get_center_name()
 
-        context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
+        context = func_get_trainer_setting_list(context, class_info.member_id, class_id, class_info.class_hour)
 
         request.session['setting_member_reserve_time_available'] = context['setting_member_reserve_time_available']
         request.session['setting_member_reserve_time_prohibition'] = context['setting_member_reserve_time_prohibition']

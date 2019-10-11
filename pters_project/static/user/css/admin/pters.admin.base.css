@@ -172,14 +172,14 @@ html, body{
     .side_menu_item{
         width: 90%;
         margin: 0 auto;
-        border-radius: 10px;
+        border-radius: 4px;
         font-size: 12px;
         font-weight: 500;
         letter-spacing: -0.5px;
-        padding: 10px 0;
-        padding-left: 22px;
+        padding: 10px 0 10px 22px;
         box-sizing: border-box;
         cursor: pointer;
+        color: #3d3b3b;
     }
     .side_menu_item:hover{
         background-color: #fe4e6510
