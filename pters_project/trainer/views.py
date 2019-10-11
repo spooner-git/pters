@@ -755,13 +755,14 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         # context = super(TrainerMainView, self).get_context_data(**kwargs)
 
         class_id = self.request.session.get('class_id', '')
+        class_hour = self.request.session.get('class_hour', '')
         error = None
         today = datetime.date.today()
         # one_day_after = today + datetime.timedelta(days=1)
         month_first_day = today.replace(day=1)
 
         # 업무 시간 고려
-        context = func_get_trainer_setting_list(context, self.request.user.id, class_id)
+        context = func_get_trainer_setting_list(context, self.request.user.id, class_id, class_hour)
 
         setting_trainer_work_time_avail = [context['setting_trainer_work_sun_time_avail'],
                                            context['setting_trainer_work_mon_time_avail'],
@@ -1225,7 +1226,8 @@ class PushSettingView(LoginRequiredMixin, AccessTestMixin, View):
         context = {}
         # context = super(PushSettingView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
-        context = func_get_trainer_setting_list(context, request.user.id, class_id)
+        class_hour = request.session.get('class_hour')
+        context = func_get_trainer_setting_list(context, request.user.id, class_id, class_hour)
 
         return render(request, self.template_name, context)
 
@@ -4039,7 +4041,7 @@ def update_setting_reserve_logic(request):
     setting_member_reserve_prohibition = request.POST.get('setting_member_reserve_prohibition',
                                                           MEMBER_RESERVE_PROHIBITION_ON)
     setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '7')
-    setting_member_time_duration = request.POST.get('setting_member_time_duration', '1')
+    setting_member_time_duration = request.POST.get('setting_member_time_duration', '60')
     setting_member_start_time = request.POST.get('setting_member_start_time', 'A-0')
     class_id = request.session.get('class_id', '')
 
@@ -4054,7 +4056,7 @@ def update_setting_reserve_logic(request):
     if setting_member_reserve_date_available is None or setting_member_reserve_date_available == '':
         setting_member_reserve_date_available = '7'
     if setting_member_time_duration is None or setting_member_time_duration == '':
-        setting_member_time_duration = '1'
+        setting_member_time_duration = '60'
     if setting_member_start_time is None or setting_member_start_time == '':
         setting_member_start_time = 'A-0'
 

@@ -493,7 +493,7 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
 
 
 # 강사의 셋팅 정보 가져오기
-def func_get_trainer_setting_list(context, user_id, class_id):
+def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     today = datetime.date.today()
     lt_res_01 = '00:00-23:59'
     lt_res_02 = 0
@@ -509,7 +509,7 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     lt_res_05 = '7'
     lt_res_cancel_time = -1
     lt_res_enable_time = -1
-    lt_res_member_time_duration = 1
+    lt_res_member_time_duration = 60
     lt_res_member_start_time = 'A-0'
     lt_schedule_auto_finish = AUTO_FINISH_OFF
     lt_member_ticket_auto_finish = AUTO_FINISH_OFF
@@ -598,6 +598,9 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     reserve_date_available = int(lt_res_05)
     for i in range(0, reserve_date_available):
         avail_date_list.append(str(today + datetime.timedelta(days=i)))
+
+    if lt_res_member_time_duration < 10:
+        lt_res_member_time_duration = int(class_hour) * lt_res_member_time_duration
 
     context['avail_date_data'] = avail_date_list
     context['setting_member_reserve_time_available'] = lt_res_01

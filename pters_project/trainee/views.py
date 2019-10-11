@@ -195,7 +195,7 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 class_info = None
 
             if class_info is not None:
-                context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
+                context = func_get_trainer_setting_list(context, class_info.member_id, class_id, class_info.class_hour)
                 cancel_prohibition_time = context['setting_member_reserve_cancel_time']
                 # 근접 취소 시간 확인
                 cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
@@ -350,7 +350,7 @@ def add_trainee_schedule_logic(request):
     schedule_info = None
     member_ticket_id = None
     member_ticket_info = None
-    lt_res_member_time_duration = 1
+    lt_res_member_time_duration = 60
 
     if class_id is None or class_id == '':
         error = '수강 정보를 불러오지 못했습니다.'
@@ -376,11 +376,14 @@ def add_trainee_schedule_logic(request):
                                                  setting_type_cd='LT_RES_MEMBER_TIME_DURATION')
             lt_res_member_time_duration = int(setting_data.setting_info)
         except ObjectDoesNotExist:
-            lt_res_member_time_duration = 1
+            lt_res_member_time_duration = 60
 
     if error is None:
         if lecture_schedule_id is None or lecture_schedule_id == '':
-            time_duration_temp = class_info.class_hour*int(lt_res_member_time_duration)
+            if int(lt_res_member_time_duration) < 10:
+                time_duration_temp = class_info.class_hour*int(lt_res_member_time_duration)
+            else:
+                time_duration_temp = int(lt_res_member_time_duration)
             start_date = datetime.datetime.strptime(training_date+' '+training_time, '%Y-%m-%d %H:%M')
             end_date = start_date + datetime.timedelta(minutes=int(time_duration_temp))
         else:
@@ -661,6 +664,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         day = self.request.GET.get('day', '')
         class_id = self.request.session.get('class_id', '')
         trainer_id = self.request.session.get('trainer_id', '')
+        class_hour = self.request.session.get('class_hour', '')
         today = datetime.date.today()
         error = None
         if date != '':
@@ -674,6 +678,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 try:
                     class_info = ClassTb.objects.get(class_id=class_id)
                     trainer_id = class_info.member_id
+                    class_hour = class_info.class_hour
                     self.request.session['trainer_id'] = trainer_id
                 except ObjectDoesNotExist:
                     error = '수강정보를 불러오지 못했습니다.'
@@ -687,7 +692,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             context = func_get_class_member_ticket_count(context, class_id, self.request.user.id)
 
             if trainer_id != '' and trainer_id is not None:
-                context = func_get_trainer_setting_list(context, trainer_id, class_id)
+                context = func_get_trainer_setting_list(context, trainer_id, class_id, class_hour)
 
             if context['error'] is not None:
                 logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + context['error'])
@@ -1390,7 +1395,7 @@ class PopupCalendarPlanView(TemplateView):
                 class_info = None
 
             if class_info is not None:
-                context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
+                context = func_get_trainer_setting_list(context, class_info.member_id, class_id, class_info.class_hour)
                 cancel_prohibition_time = context['setting_member_reserve_cancel_time']
                 # 근접 예약 시간 확인
                 cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
@@ -1481,7 +1486,7 @@ class PopupCalendarPlanReserveCompleteView(LoginRequiredMixin, AccessTestMixin, 
 
         if schedule_info is not None:
 
-            context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
+            context = func_get_trainer_setting_list(context, class_info.member_id, class_id, class_info.class_hour)
             cancel_prohibition_time = context['setting_member_reserve_cancel_time']
             # 근접 취소 시간 확인
             cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
