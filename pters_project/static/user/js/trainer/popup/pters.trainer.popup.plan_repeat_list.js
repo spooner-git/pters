@@ -200,7 +200,7 @@ class Plan_repeat_list{
                             }catch(e){
                                 console.log(e)
                             }
-                            layer_popup.all_close_layer_popup();
+                            layer_popup.close_layer_popup();
                         });
                     });
                 }}
@@ -234,7 +234,7 @@ class Plan_repeat_list{
                             }catch(e){
                                 console.log(e)
                             }
-                            layer_popup.all_close_layer_popup();
+                            layer_popup.close_layer_popup();
                         });
                     });
                 }}
