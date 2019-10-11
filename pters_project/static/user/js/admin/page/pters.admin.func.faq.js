@@ -142,17 +142,18 @@ class Faq {
                                                                         category:[
                                                                             {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
                                                                             {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
-                                                                            {id:"status", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
+                                                                            {id:"use", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
                                                                         ],
                                                                         category_selected:{
                                                                             open:{text:[], value:[]},
                                                                             type:{text:[], value:[]},
-                                                                            status:{text:[], value:[]}
+                                                                            use:{text:[], value:[]}
                                                                         }
                                             };
                                             board_writer = new BoardWriter("FAQ 수정", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
                                                 let data = {"notice_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
-                                                            "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0]};
+                                                            "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0],
+                                                            "use":data_written.category_selected.use.value[0]};
                                                 Notice_func.create(data, ()=>{
                                                     this.init();
                                                 });
@@ -185,17 +186,18 @@ class Faq {
                                         category:[
                                             {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
                                             {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
-                                            {id:"status", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
+                                            {id:"use", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
                                         ],
                                         category_selected:{
                                             open:{text:[], value:[]},
                                             type:{text:[], value:[]},
-                                            status:{text:[], value:[]}
+                                            use:{text:[], value:[]}
                                         }
             };
             board_writer = new BoardWriter("새 FAQ", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
                 let data = {"notice_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
-                            "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0]};
+                            "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0],
+                            "use":data_written.category_selected.use.value[0]};
                 Notice_func.create(data, ()=>{
                     this.init();
                 });

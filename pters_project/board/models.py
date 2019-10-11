@@ -53,6 +53,7 @@ class CommentTb(TimeStampedModel):
 
 class NoticeTb(TimeStampedModel):
     notice_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     notice_type_cd = models.CharField(db_column='NOTICE_TYPE_CD', max_length=20,
                                       blank=True, default=NOTICE_TYPE_CD_NORMAL)
     title = models.CharField(db_column='TITLE', max_length=255, blank=True, default='')

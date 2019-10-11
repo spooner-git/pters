@@ -63,7 +63,7 @@ class GetQuestionDataView(LoginRequiredMixin, TemplateView):
             'member').filter(member_id=self.request.user.id, use=USE
                              ).annotate(qa_type_cd_name=RawSQL(query_type_cd, []),
                                         status_type_cd_name=RawSQL(query_status, [])
-                                        ).order_by('-reg_dt')
+                                        ).order_by('reg_dt')
         for question_info in question_list:
             if question_info.read == 0 and question_info.status_type_cd == 'QA_COMPLETE':
                 question_info.read = 1
@@ -79,7 +79,7 @@ class ClearQuestionDataView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ClearQuestionDataView, self).get_context_data(**kwargs)
         question_list = QATb.objects.filter(member_id=self.request.user.id, read=0,
-                                            status_type_cd='QA_COMPLETE', use=USE).order_by('-reg_dt')
+                                            status_type_cd='QA_COMPLETE', use=USE).order_by('reg_dt')
         question_list.update(read=1)
         context['question_data'] = question_list
 
@@ -101,7 +101,7 @@ class GetNoticeDataView(LoginRequiredMixin, View):
         notice_data = NoticeTb.objects.filter(query_notice_type_list, query_notice_group_cd,
                                               use=USE
                                               ).annotate(notice_type_cd_name=RawSQL(query_type_cd, []),
-                                                         ).order_by('-reg_dt')
+                                                         ).order_by('reg_dt')
         notice_list = []
         for notice_info in notice_data:
             notice_list.append({'notice_id': notice_info.notice_id,
