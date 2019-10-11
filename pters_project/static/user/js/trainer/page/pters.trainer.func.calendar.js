@@ -1835,6 +1835,47 @@ class Plan_func{
             }
         });
     }
+
+    static delete_plan_repeat(data, callback){
+        console.log(data);
+        $.ajax({
+            url:'/schedule/delete_repeat_schedule/',
+            type:'POST',
+            data: data,
+            dataType : 'JSON',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback();
+                }
+                
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                // location.reload();
+            }
+        });
+    }
 }
 
 

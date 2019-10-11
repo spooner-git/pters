@@ -75,8 +75,11 @@ class Plan_repeat_list{
     }
     
     dom_assembly_content(){
-        
+        let lectures_list = this.dom_sub_assembly_lectures();
+        let members_list = this.dom_sub_assembly_members();
+        let offs_list = this.dom_sub_assembly_offs();
 
+        let html = lectures_list + members_list + offs_list;
 
         return html;
     }
@@ -88,13 +91,34 @@ class Plan_repeat_list{
             let repeat_id = data.repeat_schedule_id;
             let color = data.lecture_ing_color_cd;
             let repeat_name = data.lecture_name;
-            let repeat_day = data;
             let repeat_period = data.start_date + ' - ' + data.end_date;
-            let repeat_start_time = TimeRobot.to_hhmm(data.start_time.split(':')[0], data.start_time.split(':')[1]);
-            let repeat_end_time = TimeRobot.to_hhmm(data.end_time.split(':')[0], data.end_time.split(':')[1]);
+            let repeat_start_time = TimeRobot.to_hhmm(data.start_time.split(':')[0], data.start_time.split(':')[1]).complete;
+            let repeat_end_time = TimeRobot.to_hhmm(data.end_time.split(':')[0], data.end_time.split(':')[1]).complete;
             let repeat_time = repeat_start_time + ' - ' + repeat_end_time;
+            let repeat_day = data.week_info.split('/').map((item)=>{
+                return DAYNAME_MATCH[item];
+            }).join('');
 
-            let html = this.dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time);
+            let html_main = this.dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time);
+
+
+            let length = data.lecture_member_repeat_schedule_list.length;
+            let html_to_join_participants = [];
+            for(let i=0; i<length; i++){
+                let data2 = data.lecture_member_repeat_schedule_list[i];
+                let repeat_id = data2.repeat_schedule_id;
+                let member_id = data2.member_id;
+                let member_name = data2.member_name;
+                let member_photo = data2.member_profile_url;
+                let html = this.dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo);
+                html_to_join_participants.push(html);
+            }
+            let html_participants = '<div style="margin-bottom:20px;">' + html_to_join_participants.join("") + '</div>';
+            if(length == 0){
+                html_participants = '';
+            }
+
+            let html = html_main + html_participants;
 
             html_to_join.push(html);
         }
@@ -106,15 +130,17 @@ class Plan_repeat_list{
         let html_to_join = [];
         let length = this.data.member_repeat_schedule_list.length;
         for(let i=0; i<length; i++){
-            let data = this.data.member_repeat_schedule_list;
+            let data = this.data.member_repeat_schedule_list[i];
             let repeat_id = data.repeat_schedule_id;
             let color = '#cccccc';
             let repeat_name = data.member_name;
-            let repeat_day = data;
             let repeat_period = data.repeat_start_date + ' - ' + data.repeat_end_date;
-            let repeat_start_time = TimeRobot.to_hhmm(data.repeat_start_time.split(':')[0], data.repeat_start_time.split(':')[1]);
-            let repeat_end_time = TimeRobot.to_hhmm(data.repeat_end_time.split(':')[0], data.repeat_end_time.split(':')[1]);
+            let repeat_start_time = TimeRobot.to_hhmm(data.repeat_start_time.split(':')[0], data.repeat_start_time.split(':')[1]).complete;
+            let repeat_end_time = TimeRobot.to_hhmm(data.repeat_end_time.split(':')[0], data.repeat_end_time.split(':')[1]).complete;
             let repeat_time = repeat_start_time + ' - ' + repeat_end_time;
+            let repeat_day = data.week_info.split('/').map((item)=>{
+                return DAYNAME_MATCH[item];
+            }).join('');
 
             let html = this.dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time);
 
@@ -128,15 +154,17 @@ class Plan_repeat_list{
         let html_to_join = [];
         let length = this.data.off_repeat_schedule_data.length;
         for(let i=0; i<length; i++){
-            let data = this.data.off_repeat_schedule_data;
+            let data = this.data.off_repeat_schedule_data[i];
             let repeat_id = data.repeat_schedule_id;
             let color = '#282828';
             let repeat_name = "OFF";
-            let repeat_day = data;
             let repeat_period = data.start_date + ' - ' + data.end_date;
-            let repeat_start_time = TimeRobot.to_hhmm(data.start_time.split(':')[0], data.start_time.split(':')[1]);
-            let repeat_end_time = TimeRobot.to_hhmm(data.end_time.split(':')[0], data.end_time.split(':')[1]);
+            let repeat_start_time = TimeRobot.to_hhmm(data.start_time.split(':')[0], data.start_time.split(':')[1]).complete;
+            let repeat_end_time = TimeRobot.to_hhmm(data.end_time.split(':')[0], data.end_time.split(':')[1]).complete;
             let repeat_time = repeat_start_time + ' - ' + repeat_end_time;
+            let repeat_day = data.week_info.split('/').map((item)=>{
+                return DAYNAME_MATCH[item];
+            }).join('');
 
             let html = this.dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time);
 
@@ -153,20 +181,72 @@ class Plan_repeat_list{
                             <div style="float:left;width:4px;height:32px;background-color:${color}"></div>
                         </div>
                         <div style="flex:1 1 0">
-                            <div>${repeat_name}</div>
-                            <div>${repeat_day} / ${repeat_time}</div>
+                            <div style="font-size:16px;font-weight:500;letter-spacing:-0.7px;color:#1f1d1e;">${repeat_name}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:#858282;">${repeat_day} / ${repeat_time} / ${repeat_period}</div>
                         </div>
                         <div style="flex-basis:30px;">
                             <img src="/static/common/icon/icon_more_horizontal.png" style="width:24px;vertical-align:top;">
                         </div>
                     </div>`;
+        $(document).off('click', `#repeat_item_${repeat_id}`).on('click', `#repeat_item_${repeat_id}`, function(e){
+            let user_option = {
+                delete:{text:"삭제", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    show_user_confirm(`정말 ${repeat_name}의 반복 일정을 취소하시겠습니까?`, ()=>{
+                        Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
+                            try{
+                                this.init();
+                                calendar.init_no_new();
+                            }catch(e){
+                                console.log(e)
+                            }
+                            layer_popup.all_close_layer_popup();
+                        });
+                    });
+                }}
+            };
+            let options_padding_top_bottom = 16;
+            let button_height = 8 + 8 + 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        });
 
         return html;
     }
 
     dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo){
-        let html = ``;
-
+        let html = `<div style="display:flex;width:100%;height:32px;padding:0 36px;box-sizing:border-box;" id="repeat_item_${repeat_id}">
+                        <div style="flex-basis:24px;"><img src="${member_photo}" style="border-radius:50%;width:20px;vertical-align:middle;"></div>
+                        <div style="flex:1 1 0;font-size:14px;font-weight:500;letter-spacing:-0.6px;color:#3d3b3b;line-height:32px;">${member_name}</div>
+                    </div>`;
+        $(document).off('click', `#repeat_item_${repeat_id}`).on('click', `#repeat_item_${repeat_id}`, function(e){
+            let user_option = {
+                delete:{text:"삭제", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    show_user_confirm(`정말 ${member_id}회원님의 반복 일정을 취소하시겠습니까?`, ()=>{
+                        Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
+                            try{
+                                this.init();
+                                calendar.init_no_new();
+                            }catch(e){
+                                console.log(e)
+                            }
+                            layer_popup.all_close_layer_popup();
+                        });
+                    });
+                }}
+            };
+            let options_padding_top_bottom = 16;
+            let button_height = 8 + 8 + 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        });
         return html;
     }
 
