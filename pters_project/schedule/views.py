@@ -1243,7 +1243,7 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, View):
         context['data_changed'] = update_check
         if error is not None:
             logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
-            messages.error(request, error)
+            # messages.error(request, error)
 
         return render(request, self.template_name, context)
 
@@ -1277,7 +1277,7 @@ class CheckScheduleDuplicateViewAjax(LoginRequiredMixin, View):
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-            messages.error(request, error)
+            # messages.error(request, error)
 
         return render(request, self.template_name, context)
 
@@ -1747,7 +1747,7 @@ def add_other_member_lecture_schedule_logic(request):
             context['push_message'] = push_message
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
+        # messages.error(request, error)
 
         context['messageArray'] = error
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})

@@ -15,5 +15,6 @@
       [{% for price_info in price_data %}"{{ price_info.package_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "messageArray" :
-      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+        "{{ messageArray }}"
+{#      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]#}
     }
