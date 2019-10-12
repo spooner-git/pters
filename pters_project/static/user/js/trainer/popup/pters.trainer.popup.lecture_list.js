@@ -3,7 +3,7 @@ class Lecture_list {
         this.target = {install: install_target, toolbox:'section_lecture_list_toolbox', content:'section_lecture_list_content'};
 
         this.instance = instance;
-        this.page_name = 'lecture';
+        this.page_name = 'lecture_list';
         this.data = null;
         this.data_length = 0;
         this.lecture_ing_length = 0;

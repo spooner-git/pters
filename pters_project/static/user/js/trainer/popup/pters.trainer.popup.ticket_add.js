@@ -281,7 +281,7 @@ class Ticket_add{
         return html;
     }
 
-    send_data(){
+    send_data(external_data){
         let inspect = pass_inspector.ticket();
         if(inspect.barrier == BLOCKED){
             show_error_message(`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.`);
@@ -311,7 +311,7 @@ class Ticket_add{
                 ticket.init();
                 ticket_list_popup.init();
             }catch(e){
-
+                console.log(e);
             }
         });
         layer_popup.close_layer_popup();

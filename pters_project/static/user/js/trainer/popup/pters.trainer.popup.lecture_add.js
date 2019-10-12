@@ -27,7 +27,9 @@ class Lecture_add{
                 color_name:[],
 
                 ticket_id:[],
-                ticket_name:[]
+                ticket_name:[],
+
+                make_ticket:OFF
         };
 
         this.init();
@@ -54,7 +56,6 @@ class Lecture_add{
     set capacity(number){
         this.data.capacity = number;
         this.render_content();
-        console.log("렌더 완료", this.data.capacity)
     }
 
     get capacity(){
@@ -89,7 +90,7 @@ class Lecture_add{
     }
 
     get ticket(){
-        return {id:this.data.ticket_id, name:this.data.ticket_name, reg_price:null, reg_count:null, effective_days:null};
+        return {id:this.data.ticket_id, name:this.data.ticket_name, reg_price:[], reg_count:[], effective_days:[]};
     }
 
  
@@ -143,8 +144,8 @@ class Lecture_add{
         let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업명') + name+'</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('정원') + capacity + '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('색상 태그')+ color+ '</div>' +
-                    '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 수강권에 추가')+ ticket+ '</div>';
-                    //  + '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 수강권 동시 생성')+ ticket_make+ '</div>';
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 수강권에 추가')+ ticket+ '</div>'
+                     + '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 같은 이름의 수강권을 함께 생성')+ ticket_make+ '</div>';
 
         return html;
     }
@@ -220,7 +221,6 @@ class Lecture_add{
                 input_data = Number(input_data);
             }
             this.capacity = input_data;
-            console.log("1", input_data)
         }, pattern, pattern_message, required);
         return html;
     }
@@ -299,7 +299,7 @@ class Lecture_add{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SELECT, 100, popup_style, null, ()=>{
-                ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1, {"title":"수강권 선택"}, (set_data)=>{
+                ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 99, {"title":"수강권 선택"}, (set_data)=>{
                     this.ticket = set_data;
                     // this.render_content();
                 });
@@ -310,15 +310,39 @@ class Lecture_add{
 
     dom_row_ticket_make_select(){
         let id = "lecture_add_ticket_new";
-        let power = OFF;
-        let style = null;
-        let onclick = ()=>{
-
+        let power = this.data.make_ticket;
+        let style = {"margin-top":"10px", "margin-left":"40px"};
+        let onclick = (on_off)=>{
+            this.data.make_ticket = on_off;
+            this.render_content();
         };
         let html = CComponent.toggle_button (id, power, style, onclick);
         return html;
     }
 
+    send_date_create_ticket_at_the_same_time(lecture_id){
+        let inspect = pass_inspector.ticket();
+        if(inspect.barrier == BLOCKED){
+            show_error_message(`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
+                                <br> 같은 이름으로 수강권 생성에 실패하였습니다.`);
+            return false;
+        }
+
+        let data = {
+                    "ticket_name":this.data.name,
+                    "lecture_id_list[]":[lecture_id],
+                    // "ticket_effective_days":30,
+                    // "ticket_reg_count":this.data.count,
+                    // "ticket_price":this.data.price,
+                    "ticket_note":"",
+                    "ticket_week_schedule_enable":7, //주간 수강 제한 횟수
+                    "ticket_day_schedule_enable":1  //일일 수강 제한 횟수
+        };
+        
+        Ticket_func.create(data, ()=>{
+
+        });
+    }
 
     send_data(){
         let inspect = pass_inspector.lecture();
@@ -350,6 +374,10 @@ class Lecture_add{
                     this.callback();
                 }
             }
+            //수업 생성시 같은 이름으로 수강권도 함께 만들기
+            if(this.data.make_ticket == ON){ 
+                this.send_date_create_ticket_at_the_same_time(received.lecture_id);
+            }
             try{
                 lecture.init();
                 lecture_list_popup.init();
@@ -366,7 +394,6 @@ class Lecture_add{
         let forms = document.getElementById(`${this.form_id}`);
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
-        console.log(error_info);
         if(error_info != ''){
             show_error_message(error_info);
             return false;

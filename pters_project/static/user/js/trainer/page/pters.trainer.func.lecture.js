@@ -231,6 +231,9 @@ class Lecture {
     }
 
     init(){
+        if(current_page != this.page_name){
+            return false;
+        }
         this.set_initial_data();
     }
 

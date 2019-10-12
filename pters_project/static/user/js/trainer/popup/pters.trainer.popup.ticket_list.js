@@ -3,7 +3,7 @@ class Ticket_list {
         this.target = {install: install_target, toolbox:'section_ticket_list_toolbox', content:'section_ticket_list_content'};
 
         this.instance = instance;
-        this.page_name = 'ticket';
+        this.page_name = 'ticket_list';
         this.data = null;
         this.data_length = 0;
         this.ticket_ing_length = 0;
