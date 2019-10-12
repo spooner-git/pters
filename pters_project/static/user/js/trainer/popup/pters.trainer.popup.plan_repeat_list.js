@@ -200,12 +200,18 @@ class Plan_repeat_list{
                                         과거일정은 보존되지만, 등록한 미래일정은 취소됩니다.</div>`, ()=>{
                         layer_popup.close_layer_popup();
                         Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
+                            // try{
+                            //     this.init();
+                            //     calendar.init_no_new();
+                            // }catch(e){
+                            //     console.log(e);
+                            // }
+                            try{
+                                current_page.init();
+                            }catch(e){}
                             try{
                                 this.init();
-                                calendar.init_no_new();
-                            }catch(e){
-                                console.log(e);
-                            }
+                            }catch(e){}
                             layer_popup.close_layer_popup();
                         });
                     });
@@ -235,12 +241,18 @@ class Plan_repeat_list{
                     show_user_confirm(`정말 ${member_name}회원님의 반복 일정을 취소하시겠습니까?`, ()=>{
                         layer_popup.close_layer_popup();
                         Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
+                            // try{
+                            //     this.init();
+                            //     calendar.init_no_new();
+                            // }catch(e){
+                            //     console.log(e);
+                            // }
+                            try{
+                                current_page.init();
+                            }catch(e){}
                             try{
                                 this.init();
-                                calendar.init_no_new();
-                            }catch(e){
-                                console.log(e);
-                            }
+                            }catch(e){}
                             layer_popup.close_layer_popup();
                         });
                     });

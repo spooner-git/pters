@@ -134,14 +134,12 @@ class Member_ticket_modify{
                         this.data.status = "PE";
                         this.render_content();
                         try{
+                            current_page.init();
+                        }catch(e){}
+                        try{
                             member_view_popup.init();
-                            member.init();
                             member_ticket_history.init();
-                        }catch(e){
-                            console.log(e);
-                        }
-                        // member_view_popup.init();
-                        // member.init();
+                        }catch(e){}
                     });
                     layer_popup.close_layer_popup();}
                 },
@@ -150,14 +148,12 @@ class Member_ticket_modify{
                         this.data.status = "IP";
                         this.render_content();
                         try{
+                            current_page.init();
+                        }catch(e){}
+                        try{
                             member_view_popup.init();
-                            member.init();
                             member_ticket_history.init();
-                        }catch(e){
-                            console.log(e);
-                        }
-                        // member_view_popup.init();
-                        // member.init();
+                        }catch(e){}
                     });
                     layer_popup.close_layer_popup();}
                 },
@@ -172,14 +168,12 @@ class Member_ticket_modify{
                 delete:{text:"삭제", callback:()=>{
                     Member_func.ticket_delete({"member_ticket_id":this.data.member_ticket_id}, ()=>{
                         try{
+                            current_page.init();
+                        }catch(e){}
+                        try{
                             member_view_popup.init();
-                            member.init();
                             member_ticket_history.init();
-                        }catch(e){
-                            console.log(e);
-                        }
-                        // member_view_popup.init();
-                        // member.init();
+                        }catch(e){}
                         layer_popup.close_layer_popup();
                     });
                     layer_popup.close_layer_popup();}
@@ -355,18 +349,16 @@ class Member_ticket_modify{
         let data = {"member_ticket_id":this.data.member_ticket_id, "note":"", "start_date":this.data.start_date, "end_date":this.data.end_date, 
                     "price":this.data.price, "refund_price":this.data.refund_price, "refund_date":this.data.refund_date, "member_ticket_reg_count":this.data.reg_count};
 
-        console.log(data)
-
         Member_func.ticket_update(data, ()=>{
             layer_popup.close_layer_popup();
             this.set_initial_data();
             try{
+                current_page.init();
+            }catch(e){}
+            try{
                 member_view_popup.init();
-                member.init();
                 member_ticket_history.init();
-            }catch(e){
-                console.log(e);
-            }
+            }catch(e){}
         });
     }
 

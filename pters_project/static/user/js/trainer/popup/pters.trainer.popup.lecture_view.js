@@ -418,11 +418,11 @@ class Lecture_view{
 
             this.set_initial_data();
             try{
-                lecture.init();
+                current_page.init();
+            }catch(e){}
+            try{
                 lecture_list_popup.init();
-            }catch(e){
-
-            }
+            }catch(e){}
         });
     }
 
@@ -432,11 +432,11 @@ class Lecture_view{
                     show_user_confirm(`"${this.data.name}" <br> 수업을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
                         Lecture_func.status({"lecture_id":this.lecture_id, "state_cd":STATE_IN_PROGRESS}, ()=>{
                             try{
-                                lecture.init();
+                                current_page.init();
+                            }catch(e){}
+                            try{
                                 lecture_list_popup.init();
-                            }catch(e){
-                
-                            }
+                            }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
                             layer_popup.close_layer_popup(); //수업 정보 팝업 닫기
@@ -454,11 +454,11 @@ class Lecture_view{
                                                             이 수업 하나만 포함하는 수강권은 비활성화 됩니다.`, ()=>{
                         Lecture_func.status({"lecture_id":this.lecture_id, "state_cd":STATE_END_PROGRESS}, ()=>{
                             try{
-                                lecture.init();
+                                current_page.init();
+                            }catch(e){}
+                            try{
                                 lecture_list_popup.init();
-                            }catch(e){
-                
-                            }
+                            }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
                             layer_popup.close_layer_popup(); //수업 정보 팝업 닫기
@@ -473,11 +473,11 @@ class Lecture_view{
                                                             <span style="color:#fe4e65; font-size:12px;">이 수업을 포함하는 수강권에서 수업이 삭제됩니다.</span>`, ()=>{
                         Lecture_func.delete({"lecture_id":this.lecture_id}, ()=>{
                             try{
-                                lecture.init();
+                                current_page.init();
+                            }catch(e){}
+                            try{
                                 lecture_list_popup.init();
-                            }catch(e){
-                
-                            }
+                            }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
                             layer_popup.close_layer_popup(); //수업 정보 팝업 닫기

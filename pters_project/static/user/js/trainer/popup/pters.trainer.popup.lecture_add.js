@@ -379,11 +379,11 @@ class Lecture_add{
                 this.send_date_create_ticket_at_the_same_time(received.lecture_id);
             }
             try{
-                lecture.init();
+                current_page.init();
+            }catch(e){}
+            try{
                 lecture_list_popup.init();
-            }catch(e){
-
-            }
+            }catch(e){}
         });
         layer_popup.close_layer_popup();
         lecture_add_popup.clear();

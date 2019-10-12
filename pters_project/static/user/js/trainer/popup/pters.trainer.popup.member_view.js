@@ -593,7 +593,9 @@ class Member_view{
         };
         Member_func.update(data, ()=>{
             this.set_initial_data();
-            member.init();
+            try{
+                current_page.init();
+            }catch(e){}
         });
     }
 
@@ -639,7 +641,10 @@ class Member_view{
             delete:{text:"회원 삭제", callback:()=>{
                     show_user_confirm(`"${this.data.name}" 님 정보를 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
                         Member_func.delete({"member_id":this.member_id}, ()=>{
-                            member.init();layer_popup.all_close_layer_popup();
+                            try{
+                                current_page.init();
+                            }catch(e){}
+                            layer_popup.all_close_layer_popup();
                         });
                     });
                 }

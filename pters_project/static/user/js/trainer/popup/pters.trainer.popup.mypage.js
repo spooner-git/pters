@@ -254,20 +254,12 @@ class Mypage{
                             show_error_message(jsondata.messageArray);
                         }
                         try{
+                            current_page.init();
+                        }catch(e){}
+                        try{
+                            pc_top_toolbar_user_info_update();
                             mypage_popup.init();
-                        }catch(e){
-                            console.log(e);
-                        }
-                        try{
-                            home.init();
-                        }catch(e){
-                            console.log(e);
-                        }
-                        try{
-                            menu.init();
-                        }catch(e){
-                            console.log(e);
-                        }
+                        }catch(e){}
                     },
 
                     complete:function(){

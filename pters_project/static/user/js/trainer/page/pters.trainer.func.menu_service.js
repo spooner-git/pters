@@ -10,10 +10,10 @@ class Menu_service {
         };
     }
 
-    init (page_check){
-        if(current_page != this.page_name){
-            return false;
-        }
+    init (){
+        // if(current_page != this.page_name){
+        //     return false;
+        // }
 
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
@@ -46,9 +46,9 @@ class Menu_service {
 
     //상단을 렌더링
     dom_assembly_tool_box (){
-        if(current_page != this.page_name){
-            return false;
-        }
+        // if(current_page != this.page_name){
+        //     return false;
+        // }
 
         let component = this.static_component();
         return component.menu_upper_box;
@@ -56,9 +56,10 @@ class Menu_service {
 
     //회원 리스트를 렌더링
     dom_assembly_content (){
-        if(current_page != this.page_name){
-            return false;
-        }
+        // if(current_page != this.page_name){
+        //     return false;
+        // }
+        
         let dom_tag_style = {"font-size":"13px", "color":"#858282", "padding-left":"0", "margin-bottom":"8px"};
 
         let assembly = 
