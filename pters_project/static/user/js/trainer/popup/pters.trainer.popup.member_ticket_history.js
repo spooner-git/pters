@@ -59,6 +59,7 @@ class Member_ticket_history{
             let avail_count = data.member_ticket_avail_count;
             let status_code = data.member_ticket_state_cd;
             let status = TICKET_STATUS[data.member_ticket_state_cd];
+            let note = data.member_ticket_note;
             let refund_date = data.member_ticket_refund_date == "" || data.member_ticket_refund_date == "None" ? null : data.member_ticket_refund_date;
             let refund_price = data.member_ticket_refund_price == "" ? null : data.member_ticket_refund_price;
             let date_diff = DateRobot.diff_date(data.member_ticket_end_date, data.member_ticket_start_date);
@@ -68,12 +69,12 @@ class Member_ticket_history{
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, popup_style, null, ()=>{
                     let data = {"member_name":this.member_name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
                                 "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":reg_count, "price":ticket_price, "status":status_code,
-                                "refund_date":refund_date, "refund_price":refund_price};
+                                "refund_date":refund_date, "refund_price":refund_price, "note":note};
                     member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
             };
 
-            html = CComponent.ticket_history_row (numbering, member_ticket_id, date, ticket_name, reg_count, remain_count, avail_count, status, onclick);
+            html = CComponent.ticket_history_row (numbering, member_ticket_id, date, ticket_name, reg_count, remain_count, avail_count, status, note, onclick);
 
             html_to_join.push(html);
         }

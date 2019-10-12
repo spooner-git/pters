@@ -532,7 +532,7 @@ class CComponent{
     }
 
     //회원의 수강권 이력에 사용되는 행
-    static ticket_history_row (numbering, ticket_id, date, ticket_name, reg_count, remain_count, avail_count, status, onclick){
+    static ticket_history_row (numbering, ticket_id, date, ticket_name, reg_count, remain_count, avail_count, status, note, onclick){
         let html = `<li class="ticket_history_row" id="ticket_history_row_${ticket_id}">
                         <div class="obj_table_raw table_basic_info">
                             <div class="cell_ticket_num">${numbering}</div>
@@ -546,6 +546,10 @@ class CComponent{
                         <div class="obj_table_raw table_memo_info">
                             <div class="cell_ticket_num"></div>
                             <div class="cell_ticket_info">등록 ${reg_count} 회 / 출석완료 ${reg_count-avail_count} / 예약가능 ${avail_count}</div>
+                        </div>
+                        <div class="obj_table_raw table_memo_info" style="color:#ff7184;">
+                            <div class="cell_ticket_num"></div>
+                            <div class="cell_ticket_info">${note}</div>
                         </div>
                     </li>`;
         $(document).off('click', `#ticket_history_row_${ticket_id}`).on('click', `#ticket_history_row_${ticket_id}`, function(){
