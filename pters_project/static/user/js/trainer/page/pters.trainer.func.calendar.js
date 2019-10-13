@@ -11,7 +11,7 @@ class Calendar {
         this.subtargetHTML = 'calendar_wrap';
         this.instance = instance;
         
-        this.date_start = 1; //시작을 월요일부터 옵션을 위한 코드
+        this.date_start = 0; //시작을 월요일부터 옵션을 위한 코드
         this.cal_type = "week";
         this.current_page_num = 1;
 
@@ -29,15 +29,8 @@ class Calendar {
         this.current_year = d.getFullYear();
         this.current_month = d.getMonth()+1;
         this.current_date = d.getDate();
-        this.first_day_of_the_date = new Date(this.current_year, this.current_month-1, 1).getDay();
-        if(this.date_start == 1){
-            if(this.first_day_of_the_date == 0){
-                this.first_day_of_the_date = 6;
-            }else{
-                this.first_day_of_the_date--;
-            }
-        }
-        this.current_week = Math.ceil( (this.current_date +  this.first_day_of_the_date)/7 ) - 1;
+        this.current_week = 0;
+
         
         this.current_hour = d.getHours() > 12 ? d.getHours() - 12 : d.getHours();
         this.current_minute = Math.floor(d.getMinutes()/5)*5;
@@ -53,11 +46,6 @@ class Calendar {
         };
 
         let interval = setInterval(()=>{
-            // let realtime = new Date();
-            // let realtime_today = `${realtime.getFullYear()}-${realtime.getMonth()+1}-${realtime.getDate()}`;
-            // if(this.today != realtime_today){
-            //     window.location.reload();
-            // }
             if(this.page_name == current_page){
                 this.relocate_current_time_indicator();
             }else{
@@ -81,9 +69,6 @@ class Calendar {
 
     //다른페이지에서 접근했을때 처음에 달력을 위해 필요한 최상위 컨테이너를 포함하여 초기화한다.
     init_new (cal_type){
-        // if(current_page != this.page_name){
-        //     return false;
-        // }
 
         this.today = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`;
 
@@ -95,6 +80,17 @@ class Calendar {
             this.dayoff_hide = data.setting_holiday_hide;
             let date_start_array = {"SUN":0, "MON":1};
             this.date_start = date_start_array[data.setting_week_start_date];
+            //this.current_week를 구하기 위한 코드
+            this.first_day_of_the_date = new Date(this.current_year, this.current_month-1, 1).getDay();
+            if(this.date_start == 1){
+                if(this.first_day_of_the_date == 0){
+                    this.first_day_of_the_date = 6;
+                }else{
+                    this.first_day_of_the_date--;
+                }
+            }
+            this.current_week = Math.ceil( (this.current_date +  this.first_day_of_the_date)/7 ) - 1;
+
             let work_time = this.calc_worktime_display(data);
             this.work_time_info.calc = work_time;
             this.worktime = [];
