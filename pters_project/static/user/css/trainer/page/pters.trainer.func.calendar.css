@@ -290,6 +290,9 @@
 	line-height: 10px;
 	padding: 2px;
 }
+.calendar_schedule_display_week:active{
+	border-color: #858282;
+}
 .week_group_schedule{
 	background-color: #fe4e65;
 }

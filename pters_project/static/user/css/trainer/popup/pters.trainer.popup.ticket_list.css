@@ -79,7 +79,11 @@
 	box-shadow: 0 0 16px 0 #e6e6e6;
 	margin: 16px;
 	box-sizing: border-box;
-	
+	cursor: pointer;
+}
+
+.ticket_wrapper:active{
+	background-color: #e8e8e8;
 }
 
 .ticket_data_u{

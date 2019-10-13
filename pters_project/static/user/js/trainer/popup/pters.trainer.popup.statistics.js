@@ -138,11 +138,11 @@ class Statistics{
         let html = `
                     <div class="lecture_view_upper_box">
                         <div style="display:inline-block;width:320px;">
-                            <span style="display:inline-block;width:100px;font-size:23px;font-weight:bold;text-align:center;color:${this.tab=="sales" ? "#3d3b3b" :"#b8b4b4"}" onclick="statistics_popup.switch('sales')">
+                            <span class="sales_type_select_text_button" style="color:${this.tab=="sales" ? "#3d3b3b" :"#b8b4b4"}" onclick="statistics_popup.switch('sales')">
                                 ${title}
                             </span>
                             <div style="display:inline-block;background-color:#f5f2f3;width:2px;height:16px;"></div>
-                            <span style="display:inline-block;width:100px;font-size:23px;font-weight:bold;text-align:center;color:${this.tab=="member" ? "#3d3b3b" :"#b8b4b4"}" onclick="statistics_popup.switch('member')">
+                            <span class="sales_type_select_text_button" style="color:${this.tab=="member" ? "#3d3b3b" :"#b8b4b4"}" onclick="statistics_popup.switch('member')">
                                 ${title2}
                             </span>
                             <span style="display:none">${this.tab=="sales"? "매출 통계" : "회원 통계"}</span>
@@ -265,7 +265,7 @@ class Statistics{
 
     dom_row_sales_list(){
         let length = this.data.sales.month_date.length;
-        let html_to_join = []
+        let html_to_join = [];
         html_to_join.push(`<div class="sales_list_row" style="font-size:11px;">
                                 <div class="sales_list_month" style="color:#999696;">기간</div>
                                 <div class="sales_list_price" style="color:#999696;">매출액 (환불 포함)</div>

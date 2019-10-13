@@ -235,6 +235,12 @@ html, body{
     line-height: 60px;
     padding: 0 20px;
 }
+.up_menu_tool > div{
+    cursor: pointer;
+}
+.up_menu_tool > div:active{
+    background-color: #e8e8e8;
+}
 .up_menu_img{
     width: 24px;
     vertical-align: middle;

@@ -34,6 +34,9 @@ input:disabled{
 	padding-top:12px;
 	padding-bottom: 12px;
 }
+.create_row:active{
+	background-color: #e8e8e8;
+}
 .create_input_row{
 	cursor: unset;
 }

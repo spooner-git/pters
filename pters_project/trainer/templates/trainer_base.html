@@ -100,7 +100,7 @@
             <div class="side_menu_item" onclick="sideGoPage('ticket_page_type')" id="side_ticket_page_type">
                 <img src={% static_url "common/icon/icon_ticket_grey.png" %} alt=""><span class="sidemenu_text">수강권</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('statistics')" id="side_statistics">
+            <div class="side_menu_item" onclick="sideGoPopup('statistics')" id="side_statistics">
                 <img src={% static_url "common/icon/icon_statistics_grey.png" %} alt=""><span class="sidemenu_text">통계</span>
             </div>
             <div class="side_menu_item" onclick="sideGoPage('settings')" id="side_settings">
@@ -118,9 +118,9 @@
                 <img src="/static/common/icon/icon_toggle_sidemenu.png" alt="" style="width:30px;transform:rotate(90deg);vertical-align:middle;padding:15px;transition:0.3s">
             </div>
             <div class="up_menu_tool">
-                <div style="flex:1 0 140px" id="up_menu_user_info" onclick="sideGoPage('mypage')"><img src={% static_url "common/loading.svg" %} alt="" class="up_menu_img"><span>불러오는 중</span></div>
+                <div style="flex:1 0 140px" id="up_menu_user_info" onclick="sideGoPopup('mypage')"><img src={% static_url "common/loading.svg" %} alt="" class="up_menu_img"><span>불러오는 중</span></div>
                 <div style="flex:1 0 0"><img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img" onclick="sideGoPage('alarm')"></div>
-                <div style="flex:1 0 0"><img src="/static/common/icon/icon_help_black.png" alt="" class="up_menu_img" onclick="sideGoPage('helper')"></div>
+                <div style="flex:1 0 0"><img src="/static/common/icon/icon_help_black.png" alt="" class="up_menu_img" onclick="sideGoPopup('helper')"></div>
             </div>
         </div>
         <div id="section_content">
@@ -582,7 +582,8 @@
                                                     statistics_popup = new Statistics('.popup_statistics')});
             break;
             case 'mypage':
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE, 100, POPUP_FROM_RIGHT, null, ()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_TOP : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE, 100, popup_style, null, ()=>{
                                                     mypage_popup = new Mypage('.popup_mypage')});
             break;
             case 'pters_pass_main':
@@ -601,7 +602,7 @@
     //튜토리얼을 본적이 없으면 튜토리얼을 띄우기
     let tutorial_view = localStorage.getItem("tutorial_view");
     if(tutorial_view != "1"){
-        sideGoPage("helper");
+        sideGoPopup("helper");
     }
 
     //PC버전 상단 툴바에 사용자 정보 채우기

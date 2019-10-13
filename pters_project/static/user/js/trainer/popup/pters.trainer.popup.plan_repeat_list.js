@@ -176,7 +176,7 @@ class Plan_repeat_list{
 
 
     dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time){
-        let html = `<div style="display:flex;width:100%;height:60px;padding:8px 20px;box-sizing:border-box;" id="repeat_item_${repeat_id}">
+        let html = `<div class="repeat_wrapper" id="repeat_item_${repeat_id}">
                         <div style="flex-basis:16px;">
                             <div style="float:left;width:4px;height:32px;background-color:${color}"></div>
                         </div>
@@ -230,7 +230,7 @@ class Plan_repeat_list{
     }
 
     dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo){
-        let html = `<div style="display:flex;width:100%;height:32px;padding:0 36px;box-sizing:border-box;" id="repeat_item_${repeat_id}">
+        let html = `<div class="repeat_member_wrapper" id="repeat_item_${repeat_id}">
                         <div style="flex-basis:24px;"><img src="${member_photo}" style="border-radius:50%;width:20px;vertical-align:middle;"></div>
                         <div style="flex:1 1 0;font-size:14px;font-weight:500;letter-spacing:-0.6px;color:#3d3b3b;line-height:32px;">${member_name}</div>
                     </div>`;
