@@ -81,6 +81,20 @@
 	box-sizing: border-box;
 	cursor: pointer;
 }
+@media(min-width:651px){
+    .ticket_wrapper{
+		float: left;
+		width: 31%;
+		margin: 1%;
+		padding: 10px;
+		box-shadow:0 0 16px 0 #e6e6e6;
+	}
+	.ticket_wrapper:hover{
+		box-shadow:0 0 16px 0 #28282850;
+		transition:0.1s;
+		transform: scale(1.03);
+	}
+}
 
 .ticket_wrapper:active{
 	background-color: #e8e8e8;
