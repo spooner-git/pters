@@ -9,12 +9,6 @@ class Service_notice {
 
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
 
-        this.temp_data_for_test = {
-            data:[{date:"2019-9-1", subject:"테스트 공지사항 입력 제목1", id:1}, {date:"2019-9-2", subject:"테스트 공지사항 입력 제목2", id:2}, {date:"2019-9-3", subject:"테스트 공지사항 입력 제목3", id:3},
-                    {date:"2019-9-4", subject:"테스트 공지사항 입력 제목4", id:4},{date:"2019-9-5", subject:"테스트 공지사항 입력 제목5", id:5}, {date:"2019-9-5", subject:"테스트 공지사항 입력 제목6", id:6}]
-        }
-
-
         this.init();
     }
 

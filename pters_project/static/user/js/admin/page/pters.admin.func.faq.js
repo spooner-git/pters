@@ -30,7 +30,6 @@ class Faq {
         Faq_func.read_all((data)=>{
             this.data.all = data;
             this.render_content();
-            console.log(data);
         });
     }
 
@@ -106,7 +105,7 @@ class Faq {
 
     dom_row_faq_article(data){
         let type = data.notice_type_cd;
-        if(type != NOTICE_FAQ){
+        if(type != NOTICE_FAQ && type != NOTICE_USAGE){
             return "";
         }
         
@@ -119,11 +118,10 @@ class Faq {
         let hits = data.notice_hits; //조회수
         let use = data.notice_use; //공개여부
 
-
         let html = `<article id="faq_article_${id}" class="faq_article">
                         <div class="faq_article_upper">
                             <div class="faq_article_id">${id}</div>
-                            <div class="faq_article_title">${title}</div>
+                            <div class="faq_article_title">[${NOTICE_TYPE[type]}] ${title}</div>
                             <div class="faq_article_hits"></div>
                         </div>
                         <div class="faq_article_bottom">

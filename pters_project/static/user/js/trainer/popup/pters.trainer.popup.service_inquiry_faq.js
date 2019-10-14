@@ -9,16 +9,6 @@ class Service_inquiry_faq {
 
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
 
-        // this.temp_data_for_test = {
-        //     data:[  {type:"사용법", subject:"회원 등록하기", id:1}, {type:"사용법", subject:"수업 등록하기", id:1}, {type:"사용법", subject:"수강권 등록하기", id:1},
-        //             {type:"사용법", subject:"일정 등록하기", id:1},
-        //             {type:"사용법", subject:"수강 회원님과 연결하여 사용하기", id:2}, {type:"사용법", subject:"기존 회원 재등록 하기", id:6},
-        //             {type:"자주 묻는 질문", subject:"결제 방법에는 무엇이 있나요?", id:5}, {type:"자주 묻는 질문", subject:"프로그램이 무엇인가요?", id:3},
-        //             {type:"자주 묻는 질문", subject:"달력에 일부 요일이 보이지 않아요", id:7}
-        //         ]
-        // };
-
-
         this.init();
     }
 
@@ -69,7 +59,6 @@ class Service_inquiry_faq {
 
     dom_assembly_content(){
         let length = this.data.length;
-        console.log('length::'+length);
         let html_temp = [];
         for(let i=0; i <length ; i++){
             let id = this.data[i].notice_id;
@@ -99,7 +88,26 @@ class Service_inquiry_faq {
     }
 
     open_detail(id){
-        alert(id+' 공지사항 내용');
+        let length = this.data.length;
+        let title = null;
+        let content = null;
+        let date = null;
+        for(let i=0; i<length; i++){
+            let current_loop = this.data[i];
+            let notice_id = current_loop.notice_id;
+            if(notice_id == id){
+                title = current_loop.notice_title;
+                content = current_loop.notice_contents;
+                date = current_loop.notice_reg_dt;
+            }
+        }
+
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_READER, 100, popup_style, null, ()=>{
+            let data = {
+                title:title, content:content, date:date
+            };
+            board_reader = new BoardReader("FAQ", '.popup_board_reader', "board_reader", data);});
     }
 
 
