@@ -10,6 +10,9 @@ const STATE_END_PROGRESS = "PE";
 const ON = 1;
 const OFF = 0;
 
+const DEACTIVATE = 0;
+const ACTIVATE = 0;
+
 const CONFIRM = 1;
 const CANCEL = 0;
 

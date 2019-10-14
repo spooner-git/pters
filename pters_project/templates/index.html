@@ -6,15 +6,6 @@
 {% endblock %}
 {% block content %}
     <div id="root_content" style="background-color: #ffffff">
-        {% for message in messages %}
-            {% if message.tags == "error" %}
-
-                <div id="errorMessageBar">
-                    <span id="errorMessageText">{{ message }}</span><span>닫기</span>
-                </div>
-
-            {% endif %}
-        {% endfor %}
 
         <div id="login_box">
 
@@ -135,6 +126,11 @@
     });
 
     window.addEventListener('load', function () {
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                show_error_message('{{ message }}');
+            {% endif %}
+        {% endfor %}
         kakao_login_test = true;
         var val = location.href.substr(
             location.href.lastIndexOf('=') + 1
