@@ -954,12 +954,13 @@ class GetTraineeInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
 def update_trainee_info_logic(request):
     first_name = request.POST.get('first_name', '')
-    phone = request.POST.get('phone', '')
+    # phone = request.POST.get('phone', '')
     contents = request.POST.get('contents', '')
     country = request.POST.get('country', '')
     address = request.POST.get('address', '')
     sex = request.POST.get('sex', '')
     birthday_dt = request.POST.get('birthday', '')
+    email = request.POST.get('email', '')
 
     error = None
     member_id = request.user.id
@@ -998,21 +999,24 @@ def update_trainee_info_logic(request):
     if birthday_dt is None or birthday_dt == '':
         birthday_dt = member.birthday_dt
 
-    if phone is None or phone == '':
-        phone = member.phone
-    else:
-        if len(phone) != 11 and len(phone) != 10:
-            error = '연락처를 확인해 주세요.'
-        elif not phone.isdigit():
-            error = '연락처를 확인해 주세요.'
+    if email is None or email == '':
+        email = user.email
+    # if phone is None or phone == '':
+    #     phone = member.phone
+    # else:
+    #     if len(phone) != 11 and len(phone) != 10:
+    #         error = '연락처를 확인해 주세요.'
+    #     elif not phone.isdigit():
+    #         error = '연락처를 확인해 주세요.'
 
     if error is None:
         try:
             with transaction.atomic():
                 user.first_name = first_name
+                user.email = email
                 user.save()
                 member.name = first_name
-                member.phone = phone
+                # member.phone = phone
                 member.contents = contents
                 member.sex = sex
                 if birthday_dt is not None and birthday_dt != '':
