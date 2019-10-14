@@ -182,6 +182,7 @@ class Member_view{
 
 
             Member_func.read_ticket_list({"member_id":this.member_id}, (data)=>{
+                console.log("data",data)
                 let ticket_list = data;
                 this.data.ticket = [];
                 let member_ticket_list = [];
@@ -216,6 +217,7 @@ class Member_view{
                                             ticket_rem_count:ticket_rem_count_of_this_member,
                                             ticket_price:ticket_reg_price_of_this_member,
                                             ticket_state:member_ticket_list[i].ticket_state_cd,
+                                            ticket_note:member_ticket_list[i].member_ticket_note,
                                             member_ticket_id:member_ticket_list[i].member_ticket_id,
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
@@ -523,7 +525,7 @@ class Member_view{
             let ticket_end_date =  this.data.ticket[i].end_date;
             let ticket_reg_count =  this.data.ticket[i].ticket_reg_count;
             let ticket_price =  this.data.ticket[i].ticket_price;
-            let ticket_note = "특이사항 데이터 안넘어옴";
+            let ticket_note = this.data.ticket[i].ticket_note;
             if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
                 ticket_name = `<span style="color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;
             }
