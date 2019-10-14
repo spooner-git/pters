@@ -931,7 +931,7 @@ def add_repeat_schedule_confirm(request):
                 log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
                                  from_member_name=request.user.first_name,
                                  class_tb_id=class_id,
-                                 log_info=lecture_info.name + ' 반복 일정',
+                                 log_info=lecture_info.name,
                                  log_how='반복 일정 등록',
                                  log_detail=str(start_date) + '/' + str(end_date), use=USE)
                 log_data.save()
@@ -1025,7 +1025,7 @@ def add_repeat_schedule_confirm(request):
                                              to_member_name=member_info.name,
                                              class_tb_id=class_id,
                                              member_ticket_tb_id=member_ticket_id,
-                                             log_info=lecture_info.name + ' 반복 일정',
+                                             log_info=lecture_info.name,
                                              log_how='반복 일정 등록',
                                              log_detail=str(start_date) + '/' + str(end_date), use=USE)
                             log_data.save()
@@ -1063,6 +1063,186 @@ def delete_repeat_schedule_logic(request):
     class_type_name = request.session.get('class_type_name', '')
 
     error = None
+    repeat_schedule_info = None
+    context = {}
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
+
+    if repeat_schedule_id == '':
+        error = '확인할 반복 일정을 선택해주세요.'
+
+    if error is None:
+        # 반복일정 정보 가져오기
+        try:
+            repeat_schedule_info = RepeatScheduleTb.objects.get(repeat_schedule_id=repeat_schedule_id)
+        except ObjectDoesNotExist:
+            error = '반복 일정이 존재하지 않습니다'
+
+    if error is None:
+        # 그룹 수업인 경우 + 포함된 회원의 반복일정이 존재하는 경우
+        try:
+            with transaction.atomic():
+                lecture_member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
+                    'member_ticket_tb__member', 'lecture_tb').filter(lecture_schedule_id=repeat_schedule_id)
+                if len(lecture_member_repeat_schedule_data) > 0:
+                    for lecture_member_repeat_schedule_info in lecture_member_repeat_schedule_data:
+                        start_date = lecture_member_repeat_schedule_info.start_date
+                        end_date = lecture_member_repeat_schedule_info.end_date
+                        member_ticket_id = lecture_member_repeat_schedule_info.member_ticket_tb_id
+                        member_name = lecture_member_repeat_schedule_info.member_ticket_tb.member.name
+                        lecture_name = lecture_member_repeat_schedule_info.lecture_tb.name
+
+                        # 반복일정에 해당하는 일정 불러오기
+                        lecture_member_schedule_data = ScheduleTb.objects.select_related(
+                            'member_ticket_tb__member').filter(
+                            repeat_schedule_tb_id=lecture_member_repeat_schedule_info.repeat_schedule_id,
+                            start_dt__gt=timezone.now())
+
+                        # 반복일정에 해당하는 회원 수강정보 저장
+                        # 일정 삭제
+                        delete_member_ticket_id_data = {}
+                        for lecture_member_schedule_info in lecture_member_schedule_data:
+                            member_ticket_id = lecture_member_schedule_info.member_ticket_tb_id
+                            delete_member_ticket_id_data[member_ticket_id] = member_ticket_id
+                            lecture_member_schedule_info.delete()
+
+                        # 회원 수강정보(횟수) refresh
+                        for delete_member_ticket_id_info in delete_member_ticket_id_data:
+                            error = func_refresh_member_ticket_count(class_id, delete_member_ticket_id_info)
+                            if error is not None:
+                                break
+
+                        # 반복일정 삭제
+                        if error is None:
+                            schedule_result = func_delete_repeat_schedule(lecture_member_repeat_schedule_info.repeat_schedule_id)
+                            error = schedule_result['error']
+
+                        if error is not None:
+                            raise ValidationError(str(error))
+                        else:
+                            # 로그 남기기 및 회원에게 push
+                            log_info = lecture_name + ' 반복 일정'
+
+                            log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
+                                             from_member_name=request.user.first_name,
+                                             to_member_name=member_name,
+                                             class_tb_id=class_id,
+                                             member_ticket_tb_id=member_ticket_id,
+                                             log_info=log_info,
+                                             log_how='반복 일정 취소',
+                                             log_detail=str(start_date) + '/' + str(end_date), use=USE)
+                            log_data.save()
+
+                            if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
+                                func_send_push_trainer(member_ticket_id,
+                                                       class_type_name + ' - 수업 알림',
+                                                       request.user.first_name + '님이 '
+                                                       + str(start_date) + '~' + str(end_date)
+                                                       + ' ['+lecture_name + '] 반복 일정을 취소했습니다')
+
+        except TypeError:
+            error = '반복일정 삭제중 오류가 발생했습니다.[0]'
+        except ValueError:
+            error = '반복일정 삭제중 오류가 발생했습니다.[1]'
+        except IntegrityError:
+            error = '반복일정 삭제중 오류가 발생했습니다.[2]'
+        except InternalError:
+            error = '반복일정 삭제중 오류가 발생했습니다.[3]'
+        except ValidationError:
+            error = '반복일정 삭제중 오류가 발생했습니다.[4]'
+
+    if error is None:
+        # OFF 일정 or 그룹 일정 or 1:1 회원 일정
+        try:
+            with transaction.atomic():
+                start_date = repeat_schedule_info.start_date
+                end_date = repeat_schedule_info.end_date
+                lecture_name = '개인 수업'
+                member_ticket_id = ''
+                member_name = ''
+                if str(repeat_schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE):
+                    if repeat_schedule_info.member_ticket_tb is not None and repeat_schedule_info.member_ticket_tb != '':
+                        member_ticket_id = repeat_schedule_info.member_ticket_tb_id
+                        member_name = repeat_schedule_info.member_ticket_tb.member.name
+                    if repeat_schedule_info.lecture_tb is not None and repeat_schedule_info.lecture_tb != '':
+                        lecture_name = repeat_schedule_info.lecture_tb.name
+
+                schedule_data = ScheduleTb.objects.select_related('member_ticket_tb__member').filter(
+                    repeat_schedule_tb_id=repeat_schedule_info.repeat_schedule_id, start_dt__gt=timezone.now())
+                if repeat_schedule_info.member_ticket_tb is None or repeat_schedule_info.member_ticket_tb == '':
+                    schedule_data.delete()
+                else:
+                    delete_member_ticket_id_data = {}
+                    for schedule_info in schedule_data:
+                        member_ticket_id = schedule_info.member_ticket_tb_id
+                        delete_member_ticket_id_data[member_ticket_id] = member_ticket_id
+                        schedule_info.delete()
+
+                    for delete_member_ticket_id_info in delete_member_ticket_id_data:
+                        error = func_refresh_member_ticket_count(class_id, delete_member_ticket_id_info)
+                        if error is not None:
+                            break
+
+                if error is None:
+                    schedule_result = func_delete_repeat_schedule(repeat_schedule_info.repeat_schedule_id)
+                    error = schedule_result['error']
+
+                if error is not None:
+                    raise ValidationError(str(error))
+
+                else:
+                    # 로그 남기기 및 회원에게 push
+                    if str(repeat_schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE):
+                        log_info = lecture_name + ' 반복 일정'
+                        if member_ticket_id != '':
+                            log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
+                                             from_member_name=request.user.first_name,
+                                             to_member_name=member_name,
+                                             class_tb_id=class_id,
+                                             member_ticket_tb_id=member_ticket_id,
+                                             log_info=log_info,
+                                             log_how='반복 일정 취소',
+                                             log_detail=str(start_date) + '/' + str(end_date), use=USE)
+                            log_data.save()
+                            if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
+                                func_send_push_trainer(member_ticket_id,
+                                                       class_type_name + ' - 수업 알림',
+                                                       request.user.first_name + '님이 '
+                                                       + str(start_date) + '~' + str(end_date)
+                                                       + ' [' + lecture_name + '] 반복 일정을 취소했습니다')
+                        else:
+                            log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
+                                             from_member_name=request.user.first_name,
+                                             class_tb_id=class_id,
+                                             log_info=lecture_name + ' 반복 일정',
+                                             log_how='반복 일정 취소',
+                                             log_detail=str(start_date) + '/' + str(end_date), use=USE)
+                            log_data.save()
+        except TypeError:
+            error = '반복일정 삭제중 오류가 발생했습니다.[5]'
+        except ValueError:
+            error = '반복일정 삭제중 오류가 발생했습니다.[6]'
+        except IntegrityError:
+            error = '반복일정 삭제중 오류가 발생했습니다.[7]'
+        except InternalError:
+            error = '반복일정 삭제중 오류가 발생했습니다.[8]'
+        except ValidationError:
+            error = '반복일정 삭제중 오류가 발생했습니다.[9]'
+
+    if error is not None:
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
+        context['messageArray'] = error
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+def delete_repeat_schedule_logic2(request):
+
+    repeat_schedule_id = request.POST.get('repeat_schedule_id', '')
+    class_id = request.session.get('class_id', '')
+    class_type_name = request.session.get('class_type_name', '')
+
+    error = None
     schedule_data = None
     start_date = None
     end_date = None
@@ -1094,7 +1274,7 @@ def delete_repeat_schedule_logic(request):
         start_date = repeat_schedule_info.start_date
         end_date = repeat_schedule_info.end_date
         en_dis_type = repeat_schedule_info.en_dis_type
-        member_ticket_id = repeat_schedule_info.lecture_tb_id
+        member_ticket_id = repeat_schedule_info.member_ticket_tb_id
         lecture_id = repeat_schedule_info.lecture_tb_id
         if lecture_id is not None and lecture_id != '':
             lecture_name = repeat_schedule_info.get_lecture_name()
@@ -1180,10 +1360,9 @@ def delete_repeat_schedule_logic(request):
                                     + '~' + str(end_date)\
                                     + ' [' + lecture_name+'] 반복 일정을 취소했습니다'
             push_message.append(push_message_info)
-
-            context['push_member_ticket_id'] = push_member_ticket_id
-            context['push_title'] = push_title
-            context['push_message'] = push_message
+            # context['push_member_ticket_id'] = push_member_ticket_id
+            # context['push_title'] = push_title
+            # context['push_message'] = push_message
 
     else:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
