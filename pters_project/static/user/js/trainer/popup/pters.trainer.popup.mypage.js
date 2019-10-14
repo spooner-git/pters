@@ -171,7 +171,7 @@ class Mypage{
         let icon_r_text = `${pass_inspector.data.auth_plan_create.limit_type}`;
         let style = null;
         let onclick = ()=>{
-            sideGoPage('pters_pass_main');
+            sideGoPopup('pters_pass_main');
         };
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
