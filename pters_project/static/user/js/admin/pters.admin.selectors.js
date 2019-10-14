@@ -1385,7 +1385,6 @@ class TimeSelector{
             if(selected_time_data_form == '0:0'){
                 selected_time_data_form = '24:00';
             }
-            console.log(selected_time_data_form, min_time_data_form, TimeRobot.compare(selected_time_data_form, min_time_data_form));
 
             let time_compare = TimeRobot.compare(selected_time_data_form, min_time_data_form); // >= 일경우 true;
             if(time_compare == false){
@@ -1966,14 +1965,6 @@ class OptionSelector{
 
         document.querySelector(this.target.install).innerHTML = html_to_join.join('');
     }
-
-
-    //data 형태
-    // `{
-    //     사과:{value: 'apple', callback: ()=>{console.log('사과 Apple')} }, 
-    //     수박:{value: 'water_melon', callback: ()=>{console.log('수박 Water melon')} }, 
-    //     바나나:{value: 'banana', callback: ()=>{console.log('바나나 Banana')} }
-    // }`;
 }
 
 class TicketSelector{
@@ -3212,6 +3203,7 @@ class BoardWriter{
         this.callback = callback;
         this.external_data = data;
         this.data = {
+            id:null,
             title:null,
             content:null,
             category:[
