@@ -145,7 +145,7 @@ class UpdateNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             notice_info.member_id = request.user.id
-            notice_info.notice_type_cd = notice_type_cd,
+            notice_info.notice_type_cd = notice_type_cd
             notice_info.title = title
             notice_info.contents = contents
             notice_info.to_member_type_cd = to_member_type_cd
