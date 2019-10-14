@@ -349,7 +349,7 @@ class Home {
                                     `
                 ,
                 initial_page:`<div id="home_display_panel"></div>
-                                <div id="home_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:calc(100% - 68px);padding-top:6px; padding-bottom:20px;"></div>`
+                                <div id="home_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:calc(100% - 68px);padding-top:20px; padding-bottom:20px;"></div>`
             }
         );
     }
