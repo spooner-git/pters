@@ -171,6 +171,12 @@ class Plan_repeat_list{
             html_to_join.push(html);
         }
 
+        if(html_to_join.length == 0){
+            html_to_join.push(`<div style="font-size:14px;letter-spacing:-0.6px;font-weight:500;padding:20px;">
+                                    설정된 반복 일정이 없습니다.
+                                </div>`);
+        }
+
         return html_to_join.join("");
     }
 
@@ -200,12 +206,6 @@ class Plan_repeat_list{
                                         과거일정은 보존되지만, 등록한 미래일정은 취소됩니다.</div>`, ()=>{
                         layer_popup.close_layer_popup();
                         Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
-                            // try{
-                            //     this.init();
-                            //     calendar.init_no_new();
-                            // }catch(e){
-                            //     console.log(e);
-                            // }
                             try{
                                 current_page.init();
                             }catch(e){}
@@ -241,12 +241,6 @@ class Plan_repeat_list{
                     show_user_confirm(`정말 ${member_name}회원님의 반복 일정을 취소하시겠습니까?`, ()=>{
                         layer_popup.close_layer_popup();
                         Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
-                            // try{
-                            //     this.init();
-                            //     calendar.init_no_new();
-                            // }catch(e){
-                            //     console.log(e);
-                            // }
                             try{
                                 current_page.init();
                             }catch(e){}

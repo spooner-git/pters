@@ -551,7 +551,6 @@ class Calendar {
         let user_option = {
             month:{text:"월간 달력", callback:()=>{this.init("month");layer_popup.close_layer_popup();}},
             week:{text:"주간 달력", callback:()=>{this.init("week");layer_popup.close_layer_popup();}},
-            plans:{text:"일정 리스트", callback:()=>{layer_popup.close_layer_popup();}},
             repeat:{text:"반복 일정 리스트", callback:()=>{
                 layer_popup.close_layer_popup();
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;

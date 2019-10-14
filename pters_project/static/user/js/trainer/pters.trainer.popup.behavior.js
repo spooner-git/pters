@@ -182,7 +182,6 @@ let layer_popup = (function (){
 
 }());
 
-
 //Ajax로 팝업 html을 통째로 들고온다.
 function func_get_popup_ajax (popup_name, data, callback){
     // ajax_load_image(SHOW);
@@ -215,10 +214,7 @@ function func_get_popup_ajax (popup_name, data, callback){
     // }, 10);
 }
 
-
-
 function func_set_popup_position ($popup_selector, animation_type, popup_size){
-    console.log(popup_size)
     let translate_x = 0;
     let translate_y = 0;
     let width = 100;
@@ -425,34 +421,3 @@ function show_user_confirm (message, callback){
                                   'popup_comment':`${message}`,
                                   'onclick_function':()=>{callback();}});
 }
-
-
-// function show_user_input_popup (type, prev_value, callback_after_confirm){
-//     $(`.popup_basic_user_input input`).val('');
-//     layer_popup.open_layer_popup(POPUP_BASIC, `popup_basic_user_input_${type}`, POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-//                                             {'popup_title':'', 'popup_comment':prev_value,
-//                                             'onclick_function': ()=>{callback_after_confirm();layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)} });
-// }
-
-
-// function show_user_select_multi_popup (option_data, callback){
-//     let option_length = Object.keys(option_data).length;
-//     callback();
-//     let button_height = 45;
-//     let popup_height = 100*(button_height*(option_length+4))/windowHeight;
-//     layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select_multi', popup_height, POPUP_FROM_BOTTOM);
-// }
-
-// function show_user_select_time_popup (callback){
-//     let top_comment_height = 65;
-//     let time_selector_height = 175;
-//     let close_button_height = 46;
-//     let sum = top_comment_height + time_selector_height + close_button_height;
-
-//     let popup_height = 100*sum/windowHeight;
-
-//     layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', popup_height, POPUP_FROM_BOTTOM,
-//         {'popup_title':'', 'popup_comment':'시간을 선택해주세요'});
-
-//     callback();
-// }
