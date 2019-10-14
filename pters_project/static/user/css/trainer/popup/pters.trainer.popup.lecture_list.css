@@ -83,8 +83,8 @@
 }
 @media(min-width:651px){
     .lecture_wrapper{
-		float: left;
-		width: 31%;
+		display: inline-block;
+		width: 48%;
 		margin: 1%;
 		padding: 10px;
 		box-shadow:0 0 16px 0 #e6e6e6;
@@ -93,6 +93,11 @@
 		box-shadow:0 0 16px 0 #28282850;
 		transition:0.1s;
 		transform: scale(1.03);
+	}
+}
+@media(min-width:1024px){
+    .lecture_wrapper{
+		width: 31%;
 	}
 }
 
