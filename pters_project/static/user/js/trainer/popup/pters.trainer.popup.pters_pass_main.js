@@ -22,7 +22,7 @@ class Pters_pass_main{
                 receipt_url:[""],
                 start_date:[""],
                 status:[""]
-                    },
+            },
             next:{
                 messageArray:[""],
                 buyer_email:[""],
@@ -642,11 +642,11 @@ class Pters_pass_func{
                 show_error_message(msg);
             }
         });
-
     }
 
     static request_payment_close(customer_uid, cancel_type, cancel_reason, callback){
         let data = {"customer_uid":customer_uid, "cancel_type":cancel_type, "cancel_reason":cancel_reason, "next_page":""};
+        console.log(data);
         $.ajax({
             url: "/payment/cancel_period_billing/", // 서비스 웹서버
             type: "POST",
@@ -660,7 +660,8 @@ class Pters_pass_func{
             },
 
             success:function(data){
-                data = JSON.parse(data);
+                console.log(data);
+                // data = JSON.parse(data);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray[0]);

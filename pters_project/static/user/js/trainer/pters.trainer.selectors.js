@@ -1479,6 +1479,14 @@ class TimeSelector2{
         let zone = object.zone == null ? this.time.current_zone : object.zone;
         let hour = object.hour == null ? this.time.current_hour : object.hour;
         let minute = object.minute == null ? this.time.current_minute : object.minute;
+        
+        let time_data = TimeRobot.to_data(zone, hour, minute);
+        if(time_data.hour >= this.option.range.end || time_data.hour < this.option.range.start){
+            let time_zone = TimeRobot.to_zone(this.option.range.start, minute);
+            zone = time_zone.zone;
+            hour = time_zone.hour;
+        }
+
         this.store.value = {zone: zone, hour:hour, minute:minute};
         this.store.text = TimeRobot.to_text(TimeRobot.to_data(zone, hour, minute).hour, TimeRobot.to_data(zone, hour, minute).minute);
         

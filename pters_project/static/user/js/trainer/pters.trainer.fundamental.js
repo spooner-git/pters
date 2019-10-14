@@ -739,4 +739,58 @@ class Phone_auth_func{
     }
 }
 
+class help_icon{
+    constructor(install_target, option){
+        this.target = {install: install_target};
+        this.data = {
+            text:null
+        };
+
+        this.option = {
+            width:20,
+            height:20,
+        };
+
+        for(let item in option){
+            if(option[item] != undefined){
+                this.option[item] = option[item];
+            }
+        }
+    }
+
+    set_text(text){
+        this.data.text = text;
+    }
+
+    init(){
+        document.querySelector(this.target.install).innerHTML;
+    }
+
+    dom_icon(){
+        let html = `<div style="display:inline-block;width:${this.option.width}px;height:${this.option.height}px">
+                        <img src="/static/common/icon/icon_help_grey.png" style="width:100%;cursor:pointer;">
+                    </div>`;
+        return html;
+    }
+
+    dom_popup(){
+        let style = `position:fixed;
+                    width:90%;height:80%;padding:16px;
+                    transform:translate(-50%, -50%);
+                    left:50%;top:50%;
+                    background-color:#ffffff;
+                    box-shadow:0 0 24px 0 #cccccc;`;
+        let html = `
+                    <div style="${style}">
+                        <div style="width:100%;height:50px;">
+                            <img src="/static/common/icon/icon_x_black.png" style="width:25px;padding:5px;cursor:pointer;">
+                        </div>
+                        ${this.data.text}
+                    </div>
+                    `;
+        return html;
+    }
+
+}
+
 
