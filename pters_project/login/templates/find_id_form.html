@@ -97,7 +97,7 @@
         window.addEventListener('load', function () {
             {% for message in messages %}
                 {% if message.tags == "error" %}
-                    alert('{{ message }}');
+                    show_error_message('{{ message }}');
                 {% endif %}
             {% endfor %}
         });

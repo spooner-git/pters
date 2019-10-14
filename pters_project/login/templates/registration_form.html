@@ -163,6 +163,11 @@
     <script type="text/javascript">
         // 구글 reCAPTCHA 보이지 않게 하기
         window.addEventListener('load', function () {
+            {% for message in messages %}
+                {% if message.tags == "error" %}
+                    show_error_message('{{ message }}');
+                {% endif %}
+            {% endfor %}
             $('#id_username').focusout(function(){
                 check_username($(this).val());
             });

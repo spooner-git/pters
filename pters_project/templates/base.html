@@ -28,16 +28,25 @@
          /* background-color: #f7f5f6;*/
          }
     </style>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.fundamental.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.object.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.base.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.base.css" %}>
     {% block local_css %}
     {% endblock %}
 </head>
 <body>
+<div id="shade_for_popup_basic" style="position: absolute;;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;"
+onclick="layer_popup.close_layer_popup();"></div>
+{% include 'popup/trainer_popup_basic.html' %}
 {% block content %}
 {% endblock %}
     <script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.base.js" %}></script>
+    <script type="text/javascript" src="{% static_url "user/js/trainer/pters.trainer.popup.behavior.js" %}"></script>
     <script type="text/javascript">
         //기기종류 판단
         const varUA = navigator.userAgent.toLowerCase();
