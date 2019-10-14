@@ -97,6 +97,7 @@
 @media(min-width:651px){
     .lecture_wrapper{
 		display: inline-block;
+		vertical-align: top;
 		width: 48%;
 		margin: 1%;
 		padding: 10px;
