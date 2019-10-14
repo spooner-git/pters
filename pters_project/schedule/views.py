@@ -1121,7 +1121,7 @@ def delete_repeat_schedule_logic(request):
                             raise ValidationError(str(error))
                         else:
                             # 로그 남기기 및 회원에게 push
-                            log_info = lecture_name + ' 반복 일정'
+                            log_info = lecture_name
 
                             log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
                                              from_member_name=request.user.first_name,
@@ -1193,7 +1193,7 @@ def delete_repeat_schedule_logic(request):
                 else:
                     # 로그 남기기 및 회원에게 push
                     if str(repeat_schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE):
-                        log_info = lecture_name + ' 반복 일정'
+                        log_info = lecture_name
                         if member_ticket_id != '':
                             log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
                                              from_member_name=request.user.first_name,
@@ -1214,7 +1214,7 @@ def delete_repeat_schedule_logic(request):
                             log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
                                              from_member_name=request.user.first_name,
                                              class_tb_id=class_id,
-                                             log_info=lecture_name + ' 반복 일정',
+                                             log_info=lecture_name,
                                              log_how='반복 일정 취소',
                                              log_detail=str(start_date) + '/' + str(end_date), use=USE)
                             log_data.save()
