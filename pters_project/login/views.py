@@ -41,7 +41,7 @@ from registration import signals
 from registration.backends.hmac.views import RegistrationView, REGISTRATION_SALT
 from registration.forms import RegistrationForm
 
-from configs.const import USE, UN_USE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT
+from configs.const import USE, UN_USE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, ACTIVATE
 from configs import settings
 from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
@@ -674,7 +674,8 @@ class AddMemberView(RegistrationView, View):
                             user.is_active = True
                             user.save()
 
-                            member = MemberTb(member_id=user.id, name=name, phone=phone, user_id=user.id, use=USE)
+                            member = MemberTb(member_id=user.id, name=name, phone=phone, user_id=user.id,
+                                              phone_is_active=ACTIVATE, use=USE)
                             member.save()
 
                     except ValueError:
@@ -1200,7 +1201,7 @@ def activate_sms_logic(request):
     if phone == '':
         error = '휴대폰 번호를 입력해주세요.'
     else:
-        member_list = MemberTb.objects.filter(phone=phone, user__is_active=True, use=USE)
+        member_list = MemberTb.objects.filter(phone=phone, phone_is_active=ACTIVATE, use=USE)
         if len(member_list) > 0:
             error = '이미 등록된 휴대폰 번호가 존재합니다.'
 
@@ -1223,6 +1224,50 @@ def activate_sms_logic(request):
         sms_activation_number = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
         request.session['sms_activation_number'] = sms_activation_number
         error = func_send_sms_auth(phone, sms_activation_number)
+
+    if error is not None:
+        logger.error('error:'+str(error)+':'+str(timezone.now()))
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+def activate_email_logic(request):
+    token = request.POST.get('token', '')
+    recaptcha_test_session = request.session.get('recaptcha_session', '')
+    # sms_count = request.session.get('email_count', 0)
+    email = request.POST.get('email', '')
+
+    recaptcha_secret_key = settings.PTERS_reCAPTCHA_SECRET_KEY
+    # sms_activation_count = settings.PTERS_SMS_ACTIVATION_MAX_COUNT
+    error = None
+
+    if email == '':
+        error = '이메일 주소를 입력해주세요.'
+    # else:
+    #     member_list = MemberTb.objects.filter(user__email=email, phone_is_active=ACTIVATE, use=USE)
+    #     if len(member_list) > 0:
+    #         error = '이미 등록된 휴대폰 번호가 존재합니다.'
+
+    if error is None:
+        # if int(sms_count) < sms_activation_count:
+        if recaptcha_test_session != 'success':
+            # error = func_recaptcha_test(recaptcha_secret_key, token)
+            # 테스트
+            if error is None:
+                request.session['recaptcha_session'] = 'success'
+            else:
+                request.session['recaptcha_session'] = 'failed'
+        # else:
+        #     error = '일일 문자 인증 횟수가 '+str(sms_activation_count)+'회 초과했습니다.'
+
+    if error is None:
+        max_range = 99999
+        request.session['email_activation_check'] = False
+        request.session['email_activation_time'] = str(timezone.now())
+        email_activation_number = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+        request.session['email_activation_number'] = email_activation_number
+        error = func_send_email_auth(email, email_activation_number)
 
     if error is not None:
         logger.error('error:'+str(error)+':'+str(timezone.now()))
@@ -1325,6 +1370,7 @@ class ActivateSmsConfirmView(View):
 
     def post(self, request):
         user_activation_code = request.POST.get('user_activation_code')
+        phone = request.POST.get('phone', '')
         sms_activation_number = request.session.get('sms_activation_number')
         sms_activation_time = request.session.get('sms_activation_time')
         now = timezone.now()
@@ -1342,9 +1388,55 @@ class ActivateSmsConfirmView(View):
                 request.session['sms_activation_check'] = False
             else:
                 request.session['sms_activation_check'] = True
+                if phone is not None and phone != '':
+                    try:
+                        member_info = MemberTb.objects.get(member_id=request.user.id)
+                        member_info.phone = phone
+                        member_info.save()
+                    except ObjectDoesNotExist:
+                        error = None
         else:
             request.session['sms_activation_check'] = False
             error = '문자 인증번호가 일치하지 않습니다.'
+        if error is not None:
+            messages.error(request, error)
+
+        return render(request, self.template_name)
+
+
+class ActivateEmailConfirmView(View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request):
+        user_activation_code = request.POST.get('user_activation_code')
+        email = request.POST.get('email', '')
+        email_activation_number = request.session.get('email_activation_number')
+        email_activation_time = request.session.get('email_activation_time')
+        now = timezone.now()
+        error = None
+        email_activation_time = datetime.datetime.strptime(email_activation_time, '%Y-%m-%d %H:%M:%S.%f')
+
+        time_interval = str(now-email_activation_time)
+        time_interval_data = time_interval.split('.')[0].split(':')
+        time_interval_minutes = time_interval_data[1]
+        time_interval_seconds = time_interval_data[2]
+
+        if user_activation_code == email_activation_number:
+            if(int(time_interval_minutes)*60+int(time_interval_seconds)) > settings.EMAIL_ACTIVATION_SECONDS:
+                error = '입력 시한이 지났습니다.'
+                request.session['email_activation_check'] = False
+            else:
+                request.session['email_activation_check'] = True
+                if email is not None and email != '':
+                    try:
+                        member_info = MemberTb.objects.get(member_id=request.user.id)
+                        member_info.user.email = email
+                        member_info.save()
+                    except ObjectDoesNotExist:
+                        error = None
+        else:
+            request.session['email_activation_check'] = False
+            error = '인증번호가 일치하지 않습니다.'
         if error is not None:
             messages.error(request, error)
 
@@ -1579,7 +1671,7 @@ class ResetActivateView(View):
         request.session['reset_activation_type'] = activation_type
 
         if recaptcha_test_session != 'success':
-            error = func_recaptcha_test(recaptcha_secret_key, token)
+            # error = func_recaptcha_test(recaptcha_secret_key, token)
             if error is None:
                 request.session['recaptcha_session'] = 'success'
             else:

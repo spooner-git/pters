@@ -26,6 +26,7 @@ class MemberTb(TimeStampedModel):
     contents = models.CharField(db_column='CONTENTS', max_length=255, blank=True, default='')
     profile_url = models.CharField(db_column='PROFILE_URL', max_length=255, blank=True, null=True,
                                    default='/static/common/icon/icon_account.png')
+    phone_is_active = models.IntegerField(db_column='PHONE_IS_ACTIVE', blank=True, null=True, default=0)
     reg_info = models.CharField(db_column='REG_INFO', max_length=20, blank=True, default='')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.

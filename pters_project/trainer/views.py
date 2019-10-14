@@ -3842,7 +3842,8 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
                            'member_email': str(user_member_info.user.email),
                            'member_sex': str(user_member_info.sex),
                            'member_birthday_dt': str(user_member_info.birthday_dt),
-                           'member_profile_url': member_profile_url
+                           'member_profile_url': member_profile_url,
+                           'member_phone_is_active': str(user_member_info.phone_is_active)
                            }
 
         if error is None:
@@ -3869,12 +3870,13 @@ def update_trainer_info_logic(request):
     # member_id = request.POST.get('id')
     # email = request.POST.get('email', '')
     first_name = request.POST.get('first_name', '')
-    phone = request.POST.get('phone', '')
+    # phone = request.POST.get('phone', '')
     contents = request.POST.get('contents', '')
     country = request.POST.get('country', '')
     address = request.POST.get('address', '')
     sex = request.POST.get('sex', '')
     birthday_dt = request.POST.get('birthday', '')
+    email = request.POST.get('email', '')
 
     error = None
     member_id = request.user.id
@@ -3895,7 +3897,7 @@ def update_trainer_info_logic(request):
             error = '회원 ID를 확인해 주세요.'
 
     # input_first_name = ''
-    input_phone = ''
+    # input_phone = ''
     # input_contents = ''
     # input_country = ''
     # input_address = ''
@@ -3932,24 +3934,29 @@ def update_trainer_info_logic(request):
     else:
         input_birthday_dt = birthday_dt
 
-    if phone is None or phone == '':
-        input_phone = member.phone
+    # if phone is None or phone == '':
+    #     input_phone = member.phone
+    # else:
+    #     if len(phone) != 11 and len(phone) != 10:
+    #         error = '연락처를 확인해 주세요.'
+    #     elif not phone.isdigit():
+    #         error = '연락처를 확인해 주세요.'
+    #     else:
+    #         input_phone = phone
+    if email is None or email == '':
+        input_email = user.email
     else:
-        if len(phone) != 11 and len(phone) != 10:
-            error = '연락처를 확인해 주세요.'
-        elif not phone.isdigit():
-            error = '연락처를 확인해 주세요.'
-        else:
-            input_phone = phone
+        input_email = email
 
     if error is None:
         try:
             with transaction.atomic():
                 user.first_name = input_first_name
                 # user.email = email
+                user.email = input_email
                 user.save()
                 member.name = input_first_name
-                member.phone = input_phone
+                # member.phone = input_phone
                 member.contents = input_contents
                 member.sex = input_sex
                 if input_birthday_dt is not None and input_birthday_dt != '':

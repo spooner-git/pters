@@ -10,10 +10,12 @@ class Mypage_modify{
             email:null,
             sex:null,
             birth:null,
+            phone_is_active:DEACTIVATE,
             photo:'/static/common/icon/icon_account.png',
         };
 
         this.auth_phone = {
+            phone : null,
             request_status : false,
             number_get : null,
             valid_time_count : 180,
@@ -33,10 +35,11 @@ class Mypage_modify{
             this.data.db_id = data.trainer_info.member_id;
             this.data.user_id = data.trainer_info.member_user_id;
             this.data.name = data.trainer_info.member_name;
-            this.data.phone = data.trainer_info.member_phone;
             this.data.email = data.trainer_info.member_email;
             this.data.sex = data.trainer_info.member_sex;
             this.data.birth = data.trainer_info.member_birthday_dt;
+            this.data.phone_is_active = data.trainer_info.member_phone_is_active;
+            this.auth_phone.phone = data.trainer_info.member_phone;
 
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -96,6 +99,23 @@ class Mypage_modify{
         let my_name = this.dom_row_my_name();
         let my_phone = '<div style="height:60px">' + this.dom_row_my_phone() + this.dom_button_auth_request_phone() + '</div>';
         let auth_phone = '<div id="auth_phone_number_input" style="height:60px">' + this.dom_row_my_phone_auth_number() + this.dom_button_auth_confirm_phone() +'</div>';
+        // let my_phone = '';
+        // if(this.auth_phone.phone_is_active == DEACTIVATE){
+        //     my_phone = '<div style="height:60px">' + this.dom_row_my_phone() + this.dom_button_auth_request_phone() + '</div>';
+        // }else{
+        //     my_phone = '<div style="height:60px">' + this.dom_row_my_phone() +
+        //                 '<div id="button_auth_request_my_phone" ' +
+        //                 'style="background-color:#fe4e65; color:#ffffff; text-align:center;cursor:pointer;padding:3px 8px;' +
+        //                 '       float:right; border:1px solid #fe4e65;border-radius:4px;font-size:13px;height:50px;' +
+        //                 '       line-height:50px;width:60px;padding:0;box-sizing:border-box;vertical-align:top">' +
+        //                 '인증완료</div>' +
+        //                 '</div>';
+        // }
+        //
+        // let auth_phone = '';
+        // if(this.auth_phone.phone_is_active == DEACTIVATE){
+        //     auth_phone = '<div id="auth_phone_number_input" style="height:60px">' + this.dom_row_my_phone_auth_number() + this.dom_button_auth_confirm_phone() +'</div>';
+        // }
         let my_email = this.dom_row_my_email();
         if(this.auth_phone.request_status == false){
             // auth_phone = "";
@@ -151,7 +171,7 @@ class Mypage_modify{
 
     dom_row_my_phone(){
         let id = 'modify_my_phone';
-        let title = this.data.phone == null ? '' : this.data.phone;
+        let title = this.auth_phone.phone == null ? '' : this.auth_phone.phone;
         let placeholder = '휴대폰 번호';
         let icon = DELETE;
         let icon_r_visible = HIDE;
@@ -162,7 +182,7 @@ class Mypage_modify{
         let pattern_message = "";
         let required = "required";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
-            this.data.phone = input_data;
+            this.auth_phone.phone = input_data;
             this.render_content();
         }, pattern, pattern_message, required);
         return html;
@@ -201,12 +221,13 @@ class Mypage_modify{
         let title = "인증";
         let style = {"float":"right", "border":"1px solid #cccccc", "border-radius":"4px", "font-size":"13px", "height":"50px", "line-height":"50px", "width":"60px", "padding":"0", "box-sizing":"border-box", "vertical-align":"top"};
         let onclick = ()=>{
-            let data = {'token':'', 'phone':this.data.phone};
+            let data = {'token':'', 'phone':this.auth_phone.phone};
             Phone_auth_func.request_auth_number(data, (jsondata)=>{
                     if(jsondata.messageArray.length > 0){
                         show_error_message(jsondata.messageArray);
                         return false;
                     }
+                    show_error_message("인증번호를 확인해주세요.");
                     this.auth_phone.valid_time_count = 180;
                     this.auth_phone.request_status = true;
                     this.render_content();
@@ -233,12 +254,14 @@ class Mypage_modify{
         let title = "확인";
         let style = {"float":"right", "border":"1px solid #cccccc", "border-radius":"4px", "font-size":"13px", "height":"50px", "line-height":"50px", "width":"60px", "padding":"0", "box-sizing":"border-box", "vertical-align":"top", "color":"#fe4e65"};
         let onclick = ()=>{
-            let data = {'user_activation_code': this.auth_phone.number_get};
+            let data = {'user_activation_code': this.auth_phone.number_get, 'phone': this.auth_phone.phone};
             Phone_auth_func.send_auth_number(data, (data)=>{
                 if(data.messageArray.length > 0){
                     show_error_message(data.messageArray);
                 }else{
-                    show_error_message("인증 되었습니다");
+                    clearInterval(this.auth_phone.valid_time_count_func);
+                    $('#activation_timer').text('');
+                    show_error_message("휴대폰 번호가 변경되었습니다");
                 }
             });
         };
@@ -255,8 +278,8 @@ class Mypage_modify{
         let icon_r_text = "";
         let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
         let disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
-        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9@. 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "";
         let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             this.data.email = input_data;
@@ -272,9 +295,9 @@ class Mypage_modify{
         }
 
         let data = {
-            "first_name":this.data.name, "phone":this.data.phone, "contents":null, "country":null, "address":null, "sex":null, "birthday":null
+            "first_name":this.data.name, "contents":null, "country":null, "address":null, "sex":null, "birthday":null, "email":this.data.email
         };
-
+        console.log(data);
         Mypage_func.update(data, ()=>{
             try{
                 current_page.init();
@@ -303,10 +326,10 @@ class Mypage_modify{
                 show_error_message('이름을 입력 해주세요.');
                 return false;
             }
-            if(this.data.phone == null){
-                show_error_message('휴대폰 번호를 입력 해주세요.');
-                return false;
-            }
+            // if(this.auth_phone.phone == null){
+            //     show_error_message('휴대폰 번호를 입력 해주세요.');
+            //     return false;
+            // }
             // if(this.data.email == null){
             //     show_error_message('이메일을 선택 해주세요.');
             //     return false;

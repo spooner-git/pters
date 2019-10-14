@@ -90,14 +90,27 @@ function reset_activate(method){
     $(`#id_activation_button_${method}`).text('재인증').css({'color':'#fe4e65', 'border':'solid 1px #fe4e65'});
     $(`#id_activation_confirm_${method}`).text(" ").css({'display':'none'});
     $(`#activation_timer_${method}`).text(activation_timer_text).css({'display':'inline-block'});
-
+    let phone_val = '';
+    let email_val = '';
+    try{
+        phone_val = document.getElementById('id_phone').value;
+    }
+    catch(e){
+        phone_val = '';
+    }
+    try{
+        email_val = document.getElementById('id_email').value;
+    }
+    catch(e){
+        email_val = '';
+    }
     // 인증 메시지 발송
     $.ajax({
         url:'/login/reset_activate/',
         type:'POST',
         data:{'token':document.getElementById('g-recaptcha-response').value,
-              'phone':document.getElementById('id_phone').value,
-              'email':document.getElementById('id_email').value,
+              'phone':phone_val,
+              'email':email_val,
               'member_id':document.getElementById('id_member_id').value,
               'activation_type':document.getElementById('id_activation_type').value
              },

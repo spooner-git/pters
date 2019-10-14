@@ -84,6 +84,9 @@ urlpatterns = [
     url(r'^activate_sms/$', views.activate_sms_logic, name='activate_sms'),
     url(r'^activate_sms_confirm/$', views.ActivateSmsConfirmView.as_view(), name='activate_sms_confirm'),
 
+    # 이메일 인증 처리 기능
+    url(r'^activate_email/$', views.activate_email_logic, name='activate_email'),
+    url(r'^activate_email_confirm/$', views.ActivateEmailConfirmView.as_view(), name='activate_email_confirm'),
 
     # 강사가 등록하는 회원용
     url(r'^add_member_info_no_email/$', views.AddMemberNoEmailView.as_view(), name='add_member_info_no_email'),
