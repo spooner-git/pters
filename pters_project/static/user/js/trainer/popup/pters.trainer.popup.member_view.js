@@ -182,7 +182,6 @@ class Member_view{
 
 
             Member_func.read_ticket_list({"member_id":this.member_id}, (data)=>{
-                console.log("data",data)
                 let ticket_list = data;
                 this.data.ticket = [];
                 let member_ticket_list = [];
@@ -390,6 +389,9 @@ class Member_view{
         }
         let id = 'member_user_id_view';
         let title = this.data.user_id == null ? '회원ID' : this.data.user_id;
+        if(this.data.active != 'True'){
+            title = '(임시 ID) ' + title;
+        }
         let icon = '/static/common/icon/icon_member_card_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = '';
