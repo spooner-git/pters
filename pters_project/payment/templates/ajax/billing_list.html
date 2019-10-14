@@ -11,6 +11,10 @@
       [{% for billing_info in billing_data %}"{{ billing_info.payment_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "payed_date" :
       [{% for billing_info in billing_data %}"{{ billing_info.payed_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "card_name" :
+      [{% for billing_info in billing_data %}"{{ billing_info.card_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "product_name" :
+      [{% for billing_info in billing_data %}"{{ billing_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "state_cd" :
       [{% for billing_info in billing_data %}"{{ billing_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "mod_dt" :

@@ -253,6 +253,10 @@
 
 
 <script>
+
+    var user_email = '{{ request.user.email }}';
+    var user_name = '{{ request.user.first_name }}';
+
     //기기종류 판단
     const varUA = navigator.userAgent.toLowerCase();
     let device = PC;

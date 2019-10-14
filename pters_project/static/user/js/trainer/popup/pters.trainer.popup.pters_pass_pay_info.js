@@ -13,7 +13,16 @@ class Pters_pass_pay_info{
             },
             history:null
         };
-
+        this.data_billing = {
+            current:{
+                product_name:[""],
+                card_name:[""],
+                pay_method:[""],
+                payed_date:[""],
+                state_cd:[""],
+                customer_uid:[""],
+            }
+        };
 
         this.init();
     }
@@ -37,6 +46,15 @@ class Pters_pass_pay_info{
                 this.render();
             });
             
+        });
+        Pters_pass_func.read('Current_period', (data)=>{
+            this.data_billing.current.product_name = data.product_name;
+            this.data_billing.current.card_name = data.card_name;
+            this.data_billing.current.pay_method = data.pay_method;
+            this.data_billing.current.payed_date = data.payed_date;
+            this.data_billing.current.state_cd = data.state_cd;
+            this.data_billing.current.customer_uid = data.customer_uid;
+
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
@@ -100,10 +118,23 @@ class Pters_pass_pay_info{
 
     dom_row_pay_method(){
         let id = "pters_pass_pay_method";
-        let card_name = this.data.current.card_name[0];
+        console.log(this.data_billing.current);
+        let change_test = true;
+        let card_name = this.data_billing.current.card_name[0];
         let pay_date_info = ``;
+        let paid_date = this.data_billing.current.payed_date[0];
+        if(card_name == undefined){
+            card_name = '결제 정보 없음';
+            change_test = false;
+        }
+        if(paid_date == undefined){
+            paid_date = '다음 결제 예정일 없음';
+            change_test = false;
+        }else{
+            paid_date = '매월 ' + paid_date + ' 일 결제'
+        }
         if(this.data.current.payment_type_cd[0] == "PERIOD"){
-            pay_date_info = `<span style="display:block;font-size:12px;color:#5c5859">매월 ${this.data.current.start_date[0].split('-')[2]} 일 결제</span>`;
+            pay_date_info = `<span style="display:block;font-size:12px;color:#5c5859">${paid_date}</span>`;
         }else if(this.data.current.payment_type_cd[0] == "SINGLE"){
             pay_date_info = `<span style="display:block;font-size:12px;color:#5c5859">1회권 결제</span>`;
         }
@@ -111,28 +142,36 @@ class Pters_pass_pay_info{
             card_name = '인앱결제';
             pay_date_info = `1회권 결제`;
         }
+
         let title = `${card_name} ${pay_date_info}`;
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = "변경";
         let style = {"line-height":"20px"};
+        if(change_test== false){
+            icon_r_visible = HIDE;
+            icon_r_text = "";
+        }
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let date = new Date();
-            let current_customer_uid = this.data.current.customer_uid[0];
-            let product_id = this.data.current.customer_uid[0].split('-')[2];
-            let new_merchant_uid = `m_${home.data.user_id}_${product_id}_${date.getTime()}`;
-            let new_customer_uid = `c_${home.data.user_id}_${product_id}_${date.getTime()}`;
-            let callback = (data)=>{
-                let product_name = this.data.current.product_name[0];
-                let pay_method = this.data.current.pay_method[0];
-                let start_date = data.next_start_date[0];
-                let period_month = 1;
-                let price = data.price[0];
-                Pters_pass_func.request_payment_update(product_name, pay_method, product_id, start_date, current_customer_uid, period_month, price, new_merchant_uid, new_customer_uid)
-            };
 
-            Pters_pass_func.ready_payment();
-            Pters_pass_func.check_payment_for_update(current_customer_uid, product_id, new_merchant_uid, new_customer_uid, callback);
+            if(change_test) {
+                let date = new Date();
+                let current_customer_uid = this.data_billing.current.customer_uid[0];
+                let product_id = this.data_billing.current.customer_uid[0].split('_')[2];
+                let new_merchant_uid = `m_${home.data.user_id}_${product_id}_${date.getTime()}`;
+                let new_customer_uid = `c_${home.data.user_id}_${product_id}_${date.getTime()}`;
+                let callback = (data) => {
+                    let product_name = this.data_billing.current.product_name[0] + ' - 정기결제 - 1개월';
+                    let pay_method = this.data_billing.current.pay_method[0];
+                    let start_date = data.next_start_date[0];
+                    let period_month = 1;
+                    let price = data.price[0];
+                    Pters_pass_func.request_payment_update(product_name, pay_method, product_id, start_date, current_customer_uid, period_month, price, new_merchant_uid, new_customer_uid)
+                };
+
+                Pters_pass_func.ready_payment();
+                Pters_pass_func.check_payment_for_update(current_customer_uid, product_id, new_merchant_uid, new_customer_uid, callback);
+            }
         });
         let html = row;
         return html;
@@ -154,6 +193,7 @@ class Pters_pass_pay_info{
             let pay_price = this.data.history.price[i];
             let pay_status = this.data.history.status[i];
             let pay_failed_reason = this.data.history.fail_reason[i];
+            let pay_card_name = this.data.history.card_name[i];
 
             let html = `<article class="pay_history_wrapper">
                             <div class="pay_history_title">${pass_name} (${pass_type})</div>
@@ -162,7 +202,7 @@ class Pters_pass_pay_info{
                                     <div>결제일</div><div>${pay_date}</div>
                                 </div>
                                 <div class="pass_article_detail_row">
-                                    <div>결제수단</div><div>${PAY_METHOD[pay_method]}</div>
+                                    <div>결제수단</div><div>${PAY_METHOD[pay_method]} - ${pay_card_name}</div>
                                 </div>
                                 <div class="pass_article_detail_row">
                                     <div>금액</div><div>${UnitRobot.numberWithCommas(pay_price)}원 (부가세 포함)</div>

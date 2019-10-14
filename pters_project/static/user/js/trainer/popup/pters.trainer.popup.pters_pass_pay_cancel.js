@@ -150,7 +150,7 @@ class Pters_pass_pay_cancel{
     }
 
     event_excute(){
-        Pters_pass_func.read('Current', (data)=>{
+        Pters_pass_func.read('Current_period', (data)=>{
             let customer_uid = data.customer_uid[0];
             let cancel_type = this.survey_checkbox_data[this.data.cancel_type];
             let cancel_reason = this.data.cancel_reason;

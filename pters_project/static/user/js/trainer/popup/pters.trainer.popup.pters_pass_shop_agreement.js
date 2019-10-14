@@ -194,7 +194,7 @@ class Pters_pass_shop_agreement{
         let user_id = home.data.user_id;
         let user_name = home.data.user_name;
         let user_email = home.data.user_email;
-        let product_name = PASS_PRODUCT["standard"].text;
+        let product_name = PASS_PRODUCT["standard"].text + ' - 정기 결제 - 1개월';
         let pay_method = CARD;
         let payment_type_cd = PERIOD;
         let product_id = PASS_PRODUCT["standard"].id;
@@ -209,7 +209,7 @@ class Pters_pass_shop_agreement{
             if(payment_date != data.next_start_date[0]){
                 if(payment_type_cd == PERIOD){
                     confirm_message = data.next_start_date[0]+" ~ "+data.next_end_date[0]+" 이용권 결제를 예약하시겠습니까? \n" +
-                                        "실제 결제는 "+data.next_start_date[0]+"에 진행됩니다.";
+                                        "실제 결제는 "+data.next_payment_date[0]+"에 진행됩니다.";
                 }
             }
 

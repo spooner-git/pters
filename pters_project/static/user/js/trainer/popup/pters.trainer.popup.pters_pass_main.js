@@ -554,8 +554,8 @@ class Pters_pass_func{
             customer_uid : customer_uid, // 카드(빌링키)와 1:1로 대응하는 값
             name : name,
             amount : price,
-            buyer_email : '{{ request.user.email }}',
-            buyer_name : '{{ request.user.first_name }}',
+            buyer_email : user_email,
+            buyer_name : user_name,
         };
 
         IMP.request_pay(request_pay_period_data, function(rsp) {
@@ -565,14 +565,8 @@ class Pters_pass_func{
                 $.ajax({
                     url: "/payment/check_finish_billing/", // 서비스 웹서버
                     type: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    data: JSON.stringify({
-                        product_id : product_id,
-                        payment_type_cd:payment_type_cd,
-                        paid_amount: rsp.paid_amount,
-                        start_date: today,
-                        period_month: period_month
-                    }),
+                    data: {"imp_uid" : rsp.imp_uid, "merchant_uid": rsp.merchant_uid},
+                    dataType: "html",
 
                     beforeSend:function(xhr, settings) {
                         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -582,29 +576,28 @@ class Pters_pass_func{
 
                     success:function(data){
                         var jsondata = JSON.parse(data);
+
                         if(jsondata.messageArray.length>0){
                             msg = '결제 정보 변경에 실패하였습니다.';
                             msg += '에러내용 : ' + jsondata.messageArray;
+                            show_error_message(msg);
                         }else {
-                            msg = '결제가 완료되었습니다.';
-
+                            console.log('test########################');
                             $.ajax({
                                 url: "/payment/update_period_billing/", // 서비스 웹서버
                                 method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                data: JSON.stringify({
-                                    customer_uid : before_customer_uid
-                                }),
+                                data: {"customer_uid" : before_customer_uid},
+                                dataType: "html",
 
                                 beforeSend:function(xhr, settings) {
                                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                                         xhr.setRequestHeader("X-CSRFToken", csrftoken);
                                     }
-                                    beforeSend();
                                 },
 
                                 success:function(data){
                                     var jsondata = JSON.parse(data);
+
                                     if(jsondata.messageArray.length>0){
                                         msg = '결제 정보 변경에 실패하였습니다.';
                                         msg += '에러내용 : ' + jsondata.messageArray;
@@ -613,7 +606,7 @@ class Pters_pass_func{
                                     }
                                     show_error_message(msg);
                                     layer_popup.close_layer_popup();
-                                    // window.location.reload(true);
+                                    window.location.reload(true);
                                 },
 
                                 complete:function(){
@@ -624,7 +617,6 @@ class Pters_pass_func{
                                 }
                             });
                         }
-                        show_error_message(msg);
 
                     },
 
