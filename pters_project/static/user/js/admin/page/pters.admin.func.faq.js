@@ -30,7 +30,6 @@ class Faq {
         Faq_func.read_all((data)=>{
             this.data.all = data;
             this.render_content();
-            console.log(data);
         });
     }
 
@@ -106,7 +105,7 @@ class Faq {
 
     dom_row_faq_article(data){
         let type = data.notice_type_cd;
-        if(type != NOTICE_FAQ){
+        if(type != NOTICE_FAQ && type != NOTICE_USAGE){
             return "";
         }
         
@@ -119,11 +118,10 @@ class Faq {
         let hits = data.notice_hits; //조회수
         let use = data.notice_use; //공개여부
 
-
         let html = `<article id="faq_article_${id}" class="faq_article">
                         <div class="faq_article_upper">
                             <div class="faq_article_id">${id}</div>
-                            <div class="faq_article_title">${title}</div>
+                            <div class="faq_article_title">[${NOTICE_TYPE[type]}] ${title}</div>
                             <div class="faq_article_hits"></div>
                         </div>
                         <div class="faq_article_bottom">
@@ -138,23 +136,23 @@ class Faq {
                             <div style="text-align:right;margin-top:10px;">
                                 ${CComponent.button ("faq_modify_"+id, "수정", {"border":"1px solid #e8e8e8", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
                                         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
-                                            let external_data = {   
+                                            let external_data = {       title:title, content: content, id:id,
                                                                         category:[
                                                                             {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
                                                                             {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
                                                                             {id:"use", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
                                                                         ],
                                                                         category_selected:{
-                                                                            open:{text:[], value:[]},
-                                                                            type:{text:[], value:[]},
-                                                                            use:{text:[], value:[]}
+                                                                            open:{text:[target], value:[data.notice_to_member_type_cd]},
+                                                                            type:{text:[NOTICE_TYPE[type] ], value:[type]},
+                                                                            use:{text:[NOTICE_USE[use].text], value:[use]}
                                                                         }
                                             };
                                             board_writer = new BoardWriter("FAQ 수정", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
-                                                let data = {"notice_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
+                                                let data = {"notice_id":data_written.id, "notice_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
                                                             "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0],
                                                             "use":data_written.category_selected.use.value[0]};
-                                                Notice_func.create(data, ()=>{
+                                                Notice_func.update(data, ()=>{
                                                     this.init();
                                                 });
                                             });

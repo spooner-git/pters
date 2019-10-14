@@ -1385,7 +1385,6 @@ class TimeSelector{
             if(selected_time_data_form == '0:0'){
                 selected_time_data_form = '24:00';
             }
-            console.log(selected_time_data_form, min_time_data_form, TimeRobot.compare(selected_time_data_form, min_time_data_form));
 
             let time_compare = TimeRobot.compare(selected_time_data_form, min_time_data_form); // >= 일경우 true;
             if(time_compare == false){
@@ -1966,14 +1965,6 @@ class OptionSelector{
 
         document.querySelector(this.target.install).innerHTML = html_to_join.join('');
     }
-
-
-    //data 형태
-    // `{
-    //     사과:{value: 'apple', callback: ()=>{console.log('사과 Apple')} }, 
-    //     수박:{value: 'water_melon', callback: ()=>{console.log('수박 Water melon')} }, 
-    //     바나나:{value: 'banana', callback: ()=>{console.log('바나나 Banana')} }
-    // }`;
 }
 
 class TicketSelector{
@@ -3212,6 +3203,9 @@ class BoardWriter{
         this.callback = callback;
         this.external_data = data;
         this.data = {
+            upper_html:null,
+            bottom_html:null,
+            id:null,
             title:null,
             content:null,
             category:[
@@ -3219,6 +3213,10 @@ class BoardWriter{
             ],
             category_selected:{
                 
+            },
+            visibility:{
+                title:SHOW,
+                content:SHOW
             }
         };
         // this.init();
@@ -3261,14 +3259,24 @@ class BoardWriter{
     }
 
     dom_assembly (){
-        let title_input = this.dom_row_subject_input();
-        let content_input = this.dom_row_content_input();
+        let upper_html = this.data.upper_html != null ? this.data.upper_html : "";
+        let title_input = `<div class="obj_input_box_full" style="padding:8px 16px;">`+ this.dom_row_subject_input() + `</div>`;
+        let content_input = `<div class="obj_input_box_full">` + this.dom_row_content_input() + `</div>`;
         let category = this.dom_assembly_category();
+        let bottom_html = this.data.bottom_html != null ? this.data.bottom_html : "";
 
+        if(this.data.visibility.title == HIDE){
+            title_input = "";
+        }
+        if(this.data.visibility.content == HIDE){
+            content_input = "";
+        }
 
-        let html =  category + 
-                    `<div class="obj_input_box_full" style="padding:8px 16px;">`+ title_input + `</div>` + 
-                    `<div class="obj_input_box_full">` + content_input + `</div>`;
+        let html =  upper_html +
+                    category + 
+                    title_input + 
+                    content_input +
+                    bottom_html;
 
         return html;
     }
@@ -3398,11 +3406,11 @@ class BoardWriter{
         let content_value = $('#board_writer_content_input').summernote('code');
         this.data.content = content_value;
 
-        if(this.data.title == null){
+        if(this.data.title == null && this.data.visibility.title != HIDE){
             show_error_message("제목을 입력해주세요.");
             return false;
         }
-        if($(content_value).text().length <= 1){
+        if($(content_value).text().length <= 1 && this.data.visibility.content != HIDE){
             show_error_message("내용을 입력해주세요.");
             return false;
         }

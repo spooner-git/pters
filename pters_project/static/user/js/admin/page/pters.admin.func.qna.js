@@ -130,8 +130,8 @@ class Qna {
                             </div>
                             <div>
                                 <div>${CComponent.button ("qa_answer_"+qa_id, "답변", {"border":"1px solid #e8e8e8", "padding":"12px"}, ()=>{
-                                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_QNA_DETAIL, 100, POPUP_FROM_PAGE, null, ()=>{
-                                            qna_detail_popup = new Qna_detail('.popup_qna_detail', qa_id, this.data);});
+                                        let data = {id:qa_id, title:qa_title, content:qa_contents, type:qa_type, name: member_name, email: member_email, reg_date: qa_reg_date, status: qa_status};
+                                        this.event_open_board_writer(data);
                                     })
                                     }
                                 </div>
@@ -150,7 +150,40 @@ class Qna {
         return html;
     }
 
-    
+    event_open_board_writer(data){
+        let style_parent = "display:flex;font-size:14px;padding:5px 0";
+        let style_child_1 = "flex-basis:80px;font-weight:bold;";
+        let style_child_2 = "flex:1 1 0";
+        let upper_html_of_board_writer = 
+        `<div style="padding:16px;">
+        <div style="${style_parent}"><div style="${style_child_1}">DB ID</div><div style="${style_child_2}">${data.id}</div></div>
+        <div style="${style_parent}"><div style="${style_child_1}">회원명</div><div style="${style_child_2}">${data.name} (${data.email})</div></div>
+        <div style="${style_parent}"><div style="${style_child_1}">유형</div><div style="${style_child_2}">${data.type}</div></div>
+        <div style="${style_parent}"><div style="${style_child_1}">제목</div><div style="${style_child_2}">${data.title}</div></div>
+        <div style="${style_parent}"><div style="${style_child_1}">내용</div><div style="${style_child_2}">${data.content}</div></div>
+        </div>
+        `;
+
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
+            let external_data = {       upper_html:upper_html_of_board_writer,
+                                        id:data.id,
+                                        visibility:{title:HIDE},
+                                        category:[
+                                            {id:"status", title:"상태 변경", data: {text:["완료", "대기"], value:["QA_COMPLETE", "QA_WAIT"]} }
+                                        ],
+                                        category_selected:{
+                                            status:{text:[QA_STATUS[data.status]], value:[data.status]},
+                                        }
+            };
+            board_writer = new BoardWriter("QnA", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
+                let data = {"qa_id":data_written.id, "status_type_cd":data_written.category_selected.status.value[0]};
+                Qna_func.update(data, ()=>{
+                    this.init();
+                });
+            });
+        });
+    }
+
 
 }
 
@@ -188,6 +221,40 @@ class Qna_func{
             //통신 실패시 처리
             error:function(){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static update(data, callback){
+        $.ajax({
+            url:'/admin_spooner/update_qa_status_info/',
+            type:'POST',
+            data: data,
+            dataType : 'JSON',
+
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                // let data = JSON.parse(received_data);
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                // location.reload();
             }
         });
     }
