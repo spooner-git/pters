@@ -93,6 +93,11 @@
 	border: 1px solid #f4f4f4; */
 	/*margin: 10px auto;*/
 	box-sizing: border-box;
+	cursor: pointer;
+}
+
+.member_wrapper:active{
+	background-color: #e8e8e8;
 }
 
 .member_data_l{

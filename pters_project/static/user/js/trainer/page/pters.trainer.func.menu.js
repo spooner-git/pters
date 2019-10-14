@@ -10,10 +10,10 @@ class Menu {
         };
     }
 
-    init (page_check){
-        if(current_page != this.page_name){
-            return false;
-        }
+    init (){
+        // if(current_page != this.page_name){
+        //     return false;
+        // }
 
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
@@ -46,9 +46,9 @@ class Menu {
 
     //상단을 렌더링
     dom_assembly_tool_box (){
-        if(current_page != this.page_name){
-            return false;
-        }
+        // if(current_page != this.page_name){
+        //     return false;
+        // }
 
         let component = this.static_component();
         return component.menu_upper_box;
@@ -56,9 +56,10 @@ class Menu {
 
     //회원 리스트를 렌더링
     dom_assembly_content (){
-        if(current_page != this.page_name){
-            return false;
-        }
+        // if(current_page != this.page_name){
+        //     return false;
+        // }
+
         let dom_tag_style = {"font-size":"13px", "color":"#858282", "padding-left":"0", "margin-bottom":"8px"};
 
         let assembly = this.dom_who_i_am() + 
@@ -102,8 +103,9 @@ class Menu {
     }
 
     go_to_profile(){
-        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE, 100, popup_style, null, ()=>{mypage_popup = new Mypage('.popup_mypage');});
+        sideGoPopup("mypage");
+        // let popup_style = $root_content.width() > 650 ? POPUP_FROM_TOP : POPUP_FROM_RIGHT;
+        // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE, 100, popup_style, null, ()=>{mypage_popup = new Mypage('.popup_mypage');});
     }
 
     dom_menu_program(){

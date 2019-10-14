@@ -21,9 +21,9 @@ class Member {
     }
 
     init (list_type){
-        if(current_page != this.page_name){
-            return false;
-        }
+        // if(current_page != this.page_name){
+        //     return false;
+        // }
 
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
@@ -96,9 +96,9 @@ class Member {
 
     //상단을 렌더링
     render_upper_box (){
-        if(current_page != this.page_name){
-            return false;
-        }
+        // if(current_page != this.page_name){
+        //     return false;
+        // }
 
         this.search = false;
         let component = this.static_component();
@@ -107,9 +107,9 @@ class Member {
 
     //회원 리스트를 렌더링
     render_member_list (jsondata, list_type){
-        if(current_page != this.page_name){
-            return false;
-        }
+        // if(current_page != this.page_name){
+        //     return false;
+        // }
 
         let whole_data, length;
 

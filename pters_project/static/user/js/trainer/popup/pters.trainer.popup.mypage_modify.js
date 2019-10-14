@@ -276,11 +276,15 @@ class Mypage_modify{
         };
 
         Mypage_func.update(data, ()=>{
-            this.set_initial_data();
-            mypage_popup.set_initial_data();
-            // show_error_message('변경 내용이 저장되었습니다.');
+            try{
+                current_page.init();
+            }catch(e){}
+            try{
+                pc_top_toolbar_user_info_update();
+                mypage_popup.set_initial_data();
+            }catch(e){}
+
             layer_popup.close_layer_popup();
-            // this.render_content();
         });
     }
 

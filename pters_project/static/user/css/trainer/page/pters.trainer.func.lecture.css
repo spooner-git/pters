@@ -92,6 +92,11 @@
 	background-color: #ffffff;
 	margin: 0px auto;
 	box-sizing: border-box;
+	cursor: pointer;
+}
+
+.lecture_wrapper:active{
+	background-color: #e8e8e8;
 }
 
 .lecture_data_l{

@@ -42,11 +42,13 @@
                 /* float: right; */
                 width: 24px;
                 height: 24px;
+                cursor: pointer;
             }
             .popup_mobile .wrapper_top .obj_icon_prev{
                 /* float: left; */
                 width: 24px;
                 height: 24px;
+                cursor: pointer;
             }
             .popup_mobile .wrapper_top .icon_center{
                 font-size: 15px;
@@ -61,6 +63,7 @@
                float: right;
                font-size: 14px;
                height: 60px;
+               cursor: pointer;
             }
             .popup_mobile .wrapper_top .icon_right > img{
                 padding: 18px 16px 18px 18px;
@@ -73,6 +76,7 @@
                 float: left;
                 font-size: 14px;
                 height: 60px;
+                cursor: pointer;
              }
              .popup_mobile .wrapper_top .icon_left > img{
                 padding: 18px 18px 18px 16px;

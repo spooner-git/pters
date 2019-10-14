@@ -509,7 +509,10 @@ class Plan_add{
             let url ='/schedule/add_schedule/';
             Plan_func.create(url, data, ()=>{
                 layer_popup.close_layer_popup();
-                calendar.init_no_new();
+                // calendar.init_no_new();
+                try{
+                    current_page.init();
+                }catch(e){}
             });
             
         }else if(this.data.repeat.power == ON){
@@ -522,14 +525,15 @@ class Plan_add{
             let confirm_url = '/schedule/add_repeat_schedule_confirm/';
             
             Plan_func.create(url, data, (received)=>{
-                console.log(received);
-                console.log(received.repeat_schedule_id);
                 let repeat_schedule_id = received.repeat_schedule_id;
                 let repeat_confirm = 1;
                 let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm, "member_ids":this.data.member_id};
                 Plan_func.create(confirm_url, confirm_data, ()=>{
                     layer_popup.close_layer_popup();
-                    calendar.init_no_new();
+                    // calendar.init_no_new();
+                    try{
+                        current_page.init();
+                    }catch(e){}
                 });
             });
         }   

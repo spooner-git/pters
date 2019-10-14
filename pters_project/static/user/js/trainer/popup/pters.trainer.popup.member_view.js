@@ -523,6 +523,7 @@ class Member_view{
             let ticket_end_date =  this.data.ticket[i].end_date;
             let ticket_reg_count =  this.data.ticket[i].ticket_reg_count;
             let ticket_price =  this.data.ticket[i].ticket_price;
+            let ticket_note = "특이사항 데이터 안넘어옴";
             if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
                 ticket_name = `<span style="color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;
             }
@@ -536,7 +537,9 @@ class Member_view{
             let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, popup_style, null, ()=>{
-                    let data = {"member_name":this.name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":ticket_reg_count, "price":ticket_price, "status":"IP"};
+                    let data = {"member_name":this.name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
+                                "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":ticket_reg_count, "price":ticket_price, 
+                                "status":"IP", "note":ticket_note};
                     member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
 
@@ -593,7 +596,9 @@ class Member_view{
         };
         Member_func.update(data, ()=>{
             this.set_initial_data();
-            member.init();
+            try{
+                current_page.init();
+            }catch(e){}
         });
     }
 
@@ -639,7 +644,10 @@ class Member_view{
             delete:{text:"회원 삭제", callback:()=>{
                     show_user_confirm(`"${this.data.name}" 님 정보를 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
                         Member_func.delete({"member_id":this.member_id}, ()=>{
-                            member.init();layer_popup.all_close_layer_popup();
+                            try{
+                                current_page.init();
+                            }catch(e){}
+                            layer_popup.all_close_layer_popup();
                         });
                     });
                 }

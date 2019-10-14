@@ -11,7 +11,7 @@ class Calendar {
         this.subtargetHTML = 'calendar_wrap';
         this.instance = instance;
         
-        this.date_start = 1; //시작을 월요일부터 옵션을 위한 코드
+        this.date_start = 0; //시작을 월요일부터 옵션을 위한 코드
         this.cal_type = "week";
         this.current_page_num = 1;
 
@@ -29,15 +29,8 @@ class Calendar {
         this.current_year = d.getFullYear();
         this.current_month = d.getMonth()+1;
         this.current_date = d.getDate();
-        this.first_day_of_the_date = new Date(this.current_year, this.current_month-1, 1).getDay();
-        if(this.date_start == 1){
-            if(this.first_day_of_the_date == 0){
-                this.first_day_of_the_date = 6;
-            }else{
-                this.first_day_of_the_date--;
-            }
-        }
-        this.current_week = Math.ceil( (this.current_date +  this.first_day_of_the_date)/7 ) - 1;
+        this.current_week = 0;
+
         
         this.current_hour = d.getHours() > 12 ? d.getHours() - 12 : d.getHours();
         this.current_minute = Math.floor(d.getMinutes()/5)*5;
@@ -53,11 +46,6 @@ class Calendar {
         };
 
         let interval = setInterval(()=>{
-            // let realtime = new Date();
-            // let realtime_today = `${realtime.getFullYear()}-${realtime.getMonth()+1}-${realtime.getDate()}`;
-            // if(this.today != realtime_today){
-            //     window.location.reload();
-            // }
             if(this.page_name == current_page){
                 this.relocate_current_time_indicator();
             }else{
@@ -80,10 +68,7 @@ class Calendar {
     }
 
     //다른페이지에서 접근했을때 처음에 달력을 위해 필요한 최상위 컨테이너를 포함하여 초기화한다.
-    init (cal_type){
-        if(current_page != this.page_name){
-            return false;
-        }
+    init_new (cal_type){
 
         this.today = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`;
 
@@ -95,6 +80,17 @@ class Calendar {
             this.dayoff_hide = data.setting_holiday_hide;
             let date_start_array = {"SUN":0, "MON":1};
             this.date_start = date_start_array[data.setting_week_start_date];
+            //this.current_week를 구하기 위한 코드
+            this.first_day_of_the_date = new Date(this.current_year, this.current_month-1, 1).getDay();
+            if(this.date_start == 1){
+                if(this.first_day_of_the_date == 0){
+                    this.first_day_of_the_date = 6;
+                }else{
+                    this.first_day_of_the_date--;
+                }
+            }
+            this.current_week = Math.ceil( (this.current_date +  this.first_day_of_the_date)/7 ) - 1;
+
             let work_time = this.calc_worktime_display(data);
             this.work_time_info.calc = work_time;
             this.worktime = [];
@@ -102,15 +98,15 @@ class Calendar {
                 this.worktime.push(i);
             }
             this.dayoff = work_time.dayoff;
-            this.init_no_new(cal_type);
+            this.init(cal_type);
         });
     }
 
     //달력에 필요한 최상위 컨테이너가 이미 있는 상태에서 컨테이너 내용(달력)을 재초기화 할때 사용한다.
-    init_no_new(cal_type){
-        if(current_page != this.page_name){
-            return false;
-        }
+    init(cal_type){
+        // if(current_page != this.page_name){
+        //     return false;
+        // }
         if(cal_type == undefined){
             cal_type = this.cal_type;
         }
@@ -574,9 +570,9 @@ class Calendar {
     }
 
     render_upper_box (type){
-        if(current_page != this.page_name){
-            return false;
-        }
+        // if(current_page != this.page_name){
+        //     return false;
+        // }
 
         let component = this.static_component();
         switch(type){
@@ -590,9 +586,9 @@ class Calendar {
     }
     
     render_month_cal (page, year, month, schedule_data){ //월간 달력 렌더링 (연, 월)
-        if(current_page != this.page_name){
-            return false;
-        }
+        // if(current_page != this.page_name){
+        //     return false;
+        // }
 
         if(schedule_data == undefined){
             schedule_data = false;
@@ -618,9 +614,9 @@ class Calendar {
     }
 
     render_week_cal (page, year, month, week, schedule_data){ //주간 달력 렌더링 (연, 월, 몇번째 주)
-        if(current_page != this.page_name){
-            return false;
-        }
+        // if(current_page != this.page_name){
+        //     return false;
+        // }
         let data = this.draw_week_line(year, month, week, schedule_data, "week");
         
 
@@ -1218,7 +1214,6 @@ class Calendar {
                 $('#debug_toolbar').show().html(`<span style="margin-left:10px;line-height:60px;font-size:14px;">일정 변경을 위해 원하는 곳을 터치해주세요.</span>
                                                 <button style="float:right;width:70px;height:40px;margin:10px;border-radius:4px;background-color:#ffffff;border:1px solid #cccccc;" onclick="calendar.mode_to_plan_change(OFF)">취소</button>`)
                                           .css({"height":"60px", "line-height":"60px;"});
-                // this.init_no_new();
                 this.render_upper_box(this.cal_type);
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
 
@@ -1228,33 +1223,12 @@ class Calendar {
                 $('#debug_toolbar').hide();
                 this.long_touch_target = null;
                 this.long_touch_schedule_id = null;
-                // this.init_no_new();
                 this.render_upper_box(this.cal_type);
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
                 break;
         }
     }
 
-    // simple_plan_change(data, start_dt, end_dt){
-    //     let data1 = {"schedule_id": data.schedule_info[0].schedule_id};
-    //     let data2 = {"lecture_id": data.schedule_info[0].schedule_type == 0 ? "" : data.schedule_info[0].lecture_id,
-    //                 "start_dt": start_dt,
-    //                 "end_dt":end_dt,
-    //                 "note":data.schedule_info[0].note, "duplication_enable_flag": 1,
-    //                 "en_dis_type":data.schedule_info[0].schedule_type == 2 ? 1 : data.schedule_info[0].schedule_type,
-    //                 "member_ids": data.schedule_info[0].member_id != "" ? [data.schedule_info[0].member_id] : data.schedule_info[0].lecture_schedule_data.map((el)=>{return el.member_id;})
-    //     };
-    //     //en_dis_type 0: off일정, 1:레슨일정
-    //     //duplication_enable_flag 0: 중복불허 1:중복허용
-
-    //     Plan_func.delete(data1, ()=>{ //일정을 지운다.
-    //         let url_to_create_new_schedule ='/schedule/add_schedule/';
-    //         Plan_func.create(url_to_create_new_schedule, data2, ()=>{ //일정을 새로 등록한다.
-    //             this.mode_to_plan_change(OFF);
-    //             this.init_no_new();
-    //         });
-    //     });
-    // }
     simple_plan_change(data, start_dt, end_dt){
         let schedule_ids = [];
         schedule_ids.push(data.schedule_info[0].schedule_id);
@@ -1269,7 +1243,7 @@ class Calendar {
         let url = '/schedule/update_schedule/';
         Plan_func.update(url, data_to_send, ()=>{
             this.mode_to_plan_change(OFF);
-            this.init_no_new();
+            this.init();
         });
     }
 

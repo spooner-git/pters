@@ -176,7 +176,7 @@ class Plan_repeat_list{
 
 
     dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time){
-        let html = `<div style="display:flex;width:100%;height:60px;padding:8px 20px;box-sizing:border-box;" id="repeat_item_${repeat_id}">
+        let html = `<div class="repeat_wrapper" id="repeat_item_${repeat_id}">
                         <div style="flex-basis:16px;">
                             <div style="float:left;width:4px;height:32px;background-color:${color}"></div>
                         </div>
@@ -200,12 +200,18 @@ class Plan_repeat_list{
                                         과거일정은 보존되지만, 등록한 미래일정은 취소됩니다.</div>`, ()=>{
                         layer_popup.close_layer_popup();
                         Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
+                            // try{
+                            //     this.init();
+                            //     calendar.init_no_new();
+                            // }catch(e){
+                            //     console.log(e);
+                            // }
+                            try{
+                                current_page.init();
+                            }catch(e){}
                             try{
                                 this.init();
-                                calendar.init_no_new();
-                            }catch(e){
-                                console.log(e);
-                            }
+                            }catch(e){}
                             layer_popup.close_layer_popup();
                         });
                     });
@@ -224,7 +230,7 @@ class Plan_repeat_list{
     }
 
     dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo){
-        let html = `<div style="display:flex;width:100%;height:32px;padding:0 36px;box-sizing:border-box;" id="repeat_item_${repeat_id}">
+        let html = `<div class="repeat_member_wrapper" id="repeat_item_${repeat_id}">
                         <div style="flex-basis:24px;"><img src="${member_photo}" style="border-radius:50%;width:20px;vertical-align:middle;"></div>
                         <div style="flex:1 1 0;font-size:14px;font-weight:500;letter-spacing:-0.6px;color:#3d3b3b;line-height:32px;">${member_name}</div>
                     </div>`;
@@ -235,12 +241,18 @@ class Plan_repeat_list{
                     show_user_confirm(`정말 ${member_name}회원님의 반복 일정을 취소하시겠습니까?`, ()=>{
                         layer_popup.close_layer_popup();
                         Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
+                            // try{
+                            //     this.init();
+                            //     calendar.init_no_new();
+                            // }catch(e){
+                            //     console.log(e);
+                            // }
+                            try{
+                                current_page.init();
+                            }catch(e){}
                             try{
                                 this.init();
-                                calendar.init_no_new();
-                            }catch(e){
-                                console.log(e);
-                            }
+                            }catch(e){}
                             layer_popup.close_layer_popup();
                         });
                     });

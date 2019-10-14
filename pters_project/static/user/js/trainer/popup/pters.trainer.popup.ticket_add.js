@@ -308,11 +308,11 @@ class Ticket_add{
                 this.callback();
             }
             try{
-                ticket.init();
+                current_page.init();
+            }catch(e){}
+            try{
                 ticket_list_popup.init();
-            }catch(e){
-                console.log(e);
-            }
+            }catch(e){}
         });
         layer_popup.close_layer_popup();
         ticket_add_popup.clear();

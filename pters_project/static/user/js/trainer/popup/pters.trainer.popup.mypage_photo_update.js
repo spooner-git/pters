@@ -170,21 +170,14 @@ class Mypage_photo_update{
                                     }
                                     layer_popup.close_layer_popup(); // confirm 팝업 닫기
                                     layer_popup.close_layer_popup(); // 사진 조절 팝업 닫기
+                                    
                                     try{
+                                        current_page.init();
+                                    }catch(e){}
+                                    try{
+                                        pc_top_toolbar_user_info_update();
                                         mypage_popup.init();
-                                    }catch(e){
-                                        console.log(e);
-                                    }
-                                    try{
-                                        home.init();
-                                    }catch(e){
-                                        console.log(e);
-                                    }
-                                    try{
-                                        menu.init();
-                                    }catch(e){
-                                        console.log(e);
-                                    }
+                                    }catch(e){}
                                 },
 
                                 complete:function(){

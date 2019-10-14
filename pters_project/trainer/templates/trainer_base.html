@@ -100,7 +100,7 @@
             <div class="side_menu_item" onclick="sideGoPage('ticket_page_type')" id="side_ticket_page_type">
                 <img src={% static_url "common/icon/icon_ticket_grey.png" %} alt=""><span class="sidemenu_text">수강권</span>
             </div>
-            <div class="side_menu_item" onclick="sideGoPage('statistics')" id="side_statistics">
+            <div class="side_menu_item" onclick="sideGoPopup('statistics')" id="side_statistics">
                 <img src={% static_url "common/icon/icon_statistics_grey.png" %} alt=""><span class="sidemenu_text">통계</span>
             </div>
             <div class="side_menu_item" onclick="sideGoPage('settings')" id="side_settings">
@@ -118,9 +118,9 @@
                 <img src="/static/common/icon/icon_toggle_sidemenu.png" alt="" style="width:30px;transform:rotate(90deg);vertical-align:middle;padding:15px;transition:0.3s">
             </div>
             <div class="up_menu_tool">
-                <div style="flex:1 0 140px" id="up_menu_user_info" onclick="sideGoPage('mypage')"><img src={% static_url "common/loading.svg" %} alt="" class="up_menu_img"><span>불러오는 중</span></div>
+                <div style="flex:1 0 140px" id="up_menu_user_info" onclick="sideGoPopup('mypage')"><img src={% static_url "common/loading.svg" %} alt="" class="up_menu_img"><span>불러오는 중</span></div>
                 <div style="flex:1 0 0"><img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img" onclick="sideGoPage('alarm')"></div>
-                <div style="flex:1 0 0"><img src="/static/common/icon/icon_help_black.png" alt="" class="up_menu_img" onclick="sideGoPage('helper')"></div>
+                <div style="flex:1 0 0"><img src="/static/common/icon/icon_help_black.png" alt="" class="up_menu_img" onclick="sideGoPopup('helper')"></div>
             </div>
         </div>
         <div id="section_content">
@@ -422,7 +422,7 @@
     }
 
     function sideGoPage(page){
-        current_page = page;
+        // current_page = page;
         $('#debug_toolbar').hide();
 
         try{
@@ -456,93 +456,42 @@
 
         switch(page){
             case 'home':
+                current_page = home;
                 home.init();
             break;
             case 'calendar':
-                calendar.init();
+                current_page = calendar;
+                calendar.init_new();
             break;
             case 'ticket_page_type':
+                current_page = ticket;
                 ticket.init();
             break;
             case 'lecture_page_type':
+                current_page = lecture;
                 lecture.init();
             break;
-            case 'ticket':
-                // ticket.init();
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    ticket_list_popup = new Ticket_list('.popup_ticket_list', 'ticket_list_popup')});
-            break;
-            case 'lecture':
-                // lecture.init();
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    lecture_list_popup = new Lecture_list('.popup_lecture_list', 'lecture_list_popup')});
-            break;
             case 'member':
+                current_page = member;
                 member.init();
             break;
             case 'alarm':
+                current_page = alarm;
                 alarm.init();
             break;
             case 'menu':
+                current_page = menu;
                 menu.init();
-            break;
-            case 'program':
-                // menu.init();
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    program_list_popup = new Program_list('.popup_program_list')});
-            break;
-            case 'setting_worktime':
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_WORKTIME, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    setting_worktime_popup = new Setting_worktime('.popup_setting_worktime')});
-            break;
-            case 'setting_autocomplete':
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_AUTOCOMPLETE, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    setting_autocomplete_popup = new Setting_autocomplete('.popup_setting_autocomplete')});
-            break;
-            case 'setting_reserve':
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_RESERVE, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    setting_reserve_popup = new Setting_reserve('.popup_setting_reserve')});
-            break;
-            case 'setting_alarm':
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ALARM, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    setting_alarm_popup = new Setting_alarm('.popup_setting_alarm')});
-            break;
-            case 'setting_attendmode':
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ATTENDMODE, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    setting_attendmode_popup = new Setting_attendmode('.popup_setting_attendmode')});
-            break;
-            case 'service_notice':
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_NOTICE, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    service_notice_popup = new Service_notice('.popup_service_notice')});
-            break;
-            case 'service_inquiry_menu':
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY_MENU, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    service_inquiry_menu_popup = new Service_inquiry_menu('.popup_service_inquiry_menu')});
             break;
             case 'attend_mode':
                 location.href = '/trainer/attend_mode/';
             break;
-            case 'statistics':
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    statistics_popup = new Statistics('.popup_statistics')});
-            break;
-            case 'mypage':
-                let popup_style = $root_content.width() > 650 ? POPUP_FROM_TOP : POPUP_FROM_RIGHT;
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE, 100, popup_style, null, ()=>{
-                                                    mypage_popup = new Mypage('.popup_mypage')});
-            break;
-            case 'pters_pass_main':
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_MAIN, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    pters_pass_main_popup = new Pters_pass_main('.popup_pters_pass_main')});
-            break;
-            case 'helper':
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_HELPER, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    service_helper_popup = new Service_helper('.popup_service_helper')});
-            break;
             case 'settings':
+                current_page = settings;
                 settings.init();
             break;
             case 'service':
+                current_page = service;
                 service.init();
             break;
         }
@@ -584,34 +533,6 @@
         current_page = page;
         $('#debug_toolbar').hide();
 
-        // try{
-        //     let context_loc = document.getElementById(page).offsetLeft;
-            
-        //     $(`.nav_img > img`).each(function(e){
-        //        let this_id = $(this).parents('.nav_item').attr('id');
-        //         $(this).attr('src', `/static/common/icon/tab_bar/icon_${this_id}_off.png`) 
-        //     });
-        //     $(`#${page} .nav_img > img`).attr('src', `/static/common/icon/tab_bar/icon_${page}_on.png`);
-        // }
-        // catch(e){
-
-        // }
-        // try{
-        //     $('.side_menu_selected').removeClass('side_menu_selected');
-        //     $(`#side_${page}`).addClass('side_menu_selected');
-        // }catch(e){
-
-        // }
-        // try{
-        //     //메뉴 이동시 팝업이 열려있으면 모두 닫고 이동
-        //     $('#root_content').scrollTop(0);
-        //     if(layer_popup.stack.length > 0){
-        //         layer_popup.all_close_layer_popup()
-        //     }
-        // }catch(e){
-        //     console.log(e);
-        // }
-
         switch(page){
             case 'ticket':
                 // ticket.init();
@@ -656,30 +577,22 @@
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY_MENU, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     service_inquiry_menu_popup = new Service_inquiry_menu('.popup_service_inquiry_menu')});
             break;
-            case 'attend_mode':
-                location.href = '/trainer/attend_mode/';
-            break;
             case 'statistics':
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     statistics_popup = new Statistics('.popup_statistics')});
             break;
             case 'mypage':
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE, 100, POPUP_FROM_RIGHT, null, ()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_TOP : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE, 100, popup_style, null, ()=>{
                                                     mypage_popup = new Mypage('.popup_mypage')});
             break;
             case 'pters_pass_main':
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_MAIN, 100, POPUP_FROM_RIGHT, null, ()=>{
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_MAIN, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     pters_pass_main_popup = new Pters_pass_main('.popup_pters_pass_main')});
             break;
             case 'helper':
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_HELPER, 100, POPUP_FROM_RIGHT, null, ()=>{
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_HELPER, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     service_helper_popup = new Service_helper('.popup_service_helper')});
-            break;
-            case 'settings':
-                settings.init();
-            break;
-            case 'service':
-                service.init();
             break;
         }
     }
@@ -689,17 +602,22 @@
     //튜토리얼을 본적이 없으면 튜토리얼을 띄우기
     let tutorial_view = localStorage.getItem("tutorial_view");
     if(tutorial_view != "1"){
-        sideGoPage("helper");
+        sideGoPopup("helper");
     }
 
     //PC버전 상단 툴바에 사용자 정보 채우기
-    Mypage_func.read((data)=>{
-        let user_id = data.trainer_info.member_id;
-        let user_name = data.trainer_info.member_name;
-        let user_photo = data.trainer_info.member_profile_url;
-        let target = document.getElementById('up_menu_user_info')
-        target.innerHTML = `<img src="${user_photo}" alt="" class="up_menu_img" style="border-radius:50%"><span>${user_name}</span>`;
-    });
+    function pc_top_toolbar_user_info_update(){
+        Mypage_func.read((data)=>{
+            let user_id = data.trainer_info.member_id;
+            let user_name = data.trainer_info.member_name;
+            let user_photo = data.trainer_info.member_profile_url;
+            let target = document.getElementById('up_menu_user_info')
+            target.innerHTML = `<img src="${user_photo}" alt="" class="up_menu_img" style="border-radius:50%"><span>${user_name}</span>`;
+        });
+    }
+
+    pc_top_toolbar_user_info_update();
+    
 
     
 

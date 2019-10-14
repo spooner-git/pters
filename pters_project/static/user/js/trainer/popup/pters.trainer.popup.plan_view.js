@@ -485,11 +485,8 @@ class Plan_view{
             ()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
                     Plan_func.delete({"schedule_id":this.schedule_id}, ()=>{
                         try{
-                            calendar.init_no_new();
-                            home.init();
-                        }catch(e){
-                            console.log(e)
-                        }
+                            current_page.init();
+                        }catch(e){}
                         layer_popup.all_close_layer_popup();
                     });
                 });
@@ -505,11 +502,8 @@ class Plan_view{
                             Plan_func.status(send_data, ()=>{
                                 this.init();
                                 try{
-                                    calendar.init_no_new();
-                                    home.init();
-                                }catch(e){
-                                    console.log(e)
-                                }
+                                    current_page.init();
+                                }catch(e){}
                             });
                         }
                         let data_to_send = [];
@@ -529,12 +523,11 @@ class Plan_view{
                                 ajax_send_order++;
                                 if(ajax_send_order == length){
                                     try{
+                                        current_page.init();
+                                    }catch(e){}
+                                    try{
                                         this.init();
-                                        calendar.init_no_new();
-                                        home.init();
-                                    }catch(e){
-                                        console.log(e);
-                                    }
+                                    }catch(e){}
                                 }
                             });
                         }
@@ -555,32 +548,6 @@ class Plan_view{
         layer_popup.close_layer_popup();this.clear();
     }
 
-    // send_data (){
-    //     if(this.check_before_send() == false){
-    //         return false;
-    //     }
-    //     let data1 = {"schedule_id": this.schedule_id};
-    //     let data2 = {"lecture_id": this.data.schedule_type == 0 ? "" : this.data.lecture_id,
-    //                 "start_dt": this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.start_time,
-    //                 "end_dt":this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.end_time,
-    //                 "note":this.data.memo, "duplication_enable_flag": 1,
-    //                 "en_dis_type":this.data.schedule_type == 2 ? 1 : this.data.schedule_type, "member_ids":this.data.member_id
-    //     };
-    //     //en_dis_type 0: off일정, 1:레슨일정
-    //     //duplication_enable_flag 0: 중복불허 1:중복허용
-        
-    //     Plan_func.delete(data1, ()=>{ //일정을 지운다.
-    //         let url_to_create_new_schedule ='/schedule/add_schedule/';
-    //         Plan_func.create(url_to_create_new_schedule, data2, ()=>{ //일정을 새로 등록한다.
-    //             try{
-    //                 calendar.init_no_new();
-    //                 home.init();
-    //             }catch(e){
-    //                 console.log(e)
-    //             }
-    //         });
-    //     });
-    // }
     send_data (){
         if(this.check_before_send() == false){
             return false;
@@ -600,11 +567,8 @@ class Plan_view{
         let url = '/schedule/update_schedule/';
         Plan_func.update(url, data_to_send, ()=>{ //일정을 새로 등록한다.
             try{
-                calendar.init_no_new();
-                home.init();
-            }catch(e){
-                console.log(e);
-            }
+                current_page.init();
+            }catch(e){}
         });
         
     }

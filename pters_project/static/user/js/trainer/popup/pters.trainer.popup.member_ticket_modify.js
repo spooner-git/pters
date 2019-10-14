@@ -26,6 +26,7 @@ class Member_ticket_modify{
             reg_count: null,
             price:null,
             status:null,
+            note:null,
             refund_date:null,
             refund_price:null
         };
@@ -94,7 +95,9 @@ class Member_ticket_modify{
                     `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;
         let count  = CComponent.dom_tag('횟수') + this.dom_row_count_input() +
                     `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;
-        let price  = CComponent.dom_tag('가격') + this.dom_row_price_input();
+        let price  = CComponent.dom_tag('가격') + this.dom_row_price_input() + 
+                    `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;
+        let note = CComponent.dom_tag('특이사항') + this.dom_row_note_input();
 
         if(this.data.refund_date == null || this.data.refund_price == null){
             refund_date = "";
@@ -109,7 +112,8 @@ class Member_ticket_modify{
                 + start
                 + end
                 + count
-                + price +
+                + price
+                + note +
             '</div>';
 
         return html;
@@ -134,14 +138,12 @@ class Member_ticket_modify{
                         this.data.status = "PE";
                         this.render_content();
                         try{
+                            current_page.init();
+                        }catch(e){}
+                        try{
                             member_view_popup.init();
-                            member.init();
                             member_ticket_history.init();
-                        }catch(e){
-                            console.log(e);
-                        }
-                        // member_view_popup.init();
-                        // member.init();
+                        }catch(e){}
                     });
                     layer_popup.close_layer_popup();}
                 },
@@ -150,14 +152,12 @@ class Member_ticket_modify{
                         this.data.status = "IP";
                         this.render_content();
                         try{
+                            current_page.init();
+                        }catch(e){}
+                        try{
                             member_view_popup.init();
-                            member.init();
                             member_ticket_history.init();
-                        }catch(e){
-                            console.log(e);
-                        }
-                        // member_view_popup.init();
-                        // member.init();
+                        }catch(e){}
                     });
                     layer_popup.close_layer_popup();}
                 },
@@ -172,14 +172,12 @@ class Member_ticket_modify{
                 delete:{text:"삭제", callback:()=>{
                     Member_func.ticket_delete({"member_ticket_id":this.data.member_ticket_id}, ()=>{
                         try{
+                            current_page.init();
+                        }catch(e){}
+                        try{
                             member_view_popup.init();
-                            member.init();
                             member_ticket_history.init();
-                        }catch(e){
-                            console.log(e);
-                        }
-                        // member_view_popup.init();
-                        // member.init();
+                        }catch(e){}
                         layer_popup.close_layer_popup();
                     });
                     layer_popup.close_layer_popup();}
@@ -348,25 +346,43 @@ class Member_ticket_modify{
         return html;
     }
 
+    dom_row_note_input(){
+        let id = 'member_ticket_note_modify';
+        let title = this.data.note == null || this.data.note == 'None' ? '' :this.data.note;
+        let placeholder = '특이사항';
+        let icon = NONE;
+        let icon_r_visible = HIDE;
+        let icon_r_text;
+        let style = null;
+        let disabled = false;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+:()[] 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "+ - _ : ()[] 제외 특수문자는 입력 불가";
+        let required = "";
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let user_input_data = input_data;
+            this.data.note = user_input_data;
+            this.render_content();
+        }, pattern, pattern_message, required);
+        return html;
+    }
+
     send_data(){
         if(this.check_before_send() == false){
             return false;
         }
-        let data = {"member_ticket_id":this.data.member_ticket_id, "note":"", "start_date":this.data.start_date, "end_date":this.data.end_date, 
+        let data = {"member_ticket_id":this.data.member_ticket_id, "note":this.data.note, "start_date":this.data.start_date, "end_date":this.data.end_date, 
                     "price":this.data.price, "refund_price":this.data.refund_price, "refund_date":this.data.refund_date, "member_ticket_reg_count":this.data.reg_count};
-
-        console.log(data)
 
         Member_func.ticket_update(data, ()=>{
             layer_popup.close_layer_popup();
             this.set_initial_data();
             try{
+                current_page.init();
+            }catch(e){}
+            try{
                 member_view_popup.init();
-                member.init();
                 member_ticket_history.init();
-            }catch(e){
-                console.log(e);
-            }
+            }catch(e){}
         });
     }
 

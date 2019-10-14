@@ -562,8 +562,9 @@ class Member_add{
             Member_func.create_pre(data_for_new, (received)=>{
                 data_for_new.member_id = received.user_db_id[0];
                 Member_func.create(data_for_new, ()=>{
-                    // layer_popup.close_layer_popup();
-                    member.init();
+                    try{
+                        current_page.init();
+                    }catch(e){}
                 });
             });
         }else{ // 재등록
@@ -575,8 +576,7 @@ class Member_add{
                     console.log(e);
                 }
                 try{
-                    member.init();
-                    home.init();
+                    current_page.init();
                 }catch(e){
                     console.log(e);
                 }

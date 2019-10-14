@@ -190,15 +190,14 @@ class Member_ticket_refund{
         Member_func.ticket_status(data, ()=>{
             this.set_initial_data();
             try{
-                member_ticket_modify.init();
-                member_ticket_history.init();
+                current_page.init();
+            }catch(e){}
+            try{
                 member_view_popup.init();
-                member.init();
-            }catch(e){
-                console.log(e);
-            }
+                member_ticket_history.init();
+                member_ticket_modify.init();
+            }catch(e){}
             layer_popup.close_layer_popup();
-            // member.init();
         });
     }
 
