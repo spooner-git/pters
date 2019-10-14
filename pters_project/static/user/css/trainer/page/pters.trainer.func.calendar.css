@@ -291,7 +291,8 @@
 	padding: 2px;
 }
 .calendar_schedule_display_week:active{
-	border-color: #858282;
+	/* border-color: #858282; */
+	opacity: 0.6;
 }
 .week_group_schedule{
 	background-color: #fe4e65;
