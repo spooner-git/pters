@@ -13,6 +13,7 @@
         <div class="obj_box_full">
             <form id="form_my_info">
                 {% csrf_token %}
+                <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
                 <div style="display: none">
                     {{ form.as_p }}
                 </div>
@@ -30,20 +31,39 @@
                     <input type="date" name="birthday" class="wrapper_my_info_change_input_box obj_font_size_14_weight_500" value="{{ member_info.birthday_dt }}" max="2025-12-31" min="1919-01-01">
                 </article>
                 <article>
-                    <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">연락처</div>
-                    <input type="tel" name="phone" class="wrapper_my_info_change_input_box obj_font_size_14_weight_500" placeholder="{{ member_info.phone }}">
+                    <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">휴대폰 번호</div>
+                    <div style="margin-top:5px;">
+                        <input type="tel" name="phone" id="id_phone" class="pters_login_input" minlength="10" maxlength="11" placeholder="{{ member_info.phone }}"
+                                style="width: 225px;" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event.target); check_sms_activation_button(event.target);" data-valid="false">
+                        <div class="activation_button" id="id_activation_button" onclick="activate_sms();" style="pointer-events:none;">인증</div>
+                    </div>
+                    <!-- 인증 번호 입력 영역 -->
+                    <div style="margin-top:8px;">
+                        <div id="wrapper_id_activation" style="width: 225px; border: solid 1px #d6d2d2; display:inline-block">
+                            <input class="pters_login_input" type="text" name="activation_code" id="id_activation_code" placeholder="인증 번호" minlength="3" maxlength="8" title="휴대폰 인증"
+                                   style="width:70%; border:0" pattern="[0-9]{3,8}" onkeyup="limit_char_auto_correction(event.target);" data-valid="false">
+                            <div id="activation_timer" style="display:none; width:20%; text-align:right; padding-right:12px; color: #ff001f; font-size: 13px; font-weight: 500; letter-spacing: -0.5px;">
+                                03:00
+                            </div>
+                        </div>
+                        <div class="activation_button" id="id_activation_confirm_button" onclick="trainee_info_check_activation_code();" style="pointer-events:none;">확인</div>
+                        <div class="input_description">
+                            <div class="input_description_text" id="id_activation_confirm"></div>
+                        </div>
+                    </div>
+
                 </article>
                 <article>
                     <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">이메일</div>
                     <input type="email" name="email" id="id_email" class="wrapper_auth_input obj_font_size_14_weight_500"
-                           value="{{ member_info.user.email }}" {% if member_info.user.email != '' and request.user.is_active %} disabled {% endif %}>
-                    {% if member_info.user.email == '' and not request.user.is_active %}
-                    <div class="wrapper_auth_button obj_button_gen obj_font_bg_coral_white" onclick="func_send_activation_email()">인증하기</div>
-                    {% elif member_info.user.email != '' and not request.user.is_active %}
-                    <div class="wrapper_auth_button obj_button_gen obj_font_bg_coral_white" onclick="func_send_activation_email()">재인증 하기</div>
-                    {% else %}
-                    <div class="wrapper_auth_button obj_button_gen obj_font_bg_white_coral">인증완료</div>
-                    {% endif %}
+                           value="{{ member_info.user.email }}">
+{#                    {% if member_info.user.email == '' and not request.user.is_active %}#}
+{#                    <div class="wrapper_auth_button obj_button_gen obj_font_bg_coral_white" onclick="func_send_activation_email()">인증하기</div>#}
+{#                    {% elif member_info.user.email != '' and not request.user.is_active %}#}
+{#                    <div class="wrapper_auth_button obj_button_gen obj_font_bg_coral_white" onclick="func_send_activation_email()">재인증 하기</div>#}
+{#                    {% else %}#}
+{#                    <div class="wrapper_auth_button obj_button_gen obj_font_bg_white_coral">인증완료</div>#}
+{#                    {% endif %}#}
                 </article>
                 <span class="email_confirm obj_font_size_11_weight_500"></span>
 
@@ -65,6 +85,7 @@
 {% endblock %}
 
 {% block popup_base_js %}
+    <script type="text/javascript" src="{% static_url "user/js/login/login.registration.js" %}"></script>
     <script type="text/javascript">
 
         function func_send_my_info_change(){
@@ -87,14 +108,14 @@
                 success:function(data){
 
                     let jsondata = JSON.parse(data);
-                    console.log(jsondata)
+                    console.log(jsondata);
                     let error_message = jsondata.messageArray;
                     if(error_message.length > 0){
                         layer_popup.close_layer_popup();
                         show_error_message(error_message[0]);
                     }else{
                         layer_popup.close_layer_popup();
-                        alert("정보를 변경하였습니다.");
+                        show_error_message("정보를 변경하였습니다.");
                         location.reload(true);
                     }
                     
@@ -122,104 +143,46 @@
             }
         }
 
-        $('#id_email').keyup(function(){
-            $('#id_email_duplicate_check').val('0');
-            let email_input = $('#id_email').val();
-            let email_data = email_input.split('@');
-            let email_domain_data;
-            if(email_data.length==2){
-                email_domain_data = email_data[1].split('.');
-            }
 
-            if(email_data.length==2 && email_domain_data.length>1){
-                check_email();
-            }else{
-                $('#id_email_duplicate_check').val('0');
-                $('.email_confirm').text('');
+    function trainee_info_check_activation_code(){
+        let $id_activation_code = $('#id_activation_code');
+        let $id_phone = $('#id_phone');
+        $.ajax({
+            url:'/login/activate_sms_confirm/',
+            type:'POST',
+            data: {'user_activation_code': $id_activation_code.val(), 'phone':$id_phone.val()},
+            dataType : 'html',
+
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                let jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length > 0){
+                    $('#id_activation_confirm').text(jsondata.messageArray).css({'display':'block','color':'#fe4e65'});
+                    $id_activation_code.attr('data-valid', 'false');
+                }else{
+                    clearInterval(activation_time_interval);
+                    $('#id_activation_button').text('인증').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+                    $('#id_activation_confirm').text('변경 완료').css({'display':'block','color':'green'});
+                    $('#id_activation_confirm_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+                    $id_activation_code.attr('data-valid', 'true');
+                    $('#activation_timer').text("");
+                    show_error_message('휴대폰 번호가 변경되었습니다.');
+                    location.reload(true);
+                }
+            },
+            complete:function(){
+
+            },
+            error:function(){
+
             }
         });
-
-        function check_email(){
-            var $form = $('#form_my_info');
-            var serializeArray = $form.serializeArray();
-            $.ajax({
-                url:'/login/check_member_email/',
-                type:'GET',
-                //data:{"email" : $('#id_email').val() },
-                data:serializeArray,
-                dataType : 'html',
-
-                beforeSend:function(){
-                },
-
-                //통신성공시 처리
-                success:function(data){
-                    var jsondata = JSON.parse(data);
-                    var id_check_message = jsondata.id_check_result;
-                    if(id_check_message[0].length>0){
-                        var error_msg = id_check_message[0];
-                        $('.email_confirm').text(error_msg).css({'display':'block','color':'#fe4e65'});
-                        $form.find('#id_email_duplicate_check').val('0');
-                    }else{
-                        $('.email_confirm').text('사용 가능').css({'display':'block','color':'green'});
-                        $form.find('#id_email_duplicate_check').val('1');
-                    }
-                },
-
-                //보내기후 팝업창 닫기
-                complete:function(){
-
-                },
-
-                //통신 실패시 처리
-                error:function(){
-                    alert("에러: 서버 통신 실패");
-                }
-            });
-        }
-
-        function func_send_activation_email(){
-            let email_duplication_check = $('#id_email_duplicate_check').val();
-            if(email_duplication_check == '1'){
-
-                var $form = $('#form_my_info');
-                var serializeArray = $form.serializeArray();
-                $.ajax({
-                    url:'/login/change_resend_email_authentication/',
-                    type:'POST',
-                    data:serializeArray,
-                    dataType : 'html',
-
-                    beforeSend:function(){
-                    },
-
-                    //통신성공시 처리
-                    success:function(data){
-                        let jsondata = JSON.parse(data);
-                        let id_check_message = jsondata.messageArray;
-                        if(id_check_message.length>0){
-                            let error_msg = id_check_message[0];
-                            alert(error_msg);
-                            $('#id_email_duplicate_check').val('0');
-                        }else{
-                            $('.wrapper_auth_button').text('재인증 하기');
-                            alert('인증 메일이 발송되었습니다.');
-                        }
-                    },
-
-                    //보내기후 팝업창 닫기
-                    complete:function(){
-
-                    },
-
-                    //통신 실패시 처리
-                    error:function(){
-                        alert("에러: 서버 통신 실패");
-                    }
-                });
-            }
-        }
-
-
+    }
     </script>
 {% endblock %}

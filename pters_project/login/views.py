@@ -1392,6 +1392,7 @@ class ActivateSmsConfirmView(View):
                     try:
                         member_info = MemberTb.objects.get(member_id=request.user.id)
                         member_info.phone = phone
+                        member_info.phone_is_active = ACTIVATE
                         member_info.save()
                     except ObjectDoesNotExist:
                         error = None
