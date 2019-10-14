@@ -225,6 +225,24 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         member_repeat_schedule_list = []
         lecture_member_repeat_schedule_ordered_dict = collections.OrderedDict()
 
+        member_lecture_ing_color_cd = ''
+        member_lecture_end_color_cd = ''
+        member_lecture_ing_font_color_cd = ''
+        member_lecture_end_font_color_cd = ''
+
+        try:
+            one_to_one_lecture = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+                                                       use=USE)
+            member_lecture_ing_color_cd = one_to_one_lecture.ing_color_cd
+            member_lecture_end_color_cd = one_to_one_lecture.end_color_cd
+            member_lecture_ing_font_color_cd = one_to_one_lecture.ing_font_color_cd
+            member_lecture_end_font_color_cd = one_to_one_lecture.end_font_color_cd
+        except ObjectDoesNotExist:
+            member_lecture_ing_color_cd = ''
+            member_lecture_end_color_cd = ''
+            member_lecture_ing_font_color_cd = ''
+            member_lecture_end_font_color_cd = ''
+
         # OFF 반복 일정 정보 불러오기
         off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=OFF_SCHEDULE_TYPE)
 
@@ -280,6 +298,10 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'repeat_time_duration': member_repeat_schedule_info.time_duration,
                 'repeat_state_cd': member_repeat_schedule_info.state_cd,
                 'reg_dt': str(member_repeat_schedule_info.reg_dt),
+                'lecture_ing_color_cd': member_lecture_ing_color_cd,
+                'lecture_end_color_cd': member_lecture_end_color_cd,
+                'lecture_ing_font_color_cd': member_lecture_ing_font_color_cd,
+                'lecture_end_font_color_cd': member_lecture_end_font_color_cd,
                 'member_id': member_repeat_schedule_info.member_ticket_tb.member.member_id,
                 'member_name': member_repeat_schedule_info.member_ticket_tb.member.name,
                 'member_profile_url': member_profile_url
