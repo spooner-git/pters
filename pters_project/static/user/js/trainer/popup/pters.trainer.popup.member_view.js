@@ -450,7 +450,8 @@ class Member_view{
         }
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
 
                 //data_to_send의 선택날짜가 빈값이라면 1986.02.24로 셋팅한다.
                 let year = this.data.birth == null ? 1986 : this.data.birth.year; 

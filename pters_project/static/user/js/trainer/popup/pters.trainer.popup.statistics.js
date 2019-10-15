@@ -528,7 +528,8 @@ class Statistics{
             },
             user:{text:"직접 입력", callback:()=>{  
                     layer_popup.close_layer_popup();
-                    layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+                    let root_content_height = $root_content.height();
+                    layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                         date_selector = new TwoDateSelector('#wrapper_popup_date_selector_function', null, {myname:'twodateselector', title:'날짜 선택', data:null, callback_when_set: (selected_data)=>{
                             let date_1 = `${selected_data.data1.year}-${selected_data.data1.month}`;
                             let date_2 = `${selected_data.data2.year}-${selected_data.data2.month}`;
