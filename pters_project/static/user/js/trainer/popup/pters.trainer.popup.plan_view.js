@@ -168,6 +168,7 @@ class Plan_view{
         let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="plan_view_popup.upper_left_menu();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
+                            <img src="/static/common/icon/icon_program_black.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(2);">
                             <img src="/static/common/icon/icon_delete_black.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(0);">
                             <img src="/static/common/icon/icon_attend_check_black.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};">
                         </span>`;
@@ -532,6 +533,19 @@ class Plan_view{
                             });
                         }
                     });
+                });
+            },
+            ()=>{ 
+                let root_content_height = $root_content.height();
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DRAWING_BOARD, 100*315/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                    let data = {    title:"일정 완료 서명",
+                                    description:"완료 서명을 입력해주세요.",
+                                    width: $root_content.width() <= 800 ? $root_content.width() : MAX_WIDTH,
+                                    height:250,
+                                    color:{pencil:"#ffffff", paper:"#282828"},
+                                    border:0
+                                };
+                    drawing_board = new DrawingBoard('#wrapper_box_drawing_board', "drawing_board", data);
                 });
             }    
         ];

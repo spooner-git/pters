@@ -3559,3 +3559,204 @@ class BoardReader{
         this.clear();
     }
 }
+
+
+class DrawingBoard{
+    constructor(install_target, instance, data){
+        this.target = {install: install_target, canvas: "#canvas"};
+        this.instance = instance;
+        this.external_data = data;
+
+        this.data = {
+            title:null,
+            description:null,
+            color:{
+                pencil:"#282828",
+                paper:"#ffffff"
+            },
+            width:"320",
+            height:"200",
+            border:0
+        }
+        this.user_input_status = OFF;
+
+        this.pos = {
+            drawable : false,
+            x: -1,
+            y: -1
+        };
+        
+        this.ctx;
+
+        //유저가 터치인지 마우스 사용인지 알아낸다
+        this.touch_or_mouse = "";
+
+        this.set_initial_data();
+        this.init();
+    }
+
+    init(){
+        this.render();
+        this.init_canvas();
+    }
+
+    init_canvas(){
+        let canvas = document.querySelector(this.target.canvas);
+        this.ctx = canvas.getContext("2d");
+        this.ctx.clearRect(0, 0, this.data.width, this.data.height);
+        canvas.addEventListener("mousedown", this.listener);
+        canvas.addEventListener("mousemove", this.listener);
+        canvas.addEventListener("mouseup", this.listener);
+        canvas.addEventListener("mouseout", this.listener);
+        canvas.addEventListener("touchstart", this.listener);
+        canvas.addEventListener("touchmove", this.listener);
+        canvas.addEventListener("touchend", this.listener);
+        canvas.addEventListener("touchcancel", this.listener);
+    }
+
+    set_initial_data(){
+        for(let item in this.external_data){
+            if(this.external_data[item] != undefined){
+                this.data[item] = this.external_data[item];
+            }
+        }
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_x_black.png" onclick="${this.instance}.close();" class="obj_icon_prev"></span>`;
+        let top_center = `<span class="icon_center">
+                            <span id="">${this.data.title}</span>
+                          </span>`;
+        let top_right = `<span class="icon_right">
+                            <span style="color:#fe4e65;font-weight: 500;" onclick="${this.instance}.upper_right_menu();">완료</span>
+                        </span>`;
+        let content =   `<section>${this.dom_assembly()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_assembly (){
+        let title = `<div style="padding:20px;">`+ this.dom_row_title() + `</div>`;
+        let content = `<div>` + this.dom_row_content() + `</div>`;
+
+        let html =  content;
+
+        return html;
+    }
+
+    dom_row_title(){
+        let html = `<div style="font-size:20px;font-weight:bold;color:#3d3b3b;letter-spacing:-0.9px;">
+                        ${this.data.title}
+                    </div>`;
+        return html;
+    }
+
+    dom_row_content(){
+        let html = `<div style="position:relative;width:${this.data.width}px;height:${this.data.height}px;border:1px solid ${this.user_input_status == ON ? '#fe4e65' : '#cccccc'}">
+                        <div style="position:absolute;width:100%;top:0;left:0;text-align:center;font-size:13px;font-weight:normal;letter-spacing:-0.6px;opacity:0.8;color:${this.data.color.pencil};">${this.data.description}</div>
+                        <canvas id="canvas" width="${this.data.width}" height="${this.data.height}" style="border:${this.data.border};background-color:${this.data.color.paper}">
+                        </canvas>
+                    </div>`;
+        return html;
+    }
+
+    request_list (callback){
+
+    }
+
+    listener(event){
+        let self = drawing_board;
+        switch(event.type){
+            case "touchstart":
+                self.touch_or_mouse = "touch";
+                self.initDraw(event);
+                self.user_input_status = ON;
+                break;
+    
+            case "touchmove":
+                if(self.pos.drawable){
+                    self.draw(event);
+                }
+                break;
+            case "touchend":
+            case "touchcancel":
+                self.finishDraw();
+                break;
+    
+            case "mousedown":
+                self.initDraw(event);
+                self.user_input_status = ON;
+                break;
+            case "mousemove":
+                if(self.pos.drawable){
+                    self.draw(event);
+                }
+                break;
+            case "mouseup":
+            case "mouseout":
+                self.finishDraw();
+                break;
+        }
+    }
+    
+    initDraw(event){
+        this.ctx.strokeStyle = this.data.color.pencil;
+        this.ctx.beginPath();
+        this.pos.drawable = true;
+        var coors = this.getPosition(event);
+        this.pos.x = coors.X;
+        this.pos.y = coors.Y;
+        this.ctx.moveTo(this.pos.x, this.pos.y);
+    }
+    
+    draw(event){
+        this.ctx.strokeStyle = this.data.color.pencil;
+        event.preventDefault();
+        var coors = this.getPosition(event);
+        this.ctx.lineTo(coors.X, coors.Y);
+        console.log("line_to", coors.X, coors.Y)
+        this.pos.x = coors.X;
+        this.pos.y = coors.Y;
+        this.ctx.stroke();
+    }
+    
+    finishDraw(){
+        this.pos.drawable = false;
+        this.pos.x = -1;
+        this.pos.y = -1;
+    }
+    
+    getPosition(event){
+        var x;
+        var y;
+        // var offset_for_canvas__ = $(this.target.canvas).offset();
+        var offset_for_canvas__ = $(this.target.canvas).offset();
+        if(this.touch_or_mouse=="touch"){
+            x = event.touches[0].pageX - offset_for_canvas__.left;
+            y = event.touches[0].pageY - offset_for_canvas__.top;
+        }else{
+            x = event.pageX - offset_for_canvas__.left;
+            y = event.pageY - offset_for_canvas__.top;
+        }
+        return {X:x, Y:y};
+    }
+    
+    close(){
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+
+    upper_right_menu(){
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
+
