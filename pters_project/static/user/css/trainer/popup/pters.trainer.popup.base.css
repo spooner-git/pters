@@ -63,14 +63,15 @@
                float: right;
                font-size: 14px;
                height: 60px;
-               cursor: pointer;
             }
             .popup_mobile .wrapper_top .icon_right > img{
                 padding: 18px 16px 18px 18px;
+                cursor: pointer;
             }
             .popup_mobile .wrapper_top .icon_right > span{
                 padding: 18px 16px 18px 18px;
                 line-height: 60px;
+                cursor: pointer;
             }
             .popup_mobile .wrapper_top .icon_left{
                 float: left;
