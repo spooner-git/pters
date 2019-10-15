@@ -680,7 +680,7 @@ input:disabled{
 	/*padding-bottom: 12px;*/
 	letter-spacing: -0.6px;
 	vertical-align: middle;
-
+	cursor: pointer;
 }
 .list_sort_select_wrap{
 	float: right;
@@ -691,6 +691,7 @@ input:disabled{
 	vertical-align: middle;
 	color: #b8b4b4;
 	text-align: right;
+	cursor: pointer;
 }
 .list_sort_select_wrap select{
 	-webkit-appearance: none;

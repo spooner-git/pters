@@ -31,20 +31,7 @@
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 23px;
-	}
-	.lecture_tools_wrap > .search_lecture > .search_input{
-		position: absolute;
-		display: none;
-		-webkit-appearance: none;
-		width: 200%;
-		height: 50px;
-		left: -200%;
-		border: 1px solid #cccccc;
-		background-color: #ffffff;
-		border-radius: 0;
-		transform: translateY(-50px);
-		box-sizing: border-box;
-		transition: 0.25s;
+		cursor: pointer;
 	}
 	.lecture_tools_wrap > .add_lecture{
 		display: table-cell;
@@ -53,6 +40,7 @@
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 23px;
+		cursor: pointer;
 	}
 	/* .lecture_tools_wrap > .swap_list{
 		display: table-cell;

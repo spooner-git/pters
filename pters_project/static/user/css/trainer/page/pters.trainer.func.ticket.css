@@ -37,6 +37,7 @@
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 23px;
+		cursor: pointer;
 	}
 	.ticket_tools_wrap > .add_ticket{
 		display: table-cell;
@@ -45,6 +46,7 @@
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 23px;
+		cursor: pointer;
 	}
 	.ticket_tools_wrap > .swap_list{
 		/* display: table-cell;

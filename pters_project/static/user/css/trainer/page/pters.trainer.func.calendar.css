@@ -36,6 +36,7 @@
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 24px;
+		cursor: pointer;
 	}
 	.cal_tools_wrap > .go_today{
 		display: table-cell;
@@ -44,6 +45,7 @@
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 24px;
+		cursor: pointer;
 	}
 	.cal_pc_tools_wrap{
 		float: right;
@@ -53,6 +55,14 @@
 		.cal_pc_tools_wrap{
 			display: none;
 		}
+	}
+	.cal_upper_box > .cal_date_display{
+		display:inline-block;
+		width:245px;
+		font-size:23px;
+		font-weight:bold;
+		color:#3b3d3d;
+		cursor: pointer;
 	}
 	.cal_upper_box .swap_cal{
 		display: inline-block;

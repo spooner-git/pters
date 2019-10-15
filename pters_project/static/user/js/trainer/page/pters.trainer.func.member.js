@@ -318,7 +318,7 @@ class Member {
                 ,
                 initial_page:` <div>
                                     <div id="member_display_panel"></div>
-                                    <div id="member_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:calc(100% - 68px); padding-top:6px; padding-bottom:20px;"></div>
+                                    <div id="member_content_wrap" class="pages"></div>
                                 </div>`
             }
         );

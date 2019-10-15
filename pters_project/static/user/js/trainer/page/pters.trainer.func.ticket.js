@@ -67,7 +67,7 @@ class Ticket{
                         <div id="ticket_display_panel">
                             ${this.dom_assembly_toolbox()}
                         </div>
-                        <div id="ticket_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:calc(100% - 68px);padding:0 16px;box-sizing:border-box;">
+                        <div id="ticket_content_wrap" class="pages" style="">
                             ${this.dom_assembly_content()}
                         </div>
                     </div>`;
@@ -195,7 +195,7 @@ class Ticket{
                         </div>
                     </div>
                     <div class="search_bar"></div>
-                    <div class="ticket_bottom_tools_wrap">
+                    <div class="ticket_bottom_tools_wrap" style="padding: 6px 16px;">
                         <div class="list_type_tab_wrap">
                             <div onclick="${this.instance}.switch_type('ing');" class="${this.list_status_type == "ing" ? "tab_selected": ""}">활성화</div>
                                 <div style="width: 2px; height: 12px;background-color: #f5f2f3; margin:8px;"></div>
@@ -213,7 +213,8 @@ class Ticket{
                             </select>-->
                             ${this.sort_value_text} <img src="/static/common/icon/icon_arrow_expand_light_grey.png" style="width:24px; height:24px; vertical-align: middle;">
                         </div>
-                    </div> `;
+                    </div> 
+                    `;
         return html;
     }
 
