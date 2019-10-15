@@ -100,10 +100,14 @@ class Pters_pass_shop{
     
     dom_assembly_content(){
         let html =  '<article class="obj_input_box_full">' +
-                        this.dom_row_pters_pass_standard() + 
-                        this.dom_row_pters_pass_standard_explain() +
-                        this.dom_row_pters_pass_light() + 
-                        this.dom_row_pters_pass_light_explain() +
+                        '<div class="pters_pass_product_wrapper">' +
+                            this.dom_row_pters_pass_standard() + 
+                            this.dom_row_pters_pass_standard_explain() +
+                        '</div>' +
+                        '<div class="pters_pass_product_wrapper">' +
+                            this.dom_row_pters_pass_light() + 
+                            this.dom_row_pters_pass_light_explain() +
+                        '</div>' +
                     '</article>';
 
         return html;
@@ -115,7 +119,7 @@ class Pters_pass_shop{
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = "구매 9,900원";
-        let style = {"color":"#fe4e65", "font-weight":"bold"};
+        let style = {"color":"#fe4e65", "font-weight":"bold", "border-bottom":"1px solid #e8e8e8"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
                 pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement');});
@@ -126,7 +130,7 @@ class Pters_pass_shop{
     }
 
     dom_row_pters_pass_standard_explain(){
-        let html = `<article class="pters_pass_explain_wrapper" style="background-color:#fe4e6514">
+        let html = `<article class="pters_pass_explain_wrapper">
                         <div class="product_explain_row">
                             <div class="product_explain_row_title">일정</div>
                             <div class="product_explain_row_detail">매일 오늘 기준 전후 1년 등록, 취소</div>
@@ -165,7 +169,7 @@ class Pters_pass_shop{
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = "구매 4,400원";
-        let style = {"color":"#22a900", "font-weight":"bold"};
+        let style = {"color":"#22a900", "font-weight":"bold", "border-bottom":"1px solid #e8e8e8"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
                 pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement');});
@@ -176,7 +180,7 @@ class Pters_pass_shop{
     }
 
     dom_row_pters_pass_light_explain(){
-        let html = `<article class="pters_pass_explain_wrapper" style="background-color:#22a90014">
+        let html = `<article class="pters_pass_explain_wrapper">
                         <div class="product_explain_row">
                             <div class="product_explain_row_title">일정</div>
                             <div class="product_explain_row_detail">매일 오늘 기준 전후 1개월 등록, 취소</div>

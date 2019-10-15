@@ -147,22 +147,24 @@ class Member {
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${popup_style}, {'member_id':${member_id}}, ()=>{
                 member_view_popup = new Member_view('.popup_member_view', ${member_id}, 'member_view_popup');});`;
             let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : '#a3a0a0'}">
-                            <div class="member_data_l">
-                                <img src="${data.member_profile_url}">
-                            </div>                
-                            <div class="member_data_c">
-                                <div class="member_name">${member_name}</div>
-                                <div class="member_counts">
-                                    ${member_counts_text}
+                            <div class="member_data_wrapper">
+                                <div class="member_data_l">
+                                    <img src="${data.member_profile_url}">
+                                </div>                
+                                <div class="member_data_c">
+                                    <div class="member_name">${member_name}</div>
+                                    <div class="member_counts">
+                                        ${member_counts_text}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="member_data_r">
-                                <div class="member_phone" onclick="event.stopPropagation();location.href='tel:${member_phone}'" ${member_phone == "None" ? "style='display:none;'" : ""}>
-                                    <img src="/static/common/icon/icon_gap_black.png" class="icon_contact">
-                                </div>
-                                <div class="member_sms" onclick="event.stopPropagation();location.href='sms:${member_phone}'" ${member_phone== "None" ? "style='display:none;'" : ""}>
+                                <div class="member_data_r">
+                                    <div class="member_phone" onclick="event.stopPropagation();location.href='tel:${member_phone}'" ${member_phone == "None" ? "style='display:none;'" : ""}>
+                                        <img src="/static/common/icon/icon_gap_black.png" class="icon_contact">
+                                    </div>
+                                    <div class="member_sms" onclick="event.stopPropagation();location.href='sms:${member_phone}'" ${member_phone== "None" ? "style='display:none;'" : ""}>
 
-                                    <img src="/static/common/icon/icon_gap_black.png" class="icon_contact">
+                                        <img src="/static/common/icon/icon_gap_black.png" class="icon_contact">
+                                    </div>
                                 </div>
                             </div>
                         </article>`;

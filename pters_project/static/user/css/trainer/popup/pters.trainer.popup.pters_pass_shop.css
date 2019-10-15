@@ -26,6 +26,13 @@
 	/* padding-top: 20px; */
 }
 
+.popup_pters_pass_shop .pters_pass_product_wrapper{
+	border: 1px solid #cccccc;
+	border-radius: 10px;
+	padding: 0 15px;
+	margin:20px 0;
+}
+
 .popup_pters_pass_shop .pters_pass_explain_wrapper{
 	font-size:13px;
 	padding:10px 10px 20px 10px;

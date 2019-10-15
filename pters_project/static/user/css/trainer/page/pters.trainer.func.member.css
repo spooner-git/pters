@@ -119,14 +119,16 @@
 .member_wrapper:active{
 	background-color: #e8e8e8;
 }
-
+.member_data_wrapper{
+	display: flex;
+}
 .member_data_l{
-	 display: table-cell;
-	/*display: none;*/
+	/* display: table-cell;
 	width: 36px;
 	text-align: left;
-	vertical-align: middle;
+	vertical-align: middle; */
 	padding-right: 10px;
+	flex-basis: 36px;
 }
 	.member_data_l > img{
 		width: 36px;
@@ -134,8 +136,12 @@
 		border-radius: 50%;
 	}
 .member_data_c{
-	display: table-cell;
-	width: auto;
+	/* display: table-cell;
+	width: auto; */
+	flex: 1 1 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .member_data_r{
 	/* display: table-cell; */
@@ -148,6 +154,9 @@
 	font-size: 16px;
 	font-weight: 500;
 	letter-spacing: -0.8px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .member_counts{
 	font-size: 12px;
@@ -157,6 +166,9 @@
 	letter-spacing: -0.6px;
 	height: 20px;
 	line-height: 20px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .member_phone, .member_sms{
 	display: table-cell;
