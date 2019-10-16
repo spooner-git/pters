@@ -425,7 +425,7 @@ def update_schedule_logic(request):
                                                class_type_name + ' - 수업 알림',
                                                request.user.first_name + '님이 '
                                                + log_detail_info
-                                               + ' [' + lecture_name + '] 수업을 수정했습니다')
+                                               + ' [' + lecture_name + '] 수업을 변경했습니다')
 
     if error is not None:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
