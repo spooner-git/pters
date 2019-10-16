@@ -30,6 +30,10 @@ class Statistics{
 
         this.target_date_start = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, -2);
         this.target_date_end = `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`;
+        let inspect = pass_inspector.statistics(this.target_date_start, this.target_date_end);
+        if(inspect.barrier == BLOCKED){
+            this.target_date_start = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, (1 - inspect.limit_num) );
+        }
 
         this.init();
         // this.set_initial_data();

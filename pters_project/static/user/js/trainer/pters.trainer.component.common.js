@@ -22,35 +22,6 @@ class CComponent{
         return html;
     }
 
-    //추가 페이지들에서 자주 사용되는 row 스타일
-    // static create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick){
-    //     // if(icon == null){
-    //     //     icon = '/static/common/icon/icon_dissatisfied.png';
-    //     // }
-    //     if(icon == NONE){
-    //         icon = '/static/common/icon/icon_gap_black.png';
-    //     }
-        
-    //     let html = `<li class="create_row" id="c_r_${id}" style="${CComponent.data_to_style_code(style)}">
-    //                     <div class="obj_table_raw">
-    //                         <div class="cell_title">
-    //                             ${icon == DELETE ? "" : `<img src="${icon}">`} 
-    //                             <div class="cell_text">${title}</div>
-    //                         </div>
-    //                         <div class="cell_icon" ${icon_r_visible == NONE ? "style='display:none'": ''}>
-    //                             <span class="cell_text" ${icon_r_visible == "" || null ? 'style="display:none"' : ''}>${icon_r_text}</span>
-    //                             <img src="/static/common/icon/icon_arrow_r_small_black.png" ${icon_r_visible == HIDE ? 'style="display:none"' : ''}>
-    //                         </div>
-    //                     </div>
-    //                 </li>`;
-
-
-    //     $(document).off('click', `#c_r_${id}`).on('click', `#c_r_${id}`, function(e){
-    //         onclick();
-    //     });
-    //     return html;
-    // }
-
     static create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick){
         if(icon == NONE){
             icon = '/static/common/icon/icon_gap_black.png';
@@ -59,7 +30,7 @@ class CComponent{
         let html = `<li class="create_row" id="c_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div style="display:flex;">
                             <div class="cell_title" style="${icon == DELETE ? 'display:none' : ''}">
-                                <img src="${icon}">
+                                <img src="${icon == DELETE ? '' : icon}">
                             </div>
                             <div class="cell_content">
                                 <div class="cell_text">${title}</div>
