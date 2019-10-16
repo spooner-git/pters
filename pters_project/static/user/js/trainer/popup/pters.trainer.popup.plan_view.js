@@ -282,6 +282,7 @@ class Plan_view{
         for(let i=0; i<length; i++){
             let member_id = this.data.member_id[i];
             let member_name = this.data.member_name[i];
+            let member_schedule_id = this.data.member_schedule_id[i];
             let icon_button_style = {"padding":"3px 1%", "width":"30%", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500", "text-align":"center"};
             let state = this.data.member_schedule_state[i];
             let state_icon_url;
@@ -306,9 +307,14 @@ class Plan_view{
                         }},
                         sign_image:{text:"출석 서명 확인", callback:()=>{
                             layer_popup.close_layer_popup();
-                            show_error_message("완료 서명 여기에");
+                            show_error_message(
+                                `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${member_schedule_id}.png" style="width:100%;filter:invert(1);">`
+                            );
                         }}
                     };
+                    if(state != SCHEDULE_FINISH){
+                        delete user_option.sign_image;
+                    }
 
                     let options_padding_top_bottom = 16;
                     let button_height = 8 + 8 + 52;
@@ -513,20 +519,22 @@ class Plan_view{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ATTEND, 100, popup_style, null, ()=>{
                     member_attend = new Member_attend('.popup_member_attend', this.schedule_id, (set_data)=>{
-                        console.log(set_data)
+                        console.log("set_data", set_data)
                         //출석체크 팝업에서 완료버튼을 눌렀을때 할 행동
                         if(this.data.schedule_type == 1){
                             let state_cd = set_data[null].state_cd;
                             let send_data = {"schedule_id":this.schedule_id, "state_cd":state_cd, "upload_file":set_data[null].image};
                             Plan_func.status(send_data, ()=>{
-                                Plan_func.upload_sign(send_data, ()=>{
-                                    this.init();
-                                    try{
-                                        current_page.init();
-                                    }catch(e){}
-                                });
+                                if(state_cd == SCHEDULE_FINISH){
+                                    Plan_func.upload_sign(send_data, ()=>{
+                                        this.init();
+                                        try{
+                                            current_page.init();
+                                        }catch(e){}
+                                    });
+                                }
                             });
-                            
+                            return;
                         }
                         let data_to_send = [];
                         for(let member in set_data){
@@ -534,7 +542,8 @@ class Plan_view{
                             let state_cd = set_data[member].state_cd;
                             let image = set_data[member].image;
                             let member_id_index = this.data.member_id.indexOf(member_id);
-                            if(this.data.member_schedule_state[member_id_index] != state_cd){
+                            //기존대비 상태가 변한 것들만 데이터를 바꿔주기 위함 (결석,완료등 상태가 변하거나, 사인 이미지가 변했을때)
+                            if(this.data.member_schedule_state[member_id_index] != state_cd || String(image).split(':')[0] != "https"){
                                 let send_data = {"schedule_id":this.data.member_schedule_id[member_id_index], "state_cd":state_cd, "upload_file":image};
                                 data_to_send.push(send_data);
                             }
@@ -543,7 +552,24 @@ class Plan_view{
                         let ajax_send_order = 0;
                         for(let i=0; i<data_to_send.length; i++){
                             Plan_func.status(data_to_send[i], ()=>{
-                                Plan_func.upload_sign(data_to_send[i], ()=>{
+                                //스케쥴을 완료하는 것이면 sing데이터도 보낸다.
+                                if(data_to_send[i].state_cd == SCHEDULE_FINISH){
+                                    if(data_to_send[i].upload_file != null){
+                                        Plan_func.upload_sign(data_to_send[i], ()=>{
+                                            ajax_send_order++; // for문이 돌때마다 화면을 재렌더 하지 않고, 마지막에만 렌더하도록
+                                            if(ajax_send_order == length){
+                                                try{
+                                                    current_page.init();
+                                                }catch(e){}
+                                                try{
+                                                    this.init();
+                                                }catch(e){}
+                                            }
+                                        });
+                                    }
+                                    
+                                //스케쥴을 완료하는 것이 아니라, 결석, 미처리로 바꿀때는 sign데이터를 보내지 않는다.
+                                }else{
                                     ajax_send_order++; // for문이 돌때마다 화면을 재렌더 하지 않고, 마지막에만 렌더하도록
                                     if(ajax_send_order == length){
                                         try{
@@ -553,30 +579,12 @@ class Plan_view{
                                             this.init();
                                         }catch(e){}
                                     }
-                                });
+                                }
                             });
                         }
                     });
                 });
-            },
-            // ()=>{  
-            //     //사인창 열기
-            //     let root_content_height = $root_content.height();
-            //     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DRAWING_BOARD, 100*315/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
-            //         let data = {    title:"일정 완료 서명",
-            //                         description:"완료 서명을 입력해주세요.",
-            //                         // width: $root_content.width() <= 800 ? $root_content.width() : MAX_WIDTH,
-            //                         width: $root_content.width() <= 500 ? $root_content.width() : 500,
-            //                         height:250,
-            //                         color:{pencil:"#ffffff", paper:"#282828"},
-            //                         border:0,
-            //                         callback:(data)=>{
-            //                             show_error_message(`<img src="${data}" style="width:100%;filter:invert(1)">`);
-            //                         }
-            //                     };
-            //         drawing_board = new DrawingBoard('#wrapper_box_drawing_board', "drawing_board", data);
-            //     });
-            // }    
+            }   
         ];
 
         user_option[number]();
@@ -608,7 +616,7 @@ class Plan_view{
         let data_to_send = {"schedule_ids[]":schedule_ids, "start_dt":start_dt, "end_dt":end_dt};
 
         let url = '/schedule/update_schedule/';
-        Plan_func.update(url, data_to_send, ()=>{ //일정을 새로 등록한다.
+        Plan_func.update(url, data_to_send, ()=>{
             try{
                 current_page.init();
             }catch(e){}

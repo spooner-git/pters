@@ -3723,7 +3723,6 @@ class DrawingBoard{
         event.preventDefault();
         var coors = this.getPosition(event);
         this.ctx.lineTo(coors.X, coors.Y);
-        console.log("line_to", coors.X, coors.Y)
         this.pos.x = coors.X;
         this.pos.y = coors.Y;
         this.ctx.stroke();

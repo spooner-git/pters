@@ -6,7 +6,7 @@ class Member_attend{
         this.received_data;
         this.check_entire = false;
         this.data = {
-            id:{name:null, member_id:null, state_cd:null}
+            id:{name:null, member_id:null, state_cd:null, image:null, schedule_id:null}
         };
         this.lecture_max_num = null;
         this.lecture_current_num = null;
@@ -24,17 +24,37 @@ class Member_attend{
         let length = data.lecture_schedule_data.length;
         let new_data = {};
         for(let i=0; i<length; i++){
+            let member_schedule_id = data.lecture_schedule_data[i].schedule_id;
             let member_id = data.lecture_schedule_data[i].member_id;
             let state = data.lecture_schedule_data[i].state_cd;
             let member_name = data.lecture_schedule_data[i].member_name;
-            new_data[member_id] = {name:member_name, member_id:member_id, state_cd:state, image:null};
+            let image_url = null;
+            let image_url_to_check = `https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${member_schedule_id}.png`;
+            if(this.check_image_link(image_url_to_check) != false){
+                console.log("이미지 있음")
+                image_url = image_url_to_check;
+            }
+            if(state != SCHEDULE_FINISH){
+                image_url = null;
+            }
+            new_data[member_id] = {name:member_name, member_id:member_id, state_cd:state, image:image_url};
             //서버로부터 image를 받아오면 image를 null이 아니라 image 주소로
             if(state != SCHEDULE_FINISH){
                 this.check_entire = false;
             }
         }
         if(data.schedule_type == 1){
-            new_data[null] = {name:data.member_name, state_cd:data.state_cd, member_id:null, image:null};
+            let state = data_.schedule_info[0].state_cd;
+            let image_url = null;
+            let image_url_to_check = `https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${data.schedule_id}.png`;
+            if(this.check_image_link(image_url_to_check) != false){
+                console.log("이미지 있음")
+                image_url = image_url_to_check;
+            }
+            if(state != SCHEDULE_FINISH){
+                image_url = null;
+            }
+            new_data[null] = {name:data.member_name, state_cd:data.state_cd, member_id:null, image:image_url};
             //서버로부터 image를 받아오면 image를 null이 아니라 image 주소로
         }
 
@@ -105,8 +125,9 @@ class Member_attend{
             let checked_attend = data.state_cd == "PE" ? 1 : 0;
             let location = 'member_attend';
             let member_id = data.member_id;
+            let image = data.image;
             let tag = "";
-            if(data.image != null){
+            if(image != null && this.check_image_link(image) != false && data.state_cd == SCHEDULE_FINISH){
                 tag = '<div style="position:absolute">' + 
                         '<div style="float:left;background-color:#fe4e65;border:1px solid #fe4e65;border-radius:5px;color:#ffffff;width:20px;height:13px;line-height:13px;font-size:9px;font-weight:normal;margin-right:3px;">서명</div>'+
                     '</div>';
@@ -146,6 +167,17 @@ class Member_attend{
         }
 
         return html_to_join.join('');
+    }
+
+    check_image_link(url){
+        let check_status = true;
+        let dom = document.createElement('img');
+        dom.setAttribute('src', url);
+        
+        dom.onerror = function(){
+            check_status = false;
+            return check_status;
+        };
     }
 
     request_list (callback){
