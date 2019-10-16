@@ -2862,6 +2862,9 @@ class RepeatSelector{
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_day_select', 100, popup_style, null, ()=>{
                 day_select = new DaySelector('#wrapper_box_day_select', this, 7, (set_data)=>{
                     this.day = set_data.day;
+                    if(set_data.day.length > 0){
+                        this.power = ON;
+                    }
                 });
             });
         });
@@ -2878,12 +2881,7 @@ class RepeatSelector{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*320/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
-                let year = this.target_instance.date == null ? this.dates.current_year : this.target_instance.date.year; 
-                let month = this.target_instance.date == null ? this.dates.current_month : this.target_instance.date.month;
-                let date = this.target_instance.date == null ? this.dates.current_date : this.target_instance.date.date;
-                
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'repeat_end_date', title:'반복 종료일', data:{year:year, month:month, date:date},
-                                                                                                min:this.data_from_external,
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'repeat_end_date', title:'반복 종료일', min:this.data_from_external,
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     this.end_date = object.data; 
                                                                                                     this.power = ON;
@@ -2897,6 +2895,15 @@ class RepeatSelector{
         if(this.data.power == OFF){
             this.data.day = [];
             this.data.repeat_end = {year:null, month:null, date:null};
+        }else{
+            if(this.data.day.length == 0){
+                show_error_message("반복 요일을 선택 해주세요.");
+                return false;
+            }
+            if(this.data.repeat_end.year == null){
+                show_error_message("반복 종료일을 선택 해주세요.");
+                return false;
+            }
         }
 
         this.callback(this.data);
@@ -2979,7 +2986,21 @@ class DaySelector{
         // callback();
     }
 
+    arrange_day_names(){
+        // ["TUE", "SUN", "MON", ];
+        let days = ["MON", "TUE", "WED", "THS", "FRI", "SAT", "SUN"];
+        let news = [];
+        for(let i=0; i<days.length; i++){
+            let search = this.data.day.indexOf(days[i]);
+            if(search != -1){
+                news.push(days[i]);
+            }
+        }
+        return news;
+    }
+
     upper_right_menu(){
+        this.data.day = this.arrange_day_names();
         this.callback(this.data);
         layer_popup.close_layer_popup();
         this.clear();
