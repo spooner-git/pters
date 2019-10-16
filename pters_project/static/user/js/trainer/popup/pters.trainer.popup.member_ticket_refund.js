@@ -156,12 +156,7 @@ class Member_ticket_refund{
         let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
-            if(user_input_data > this.data.member_ticket_price){
-                show_error_message("환불금액은 등록금액보다 클 수 없습니다.");
-                this.data.refund_price = null;
-                this.render_content();
-                return false;
-            }
+            
             this.data.refund_price = user_input_data;
             this.render_content();
         }, pattern, pattern_message, required);
@@ -195,6 +190,7 @@ class Member_ticket_refund{
             try{
                 member_view_popup.init();
                 member_ticket_history.init();
+                member_ticket_modify.data.status = "RF";
                 member_ticket_modify.init();
             }catch(e){}
             layer_popup.close_layer_popup();
@@ -206,6 +202,20 @@ class Member_ticket_refund{
     }
 
     check_before_send(){
+        if(this.data.member_ticket_id == null){
+            return false;
+        }else if(this.data.refund_price == null){
+            show_error_message("환불 금액을 입력해주세요");
+            return false;
+        }else if(this.data.refund_price > this.data.member_ticket_price){
+            show_error_message("환불금액은 등록금액보다 클 수 없습니다.");
+            this.data.refund_price = null;
+            this.render_content();
+            return false;
+        }else if(this.data.refund_date == null){
+            return false;
+        }
+
         let forms = document.getElementById(`${this.form_id}`);
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
