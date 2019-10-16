@@ -332,6 +332,16 @@ class Statistics{
         let chart_data = statistics_popup.data.chart.member.reg;
         let data = new google.visualization.arrayToDataTable(chart_data);
 
+        if(chart_data[1][1] == 0 && chart_data[2][1] == 0){
+            document.getElementById('member_reg_graph').innerHTML = 
+            `<div>
+                <div style="font-size:13px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;padding:40px;">
+                    데이터가 없습니다.
+                </div>
+            </div>`;
+            return;
+        }
+
         // Set chart options
         let options = {'title':"회원 등록 현황",
                         // 'width':width,
@@ -351,13 +361,23 @@ class Statistics{
         let chart_data = statistics_popup.data.chart.member.refund;
         let data = new google.visualization.arrayToDataTable(chart_data);
 
+        if(chart_data[1][1] == 0 && chart_data[2][1] == 0){
+            document.getElementById('member_refund_graph').innerHTML = 
+            `<div>
+                <div style="font-size:13px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;padding:40px;">
+                    데이터가 없습니다.
+                </div>
+            </div>`;
+            return;
+        }
+
         // Set chart options
         let options = {'title':"회원 환불 현황",
                         // 'width':width,
                         // 'height':height,
                         colors:['#fe4e65', '#5d91f7'],
                         titlePosition:'none',
-                        'chartArea':{width:'85%',height:'85%'},
+                        'chartArea':{width:'85%', height:'85%'},
                         'legend':{position:'right', 'alignment':'center'},
                         sliceVisibilityThreshold:0,
                         pieSliceText:'value' };
