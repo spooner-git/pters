@@ -233,7 +233,10 @@ class Ticket_view{
         let icon = '/static/common/icon/icon_lecture_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = CComponent.text_button ('ticket_lecture_list_view', "수업 목록", null, ()=>{
-            //티켓에 포함될 수업 선택
+
+        });
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, null, ()=>{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, {'title':'수업'}, (set_data)=>{
@@ -241,10 +244,6 @@ class Ticket_view{
                     this.send_data();
                 });
             });
-        });
-        let style = null;
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-
         });
         return html;
     }

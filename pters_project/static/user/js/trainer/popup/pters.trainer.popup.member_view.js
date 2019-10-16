@@ -410,7 +410,6 @@ class Member_view{
     }
 
     dom_row_member_phone_input(){
-        let unit = '';
         let id = 'member_phone_view';
         let title = this.data.phone == null || this.data.phone == 'None' ? '' : this.data.phone;
         let placeholder = '휴대폰 번호';
@@ -450,7 +449,9 @@ class Member_view{
         }
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
-            if(disabled){
+
+            if(disabled == true){
+                show_error_message("수강 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다.");
                 return false;
             }
             let root_content_height = $root_content.height();
@@ -486,10 +487,12 @@ class Member_view{
             disabled = true;
         }
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            //행을 클릭했을때 실행할 내용
-            if(disabled){
+
+            if(disabled == true){
+                show_error_message("수강 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다.");
                 return false;
             }
+
             let user_option = {
                                 male:{text:"남성", callback:()=>{this.sex = "M";this.send_data();layer_popup.close_layer_popup();}},
                                 female:{text:"여성", callback:()=>{this.sex = "W";this.send_data();layer_popup.close_layer_popup();}}

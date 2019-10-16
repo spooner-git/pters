@@ -519,11 +519,15 @@ class Plan_view{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ATTEND, 100, popup_style, null, ()=>{
                     member_attend = new Member_attend('.popup_member_attend', this.schedule_id, (set_data)=>{
-                        console.log("set_data", set_data)
                         //출석체크 팝업에서 완료버튼을 눌렀을때 할 행동
+                        //개인일정 일때
                         if(this.data.schedule_type == 1){
                             let state_cd = set_data[null].state_cd;
-                            let send_data = {"schedule_id":this.schedule_id, "state_cd":state_cd, "upload_file":set_data[null].image};
+                            let image = set_data[null].image;
+                            if(String(image).split(':')[0] == "https"){
+                                image = null;
+                            }
+                            let send_data = {"schedule_id":this.schedule_id, "state_cd":state_cd, "upload_file":image};
                             Plan_func.status(send_data, ()=>{
                                 if(state_cd == SCHEDULE_FINISH){
                                     Plan_func.upload_sign(send_data, ()=>{
@@ -536,6 +540,8 @@ class Plan_view{
                             });
                             return;
                         }
+
+                        //그룹일정 일때
                         let data_to_send = [];
                         for(let member in set_data){
                             let member_id = member;
@@ -543,18 +549,21 @@ class Plan_view{
                             let image = set_data[member].image;
                             let member_id_index = this.data.member_id.indexOf(member_id);
                             //기존대비 상태가 변한 것들만 데이터를 바꿔주기 위함 (결석,완료등 상태가 변하거나, 사인 이미지가 변했을때)
-                            if(this.data.member_schedule_state[member_id_index] != state_cd || String(image).split(':')[0] != "https"){
+                            // if(this.data.member_schedule_state[member_id_index] != state_cd){
+                                if(String(image).split(':')[0] == "https"){
+                                    image = null;
+                                }
                                 let send_data = {"schedule_id":this.data.member_schedule_id[member_id_index], "state_cd":state_cd, "upload_file":image};
                                 data_to_send.push(send_data);
-                            }
+                            // }
                         }
                         let length = data_to_send.length;
                         let ajax_send_order = 0;
                         for(let i=0; i<data_to_send.length; i++){
                             Plan_func.status(data_to_send[i], ()=>{
                                 //스케쥴을 완료하는 것이면 sing데이터도 보낸다.
-                                if(data_to_send[i].state_cd == SCHEDULE_FINISH){
-                                    if(data_to_send[i].upload_file != null){
+                                if(data_to_send[i].state_cd == SCHEDULE_FINISH){ //완료로 바꾸는경우에는 서명 데이터도 보낸다.
+                                    if(data_to_send[i].upload_file != null){ // 서명이 비어있지 않으면 서명을 보낸다.
                                         Plan_func.upload_sign(data_to_send[i], ()=>{
                                             ajax_send_order++; // for문이 돌때마다 화면을 재렌더 하지 않고, 마지막에만 렌더하도록
                                             if(ajax_send_order == length){
@@ -566,6 +575,16 @@ class Plan_view{
                                                 }catch(e){}
                                             }
                                         });
+                                    }else{  // 서명이 비어있는 경우 서명을 보내지 않는다.
+                                        ajax_send_order++; // for문이 돌때마다 화면을 재렌더 하지 않고, 마지막에만 렌더하도록
+                                        if(ajax_send_order == length){
+                                            try{
+                                                current_page.init();
+                                            }catch(e){}
+                                            try{
+                                                this.init();
+                                            }catch(e){}
+                                        }
                                     }
                                     
                                 //스케쥴을 완료하는 것이 아니라, 결석, 미처리로 바꿀때는 sign데이터를 보내지 않는다.
