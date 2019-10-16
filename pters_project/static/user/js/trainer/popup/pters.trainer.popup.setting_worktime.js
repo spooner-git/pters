@@ -134,11 +134,13 @@ class Setting_worktime{
     
     dom_assembly_content(){
         let general_worktime = this.dom_row_general_worktime();
-        let dayoff_visibility = this.dom_row_dayoff_visibility();
+        // let dayoff_visibility = this.dom_row_dayoff_visibility();
         let start_day_setting = this.dom_row_start_day_setting();
 
-        let main_assembly = start_day_setting + dayoff_visibility + general_worktime;
+        // let main_assembly = start_day_setting + dayoff_visibility + general_worktime;
 
+        let main_assembly = start_day_setting +  general_worktime;
+        
         let sub_assembly = "";
         if(this.data.GENERAL.detail_switch == ON){
             sub_assembly = this.dom_assembly_sub_content();

@@ -11,6 +11,7 @@ class Calendar {
         this.subtargetHTML = 'calendar_wrap';
         this.instance = instance;
         
+        this.dayoff_hide = 0; //휴무일 숨기기 기능 없앰 (1이 휴무일 숨기기)
         this.date_start = 0; //시작을 월요일부터 옵션을 위한 코드
         this.cal_type = "week";
         this.current_page_num = 1;
@@ -77,7 +78,7 @@ class Calendar {
         this.mode_to_plan_change(OFF);
         Setting_reserve_func.read((data)=>{
             this.work_time_info.full = data;
-            this.dayoff_hide = data.setting_holiday_hide;
+            // this.dayoff_hide = data.setting_holiday_hide; // 휴무일 숨기기 기능 없앰
             let date_start_array = {"SUN":0, "MON":1};
             this.date_start = date_start_array[data.setting_week_start_date];
             //this.current_week를 구하기 위한 코드
