@@ -14,10 +14,11 @@
 	-webkit-text-fill-color: #282828 !important;
 	opacity: 1;
 } */
+
 input:disabled{
-	color: #282828 !important;
+	/* color: #282828 !important;
 	-webkit-text-fill-color: #282828 !important;
-	opacity: 1;
+	opacity: 1; */
 }
 
 .create_row, .create_input_row, .cell_text{

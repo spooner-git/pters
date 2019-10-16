@@ -215,6 +215,21 @@ class Member_add{
                 + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('특이사항') + memo +
             '</div>';
+        
+        if(this.data_from_external != null){
+            html =
+            '<div class="obj_input_box_full">'
+                + CComponent.dom_tag('회원명') + name +
+            '</div>' +
+            '<div class="obj_input_box_full">'
+                + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('특이사항') + memo +
+            '</div>';
+        }
 
         return html;
     }
@@ -283,7 +298,8 @@ class Member_add{
         let style = this.data.birth == null ? {"color":"#b8b4b4"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             //행을 클릭했을때 실행할 내용
-            if(this.data_from_external != null){
+            if(this.data_from_external != null){ //재등록
+                show_error_message("재등록 화면에서는 기본정보를 수정할 수 없습니다.");
                 return false;
             }
 
@@ -324,6 +340,7 @@ class Member_add{
         let style = this.data.sex == null ? {"color":"#b8b4b4"} : null;
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             if(this.data_from_external != null){
+                show_error_message("재등록 화면에서는 기본정보를 수정할 수 없습니다.");
                 return false;
             }
 
