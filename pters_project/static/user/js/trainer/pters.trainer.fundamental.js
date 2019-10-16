@@ -340,6 +340,20 @@ class TimeRobot{
         };
     }
 
+    static hm_to_hhmm(hm){
+        let h = Number(hm.split(':')[0]);
+        let m = Number(hm.split(':')[1]);
+        if(h < 10){
+            h = '0' + h;
+        }
+        if(m < 10){
+            m = '0' + m;
+        }
+        return {
+            complete: `${h}:${m}`, hour:h, minute:m
+        };
+    }
+
     // 시간을 Text 로 변환
     static to_text(hour, minute, short){
         // hour 가 시간 전체로 넘어오는 경우

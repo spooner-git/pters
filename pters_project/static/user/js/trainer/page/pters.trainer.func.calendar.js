@@ -1130,17 +1130,20 @@ class Calendar {
             
             for(let i=0; i<work_time_list.length; i++){
                 // 일정 표기 관련 계산
-                let daily_work_start = work_time_list[i].split('-')[0]; //해당 요일의 업무 시작시간
-                let daily_work_end = work_time_list[i].split('-')[1]; //해당 요일의 업무 종료시간
-                let general_work_start = this.work_time_info.calc.start; //전체 요일로 계산된 업무 시간
-                let general_work_end = this.work_time_info.calc.end; // 전체 요일로 계산된 업무 종료 시간
+                let daily_work_start = TimeRobot.hm_to_hhmm(work_time_list[i].split('-')[0]).complete; //해당 요일의 업무 시작시간
+                let daily_work_end = TimeRobot.hm_to_hhmm(work_time_list[i].split('-')[1]).complete; //해당 요일의 업무 종료시간
+                let general_work_start = TimeRobot.hm_to_hhmm(this.work_time_info.calc.start).complete; //전체 요일로 계산된 업무 시간
+                let general_work_end = TimeRobot.hm_to_hhmm(this.work_time_info.calc.end).complete; // 전체 요일로 계산된 업무 종료 시간
 
                 let height_start = 100*( TimeRobot.diff(general_work_start, daily_work_start).hour*60 + TimeRobot.diff(general_work_start, daily_work_start).min)/(this.worktime.length*60);
-                if(general_work_start != daily_work_start && height_start == 100){ // 업무시간 00:00 - 24:00가 TimeRobot.diff에서 24로 표기되어서 모든시간이 disabled되어버리는 현상보정
+                // if(general_work_start != daily_work_start && height_start == 100){ // 업무시간 00:00 - 24:00가 TimeRobot.diff에서 24로 표기되어서 모든시간이 disabled되어버리는 현상보정
+                //     height_start = 0;
+                // }
+                if(general_work_start == daily_work_start && general_work_start == "00:00"){
                     height_start = 0;
                 }
+
                 let top_start = 0;
-                // let top_start = 100*( TimeRobot.diff(general_work_start, daily_work_end).hour*60 + TimeRobot.diff(general_work_start, daily_work_end).min)/(this.worktime.length*60);
 
                 let height_end = 100*( TimeRobot.diff(daily_work_end, general_work_end).hour*60 + TimeRobot.diff(daily_work_end, general_work_end).min)/(this.worktime.length*60);
                 let top_end = 100*( TimeRobot.diff(general_work_start, daily_work_end).hour*60 + TimeRobot.diff(general_work_start, daily_work_end).min)/(this.worktime.length*60);
