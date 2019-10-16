@@ -168,7 +168,6 @@ class Plan_view{
         let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="plan_view_popup.upper_left_menu();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
-                            <img src="/static/common/icon/icon_program_black.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(2);">
                             <img src="/static/common/icon/icon_delete_black.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(0);">
                             <img src="/static/common/icon/icon_attend_check_black.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};">
                         </span>`;
@@ -296,9 +295,27 @@ class Plan_view{
 
             html_to_join.push(
                 CComponent.icon_button(member_id, member_name, state_icon_url, icon_button_style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/windowHeight), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
-                        member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
-                        //회원 간단 정보 팝업 열기
+                   
+                    let user_option = {
+                        info:{text:"회원 정보", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/windowHeight), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
+                                member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
+                                //회원 간단 정보 팝업 열기
+                            });
+                        }},
+                        sign_image:{text:"출석 서명 확인", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            show_error_message("완료 서명 여기에");
+                        }}
+                    };
+
+                    let options_padding_top_bottom = 16;
+                    let button_height = 8 + 8 + 52;
+                    let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+                    let root_content_height = $root_content.height();
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                        option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                     });
                 })
             );
@@ -496,24 +513,29 @@ class Plan_view{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ATTEND, 100, popup_style, null, ()=>{
                     member_attend = new Member_attend('.popup_member_attend', this.schedule_id, (set_data)=>{
+                        console.log(set_data)
                         //출석체크 팝업에서 완료버튼을 눌렀을때 할 행동
                         if(this.data.schedule_type == 1){
                             let state_cd = set_data[null].state_cd;
-                            let send_data = {"schedule_id":this.schedule_id, "state_cd":state_cd};
+                            let send_data = {"schedule_id":this.schedule_id, "state_cd":state_cd, "upload_file":set_data[null].image};
                             Plan_func.status(send_data, ()=>{
-                                this.init();
-                                try{
-                                    current_page.init();
-                                }catch(e){}
+                                Plan_func.upload_sign(send_data, ()=>{
+                                    this.init();
+                                    try{
+                                        current_page.init();
+                                    }catch(e){}
+                                });
                             });
+                            
                         }
                         let data_to_send = [];
                         for(let member in set_data){
                             let member_id = member;
                             let state_cd = set_data[member].state_cd;
+                            let image = set_data[member].image;
                             let member_id_index = this.data.member_id.indexOf(member_id);
                             if(this.data.member_schedule_state[member_id_index] != state_cd){
-                                let send_data = {"schedule_id":this.data.member_schedule_id[member_id_index], "state_cd":state_cd};
+                                let send_data = {"schedule_id":this.data.member_schedule_id[member_id_index], "state_cd":state_cd, "upload_file":image};
                                 data_to_send.push(send_data);
                             }
                         }
@@ -521,33 +543,40 @@ class Plan_view{
                         let ajax_send_order = 0;
                         for(let i=0; i<data_to_send.length; i++){
                             Plan_func.status(data_to_send[i], ()=>{
-                                ajax_send_order++;
-                                if(ajax_send_order == length){
-                                    try{
-                                        current_page.init();
-                                    }catch(e){}
-                                    try{
-                                        this.init();
-                                    }catch(e){}
-                                }
+                                Plan_func.upload_sign(data_to_send[i], ()=>{
+                                    ajax_send_order++; // for문이 돌때마다 화면을 재렌더 하지 않고, 마지막에만 렌더하도록
+                                    if(ajax_send_order == length){
+                                        try{
+                                            current_page.init();
+                                        }catch(e){}
+                                        try{
+                                            this.init();
+                                        }catch(e){}
+                                    }
+                                });
                             });
                         }
                     });
                 });
             },
-            ()=>{ 
-                let root_content_height = $root_content.height();
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DRAWING_BOARD, 100*315/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
-                    let data = {    title:"일정 완료 서명",
-                                    description:"완료 서명을 입력해주세요.",
-                                    width: $root_content.width() <= 800 ? $root_content.width() : MAX_WIDTH,
-                                    height:250,
-                                    color:{pencil:"#ffffff", paper:"#282828"},
-                                    border:0
-                                };
-                    drawing_board = new DrawingBoard('#wrapper_box_drawing_board', "drawing_board", data);
-                });
-            }    
+            // ()=>{  
+            //     //사인창 열기
+            //     let root_content_height = $root_content.height();
+            //     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DRAWING_BOARD, 100*315/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+            //         let data = {    title:"일정 완료 서명",
+            //                         description:"완료 서명을 입력해주세요.",
+            //                         // width: $root_content.width() <= 800 ? $root_content.width() : MAX_WIDTH,
+            //                         width: $root_content.width() <= 500 ? $root_content.width() : 500,
+            //                         height:250,
+            //                         color:{pencil:"#ffffff", paper:"#282828"},
+            //                         border:0,
+            //                         callback:(data)=>{
+            //                             show_error_message(`<img src="${data}" style="width:100%;filter:invert(1)">`);
+            //                         }
+            //                     };
+            //         drawing_board = new DrawingBoard('#wrapper_box_drawing_board', "drawing_board", data);
+            //     });
+            // }    
         ];
 
         user_option[number]();

@@ -3576,7 +3576,8 @@ class DrawingBoard{
             },
             width:"320",
             height:"200",
-            border:0
+            border:0,
+            callback:()=>{}
         }
         this.user_input_status = OFF;
 
@@ -3645,7 +3646,7 @@ class DrawingBoard{
 
     dom_assembly (){
         let title = `<div style="padding:20px;">`+ this.dom_row_title() + `</div>`;
-        let content = `<div>` + this.dom_row_content() + `</div>`;
+        let content = `<div style="background-color:${this.data.color.paper}">` + this.dom_row_content() + `</div>`;
 
         let html =  content;
 
@@ -3660,7 +3661,7 @@ class DrawingBoard{
     }
 
     dom_row_content(){
-        let html = `<div style="position:relative;width:${this.data.width}px;height:${this.data.height}px;border:1px solid ${this.user_input_status == ON ? '#fe4e65' : '#cccccc'}">
+        let html = `<div style="position:relative;margin:0 auto;width:${this.data.width}px;height:${this.data.height}px;border:1px solid ${this.user_input_status == ON ? '#fe4e65' : '#cccccc'}">
                         <div style="position:absolute;width:100%;top:0;left:0;text-align:center;font-size:13px;font-weight:normal;letter-spacing:-0.6px;opacity:0.8;color:${this.data.color.pencil};">${this.data.description}</div>
                         <canvas id="canvas" width="${this.data.width}" height="${this.data.height}" style="border:${this.data.border};background-color:${this.data.color.paper}">
                         </canvas>
@@ -3755,6 +3756,8 @@ class DrawingBoard{
     }
 
     upper_right_menu(){
+        let image = document.getElementById('canvas').toDataURL('image/png');
+        this.data.callback(image);
         layer_popup.close_layer_popup();
         this.clear();
     }

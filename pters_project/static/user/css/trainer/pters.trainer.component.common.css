@@ -530,15 +530,20 @@ input:disabled{
 }
 
 .select_attend_row .cell_member_name{
-	display: table-cell;
-	width: 150px;
-	vertical-align: middle;
+	/* display: table-cell; */
+	/* width: 150px; */
+	/* vertical-align: middle; */
+	flex-basis: 150px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .select_attend_row .cell_attend_select{
-	display: table-cell;
+	/* display: table-cell;
 	width: auto;
-	vertical-align: middle;
+	vertical-align: middle; */
+	flex: 1 1 0;
 	text-align: right;
 }
 .select_attend_row .cell_attend_select > div{

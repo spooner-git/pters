@@ -27,13 +27,15 @@ class Member_attend{
             let member_id = data.lecture_schedule_data[i].member_id;
             let state = data.lecture_schedule_data[i].state_cd;
             let member_name = data.lecture_schedule_data[i].member_name;
-            new_data[member_id] = {name:member_name, member_id:member_id, state_cd:state};
+            new_data[member_id] = {name:member_name, member_id:member_id, state_cd:state, image:null};
+            //서버로부터 image를 받아오면 image를 null이 아니라 image 주소로
             if(state != SCHEDULE_FINISH){
                 this.check_entire = false;
             }
         }
         if(data.schedule_type == 1){
-            new_data[null] = {name:data.member_name, state_cd:data.state_cd, member_id:null};
+            new_data[null] = {name:data.member_name, state_cd:data.state_cd, member_id:null, image:null};
+            //서버로부터 image를 받아오면 image를 null이 아니라 image 주소로
         }
 
         this.data = new_data;
@@ -50,7 +52,7 @@ class Member_attend{
     render(){
         let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_attend.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="">출석 체크</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_attend.upper_right_menu();">완료</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_attend.upper_right_menu();">저장</span></span>`;
         let content =   `<section>${this.dom_row_check_entire()}</section><section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -62,7 +64,7 @@ class Member_attend{
         let html;
         html = `<div class="obj_table_raw" style="height:52px;padding:0px 20px;box-sizing:border-box;">
                     <div style="display:table-cell;width:150px; height:20px; font-size:11px; font-weight:bold; letter-spacing: -0.5px; color:#858282; vertical-align: middle;">
-                        정원(${this.lecture_current_num}/${this.lecture_current_num})
+                        정원(${this.lecture_current_num}/${this.lecture_max_num})
                     </div>
                     <div style="display:table-cell;width:auto;font-size:13px;font-weight:500;text-align:right;vertical-align:middle;cursor:pointer; letter-spacing: -0.5px; color: #858282;" id="check_entire_${this.schedule_id}">
                         <span style="color:#858282">전원 출석</span>
@@ -103,7 +105,13 @@ class Member_attend{
             let checked_attend = data.state_cd == "PE" ? 1 : 0;
             let location = 'member_attend';
             let member_id = data.member_id;
-            let member_name = data.name;
+            let tag = "";
+            if(data.image != null){
+                tag = '<div style="position:absolute">' + 
+                        '<div style="float:left;background-color:#fe4e65;border:1px solid #fe4e65;border-radius:5px;color:#ffffff;width:20px;height:13px;line-height:13px;font-size:9px;font-weight:normal;margin-right:3px;">서명</div>'+
+                    '</div>';
+            }
+            let member_name = tag + data.name;
             html = CComponent.select_attend_row (checked_absence, checked_attend, location, member_id, member_name, (add_or_substract)=>{
                 switch(add_or_substract){
                 case 'check_absence':
@@ -122,7 +130,7 @@ class Member_attend{
                                 this.check_entire = false;
                             }
                         }
-
+                        this.open_drawing_board(member_id);
                     break;
                 case 'uncheck_attend':
                         this.data[member_id].state_cd = SCHEDULE_NOT_FINISH;
@@ -149,6 +157,27 @@ class Member_attend{
 
     send_data(){
 
+    }
+
+    open_drawing_board(id){
+        //사인창 열기
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DRAWING_BOARD, 100*315/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+            let data = {    title:"일정 완료 서명",
+                            description:"완료 서명을 입력해주세요.",
+                            // width: $root_content.width() <= 800 ? $root_content.width() : MAX_WIDTH,
+                            width: $root_content.width() <= 500 ? $root_content.width() : 500,
+                            height:250,
+                            color:{pencil:"#ffffff", paper:"#282828"},
+                            border:0,
+                            callback:(data)=>{
+                                // show_error_message(`<img src="${data}" style="width:100%;filter:invert(1)">`);
+                                this.data[id].image = data;
+                                this.render();
+                            }
+                        };
+            drawing_board = new DrawingBoard('#wrapper_box_drawing_board', "drawing_board", data);
+        });
     }
 
     upper_right_menu(){

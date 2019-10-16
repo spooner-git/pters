@@ -461,7 +461,7 @@ class CComponent{
     static select_attend_row (checked_absence, checked_attend, location, member_id, member_name, onclick){
         let html = `
                     <li class="select_attend_row sar_${location}" id="sar_${member_id}">
-                        <div class="obj_table_raw">
+                        <div style="display:flex;">
                             <div class="cell_member_name">
                                 <span>${member_name}</span>
                             </div>
