@@ -593,19 +593,24 @@ class Plan_view{
 
     upper_left_menu(){
         if(this.if_user_changed_any_information == true){
-            //날짜, 시작시간, 종료시간이 바뀌었을 경우 변경 데이터를 전송한다.
-            // layer_popup.close_layer_popup();this.clear();
-            this.send_data();
+            if(this.send_data() == false){
+                return false;
+            }
         }
         layer_popup.close_layer_popup();this.clear();
     }
 
     send_data (){
-        if(this.check_before_send() == false){
+        // if(this.check_before_send() == false){
+        //     return false;
+        // }
+
+        let start_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' ' + TimeRobot.hm_to_hhmm(this.data.start_time).complete;
+        let end_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' ' + TimeRobot.hm_to_hhmm(this.data.end_time).complete;
+        if(start_dt == end_dt){
+            show_error_message("시간을 다시 선택해주세요.");
             return false;
         }
-        let start_dt = this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.start_time;
-        let end_dt = this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.end_time;
 
         let schedule_ids = [];
         schedule_ids.push(this.received_data.schedule_info[0].schedule_id);
@@ -701,42 +706,7 @@ class Plan_view{
     }
 
     check_before_send(){
-    //     let forms = document.getElementById(`${this.form_id}`);
-    //     update_check_registration_form(forms);
-    //
-    //     let error_info = check_registration_form(forms);
-    //
-    //     if(error_info != ''){
-    //         show_error_message(error_info);
-    //         return false;
-    //     }
-    //     else{
-    //         if(this.list_type == 'lesson'){
-    //             if(this.data.lecture_name.length == 0){
-    //                 show_error_message('수업을 선택 해주세요.');
-    //                 return false;
-    //             }
-    //             if(this.data.lecture_type_cd[0] == LECTURE_TYPE_ONE_TO_ONE){
-    //                 if(this.data.member_name.length == 0){
-    //                     show_error_message('회원을 선택 해주세요.');
-    //                     return false;
-    //                 }
-    //             }
-    //         }
-    //         if(this.data.date_text == null){
-    //             show_error_message('날짜를 선택 해주세요.');
-    //             return false;
-    //         }
-    //         if(this.data.start_time_text == null){
-    //             show_error_message('시작 시간을 선택 해주세요.');
-    //             return false;
-    //         }
-    //         if(this.data.end_time_text == null){
-    //             show_error_message('종료 시간을 선택 해주세요.');
-    //             return false;
-    //         }
-    //         return true;
-    //     }
+   
         return true;
     }
 }
