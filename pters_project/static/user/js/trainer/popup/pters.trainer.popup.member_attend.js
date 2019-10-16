@@ -28,12 +28,7 @@ class Member_attend{
             let member_id = data.lecture_schedule_data[i].member_id;
             let state = data.lecture_schedule_data[i].state_cd;
             let member_name = data.lecture_schedule_data[i].member_name;
-            let image_url = null;
-            let image_url_to_check = `https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${member_schedule_id}.png`;
-            if(this.check_image_link(image_url_to_check) != false){
-                console.log("이미지 있음")
-                image_url = image_url_to_check;
-            }
+            let image_url = `https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${member_schedule_id}.png`;
             if(state != SCHEDULE_FINISH){
                 image_url = null;
             }
@@ -45,12 +40,7 @@ class Member_attend{
         }
         if(data.schedule_type == 1){
             let state = data_.schedule_info[0].state_cd;
-            let image_url = null;
-            let image_url_to_check = `https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${data.schedule_id}.png`;
-            if(this.check_image_link(image_url_to_check) != false){
-                console.log("이미지 있음")
-                image_url = image_url_to_check;
-            }
+            let image_url = `https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${data.schedule_id}.png`;
             if(state != SCHEDULE_FINISH){
                 image_url = null;
             }
@@ -127,9 +117,11 @@ class Member_attend{
             let member_id = data.member_id;
             let image = data.image;
             let tag = "";
-            if(image != null && this.check_image_link(image) != false && data.state_cd == SCHEDULE_FINISH){
+            // if(image != null && this.check_image_link(image) != false && data.state_cd == SCHEDULE_FINISH){
+            if(image != null && data.state_cd == SCHEDULE_FINISH){
                 tag = '<div style="position:absolute">' + 
                         '<div style="float:left;background-color:#fe4e65;border:1px solid #fe4e65;border-radius:5px;color:#ffffff;width:20px;height:13px;line-height:13px;font-size:9px;font-weight:normal;margin-right:3px;">서명</div>'+
+                        `<img src="${image}" onerror="this.onerror=null;this.src=member_attend.image_error(${item})" style="display:none;">` +
                     '</div>';
             }
             let member_name = tag + data.name;
@@ -169,15 +161,20 @@ class Member_attend{
         return html_to_join.join('');
     }
 
-    check_image_link(url){
-        let check_status = true;
-        let dom = document.createElement('img');
-        dom.setAttribute('src', url);
+    // check_image_link(url){
+    //     let check_status = true;
+    //     let dom = document.createElement('img');
+    //     dom.setAttribute('src', url);
         
-        dom.onerror = function(){
-            check_status = false;
-            return check_status;
-        };
+    //     dom.onerror = function(){
+    //         check_status = false;
+    //         return check_status;
+    //     };
+    // }
+
+    image_error(schedule_id){
+        this.data[schedule_id].image = null;
+        this.render();
     }
 
     request_list (callback){
