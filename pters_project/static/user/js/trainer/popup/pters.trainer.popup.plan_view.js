@@ -523,7 +523,11 @@ class Plan_view{
                         //개인일정 일때
                         if(this.data.schedule_type == 1){
                             let state_cd = set_data[null].state_cd;
-                            let send_data = {"schedule_id":this.schedule_id, "state_cd":state_cd, "upload_file":set_data[null].image};
+                            let image = set_data[null].image;
+                            if(String(image).split(':')[0] == "https"){
+                                image = null;
+                            }
+                            let send_data = {"schedule_id":this.schedule_id, "state_cd":state_cd, "upload_file":image};
                             Plan_func.status(send_data, ()=>{
                                 if(state_cd == SCHEDULE_FINISH){
                                     Plan_func.upload_sign(send_data, ()=>{
