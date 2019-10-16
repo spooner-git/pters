@@ -132,7 +132,7 @@ class Plan_repeat_list{
         for(let i=0; i<length; i++){
             let data = this.data.member_repeat_schedule_list[i];
             let repeat_id = data.repeat_schedule_id;
-            let color = '#cccccc';
+            let color = data.lecture_ing_color_cd;
             let repeat_name = data.member_name;
             let repeat_period = data.repeat_start_date + ' - ' + data.repeat_end_date;
             let repeat_start_time = TimeRobot.to_hhmm(data.repeat_start_time.split(':')[0], data.repeat_start_time.split(':')[1]).complete;

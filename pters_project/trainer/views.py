@@ -44,7 +44,8 @@ from .functions import func_get_trainer_setting_list, \
     func_get_member_info, func_get_member_from_member_ticket_list, \
     func_check_member_connection_info, func_get_member_lecture_list, \
     func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info, func_get_ticket_info, \
-    func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, update_setting_data
+    func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, update_setting_data, \
+    func_get_member_ticket_info
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb
 
@@ -224,11 +225,6 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         off_repeat_schedule_list = []
         member_repeat_schedule_list = []
         lecture_member_repeat_schedule_ordered_dict = collections.OrderedDict()
-
-        member_lecture_ing_color_cd = ''
-        member_lecture_end_color_cd = ''
-        member_lecture_ing_font_color_cd = ''
-        member_lecture_end_font_color_cd = ''
 
         try:
             one_to_one_lecture = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
@@ -1782,6 +1778,29 @@ def export_excel_member_info_logic(request):
 
 # ############### ############### ############### ############### ############### ############### ##############
 # 회원 수강권 기능 ############### ############### ############### ############### ############### ############### ########
+
+class GetMemberTicketInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        member_ticket_id = request.GET.get('member_ticket_id', '')
+        error = None
+        member_ticket_list = collections.OrderedDict()
+
+        if class_id is None or class_id == '':
+            error = '오류가 발생했습니다.'
+
+        if member_ticket_id is None or member_ticket_id == '':
+            error = '회원 수강 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            member_ticket_list = func_get_member_ticket_info(class_id, member_ticket_id)
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+        return JsonResponse(member_ticket_list, json_dumps_params={'ensure_ascii': True})
+
 
 class GetMemberTicketListView(LoginRequiredMixin, AccessTestMixin, View):
 

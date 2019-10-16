@@ -267,7 +267,7 @@ class Pters_pass_func{
             success:function(data){
                 var jsondata = JSON.parse(data);
                 if(jsondata.messageArray.length>0){
-                    msg = '결제 정보 변경에 실패하였습니다.';
+                    msg = '결제 정보 변경에 실패했습니다.';
                     msg += '에러내용 : ' + jsondata.messageArray;
                 }else {
                     msg = '결제 정보 변경이 완료되었습니다.';
@@ -445,7 +445,7 @@ class Pters_pass_func{
                             let url_move = "/trainer/trainer_main/";
                             msg = '결제가 완료되었습니다.';
                             if (jsondata.messageArray.length > 0) {
-                                msg = '결제에 실패하였습니다.';
+                                msg = '결제에 실패했습니다.';
                                 msg += ' : ' + jsondata.messageArray;
                                 show_error_message(msg);
                                 return false;
@@ -467,7 +467,7 @@ class Pters_pass_func{
                     });
 
                 } else {
-                    msg = '결제에 실패하였습니다.';
+                    msg = '결제에 실패했습니다.';
                     msg += ' : ' + rsp.error_msg;
                     show_error_message(msg);
                     // location.href = "/payment/";
@@ -578,7 +578,7 @@ class Pters_pass_func{
                         var jsondata = JSON.parse(data);
 
                         if(jsondata.messageArray.length>0){
-                            msg = '결제 정보 변경에 실패하였습니다.';
+                            msg = '결제 정보 변경에 실패했습니다.';
                             msg += '에러내용 : ' + jsondata.messageArray;
                             show_error_message(msg);
                         }else {
@@ -599,7 +599,7 @@ class Pters_pass_func{
                                     var jsondata = JSON.parse(data);
 
                                     if(jsondata.messageArray.length>0){
-                                        msg = '결제 정보 변경에 실패하였습니다.';
+                                        msg = '결제 정보 변경에 실패했습니다.';
                                         msg += '에러내용 : ' + jsondata.messageArray;
                                     }else {
                                         msg = '결제 정보 변경이 완료되었습니다.';
@@ -629,7 +629,7 @@ class Pters_pass_func{
                 });
 
             } else {
-                msg = '결제 정보 변경에 실패하였습니다.';
+                msg = '결제 정보 변경에 실패했습니다.';
                 msg += '에러내용 : ' + rsp.error_msg;
                 show_error_message(msg);
             }
