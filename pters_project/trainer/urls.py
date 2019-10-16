@@ -62,6 +62,8 @@ urlpatterns = [
     url(r'^get_member_end_list/$', views.GetMemberEndListViewAjax.as_view(), name='get_member_end_list'),
 
     # 회원 수강정보 조회 - refactoring
+    url(r'^get_member_ticket_info/$', views.GetMemberTicketInfoView.as_view(), name='get_member_ticket_info'),
+    # 회원 수강정보 조회 - refactoring
     url(r'^get_member_ticket_list/$', views.GetMemberTicketListView.as_view(), name='get_member_ticket_list'),
     # 회원이 들을수 있는 수업 조회
     url(r'^get_member_lecture_list/$', views.GetMemberLectureListView.as_view(), name='get_member_lecture_list'),

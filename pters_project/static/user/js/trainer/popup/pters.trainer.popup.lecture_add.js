@@ -324,7 +324,7 @@ class Lecture_add{
         let inspect = pass_inspector.ticket();
         if(inspect.barrier == BLOCKED){
             show_error_message(`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
-                                <br> 같은 이름으로 수강권 생성에 실패하였습니다.`);
+                                <br> 같은 이름으로 수강권 생성에 실패했습니다.`);
             return false;
         }
 

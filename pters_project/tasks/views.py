@@ -145,7 +145,11 @@ def update_finish_schedule_data_logic(request):
              ).annotate(schedule_auto_finish=RawSQL(query_setting_schedule_auto_finish,
                                                     [])).exclude(schedule_auto_finish=AUTO_FINISH_OFF)
     for not_finish_schedule_info in not_finish_schedule_data:
-        member_ticket_tb_id = not_finish_schedule_info.member_ticket_tb_id
+        member_ticket_tb = not_finish_schedule_info.member_ticket_tb
+        member_ticket_tb_id = None
+        if member_ticket_tb is not None and member_ticket_tb != '':
+            member_ticket_tb_id = not_finish_schedule_info.member_ticket_tb_id
+
         if str(not_finish_schedule_info.schedule_auto_finish) == str(AUTO_FINISH_ON):
             not_finish_schedule_info.state_cd = STATE_CD_FINISH
             not_finish_schedule_info.save()
@@ -168,8 +172,9 @@ def update_finish_schedule_data_logic(request):
                 use=UN_USE)
             delete_schedule_info.save()
             not_finish_schedule_info.delete()
-            member_ticket_tb_id = delete_schedule_info.member_ticket_tb_id
-        func_refresh_member_ticket_count(not_finish_schedule_info.class_tb_id, member_ticket_tb_id)
+            # member_ticket_tb_id = delete_schedule_info.member_ticket_tb_id
+        if member_ticket_tb_id is not None:
+            func_refresh_member_ticket_count(not_finish_schedule_info.class_tb_id, member_ticket_tb_id)
     end_time = timezone.now()
     logger.info('finish_schedule_data_time'+str(end_time-now))
     return render(request, 'ajax/task_error_info.html')

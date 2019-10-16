@@ -164,7 +164,7 @@ class Service_inquiry {
         };
 
         Service_inquiry_func.create(data, ()=>{
-            show_error_message("문의를 접수하였습니다.");
+            show_error_message("문의를 접수했습니다.");
             this.init_data();
             Service_inquiry.render_content();
             Service_inquiry_func.read((data)=>{

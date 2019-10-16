@@ -210,7 +210,7 @@ def func_get_member_info(class_id, user_id, member_id):
                 if member.phone is None or member.phone == '':
                     member.phone = ''
                 else:
-                    member.phone = '***-****-' + member.phone[7:]
+                    member.phone = '*******' + member.phone[7:]
                 member.user.email = ''
                 member.profile_url = '/static/common/icon/icon_account.png'
         if member.profile_url is None or member.profile_url == '':
@@ -286,6 +286,100 @@ def func_get_member_lecture_list(class_id, member_id):
             member_lecture_list[str(lecture_tb.lecture_id)] = lecture_info
 
     return member_lecture_list
+
+
+# 회원의 수강정보 불러오기
+def func_get_member_ticket_info(class_id, member_ticket_id):
+    member_ticket_list = collections.OrderedDict()
+
+    ticket_data = TicketTb.objects.filter(class_tb_id=class_id, use=USE).order_by('ticket_id')
+    ticket_lecture_data = TicketLectureTb.objects.select_related(
+        'ticket_tb', 'lecture_tb').filter(class_tb_id=class_id, ticket_tb__use=USE,
+                                          use=USE).order_by('ticket_tb_id', 'lecture_tb__state_cd', 'lecture_tb_id')
+
+    ticket_data_dict = {}
+    for ticket_lecture_info in ticket_lecture_data:
+        ticket_tb = ticket_lecture_info.ticket_tb
+        lecture_tb = ticket_lecture_info.lecture_tb
+        ticket_id = str(ticket_tb.ticket_id)
+        try:
+            ticket_data_dict[ticket_id]
+        except KeyError:
+            ticket_data_dict[ticket_id] = {'ticket_lecture_list': [],
+                                           'ticket_lecture_state_cd_list': [],
+                                           'ticket_lecture_id_list': [],
+                                           'ticket_lecture_ing_color_cd_list': [],
+                                           'ticket_lecture_ing_font_color_cd_list': [],
+                                           'ticket_lecture_end_color_cd_list': [],
+                                           'ticket_lecture_end_font_color_cd_list': []}
+        if lecture_tb.use == USE:
+            ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
+            ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'].append(lecture_tb.state_cd)
+            ticket_data_dict[ticket_id]['ticket_lecture_id_list'].append(lecture_tb.lecture_id)
+            ticket_data_dict[ticket_id]['ticket_lecture_ing_color_cd_list'].append(lecture_tb.ing_color_cd)
+            ticket_data_dict[ticket_id]['ticket_lecture_ing_font_color_cd_list'].append(lecture_tb.ing_font_color_cd)
+            ticket_data_dict[ticket_id]['ticket_lecture_end_color_cd_list'].append(lecture_tb.end_color_cd)
+            ticket_data_dict[ticket_id]['ticket_lecture_end_font_color_cd_list'].append(lecture_tb.end_font_color_cd)
+
+    if len(ticket_data) != len(ticket_data_dict):
+        for ticket_info in ticket_data:
+            ticket_id = str(ticket_info.ticket_id)
+            try:
+                ticket_data_dict[ticket_id]
+            except KeyError:
+                ticket_data_dict[ticket_id] = {'ticket_lecture_list': [],
+                                               'ticket_lecture_state_cd_list': [],
+                                               'ticket_lecture_id_list': [],
+                                               'ticket_lecture_ing_color_cd_list': [],
+                                               'ticket_lecture_ing_font_color_cd_list': [],
+                                               'ticket_lecture_end_color_cd_list': [],
+                                               'ticket_lecture_end_font_color_cd_list': []}
+
+    member_ticket_data = ClassMemberTicketTb.objects.select_related(
+        'member_ticket_tb__ticket_tb').filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+                                              member_ticket_tb_id=member_ticket_id,
+                                              member_ticket_tb__use=USE,
+                                              member_ticket_tb__ticket_tb__use=USE,
+                                              use=USE).order_by('-member_ticket_tb__start_date',
+                                                                '-member_ticket_tb__reg_dt')
+    for member_ticket_info in member_ticket_data:
+        member_ticket_tb = member_ticket_info.member_ticket_tb
+        ticket_tb = member_ticket_tb.ticket_tb
+        if '\r\n' in member_ticket_tb.note:
+            member_ticket_tb.note = member_ticket_tb.note.replace('\r\n', ' ')
+        ticket_id = str(ticket_tb.ticket_id)
+        member_ticket_info = {'member_ticket_id': str(member_ticket_tb.member_ticket_id),
+                              'member_ticket_name': ticket_tb.name,
+                              'member_ticket_state_cd': member_ticket_tb.state_cd,
+                              'member_ticket_reg_count': member_ticket_tb.member_ticket_reg_count,
+                              'member_ticket_rem_count': member_ticket_tb.member_ticket_rem_count,
+                              'member_ticket_avail_count': member_ticket_tb.member_ticket_avail_count,
+                              'member_ticket_start_date': str(member_ticket_tb.start_date),
+                              'member_ticket_end_date': str(member_ticket_tb.end_date),
+                              'member_ticket_price': member_ticket_tb.price,
+                              'member_ticket_refund_date': str(member_ticket_tb.refund_date),
+                              'member_ticket_refund_price': member_ticket_tb.refund_price,
+                              'member_ticket_note': str(member_ticket_tb.note),
+                              'ticket_id': ticket_id,
+                              'ticket_effective_days': ticket_tb.effective_days,
+                              'ticket_state_cd': ticket_tb.state_cd,
+                              'ticket_lecture_list':
+                                  ticket_data_dict[ticket_id]['ticket_lecture_list'],
+                              'ticket_lecture_state_cd_list':
+                                  ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'],
+                              'ticket_lecture_id_list':
+                                  ticket_data_dict[ticket_id]['ticket_lecture_id_list'],
+                              'ticket_lecture_ing_color_cd_list':
+                                  ticket_data_dict[ticket_id]['ticket_lecture_ing_color_cd_list'],
+                              'ticket_lecture_ing_font_color_cd_list':
+                                  ticket_data_dict[ticket_id]['ticket_lecture_ing_font_color_cd_list'],
+                              'ticket_lecture_end_color_cd_list':
+                                  ticket_data_dict[ticket_id]['ticket_lecture_end_color_cd_list'],
+                              'ticket_lecture_end_font_color_cd_list':
+                                  ticket_data_dict[ticket_id]['ticket_lecture_end_font_color_cd_list']
+                              }
+        member_ticket_list[str(member_ticket_tb.member_ticket_id)] = member_ticket_info
+    return member_ticket_list
 
 
 # 회원의 수강정보 리스트 불러오기

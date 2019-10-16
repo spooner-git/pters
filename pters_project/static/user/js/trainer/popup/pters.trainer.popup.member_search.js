@@ -249,7 +249,7 @@ class Member_search {
         };
 
         member_search_func.create(data, ()=>{
-            show_error_message("문의를 접수하였습니다.");
+            show_error_message("문의를 접수했습니다.");
             member_search.render_content();
             member_search_func.read((data)=>{
                 console.log(data);
