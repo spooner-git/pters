@@ -693,6 +693,11 @@ def add_repeat_schedule_logic(request):
 
     # 등록할 날짜 list 가져오기
     if error is None:
+        week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
+        week_order = {key: i for i, key in enumerate(week_order)}
+        week_data = repeat_week_type.split('/')
+        week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+        repeat_week_type = "/".join(week_data)
         repeat_schedule_date_list = func_get_repeat_schedule_date_list(repeat_type, repeat_week_type,
                                                                        repeat_schedule_start_date_info,
                                                                        repeat_schedule_end_date_info)

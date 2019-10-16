@@ -262,11 +262,15 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=False,
             lecture_schedule_id__isnull=False).order_by('reg_dt', 'lecture_tb', 'lecture_schedule_id')
 
+        week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
+        week_order = {key: i for i, key in enumerate(week_order)}
         for off_repeat_schedule_info in off_repeat_schedule_data:
+            week_data = off_repeat_schedule_info.week_info.split('/')
+            week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
             off_repeat_schedule = {
                 'repeat_schedule_id': off_repeat_schedule_info.repeat_schedule_id,
                 'repeat_type_cd': off_repeat_schedule_info.repeat_type_cd,
-                'week_info': off_repeat_schedule_info.week_info,
+                'week_info': "/".join(week_data),
                 'start_date': off_repeat_schedule_info.start_date,
                 'end_date': off_repeat_schedule_info.end_date,
                 'start_time': off_repeat_schedule_info.start_time,
@@ -283,10 +287,13 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                     and member_repeat_schedule_info.member_ticket_tb.member.profile_url != '':
                 member_profile_url = member_repeat_schedule_info.member_ticket_tb.member.profile_url
 
+            week_data = member_repeat_schedule_info.week_info.split('/')
+            week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+
             member_repeat_schedule = {
                 'repeat_schedule_id': member_repeat_schedule_info.repeat_schedule_id,
                 'repeat_type_cd': member_repeat_schedule_info.repeat_type_cd,
-                'week_info': member_repeat_schedule_info.week_info,
+                'week_info': "/".join(week_data),
                 'repeat_start_date': member_repeat_schedule_info.start_date,
                 'repeat_end_date': member_repeat_schedule_info.end_date,
                 'repeat_start_time': member_repeat_schedule_info.start_time,
@@ -306,10 +313,13 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             member_repeat_schedule_list.append(member_repeat_schedule)
 
         for lecture_repeat_schedule_info in lecture_repeat_schedule_data:
+            week_data = lecture_repeat_schedule_info.week_info.split('/')
+            week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+
             lecture_member_repeat_schedule_ordered_dict[lecture_repeat_schedule_info.repeat_schedule_id] = {
                 'repeat_schedule_id': lecture_repeat_schedule_info.repeat_schedule_id,
                 'repeat_type_cd': lecture_repeat_schedule_info.repeat_type_cd,
-                'week_info': lecture_repeat_schedule_info.week_info,
+                'week_info': "/".join(week_data),
                 'start_date': lecture_repeat_schedule_info.start_date,
                 'end_date': lecture_repeat_schedule_info.end_date,
                 'start_time': lecture_repeat_schedule_info.start_time,
@@ -333,10 +343,13 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                     and lecture_member_repeat_schedule_info.member_ticket_tb.member.profile_url != '':
                 member_profile_url = lecture_member_repeat_schedule_info.member_ticket_tb.member.profile_url
 
+            week_data = lecture_member_repeat_schedule_info.week_info.split('/')
+            week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+
             lecture_member_repeat_schedule_dict = {
                 'repeat_schedule_id': lecture_member_repeat_schedule_info.repeat_schedule_id,
                 'repeat_type_cd': lecture_member_repeat_schedule_info.repeat_type_cd,
-                'week_info': lecture_member_repeat_schedule_info.week_info,
+                'week_info': "/".join(week_data),
                 'start_date': lecture_member_repeat_schedule_info.start_date,
                 'end_date': lecture_member_repeat_schedule_info.end_date,
                 'start_time': lecture_member_repeat_schedule_info.start_time,
