@@ -449,6 +449,7 @@ class Member_view{
         }
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
+
             if(disabled == true){
                 show_error_message("수강 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다.");
                 return false;
@@ -486,6 +487,7 @@ class Member_view{
             disabled = true;
         }
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+
             if(disabled == true){
                 show_error_message("수강 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다.");
                 return false;

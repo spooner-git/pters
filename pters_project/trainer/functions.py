@@ -204,7 +204,7 @@ def func_get_member_info(class_id, user_id, member_id):
         connection_check = func_check_member_connection_info(class_id, member_id)
         if member.reg_info is None or str(member.reg_info) != str(user_id):
             # 연결이 안되어 있는 경우 회원 정보 표시 안함
-            if not connection_check:
+            if connection_check != 2:
                 member.sex = ''
                 member.birthday_dt = ''
                 if member.phone is None or member.phone == '':
