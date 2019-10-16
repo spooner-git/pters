@@ -541,13 +541,17 @@ class SearchMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             if user_info is not None:
-                member_result = func_get_member_info(class_id, request.user.id, user_info.id)
-                error = member_result['error']
-                member_result_list.append(member_result['member_info'])
+                group_type = user_info.groups.filter(user=user_info.id, name='trainee')
+                if len(group_type) > 0:
+                    member_result = func_get_member_info(class_id, request.user.id, user_info.id)
+                    error = member_result['error']
+                    member_result_list.append(member_result['member_info'])
             else:
                 for member_info in member_list:
-                    member_result = func_get_member_info(class_id, request.user.id, member_info.user.id)
-                    member_result_list.append(member_result['member_info'])
+                    group_type = member_info.user.groups.filter(user=member_info.user.id, name='trainee')
+                    if len(group_type) > 0:
+                        member_result = func_get_member_info(class_id, request.user.id, member_info.user.id)
+                        member_result_list.append(member_result['member_info'])
         if error is not None:
             logger.error(request.user.first_name + ' ' + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
