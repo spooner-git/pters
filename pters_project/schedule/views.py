@@ -532,20 +532,20 @@ def update_schedule_state_cd_logic(request):
         log_info = '개인 레슨'
         push_info = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] \
-                    + ' [개인 레슨] 수업이 '+schedule_state_cd_name+' 처리 되었습니다.'
+                    + ' [개인 레슨] 수업이 '+schedule_state_cd_name+' 처리 됐습니다.'
 
         if schedule_info.lecture_tb_id is not None and schedule_info.lecture_tb_id != '':
             log_info = schedule_info.lecture_tb.name + ' 수업'
             push_info = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] \
                         + ' ['+schedule_info.lecture_tb.name\
-                        + '] 수업이 '+schedule_state_cd_name+' 처리 되었습니다.'
+                        + '] 수업이 '+schedule_state_cd_name+' 처리 됐습니다.'
 
         log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
                          from_member_name=request.user.first_name,
                          to_member_name=member_name,
                          class_tb_id=class_id, member_ticket_tb_id=member_ticket_info.member_ticket_id,
-                         log_info=log_info, log_how=schedule_state_cd_name,
+                         log_info=log_info, log_how=schedule_state_cd_name + ' 처리',
                          log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
         push_message.append(push_info)
