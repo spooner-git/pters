@@ -91,6 +91,7 @@ class Plan_view{
     set start_time (data){
         this.data.start_time = TimeRobot.to_data(data.data.zone, data.data.hour, data.data.minute).complete;
         this.data.start_time_text = data.text + ' 부터';
+        this.data.end_time_text = TimeRobot.to_text(this.data.end_time) + ' 까지 ('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)';
         this.render_content();
     }
 
@@ -388,6 +389,11 @@ class Plan_view{
                                                                                                             this.end_time = object;
                                                                                                         }
                                                                                                     }
+                                                                                                    
+                                                                                                    this.check_duplicate_plan_exist((data)=>{
+                                                                                                        this.data.duplicate_plan_when_add = data;
+                                                                                                        this.render_content();
+                                                                                                    });
                                                                                                     this.if_user_changed_any_information = true;
                                                                                                     //셀렉터에서 선택된 값(object)을 this.dataCenter에 셋팅하고 rerender 한다.
                                                                                                 }});
@@ -413,7 +419,7 @@ class Plan_view{
                 let start_minute = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
 
                 //유저가 선택할 수 있는 최저 시간을 셋팅한다. 이시간보다 작은값을 선택하려면 메세지를 띄우기 위함
-                let time_min = TimeRobot.add_time(TimeRobot.to_data(start_zone, start_hour, start_minute).hour, TimeRobot.to_data(start_zone, start_hour, start_minute).minute, 0, 5);
+                let time_min = TimeRobot.add_time(TimeRobot.to_data(start_zone, start_hour, start_minute).hour, TimeRobot.to_data(start_zone, start_hour, start_minute).minute, 0, 0);
                 let time_min_type_zone = TimeRobot.to_zone(time_min.hour, time_min.minute);
                 let zone_min = time_min_type_zone.zone;
                 let zone_hour = time_min_type_zone.hour;
@@ -447,30 +453,6 @@ class Plan_view{
         return html + html_duplication_alert;
     }
 
-    // dom_row_memo_select (){
-    //     let id = 'select_memo';
-    //     let title = this.data.memo == null ? '' : this.data.memo;
-    //     let placeholder = '일정 메모';
-    //     let icon = '/static/common/icon/icon_note_black.png';
-    //     let icon_r_visible = HIDE;
-    //     let icon_r_text = "";
-    //     let style = null;
-    //     let disabled = false;
-    //     let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
-    //     let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
-    //     let required = "";
-    //     let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-    //         let user_input_data = input_data;
-    //         this.memo = user_input_data;
-    //         let data_to_send = {"schedule_id": this.schedule_id, "add_memo":this.memo};
-    //         let url_update_memo = '/schedule/update_memo_schedule/';
-    //         Plan_func.update(url_update_memo, data_to_send, ()=>{
-    //             this.init();
-    //             this.if_user_changed_any_information = true;
-    //         });
-    //     }, pattern, pattern_message, required);
-    //     return html;
-    // }
     dom_row_memo_select (){
         let id = 'select_memo';
         let title = this.data.memo == null ? '' : this.data.memo;
@@ -624,6 +606,7 @@ class Plan_view{
         }
         let start_dt = this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.start_time;
         let end_dt = this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.end_time;
+
         let schedule_ids = [];
         schedule_ids.push(this.received_data.schedule_info[0].schedule_id);
         for(let i=0; i<this.received_data.schedule_info[0].lecture_schedule_data.length; i++){

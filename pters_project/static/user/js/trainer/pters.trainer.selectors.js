@@ -1468,9 +1468,10 @@ class TimeSelector2{
     }
 
     init (){
+        let initial_set_time_data = TimeRobot.to_data(this.option.data.zone, this.option.data.hour, this.option.data.minute);
         this.init_html();
         this.render_hour_list();
-        this.render_minute_list();
+        this.render_minute_list(initial_set_time_data.hour >= this.option.range.end ? 5 : 60);
         this.set_iscroll();
         this.reset(this.option.data);
     }
@@ -1479,9 +1480,10 @@ class TimeSelector2{
         let zone = object.zone == null ? this.time.current_zone : object.zone;
         let hour = object.hour == null ? this.time.current_hour : object.hour;
         let minute = object.minute == null ? this.time.current_minute : object.minute;
-        
+
         let time_data = TimeRobot.to_data(zone, hour, minute);
-        if(time_data.hour >= this.option.range.end || time_data.hour < this.option.range.start){
+        //미리 셋팅되어있어야하는 값이 업무시간 외의 시간에 있을 경우
+        if((time_data.hour > this.option.range.end && time_data.minute > 0) || time_data.hour < this.option.range.start){
             let time_zone = TimeRobot.to_zone(this.option.range.start, minute);
             zone = time_zone.zone;
             hour = time_zone.hour;
@@ -1550,10 +1552,13 @@ class TimeSelector2{
         document.querySelector(`${this.target.install} .time_selector_hour_wrap`).innerHTML = html;
     }
 
-    render_minute_list (){
+    render_minute_list (minute_end){
         let html_to_join = [];
         let pos = 0;
-        for(let i=0; i<=55; i=i+5){
+        if(minute_end == undefined){
+            minute_end = 60;
+        }
+        for(let i=0; i<minute_end; i=i+5){
                 html_to_join.push(`<li data-mpos=${pos} data-min="${i}">${i}</li>`);
                 pos = pos + 40; 
         }
@@ -1580,11 +1585,21 @@ class TimeSelector2{
             deceleration:0.005,
             bounce: false,
         });
+        
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
-            
+        });
+
+        this.set_scroll_snap();
+    }
+
+    set_iscroll_minute(){
+        this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
+            mouseWheel : true,
+            deceleration:0.005,
+            bounce: false,
         });
         this.set_scroll_snap();
     }
@@ -1606,10 +1621,24 @@ class TimeSelector2{
                     snap = min;
                 }
                 
-                    
                 self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
                 $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
                 $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+
+                let hour = self.get_selected_data().data.hour_data;
+                if(hour >= self.option.range.end){
+                    // self.minute_end = 5;
+                    self.render_minute_list(5);
+                    self.set_iscroll_minute();
+                    self.go_snap(hour - self.option.range.start, 0);
+                    console.log("go_snap", hour, 0)
+                }else{
+                    // self.minute_end = 60;
+                    self.render_minute_list();
+                    self.set_iscroll_minute();
+                    self.go_snap(hour - self.option.range.start, 0);
+                    console.log("go_snap", hour, 0)
+                }
 
                 let data_check = self.check_minimum_time();
                 if(data_check != true){
@@ -1685,9 +1714,11 @@ class TimeSelector2{
             data:{
                 zone : zone_form.zone,
                 hour : zone_form.hour,
-                minute: zone_form.minute
+                minute: zone_form.minute,
+                hour_data: hour_text,
+                minute_data: minute_text
             },
-            text: text
+            text: text,
             
         };
     }
@@ -1716,9 +1747,9 @@ class TimeSelector2{
         if(this.option.min != null){
             let selected_time_data_form = TimeRobot.to_data(this.get_selected_data().data.zone, this.get_selected_data().data.hour, this.get_selected_data().data.minute).complete;
             let min_time_data_form = TimeRobot.to_data(this.option.min.zone, this.option.min.hour, this.option.min.minute).complete;
-            if(selected_time_data_form == '0:0'){
-                selected_time_data_form = '24:00';
-            }
+            // if(selected_time_data_form == '0:0'){
+            //     selected_time_data_form = '24:00';
+            // }
 
             //24시 00분 보다 큰 24시 05분등을 입력하지 못하게 막는다
             if(this.get_selected_data().data.zone == 0 && this.get_selected_data().data.hour == 12 && this.get_selected_data().data.minute > 0){

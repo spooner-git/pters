@@ -351,7 +351,7 @@ class Plan_add{
                                                                                                         if(compare == true){
                                                                                                             //유저가 선택할 수 있는 최저 시간을 셋팅한다. 이시간보다 작은값을 선택하려면 메세지를 띄우기 위함
                                                                                                             let to_data = TimeRobot.to_data(object.data.zone, object.data.hour, object.data.minute);
-                                                                                                            let end_time = TimeRobot.add_time(to_data.hour, to_data.minute, 0, 5);
+                                                                                                            let end_time = TimeRobot.add_time(to_data.hour, to_data.minute, 0, 0);
                                                                                                             let end_time_to_zone = TimeRobot.to_zone(end_time.hour, end_time.minute);
                                                                                                             let end_time_text = TimeRobot.to_text(end_time.hour, end_time.minute);
                                                                                                             this.end_time = {'data':{'zone':end_time_to_zone.zone,'hour':end_time_to_zone.hour, 'minute':end_time_to_zone.minute},
@@ -386,7 +386,7 @@ class Plan_add{
                 let start_minute = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
 
                 //유저가 선택할 수 있는 최저 시간을 셋팅한다. 이시간보다 작은값을 선택하려면 메세지를 띄우기 위함
-                let time_min = TimeRobot.add_time(TimeRobot.to_data(start_zone, start_hour, start_minute).hour, TimeRobot.to_data(start_zone, start_hour, start_minute).minute, 0, 5);
+                let time_min = TimeRobot.add_time(TimeRobot.to_data(start_zone, start_hour, start_minute).hour, TimeRobot.to_data(start_zone, start_hour, start_minute).minute, 0, 0);
                 let time_min_type_zone = TimeRobot.to_zone(time_min.hour, time_min.minute);
                 let zone_min = time_min_type_zone.zone;
                 let zone_hour = time_min_type_zone.hour;
