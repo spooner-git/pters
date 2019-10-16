@@ -278,7 +278,7 @@ class Plan_add{
         let icon = '/static/common/icon/icon_people_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = null;
+        let style = {"height":"auto"};
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             if(this.data.lecture_id.length != 0){
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
