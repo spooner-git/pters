@@ -1093,12 +1093,18 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                     before_day = log_detail_split[0]
                     after_day = log_detail_split[1]
 
-                    if '반복 일정' in log_info.log_info:
+                    if '반복 일정' in log_info.log_how or '반복 일정' in log_info.log_info:
                         log_info.log_detail = before_day + '~' + after_day
                     else:
-                        log_info.log_detail = before_day + '~' + after_day.split(' ')[1]
+
+                        after_day_split = after_day.split(' ')
+                        if len(after_day_split) > 1:
+                            log_info.log_detail = before_day + '~' + after_day.split(' ')[1]
+                        else:
+                            log_info.log_detail = before_day + '~' + after_day
+                        # log_info.log_detail = before_day + '~' + after_day.split(' ')[1]
                         if len(log_detail_split) > 2:
-                            log_info.log_detail = before_day + '~' + after_day + '~' + log_detail_split[2].split(' ')[1]
+                            log_info.log_detail = before_day + '~' + after_day + '~' + log_detail_split[2]
 
                 day = int(log_info.time_ago.days)
                 hour = int(log_info.time_ago.seconds/3600)
