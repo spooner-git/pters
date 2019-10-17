@@ -136,14 +136,22 @@ class Member_attend{
                         this.check_entire = false;
                     break;
                 case 'check_attend':
-                        this.data[member_id].state_cd = SCHEDULE_FINISH;
-                        this.check_entire = true;
-                        for(let id in this.data){
-                            if(this.data[id].state_cd != SCHEDULE_FINISH){
-                                this.check_entire = false;
+                        // this.data[member_id].state_cd = SCHEDULE_FINISH;
+                        // this.check_entire = true;
+                        // for(let id in this.data){
+                        //     if(this.data[id].state_cd != SCHEDULE_FINISH){
+                        //         this.check_entire = false;
+                        //     }
+                        // }
+                        this.open_drawing_board(member_id, ()=>{
+                            this.data[member_id].state_cd = SCHEDULE_FINISH;
+                            this.check_entire = true;
+                            for(let id in this.data){
+                                if(this.data[id].state_cd != SCHEDULE_FINISH){
+                                    this.check_entire = false;
+                                }
                             }
-                        }
-                        this.open_drawing_board(member_id);
+                        });
                     break;
                 case 'uncheck_attend':
                         this.data[member_id].state_cd = SCHEDULE_NOT_FINISH;
@@ -188,7 +196,7 @@ class Member_attend{
 
     }
 
-    open_drawing_board(id){
+    open_drawing_board(id, callback){
         //사인창 열기
         let root_content_height = $root_content.height();
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DRAWING_BOARD, 100*315/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -201,6 +209,7 @@ class Member_attend{
                             border:0,
                             callback:(data)=>{
                                 // show_error_message(`<img src="${data}" style="width:100%;filter:invert(1)">`);
+                                callback();
                                 this.data[id].image = data;
                                 this.render();
                             }

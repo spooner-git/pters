@@ -503,7 +503,6 @@ class Plan_view{
                     member_attend = new Member_attend('.popup_member_attend', this.schedule_id, (set_data)=>{
                         //출석체크 팝업에서 완료버튼을 눌렀을때 할 행동
                         //개인일정 일때
-                        console.log(this.data.schedule_type)
                         if(this.data.schedule_type == 1){
                             let state_cd = set_data[null].state_cd;
                             let image = set_data[null].image;
@@ -511,7 +510,6 @@ class Plan_view{
                                 image = null;
                             }
                             let send_data = {"schedule_id":this.schedule_id, "state_cd":state_cd, "upload_file":image};
-                            console.log(send_data)
                             Plan_func.status(send_data, ()=>{
                                 if(state_cd == SCHEDULE_FINISH){
                                     Plan_func.upload_sign(send_data, ()=>{
