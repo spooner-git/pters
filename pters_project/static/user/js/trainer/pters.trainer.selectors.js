@@ -3274,7 +3274,7 @@ class PasswordFourDigitInput{
 class BoardWriter{
     constructor(title, install_target, instance, data, callback){
         this.title = title;
-        this.target = {install:install_target, instance:instance};
+        this.target = {install:install_target, instance:instance, upper_html:"section_board_writer_upper_html", category_selector:"section_board_writer_category_selector", content_writer:"section_board_writer_content_writer"};
         this.callback = callback;
         this.external_data = data;
         this.data = {
@@ -3318,7 +3318,9 @@ class BoardWriter{
         let top_right = `<span class="icon_right">
                             <span style="color:#fe4e65;font-weight: 500;" onclick="${this.target.instance}.upper_right_menu();">저장</span>
                         </span>`;
-        let content =   `<section>${this.dom_assembly()}</section>`;
+        let content =   `<section id="${this.target.upper_html}">${this.data.upper_html != null ? this.data.upper_html : ""}</section>`+
+                        `<section id="${this.target.category_selector}">${this.dom_assembly_category()}</section>`+
+                        `<section id="${this.target.content_writer}">${this.dom_content_assembly()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -3326,15 +3328,39 @@ class BoardWriter{
         this.init_summernote();
     }
 
-    dom_assembly (){
-        let title_input = this.dom_row_subject_input();
-        let content_input = this.dom_row_content_input();
-        let category = this.dom_assembly_category();
+    render_upper_html(){
+        let html = this.data.upper_html != null ? this.data.upper_html : ""
+        document.getElementById(this.target.upper_html).innerHTML = html;
+    }
 
+    render_category_selector(){
+        let html = this.dom_assembly_category();
+        document.getElementById(this.target.category_selector).innerHTML = html;
+    }
 
-        let html =  category + 
-                    `<div class="obj_input_box_full" style="padding:8px 16px;">`+ title_input + `</div>` + 
-                    `<div class="obj_input_box_full">` + content_input + `</div>`;
+    render_content_writer(){
+        let html = this.dom_content_assembly();
+        document.getElementById(this.target.content_writer).innerHTML = html;
+    }
+
+    dom_content_assembly (){
+        // let upper_html = this.data.upper_html != null ? this.data.upper_html : "";
+        let title_input = `<div class="obj_input_box_full" style="padding:8px 16px;">`+ this.dom_row_subject_input() + `</div>`;
+        let content_input = `<div class="obj_input_box_full">` + this.dom_row_content_input() + `</div>`;
+        // let category = this.dom_assembly_category();
+        let bottom_html = this.data.bottom_html != null ? this.data.bottom_html : "";
+
+        if(this.data.visibility.title == HIDE){
+            title_input = "";
+        }
+        if(this.data.visibility.content == HIDE){
+            content_input = "";
+        }
+
+        let html =  
+                    title_input + 
+                    content_input +
+                    bottom_html;
 
         return html;
     }
@@ -3386,7 +3412,8 @@ class BoardWriter{
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.category_selected[category_id].text.length == 0 ? '' : this.data.category_selected[category_id].text;
-        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"170px", "max-width":"208px", "font-size":"14px"};
+        // let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"170px", "max-width":"208px", "font-size":"14px"};
+        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"300px", "max-width":"320px", "font-size":"14px"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let title = category_title;
             let install_target = "#wrapper_box_custom_select";
@@ -3397,7 +3424,7 @@ class BoardWriter{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
                 custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
                     this.data.category_selected[category_id] = set_data;
-                    this.render();
+                    this.render_category_selector();
                 });
             });
         });
@@ -3406,6 +3433,7 @@ class BoardWriter{
     }
 
     init_summernote(){
+        let summernote_attachment = {"name":[], "size":[]};
         $(`#board_writer_content_input`).summernote({
             minHeight: 150,
             fontSizes:['12', '14', '16'],
@@ -3436,7 +3464,7 @@ class BoardWriter{
                         for (let i = files.length - 1; i >= 0; i--) {
                             summernote_attachment["name"].push(files[i].name);
                             summernote_attachment["size"].push(files[i].size/1024000);
-                            update_room_content_img(files[i]);
+                            update_content_img(files[i]);
                         }
                     }
                 }
@@ -3445,8 +3473,51 @@ class BoardWriter{
         if(this.data.content == "" || this.data.content == null){
             this.data.content = " "
         }
-        $(`#board_writer_content_input`).summernote('pasteHTML', this.data.content);
+
+        $(`#board_writer_content_input`).summernote('code', this.data.content);
         $('.note-editable').blur();
+    }
+
+    update_content_img(file){
+        let date = new Date();
+        let content_img_file_name = file.lastModified+'_{{request.user.id}}_'+date.getTime();
+        let form_data = new FormData();
+        form_data.append('content_img_file', file);
+        form_data.append('content_img_file_name', file.lastModified+'_'+file.name);
+        $.ajax({
+            url: '{% url "room:update_room_content_img_logic" %}',
+            data: form_data,
+            dataType : 'html',
+            type:'POST',
+            processData: false,
+            contentType: false,
+            enctype:'multipart/form-data',
+
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+                ajax_load_image(SHOW);
+            },
+
+            success:function(data){
+                let jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    show_error_message(jsondata.messageArray);
+                }else{
+                    $('#board_writer_content_input').summernote('insertImage', jsondata.img_url);
+                }
+            },
+
+            complete:function(){
+                ajax_load_image(HIDE);
+            },
+
+            error:function(){
+                //alert('통신이 불안정합니다.');
+                show_error_message('통신이 불안정합니다.');
+            }
+        });
     }
 
     request_list (callback){

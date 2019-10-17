@@ -14,6 +14,10 @@
      -webkit-user-select: none !important; */
  }
 
+ iframe{
+     width: 100%;
+ }
+
  /* 안드로이드 input 필드 키보드 가림현상 보정 */
  .input_focused{
 	position: fixed;
