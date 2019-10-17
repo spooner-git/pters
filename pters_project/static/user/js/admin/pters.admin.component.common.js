@@ -22,19 +22,17 @@ class CComponent{
         return html;
     }
 
-    //추가 페이지들에서 자주 사용되는 row 스타일
     static create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick){
-        // if(icon == null){
-        //     icon = '/static/common/icon/icon_dissatisfied.png';
-        // }
         if(icon == NONE){
             icon = '/static/common/icon/icon_gap_black.png';
         }
         
         let html = `<li class="create_row" id="c_r_${id}" style="${CComponent.data_to_style_code(style)}">
-                        <div class="obj_table_raw">
-                            <div class="cell_title">
-                                ${icon == DELETE ? "" : `<img src="${icon}">`} 
+                        <div style="display:flex;">
+                            <div class="cell_title" style="${icon == DELETE ? 'display:none' : ''}">
+                                <img src="${icon == DELETE ? '' : icon}">
+                            </div>
+                            <div class="cell_content">
                                 <div class="cell_text">${title}</div>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == NONE ? "style='display:none'": ''}>
@@ -64,7 +62,7 @@ class CComponent{
         }
 
         let html = `<li class="create_input_row" id="c_i_r_${id}" style="${CComponent.data_to_style_code(style)}">
-                        <div class="obj_table_raw">
+                        <div style="display:flex;">
                             <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
                                 <img src="${icon == DELETE ? '' : icon}">
                             </div>
@@ -105,7 +103,7 @@ class CComponent{
             icon = '/static/common/icon/icon_gap_black.png';
         }
         let html = `<li class="create_input_row" id="c_i_n_r_${id}" style="${CComponent.data_to_style_code(style)}">
-                        <div class="obj_table_raw">
+                        <div style="display:flex;">
                             <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
                                 <img src="${icon == DELETE ? '' : icon}">
                             </div>
@@ -145,12 +143,12 @@ class CComponent{
             icon = '/static/common/icon/icon_gap_black.png';
         }
         let html = `<li class="create_input_row create_input_textarea_row" id="c_i_t_r_${id}" style="${CComponent.data_to_style_code(style)}">
-                        <div class="obj_table_raw" style="height:100%">
-                            <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
+                        <div style="height:100%;display:flex;">
+                            <div class="cell_title" style="vertical-align:top;display:${icon == DELETE ? 'none' : ''}">
                                 <img src="${icon == DELETE ? '' : icon}">
                             </div>
                             <div class="cell_content">
-                                <textarea class="cell_text" placeholder="${placeholder}" value="${title}" style="height:100%;" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">${title}</textarea>
+                                <textarea class="cell_text" placeholder="${placeholder}" value="${title}" style="height:100%;min-height:55px;" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">${title}</textarea>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
@@ -159,7 +157,7 @@ class CComponent{
                         </div>
                     </li>`;
         $(document).off('focusin', `#c_i_t_r_${id}`).on('focusin', `#c_i_t_r_${id}`, function(e){
-            $(this).find('textarea').val('');
+            // $(this).find('textarea').val('');
         });
 
         $(document).off('focusout', `#c_i_t_r_${id}`).on('focusout', `#c_i_t_r_${id}`, function(e){
@@ -301,7 +299,7 @@ class CComponent{
     }
 
     //회원 선택 팝업에 사용되는 행
-    static select_member_row (multiple_select, checked, location, member_id, member_name, member_avail_count, member_expiry, member_fix_state_cd, disable_zero_avail_count, onclick){
+    static select_member_row (multiple_select, checked, location, member_id, member_name, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, disable_zero_avail_count, onclick){
         let fix_member_check = '';
         if(member_fix_state_cd==FIX){
             fix_member_check = '고정회원';
@@ -461,7 +459,7 @@ class CComponent{
     static select_attend_row (checked_absence, checked_attend, location, member_id, member_name, onclick){
         let html = `
                     <li class="select_attend_row sar_${location}" id="sar_${member_id}">
-                        <div class="obj_table_raw">
+                        <div style="display:flex;">
                             <div class="cell_member_name">
                                 <span>${member_name}</span>
                             </div>
@@ -532,7 +530,7 @@ class CComponent{
     }
 
     //회원의 수강권 이력에 사용되는 행
-    static ticket_history_row (numbering, ticket_id, date, ticket_name, reg_count, remain_count, avail_count, status, onclick){
+    static ticket_history_row (numbering, ticket_id, date, ticket_name, reg_count, remain_count, avail_count, status, note, onclick){
         let html = `<li class="ticket_history_row" id="ticket_history_row_${ticket_id}">
                         <div class="obj_table_raw table_basic_info">
                             <div class="cell_ticket_num">${numbering}</div>
@@ -547,6 +545,10 @@ class CComponent{
                             <div class="cell_ticket_num"></div>
                             <div class="cell_ticket_info">등록 ${reg_count} 회 / 출석완료 ${reg_count-avail_count} / 예약가능 ${avail_count}</div>
                         </div>
+                        <div class="obj_table_raw table_memo_info" style="color:#ff7184;">
+                            <div class="cell_ticket_num"></div>
+                            <div class="cell_ticket_info">${note}</div>
+                        </div>
                     </li>`;
         $(document).off('click', `#ticket_history_row_${ticket_id}`).on('click', `#ticket_history_row_${ticket_id}`, function(){
             onclick();
@@ -554,6 +556,7 @@ class CComponent{
         return html;
     }
 
+    
 
     static no_data_row(text){
         let html = `<li class="no_data_row">
@@ -573,8 +576,9 @@ class CComponent{
         let html = `<div id="button_${id}" style="text-align:center;cursor:pointer;padding:3px 8px;${style_code}">${title}</div>`;
         
         $(document).off('click', `#button_${id}`).on('click', `#button_${id}`, function(e){
-            e.stopPropagation();
-            onclick();
+            if(onclick!=undefined){
+                onclick();
+            }
         });
         return html;
     }
@@ -584,8 +588,9 @@ class CComponent{
         let html = `<span id="text_button_${id}" style="cursor:pointer;padding:3px 0;${style_code}">${title}</span>`;
         
         $(document).off('click', `#text_button_${id}`).on('click', `#text_button_${id}`, function(e){
-            e.stopPropagation();
-            onclick();
+            if(onclick!=undefined){
+                onclick();
+            }
         });
         return html;
     }
@@ -600,12 +605,11 @@ class CComponent{
         }
 
         let html = `<div id="icon_button_${id}" style="cursor:pointer;padding:3px 8px;display:inline-block;height:40px;width:auto;${CComponent.data_to_style_code(style)}">
-                        <img src="${url}" style="width:24px;height:24px;vertical-align:middle;margin-bottom:4px;margin-right:5px;${url == DELETE ? 'display:none': ''}">
+                        <img src="${url == DELETE ? '' :url}" style="width:24px;height:24px;vertical-align:middle;margin-bottom:4px;margin-right:5px;${url == DELETE ? 'display:none': ''}">
                         <span style="line-height:40px;">${title}</span>
                     </div>`;
         
         $(document).off('click', `#icon_button_${id}`).on('click', `#icon_button_${id}`, function(e){
-            e.stopPropagation();
             onclick();
         });
         return html;
@@ -621,7 +625,6 @@ class CComponent{
                     </div>`;
         
         $(document).off('click', `#image_button_${id}`).on('click', `#image_button_${id}`, function(e){
-            e.stopPropagation();
             onclick();
         });
         return html;
@@ -633,7 +636,6 @@ class CComponent{
                     </div>`;
         
         $(document).off('click', `#toggle_button_${id}`).on('click', `#toggle_button_${id}`, function(e){
-            e.stopPropagation();
             let $this = $(`#toggle_button_${id}`);
             if($this.hasClass('toggle_button_active')){
                 onclick(OFF);
