@@ -141,7 +141,8 @@ def update_finish_schedule_data_logic(request):
                                          " AND A.USE=1"
     not_finish_schedule_data = ScheduleTb.objects.select_related(
         'member_ticket_tb'
-    ).filter(class_tb_id='127', state_cd=STATE_CD_NOT_PROGRESS, en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now, use=USE
+    ).filter(Q(class_tb_id='127')|Q(class_tb_id='1956'), state_cd=STATE_CD_NOT_PROGRESS,
+             en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now, use=USE
              ).annotate(schedule_auto_finish=RawSQL(query_setting_schedule_auto_finish,
                                                     [])).exclude(schedule_auto_finish=AUTO_FINISH_OFF)
     for not_finish_schedule_info in not_finish_schedule_data:
