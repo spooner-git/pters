@@ -141,6 +141,7 @@ html, body{
     #section_center{
         position: relative;
         flex: 1 0 0;
+        width: 100%;
     }
     #section_content{
         position: relative;

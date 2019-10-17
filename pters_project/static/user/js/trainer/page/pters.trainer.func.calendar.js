@@ -1338,25 +1338,25 @@ class Calendar {
         return(
             {
                 "month_cal_upper_box":` <div class="cal_upper_box">
-                                            <div class="cal_date_display" onclick="${this.instance}.switch_cal_type()">
+                                            <div class="cal_date_display page_title" onclick="${this.instance}.switch_cal_type()">
                                                 <span class="display_year">${this.current_year}년</span>
                                                 <span class="display_month">${this.current_month}월</span>
                                                 <div class="swap_cal"></div>
                                             </div>
-                                            <div class="cal_tools_wrap">
-                                                <div class="go_today" onclick="${this.instance}.go_month()"></div>
-                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()"></div>
-                                            </div>
                                             <div class="cal_pc_tools_wrap">
                                                 ${CComponent.text_button ("calendar_month_prev", "<img src='/static/common/icon/icon_arrow_l_black.png' style='width:28px;vertical-align:top'>", null, ()=>{this.move_month('prev');})}
                                                 ${CComponent.text_button ("calendar_month_next", "<img src='/static/common/icon/icon_arrow_l_black.png' style='width:28px;vertical-align:top;transform:rotate(180deg)'>", null, ()=>{this.move_month('next');})}
+                                            </div>
+                                            <div class="cal_tools_wrap">
+                                                <div class="go_today" onclick="${this.instance}.go_month()"></div>
+                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()"></div>
                                             </div>
                                         </div>
                                         `
                 ,
                 "week_cal_upper_box":`
                                         <div class="cal_upper_box">
-                                            <div class="cal_date_display" onclick="${this.instance}.switch_cal_type()">
+                                            <div class="cal_date_display page_title" onclick="${this.instance}.switch_cal_type()">
                                                 <span class="display_week">${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0] :null}월 
                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0] :null}일 - 
                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]: null}월 
@@ -1364,13 +1364,13 @@ class Calendar {
                                                 </span>
                                                 <div class="swap_cal"></div>
                                             </div>
-                                            <div class="cal_tools_wrap">
-                                                <div class="go_today" onclick="${this.instance}.go_week()"></div>
-                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()"></div>
-                                            </div>
                                             <div class="cal_pc_tools_wrap">
                                                 ${CComponent.text_button ("calendar_week_prev", "<img src='/static/common/icon/icon_arrow_l_black.png' style='width:28px;vertical-align:top'>", null, ()=>{this.move_week('prev');})}
                                                 ${CComponent.text_button ("calendar_week_next", "<img src='/static/common/icon/icon_arrow_l_black.png' style='width:28px;vertical-align:top;transform:rotate(180deg)'>", null, ()=>{this.move_week('next');})}
+                                            </div>
+                                            <div class="cal_tools_wrap">
+                                                <div class="go_today" onclick="${this.instance}.go_week()"></div>
+                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()"></div>
                                             </div>
                                         </div>
                                         `             

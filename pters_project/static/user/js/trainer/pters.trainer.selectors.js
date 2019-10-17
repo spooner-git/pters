@@ -2854,7 +2854,7 @@ class RepeatSelector{
         let id = 'select_day';
         let title = this.data.day.length == 0 ? '요일 지정' : this.data.day.map((el)=>{return DAYNAME_MATCH[el];}).join(', ');
         let icon = NONE;
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
@@ -2875,7 +2875,7 @@ class RepeatSelector{
         let id = 'select_end_date';
         let title = this.data.repeat_end.year == null ? '반복 종료일' : DateRobot.to_text(this.data.repeat_end.year, this.data.repeat_end.month, this.data.repeat_end.date)+' 까지';
         let icon = NONE;
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 

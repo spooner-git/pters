@@ -23,6 +23,9 @@ input:disabled{
 
 .create_row, .create_input_row, .cell_text{
 	vertical-align: inherit;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .create_row, .create_input_row{
 	list-style: none;
@@ -97,7 +100,10 @@ input:disabled{
 	flex-basis: 42px;
 }
 .create_row .cell_content{
-	flex: 1 1 0;
+	flex: 2 1 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .create_input_row .cell_title{
@@ -116,7 +122,9 @@ input:disabled{
 
 
 .create_row .cell_icon{
-	flex-basis:120px;
+	/* flex-basis:120px; */
+	flex: 1 1 0;
+	max-width: 120px;
 	font-size: 13px;
 	text-align: right;
 	color: #858282;

@@ -42,52 +42,20 @@
     opacity:0.5;
     z-index:1
 }
-/* #android_input_wrap{
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 100;
+
+/* 페이지들의 공통 css 요소들*/
+
+/* 페이지 상단 메뉴명 */
+.page_title{
+    font-size: 23px;
 }
-#android_input{
-	position: fixed;
-    top: 25%;
-    left: 0;
-    transform: translateY(-25%);
-    text-align:center;
-    width: 100%;
-    height: 65px;
-    padding: 10px 0;
-    box-sizing: border-box;
-	border-top: 1px solid #cccccc;
-	border-bottom: 1px solid #cccccc;
-	box-shadow: 0px 0px 5px 0px #cccccc;
-	background-color: #ffffff;
-    z-index: 2;
+@media(max-width:370px){
+    .page_title{
+        font-size: 20px;
+    }
 }
-#android_input > input{
-    width: 95%;
-    height: 35px;
-    -webkit-appearance: none;
-    font-family: inherit;
-    font-size: 15px;
-    border: 0;
-    border-bottom: 1px solid #cccccc;
-} */
-
-
- /*기본 html, body스타일*/
-
- /* .content_page{
-    position: fixed;
-    top: 0px;
-    left: 0%;
-    transform: translateX(-50%);
-    max-width: 800px;
-    width: 100%;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    z-index: 0;
-    background-color: #f7f5f6;
-
-} 
-*/
+@media(max-width:340px){
+    .page_title{
+        font-size: 17px;
+    }
+}
