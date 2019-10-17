@@ -423,11 +423,11 @@ class Plan_add{
     dom_row_repeat_select(){
         let repeat_end_date_in_text = '<span style="font-size:10px; font-weight:500;letter-spacing: -1px;color: #1f1d1e;float:left;">'+ DateRobot.to_text(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date)+' 까지</span>';
         let id = 'select_repeat';
-        let repeat_title = '<span style="float:left">' + this.data.repeat.day.map((el)=>{return DAYNAME_MATCH[el];}).join(', ') + '</span>';
+        let repeat_title = '<span style="float:left">' + this.data.repeat.day.map((el)=>{return DAYNAME_MATCH[el];}).join(', ') + ' / ' + '</span>';
         if(this.data.repeat.day.length==7){
-            repeat_title = '<span style="float:left">'+ '매일' + '</span>';
+            repeat_title = '<span style="float:left">'+ '매일 / ' + '</span>';
         }
-        let title =this.data.repeat.power == OFF ? '반복 일정' : repeat_title +' / '+ repeat_end_date_in_text;
+        let title =this.data.repeat.power == OFF ? '반복 일정' : repeat_title + repeat_end_date_in_text;
         let icon = '/static/common/icon/icon_repeat_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
