@@ -328,7 +328,7 @@ class Plan_add{
         let id = 'select_start';
         let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
         let icon = '/static/common/icon/icon_clock_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ //data : 직전 셋팅값
@@ -369,7 +369,7 @@ class Plan_add{
         let id = 'select_end';
         let title = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
         let icon = '/static/common/icon/icon_clock_white.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ //data : 직전 셋팅값
@@ -421,17 +421,17 @@ class Plan_add{
     }
 
     dom_row_repeat_select(){
-        let repeat_end_date_in_text = '<span style="font-size:10px; font-weight:500;letter-spacing: -1px;color: #1f1d1e;">'+DateRobot.to_text(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date)+' 까지</span>';
+        let repeat_end_date_in_text = '<span style="font-size:10px; font-weight:500;letter-spacing: -1px;color: #1f1d1e;float:left;">'+ DateRobot.to_text(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date)+' 까지</span>';
         let id = 'select_repeat';
-        let repeat_title = this.data.repeat.day.map((el)=>{return DAYNAME_MATCH[el];}).join(', ');
+        let repeat_title = '<span style="float:left">' + this.data.repeat.day.map((el)=>{return DAYNAME_MATCH[el];}).join(', ') + '</span>';
         if(this.data.repeat.day.length==7){
-            repeat_title = '매일';
+            repeat_title = '<span style="float:left">'+ '매일' + '</span>';
         }
         let title =this.data.repeat.power == OFF ? '반복 일정' : repeat_title +' / '+ repeat_end_date_in_text;
         let icon = '/static/common/icon/icon_repeat_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = null;
+        let style = {"height":"auto"};
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_REPEAT_SELECT, 100, popup_style, null, ()=>{

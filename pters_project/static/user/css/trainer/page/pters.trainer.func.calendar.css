@@ -14,23 +14,25 @@
 		height: 28px;
 		line-height: 28px;
 		background-color: #ffffff;
-		/* border-bottom: 1px solid #cccccc; */
 		padding: 0 16px;
 		padding-right: 0;
 		box-sizing: border-box;
-		/*margin-bottom: 4px;*/
+		display: flex;
 	}
 	.cal_tools_wrap{
-		display: table;
+		/* display: table; */
 		/* position: absolute; */
 		/* right: 0; */
 		/* top: 0; */
-		float: right;
-		width: 100px;
+		/* float: right; */
+		/* width: 100px; */
 		height: 100%;
+		flex-basis: 100px;
+		display: flex;
 	}
 	.cal_tools_wrap > .add_plan{
-		display: table-cell;
+		/* display: table-cell; */
+		flex: 1 1 0;
 		height: 28px;
 		background-image: url("/static/common/icon/icon_plus_pink.png");
 		background-repeat: no-repeat;
@@ -39,7 +41,8 @@
 		cursor: pointer;
 	}
 	.cal_tools_wrap > .go_today{
-		display: table-cell;
+		/* display: table-cell; */
+		flex: 1 1 0;
 		height: 28px;
 		background-image: url("/static/common/icon/icon_today_black.png");
 		background-repeat: no-repeat;
@@ -48,8 +51,9 @@
 		cursor: pointer;
 	}
 	.cal_pc_tools_wrap{
-		float: right;
-		margin-right:20px;
+		/* float: right;
+		margin-right:20px; */
+		flex-basis: 90px;
 	}
 	@media(max-width:650px){
 		.cal_pc_tools_wrap{
@@ -57,13 +61,16 @@
 		}
 	}
 	.cal_upper_box > .cal_date_display{
-		display:inline-block;
-		width:245px;
-		font-size:23px;
+		/* display:inline-block; */
+		/* width:245px; */
+		/* flex-basis: 245px; */
+		flex: 1 1 0;
+		/* font-size:23px; */
 		font-weight:bold;
 		color:#3b3d3d;
 		cursor: pointer;
 	}
+
 	.cal_upper_box .swap_cal{
 		display: inline-block;
 		height: 24px;
