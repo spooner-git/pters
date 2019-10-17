@@ -168,7 +168,7 @@ def update_finish_schedule_data_logic(request):
                 permission_state_cd=not_finish_schedule_info.permission_state_cd,
                 state_cd=not_finish_schedule_info.state_cd, note=not_finish_schedule_info.note,
                 en_dis_type=not_finish_schedule_info.en_dis_type, member_note=not_finish_schedule_info.member_note,
-                reg_member_id=not_finish_schedule_info.reg_member_id, del_member_id='auto',
+                reg_member_id=not_finish_schedule_info.reg_member_id, del_member='auto',
                 reg_dt=not_finish_schedule_info.reg_dt, mod_dt=timezone.now(),
                 use=UN_USE)
             delete_schedule_info.save()

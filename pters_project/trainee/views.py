@@ -21,7 +21,7 @@ from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_get_member_ticket_id, func_check_lecture_available_member_before,\
     func_check_lecture_available_member_after, func_add_schedule, func_refresh_member_ticket_count, \
-    func_get_lecture_member_ticket_id_from_trainee
+    func_get_lecture_member_ticket_id_from_trainee, func_send_push_trainee
 from schedule.models import ScheduleTb, DeleteScheduleTb
 from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassMemberTicketTb,  ClassTb, SettingTb, LectureTb, TicketLectureTb,\
@@ -523,12 +523,15 @@ def delete_trainee_schedule_logic(request):
     schedule_info = None
     start_date = None
     end_date = None
-    push_class_id = []
-    push_title = []
-    push_message = []
+    # push_class_id = []
+    # push_title = []
+    # push_message = []
     lecture_name = '개인 레슨'
-    context = {'push_class_id': None, 'push_title': None, 'push_message': None}
+    # context = {'push_class_id': None, 'push_title': None, 'push_message': None}
+    context = {}
     member_ticket_id = None
+    lecture_id = None
+    repeat_schedule_id = None
 
     if schedule_id == '':
         error = '스케쥴 정보를 불러오지 못했습니다.'
@@ -554,7 +557,14 @@ def delete_trainee_schedule_logic(request):
 
     if error is None:
         member_ticket_info = schedule_info.member_ticket_tb
-        member_ticket_id = schedule_info.member_ticket_tb.member_ticket_id
+        member_ticket_id = member_ticket_info.member_ticket_id
+
+        # if member_ticket_info is not None and member_ticket_info != '':
+        # member_ticket_id = schedule_info.member_ticket_tb.member_ticket_id
+        if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
+            lecture_id = schedule_info.lecture_tb_id
+        if schedule_info.repeat_schedule_tb is not None and schedule_info.repeat_schedule_tb != '':
+            repeat_schedule_id = schedule_info.repeat_schedule_tb_id
 
     if error is None:
         try:
@@ -576,12 +586,11 @@ def delete_trainee_schedule_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-
                 delete_schedule = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
                                                    class_tb_id=schedule_info.class_tb_id,
-                                                   member_ticket_tb_id=schedule_info.member_ticket_tb_id,
-                                                   lecture_tb_id=schedule_info.lecture_tb_id,
-                                                   delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
+                                                   member_ticket_tb_id=member_ticket_id,
+                                                   lecture_tb_id=lecture_id,
+                                                   delete_repeat_schedule_tb=repeat_schedule_id,
                                                    lecture_schedule_id=schedule_info.lecture_schedule_id,
                                                    start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
                                                    permission_state_cd=schedule_info.permission_state_cd,
@@ -589,23 +598,24 @@ def delete_trainee_schedule_logic(request):
                                                    en_dis_type=schedule_info.en_dis_type,
                                                    note=schedule_info.note, member_note=schedule_info.member_note,
                                                    reg_member_id=schedule_info.reg_member_id,
-                                                   del_member_id=request.user.id,
+                                                   del_member=str(request.user.id),
                                                    reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=UN_USE)
 
                 delete_schedule.save()
                 schedule_info.delete()
 
-                if error is None:
-                    error = func_refresh_member_ticket_count(class_id, member_ticket_id)
-
+                # if error is None:
+                error = func_refresh_member_ticket_count(class_id, member_ticket_id)
+                if error is not None:
+                    raise InternalError
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
             error = '등록 값의 형태에 문제가 있습니다.'
         except IntegrityError:
-            error = '삭제된 일정입니다.'
+            error = '삭제된 일정입니다.[0]'
         except InternalError:
-            error = '삭제된 일정입니다.'
+            error = '오류가 발생했습니다.[1]'
         except ValidationError:
             error = '예약 가능한 횟수를 확인해주세요.'
 
@@ -628,25 +638,32 @@ def delete_trainee_schedule_logic(request):
             lt_pus_from_trainee_lesson_alarm = int(setting_data.setting_info)
         except ObjectDoesNotExist:
             lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
-
+        print('test1')
         if lt_pus_from_trainee_lesson_alarm == FROM_TRAINEE_LESSON_ALARM_ON:
             push_info_schedule_start_date = str(start_date).split(':')
             push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
-
-            push_class_id.append(class_id)
-            push_title.append(class_type_name + ' - 수업 알림')
-            push_message.append(request.user.first_name + '님이 '
-                                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + ' ['+lecture_name+'] 수업을 예약 취소했습니다.')
-
-            context['push_class_id'] = push_class_id
-            context['push_title'] = push_title
-            context['push_message'] = push_message
-        else:
-            context['push_class_id'] = ''
-            context['push_title'] = ''
-            context['push_message'] = ''
+            print('test2::'+str(class_id))
+            func_send_push_trainee(class_id,
+                                   class_type_name + ' - 수업 알림',
+                                   request.user.first_name + '님이 '
+                                   + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                                   + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                                   + ' ['+lecture_name + '] 수업을 예약 취소했습니다.')
+            print('test3')
+            # push_class_id.append(class_id)
+            # push_title.append(class_type_name + ' - 수업 알림')
+            # push_message.append(request.user.first_name + '님이 '
+            #                     + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+            #                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+            #                     + ' ['+lecture_name+'] 수업을 예약 취소했습니다.')
+            #
+            # context['push_class_id'] = push_class_id
+            # context['push_title'] = push_title
+            # context['push_message'] = push_message
+        # else:
+        #     context['push_class_id'] = ''
+        #     context['push_title'] = ''
+        #     context['push_message'] = ''
 
     else:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
