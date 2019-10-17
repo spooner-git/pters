@@ -100,6 +100,9 @@ class Pters_pass_main{
     
     dom_assembly_content(){
         let html =  '<article class="obj_input_box_full">' +
+                        this.dom_row_my_pters_pass() +
+                    '</article>' +
+                    '<article class="obj_input_box_full">' +
                         this.dom_row_pters_pass_purchase() + 
                     '</article>' +
                     '<article class="obj_input_box_full">' +
@@ -110,6 +113,33 @@ class Pters_pass_main{
         return html;
     }
 
+    dom_row_my_pters_pass(){
+        let data = pass_inspector.data;
+        
+        let schedule =  this.dom_row_auth_info("일정", `매일 오늘 기준 전/후 ${data["auth_plan_create"].limit_num}일 등록, 취소`);
+        let member =  this.dom_row_auth_info("회원", `${data["auth_member_create"].limit_num} 명 (진행중)`);
+        let lecture =  this.dom_row_auth_info("수업", `${data["auth_group_create"].limit_num} 개 (진행중)`);
+        let ticket =  this.dom_row_auth_info("수강권", `${data["auth_package_create"].limit_num} 개 (진행중)`);
+        let statistics =  this.dom_row_auth_info("통계", `${data["auth_analytics_read"].limit_num} 개월씩 조회 가능`);
+        let program =  this.dom_row_auth_info("프로그램", `${data["auth_program_create"].limit_num} 개`);
+        
+        let html = `<div>` +
+                        schedule + member + lecture + ticket + statistics + program +
+                    `</div>`;
+        return html;
+    }
+
+    dom_row_auth_info(title, auth_info){
+        let html = `<div style="display:flex;font-size:12px;letter-spacing:-0.5px;height:24px;line-height:24px;margin-bottom:2px;">
+                        <div style="flex-basis:82px;color:#999696">
+                            ${title}
+                        </div>
+                        <div style="flex:1 1 0;color:#5c5859;">
+                            ${auth_info}
+                        </div>
+                    </div>`;
+        return html;
+    }
 
     dom_row_pters_pass_purchase(){
         let id = "pters_pass_purchase";
