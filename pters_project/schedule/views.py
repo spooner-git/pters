@@ -970,18 +970,18 @@ def add_repeat_schedule_confirm(request):
                         member_info = None
 
                     if member_info is not None:
-                        member_ticket_id = None
-                        member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
+                        repeat_member_ticket_id = None
+                        repeat_member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
                                                                                  member_info.member_id)
-                        if member_ticket_result['error'] is not None:
-                            error = member_ticket_result['error']
+                        if repeat_member_ticket_result['error'] is not None:
+                            error = repeat_member_ticket_result['error']
                         else:
-                            member_ticket_id = member_ticket_result['member_ticket_id']
+                            repeat_member_ticket_id = repeat_member_ticket_result['member_ticket_id']
 
                         if error is None:
-                            if member_ticket_id is not None and member_ticket_id != '':
+                            if repeat_member_ticket_id is not None and repeat_member_ticket_id != '':
                                 repeat_schedule_result = func_add_repeat_schedule(repeat_schedule_info.class_tb_id,
-                                                                                  member_ticket_id,
+                                                                                  repeat_member_ticket_id,
                                                                                   repeat_schedule_info.lecture_tb_id,
                                                                                   repeat_schedule_info.repeat_schedule_id,
                                                                                   repeat_schedule_info.repeat_type_cd,
@@ -1044,18 +1044,18 @@ def add_repeat_schedule_confirm(request):
 
                                             # if error_temp is not None:
                                             #     error_message = error_temp
-                        if member_ticket_id is not None and member_ticket_id != '':
+                        if repeat_member_ticket_id is not None and repeat_member_ticket_id != '':
                             log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
                                              from_member_name=request.user.first_name,
                                              to_member_name=member_info.name,
                                              class_tb_id=class_id,
-                                             member_ticket_tb_id=member_ticket_id,
+                                             member_ticket_tb_id=repeat_member_ticket_id,
                                              log_info=lecture_info.name,
                                              log_how='반복 일정 등록',
                                              log_detail=str(start_date) + '/' + str(end_date), use=USE)
                             log_data.save()
                             if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
-                                func_send_push_trainer(member_ticket_id,
+                                func_send_push_trainer(repeat_member_ticket_id,
                                                        class_type_name + ' - 수업 알림',
                                                        request.user.first_name + '님이 '
                                                        + str(start_date) + '~' + str(end_date)
