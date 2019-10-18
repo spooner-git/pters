@@ -170,8 +170,16 @@ class Notice {
                                         });
                                     })
                                 }
-                                ${CComponent.button ("notice_delete_"+id, "삭제", {"border":"1px solid #e8e8e8", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
-                                        alert('삭제 실행');
+                                ${
+                                    CComponent.button ("notice_delete_"+id, "삭제", {"border":"1px solid #e8e8e8", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
+                                        show_user_confirm(`공지 "${numbering}" 번 글을 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
+                                            Notice_func.delete({"notice_id":id}, ()=>{
+                                                try{
+                                                    this.init();
+                                                }catch(e){}
+                                                layer_popup.all_close_layer_popup();
+                                            });
+                                        });
                                     })
                                 }
                             </div>
@@ -289,6 +297,40 @@ class Notice_func{
     static update(data, callback){
         $.ajax({
             url:'/admin_spooner/update_notice_info/',
+            type:'POST',
+            data: data,
+            dataType : 'JSON',
+
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                // let data = JSON.parse(received_data);
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                // location.reload();
+            }
+        });
+    }
+
+    static delete(data, callback){
+        $.ajax({
+            url:'/admin_spooner/delete_notice_info/',
             type:'POST',
             data: data,
             dataType : 'JSON',

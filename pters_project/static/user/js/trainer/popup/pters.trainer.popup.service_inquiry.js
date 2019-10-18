@@ -272,6 +272,42 @@ class Service_inquiry_func {
             }
         });
     }
+
+    static read_inquiry_answer(data, callback){
+        $.ajax({
+            url:'/board/get_qa_comment_list/',
+            data:data,
+            type:'GET',
+            dataType : 'JSON',
+    
+            beforeSend:function(xhr, settings) {
+                
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
 }
 
 /* global $, 

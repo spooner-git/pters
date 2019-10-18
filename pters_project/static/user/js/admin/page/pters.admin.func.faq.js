@@ -165,8 +165,16 @@ class Faq {
                                         });
                                     })
                                 }
-                                ${CComponent.button ("faq_delete_"+id, "삭제", {"border":"1px solid #e8e8e8", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
-                                        alert('삭제 실행');
+                                ${
+                                    CComponent.button ("faq_delete_"+id, "삭제", {"border":"1px solid #e8e8e8", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
+                                        show_user_confirm(`FAQ "${numbering}" 번 글을 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
+                                            Notice_func.delete({"notice_id":id}, ()=>{
+                                                try{
+                                                    this.init();
+                                                }catch(e){}
+                                                layer_popup.all_close_layer_popup();
+                                            });
+                                        });
                                     })
                                 }
                             </div>
