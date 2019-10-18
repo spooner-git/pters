@@ -173,10 +173,12 @@ class Qna {
                                         ],
                                         category_selected:{
                                             status:{text:[QA_STATUS[data.status]], value:[data.status]},
+                                            type:{text:['Q&A 답변'], value:['QNA_COMMENT']}
                                         }
             };
             board_writer = new BoardWriter("QnA", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
-                let data = {"qa_id":data_written.id, "status_type_cd":data_written.category_selected.status.value[0]};
+                let data = {"qa_id":data_written.id, "status_type_cd":data_written.category_selected.status.value[0], "title":data_written.title,
+                            "contents":data_written.content};
                 Qna_func.update(data, ()=>{
                     this.init();
                 });
@@ -227,7 +229,7 @@ class Qna_func{
 
     static update(data, callback){
         $.ajax({
-            url:'/admin_spooner/update_qa_status_info/',
+            url:'/admin_spooner/update_qa_comment_info/',
             type:'POST',
             data: data,
             dataType : 'JSON',

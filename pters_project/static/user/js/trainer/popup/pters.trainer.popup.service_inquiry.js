@@ -184,7 +184,7 @@ class Service_inquiry {
 class Service_inquiry_func {
     static create (data, callback){
         $.ajax({
-            url : "/board/add_question_info/",
+            url : "/board/add_qa_info/",
             type:'POST',
             data: data,
             dataType : 'json',
@@ -221,7 +221,7 @@ class Service_inquiry_func {
 
     static read (callback){
         $.ajax({
-            url: '/board/get_question_list/',
+            url: '/board/get_qa_list/',
             type: 'GET',
             dataType : 'html',
 
@@ -248,7 +248,7 @@ class Service_inquiry_func {
 
     static read_check (callback){
         $.ajax({
-            url: '/board/clear_question_list/',
+            url: '/board/clear_qa_list/',
             type: 'GET',
             dataType : 'html',
 

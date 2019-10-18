@@ -21,6 +21,20 @@ class QATb(TimeStampedModel):
         db_table = 'QA_TB'
 
 
+class QACommentTb(TimeStampedModel):
+    comment_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    qa_tb = models.ForeignKey(QATb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    upper_qa_comment_tb_id = models.CharField(db_column='UPPER_QA_COMMENT_TB_ID', max_length=20, blank=True, default='')
+    title = models.CharField(db_column='TITLE', max_length=255, blank=True, default='')
+    contents = models.CharField(db_column='CONTENTS', max_length=3000, blank=True, default='')
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'QA_COMMENT_TB'
+
+
 class BoardTb(TimeStampedModel):
     board_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
