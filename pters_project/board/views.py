@@ -23,7 +23,8 @@ def add_qa_info_logic(request):
     qa_type_cd = request.POST.get('inquire_type', '')
     title = request.POST.get('inquire_subject', '')
     contents = request.POST.get('inquire_body', '')
-    next_page = request.POST.get('next_page')
+    # next_page = request.POST.get('next_page')
+    context = {}
 
     error = None
 
@@ -36,20 +37,21 @@ def add_qa_info_logic(request):
                        status_type_cd='QA_WAIT', use=USE)
         qa_info.save()
 
-    if error is None:
-        email = EmailMessage('[PTERS 질문]'+request.user.first_name+'회원-'+title,
-                             '질문 유형:'+qa_type_cd+'\n\n'+contents + '\n\n' + request.user.email +
-                             '\n\n' + str(timezone.now()),
-                             to=['support@pters.co.kr'])
-        email.send()
+    # if error is None:
+        # email = EmailMessage('[PTERS 질문]'+request.user.first_name+'회원-'+title,
+        #                      '질문 유형:'+qa_type_cd+'\n\n'+contents + '\n\n' + request.user.email +
+        #                      '\n\n' + str(timezone.now()),
+        #                      to=['support@pters.co.kr'])
+        # email.send()
 
-        return redirect(next_page)
-    else:
+        # return redirect(next_page)
+    if error is not None:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
+        # messages.error(request, error)
         messages.info(request, qa_type_cd+'/'+title+'/'+contents)
-
-        return redirect(next_page)
+        context['messageArray'] = error
+        # return redirect(next_page)
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
 
 class GetQADataView(LoginRequiredMixin, TemplateView):
@@ -67,6 +69,7 @@ class GetQADataView(LoginRequiredMixin, TemplateView):
         for qa_info in qa_list:
             if qa_info.read == 0 and qa_info.status_type_cd == 'QA_COMPLETE':
                 qa_info.read = 1
+                qa_info.contents = str(qa_info.contents)
                 qa_info.save()
         context['qa_data'] = qa_list
 
@@ -79,7 +82,7 @@ class ClearQADataView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ClearQADataView, self).get_context_data(**kwargs)
         qa_list = QATb.objects.filter(member_id=self.request.user.id, read=0,
-                                            status_type_cd='QA_COMPLETE', use=USE).order_by('reg_dt')
+                                      status_type_cd='QA_COMPLETE', use=USE).order_by('reg_dt')
         qa_list.update(read=1)
         context['qa_data'] = qa_list
 
