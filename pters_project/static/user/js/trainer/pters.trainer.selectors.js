@@ -3451,6 +3451,10 @@ class BoardWriter{
             maximumImageFileSize: 10485760,
             callbacks:{
                 onImageUpload: function(files) {
+                    if(board_writer.data.category_selected['type'].text.length == 0){
+                        show_error_message('게시글 분류부터 선택해주세요.');
+                        return false;
+                    }
                     // upload image to server and create imgNode...
                     let img_error_flag = false;
                     for (let i = files.length - 1; i >= 0; i--) {
@@ -3464,7 +3468,7 @@ class BoardWriter{
                         for (let i = files.length - 1; i >= 0; i--) {
                             summernote_attachment["name"].push(files[i].name);
                             summernote_attachment["size"].push(files[i].size/1024000);
-                            update_content_img(files[i]);
+                            board_writer.update_content_img(files[i]);
                         }
                     }
                 }
@@ -3484,6 +3488,7 @@ class BoardWriter{
         let form_data = new FormData();
         form_data.append('content_img_file', file);
         form_data.append('content_img_file_name', file.lastModified+'_'+file.name);
+        form_data.append('board_type_cd', this.data.category_selected['type'].value);
         $.ajax({
             url: '/trainer/update_trainer_board_content_img/',
             data: form_data,

@@ -4749,6 +4749,7 @@ def update_trainer_board_content_img_logic(request):
         try:
             img_url = func_upload_board_content_image_logic(request.FILES['content_img_file'],
                                                             request.POST.get('content_img_file_name'),
+                                                            request.POST.get('board_type_cd'),
                                                             request.user.id, 'trainer')
         except MultiValueDictKeyError:
             img_url = None

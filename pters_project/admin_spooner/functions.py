@@ -4,7 +4,7 @@ from awscli.errorhandler import ClientError
 from configs import settings
 
 
-def func_upload_board_content_image_logic(file, file_name, user_id, user_group_type):
+def func_upload_board_content_image_logic(file, file_name, board_type_cd, user_id, user_group_type):
 
     # project_id = request.POST.get('project_id', '')
     # image = request.POST.get('upload_file', '')
@@ -32,7 +32,7 @@ def func_upload_board_content_image_logic(file, file_name, user_id, user_group_t
 
         # data = ContentFile(base64.b64decode(image_str), name='temp.' + ext)
         content = file.read()
-        s3_img_url = 'board/'+user_group_type+'/content_img/'+str(user_id)+'/'+file_name
+        s3_img_url = 'board/'+user_group_type+'/'+board_type_cd+'/content_img/'+str(user_id)+'/'+file_name
         bucket.put_object(Key=s3_img_url, Body=content, ContentType=file.content_type, ACL='public-read')
         img_url = 'https://s3.ap-northeast-2.amazonaws.com/'+bucket_name+'/'+s3_img_url
 

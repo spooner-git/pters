@@ -115,6 +115,38 @@ class AddNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
 
+class AddQnACommentInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+        notice_type_cd = request.POST.get('notice_type_cd', '')
+        title = request.POST.get('title', '')
+        contents = request.POST.get('contents', '')
+        to_member_type_cd = request.POST.get('to_member_type_cd')
+        use = request.POST.get('use', USE)
+        member_type_cd = request.session.get('group_name')
+
+        context = {}
+        error = None
+        if member_type_cd != 'admin':
+            error = '관리자만 접근 가능합니다.'
+
+        if notice_type_cd == '' or notice_type_cd is None:
+            error = '공지 유형을 선택해주세요.'
+
+        if error is None:
+            notice_info = NoticeTb(member_id=request.user.id, notice_type_cd=notice_type_cd,
+                                   title=title, contents=contents, to_member_type_cd=to_member_type_cd,
+                                   use=use)
+            notice_info.save()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
 class UpdateNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
     def post(self, request):
@@ -207,6 +239,7 @@ def update_admin_board_content_img_logic(request):
         try:
             img_url = func_upload_board_content_image_logic(request.FILES['content_img_file'],
                                                             request.POST.get('content_img_file_name'),
+                                                            request.POST.get('board_type_cd'),
                                                             request.user.id, 'admin')
         except MultiValueDictKeyError:
             img_url = None
