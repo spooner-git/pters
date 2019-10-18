@@ -112,7 +112,7 @@ class Notice {
     }
 
     dom_row_notice_article(numbering, data){
-        // let type = data.notice_type_cd;
+        let type = data.notice_type_cd;
         // if(type != NOTICE){
         //     return "";
         // }
