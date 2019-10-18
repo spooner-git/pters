@@ -145,12 +145,14 @@ class Service_inquiry_history {
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_READER, 100, popup_style, null, ()=>{
             Service_inquiry_func.read_inquiry_answer({qa_id:qa_id}, (answer)=>{
+                console.log(answer)
                 let answer_active = answer.qa_comment_data.length > 0 ? answer.qa_comment_data[0].qa_comment_use : "";
                 let answer_content = answer.qa_comment_data.length > 0 ? answer.qa_comment_data[0].qa_comment_contents : "";
+                let answer_date = answer.qa_comment_data.length > 0 ? answer.qa_comment_data[0].qa_comment_mod_dt : "";
                 
                 let data = {
                     title:title, content:content, date:date, status:status, type:type,
-                    answer_title:null, answer_content:answer_active == 1 ? answer_content : null, answer_date:date
+                    answer_title:null, answer_content:answer_active == 1 ? answer_content : null, answer_date:answer_date
                 };
                 board_reader = new BoardReader("문의 내용", '.popup_board_reader', "board_reader", data);});
             });

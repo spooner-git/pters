@@ -3691,9 +3691,19 @@ class BoardReader{
     }
 
     dom_row_answer_title(){
+        let date = this.data.answer_date == null ? "" : this.data.answer_date;
+        if(date != null){
+            let date_info_split = date.split(' ')[0];
+            let date_info = date_info_split.split('-');
+            let date_text = DateRobot.to_text(date_info[0], date_info[1], date_info[2]);
+            let time_info_split = date.split(' ')[1];
+            let time_text = TimeRobot.to_text(time_info_split.split(':')[0] ,time_info_split.split(':')[1]);
+            date = date_text + '  ' + time_text;
+        }
+
         let html = `<div style="font-size:16px;font-weight:bold;color:#3d3b3b;letter-spacing:-0.9px;margin-bottom:40px;">
                         답글 : ${this.data.answer_title == null ? "" : this.data.answer_title}
-                        <div style="font-size:12px;font-weight:500;letter-spacing:#858282;color:#858282;">${this.data.answer_date}</div>
+                        <div style="font-size:12px;font-weight:500;letter-spacing:#858282;color:#858282;">${date}</div>
                     </div>`;
         return html;
     }
