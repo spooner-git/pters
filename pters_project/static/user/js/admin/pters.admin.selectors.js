@@ -3321,8 +3321,8 @@ class BoardWriter{
             this.data.title = data;
             // this.render_content();
         };
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
-        let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+., 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ ., 제외 특수문자는 입력 불가";
         let required = "";
         let row = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
         let html = row;
@@ -3397,7 +3397,7 @@ class BoardWriter{
                         for (let i = files.length - 1; i >= 0; i--) {
                             summernote_attachment["name"].push(files[i].name);
                             summernote_attachment["size"].push(files[i].size/1024000);
-                            update_content_img(files[i]);
+                            board_writer.update_content_img(files[i]);
                         }
                     }
                 }
@@ -3412,14 +3412,15 @@ class BoardWriter{
 
     update_content_img(file){
         let date = new Date();
-        let content_img_file_name = file.lastModified+'_{{request.user.id}}_'+date.getTime();
+        let content_img_file_name = file.name+'_'+file.lastModified+'_'+date.getTime();
         let form_data = new FormData();
         form_data.append('content_img_file', file);
         form_data.append('content_img_file_name', file.lastModified+'_'+file.name);
+        console.log(form_data);
         $.ajax({
-            url: '{% url "room:update_room_content_img_logic" %}',
+            url: '/admin_spooner/update_admin_board_content_img/',
             data: form_data,
-            dataType : 'html',
+            dataType : 'JSON',
             type:'POST',
             processData: false,
             contentType: false,
@@ -3433,12 +3434,16 @@ class BoardWriter{
             },
 
             success:function(data){
-                let jsondata = JSON.parse(data);
-                if(jsondata.messageArray.length>0){
-                    show_error_message(jsondata.messageArray);
-                }else{
-                    $('#board_writer_content_input').summernote('insertImage', jsondata.img_url);
+                // let jsondata = JSON.parse(data);
+                console.log(data);
+                if(data.messageArray != undefined) {
+                    if (data.messageArray.length > 0) {
+                        show_error_message(data.messageArray);
+                        return false;
+                    }
                 }
+                $('#board_writer_content_input').summernote('insertImage', data.img_url);
+
             },
 
             complete:function(){

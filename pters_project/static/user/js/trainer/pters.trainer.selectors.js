@@ -3480,14 +3480,14 @@ class BoardWriter{
 
     update_content_img(file){
         let date = new Date();
-        let content_img_file_name = file.lastModified+'_{{request.user.id}}_'+date.getTime();
+        let content_img_file_name = file.name+'_'+file.lastModified+'_'+date.getTime();
         let form_data = new FormData();
         form_data.append('content_img_file', file);
         form_data.append('content_img_file_name', file.lastModified+'_'+file.name);
         $.ajax({
-            url: '{% url "room:update_room_content_img_logic" %}',
+            url: '/trainer/update_trainer_board_content_img/',
             data: form_data,
-            dataType : 'html',
+            dataType : 'JSON',
             type:'POST',
             processData: false,
             contentType: false,
@@ -3501,12 +3501,13 @@ class BoardWriter{
             },
 
             success:function(data){
-                let jsondata = JSON.parse(data);
-                if(jsondata.messageArray.length>0){
-                    show_error_message(jsondata.messageArray);
-                }else{
-                    $('#board_writer_content_input').summernote('insertImage', jsondata.img_url);
+                if(data.messageArray != undefined) {
+                    if (data.messageArray.length > 0) {
+                        show_error_message(data.messageArray);
+                        return false;
+                    }
                 }
+                $('#board_writer_content_input').summernote('insertImage', jsondata.img_url);
             },
 
             complete:function(){

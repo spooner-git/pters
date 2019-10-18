@@ -23,5 +23,9 @@ urlpatterns = [
     url(r'^add_notice_info/$', views.AddNoticeInfoView.as_view(), name='add_notice_info'),
     url(r'^update_notice_info/$', views.UpdateNoticeInfoView.as_view(), name='update_notice_info'),
     url(r'^update_qa_status_info/$', views.UpdateQaStatusInfoView.as_view(), name='update_qa_status_info'),
+    url(r'^update_admin_board_content_img/$', views.update_admin_board_content_img_logic,
+        name='update_admin_board_content_img'),
+    url(r'^delete_admin_board_content_img/$', views.delete_admin_board_content_img_logic,
+        name='delete_admin_board_content_img'),
 
 ]

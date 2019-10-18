@@ -303,4 +303,8 @@ urlpatterns = [
     url(r'^add_program/$', views.AddProgramView.as_view(), name='add_program'),
     # url(r'^refresh_all_data/$', views.refresh_all_data_logic, name='refresh_all_data')
 
+
+
+    url(r'^update_trainer_board_content_img/$', views.update_trainer_board_content_img_logic,
+        name='update_trainer_board_content_img'),
 ]

@@ -1,6 +1,8 @@
 import collections
 import datetime
 
+import boto3
+from awscli.errorhandler import ClientError
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
@@ -16,7 +18,7 @@ from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.models import MemberTicketTb
 from .models import ClassMemberTicketTb, LectureTb, SettingTb, TicketLectureTb, TicketTb, LectureMemberTb
-
+from configs import settings
 
 # 전체 회원 id 정보 가져오기
 def func_get_class_member_id_list(class_id):
