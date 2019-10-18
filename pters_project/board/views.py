@@ -69,8 +69,8 @@ class GetQADataView(LoginRequiredMixin, TemplateView):
         for qa_info in qa_list:
             if qa_info.read == 0 and qa_info.status_type_cd == 'QA_COMPLETE':
                 qa_info.read = 1
-                qa_info.contents = str(qa_info.contents)
                 qa_info.save()
+            qa_info.contents = qa_info.contents.replace('\n', '<br/>')
         context['qa_data'] = qa_list
 
         return context
