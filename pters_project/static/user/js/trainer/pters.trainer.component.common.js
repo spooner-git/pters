@@ -153,7 +153,7 @@ class CComponent{
                                 <img src="${icon == DELETE ? '' : icon}">
                             </div>
                             <div class="cell_content">
-                                <textarea class="cell_text" onkeydown="resize_textarea(this)" onkeyup="resize_textarea(this)" placeholder="${placeholder}" value="${title}" style="height:100%;min-height:${title_sentence_height}px" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">${title}</textarea>
+                                <textarea class="cell_text" onkeydown="resize_textarea(this)" onkeyup="resize_textarea(this)" placeholder="${placeholder}" style="height:100%;min-height:${title_sentence_height}px" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">${title}</textarea>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
