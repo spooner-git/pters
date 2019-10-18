@@ -142,7 +142,7 @@ class CComponent{
         return html;
     }
 
-    static create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout){
+    static create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout, pattern, pattern_message, required){
         if(icon == NONE){
             icon = '/static/common/icon/icon_gap_black.png';
         }
@@ -153,7 +153,10 @@ class CComponent{
                                 <img src="${icon == DELETE ? '' : icon}">
                             </div>
                             <div class="cell_content">
-                                <textarea class="cell_text" onkeydown="resize_textarea(this)" onkeyup="resize_textarea(this)" placeholder="${placeholder}" style="height:100%;min-height:${title_sentence_height}px" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">${title}</textarea>
+                                <textarea class="cell_text" pattern="${pattern}" data-pattern-message="${pattern_message} 
+                                                onkeydown="resize_textarea(this)" onkeyup="resize_textarea(this)" 
+                                                placeholder="${placeholder}" style="height:100%;min-height:${title_sentence_height}px" 
+                                                spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" ${required}>${title}</textarea>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
