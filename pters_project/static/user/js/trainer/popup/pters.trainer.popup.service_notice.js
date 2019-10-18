@@ -64,8 +64,8 @@ class Service_notice {
         for(let i=0; i <length; i++){
             let notice_id = this.data[i].notice_id;
             let notice_title = this.data[i].notice_title;
-            let notice_reg_date =  this.data[i].notice_reg_dt.split(' ')[0];
-            let date_format_split = notice_reg_date.split('-');
+            let notice_mod_date =  this.data[i].notice_mod_dt.split(' ')[0];
+            let date_format_split = notice_mod_date.split('-');
             let date_text = DateRobot.to_text(date_format_split[0], date_format_split[1], date_format_split[2]);
             let html = `<article class="notice_wrapper" onclick="service_notice_popup.open_detail(${notice_id})">
                             <div class="notice_subject">${notice_title}</div>
@@ -101,7 +101,7 @@ class Service_notice {
             if(notice_id == id){
                 title = current_loop.notice_title;
                 content = current_loop.notice_contents;
-                date = current_loop.notice_reg_dt;
+                date = current_loop.notice_mod_dt;
             }
         }
 

@@ -89,8 +89,14 @@ class Notice {
     dom_assembly_content(){
         
         let html_to_join = [];
+        let numbering = 1;
         for(let item in this.data.all){
-            let article = this.dom_row_notice_article(this.data.all[item]);
+            let type = this.data.all[item].notice_type_cd;
+            if(type != NOTICE){
+                continue;
+            }
+            let article = this.dom_row_notice_article(numbering, this.data.all[item]);
+            numbering++;
             html_to_join.push(article);
         }
         if(html_to_join.length == 0){
@@ -105,11 +111,11 @@ class Notice {
         return html;
     }
 
-    dom_row_notice_article(data){
+    dom_row_notice_article(numbering, data){
         let type = data.notice_type_cd;
-        if(type != NOTICE){
-            return "";
-        }
+        // if(type != NOTICE){
+        //     return "";
+        // }
         
         let id = data.notice_id;
         let title = data.notice_title;
@@ -123,14 +129,14 @@ class Notice {
 
         let html = `<article id="notice_article_${id}" class="notice_article">
                         <div class="notice_article_upper">
-                            <div class="notice_article_id">${id}</div>
+                            <div class="notice_article_id">${numbering}</div>
                             <div class="notice_article_title">${title}</div>
                             <div class="notice_article_hits">조회수 ${hits}</div>
                         </div>
                         <div class="notice_article_bottom">
                             <div class="notice_article_use" style="color:${NOTICE_USE[use].color}">${NOTICE_USE[use].text}</div>
                             <div class="notice_article_target">${target}</div>
-                            <div class="notice_article_reg_date">${reg_dt.split('T')[0]}  ${reg_dt.split('T')[1]}</div>
+                            <div class="notice_article_reg_date">${mod_dt.split('T')[0]}  ${mod_dt.split('T')[1].split('.')[0]}</div>
                         </div>
                         <div class="notice_contents" style="display:none;">
                             <div>

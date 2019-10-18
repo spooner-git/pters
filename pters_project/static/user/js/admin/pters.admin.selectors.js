@@ -3578,11 +3578,21 @@ class BoardReader{
     }
 
     dom_row_title(){
+        let date = this.data.date == null ? "" : this.data.date;
+        if(date != null){
+            let date_info_split = date.split(' ')[0];
+            let date_info = date_info_split.split('-');
+            let date_text = DateRobot.to_text(date_info[0], date_info[1], date_info[2]);
+            let time_info_split = date.split(' ')[1];
+            let time_text = TimeRobot.to_text(time_info_split.split(':')[0] ,time_info_split.split(':')[1]);
+            date = date_text + '  ' + time_text;
+        }
+
         let html = `<div style="font-size:20px;font-weight:bold;color:#3d3b3b;letter-spacing:-0.9px;">
                         <span>${this.data.type == null ? "" : '['+this.data.type+']'}</span> 
                         ${this.data.title == null ? "" : this.data.title} 
                         <span style="float:right;font-size:13px;letter-spacing:-0.6px">${this.data.status == null ? "" : this.data.status}</span>
-                        <div style="font-size:12px;font-weight:500;letter-spacing:-0.6px;color:#858282;">${this.data.date == null ? "" : this.data.date}</div>
+                        <div style="font-size:12px;font-weight:500;letter-spacing:-0.6px;color:#858282;">${date}</div>
                     </div>`;
         return html;
     }
