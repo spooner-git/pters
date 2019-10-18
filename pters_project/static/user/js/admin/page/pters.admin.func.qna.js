@@ -165,7 +165,6 @@ class Qna {
         `;
 
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
-            
 
             let data_for_answer = {qa_id: data.id};
             Qna_func.read_answer(data_for_answer, (answer)=>{
@@ -189,6 +188,7 @@ class Qna {
                                     "contents":data_written.content};
                         Qna_func.create(data, ()=>{
                             this.init();
+                            update_admin_side_bar();
                         });
                     });
                 }else{ // 답변을 수정할 때
@@ -197,6 +197,7 @@ class Qna {
                                     "contents":data_written.content};
                         Qna_func.update(data, ()=>{
                             this.init();
+                            update_admin_side_bar();
                         });
                     });
                 }
