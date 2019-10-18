@@ -47,6 +47,8 @@ textarea{
     -webkit-appearance: none;
     border: 0;
     border-radius: 0;
+    word-break: break-all;
+    white-space: normal;
 }
 
 textarea::-webkit-input-placeholder{

@@ -153,7 +153,7 @@ class CComponent{
                                 <img src="${icon == DELETE ? '' : icon}">
                             </div>
                             <div class="cell_content">
-                                <textarea class="cell_text" pattern="${pattern}" data-pattern-message="${pattern_message} 
+                                <textarea pattern="${pattern}" data-pattern-message="${pattern_message}" wrap="hard"
                                         onkeydown="resize_textarea(this)" onkeyup="resize_textarea(this)" 
                                         placeholder="${placeholder}" style="height:100%;min-height:${title_sentence_height}px;resize:none" 
                                         spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" ${required}>${title}</textarea>
