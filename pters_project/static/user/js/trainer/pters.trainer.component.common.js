@@ -154,9 +154,9 @@ class CComponent{
                             </div>
                             <div class="cell_content">
                                 <textarea class="cell_text" pattern="${pattern}" data-pattern-message="${pattern_message} 
-                                                onkeydown="resize_textarea(this)" onkeyup="resize_textarea(this)" 
-                                                placeholder="${placeholder}" style="height:100%;min-height:${title_sentence_height}px" 
-                                                spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" ${required}>${title}</textarea>
+                                        onkeydown="resize_textarea(this)" onkeyup="resize_textarea(this)" 
+                                        placeholder="${placeholder}" style="height:100%;min-height:${title_sentence_height}px;resize:none" 
+                                        spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" ${required}>${title}</textarea>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
