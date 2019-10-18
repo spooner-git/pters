@@ -3628,7 +3628,7 @@ class BoardReader{
 
     dom_row_answer_title(){
         let date = this.data.answer_date == null ? "" : this.data.answer_date;
-        if(date != null){
+        if(date != ""){
             let date_info_split = date.split(' ')[0];
             let date_info = date_info_split.split('-');
             let date_text = DateRobot.to_text(date_info[0], date_info[1], date_info[2]);
