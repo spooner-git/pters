@@ -3377,7 +3377,9 @@ class BoardWriter{
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 // ['fontsize', ['fontsize']],
                 ['color', ['color']],
-                ['insert', ['picture', 'video']]
+                ['insert', ['picture', 'video']],
+                ['para', ['paragraph']],
+                ['table', ['table']],
             ],
             focus: false,
             // fontSize: 14,
@@ -3480,7 +3482,7 @@ class BoardWriter{
             show_error_message("제목을 입력해주세요.");
             return false;
         }
-        if($(content_value).text().length <= 1 && this.data.visibility.content != HIDE){
+        if(this.data.content.length <= 1 && this.data.visibility.content != HIDE){
             show_error_message("내용을 입력해주세요.");
             return false;
         }
