@@ -41,7 +41,7 @@
 {% block content %}
 
     <div class="trainee_inquiry">
-        <form id="form_inquiry"  action="{% url 'board:add_question_info' %}" method="post">
+        <form id="form_inquiry"  action="{% url 'board:add_qa_info' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="next_page" value="{% url 'trainee:trainee_inquiry' %}">
             <input type="hidden" name="inquire_type" id="id_inquire_type">

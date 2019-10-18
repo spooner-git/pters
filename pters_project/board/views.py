@@ -13,12 +13,12 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from configs.const import USE
-from .models import QATb, BoardTb, NoticeTb
+from .models import QATb, BoardTb, NoticeTb, QACommentTb
 
 logger = logging.getLogger(__name__)
 
 
-def add_question_info_logic(request):
+def add_qa_info_logic(request):
 
     qa_type_cd = request.POST.get('inquire_type', '')
     title = request.POST.get('inquire_subject', '')
@@ -52,36 +52,36 @@ def add_question_info_logic(request):
         return redirect(next_page)
 
 
-class GetQuestionDataView(LoginRequiredMixin, TemplateView):
+class GetQADataView(LoginRequiredMixin, TemplateView):
     template_name = 'ajax/qa_data_ajax.html'
 
     def get_context_data(self, **kwargs):
-        context = super(GetQuestionDataView, self).get_context_data(**kwargs)
+        context = super(GetQADataView, self).get_context_data(**kwargs)
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `QA_TB`.`QA_TYPE_CD`"
         query_status = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `QA_TB`.`STATUS`"
-        question_list = QATb.objects.select_related(
+        qa_list = QATb.objects.select_related(
             'member').filter(member_id=self.request.user.id, use=USE
                              ).annotate(qa_type_cd_name=RawSQL(query_type_cd, []),
                                         status_type_cd_name=RawSQL(query_status, [])
                                         ).order_by('reg_dt')
-        for question_info in question_list:
-            if question_info.read == 0 and question_info.status_type_cd == 'QA_COMPLETE':
-                question_info.read = 1
-                question_info.save()
-        context['question_data'] = question_list
+        for qa_info in qa_list:
+            if qa_info.read == 0 and qa_info.status_type_cd == 'QA_COMPLETE':
+                qa_info.read = 1
+                qa_info.save()
+        context['qa_data'] = qa_list
 
         return context
 
 
-class ClearQuestionDataView(LoginRequiredMixin, TemplateView):
+class ClearQADataView(LoginRequiredMixin, TemplateView):
     template_name = 'ajax/qa_data_ajax.html'
 
     def get_context_data(self, **kwargs):
-        context = super(ClearQuestionDataView, self).get_context_data(**kwargs)
-        question_list = QATb.objects.filter(member_id=self.request.user.id, read=0,
+        context = super(ClearQADataView, self).get_context_data(**kwargs)
+        qa_list = QATb.objects.filter(member_id=self.request.user.id, read=0,
                                             status_type_cd='QA_COMPLETE', use=USE).order_by('reg_dt')
-        question_list.update(read=1)
-        context['question_data'] = question_list
+        qa_list.update(read=1)
+        context['qa_data'] = qa_list
 
         return context
 
@@ -116,3 +116,23 @@ class GetNoticeDataView(LoginRequiredMixin, View):
                                 'notice_use': notice_info.use})
 
         return JsonResponse({'notice_data': notice_list}, json_dumps_params={'ensure_ascii': True})
+
+
+class GetQACommentDataView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        qa_id = request.GET.get('qa_id')
+        qa_comment_data = QACommentTb.objects.select_related('qa_tb', 'member').filter(qa_tb_id=qa_id,
+                                                                                       use=USE).order_by('reg_dt')
+
+        qa_comment_list = []
+        for qa_comment_info in qa_comment_data:
+            qa_comment_list.append({'qa_comment_id': qa_comment_info.notice_id,
+                                    'qa_comment_title': qa_comment_info.notice_type_cd,
+                                    'qa_comment_content': qa_comment_info.notice_type_cd_name,
+                                    'qa_comment_member_name': qa_comment_info.title,
+                                    'qa_comment_mod_dt': str(qa_comment_info.mod_dt),
+                                    'qa_comment_reg_dt': str(qa_comment_info.reg_dt),
+                                    'qa_comment_use': qa_comment_info.use})
+
+        return JsonResponse({'qa_comment_data': qa_comment_list}, json_dumps_params={'ensure_ascii': True})

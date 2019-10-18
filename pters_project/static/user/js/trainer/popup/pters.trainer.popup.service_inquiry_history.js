@@ -10,7 +10,7 @@ class Service_inquiry_history {
                         email_address: [],
                         qa_type_cd: [],
                         qa_type_cd_name: [],
-                        question_id: [],
+                        qa_id: [],
                         reg_dt: [],
                         mod_dt: [],
                         status_type_cd: [],
@@ -37,7 +37,7 @@ class Service_inquiry_history {
             email_address: [],
             qa_type_cd: [],
             qa_type_cd_name: [],
-            question_id: [],
+            qa_id: [],
             reg_dt: [],
             mod_dt: [],
             status_type_cd: [],
@@ -94,10 +94,10 @@ class Service_inquiry_history {
     }
 
     dom_assembly_content(){
-        let length = this.data.question_id.length;
+        let length = this.data.qa_id.length;
         let html_temp = [];
         for(let i=length-1; i >= 0; i--){
-            let id = this.data.question_id[i];
+            let id = this.data.qa_id[i];
             let title = this.data.title[i];
             let qa_type = this.data.qa_type_cd_name[i];
             let status_type = this.data.status_type_cd_name[i];
@@ -134,8 +134,8 @@ class Service_inquiry_history {
         return html;
     }
 
-    open_detail(question_id){
-        let index = this.data.question_id.indexOf(String(question_id) );
+    open_detail(qa_id){
+        let index = this.data.qa_id.indexOf(String(qa_id) );
         let title = this.data.title[index];
         let content = this.data.contents[index];
         let date = this.data.reg_dt[index];

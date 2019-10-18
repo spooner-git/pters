@@ -14,8 +14,8 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from admin_spooner.functions import func_upload_board_content_image_logic, func_delete_board_content_image_logic
-from board.models import QATb, NoticeTb
-from configs.const import USE
+from board.models import QATb, NoticeTb, QACommentTb
+from configs.const import USE, UN_USE
 from configs.views import AccessTestMixin
 
 logger = logging.getLogger(__name__)
@@ -86,6 +86,7 @@ class GetNoticeAllView(LoginRequiredMixin, AccessTestMixin, View):
 class AddNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
     def post(self, request):
+        # NOTICE : 공지사항, SYS_USAGE : 사용법 , FAQ : 자주 묻는 질문
         notice_type_cd = request.POST.get('notice_type_cd', '')
         title = request.POST.get('title', '')
         contents = request.POST.get('contents', '')
@@ -115,29 +116,126 @@ class AddNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
 
-class AddQnACommentInfoView(LoginRequiredMixin, AccessTestMixin, View):
+class AddQACommentInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
     def post(self, request):
-        notice_type_cd = request.POST.get('notice_type_cd', '')
+        qa_id = request.POST.get('qa_id')
         title = request.POST.get('title', '')
         contents = request.POST.get('contents', '')
-        to_member_type_cd = request.POST.get('to_member_type_cd')
-        use = request.POST.get('use', USE)
+        # QA_WAIT : 답변 대기 / QA_COMPLETE : 답변 완료
+        status_type_cd = request.POST.get('status_type_cd', 'QA_COMPLETE')
         member_type_cd = request.session.get('group_name')
 
         context = {}
         error = None
+        qa_info = None
+
         if member_type_cd != 'admin':
             error = '관리자만 접근 가능합니다.'
 
-        if notice_type_cd == '' or notice_type_cd is None:
-            error = '공지 유형을 선택해주세요.'
+        if qa_id is None or qa_id == '':
+            error = '변경할 문의 글을 선택해주세요.'
 
         if error is None:
-            notice_info = NoticeTb(member_id=request.user.id, notice_type_cd=notice_type_cd,
-                                   title=title, contents=contents, to_member_type_cd=to_member_type_cd,
-                                   use=use)
-            notice_info.save()
+            try:
+                qa_info = QATb.objects.get(qa_id=qa_id)
+            except ObjectDoesNotExist:
+                error = '문의 글을 불러오지 못했습니다.'
+
+        if error is None:
+            qa_info.status_type_cd = status_type_cd
+            qa_info.save()
+
+        if error is None:
+            use = UN_USE
+            if status_type_cd == 'QA_COMPLETE':
+                use = USE
+            qa_comment_info = QACommentTb(qa_tb_id=qa_id, member_id=request.user.id, title=title, contents=contents,
+                                          use=use)
+            qa_comment_info.save()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+class UpdateQACommentInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+        qa_comment_id = request.POST.get('qa_comment_id')
+        title = request.POST.get('title', '')
+        contents = request.POST.get('contents', '')
+        # QA_WAIT : 답변 대기 / QA_COMPLETE : 답변 완료
+        status_type_cd = request.POST.get('status_type_cd', 'QA_COMPLETE')
+        member_type_cd = request.session.get('group_name')
+
+        context = {}
+        error = None
+        qa_comment_info = None
+
+        if member_type_cd != 'admin':
+            error = '관리자만 접근 가능합니다.'
+
+        if qa_comment_id is None or qa_comment_id == '':
+            error = '변경할 문의 답변 글을 선택해주세요.'
+
+        if error is None:
+            try:
+                qa_comment_info = QACommentTb.objects.get(qa_comment_id=qa_comment_id)
+            except ObjectDoesNotExist:
+                error = '문의 답변 글을 불러오지 못했습니다.'
+
+        if error is None:
+            qa_comment_info.qa_tb.status_type_cd = status_type_cd
+            qa_comment_info.qa_tb.save()
+
+        if error is None:
+            use = UN_USE
+            if status_type_cd == 'QA_COMPLETE':
+                use = USE
+            qa_comment_info.member_id = request.user.id
+            qa_comment_info.title = title
+            qa_comment_info.contents = contents
+            qa_comment_info.use=use
+            qa_comment_info.save()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+class DeleteQACommentInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+        qa_comment_id = request.POST.get('qa_comment_id')
+        member_type_cd = request.session.get('group_name')
+
+        context = {}
+        error = None
+        qa_comment_info = None
+
+        if member_type_cd != 'admin':
+            error = '관리자만 접근 가능합니다.'
+
+        if qa_comment_id is None or qa_comment_id == '':
+            error = '변경할 문의 답변 글을 선택해주세요.'
+
+        if error is None:
+            try:
+                qa_comment_info = QACommentTb.objects.get(qa_comment_id=qa_comment_id)
+            except ObjectDoesNotExist:
+                error = '문의 답변 글을 불러오지 못했습니다.'
+
+        if error is None:
+            qa_comment_info.qa_tb.status_type_cd = 'QA_WAIT'
+            qa_comment_info.qa_tb.save()
+            qa_comment_info.delete()
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -194,11 +292,47 @@ class UpdateNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
 
+class DeleteNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+        notice_id = request.POST.get('notice_id')
+        member_type_cd = request.session.get('group_name')
+
+        context = {}
+        error = None
+        notice_info = None
+
+        if member_type_cd != 'admin':
+            error = '관리자만 접근 가능합니다.'
+
+        if notice_id is None or notice_id == '':
+            error = '변경할 게시글을 선택해주세요.'
+
+        if error is None:
+            try:
+                notice_info = NoticeTb.objects.get(notice_id=notice_id)
+            except ObjectDoesNotExist:
+                error = '게시글을 불러오지 못했습니다.'
+
+        if error is None:
+            notice_info.delete()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
 class UpdateQaStatusInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
     def post(self, request):
         qa_id = request.POST.get('qa_id')
         # QA_WAIT : 답변 대기 / QA_COMPLETE : 답변 완료
+        title = request.POST.get('title', '')
+        contents = request.POST.get('contents', '')
+
         status_type_cd = request.POST.get('status_type_cd', 'QA_COMPLETE')
         member_type_cd = request.session.get('group_name')
 

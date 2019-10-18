@@ -1,26 +1,26 @@
 
     {% autoescape off %}
     {
-      "question_id":
-      [{% for question_info in question_data %}"{{ question_info.qa_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "qa_id":
+      [{% for qa_info in qa_data %}"{{ qa_info.qa_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "qa_type_cd":
-      [{% for question_info in question_data %}"{{ question_info.qa_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for qa_info in qa_data %}"{{ qa_info.qa_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "qa_type_cd_name":
-      [{% for question_info in question_data %}"{{ question_info.qa_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for qa_info in qa_data %}"{{ qa_info.qa_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "title":
-      [{% for question_info in question_data %}"{{ question_info.title  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for qa_info in qa_data %}"{{ qa_info.title  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "contents":
-      [{% for question_info in question_data %}"{{ question_info.contents }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for qa_info in qa_data %}"{{ qa_info.contents }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "status_type_cd":
-      [{% for question_info in question_data %}"{{ question_info.status_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for qa_info in qa_data %}"{{ qa_info.status_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "status_type_cd_name":
-      [{% for question_info in question_data %}"{{ question_info.status_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for qa_info in qa_data %}"{{ qa_info.status_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "email_address":
-      [{% for question_info in question_data %}"{{ question_info.email_address }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for qa_info in qa_data %}"{{ qa_info.email_address }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "reg_dt":
-      [{% for question_info in question_data %}"{{ question_info.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for qa_info in qa_data %}"{{ qa_info.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "mod_dt":
-      [{% for question_info in question_data %}"{{ question_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for qa_info in qa_data %}"{{ qa_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
