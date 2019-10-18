@@ -716,6 +716,7 @@ function limit_char_auto_correction(event){
 
 function limit_char_check(event){
     let limit_reg_pattern = event.pattern.replace('[', '[^').split('{')[0];
+    console.log('limit_reg_pattern::'+limit_reg_pattern)
     let limit = new RegExp(limit_reg_pattern, "gi");
     let limit_char_check = false;
     let min_length = event.minLength;
@@ -731,14 +732,19 @@ function limit_char_check(event){
     }
     else{
         $(`#${confirm_id}`).text('');
+        console.log('tt::'+event.value);
+        console.log('tt::'+limit.test(event.value));
         if(limit.test(event.value)){
+            console.log('test1');
             event.attributes['data-error-message'].value = title+' : '+event.attributes['data-pattern-message'].value + ' 합니다.';
             // $(`#${default_confirm_id}`).css('color', '#fe4e65');
             event.attributes['data-valid'].value = 'false';
         }else{
+            console.log('test2')
             event.attributes['data-error-message'].value = '';
             // $(`#${default_confirm_id}`).css('color', 'green');
             event.attributes['data-valid'].value = 'true';
+            limit_char_check = true;
         }
     }
 
