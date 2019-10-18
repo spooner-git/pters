@@ -3433,9 +3433,23 @@ class BoardWriter{
     }
 
     init_summernote(){
+        let popup_width = $root_content.width();
+        let category_width = 320;
+        let category_row_number = this.data.category.length / Math.floor(popup_width/category_width);
+
+        let wrapper_top_height = 60;
+        let category_height = 61 * category_row_number;
+        let title_input_height = 65;
+        let summer_note_toolbar_height = 42;
+        let summer_note_textarea_padding = 32;
+        let wrapper_bottom_padding_height = 60;
+
+        let summer_note_textarea_height = $root_content.height() - wrapper_top_height - category_height - title_input_height - summer_note_toolbar_height -summer_note_textarea_padding - wrapper_bottom_padding_height;
+
         let summernote_attachment = {"name":[], "size":[]};
         $(`#board_writer_content_input`).summernote({
             minHeight: 150,
+            maxHeight:summer_note_textarea_height,
             fontSizes:['12', '14', '16'],
             placeholder: "내용을 입력해주세요.",
             tabsize: 2,
