@@ -73,6 +73,18 @@ function input_adjust_location_for_android(){
     }
 }
 
+function pc_keyboard_event(){
+    $(document).keyup(function(e) {
+        if (e.keyCode == 27) { // escape key maps to keycode `27`
+            layer_popup.close_layer_popup();
+        }
+    });
+}
+
+function resize_textarea(obj) {
+    obj.style.height = "1px";
+    obj.style.height = (12+obj.scrollHeight)+"px";
+}
 
 function ajax_load_image(option){
     let $ajax_load_image = $('img.ajax_loading_image');

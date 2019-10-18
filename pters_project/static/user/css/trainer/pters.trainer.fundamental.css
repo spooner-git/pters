@@ -1,8 +1,8 @@
  /*폰트 임포트*/
  @import url(/static/common/fonts/notosanskr.css);
  @font-face{
-     font-family: 'Noto Sans Medium';
-     src: url(/static/common/fonts/NotoSansKR-Medium.woff2) format('woff2');
+    font-family: 'Noto Sans Medium';
+    src: url(/static/common/fonts/NotoSansKR-Medium.woff2) format('woff2');
  }
  
  html{
