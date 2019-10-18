@@ -28,9 +28,7 @@
                         <div class="wrapper_request_select_box">
                             <div class="obj_button_gen obj_font_bg_white_coral" onclick="func_program_select('{{ class_info.class_tb_id }}',`${PROGRAM_LECTURE_CONNECT_ACCEPT}`);">연결하기</div>
                             <div class="obj_button_gen obj_font_bg_coral_trans"
-                                 onclick="layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-                                         {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
-                                         'onclick_function':`func_program_select('{{ class_info.class_tb_id }}', '${PROGRAM_LECTURE_CONNECT_DELETE}')`});">취소하기</div>
+                                 onclick="program_connect_accept('{{ class_info.class_tb_id }}')">취소하기</div>
                         </div>
                     </div>
                 {% endif %}
@@ -90,6 +88,15 @@
             $('#form_program_select_class_id').val(class_id);
             $('#form_program_select_member_ticket_connection_check').val(program_select);
             $('#form_program_select').submit();
+        }
+
+        function program_connect_accept(class_tb_id){
+            // layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
+            //                              {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
+            //                              'onclick_function':`func_program_select('{{ class_info.class_tb_id }}', '${PROGRAM_LECTURE_CONNECT_DELETE}')`});
+            show_user_confirm ("정말 취소하시겠습니까", ()=>{
+                func_program_select(class_tb_id, PROGRAM_LECTURE_CONNECT_DELETE)
+            })
         }
     </script>
 

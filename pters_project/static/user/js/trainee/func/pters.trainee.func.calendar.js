@@ -304,7 +304,6 @@ function pters_month_calendar(calendar_name, calendar_options){
 
             success:function(data){
                 let jsondata = JSON.parse(data);
-                console.log(jsondata);
                 /**
                  * @param jsondata.messageArray
                  * @param jsondata.avail_date_data
