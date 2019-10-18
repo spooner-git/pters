@@ -9,9 +9,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
+from django.utils.datastructures import MultiValueDictKeyError
 from django.views import View
 from django.views.generic import TemplateView
 
+from admin_spooner.functions import func_upload_board_content_image_logic, func_delete_board_content_image_logic
 from board.models import QATb, NoticeTb
 from configs.const import USE
 from configs.views import AccessTestMixin
@@ -82,6 +84,38 @@ class GetNoticeAllView(LoginRequiredMixin, AccessTestMixin, View):
 
 
 class AddNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+        notice_type_cd = request.POST.get('notice_type_cd', '')
+        title = request.POST.get('title', '')
+        contents = request.POST.get('contents', '')
+        to_member_type_cd = request.POST.get('to_member_type_cd')
+        use = request.POST.get('use', USE)
+        member_type_cd = request.session.get('group_name')
+
+        context = {}
+        error = None
+        if member_type_cd != 'admin':
+            error = '관리자만 접근 가능합니다.'
+
+        if notice_type_cd == '' or notice_type_cd is None:
+            error = '공지 유형을 선택해주세요.'
+
+        if error is None:
+            notice_info = NoticeTb(member_id=request.user.id, notice_type_cd=notice_type_cd,
+                                   title=title, contents=contents, to_member_type_cd=to_member_type_cd,
+                                   use=use)
+            notice_info.save()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+class AddQnACommentInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
     def post(self, request):
         notice_type_cd = request.POST.get('notice_type_cd', '')
@@ -194,3 +228,54 @@ class UpdateQaStatusInfoView(LoginRequiredMixin, AccessTestMixin, View):
             context['messageArray'] = error
 
         return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+def update_admin_board_content_img_logic(request):
+    error_message = None
+    img_url = None
+    context = {}
+    if request.method == 'POST':
+        # 대표 이미지 설정
+        try:
+            img_url = func_upload_board_content_image_logic(request.FILES['content_img_file'],
+                                                            request.POST.get('content_img_file_name'),
+                                                            request.POST.get('board_type_cd'),
+                                                            request.user.id, 'admin')
+        except MultiValueDictKeyError:
+            img_url = None
+    else:
+        error_message = '잘못된 요청입니다.'
+
+    if img_url is None:
+        error_message = '이미지 업로드중 오류가 발생했습니다.'
+
+    if error_message is not None:
+        messages.error(request, error_message)
+        context['messageArray'] = error_message
+    else:
+        context['img_url'] = img_url
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+def delete_admin_board_content_img_logic(request):
+    error_message = None
+    img_url = None
+    context = {}
+    if request.method == 'POST':
+        # 대표 이미지 설정
+        try:
+            img_url = func_delete_board_content_image_logic(request.POST.get('content_img_file_name'))
+        except MultiValueDictKeyError:
+            img_url = None
+    else:
+        error_message = '잘못된 요청입니다.'
+
+    if img_url is None:
+        error_message = '이미지 삭 오류가 발생했습니다.'
+
+    if error_message is not None:
+        messages.error(request, error_message)
+        context['messageArray'] = error_message
+    else:
+        context['img_url'] = img_url
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})

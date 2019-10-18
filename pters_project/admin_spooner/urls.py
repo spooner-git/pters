@@ -21,7 +21,12 @@ urlpatterns = [
     url(r'^get_qa_all/$', views.GetQaAllView.as_view(), name='get_qa_all'),
     url(r'^get_notice_all/$', views.GetNoticeAllView.as_view(), name='get_notice_all'),
     url(r'^add_notice_info/$', views.AddNoticeInfoView.as_view(), name='add_notice_info'),
+    url(r'^add_qna_comment_info/$', views.AddQnACommentInfoView.as_view(), name='add_qna_comment_info'),
     url(r'^update_notice_info/$', views.UpdateNoticeInfoView.as_view(), name='update_notice_info'),
     url(r'^update_qa_status_info/$', views.UpdateQaStatusInfoView.as_view(), name='update_qa_status_info'),
+    url(r'^update_admin_board_content_img/$', views.update_admin_board_content_img_logic,
+        name='update_admin_board_content_img'),
+    url(r'^delete_admin_board_content_img/$', views.delete_admin_board_content_img_logic,
+        name='delete_admin_board_content_img'),
 
 ]

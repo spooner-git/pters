@@ -17,12 +17,14 @@ from django.db.models.expressions import RawSQL
 from django.http import HttpResponse, JsonResponse, request
 from django.shortcuts import redirect, render
 from django.utils import timezone
+from django.utils.datastructures import MultiValueDictKeyError
 from django.views import View
 from django.views.generic import TemplateView, RedirectView
 from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
 
+from admin_spooner.functions import func_upload_board_content_image_logic
 from configs.views import AccessTestMixin
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
     MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT, SORT_START_DATE, SORT_ASC, SORT_REG_COUNT, \
@@ -4736,3 +4738,30 @@ class PopupColorSelect(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupColorSelect, self).get_context_data(**kwargs)
         return context
+
+
+def update_trainer_board_content_img_logic(request):
+    error_message = None
+    img_url = None
+    context = {}
+    if request.method == 'POST':
+        # 대표 이미지 설정
+        try:
+            img_url = func_upload_board_content_image_logic(request.FILES['content_img_file'],
+                                                            request.POST.get('content_img_file_name'),
+                                                            request.POST.get('board_type_cd'),
+                                                            request.user.id, 'trainer')
+        except MultiValueDictKeyError:
+            img_url = None
+    else:
+        error_message = '잘못된 요청입니다.'
+
+    if img_url is None:
+        error_message = '이미지 업로드중 오류가 발생했습니다.'
+
+    if error_message is not None:
+        messages.error(request, error_message)
+        context['messageArray'] = error_message
+    else:
+        context['img_url'] = img_url
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
