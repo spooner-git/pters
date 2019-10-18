@@ -245,6 +245,26 @@ class DeleteQACommentInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
 
+class GetQACommentDataView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        qa_id = request.GET.get('qa_id')
+        qa_comment_data = QACommentTb.objects.select_related('qa_tb', 'member').filter(qa_tb_id=qa_id,
+                                                                                       use=USE).order_by('reg_dt')
+
+        qa_comment_list = []
+        for qa_comment_info in qa_comment_data:
+            qa_comment_list.append({'qa_comment_id': qa_comment_info.qa_comment_id,
+                                    'qa_comment_title': qa_comment_info.title,
+                                    'qa_comment_contents': qa_comment_info.contents,
+                                    'qa_comment_member_name': qa_comment_info.member.name,
+                                    'qa_comment_mod_dt': str(qa_comment_info.mod_dt),
+                                    'qa_comment_reg_dt': str(qa_comment_info.reg_dt),
+                                    'qa_comment_use': qa_comment_info.use})
+
+        return JsonResponse({'qa_comment_data': qa_comment_list}, json_dumps_params={'ensure_ascii': True})
+
+
 class UpdateNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
     def post(self, request):

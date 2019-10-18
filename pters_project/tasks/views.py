@@ -146,10 +146,19 @@ def update_finish_schedule_data_logic(request):
              ).annotate(schedule_auto_finish=RawSQL(query_setting_schedule_auto_finish,
                                                     [])).exclude(schedule_auto_finish=AUTO_FINISH_OFF)
     for not_finish_schedule_info in not_finish_schedule_data:
+        lecture_tb = not_finish_schedule_info.lecture_tb
+        lecture_tb_id = None
         member_ticket_tb = not_finish_schedule_info.member_ticket_tb
         member_ticket_tb_id = None
+        repeat_schedule_tb = not_finish_schedule_info.repeat_schedule_tb
+        repeat_schedule_tb_id = None
+
         if member_ticket_tb is not None and member_ticket_tb != '':
             member_ticket_tb_id = not_finish_schedule_info.member_ticket_tb_id
+        if lecture_tb is not None and lecture_tb != '':
+            lecture_tb_id = not_finish_schedule_info.lecture_tb_id
+        if repeat_schedule_tb is not None and repeat_schedule_tb != '':
+            repeat_schedule_tb_id = not_finish_schedule_info.repeat_schedule_tb_id
 
         if str(not_finish_schedule_info.schedule_auto_finish) == str(AUTO_FINISH_ON):
             not_finish_schedule_info.state_cd = STATE_CD_FINISH
@@ -158,21 +167,28 @@ def update_finish_schedule_data_logic(request):
             not_finish_schedule_info.state_cd = STATE_CD_ABSENCE
             not_finish_schedule_info.save()
         elif str(not_finish_schedule_info.schedule_auto_finish) == str(AUTO_CANCEL_ON):
-            delete_schedule_info = DeleteScheduleTb(
-                schedule_id=not_finish_schedule_info.schedule_id, class_tb_id=not_finish_schedule_info.class_tb_id,
-                lecture_tb_id=not_finish_schedule_info.lecture_tb_id,
-                member_ticket_tb_id=not_finish_schedule_info.member_ticket_tb_id,
-                lecture_schedule_id=not_finish_schedule_info.lecture_schedule_id,
-                delete_repeat_schedule_tb=not_finish_schedule_info.repeat_schedule_tb_id,
-                start_dt=not_finish_schedule_info.start_dt, end_dt=not_finish_schedule_info.end_dt,
-                permission_state_cd=not_finish_schedule_info.permission_state_cd,
-                state_cd=not_finish_schedule_info.state_cd, note=not_finish_schedule_info.note,
-                en_dis_type=not_finish_schedule_info.en_dis_type, member_note=not_finish_schedule_info.member_note,
-                reg_member_id=not_finish_schedule_info.reg_member_id, del_member='auto',
-                reg_dt=not_finish_schedule_info.reg_dt, mod_dt=timezone.now(),
-                use=UN_USE)
-            delete_schedule_info.save()
-            not_finish_schedule_info.delete()
+            finish_lecture_member_schedule_count = 0
+            if lecture_tb_id is not None and lecture_tb_id != '':
+                if member_ticket_tb_id is None or member_ticket_tb_id == '':
+                    finish_lecture_member_schedule_count = ScheduleTb.objects.filter(
+                        lecture_schedule_id=not_finish_schedule_info.schedule_id,
+                        use=USE).exclude(state_cd=STATE_CD_NOT_PROGRESS).count()
+            if finish_lecture_member_schedule_count == 0:
+                delete_schedule_info = DeleteScheduleTb(
+                    schedule_id=not_finish_schedule_info.schedule_id, class_tb_id=not_finish_schedule_info.class_tb_id,
+                    lecture_tb_id=lecture_tb_id,
+                    member_ticket_tb_id=member_ticket_tb_id,
+                    lecture_schedule_id=not_finish_schedule_info.lecture_schedule_id,
+                    delete_repeat_schedule_tb=repeat_schedule_tb_id,
+                    start_dt=not_finish_schedule_info.start_dt, end_dt=not_finish_schedule_info.end_dt,
+                    permission_state_cd=not_finish_schedule_info.permission_state_cd,
+                    state_cd=not_finish_schedule_info.state_cd, note=not_finish_schedule_info.note,
+                    en_dis_type=not_finish_schedule_info.en_dis_type, member_note=not_finish_schedule_info.member_note,
+                    reg_member_id=not_finish_schedule_info.reg_member_id, del_member='auto',
+                    reg_dt=not_finish_schedule_info.reg_dt, mod_dt=timezone.now(),
+                    use=UN_USE)
+                delete_schedule_info.save()
+                not_finish_schedule_info.delete()
             # member_ticket_tb_id = delete_schedule_info.member_ticket_tb_id
         if member_ticket_tb_id is not None:
             func_refresh_member_ticket_count(not_finish_schedule_info.class_tb_id, member_ticket_tb_id)
