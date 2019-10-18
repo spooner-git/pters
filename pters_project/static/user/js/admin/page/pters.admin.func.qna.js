@@ -188,7 +188,6 @@ class Qna {
                         let data = {"qa_id":data_written.id, "status_type_cd":data_written.category_selected.status.value[0], "title":data_written.title,
                                     "contents":data_written.content};
                         Qna_func.create(data, ()=>{
-                            console.log("send",data)
                             this.init();
                         });
                     });
