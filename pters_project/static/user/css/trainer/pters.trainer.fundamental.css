@@ -32,6 +32,38 @@
     z-index: 10;
     transition: 0.3s;
 }
+
+input{
+    -webkit-appearance: none;
+	border: 0;
+	border-radius: 0;
+}
+textarea{
+    -webkit-appearance: none;
+    border: 0;
+    border-radius: 0;
+}
+
+textarea::-webkit-input-placeholder{
+	color: #b8b4b4;
+}
+textarea::-moz-placeholder{
+	color: #b8b4b4;
+}
+textarea:-ms-input-placeholder{
+	color: #b8b4b4;
+}
+
+input::-webkit-input-placeholder{
+	color: #b8b4b4;
+}
+input::-moz-placeholder{
+	color: #b8b4b4;
+}
+input:-ms-input-placeholder{
+	color: #b8b4b4;
+}
+
 #android_input_shade{
     position:fixed;
     width:100%;

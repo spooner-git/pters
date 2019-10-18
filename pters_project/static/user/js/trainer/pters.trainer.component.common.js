@@ -142,13 +142,14 @@ class CComponent{
         if(icon == NONE){
             icon = '/static/common/icon/icon_gap_black.png';
         }
+        let title_sentence_height = title.split('\n').length > 0 ? title.split('\n').length * 25 : 25;
         let html = `<li class="create_input_row create_input_textarea_row" id="c_i_t_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div style="height:100%;display:flex;">
                             <div class="cell_title" style="vertical-align:top;display:${icon == DELETE ? 'none' : ''}">
                                 <img src="${icon == DELETE ? '' : icon}">
                             </div>
                             <div class="cell_content">
-                                <textarea class="cell_text" placeholder="${placeholder}" value="${title}" style="height:100%;min-height:55px;" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">${title}</textarea>
+                                <textarea class="cell_text" onkeydown="resize_textarea(this)" onkeyup="resize_textarea(this)" placeholder="${placeholder}" value="${title}" style="height:100%;min-height:${title_sentence_height}px" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">${title}</textarea>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}

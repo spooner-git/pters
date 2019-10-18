@@ -45,9 +45,9 @@ input:disabled{
 	cursor: unset;
 }
 .create_input_row input{
-	-webkit-appearance: none;
+	/* -webkit-appearance: none;
 	border: 0;
-	border-radius: 0;
+	border-radius: 0; */
 	font-size: inherit;
 	font-weight: inherit;
 	font-family: inherit;
@@ -62,9 +62,9 @@ input:disabled{
 }
 
 .create_input_row textarea{
-	-webkit-appearance: none;
+	/* -webkit-appearance: none;
 	border: 0;
-	border-radius: 0;
+	border-radius: 0; */
 	font-size: inherit;
 	font-weight: inherit;
 	font-family: inherit;
@@ -78,7 +78,7 @@ input:disabled{
 	background-color: transparent
 }
 
-.create_input_row input::-webkit-input-placeholder, .create_input_row textarea::-webkit-input-placeholder{
+/* .create_input_row input::-webkit-input-placeholder, .create_input_row textarea::-webkit-input-placeholder{
 	color: #b8b4b4;
 }
 .create_input_row input::-moz-placeholder, .create_input_row textarea::-moz-placeholder{
@@ -86,7 +86,8 @@ input:disabled{
 }
 .create_input_row input:-ms-input-placeholder, .create_input_row textarea:-ms-input-placeholder{
 	color: #b8b4b4;
-}
+} */
+
 .create_input_textarea_row{
 	height: auto;
 }
