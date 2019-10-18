@@ -210,6 +210,41 @@ class UpdateQACommentInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
 
+class DeleteQACommentInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+        qa_comment_id = request.POST.get('qa_comment_id')
+        member_type_cd = request.session.get('group_name')
+
+        context = {}
+        error = None
+        qa_comment_info = None
+
+        if member_type_cd != 'admin':
+            error = '관리자만 접근 가능합니다.'
+
+        if qa_comment_id is None or qa_comment_id == '':
+            error = '변경할 문의 답변 글을 선택해주세요.'
+
+        if error is None:
+            try:
+                qa_comment_info = QACommentTb.objects.get(qa_comment_id=qa_comment_id)
+            except ObjectDoesNotExist:
+                error = '문의 답변 글을 불러오지 못했습니다.'
+
+        if error is None:
+            qa_comment_info.qa_tb.status_type_cd = 'QA_WAIT'
+            qa_comment_info.qa_tb.save()
+            qa_comment_info.delete()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
 class UpdateNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
     def post(self, request):

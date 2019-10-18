@@ -39,6 +39,8 @@ urlpatterns = [
     url(r'^add_qa_comment_info/$', views.AddQACommentInfoView.as_view(), name='add_qa_comment_info'),
     # qa 답변 수정 + 상태 변경
     url(r'^update_qa_comment_info/$', views.UpdateQACommentInfoView.as_view(), name='update_qa_comment_info'),
+    # qa 답변 삭제
+    url(r'^delete_qa_comment_info/$', views.DeleteQACommentInfoView.as_view(), name='delete_qa_comment_info'),
     # qa 답변 조회 -> board get_qa_comment_list 참고
 
 
