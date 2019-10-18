@@ -165,11 +165,13 @@ class Service_inquiry {
 
         Service_inquiry_func.create(data, ()=>{
             show_error_message("문의를 접수했습니다.");
-            this.init_data();
-            Service_inquiry.render_content();
-            Service_inquiry_func.read((data)=>{
-                console.log(data);
-            });
+            // this.init_data();
+            // Service_inquiry.render_content();
+            // Service_inquiry_func.read((data)=>{
+            //     console.log(data);
+            // });
+            layer_popup.close_layer_popup();
+            this.go_to_inquiry_history();
         });
     }
 
