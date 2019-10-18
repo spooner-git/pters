@@ -87,8 +87,14 @@ class Faq {
     dom_assembly_content(){
         
         let html_to_join = [];
+        let numbering = 1;
         for(let item in this.data.all){
-            let article = this.dom_row_faq_article(this.data.all[item]);
+            let type = this.data.all[item].notice_type_cd;
+            if(type != NOTICE_FAQ && type != NOTICE_USAGE){
+                continue;
+            }
+            let article = this.dom_row_faq_article(numbering, this.data.all[item]);
+            numbering++;
             html_to_join.push(article);
         }
         if(html_to_join.length == 0){
@@ -103,11 +109,11 @@ class Faq {
         return html;
     }
 
-    dom_row_faq_article(data){
+    dom_row_faq_article(numbering, data){
         let type = data.notice_type_cd;
-        if(type != NOTICE_FAQ && type != NOTICE_USAGE){
-            return "";
-        }
+        // if(type != NOTICE_FAQ && type != NOTICE_USAGE){
+        //     return "";
+        // }
         
         let id = data.notice_id;
         let title = data.notice_title;
@@ -120,14 +126,14 @@ class Faq {
 
         let html = `<article id="faq_article_${id}" class="faq_article">
                         <div class="faq_article_upper">
-                            <div class="faq_article_id">${id}</div>
+                            <div class="faq_article_id">${numbering}</div>
                             <div class="faq_article_title">[${NOTICE_TYPE[type]}] ${title}</div>
                             <div class="faq_article_hits"></div>
                         </div>
                         <div class="faq_article_bottom">
                             <div class="faq_article_use" style="color:${NOTICE_USE[use].color}">${NOTICE_USE[use].text}</div>
                             <div class="faq_article_target">${target}</div>
-                            <div class="faq_article_reg_date">${reg_dt.split('T')[0]}  ${reg_dt.split('T')[1]}</div>
+                            <div class="faq_article_reg_date">${mod_dt.split('T')[0]}  ${mod_dt.split('T')[1].split('.')[0]}</div>
                         </div>
                         <div class="faq_contents" style="display:none;">
                             <div>
