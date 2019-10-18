@@ -165,7 +165,13 @@ class Qna {
         `;
 
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
-            let external_data = {       upper_html:upper_html_of_board_writer,
+            
+
+            let data_for_answer = {qa_id: data.id};
+            Qna_func.read_answer(data_for_answer, (answer)=>{
+                console.log(answer);
+                let external_data = {       
+                                        upper_html:upper_html_of_board_writer, content: answer,
                                         id:data.id,
                                         visibility:{title:HIDE},
                                         category:[
@@ -175,14 +181,29 @@ class Qna {
                                             status:{text:[QA_STATUS[data.status]], value:[data.status]},
                                             type:{text:['Q&A 답변'], value:['QNA_COMMENT']}
                                         }
-            };
-            board_writer = new BoardWriter("QnA", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
-                let data = {"qa_id":data_written.id, "status_type_cd":data_written.category_selected.status.value[0], "title":data_written.title,
-                            "contents":data_written.content};
-                Qna_func.update(data, ()=>{
-                    this.init();
-                });
+                };
+
+                if(answer != null){ //새로 답변을 등록할때
+                    board_writer = new BoardWriter("QnA", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
+                        let data = {"qa_id":data_written.id, "status_type_cd":data_written.category_selected.status.value[0], "title":data_written.title,
+                                    "contents":data_written.content};
+                        Qna_func.create(data, ()=>{
+                            this.init();
+                        });
+                    });
+                }else{ // 답변을 수정할 때
+                    board_writer = new BoardWriter("QnA", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
+                        let data = {"qa_comment_id":data_written.id, "status_type_cd":data_written.category_selected.status.value[0], "title":data_written.title,
+                                    "contents":data_written.content};
+                        Qna_func.update(data, ()=>{
+                            this.init();
+                        });
+                    });
+                }
             });
+
+
+            
         });
     }
 
@@ -223,6 +244,76 @@ class Qna_func{
             //통신 실패시 처리
             error:function(){
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static read_answer(data, callback){
+        $.ajax({
+            url:'/board/get_qa_comment_list/',
+            data:data,
+            type:'GET',
+            dataType : 'JSON',
+    
+            beforeSend:function(xhr, settings) {
+                
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    static create(data, callback){
+        $.ajax({
+            url:'/admin_spooner/add_qa_comment_info/',
+            type:'POST',
+            data: data,
+            dataType : 'JSON',
+
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                // let data = JSON.parse(received_data);
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                // location.reload();
             }
         });
     }
