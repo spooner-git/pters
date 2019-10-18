@@ -249,8 +249,8 @@ class GetQACommentDataView(LoginRequiredMixin, View):
 
     def get(self, request):
         qa_id = request.GET.get('qa_id')
-        qa_comment_data = QACommentTb.objects.select_related('qa_tb', 'member').filter(qa_tb_id=qa_id,
-                                                                                       use=USE).order_by('reg_dt')
+        qa_comment_data = QACommentTb.objects.select_related('qa_tb',
+                                                             'member').filter(qa_tb_id=qa_id).order_by('reg_dt')
 
         qa_comment_list = []
         for qa_comment_info in qa_comment_data:
