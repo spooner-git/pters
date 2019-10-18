@@ -22,7 +22,7 @@ class QATb(TimeStampedModel):
 
 
 class QACommentTb(TimeStampedModel):
-    comment_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    qa_comment_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     qa_tb = models.ForeignKey(QATb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     upper_qa_comment_tb_id = models.CharField(db_column='UPPER_QA_COMMENT_TB_ID', max_length=20, blank=True, default='')

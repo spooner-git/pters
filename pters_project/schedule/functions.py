@@ -189,6 +189,10 @@ def func_refresh_lecture_status(lecture_id, lecture_schedule_id, lecture_repeat_
                 if lecture_schedule_info.state_cd != STATE_CD_FINISH:
                     lecture_schedule_info.state_cd = STATE_CD_FINISH
                     lecture_schedule_info.save()
+            else:
+                if lecture_schedule_info.state_cd == STATE_CD_FINISH:
+                    lecture_schedule_info.state_cd = STATE_CD_NOT_PROGRESS
+                    lecture_schedule_info.save()
 
     # 그룹 반복 일정 종료
     if lecture_repeat_schedule_id is not None and lecture_repeat_schedule_id != '':
