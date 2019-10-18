@@ -3676,9 +3676,22 @@ class BoardReader{
     }
 
     dom_row_content(){
-        let html = `<div style="font-size:15px;font-weight:500;letter-spacing:-0.6px;color:#5c5859;">
+        let html = `<div style="font-size:15px;font-weight:500;letter-spacing:-0.6px;color:#5c5859;" id="board_reader_content">
                         ${this.data.content == null ? "" : this.data.content}
                     </div>`;
+        $(document).off('click', '#board_reader_content img').on('click', '#board_reader_content img', function(){
+            let board_reader_content_width = $('#board_reader_content').width();
+            if($(this).hasClass('zoomed') == false){
+                let original_size = 100*$(this).width()/board_reader_content_width + '%';
+                $(this).css({'transition':'0.4s', 'width':"100%"});
+                $(this).addClass('zoomed');
+                $(this).attr('data-oriwidth', original_size);
+            }else{
+                let original_size = $(this).attr('data-oriwidth');
+                $(this).css({'width':original_size});
+                $(this).removeClass('zoomed');
+            }
+        });
         return html;
     }
 
