@@ -79,9 +79,11 @@ class CComponent{
                     </li>`;
         $(document).off('focusin', `#c_i_r_${id}`).on('focusin', `#c_i_r_${id}`, function(e){
             // $(this).find('input').val('');
+            $(this).find("input").css("font-family", 'Noto Sans Medium', 'sans-serif');
         });
 
         $(document).off('focusout', `#c_i_r_${id}`).on('focusout', `#c_i_r_${id}`, function(e){
+            $(this).find("input").css("font-family", 'Noto Sans KR', 'sans-serif');
             let user_input_data = e.target.value;
             if(user_input_data.length == 0){
                 user_input_data = null;
@@ -119,6 +121,7 @@ class CComponent{
                         </div>
                     </li>`;
         $(document).off('focusin', `#c_i_n_r_${id}`).on('focusin', `#c_i_n_r_${id}`, function(e){
+            $(this).find("input").css("font-family", 'Noto Sans Medium', 'sans-serif');
             let current_value = e.target.value;
             let current_num = '';
             if(current_value != 0){
@@ -128,6 +131,7 @@ class CComponent{
         });
 
         $(document).off('focusout', `#c_i_n_r_${id}`).on('focusout', `#c_i_n_r_${id}`, function(e){
+            $(this).find("input").css("font-family", 'Noto Sans KR', 'sans-serif');
             LimitChar.number(`#c_i_n_r_${id} input`);
             let user_input_data = e.target.value;
             if(user_input_data.length == 0){
@@ -138,17 +142,21 @@ class CComponent{
         return html;
     }
 
-    static create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout){
+    static create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout, pattern, pattern_message, required){
         if(icon == NONE){
             icon = '/static/common/icon/icon_gap_black.png';
         }
+        let title_sentence_height = title.split('\n').length > 0 ? title.split('\n').length * 25 : 25;
         let html = `<li class="create_input_row create_input_textarea_row" id="c_i_t_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div style="height:100%;display:flex;">
                             <div class="cell_title" style="vertical-align:top;display:${icon == DELETE ? 'none' : ''}">
                                 <img src="${icon == DELETE ? '' : icon}">
                             </div>
                             <div class="cell_content">
-                                <textarea class="cell_text" placeholder="${placeholder}" value="${title}" style="height:100%;min-height:55px;" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">${title}</textarea>
+                                <textarea class="cell_text" pattern="${pattern}" data-pattern-message="${pattern_message} 
+                                        onkeydown="resize_textarea(this)" onkeyup="resize_textarea(this)" 
+                                        placeholder="${placeholder}" style="height:100%;min-height:${title_sentence_height}px;resize:none" 
+                                        spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" ${required}>${title}</textarea>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
@@ -158,9 +166,11 @@ class CComponent{
                     </li>`;
         $(document).off('focusin', `#c_i_t_r_${id}`).on('focusin', `#c_i_t_r_${id}`, function(e){
             // $(this).find('textarea').val('');
+            $(this).find("textarea").css("font-family", 'Noto Sans Medium', 'sans-serif');
         });
 
         $(document).off('focusout', `#c_i_t_r_${id}`).on('focusout', `#c_i_t_r_${id}`, function(e){
+            $(this).find("textarea").css("font-family", 'Noto Sans KR', 'sans-serif');
             let user_input_data = $(this).find('textarea').val();
             if(user_input_data.length == 0){
                 user_input_data = null;
