@@ -67,7 +67,7 @@
 .popup_service_inquiry_history .inquiry_subject .inquiry_status{
 	flex-grow: 0;
 	flex-shrink: 0;
-	flex-basis: 50px;
+	flex-basis: 70px;
 	text-align: right;
 }
 
