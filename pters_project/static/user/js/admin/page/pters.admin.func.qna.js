@@ -245,7 +245,7 @@ class Qna_func{
 
     static read_answer(data, callback){
         $.ajax({
-            url:'/board/get_qa_comment_list/',
+            url:'/admin_spooner/get_qa_comment_list/',
             data:data,
             type:'GET',
             dataType : 'JSON',
