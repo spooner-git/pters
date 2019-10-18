@@ -3472,7 +3472,7 @@ class BoardWriter{
             show_error_message("제목을 입력해주세요.");
             return false;
         }
-        if($(content_value).text().length <= 1 && this.data.visibility.content != HIDE){
+        if($(content_value).length <= 1 && this.data.visibility.content != HIDE){
             show_error_message("내용을 입력해주세요.");
             return false;
         }
