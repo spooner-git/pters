@@ -25,6 +25,13 @@ class Notice {
         this.set_initail_data();
     }
 
+    init_content(){
+        Notice_func.read_all((data)=>{
+            this.data.all = data;
+            this.render_content();
+        });
+    }
+
     set_initail_data(){
         this.render_loading_image();
         Notice_func.read_all((data)=>{
@@ -163,7 +170,7 @@ class Notice {
                                                             "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0],
                                                             "use":data_written.category_selected.use.value[0]};
                                                 Notice_func.update(data, ()=>{
-                                                    this.init();
+                                                    this.init_content();
                                                 });
                                             });
 
@@ -175,7 +182,7 @@ class Notice {
                                         show_user_confirm(`공지 "${numbering}" 번 글을 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
                                             Notice_func.delete({"notice_id":id}, ()=>{
                                                 try{
-                                                    this.init();
+                                                    this.init_content();
                                                 }catch(e){}
                                                 layer_popup.all_close_layer_popup();
                                             });

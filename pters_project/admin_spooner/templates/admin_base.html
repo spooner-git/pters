@@ -369,20 +369,29 @@
     //페이지에 들어오면 홈화면을 띄우기
     $('#home').trigger('click');
 
-    Qna_func.read_all((data)=>{
-        let qna_uncomplete = 0;
-        for(let item in data){
-            let complete_status = data[item].qa_status_type_cd;
-            if(complete_status != "QA_COMPLETE"){
-                qna_uncomplete++;
+    update_admin_side_bar();
+    function update_admin_side_bar(){
+        Qna_func.read_all((data)=>{
+            let qna_uncomplete = 0;
+            for(let item in data){
+                let complete_status = data[item].qa_status_type_cd;
+                if(complete_status != "QA_COMPLETE"){
+                    qna_uncomplete++;
+                }
             }
-        }
-        if(qna_uncomplete > 0){
-            $('#side_qna > span').html(
-                `문의(${qna_uncomplete}) <span class="side_unread"></span>`
-            )
-        }
-    });
+            if(qna_uncomplete > 0){
+                $('#side_qna > span').html(
+                    `문의(${qna_uncomplete}) <span class="side_unread"></span>`
+                )
+            }else{
+                $('#side_qna > span').html(
+                    `문의`
+                )
+            }
+        });
+    }
+
+    
 
 
 </script>
