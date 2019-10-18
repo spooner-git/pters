@@ -25,6 +25,14 @@ class Qna {
         this.set_initail_data();
     }
 
+    init_content(){
+        // this.render_loading_image();
+        Qna_func.read_all((data)=>{
+            this.data.all = data;
+            this.render_content();
+        });  
+    }
+
     set_initail_data(){
         this.render_loading_image();
         Qna_func.read_all((data)=>{
@@ -187,7 +195,7 @@ class Qna {
                         let data = {"qa_id":data_written.id, "status_type_cd":data_written.category_selected.status.value[0], "title":data_written.title,
                                     "contents":data_written.content};
                         Qna_func.create(data, ()=>{
-                            this.init();
+                            this.init_content();
                             update_admin_side_bar();
                         });
                     });
@@ -196,7 +204,7 @@ class Qna {
                         let data = {"qa_comment_id":answer.qa_comment_data[0].qa_comment_id, "status_type_cd":data_written.category_selected.status.value[0], "title":data_written.title,
                                     "contents":data_written.content};
                         Qna_func.update(data, ()=>{
-                            this.init();
+                            this.init_content();
                             update_admin_side_bar();
                         });
                     });
