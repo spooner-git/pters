@@ -638,18 +638,15 @@ def delete_trainee_schedule_logic(request):
             lt_pus_from_trainee_lesson_alarm = int(setting_data.setting_info)
         except ObjectDoesNotExist:
             lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
-        print('test1')
         if lt_pus_from_trainee_lesson_alarm == FROM_TRAINEE_LESSON_ALARM_ON:
             push_info_schedule_start_date = str(start_date).split(':')
             push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
-            print('test2::'+str(class_id))
             func_send_push_trainee(class_id,
                                    class_type_name + ' - 수업 알림',
                                    request.user.first_name + '님이 '
                                    + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                    + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                    + ' ['+lecture_name + '] 수업을 예약 취소했습니다.')
-            print('test3')
             # push_class_id.append(class_id)
             # push_title.append(class_type_name + ' - 수업 알림')
             # push_message.append(request.user.first_name + '님이 '

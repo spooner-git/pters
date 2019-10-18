@@ -568,11 +568,9 @@ def func_send_push_trainee(class_id, title, message):
 
         member_class_data = MemberClassTb.objects.select_related('member').filter(class_tb_id=class_id,
                                                                                   auth_cd=AUTH_TYPE_VIEW, use=USE)
-        print(str(member_class_data))
         for member_class_info in member_class_data:
 
             token_data = PushInfoTb.objects.filter(member_id=member_class_info.member_id, use=USE)
-            print(str(token_data))
             for token_info in token_data:
                 if token_info.device_id != 'pc':
                     token_info.badge_counter += 1
