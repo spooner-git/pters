@@ -3444,7 +3444,9 @@ class BoardWriter{
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 // ['fontsize', ['fontsize']],
                 ['color', ['color']],
-                ['insert', ['picture', 'video']]
+                ['insert', ['picture', 'video']],
+                ['para', ['paragraph']],
+                ['table', ['table']],
             ],
             focus: false,
             // fontSize: 14,
