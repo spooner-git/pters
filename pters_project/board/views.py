@@ -101,7 +101,7 @@ class GetNoticeDataView(LoginRequiredMixin, View):
         notice_data = NoticeTb.objects.filter(query_notice_type_list, query_notice_group_cd,
                                               use=USE
                                               ).annotate(notice_type_cd_name=RawSQL(query_type_cd, []),
-                                                         ).order_by('reg_dt')
+                                                         ).order_by('-reg_dt')
         notice_list = []
         for notice_info in notice_data:
             notice_list.append({'notice_id': notice_info.notice_id,

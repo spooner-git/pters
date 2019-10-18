@@ -61,7 +61,7 @@ class Service_notice {
     dom_assembly_content(){
         let length = this.data.length;
         let html_temp = [];
-        for(let i=length-1; i >= 0; i--){
+        for(let i=0; i <length; i++){
             let notice_id = this.data[i].notice_id;
             let notice_title = this.data[i].notice_title;
             let notice_reg_date =  this.data[i].notice_reg_dt.split(' ')[0];
