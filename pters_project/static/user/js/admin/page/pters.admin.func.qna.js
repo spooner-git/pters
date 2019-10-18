@@ -169,9 +169,9 @@ class Qna {
 
             let data_for_answer = {qa_id: data.id};
             Qna_func.read_answer(data_for_answer, (answer)=>{
-                console.log(answer);
+                let answer_content = answer.qa_comment_data.length > 0 ? answer.qa_comment_data[0].qa_comment_contents : "";
                 let external_data = {       
-                                        upper_html:upper_html_of_board_writer, content: answer,
+                                        upper_html:upper_html_of_board_writer, content: answer_content,
                                         id:data.id,
                                         visibility:{title:HIDE},
                                         category:[
@@ -183,17 +183,18 @@ class Qna {
                                         }
                 };
 
-                if(answer != null){ //새로 답변을 등록할때
+                if(answer.qa_comment_data.length == 0){ //새로 답변을 등록할때
                     board_writer = new BoardWriter("QnA", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
                         let data = {"qa_id":data_written.id, "status_type_cd":data_written.category_selected.status.value[0], "title":data_written.title,
                                     "contents":data_written.content};
                         Qna_func.create(data, ()=>{
+                            console.log("send",data)
                             this.init();
                         });
                     });
                 }else{ // 답변을 수정할 때
                     board_writer = new BoardWriter("QnA", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
-                        let data = {"qa_comment_id":data_written.id, "status_type_cd":data_written.category_selected.status.value[0], "title":data_written.title,
+                        let data = {"qa_comment_id":answer.qa_comment_data[0].qa_comment_id, "status_type_cd":data_written.category_selected.status.value[0], "title":data_written.title,
                                     "contents":data_written.content};
                         Qna_func.update(data, ()=>{
                             this.init();
@@ -201,13 +202,8 @@ class Qna {
                     });
                 }
             });
-
-
-            
         });
     }
-
-
 }
 
 
