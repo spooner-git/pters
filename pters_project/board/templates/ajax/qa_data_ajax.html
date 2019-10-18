@@ -8,9 +8,9 @@
       "qa_type_cd_name":
       [{% for qa_info in qa_data %}"{{ qa_info.qa_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "title":
-      [{% for qa_info in qa_data %}"{{ qa_info.title  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for qa_info in qa_data %}"{{ qa_info.title }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "contents":
-      [{% for qa_info in qa_data %}"{{ qa_info.contents }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for qa_info in qa_data %}"{{ qa_info.contents | linebreaks }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "status_type_cd":
       [{% for qa_info in qa_data %}"{{ qa_info.status_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "status_type_cd_name":

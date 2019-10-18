@@ -206,7 +206,7 @@ class Service_inquiry_func {
             success:function(data){
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message(data.messageArray);
                         return false;
                     }
                 }
@@ -232,6 +232,7 @@ class Service_inquiry_func {
             },
 
             success:function(data){
+                console.log(data);
                 var jsondata = JSON.parse(data);
                 if(callback != undefined){
                     callback(jsondata);
