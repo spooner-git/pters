@@ -79,9 +79,11 @@ class CComponent{
                     </li>`;
         $(document).off('focusin', `#c_i_r_${id}`).on('focusin', `#c_i_r_${id}`, function(e){
             // $(this).find('input').val('');
+            $(this).find("input").css("font-family", 'Noto Sans Medium', 'sans-serif');
         });
 
         $(document).off('focusout', `#c_i_r_${id}`).on('focusout', `#c_i_r_${id}`, function(e){
+            $(this).find("input").css("font-family", 'Noto Sans KR', 'sans-serif');
             let user_input_data = e.target.value;
             if(user_input_data.length == 0){
                 user_input_data = null;
@@ -119,6 +121,7 @@ class CComponent{
                         </div>
                     </li>`;
         $(document).off('focusin', `#c_i_n_r_${id}`).on('focusin', `#c_i_n_r_${id}`, function(e){
+            $(this).find("input").css("font-family", 'Noto Sans Medium', 'sans-serif');
             let current_value = e.target.value;
             let current_num = '';
             if(current_value != 0){
@@ -128,6 +131,7 @@ class CComponent{
         });
 
         $(document).off('focusout', `#c_i_n_r_${id}`).on('focusout', `#c_i_n_r_${id}`, function(e){
+            $(this).find("input").css("font-family", 'Noto Sans KR', 'sans-serif');
             LimitChar.number(`#c_i_n_r_${id} input`);
             let user_input_data = e.target.value;
             if(user_input_data.length == 0){
@@ -159,9 +163,11 @@ class CComponent{
                     </li>`;
         $(document).off('focusin', `#c_i_t_r_${id}`).on('focusin', `#c_i_t_r_${id}`, function(e){
             // $(this).find('textarea').val('');
+            $(this).find("textarea").css("font-family", 'Noto Sans Medium', 'sans-serif');
         });
 
         $(document).off('focusout', `#c_i_t_r_${id}`).on('focusout', `#c_i_t_r_${id}`, function(e){
+            $(this).find("textarea").css("font-family", 'Noto Sans KR', 'sans-serif');
             let user_input_data = $(this).find('textarea').val();
             if(user_input_data.length == 0){
                 user_input_data = null;

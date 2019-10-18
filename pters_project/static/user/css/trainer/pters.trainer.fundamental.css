@@ -1,15 +1,12 @@
  /*폰트 임포트*/
- /* @import url(/static/common/fonts/notosanskr.css);
- @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css); */
+ @import url(/static/common/fonts/notosanskr.css);
  @font-face{
      font-family: 'Noto Sans Medium';
      src: url(/static/common/fonts/NotoSansKR-Medium.woff2) format('woff2');
  }
  
  html{
-     /* font-family: 'Noto Sans KR', sans-serif; */
-     /* font-family: "Nanum Gothic", sans-serif; */
-     font-family: 'Noto Sans Medium', sans-serif;
+     font-family: 'Noto Sans KR', sans-serif;
      box-sizing: border-box !important;
      /* color: #1f1d1e; */
      letter-spacing: -0.5px;
