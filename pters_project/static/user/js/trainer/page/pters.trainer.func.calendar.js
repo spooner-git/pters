@@ -1069,12 +1069,17 @@ class Calendar {
         indicator.setAttribute('onclick', "event.stopPropagation();$('.week_indicator').remove()");
         event.target.appendChild(indicator);
 
+        // if(this.week_zoomed.vertical.activate == true){
+        //     hour = Math.floor(offset_hour/3);
+        //     minute = Math.round((offset_hour/3 - (Math.floor(offset_hour/3)))*60);
+        //     period_min = 10;
+        // }
+
         if(this.week_zoomed.vertical.activate == true){
-            hour = Math.floor(offset_hour/3);
-            minute = Math.round((offset_hour/3 - (Math.floor(offset_hour/3)))*60);
+            hour = Math.floor( (offset_hour - this.worktime[0]) /3) + this.worktime[0];
+            minute = Math.round(( (offset_hour - this.worktime[0]) /3 - (Math.floor( (offset_hour - this.worktime[0]) /3)))*60);
             period_min = 10;
         }
-        
         
 
         //현재 클릭한 곳의 연월일, 시분 데이터
