@@ -569,11 +569,11 @@ class DateSelector{
                             `<div class="date_selector">
                                 <div class="date_selector_confirm">
                                     <div style="float:left;margin-left:5px;">
-                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', null, ()=>{layer_popup.close_layer_popup();})}
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{layer_popup.close_layer_popup();})}
                                     </div>
                                     <span class="date_selector_title">${this.option.title}</span>
                                     <div style="float:right;margin-right:5px;color:#fe4e65;">
-                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', null, ()=>{ this.store = this.get_selected_data();
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', {"padding":"10px 20px"}, ()=>{ this.store = this.get_selected_data();
                                                                                                                     this.option.callback_when_set(this.store); 
                                                                                                                     layer_popup.close_layer_popup();
                                                                                                                 })}
@@ -1022,11 +1022,11 @@ class TwoDateSelector{
                             `<div class="date_selector2">
                                 <div class="date_selector_confirm">
                                     <div style="float:left;margin-left:5px;">
-                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', null, ()=>{layer_popup.close_layer_popup();})}
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{layer_popup.close_layer_popup();})}
                                     </div>
                                     <span class="date_selector_title">${this.option.title}</span>
                                     <div style="float:right;margin-right:5px;color:#fe4e65;">
-                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', null, ()=>{ this.store = this.get_selected_data();
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', {"padding":"10px 20px"}, ()=>{ this.store = this.get_selected_data();
                                                                                                                     this.option.callback_when_set(this.store); 
                                                                                                                     // layer_popup.close_layer_popup();
                                                                                                                 })}
@@ -1363,11 +1363,11 @@ class TimeSelector{
             "initial_html":`<div class="time_selector">
                                 <div class="time_selector_confirm">
                                     <div style="float:left;margin-left:5px;">
-                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', null, ()=>{layer_popup.close_layer_popup();})}
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{layer_popup.close_layer_popup();})}
                                     </div>
                                     <span class="time_selector_title">${this.option.title}</span>
                                     <div style="float:right;margin-right:5px;color:#fe4e65;">
-                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', null, ()=>{this.upper_right_button();})}
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', {"padding":"10px 20px"}, ()=>{this.upper_right_button();})}
                                     </div>
                                 </div>
                                 <div class="time_selector_zone_wrap select_wrapper"></div>
@@ -1729,11 +1729,11 @@ class TimeSelector2{
             "initial_html":`<div class="time_selector">
                                 <div class="time_selector_confirm">
                                     <div style="float:left;margin-left:5px;">
-                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', null, ()=>{layer_popup.close_layer_popup();})}
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{layer_popup.close_layer_popup();})}
                                     </div>
                                     <span class="time_selector_title">${this.option.title}</span>
                                     <div style="float:right;margin-right:5px;color:#fe4e65;">
-                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', null, ()=>{this.upper_right_button();})}
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', {"padding":"10px 20px"}, ()=>{this.upper_right_button();})}
                                     </div>
                                 </div>
                                 <div class="time_selector_hour_wrap select_wrapper"></div>
@@ -1942,11 +1942,11 @@ class SpinSelector{
             "initial_html":`<div class="spin_selector">
                                 <div class="spin_selector_confirm">
                                     <div style="float:left;margin-left:5px;">
-                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', null, ()=>{layer_popup.close_layer_popup();})}
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{layer_popup.close_layer_popup();})}
                                     </div>
                                     <span class="span_selector_title">${this.option.title}</span>
                                     <div style="float:right;margin-right:5px;color:#fe4e65;">
-                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', null, ()=>{this.option.callback_when_set();})}
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', {"padding":"10px 20px"}, ()=>{this.option.callback_when_set();})}
                                     </div>
                                 </div>
                                 <div class="spin_selector_page_wrap select_wrapper"></div>
@@ -2746,7 +2746,7 @@ class DatePickerSelector{
                             `<div class="date_selector">
                                 <div class="date_selector_confirm">
                                     <div style="position:absolute;margin-left:5px;">
-                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', null, ()=>{layer_popup.close_layer_popup();})}
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{layer_popup.close_layer_popup();})}
                                     </div>
                                     <span class="date_selector_title">${this.option.title}</span>
                                 </div>
