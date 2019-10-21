@@ -35,7 +35,7 @@ class Home {
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 
-        // this.render_loading_image();
+        this.render_loading_image();
         this.render_upper_box();
         this.render_content();
     }
@@ -49,6 +49,14 @@ class Home {
             let component = this.static_component();
             document.getElementById('home_display_panel').innerHTML = component.home_upper_box;
         });
+    }
+
+    render_loading_image(){
+        document.querySelector("#home_content_wrap").innerHTML = 
+            `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
+                <img src="/static/common/loading.svg">
+                <div style="font-size:12px;color:#858282">사용자 데이터를 불러오고 있습니다.</div>
+            </div>`;
     }
 
     //회원 리스트를 렌더링
@@ -295,7 +303,7 @@ class Home {
             async:async,
     
             beforeSend:function (){
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
     
             //통신성공시 처리
@@ -314,7 +322,7 @@ class Home {
 
             //보내기후 팝업창 닫기
             complete:function (){
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
     
             //통신 실패시 처리

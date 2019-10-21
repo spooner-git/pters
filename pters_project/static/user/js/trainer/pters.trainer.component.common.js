@@ -62,7 +62,7 @@ class CComponent{
         }
 
         let html = `<li class="create_input_row" id="c_i_r_${id}" style="${CComponent.data_to_style_code(style)}">
-                        <div style="display:flex;">
+                        <div style="display:flex;height:100%;">
                             <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
                                 <img src="${icon == DELETE ? '' : icon}">
                             </div>
@@ -105,7 +105,7 @@ class CComponent{
             icon = '/static/common/icon/icon_gap_black.png';
         }
         let html = `<li class="create_input_row" id="c_i_n_r_${id}" style="${CComponent.data_to_style_code(style)}">
-                        <div style="display:flex;">
+                        <div style="display:flex;height:100%;">
                             <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
                                 <img src="${icon == DELETE ? '' : icon}">
                             </div>

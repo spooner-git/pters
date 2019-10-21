@@ -95,7 +95,7 @@
 	box-sizing: border-box;
 }
 
-#home_content_wrap .end_alert_wrapper .create_row .cell_title > img, .create_input_row .cell_title > img{
+#home_content_wrap .end_alert_wrapper .create_row .cell_title > img, #home_content_wrap .create_input_row .cell_title > img{
 	border-radius: 50%;
 }
 
