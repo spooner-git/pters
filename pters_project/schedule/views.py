@@ -538,16 +538,16 @@ def update_schedule_state_cd_logic(request):
 
         push_info_schedule_start_date = str(start_date).split(':')
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
-        member_ticket_tb = schedule_info.member_ticket_tb
+        # member_ticket_tb = schedule_info.member_ticket_tb
         # push_member_ticket_id.append(schedule_info.member_ticket_tb_id)
         # push_title.append(class_type_name + ' - '+schedule_state_cd_name)
         log_info = '개인 레슨'
         push_info = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] \
-                    + ' [개인 레슨] 수업이 '+schedule_state_cd_name+' 처리 했습니다.'
+                    + ' [개인 레슨] 수업을 '+schedule_state_cd_name+' 처리 했습니다.'
 
         # 그룹 수업인 경우 처리
-        if member_ticket_tb is None or member_ticket_tb == '':
+        if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
             log_info = schedule_info.lecture_tb.name
             push_info = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] \
