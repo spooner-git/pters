@@ -776,10 +776,10 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
         query_member_ticket_ip_count = "select count(*) from LECTURE_TB as C where C.MEMBER_ID" \
                                        "=(select B.MEMBER_ID from LECTURE_TB as B where B.ID =" \
                                        " `CLASS_LECTURE_TB`.`LECTURE_TB_ID`)" \
-                                       " and " + class_id + \
+                                       " and " + str(class_id) + \
                                        " = (select D.CLASS_TB_ID from CLASS_LECTURE_TB as D" \
-                                       " where D.LECTURE_TB_ID=C.ID and D.CLASS_TB_ID=" + class_id + ")" \
-                                       " and C.STATE_CD=\'IP\' and C.PACKAGE_TB_ID=" + ticket_id + " and C.USE=1"
+                                       " where D.LECTURE_TB_ID=C.ID and D.CLASS_TB_ID=" + str(class_id) + ")" \
+                                       " and C.STATE_CD=\'IP\' and C.PACKAGE_TB_ID=" + str(ticket_id) + " and C.USE=1"
 
         all_member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb',
