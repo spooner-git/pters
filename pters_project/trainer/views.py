@@ -3447,17 +3447,17 @@ class GetTicketEndMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                        MemberTicketTb._meta.get_field('member_ticket_id').column+" =" + \
                                        " `"+ClassMemberTicketTb._meta.db_table+"`.`" + \
                                        ClassMemberTicketTb._meta.get_field('member_ticket_tb').column+"`)" \
-                                       " and " + class_id + \
+                                       " and " + str(class_id) + \
                                        " = (select D."+ClassMemberTicketTb._meta.get_field('class_tb').column + \
                                        " from "+ClassMemberTicketTb._meta.db_table+" as D" \
                                        " where D."+ClassMemberTicketTb._meta.get_field('member_ticket_tb').column + \
                                        "=C."+ClassMemberTicketTb._meta.get_field('class_member_ticket_id').column + \
                                        " and D."+ClassMemberTicketTb._meta.get_field('class_tb').column + \
-                                       "=" + class_id + ")" \
+                                       "=" + str(class_id) + ")" \
                                        " and C."+MemberTicketTb._meta.get_field('state_cd').column + \
                                        "=\'IP\' and C."+MemberTicketTb._meta.get_field('ticket_tb').column + \
-                                       "=" + ticket_id + " and C." + \
-                                       MemberTicketTb._meta.get_field('use').column + "="+USE
+                                       "=" + str(ticket_id) + " and C." + \
+                                       MemberTicketTb._meta.get_field('use').column + "="+str(USE)
 
         all_class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb',
