@@ -136,13 +136,6 @@ class Member_attend{
                         this.check_entire = false;
                     break;
                 case 'check_attend':
-                        // this.data[member_id].state_cd = SCHEDULE_FINISH;
-                        // this.check_entire = true;
-                        // for(let id in this.data){
-                        //     if(this.data[id].state_cd != SCHEDULE_FINISH){
-                        //         this.check_entire = false;
-                        //     }
-                        // }
                         this.open_drawing_board(member_id, ()=>{
                             this.data[member_id].state_cd = SCHEDULE_FINISH;
                             this.check_entire = true;

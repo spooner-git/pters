@@ -262,7 +262,7 @@ class Ticket{
     }
 
     //수강권 리스트 서버에서 불러오기
-    request_ticket_list (status, callback, image_load, async){
+    request_ticket_list (status, callback, load_image, async){
         //sort_order_by : ticket_type_seq, ticket_name, ticket_member_many, ticket_member_few, ticket_create_new, ticket_create_old
         let url;
         if(status=='ing'){

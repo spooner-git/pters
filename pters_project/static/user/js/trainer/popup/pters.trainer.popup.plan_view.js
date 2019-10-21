@@ -229,11 +229,48 @@ class Plan_view{
         }else if(this.data.schedule_type == 2){
             lecture_name = this.data.lecture_name;
         }
+        
+        let id = "plan_view_lecture_name";
+        let title = lecture_name;
+        let style = null;
+        let onclick = ()=>{
+            if(this.data.schedule_type != 1){
+                return false;
+            }
+            let user_option = {
+                info:{text:"회원 정보", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/windowHeight), POPUP_FROM_BOTTOM, null, ()=>{
+                        member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', this.data.member_id[0], 'member_simple_view_popup');
+                        //회원 간단 정보 팝업 열기
+                    });
+                }},
+                sign_image:{text:"출석 서명 확인", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    show_error_message(
+                        `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${this.data.member_schedule_id[0]}.png" style="width:100%;filter:invert(1);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`
+                    );
+                }}
+            };
+
+            if(this.data.member_schedule_state[0] != SCHEDULE_FINISH){
+                delete user_option.sign_image;
+            }
+
+            let options_padding_top_bottom = 16;
+            let button_height = 8 + 8 + 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        }
+        let text_button = CComponent.text_button(id, title, style, onclick);
 
         let html = `
                     <div class="info_popup_title_wrap" style="height:24px;background-color:${this.data.lecture_color}">
                         <div class="info_popup_title" style="display:inline-block;width:100%;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;line-height:24px;font-size:20px;font-weight:bold;letter-spacing:-1px;color:${this.data.lecture_font_color}">
-                            ${lecture_name}
+                            ${text_button}
                         </div>
                     </div>
                     `;
@@ -309,7 +346,7 @@ class Plan_view{
                         sign_image:{text:"출석 서명 확인", callback:()=>{
                             layer_popup.close_layer_popup();
                             show_error_message(
-                                `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${member_schedule_id}.png" style="width:100%;filter:invert(1);">`
+                                `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${member_schedule_id}.png" style="width:100%;filter:invert(1);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`
                             );
                         }}
                     };
@@ -512,12 +549,19 @@ class Plan_view{
                             let send_data = {"schedule_id":this.schedule_id, "state_cd":state_cd, "upload_file":image};
                             Plan_func.status(send_data, ()=>{
                                 if(state_cd == SCHEDULE_FINISH){
-                                    Plan_func.upload_sign(send_data, ()=>{
+                                    if(send_data.upload_file != null){
+                                        Plan_func.upload_sign(send_data, ()=>{
+                                            this.init();
+                                            try{
+                                                current_page.init();
+                                            }catch(e){}
+                                        });
+                                    }else{
                                         this.init();
                                         try{
                                             current_page.init();
                                         }catch(e){}
-                                    });
+                                    }
                                 }else{
                                     this.init();
                                     try{
