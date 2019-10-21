@@ -312,7 +312,7 @@
                             </div>
                             <div class="wrapper_lesson_now_text">
                                 <p class="lesson_date_row">{{ pt_schedule_info.start_dt | time:'H:i' }} ~ {{ pt_schedule_info.end_dt | time:'H:i' }}</p>
-                                <p class="lesson_name_row">개인 레슨 - {{ pt_schedule_info.lecture_tb.member.name }} 회원</p>
+                                <p class="lesson_name_row">개인 레슨 - {{ pt_schedule_info.member_ticket_tb.member.name }} 회원</p>
                             </div>
                     {% endif %}
                 {% endfor %}

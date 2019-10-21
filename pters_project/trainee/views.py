@@ -1281,14 +1281,14 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_id,
                              member_ticket_tb_id=member_ticket_id,
-                             log_info=lecture_schedule_info.get_lecture_name() + ' 수업', log_how='예약 완료',
+                             log_info=lecture_schedule_info.get_lecture_name() + ' 수업', log_how='예약',
                              log_detail=str(start_date) + '/' + str(end_date),  use=USE)
             log_data.save()
         else:
             log_data = LogTb(log_type='LS01', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
-                             log_info='개인 레슨 수업', log_how='예약 완료',
+                             log_info='개인 레슨 수업', log_how='예약',
                              log_detail=str(start_date) + '/' + str(end_date),
                              use=USE)
             log_data.save()
