@@ -33,9 +33,11 @@
             }
         }
         p{
-            margin-top: 10px;
-            margin-bottom: 10px;
+            /* margin-top: 10px;
+            margin-bottom: 10px; */
+            margin: 0;
         }
+
         section{
             width: 100%;
             box-sizing: border-box;
@@ -90,16 +92,8 @@
             float: right;
         }
 
-        #wrapper_arrow_button .logo{
-            height: 35px;
-            background-image: url("/static/user/res/PTERS_logo_pure.png");
-            background-repeat: no-repeat;
-            background-size: 100px;
-            background-position: center;
-        }
-
         #wrapper_page_title{
-            padding: 20px;
+            padding:0 20px;
         }
         #wrapper_page_title > span{
             font-size:22px;
@@ -118,19 +112,8 @@
 
         }
         .wrapper_lesson_now_info_article{
-            /* display: inline-block;
-            width: 300px;
-            margin: 1%;
-            height: 110px;
-            overflow-y: hidden;
-            padding: 15px;
-            border: 2px solid #1e1e1e;
-            border-radius: 10px;
-            background: linear-gradient(to right, #f4f4f4, #f4f4f4 20%, #ffffff);
-            margin-top: 15px; */
             display: flex;
             width: 100%;
-            /* height: 60px; */
             height: auto;
             overflow-y: hidden;
             padding: 10px 0;
@@ -146,28 +129,38 @@
         .wrapper_lesson_now_color .color_tag{
             width:4px;
             height: 100%;
-            color: #cccccc;
+            background-color: #cccccc;
         }
         
         .wrapper_lesson_now_text .lesson_date_row{
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 500;
             letter-spacing: -0.5px;
             color: #3d3b3b;
-            height: 20px;
+            height: 25px;
         }
         .wrapper_lesson_now_text .lesson_name_row{
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 500;
             letter-spacing: -0.7px;
             color: #3d3b3b;
-            height: 24px;
+            min-height: 33px;
+        }
+        .wrapper_lesson_now_text .lesson_member_row{
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            color: #3d3b3b;
+            height: 25px;
         }
 
         .lesson_selected{
-            border: 2px solid #fe4e65;
+            /* border: 2px solid #fe4e65; */
             /* border-width: 2px !important;
             border-color: #fe4e65 !important; */
+            box-shadow: 0 0 5px 0 #fe4e6560;
+            transition: 0.3s;
+            /* transform: scale(1.01); */
         }
 
         #wrapper_phone_input{
@@ -283,46 +276,44 @@
                         <img src="/static/common/icon/icon_setting_black.png" style="width:20px; height:20px;">
                     </button> -->
                 </div>
-                
-                
                 <!-- <div class="logo"></div> -->
                 <!-- <button onclick="move_button(event, 'next')" hidden>&#62;&#62;</button> -->
             </div>
 
             <div id="wrapper_page_title">
-                <span>실시간 출석 체크</span>
+                <span>실시간 출석 체크 </span>
             </div>
 
             <div id="wrapper_lesson_now_info">
             {% now "Y.m.d (l)" as today %}
                 <!-- <p class="fts_22">{{ today |cut:"요일" }} - 현재 진행중인 수업</p> -->
-                <p class="title_tag">현재 진행중인 수업</p>
+                <p class="title_tag" style="margin-bottom: 10px;">현재 진행중인 수업 </p>
 
-                {% for group_schedule_info in group_schedule_data %}
-                
-                <div class="wrapper_lesson_now_info_article" data-id="{{ group_schedule_info.schedule_id }}" onclick="lesson_select(this)">
+                {% for lecture_schedule_info in lecture_schedule_data %}
+                <div class="wrapper_lesson_now_info_article" data-id="{{ lecture_schedule_info.schedule_id }}" onclick="lesson_select(this)">
                     <div class="wrapper_lesson_now_color">
-
+                        <div class="color_tag"></div>
                     </div>
                     <div class="wrapper_lesson_now_text">
-                        <p class="lesson_name_row">{{ group_schedule_info.start_dt | time:'H:i' }} ~ {{ group_schedule_info.end_dt | time:'H:i' }}</p>
-                        <p class="lesson_date_row">(그룹) {{ group_schedule_info.lecture_tb.name }} - 정원 : {{ group_schedule_info.group_tb.member_num }} <br/>
-                            출석 : {{ group_schedule_info.group_current_finish_member_num }} / 예약 : {{ group_schedule_info.group_current_member_num }}</p>
+                        <p class="lesson_date_row">{{ lecture_schedule_info.start_dt | date:"Y.m.d (l)" |cut:"요일" }} {{ lecture_schedule_info.start_dt | time:'H:i' }} ~ {{ lecture_schedule_info.end_dt | time:'H:i' }}</p>
+                        <p class="lesson_name_row">{{ lecture_schedule_info.lecture_tb.name }}</p>
+                        <p class="lesson_member_row">
+                            <span style="margin-right:10px;">정원 : {{ lecture_schedule_info.lecture_tb.member_num }}</span>
+                            <span style="margin-right:10px;">출석 : {{ lecture_schedule_info.lecture_current_finish_member_num }}</span> 
+                            <span>예약 : {{ lecture_schedule_info.lecture_current_member_num }}</span></p>
                     </div>
-                </div>
                 {% endfor %}
 
                 {% for pt_schedule_info in pt_schedule_data %}
-                    {% if not pt_schedule_info.group_tb %}
+                    {% if not pt_schedule_info.lecture_tb %}
                         <div class="wrapper_lesson_now_info_article" data-id="{{ pt_schedule_info.schedule_id }}" onclick="lesson_select(this)">
                             <div class="wrapper_lesson_now_color">
-                                
+                                <div class="color_tag"></div>
                             </div>
                             <div class="wrapper_lesson_now_text">
-                                <p class="lesson_name_row">{{ pt_schedule_info.start_dt | time:'H:i' }} ~ {{ pt_schedule_info.end_dt | time:'H:i' }}</p>
-                                <p class="lesson_date_row">(개인) 개인 레슨 - {{ pt_schedule_info.lecture_tb.member.name }} 회원</p>
+                                <p class="lesson_date_row">{{ pt_schedule_info.start_dt | time:'H:i' }} ~ {{ pt_schedule_info.end_dt | time:'H:i' }}</p>
+                                <p class="lesson_name_row">개인 레슨 - {{ pt_schedule_info.lecture_tb.member.name }} 회원</p>
                             </div>
-                        </div>
                     {% endif %}
                 {% endfor %}
 
@@ -355,7 +346,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>
 
-        let group_schedule_id = [{% for group_schedule_info in group_schedule_data %}'{{ group_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        let lecture_schedule_id = [{% for lecture_schedule_info in lecture_schedule_data %}'{{ lecture_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         let scheduleIdArray = [{% for pt_schedule_info in pt_schedule_data %}'{{ pt_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
         window.onload=function(){
@@ -363,7 +354,6 @@
             let content_height = $('#content_wrapper').height();
             let check_setting_data = '{{ check_setting_data }}';
             $('#content_wrapper').fadeIn();
-            console.log(content_height, window_height)
             if(content_height < window_height){
                 $('#content_wrapper').css({'left':'50%', 'top':'50%', 'transform':'translate(-50%, -50%)', 'position':'absolute'})
             }else{
@@ -373,37 +363,38 @@
             if(check_setting_data == '1'){
                 back_to_normal_mode(event, 'admin_menu');
             }
+            $('#wrapper_lesson_now_info').css('height', $('#wrapper_lesson_now').height() - 160 + 'px');
         };
-        // setInterval(function(){
-        //     $.ajax({
-        //         url: '/trainer/get_attend_mode_schedule/',
-        //         type : 'GET',
-        //         dataType : 'html',
+         setInterval(function(){
+             $.ajax({
+                 url: '/trainer/get_attend_mode_schedule/',
+                 type : 'GET',
+                 dataType : 'html',
 
-        //         beforeSend:function(){
-        //         },
+                 beforeSend:function(){
+                 },
 
-        //         success:function(data){
-        //             var jsondata = JSON.parse(data);
-        //             if(jsondata.messageArray.length>0){
-        //                 alert(jsondata.messageArray);
-        //             }else{
-        //                 if(JSON.stringify(group_schedule_id) != JSON.stringify(jsondata.group_schedule_id)){
-        //                     location.reload();
-        //                 }
-        //                 if(JSON.stringify(scheduleIdArray) != JSON.stringify(jsondata.scheduleIdArray)){
-        //                     location.reload();
-        //                 }
-        //             }
-        //         },
-        //         complete:function(){
-        //         },
+                 success:function(data){
+                     var jsondata = JSON.parse(data);
+                     if(jsondata.messageArray.length>0){
+                         alert(jsondata.messageArray);
+                     }else{
+                         if(JSON.stringify(lecture_schedule_id) != JSON.stringify(jsondata.lecture_schedule_id)){
+                             location.reload();
+                         }
+                         if(JSON.stringify(scheduleIdArray) != JSON.stringify(jsondata.scheduleIdArray)){
+                             location.reload();
+                         }
+                     }
+                 },
+                 complete:function(){
+                 },
 
-        //         error:function(){
-        //             console.log('server error');
-        //         }
-        //     });
-        // }, 60000);// 자동 ajax 새로고침(일정가져오기)
+                 error:function(){
+                     console.log('server error');
+                 }
+             });
+         }, 60000);// 자동 ajax 새로고침(일정가져오기)
 
 
         function form_confirm(e){
