@@ -315,7 +315,7 @@ class CComponent{
             fix_member_check = '고정회원';
         }
         let html = `
-                    <li class="select_member_row smr_${location}" id="select_member_row_${member_id}" ${disable_zero_avail_count == ON && member_avail_count == 0? "style='opacity:0.6;'": ""}>
+                    <li class="select_member_row smr_${location}" id="select_member_row_${member_id}" ${disable_zero_avail_count == ON && member_avail_count == 0 && checked == 0? "style='opacity:0.6;'": ""}>
                         <div class="obj_table_raw">
                             <div style="display:table-cell; width:35px; height:35px; padding-right:10px;">
                                 <img src="${member_profile_url}" style="width:35px; height:35px; border-radius: 50%;">
@@ -342,7 +342,7 @@ class CComponent{
 
         if(multiple_select > 1){
             $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
-                if(disable_zero_avail_count == ON && member_avail_count == 0){
+                if(disable_zero_avail_count == ON && member_avail_count == 0 && checked == 0){
                     return false;
                 }
                 let member_select_count = $(`.smr_${location} .member_selected`).length;
@@ -364,7 +364,7 @@ class CComponent{
             });
         }else if(multiple_select == 1){
             $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
-                if(disable_zero_avail_count == ON && member_avail_count == 0){
+                if(disable_zero_avail_count == ON && member_avail_count == 0 && checked == 0){
                     return false;
                 }
                 onclick('add_single');
