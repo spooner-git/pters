@@ -4395,7 +4395,7 @@ def attend_mode_finish_logic(request):
     member_id = request.POST.get('member_id')
     schedule_id = request.POST.get('schedule_id')
     class_id = request.session.get('class_id', '')
-
+    next_page = '/trainer/attend_mode/'
     error = None
     try:
         schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
@@ -4474,8 +4474,9 @@ def attend_mode_finish_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+        next_page = '/trainer/attend_mode_detail/'
 
-    return render(request, 'ajax/trainer_error_ajax.html')
+    return redirect(next_page)
 
 
 # 강사 출석 기능 setting 업데이트 api
