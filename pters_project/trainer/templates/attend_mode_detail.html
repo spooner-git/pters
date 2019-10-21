@@ -208,6 +208,15 @@
         }
         /* 팝업 */
 
+        .ajax_loading_image{
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 35px;
+            z-index: 1500;
+        }
 
         .fts_24{font-size: 1.7rem;}
         .fts_22{font-size: 1.5rem;}
@@ -228,7 +237,7 @@
         <span id="debug_y">y:</span><span id="debug_y_value"></span>
         <span id="debug_offset"></span>
     </div>
-    
+    <img src={% static_url "common/loading.svg" %} alt="" class="ajax_loading_image">
     <div id="shade_for_popup_basic" style="position: absolute;;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
         onclick="layer_popup.close_layer_popup();"></div>
 
@@ -370,9 +379,8 @@
             // let drawCanvas = document.getElementById('canvas');
             let send_data = $('#form_attend_data').serializeArray();
             send_data.push({"name":"upload_file", "value":image_data});
-            // console.log(send_data)
             signImageSend(send_data, ()=>{
-                location.href='/trainer/attend_mode/';
+                // location.href='/trainer/attend_mode/';
             });
         }
 
@@ -387,7 +395,7 @@
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                         xhr.setRequestHeader("X-CSRFToken", csrftoken);
                     }
-                    //beforeSend();
+                    ajax_load_image(SHOW);
                 },
 
                 //통신성공시 처리
@@ -397,8 +405,7 @@
                         $('#errorMessageBar').show();
                         $('#errorMessageText').text(jsondata.messageArray);
                     }else{
-                        alert('test');
-{#                        console.log('sign_image_save_success');#}
+                        console.log('sign_image_save_success');
                         $('#form_attend_data').submit();
                     }
 
@@ -409,7 +416,7 @@
 
                 //보내기후 팝업창 닫기
                 complete:function(){
-
+                    ajax_load_image(HIDE);
                 },
 
                 //통신 실패시 처리
@@ -477,6 +484,18 @@
         }
         var csrftoken = getCookie('csrftoken');
 
+        function ajax_load_image(option){
+            let $ajax_load_image = $('img.ajax_loading_image');
+            switch(option){
+                case SHOW:
+                    $ajax_load_image.show();
+                break;
+
+                case HIDE:
+                    $ajax_load_image.hide();
+                break;
+            }
+        }
 
     </script>
 </body>

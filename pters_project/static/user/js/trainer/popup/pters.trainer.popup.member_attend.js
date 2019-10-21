@@ -169,16 +169,6 @@ class Member_attend{
         return html_to_join.join('');
     }
 
-    // check_image_link(url){
-    //     let check_status = true;
-    //     let dom = document.createElement('img');
-    //     dom.setAttribute('src', url);
-        
-    //     dom.onerror = function(){
-    //         check_status = false;
-    //         return check_status;
-    //     };
-    // }
 
     image_error(schedule_id){
         this.data[schedule_id].image = null;
