@@ -51,6 +51,7 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
                 idx1 += 1
                 idx2 = 1
             schedule_info.idx = str(idx1)+'-'+str(idx2)
+            schedule_info.note = schedule_info.note.replace('\n', '<br/>')
             schedule_list.append(schedule_info)
             idx2 += 1
 
@@ -82,6 +83,7 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
 
             for schedule_info in schedule_data:
                 schedule_info.idx = str(idx1) + '-' + str(idx2)
+                schedule_info.note = schedule_info.note.replace('\n', '<br/>')
                 schedule_list.append(schedule_info)
                 idx2 += 1
 
@@ -115,7 +117,8 @@ def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, en
                              ).annotate(lecture_current_member_num=RawSQL(query, []),
                                         lecture_check=RawSQL('IFNULL(('+query_member_auth_cd+' ), 0)', [])
                                         ).filter(lecture_check__gt=0).order_by('start_dt')
-
+    for lecture_schedule_info in lecture_schedule_data:
+        lecture_schedule_info.note = lecture_schedule_info.note.replace('\n', '<br/>')
     context['lecture_schedule_data'] = lecture_schedule_data
 
     return context
@@ -129,6 +132,8 @@ def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
         class_tb_id=class_id, start_dt__gte=start_date,
         start_dt__lt=end_date).exclude(state_cd=STATE_CD_ABSENCE).order_by('start_dt')
 
+    for schedule_info in schedule_data:
+        schedule_info.note = schedule_info.note.replace('\n', '<br/>')
     context['off_schedule_data'] = schedule_data
 
     return context

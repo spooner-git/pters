@@ -166,7 +166,7 @@ function check_username(data){
         },
         //통신 실패시 처리
         error:function(){
-            show_error_message("에러: 서버 통신 실패")
+            alert("에러: 서버 통신 실패")
         }
     });
 }
@@ -219,9 +219,9 @@ function activate_sms(){
                 $('#id_activation_button').text('인증').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
                 $('#id_activation_confirm_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
                 $('#activation_timer').text("");
-                show_error_message(jsondata.messageArray);
+                alert(jsondata.messageArray);
             }else{
-                show_error_message('인증번호가 발송되었습니다.');
+                alert('인증번호가 발송되었습니다.');
                 activation_time_interval = setInterval(function(){
                     activation_timer--;
                     // 시간 종료시 처리
@@ -247,7 +247,7 @@ function activate_sms(){
         },
         //통신 실패시 처리
         error:function(){
-            show_error_message("에러: 서버 통신 실패");
+            alert("에러: 서버 통신 실패");
         }
     });
 }
@@ -279,7 +279,7 @@ function check_activation_code(){
                 $('#id_activation_confirm_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
                 $id_activation_code.attr('data-valid', 'true');
                 $('#activation_timer').text("");
-                show_error_message('확인되었습니다.');
+                alert('확인되었습니다.');
             }
         },
         complete:function(){
@@ -309,7 +309,7 @@ function registration_member_info(forms){
         }
     }
     if(error_info!=''){
-        show_error_message(error_info+'를 확인해주세요.');
+        alert(error_info+'를 확인해주세요.');
     }else{
         add_member_info();
     }
@@ -337,9 +337,9 @@ function add_member_info(){
                 for(let i=0; i<jsondata.messageArray.length; i++){
                     error_message += jsondata.messageArray[i] + '<br/>';
                 }
-                show_error_message(error_message);
+                alert(error_message);
             }else{
-                show_error_message('가입이 완료되었습니다.');
+                alert('가입이 완료되었습니다.');
                 location.href = $('#id_next_page').val();
             }
         },
