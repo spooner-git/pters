@@ -1224,7 +1224,10 @@ class Calendar {
                                           .css({"height":"60px", "line-height":"60px;"});
                 this.render_upper_box(this.cal_type);
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
-
+                if(this.week_zoomed.vertical.activate == true){
+                    this.week_zoomed.vertical.activate = false;
+                    this.zoom_week_cal_vertical();
+                }
                 break;
             case OFF:
                 this.long_touch = OFF;
@@ -1233,6 +1236,10 @@ class Calendar {
                 this.long_touch_schedule_id = null;
                 this.render_upper_box(this.cal_type);
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
+                if(this.week_zoomed.vertical.activate == true){
+                    this.week_zoomed.vertical.activate = false;
+                    this.zoom_week_cal_vertical();
+                }
                 break;
         }
     }
