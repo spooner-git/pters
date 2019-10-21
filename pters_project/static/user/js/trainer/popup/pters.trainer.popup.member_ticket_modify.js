@@ -34,7 +34,6 @@ class Member_ticket_modify{
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
        
         this.init();
-        // this.set_initial_data();
     }
 
     init(){
@@ -44,7 +43,12 @@ class Member_ticket_modify{
     }
 
     set_initial_data (){
-        this.data = this.external_data;
+        // this.data = this.external_data;
+        for(let item in this.external_data){
+            if(this.external_data[item] != undefined){
+                this.data[item] = this.external_data[item];
+            }
+        }
         this.render();
     }
 
@@ -372,7 +376,6 @@ class Member_ticket_modify{
         }
         let data = {"member_ticket_id":this.data.member_ticket_id, "note":this.data.note, "start_date":this.data.start_date, "end_date":this.data.end_date, 
                     "price":this.data.price, "refund_price":this.data.refund_price, "refund_date":this.data.refund_date, "member_ticket_reg_count":this.data.reg_count};
-
         Member_func.ticket_update(data, ()=>{
             layer_popup.close_layer_popup();
             this.set_initial_data();
