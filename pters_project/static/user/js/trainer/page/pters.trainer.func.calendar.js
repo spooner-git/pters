@@ -1298,7 +1298,7 @@ class Calendar {
         }
     }
 
-    request_schedule_data (date, days, callback, async){
+    request_schedule_data (date, days, callback, load_image, async){
         let date_ = date;
         let days_ = days;
         if(date_ == undefined){date_ = `${this.current_year}-${this.current_month}-01`;}
@@ -1315,6 +1315,9 @@ class Calendar {
             async: async,
 
             beforeSend:function (){
+                if(load_image == OFF){
+                    return;
+                }
                 ajax_load_image(SHOW);
             },
             success:function (data){
@@ -1329,6 +1332,9 @@ class Calendar {
             },
 
             complete:function (){
+                if(load_image == OFF){
+                    return;
+                }
                 ajax_load_image(HIDE);
             },
 

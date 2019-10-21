@@ -231,7 +231,7 @@ class Lecture_list {
     }
 
     //수업 리스트 서버에서 불러오기
-    request_lecture_list (status, callback){
+    request_lecture_list (status, callback, load_image){
         //sort_order_by : lecture_type_seq, lecture_name, lecture_member_many, lecture_member_few, lecture_create_new, lecture_create_old
         let url;
         if(status=='ing'){
@@ -247,6 +247,9 @@ class Lecture_list {
             dataType : 'JSON',
     
             beforeSend:function (){
+                if(load_image == OFF){
+                    return;
+                }
                 ajax_load_image(SHOW);
             },
     
@@ -264,6 +267,9 @@ class Lecture_list {
 
             //보내기후 팝업창 닫기
             complete:function (){
+                if(load_image == OFF){
+                    return;
+                }
                 ajax_load_image(HIDE);
             },
     

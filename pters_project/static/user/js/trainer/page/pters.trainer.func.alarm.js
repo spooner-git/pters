@@ -75,7 +75,6 @@ class Alarm {
             for (let i=0; i<length; i++){
                 
                 let data = jsondata[date][i];
-                console.log(data)
                 let alarm_id = data.alarm_id;
                 let alarm_from = data.alarm_from_member_name;
                 let alarm_to = data.alarm_to_member_name;

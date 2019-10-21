@@ -262,7 +262,7 @@ class Ticket{
     }
 
     //수강권 리스트 서버에서 불러오기
-    request_ticket_list (status, callback, async){
+    request_ticket_list (status, callback, image_load, async){
         //sort_order_by : ticket_type_seq, ticket_name, ticket_member_many, ticket_member_few, ticket_create_new, ticket_create_old
         let url;
         if(status=='ing'){
@@ -279,6 +279,9 @@ class Ticket{
             async: async,
 
             beforeSend:function (){
+                if(load_image == OFF){
+                    return;
+                }
                 ajax_load_image(SHOW);
             },
 
@@ -297,6 +300,9 @@ class Ticket{
 
             //보내기후 팝업창 닫기
             complete:function (){
+                if(load_image == OFF){
+                    return;
+                }
                 ajax_load_image(HIDE);
             },
 

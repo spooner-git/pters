@@ -47,7 +47,7 @@ class Member {
 
 
     //회원 리스트 서버에서 불러오기
-    request_member_list (list_type, callback, async){
+    request_member_list (list_type, callback, load_image, async){
         var url;
         if(async == undefined){
             async = true;
@@ -64,6 +64,9 @@ class Member {
             data: {'sort_val':this.sort_val, 'sort_order_by':this.sort_order_by, "keyword":""},
     
             beforeSend:function (){
+                if(load_image == OFF){
+                    return;
+                }
                 ajax_load_image(SHOW);
             },
     
@@ -83,6 +86,9 @@ class Member {
 
             //보내기후 팝업창 닫기
             complete:function (){
+                if(load_image == OFF){
+                    return;
+                }
                 ajax_load_image(HIDE);
             },
     
