@@ -1506,7 +1506,7 @@ class ResetPassword2View(View):
     template_name = 'reset_password_form2.html'
 
     def post(self, request):
-        name = request.POST.get('name', '')
+        # name = request.POST.get('name', '')
         username = request.POST.get('username', '')
         error = None
         member = None
@@ -1514,11 +1514,12 @@ class ResetPassword2View(View):
 
         if username is None or username == '':
             error = '아이디를 입력해주세요'
-        if name is None or name == '':
-            error = '이름을 입력해주세요.'
+        # if name is None or name == '':
+        #     error = '이름을 입력해주세요.'
         if error is None:
             try:
-                member = MemberTb.objects.get(name=name, user__username=username)
+                member = MemberTb.objects.get(user__username=username)
+                # member = MemberTb.objects.get(name=name, user__username=username)
                 if member.phone is None:
                     member.phone = ''
                 else:

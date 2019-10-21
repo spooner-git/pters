@@ -78,124 +78,19 @@
 {% block local_js_footer %}
 <script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
-<script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
-<script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-<!--<script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>-->
 <script type="text/javascript">
-    var kakao_login_test = true;
-
     function enter_key() {
         if (window.event.keyCode == 13) {
              // 엔터키가 눌렸을 때 실행할 내용
              document.getElementById('login-form').submit();
         }
     }
-
-    $('#errorMessageBar span:nth-child(2)').click(function(){
-        $('#errorMessageBar').fadeOut('fast')
-    });
-
     window.addEventListener('load', function () {
         {% for message in messages %}
             {% if message.tags == "error" %}
-                show_error_message('{{ message }}');
+                alert('{{ message }}');
             {% endif %}
         {% endfor %}
-        kakao_login_test = true;
-        var val = location.href.substr(
-            location.href.lastIndexOf('=') + 1
-        );
-        if(val=='naver'){
-            location.href = naverLogin.generateAuthorizeUrl();
-        }
-        $.ajax({
-            url:'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=VM6zl0mLyBgjf9dgw1cC&client_secret=gGI681B6TR',
-            type:'POST',
-            dataType : 'json',
-
-            beforeSend:function(){
-                //beforeSend();
-            },
-
-            //통신성공시 처리
-            success:function(data){
-                var jsondata = JSON.parse(data);
-            },
-
-            //보내기후 팝업창 닫기
-            complete:function(){
-            },
-
-            //통신 실패시 처리
-            error:function(){
-
-            }
-        });
     });
-
-    //네이버아디디로로그인 초기화 Script
-    var naverLogin = new naver.LoginWithNaverId(
-        {
-            clientId: "h5MuvYzSFLlrFTs19g0V",
-            callbackUrl: "https://www.pters.co.kr/login/login_simple_naver/",
-            //clientId: "VM6zl0mLyBgjf9dgw1cC",
-            //callbackUrl: "http://localhost:8000/login/login_simple_naver/",
-            isPopup: false, /* 팝업을 통한 연동처리 여부 */
-            callbackHandle: false,
-            loginButton: {color: "white", type: 1, height: 39} /* 로그인 버튼의 타입을 지정 */
-        }
-    );
-    /* 설정정보를 초기화하고 연동을 준비 */
-    naverLogin.init();
-    // <!--  네이버아이디로로그인 초기화 Script -->
-
-
-    // <!-- 카카오 로그인  Script -->
-    function loginWithKakao() {
-        if(kakao_login_test){
-            Kakao.init('4533bb10ac61e20907cd273f0941210a');
-            kakao_login_test = false;
-        }
-        // 로그인 창을 띄웁니다.
-        Kakao.Auth.login({
-            success: function(authObj) {
-                location.href = '/login/login_simple_kakao/?access_token='+authObj.access_token;
-            },
-            fail: function(err) {
-                alert(JSON.stringify(err));
-            }
-        });
-    }
-
-// <!-- 구글 로그인  Script -->
-/*
-    var google_login_check = false;
-    window.addEventListener('load', function () {
-        google_signOut();
-    });
-    function onSignIn(googleUser) {
-        // Useful data for your client-side scripts:
-        if(google_login_check == true){
-            var profile = googleUser.getBasicProfile();
-                $('#id_new_sns_id').attr('value', profile.getId());
-                $('#id_sns_username').attr('value', profile.getEmail());
-                $('#id_sns_email').attr('value', profile.getEmail());
-                $('#id_sns_last_name').attr('value', profile.getFamilyName() +profile.getGivenName());
-                $('#id_sns_first_name').attr('value', );
-                $('#id_sns_type').attr('value', 'Google');
-                var id_token = googleUser.getAuthResponse().id_token;
-                $('#id_social_accessToken').attr('value', id_token);
-                document.getElementById('sns-form').submit();
-                // The ID token you need to pass to your backend:
-        }
-      }
-    function google_signOut() {
-        var auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function () {
-          console.log('User signed out.');
-        });
-        google_login_check = true;
-      }
-*/
 </script>
 {% endblock %}

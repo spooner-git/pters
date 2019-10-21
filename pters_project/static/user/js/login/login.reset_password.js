@@ -23,7 +23,7 @@ function check_member_info(){
         }
     }
     if(error_info!=''){
-        alert(error_info+'를 확인해주세요.');
+        show_error_message(error_info+'를 확인해주세요.');
     }else{
         id_check_member_form.submit();
     }
@@ -128,9 +128,9 @@ function reset_activate(method){
                 $(`#id_activation_button_${method}`).text('인증').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
                 $(`#id_activation_confirm_button_${method}`).css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
                 $(`#activation_timer_${method}`).text("");
-                alert(jsondata.messageArray);
+                show_error_message(jsondata.messageArray);
             }else{
-                alert('인증번호가 발송되었습니다.\n인증번호가 오지 않는 경우 스팸함을 확인해주세요.');
+                show_error_message('인증번호가 발송되었습니다.\n인증번호가 오지 않는 경우 스팸함을 확인해주세요.');
                 reset_activation_time_interval = setInterval(function(){
                     reset_activation_timer--;
                     // 시간 종료시 처리
@@ -156,7 +156,7 @@ function reset_activate(method){
         },
         //통신 실패시 처리
         error:function(){
-            alert("에러: 서버 통신 실패");
+            show_error_message("에러: 서버 통신 실패");
         }
     });
 }
@@ -188,7 +188,7 @@ function reset_check_activation_code(method){
                 $(`#id_activation_confirm_button_${method}`).css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
                 $id_activation_code.attr('data-valid', 'true');
                 $(`#activation_timer_${method}`).text("");
-                alert('확인되었습니다.');
+                show_error_message('확인되었습니다.');
             }
         },
         complete:function(){
@@ -218,7 +218,7 @@ function check_reset_password2(){
         error_info += '입력해주세요.';
     }
     if(error_info!=''){
-        alert(error_info);
+        show_error_message(error_info);
     }else{
         id_reset_password_member_form.submit();
     }
@@ -243,7 +243,7 @@ function reset_password_member(){
         }
     }
     if(error_info!=''){
-        alert(error_info+'를 확인해주세요.');
+        show_error_message(error_info+'를 확인해주세요.');
     }else{
         reset_password_member_info();
     }
@@ -271,9 +271,9 @@ function reset_password_member_info(){
                 for(let i=0; i<jsondata.messageArray.length; i++){
                     error_message += jsondata.messageArray[i] + '<br/>';
                 }
-                alert(error_message);
+                show_error_message(error_message);
             }else{
-                alert('비밀번호 변경이 완료되었습니다.');
+                show_error_message('비밀번호 변경이 완료되었습니다.');
                 location.href = $('#id_next_page').val();
             }
         },
