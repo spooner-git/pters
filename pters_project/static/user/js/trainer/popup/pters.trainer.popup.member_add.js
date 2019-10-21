@@ -418,6 +418,17 @@ class Member_add{
                                                                                                 data:{year:year, month:month, date:date},
                                                                                                 // min:{year:year, month:month, date:date},
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
+                                                                                                    if(this.data.end_date != null){
+                                                                                                        let compare = DateRobot.compare(
+                                                                                                            object.data.year+'-'+object.data.month+'-'+object.data.date, 
+                                                                                                            this.data.end_date.year+'-'+this.data.end_date.month+'-'+this.data.end_date.date
+                                                                                                        );
+                                                                                                        if(compare == true){
+                                                                                                            this.data.end_date = object.data;
+                                                                                                            this.data.end_date_text = object.text;
+                                                                                                        }
+                                                                                                    }
+                                                                                                    
                                                                                                     this.start_date = object; 
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
                 }});
@@ -466,7 +477,6 @@ class Member_add{
                 
                 let min = this.data.start_date != null ? {year:this.data.start_date.year, month:this.data.start_date.month, date: this.data.start_date.date} : null;
 
-                
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'end_date', title:'종료일',
                                                                                                 data:{year:year, month:month, date:date},  
                                                                                                 min:min,
