@@ -25,6 +25,7 @@
             font-size: 10px;
         }
         body{
+            background-color: #cccccc;
             margin: 0;
         }
         @media(min-width:768px){
@@ -33,33 +34,39 @@
             }
         }
         p{
-            /* margin-top: 10px;
-            margin-bottom: 10px; */
-            margin: 0;
+            margin-top: 10px;
+            margin-bottom: 10px;
         }
-
         section{
             width: 100%;
+            padding: 20px;
             box-sizing: border-box;
         }
         button{
-            border: 0;
+            border: 1px solid #cccccc;
             background-color: #ffffff;
             height: 35px;
             padding: 5px 10px;
             min-width: 50px;
-            cursor: pointer;
-        }
-        button > img{
-            vertical-align: middle;
+            border-radius: 5px;
         }
 
         #button_setting{
+            /* background-image: url("/static/user/res/login/icon-lock-pink.png"); */
+            background-image: url("/static/common/icon/settings_black.png");
+            background-size: 25px;
+            background-position: left;
+            background-repeat: no-repeat;
             border: 0;
             background-color: transparent;
         }
 
         #button_back{
+            /* background-image: url("/static/user/res/login/icon-lock-pink.png"); */
+            background-image: url("/static/common/icon/exit_to_app_black.png");
+            background-size: 25px;
+            background-position: right;
+            background-repeat: no-repeat;
             border: 0;
             background-color: transparent;
         }
@@ -69,8 +76,11 @@
             display:none;
             width: 100%;
             height: 100%;
-            max-width: 650px;
+            /* max-width: 650px; */
             margin: 0 auto;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            box-shadow: 1px 1px 3px 2px #cccccc;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
@@ -83,125 +93,69 @@
         #wrapper_arrow_button{
             position: relative;
             height: 35px;
-            padding: 20px 0;
         }
-        #wrapper_arrow_button .left_button_set{
-            float: left;
+        #wrapper_arrow_button button:first-child{
+            position: absolute;
+            top: 0;
+            left: 0;
         }
-        #wrapper_arrow_button .right_button_set{
-            float: right;
+        #wrapper_arrow_button button:last-child{
+            position: absolute;
+            top: 0;
+            right: 0;
         }
-
-        #wrapper_page_title{
-            padding:0 20px;
+        #wrapper_arrow_button .logo{
+            height: 35px;
+            background-image: url("/static/user/res/PTERS_logo_pure.png");
+            background-repeat: no-repeat;
+            background-size: 100px;
+            background-position: center;
         }
-        #wrapper_page_title > span{
-            font-size:22px;
-            font-weight:bold;
-            color:#3d3b3b;
-            letter-spacing:-0.1px;
-        }
-
         #wrapper_lesson_now_info{
             margin: 0 auto;
-            padding: 20px;
+            /* max-width: 550px; */
+            padding: 15px;
             box-sizing: border-box;
-            /* text-align: center; */
-            /* height:100%; */
+            text-align: center;
+            height:100%;
             overflow-y: auto;
 
         }
-        .wrapper_lesson_now_info_article{
-            display: flex;
-            width: 100%;
-            height: auto;
+        #wrapper_lesson_now_info_name{
+            display: inline-block;
+            width: 300px;
+            margin: 1%;
+            height: 110px;
             overflow-y: hidden;
-            padding: 10px 0;
+            padding: 15px;
+            border: 2px solid #1e1e1e;
+            border-radius: 10px;
+            background: linear-gradient(to right, #f4f4f4, #f4f4f4 20%, #ffffff);
+            margin-top: 15px;
         }
-        .wrapper_lesson_now_color{
-            flex-basis: 14px;
-        }
-
-        .wrapper_lesson_now_text{
-            flex: 1 1 0;
-        }
-
-        .wrapper_lesson_now_color .color_tag{
-            width:4px;
-            height: 100%;
-            background-color: #cccccc;
-        }
-        
-        .wrapper_lesson_now_text .lesson_date_row{
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: -0.5px;
-            color: #3d3b3b;
-            height: 25px;
-        }
-        .wrapper_lesson_now_text .lesson_name_row{
-            font-size: 18px;
-            font-weight: 500;
-            letter-spacing: -0.7px;
-            color: #3d3b3b;
-            min-height: 33px;
-        }
-        .wrapper_lesson_now_text .lesson_member_row{
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: -0.5px;
-            color: #3d3b3b;
-            height: 25px;
-        }
-
         .lesson_selected{
-            /* border: 2px solid #fe4e65; */
-            /* border-width: 2px !important;
-            border-color: #fe4e65 !important; */
-            box-shadow: 0 0 5px 0 #fe4e6560;
-            transition: 0.3s;
-            /* transform: scale(1.01); */
+            border-width: 2px !important;
+            border-color: #fe4e65 !important;
         }
 
         #wrapper_phone_input{
-            /* text-align: center; */
-        }
-        #form_data_phone{
-            padding: 0 20px;
+            text-align: center;
         }
         #input_form_phone{
             -webkit-appearance: none;
             border: 1px solid #cccccc;
-            height: 52px;
-            width: 100%;
-            padding: 12px;
-            font-size: 15px;
-            box-sizing: border-box;
-            /* max-width: 300px; */
-            /* font-size: 2rem; */
+            height: 40px;
+            width: 90%;
+            max-width: 300px;
+            font-size: 2rem;
+            text-align: center;
         }
 
         #wrapper_submit_button{
-            text-align: center;
-            position: fixed;
-            bottom:  20px;
-            padding: 20px;
+            text-align: center
         }
         #wrapper_submit_button > button{
-            width: 100%;
-            height: 52px;
-            background-color: #fe4e65;
-            color: #ffffff;
-            font-size: 15px;
-            font-weight: bold;
-            letter-spacing: -0.7px;
-        }
-        .title_tag{
-            font-size: 11px;
-            font-weight: 500;
-            color: #999696;
-            letter-spacing: -0.5px;
-            text-align: left;
+            width: 40%;
         }
 
 
@@ -263,57 +217,31 @@
     <div id="content_wrapper">
         <section id="wrapper_lesson_now">
             <div id="wrapper_arrow_button">
-                <div class="left_button_set">
-                    <button id="button_back" onclick="back_to_normal_mode(event, 'exit')">
-                        <img src="/static/common/icon/icon_x_black.png" style="width:25px; height:25px;">
-                    </button>
-                </div>
-                <div class="right_button_set">
-                    <button onclick="location.reload();" style="border:0;">
-                        <img src="/static/common/icon/icon_refresh_black.png" style="width:20px; height:20px;">
-                    </button>
-                    <!-- <button id="button_setting" onclick="back_to_normal_mode(event, 'admin_check')">
-                        <img src="/static/common/icon/icon_setting_black.png" style="width:20px; height:20px;">
-                    </button> -->
-                </div>
-                <!-- <div class="logo"></div> -->
-                <!-- <button onclick="move_button(event, 'next')" hidden>&#62;&#62;</button> -->
-            </div>
-
-            <div id="wrapper_page_title">
-                <span>실시간 출석 체크 </span>
+                <button onclick="location.reload();" style="border:0;"><img src="/static/common/icon/refresh_black.png" style="width:25px; height:25px;"></button>
+                <div class="logo"></div>
+                <button onclick="move_button(event, 'next')" hidden>&#62;&#62;</button>
             </div>
 
             <div id="wrapper_lesson_now_info">
             {% now "Y.m.d (l)" as today %}
-                <!-- <p class="fts_22">{{ today |cut:"요일" }} - 현재 진행중인 수업</p> -->
-                <p class="title_tag" style="margin-bottom: 10px;">현재 진행중인 수업 </p>
+                <p class="fts_22">{{ today |cut:"요일" }} - 현재 진행중인 수업</p>
 
-                {% for lecture_schedule_info in lecture_schedule_data %}
-                <div class="wrapper_lesson_now_info_article" data-id="{{ lecture_schedule_info.schedule_id }}" onclick="lesson_select(this)">
-                    <div class="wrapper_lesson_now_color">
-                        <div class="color_tag"></div>
-                    </div>
-                    <div class="wrapper_lesson_now_text">
-                        <p class="lesson_date_row">{{ lecture_schedule_info.start_dt | date:"Y.m.d (l)" |cut:"요일" }} {{ lecture_schedule_info.start_dt | time:'H:i' }} ~ {{ lecture_schedule_info.end_dt | time:'H:i' }}</p>
-                        <p class="lesson_name_row">{{ lecture_schedule_info.lecture_tb.name }}</p>
-                        <p class="lesson_member_row">
-                            <span style="margin-right:10px;">정원 : {{ lecture_schedule_info.lecture_tb.member_num }}</span>
-                            <span style="margin-right:10px;">출석 : {{ lecture_schedule_info.lecture_current_finish_member_num }}</span> 
-                            <span>예약 : {{ lecture_schedule_info.lecture_current_member_num }}</span></p>
-                    </div>
+                {% for group_schedule_info in group_schedule_data %}
+                <div id="wrapper_lesson_now_info_name" data-id="{{ group_schedule_info.schedule_id }}" onclick="lesson_select(this)">
+{#                    <p style="margin:0;" class="fts_16">현재 진행중인 수업</p>#}
+                    <p class="fts_20 ftw_bd">(그룹) {{ group_schedule_info.lecture_tb.name }} - 정원 : {{ group_schedule_info.group_tb.member_num }} <br/>
+                        출석 : {{ group_schedule_info.group_current_finish_member_num }} / 예약 : {{ group_schedule_info.group_current_member_num }}</p>
+                    <p class="fts_20">{{ group_schedule_info.start_dt | time:'H:i' }} ~ {{ group_schedule_info.end_dt | time:'H:i' }}</p>
+                </div>
                 {% endfor %}
 
                 {% for pt_schedule_info in pt_schedule_data %}
-                    {% if not pt_schedule_info.lecture_tb %}
-                        <div class="wrapper_lesson_now_info_article" data-id="{{ pt_schedule_info.schedule_id }}" onclick="lesson_select(this)">
-                            <div class="wrapper_lesson_now_color">
-                                <div class="color_tag"></div>
-                            </div>
-                            <div class="wrapper_lesson_now_text">
-                                <p class="lesson_date_row">{{ pt_schedule_info.start_dt | time:'H:i' }} ~ {{ pt_schedule_info.end_dt | time:'H:i' }}</p>
-                                <p class="lesson_name_row">개인 레슨 - {{ pt_schedule_info.member_ticket_tb.member.name }} 회원</p>
-                            </div>
+                    {% if not pt_schedule_info.group_tb %}
+                        <div id="wrapper_lesson_now_info_name" data-id="{{ pt_schedule_info.schedule_id }}" onclick="lesson_select(this)">
+{#                            <p style="margin:0;" class="fts_16">현재 진행중인 수업</p>#}
+                            <p class="fts_20 ftw_bd">(개인) 개인 레슨 - {{ pt_schedule_info.lecture_tb.member.name }} 회원</p>
+                            <p class="fts_20">{{ pt_schedule_info.start_dt | time:'H:i' }} ~ {{ pt_schedule_info.end_dt | time:'H:i' }}</p>
+                        </div>
                     {% endif %}
                 {% endfor %}
 
@@ -323,8 +251,8 @@
         <section id="wrapper_phone_input">
             <form action="{% url 'trainer:attend_mode_detail' %}" id="form_data_phone" method="post">
                 <div style="display:none;">{% csrf_token %}</div>
-                <p style="font-size:12px;font-weight:500;letter-spacing: -0.5px;color:#858282;">등록된 휴대폰 번호를 입력해주세요.</p>
-                <input type="tel" placeholder="- 를 제외한 숫자만 입력" name="phone_number" id="input_form_phone" autocomplete="off" onkeyup="limit_char_only_number(this);">
+                <p>등록된 전화번호</p>
+                <input type="tel" placeholder="숫자만 입력" name="phone_number" id="input_form_phone" autocomplete="off" onkeyup="limit_char_only_number(this);">
                 <input type="hidden" name="schedule_id" id="input_form_lesson_id">
             </form>
         </section>
@@ -333,10 +261,10 @@
                 <button onclick="form_confirm(event)">확인</button>
         </section>
 
-        <!-- <section id="wrapper_submit_button">
+        <section id="wrapper_submit_button">
                 <button id="button_setting" onclick="back_to_normal_mode(event, 'admin_check')"></button>
                 <button id="button_back" onclick="back_to_normal_mode(event, 'exit')"></button>
-        </section> -->
+        </section>
 
     </div>
 
@@ -346,7 +274,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>
 
-        let lecture_schedule_id = [{% for lecture_schedule_info in lecture_schedule_data %}'{{ lecture_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        let group_schedule_id = [{% for group_schedule_info in group_schedule_data %}'{{ group_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         let scheduleIdArray = [{% for pt_schedule_info in pt_schedule_data %}'{{ pt_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
         window.onload=function(){
@@ -354,6 +282,7 @@
             let content_height = $('#content_wrapper').height();
             let check_setting_data = '{{ check_setting_data }}';
             $('#content_wrapper').fadeIn();
+            console.log(content_height, window_height)
             if(content_height < window_height){
                 $('#content_wrapper').css({'left':'50%', 'top':'50%', 'transform':'translate(-50%, -50%)', 'position':'absolute'})
             }else{
@@ -363,38 +292,37 @@
             if(check_setting_data == '1'){
                 back_to_normal_mode(event, 'admin_menu');
             }
-            $('#wrapper_lesson_now_info').css('height', $('#wrapper_lesson_now').height() - 160 + 'px');
         };
-         setInterval(function(){
-             $.ajax({
-                 url: '/trainer/get_attend_mode_schedule/',
-                 type : 'GET',
-                 dataType : 'html',
+        // setInterval(function(){
+        //     $.ajax({
+        //         url: '/trainer/get_attend_mode_schedule/',
+        //         type : 'GET',
+        //         dataType : 'html',
 
-                 beforeSend:function(){
-                 },
+        //         beforeSend:function(){
+        //         },
 
-                 success:function(data){
-                     var jsondata = JSON.parse(data);
-                     if(jsondata.messageArray.length>0){
-                         alert(jsondata.messageArray);
-                     }else{
-                         if(JSON.stringify(lecture_schedule_id) != JSON.stringify(jsondata.lecture_schedule_id)){
-                             location.reload();
-                         }
-                         if(JSON.stringify(scheduleIdArray) != JSON.stringify(jsondata.scheduleIdArray)){
-                             location.reload();
-                         }
-                     }
-                 },
-                 complete:function(){
-                 },
+        //         success:function(data){
+        //             var jsondata = JSON.parse(data);
+        //             if(jsondata.messageArray.length>0){
+        //                 alert(jsondata.messageArray);
+        //             }else{
+        //                 if(JSON.stringify(group_schedule_id) != JSON.stringify(jsondata.group_schedule_id)){
+        //                     location.reload();
+        //                 }
+        //                 if(JSON.stringify(scheduleIdArray) != JSON.stringify(jsondata.scheduleIdArray)){
+        //                     location.reload();
+        //                 }
+        //             }
+        //         },
+        //         complete:function(){
+        //         },
 
-                 error:function(){
-                     console.log('server error');
-                 }
-             });
-         }, 60000);// 자동 ajax 새로고침(일정가져오기)
+        //         error:function(){
+        //             console.log('server error');
+        //         }
+        //     });
+        // }, 60000);// 자동 ajax 새로고침(일정가져오기)
 
 
         function form_confirm(e){
