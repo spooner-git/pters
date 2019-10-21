@@ -387,7 +387,7 @@ class Lecture_view{
                             //회원 간단 정보 팝업 열기
                     });">
                     ${member_img}
-                    <div style="display: table-cell; width:60%;">${member_button}</div>
+                    <div style="display: table-cell; width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${member_button}</div>
                     <div style="display: table-cell; line-height: 44px; float:right;">${member_fix_indicator}</div>
                  </div>`
             );
@@ -654,9 +654,7 @@ class Lecture_simple_view{
 
         let lecture_name = this.data.name == null ? '' : this.data.name;
         if(this.data.lecture_state == STATE_END_PROGRESS){
-            lecture_name = `<span style="color:#888888;">${lecture_name}</span>
-                            <!--<span> (비활성)</span>-->
-                            `;
+            lecture_name = `<span style="color:#888888;">${lecture_name}</span>`;
         }
 
         let html = `

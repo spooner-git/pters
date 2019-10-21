@@ -311,10 +311,12 @@ input:disabled{
 }
 
 .select_member_row .cell_member_name{
-	width: 100px;
+	width: 100%;
 	vertical-align: middle;
 	height: 16px;
 	line-height: 16px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .select_member_row .cell_member_info{

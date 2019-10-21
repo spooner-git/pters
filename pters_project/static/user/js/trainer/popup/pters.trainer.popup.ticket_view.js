@@ -385,7 +385,7 @@ class Ticket_view{
 
             let member_img = '<div style="display: table-cell; width:40px; vertical-align:bottom;"><img src="'+member_profile_url+'" style="width:30px; height:30px; border-radius: 50%;"></div>';
             html_to_join.push(
-                '<div style="display:table;width:100%;">'+member_img+'<div style="display: table-cell; width:60%;">'+member_button + '</div><div style="display: table-cell; line-height: 44px; float:right;"></div></div>'
+                '<div style="display:table;width:100%;">'+member_img+'<div style="display: table-cell; width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+member_button + '</div><div style="display: table-cell; line-height: 44px; float:right;"></div></div>'
             );
         }
         let html = `${html_to_join.join('')}`;
@@ -659,7 +659,7 @@ class Ticket_simple_view{
 
         let ticket_name = this.data.name == null ? '' : this.data.name;
         if(this.data.ticket_state == STATE_END_PROGRESS){
-            ticket_name = `<span style="color:#888888;">${ticket_name}</span><span> (비활성)</span>`;
+            ticket_name = `<span style="color:#888888;">${ticket_name}</span>`;
         }
 
         let html = `
