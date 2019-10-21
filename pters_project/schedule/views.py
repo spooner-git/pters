@@ -460,7 +460,7 @@ def update_schedule_state_cd_logic(request):
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
-    schedule_state_cd_name = '완료'
+    schedule_state_cd_name = '변경'
     error = None
     schedule_info = None
     member_ticket_info = None
@@ -478,10 +478,17 @@ def update_schedule_state_cd_logic(request):
             schedule_info = ScheduleTb.objects.select_related('lecture_tb').get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
             error = '일정 정보를 불러오지 못했습니다.'
+
+    if error is None:
         if schedule_state_cd == STATE_CD_FINISH:
             schedule_state_cd_name = '출석'
         elif schedule_state_cd == STATE_CD_ABSENCE:
             schedule_state_cd_name = '결석'
+        else:
+            if schedule_info.state_cd == STATE_CD_FINISH:
+                schedule_state_cd_name = '출석 취소'
+            elif schedule_info.state_cd == STATE_CD_ABSENCE:
+                schedule_state_cd_name = '결석 취소'
 
     if error is None:
         start_date = schedule_info.start_dt
