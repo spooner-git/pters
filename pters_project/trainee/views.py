@@ -834,14 +834,14 @@ def program_select_logic(request):
             except ObjectDoesNotExist:
                 error = '수강정보를 불러오지 못했습니다.'
 
-            log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
-                             from_member_name=request.user.first_name,
-                             class_tb_id=class_id_session,
-                             log_info=class_info.member.name + ' 강사님의 \''
-                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
-                             log_how='연결 취소',
-                             log_detail='', use=USE)
-            log_data.save()
+            # log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+            #                  from_member_name=request.user.first_name,
+            #                  class_tb_id=class_id_session,
+            #                  log_info=class_info.member.name + ' 강사님의 \''
+            #                           + class_info.get_class_type_cd_name()+'\' 프로그램',
+            #                  log_how='연결 취소',
+            #                  log_detail='', use=USE)
+            # log_data.save()
             log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_info.class_id,
@@ -868,14 +868,14 @@ def program_select_logic(request):
             except ObjectDoesNotExist:
                 error = '수강정보를 불러오지 못했습니다.'
 
-            log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
-                             from_member_name=request.user.first_name,
-                             class_tb_id=class_id_session,
-                             log_info=class_info.member.name + ' 강사님의 \''
-                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
-                             log_how='연결 완료',
-                             log_detail='', use=USE)
-            log_data.save()
+            # log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
+            #                  from_member_name=request.user.first_name,
+            #                  class_tb_id=class_id_session,
+            #                  log_info=class_info.member.name + ' 강사님의 \''
+            #                           + class_info.get_class_type_cd_name()+'\' 프로그램',
+            #                  log_how='연결 완료',
+            #                  log_detail='', use=USE)
+            # log_data.save()
             log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_info.class_id,
