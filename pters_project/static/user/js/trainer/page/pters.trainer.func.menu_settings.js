@@ -77,7 +77,8 @@ class Menu_settings {
                         this.dom_menu_setting_autocomplete() +
                         this.dom_menu_setting_reserve() + 
                         this.dom_menu_setting_alarm() + 
-                        this.dom_menu_setting_attendmode()
+                        this.dom_menu_attendmode() + 
+                        this.dom_menu_setting_attendmode();
                     //    CComponent.dom_tag('서비스', dom_tag_style) + 
                     //     this.dom_menu_pters_pass() + 
                     //     this.dom_menu_service_notice() + 
