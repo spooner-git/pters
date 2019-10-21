@@ -257,6 +257,10 @@ def delete_schedule_logic(request):
         log_info = push_schedule_info.replace('~', '/')
 
     if error is None:
+        schedule_result = func_delete_schedule(class_id, schedule_id, request.user.id)
+        error = schedule_result['error']
+
+    if error is None:
         # 개인 레슨인 경우
         if lecture_info is None and member_ticket_info is not None:
             member_ticket_id = schedule_info.member_ticket_tb_id
@@ -277,8 +281,29 @@ def delete_schedule_logic(request):
                              log_how='취소',
                              log_detail=log_info, use=USE)
             log_data.save()
+        # 그룹 레슨 + 회원 일정인 경우
+        if lecture_info is not None and member_ticket_info is not None:
+            member_ticket_id = schedule_info.member_ticket_tb_id
+            member_name = schedule_info.member_ticket_tb.member.name
+            func_send_push_trainer(member_ticket_id,
+                                   class_type_name + ' - 수업 알림',
+                                   request.user.first_name + '님이 ' + push_schedule_info
+                                   + ' ['+lecture_name+'] 수업을 취소했습니다.')
+            # logger.error(request.user.first_name + '[' + str(request.user.id) + ']'
+            #              + member_name + '님에게 push 알림 전송에 실패했습니다.')
+
+            log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+                             from_member_name=request.user.first_name,
+                             to_member_name=member_name,
+                             class_tb_id=class_id,
+                             member_ticket_tb_id=member_ticket_id,
+                             log_info=lecture_name + ' 수업',
+                             log_how='취소',
+                             log_detail=log_info, use=USE)
+            log_data.save()
+
         # 그룹 레슨인 경우
-        if lecture_info is not None:
+        if lecture_info is not None and member_ticket_info is None:
             log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_id,
@@ -286,9 +311,6 @@ def delete_schedule_logic(request):
                              log_how='취소',
                              log_detail=log_info, use=USE)
             log_data.save()
-
-        schedule_result = func_delete_schedule(class_id, schedule_id, request.user.id)
-        error = schedule_result['error']
 
     if error is None:
         # 그룹 레슨의 경우
@@ -460,7 +482,7 @@ def update_schedule_state_cd_logic(request):
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
-    schedule_state_cd_name = '완료'
+    schedule_state_cd_name = '변경'
     error = None
     schedule_info = None
     member_ticket_info = None
@@ -478,10 +500,17 @@ def update_schedule_state_cd_logic(request):
             schedule_info = ScheduleTb.objects.select_related('lecture_tb').get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
             error = '일정 정보를 불러오지 못했습니다.'
+
+    if error is None:
         if schedule_state_cd == STATE_CD_FINISH:
             schedule_state_cd_name = '출석'
         elif schedule_state_cd == STATE_CD_ABSENCE:
             schedule_state_cd_name = '결석'
+        else:
+            if schedule_info.state_cd == STATE_CD_FINISH:
+                schedule_state_cd_name = '출석 취소'
+            elif schedule_info.state_cd == STATE_CD_ABSENCE:
+                schedule_state_cd_name = '결석 취소'
 
     if error is None:
         start_date = schedule_info.start_dt
@@ -538,16 +567,16 @@ def update_schedule_state_cd_logic(request):
 
         push_info_schedule_start_date = str(start_date).split(':')
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
-        member_ticket_tb = schedule_info.member_ticket_tb
+        # member_ticket_tb = schedule_info.member_ticket_tb
         # push_member_ticket_id.append(schedule_info.member_ticket_tb_id)
         # push_title.append(class_type_name + ' - '+schedule_state_cd_name)
         log_info = '개인 레슨'
         push_info = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] \
-                    + ' [개인 레슨] 수업이 '+schedule_state_cd_name+' 처리 했습니다.'
+                    + ' [개인 레슨] 수업을 '+schedule_state_cd_name+' 처리 했습니다.'
 
         # 그룹 수업인 경우 처리
-        if member_ticket_tb is None or member_ticket_tb == '':
+        if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
             log_info = schedule_info.lecture_tb.name
             push_info = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] \
@@ -1691,11 +1720,7 @@ def add_member_lecture_schedule_logic(request):
     member_info = None
     lecture_id = ''
     member_ticket_id = ''
-
-    push_member_ticket_id = []
-    push_title = []
-    push_message = []
-    context = {'push_member_ticket_id': '', 'push_title': '', 'push_message': ''}
+    context = {}
 
     if lecture_schedule_id == '':
         error = '일정을 선택해 주세요.'
@@ -1800,15 +1825,12 @@ def add_member_lecture_schedule_logic(request):
             push_info_schedule_start_date = str(schedule_info.start_dt).split(':')
             push_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
 
-            push_member_ticket_id.append(member_ticket_id)
-            push_title.append(class_type_name + ' - 수업 알림')
-            push_message.append(request.user.first_name + '님이 '
-                                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + ' ['+lecture_info.name+'] 수업을 등록했습니다')
-            context['push_member_ticket_id'] = push_member_ticket_id
-            context['push_title'] = push_title
-            context['push_message'] = push_message
+            func_send_push_trainer(member_ticket_id,
+                                   class_type_name + ' - 수업 알림',
+                                   request.user.first_name + '님이 '
+                                   + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                                   + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                                   + ' ['+lecture_info.name+'] 수업을 등록했습니다.')
 
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)

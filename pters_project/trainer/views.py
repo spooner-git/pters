@@ -1972,7 +1972,7 @@ def update_member_ticket_info_logic(request):
 
         if refund_date != '' and refund_date is not None:
             try:
-                refund_date = datetime.datetime.strptime(refund_date, '%Y-%m-%d')
+                refund_date = datetime.datetime.strptime(str(refund_date), '%Y-%m-%d')
             except ValueError:
                 error = '환불 날짜 오류가 발생했습니다.'
             except TypeError:
@@ -2079,13 +2079,15 @@ def update_member_ticket_status_info_logic(request):
 
             if error is None:
                 try:
-                    refund_date = datetime.datetime.strptime(refund_date, '%Y-%m-%d')
+                    refund_date = datetime.datetime.strptime(str(refund_date), '%Y-%m-%d')
                 except ValueError:
-                    error = '환불 날짜 오류가 발생했습니다.'
+                    error = '환불 날짜 오류가 발생했습니다.[0]'
                 except TypeError:
-                    error = '환불 날짜 오류가 발생했습니다.'
+                    error = '환불 날짜 오류가 발생했습니다.[1]'
 
         if state_cd == STATE_CD_IN_PROGRESS:
+            refund_price = 0
+            refund_date = None
             if member_ticket_info.ticket_tb.use == UN_USE \
                     or member_ticket_info.ticket_tb.state_cd != STATE_CD_IN_PROGRESS:
                 error = '해당 수강권은 진행중 상태가 아닙니다.'
