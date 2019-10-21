@@ -1051,12 +1051,16 @@ class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, View):
             context['member_info'] = member_data[0].member_ticket_tb.member
             member_id = member_data[0].member_ticket_tb.member_id
             context['member_id'] = member_id
+            context['schedule_info'] = schedule_info
+            context['schedule_id'] = schedule_id
             if schedule_info.member_ticket_tb is None or schedule_info.member_ticket_tb == '':
                 try:
                     member_ticket_schedule_info = ScheduleTb.objects.get(lecture_schedule_id=schedule_id,
                                                                          lecture_tb_id=schedule_info.lecture_tb_id,
                                                                          member_ticket_tb__member_id=member_id)
                     context['member_ticket_info'] = member_ticket_schedule_info.member_ticket_tb
+                    context['schedule_info'] = member_ticket_schedule_info
+                    context['schedule_id'] = member_ticket_schedule_info.schedule_id
 
                 except ObjectDoesNotExist:
                     member_ticket_id = None
@@ -1083,10 +1087,6 @@ class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, View):
                     error = '번호와 수업이 일치하지 않습니다.'
         else:
             error = '등록되지 않은 전화번호 입니다.'
-
-        if schedule_info is not None:
-            context['schedule_info'] = schedule_info
-            context['schedule_id'] = schedule_id
 
         if error is not None:
             logger.error('class_id:'+str(class_id) + '/phone_number:' + str(phone_number) + '/schedule_id:'
@@ -4395,6 +4395,7 @@ def attend_mode_finish_logic(request):
     member_id = request.POST.get('member_id')
     schedule_id = request.POST.get('schedule_id')
     class_id = request.session.get('class_id', '')
+
     error = None
     try:
         schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
