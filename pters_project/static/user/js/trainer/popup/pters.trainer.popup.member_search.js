@@ -52,6 +52,14 @@ class Member_search {
         PopupBase.top_menu_effect(this.target.install);
     }
 
+    render_loading_image(){
+        document.querySelector("#section_member_search_content").innerHTML = 
+            `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
+                <img src="/static/common/loading.svg">
+                <div style="font-size:12px;color:#858282">검색중...</div>
+            </div>`;
+    }
+
     render_toolbox(){
         document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
     }
@@ -109,6 +117,7 @@ class Member_search {
                 show_error_message("검색 조건을 입력해주세요.");
                 return false;
             }
+            this.render_loading_image();
             let data = {"search_val":this.data.search_id};
             Member_func.search(data, (data)=>{
                 this.data.searched_data = data.member_list;
@@ -147,13 +156,11 @@ class Member_search {
         let title = "재검색";
         let style = {"background-color":"#ffffff", "height":"48px", "line-height":"48px", "margin-top":"10px", 'border':"1px solid #ebe6e6"};
         let onclick = ()=>{
-            // this.clear_data();
-            // this.render_content();
-            
             if(this.data.search_id == null){
                 show_error_message("검색 조건을 입력해주세요.");
                 return false;
             }
+            this.render_loading_image();
             let data = {"search_val":this.data.search_id};
             Member_func.search(data, (data)=>{
                 this.data.searched_data = data.member_list;
@@ -172,7 +179,7 @@ class Member_search {
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"padding":"12px 16px", "border":"1px solid #ebe6e6"};
+        let style = {"border":"1px solid #ebe6e6"};
         let disabled = false;
         let onfocusout = (data)=>{
             this.data.search_id = data;
@@ -183,14 +190,6 @@ class Member_search {
         let required = "";
         let row = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
         let html = row;
-        // $(document).off('focusin', '#c_i_r_member_search_subject_input').on('focusin', '#c_i_r_member_search_subject_input', ()=>{
-
-        //     if(this.data.search_id != null){
-        //         this.clear_data();
-        //         this.render_content();
-        //     }
-        // });
-
         return html;
     }
 

@@ -766,11 +766,12 @@ class Member_func{
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
+                // ajax_load_image(SHOW);
             },
 
             //보내기후 팝업창 닫기
             complete:function(){
-                
+                // ajax_load_image(HIDE);
             },
 
             //통신성공시 처리
