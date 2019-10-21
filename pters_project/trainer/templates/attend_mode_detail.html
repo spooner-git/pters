@@ -225,8 +225,8 @@
                     <p class="fts_20" style="margin-top: 0;">{{ schedule_info.start_dt | date:"Y.m.d (l)" |cut:"요일" }}</p>
                     <p class="fts_24 ftw_bd" style="text-decoration: underline">{{ schedule_info.start_dt | time:"H:i" }} - {{ schedule_info.end_dt | time:"H:i" }}</p>
                     <p class="fts_22 ftw_bd">
-                        {% if schedule_info.group_tb %}
-                            [그룹] {{ schedule_info.group_tb.name }}
+                        {% if schedule_info.lecture_tb %}
+                            [그룹] {{ schedule_info.lecture_tb.name }}
                         {% else %}
                             [개인] 1:1 레슨
                         {% endif %}
@@ -237,24 +237,24 @@
             <div id="wrapper_ticket_change_info">
                 <p class="fts_20 ftw_bd">수강권 차감</p>
                 <p class="fts_20">
-{#                    {% if lecture_info.package_tb.package_type_cd == 'PACKAGE' %}#}
+{#                    {% if member_ticket_info.ticket_tb.ticket_type_cd == 'PACKAGE' %}#}
 {#                        [패키지]#}
-{#                    {% elif lecture_info.package_tb.package_type_cd == 'GROUP' %}#}
+{#                    {% elif member_ticket_info.ticket_tb.ticket_type_cd == 'GROUP' %}#}
 {#                        [그룹]#}
 {#                    {% else %}#}
 {#                        [개인]#}
 {#                    {% endif %}#}
-                    {{ lecture_info.package_tb.name }} ({{ lecture_info.lecture_rem_count }} / {{ lecture_info.lecture_reg_count }})</p>
+                    {{ member_ticket_info.ticket_tb.name }} ({{ member_ticket_info.member_ticket_rem_count }} / {{ member_ticket_info.member_ticket_reg_count }})</p>
                 <div><img src="/static/user/res/btn_next.png" id="img_ticket_change_arrow"></div>
                 <p class="fts_22 ftw_bd">
-{#                    {% if lecture_info.package_tb.package_type_cd == 'PACKAGE' %}#}
+{#                    {% if member_ticket_info.ticket_tb.ticket_type_cd == 'PACKAGE' %}#}
 {#                        [패키지]#}
-{#                    {% elif lecture_info.package_tb.package_type_cd == 'GROUP' %}#}
+{#                    {% elif member_ticket_info.ticket_tb.ticket_type_cd == 'GROUP' %}#}
 {#                        [그룹]#}
 {#                    {% else %}#}
 {#                        [개인]#}
 {#                    {% endif %}#}
-                    {{ lecture_info.package_tb.name }} ({{ lecture_info.lecture_rem_count|add:"-1" }} / {{ lecture_info.lecture_reg_count }})</p>
+                    {{ member_ticket_info.ticket_tb.name }} ({{ member_ticket_info.member_ticket_rem_count|add:"-1" }} / {{ member_ticket_info.member_ticket_reg_count }})</p>
             </div>
 
 

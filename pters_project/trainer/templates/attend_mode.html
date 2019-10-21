@@ -226,17 +226,17 @@
             {% now "Y.m.d (l)" as today %}
                 <p class="fts_22">{{ today |cut:"요일" }} - 현재 진행중인 수업</p>
 
-                {% for group_schedule_info in group_schedule_data %}
-                <div id="wrapper_lesson_now_info_name" data-id="{{ group_schedule_info.schedule_id }}" onclick="lesson_select(this)">
+                {% for lecture_schedule_info in lecture_schedule_data %}
+                <div id="wrapper_lesson_now_info_name" data-id="{{ lecture_schedule_info.schedule_id }}" onclick="lesson_select(this)">
 {#                    <p style="margin:0;" class="fts_16">현재 진행중인 수업</p>#}
-                    <p class="fts_20 ftw_bd">(그룹) {{ group_schedule_info.lecture_tb.name }} - 정원 : {{ group_schedule_info.group_tb.member_num }} <br/>
-                        출석 : {{ group_schedule_info.group_current_finish_member_num }} / 예약 : {{ group_schedule_info.group_current_member_num }}</p>
-                    <p class="fts_20">{{ group_schedule_info.start_dt | time:'H:i' }} ~ {{ group_schedule_info.end_dt | time:'H:i' }}</p>
+                    <p class="fts_20 ftw_bd">(그룹) {{ lecture_schedule_info.lecture_tb.name }} - 정원 : {{ lecture_schedule_info.lecture_tb.member_num }} <br/>
+                        출석 : {{ lecture_schedule_info.lecture_current_finish_member_num }} / 예약 : {{ lecture_schedule_info.lecture_current_member_num }}</p>
+                    <p class="fts_20">{{ lecture_schedule_info.start_dt | time:'H:i' }} ~ {{ lecture_schedule_info.end_dt | time:'H:i' }}</p>
                 </div>
                 {% endfor %}
 
                 {% for pt_schedule_info in pt_schedule_data %}
-                    {% if not pt_schedule_info.group_tb %}
+                    {% if not pt_schedule_info.lecture_tb %}
                         <div id="wrapper_lesson_now_info_name" data-id="{{ pt_schedule_info.schedule_id }}" onclick="lesson_select(this)">
 {#                            <p style="margin:0;" class="fts_16">현재 진행중인 수업</p>#}
                             <p class="fts_20 ftw_bd">(개인) 개인 레슨 - {{ pt_schedule_info.lecture_tb.member.name }} 회원</p>
@@ -274,7 +274,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>
 
-        let group_schedule_id = [{% for group_schedule_info in group_schedule_data %}'{{ group_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        let lecture_schedule_id = [{% for lecture_schedule_info in lecture_schedule_data %}'{{ lecture_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         let scheduleIdArray = [{% for pt_schedule_info in pt_schedule_data %}'{{ pt_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
         window.onload=function(){
@@ -293,36 +293,36 @@
                 back_to_normal_mode(event, 'admin_menu');
             }
         };
-        // setInterval(function(){
-        //     $.ajax({
-        //         url: '/trainer/get_attend_mode_schedule/',
-        //         type : 'GET',
-        //         dataType : 'html',
+         setInterval(function(){
+             $.ajax({
+                 url: '/trainer/get_attend_mode_schedule/',
+                 type : 'GET',
+                 dataType : 'html',
 
-        //         beforeSend:function(){
-        //         },
+                 beforeSend:function(){
+                 },
 
-        //         success:function(data){
-        //             var jsondata = JSON.parse(data);
-        //             if(jsondata.messageArray.length>0){
-        //                 alert(jsondata.messageArray);
-        //             }else{
-        //                 if(JSON.stringify(group_schedule_id) != JSON.stringify(jsondata.group_schedule_id)){
-        //                     location.reload();
-        //                 }
-        //                 if(JSON.stringify(scheduleIdArray) != JSON.stringify(jsondata.scheduleIdArray)){
-        //                     location.reload();
-        //                 }
-        //             }
-        //         },
-        //         complete:function(){
-        //         },
+                 success:function(data){
+                     var jsondata = JSON.parse(data);
+                     if(jsondata.messageArray.length>0){
+                         alert(jsondata.messageArray);
+                     }else{
+                         if(JSON.stringify(lecture_schedule_id) != JSON.stringify(jsondata.lecture_schedule_id)){
+                             location.reload();
+                         }
+                         if(JSON.stringify(scheduleIdArray) != JSON.stringify(jsondata.scheduleIdArray)){
+                             location.reload();
+                         }
+                     }
+                 },
+                 complete:function(){
+                 },
 
-        //         error:function(){
-        //             console.log('server error');
-        //         }
-        //     });
-        // }, 60000);// 자동 ajax 새로고침(일정가져오기)
+                 error:function(){
+                     console.log('server error');
+                 }
+             });
+         }, 60000);// 자동 ajax 새로고침(일정가져오기)
 
 
         function form_confirm(e){
