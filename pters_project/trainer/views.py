@@ -2406,12 +2406,16 @@ def update_lecture_status_info_logic(request):
     except ObjectDoesNotExist:
         error = '오류가 발생했습니다.'
 
-    ticket_lecture_data = TicketLectureTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id, use=USE)
-    query_ticket_info = Q()
-    for ticket_lecture_info in ticket_lecture_data:
-        query_ticket_info |= Q(member_ticket_tb__ticket_tb_id=ticket_lecture_info.ticket_tb.ticket_id)
+    if error is None:
+        if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
+            error = '개인 수업은 상태 변경이 불가합니다.'
 
     if error is None:
+        ticket_lecture_data = TicketLectureTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id, use=USE)
+        query_ticket_info = Q()
+        for ticket_lecture_info in ticket_lecture_data:
+            query_ticket_info |= Q(member_ticket_tb__ticket_tb_id=ticket_lecture_info.ticket_tb.ticket_id)
+
         if state_cd == STATE_CD_FINISH:
             schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
                                                       end_dt__lte=now, use=USE).exclude(Q(state_cd=STATE_CD_FINISH)
