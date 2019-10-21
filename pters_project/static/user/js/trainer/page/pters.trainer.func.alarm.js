@@ -73,13 +73,21 @@ class Alarm {
         for(let date in jsondata){
             let length = jsondata[date].length;
             for (let i=0; i<length; i++){
+                
                 let data = jsondata[date][i];
+                console.log(data)
                 let alarm_id = data.alarm_id;
                 let alarm_from = data.alarm_from_member_name;
                 let alarm_to = data.alarm_to_member_name;
                 let alarm_what = data.alarm_info;
                 let alarm_how = data.alarm_how;
                 let alarm_time_ago = data.time_ago;
+                let alarm_detail = data.alarm_detail;
+                if(alarm_detail.split('->').length > 1){
+                    let alarm_detail_of_change_plan = alarm_detail.split('->');
+                    alarm_detail = "변경 전: " + alarm_detail_of_change_plan[0] + "<br> 변경 후: " + alarm_detail_of_change_plan[1];
+                }
+
                 let read_check = data.read_check;
                 let html = `<article class="alarm_wrapper" data-alarm_id="${alarm_id}" style="background-color:${read_check == 1 ? "" : '#ffe8eb'}">
                                 <div class="alarm_data_u">
@@ -97,6 +105,9 @@ class Alarm {
                                     <div></div>
                                     <div>
                                         <span>${alarm_from}님이 ${alarm_to != "" ? alarm_to+'님의' :''} ${alarm_what}을 ${alarm_how} 했습니다.</span>
+                                        <div style="margin-top:3px;">
+                                            ${alarm_detail}
+                                        </div>
                                     </div>
                                 </div>
                             </article>`;
