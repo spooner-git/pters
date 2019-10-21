@@ -485,7 +485,7 @@ class Plan_add{
             return false;
         }
 
-        let data = {"lecture_id":this.data.lecture_id[0],
+        let data = {"lecture_id":this.list_type == "off" ? "" : this.data.lecture_id[0],
                     "start_dt": this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.start_time,
                     "end_dt":this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.end_time,
                     "note":this.data.memo, "duplication_enable_flag": 1,

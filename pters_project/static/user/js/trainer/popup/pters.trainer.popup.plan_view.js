@@ -142,6 +142,7 @@ class Plan_view{
             this.data.member_id.push(data.schedule_info[0].member_id);
             this.data.member_id_original.push(this.data.member_id);
             this.data.member_name.push(data.schedule_info[0].member_name);
+            this.data.member_schedule_id.push(data.schedule_info[0].schedule_id);
             this.data.member_schedule_state.push(data.schedule_info[0].state_cd);
         }
         this.data.date = this.selected_date;
