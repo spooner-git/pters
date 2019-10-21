@@ -213,6 +213,7 @@ class Ticket_view{
         let html = `
         <div class="member_add_upper_box">
             <div style="display:inline-block;width:100%;">
+                <span style="position:absolute;top:0;font-size: 12px;display:block;color: #7d7d7d;font-weight: 500;">수강권</span>
                 ${sub_html}
             </div>
         </div>
@@ -259,7 +260,7 @@ class Ticket_view{
             let lecture_color = this.data.lecture_color[i];
             let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:#cccccc; text-decoration:line-through;' : '');
             let icon_button_style = {"display":"block", "padding":"0", "padding-left":"10px", "font-size":"15px",
-                                     "font-weight":"500", "height":"50px", "line-height":"50px"};
+                                     "font-weight":"500", "height":"50px", "line-height":"50px", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap"};
 
             let lecture_name_set = `<div style="display:inline-block;width: 4px;height:16px;border-radius:6px;background-color:${lecture_color};margin-right:12px;vertical-align:middle;"></div>
                                     <span style="${text_decoration};vertical-align:middle;">${lecture_name}</span>`;

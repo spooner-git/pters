@@ -23,6 +23,11 @@
      width: 100%;
  }
 
+ a{
+    text-decoration: none;
+    color: inherit;
+ }
+
  /* 안드로이드 input 필드 키보드 가림현상 보정 */
  .input_focused{
 	position: fixed;

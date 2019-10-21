@@ -215,6 +215,7 @@ class Lecture_view{
         let html = `
         <div class="lecture_view_upper_box">
             <div style="display:inline-block;width:100%;">
+                <span style="position:absolute;top:0;font-size: 12px;display:block;color: #7d7d7d;font-weight: 500;">수업</span>
                 ${sub_html}
             </div>
             <span style="display:none;">${title}</span>
@@ -316,7 +317,7 @@ class Lecture_view{
             let ticket_id = this.data.ticket_id[i];
             let ticket_name = this.data.ticket_name[i];
             let ticket_state = this.data.ticket_state[i];
-            let style = {"display":"block", "font-size":"15px", "font-weight":"500",  "padding":"0", "height":"44px", "line-height":"44px", "letter-spacing":"-0.7px"};
+            let style = {"display":"block", "font-size":"15px", "font-weight":"500",  "padding":"0", "height":"44px", "line-height":"44px", "letter-spacing":"-0.7px", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap"};
             if(ticket_state == STATE_END_PROGRESS){
                 progress_end_ticket++;
                 style["text-decoration"] = "line-through";

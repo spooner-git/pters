@@ -893,6 +893,8 @@ class Member_simple_view{
     }
 
     dom_row_member_phone_input(){
+        
+
         let unit = '';
         let id = 'member_phone_view';
         let title =  this.data.phone == null || this.data.phone == 'None' || this.data.phone == '' ? '휴대폰 번호' : this.data.phone;
@@ -905,11 +907,40 @@ class Member_simple_view{
         let pattern = "[0-9]{10,11}";
         let pattern_message = "";
         let required = "";
-        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            let user_input_data = input_data;
-            this.phone = user_input_data;
-        }, pattern, pattern_message, required);
+        let onclick = ()=>{
+            let user_option = {
+                sms:{text:`<a href='sms:${this.data.phone}'>문자 메세지</a>`, callback:()=>{layer_popup.close_layer_popup();}},
+                tel:{text:`<a href='tel:${this.data.phone}'>전화 걸기</a>`, callback:()=>{layer_popup.close_layer_popup();}},
+            };
+            let options_padding_top_bottom = 16;
+            let button_height = 8 + 8 + 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        }
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         return html;
+
+
+        // let unit = '';
+        // let id = 'member_phone_view';
+        // let title =  this.data.phone == null || this.data.phone == 'None' || this.data.phone == '' ? '휴대폰 번호' : this.data.phone;
+        // let placeholder = '휴대폰 번호';
+        // let icon = '/static/common/icon/icon_member_card_black.png';
+        // let icon_r_visible = HIDE;
+        // let icon_r_text = "";
+        // let style = null;
+        // let disabled = true;
+        // let pattern = "[0-9]{10,11}";
+        // let pattern_message = "";
+        // let required = "";
+        // let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+        //     let user_input_data = input_data;
+        //     this.phone = user_input_data;
+        // }, pattern, pattern_message, required);
+        // return html;
     }
 
     dom_row_member_birth_input(){
