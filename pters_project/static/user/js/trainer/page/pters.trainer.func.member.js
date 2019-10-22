@@ -353,6 +353,12 @@ class Member_func{
             //통신성공시 처리
             success:function(received_data){
                 let data = JSON.parse(received_data);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 if(callback != undefined){
                     callback(data);
                 }
@@ -384,6 +390,12 @@ class Member_func{
     
             success:function(received_data){
                 let data = JSON.parse(received_data);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 if(callback != undefined){
                     callback(data);
                 }
@@ -415,6 +427,12 @@ class Member_func{
     
             success:function(received_data){
                 let data = JSON.parse(received_data);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 if(callback != undefined){
                     callback(data);
                 }
@@ -455,7 +473,9 @@ class Member_func{
                         return false;
                     }
                 }
-                callback(data);
+                if(callback != undefined){
+                    callback(data); 
+                }
             },
     
             //통신 실패시 처리
@@ -493,7 +513,9 @@ class Member_func{
                         return false;
                     }
                 }
-                callback(data);
+                if(callback != undefined){
+                    callback(data); 
+                }
             },
     
             //통신 실패시 처리
@@ -526,7 +548,15 @@ class Member_func{
             //통신성공시 처리
             success:function(data){
                 let json = JSON.parse(data);
-                callback(json);
+                if(json.messageArray != undefined){
+                    if(json.messageArray.length > 0){
+                        show_error_message(json.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(json);
+                }
             },
     
             //통신 실패시 처리
@@ -558,7 +588,16 @@ class Member_func{
     
             //통신성공시 처리
             success:function(data){
-                callback();
+                let json = JSON.parse(data);
+                if(json.messageArray != undefined){
+                    if(json.messageArray.length > 0){
+                        show_error_message(json.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(); 
+                }
             },
     
             //통신 실패시 처리
@@ -589,8 +628,17 @@ class Member_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                callback();
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback();
+                }
             },
     
             //통신 실패시 처리
@@ -621,8 +669,18 @@ class Member_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                callback(data);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);  
+                }
+                
             },
     
             //통신 실패시 처리
@@ -653,8 +711,17 @@ class Member_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                callback(data);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data); 
+                }
             },
     
             //통신 실패시 처리
@@ -685,8 +752,17 @@ class Member_func{
             },
 
             //통신성공시 처리
-            success:function(data){
-                callback(data);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
             },
 
             //통신 실패시 처리
@@ -717,9 +793,17 @@ class Member_func{
             },
 
             //통신성공시 처리
-            success:function(data){
-                console.log(data)
-                callback(data);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
             },
 
             //통신 실패시 처리
@@ -749,8 +833,17 @@ class Member_func{
             },
 
             //통신성공시 처리
-            success:function(data){
-                callback(data);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
             },
 
             //통신 실패시 처리
@@ -782,7 +875,15 @@ class Member_func{
 
             //통신성공시 처리
             success:function(data){
-                callback(data);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
             },
 
             //통신 실패시 처리

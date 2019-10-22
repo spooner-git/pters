@@ -293,7 +293,9 @@ class Ticket{
                         return false;
                     }
                 }
-                callback(data);
+                if(callback != undefined){
+                    callback(data);
+                }
                 return data;
                 // }
             },
@@ -359,8 +361,17 @@ class Ticket_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                callback();
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
             },
     
             //통신 실패시 처리
@@ -391,9 +402,17 @@ class Ticket_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                let json = JSON.parse(data);
-                callback(json);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
             },
     
             //통신 실패시 처리
@@ -424,8 +443,17 @@ class Ticket_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                callback();
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
             },
     
             //통신 실패시 처리
@@ -456,8 +484,17 @@ class Ticket_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                callback();
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
             },
     
             //통신 실패시 처리
@@ -488,8 +525,17 @@ class Ticket_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                callback(data);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
             },
     
             //통신 실패시 처리
@@ -519,9 +565,17 @@ class Ticket_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                let json = JSON.parse(data);
-                callback(json);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
             },
     
             //통신 실패시 처리
@@ -558,9 +612,16 @@ class Ticket_func{
             },
     
             //통신성공시 처리
-            success:function(data){
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 if(callback != undefined){
-                    callback();
+                    callback(data);
                 }
             },
     
