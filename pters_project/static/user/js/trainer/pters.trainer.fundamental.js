@@ -596,7 +596,7 @@ class PassInspector{
         return {barrier:PASSED};
     }
 
-    member(){
+    member(re_contract){
         let async = false;
         let data;
         member.request_member_list("ing", (data1)=>{
@@ -608,6 +608,9 @@ class PassInspector{
         let limit_number = this.data.auth_member_create.limit_num;
         let limit_type = this.data.auth_member_create.limit_type;
 
+        if(re_contract == ON){
+            return {barrier:PASSED};
+        }
         if(total_member >= limit_number){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
         }
