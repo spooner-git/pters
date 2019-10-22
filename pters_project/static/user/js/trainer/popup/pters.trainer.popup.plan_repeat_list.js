@@ -79,7 +79,15 @@ class Plan_repeat_list{
         let members_list = this.dom_sub_assembly_members();
         let offs_list = this.dom_sub_assembly_offs();
 
+        
+
         let html = lectures_list + members_list + offs_list;
+
+        if(Object.keys(this.data.lecture_repeat_schedule_list).length == 0 && this.data.member_repeat_schedule_list.length == 0 && this.data.off_repeat_schedule_data.length == 0){
+            html = `<div style="font-size:14px;letter-spacing:-0.6px;font-weight:500;padding:20px;">
+                                    설정된 반복 일정이 없습니다.
+                                </div>`;
+        }
 
         return html;
     }
@@ -169,12 +177,6 @@ class Plan_repeat_list{
             let html = this.dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time);
 
             html_to_join.push(html);
-        }
-
-        if(html_to_join.length == 0){
-            html_to_join.push(`<div style="font-size:14px;letter-spacing:-0.6px;font-weight:500;padding:20px;">
-                                    설정된 반복 일정이 없습니다.
-                                </div>`);
         }
 
         return html_to_join.join("");
