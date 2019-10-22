@@ -391,7 +391,10 @@ class Home_func{
                         return false;
                     }
                 }
-                callback(data);
+                if(callback != undefined){
+                    callback(data);
+                }
+                
             },
     
             //통신 실패시 처리
