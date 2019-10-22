@@ -90,7 +90,7 @@
         .popup_mobile .wrapper_middle{
             width: 100%;
             overflow-y:auto;
-            -webkit-overflow-scrolling: touch;
+            /* -webkit-overflow-scrolling: touch; */
             height: 100%;
             padding: 60px 0;
             box-sizing: border-box;

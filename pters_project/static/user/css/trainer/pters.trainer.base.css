@@ -50,12 +50,12 @@ progress::-webkit-progress-value {
     width: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
+    /* -webkit-overflow-scrolling: touch; */
     z-index: 0;
     background-color: #ffffff;
     color: #3b3b3b;
     height: 100%;
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth; */
     margin: 0 auto;
 }
 

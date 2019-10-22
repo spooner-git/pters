@@ -1,6 +1,6 @@
 
 .popup_setting_autocomplete{
-	-webkit-overflow-scrolling: touch;
+	/* -webkit-overflow-scrolling: touch; */
 }
 
 .popup_setting_autocomplete .obj_box_full{

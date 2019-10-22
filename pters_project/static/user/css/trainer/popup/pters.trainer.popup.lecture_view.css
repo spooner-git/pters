@@ -1,5 +1,5 @@
 .popup_lecture_view{
-	-webkit-overflow-scrolling: touch;
+	/* -webkit-overflow-scrolling: touch; */
 }
 
 .popup_lecture_view .obj_box_full{

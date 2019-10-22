@@ -1,6 +1,6 @@
 
 .popup_mypage{
-	-webkit-overflow-scrolling: touch;
+	/* -webkit-overflow-scrolling: touch; */
 }
 
 .popup_mypage .obj_box_full{

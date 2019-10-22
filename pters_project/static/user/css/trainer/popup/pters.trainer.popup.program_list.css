@@ -1,6 +1,6 @@
 
 .popup_program_list{
-	-webkit-overflow-scrolling: touch;
+	/* -webkit-overflow-scrolling: touch; */
 }
 
 .popup_program_list .obj_box_full{

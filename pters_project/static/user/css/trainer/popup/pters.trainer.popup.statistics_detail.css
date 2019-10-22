@@ -1,6 +1,6 @@
 
 .popup_statistics_detail{
-	-webkit-overflow-scrolling: touch;
+	/* -webkit-overflow-scrolling: touch; */
 }
 
 .popup_statistics_detail .obj_box_full{

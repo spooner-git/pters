@@ -1,5 +1,5 @@
 .popup_plan_view{
-	-webkit-overflow-scrolling: touch;
+	/* -webkit-overflow-scrolling: touch; */
 }
 
 .popup_plan_view .obj_input_box_full{
