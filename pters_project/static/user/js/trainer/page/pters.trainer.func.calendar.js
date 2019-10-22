@@ -1434,8 +1434,8 @@ class Calendar {
 
         switch(onoff){
         case "on":
-            // selector_body.off("touchstart").on("touchstart", (e) => {
-            $(document).off("touchstart", click_body).on("touchstart", click_body, (e)=>{
+            selector_body.off("touchstart").on("touchstart", (e) => {
+            // $(document).off("touchstart", click_body).on("touchstart", click_body, (e)=>{
                 ts = e.originalEvent.touches[0].clientX;
                 tsy = e.originalEvent.touches[0].clientY;
             });
@@ -1444,7 +1444,9 @@ class Calendar {
                 tm = e.originalEvent.touches[0].clientX;
                 tmy = e.originalEvent.touches[0].clientY;
 
-                this.longtouchend(e); // 일정이 잡힌채로 스와이프할때, 일정 롱터치 되지 않도록 롱터치이벤트 엔드
+                // 일정이 잡힌채로 스와이프할때, 일정 롱터치 되지 않도록 롱터치이벤트 엔드
+                clearInterval(this.touch_sense);
+                this.touch_timer = 0;
 
                 if( Math.abs(ts - tm) > Math.abs(tsy - tmy)){
                     if(swiper_x == false){
