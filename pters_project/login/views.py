@@ -162,6 +162,7 @@ class ServiceTestLoginView(TemplateView):
         context = super(ServiceTestLoginView, self).get_context_data(**kwargs)
 
         # db 업데이트용
+        print('test1')
         group_lecture_list = LectureMemberTicketTb.objects.select_related('lecture_tb',
                                                                           'member_ticket_tb__member').filter(fix_state_cd='FIX', use=USE)
 
@@ -175,6 +176,7 @@ class ServiceTestLoginView(TemplateView):
                                                     lecture_tb_id=group_lecture_info.lecture_tb_id,
                                                     member_id=group_lecture_info.member_ticket_tb.member_id, use=USE)
                 group_member_info.save()
+        print('test2')
         member_ticket_data = MemberTicketTb.objects.filter(member_auth_cd__isnull=True)
         for member_ticket_info in member_ticket_data:
             try:
@@ -183,8 +185,10 @@ class ServiceTestLoginView(TemplateView):
                 member_ticket_info.save()
             except ObjectDoesNotExist:
                 member_lecture = None
-        schedule_data = ScheduleTb.objects.select_related('lecture_tb').filter(ing_font_color_cd='#d2d1cf',
+        print('test3')
+        schedule_data = ScheduleTb.objects.select_related('lecture_tb').filter(ing_color_cd__isnull=True,
                                                                                en_dis_type=ON_SCHEDULE_TYPE)
+        print('test4')
         for schedule_info in schedule_data:
             if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
                 schedule_info.max_mem_count = schedule_info.lecture_tb.member_num
@@ -198,6 +202,7 @@ class ServiceTestLoginView(TemplateView):
                 schedule_info.end_color_cd = '#d2d1cf'
                 schedule_info.end_font_color_cd = '#282828'
             schedule_info.save()
+        print('test5')
         return context
 
 
