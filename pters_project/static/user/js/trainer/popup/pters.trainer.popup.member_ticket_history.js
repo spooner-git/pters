@@ -62,7 +62,7 @@ class Member_ticket_history{
             let note = data.member_ticket_note;
             let refund_date = data.member_ticket_refund_date == "" || data.member_ticket_refund_date == "None" ? null : data.member_ticket_refund_date;
             let refund_price = data.member_ticket_refund_price == "" ? null : data.member_ticket_refund_price;
-            let date_diff = DateRobot.diff_date(data.member_ticket_end_date, data.member_ticket_start_date);
+            let date_diff = DateRobot.diff_date(data.member_ticket_end_date, data.member_ticket_start_date) + 1;
             let date = DateRobot.to_text(data.member_ticket_start_date, '', '', SHORT) + ' - ' + DateRobot.to_text(data.member_ticket_end_date, '', '', SHORT) + ' ('+date_diff+'일)';
             let onclick = ()=>{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
