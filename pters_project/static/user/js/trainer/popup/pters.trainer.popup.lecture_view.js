@@ -443,6 +443,7 @@ class Lecture_view{
                     show_user_confirm(`"${this.data.name}" <br> 수업을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
                         let inspect = pass_inspector.lecture();
                         if(inspect.barrier == BLOCKED){
+                            layer_popup.close_layer_popup(); //confirm팝업 닫기
                             show_error_message(`[${inspect.limit_type}] 이용자께서는 진행중 수업을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
                                                 <br> 수업 활성화에 실패했습니다.`);
                             return false;
