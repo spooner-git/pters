@@ -1,5 +1,6 @@
 .popup_member_view{
 	/* -webkit-overflow-scrolling: touch; */
+	overflow: hidden;
 }
 
 .popup_member_view .obj_box_full{

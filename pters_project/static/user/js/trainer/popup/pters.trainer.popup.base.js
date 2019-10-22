@@ -19,7 +19,6 @@ class PopupBase{
     static top_menu_effect(install_target){
         if(os != IOS){
             $(`${install_target} .wrapper_middle`).off('scroll').on('scroll', function(e){
-                console.log("scroll")
                 let scroll_position = $(this).scrollTop();
                 let menu_text = $(`${install_target} .popup_toolbox span:last-child`).text();
                 if(scroll_position > 30){

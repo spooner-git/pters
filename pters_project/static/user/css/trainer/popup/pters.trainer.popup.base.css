@@ -9,11 +9,13 @@
         transform: translate(100%, 0%);
         top: 0;
         visibility: hidden;
-        position: absolute;
+        position: fixed;
+        /* position: fixed; */
         overflow: hidden;
     }
     @media(min-width:650px){
         .popup_mobile{
+            position: absolute;
             box-shadow: 0 0 24px 0 #28282870;
             border-radius: 10px;
         }
@@ -90,7 +92,7 @@
         .popup_mobile .wrapper_middle{
             width: 100%;
             overflow-y:auto;
-            /* -webkit-overflow-scrolling: touch; */
+            -webkit-overflow-scrolling: touch;
             height: 100%;
             padding: 60px 0;
             box-sizing: border-box;
