@@ -1186,7 +1186,6 @@ class Calendar {
     }
 
     longtouchstart(event, callback){
-        event.stopPropagation();
         if(this.long_touch == OFF){
             this.touch_sense = setInterval(()=>{this.touch_timer+= 100;
                                         if(this.touch_timer >= 900){
@@ -1418,7 +1417,8 @@ class Calendar {
         let tsy;
         let tm;
         let tmy;
-        let selector_body = $(input_target_html);
+        let selector_body = $(input_target_html); // .calendar_schedule_display_week
+        let click_body = `${input_target_html}, ${input_target_html} .calendar_schedule_display_week`;
         let x_threshold;
         let y_threshold;
         let swiper_x = false;
@@ -1432,7 +1432,8 @@ class Calendar {
 
         switch(onoff){
         case "on":
-            selector_body.off("touchstart").on("touchstart", (e) => {
+            // selector_body.off("touchstart").on("touchstart", (e) => {
+            $(document).off("touchstart", click_body).on("touchstart", click_body, (e)=>{
                 ts = e.originalEvent.touches[0].clientX;
                 tsy = e.originalEvent.touches[0].clientY;
             });
@@ -1441,8 +1442,6 @@ class Calendar {
                 tm = e.originalEvent.touches[0].clientX;
                 tmy = e.originalEvent.touches[0].clientY;
 
-
-                // if( Math.abs(ts - tm) > Math.abs(tsy - tmy) && swiper_x == false ){
                 if( Math.abs(ts - tm) > Math.abs(tsy - tmy)){
                     if(swiper_x == false){
                         $('#root_content').on('touchmove', (e) => {
@@ -1467,9 +1466,6 @@ class Calendar {
                             swiper_x = false;
                         }
                     }
-                    // selector_body.off("touchstart").off("touchend").off('touchmove');
-
-                    
                 }
             });
 
@@ -1480,18 +1476,6 @@ class Calendar {
                     $('#root_content').off('touchmove');
                     swiper_x = false;
                 }
-
-                // let te = e.originalEvent.changedTouches[0].clientX;
-                // let tey = e.originalEvent.changedTouches[0].clientY;
-
-                // if( Math.abs(ts - te) > Math.abs(tsy - tey)){
-                //     if(ts>te+x_threshold){
-                //         if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
-                //     }else if(ts<te-x_threshold){
-                //         if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
-                //     }
-                // }
-                // return true;
             });
             break;
 
