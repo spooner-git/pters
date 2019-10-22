@@ -1415,6 +1415,369 @@ class TimeSelector2{
     constructor(install_target, target_instance, user_option){
         this.target = {install: install_target, result: target_instance};
 
+        this.hour_scroll;
+        this.minute_scroll;
+        this.user_scroll_hour = false;
+        this.user_scroll_minute = false;
+
+        this.time = {
+            current_hour : new Date().getHours(),
+            current_minute : Math.floor((new Date().getMinutes())/5)*5
+        };
+
+        this.option = {
+            myname:null,
+            title:null,
+            data:{
+                hour:null, minute:null
+            },
+            min:null,
+            range:{start:0, end:24},
+            callback_when_set : ()=>{
+                return false;
+            }
+        };
+
+        this.store = {
+            text: null,
+            data: {hour:null, minute:null}
+        };
+
+        if(user_option != undefined){
+            //user_option이 들어왔을경우 option의 값을 user_option값으로 바꿔준다.
+            for(let option in user_option){
+                if(user_option[option] != null){
+                    this.option[option] = user_option[option];
+                }
+            }
+        }
+        
+        this.init();
+    }
+
+    set dataset (object){
+        this.reset(object);
+    }
+
+    get dataset (){
+        return this.store;
+    }
+
+    init (){
+        let initial_set_time_data = {hour:this.option.data.hour, minute:this.option.data.minute};
+        this.init_html();
+        this.render_hour_list();
+        this.render_minute_list(initial_set_time_data.hour >= this.option.range.end ? 5 : 60);
+        this.set_iscroll();
+        this.reset(this.option.data);
+    }
+
+    reset (object){
+        let hour = object.hour == null ? this.time.current_hour : object.hour;
+        let minute = object.minute == null ? this.time.current_minute : object.minute;
+
+        //미리 셋팅되어있어야하는 값이 업무시간 외의 시간에 있을 경우
+        if((hour > this.option.range.end && minute > 0) || hour < this.option.range.start){
+            let time_zone = TimeRobot.to_zone(this.option.range.start, minute);
+            hour = time_zone.hour;
+        }
+
+        this.store.value = {hour:hour, minute:minute};
+        this.store.text = TimeRobot.to_text(hour, minute);
+        
+        let hour_data = hour - this.option.range.start;
+        let minute_data = minute;
+
+        this.go_snap(hour_data, minute_data);
+        //값을 저장하고, 스크롤 위치를 들어온 값으로 보낸다.
+    }
+
+    init_html (){
+        //초기 html 생성
+        document.querySelector(this.target.install).innerHTML = this.static_component().initial_html;
+    }
+
+    delete (){
+        document.querySelector(this.target.install).innerHTML = "";
+    }
+
+
+    render_hour_list (){
+        let html_to_join = [];
+        let pos = 0;
+        let hour_range_start = this.option.range.start;
+        let hour_range_end = this.option.range.end;
+    
+        for(let i=hour_range_start; i<=hour_range_end; i++){
+                let morningday;
+                let time_for_user;
+                if(i < 12 || i == 24){
+                    morningday = "오전";
+                    time_for_user = i;
+                    if(i == 24){
+                        time_for_user = 12;
+                    }
+                }else if(i >= 12){
+                    morningday = "오후";
+                    time_for_user = i - 12;
+                    if(i == 12){
+                        time_for_user = 12;
+                    }
+                }
+
+                html_to_join.push(`<li data-hpos=${pos} data-hour="${i}"><span style="margin-right:16px;">${morningday}</span>${time_for_user}</li>`);
+                pos = pos + 40;
+        }
+
+        let html = `
+                        <div id="hour_wrap_${this.instance}" class="select_wrapper_child">
+                            <ul>
+                                <li></li>
+                                <li></li>
+                                ${html_to_join.join('')}
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </div>
+                        <div class="selector_unit">시</div>
+                    `;
+
+        document.querySelector(`${this.target.install} .time_selector_hour_wrap`).innerHTML = html;
+    }
+
+    render_minute_list (minute_end){
+        let html_to_join = [];
+        let pos = 0;
+        if(minute_end == undefined){
+            minute_end = 60;
+        }
+        for(let i=0; i<minute_end; i=i+5){
+                html_to_join.push(`<li data-mpos=${pos} data-min="${i}">${i}</li>`);
+                pos = pos + 40; 
+        }
+
+        let html = `
+                        <div id="minute_wrap_${this.instance}" class="select_wrapper_child">
+                            <ul>
+                                <li></li>
+                                <li></li>
+                                ${html_to_join.join('')}
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </div>
+                        <div class="selector_unit">분</div>
+                    `;
+
+        document.querySelector(`${this.target.install} .time_selector_minute_wrap`).innerHTML = html;
+    }
+
+    set_iscroll (){
+        this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`, {
+            mouseWheel : true,
+            deceleration:0.005,
+            bounce: false,
+        });
+        
+        this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
+            mouseWheel : true,
+            deceleration:0.005,
+            bounce: false,
+        });
+
+        this.set_scroll_snap();
+    }
+
+    set_iscroll_minute(){
+        this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
+            mouseWheel : true,
+            deceleration:0.005,
+            bounce: false,
+        });
+        this.set_scroll_snap();
+    }
+
+    set_scroll_snap (){
+        let self = this;
+        self.hour_scroll.on('scrollEnd', function (){
+            if(self.user_scroll_hour == true){
+                self.user_scroll_hour = false;
+                let posY = this.y;
+                let min = posY-posY%40;
+                let max = min - 40;
+
+                let snap;
+                
+                if(Math.abs(posY - max) < Math.abs(posY - min)){
+                    snap = max;
+                }else{
+                    snap = min;
+                }
+                
+                self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+
+                let hour = self.get_selected_data().data.hour;
+                if(hour >= self.option.range.end){
+                    // self.minute_end = 5;
+                    self.render_minute_list(5);
+                    self.set_iscroll_minute();
+                    self.go_snap(hour - self.option.range.start, 0);
+                }else{
+                    // self.minute_end = 60;
+                    self.render_minute_list();
+                    self.set_iscroll_minute();
+                    self.go_snap(hour - self.option.range.start, 0);
+                }
+
+                let data_check = self.check_minimum_time();
+                if(data_check != true){
+                    document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
+                }else{
+                    document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
+                }
+            }
+        });
+
+        self.hour_scroll.on('scrollStart', function (){
+            self.user_scroll_hour = true;
+        });
+
+        self.minute_scroll.on('scrollEnd', function (){
+            if(self.user_scroll_minute == true){
+                self.user_scroll_minute = false;
+                let posY = this.y;
+                let min = posY-posY%40;
+                let max = min - 40;
+
+                let snap;
+                
+                if(Math.abs(posY - max) < Math.abs(posY - min)){
+                    snap = max;
+                }else{
+                    snap = min;
+                }
+                
+                    
+                self.minute_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).css('color', '#1e1e1e');
+                
+                let data_check = self.check_minimum_time();
+                if(data_check != true){
+                    document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
+                }else{
+                    document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
+                }
+            }
+        });
+
+        self.minute_scroll.on('scrollStart', function (){
+            self.user_scroll_minute = true;
+        });
+    }
+
+    go_snap (hour, minute){
+        let initial_pos_hour = (-hour)*40;
+        let initial_pos_minute = -(minute)*8;
+
+        this.hour_scroll.scrollTo(0, initial_pos_hour, 0, IScroll.utils.ease.bounce);
+        this.minute_scroll.scrollTo(0, initial_pos_minute, 0, IScroll.utils.ease.bounce);
+
+        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).css('color', '#1e1e1e');
+        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+    }
+
+    get_selected_data (){
+        let hour = $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`);
+        let minute = $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`);
+
+        let hour_text = Number(hour.attr('data-hour'));
+        let minute_text = Number(minute.attr('data-min'));
+        if(hour_text < 10){
+            hour_text = '0' + hour_text;
+        }
+        if(minute_text < 10){
+            minute_text = '0' + minute_text;
+        }
+
+        let text = TimeRobot.to_text(hour_text, minute_text);
+
+        return {
+            data:{
+                hour : hour_text,
+                minute: minute_text
+            },
+            text: text,
+            
+        };
+    }
+
+
+    static_component (){
+        return{
+            "initial_html":`<div class="time_selector">
+                                <div class="time_selector_confirm">
+                                    <div style="float:left;margin-left:5px;">
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{layer_popup.close_layer_popup();})}
+                                    </div>
+                                    <span class="time_selector_title">${this.option.title}</span>
+                                    <div style="float:right;margin-right:5px;color:#fe4e65;">
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', {"padding":"10px 20px"}, ()=>{this.upper_right_button();})}
+                                    </div>
+                                </div>
+                                <div class="time_selector_hour_wrap select_wrapper"></div>
+                                <div class="time_selector_minute_wrap select_wrapper"></div>
+                                <div class="selector_indicator"></div>
+                            </div>`
+        };
+    }
+
+    check_minimum_time(){
+        if(this.option.min != null){
+            let selected_time = `${this.get_selected_data().data.hour}:${this.get_selected_data().data.minute}`;
+            let min_time = `${this.option.min.hour}:${this.option.min.minute}`;
+
+            //24시 00분 보다 큰 24시 05분등을 입력하지 못하게 막는다
+            if(this.get_selected_data().data.hour == 24 && this.get_selected_data().data.minute > 0){
+                return {message:"입력할 수 없는 시간입니다."};
+            }
+
+            let time_compare = TimeRobot.compare(min_time, selected_time); // >= 일경우 true;
+            if(time_compare == true){
+                return {message:"종료시간은 시작시간보다 커야 합니다."};
+            }
+        }else{
+            //24시 00분 보다 큰 24시 05분등을 입력하지 못하게 막는다
+            if(this.get_selected_data().data.hour == 24 && this.get_selected_data().data.minute > 0){
+                return {message:"입력할 수 없는 시간입니다."};
+            }
+        }
+        return true;
+    }
+
+    upper_right_button(){
+        let minimum_check = this.check_minimum_time();
+        if(minimum_check != true){
+            show_error_message(minimum_check.message);
+            return false;
+        }
+
+        this.store = this.get_selected_data();
+        this.option.callback_when_set(this.store); 
+        layer_popup.close_layer_popup();
+    }
+
+}
+
+//시간 선택 (오전오후, 시, 분)
+class TimeSelector3{
+    constructor(install_target, target_instance, user_option){
+        this.target = {install: install_target, result: target_instance};
+
         this.zone_scroll;
         this.hour_scroll;
         this.minute_scroll;

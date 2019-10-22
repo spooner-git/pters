@@ -89,7 +89,7 @@ class Plan_view{
     }
 
     set start_time (data){
-        this.data.start_time = TimeRobot.to_data(data.data.zone, data.data.hour, data.data.minute).complete;
+        this.data.start_time = `${data.data.hour}:${data.data.minute}`;
         this.data.start_time_text = data.text + ' 부터';
         this.data.end_time_text = TimeRobot.to_text(this.data.end_time) + ' 까지 ('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)';
         this.render_content();
@@ -100,7 +100,7 @@ class Plan_view{
     }
 
     set end_time (data){
-        this.data.end_time = TimeRobot.to_data(data.data.zone, data.data.hour, data.data.minute).complete;
+        this.data.end_time = `${data.data.hour}:${data.data.minute}`;
         this.data.end_time_text = data.text + ' 까지 ('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)';
         this.render_content();
     }
@@ -409,20 +409,19 @@ class Plan_view{
             //행을 클릭했을때 실행할 내용
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TIME_SELECTOR, 100*255/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+                //data_to_send의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
 
-                //dataCenter의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
-                let zone = this.data.start_time == null ? this.times.current_zone : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).zone;
-                let hour = this.data.start_time == null ? this.times.current_hour : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
-                let minute = this.data.start_time == null ? this.times.current_minute : TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
+                let hour = this.data.start_time == null ? this.times.current_hour : this.data.start_time.split(':')[0];
+                let minute = this.data.start_time == null ? this.times.current_minute : this.data.start_time.split(':')[1];
 
                 let range_start = this.work_time.start_hour;
                 let range_end = this.work_time.end_hour;
 
-                time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{zone:zone, hour:hour, minute:minute}, range:{start:range_start, end:range_end},
+                time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{hour:hour, minute:minute}, range:{start:range_start, end:range_end},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.start_time = object;
                                                                                                     if(this.data.end_time != null){
-                                                                                                        let compare = TimeRobot.compare_by_zone(object.data, TimeRobot.to_zone(this.data.end_time.split(':')[0],this.data.end_time.split(':')[1]));
+                                                                                                        let compare = TimeRobot.compare(`${object.data.hour}:${object.data.minute}`, this.data.end_time);
                                                                                                         if(compare == true){
                                                                                                             this.end_time = object;
                                                                                                         }
@@ -446,32 +445,26 @@ class Plan_view{
         let icon = '/static/common/icon/icon_clock_white.png';
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = null;
+        // let style = null;
+        let style = this.data.start_time == this.data.end_time && this.data.end_time != null ? {"color":"#fe4e65"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TIME_SELECTOR, 100*255/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
-                let start_zone = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).zone;
-                let start_hour = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).hour;
-                let start_minute = TimeRobot.to_zone(this.data.start_time.split(':')[0], this.data.start_time.split(':')[1]).minute;
+                
+                let hour_init = this.data.end_time == null ? this.data.start_time.split(':')[0] : this.data.end_time.split(':')[0];
+                let minute_init = this.data.end_time == null ? this.data.start_time.split(':')[1] : this.data.end_time.split(':')[1];
 
                 //유저가 선택할 수 있는 최저 시간을 셋팅한다. 이시간보다 작은값을 선택하려면 메세지를 띄우기 위함
-                let time_min = TimeRobot.add_time(TimeRobot.to_data(start_zone, start_hour, start_minute).hour, TimeRobot.to_data(start_zone, start_hour, start_minute).minute, 0, 0);
-                let time_min_type_zone = TimeRobot.to_zone(time_min.hour, time_min.minute);
-                let zone_min = time_min_type_zone.zone;
-                let zone_hour = time_min_type_zone.hour;
-                let zone_minute = time_min_type_zone.minute;
-
-                let zone = this.data.end_time == null ? zone_min : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).zone;
-                let hour = this.data.end_time == null ? zone_hour : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).hour;
-                let minute = this.data.end_time == null ? zone_minute : TimeRobot.to_zone(this.data.end_time.split(':')[0], this.data.end_time.split(':')[1]).minute;
+                let hour_min = this.data.start_time.split(':')[0];
+                let minute_min = this.data.start_time.split(':')[1];
 
                 let range_start = this.work_time.start_hour;
                 let range_end = this.work_time.end_hour;
                 
                 time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시각',
-                                                                                                data:{zone:zone, hour:hour, minute:minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
+                                                                                                data:{hour:hour_init, minute:minute_init}, min:{hour:hour_min, minute:minute_min},
                                                                                                 range:{start:range_start, end:range_end},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.end_time = object;
@@ -651,14 +644,10 @@ class Plan_view{
     }
 
     send_data (){
-        // if(this.check_before_send() == false){
-        //     return false;
-        // }
-
-        let start_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' ' + TimeRobot.hm_to_hhmm(this.data.start_time).complete;
-        let end_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' ' + TimeRobot.hm_to_hhmm(this.data.end_time).complete;
+        let start_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' ' + this.data.start_time;
+        let end_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' ' + this.data.end_time;
         if(start_dt == end_dt){
-            show_error_message("시간을 다시 선택해주세요.");
+            show_error_message("종료 시간을 다시 선택해주세요.");
             return false;
         }
 

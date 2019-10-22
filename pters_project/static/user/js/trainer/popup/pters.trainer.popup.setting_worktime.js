@@ -283,28 +283,25 @@ class Setting_worktime{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ //data : 직전 셋팅값
             //행을 클릭했을때 실행할 내용
             let root_content_height = $root_content.height();
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*255/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*255/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
 
                 //data의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
-                let zone = this.data[day].start_time == null ? 0  :TimeRobot.to_zone(this.data[day].start_time.split(':')[0], this.data[day].start_time.split(':')[1]).zone;
-                let hour = this.data[day].start_time == null ? 0 : TimeRobot.to_zone(this.data[day].start_time.split(':')[0], this.data[day].start_time.split(':')[1]).hour;
-                let minute = this.data[day].start_time == null ? 0 :TimeRobot.to_zone(this.data[day].start_time.split(':')[0], this.data[day].start_time.split(':')[1]).minute;
+                let hour = this.data[day].start_time == null ? 0 : this.data[day].start_time.split(':')[0];
+                let minute = this.data[day].start_time == null ? 0 : this.data[day].start_time.split(':')[1];
                 
-                time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{zone:zone, hour:hour, minute:minute},
+                time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{hour:hour, minute:minute},
                                                                                                 callback_when_set: (object)=>{
-                                                                                                    this.data[day].start_time = TimeRobot.to_data(object.data.zone, object.data.hour, object.data.minute).complete;
+                                                                                                    this.data[day].start_time = `${object.data.hour}:${object.data.minute}`;
                                                                                                     this.data[day].start_time_text = object.text;
                                                                                                     this.render_content();
 
                                                                                                     if(this.data[day].end_time != null){
-                                                                                                        let compare = TimeRobot.compare_by_zone(object.data, TimeRobot.to_zone(this.data[day].end_time.split(':')[0],this.data[day].end_time.split(':')[1]));
+                                                                                                        let compare = TimeRobot.compare(`${object.data.hour}:${object.data.minute}`, this.data[day].end_time);
                                                                                                         if(compare == true){
                                                                                                             //유저가 선택할 수 있는 최저 시간을 셋팅한다. 이시간보다 작은값을 선택하려면 메세지를 띄우기 위함
-                                                                                                            let end_time = TimeRobot.add_time(object.data.hour, object.data.minute, 0, 5);
-                                                                                                            let end_time_to_zone = TimeRobot.to_zone(end_time.hour, end_time.minute);
-                                                                                                            let end_time_text = TimeRobot.to_text(end_time.hour, end_time.minute);
-                                                                                                            this.end_time = {'data':{'zone':end_time_to_zone.zone,'hour':end_time_to_zone.hour, 'minute':end_time_to_zone.minute},
-                                                                                                                            'text':end_time_text};
+                                                                                                            this.data[day].end_time = `${object.data.hour}:${object.data.minute}`;
+                                                                                                            this.data[day].end_time_text = object.text;
+                                                                                                            this.render_content();
                                                                                                         }
                                                                                                     }
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
@@ -320,7 +317,7 @@ class Setting_worktime{
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = null;
+        let style = this.data[day].start_time == this.data[day].end_time && this.data[day].end_time != null ? {"color":"#fe4e65"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ //data : 직전 셋팅값
             //행을 클릭했을때 실행할 내용
             if(this.data[day].start_time == null){
@@ -328,23 +325,20 @@ class Setting_worktime{
                 return false;
             }
             let root_content_height = $root_content.height();
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*255/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*255/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                
                 //data_to_send의 선택 시작시간이 빈값이라면 시작 시간으로 셋팅한다.
-                let zone = TimeRobot.to_zone(this.data[day].start_time.split(':')[0], this.data[day].start_time.split(':')[1]).zone;
-                let hour = TimeRobot.to_zone(this.data[day].start_time.split(':')[0], this.data[day].start_time.split(':')[1]).hour;
-                let minute = TimeRobot.to_zone(this.data[day].start_time.split(':')[0], this.data[day].start_time.split(':')[1]).minute;
+                let hour_init = this.data[day].end_time == null ? this.data[day].start_time.split(':')[0] : this.data[day].end_time.split(':')[0];
+                let minute_init = this.data[day].end_time == null ? this.data[day].start_time.split(':')[1] : this.data[day].end_time.split(':')[1];
 
                 //유저가 선택할 수 있는 최저 시간을 셋팅한다. 이시간보다 작은값을 선택하려면 메세지를 띄우기 위함
-                let time_min = TimeRobot.add_time(TimeRobot.to_data(zone, hour, minute).hour, TimeRobot.to_data(zone, hour, minute).minute, 1, 0);
-                let time_min_type_zone = TimeRobot.to_zone(time_min.hour, time_min.minute);
-                let zone_min = time_min_type_zone.zone;
-                let zone_hour = time_min_type_zone.hour;
-                let zone_minute = time_min_type_zone.minute;
+                let hour_min = this.data[day].start_time.split(':')[0];
+                let minute_min = this.data[day].start_time.split(':')[1];
 
                 time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시각',
-                                                                                                data:{zone:zone_min, hour:zone_hour, minute:zone_minute}, min:{zone:zone_min, hour:zone_hour, minute:zone_minute},
+                                                                                                data:{hour:hour_init, minute:minute_init}, min:{hour:hour_min, minute:minute_min},
                                                                                                 callback_when_set: (object)=>{
-                                                                                                    this.data[day].end_time = TimeRobot.to_data(object.data.zone, object.data.hour, object.data.minute).complete;
+                                                                                                    this.data[day].end_time = `${object.data.hour}:${object.data.minute}`;
                                                                                                     this.data[day].end_time_text = object.text;
                                                                                                     this.render_content();
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
@@ -398,6 +392,10 @@ class Setting_worktime{
     }
 
     send_data(){
+        if(this.check_before_send() == false){
+            return false;
+        }
+
         let data = {
             "setting_trainer_work_sun_time_avail":this.data.SUN.dayoff == OFF ? this.art_data(this.data.SUN.start_time, this.data.SUN.end_time) : "00:00-00:00",
             "setting_trainer_work_mon_time_avail":this.data.MON.dayoff == OFF ? this.art_data(this.data.MON.start_time, this.data.MON.end_time) : "00:00-00:00",
@@ -409,11 +407,28 @@ class Setting_worktime{
             "setting_holiday_hide":this.data.dayoff_visibility,
             "setting_week_start_date":this.data.start_day 
         };
-        console.log(data);
         Setting_worktime_func.update(data, ()=>{
             this.set_initial_data();
             show_error_message('변경 내용이 저장되었습니다.');
         });
+    }
+
+    check_before_send(){
+        let whose_error = [];
+        for(let day in this.data){
+            let start_time = this.data[day].start_time;
+            let end_time = this.data[day].end_time;
+            if(start_time == end_time && start_time != "00:00" && start_time != undefined){
+                whose_error.push(day);
+            }
+        }
+
+        if(whose_error.length == 0){
+            return true;
+        }
+        let error_days_in_hangul = whose_error.map((day)=>{return DAYNAME_MATCH[day];});
+        show_error_message('['+error_days_in_hangul.join(', ') + "] 요일 시간을 다시 선택해주세요.");
+        return false;
     }
 
     upper_right_menu(){
