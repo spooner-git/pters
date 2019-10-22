@@ -1444,6 +1444,8 @@ class Calendar {
                 tm = e.originalEvent.touches[0].clientX;
                 tmy = e.originalEvent.touches[0].clientY;
 
+                this.longtouchend(e); // 일정이 잡힌채로 스와이프할때, 일정 롱터치 되지 않도록 롱터치이벤트 엔드
+
                 if( Math.abs(ts - tm) > Math.abs(tsy - tmy)){
                     if(swiper_x == false){
                         $('#root_content').on('touchmove', (e) => {
