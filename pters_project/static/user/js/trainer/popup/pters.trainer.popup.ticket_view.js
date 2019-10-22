@@ -180,11 +180,19 @@ class Ticket_view{
         // let member = this.dom_row_member();
         let member_list = this.dom_row_member_list();
 
-        let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>' +
-                    '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>' +
-                    '<div class="obj_input_box_full" style="padding-top:16px;">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
-                                                                            {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
-                                                                        +member_list+ '</div>';
+        let lecture_list_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>';
+        let ticket_memo_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>';
+        let ticket_member_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
+                                            {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
+                                        +member_list+ '</div>';
+
+        if(this.data.ticket_state == STATE_END_PROGRESS){
+            lecture_list_assembly = "";
+        }
+
+        let html =  lecture_list_assembly +
+                    ticket_memo_assembly +
+                    ticket_member_list_assembly;
         return html;
     }
 
@@ -194,7 +202,6 @@ class Ticket_view{
         let title = this.data.name == null ? '' : this.data.name;
         if(this.data.ticket_state == STATE_END_PROGRESS){
             style["color"] = "#888888";
-            title = title + ' (비활성)';
         }
         let placeholder = '수강권명*';
         let icon = DELETE;
@@ -266,7 +273,8 @@ class Ticket_view{
                                     <span style="${text_decoration};vertical-align:middle;">${lecture_name}</span>`;
             html_to_join.push(
                 CComponent.icon_button (lecture_id, lecture_name_set, NONE, icon_button_style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(258/windowHeight), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
+                    let root_content_height = $root_content.height();
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(247/root_content_height), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
                         lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
                         //수업 간단 정보 팝업 열기
                     });
@@ -377,7 +385,8 @@ class Ticket_view{
             let style = {"display":"block", "font-size":"15px", "font-weight":"500", "padding":"0", "height":"44px", "line-height":"44px"};
             let member_button =
                 CComponent.text_button(member_id, member_name, style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/windowHeight), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
+                    let root_content_height = $root_content.height();
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/root_content_height), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
                         member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
                         //회원 간단 정보 팝업 열기
                     });
@@ -436,6 +445,14 @@ class Ticket_view{
         let user_option = {
             activate:{text:"활성화", callback:()=>{
                     show_user_confirm(`"${this.data.name}" <br> 수강권을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
+                        let inspect = pass_inspector.ticket();
+                        if(inspect.barrier == BLOCKED){
+                            layer_popup.close_layer_popup(); //confirm팝업 닫기
+                            show_error_message(`[${inspect.limit_type}] 이용자께서는 진행중 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
+                                                <br> 수강권 활성화에 실패했습니다.`);
+                            return false;
+                        }
+
                         Ticket_func.status({"ticket_id":this.ticket_id, "state_cd":STATE_IN_PROGRESS}, ()=>{
                             try{
                                 current_page.init();

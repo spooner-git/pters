@@ -170,21 +170,27 @@ class Lecture_view{
         // let name = this.dom_row_lecture_name_input();
         let capacity = this.dom_row_capacity_view();
         let color = this.dom_row_color_view();
-        // let reg_mod = this.dom_row_reg_mod_date();
-        // let ticket = this.dom_row_ticket();
         let ticket_list = this.dom_row_ticket_list();
-        // let member = this.dom_row_member();
         let member_list = this.dom_row_member_list();
 
+        let capacity_assembly = '<div class="obj_input_box_full">' + CComponent.dom_tag('정원') + capacity + '</div>';
+        let color_select_assembly =  '<div class="obj_input_box_full">' + CComponent.dom_tag('색상 태그') + color +  '</div>'
+        let ticket_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">' + CComponent.dom_tag(`이 수업을 포함하는 수강권 (${this.data.active_ticket_length} 개)`,
+                                    {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
+                                    + ticket_list + '</div>';
+        let member_list_assembly = '<div class="obj_input_box_full" style="padding-top:20px; border:0;">' + CComponent.dom_tag(`진행중 회원 (${this.data.member_number} 명)`,
+        {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
+        + member_list + '</div>';
 
-        let html =  '<div class="obj_input_box_full">' + CComponent.dom_tag('정원') + capacity + '</div>' +
-                    '<div class="obj_input_box_full">' + CComponent.dom_tag('색상 태그') + color +  '</div>' +
-                    '<div class="obj_input_box_full" style="padding-top:16px;">' + CComponent.dom_tag(`이 수업을 포함하는 수강권 (${this.data.active_ticket_length} 개)`,
-                                                        {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
-                                                        + ticket_list + '</div>' +
-                    '<div class="obj_input_box_full" style="padding-top:20px; border:0;">' + CComponent.dom_tag(`진행중 회원 (${this.data.member_number} 명)`,
-                                                        {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
-                                                        + member_list + '</div>';
+        if(this.data.lecture_state == STATE_END_PROGRESS){
+            ticket_list_assembly = "";
+            member_list_assembly = "";
+        }
+
+        let html =  capacity_assembly +
+                    color_select_assembly +
+                    ticket_list_assembly +
+                    member_list_assembly;
 
         return html;
     }
@@ -196,7 +202,6 @@ class Lecture_view{
         let style = {"font-size":"20px", "font-weight":"bold"};
         if(this.data.lecture_state == STATE_END_PROGRESS){
             style["color"] = "#888888";
-            // title = title + ' (비활성)';
         }
         let placeholder =  '수업명*';
         let icon = DELETE;
@@ -331,7 +336,8 @@ class Lecture_view{
             }
             html_to_join.push(
                 CComponent.text_button(ticket_id, ticket_name, style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(258/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
+                    let root_content_height = $root_content.height();
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(251/root_content_height), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                         ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
                         //수강권 간단 정보 팝업 열기
                     });
@@ -372,7 +378,7 @@ class Lecture_view{
     dom_row_member_list (){
         let length = this.data.member.length;
         let html_to_join = [];
-        
+        let root_content_height = $root_content.height();
         for(let i=0; i<length; i++){
             let member_id = this.data.member[i].member_id;
             let member_name = this.data.member[i].member_name;
@@ -388,7 +394,7 @@ class Lecture_view{
             let member_img = '<div style="display: table-cell; width:40px; vertical-align:bottom;"><img src="'+member_profile_url+'" style="width:30px; height:30px; border-radius: 50%;"></div>';
             html_to_join.push(
                 `<div style="display:table;width:100%;" onclick="
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/windowHeight), POPUP_FROM_BOTTOM, {'member_id':${member_id}},()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/${root_content_height}), POPUP_FROM_BOTTOM, {'member_id':${member_id}},()=>{
                             member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', ${member_id}, 'member_simple_view_popup');
                             //회원 간단 정보 팝업 열기
                     });">
@@ -436,6 +442,14 @@ class Lecture_view{
         let user_option = {
             activate:{text:"활성화", callback:()=>{
                     show_user_confirm(`"${this.data.name}" <br> 수업을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
+                        let inspect = pass_inspector.lecture();
+                        if(inspect.barrier == BLOCKED){
+                            layer_popup.close_layer_popup(); //confirm팝업 닫기
+                            show_error_message(`[${inspect.limit_type}] 이용자께서는 진행중 수업을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
+                                                <br> 수업 활성화에 실패했습니다.`);
+                            return false;
+                        }
+                        
                         Lecture_func.status({"lecture_id":this.lecture_id, "state_cd":STATE_IN_PROGRESS}, ()=>{
                             try{
                                 current_page.init();

@@ -207,21 +207,48 @@ class Home {
             }
             let member_id = data.current_member_data[i].member_id;
             let end_info;
+            // if(diff_date <= 7 && rem_count > 3){
+            //     end_info = diff_date + ' 일';
+            //     if(diff_date < 0){
+            //         end_info = Math.abs(diff_date) + ' 일 지남';
+            //     }
+            // }else if(diff_date > 7 && rem_count <= 3){
+            //     end_info = rem_count + ' 회';
+            // }else{
+            //     let date_info =  diff_date + ' 일';
+            //     if(diff_date < 0){
+            //         date_info = Math.abs(diff_date) + ' 일 지남';
+            //     }
+            //     end_info = rem_count + '  회 / ' + date_info;
+            // }
+
             if(diff_date <= 7 && rem_count > 3){
-                end_info = diff_date + ' 일';
+                let date_limit_text = diff_date + ' 일 남음';
+                if(end_date == "9999-12-31"){
+                    date_limit_text = "기간 제한없음";
+                }
+                end_info = rem_count + ' 회' +' / ' + date_limit_text;
                 if(diff_date < 0){
-                    end_info = Math.abs(diff_date) + ' 일 지남';
+                    date_limit_text = Math.abs(diff_date) + ' 일 지남';
+                    end_info = rem_count + ' 회' +' / ' + date_limit_text;
                 }
             }else if(diff_date > 7 && rem_count <= 3){
-                end_info = rem_count + ' 회';
+                let date_limit_text = diff_date + ' 일 남음';
+                if(end_date == "9999-12-31"){
+                    date_limit_text = "기간 제한없음";
+                }
+                end_info = rem_count + ' 회' + ' / ' + date_limit_text;
             }else{
-                let date_info =  diff_date + ' 일';
+                let date_limit_text = diff_date + ' 일 남음';
+                if(end_date == "9999-12-31"){
+                    date_limit_text = "기간 제한없음";
+                }
+                let date_info =  date_limit_text;
                 if(diff_date < 0){
                     date_info = Math.abs(diff_date) + ' 일 지남';
                 }
                 end_info = rem_count + '  회 / ' + date_info;
-                
-            };
+            }
             
             let id = `home_end_alert_${member_id}`;
             let title = data.current_member_data[i].member_name;

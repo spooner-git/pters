@@ -89,7 +89,9 @@ class Plan_add{
     set start_time(data){
         this.data.start_time = `${data.data.hour}:${data.data.minute}`;
         this.data.start_time_text = data.text + ' 부터';
-        this.data.end_time_text = TimeRobot.to_text(this.data.end_time) + ' 까지 ('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)';
+        if(this.data.end_time != null){
+            this.data.end_time_text = TimeRobot.to_text(this.data.end_time) + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
+        }
         this.render_content();
     }
 

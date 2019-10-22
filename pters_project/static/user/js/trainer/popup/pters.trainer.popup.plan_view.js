@@ -91,7 +91,7 @@ class Plan_view{
     set start_time (data){
         this.data.start_time = `${data.data.hour}:${data.data.minute}`;
         this.data.start_time_text = data.text + ' 부터';
-        this.data.end_time_text = TimeRobot.to_text(this.data.end_time) + ' 까지 ('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)';
+        this.data.end_time_text = TimeRobot.to_text(this.data.end_time) + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
         this.render_content();
     }
 
@@ -101,7 +101,7 @@ class Plan_view{
 
     set end_time (data){
         this.data.end_time = `${data.data.hour}:${data.data.minute}`;
-        this.data.end_time_text = data.text + ' 까지 ('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)';
+        this.data.end_time_text = data.text + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
         this.render_content();
     }
 
@@ -241,7 +241,8 @@ class Plan_view{
             let user_option = {
                 info:{text:"회원 정보", callback:()=>{
                     layer_popup.close_layer_popup();
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/windowHeight), POPUP_FROM_BOTTOM, null, ()=>{
+                    let root_content_height = $root_content.height();
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/root_content_height), POPUP_FROM_BOTTOM, null, ()=>{
                         member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', this.data.member_id[0], 'member_simple_view_popup');
                         //회원 간단 정보 팝업 열기
                     });
@@ -339,7 +340,8 @@ class Plan_view{
                     let user_option = {
                         info:{text:"회원 정보", callback:()=>{
                             layer_popup.close_layer_popup();
-                            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/windowHeight), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
+                            let root_content_height = $root_content.height();
+                            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/root_content_height), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
                                 member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
                                 //회원 간단 정보 팝업 열기
                             });

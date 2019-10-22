@@ -1477,9 +1477,9 @@ class TimeSelector2{
         let minute = object.minute == null ? this.time.current_minute : object.minute;
 
         //미리 셋팅되어있어야하는 값이 업무시간 외의 시간에 있을 경우
-        if((hour > this.option.range.end && minute > 0) || hour < this.option.range.start){
-            let time_zone = TimeRobot.to_zone(this.option.range.start, minute);
-            hour = time_zone.hour;
+        if((hour >= this.option.range.end && minute > 0) || hour < this.option.range.start){
+            hour = this.option.range.end;
+            minute = 0;
         }
 
         this.store.value = {hour:hour, minute:minute};
