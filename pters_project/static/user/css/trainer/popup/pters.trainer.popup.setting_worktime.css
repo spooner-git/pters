@@ -24,4 +24,5 @@
 
 .popup_setting_worktime .popup_content{
 	/* padding-top: 20px; */
+	position: relative;
 }
