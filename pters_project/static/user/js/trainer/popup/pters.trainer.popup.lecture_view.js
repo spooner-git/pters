@@ -336,7 +336,8 @@ class Lecture_view{
             }
             html_to_join.push(
                 CComponent.text_button(ticket_id, ticket_name, style, ()=>{
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(258/windowHeight), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
+                    let root_content_height = $root_content.height();
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(251/root_content_height), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                         ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
                         //수강권 간단 정보 팝업 열기
                     });
@@ -377,7 +378,7 @@ class Lecture_view{
     dom_row_member_list (){
         let length = this.data.member.length;
         let html_to_join = [];
-        
+        let root_content_height = $root_content.height();
         for(let i=0; i<length; i++){
             let member_id = this.data.member[i].member_id;
             let member_name = this.data.member[i].member_name;
@@ -393,7 +394,7 @@ class Lecture_view{
             let member_img = '<div style="display: table-cell; width:40px; vertical-align:bottom;"><img src="'+member_profile_url+'" style="width:30px; height:30px; border-radius: 50%;"></div>';
             html_to_join.push(
                 `<div style="display:table;width:100%;" onclick="
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/windowHeight), POPUP_FROM_BOTTOM, {'member_id':${member_id}},()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/${root_content_height}), POPUP_FROM_BOTTOM, {'member_id':${member_id}},()=>{
                             member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', ${member_id}, 'member_simple_view_popup');
                             //회원 간단 정보 팝업 열기
                     });">

@@ -125,7 +125,8 @@ class Member_ticket_history{
 
     ticket_start_date_change_selector(ticket_id, start_date){
         let init_date = {year: start_date.split('-')[0], month: start_date.split('-')[1], date: start_date.split('-')[2]};
-        layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
             date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'dateselector', title:'날짜 선택', data:init_date, callback_when_set: (selected_data)=>{
                 let date = DateRobot.to_yyyymmdd(selected_data.data.year, selected_data.data.month, selected_data.data.date);
                 let data = {"member_ticket_id":ticket_id, "note":"", "start_date":date, "end_date":"", "price":"", "refund_price":"", "refund_date":"", "member_ticket_reg_count":""};
@@ -139,7 +140,8 @@ class Member_ticket_history{
 
     ticket_end_date_change_selector(ticket_id, end_date){
         let init_date = {year: end_date.split('-')[0], month: end_date.split('-')[1], date:end_date.split('-'[2])};
-        layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*245/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
             date_selector = new DateSelector('#wrapper_popup_date_selector_function', null, {myname:'dateselector', title:'날짜 선택', data:init_date, callback_when_set: (selected_data)=>{
                 let date = DateRobot.to_yyyymmdd(selected_data.data.year, selected_data.data.month, selected_data.data.date);
                 let data = {"member_ticket_id":ticket_id, "note":"", "start_date":"", "end_date":date, "price":"", "refund_price":"", "refund_date":"", "member_ticket_reg_count":""};
