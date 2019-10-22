@@ -109,7 +109,6 @@ class Ticket_view{
 
     init(){
         this.render();
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     set_initial_data (){
@@ -136,7 +135,9 @@ class Ticket_view{
                 this.data.member_id = data.ticket_ing_member_list.map((el)=>{return el.member_id;});
                 this.data.member_name = data.ticket_ing_member_list.map((el)=>{return el.member_name;});
                 this.data.member_profile_url = data.ticket_ing_member_list.map((el)=>{return el.member_profile_url;});
-                this.init();
+                // this.init();
+                this.render();
+                func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
             });
         });
     }
@@ -224,6 +225,7 @@ class Ticket_view{
                 <span style="position:absolute;top:0;font-size: 12px;display:block;color: #7d7d7d;font-weight: 500;">수강권</span>
                 ${sub_html}
             </div>
+            <span style="display:none;">${title}</span>
         </div>
         `;
         return html;
