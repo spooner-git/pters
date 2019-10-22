@@ -1721,6 +1721,8 @@ def add_member_lecture_schedule_logic(request):
     lecture_id = ''
     member_ticket_id = ''
     context = {}
+    log_info_schedule_start_dt = ''
+    log_info_schedule_end_dt = ''
 
     if lecture_schedule_id == '':
         error = '일정을 선택해 주세요.'
@@ -1811,25 +1813,26 @@ def add_member_lecture_schedule_logic(request):
             error = error
 
     if error is None:
+        push_info_schedule_start_date = str(schedule_info.start_dt).split(':')
+        push_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
+        log_info_schedule_start_dt = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+        log_info_schedule_end_dt = push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.first_name,
                          to_member_name=member_info.name,
                          class_tb_id=class_id,
                          member_ticket_tb_id=member_ticket_id,
                          log_info=lecture_info.name+' 수업', log_how='등록',
-                         log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt), use=USE)
+                         log_detail=str(log_info_schedule_start_dt) + '/' + str(log_info_schedule_end_dt), use=USE)
         log_data.save()
 
     if error is None:
         if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
-            push_info_schedule_start_date = str(schedule_info.start_dt).split(':')
-            push_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
 
             func_send_push_trainer(member_ticket_id,
                                    class_type_name + ' - 수업 알림',
                                    request.user.first_name + '님이 '
-                                   + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                                   + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                                   + log_info_schedule_start_dt + '~' + log_info_schedule_end_dt
                                    + ' ['+lecture_info.name+'] 수업을 등록했습니다.')
 
     else:
