@@ -170,21 +170,27 @@ class Lecture_view{
         // let name = this.dom_row_lecture_name_input();
         let capacity = this.dom_row_capacity_view();
         let color = this.dom_row_color_view();
-        // let reg_mod = this.dom_row_reg_mod_date();
-        // let ticket = this.dom_row_ticket();
         let ticket_list = this.dom_row_ticket_list();
-        // let member = this.dom_row_member();
         let member_list = this.dom_row_member_list();
 
+        let capacity_assembly = '<div class="obj_input_box_full">' + CComponent.dom_tag('정원') + capacity + '</div>';
+        let color_select_assembly =  '<div class="obj_input_box_full">' + CComponent.dom_tag('색상 태그') + color +  '</div>'
+        let ticket_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">' + CComponent.dom_tag(`이 수업을 포함하는 수강권 (${this.data.active_ticket_length} 개)`,
+                                    {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
+                                    + ticket_list + '</div>';
+        let member_list_assembly = '<div class="obj_input_box_full" style="padding-top:20px; border:0;">' + CComponent.dom_tag(`진행중 회원 (${this.data.member_number} 명)`,
+        {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
+        + member_list + '</div>';
 
-        let html =  '<div class="obj_input_box_full">' + CComponent.dom_tag('정원') + capacity + '</div>' +
-                    '<div class="obj_input_box_full">' + CComponent.dom_tag('색상 태그') + color +  '</div>' +
-                    '<div class="obj_input_box_full" style="padding-top:16px;">' + CComponent.dom_tag(`이 수업을 포함하는 수강권 (${this.data.active_ticket_length} 개)`,
-                                                        {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
-                                                        + ticket_list + '</div>' +
-                    '<div class="obj_input_box_full" style="padding-top:20px; border:0;">' + CComponent.dom_tag(`진행중 회원 (${this.data.member_number} 명)`,
-                                                        {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
-                                                        + member_list + '</div>';
+        if(this.data.lecture_state == STATE_END_PROGRESS){
+            ticket_list_assembly = "";
+            member_list_assembly = "";
+        }
+
+        let html =  capacity_assembly +
+                    color_select_assembly +
+                    ticket_list_assembly +
+                    member_list_assembly;
 
         return html;
     }
@@ -196,7 +202,6 @@ class Lecture_view{
         let style = {"font-size":"20px", "font-weight":"bold"};
         if(this.data.lecture_state == STATE_END_PROGRESS){
             style["color"] = "#888888";
-            // title = title + ' (비활성)';
         }
         let placeholder =  '수업명*';
         let icon = DELETE;

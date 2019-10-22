@@ -180,11 +180,19 @@ class Ticket_view{
         // let member = this.dom_row_member();
         let member_list = this.dom_row_member_list();
 
-        let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>' +
-                    '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>' +
-                    '<div class="obj_input_box_full" style="padding-top:16px;">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
-                                                                            {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
-                                                                        +member_list+ '</div>';
+        let lecture_list_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>';
+        let ticket_memo_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>';
+        let ticket_member_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
+                                            {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
+                                        +member_list+ '</div>';
+
+        if(this.data.ticket_state == STATE_END_PROGRESS){
+            lecture_list_assembly = "";
+        }
+
+        let html =  lecture_list_assembly +
+                    ticket_memo_assembly +
+                    ticket_member_list_assembly;
         return html;
     }
 
