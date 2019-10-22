@@ -188,6 +188,7 @@ class Ticket_view{
 
         if(this.data.ticket_state == STATE_END_PROGRESS){
             lecture_list_assembly = "";
+            ticket_member_list_assembly = "";
         }
 
         let html =  lecture_list_assembly +
