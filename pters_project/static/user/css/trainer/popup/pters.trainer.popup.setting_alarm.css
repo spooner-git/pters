@@ -14,8 +14,9 @@
 }
 
 .popup_setting_alarm .popup_toolbox{
-	position: sticky;
-	position: -webkit-sticky;
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
 	top: 0;
 	padding: 8px 16px 24px 20px;
 	border-bottom: 1px solid #f2f2f2;

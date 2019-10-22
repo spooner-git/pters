@@ -175,8 +175,9 @@
 }
 
 .popup_lecture_list .popup_toolbox{
-	position: sticky;
-	position: -webkit-sticky;
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
 	top: 0;
 	padding: 8px 16px 16px 20px;
 	z-index: 1;

@@ -11,8 +11,9 @@
 }
 
 .popup_lecture_view .popup_toolbox{
-	position: sticky;
-	position: -webkit-sticky;
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
 	top: 0;
 	padding: 0px 16px 10px 60px;
 }

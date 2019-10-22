@@ -10,8 +10,9 @@
 }
 
 .popup_lecture_add .popup_toolbox{
-	position: sticky;
-	position: -webkit-sticky;
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
 	top: 0;
 	padding: 0 16px 24px 60px;
 }
