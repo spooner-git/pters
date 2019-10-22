@@ -565,8 +565,9 @@ class Member_view{
             for(let j=0; j<length; j++){
                 let lecture_id = this.data.ticket[i].lecture_id[j];
                 let lecture_name = this.data.ticket[i].lecture_name[j];
-                let lecture_state_cd = this.data.ticket[i].lecture_state[i];
+                let lecture_state_cd = this.data.ticket[i].lecture_state[j];
                 let lecture_color = this.data.ticket[i].lecture_color[j];
+                console.log(lecture_name, lecture_state_cd, STATE_END_PROGRESS)
                 let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:#cccccc; text-decoration:line-through;' : '');
                 let icon_button_style = {"display":"block", "padding":"12px 0 12px 42px", "font-size":"13px", "height":"24px", "line-height":"24px"};
                 let lecture_name_set = `<div style="display:inline-block;width:4px;height:16px;border-radius: 8px;background-color:${lecture_color};margin-right:10px;margin-top:4px;"></div>
