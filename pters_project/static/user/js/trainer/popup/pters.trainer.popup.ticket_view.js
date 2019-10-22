@@ -194,7 +194,6 @@ class Ticket_view{
         let title = this.data.name == null ? '' : this.data.name;
         if(this.data.ticket_state == STATE_END_PROGRESS){
             style["color"] = "#888888";
-            title = title + ' (비활성)';
         }
         let placeholder = '수강권명*';
         let icon = DELETE;
