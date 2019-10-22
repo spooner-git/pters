@@ -182,6 +182,7 @@ class Member_view{
 
 
             Member_func.read_ticket_list({"member_id":this.member_id}, (data)=>{
+                console.log(data)
                 let ticket_list = data;
                 this.data.ticket = [];
                 let member_ticket_list = [];
@@ -200,6 +201,8 @@ class Member_view{
                     let ticket_reg_price_of_this_member = member_ticket_list[i].member_ticket_price;
                     let ticket_reg_date_of_this_member = member_ticket_list[i].member_ticket_start_date;
                     let ticket_end_date_of_this_member = member_ticket_list[i].member_ticket_end_date;
+                    let ticket_refund_date_of_this_member = member_ticket_list[i].member_ticket_refund_date;
+                    let ticket_refund_price_of_this_member = member_ticket_list[i].member_ticket_refund_price;
                     let ticket_remain_date = Math.round((new Date(ticket_end_date_of_this_member).getTime() - new Date().getTime()) / (1000*60*60*24));
                     let ticket_remain_alert_text = "";
                     if(ticket_remain_date < 0){
@@ -217,6 +220,8 @@ class Member_view{
                                             ticket_price:ticket_reg_price_of_this_member,
                                             ticket_state:member_ticket_list[i].ticket_state_cd,
                                             ticket_note:member_ticket_list[i].member_ticket_note,
+                                            ticket_refund_date: ticket_refund_date_of_this_member,
+                                            ticket_refund_price: ticket_refund_price_of_this_member,
                                             member_ticket_id:member_ticket_list[i].member_ticket_id,
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
@@ -539,6 +544,9 @@ class Member_view{
             let ticket_reg_count =  this.data.ticket[i].ticket_reg_count;
             let ticket_price =  this.data.ticket[i].ticket_price;
             let ticket_note = this.data.ticket[i].ticket_note;
+            let ticket_status = this.data.ticket[i].ticket_state;
+            let ticket_refund_date = this.data.ticket[i].ticket_refund_date;
+            let ticket_refund_price = this.data.ticket[i].ticket_refund_price;
             if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
                 ticket_name = `<span style="color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;
             }
@@ -553,8 +561,9 @@ class Member_view{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, popup_style, null, ()=>{
                     let data = {"member_name":this.name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
-                                "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":ticket_reg_count, "price":ticket_price, 
-                                "status":"IP", "note":ticket_note};
+                                "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":ticket_reg_count, "price":ticket_price, "status":ticket_status,
+                                "refund_date":ticket_refund_date, "refund_price":ticket_refund_price, "note":ticket_note};
+                    console.log("이 데이터", data)
                     member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
             });

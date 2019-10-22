@@ -188,10 +188,9 @@ class Member_ticket_refund{
                 current_page.init();
             }catch(e){}
             try{
+                layer_popup.close_layer_popup();
                 member_view_popup.init();
                 member_ticket_history.init();
-                member_ticket_modify.data.status = "RF";
-                member_ticket_modify.init();
             }catch(e){}
             layer_popup.close_layer_popup();
         });

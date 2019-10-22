@@ -37,6 +37,7 @@ class Member_ticket_modify{
     }
 
     init(){
+        console.log(this.external_data)
         // this.render();
         this.set_initial_data();
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
@@ -103,7 +104,8 @@ class Member_ticket_modify{
                     `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;
         let note = CComponent.dom_tag('특이사항') + this.dom_row_note_input();
 
-        if(this.data.refund_date == null || this.data.refund_price == null){
+        // if(this.data.refund_date == null || this.data.refund_price == null){
+        if(this.data.status != "RF"){
             refund_date = "";
             refund_price = "";
         }
