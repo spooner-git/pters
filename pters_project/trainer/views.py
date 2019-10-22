@@ -2329,6 +2329,7 @@ def delete_lecture_info_logic(request):
 
 
 def update_lecture_info_logic(request):
+    class_id = request.session.get('class_id', '')
     lecture_id = request.POST.get('lecture_id', '')
     member_num = request.POST.get('member_num', '')
     name = request.POST.get('name', '')
@@ -2375,6 +2376,14 @@ def update_lecture_info_logic(request):
             error = '정원은 숫자만 입력 가능합니다.'
         except TypeError:
             error = '정원은 숫자만 입력 가능합니다.'
+
+    if error is None:
+
+        lecture_member_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
+                                                                 lecture_tb_id=lecture_id, use=USE)
+        # 수업에 고정회원 가능 여부 체크
+        if len(lecture_member_fix_data) > int(member_num):
+            error = '수정하려는 정원보다 고정 회원이 많습니다.'
 
     if error is None:
         lecture_info.member_num = member_num
