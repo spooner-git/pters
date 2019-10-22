@@ -32,6 +32,12 @@ class PopupBase{
                     $(`${install_target} .popup_toolbox`).css('visibility', 'visible');
                 }
             });
+
+
+            $(`div, article, li`).off('scroll').on('scroll', function(e){
+                console.log(e.target);
+            });
+
         }
     }
 
