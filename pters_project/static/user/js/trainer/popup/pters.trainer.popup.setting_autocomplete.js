@@ -138,7 +138,7 @@ class Setting_autocomplete{
             }
         });
 
-        let title = CComponent.text_button ("ntd", '출석', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.7px"}, ()=>{});
+        let title = CComponent.text_button ("ntd", '출석(횟수 차감됨)', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.7px"}, ()=>{});
         
         let html = `<div style="display:table;width:100%;height:52px;">
                         <div style="display:table-cell;width:auto;vertical-align:middle">${title}</div>

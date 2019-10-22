@@ -41,11 +41,14 @@ from registration import signals
 from registration.backends.hmac.views import RegistrationView, REGISTRATION_SALT
 from registration.forms import RegistrationForm
 
-from configs.const import USE, UN_USE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, ACTIVATE
+from configs.const import USE, UN_USE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, ACTIVATE, ON_SCHEDULE_TYPE
 from configs import settings
 from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
-from trainee.models import MemberTicketTb
+from schedule.models import ScheduleTb
+from trainee.models import MemberTicketTb, MemberMemberTicketTb
+from trainer.models import LectureMemberTb
+from trainer.models import LectureMemberTicketTb
 from .forms import MyPasswordResetForm, MyPasswordChangeForm, MyRegistrationForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb
 
@@ -158,123 +161,43 @@ class ServiceTestLoginView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ServiceTestLoginView, self).get_context_data(**kwargs)
 
-        # Empty 를 Normal로 변경 및 FIX 체크
-        # class_data = ClassTb.objects.filter()
-        # for class_info in class_data:
-        #     # 프로그램에 속한 그룹 불러오기
-        #     group_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
-        #     if len(group_data) == 0:
-        #         group_data = None
-        #     else:
-        #         for group_info in group_data:
-        #
-        #             if group_info.group_type_cd == 'NORMAL':
-        #                 group_lecture_data = GroupMemberTicketTb.objects.filter(group_tb_id=group_info.group_id,
-        #                                                                    lecture_tb__state_cd='IP',
-        #                                                                    lecture_tb__use=USE,
-        #                                                                    use=USE)
-        #                 group_lecture_data.update(fix_state_cd='FIX')
-        #             elif group_info.group_type_cd == 'EMPTY':
-        #                 group_info.group_type_cd = 'NORMAL'
-        #                 group_info.save()
+        # db 업데이트용
+        group_lecture_list = LectureMemberTicketTb.objects.select_related('lecture_tb',
+                                                                          'member_ticket_tb__member').filter(fix_state_cd='FIX', use=USE)
 
-        # 1:1 그룹 생성
-        # class_data = ClassTb.objects.filter(class_id__gte='502')
-        # for class_info in class_data:
-        #     # 그룹중에 1:1 그룹 불러오기
-        #     check_group = LectureTb.objects.filter(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE')
-        #     # 1개도 없는 경우 생성
-        #     if len(check_group) == 0:
-        #         group_info = LectureTb(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE', member_num=1,
-        #                              name='1:1레슨',
-        #                              # ing_group_member_num=ing_group_member_num,
-        #                              # end_group_member_num=end_group_member_num,
-        #                              ing_color_cd='#fbf3bd', end_color_cd='#8c8763',
-        #                              reg_dt=class_info.reg_dt,
-        #                              mod_dt=class_info.mod_dt,
-        #                              state_cd='IP', use=USE)
-        #         group_info.save()
-        #     else:
-        #         group_info = check_group[0]
-        #     class_lecture_data = ClassMemberTicketTb.objects.select_related(
-        # 'lecture_tb').filter(class_tb_id=class_info.class_id)
-        #     if len(class_lecture_data) > 0:
-        #         for class_lecture_info in class_lecture_data:
-        #             if class_lecture_info.lecture_tb is not None and class_lecture_info.lecture_tb != '':
-    #                 check_group = GroupMemberTicketTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id)
-        #                 # 1:1 그룹인 경우 GroupLecture가 없음. 1:1에 대한 GroupLecture 생성
-        #                 if len(check_group) == 0:
-        #                     lecture_info = GroupMemberTicketTb(group_tb_id=group_info.group_id,
-        #                                                   lecture_tb_id=class_lecture_info.lecture_tb_id,
-        #                                                   reg_dt=class_lecture_info.lecture_tb.reg_dt,
-        #                                                   mod_dt=class_lecture_info.lecture_tb.mod_dt,
-        #                                                   fix_state_cd='',
-        #                                                   use=class_lecture_info.lecture_tb.use)
-        #                     lecture_info.save()
-
-        # 그룹 숫자 업데이트 패키지 정보 업데이트
-        # class_data = ClassTb.objects.filter()
-        # for class_info in class_data:
-        #     group_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
-        #     if len(group_data) == 0:
-        #         group_data = None
-        #     else:
-        #         for group_info in group_data:
-        #
-        #             package_group_test = PackageLectureTb.objects.filter(group_tb_id=group_info.group_id)
-        #             if len(package_group_test) == 0:
-        #                 package_info = TicketTb(class_tb_id=group_info.class_tb_id, name=group_info.name,
-        #                                          state_cd=group_info.state_cd,
-        #                                          package_type_cd=group_info.group_type_cd,
-        #                                          ing_package_member_num=group_info.ing_group_member_num,
-        #                                          end_package_member_num=group_info.end_group_member_num,
-        #                                          package_group_num=1,
-        #                                          reg_dt=group_info.reg_dt,
-        #                                          mod_dt=group_info.mod_dt,
-        #                                          use=group_info.use)
-        #                 package_info.save()
-        #                 package_group_info = PackageLectureTb(class_tb_id=group_info.class_tb_id,
-        #                                                     package_tb_id=package_info.package_id,
-        #                                                     group_tb_id=group_info.group_id,
-        #                                                     reg_dt=group_info.reg_dt,
-        #                                                     mod_dt=group_info.mod_dt,
-        #                                                     use=group_info.use)
-        #                 package_group_info.save()
-        #
-        #                 group_lecture_data = GroupMemberTicketTb.objects.filter(group_tb_id=group_info.group_id)
-        #                 for group_lecture_info in group_lecture_data:
-        #                     group_lecture_info.lecture_tb.package_tb_id = package_info.package_id
-        #                     group_lecture_info.lecture_tb.save()
-        # group_data = LectureTb.objects.filter()
-        # for group_info in group_data:
-        #     package_info = TicketTb(class_tb_id=group_info.class_tb_id, name=group_info.name,
-        #                              state_cd=group_info.state_cd, package_type_cd=group_info.group_type_cd,
-        #                              package_group_num=1, use=group_info.use)
-        #     package_info.save()
-        # for lecture_info in lecture_data:
-        #     package_lecture_info =
-        # trainer_list = MemberTb.objects.filter(use=USE)
-        # for trainer_info in trainer_list:
-        #
-        #     user_for_group = User.objects.get(id=trainer_info.user_id)
-        #     group = user_for_group.groups.get(user=trainer_info.user_id)
-        #     if str(group.id) == '3':
-        #         payment_info = PaymentInfoTb(name='초기 이용 고객 감사 이벤트', member_id=trainer_info.user_id,
-        #                                      product_tb_id='10',
-        #                                      merchant_uid='m_free_event_'+str(trainer_info.user_id),
-        #                                      customer_uid='c_free_event_'+str(trainer_info.user_id),
-        #                                      start_date='2018-10-29', end_date='2028-10-29', period_month='120',
-        #                                      payment_type_cd='SINGLE', price=0, card_name='없음', status='paid',
-        #                                      buyer_name=trainer_info.name, use=USE)
-        #         billing_info = BillingInfoTb(name='초기 이용 고객 감사 이벤트', member_id=str(trainer_info.user_id),
-        #                                      product_tb_id='10',
-        #                                      customer_uid='c_free_event_'+str(trainer_info.user_id),
-        #                                      payment_reg_date='2018-10-29', next_payment_date='2028-10-29',
-        #                                      payment_type_cd='SINGLE', price=0, card_name='없음',
-        #                                      payed_date='29',
-        #                                      state_cd='IP', use=USE)
-        #         payment_info.save()
-        #         billing_info.save()
+        for group_lecture_info in group_lecture_list:
+            lecture_member_count = LectureMemberTb.objects.filter(lecture_tb_id=group_lecture_info.lecture_tb_id,
+                                                                  member_id=group_lecture_info.member_ticket_tb.member_id,
+                                                                  use=USE).count()
+            if lecture_member_count == 0:
+                group_member_info = LectureMemberTb(class_tb_id=group_lecture_info.lecture_tb.class_tb_id,
+                                                    fix_state_cd='FIX',
+                                                    lecture_tb_id=group_lecture_info.lecture_tb_id,
+                                                    member_id=group_lecture_info.member_ticket_tb.member_id, use=USE)
+                group_member_info.save()
+        member_ticket_data = MemberTicketTb.objects.filter(member_auth_cd__isnull=True)
+        for member_ticket_info in member_ticket_data:
+            try:
+                member_member_ticket_info = MemberMemberTicketTb.objects.get(member_ticket_tb_id=member_ticket_info.member_ticket_id)
+                member_ticket_info.member_auth_cd = member_member_ticket_info.auth_cd
+                member_ticket_info.save()
+            except ObjectDoesNotExist:
+                member_lecture = None
+        schedule_data = ScheduleTb.objects.select_related('lecture_tb').filter(ing_font_color_cd='#d2d1cf',
+                                                                               en_dis_type=ON_SCHEDULE_TYPE)
+        for schedule_info in schedule_data:
+            if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
+                schedule_info.max_mem_count = schedule_info.lecture_tb.member_num
+                schedule_info.ing_color_cd = schedule_info.lecture_tb.ing_color_cd
+                schedule_info.ing_font_color_cd = schedule_info.lecture_tb.ing_font_color_cd
+                schedule_info.end_color_cd = schedule_info.lecture_tb.end_color_cd
+                schedule_info.end_font_color_cd = schedule_info.lecture_tb.end_font_color_cd
+            else:
+                schedule_info.ing_color_cd = '#fbf3bd'
+                schedule_info.ing_font_color_cd = '#282828'
+                schedule_info.end_color_cd = '#d2d1cf'
+                schedule_info.end_font_color_cd = '#282828'
+            schedule_info.save()
         return context
 
 

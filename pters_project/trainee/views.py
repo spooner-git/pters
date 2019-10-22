@@ -149,42 +149,6 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         class_id = self.request.session.get('class_id')
         context['error'] = None
         context = func_get_class_list_only_view(context, self.request.user.id)
-        # db 업데이트용
-        # group_lecture_list = LectureMemberTicketTb.objects.filter(fix_state_cd='FIX', use=USE)
-        #
-        # for group_lecture_info in group_lecture_list:
-        #     lecture_member_count = LectureMemberTb.objects.filter(lecture_tb_id=group_lecture_info.lecture_tb_id,
-        #                                                           member_id=group_lecture_info.member_ticket_tb.member_id,
-        #                                                           use=USE).count()
-        #     if lecture_member_count == 0:
-        #         group_member_info = LectureMemberTb(class_tb_id=group_lecture_info.lecture_tb.class_tb_id,
-        #                                             fix_state_cd='FIX',
-        #                                             lecture_tb_id=group_lecture_info.lecture_tb_id,
-        #                                             member_id=group_lecture_info.member_ticket_tb.member_id, use=USE)
-        #         group_member_info.save()
-        # member_lecture_data = MemberMemberTicketTb.objects.filter().order_by('member_id')
-        # for member_lecture_info in member_lecture_data:
-        #     try:
-        #         member_lecture = MemberTicketTb.objects.get(member_ticket_id=member_lecture_info.member_ticket_tb_id)
-        #         member_lecture.member_auth_cd = member_lecture_info.auth_cd
-        #         member_lecture.save()
-        #     except ObjectDoesNotExist:
-        #         member_lecture = None
-        # schedule_data = ScheduleTb.objects.select_related('lecture_tb').filter(ing_color_cd__isnull=True,
-        #                                                                        en_dis_type=ON_SCHEDULE_TYPE)
-        # for schedule_info in schedule_data:
-        #     if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
-        #         schedule_info.max_mem_count = schedule_info.lecture_tb.member_num
-        #         schedule_info.ing_color_cd = schedule_info.lecture_tb.ing_color_cd
-        #         schedule_info.ing_font_color_cd = schedule_info.lecture_tb.ing_font_color_cd
-        #         schedule_info.end_color_cd = schedule_info.lecture_tb.end_color_cd
-        #         schedule_info.end_font_color_cd = schedule_info.lecture_tb.end_font_color_cd
-        #     else:
-        #         schedule_info.ing_color_cd = '#fbf3bd'
-        #         schedule_info.ing_font_color_cd = '#d2d1cf'
-        #         schedule_info.end_color_cd = '#282828'
-        #         schedule_info.end_font_color_cd = '#282828'
-        #     schedule_info.save()
 
         if class_id is not None and class_id != '':
             context = func_get_trainee_next_schedule_by_class_id(context, class_id, self.request.user.id)
@@ -1594,8 +1558,10 @@ class PopupTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'class_tb__member',
-            'member_ticket_tb__ticket_tb'
+            'member_ticket_tb__ticket_tb',
+            'member_ticket_tb__member'
         ).filter(member_ticket_tb__ticket_tb__ticket_id=ticket_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
+                 member_ticket_tb__member_id=self.request.user.id,
                  use=USE).order_by('-member_ticket_tb__state_cd', '-member_ticket_tb__start_date',
                                    '-member_ticket_tb__reg_dt')
 
