@@ -565,10 +565,12 @@ class Member_view{
             for(let j=0; j<length; j++){
                 let lecture_id = this.data.ticket[i].lecture_id[j];
                 let lecture_name = this.data.ticket[i].lecture_name[j];
+                let lecture_state_cd = this.data.ticket[i].lecture_state[i];
                 let lecture_color = this.data.ticket[i].lecture_color[j];
+                let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:#cccccc; text-decoration:line-through;' : '');
                 let icon_button_style = {"display":"block", "padding":"12px 0 12px 42px", "font-size":"13px", "height":"24px", "line-height":"24px"};
                 let lecture_name_set = `<div style="display:inline-block;width:4px;height:16px;border-radius: 8px;background-color:${lecture_color};margin-right:10px;margin-top:4px;"></div>
-                                        <div style="display:inline-block;vertical-align:top;">${lecture_name}</div>`;
+                                        <div style="display:inline-block;vertical-align:top;${text_decoration}">${lecture_name}</div>`;
                 let html_lecture_list_info = CComponent.text_button (lecture_id, lecture_name_set, icon_button_style, ()=>{
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(247/root_content_height), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
@@ -915,25 +917,6 @@ class Member_simple_view{
         }
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         return html;
-
-
-        // let unit = '';
-        // let id = 'member_phone_view';
-        // let title =  this.data.phone == null || this.data.phone == 'None' || this.data.phone == '' ? '휴대폰 번호' : this.data.phone;
-        // let placeholder = '휴대폰 번호';
-        // let icon = '/static/common/icon/icon_member_card_black.png';
-        // let icon_r_visible = HIDE;
-        // let icon_r_text = "";
-        // let style = null;
-        // let disabled = true;
-        // let pattern = "[0-9]{10,11}";
-        // let pattern_message = "";
-        // let required = "";
-        // let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-        //     let user_input_data = input_data;
-        //     this.phone = user_input_data;
-        // }, pattern, pattern_message, required);
-        // return html;
     }
 
     dom_row_member_birth_input(){
