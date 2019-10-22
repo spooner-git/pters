@@ -601,7 +601,7 @@ class PassInspector{
         let data;
         member.request_member_list("ing", (data1)=>{
             data = data1;
-        }, async);
+        }, OFF, async);
         let current_member_number = data.current_member_data.length;
         let finish_member_number = data.finish_member_num;
         let total_member = current_member_number + finish_member_number;
@@ -620,10 +620,10 @@ class PassInspector{
         let data2;
         lecture.request_lecture_list("ing", (d1)=>{
             data1 = d1;
-        }, async);
+        }, OFF, async);
         lecture.request_lecture_list("end", (d2)=>{
             data2 = d2;
-        }, async);
+        }, OFF, async);
         let current_lecture_number = data1.current_lecture_data.length;
         let finish_lecture_number = data2.finish_lecture_data.length;
         let total_number = current_lecture_number + finish_lecture_number;
@@ -645,11 +645,11 @@ class PassInspector{
         ticket.request_ticket_list("ing", (d1)=>{
             data1 = d1;
             current_ticket_number = data1.current_ticket_data.length;
-        }, async);
+        }, OFF, async);
         ticket.request_ticket_list("end", (d2)=>{
             data2 = d2;
             finish_ticket_number = data2.finish_ticket_data.length;
-        }, async);
+        },  OFF, async);
         let total_number = current_ticket_number + finish_ticket_number;
         let limit_number = this.data.auth_package_create.limit_num;
         let limit_type = this.data.auth_package_create.limit_type;
@@ -701,7 +701,6 @@ class Phone_auth_func{
         // {'token':document.getElementById('g-recaptcha-response').value,
         // 'phone':document.getElementById('id_phone').value
         // }
-        console.log(data);
         $.ajax({
             url:'/login/activate_sms/',
             type:'POST',

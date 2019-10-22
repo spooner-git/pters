@@ -1832,7 +1832,6 @@ class Plan_func{
     }
 
     static delete_plan_repeat(data, callback){
-        console.log(data);
         $.ajax({
             url:'/schedule/delete_repeat_schedule/',
             type:'POST',
