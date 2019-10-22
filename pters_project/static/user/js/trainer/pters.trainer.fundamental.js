@@ -604,7 +604,7 @@ class PassInspector{
         }, OFF, async);
         let current_member_number = data.current_member_data.length;
         let finish_member_number = data.finish_member_num;
-        let total_member = current_member_number + finish_member_number;
+        let total_member = current_member_number;
         let limit_number = this.data.auth_member_create.limit_num;
         let limit_type = this.data.auth_member_create.limit_type;
 
@@ -629,7 +629,7 @@ class PassInspector{
         }, OFF, async);
         let current_lecture_number = data1.current_lecture_data.length;
         let finish_lecture_number = data2.finish_lecture_data.length;
-        let total_number = current_lecture_number + finish_lecture_number;
+        let total_number = current_lecture_number;
         let limit_number = this.data.auth_group_create.limit_num;
         let limit_type = this.data.auth_group_create.limit_type;
 
@@ -653,7 +653,7 @@ class PassInspector{
             data2 = d2;
             finish_ticket_number = data2.finish_ticket_data.length;
         },  OFF, async);
-        let total_number = current_ticket_number + finish_ticket_number;
+        let total_number = current_ticket_number;
         let limit_number = this.data.auth_package_create.limit_num;
         let limit_type = this.data.auth_package_create.limit_type;
 
