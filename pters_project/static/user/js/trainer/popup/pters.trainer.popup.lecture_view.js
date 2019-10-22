@@ -265,6 +265,11 @@ class Lecture_view{
             if(user_input_data == null){
                 user_input_data = this.data.capacity;
             }
+            if(user_input_data < this.data.fixed_member_id.length){
+                show_error_message("수정하려는 정원보다 고정회원 수가 더 많습니다.");
+                this.render_content();
+                return;
+            }
             this.capacity = user_input_data;
             this.send_data();
         }, pattern, pattern_message, required);
