@@ -206,11 +206,13 @@ class Service_inquiry_func {
             success:function(data){
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray);
+                        show_error_message(data.messageArray[0]);
                         return false;
                     }
                 }
-                callback(data);
+                if(callback != undefined){
+                    callback(data); 
+                }
             },
     
             //통신 실패시 처리
@@ -231,11 +233,16 @@ class Service_inquiry_func {
                 
             },
 
-            success:function(data){
-                console.log(data);
-                var jsondata = JSON.parse(data);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 if(callback != undefined){
-                    callback(jsondata);
+                    callback(data); 
                 }
             },
 
@@ -259,10 +266,16 @@ class Service_inquiry_func {
                 
             },
 
-            success:function(data){
-                var jsondata = JSON.parse(data);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 if(callback != undefined){
-                    callback(jsondata);
+                    callback(data); 
                 }
             },
 

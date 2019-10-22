@@ -249,9 +249,10 @@ class Mypage{
                     },
 
                     success:function(data){
-                        let jsondata = $.parseJSON(data);
+                        let jsondata = JSON.parse(data);
                         if(jsondata.messageArray.length>0){
                             show_error_message(jsondata.messageArray);
+                            return false;
                         }
                         try{
                             current_page.init();
@@ -316,9 +317,16 @@ class Mypage_func{
             },
     
             //통신성공시 처리
-            success:function (data){
+            success:function (data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
                 if(callback != undefined){
-                    callback(data);
+                    callback(data); 
                 }
             },
 

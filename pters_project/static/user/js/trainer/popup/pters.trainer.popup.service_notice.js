@@ -136,7 +136,9 @@ class Service_notice {
                         return false;
                     }
                 }
-                callback(data);
+                if(callback != undefined){
+                    callback(data); 
+                }
                 return data;
                 // }
             },

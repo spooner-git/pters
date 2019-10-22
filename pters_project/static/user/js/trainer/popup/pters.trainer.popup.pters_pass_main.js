@@ -352,8 +352,8 @@ class Pters_pass_func{
             },
     
             //통신성공시 처리
-            success:function (data){
-                data = JSON.parse(data);
+            success:function (data_){
+                let data = JSON.parse(data_);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray[0]);
@@ -361,7 +361,7 @@ class Pters_pass_func{
                     }
                 }
                 if(callback != undefined){
-                    callback(data);
+                    callback(data); 
                 }
                 console.log(data);
             },
@@ -404,17 +404,16 @@ class Pters_pass_func{
                 }
             },
 
-            success:function(data){
-                data = JSON.parse(data);
+            success:function(data_){
+                let data = JSON.parse(data_);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray[0]);
                         return false;
                     }
                 }
-
                 if(callback != undefined){
-                    callback(data);
+                    callback(data); 
                 }
                 console.log(data);
 
@@ -525,24 +524,16 @@ class Pters_pass_func{
                 }
             },
 
-            success:function(data){
-                data = JSON.parse(data);
-                // if(jsondata.messageArray.length>0){
-                //     error_check = false;
-                //     alert(jsondata.messageArray);
-                // }else {
-                //     payment(name, 'card',  product_id, jsondata.next_start_date[0],
-                //         customer_uid, period_month, jsondata.price[0], new_merchant_uid, new_customer_uid);
-                // }
+            success:function(data_){
+                let data = JSON.parse(data_);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray[0]);
                         return false;
                     }
                 }
-
                 if(callback != undefined){
-                    callback(data);
+                    callback(data); 
                 }
 
             },
@@ -681,18 +672,16 @@ class Pters_pass_func{
                 }
             },
 
-            success:function(data){
-                console.log(data);
-                // data = JSON.parse(data);
+            success:function(data_){
+                let data = JSON.parse(data_);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray[0]);
                         return false;
                     }
                 }
-
                 if(callback != undefined){
-                    callback(data);
+                    callback(data); 
                 }
                 console.log(data);
 

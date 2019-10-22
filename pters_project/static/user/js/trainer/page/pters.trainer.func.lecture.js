@@ -277,7 +277,10 @@ class Lecture {
                         return false;
                     }
                 }
-                callback(data);
+                if(callback != undefined){
+                    callback(data);
+                }
+                
                 return data;
             },
 
@@ -385,16 +388,16 @@ class Lecture_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                let json = JSON.parse(data);
-                if(json.messageArray != undefined){
-                    if(json.messageArray.length > 0){
-                        show_error_message(json.messageArray[0]);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
                         return false;
                     }
                 }
                 if(callback != undefined){
-                    callback(json); 
+                    callback(data); 
                 }
                
             },
@@ -426,16 +429,16 @@ class Lecture_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                let json = JSON.parse(data);
-                if(json.messageArray != undefined){
-                    if(json.messageArray.length > 0){
-                        show_error_message(json.messageArray[0]);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
                         return false;
                     }
                 }
                 if(callback != undefined){
-                    callback(data);  
+                    callback(data); 
                 }
                 
             },
@@ -470,16 +473,16 @@ class Lecture_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                let json = JSON.parse(data);
-                if(json.messageArray != undefined){
-                    if(json.messageArray.length > 0){
-                        show_error_message(json.messageArray[0]);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
                         return false;
                     }
                 }
                 if(callback != undefined){
-                    callback();  
+                    callback(data); 
                 }
             },
     
@@ -511,11 +514,11 @@ class Lecture_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                let json = JSON.parse(data);
-                if(json.messageArray != undefined){
-                    if(json.messageArray.length > 0){
-                        show_error_message(json.messageArray[0]);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
                         return false;
                     }
                 }
@@ -553,16 +556,16 @@ class Lecture_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                let json = JSON.parse(data);
-                if(json.messageArray != undefined){
-                    if(json.messageArray.length > 0){
-                        show_error_message(json.messageArray[0]);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
                         return false;
                     }
                 }
                 if(callback != undefined){
-                    callback(json);   
+                    callback(data); 
                 }
                 
             },
@@ -596,16 +599,16 @@ class Lecture_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                let json = JSON.parse(data);
-                if(json.messageArray != undefined){
-                    if(json.messageArray.length > 0){
-                        show_error_message(json.messageArray[0]);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
                         return false;
                     }
                 }
                 if(callback != undefined){
-                    callback();
+                    callback(data); 
                 }
             },
     

@@ -255,9 +255,17 @@ class Password_modify_func{
             },
     
             //통신성공시 처리
-            success:function(data){
-                // let json = JSON.parse(data);
-                callback(data);
+            success:function(data_){
+                let data = JSON.parse(data_);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data); 
+                }
             },
     
             //통신 실패시 처리

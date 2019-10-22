@@ -133,7 +133,9 @@ class Service_inquiry_faq {
                         return false;
                     }
                 }
-                callback(data);
+                if(callback != undefined){
+                    callback(data); 
+                }
                 return data;
                 // }
             },

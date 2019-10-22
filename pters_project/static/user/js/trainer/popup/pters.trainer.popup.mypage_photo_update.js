@@ -163,11 +163,12 @@ class Mypage_photo_update{
                                 },
 
                                 success:function(data){
-                                    let jsondata = $.parseJSON(data);
+                                    let jsondata = JSON.parse(data);
                                     if(jsondata.messageArray.length>0){
-                                        //alert(jsondata.messageArray);
                                         show_error_message(jsondata.messageArray);
+                                        return false;
                                     }
+
                                     layer_popup.close_layer_popup(); // confirm 팝업 닫기
                                     layer_popup.close_layer_popup(); // 사진 조절 팝업 닫기
                                     

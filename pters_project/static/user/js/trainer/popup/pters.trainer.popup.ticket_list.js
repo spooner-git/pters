@@ -273,7 +273,9 @@ class Ticket_list {
                         return false;
                     }
                 }
-                callback(data);
+                if(callback != undefined){
+                    callback(data); 
+                }
                 return data;
                 // }
             },
