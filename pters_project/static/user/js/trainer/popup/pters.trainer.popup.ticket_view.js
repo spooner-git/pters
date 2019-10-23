@@ -670,7 +670,12 @@ class Ticket_simple_view{
         let text_button = CComponent.text_button ("detail_ticket_info", "더보기", text_button_style, ()=>{
             show_user_confirm(`작업중이던 항목을 모두 닫고 수강권 메뉴로 이동합니다.`, ()=>{
                 layer_popup.all_close_layer_popup();
-                sideGoPage("ticket");
+                if($(window).width() > 650){
+                    sideGoPage("ticket_page_type");
+                }else{
+                    sideGoPopup("ticket");
+                }
+                
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, popup_style, {'ticket_id':this.ticket_id} ,()=>{
                     ticket_view_popup = new Ticket_view('.popup_ticket_view', this.ticket_id, 'ticket_view_popup');
