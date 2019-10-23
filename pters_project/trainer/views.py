@@ -4506,7 +4506,7 @@ def update_attend_mode_setting_logic(request):
     setting_attend_class_after_display_time = request.POST.get('setting_attend_class_after_display_time', '5')
 
     class_id = request.session.get('class_id', '')
-    next_page = request.POST.get('next_page', '/trainer/attend_mode/')
+    # next_page = request.POST.get('next_page', '/trainer/attend_mode/')
 
     if setting_admin_password is None or setting_admin_password == '':
         setting_admin_password = '0000'
@@ -4528,7 +4528,7 @@ def update_attend_mode_setting_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
 #
