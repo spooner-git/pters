@@ -12,6 +12,9 @@ def func_upload_profile_image_logic(file, file_name, group):
     # project_id = request.POST.get('project_id', '')
     # image = request.POST.get('upload_file', '')
     # context = {'error': None}
+    print(str(file))
+    print(str(file_name))
+    print(str(group))
     bucket_name = getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", '')
 
     s3 = boto3.resource('s3', aws_access_key_id=getattr(settings, "PTERS_AWS_ACCESS_KEY_ID", ''),
@@ -45,6 +48,8 @@ def func_delete_profile_image_logic(file_name):
     # project_id = request.POST.get('project_id', '')
     # image = request.POST.get('upload_file', '')
     # context = {'error': None}
+    print('test3')
+    print(str(file_name))
     bucket_name = getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", '')
     s3 = boto3.resource('s3', aws_access_key_id=getattr(settings, "PTERS_AWS_ACCESS_KEY_ID", ''),
                         aws_secret_access_key=getattr(settings, "PTERS_AWS_SECRET_ACCESS_KEY", ''))
@@ -52,6 +57,7 @@ def func_delete_profile_image_logic(file_name):
     exists = True
     error_code = None
 
+    print('test3-1')
     try:
         s3.meta.client.head_bucket(Bucket=getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", ''))
     except ClientError as e:
@@ -61,6 +67,7 @@ def func_delete_profile_image_logic(file_name):
         if error_code == 404:
             exists = False
 
+    print('test3-2')
     if exists is True:
         # image_format, image_str = content.split(';base64,')
         # ext = image_format.split('/')[-1]
@@ -78,4 +85,5 @@ def func_delete_profile_image_logic(file_name):
                 error_code = '프로필 변경중 오류가 발생했습니다.'
         else:
             error_code = None
+    print('test3-3')
     return error_code

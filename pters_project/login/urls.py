@@ -39,7 +39,11 @@ urlpatterns = [
     url(r'^add_push_token/$', views.AddPushTokenView.as_view(), name='add_push_token'),
     url(r'^delete_push_token/$', views.DeletePushTokenView.as_view(), name='delete_push_token'),
     url(r'^clear_badge_counter/$', views.clear_badge_counter_logic, name='clear_badge_counter'),
-
+    # The activation key can make use of any character from the
+    # URL-safe base64 alphabet, plus the colon as a separator.
+    url(r'^activate/(?P<activation_key>[-:\w]+)/$',
+        views.ActivationView.as_view(),
+        name='registration_activate'),
 
     # 회원가입 유형 처리 부분
     url(r'^check_registration/$', views.CheckRegistration.as_view(), name='check_registration'),
