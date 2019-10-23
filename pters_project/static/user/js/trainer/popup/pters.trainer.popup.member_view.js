@@ -721,6 +721,7 @@ class Member_simple_view{
         };
 
         this.data = {
+            user_id:null,
             name: null,
             phone: null,
             birth: null,
@@ -766,6 +767,8 @@ class Member_simple_view{
 
     set_initial_data (){
         Member_func.read({"member_id": this.member_id}, (data)=>{
+            console.log(data)
+            this.data.user_id = data.member_user_id;
             this.data.name = data.member_name;
             this.data.phone = data.member_phone;
             this.data.birth = data.member_birthday_dt;
@@ -843,13 +846,15 @@ class Member_simple_view{
     
     dom_assembly_content(){
         // let name = this.dom_row_member_name_input();
+        let id = this.dom_row_member_user_id();
+        let connection = this.dom_row_member_connection();
         let phone = this.dom_row_member_phone_input();
         let birth = this.dom_row_member_birth_input();
         let sex = this.dom_row_member_sex_input();
-        let memo = this.dom_row_member_memo_input();
+        // let memo = this.dom_row_member_memo_input();
         let ticket = this.dom_row_ticket();
 
-        let html =  '<div class="obj_box_full">'+phone+birth+sex+memo+'</div>' +
+        let html =  '<div class="obj_box_full">'+id+phone+birth+sex+connection+'</div>' +
                     '<div class="obj_box_full">'+ticket+ '</div>';
 
         // document.getElementById(this.target.content).innerHTML = html;
@@ -857,7 +862,7 @@ class Member_simple_view{
     }
 
     dom_row_toolbox(){
-        let text_button_style = {"color":"#858282", "font-size":"13px", "font-weight":"500"};
+        let text_button_style = {"color":"#fe4e65", "font-size":"13px", "font-weight":"500", "padding":"10px 0"};
         let text_button = CComponent.text_button ("detail_user_info", "더보기", text_button_style, ()=>{
             show_user_confirm(`작업중이던 항목을 모두 닫고 회원 메뉴로 이동합니다.`, ()=>{
                 layer_popup.all_close_layer_popup();
@@ -872,7 +877,10 @@ class Member_simple_view{
         let html = `
         <div style="height:48px;line-height:48px;">
             <div style="float:left;width:auto;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                <span style="font-size:13px;font-weight:500;">${this.data.name == null ? '' : this.data.name}</span>
+                <span style="font-size:16px;font-weight:500;">
+                    <img src="/static/common/icon/icon_member_card_black.png" style="width:20px;vertical-align:middle;margin-right:8px;margin-bottom:3px;">
+                    ${this.data.name == null ? '' : this.data.name}
+                </span>
             </div>
             <div style="display:inline-block;float:right;width:65px;text-align:right;">
                 ${text_button}
@@ -900,14 +908,62 @@ class Member_simple_view{
         return html;
     }
 
+    dom_row_member_user_id(){
+        let id = 'member_user_id_view';
+        let title = this.data.user_id == null ? '-' : this.data.user_id;
+        if(this.data.active == "False"){
+            title = "(임시)" + this.data.user_id;
+        }
+        let icon = DELETE;
+        let icon_r_text = "";
+        let icon_r_visible = NONE;
+        let style = {"flex":"1 1 0", "padding":"8px 0", "font-size":"13px"};
+        let onclick = ()=>{
+
+        };
+        let html_data = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+
+        let html = `<div style="display:flex;">
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:8px 0;">아이디</div>
+                        ${html_data}
+                    </div>`;
+        return html;
+    }
+
+    dom_row_member_connection(){
+        let id = 'member_connection_view';
+        let title = "";
+        if(this.data.connection == CONNECTED){
+            title = "<span style='color:green'>연결 중</span>";
+        }else if(this.data.connection == CONNECT_WAIT){
+            title = "<span style='color:orange'>연결 대기</span>";
+        }else if(this.data.connection == UNCONNECTED){
+            title = "<span style='color:#fe4e65'>미연결</span>";
+        }
+        let icon = DELETE;
+        let icon_r_text = "";
+        let icon_r_visible = NONE;
+        let style = {"flex":"1 1 0", "padding":"8px 0", "font-size":"13px"};
+        let onclick = ()=>{
+
+        };
+        let html_data = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+
+        let html = `<div style="display:flex;">
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:8px 0;">연결상태</div>
+                        ${html_data}
+                    </div>`;
+        return html;
+    }
+
     dom_row_member_phone_input(){
         
         let id = 'member_phone_view';
-        let title =  this.data.phone == null || this.data.phone == 'None' || this.data.phone == '' ? '휴대폰 번호' : this.data.phone;
-        let icon = '/static/common/icon/icon_member_card_black.png';
-        let icon_r_visible = HIDE;
+        let title =  this.data.phone == null || this.data.phone == 'None' || this.data.phone == '' ? '-' : this.data.phone;
+        let icon = DELETE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
-        let style = null;
+        let style = {"flex":"1 1 0", "padding":"8px 0", "font-size":"13px"};
         let onclick = ()=>{
             if(this.data.phone == null || this.data.phone == 'None' || this.data.phone == ''){
                 return false;
@@ -924,8 +980,14 @@ class Member_simple_view{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                 option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
             });
-        }
-        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+        };
+        let html_data = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+
+        let html = `<div style="display:flex;">
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:8px 0;">휴대폰 번호</div>
+                        ${html_data}
+                    </div>`;
+
         return html;
     }
 
@@ -933,33 +995,45 @@ class Member_simple_view{
         //등록하는 행을 만든다.
         let unit = '';
         let id = 'member_birth_view';
-        let title = this.data.birth == null || this.data.birth == 'None' || this.data.birth == '' ? '생년월일' : this.data.birth;
+        let title = this.data.birth == null || this.data.birth == 'None' || this.data.birth == '' ? '-' : this.data.birth;
         let placeholder =  '생년월일';
-        let icon = NONE;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = null;
+        let style = {"flex":"1 1 0", "padding":"8px 0", "font-size":"13px"};
         let disabled = true;
         let pattern = "[0-9]{4}-[0-9]{2}-[0-9]{2}";
         let pattern_message = "";
         let required = "";
-        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+        let html_data = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
         }, pattern, pattern_message, required);
+
+        let html = `<div style="display:flex;">
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:8px 0;">생년월일</div>
+                        ${html_data}
+                    </div>`;
+
         return html;
     }
 
     dom_row_member_sex_input(){
         let id = 'member_sex_view';
-        let title = this.data.sex == null || this.data.sex == 'None' || this.data.sex == '' ? '성별' : SEX_CODE[this.data.sex];
-        let icon = NONE;
-        let icon_r_visible = HIDE;
+        let title = this.data.sex == null || this.data.sex == 'None' || this.data.sex == '' ? '-' : SEX_CODE[this.data.sex];
+        let icon = DELETE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
-        let style = null;
-        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+        let style = {"flex": "1 1 0", "padding":"8px 0", "font-size":"13px"};
+        let html_data = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             
         });
+
+        let html = `<div style="display:flex;">
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:8px 0;">성별</div>
+                        ${html_data}
+                    </div>`;
+
         return html;
     }
 
@@ -967,18 +1041,24 @@ class Member_simple_view{
         let id = 'member_memo_view';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '특이사항';
-        let icon = NONE;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = null;
+        let style = {"flex":"1 1 0", "padding":"8px 0", "font-size":"13px"};
         let disabled = true;
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
         let required = "";
-        let html = CComponent.create_input_row(id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+        let html_data = CComponent.create_input_row(id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
         }, pattern, pattern_message, required);
+
+        let html = `<div style="display:flex;">
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:8px 0;">특이사항</div>
+                        ${html_data}
+                    </div>`;
+
         return html;
     }
 
@@ -995,29 +1075,32 @@ class Member_simple_view{
             //티켓 이름 표기 부분
             let id = `input_ticket_select_${i}`;
             let title = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
-            let icon = '/static/common/icon/icon_ticket_black.png';
-            let icon_r_visible = SHOW;
+            let icon = DELETE;
+            let icon_r_visible = NONE;
             let icon_r_text = "";
-            let style = null;
+            let style = {"flex":"1 1 0", "padding-top":"8px", "padding-bottom":"0", "font-size":"13px"};
             let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
-                let ticket_id =  this.data.ticket[i].ticket_id;
-                let root_content_height = $root_content.height();
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(251/root_content_height), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
-                    ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
-                    //회원 간단 정보 팝업 열기
-                });
+
             });
 
-            
-            //티켓내 남은횟수, 남은 기간 표기 부분
-            let icon_button_style_remain_count_info = {"display":"block", "padding":0, "font-size":"12px", "height":"20px"};
-            let icon_button_style_remain_data_info = {"display":"block", "padding":0, "font-size":"12px"};
-            let html_remain_info = CComponent.icon_button('reg_count', `남은 횟수  <span style="color:#fe4e65">${this.data.ticket[i].ticket_rem_count}</span>`, NONE, icon_button_style_remain_count_info, ()=>{}) + 
-                                    CComponent.icon_button('reg_date', `남은 기간 <span style="color:#fe4e65">${this.data.ticket[i].end_date_text}</span>`, NONE, icon_button_style_remain_data_info, ()=>{});
+            let html_remain_info = `<div style="font-size:11px;font-weight:bold;letter-spacing:-0.5px;color:#fe4e65;margin-bottom:5px">
+                                        <div style="display:flex;">
+                                            <div style="flex-basis:68px"></div><div style="flex:1 1 0;height:20px;">${this.data.ticket[i].ticket_rem_count} 회</div>
+                                        </div>
+                                        <div style="display:flex;">
+                                            <div style="flex-basis:68px"></div><div style="flex:1 1 0;height:20px;">${this.data.ticket[i].end_date_text}</div>
+                                        </div>
+                                    </div>`;
 
-            html_to_join.push(html_ticket_name + html_remain_info);
+            let html_name = `<div style="display:flex;">
+                            <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding-top:8px;padding-bottom:0;">${i==0 ? "수강권" : ""}</div>
+                            ${html_ticket_name}
+                        </div>`;
+
+            html_to_join.push(html_name + html_remain_info);
         }
         let html = html_to_join.join('');
+
 
         return html;
     }

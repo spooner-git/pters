@@ -666,7 +666,7 @@ class Ticket_simple_view{
     }
 
     dom_row_toolbox(){
-        let text_button_style = {"color":"#858282", "font-size":"13px", "font-weight":"500"};
+        let text_button_style = {"color":"#fe4e65", "font-size":"13px", "font-weight":"500", "padding":"10px 0"};
         let text_button = CComponent.text_button ("detail_ticket_info", "더보기", text_button_style, ()=>{
             show_user_confirm(`작업중이던 항목을 모두 닫고 수강권 메뉴로 이동합니다.`, ()=>{
                 layer_popup.all_close_layer_popup();
@@ -686,7 +686,10 @@ class Ticket_simple_view{
         let html = `
         <div style="height:48px;line-height:48px;">
             <div style="float:left;width:auto;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                <span style="font-size:13px;font-weight:500;">${ticket_name}</span>
+                <span style="font-size:16px;font-weight:bold;">
+                    <img src="/static/common/icon/icon_ticket_black.png" style="width:20px;vertical-align:middle;margin-right:8px;margin-bottom:3px;">
+                    ${ticket_name}
+                </span>
             </div>
             <div style="display:inline-block;float:right;width:65px;text-align:right;">
                 ${text_button}
@@ -705,17 +708,20 @@ class Ticket_simple_view{
                 ing_lecture_length++;
             }
         }
-        let title = this.data.lecture_id.length == 0 ? '수업 0개' : ing_lecture_length+'개';
-        let icon = '/static/common/icon/icon_lecture_black.png';
+        let title = this.data.lecture_id.length == 0 ? '0 개' : ing_lecture_length+' 개';
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = null;
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
-            // let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, null, ()=>{
-            //     lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999);
-            // });
+        let style = {"flex":"1 1 0"};
+        let html_data = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
+
         });
+
+        let html = `<div style="display:flex;">
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:12px 0;">수업수</div>
+                        ${html_data}
+                    </div>`;
+
         return html;
     }
 
@@ -723,30 +729,41 @@ class Ticket_simple_view{
         let id = 'ticket_memo_view';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '설명';
-        let icon = '/static/common/icon/icon_note_black.png';
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = null;
+        let style = {"flex":"1 1 0"};
         let disabled = true;
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
         let required = "";
-        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            // let user_input_data = input_data;
-            // this.memo = user_input_data;
+        let html_data = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            
         }, pattern, pattern_message, required);
+
+        let html = `<div style="display:flex;">
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:12px 0;">특이사항</div>
+                        ${html_data}
+                    </div>`;
+
         return html;
     }
 
 
     dom_row_member(){
         let id = 'ing_member_view';
-        let title = this.data.member_id.length == 0 ? '진행중인 회원 (0 명)' : '진행중인 회원 ('+this.data.member_id.length+' 명)';
-        let icon = NONE;
+        let title = this.data.member_id.length == 0 ? '0 명 (진행중)' : this.data.member_id.length+' 명 (진행중)';
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = null;
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{});
+        let style = {"flex":"1 1 0"};
+        let html_data = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{});
+
+        let html = `<div style="display:flex;">
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:12px 0;">회원수</div>
+                        ${html_data}
+                    </div>`;
+
         return html;
     }
 
