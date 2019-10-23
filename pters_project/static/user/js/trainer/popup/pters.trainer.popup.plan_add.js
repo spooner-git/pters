@@ -484,7 +484,7 @@ class Plan_add{
                     "start_dt": this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.start_time,
                     "end_dt":this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.end_time,
                     "note":this.data.memo, "duplication_enable_flag": 1,
-                    "en_dis_type":this.list_type == "off" ? 0 : 1, "member_ids":this.data.member_id,
+                    "en_dis_type":this.list_type == "off" ? 0 : 1, "member_ids":this.list_type == "off" ? [] : this.data.member_id,
 
                     //repeat 관련
                     "repeat_freq":"WW", 
