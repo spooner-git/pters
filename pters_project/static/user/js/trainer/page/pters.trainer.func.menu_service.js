@@ -81,6 +81,7 @@ class Menu_service {
                        CComponent.dom_tag('서비스', dom_tag_style) + 
                         this.dom_menu_pters_pass() + 
                         this.dom_menu_service_notice() + 
+                        this.dom_menu_service_faq() +
                         this.dom_menu_service_inquiry() + 
                         this.dom_menu_service_help();
           
@@ -286,6 +287,21 @@ class Menu_service {
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             sideGoPopup('service_notice');
+        });
+        return html;
+    }
+
+    dom_menu_service_faq(){
+        let id = 'menu_service_faq_menu';
+        let title = '사용법 & 자주묻는 질문';
+        let icon = '/static/common/icon/icon_inquiry_black.png';
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = {"font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY_FAQ, 100, popup_style, null, ()=>{
+                service_inquiry_faq_popup = new Service_inquiry_faq('.popup_service_inquiry_faq');});
         });
         return html;
     }
