@@ -665,7 +665,12 @@ class Lecture_simple_view{
         let text_button = CComponent.text_button ("detail_lecture_info", "더보기", text_button_style, ()=>{
             show_user_confirm(`작업중이던 항목을 모두 닫고 수업 메뉴로 이동합니다.`, ()=>{
                 layer_popup.all_close_layer_popup();
-                sideGoPage("lecture");
+                if($(window).width() > 650){
+                    sideGoPage("lecture_page_type");
+                }else{
+                    sideGoPopup("lecture");
+                }
+                
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_VIEW, 100, popup_style, {'lecture_id':this.lecture_id}, ()=>{
                     lecture_view_popup = new Lecture_view('.popup_lecture_view', this.lecture_id, 'lecture_view_popup');
