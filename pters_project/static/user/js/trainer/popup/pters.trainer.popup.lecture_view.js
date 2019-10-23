@@ -142,7 +142,7 @@ class Lecture_view{
     render(){
         let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();lecture_view_popup.clear();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="lecture_view_popup.upper_right_menu();"></span>`;
+        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="lecture_view_popup.upper_right_menu();" ${this.data.capacity == 1 && this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE ? 'style="display:none"' : '' }  ></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
@@ -216,7 +216,7 @@ class Lecture_view{
             this.name = user_input_data;
             this.send_data();
         }, pattern, pattern_message, required);
-        let one_to_one_lesson_description = this.data.capacity == 1 ? "<div style='font-size:11px;color:#888888;'>이 수업은 정원 수정, 비활성화 할 수 없습니다.</div>" : "";
+        let one_to_one_lesson_description = this.data.capacity == 1 && this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE ? "<div style='font-size:11px;color:#888888;'>이 수업은 정원 수정, 비활성화 할 수 없습니다.</div>" : "";
         let html = `
         <div class="lecture_view_upper_box">
             <div style="display:inline-block;width:100%;">
