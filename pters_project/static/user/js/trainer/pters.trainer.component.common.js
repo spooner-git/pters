@@ -146,6 +146,7 @@ class CComponent{
         if(icon == NONE){
             icon = '/static/common/icon/icon_gap_black.png';
         }
+        let min_max_length = pattern.split('{')[1].replace('}', '').split(',');
         let title_sentence_height = title.split('\n').length > 0 ? title.split('\n').length * 25 : 25;
         let html = `<li class="create_input_row create_input_textarea_row" id="c_i_t_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div style="height:100%;display:flex;">
@@ -154,9 +155,10 @@ class CComponent{
                             </div>
                             <div class="cell_content">
                                 <textarea pattern="${pattern}" data-pattern-message="${pattern_message}" wrap="hard"
-                                        onkeydown="resize_textarea(this)" onkeyup="resize_textarea(this)" 
-                                        placeholder="${placeholder}" style="height:100%;min-height:${title_sentence_height}px;resize:none" 
-                                        spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" ${required}>${title}</textarea>
+                                        onkeydown="resize_textarea(this)" onkeyup="resize_textarea(this); limit_char_auto_correction(event.target);"
+                                        placeholder="${placeholder}" style="height:100%;min-height:${title_sentence_height}px;resize:none" title="메모" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}"
+                                        data-error-message="${placeholder} : 필수 입력입니다."
+                                        spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" data-valid="false" ${required}>${title}</textarea>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
@@ -709,9 +711,10 @@ class LimitChar{
 }
 
 function limit_char_auto_correction(event){
-    let limit_reg_pattern = event.pattern.replace('[', '[^').split('{')[0];
+    let pattern = event.attributes['pattern'].value;
+    let limit_reg_pattern = pattern.replace('[', '[^').split('{')[0];
     let limit = new RegExp(limit_reg_pattern, "gi");
-    let min_length = event.minLength;
+    let min_length = event.attributes['minlength'].value;
     let title = event.attributes['title'].value;
     event.value = event.value.replace(limit, "");
     if(event.value.length < Number(min_length)) {
@@ -724,15 +727,15 @@ function limit_char_auto_correction(event){
 }
 
 function limit_char_check(event){
-    let limit_reg_pattern = event.pattern.replace('[', '[^').split('{')[0];
-    console.log('limit_reg_pattern::'+limit_reg_pattern)
+    let pattern = event.attributes['pattern'].value;
+    let limit_reg_pattern = pattern.replace('[', '[^').split('{')[0];
     let limit = new RegExp(limit_reg_pattern, "gi");
     let limit_char_check = false;
-    let min_length = event.minLength;
-    let event_id = event.id;
+    let min_length = event.attributes['minlength'].value;
+    // let event_id = event.attributes['id'].value;
     let title = event.attributes['title'].value;
-    let confirm_id = event_id+'_confirm';
-    let default_confirm_id = event_id+'_default_confirm';
+    // let confirm_id = event_id+'_confirm';
+    // let default_confirm_id = event_id+'_default_confirm';
     if(event.value.length < Number(min_length)){
         event.attributes['data-error-message'].value = title+' : 최소 '+min_length+'자 이상 입력해야합니다.';
         // $(`#${confirm_id}`).text('최소 '+min_length+'자 이상 입력');
@@ -740,32 +743,24 @@ function limit_char_check(event){
         event.attributes['data-valid'].value = 'false';
     }
     else{
-        $(`#${confirm_id}`).text('');
-        console.log('tt::'+event.value);
-        console.log('tt::'+limit.test(event.value));
+        // $(`#${confirm_id}`).text('');
         if(limit.test(event.value)){
-            console.log('test1');
             event.attributes['data-error-message'].value = title+' : '+event.attributes['data-pattern-message'].value + ' 합니다.';
             // $(`#${default_confirm_id}`).css('color', '#fe4e65');
             event.attributes['data-valid'].value = 'false';
         }else{
-            console.log('test2')
             event.attributes['data-error-message'].value = '';
             // $(`#${default_confirm_id}`).css('color', 'green');
             event.attributes['data-valid'].value = 'true';
             limit_char_check = true;
         }
     }
-
-    console.log(limit_char_check);
-
     return limit_char_check;
 }
 
 function update_check_registration_form(forms){
     // form 안에 있는 값 검사
     let inputs = forms.elements;
-
     for(let i=0; i<inputs.length; i++){
         if (inputs[i].nodeName === "INPUT" && (inputs[i].type === "text" || inputs[i].type === "tel")) {
             // Update text input
@@ -776,6 +771,12 @@ function update_check_registration_form(forms){
                 limit_char_auto_correction(inputs[i]);
             }
         }
+        else if (inputs[i].nodeName == "TEXTAREA"){
+            limit_char_check(inputs[i]);
+        }
+        // else if(inputs[i].nodeName === "textarea"){
+        //     limit_char_check(inputs[i]);
+        // }
     }
 }
 
@@ -787,7 +788,13 @@ function check_registration_form(forms){
     for(let i=0; i<inputs.length; i++){
         if (inputs[i].nodeName === "INPUT" && (inputs[i].type === "text" || inputs[i].type === "tel")) {
             // Update text input
-            console.log(inputs[i].getAttribute('title')+':'+inputs[i].getAttribute('data-valid'));
+            // console.log(inputs[i].getAttribute('title')+':'+inputs[i].getAttribute('data-valid'));
+            if((inputs[i].value !=  '' || inputs[i].required) && inputs[i].getAttribute('data-valid') == 'false'){
+                error_info = inputs[i].getAttribute('data-error-message');
+                break;
+            }
+        }
+        else if (inputs[i].nodeName == "TEXTAREA"){
             if((inputs[i].value !=  '' || inputs[i].required) && inputs[i].getAttribute('data-valid') == 'false'){
                 error_info = inputs[i].getAttribute('data-error-message');
                 break;
