@@ -2576,17 +2576,17 @@ class LectureSelector{
             let lecture_name = data.lecture_name;
             let lecture_color_code = data.lecture_ing_color_cd;
             let lecture_max_num = data.lecture_max_num;
-            let lecture_state_cd = data.lecture_state_cd;
+            let lecture_state_cd = data.lecture_ing_member_num == undefined ? "end" : "ing";
             let lecture_type_cd = data.lecture_type_cd;
             let lecture_ing_member_num = data.lecture_ing_member_num;
             let checked = this.target_instance.lecture.id.indexOf(lecture_id) >= 0 ? 1 : 0;
             let html = CComponent.select_lecture_row(
-                this.multiple_select, checked, this.unique_instance, lecture_id, lecture_name, lecture_color_code, lecture_max_num, lecture_ing_member_num, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, lecture_id, lecture_name, lecture_color_code, lecture_max_num, lecture_ing_member_num, lecture_state_cd, (add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.id.push(lecture_id);
                         this.data.name.push(lecture_name);
                         this.data.max.push(lecture_max_num);
-                        this.data.state_cd.push(lecture_state_cd);
+                        // this.data.state_cd.push(lecture_state_cd);
                         this.data.type_cd.push(lecture_type_cd);
                     }else if(add_or_substract == "substract"){
                         this.data.id.splice(this.data.id.indexOf(lecture_id), 1);
@@ -2603,7 +2603,7 @@ class LectureSelector{
                         this.data.id.push(lecture_id);
                         this.data.name.push(lecture_name);
                         this.data.max.push(lecture_max_num);
-                        this.data.state_cd.push(lecture_state_cd);
+                        // this.data.state_cd.push(lecture_state_cd);
                         this.data.type_cd.push(lecture_type_cd);
                     }
 
@@ -2650,7 +2650,16 @@ class LectureSelector{
     request_list (callback){
         lecture.request_lecture_list("ing", (data)=>{
             this.received_data = data.current_lecture_data;
-            callback();
+            lecture.request_lecture_list("end", (data)=>{
+                let length = data.finish_lecture_data.length;
+                for(let i=0; i<length; i++){
+                    let lecture_id = data.finish_lecture_data[i].lecture_id;
+                    if(this.data.id.indexOf(lecture_id) != -1){
+                        this.received_data.push(data.finish_lecture_data[i]);
+                    }
+                }
+                callback();
+            });
         });
     }
 
