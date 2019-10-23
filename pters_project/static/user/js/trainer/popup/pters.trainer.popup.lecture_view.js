@@ -216,12 +216,13 @@ class Lecture_view{
             this.name = user_input_data;
             this.send_data();
         }, pattern, pattern_message, required);
-        
+        let one_to_one_lesson_description = this.data.capacity == 1 ? "<div style='font-size:11px;color:#888888;'>이 수업은 정원 수정, 비활성화 할 수 없습니다.</div>" : "";
         let html = `
         <div class="lecture_view_upper_box">
             <div style="display:inline-block;width:100%;">
                 <span style="position:absolute;top:0;font-size: 12px;display:block;color: #7d7d7d;font-weight: 500;">수업</span>
                 ${sub_html}
+                ${one_to_one_lesson_description}
             </div>
             <span style="display:none;">${title}</span>
         </div>
@@ -243,7 +244,7 @@ class Lecture_view{
         let pattern_message = "";
         let required = "";
 
-        if(this.data.lecture_type_cd!=LECTURE_TYPE_ONE_TO_ONE){
+        if(this.data.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE){ //그룹수업이라면
             icon_r_text = CComponent.text_button ('lecture_fixed_member_select', `고정 회원(${this.data.fixed_member_id.length})`, null, ()=>{
                 //고정 인원 선택
                 if(this.data.capacity != null){
@@ -555,7 +556,7 @@ class Lecture_view{
             return false;
         }
         else{
-            if(this.data.capacity <= 1){
+            if(this.data.capacity <= 1 && this.data.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE){
                 show_error_message('정원은 2명보다 크게 설정해주세요.');
                 return false;
             }
