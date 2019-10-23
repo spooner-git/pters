@@ -941,26 +941,27 @@ class Calendar {
                     schedules.push(
                         schedule_data[date_to_search].map( (plan) => {
                             // 0 : off, 1: 1:1, 2: group
-                            let plan_name, plan_status_color, plan_font_style;
-                            if(plan.schedule_type == 0){
-                                plan_status_color = '#d2d1cf';
-                                plan_name = plan.note != "" ? plan.note : "OFF" ;
-                                plan_font_style = '';
-                            }else if(plan.schedule_type == 1){
-                                plan_status_color = plan.lecture_ing_color_cd;
-                                plan_name = plan.member_name;
-                                plan_font_style = `color:${plan.lecture_ing_font_color_cd};`;
-                            }else if(plan.schedule_type == 2){
-                                plan_status_color = plan.lecture_ing_color_cd;
-                                plan_name = plan.lecture_name;
-                                plan_font_style = `color:${plan.lecture_ing_font_color_cd};`;
-                            }
+                            // let plan_name, plan_status_color, plan_font_style, plan_capacity_status;
+                            // if(plan.schedule_type == 0){
+                            //     plan_status_color = '#d2d1cf';
+                            //     plan_name = plan.note != "" ? plan.note : "OFF" ;
+                            //     plan_font_style = '';
+                            // }else if(plan.schedule_type == 1){
+                            //     plan_status_color = plan.lecture_ing_color_cd;
+                            //     plan_name = plan.member_name;
+                            //     plan_font_style = `color:${plan.lecture_ing_font_color_cd};`;
+                            // }else if(plan.schedule_type == 2){
+                            //     plan_capacity_status = '('+plan.lecture_current_member_num + '/' + plan.lecture_max_member_num+')';
+                            //     plan_status_color = plan.lecture_ing_color_cd;
+                            //     plan_name = plan.lecture_name + '<br>' + plan_capacity_status;
+                            //     plan_font_style = `color:${plan.lecture_ing_font_color_cd};`;
+                            // }
 
-                            if(plan.state_cd != "NP"){
-                                plan_status_color = '#d2d1cf';
-                                plan_font_style = 'color:#282828;';
-                                plan_font_style+='text-decoration:line-through;text-decoration-color:#00000054;';
-                            }
+                            // if(plan.state_cd != "NP"){
+                            //     plan_status_color = '#d2d1cf';
+                            //     plan_font_style = 'color:#282828;';
+                            //     plan_font_style+='text-decoration:line-through;text-decoration-color:#00000054;';
+                            // }
 
                             let plan_start_split = plan.start_time.split(':');
                             let plan_end_split = plan.end_time.split(':');
@@ -988,6 +989,37 @@ class Calendar {
                             //일정 표기 관련 계산
                             let height = 100*(diff.hour*60+60*diff.min/60)/(this.worktime.length*60);
                             let top = 100*( (plan_start.hour-work_start)*60 + 60*plan_start.minute/60 )/(this.worktime.length*60);
+
+
+
+                            let plan_name, plan_status_color, plan_font_style, plan_capacity_status;
+                            if(plan.schedule_type == 0){
+                                plan_status_color = '#d2d1cf';
+                                plan_name = plan.note != "" ? plan.note : "OFF" ;
+                                plan_font_style = '';
+                            }else if(plan.schedule_type == 1){
+                                plan_status_color = plan.lecture_ing_color_cd;
+                                plan_name = plan.member_name;
+                                plan_font_style = `color:${plan.lecture_ing_font_color_cd};`;
+                            }else if(plan.schedule_type == 2){
+                                // let capacity_color = plan.lecture_current_member_num < plan.lecture_max_member_num ? "green" : "#fe4e65";
+                                let capacity_color = "";
+                                plan_capacity_status = '<br>' + `<span style="color:${capacity_color}">(`+plan.lecture_current_member_num + '/' + plan.lecture_max_member_num+')</span>';
+                                let plan_height_by_pixel = diff.hour*60+60*diff.min/60;
+                                if(plan_height_by_pixel < 24){
+                                    plan_capacity_status = "";
+                                }
+                                plan_status_color = plan.lecture_ing_color_cd;
+                                plan_name = plan.lecture_name + plan_capacity_status;
+                                plan_font_style = `color:${plan.lecture_ing_font_color_cd};`;
+                            }
+
+                            if(plan.state_cd != "NP"){
+                                plan_status_color = '#d2d1cf';
+                                plan_font_style = 'color:#282828;';
+                                plan_font_style+='text-decoration:line-through;text-decoration-color:#00000054;';
+                            }
+
                             
                             let styles = `width:${100/cell_divide}%;height:${height}%;top:${top}%;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style};display:${display}`;
                             let long_touch_active = this.long_touch_schedule_id == plan.schedule_id ? "long_touch_active" : "";
@@ -995,6 +1027,8 @@ class Calendar {
                             if(this.long_touch == ON && this.long_touch_schedule_id != plan.schedule_id){
                                 go_behind = "go_behind";
                             }
+
+                            
 
                             return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active} ${go_behind}" 
                                         style="${styles}" ontouchstart="${this.instance}.longtouchstart(event, ()=>{})" ontouchend="${this.instance}.longtouchend(event)">
