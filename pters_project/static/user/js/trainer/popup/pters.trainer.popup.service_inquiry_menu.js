@@ -67,12 +67,11 @@ class Service_inquiry_menu {
     }
 
     dom_assembly_content(){
-        let faq = this.dom_row_faq();
+        // let faq = this.dom_row_faq();
         let history = this.dom_row_my_inquiry();
         let write = this.dom_row_new_inquiry();
 
-        let assembled = '<div class="obj_input_box_full">' + faq + '</div>' + 
-                        '<div class="obj_input_box_full">' + history + '</div>'+
+        let assembled = '<div class="obj_input_box_full">' + history + '</div>'+
                         '<div class="obj_input_box_full">' + write + '</div>';
 
         return assembled;

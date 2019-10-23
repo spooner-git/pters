@@ -145,7 +145,7 @@ class Statistics{
                             <span class="sales_type_select_text_button" style="color:${this.tab=="sales" ? "#3d3b3b" :"#b8b4b4"}" onclick="statistics_popup.switch('sales')">
                                 ${title}
                             </span>
-                            <div style="display:inline-block;background-color:#f5f2f3;width:2px;height:16px;"></div>
+                            <div style="display:inline-block;background-color:#f5f2f3;width:2px;height:16px;margin:0 10px;"></div>
                             <span class="sales_type_select_text_button" style="color:${this.tab=="member" ? "#3d3b3b" :"#b8b4b4"}" onclick="statistics_popup.switch('member')">
                                 ${title2}
                             </span>

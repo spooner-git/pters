@@ -65,7 +65,7 @@
 
 .sales_type_select_text_button{
 	display:inline-block;
-	width:100px;
+	width:auto;
 	font-size:23px;
 	font-weight:bold;
 	text-align:center;

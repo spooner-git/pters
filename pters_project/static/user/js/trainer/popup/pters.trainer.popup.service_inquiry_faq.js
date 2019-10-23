@@ -7,6 +7,8 @@ class Service_inquiry_faq {
         this.data = null;
         this.data_length = 0;
 
+        this.tab = "manual";
+
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
 
         this.init();
@@ -61,6 +63,17 @@ class Service_inquiry_faq {
         let length = this.data.length;
         let html_temp = [];
         for(let i=0; i <length ; i++){
+            let notice_type_cd = this.data[i].notice_type_cd;
+            if(this.tab == "manual"){
+                if(notice_type_cd != NOTICE_USAGE){
+                    continue;
+                }
+            }else if(this.tab == "faq"){
+                if(notice_type_cd != NOTICE_FAQ){
+                    continue;
+                }
+            }
+
             let id = this.data[i].notice_id;
             let notice_type_cd_name = this.data[i].notice_type_cd_name;
             let title = this.data[i].notice_title;
@@ -74,17 +87,43 @@ class Service_inquiry_faq {
         return html_temp.join("");
     }
 
+    // dom_row_toolbox(){
+    //     let title = "자주 묻는 질문 & 사용법";
+    //     let html = `<div class="inquiry_faq_upper_box">
+    //                     <div style="display:inline-block;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+    //                         <span style="display:inline-block;">${title}</span>
+    //                         <span style="display:none;">${title}</span>
+    //                         <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->
+    //                     </div>
+    //                 </div>
+    //                 `;
+    //     return html;
+    // }
+
     dom_row_toolbox(){
-        let title = "자주 묻는 질문 & 사용법";
-        let html = `<div class="inquiry_faq_upper_box">
-                        <div style="display:inline-block;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
-                            <span style="display:inline-block;">${title}</span>
-                            <span style="display:none;">${title}</span>
-                            <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->
+        let title = "사용법";
+        let title2 = "자주 묻는 질문";
+        let html = `
+                    <div class="lecture_view_upper_box">
+                        <div style="display:inline-block;width:320px;">
+                            <span class="sales_type_select_text_button" style="color:${this.tab=="manual" ? "#3d3b3b" :"#b8b4b4"}" onclick="service_inquiry_faq_popup.switch('manual')">
+                                ${title}
+                            </span>
+                            <div style="display:inline-block;background-color:#f5f2f3;width:2px;height:16px;margin:0 10px;"></div>
+                            <span class="sales_type_select_text_button" style="color:${this.tab=="faq" ? "#3d3b3b" :"#b8b4b4"}" onclick="service_inquiry_faq_popup.switch('faq')">
+                                ${title2}
+                            </span>
+                            <span style="display:none">${this.tab=="manual"? "사용법" : "자주 묻는 질문"}</span>
                         </div>
                     </div>
                     `;
         return html;
+    }
+
+    switch(tab){
+        this.tab = tab;
+        this.render();
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     open_detail(id){
