@@ -356,16 +356,13 @@ def update_profile_img_logic(request):
     member_info = None
     img_url = None
     group_name = request.session.get('group_name', 'trainer')
-    print('test1')
     try:
         member_info = MemberTb.objects.get(member_id=request.user.id)
     except ObjectDoesNotExist:
         error = '회원 정보를 불러오지 못했습니다.'
-    print('test2')
     if error is None:
         if member_info.profile_url is not None and member_info.profile_url != '':
             error = func_delete_profile_image_logic(member_info.profile_url)
-    print(str(error))
     if error is None:
         max_range = 9999999999
         random_file_name = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
