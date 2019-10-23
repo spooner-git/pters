@@ -319,6 +319,13 @@ class Plan_add{
                 
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'일자', data:{year:year, month:month, date:date},
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
+                                                                                                    if(this.data.repeat.repeat_end.year != null){ // 반복일정의 종료일자보다 미래 일자를 시작일자로 선택하면, 반복일정 종료일자를 시작일자랑 같게 설정한다.
+                                                                                                        let this_start_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
+                                                                                                        let this_repeat_end = DateRobot.to_yyyymmdd(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date);
+                                                                                                        if(DateRobot.compare(this_repeat_end, this_start_date) == false){
+                                                                                                            this.data.repeat.repeat_end = object.data;
+                                                                                                        }
+                                                                                                    }
                                                                                                     this.date = object; 
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
                 }});
@@ -416,7 +423,13 @@ class Plan_add{
     }
 
     dom_row_repeat_select(){
-        let repeat_end_date_in_text = '<span style="font-size:10px; font-weight:500;letter-spacing: -1px;color: #1f1d1e;float:left;">'+ DateRobot.to_text(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date)+' 까지</span>';
+        let date_color = "#1f1d1e";
+        let this_start_date = this.data.date != null ? DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) : "";
+        let this_repeat_end_date = DateRobot.to_yyyymmdd(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date)
+        if(this_start_date == this_repeat_end_date){
+            date_color = "#fe4e65";
+        }
+        let repeat_end_date_in_text = `<span style="font-size:10px; font-weight:500;letter-spacing: -1px;color: ${date_color};float:left;">`+ DateRobot.to_text(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date)+' 까지</span>';
         let id = 'select_repeat';
         let repeat_title = '<span style="float:left">' + this.data.repeat.day.map((el)=>{return DAYNAME_MATCH[el];}).join(', ') + ' / ' + '</span>';
         if(this.data.repeat.day.length==7){
@@ -427,6 +440,10 @@ class Plan_add{
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = {"height":"auto"};
+
+        
+
+
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_REPEAT_SELECT, 100, popup_style, null, ()=>{
