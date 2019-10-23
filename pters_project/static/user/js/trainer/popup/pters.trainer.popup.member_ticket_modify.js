@@ -376,8 +376,10 @@ class Member_ticket_modify{
         if(this.check_before_send() == false){
             return false;
         }
-        let data = {"member_ticket_id":this.data.member_ticket_id, "note":this.data.note, "start_date":this.data.start_date, "end_date":this.data.end_date, 
-                    "price":this.data.price, "refund_price":this.data.refund_price, "refund_date":this.data.refund_date, "member_ticket_reg_count":this.data.reg_count};
+        let data = {"member_ticket_id":this.data.member_ticket_id, "note":this.data.note, 
+                    "start_date":this.data.start_date, "end_date":this.data.end_date, 
+                    "price":this.data.price, "refund_price":this.data.refund_price, 
+                    "refund_date":this.data.refund_date == "None" ? "" : this.data.refund_date, "member_ticket_reg_count":this.data.reg_count};
         Member_func.ticket_update(data, ()=>{
             layer_popup.close_layer_popup();
             this.set_initial_data();
