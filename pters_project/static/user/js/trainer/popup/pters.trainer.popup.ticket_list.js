@@ -141,7 +141,7 @@ class Ticket_list {
                             </div>
                             <div class="ticket_data_b">
                                 <div class="ticket_lectures">
-                                    ${ticket_lectures_included_name_html.join('')}
+                                    ${ticket_lectures_included_name_html.length != 0 ? ticket_lectures_included_name_html.join('') : "<span style='color:#fe4e65;text-decoration:underline'>포함된 수업이 없습니다.</span>"}
                                 </div>
                             </div>
                         </article>`;
