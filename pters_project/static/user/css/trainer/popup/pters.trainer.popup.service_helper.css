@@ -38,7 +38,7 @@
 
 .popup_service_helper .content_image_wrapper .content_text_left_bottom{
 	position: absolute;
-	bottom: 0;
+	bottom: 10px;
 	left:20px;
 }
 
@@ -48,8 +48,21 @@
 
 #service_helper_content_slide{
 	position: absolute;
+	width: 100%;
 	top: 50%;
-	transform: translateY(-60%);
+	transform: translateY(-50%);
+}
+
+#service_helper_content_slide:before{
+	content: "";
+	display: block;
+	padding-top: 100%;
+}
+#service_helper_content_slide > div.swiper-wrapper{
+	position: absolute;
+	width: 100%;
+	top: 0;
+	left: 0;
 }
 
 #section_helper_list_content > div.swiper-pagination.swiper-pagination-bullets{

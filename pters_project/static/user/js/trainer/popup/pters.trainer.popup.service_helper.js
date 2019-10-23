@@ -87,7 +87,7 @@ class Service_helper {
                         <div class="content_text_left_bottom">
                             <div style="font-size:11px;">오른쪽으로 넘겨 사용법을 확인 해보세요.</div>
                         </div>
-                        <img src="/static/common/img/tutorial/pters_tutorial_1.png">
+                        <img src="/static/common/img/tutorial/pters_tutorial_1.png?v2">
                     </div>`;
         return html;
     }
