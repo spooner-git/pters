@@ -2097,6 +2097,10 @@ def update_member_ticket_status_info_logic(request):
                     or member_ticket_info.ticket_tb.state_cd != STATE_CD_IN_PROGRESS:
                 error = '해당 수강권은 진행중 상태가 아닙니다.'
 
+        if state_cd == STATE_CD_FINISH:
+            refund_price = 0
+            refund_date = None
+
     if error is None:
         now = timezone.now()
         schedule_data = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_id,
