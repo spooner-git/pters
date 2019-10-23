@@ -224,6 +224,7 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
+        today = datetime.date.today()
         off_repeat_schedule_list = []
         member_repeat_schedule_list = []
         lecture_member_repeat_schedule_ordered_dict = collections.OrderedDict()
@@ -242,27 +243,28 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             member_lecture_end_font_color_cd = ''
 
         # OFF 반복 일정 정보 불러오기
-        off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=OFF_SCHEDULE_TYPE)
+        off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=OFF_SCHEDULE_TYPE).exclude(end_date__lt=today).order_by('-reg_dt')
 
         # 회원의 반복 일정 정보 불러오기
         member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
             'member_ticket_tb__member').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
                                                lecture_tb__isnull=True,
-                                               lecture_schedule_id__isnull=True).order_by('reg_dt',
-                                                                                          'lecture_tb',
-                                                                                          'lecture_schedule_id')
+                                               lecture_schedule_id__isnull=True
+                                               ).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb',
+                                                                                      'lecture_schedule_id')
 
         # 수업 반복 일정 정보 불러오기
         lecture_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
             'lecture_tb').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=False,
-                                 lecture_schedule_id__isnull=True).order_by('reg_dt', 'lecture_tb',
-                                                                            'lecture_schedule_id',)
+                                 lecture_schedule_id__isnull=True
+                                 ).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb', 'lecture_schedule_id',)
 
         # 수업에 속한 회원의 반복 일정 정보 불러오기
         lecture_member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
             'lecture_tb', 'member_ticket_tb__member').filter(
             class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=False,
-            lecture_schedule_id__isnull=False).order_by('reg_dt', 'lecture_tb', 'lecture_schedule_id')
+            lecture_schedule_id__isnull=False).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb',
+                                                                                    'lecture_schedule_id')
 
         week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
         week_order = {key: i for i, key in enumerate(week_order)}

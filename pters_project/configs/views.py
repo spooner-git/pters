@@ -363,7 +363,6 @@ def update_profile_img_logic(request):
     if error is None:
         if member_info.profile_url is not None and member_info.profile_url != '':
             error = func_delete_profile_image_logic(member_info.profile_url)
-
     if error is None:
         max_range = 9999999999
         random_file_name = str(random.randrange(0, max_range)).zfill(len(str(max_range)))

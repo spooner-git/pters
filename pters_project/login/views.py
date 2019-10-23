@@ -1754,3 +1754,98 @@ class RegistrationView(TemplateView):
         self.request.session['sms_activation_check'] = False
 
         return context
+
+
+class BaseActivationView(TemplateView):
+    """
+    Base class for user activation views.
+    """
+    success_url = None
+    template_name = 'registration/activate.html'
+
+    def get(self, *args, **kwargs):
+        """
+        The base activation logic; subclasses should leave this method
+        alone and implement activate(), which is called from this
+        method.
+        """
+        activated_user = self.activate(*args, **kwargs)
+        if activated_user:
+            signals.user_activated.send(
+                sender=self.__class__,
+                user=activated_user,
+                request=self.request
+            )
+            success_url = self.get_success_url(activated_user) if \
+                (hasattr(self, 'get_success_url') and
+                 callable(self.get_success_url)) else \
+                self.success_url
+            try:
+                to, args, kwargs = success_url
+                return redirect(to, *args, **kwargs)
+            except ValueError:
+                return redirect(success_url)
+        return super(BaseActivationView, self).get(*args, **kwargs)
+
+    def activate(self, *args, **kwargs):
+        """
+        Implement account-activation logic here.
+        """
+        raise NotImplementedError
+
+
+class ActivationView(BaseActivationView):
+    """
+    Given a valid activation key, activate the user's
+    account. Otherwise, show an error message stating the account
+    couldn't be activated.
+    """
+    # success_url = 'registration_activation_complete'
+    success_url = '/login/activate/complete/'
+
+    def activate(self, *args, **kwargs):
+        # This is safe even if, somehow, there's no activation key,
+        # because unsign() will raise BadSignature rather than
+        # TypeError on a value of None.
+        username = self.validate_key(kwargs.get('activation_key'))
+        if username is not None:
+            user = self.get_user(username)
+            if user is not None:
+                user.is_active = True
+                user.save()
+                return user
+        return False
+
+    def validate_key(self, activation_key):
+        """
+        Verify that the activation key is valid and within the
+        permitted activation time window, returning the username if
+        valid or ``None`` if not.
+        """
+        try:
+            username = signing.loads(
+                activation_key,
+                salt=REGISTRATION_SALT,
+                max_age=settings.ACCOUNT_ACTIVATION_DAYS * 86400
+            )
+            return username
+        # SignatureExpired is a subclass of BadSignature, so this will
+        # catch either one.
+        except signing.BadSignature:
+            return None
+
+    def get_user(self, username):
+        """
+        Given the verified username, look up and return the
+        corresponding user account if it exists, or ``None`` if it
+        doesn't.
+        """
+        User = get_user_model()
+        try:
+            user = User.objects.get(**{
+                User.USERNAME_FIELD: username,
+                'is_active': False
+            })
+            return user
+        except User.DoesNotExist:
+            return None
