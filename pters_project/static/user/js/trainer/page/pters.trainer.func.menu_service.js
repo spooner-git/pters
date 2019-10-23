@@ -113,7 +113,7 @@ class Menu_service {
         let id = 'menu_program';
         let title = '프로그램';
         let icon = '/static/common/icon/icon_program_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -126,7 +126,7 @@ class Menu_service {
         let id = 'menu_calendar';
         let title = '일정';
         let icon = '/static/common/icon/tab_bar/icon_calendar_off.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -139,7 +139,7 @@ class Menu_service {
         let id = 'menu_member';
         let title = '회원';
         let icon = '/static/common/icon/tab_bar/icon_member_off.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -152,7 +152,7 @@ class Menu_service {
         let id = 'menu_lecture';
         let title = '수업';
         let icon = '/static/common/icon/icon_lecture_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -165,7 +165,7 @@ class Menu_service {
         let id = 'menu_ticket';
         let title = '수강권';
         let icon = '/static/common/icon/icon_ticket_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -178,7 +178,7 @@ class Menu_service {
         let id = 'menu_statistics';
         let title = '통계';
         let icon = '/static/common/icon/icon_statistics_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -191,7 +191,7 @@ class Menu_service {
         let id = 'menu_attendmode';
         let title = '출석 체크 (Beta)';
         let icon = '/static/common/icon/icon_attend_check_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -204,7 +204,7 @@ class Menu_service {
         let id = 'menu_setting_worktime';
         let title = '업무 시간';
         let icon = '/static/common/icon/icon_setting_worktime_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -217,7 +217,7 @@ class Menu_service {
         let id = 'menu_setting_autocomplete';
         let title = '자동 완료';
         let icon = '/static/common/icon/icon_setting_autocomplete_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -230,7 +230,7 @@ class Menu_service {
         let id = 'menu_setting_reserve';
         let title = '회원 예약';
         let icon = '/static/common/icon/icon_setting_reserve_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -243,7 +243,7 @@ class Menu_service {
         let id = 'menu_setting_alarm';
         let title = '알림';
         let icon = '/static/common/icon/icon_setting_notification_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -256,7 +256,7 @@ class Menu_service {
         let id = 'menu_setting_attendmode';
         let title = '출석 체크 모드 설정';
         let icon = '/static/common/icon/icon_setting_attendmode_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -269,7 +269,7 @@ class Menu_service {
         let id = 'menu_pters_pass';
         let title = 'PTERS 패스 구매';
         let icon = '/static/common/icon/icon_ticket_pink.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -282,7 +282,7 @@ class Menu_service {
         let id = 'menu_service_notice';
         let title = '공지사항';
         let icon = '/static/common/icon/icon_notice_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -295,7 +295,7 @@ class Menu_service {
         let id = 'menu_service_faq_menu';
         let title = '사용법 & 자주묻는 질문';
         let icon = '/static/common/icon/icon_inquiry_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -310,7 +310,7 @@ class Menu_service {
         let id = 'menu_service_inquiry_menu';
         let title = '이용 문의';
         let icon = '/static/common/icon/icon_inquiry_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
@@ -323,7 +323,7 @@ class Menu_service {
         let id = 'menu_service_help';
         let title = '도움말';
         let icon = '/static/common/icon/icon_help_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{

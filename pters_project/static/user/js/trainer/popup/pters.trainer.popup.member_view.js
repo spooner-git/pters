@@ -282,10 +282,10 @@ class Member_view{
         let sex = this.dom_row_member_sex_input();
         let ticket = this.dom_row_ticket();
         // let memo = this.dom_row_member_memo_input();
-
+        let tag_id = this.data.active == 'True' || this.data.active == null ? '아이디' : '아이디 <span style="color:#fe4e65;margin-left:3px;">(임시)</span>';
         let html =
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('아이디') + user_id + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag(tag_id) + user_id + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('휴대폰 번호') + phone + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('생년월일') + birth + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('성별') + sex +
@@ -394,9 +394,9 @@ class Member_view{
         }
         let id = 'member_user_id_view';
         let title = this.data.user_id == null ? '회원ID' : this.data.user_id;
-        if(this.data.active != 'True'){
-            title = '(임시 ID) ' + title;
-        }
+        // if(this.data.active != 'True'){
+        //     title = '(임시 ID) ' + title;
+        // }
         let icon = '/static/common/icon/icon_member_card_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = '';

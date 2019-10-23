@@ -112,7 +112,8 @@ input:disabled{
 	flex-basis: 42px;
 }
 .create_row .cell_content{
-	flex: 2 1 0;
+	/* flex: 2 1 0; */
+	flex: 1 1 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -136,7 +137,8 @@ input:disabled{
 .create_row .cell_icon{
 	/* flex-basis:120px; */
 	flex: 1 1 0;
-	max-width: 120px;
+	/* max-width: 120px; */
+	padding-right: 1px;
 	font-size: 13px;
 	text-align: right;
 	color: #858282;
