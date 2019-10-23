@@ -306,6 +306,9 @@ class Plan_view{
                     }
                     
                     this.init();
+                    try{
+                        current_page.init();
+                    }catch(e){}
                     // this.render_content();
                 });
             });

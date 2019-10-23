@@ -184,8 +184,9 @@ class Ticket_view{
         let lecture_list_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>';
         let ticket_memo_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>';
         let ticket_member_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
-                                            {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
-                                        +member_list+ '</div>';
+                                            {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0", "padding-bottom":"8px", "color":"#858282", "height":"20px"}) + 
+                                            `${this.data.lecture_id.length == 0 && this.data.name != null ? "<span style='color:#fe4e65;font-size:12px;font-weight:bold;'>포함된 수업이 없어, 수강권 보유 회원들이 일정을 등록할 수 없습니다.</span>" : ""}` +
+                                            member_list+ '</div>';
 
         if(this.data.ticket_state == STATE_END_PROGRESS){
             lecture_list_assembly = "";
@@ -240,7 +241,7 @@ class Ticket_view{
                 ing_lecture_length++;
             }
         }
-        let title = this.data.lecture_id.length == 0 ? '수업*' : ing_lecture_length+'개';
+        let title = this.data.lecture_id.length == 0  && this.data.name != null ? '<span style="color:#fe4e65;">포함된 수업이 없습니다.</span>' : ing_lecture_length+'개';
         let icon = '/static/common/icon/icon_lecture_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = CComponent.text_button ('ticket_lecture_list_view', "수업 목록", null, ()=>{
