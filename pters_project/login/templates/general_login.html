@@ -22,22 +22,8 @@
                     <input type="hidden" name="auto_login_check" value="1">
                     <input type="hidden" name="next_page" value = '{% url 'login:index' %}'>
                     {% csrf_token %}
-                    <!-- 네이버 로그인 버튼 노출 영역 -->
-                    <!--
-                    <div class="social_login_box" onclick="location.href=naverLogin.generateAuthorizeUrl();" style="background-color: #0dd25a;">
-                        <div class="social_login_img"><img src="/static/user/res/login/naver.svg" style="width: 16px; height: 14.7px; vertical-align:middle;"></div>
-                        <span class="social_login_text">네이버 로그인</span>
-                        <div style="display:table-cell; width:60px;"></div>
-                    </div>
-                    -->
-                    <!-- 카카오톡 로그인 버튼 노출 영역 -->
-                    <!--
-                    <div class="social_login_box" id="custom-login-btn" onclick="javascript:loginWithKakao();" style="background-color: #ffeb00; margin-top:12px;">
-                        <div class="social_login_img"><img src="/static/user/res/login/naver.svg" style="width: 16px; height: 14.7px; vertical-align:middle;"></div>
-                        <span class="social_login_text" style="color:#3a1c1d;">카카오톡 로그인</span>
-                        <div style="display:table-cell; width:60px;"></div>
-                    </div>
-                    -->
+                    
+                   
                     <!-- 구글 로그인 버튼 노출 영역 -->
                     <!--<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" style="width:179px;margin-bottom:8px;"></div>-->
                     <!-- 페이스북 로그인 버튼 노출 영역 -->
@@ -60,6 +46,22 @@
                         <span class="social_login_text" style="color:#ffffff; text-align:center;">로그인</span>
                         <div style="display:table-cell; width:60px;"></div>
                     </div>
+
+                    <!-- 네이버 로그인 버튼 노출 영역 -->
+                    
+                    <!-- <div class="social_login_box" onclick="location.href=naverLogin.generateAuthorizeUrl();" style="background-color: #0dd25a;">
+                        <div class="social_login_img"><img src="/static/user/res/login/naver.svg" style="width: 16px; height: 14.7px; vertical-align:middle;"></div>
+                        <span class="social_login_text">네이버 로그인</span>
+                        <div style="display:table-cell; width:60px;"></div>
+                    </div> -->
+                   
+                    <!-- 카카오톡 로그인 버튼 노출 영역 -->
+                    
+                    <!-- <div class="social_login_box" id="custom-login-btn" onclick="javascript:loginWithKakao();" style="background-color: #ffeb00; margin-top:12px;">
+                        <div class="social_login_img"><img src="/static/user/res/login/naver.svg" style="width: 16px; height: 14.7px; vertical-align:middle;"></div>
+                        <span class="social_login_text" style="color:#3a1c1d;">카카오톡 로그인</span>
+                        <div style="display:table-cell; width:60px;"></div>
+                    </div> -->
 
 
                     <div style="width:320px; height: 1px;background:#f5f2f3; margin-top: 16px; margin-bottom: 8px;"></div>
