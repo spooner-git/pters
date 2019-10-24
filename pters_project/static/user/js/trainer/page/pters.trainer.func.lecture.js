@@ -24,15 +24,18 @@ class Lecture {
     }
 
     init(){
-        // if(current_page != this.page_name){
-        //     return false;
-        // }
+        if(current_page_text != this.page_name){
+            return false;
+        }
 
         this.set_initial_data();
     }
 
     set_initial_data (){
         this.request_lecture_list(this.list_status_type, (data)=>{
+            if(current_page_text != this.page_name){
+                return false;
+            }
             this.data = data;
             if(this.list_status_type == "ing"){
                 this.data_length = this.data.current_lecture_data.length;

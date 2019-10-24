@@ -292,6 +292,7 @@ TESTSETSETSETSETSET
     const windowWidth = window.innerWidth;
     const $root_content = $('#root_content');
     var current_page = "";
+    var current_page_text = "home";
 
     // input_adjust_location_for_android();
     pc_keyboard_event();
@@ -430,6 +431,7 @@ TESTSETSETSETSETSET
 
     function sideGoPage(page){
         // current_page = page;
+        current_page_text = page;
         $('#debug_toolbar').hide();
 
         try{

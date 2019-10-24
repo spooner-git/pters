@@ -47,7 +47,7 @@ class Calendar {
         };
 
         let interval = setInterval(()=>{
-            if(this.page_name == current_page){
+            if(this.page_name == current_page_text){
                 this.relocate_current_time_indicator();
             }else{
                 clearInterval(interval);
@@ -105,9 +105,9 @@ class Calendar {
 
     //달력에 필요한 최상위 컨테이너가 이미 있는 상태에서 컨테이너 내용(달력)을 재초기화 할때 사용한다.
     init(cal_type){
-        // if(current_page != this.page_name){
-        //     return false;
-        // }
+        if(current_page_text != this.page_name){
+            return false;
+        }
         if(cal_type == undefined){
             cal_type = this.cal_type;
         }
@@ -570,9 +570,9 @@ class Calendar {
     }
 
     render_upper_box (type){
-        // if(current_page != this.page_name){
-        //     return false;
-        // }
+        if(current_page_text != this.page_name){
+            return false;
+        }
 
         let component = this.static_component();
         switch(type){
@@ -586,9 +586,9 @@ class Calendar {
     }
     
     render_month_cal (page, year, month, schedule_data){ //월간 달력 렌더링 (연, 월)
-        // if(current_page != this.page_name){
-        //     return false;
-        // }
+        if(current_page_text != this.page_name){
+            return false;
+        }
 
         if(schedule_data == undefined){
             schedule_data = false;
@@ -614,9 +614,9 @@ class Calendar {
     }
 
     render_week_cal (page, year, month, week, schedule_data){ //주간 달력 렌더링 (연, 월, 몇번째 주)
-        // if(current_page != this.page_name){
-        //     return false;
-        // }
+        if(current_page_text != this.page_name){
+            return false;
+        }
         let data = this.draw_week_line(year, month, week, schedule_data, "week");
         
 
@@ -861,7 +861,7 @@ class Calendar {
                 
                 
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
-                    today_marking = `<div class="today_marking" style="${month_or_week == "week" ? '' : 'top:8%; width:20px; height:20px; border-radius:12px;'}"></div>`;
+                    today_marking = `<div class="today_marking" style="${month_or_week == "week" ? '' : 'top:7%; width:20px; height:20px; border-radius:12px;'}"></div>`;
                     today_text_style = 'color:#fe4e65;font-weight:bold;';
                 }
                 
@@ -1391,10 +1391,12 @@ class Calendar {
         return(
             {
                 "month_cal_upper_box":` <div class="cal_upper_box">
-                                            <div class="cal_date_display page_title" onclick="${this.instance}.switch_cal_type()">
-                                                <span class="display_year">${this.current_year}년</span>
-                                                <span class="display_month">${this.current_month}월</span>
-                                                <div class="swap_cal"></div>
+                                            <div class="cal_date_display page_title">
+                                                <div onclick="${this.instance}.switch_cal_type()" style="display:inline-block;">
+                                                    <span class="display_year">${this.current_year}년</span>
+                                                    <span class="display_month">${this.current_month}월</span>
+                                                    <div class="swap_cal"></div>
+                                                </div>
                                             </div>
                                             <div class="cal_pc_tools_wrap">
                                                 ${CComponent.text_button ("calendar_month_prev", "<img src='/static/common/icon/icon_arrow_l_black.png' style='width:28px;vertical-align:top'>", null, ()=>{this.move_month('prev');})}
@@ -1409,13 +1411,15 @@ class Calendar {
                 ,
                 "week_cal_upper_box":`
                                         <div class="cal_upper_box">
-                                            <div class="cal_date_display page_title" onclick="${this.instance}.switch_cal_type()">
-                                                <span class="display_week">${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0] :null}월 
-                                                                           ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0] :null}일 - 
-                                                                           ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]: null}월 
-                                                                           ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[6]: null}일
-                                                </span>
-                                                <div class="swap_cal"></div>
+                                            <div class="cal_date_display page_title">
+                                                <div onclick="${this.instance}.switch_cal_type()" style="display:inline-block;">
+                                                    <span class="display_week">${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0] :null}월 
+                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0] :null}일 - 
+                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]: null}월 
+                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[6]: null}일
+                                                    </span>
+                                                    <div class="swap_cal"></div>
+                                                </div>
                                             </div>
                                             <div class="cal_pc_tools_wrap">
                                                 ${CComponent.text_button ("calendar_week_prev", "<img src='/static/common/icon/icon_arrow_l_black.png' style='width:28px;vertical-align:top'>", null, ()=>{this.move_week('prev');})}
