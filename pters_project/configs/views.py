@@ -133,6 +133,10 @@ class AccessTestMixin(UserPassesTestMixin):
         if session_app_version != settings.APP_VERSION:
             test_result = False
             self.login_url = '/app_version_error/'
+            self.request.session['app_version_error_next_page'] = self.request.get_full_path()
+
+        self.request.session['is_ajax'] = self.request.is_ajax()
+
         return test_result
 
 
@@ -419,10 +423,13 @@ def delete_profile_img_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-class AppVersionErrorView(TemplateView):
-    template_name = 'app_version_error.json'
-
-    def get_context_data(self, **kwargs):
-        context = super(AppVersionErrorView, self).get_context_data(**kwargs)
-        context['app_version'] = settings.APP_VERSION
-        return context
+def app_version_error(request):
+    # login 완료시 main page 이동
+    template_name = 'app_version_error.html'
+    is_ajax = request.session.get('is_ajax', 'False')
+    app_version_error_next_page = request.session.get('app_version_error_next_page')
+    if is_ajax == 'False' or is_ajax is False:
+        request.session['APP_VERSION'] = settings.APP_VERSION
+        return redirect(app_version_error_next_page)
+    else:
+        return render(request, template_name, {'app_version': settings.APP_VERSION})
