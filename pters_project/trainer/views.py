@@ -540,7 +540,6 @@ class SearchMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             if len(search_val) < 3:
                 error = '3글자 이상 입력해주세요.'
-
         if error is None:
             try:
                 user_info = User.objects.get(username=search_val)

@@ -842,6 +842,7 @@ function update_push_token(token, device_id) {
         url:'/login/add_push_token/',
         type:'POST',
         data:{"token_info":token, "device_id":device_id},
+        dataType : 'html',
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -851,8 +852,9 @@ function update_push_token(token, device_id) {
         },
 
         //통신성공시 처리
-        success:function(){
-                check_app_version(data.app_version);
+        success:function(data_){
+            let data = JSON.parse(data_);
+            check_app_version(data.app_version);
             // $('a.text-payment').parent('div').css('display', 'inline-block');
             // if(device_id != 'pc') {
                 // $('a.text-payment').parent('div').css('display', 'none');
