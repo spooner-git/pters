@@ -227,7 +227,7 @@
     window.addEventListener('load', function () {
         {% for message in messages %}
             {% if message.tags == "error" %}
-                show_error_message('{{ message }}');
+                alert('{{ message }}');
             {% endif %}
         {% endfor %}
         kakao_login_test = true;
