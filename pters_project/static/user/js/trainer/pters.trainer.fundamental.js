@@ -2,23 +2,23 @@ function func_set_webkit_overflow_scrolling(target_selector, top_menu_effect_iph
     if(os == IOS){
         let $selector = $(target_selector);
 
-        // $(document).off('touchstart', target_selector).on('touchstart', target_selector, function(){
-            // if($selector.scrollTop() == 0){
-            //     $selector.scrollTop(1);
-            // }
-        // });
+        $(document).off('touchstart', target_selector).on('touchstart', target_selector, function(){
+            if($selector.scrollTop() == 0){
+                $selector.scrollTop(1);
+            }
+        });
 
         $(target_selector).off('scroll').on('scroll', function(e){
-            // const popupHeight = $selector.height();
-            // const scrollHeight = $selector.prop('scrollHeight');
-            // const scrollLocation = $selector.scrollTop();
-            // if(scrollHeight >= popupHeight+1){
-            //     if(popupHeight + scrollLocation == scrollHeight){
-            //         $selector.animate({scrollTop : scrollLocation-1}, 10);
-            //     }else if(popupHeight + scrollLocation == popupHeight){
-            //         $selector.animate({scrollTop : scrollLocation+1}, 10);
-            //     }
-            // }
+            const popupHeight = $selector.height();
+            const scrollHeight = $selector.prop('scrollHeight');
+            const scrollLocation = $selector.scrollTop();
+            if(scrollHeight >= popupHeight+1){
+                if(popupHeight + scrollLocation == scrollHeight){
+                    $selector.animate({scrollTop : scrollLocation-1}, 10);
+                }else if(popupHeight + scrollLocation == popupHeight){
+                    $selector.animate({scrollTop : scrollLocation+1}, 10);
+                }
+            }
             if(top_menu_effect_iphone == ON){
                 PopupBase.top_menu_effect_iphone(this, target_selector.split(' ')[0]);
             }
