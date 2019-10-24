@@ -28,7 +28,6 @@ def index(request):
     # login 완료시 main page 이동
     template_name = 'index.html'
     request.session['APP_VERSION'] = settings.APP_VERSION
-
     if request.user.is_authenticated():
         next_page = '/check/'
     else:
@@ -94,7 +93,7 @@ class AccessTestMixin(UserPassesTestMixin):
         user_for_group = self.request.user
         # group = None
         url = None
-
+        self.login_url = '/'
         group_name = self.request.session.get('group_name', '')
         session_app_version = self.request.session.get('APP_VERSION', '')
         if session_app_version == '' or session_app_version is None:
@@ -133,6 +132,7 @@ class AccessTestMixin(UserPassesTestMixin):
 
         if session_app_version != settings.APP_VERSION:
             test_result = False
+            self.login_url = '/app_version_error/'
         return test_result
 
 
@@ -417,3 +417,12 @@ def delete_profile_img_logic(request):
         messages.error(request, error)
 
     return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class AppVersionErrorView(TemplateView):
+    template_name = 'app_version_error.json'
+
+    def get_context_data(self, **kwargs):
+        context = super(AppVersionErrorView, self).get_context_data(**kwargs)
+        context['app_version'] = settings.APP_VERSION
+        return context

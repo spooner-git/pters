@@ -873,3 +873,12 @@ function update_push_token(token, device_id) {
         }
     });
 }
+
+
+function check_app_version(app_version){
+    if(app_version != undefined){
+        if(session_app_version != app_version){
+            location.replace('/');
+        }
+    }
+}
