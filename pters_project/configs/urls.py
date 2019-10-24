@@ -54,5 +54,6 @@ urlpatterns = [
     url(r'^update_profile_img', views.update_profile_img_logic, name='update_profile_img'),
     url(r'^delete_profile_img', views.delete_profile_img_logic, name='delete_profile_img'),
 
+    url(r'^app_version_error/$', views.AppVersionErrorView.as_view(), name='app_version_error'),
 
 ]

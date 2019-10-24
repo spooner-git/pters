@@ -94,7 +94,7 @@ class AccessTestMixin(UserPassesTestMixin):
         user_for_group = self.request.user
         # group = None
         url = None
-
+        self.redirect_field_name = '/'
         group_name = self.request.session.get('group_name', '')
         session_app_version = self.request.session.get('APP_VERSION', '')
         if session_app_version == '' or session_app_version is None:
@@ -133,6 +133,7 @@ class AccessTestMixin(UserPassesTestMixin):
 
         if session_app_version != settings.APP_VERSION:
             test_result = False
+            self.redirect_field_name = '/app_version_error/'
         return test_result
 
 
@@ -417,3 +418,11 @@ def delete_profile_img_logic(request):
         messages.error(request, error)
 
     return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class AppVersionErrorView(TemplateView):
+    template_name = 'app_version_error.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AppVersionErrorView, self).get_context_data(**kwargs)
+        return context
