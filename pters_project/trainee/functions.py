@@ -7,7 +7,8 @@ from django.db.models.expressions import RawSQL
 from django.utils import timezone
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, MEMBER_RESERVE_PROHIBITION_ON, LECTURE_TYPE_ONE_TO_ONE, \
-    STATE_CD_IN_PROGRESS, STATE_CD_ABSENCE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE
+    STATE_CD_IN_PROGRESS, STATE_CD_ABSENCE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
+    MEMBER_RESERVE_PROHIBITION_OFF
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.models import ClassTb, ClassMemberTicketTb, SettingTb, TicketLectureTb
@@ -694,7 +695,7 @@ def func_check_select_date_reserve_setting(class_id, trainer_id, select_date):
     # 예약 허용 시간대
     reserve_avail_time = '00:00-23:59'
     # 예약 정지 여부
-    reserve_stop = MEMBER_RESERVE_PROHIBITION_ON
+    reserve_stop = MEMBER_RESERVE_PROHIBITION_OFF
     # 예약 가능 일자
     reserve_avail_date = 7
     reserve_avail_end_date = today

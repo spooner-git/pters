@@ -696,7 +696,7 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
         avail_date_list.append(str(today + datetime.timedelta(days=i)))
 
     if lt_res_member_time_duration < 10:
-        lt_res_member_time_duration = int(class_hour) * lt_res_member_time_duration
+        lt_res_member_time_duration *= int(class_hour)
 
     context['avail_date_data'] = avail_date_list
     context['setting_member_reserve_time_available'] = lt_res_01
