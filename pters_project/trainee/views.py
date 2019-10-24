@@ -13,6 +13,7 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView, RedirectView
 
+from configs import settings
 from configs.views import AccessTestMixin
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
     SCHEDULE_DUPLICATION_DISABLE, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, PROGRAM_LECTURE_CONNECT_ACCEPT, \
@@ -51,81 +52,87 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
     def get(self, request, **kwargs):
 
+        class_id = request.session.get('class_id', '')
         class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
             'class_tb',
             'member_ticket_tb__member').filter(
             member_ticket_tb__member_id=request.user.id,
             use=USE).exclude(
             member_ticket_tb__member_auth_cd=AUTH_TYPE_DELETE).order_by('-member_ticket_tb__start_date')
-        if class_member_ticket_data is None or len(class_member_ticket_data) == 0:
-            # self.url = '/trainee/cal_month_blank/'
-            self.url = '/trainee/trainee_main/'
 
-        elif len(class_member_ticket_data) == 1:
-            for class_member_ticket_info in class_member_ticket_data:
-                request.session['class_id'] = class_member_ticket_info.class_tb_id
-                request.session['member_ticket_id'] = class_member_ticket_info.member_ticket_tb_id
-                request.session['trainer_id'] = class_member_ticket_info.class_tb.member_id
-                if class_member_ticket_info.member_ticket_tb.member_auth_cd == AUTH_TYPE_WAIT:
-                    # self.url = '/trainee/member_ticket_select/'
-                    self.url = '/trainee/trainee_main/'
-                elif class_member_ticket_info.member_ticket_tb.member_auth_cd == AUTH_TYPE_DELETE:
-                    # self.url = '/trainee/cal_month_blank/'
-                    self.url = '/trainee/trainee_main/'
-                else:
-                    request.session['class_hour'] = class_member_ticket_info.class_tb.class_hour
-                    request.session['class_type_code'] = class_member_ticket_info.class_tb.subject_cd
-                    request.session['program_title'] = class_member_ticket_info.class_tb.get_class_type_cd_name()
-                    request.session['class_center_name'] = class_member_ticket_info.class_tb.get_center_name()
+        if class_id is None or class_id == '':
+            if class_member_ticket_data is None or len(class_member_ticket_data) == 0:
+                # self.url = '/trainee/cal_month_blank/'
+                self.url = '/trainee/trainee_main/'
 
-        else:
-            class_tb_comp = None
-            class_counter = 0
-            member_ticket_np_counter = 0
-            member_ticket_id_select = ''
-            class_tb_selected = None
-            class_member_ticket_id_select = None
-            for class_member_ticket_info in class_member_ticket_data:
-                if class_member_ticket_info.member_ticket_tb.member_auth_cd == AUTH_TYPE_WAIT:
-                    member_ticket_np_counter += 1
+            elif len(class_member_ticket_data) == 1:
+                for class_member_ticket_info in class_member_ticket_data:
+                    request.session['class_id'] = class_member_ticket_info.class_tb_id
+                    request.session['member_ticket_id'] = class_member_ticket_info.member_ticket_tb_id
+                    request.session['trainer_id'] = class_member_ticket_info.class_tb.member_id
+                    if class_member_ticket_info.member_ticket_tb.member_auth_cd == AUTH_TYPE_WAIT:
+                        # self.url = '/trainee/member_ticket_select/'
+                        self.url = '/trainee/trainee_main/'
+                    elif class_member_ticket_info.member_ticket_tb.member_auth_cd == AUTH_TYPE_DELETE:
+                        # self.url = '/trainee/cal_month_blank/'
+                        self.url = '/trainee/trainee_main/'
+                    else:
+                        request.session['class_hour'] = class_member_ticket_info.class_tb.class_hour
+                        request.session['class_type_code'] = class_member_ticket_info.class_tb.subject_cd
+                        request.session['program_title'] = class_member_ticket_info.class_tb.get_class_type_cd_name()
+                        request.session['class_center_name'] = class_member_ticket_info.class_tb.get_center_name()
 
-                if class_member_ticket_info.member_ticket_tb.member_auth_cd == AUTH_TYPE_VIEW \
-                        and class_tb_selected is None:
-                    class_tb_selected = class_member_ticket_info.class_tb
-                    class_member_ticket_id_select = class_member_ticket_info.member_ticket_tb_id
-                if class_tb_comp is not None:
-                    if str(class_tb_comp.class_id) != str(class_member_ticket_info.class_tb_id):
+            else:
+                class_tb_comp = None
+                class_counter = 0
+                member_ticket_np_counter = 0
+                member_ticket_id_select = ''
+                class_tb_selected = None
+                class_member_ticket_id_select = None
+                for class_member_ticket_info in class_member_ticket_data:
+                    if class_member_ticket_info.member_ticket_tb.member_auth_cd == AUTH_TYPE_WAIT:
+                        member_ticket_np_counter += 1
+
+                    if class_member_ticket_info.member_ticket_tb.member_auth_cd == AUTH_TYPE_VIEW \
+                            and class_tb_selected is None:
+                        class_tb_selected = class_member_ticket_info.class_tb
+                        class_member_ticket_id_select = class_member_ticket_info.member_ticket_tb_id
+                    if class_tb_comp is not None:
+                        if str(class_tb_comp.class_id) != str(class_member_ticket_info.class_tb_id):
+                            class_tb_comp = class_member_ticket_info.class_tb
+                            if class_member_ticket_info.member_ticket_tb.member_ticket_avail_count > 0:
+                                member_ticket_id_select = class_member_ticket_info.member_ticket_tb_id
+                            class_counter += 1
+                    else:
                         class_tb_comp = class_member_ticket_info.class_tb
                         if class_member_ticket_info.member_ticket_tb.member_ticket_avail_count > 0:
                             member_ticket_id_select = class_member_ticket_info.member_ticket_tb_id
                         class_counter += 1
-                else:
-                    class_tb_comp = class_member_ticket_info.class_tb
-                    if class_member_ticket_info.member_ticket_tb.member_ticket_avail_count > 0:
-                        member_ticket_id_select = class_member_ticket_info.member_ticket_tb_id
-                    class_counter += 1
 
-            if class_counter > 1:
-                # self.url = '/trainee/member_ticket_select/'
-                request.session['trainer_id'] = class_tb_selected.member_id
-                request.session['class_id'] = class_tb_selected.class_id
-                request.session['member_ticket_id'] = class_member_ticket_id_select
-                request.session['class_hour'] = class_tb_selected.class_hour
-                request.session['class_type_code'] = class_tb_selected.subject_cd
-                request.session['program_title'] = class_tb_selected.get_class_type_cd_name()
-                request.session['class_center_name'] = class_tb_selected.get_center_name()
-                self.url = '/trainee/trainee_main/'
-            else:
-                if member_ticket_np_counter == 0:
-                    # self.url = '/trainee/cal_month/'
+                if class_counter > 1:
+                    # self.url = '/trainee/member_ticket_select/'
+                    request.session['trainer_id'] = class_tb_selected.member_id
+                    request.session['class_id'] = class_tb_selected.class_id
+                    request.session['member_ticket_id'] = class_member_ticket_id_select
+                    request.session['class_hour'] = class_tb_selected.class_hour
+                    request.session['class_type_code'] = class_tb_selected.subject_cd
+                    request.session['program_title'] = class_tb_selected.get_class_type_cd_name()
+                    request.session['class_center_name'] = class_tb_selected.get_center_name()
                     self.url = '/trainee/trainee_main/'
-                    request.session['trainer_id'] = class_tb_comp.member_id
-                    request.session['class_id'] = class_tb_comp.class_id
-                    request.session['member_ticket_id'] = member_ticket_id_select
-                    request.session['class_hour'] = class_tb_comp.class_hour
-                    request.session['class_type_code'] = class_tb_comp.subject_cd
-                    request.session['program_title'] = class_tb_comp.get_class_type_cd_name()
-                    request.session['class_center_name'] = class_tb_comp.get_center_name()
+                else:
+                    if member_ticket_np_counter == 0:
+                        # self.url = '/trainee/cal_month/'
+                        self.url = '/trainee/trainee_main/'
+                        request.session['trainer_id'] = class_tb_comp.member_id
+                        request.session['class_id'] = class_tb_comp.class_id
+                        request.session['member_ticket_id'] = member_ticket_id_select
+                        request.session['class_hour'] = class_tb_comp.class_hour
+                        request.session['class_type_code'] = class_tb_comp.subject_cd
+                        request.session['program_title'] = class_tb_comp.get_class_type_cd_name()
+                        request.session['class_center_name'] = class_tb_comp.get_center_name()
+        else:
+            self.url = '/trainee/trainee_main/'
+        request.session['APP_VERSION'] = settings.APP_VERSION
 
         return super(IndexView, self).get(request, **kwargs)
 

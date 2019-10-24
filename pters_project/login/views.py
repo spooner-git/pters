@@ -59,6 +59,7 @@ def index(request):
     # login 완료시 main page 이동
     template_name = 'general_login.html'
 
+    request.session['APP_VERSION'] = settings.APP_VERSION
     if request.user.is_authenticated():
         next_page = '/check/'
     else:
@@ -79,8 +80,9 @@ def login_trainer(request):
     auto_login_check = request.POST.get('auto_login_check', '1')
     social_login_id = request.POST.get('social_login_id', '')
     social_access_token = request.POST.get('social_accessToken', '')
-
     next_page = request.POST.get('next_page')
+
+    request.session['APP_VERSION'] = settings.APP_VERSION
     error = None
     if next_page == '':
         next_page = '/trainer/'
