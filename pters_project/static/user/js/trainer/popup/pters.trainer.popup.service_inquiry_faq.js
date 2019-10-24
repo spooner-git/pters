@@ -166,6 +166,7 @@ class Service_inquiry_faq {
     
             //통신성공시 처리
             success:function (data){
+                check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray[0]);

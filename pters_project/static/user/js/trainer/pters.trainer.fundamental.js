@@ -558,6 +558,7 @@ class PassInspector{
     
             //통신성공시 처리
             success:function (data){
+                check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray[0]);
@@ -718,6 +719,7 @@ class Phone_auth_func{
             //통신성공시 처리
             success:function(data_){
                 let data = JSON.parse(data_);
+                check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray[0]);
@@ -757,6 +759,7 @@ class Phone_auth_func{
             //통신성공시 처리
             success:function(data_){
                 let data = JSON.parse(data_);
+                check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray[0]);
@@ -849,6 +852,7 @@ function update_push_token(token, device_id) {
 
         //통신성공시 처리
         success:function(){
+                check_app_version(data.app_version);
             // $('a.text-payment').parent('div').css('display', 'inline-block');
             // if(device_id != 'pc') {
                 // $('a.text-payment').parent('div').css('display', 'none');
@@ -878,7 +882,7 @@ function update_push_token(token, device_id) {
 function check_app_version(app_version){
     if(app_version != undefined){
         if(session_app_version != app_version){
-            location.replace('/');
+            location.reload();
         }
     }
 }

@@ -1143,26 +1143,26 @@ class ClassSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-class AddProgramView(LoginRequiredMixin, AccessTestMixin, View):
+def add_program_logic(request):
     template_name = 'trainer_add_program.html'
 
-    def get(self, request):
-        context = {}
-        cancel_redirect_url = request.GET.get('cancel_redirect_url', '/login/logout/')
-        # context = super(AddClassView, self).get_context_data(**kwargs)
-        class_type_cd_data = CommonCdTb.objects.filter(upper_common_cd='02', use=USE).order_by('order')
-        for class_type_cd_info in class_type_cd_data:
-            class_type_cd_info.subject_type_cd = CommonCdTb.objects.filter(upper_common_cd='03',
-                                                                           group_cd=class_type_cd_info.common_cd,
-                                                                           use=USE).order_by('order')
+    # def get(self, request):
+    context = {}
+    cancel_redirect_url = request.GET.get('cancel_redirect_url', '/login/logout/')
+    # context = super(AddClassView, self).get_context_data(**kwargs)
+    class_type_cd_data = CommonCdTb.objects.filter(upper_common_cd='02', use=USE).order_by('order')
+    for class_type_cd_info in class_type_cd_data:
+        class_type_cd_info.subject_type_cd = CommonCdTb.objects.filter(upper_common_cd='03',
+                                                                       group_cd=class_type_cd_info.common_cd,
+                                                                       use=USE).order_by('order')
 
-        center_list = CenterTrainerTb.objects.filter(member_id=request.user.id, use=USE)
+    center_list = CenterTrainerTb.objects.filter(member_id=request.user.id, use=USE)
 
-        context['center_list'] = center_list
-        context['class_type_cd_data'] = class_type_cd_data
-        context['cancel_redirect_url'] = cancel_redirect_url
+    context['center_list'] = center_list
+    context['class_type_cd_data'] = class_type_cd_data
+    context['cancel_redirect_url'] = cancel_redirect_url
 
-        return render(request, self.template_name, context)
+    return render(request, template_name, context)
 
 
 class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
@@ -3537,201 +3537,196 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse({'program_data': program_list}, json_dumps_params={'ensure_ascii': True})
 
 
-class AddProgramInfoView(LoginRequiredMixin, AccessTestMixin, View):
+def add_program_info_logic(request):
+    template_name = 'ajax/trainer_error_ajax.html'
+    center_id = request.POST.get('center_id', '')
+    subject_cd = request.POST.get('subject_cd', '')
+    subject_detail_nm = request.POST.get('subject_detail_nm', '')
+    start_date = request.POST.get('start_date', '')
+    end_date = request.POST.get('end_date', '')
+    class_hour = request.POST.get('class_hour', 60)
+    start_hour_unit = request.POST.get('start_hour_unit', 1)
+    class_member_num = request.POST.get('class_member_num', '')
+
+    error = None
+    class_info = None
+
+    if subject_cd is None or subject_cd == '':
+        error = '프로그램 종류를 설정해주세요.'
+
+    if class_hour is None or class_hour == '':
+        class_hour = 60
+
+    if start_hour_unit is None or start_hour_unit == '':
+        start_hour_unit = 1
+
+    if start_date is None or start_date == '':
+        start_date = datetime.date.today()
+    if end_date is None or end_date == '':
+        end_date = start_date + timezone.timedelta(days=3650)
+
+    if subject_detail_nm is None:
+        subject_detail_nm = ''
+
+    if class_member_num is None or class_member_num == '':
+        error = '수업당 최대 허용 인원을 설정해 주세요.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                class_info = ClassTb(member_id=request.user.id, center_tb_id=center_id,
+                                     subject_cd=subject_cd, start_date=start_date, end_date=end_date,
+                                     class_hour=class_hour, start_hour_unit=start_hour_unit,
+                                     subject_detail_nm=subject_detail_nm,
+                                     class_member_num=int(class_member_num), state_cd=STATE_CD_IN_PROGRESS, use=USE)
+
+                class_info.save()
+
+                member_class_info = MemberClassTb(member_id=request.user.id, class_tb_id=class_info.class_id,
+                                                  auth_cd=AUTH_TYPE_VIEW, mod_member_id=request.user.id, use=USE)
+                member_class_info.save()
+
+                one_to_one_lecture_info = LectureTb(class_tb_id=class_info.class_id, name='개인 레슨',
+                                                    ing_color_cd='#fbf3bd', end_color_cd='#d2d1cf',
+                                                    state_cd=STATE_CD_IN_PROGRESS,
+                                                    lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, member_num=1, use=USE)
+                one_to_one_lecture_info.save()
+
+                ticket_info = TicketTb(class_tb_id=class_info.class_id, name='개인 레슨',
+                                       state_cd=STATE_CD_IN_PROGRESS, use=USE)
+                ticket_info.save()
+
+                ticket_lecture_info = TicketLectureTb(class_tb_id=class_info.class_id,
+                                                      ticket_tb_id=ticket_info.ticket_id,
+                                                      lecture_tb_id=one_to_one_lecture_info.lecture_id, use=USE)
+                ticket_lecture_info.save()
+
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError:
+            error = '등록 값에 문제가 있습니다.'
+        except ValidationError:
+            error = '등록 값에 문제가 있습니다.'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+        request.session['class_id'] = class_info.class_id
+        request.session['class_hour'] = class_info.class_hour
+        request.session['class_type_code'] = class_info.subject_cd
+        request.session['class_type_name'] = class_info.get_class_type_cd_name()
+        request.session['class_center_name'] = class_info.get_center_name()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    return render(request, template_name)
+
+
+def delete_program_info_logic(request):
     template_name = 'ajax/trainer_error_ajax.html'
 
-    def post(self, request):
-        center_id = request.POST.get('center_id', '')
-        subject_cd = request.POST.get('subject_cd', '')
-        subject_detail_nm = request.POST.get('subject_detail_nm', '')
-        start_date = request.POST.get('start_date', '')
-        end_date = request.POST.get('end_date', '')
-        class_hour = request.POST.get('class_hour', 60)
-        start_hour_unit = request.POST.get('start_hour_unit', 1)
-        class_member_num = request.POST.get('class_member_num', '')
+    class_id = request.POST.get('class_id', '')
+    class_id_session = request.session.get('class_id', '')
 
-        error = None
-        class_info = None
+    error = None
+    class_info = None
+    if class_id is None or class_id == '':
+        error = '프로그램 정보를 불러오지 못했습니다.'
 
-        if subject_cd is None or subject_cd == '':
-            error = '프로그램 종류를 설정해주세요.'
-
-        if class_hour is None or class_hour == '':
-            class_hour = 60
-
-        if start_hour_unit is None or start_hour_unit == '':
-            start_hour_unit = 1
-
-        if start_date is None or start_date == '':
-            start_date = datetime.date.today()
-        if end_date is None or end_date == '':
-            end_date = start_date + timezone.timedelta(days=3650)
-
-        if subject_detail_nm is None:
-            subject_detail_nm = ''
-
-        if class_member_num is None or class_member_num == '':
-            error = '수업당 최대 허용 인원을 설정해 주세요.'
-
-        if error is None:
-            try:
-                with transaction.atomic():
-                    class_info = ClassTb(member_id=request.user.id, center_tb_id=center_id,
-                                         subject_cd=subject_cd, start_date=start_date, end_date=end_date,
-                                         class_hour=class_hour, start_hour_unit=start_hour_unit,
-                                         subject_detail_nm=subject_detail_nm,
-                                         class_member_num=int(class_member_num), state_cd=STATE_CD_IN_PROGRESS, use=USE)
-
-                    class_info.save()
-
-                    member_class_info = MemberClassTb(member_id=request.user.id, class_tb_id=class_info.class_id,
-                                                      auth_cd=AUTH_TYPE_VIEW, mod_member_id=request.user.id, use=USE)
-                    member_class_info.save()
-
-                    one_to_one_lecture_info = LectureTb(class_tb_id=class_info.class_id, name='개인 레슨',
-                                                        ing_color_cd='#fbf3bd', end_color_cd='#d2d1cf',
-                                                        state_cd=STATE_CD_IN_PROGRESS,
-                                                        lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, member_num=1, use=USE)
-                    one_to_one_lecture_info.save()
-
-                    ticket_info = TicketTb(class_tb_id=class_info.class_id, name='개인 레슨',
-                                           state_cd=STATE_CD_IN_PROGRESS, use=USE)
-                    ticket_info.save()
-
-                    ticket_lecture_info = TicketLectureTb(class_tb_id=class_info.class_id,
-                                                          ticket_tb_id=ticket_info.ticket_id,
-                                                          lecture_tb_id=one_to_one_lecture_info.lecture_id, use=USE)
-                    ticket_lecture_info.save()
-
-            except ValueError:
-                error = '등록 값에 문제가 있습니다.'
-            except IntegrityError:
-                error = '등록 값에 문제가 있습니다.'
-            except TypeError:
-                error = '등록 값에 문제가 있습니다.'
-            except ValidationError:
-                error = '등록 값에 문제가 있습니다.'
-            except InternalError:
-                error = '등록 값에 문제가 있습니다.'
-
-        if error is None:
-            request.session['class_id'] = class_info.class_id
-            request.session['class_hour'] = class_info.class_hour
-            request.session['class_type_code'] = class_info.subject_cd
-            request.session['class_type_name'] = class_info.get_class_type_cd_name()
-            request.session['class_center_name'] = class_info.get_center_name()
-
-        if error is not None:
-            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-            messages.error(request, error)
-        return render(request, self.template_name)
-
-
-class DeleteProgramInfoView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'ajax/trainer_error_ajax.html'
-
-    def post(self, request):
-        class_id = request.POST.get('class_id', '')
-        class_id_session = request.session.get('class_id', '')
-
-        error = None
-        class_info = None
-        if class_id is None or class_id == '':
+    if error is None:
+        try:
+            class_info = MemberClassTb.objects.get(member_id=request.user.id, class_tb_id=class_id)
+        except ObjectDoesNotExist:
             error = '프로그램 정보를 불러오지 못했습니다.'
 
-        if error is None:
-            try:
-                class_info = MemberClassTb.objects.get(member_id=request.user.id, class_tb_id=class_id)
-            except ObjectDoesNotExist:
-                error = '프로그램 정보를 불러오지 못했습니다.'
+    if error is None:
+        class_info.auth_cd = AUTH_TYPE_DELETE
+        class_info.save()
 
-        if error is None:
-            class_info.auth_cd = AUTH_TYPE_DELETE
-            class_info.save()
+    if error is None:
+        if str(class_id) == str(class_id_session):
+            request.session['class_id'] = ''
+            request.session['class_type_code'] = ''
+            request.session['class_type_name'] = ''
+            request.session['class_center_name'] = ''
 
-        if error is None:
-            if str(class_id) == str(class_id_session):
-                request.session['class_id'] = ''
-                request.session['class_type_code'] = ''
-                request.session['class_type_name'] = ''
-                request.session['class_center_name'] = ''
+    if error is None:
+        log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info='프로그램', log_how='삭제', use=USE)
 
-        if error is None:
-            log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
-                             from_member_name=request.user.first_name,
-                             class_tb_id=class_id,
-                             log_info='프로그램', log_how='삭제', use=USE)
+        log_data.save()
 
-            log_data.save()
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
 
-        if error is not None:
-            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-            messages.error(request, error)
-
-        return render(request, self.template_name)
+    return render(request, template_name)
 
 
-class UpdateProgramInfoView(LoginRequiredMixin, AccessTestMixin, View):
+def update_program_info_logic(request):
     template_name = 'ajax/trainer_error_ajax.html'
+    class_id = request.POST.get('class_id', '')
+    class_id_session = request.session.get('class_id', '')
+    subject_cd = request.POST.get('subject_cd', '')
+    subject_detail_nm = request.POST.get('subject_detail_nm', '')
+    start_date = request.POST.get('start_date', '')
+    end_date = request.POST.get('end_date', '')
+    class_hour = request.POST.get('class_hour', '')
+    start_hour_unit = request.POST.get('start_hour_unit', '')
+    class_member_num = request.POST.get('class_member_num', '')
 
-    def post(self, request):
-        class_id = request.POST.get('class_id', '')
-        class_id_session = request.session.get('class_id', '')
-        subject_cd = request.POST.get('subject_cd', '')
-        subject_detail_nm = request.POST.get('subject_detail_nm', '')
-        start_date = request.POST.get('start_date', '')
-        end_date = request.POST.get('end_date', '')
-        class_hour = request.POST.get('class_hour', '')
-        start_hour_unit = request.POST.get('start_hour_unit', '')
-        class_member_num = request.POST.get('class_member_num', '')
+    error = None
+    class_info = None
 
-        error = None
-        class_info = None
+    if class_id is None or class_id == '':
+        error = '오류가 발생했습니다.'
 
-        if class_id is None or class_id == '':
+    if error is None:
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
             error = '오류가 발생했습니다.'
 
-        if error is None:
-            try:
-                class_info = ClassTb.objects.get(class_id=class_id)
-            except ObjectDoesNotExist:
-                error = '오류가 발생했습니다.'
+    if error is None:
 
-        if error is None:
+        if subject_cd is not None and subject_cd != '':
+            class_info.subject_cd = subject_cd
 
-            if subject_cd is not None and subject_cd != '':
-                class_info.subject_cd = subject_cd
+        if class_hour is not None and class_hour != '':
+            class_info.class_hour = class_hour
 
-            if class_hour is not None and class_hour != '':
-                class_info.class_hour = class_hour
+        if start_hour_unit is not None and start_hour_unit != '':
+            class_info.start_hour_unit = start_hour_unit
 
-            if start_hour_unit is not None and start_hour_unit != '':
-                class_info.start_hour_unit = start_hour_unit
+        if start_date is not None and start_date != '':
+            class_info.start_date = start_date
+        if end_date is not None and end_date != '':
+            class_info.end_date = end_date
 
-            if start_date is not None and start_date != '':
-                class_info.start_date = start_date
-            if end_date is not None and end_date != '':
-                class_info.end_date = end_date
+        if subject_detail_nm is not None and subject_detail_nm != '':
+            class_info.subject_detail_nm = subject_detail_nm
 
-            if subject_detail_nm is not None and subject_detail_nm != '':
-                class_info.subject_detail_nm = subject_detail_nm
+        if class_member_num is not None and class_member_num != '':
+            class_info.class_member_num = class_member_num
 
-            if class_member_num is not None and class_member_num != '':
-                class_info.class_member_num = class_member_num
+        class_info.save()
 
-            class_info.save()
+    if error is None:
+        if str(class_id) == str(class_id_session):
+            request.session['class_type_code'] = class_info.subject_cd
+            request.session['class_type_name'] = class_info.get_class_type_cd_name()
+            request.session['class_hour'] = class_info.class_hour
 
-        if error is None:
-            if str(class_id) == str(class_id_session):
-                request.session['class_type_code'] = class_info.subject_cd
-                request.session['class_type_name'] = class_info.get_class_type_cd_name()
-                request.session['class_hour'] = class_info.class_hour
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
 
-        if error is not None:
-            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-            messages.error(request, error)
-
-        return render(request, self.template_name)
+    return render(request, template_name)
 
 
 def select_program_processing_logic(request):
@@ -3813,77 +3808,75 @@ class GetBackgroundImgListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+def update_background_img_info_logic(request):
     template_name = 'ajax/trainer_error_ajax.html'
 
-    def post(self, request):
-        class_id = request.session.get('class_id', '')
-        background_img_id = request.POST.get('background_img_id', '')
-        background_img_type_cd = request.POST.get('background_img_type_cd', '')
-        url = request.POST.get('url', '')
+    class_id = request.session.get('class_id', '')
+    background_img_id = request.POST.get('background_img_id', '')
+    background_img_type_cd = request.POST.get('background_img_type_cd', '')
+    url = request.POST.get('url', '')
 
-        error = None
-        background_img_info = None
-        if class_id is None or class_id == '':
-            error = '오류가 발생했습니다.'
-        if background_img_id == '' or background_img_id is None:
-            try:
-                background_img_info = BackgroundImgTb.objects.get(class_tb_id=class_id,
-                                                                  background_img_type_cd=background_img_type_cd,
-                                                                  use=USE)
-            except ObjectDoesNotExist:
-                background_img_info = BackgroundImgTb(class_tb_id=class_id,
-                                                      background_img_type_cd=background_img_type_cd,
-                                                      url=url, reg_info_id=request.user.id, use=USE)
+    error = None
+    background_img_info = None
+    if class_id is None or class_id == '':
+        error = '오류가 발생했습니다.'
+    if background_img_id == '' or background_img_id is None:
+        try:
+            background_img_info = BackgroundImgTb.objects.get(class_tb_id=class_id,
+                                                              background_img_type_cd=background_img_type_cd,
+                                                              use=USE)
+        except ObjectDoesNotExist:
+            background_img_info = BackgroundImgTb(class_tb_id=class_id,
+                                                  background_img_type_cd=background_img_type_cd,
+                                                  url=url, reg_info_id=request.user.id, use=USE)
 
+        if background_img_type_cd is not None and background_img_type_cd != '':
+            background_img_info.background_img_type_cd = background_img_type_cd
+        if url is not None and url != '':
+            background_img_info.url = url
+
+        background_img_info.save()
+    else:
+        try:
+            background_img_info = BackgroundImgTb.objects.get(background_img_id=background_img_id, use=USE)
+        except ObjectDoesNotExist:
+            error = '배경화면 정보를 불러오지 못했습니다.'
+
+        if error is None:
             if background_img_type_cd is not None and background_img_type_cd != '':
                 background_img_info.background_img_type_cd = background_img_type_cd
             if url is not None and url != '':
                 background_img_info.url = url
 
             background_img_info.save()
-        else:
-            try:
-                background_img_info = BackgroundImgTb.objects.get(background_img_id=background_img_id, use=USE)
-            except ObjectDoesNotExist:
-                error = '배경화면 정보를 불러오지 못했습니다.'
 
-            if error is None:
-                if background_img_type_cd is not None and background_img_type_cd != '':
-                    background_img_info.background_img_type_cd = background_img_type_cd
-                if url is not None and url != '':
-                    background_img_info.url = url
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
 
-                background_img_info.save()
-
-        if error is not None:
-            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-            messages.error(request, error)
-
-        return render(request, self.template_name)
+    return render(request, template_name)
 
 
-class DeleteBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+def delete_background_img_info_logic(request):
     template_name = 'ajax/trainer_error_ajax.html'
 
-    def post(self, request):
-        background_img_id = request.POST.get('background_img_id', '')
+    background_img_id = request.POST.get('background_img_id', '')
 
-        error = None
-        if background_img_id is None or background_img_id == '':
-            error = '배경화면 정보를 불러오지 못했습니다.'
+    error = None
+    if background_img_id is None or background_img_id == '':
+        error = '배경화면 정보를 불러오지 못했습니다.'
 
-        if error is None:
-            try:
-                background_img_info = BackgroundImgTb.objects.get(background_img_id=background_img_id)
-                background_img_info.delete()
-            except ObjectDoesNotExist:
-                error = '오류가 발생했습니다.'
-        if error is not None:
-            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-            messages.error(request, error)
+    if error is None:
+        try:
+            background_img_info = BackgroundImgTb.objects.get(background_img_id=background_img_id)
+            background_img_info.delete()
+        except ObjectDoesNotExist:
+            error = '오류가 발생했습니다.'
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
 
-        return render(request, self.template_name)
+    return render(request, template_name)
 
 
 class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):

@@ -3456,6 +3456,7 @@ class BoardWriter{
 
             success:function(data){
                 // let jsondata = JSON.parse(data);
+                check_app_version(data.app_version);
                 console.log(data);
                 if(data.messageArray != undefined) {
                     if (data.messageArray.length > 0) {

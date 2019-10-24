@@ -177,6 +177,7 @@
 
             success:function(data){
                 var jsondata = JSON.parse(data);
+                check_app_version(jsondata.app_version);
                 lec_select_classIdArray = jsondata.classIdArray;
                 lec_select_centerNameArray = jsondata.centerNameArray;
                 lec_select_subjectNameArray = jsondata.subjectNameArray;
@@ -220,7 +221,7 @@
 
             success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log(jsondata)
+                check_app_version(jsondata.app_version);
 
                 lec_select_regCountArray = jsondata.countArray;
                 lec_select_startArray = jsondata.startArray;

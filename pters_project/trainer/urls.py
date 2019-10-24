@@ -151,15 +151,13 @@ urlpatterns = [
     # 강좌 정보 조회
     url(r'^get_program_list/$', views.GetProgramListViewAjax.as_view(), name='get_program_list'),
     # 강좌 추가
-    url(r'^add_program_info/$', views.AddProgramInfoView.as_view(), name='add_program_info'),
+    url(r'^add_program_info/$', views.add_program_info_logic, name='add_program_info'),
     # 강좌 삭제
-    url(r'^delete_program_info/$', views.DeleteProgramInfoView.as_view(), name='delete_program_info'),
+    url(r'^delete_program_info/$', views.delete_program_info_logic, name='delete_program_info'),
     # 강좌 정보 수정
-    url(r'^update_program_info/$', views.UpdateProgramInfoView.as_view(), name='update_program_info'),
+    url(r'^update_program_info/$', views.update_program_info_logic, name='update_program_info'),
     # 강좌 정보 선택 처리
     url(r'^select_program_processing/$', views.select_program_processing_logic, name='select_program_processing'),
-    # 강좌 정보 수정
-    url(r'^update_program_info/$', views.UpdateProgramInfoView.as_view(), name='update_program_info'),
 
 
     # 배경 이미지 설정 기능 #################################################################################################
@@ -169,10 +167,10 @@ urlpatterns = [
     # 배경 이미지 정보 조회
     url(r'^get_background_img_list/$', views.GetBackgroundImgListViewAjax.as_view(), name='get_background_img_list'),
     # 배경 이미지 정보 추가/수정
-    url(r'^update_background_img_info/$', views.UpdateBackgroundImgInfoViewAjax.as_view(),
+    url(r'^update_background_img_info/$', views.update_background_img_info_logic,
         name='update_background_img_info'),
     # 배경 이미지 정보 삭제
-    url(r'^delete_background_img_info/$', views.DeleteBackgroundImgInfoViewAjax.as_view(),
+    url(r'^delete_background_img_info/$', views.delete_background_img_info_logic,
         name='delete_background_img_info'),
 
 
@@ -300,7 +298,7 @@ urlpatterns = [
     url(r'^popup_color_select/$', views.PopupColorSelect.as_view(), name='popup_color_select'),
 
     # 프로그램 추가 페이지
-    url(r'^add_program/$', views.AddProgramView.as_view(), name='add_program'),
+    url(r'^add_program/$', views.add_program_logic, name='add_program'),
     # url(r'^refresh_all_data/$', views.refresh_all_data_logic, name='refresh_all_data')
 
 

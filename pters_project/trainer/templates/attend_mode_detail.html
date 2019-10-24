@@ -401,6 +401,7 @@
                 //통신성공시 처리
                 success:function(data){
                     var jsondata = JSON.parse(data);
+                    check_app_version(jsondata.app_version);
                     if(jsondata.messageArray.length>0){
                         $('#errorMessageBar').show();
                         $('#errorMessageText').text(jsondata.messageArray);

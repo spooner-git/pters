@@ -289,6 +289,7 @@ class Notice_func{
     
             //통신성공시 처리
             success:function(data){
+                check_app_version(data.app_version);
                 // let data = JSON.parse(received_data);
                 if(callback != undefined){
                     callback(data);
@@ -322,6 +323,7 @@ class Notice_func{
 
             //통신성공시 처리
             success:function(data){
+                check_app_version(data.app_version);
                 // let data = JSON.parse(received_data);
                 if(callback != undefined){
                     callback(data);
@@ -356,6 +358,7 @@ class Notice_func{
 
             //통신성공시 처리
             success:function(data){
+                check_app_version(data.app_version);
                 // let data = JSON.parse(received_data);
                 if(callback != undefined){
                     callback(data);

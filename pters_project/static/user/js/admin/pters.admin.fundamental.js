@@ -531,6 +531,7 @@ class PassInspector{
     
             //통신성공시 처리
             success:function (data){
+                check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray[0]);
@@ -687,6 +688,7 @@ class Phone_auth_func{
             //통신성공시 처리
             success:function(data){
                 let jsondata = JSON.parse(data);
+                check_app_version(jsondata.app_version);
                 if(callback != undefined){
                     callback(jsondata);
                 }
@@ -720,6 +722,7 @@ class Phone_auth_func{
             //통신성공시 처리
             success:function(data){
                 let jsondata = JSON.parse(data);
+                check_app_version(jsondata.app_version);
                 
                 if(callback != undefined){
                     callback(jsondata);
@@ -733,6 +736,16 @@ class Phone_auth_func{
     
             }
         });
+    }
+}
+
+
+function check_app_version(app_version){
+    if(app_version != undefined){
+        if(session_app_version != app_version){
+            alert('앱 버전이 업데이트 됐습니다.');
+            location.reload();
+        }
     }
 }
 

@@ -487,6 +487,7 @@
 
                 success:function(data){
                     var jsondata = JSON.parse(data);
+                    check_app_version(jsondata.app_version);
                     if(jsondata.messageArray.length>0){
                         error_check = false;
                         alert(jsondata.messageArray);
@@ -567,6 +568,7 @@
 
                         success:function(data){
                             var jsondata = JSON.parse(data);
+                            check_app_version(jsondata.app_version);
                             if(jsondata.messageArray.length>0){
                                 msg = '결제에 실패했습니다.';
                                 msg += '에러내용 : ' + jsondata.messageArray;
@@ -591,6 +593,7 @@
 
                                     success:function(data){
                                         var jsondata = JSON.parse(data);
+                                        check_app_version(jsondata.app_version);
                                         if(jsondata.messageArray.length>0){
                                             msg = '결제 정보 변경에 실패했습니다.';
                                             msg += '에러내용 : ' + jsondata.messageArray;

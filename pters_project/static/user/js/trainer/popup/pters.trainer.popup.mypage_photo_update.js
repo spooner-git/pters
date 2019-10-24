@@ -164,6 +164,7 @@ class Mypage_photo_update{
 
                                 success:function(data){
                                     let jsondata = JSON.parse(data);
+                                    check_app_version(data.app_version);
                                     if(jsondata.messageArray.length>0){
                                         show_error_message(jsondata.messageArray);
                                         return false;

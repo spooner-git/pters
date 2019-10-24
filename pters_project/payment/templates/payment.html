@@ -581,6 +581,7 @@
 
                 success:function(data){
                     let jsondata = JSON.parse(data);
+                    check_app_version(jsondata.app_version);
 
                     if(jsondata.messageArray.length>0){
                         alert(jsondata.messageArray);
@@ -799,6 +800,7 @@
 
                 success:function(data){
                     var jsondata = JSON.parse(data);
+                    check_app_version(jsondata.app_version);
                     console.log(jsondata);
                     fill_product_detail(jsondata, product_id);
                 },

@@ -285,6 +285,7 @@ class member_search_func {
     
             //통신성공시 처리
             success:function(data){
+                check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray);
@@ -316,6 +317,7 @@ class member_search_func {
 
             success:function(data_){
                 let data = JSON.parse(data_);
+                check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray[0]);
@@ -349,6 +351,7 @@ class member_search_func {
 
             success:function(data_){
                 let data = JSON.parse(data_);
+                check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray[0]);
