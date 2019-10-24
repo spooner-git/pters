@@ -11,15 +11,22 @@
             background-position: center;
         }
         .social_login_box_wrapper{
+            width: 100%;
             display:flex;
             margin-top: 8px;
+            flex-direction: row;
         }
         .social_login_box_wrapper .social_login_box{
+            /* display: flex; */
             flex: 1 1 0;
         }
         @media(max-width:340px){
             .social_login_box_wrapper{
+                display:flex;
                 flex-direction: column;
+            }
+            .social_login_box_wrapper .social_login_box{
+                flex: 1 1 0;
             }
         }
     </style>
@@ -68,7 +75,7 @@
                                 <img src="/static/common/icon/icon_naver_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 네이버로 로그인">
                             </div>
                             <span class="social_login_text">네이버 로그인</span>
-                            <div style="display:table-cell; width:60px; vertical-align: middle; text-align:right; padding-right:8px;">
+                            <div class="social_login_arrow">
                                 <img src="/static/common/icon/icon_arrow_r_small_white.png" style="width: 24px; height: 24px; vertical-align:middle;">
                             </div>
                         </div>
@@ -81,7 +88,7 @@
                                 <img src="/static/common/icon/icon_kakao_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 카카오로 로그인">
                             </div>
                             <span class="social_login_text" style="color:#3a1c1d;">카카오 로그인</span>
-                            <div style="display:table-cell; width:60px; vertical-align: middle; text-align:right; padding-right:8px;">
+                            <div class="social_login_arrow">
                                 <img src="/static/common/icon/icon_arrow_r_small_black.png" style="width: 24px; height: 24px; vertical-align:middle;">
                             </div>
                         </div>
