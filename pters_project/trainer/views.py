@@ -4,6 +4,7 @@ import datetime
 import logging
 import random
 import urllib
+
 from operator import attrgetter
 from urllib.parse import quote
 
@@ -25,6 +26,7 @@ from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
 
 from admin_spooner.functions import func_upload_board_content_image_logic
+from configs import settings
 from configs.views import AccessTestMixin
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
     MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT, SORT_START_DATE, SORT_ASC, SORT_REG_COUNT, \
@@ -92,7 +94,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 # self.url = '/trainer/class_select/'
         else:
             self.url = '/trainer/trainer_main/'
-
+        request.session['APP_VERSION'] = settings.APP_VERSION
         # get_setting_info(request)
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)

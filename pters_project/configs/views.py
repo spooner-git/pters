@@ -12,6 +12,7 @@ from django.shortcuts import render, redirect
 from django.utils.datastructures import MultiValueDictKeyError
 from django.views.generic import TemplateView, RedirectView
 
+from configs import settings
 from configs.const import USE
 from board.models import QATb
 from configs.functions import func_delete_profile_image_logic, func_upload_profile_image_logic
@@ -26,6 +27,7 @@ logger = logging.getLogger(__name__)
 def index(request):
     # login 완료시 main page 이동
     template_name = 'index.html'
+    request.session['APP_VERSION'] = settings.APP_VERSION
 
     if request.user.is_authenticated():
         next_page = '/check/'
@@ -94,6 +96,9 @@ class AccessTestMixin(UserPassesTestMixin):
         url = None
 
         group_name = self.request.session.get('group_name', '')
+        session_app_version = self.request.session.get('APP_VERSION', '')
+        if session_app_version == '' or session_app_version is None:
+            self.request.session['APP_VERSION'] = settings.APP_VERSION
 
         if error is None:
             if group_name == '':
@@ -125,6 +130,9 @@ class AccessTestMixin(UserPassesTestMixin):
             if url[1] == 'admin_spooner':
                 if group_name == 'admin':
                     test_result = True
+
+        if session_app_version != settings.APP_VERSION:
+            test_result = False
         return test_result
 
 
