@@ -1681,6 +1681,34 @@ class ResetActivateConfirmView(View):
         return render(request, self.template_name)
 
 
+def password_change_logic(request):
+    old_password = request.POST.get('old_password', '')
+    new_password1 = request.POST.get('new_password1', '')
+    new_password2 = request.POST.get('new_password2', '')
+
+    error = None
+
+    if not request.user.check_password(old_password):
+        error = '기존 비밀번호가 일치하지 않습니다.'
+
+    if str(new_password1) != str(new_password2):
+        error = '새로운 비밀번호가 일치하지 않습니다.'
+
+    if error is None:
+        form = MyPasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+        else:
+            for field in form:
+                for err in field.errors:
+                    messages.error(request, str(field.label)+':'+err)
+
+    if error is not None:
+        messages.error(request, error)
+
+    return render(request, 'ajax/registration_error_ajax.html')
+
 
 def func_send_sms_reset_password(phone, contents):
     error = None

@@ -509,7 +509,8 @@ def delete_trainee_schedule_logic(request):
 
     if error is None:
         try:
-            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id, member_ticket_tb__auth_cd=AUTH_TYPE_VIEW)
+            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id,
+                                                   member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW)
         except ObjectDoesNotExist:
             error = '스케쥴 정보를 불러오지 못했습니다.'
 

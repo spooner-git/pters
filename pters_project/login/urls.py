@@ -106,6 +106,8 @@ urlpatterns = [
     url(r'^reset_activate/$', views.ResetActivateView.as_view(), name='reset_activate'),
     url(r'^reset_activate_confirm/$', views.ResetActivateConfirmView.as_view(), name='reset_activate_confirm'),
 
+    url(r'^password_change/$', views.password_change_logic, name='password_change'),
+
     url(r'^password/change/$',
         views.password_change,
         {'post_change_redirect': 'login:auth_password_change_done'},

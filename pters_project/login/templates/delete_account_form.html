@@ -36,7 +36,7 @@
 	$('button.submit_change_pw').click(function(){
 		$form = $('#submit_input form')
 		$.ajax({
-              url:'/login/password/change/',
+              url:'/login/password_change/',
               type:'POST',
               data:$form.serialize(),
               dataType : 'html',
@@ -52,9 +52,9 @@
 
               //통신성공시 처리
               success:function(data){
-              		console.log(data)
-                  	alert('비밀번호가 성공적으로 변경 되었습니다.')
-                  	goBack()
+              		console.log(data);
+                  	alert('비밀번호가 성공적으로 변경 되었습니다.');
+                  	goBack();
                   //$('#errorMsg_info p').text(messageArray)
               },
 

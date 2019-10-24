@@ -196,9 +196,11 @@ class Password_modify{
                     show_error_message('새로운 비밀번호와 새로운 비밀번호 확인이 맞지 않습니다.');
                     return false;
                 }
-                if(self.data.new == self.data.old){
-                    show_error_message('새로운 비밀번호는 기존 비밀번호와 같을 수 없습니다.');
-                    return false;
+                if(self.data.new != null && self.data.old != null){
+                    if(self.data.new == self.data.old){
+                        show_error_message('새로운 비밀번호는 기존 비밀번호와 같을 수 없습니다.');
+                        return false;
+                    }
                 }
             }
             
@@ -238,7 +240,7 @@ class Password_modify{
 class Password_modify_func{
     static update(data, callback){
         $.ajax({
-            url:'/login/password/change/',
+            url:'/login/password_change/',
             type:'POST',
             data: data,
             dataType : 'HTML',
