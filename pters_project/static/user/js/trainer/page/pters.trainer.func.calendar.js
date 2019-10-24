@@ -1640,6 +1640,7 @@ class Plan_func{
                 ajax_load_image(SHOW);
             },
             success:function (data){
+                check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray);
@@ -1675,6 +1676,7 @@ class Plan_func{
                 ajax_load_image(SHOW);
             },
             success:function (data){
+                check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray);
@@ -1845,6 +1847,7 @@ class Plan_func{
                 ajax_load_image(SHOW);
             },
             success:function (data){
+                check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray);

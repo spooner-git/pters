@@ -1027,7 +1027,7 @@ class Plan_func{
             url:'/trainer/get_member_info/',
             type:'GET',
             data: data,
-            dataType : 'html',
+            dataType : 'JSON',
     
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1042,8 +1042,9 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
-                let json = JSON.parse(data);
-                callback(json);
+                check_app_version(data.app_version);
+                // let json = JSON.parse(data);
+                callback(data);
             },
     
             //통신 실패시 처리

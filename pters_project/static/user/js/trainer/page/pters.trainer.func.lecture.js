@@ -385,7 +385,7 @@ class Lecture_func{
             url:'/trainer/get_lecture_info/',
             type:'GET',
             data: data,
-            dataType : 'html',
+            dataType : 'JSON',
     
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -399,8 +399,9 @@ class Lecture_func{
             },
     
             //통신성공시 처리
-            success:function(data_){
-                let data = JSON.parse(data_);
+            success:function(data){
+                check_app_version(data.app_version);
+                // let data = JSON.parse(data_);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray[0]);
@@ -553,7 +554,7 @@ class Lecture_func{
             url:'/trainer/get_lecture_ing_member_list/',
             type:'GET',
             data: data,
-            dataType : 'html',
+            dataType : 'JSON',
     
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -567,8 +568,9 @@ class Lecture_func{
             },
     
             //통신성공시 처리
-            success:function(data_){
-                let data = JSON.parse(data_);
+            success:function(data){
+                check_app_version(data.app_version);
+                // let data = JSON.parse(data_);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray[0]);
