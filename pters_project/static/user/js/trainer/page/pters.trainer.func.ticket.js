@@ -145,7 +145,7 @@ class Ticket{
                             <div class="ticket_data_u">
                                 <div class="ticket_name">
                                     ${ticket_name}
-                                    <div class="ticket_member_number">
+                                    <div class="ticket_member_number" ${this.list_status_type == "ing" ? "" : 'hidden'}>
                                         ${this.list_status_type == "ing" ? ticket_member_number : ticket_end_member_number}명
                                     </div>
                                 </div>
