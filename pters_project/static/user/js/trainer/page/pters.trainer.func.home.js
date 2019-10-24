@@ -28,9 +28,9 @@ class Home {
     }
 
     init (){
-        // if(current_page != this.page_name){
-        //     return false;
-        // }
+        if(current_page_text != this.page_name){
+            return false;
+        }
 
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
@@ -43,6 +43,9 @@ class Home {
     //상단을 렌더링
     render_upper_box (){
         Mypage_func.read((data)=>{
+            if(current_page_text != this.page_name){
+                return false;
+            }
             this.data.user_id = data.trainer_info.member_id;
             this.data.user_name = data.trainer_info.member_name;
             this.data.user_photo = data.trainer_info.member_profile_url;
@@ -81,6 +84,9 @@ class Home {
                     end_alert_dom = '<div class="contents">' + end_alert + '</div>';
 
                     Statistics_func.read("sales", {"start_date":this.today, "end_date":this.today}, (data)=>{
+                        if(current_page_text != this.page_name){
+                            return false;
+                        }
                         let sales_summary = this.dom_row_sales_this_month(data);
                         sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
                         

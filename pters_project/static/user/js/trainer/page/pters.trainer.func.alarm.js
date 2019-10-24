@@ -9,9 +9,9 @@ class Alarm {
     }
 
     init (){
-        // if(current_page != this.page_name){
-        //     return false;
-        // }
+        if(current_page_text != this.page_name){
+            return false;
+        }
 
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
@@ -30,9 +30,9 @@ class Alarm {
 
     //상단을 렌더링
     render_upper_box (){
-        // if(current_page != this.page_name){
-        //     return false;
-        // }
+        if(current_page_text != this.page_name){
+            return false;
+        }
 
         this.search = false;
         let component = this.static_component();
@@ -41,9 +41,9 @@ class Alarm {
 
     //회원 리스트를 렌더링
     render_list (data){
-        // if(current_page != this.page_name){
-        //     return false;
-        // }
+        if(current_page_text != this.page_name){
+            return false;
+        }
 
         let page_data = data.slice(this.paging*40, (this.paging*40)+40);
         let node = document.createElement("div");

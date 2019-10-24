@@ -47,7 +47,7 @@ class Calendar {
         };
 
         let interval = setInterval(()=>{
-            if(this.page_name == current_page){
+            if(this.page_name == current_page_text){
                 this.relocate_current_time_indicator();
             }else{
                 clearInterval(interval);
@@ -105,9 +105,9 @@ class Calendar {
 
     //달력에 필요한 최상위 컨테이너가 이미 있는 상태에서 컨테이너 내용(달력)을 재초기화 할때 사용한다.
     init(cal_type){
-        // if(current_page != this.page_name){
-        //     return false;
-        // }
+        if(current_page_text != this.page_name){
+            return false;
+        }
         if(cal_type == undefined){
             cal_type = this.cal_type;
         }
@@ -570,9 +570,9 @@ class Calendar {
     }
 
     render_upper_box (type){
-        // if(current_page != this.page_name){
-        //     return false;
-        // }
+        if(current_page_text != this.page_name){
+            return false;
+        }
 
         let component = this.static_component();
         switch(type){
@@ -586,9 +586,9 @@ class Calendar {
     }
     
     render_month_cal (page, year, month, schedule_data){ //월간 달력 렌더링 (연, 월)
-        // if(current_page != this.page_name){
-        //     return false;
-        // }
+        if(current_page_text != this.page_name){
+            return false;
+        }
 
         if(schedule_data == undefined){
             schedule_data = false;
@@ -614,9 +614,9 @@ class Calendar {
     }
 
     render_week_cal (page, year, month, week, schedule_data){ //주간 달력 렌더링 (연, 월, 몇번째 주)
-        // if(current_page != this.page_name){
-        //     return false;
-        // }
+        if(current_page_text != this.page_name){
+            return false;
+        }
         let data = this.draw_week_line(year, month, week, schedule_data, "week");
         
 
