@@ -3383,23 +3383,24 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_lecture_end_font_color_cd_list': []}
 
         ticket_list = []
-        class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
-            'member_ticket_tb__ticket_tb',
-            'member_ticket_tb__member').filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
-                                               member_ticket_tb__ticket_tb__state_cd=STATE_CD_FINISH,
-                                               member_ticket_tb__ticket_tb__use=USE,
-                                               member_ticket_tb__use=USE,
-                                               use=USE).order_by('member_ticket_tb__ticket_tb',
-                                                                 'member_ticket_tb__member')
+        # class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
+        #     'member_ticket_tb__ticket_tb',
+        #     'member_ticket_tb__member').filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+        #                                        member_ticket_tb__ticket_tb__state_cd=STATE_CD_FINISH,
+        #                                        member_ticket_tb__ticket_tb__use=USE,
+        #                                        member_ticket_tb__use=USE,
+        #                                        use=USE).order_by('member_ticket_tb__ticket_tb',
+        #                                                          'member_ticket_tb__member')
 
         for ticket_info in ticket_data_dict:
-            member_list = {}
-            for class_member_ticket_info in class_member_ticket_list:
-                ticket_id = class_member_ticket_info.member_ticket_tb.ticket_tb_id
-                if ticket_id == ticket_info:
-                    member_id = class_member_ticket_info.member_ticket_tb.member_id
-                    member_list[member_id] = member_id
-            ticket_data_dict[ticket_info]['ticket_end_member_num'] = len(member_list)
+            # member_list = {}
+            # for class_member_ticket_info in class_member_ticket_list:
+            #     ticket_id = class_member_ticket_info.member_ticket_tb.ticket_tb_id
+            #     if ticket_id == ticket_info:
+            #         member_id = class_member_ticket_info.member_ticket_tb.member_id
+            #         member_list[member_id] = member_id
+            # ticket_data_dict[ticket_info]['ticket_end_member_num'] = len(member_list)
+            ticket_data_dict[ticket_info]['ticket_end_member_num'] = 0
             ticket_list.append(ticket_data_dict[ticket_info])
 
         if error is not None:
