@@ -295,7 +295,7 @@ body{
     color:#b8b4b4;
 }
 .contract{
-    width: 308px;
+    /* width: 308px; */
     height: 24px;
     padding-top:12px;
     padding-bottom:12px;
