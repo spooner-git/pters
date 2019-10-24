@@ -3,6 +3,26 @@
 
 {% block local_css %}
     <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
+    <style>
+        .login_content{
+            background-image: url('/static/common/img/tutorial/pters_tutorial_1.png');
+            background-size: 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .social_login_box_wrapper{
+            display:flex;
+            margin-top: 8px;
+        }
+        .social_login_box_wrapper .social_login_box{
+            flex: 1 1 0;
+        }
+        @media(max-width:340px){
+            .social_login_box_wrapper{
+                flex-direction: column;
+            }
+        }
+    </style>
 {% endblock %}
 {% block content %}
     <div id="root_content" style="background-color: #ffffff">
@@ -22,28 +42,53 @@
                     <input type="hidden" name="auto_login_check" value="1">
                     <input type="hidden" name="next_page" value = '{% url 'index' %}'>
                     {% csrf_token %}
-                    <!-- 네이버 로그인 버튼 노출 영역 -->
-                    <div class="social_login_box" onclick="location.href=naverLogin.generateAuthorizeUrl();" style="background-color: #0dd25a;">
-                        <div class="social_login_img">
-                            <img src="/static/common/icon/icon_naver_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 네이버로 로그인">
+
+                    <!-- PTERS 로그인 입력 영역 -->
+                    <div>
+                        <input class="pters_login_input" type="text" name="username" id="username_id" placeholder="아이디" autofocus>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <input class="pters_login_input" type="password" name="password" id="password_id" placeholder="비밀번호" onkeyup="enter_key();">
+                    </div>
+                    <!-- PTERS 로그인 버튼 노출 영역 -->
+                    <div class="social_login_box" onclick="document.getElementById('login-form').submit();" style="background-color: #fe4e65; margin-top:12px;">
+                        <div class="social_login_img" style="display:none;"></div>
+                        <span class="social_login_text" style="color:#ffffff; text-align:center;">로그인</span>
+                        <div style="display:table-cell; width:60px;display:none;"></div>
+                    </div>
+
+                    <div style="width:100%;height:2px;background-color:#f5f2f3;margin-top:15px;margin-bottom:15px;">
+
+                    </div>
+
+                    <div class="social_login_box_wrapper">
+                        <!-- 네이버 로그인 버튼 노출 영역 -->
+                        <div class="social_login_box" onclick="location.href=naverLogin.generateAuthorizeUrl();" style="background-color: #0dd25a;">
+                            <div class="social_login_img">
+                                <img src="/static/common/icon/icon_naver_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 네이버로 로그인">
+                            </div>
+                            <span class="social_login_text">네이버 로그인</span>
+                            <div style="display:table-cell; width:60px; vertical-align: middle; text-align:right; padding-right:8px;">
+                                <img src="/static/common/icon/icon_arrow_r_small_white.png" style="width: 24px; height: 24px; vertical-align:middle;">
+                            </div>
                         </div>
-                        <span class="social_login_text">네이버 로그인</span>
-                        <div style="display:table-cell; width:60px; vertical-align: middle; text-align:right; padding-right:8px;">
-                            <img src="/static/common/icon/icon_arrow_r_small_white.png" style="width: 24px; height: 24px; vertical-align:middle;">
+
+                        <div style="flex-basis:8px;"></div>
+
+                        <!-- 카카오톡 로그인 버튼 노출 영역 -->
+                        <div class="social_login_box" id="custom-login-btn" onclick="loginWithKakao();" style="background-color: #ffeb00;">
+                            <div class="social_login_img">
+                                <img src="/static/common/icon/icon_kakao_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 카카오로 로그인">
+                            </div>
+                            <span class="social_login_text" style="color:#3a1c1d;">카카오 로그인</span>
+                            <div style="display:table-cell; width:60px; vertical-align: middle; text-align:right; padding-right:8px;">
+                                <img src="/static/common/icon/icon_arrow_r_small_black.png" style="width: 24px; height: 24px; vertical-align:middle;">
+                            </div>
                         </div>
                     </div>
-                    <!-- 카카오톡 로그인 버튼 노출 영역 -->
-                    <div class="social_login_box" id="custom-login-btn" onclick="loginWithKakao();" style="background-color: #ffeb00; margin-top:8px;">
-                        <div class="social_login_img">
-                            <img src="/static/common/icon/icon_kakao_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 카카오로 로그인">
-                        </div>
-                        <span class="social_login_text" style="color:#3a1c1d;">카카오톡 로그인</span>
-                        <div style="display:table-cell; width:60px; vertical-align: middle; text-align:right; padding-right:8px;">
-                            <img src="/static/common/icon/icon_arrow_r_small_black.png" style="width: 24px; height: 24px; vertical-align:middle;">
-                        </div>
-                    </div>
+
                     <!-- 일반 로그인 버튼 노출 영역 -->
-                    <div class="social_login_box" id="custom-login-btn" onclick="location.href='{% url 'login:index' %}';" style="background-color: #ffffff; margin-top:8px;  border:1px solid #ebe6e6;">
+                    <!-- <div class="social_login_box" id="custom-login-btn" onclick="location.href='{% url 'login:index' %}';" style="background-color: #ffffff; margin-top:8px;  border:1px solid #ebe6e6;">
                         <div class="social_login_img">
                             <img src="/static/common/icon/icon_pters_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 로그인">
                         </div>
@@ -51,7 +96,8 @@
                         <div style="display:table-cell; width:60px; vertical-align: middle; text-align:right; padding-right:8px;">
                             <img src="/static/common/icon/icon_arrow_r_small_light_grey.png" style="width: 24px; height: 24px; vertical-align:middle;">
                         </div>
-                    </div>
+                    </div> -->
+
                     <!-- 구글아이디로그인 버튼 노출 영역 -->
                     <!--<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" style="width:179px;margin-bottom:8px;"></div>-->
                     <!-- 페이스북아이디로그인 버튼 노출 영역 -->
@@ -60,7 +106,7 @@
                     </fb:login-button> -->
                     <!--<div style="width:320px; height: 1px;background:#f5f2f3;margin-top: 16px; margin-bottom: 8px; opacity: 0.3"></div>-->
                     <!-- 회원가입, 일반 로그인 버튼 노출 영역역 -->
-                    <div class="general_text" style="display:table; width:100%; height: 48px; margin-top:24px; margin-bottom:20px; color:#858282">
+                    <div class="general_text" style="display:table; width:100%; height: 48px; margin-top:24px;color:#858282">
                         계정이 필요하지 않으십니까? &nbsp;&nbsp;&nbsp;<span onclick="location.href='{% url 'login:check_registration' %}'" style="color:#fe4e65;font-weight:bold;text-decoration: underline;">회원가입</span>
                     </div>
                 </form>

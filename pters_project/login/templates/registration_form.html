@@ -7,7 +7,7 @@
     <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
     <style type="text/css">
         #root_content{
-            overflow-y:hidden;
+            /* overflow-y:hidden; */
         }
         .contract{
             width: calc(100% - 8px);
@@ -41,7 +41,7 @@
             </div>
 
             <!-- 입력 영역 -->
-            <div class="registration_content" style="min-height: calc(100% - 190px);">
+            <div class="registration_content" style="height: auto">
                 <form action="{% url "login:add_member_info" %}" id="id_add_member_form" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="next_page" id="id_next_page" value="{% url 'index' %}">
@@ -148,9 +148,9 @@
             <!-- 가입 완료 버튼 영역 -->
             <div class="registration_foot" style="margin-top:40px; transform: initial; padding-bottom:0px;">
                 <div class="social_login_box" onclick="registration_member_info(document.getElementById('id_add_member_form'));" style="width:100%; background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
-                    <div class="social_login_img"></div>
+                    <div class="social_login_img" style="display:none;"></div>
                     <span class="social_login_text" style="color:#ffffff; text-align: center;">가입 완료</span>
-                    <div style="display:table-cell; width:60px;"></div>
+                    <div style="display:none; width:60px;"></div>
                 </div>
             </div>
         </div>
