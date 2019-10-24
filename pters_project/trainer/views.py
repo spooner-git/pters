@@ -1337,7 +1337,6 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, View):
                                         'read_check': alarm_info.log_read,
                                         'reg_dt': alarm_info.reg_dt})
                 ordered_alarm_dict[alarm_date] = date_alarm_list
-
         return JsonResponse(ordered_alarm_dict, json_dumps_params={'ensure_ascii': True})
 
 

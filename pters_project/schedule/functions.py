@@ -269,7 +269,7 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                                            max_mem_count=max_mem_count,
                                            ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                            ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
-                                           alarm_dt=start_datetime-datetime.timedelta(minutes=5),
+                                           # alarm_dt=start_datetime-datetime.timedelta(minutes=5),
                                            reg_member_id=user_id)
             add_schedule_info.save()
             if member_ticket_id is not None:
