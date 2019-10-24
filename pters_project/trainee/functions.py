@@ -453,7 +453,7 @@ def func_get_trainee_next_schedule_by_class_id(context, class_id, user_id):
 
     now = timezone.now()
     next_schedule_info = ''
-    next_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
+    next_schedule_data = ScheduleTb.objects.filter(class_tb=class_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                                                    member_ticket_tb__member_id=user_id,
                                                    en_dis_type=ON_SCHEDULE_TYPE,
                                                    start_dt__gte=now,
