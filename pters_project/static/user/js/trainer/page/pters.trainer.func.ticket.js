@@ -238,17 +238,24 @@ class Ticket{
             this.search = false;
             document.getElementsByClassName('search_input')[0].value = this.search_value;
             this.render_search_tool('clear');
-            event.target.src = '/static/common/icon/icon_search_black.png';
+            this.search_value = "";
+            Array.from(document.getElementsByClassName('ticket_wrapper')).forEach((el)=>{
+                $(el).show();
+            });
+            // event.target.src = '/static/common/icon/icon_search_black.png';
+            event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
             break;
         case false:
             this.search = true;
             this.render_search_tool('draw');
             document.getElementsByClassName('search_input')[0].value = this.search_value;
             
-            event.target.src = '/static/common/icon/icon_x_black.png';
+            // event.target.src = '/static/common/icon/icon_x_black.png';
+            event.target.style.backgroundImage = 'url("/static/common/icon/icon_x_black.png")';
             break;
         }
     }
+
 
     search_by_typing (event){
         let value = event.target.value;
@@ -256,10 +263,12 @@ class Ticket{
         Array.from(document.getElementsByClassName('ticket_wrapper')).forEach((el)=>{
             let name = el.dataset.text;
             if(name.match(value)){
-                el.style.display = 'block';
+                // el.style.display = 'block';
+                $(el).show();
                 // $("#root_content").scrollTop(1);
             }else{
-                el.style.display = 'none';
+                $(el).hide();
+                // el.style.display = 'none';
             }
         });
     }

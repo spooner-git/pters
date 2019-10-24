@@ -245,6 +245,10 @@ class Member {
             this.search = false;
             document.getElementsByClassName('search_input')[0].value = this.search_value;
             this.render_search_tool('clear');
+            this.search_value = "";
+            Array.from(document.getElementsByClassName('member_wrapper')).forEach((el)=>{
+                $(el).show();
+            });
             event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
             break;
         case false:
@@ -263,10 +267,12 @@ class Member {
         Array.from(document.getElementsByClassName('member_wrapper')).forEach((el)=>{
             let name = el.dataset.name;
             if(name.match(value)){
-                el.style.display = 'block';
+                // el.style.display = 'block';
+                $(el).show();
                 // $("#root_content").scrollTop(1);
             }else{
-                el.style.display = 'none';
+                $(el).hide();
+                // el.style.display = 'none';
             }
         });
     }

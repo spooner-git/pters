@@ -174,7 +174,7 @@ class Ticket_list {
         let html = `<div class="ticket_upper_box">
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">수강권 </span>
-                            <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->
+                            <div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>
                         </div>
                     </div>
                     <div class="ticket_bottom_tools_wrap">
@@ -216,7 +216,12 @@ class Ticket_list {
             this.search = false;
             document.getElementsByClassName('search_input')[0].value = this.search_value;
             this.render_search_tool('clear');
+            this.search_value = "";
+            Array.from(document.getElementsByClassName('ticket_wrapper')).forEach((el)=>{
+                $(el).show();
+            });
             event.target.src = '/static/common/icon/icon_search_black.png';
+            // event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
             break;
         case false:
             this.search = true;
@@ -224,6 +229,7 @@ class Ticket_list {
             document.getElementsByClassName('search_input')[0].value = this.search_value;
             
             event.target.src = '/static/common/icon/icon_x_black.png';
+            // event.target.style.backgroundImage = 'url("/static/common/icon/icon_x_black.png")';
             break;
         }
     }
