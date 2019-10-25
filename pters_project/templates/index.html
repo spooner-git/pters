@@ -268,7 +268,7 @@
     // <!-- 네이버아디디로로그인 초기화 Script -->
     var naverLogin = new naver.LoginWithNaverId(
         {
-            clientId: "h5MuvYzSFLlrFTs19g0V",
+            clientId: "{{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_ID }}",
             callbackUrl: "{{ request.session.domain }}/login/login_simple_naver/",
             //callbackUrl: "https://www.pters.co.kr/login/login_simple_naver/",
             //clientId: "VM6zl0mLyBgjf9dgw1cC",
