@@ -206,6 +206,9 @@ class Program_view{
         };
 
         Program_func.update(data, ()=>{
+            try{
+                current_page.init();
+            }catch(e){};
             program_list_popup.init();
             this.clear();
             layer_popup.close_layer_popup();
