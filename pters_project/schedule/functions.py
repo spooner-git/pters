@@ -549,15 +549,15 @@ def func_send_push_trainer(member_ticket_id, title, message):
                 badge_counter = token_info.badge_counter
                 check_async = False
                 if DEBUG is False:
-                    check_async = True
-                    # from configs.celery import CELERY_WORKING
-                    # try:
-                    #     if CELERY_WORKING:
-                    #         check_async = True
-                    #     else:
-                    #         check_async = False
-                    # except OperationalError:
-                    #     check_async = False
+                    # check_async = True
+                    from configs.celery import CELERY_WORKING
+                    try:
+                        if CELERY_WORKING:
+                            check_async = True
+                        else:
+                            check_async = False
+                    except OperationalError:
+                        check_async = False
                 if check_async:
                     error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
                 else:
@@ -584,15 +584,15 @@ def func_send_push_trainee(class_id, title, message):
                 badge_counter = token_info.badge_counter
                 check_async = False
                 if DEBUG is False:
-                    check_async = True
-                    # from configs.celery import CELERY_WORKING
-                    # try:
-                    #     if CELERY_WORKING:
-                    #         check_async = True
-                    #     else:
-                    #         check_async = False
-                    # except OperationalError:
-                    #     check_async = False
+                    # check_async = True
+                    from configs.celery import CELERY_WORKING
+                    try:
+                        if CELERY_WORKING:
+                            check_async = True
+                        else:
+                            check_async = False
+                    except OperationalError:
+                        check_async = False
 
                 if check_async:
                     error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
