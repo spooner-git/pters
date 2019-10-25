@@ -1031,7 +1031,7 @@ class Calendar {
                             
 
                             return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active} ${go_behind}" 
-                                        style="${styles}" ontouchstart="${this.instance}.longtouchstart(event, ()=>{})" ontouchend="${this.instance}.longtouchend(event)">
+                                        style="${styles}" ontouchstart="${this.instance}.longtouchstart(this, ()=>{})" ontouchend="${this.instance}.longtouchend(event)">
                                         ${plan_name}
                                     </div>`;
                         })
@@ -1219,11 +1219,11 @@ class Calendar {
         });
     }
 
-    longtouchstart(event, callback){
+    longtouchstart(this_, callback){
         if(this.long_touch == OFF){
             this.touch_sense = setInterval(()=>{this.touch_timer+= 100;
                                         if(this.touch_timer >= 900){
-                                            this.mode_to_plan_change(ON, event);
+                                            this.mode_to_plan_change(ON, this_);
                                             if(callback != undefined){
                                                 callback();
                                             }
@@ -1246,17 +1246,23 @@ class Calendar {
         this.touch_timer = 0;
     }
 
-    mode_to_plan_change(switching, event){
+    mode_to_plan_change(switching, this_){
         switch(switching){
             case ON:
                 this.long_touch = ON;
-                this.long_touch_target = event;
-                this.long_touch_schedule_id = event.target.dataset.scheduleid;
+                // this.long_touch_target = event;
+                // this.long_touch_schedule_id = event.target.dataset.scheduleid;
+                this.long_touch_target = $(this_);
+                this.long_touch_schedule_id = this.long_touch_target.attr("data-scheduleid");
                 $('#debug_toolbar').show().html(`<span style="margin-left:10px;line-height:60px;font-size:14px;">일정 변경을 위해 원하는 곳을 터치해주세요.</span>
                                                 <button style="float:right;width:70px;height:40px;margin:10px;border-radius:4px;background-color:#ffffff;border:1px solid #cccccc;" onclick="calendar.mode_to_plan_change(OFF)">취소</button>`)
                                           .css({"height":"60px", "line-height":"60px;"});
                 this.render_upper_box(this.cal_type);
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
+                if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
+                    this.week_zoomed.activate = false;
+                    this.zoom_week_cal();
+                }
                 if(this.week_zoomed.vertical.activate == true){
                     this.week_zoomed.vertical.activate = false;
                     this.zoom_week_cal_vertical();
@@ -1269,6 +1275,10 @@ class Calendar {
                 this.long_touch_schedule_id = null;
                 this.render_upper_box(this.cal_type);
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
+                if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
+                    this.week_zoomed.activate = false;
+                    this.zoom_week_cal();
+                }
                 if(this.week_zoomed.vertical.activate == true){
                     this.week_zoomed.vertical.activate = false;
                     this.zoom_week_cal_vertical();
