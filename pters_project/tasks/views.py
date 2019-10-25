@@ -173,6 +173,7 @@ def update_finish_schedule_data_logic(request):
                     finish_lecture_member_schedule_count = ScheduleTb.objects.filter(
                         lecture_schedule_id=not_finish_schedule_info.schedule_id,
                         use=USE).exclude(state_cd=STATE_CD_NOT_PROGRESS).count()
+
             if finish_lecture_member_schedule_count == 0:
                 delete_schedule_info = DeleteScheduleTb(
                     schedule_id=not_finish_schedule_info.schedule_id, class_tb_id=not_finish_schedule_info.class_tb_id,

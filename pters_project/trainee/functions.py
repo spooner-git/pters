@@ -735,9 +735,9 @@ def func_check_select_date_reserve_setting(class_id, trainer_id, select_date):
         reserve_avail_time_split = reserve_avail_time.split('-')
         reserve_avail_start_time_temp = reserve_avail_time_split[0]
         reserve_avail_end_time_temp = reserve_avail_time_split[1]
-        if reserve_avail_start_time_temp == '24:00':
+        if reserve_avail_start_time_temp == '24:00' or reserve_avail_start_time_temp == '24:0':
             reserve_avail_start_time_temp = '23:59'
-        if reserve_avail_end_time_temp == '24:00':
+        if reserve_avail_end_time_temp == '24:00' or reserve_avail_start_time_temp == '24:0':
             reserve_avail_end_time_temp = '23:59'
 
         reserve_avail_start_time = datetime.datetime.strptime(reserve_avail_start_time_temp, '%H:%M')
@@ -847,9 +847,9 @@ def func_check_select_time_reserve_setting(class_id, trainer_id, start_date, end
         # 선택한 일자의 강사 업무 시간 확인
         start_time_temp = lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[0]
         end_time_temp = lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[1]
-        if start_time_temp == '24:00':
+        if start_time_temp == '24:00' or start_time_temp == '24:0':
             start_time_temp = '23:59'
-        if end_time_temp == '24:00':
+        if end_time_temp == '24:00' or end_time_temp == '24:0':
             end_time_temp = '23:59'
 
         work_avail_start_time = datetime.datetime.strptime(start_time_temp, '%H:%M')
