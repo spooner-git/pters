@@ -56,6 +56,8 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
             'class_tb',
             'member_ticket_tb__member').filter(
+            auth_cd=AUTH_TYPE_VIEW,
+            member_ticket_tb__use=USE,
             member_ticket_tb__member_id=request.user.id,
             use=USE).exclude(
             member_ticket_tb__member_auth_cd=AUTH_TYPE_DELETE).order_by('-member_ticket_tb__start_date')
@@ -359,7 +361,7 @@ def add_trainee_schedule_logic(request):
             end_date = start_date + datetime.timedelta(minutes=int(time_duration_temp))
         else:
             try:
-                schedule_info = ScheduleTb.objects.get(schedule_id=lecture_schedule_id)
+                schedule_info = ScheduleTb.objects.get(schedule_id=lecture_schedule_id, use=USE)
             except ObjectDoesNotExist:
                 error = '스케쥴 정보를 불러오지 못했습니다.'
             if error is None:
@@ -380,7 +382,7 @@ def add_trainee_schedule_logic(request):
         # 그룹 Lecture Id 조회
         else:
             try:
-                lecture_schedule_info = ScheduleTb.objects.get(schedule_id=lecture_schedule_id)
+                lecture_schedule_info = ScheduleTb.objects.get(schedule_id=lecture_schedule_id, use=USE)
             except ObjectDoesNotExist:
                 lecture_schedule_info = None
 
@@ -398,7 +400,8 @@ def add_trainee_schedule_logic(request):
                 if error is None:
                     lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_schedule_info.lecture_tb_id,
                                                                       lecture_schedule_id=lecture_schedule_id,
-                                                                      member_ticket_tb__member_id=request.user.id)
+                                                                      member_ticket_tb__member_id=request.user.id,
+                                                                      use=USE)
                     if len(lecture_schedule_data) == 0:
                         member_ticket_result = func_get_lecture_member_ticket_id_from_trainee(
                             class_id, lecture_schedule_info.lecture_tb_id, request.user.id)
@@ -510,7 +513,7 @@ def delete_trainee_schedule_logic(request):
     if error is None:
         try:
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id,
-                                                   member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW)
+                                                   member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, use=USE)
         except ObjectDoesNotExist:
             error = '스케쥴 정보를 불러오지 못했습니다.'
 
@@ -1174,7 +1177,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
         if lecture_schedule_id is not None and lecture_schedule_id != '':
             schedule_duplication = SCHEDULE_DUPLICATION_ENABLE
             try:
-                lecture_schedule_info = ScheduleTb.objects.get(schedule_id=lecture_schedule_id)
+                lecture_schedule_info = ScheduleTb.objects.get(schedule_id=lecture_schedule_id, use=USE)
                 lecture_id = lecture_schedule_info.lecture_tb_id
                 note = lecture_schedule_info.note
             except ObjectDoesNotExist:
@@ -1305,8 +1308,8 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
         # 강사에 해당하는 강좌 정보 불러오기
         member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb'
-        ).filter(class_tb_id=class_id, member_ticket_tb__member_id=user_id,
-                 member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE
+        ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
+                 member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE, use=USE
                  ).order_by('member_ticket_tb__start_date')
     if error is None:
         if len(member_ticket_list) > 0:
@@ -1344,13 +1347,13 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
         member_ticket_finish_count = ScheduleTb.objects.select_related(
             'member_ticket_tb__member', 'lecture_tb'
         ).filter(Q(state_cd=STATE_CD_FINISH), class_tb_id=class_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
-                 en_dis_type=ON_SCHEDULE_TYPE
+                 en_dis_type=ON_SCHEDULE_TYPE, use=USE
                  ).order_by('member_ticket_tb__start_date', 'start_dt').count()
 
         member_ticket_absence_count = ScheduleTb.objects.select_related(
             'member_ticket_tb__member', 'lecture_tb'
         ).filter(Q(state_cd=STATE_CD_ABSENCE), class_tb_id=class_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
-                 en_dis_type=ON_SCHEDULE_TYPE
+                 en_dis_type=ON_SCHEDULE_TYPE, use=USE
                  ).order_by('member_ticket_tb__start_date', 'start_dt').count()
 
     if error is not None:
@@ -1438,7 +1441,7 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
                 query_ticket_data |= Q(member_ticket_tb__ticket_tb_id=ticket_lecture_info.ticket_tb_id)
 
             class_member_ticket_data = ClassMemberTicketTb.objects.select_related('member_ticket_tb__member').filter(
-                query_ticket_data, member_ticket_tb__member_id=self.request.user.id,
+                query_ticket_data, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=self.request.user.id,
                 member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS, use=USE)
             # member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
 
@@ -1506,7 +1509,7 @@ class PopupLectureTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVi
         schedule_list = None
 
         class_list = ClassMemberTicketTb.objects.select_related(
-            'class_tb__member').filter(member_ticket_tb_id=member_ticket_id,
+            'class_tb__member').filter(member_ticket_tb_id=member_ticket_id, auth_cd=AUTH_TYPE_VIEW,
                                        member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, use=USE)
 
         for class_info in class_list:
@@ -1529,7 +1532,7 @@ class PopupLectureTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVi
         if error is None:
 
             member_ticket_abs_count = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_id,
-                                                                state_cd=STATE_CD_ABSENCE).count()
+                                                                state_cd=STATE_CD_ABSENCE, use=USE).count()
             member_ticket_info.member_ticket_abs_count = member_ticket_abs_count
         if error is None:
             query_status = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `SCHEDULE_TB`.`STATE_CD`"
@@ -1568,7 +1571,8 @@ class PopupTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             'class_tb__member',
             'member_ticket_tb__ticket_tb',
             'member_ticket_tb__member'
-        ).filter(member_ticket_tb__ticket_tb__ticket_id=ticket_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
+        ).filter(auth_cd=AUTH_TYPE_VIEW,
+                 member_ticket_tb__ticket_tb__ticket_id=ticket_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                  member_ticket_tb__member_id=self.request.user.id,
                  use=USE).order_by('-member_ticket_tb__state_cd', '-member_ticket_tb__start_date',
                                    '-member_ticket_tb__reg_dt')

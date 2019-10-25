@@ -1536,9 +1536,9 @@ def export_excel_member_info_logic(request):
                 except ObjectDoesNotExist:
                     error = '수강정보를 불러오지 못했습니다.'
                 try:
-                    member_ticket_test = MemberMemberTicketTb.objects.get(
-                        member_ticket_tb__member_ticket_id=member_ticket_info.member_ticket_id)
-                    member_ticket_info.auth_cd = member_ticket_test.auth_cd
+                    member_ticket_test = MemberTicketTb.objects.get(
+                        member_ticket_id=member_ticket_info.member_ticket_id)
+                    member_ticket_info.auth_cd = member_ticket_test.member_auth_cd
                 except ObjectDoesNotExist:
                     error = '수강정보를 불러오지 못했습니다.'
 

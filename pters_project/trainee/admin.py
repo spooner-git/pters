@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import MemberTicketTb, MemberMemberTicketTb
+from .models import MemberTicketTb
 
 
 @admin.register(MemberTicketTb)
@@ -12,7 +12,7 @@ class MemberTicketTbAdmin(admin.ModelAdmin):
                     'note', 'reg_dt', 'mod_dt', 'use')
 
 
-@admin.register(MemberMemberTicketTb)
-class MemberMemberTicketTbAdmin(admin.ModelAdmin):
-    list_display = ('member_member_ticket_id', 'member', 'member_ticket_tb', 'auth_cd',
-                    'mod_member_id', 'reg_dt', 'mod_dt', 'use')
+# @admin.register(MemberMemberTicketTb)
+# class MemberMemberTicketTbAdmin(admin.ModelAdmin):
+#     list_display = ('member_member_ticket_id', 'member', 'member_ticket_tb', 'auth_cd',
+#                     'mod_member_id', 'reg_dt', 'mod_dt', 'use')
