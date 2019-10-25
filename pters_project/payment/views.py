@@ -127,10 +127,12 @@ def check_before_billing_logic(request):
 
         except ObjectDoesNotExist:
             # 결제가된 이용권이 없는 경우 오늘부터 사용가능한 일자 설정
-            context['next_payment_date'] = str(payment_date)
             context['next_start_date'] = str(start_date)
             context['next_end_date'] = str(func_get_end_date(payment_type_cd, start_date,
                                                              int(period_month), int(payment_date.strftime('%d'))))
+            context['next_payment_date'] = context['next_end_date']
+            start_date = context['next_start_date']
+            end_date = context['next_end_date']
 
     if error is None:
 

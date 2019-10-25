@@ -434,15 +434,15 @@ class Pters_pass_func{
 
     static request_payment(product_name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid){
 
-        if(os == IOS && device == MOBILE && device_info != 'web'){
-            // ios 인앱 결제 호출
-            window.webkit.messageHandlers.payment_method.postMessage("9");
-        }
-        else if(os == ANDROID && device == MOBILE && device_info != 'web') {
-            // 안드로이드 인앱 결제 호출
-            window.android_payment_function.callMethodName("9");
-        }
-        else {
+        // if(os == IOS && device == MOBILE && device_info != 'web'){
+        //     // ios 인앱 결제 호출
+        //     window.webkit.messageHandlers.payment_method.postMessage("9");
+        // }
+        // else if(os == ANDROID && device == MOBILE && device_info != 'web') {
+        //     // 안드로이드 인앱 결제 호출
+        //     window.android_payment_function.callMethodName("9");
+        // }
+        // else {
             var request_pay_data = {
                 pg: 'danal', // version 1.1.0부터 지원.
                 pay_method: pay_method,
@@ -505,7 +505,7 @@ class Pters_pass_func{
                     // location.href = "/payment/";
                 }
             });
-        }
+        // }
     }
 
     // static check_payment_for_update(name, current_customer_uid, product_id, period_month, merchant_uid, customer_uid, callback){
