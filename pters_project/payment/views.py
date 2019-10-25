@@ -131,6 +131,8 @@ def check_before_billing_logic(request):
             context['next_end_date'] = str(func_get_end_date(payment_type_cd, start_date,
                                                              int(period_month), int(payment_date.strftime('%d'))))
             context['next_payment_date'] = context['next_end_date']
+            start_date = context['next_start_date']
+            end_date = context['next_end_date']
 
     if error is None:
 
