@@ -41,7 +41,8 @@ class Pters_pass_main{
                 price:[""],
                 receipt_url:[""],
                 start_date:[""],
-                status:[""]
+                status:[""],
+                paid_date:[""]
             }
         };
 
@@ -227,7 +228,7 @@ class Pters_pass_main{
         let current_start_date = this.data.current.start_date[0].replace(/-/gi, '.');
         let current_end_date = this.data.current.end_date[0].replace(/-/gi, '.');
         let expire_date =  current_start_date + ' - ' + current_end_date;
-        let next_pay_date = this.data.next.start_date[0].replace(/-/gi, '.');
+        let next_pay_date = this.data.next.paid_date[0].replace(/-/gi, '.');
         let pay_type = PAY_TYPE_NAME[this.data.next.payment_type_cd[0]];
         let description = `<p style="font-size:13px;letter-spacing:-0.5px;font-weight:500;margin-bottom:0;">
                                 <span style="color:#b8b4b4;margin-right:8px;">유효 기간</span>
