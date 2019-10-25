@@ -124,13 +124,13 @@ class Member_ticket_refund{
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*320/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
-                let year = this.data.refund_date == null ? this.dates.current_year : this.data.refund_date.split('-')[0]; 
-                let month = this.data.refund_date == null ? this.dates.current_month : this.data.refund_date.split('-')[1]; 
-                let date = this.data.refund_date == null ? this.dates.current_date : this.data.refund_date.split('-')[2]; 
+                let year = this.data.refund_date == null ? this.dates.current_year : Number(this.data.refund_date.split('-')[0]); 
+                let month = this.data.refund_date == null ? this.dates.current_month : Number(this.data.refund_date.split('-')[1]); 
+                let date = this.data.refund_date == null ? this.dates.current_date : Number(this.data.refund_date.split('-')[2]); 
 
-                let year_min = this.data.member_ticket_start_date.split('-')[0];
-                let month_min = this.data.member_ticket_start_date.split('-')[1];
-                let date_min = this.data.member_ticket_start_date.split('-')[2];
+                let year_min = Number(this.data.member_ticket_start_date.split('-')[0]);
+                let month_min = Number(this.data.member_ticket_start_date.split('-')[1]);
+                let date_min = Number(this.data.member_ticket_start_date.split('-')[2]);
                 
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'refund_date', title:'환불 일자', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{ 
                     this.data.refund_date = `${object.data.year}-${object.data.month}-${object.data.date}`;
