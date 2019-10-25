@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+    {% load static_url %}
+    {% block local_css %}
+        <meta name="registertrainer" content="trainer_register">
+        <meta name="google-signin-scope" content="profile email">
+        <meta name="google-signin-client_id" content="751903262384-dbtt6ho5imk5gssgn1rqpe3vs3linq15.apps.googleusercontent.com">
+        <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
+
+    {% endblock %}
+{% block content %}
+
+    <div id="root_content">
+        <div id="registration_box">
+            <!-- 헤더 영역 -->
+            <div class="registration_top" style="border-bottom: 0">
+                <div class="registration_left" onclick="location.href='/'"><img src="/static/common/icon/icon_arrow_l_black.png" style="width:24px; height:24px;"></div>
+                <div class="registration_title">회원 가입</div>
+                <div class="registration_right"></div>
+            </div>
+            <div class="registration_content"></div>
+            <div class="registration_foot">
+                <!-- 네이버 로그인 버튼 노출 영역 -->
+                <div class="social_login_box" onclick="location.href = '/?social_type=naver'" style="background-color: #0dd25a;">
+                    <div class="social_login_img"><img src="/static/common/icon/icon_naver_logo.png" style="width: 24px; height: 24px; vertical-align:middle;"></div>
+                    <span class="social_login_text">네이버로 회원가입</span>
+                    <div  class="social_login_arrow">
+                        <img src="/static/common/icon/icon_arrow_r_small_white.png" style="width: 24px; height: 24px; vertical-align:middle;">
+                    </div>
+                </div>
+                <!-- 카카오톡 로그인 버튼 노출 영역 -->
+                <div class="social_login_box" id="custom-login-btn" onclick="loginWithKakao();" style="background-color: #ffeb00; margin-top:8px;">
+                    <div class="social_login_img"><img src="/static/common/icon/icon_kakao_logo.png" style="width: 24px; height: 24px; vertical-align:middle;"></div>
+                    <span class="social_login_text" style="color:#3a1c1d;">카카오톡으로 회원가입</span>
+                    <div class="social_login_arrow">
+                        <img src="/static/common/icon/icon_arrow_r_small_black.png" style="width: 24px; height: 24px; vertical-align:middle;">
+                    </div>
+                </div>
+                <!-- PTERS 로그인 버튼 노출 영역 -->
+                <div class="social_login_box" onclick="location.href = '{% url "login:registration_register" %}';" style="background-color: #ffffff; margin-top:8px; margin-bottom:20px; border:1px solid #ebe6e6;">
+                    <div class="social_login_img"><img src="/static/common/icon/logo/PTERS_logo_short.png" style="width: 24px; height: 24px; vertical-align:middle;"></div>
+                    <span class="social_login_text" style="color:#3d3b3b;">일반 회원가입</span>
+                    <div class="social_login_arrow">
+                        <img src="/static/common/icon/icon_arrow_r_small_light_grey.png" style="width: 24px; height: 24px; vertical-align:middle;">
+                    </div>
+                </div>
+                <div class="general_text" style="display:table; width:100%; height: 48px; margin-top:24px; margin-bottom:20px; color:#858282">
+                    이미 계정이 있으십니까? &nbsp;&nbsp;&nbsp;<span onclick="location.href='{% url 'index' %}'" style="color:#fe4e65;font-weight:bold;text-decoration: underline;">로그인</span>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block local_js_footer %}
+    <script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script>
+    var kakao_login_test = true;
+
+    window.addEventListener('load', function () {
+        kakao_login_test = true;
+    }
+    );
+    function loginWithKakao() {
+        if(kakao_login_test){
+            Kakao.init('4533bb10ac61e20907cd273f0941210a');
+            kakao_login_test = false;
+        }
+        // 로그인 창을 띄웁니다.
+        Kakao.Auth.login({
+            success: function(authObj) {
+                location.href = '/login/login_simple_kakao/?access_token='+authObj.access_token;
+            },
+            fail: function(err) {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+    </script>
+{% endblock %}

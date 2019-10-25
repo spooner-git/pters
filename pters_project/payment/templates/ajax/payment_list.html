@@ -4,10 +4,14 @@
       [{% for payment_info in payment_data %}"{{ payment_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "merchandise_type_cd" :
       [{% for payment_info in payment_data %}"{{ payment_info.merchandise_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "merchant_uid" :
+      [{% for payment_info in payment_data %}"{{ payment_info.merchant_uid }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "customer_uid" :
+      [{% for payment_info in payment_data %}"{{ payment_info.customer_uid }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "start_date" :
       [{% for payment_info in payment_data %}"{{ payment_info.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "end_date" :
-      [{% for payment_info in payment_data %}"{{ payment_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for payment_info in payment_data %}"{{ payment_info.end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "payment_type_cd" :
       [{% for payment_info in payment_data %}"{{ payment_info.payment_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "price" :

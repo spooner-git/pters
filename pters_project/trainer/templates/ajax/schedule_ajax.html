@@ -1,35 +1,72 @@
-{"offScheduleIdArray":[{% for off_schedule_info in off_schedule_data %}"{{off_schedule_info.schedule_id}}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"offTimeArray_start_date":[{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"offTimeArray_end_date":[{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"offScheduleNoteArray":[{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"scheduleIdArray":[{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"classArray_lecture_id" :[{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.lecture_tb_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"classTimeArray_member_name":[{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.lecture_tb.member.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"classTimeArray_member_id":[{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.lecture_tb.member_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"classTimeArray_start_date":[{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"classTimeArray_end_date":[{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"scheduleFinishArray":[{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.finish_check }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"schedulePermissionStateArray":[{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.permission_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"scheduleNoteArray":[{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"scheduleIdxArray":[{% for pt_schedule_info in pt_schedule_data %}"{{ forloop.counter }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"class_group_schedule_id":[{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-
-"group_schedule_id":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"group_schedule_group_id":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.group_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"group_schedule_group_name":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"group_schedule_max_member_num":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"group_schedule_ing_color_cd":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.ing_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"group_schedule_end_color_cd":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.end_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"group_schedule_ing_font_color_cd":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.ing_font_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"group_schedule_end_font_color_cd":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.end_font_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"group_schedule_current_member_num":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_current_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"group_schedule_group_type_cd_name":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"group_schedule_start_datetime":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"group_schedule_end_datetime":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"group_schedule_finish_check":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.finish_check }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"group_schedule_note":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"messageArray":[{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}],
-"RepeatDuplicationDateArray":[{% for message in messages %}"{% if message.tags == "info" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-"repeatArray":["{{ request.session.repeat_schedule_id }}"],
-"repeatScheduleCounterArray":["{{ request.session.repeat_schedule_input_counter }}"]
+{  
+"2019-05-07":[ 
+                {"start":"08:00", "end":"09:00", "finished":false, "type":"private", "name": "한예슬", "schedule_id":"1"},
+                {"start":"09:00", "end":"10:00", "finished":false, "type":"private", "name": "김태희", "schedule_id":"2"},
+                {"start":"11:00", "end":"12:00", "finished":false, "type":"private", "name": "정우성", "schedule_id":"3"},
+                {"start":"13:00", "end":"14:00", "finished":false, "type":"private", "name": "소지섭", "schedule_id":"4"},
+                {"start":"15:00", "end":"16:00", "finished":true, "type":"private", "name": "아이유", "schedule_id":"5"},
+                {"start":"17:00", "end":"18:00", "finished":false, "type":"group", "reserved":5, "max":5, "name": "5:1그룹", "schedule_id":"6"},
+                {"start":"19:00", "end":"20:00", "finished":false, "type":"group", "reserved":3, "max":5, "name": "3:1그룹", "schedule_id":"7 "} 
+            ],
+"2019-05-19":[ 
+                {"start":"06:00", "end":"07:00", "finished":false, "type":"private"},
+                {"start":"12:00", "end":"13:00", "finished":false, "type":"private"} 
+            ],
+"2019-05-22":[ 
+                {"start":"08:00", "end":"12:00", "finished":false, "type":"private"},
+                {"start":"09:00", "end":"14:00", "finished":false, "type":"private"},
+                {"start":"13:00", "end":"14:00", "finished":false, "type":"private"} 
+            ],
+"2019-05-23":[ 
+                {"start":"05:30", "end":"07:00", "finished":false, "type":"private"},
+                {"start":"08:00", "end":"10:00", "finished":false, "type":"private"} 
+            ],
+"2019-05-24":[ 
+                {"start":"06:00", "end":"08:00", "finished":false, "type":"private"},
+                {"start":"08:00", "end":"11:00", "finished":false, "type":"private"},
+                {"start":"20:00", "end":"21:00", "finished":false, "type":"private"}
+            ],
+"2019-05-27":[ 
+            {"start":"00:00", "end":"09:00", "finished":false, "type":"private"},
+            {"start":"06:00", "end":"08:00", "finished":false, "type":"private"},
+            {"start":"07:30", "end":"08:30", "finished":false, "type":"private"},
+            {"start":"09:00", "end":"11:00", "finished":false, "type":"private"},
+            {"start":"09:20", "end":"10:20", "finished":false, "type":"private"},
+            {"start":"10:00", "end":"15:00", "finished":false, "type":"private"},
+            {"start":"10:00", "end":"11:00", "finished":false, "type":"private"},
+            {"start":"10:10", "end":"12:30", "finished":false, "type":"private"},
+            {"start":"12:00", "end":"13:00", "finished":false, "type":"private"},
+            {"start":"13:00", "end":"14:40", "finished":false, "type":"private"},
+            {"start":"14:00", "end":"15:10", "finished":false, "type":"private"},
+            {"start":"18:00", "end":"21:00", "finished":false, "type":"private"}
+            ],
+"2019-05-29":[ 
+            {"start":"06:00", "end":"08:00", "finished":false, "type":"private"},
+            {"start":"08:00", "end":"11:00", "finished":false, "type":"private"},
+            {"start":"20:00", "end":"21:00", "finished":false, "type":"private"}
+            ],
+"2019-06-05":[ 
+                {"start":"08:00", "end":"09:00", "finished":false, "type":"private"},
+                {"start":"11:00", "end":"13:00", "finished":false, "type":"private"} 
+            ],
+"2019-06-17":[ 
+                {"start":"06:00", "end":"08:00", "finished":false, "type":"private"},
+                {"start":"08:00", "end":"11:00", "finished":false, "type":"private"},
+                {"start":"20:00", "end":"21:00", "finished":false, "type":"private"}
+            ],
+"2019-07-05":[ 
+                {"start":"06:00", "end":"08:00", "finished":false, "type":"private"},
+                {"start":"08:00", "end":"11:00", "finished":false, "type":"private"},
+                {"start":"20:00", "end":"21:00", "finished":false, "type":"private"}
+        ],
+"2019-07-10":[ 
+                {"start":"08:00", "end":"09:00", "finished":false, "type":"private"},
+                {"start":"11:00", "end":"13:00", "finished":false, "type":"private"} 
+        ],
+"2019-07-29":[ 
+                {"start":"06:00", "end":"08:00", "finished":false, "type":"private"},
+                {"start":"08:00", "end":"11:00", "finished":false, "type":"private"},
+                {"start":"20:00", "end":"21:00", "finished":false, "type":"private"}
+        ],
+"messageArray":[]
 }

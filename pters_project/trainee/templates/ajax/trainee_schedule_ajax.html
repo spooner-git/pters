@@ -1,107 +1,80 @@
-    {
+
+    {% autoescape off %}
+{
       "classTimeArray_start_date" :
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_end_date" : 
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleIdArray" :
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleFinishArray":
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.finish_check }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.finish_check }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "schedulePermissionStateArray":
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.permission_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.permission_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_member_name" :
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.lecture_tb.member.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.member_ticket_tb.member.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleNoteArray":
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.note | linebreaks }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleIdxArray":
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.idx }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "schedule_group_type_cd_name":
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "schedule_group_name":
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "schedule_group_current_member_num":
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_current_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "schedule_group_max_member_num":
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_tb.member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "class_group_schedule_id":
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.idx }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "schedule_lecture_name":
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.lecture_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "schedule_lecture_current_member_num":
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.lecture_current_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "schedule_lecture_max_member_num":
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.lecture_tb.member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "class_lecture_schedule_id":
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.lecture_schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "class_repeat_schedule_id":
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.repeat_schedule_tb_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.repeat_schedule_tb_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "offTimeArray_start_date" :
       [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "offTimeArray_end_date" :
       [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
-      "group_schedule_id":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "group_schedule_group_id":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.group_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "group_schedule_group_name":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "group_schedule_max_member_num":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "group_schedule_current_member_num":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_current_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "group_schedule_start_datetime":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "group_schedule_end_datetime":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "group_schedule_finish_check":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.finish_check }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "group_schedule_note":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "group_schedule_type_cd":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.group_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "group_schedule_group_type_cd_name":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "group_schedule_ing_color_cd":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.ing_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "group_schedule_end_color_cd":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.end_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "group_lecture_avail_count":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lecture_schedule_id":
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lecture_schedule_lecture_id":
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.lecture_tb.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lecture_schedule_lecture_name":
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.lecture_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lecture_schedule_max_member_num":
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lecture_schedule_current_member_num":
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.lecture_current_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lecture_schedule_start_datetime":
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lecture_schedule_end_datetime":
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lecture_schedule_finish_check":
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.finish_check }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lecture_schedule_note":
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.note | linebreaks }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lecture_schedule_ing_color_cd":
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.ing_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lecture_schedule_end_color_cd":
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.end_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lecture_member_ticket_avail_count":
+      [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.lecture_member_ticket_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
-      "package_type_cd_name":
-      [{% for package_info in package_data %}"{{ package_info.package_tb.package_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "package_name":
-      [{% for package_info in package_data %}"{{ package_info.package_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "package_lecture_reg_count":
-      [{% for package_info in package_data %}"{{ package_info.lecture_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "package_lecture_rem_count":
-      [{% for package_info in package_data %}"{{ package_info.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "package_lecture_avail_count":
-      [{% for package_info in package_data %}"{{ package_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-
+{#      "ticket_type_cd_name":#}
+{#      [{% for ticket_info in ticket_data %}"{{ ticket_info.ticket_tb.ticket_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],#}
+      "ticket_name":
+      [{% for ticket_info in ticket_data %}"{{ ticket_info.ticket_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "avail_date_data":
       [{% for avail_date_info in avail_date_data %}"{{ avail_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
-      "lecture_flag":
-      ["{{ lecture_flag }}"],
-      "group_lecture_flag":
-      ["{{ group_lecture_flag }}"],
-      "class_lecture_flag":
-      ["{{ class_lecture_flag }}"],
-
-      "lecture_avail_count" :
-      [{{ lecture_avail_count }}],
-      "lecture_reg_count" :
-      [{{ lecture_reg_count }}],
-      "lecture_finish_count" :
-      [{{ lecture_finish_count }}],
-{#      "group_lecture_avail_count" :#}
-{#      [{{ group_lecture_avail_count }}],#}
-{#      "group_lecture_reg_count" :#}
-{#      [{{ group_lecture_reg_count }}],#}
-{#      "group_lecture_finish_count" :#}
-{#      [{{ group_lecture_finish_count }}],#}
-      "class_lecture_avail_count" :
-      [{{ class_lecture_avail_count }}],
-      "class_lecture_reg_count" :
-      [{{ class_lecture_reg_count }}],
-      "class_lecture_finish_count" :
-      [{{ class_lecture_finish_count }}],
+      "member_ticket_flag":
+      ["{{ member_ticket_flag }}"],
+      "member_ticket_avail_count" :
+      [{{ member_ticket_avail_count }}],
+      "member_ticket_reg_count" :
+      [{{ member_ticket_reg_count }}],
+      "member_ticket_finish_count" :
+      [{{ member_ticket_finish_count }}],
 
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
     }
+{% endautoescape %}

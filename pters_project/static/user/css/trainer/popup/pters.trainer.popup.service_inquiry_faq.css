@@ -1,0 +1,62 @@
+/* #inquiry_faq_display_panel{
+	position: sticky;
+	position: -webkit-sticky;
+	height: auto;
+	z-index: 10;
+	width: 100%;
+	top: 0;
+	/* text-align: center; */
+} */
+.inquiry_faq_upper_box{
+	position: relative;
+	height: 28px;
+	line-height: 28px;
+	background-color: #ffffff;
+	/* border-bottom: 1px solid #cccccc; */
+	/*padding: 14px 20px;*/
+	box-sizing: border-box;
+}
+.inquiry_faq_tools_wrap{
+	display: table;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 100px;
+	height: 100%;
+}
+
+
+.inquiry_faq_wrapper{
+	display: table;
+	width: 100%;
+	height: 72px;
+	padding: 14px 20px;
+	background-color: #ffffff;
+	margin: 0 auto;
+	border-top: 1px solid #f5f2f3;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+
+.inquiry_faq_subject{
+	font-size: 16px;
+	font-weight: 500;
+	letter-spacing: -0.8px;
+	color: #1f1d1e;
+}
+
+.inquiry_faq_type{
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: -0.6px;
+	color: #858282;
+}
+
+.popup_service_inquiry_faq .popup_toolbox{
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
+	top: 0;
+	padding: 8px 16px 16px 20px;
+	z-index: 1;
+}

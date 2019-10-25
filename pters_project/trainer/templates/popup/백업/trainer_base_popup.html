@@ -1,0 +1,23 @@
+{% block popup_base_css %}
+{% endblock %}
+<div class="popup_mobile popup_full">
+    {% block popup_base_wrapper_top %}
+    <div class="wrapper_top">
+        {% block popup_base_wrapper_top_left %}
+        {% endblock %}
+        <img src="/static/common/icon/close_black.png" onclick="layer_popup.close_layer_popup()" class="obj_icon_x">
+    </div>
+    {% endblock %}
+
+    {% block popup_base_contents %}
+    {% endblock %}
+
+    {% block popup_base_wrapper_bottom %}
+    <div class="wrapper_bottom">
+        {% block popoup_base_wrapper_bottom_inside %}
+        {% endblock %}
+    </div>
+    {% endblock %}
+</div>
+{% block popup_base_js %}
+{% endblock %}

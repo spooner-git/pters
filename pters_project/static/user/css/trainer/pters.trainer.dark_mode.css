@@ -1,0 +1,23 @@
+@media(prefers-color-scheme: dark){
+    #root_content{
+        color: #ffffff;
+        background-color: #282828;
+    }
+    
+    .f_c_black{
+        color: #3b3b3b;
+    }
+    .f_c_black_light{
+
+    }
+    .f_c_grey{
+        color: #858282;
+    }
+    .f_c_grey_light{
+        color: #b8b4b4;
+    }
+    .f_c_red{
+        color: #ff0022;
+    }
+
+}

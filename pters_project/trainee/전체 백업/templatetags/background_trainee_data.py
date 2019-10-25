@@ -1,19 +1,19 @@
 import datetime
 import logging
+
 from django import template
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.expressions import RawSQL
-
 from django.utils import timezone
-from configs.const import USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
+
+from configs import USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb, ProductFunctionAuthTb
-from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
+from schedule.functions import func_refresh_member_ticket_count
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.views import get_trainee_setting_data
+from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassLectureTb, ClassTb, PackageGroupTb, GroupLectureTb
-from trainer.functions import func_get_trainer_setting_list, func_get_ing_package_member_list, \
-    func_get_end_package_member_list
 
 register = template.Library()
 logger = logging.getLogger(__name__)
@@ -54,43 +54,43 @@ def get_setting_info(request):
             request.session['class_type_name'] = class_info.get_class_type_cd_name()
             request.session['class_center_name'] = class_info.get_center_name()
 
-        context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
+        context = func_get_trainer_setting_list(context, class_info.member_id, class_id, class_info.class_hour)
 
-        request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-        request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-        request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
+        request.session['setting_member_reserve_time_available'] = context['setting_member_reserve_time_available']
+        request.session['setting_member_reserve_time_prohibition'] = context['setting_member_reserve_time_prohibition']
+        request.session['setting_member_reserve_prohibition'] = context['setting_member_reserve_prohibition']
         # request.session['setting_trainer_work_time_available'] = context['lt_res_04']
 
-        request.session['setting_trainer_work_sun_time_avail'] = context['lt_work_sun_time_avail']
-        request.session['setting_trainer_work_mon_time_avail'] = context['lt_work_mon_time_avail']
-        request.session['setting_trainer_work_tue_time_avail'] = context['lt_work_tue_time_avail']
-        request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
-        request.session['setting_trainer_work_ths_time_avail'] = context['lt_work_ths_time_avail']
-        request.session['setting_trainer_work_fri_time_avail'] = context['lt_work_fri_time_avail']
-        request.session['setting_trainer_work_sat_time_avail'] = context['lt_work_sat_time_avail']
+        request.session['setting_trainer_work_sun_time_avail'] = context['setting_trainer_work_sun_time_avail']
+        request.session['setting_trainer_work_mon_time_avail'] = context['setting_trainer_work_mon_time_avail']
+        request.session['setting_trainer_work_tue_time_avail'] = context['setting_trainer_work_tue_time_avail']
+        request.session['setting_trainer_work_wed_time_avail'] = context['setting_trainer_work_wed_time_avail']
+        request.session['setting_trainer_work_ths_time_avail'] = context['setting_trainer_work_ths_time_avail']
+        request.session['setting_trainer_work_fri_time_avail'] = context['setting_trainer_work_fri_time_avail']
+        request.session['setting_trainer_work_sat_time_avail'] = context['setting_trainer_work_sat_time_avail']
 
-        request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-        request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-        request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-        request.session['setting_member_time_duration'] = context['lt_res_member_time_duration']
-        request.session['setting_member_start_time'] = context['lt_res_member_start_time']
-        request.session['setting_schedule_auto_finish'] = context['lt_schedule_auto_finish']
-        request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
-        request.session['setting_to_trainee_lesson_alarm'] = context['lt_pus_to_trainee_lesson_alarm']
-        request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
+        request.session['setting_member_reserve_date_available'] = context['setting_member_reserve_date_available']
+        request.session['setting_member_reserve_enable_time'] = context['setting_member_reserve_enable_time']
+        request.session['setting_member_reserve_cancel_time'] = context['setting_member_reserve_cancel_time']
+        request.session['setting_member_time_duration'] = context['setting_member_time_duration']
+        request.session['setting_member_start_time'] = context['setting_member_start_time']
+        request.session['setting_schedule_auto_finish'] = context['setting_schedule_auto_finish']
+        request.session['setting_member_ticket_auto_finish'] = context['setting_member_ticket_auto_finish']
+        request.session['setting_to_trainee_lesson_alarm'] = context['setting_to_trainee_lesson_alarm']
+        request.session['setting_from_trainee_lesson_alarm'] = context['setting_from_trainee_lesson_alarm']
         context = get_trainee_setting_data(context, request.user.id)
-        request.session['setting_language'] = context['lt_lan_01']
+        request.session['setting_language'] = context['setting_language']
 
-        if context['lt_schedule_auto_finish'] == AUTO_FINISH_ON:
+        if context['setting_schedule_auto_finish'] == AUTO_FINISH_ON:
             not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                  end_dt__lte=now, state_cd='NP',
                                                                  en_dis_type=ON_SCHEDULE_TYPE, use=USE)
             for not_finish_schedule_info in not_finish_schedule_data:
                 not_finish_schedule_info.state_cd = 'PE'
                 not_finish_schedule_info.save()
-                func_refresh_lecture_count(class_id, not_finish_schedule_info.lecture_tb_id)
+                func_refresh_member_ticket_count(class_id, not_finish_schedule_info.lecture_tb_id)
 
-        if context['lt_lecture_auto_finish'] == AUTO_FINISH_ON:
+        if context['setting_member_ticket_auto_finish'] == AUTO_FINISH_ON:
             class_lecture_data = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
                                                                                             auth_cd='VIEW',
                                                                                             lecture_tb__end_date__lt
@@ -119,9 +119,6 @@ def get_setting_info(request):
                 lecture_info.save()
 
                 if lecture_info is not None and lecture_info != '':
-                    lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-                    lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-                    lecture_info.package_tb.save()
 
                     query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
                                         "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
@@ -141,7 +138,6 @@ def get_setting_info(request):
                             group_lecture_data.update(fix_state_cd='FIX')
                         else:
                             group_lecture_data.update(fix_state_cd='')
-                        func_refresh_group_status(package_group_info.group_tb_id, None, None)
     return context
 
 

@@ -1,0 +1,73 @@
+
+.popup_statistics{
+	/* -webkit-overflow-scrolling: touch; */
+}
+
+.popup_statistics .obj_box_full{
+	padding: 15px 16px;
+	border: 0;
+}
+
+.popup_statistics .obj_input_box_full{
+	padding: 15px 16px;
+	/* border: 0; */
+}
+
+.popup_statistics .popup_toolbox{
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
+	top: 0;
+	padding: 8px 16px 4px 13px;
+	z-index: 1;
+	/* border-bottom: 1px solid #f5f5f5; */
+}
+
+.popup_statistics .popup_content{
+	padding-top: 20px;
+}
+
+
+.sales_list_row{
+	display: table;
+	width: 100%;
+	padding: 10px 10px 10px 20px;
+	font-size: 15px;
+	font-weight: 500;
+	letter-spacing: -0.7px;
+	box-sizing: border-box;
+}
+
+.sales_list_month{
+	display: table-cell;
+	width: 100px;
+	color: #5c5859;
+}
+
+.sales_list_price{
+	display: table-cell;
+	width: auto;
+	color: #5c5859;
+}
+
+.sales_list_detail{
+	display: table-cell;
+	text-align: right;
+	width: 80px;
+	font-size: 13px;
+	opacity: 0.5;
+	cursor: pointer;
+}
+.sales_list_detail > img{
+	width: 24px;
+	vertical-align: middle;
+}
+
+.sales_type_select_text_button{
+	display:inline-block;
+	width:auto;
+	font-size:23px;
+	font-weight:bold;
+	text-align:center;
+	cursor: pointer;
+}

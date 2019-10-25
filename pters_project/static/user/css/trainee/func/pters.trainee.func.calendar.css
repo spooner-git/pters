@@ -43,7 +43,7 @@
 	}
 	.pters_calendar .pters_month_cal_tool_date_text{
 		display:inline-block;
-		width: 80px;
+		width: 100px;
 		vertical-align:middle;
 	}
 	.pters_calendar .help_calendar_indicator{
@@ -75,7 +75,7 @@
 		cursor: pointer;
 	}
 	.pters_calendar .pters_timeline_cal_upper_tool_box .pters_timeline_cal_expand_button_on_timeline{
-		background-image: url("/static/common/icon/expand_less_black.png");
+		background-image: url("/static/common/icon/member_icon_expand_less_black.png");
 		background-size: 24px;
 		background-position: center;
 		background-repeat: no-repeat;
@@ -211,7 +211,7 @@
 		border-radius: 50%;
 		background-color: #b3b3b3;
 	}
-	/*.schedule_marking_group{
+	/*.schedule_marking_lecture{
 		display: inline-block;
 		width: 4px;
 		height: 4px;
@@ -220,7 +220,7 @@
 		background-color: #ffffff;
 		vertical-align: middle;
 	}*/
-	.group_plan_indicator{
+	.lecture_plan_indicator{
 		height: 3px;
 		margin-bottom: 3px;
 	}

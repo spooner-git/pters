@@ -9,10 +9,11 @@
     <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
 
     <title>PTERS-출석체크모드</title>
-
+    {% load static_url %}
     <link rel="icon" href="/static/common/favicon.ico">
     <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
     <link rel="shortcut icon" href="/static/common/favicon-48.png">
+    <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.base.css" %}>
     <style type="text/css">
         @import url(/static/common/fonts/notosanskr.css);
 
@@ -25,7 +26,6 @@
             font-size: 10px;
         }
         body{
-            background-color: #cccccc;
             margin: 0;
         }
         @media(min-width:768px){
@@ -39,31 +39,35 @@
         }
         section{
             width: 100%;
-            padding: 20px;
             box-sizing: border-box;
         }
         button{
-            border: 1px solid #cccccc;
+            border: 0;
             background-color: #ffffff;
             height: 35px;
             padding: 5px 10px;
             min-width: 50px;
-            border-radius: 5px;
+            cursor: pointer;
         }
 
         #content_wrapper{
-            position: fixed;
+            /* position: fixed;
             display: none;
             left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%);
             width: 100%;
             max-width: 650px;
             margin: 0 auto;
-            background-color: #f4f4f4;
-            border-radius: 5px;
-            box-shadow: 1px 1px 3px 2px #cccccc;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch; */
+            position: relative;
+            display: none;
+            width: 100%;
+            height: 100%;
+            max-width: 650px;
+            margin: 0 auto;
+            /* overflow-y: auto; */
+            overflow: hidden;
             -webkit-overflow-scrolling: touch;
         }
 
@@ -74,63 +78,84 @@
         #wrapper_arrow_button{
             position: relative;
             height: 35px;
+            padding: 20px 0;
         }
-        #wrapper_arrow_button button:first-child{
-            position: absolute;
-            top: 0;
-            left: 0;
+        #wrapper_arrow_button .left_button_set{
+            float: left;
         }
-        #wrapper_arrow_button button:last-child{
-            position: absolute;
-            top: 0;
-            right: 0;
+        #wrapper_arrow_button .right_button_set{
+            float: right;
         }
-        #wrapper_arrow_button .logo{
-            height: 35px;
-            background-image: url("/static/user/res/PTERS_logo_pure.png");
-            background-repeat: no-repeat;
-            background-size: 100px;
-            background-position: center;
+
+        #wrapper_page_title{
+            padding: 0 20px;
+            text-align: center;
         }
+        #wrapper_page_title > span{
+            font-size:22px;
+            font-weight:bold;
+            color:#3d3b3b;
+            letter-spacing:-0.1px;
+        }
+
         #wrapper_lesson_now_info{
             margin: 0 auto;
-            max-width: 550px;
+            /* max-width: 550px; */
             padding: 15px;
             box-sizing: border-box;
             text-align: center
         }
         #wrapper_lesson_now_info_name{
-            padding: 15px;
-            border: 2px solid #fe4e65;
-            border-radius: 10px;
-            background: linear-gradient(to right, #f4f4f4, #f4f4f4 20%, #ffffff);
+            padding: 10px;
+            box-shadow:  0 0 16px 0 #e6e6e6;
+            border: 1px solid #f5f2f3;
+            border-radius: 4px;
+        }
+        #wrapper_lesson_now_info_name .lesson_date{
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            color: #3d3b3b;
+        }
+        #wrapper_lesson_now_info_name .lesson_name{
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: -0.7px;
+            color: #3d3b3b;
         }
 
-        
-
-        #wrapper_submit_button{
-            text-align: center
+        .title_tag{
+            font-size: 11px;
+            font-weight: 500;
+            color: #999696;
+            letter-spacing: -0.5px;
+            text-align: left;
         }
-
-
-
+    
         /* attend_mode_detail */
         
-        #button_confirm_attend{
-            width:100%;
-            max-width: 300px;
+        #wrapper_submit_button{
+            text-align: center;
+            padding: 20px;
+        }
+        #wrapper_submit_button > button{
+            width: 100%;
+            height: 52px;
             background-color: #fe4e65;
-            border-color: #fe4e65;
             color: #ffffff;
-            height: 45px;
-            margin-top: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: -0.7px;
+        }
+
+        #button_setting{
+            border: 0;
+            background-color: transparent;
         }
 
         #button_back{
-            width: 70%;
-            max-width: 200px;
-            margin-top: 20px;
-            margin-bottom: 10px;
+            border: 0;
+            background-color: transparent;
         }
 
         #wrapper_ticket_change_info{
@@ -151,7 +176,7 @@
             transform: translate(-50%, -50%);
             z-index: 1500;
             width: 90%;
-            max-width: 300px;
+            max-width: 500px;
             background-color: #ffffff;
             border: 1px solid #cccccc;
             padding: 20px;
@@ -183,6 +208,15 @@
         }
         /* 팝업 */
 
+        .ajax_loading_image{
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 35px;
+            z-index: 1500;
+        }
 
         .fts_24{font-size: 1.7rem;}
         .fts_22{font-size: 1.5rem;}
@@ -203,30 +237,42 @@
         <span id="debug_y">y:</span><span id="debug_y_value"></span>
         <span id="debug_offset"></span>
     </div>
+    <img src={% static_url "common/loading.svg" %} alt="" class="ajax_loading_image">
+    <div id="shade_for_popup_basic" style="position: absolute;;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
+        onclick="layer_popup.close_layer_popup();"></div>
 
     <div id="content_wrapper">
+        
         <section id="wrapper_lesson_now">
             <div id="wrapper_arrow_button">
-                <button onclick="move_button(event, 'prev')" hidden>&#60;&#60;</button>
-                <div class="logo"></div>
-                <button onclick="move_button(event, 'next')" hidden>&#62;&#62;</button>
+                <div class="left_button_set">
+                    <button id="button_back" onclick="location.href='/trainer/attend_mode/'">
+                        <img src="/static/common/icon/icon_x_black.png" style="width:25px; height:25px;">
+                    </button>
+                </div>
+                <div class="right_button_set">
+                    <!-- <button onclick="location.reload();" style="border:0;">
+                        <img src="/static/common/icon/icon_refresh_black.png" style="width:20px; height:20px;">
+                    </button> -->
+                </div>
+            </div>
+
+            <div id="wrapper_page_title">
+                <span>{% if member_info %}
+                        {{ member_info.name }} 님
+                    {% else %}
+                        휴대폰 번호를 확인해주세요.
+                    {% endif %}</span>
             </div>
 
             <div id="wrapper_lesson_now_info">
-                <p class="fts_24 ftw_bd">
-                    {% if member_info %}
-                        {{ member_info.name }} 회원님
-                    {% else %}
-                        휴대폰 번호를 확인해주세요.
-                    {% endif %}
-                </p>
-        
+
+                <p class="title_tag" style="text-align:center">선택한 수업</p>
                 <div id="wrapper_lesson_now_info_name">
-                    <p class="fts_20" style="margin-top: 0;">{{ schedule_info.start_dt | date:"Y.m.d (l)" |cut:"요일" }}</p>
-                    <p class="fts_24 ftw_bd" style="text-decoration: underline">{{ schedule_info.start_dt | time:"H:i" }} - {{ schedule_info.end_dt | time:"H:i" }}</p>
-                    <p class="fts_22 ftw_bd">
-                        {% if schedule_info.group_tb %}
-                            [그룹] {{ schedule_info.group_tb.name }}
+                    <p class="lesson_date">{{ schedule_info.start_dt | date:"Y.m.d (l)" |cut:"요일" }} {{ schedule_info.start_dt | time:"H:i" }} - {{ schedule_info.end_dt | time:"H:i" }}</p>
+                    <p class="lesson_name">
+                        {% if schedule_info.lecture_tb %}
+                            [그룹] {{ schedule_info.lecture_tb.name }}
                         {% else %}
                             [개인] 1:1 레슨
                         {% endif %}
@@ -235,35 +281,32 @@
             </div>
 
             <div id="wrapper_ticket_change_info">
-                <p class="fts_20 ftw_bd">수강권 차감</p>
+                <p class="title_tag" style="text-align:center">출석시 다음과 같이 수강권이 차감됩니다.</p>
                 <p class="fts_20">
-                    {% if lecture_info.package_tb.package_type_cd == 'PACKAGE' %}
-                        [패키지]
-                    {% elif lecture_info.package_tb.package_type_cd == 'GROUP' %}
-                        [그룹]
-                    {% else %}
-                        [개인]
-                    {% endif %}
-                    {{ lecture_info.package_tb.name }} ({{ lecture_info.lecture_rem_count }} / {{ lecture_info.lecture_reg_count }})</p>
+{#                    {% if member_ticket_info.ticket_tb.ticket_type_cd == 'PACKAGE' %}#}
+{#                        [패키지]#}
+{#                    {% elif member_ticket_info.ticket_tb.ticket_type_cd == 'GROUP' %}#}
+{#                        [그룹]#}
+{#                    {% else %}#}
+{#                        [개인]#}
+{#                    {% endif %}#}
+                    {{ member_ticket_info.ticket_tb.name }} ({{ member_ticket_info.member_ticket_rem_count }} / {{ member_ticket_info.member_ticket_reg_count }})</p>
                 <div><img src="/static/user/res/btn_next.png" id="img_ticket_change_arrow"></div>
                 <p class="fts_22 ftw_bd">
-                    {% if lecture_info.package_tb.package_type_cd == 'PACKAGE' %}
-                        [패키지]
-                    {% elif lecture_info.package_tb.package_type_cd == 'GROUP' %}
-                        [그룹]
-                    {% else %}
-                        [개인]
-                    {% endif %}
-                    {{ lecture_info.package_tb.name }} ({{ lecture_info.lecture_rem_count|add:"-1" }} / {{ lecture_info.lecture_reg_count }})</p>
+{#                    {% if member_ticket_info.ticket_tb.ticket_type_cd == 'PACKAGE' %}#}
+{#                        [패키지]#}
+{#                    {% elif member_ticket_info.ticket_tb.ticket_type_cd == 'GROUP' %}#}
+{#                        [그룹]#}
+{#                    {% else %}#}
+{#                        [개인]#}
+{#                    {% endif %}#}
+                    {{ member_ticket_info.ticket_tb.name }} ({{ member_ticket_info.member_ticket_rem_count|add:"-1" }} / {{ member_ticket_info.member_ticket_reg_count }})</p>
             </div>
-
-
         </section>
 
 
         <section id="wrapper_submit_button">
-                <div><button onclick="form_confirm(event, 'signature')" id="button_confirm_attend" class="fts_22 ftw_bd">출석</button></div>
-                <div><button onclick="location.href='/trainer/attend_mode/'" id="button_back" class="fts_16">뒤로</button></div>
+            <button onclick="form_confirm(event, 'signature')" id="button_confirm_attend" class="fts_22 ftw_bd">출석</button>
         </section>
 
         <form action="{% url 'trainer:attend_mode_finish' %}" id="form_attend_data" method="post">
@@ -272,11 +315,20 @@
             <input type="hidden" name="schedule_id" value="{{ schedule_id }}">
             </div>
         </form>
+
+        <div id="popup_storage">
+            {% include 'popup/trainer_popup_basic.html' %}
+            {% include 'popup/trainer_popup_user_input.html' %}
+        </div>
     </div>
 
-    <div id="popup_storage"></div>
+    
    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.popup.behavior.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.base.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.selectors.js" %}></script>
 
     <script>
         window.onload=function(){
@@ -293,6 +345,7 @@
 
             func_set_webkit_overflow_scrolling('#content_wrapper');
         }
+        var $root_content = $('#content_wrapper');
 
         //유저가 터치인지 마우스 사용인지 알아낸다
         var touch_or_mouse = "";
@@ -302,218 +355,37 @@
         //유저가 터치인지 마우스 사용인지 알아낸다
             
 
-
         function form_confirm(e, type){
             e.preventDefault();
-            
-            let a = popup(type);
-            a.draw();
-            let sign = new Signature('#canvas', 324, 200);
-        }
-
-        function move_button(e, direction){
-            e.preventDefault();
-            switch(direction){
-                case "prev":
-                    alert('prev');
-                break;
-                    
-                case "next":
-                    alert('next');
-                break;
-            }
-        }
-
-        function back_to_normal_mode(e){
-            e.preventDefault();
-            alert('관리자만~')
-        }
-
-
-        function popup(type){
-            let $popup_storage = $('#popup_storage');
-            let html = {
-                        "signature":`<div id="popup_signature" class="popup">
-                                        <canvas id="canvas" style="background-color:#f4f4f4;"></canvas>
-                                        <button onclick="complete_this_plan();">완료</button>
-                                        <button onclick="popup().clear();">취소</button>
-                                    </div>
-                                    <div class="popup_shade" onclick="popup().clear()"></div>`,
-                        "admin_check":`<div id="popup_input_password" class="popup">
-                                        <div><p class="fts_20 ftw_bd">관리자 비밀번호를 입력해주세요.</p></div>
-                                        <div><input type="password" name="password" placeholder="입력" autocomplete="new-password"></div>
-                                        <div class="ftw_16"><button>확인</button><button onclick="popup().clear()">취소</button></div>
-                                    </div>
-                                    <div class="popup_shade" onclick="popup().clear()">
-                                    </div>`
-            }
-
-            let draw = function(){  $('#content_wrapper').css('overflow-y', 'hidden');
-                                    $popup_storage.html(html[type]);
+            let root_content_height = $(window).height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DRAWING_BOARD, 100*315/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                let data = {    title:"일정 완료 서명",
+                                description:"완료 서명을 입력해주세요.",
+                                width: $root_content.width() <= 500 ? $root_content.width() : 500,
+                                height:250,
+                                color:{pencil:"#ffffff", paper:"#282828"},
+                                border:0,
+                                callback:(data)=>{
+                                    let image_data = data;
+                                    complete_this_plan(image_data);
                                 }
-                        
-            let clear = function(){ $('#content_wrapper').css('overflow-y', 'auto');
-                                    $('#popup_storage').html('');
-                                }
-                        
-
-            return ({
-                    "draw": draw,
-                    "clear": clear
-            })
-        }
-
-       
-
-        function complete_this_plan(){
-            // $.ajax({
-            //     url: `/trainee/${popup_name}/`,
-            //     type: 'GET',
-            //     data: data,
-            //     dataType: 'html',
-            //     async: false,
-
-            //     beforeSend: function (xhr, settings) {
-            //         func_ajax_before_send(xhr, settings, popup_name, data);
-            //     },
-
-            //     success: function (data) {
-            //         popup().clear();
-            //     },
-
-            //     complete: function () {
-            //         func_ajax_after_send(popup_name, data);
-            //     },
-
-            //     error: function () {
-            //         console.log('server error');
-            //     }
-            // });
-
-            let drawCanvas = document.getElementById('canvas');
-            let send_data = $('#form_attend_data').serializeArray();
-            send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')});
-            signImageSend(send_data);
-            popup().clear();
-        }
-
-        class Signature{
-            constructor(targetHTML, width, height){
-                this.targetHTML = targetHTML;
-                this.pos = {
-                                "drawable" : false,
-                                "x": -1,
-                                "y": -1
                             };
-                this.canvas = document.querySelector(this.targetHTML);
-                this.ctx = this.canvas.getContext("2d");
-                this.set_size(width, height);
-                this.set_event();
-                this.clear();
-            }
-
-            set_size(w, h){
-                this.width = w;
-                this.height = h;
-                this.canvas.style.width = this.width;
-                this.canvas.style.height = this.height;
-                // $("canvas").attr("width", 324).attr("height", 200);
-            }
-
-
-            clear(){
-                this.ctx.clearRect(0, 0, 324, 300);
-            }
-
-            set_event(){
-                let self = this;
-                $(document).off('mousedown', this.targetHTML).on('mousedown', this.targetHTML,function(e){ self.listener(e); })
-                $(document).off('mousemove', this.targetHTML).on('mousemove', this.targetHTML,function(e){ self.listener(e); })
-                $(document).off('mouseup', this.targetHTML).on('mouseup', this.targetHTML,function(e){ self.listener(e); })
-                $(document).off('mouseout', this.targetHTML).on('mouseout', this.targetHTML,function(e){ self.listener(e); })
-                $(document).off('touchstart', this.targetHTML).on('touchstart', this.targetHTML,function(e){ self.listener(e); })
-                $(document).off('touchmove', this.targetHTML).on('touchmove', this.targetHTML,function(e){ self.listener(e); })
-                $(document).off('touchend', this.targetHTML).on('touchend', this.targetHTML,function(e){ self.listener(e); })
-                $(document).off('touchcancel', this.targetHTML).on('touchcancel', this.targetHTML,function(){ self.listener(e); })
-            }
-
-            listener(event){
-                switch(event.type){
-                    case "touchstart":
-                        this.initDraw(event);
-                        break;
-
-                    case "touchmove":
-                        if(this.pos.drawable){
-                            this.draw(event);
-                        }
-                        break;
-                    case "touchend":
-                    case "touchcancel":
-                        this.finishDraw();
-                        break;
-
-                    case "mousedown":
-                        this.initDraw(event);
-                        break;
-                    case "mousemove":
-                        if(this.pos.drawable){
-                            this.draw(event);
-                        }
-                        break;
-                    case "mouseup":
-                    case "mouseout":
-                        this.finishDraw();
-                        break;
-
-                }
-            }
-
-            initDraw(event){
-                this.ctx.strokeStyle="#282828";
-                this.ctx.beginPath();
-                this.pos.drawable = true;
-                var coors = this.getPosition(event);
-                this.pos.x = coors.X;
-                this.pos.y = coors.Y;
-                this.ctx.moveTo(this.pos.x, this.pos.y);
-            }
-
-            draw(event){
-                this.ctx.strokeStyle="#282828";
-                event.preventDefault();
-                var coors = this.getPosition(event);
-                this.ctx.lineTo(coors.X, coors.Y);
-                this.pos.x = coors.X;
-                this.pos.y = coors.Y;
-                this.ctx.stroke();
-            }
-
-            finishDraw(){
-                this.pos.drawable = false;
-                this.pos.x = -1;
-                this.pos.y = -1;
-            }
-
-            getPosition(event){
-                var x;
-                var y;
-                var offset_for_canvas__ = $(this.targetHTML).offset();
-                if(touch_or_mouse=="touch"){
-                    x = event.originalEvent.touches[0].clientX - offset_for_canvas__.left;
-                    y = event.originalEvent.touches[0].clientY - offset_for_canvas__.top;
-                }else{
-                    x = event.originalEvent.pageX - offset_for_canvas__.left;
-                    y = event.originalEvent.pageY - offset_for_canvas__.top;
-                }
-                // $('#debug_x_value').text(x);
-                // $('#debug_y_value').text(y);
-                // $('#debug_offset').text(offset_for_canvas__.top);
-                return {X:x, Y:y};
-            }
+                drawing_board = new DrawingBoard('#wrapper_box_drawing_board', "drawing_board", data);
+            });
         }
-        
-        function signImageSend(send_data){
+
+
+        function complete_this_plan(image_data){
+            // let drawCanvas = document.getElementById('canvas');
+            let send_data = $('#form_attend_data').serializeArray();
+            send_data.push({"name":"upload_file", "value":image_data});
+            signImageSend(send_data, ()=>{
+                // location.href='/trainer/attend_mode/';
+            });
+        }
+
+
+        function signImageSend(send_data, callback){
             $.ajax({
                 url:'/schedule/upload_sign_image/',
                 type:'POST',
@@ -523,12 +395,13 @@
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                         xhr.setRequestHeader("X-CSRFToken", csrftoken);
                     }
-                    //beforeSend();
+                    ajax_load_image(SHOW);
                 },
 
                 //통신성공시 처리
                 success:function(data){
                     var jsondata = JSON.parse(data);
+                    check_app_version(jsondata.app_version);
                     if(jsondata.messageArray.length>0){
                         $('#errorMessageBar').show();
                         $('#errorMessageText').text(jsondata.messageArray);
@@ -536,11 +409,15 @@
                         console.log('sign_image_save_success');
                         $('#form_attend_data').submit();
                     }
+
+                    if(callback != undefined){
+                        callback();
+                    }
                 },
 
                 //보내기후 팝업창 닫기
                 complete:function(){
-
+                    ajax_load_image(HIDE);
                 },
 
                 //통신 실패시 처리
@@ -607,6 +484,72 @@
             return cookieValue;
         }
         var csrftoken = getCookie('csrftoken');
+
+        function ajax_load_image(option){
+            let $ajax_load_image = $('img.ajax_loading_image');
+            switch(option){
+                case SHOW:
+                    $ajax_load_image.show();
+                break;
+
+                case HIDE:
+                    $ajax_load_image.hide();
+                break;
+            }
+        }
+
+
+
+        function update_push_token(token, device_id) {
+            $.ajax({
+                url:'/login/add_push_token/',
+                type:'POST',
+                data:{"token_info":token, "device_id":device_id},
+                dataType : 'html',
+
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                    //AjaxBeforeSend();
+                },
+
+                //통신성공시 처리
+                success:function(data_){
+                    let data = JSON.parse(data_);
+                    check_app_version(data.app_version);
+                    // $('a.text-payment').parent('div').css('display', 'inline-block');
+                    // if(device_id != 'pc') {
+                        // $('a.text-payment').parent('div').css('display', 'none');
+                        // $('.ads_wrap').css('display', 'none');
+                        // $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
+                        // $('#paymentSetting').css('display', 'none');
+                        // $('._company').css('display', 'none');
+                    // }else{
+                        // $('a.text-payment').parent('div').css('display', 'inline-block');
+                    // }
+                    console.log('토큰 등록 완료');
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                },
+
+                //통신 실패시 처리
+                error:function(){
+
+                }
+            });
+        }
+
+        function check_app_version(app_version){
+            if(app_version != undefined){
+                if(session_app_version != app_version){
+                    location.reload();
+                }
+            }
+        }
     </script>
 </body>
 </html>

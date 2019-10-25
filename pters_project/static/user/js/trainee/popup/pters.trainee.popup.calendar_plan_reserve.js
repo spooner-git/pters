@@ -16,22 +16,22 @@ $(document).on("click", '#id_ticket_detail_expand_in_reserve', function(){
     switch(option){
         case OPEN:
             $this.attr({"data-open": CLOSE,
-                        "src": "/static/common/icon/expand_more_black.png"});
+                        "src": "/static/common/icon/member_icon_expand_more_black.png"});
             wrapper_my_ticket_detail_in_reserve.hide();
         break;
 
         case CLOSE:
             $this.attr({"data-open": OPEN,
-                        "src": "/static/common/icon/expand_less_black.png"});
+                        "src": "/static/common/icon/member_icon_expand_less_black.png"});
             wrapper_my_ticket_detail_in_reserve.show();
         break;
     }
 });
 
-$(document).on("change", "select[title='lecture_select']", function(){
+$(document).on("change", "select[title='member_ticket_select']", function(){
     let $selected_option = $(this).find('option:selected');
-    let selected_lecture_id = $selected_option.attr('data-lecture-id');
-    $('#form_content_lecture_id').val(selected_lecture_id);
+    let selected_member_ticket_id = $selected_option.attr('data-member_ticket-id');
+    $('#form_content_member_ticket_id').val(selected_member_ticket_id);
 });
 
 $(document).on("change", "select[title='time_select']", function(){
@@ -55,12 +55,12 @@ $(document).on("change", "select[title='time_select']", function(){
 //그룹수업 시간 선택시, 다른 그룹에 선택되어있는 라디오버튼은 해제 한다.
 $(document).on('click', '.func_radio_element', function(){
     //그룹수업 시간 선택시, 다른 그룹에 선택되어있는 라디오버튼은 해제 한다.
-    let this_group_id = $(this).attr('data-group-schedule-id');
+    let this_lecture_id = $(this).attr('data-lecture-schedule-id');
     let this_date = $(this).attr('data-date');
     let this_time = $(this).attr('data-start-time');
     let this_end_time = $(this).attr('data-end-time');
     $(this).parents('.obj_box_full').siblings('.obj_box_full').find('.func_radio_element_button_inner').removeClass('func_radio_element_button_inner');
-    $('#form_content_group_schedule_id').val(this_group_id);
+    $('#form_content_lecture_schedule_id').val(this_lecture_id);
     $('#form_content_training_date').val(this_date);
     $('#form_content_training_time').val(this_time);
     $('#form_content_training_end_date').val(this_date);
@@ -150,8 +150,8 @@ function func_start_time_calc(selected_date, schedule_json, setting_info){ //off
     // 사용 x
     // let all_start_date_time;
     // let all_end_date_time;
-    // all_start_date_time = schedule_json.classTimeArray_start_date.concat(schedule_json.group_schedule_start_datetime);
-    // all_end_date_time = schedule_json.classTimeArray_end_date.concat(schedule_json.group_schedule_end_datetime);
+    // all_start_date_time = schedule_json.classTimeArray_start_date.concat(schedule_json.lecture_schedule_start_datetime);
+    // all_end_date_time = schedule_json.classTimeArray_end_date.concat(schedule_json.lecture_schedule_end_datetime);
     // all_start_date_time = all_start_date_time.concat(schedule_json.offTimeArray_start_date);
     // all_end_date_time = all_end_date_time.concat(schedule_json.offTimeArray_end_date);
 
@@ -196,7 +196,12 @@ function func_start_time_calc(selected_date, schedule_json, setting_info){ //off
     //all_plans = sortedlist;
     //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
     let semiresult = [];
-    let time_unit = Number(setting_info.class_hour)*Number(setting_info.setting_member_time_duration);
+    let time_unit;
+    if(Number(setting_info.setting_member_time_duration < 10)){
+        time_unit = Number(setting_info.class_hour)*Number(setting_info.setting_member_time_duration);
+    }else{
+        time_unit = Number(setting_info.setting_member_time_duration);
+    }
     for(let p=0; p<sortedlist.length/2; p++){
         let zz = 0;
         //일정 시작시간이 일정 종료시간보다 작으면,
@@ -288,7 +293,12 @@ function func_start_time_dom_draw(target_html, selected_date, schedule_json, set
 
     let offOkLen = addOkArray.length;
     let timeArray = [];
-    let classDur = setting_info.class_hour*setting_info.setting_member_time_duration;
+    let classDur;
+    if(setting_info.setting_member_time_duration < 10){
+        classDur = setting_info.class_hour*setting_info.setting_member_time_duration;
+    }else{
+        classDur = setting_info.setting_member_time_duration;
+    }
     for(let i=0; i<offOkLen; i++){
         let offHour = addOkArray[i].split(':')[0];
         let offmin = addOkArray[i].split(':')[1];
@@ -321,28 +331,28 @@ function func_start_time_dom_draw(target_html, selected_date, schedule_json, set
     $target_html.html(timeArraySum);
 }
 
-// function func_group_time_dom_draw(target_html, selected_date, schedule_json, setting_info){
+// function func_lecture_time_dom_draw(target_html, selected_date, schedule_json, setting_info){
 //     console.log(schedule_json)
-//     func_group_wrapper_dom_draw(target_html, selected_date, schedule_json, setting_info)
+//     func_lecture_wrapper_dom_draw(target_html, selected_date, schedule_json, setting_info)
 //     let $target_html = $(target_html);
 //     let html_to_join = [];
-//     let len = schedule_json.group_schedule_group_id.length;
+//     let len = schedule_json.lecture_schedule_lecture_id.length;
 //     for(let i=0; i<len; i++){
-//         let start_split = schedule_json.group_schedule_start_datetime[i].split(' ');
-//         let end_split = schedule_json.group_schedule_end_datetime[i].split(' ');
+//         let start_split = schedule_json.lecture_schedule_start_datetime[i].split(' ');
+//         let end_split = schedule_json.lecture_schedule_end_datetime[i].split(' ');
 //         let this_schedule_start_date = start_split[0];
 //         let this_schedule_start_time = start_split[1].substr(0,5);
 //         let this_schedule_end_date = end_split[0];
 //         let this_schedule_end_time = end_split[1].substr(0,5);
 
-//         let this_schedule_groupid = schedule_json.group_schedule_id[i];
-//         let this_schedule_particiants = schedule_json.group_schedule_current_member_num[i];
-//         let this_schedule_max_participants = schedule_json.group_schedule_max_member_num[i];
+//         let this_schedule_lectureid = schedule_json.lecture_schedule_id[i];
+//         let this_schedule_particiants = schedule_json.lecture_schedule_current_member_num[i];
+//         let this_schedule_max_participants = schedule_json.lecture_schedule_max_member_num[i];
 
 
 
 //         if(this_schedule_start_date == selected_date){
-//             html_to_join.push(`<div class="func_radio_element obj_font_size_14_weight_500" data-group-schedule-id="${this_schedule_groupid}">
+//             html_to_join.push(`<div class="func_radio_element obj_font_size_14_weight_500" data-lecture-schedule-id="${this_schedule_lectureid}">
 //                                     <div class="func_radio_element_title">${this_schedule_start_time} ~ ${this_schedule_end_time} (${this_schedule_particiants}/${this_schedule_max_participants}명)</div>
 //                                     <div class="func_radio_element_button"><div class="func_radio_element_button_outer"><div class=""></div></div></div>
 //                                 </div>`);
@@ -350,45 +360,45 @@ function func_start_time_dom_draw(target_html, selected_date, schedule_json, set
 //     }
 //     $target_html.html(html_to_join.join(''));
 // }
-
-function func_group_time_dom_draw(target_html, selected_date, schedule_json, setting_info){
+/*
+function func_lecture_time_dom_draw(target_html, selected_date, schedule_json, setting_info){
 
     console.log(schedule_json);
     let $target_html = $(target_html);
-    let group_ids = schedule_json.group_schedule_group_id;
-    let group_names = schedule_json.group_schedule_group_name;
-    let group_dic = {};
-    let len =group_ids.length;
+    let lecture_ids = schedule_json.lecture_schedule_lecture_id;
+    let lecture_names = schedule_json.lecture_schedule_lecture_name;
+    let lecture_dic = {};
+    let len =lecture_ids.length;
     for(let i=0; i<len; i++){
-        group_dic[group_ids[i]] = group_names[i];
+        lecture_dic[lecture_ids[i]] = lecture_names[i];
     }
 
     let html_to_join_final = [];
-    for(let group_id in group_dic){
+    for(let lecture_id in lecture_dic){
         let html_to_join = [];
-        let len = schedule_json.group_schedule_group_id.length;
-        let this_schedule_lecture_avail_count = 0;
+        let len = schedule_json.lecture_schedule_lecture_id.length;
+        let this_schedule_member_ticket_avail_count = 0;
 
         for(let i=0; i<len; i++){
-            let start_split = schedule_json.group_schedule_start_datetime[i].split(' ');
-            let end_split = schedule_json.group_schedule_end_datetime[i].split(' ');
+            let start_split = schedule_json.lecture_schedule_start_datetime[i].split(' ');
+            let end_split = schedule_json.lecture_schedule_end_datetime[i].split(' ');
             let this_schedule_start_date = start_split[0];
             let this_schedule_start_time = start_split[1].substr(0, 5);
             let this_schedule_end_date = end_split[0];
             let this_schedule_end_time = end_split[1].substr(0, 5);
 
-            let this_schedule_groupid = schedule_json.group_schedule_group_id[i];
-            let this_schedule_group_schedule_id = schedule_json.group_schedule_id[i];
-            let this_schedule_particiants = schedule_json.group_schedule_current_member_num[i];
-            let this_schedule_max_participants = schedule_json.group_schedule_max_member_num[i];
+            let this_schedule_lectureid = schedule_json.lecture_schedule_lecture_id[i];
+            let this_schedule_lecture_schedule_id = schedule_json.lecture_schedule_id[i];
+            let this_schedule_particiants = schedule_json.lecture_schedule_current_member_num[i];
+            let this_schedule_max_participants = schedule_json.lecture_schedule_max_member_num[i];
 
 
-            if(this_schedule_start_date == selected_date && this_schedule_groupid == group_id){
-                html_to_join.push(`<div class="func_radio_element obj_font_size_14_weight_500" data-group-schedule-id="${this_schedule_group_schedule_id}" data-date="${this_schedule_start_date}" data-start-time="${this_schedule_start_time}" data-end-time="${this_schedule_end_time}">
+            if(this_schedule_start_date == selected_date && this_schedule_lectureid == lecture_id){
+                html_to_join.push(`<div class="func_radio_element obj_font_size_14_weight_500" data-lecture-schedule-id="${this_schedule_lecture_schedule_id}" data-date="${this_schedule_start_date}" data-start-time="${this_schedule_start_time}" data-end-time="${this_schedule_end_time}">
                                         <div class="func_radio_element_title">${this_schedule_start_time} ~ ${this_schedule_end_time} (${this_schedule_particiants}/${this_schedule_max_participants}명)</div>
                                         <div class="func_radio_element_button"><div class="func_radio_element_button_outer"><div class=""></div></div></div>
                                     </div>`);
-                this_schedule_lecture_avail_count = schedule_json.group_lecture_avail_count[i];
+                this_schedule_member_ticket_avail_count = schedule_json.lecture_member_ticket_avail_count[i];
             }
         }
 
@@ -396,11 +406,11 @@ function func_group_time_dom_draw(target_html, selected_date, schedule_json, set
             let wrap = `<div class="obj_box_full">
                             <div class="obj_table_raw wrapper_ticket_info">
                                 <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/people_black.png"></div>
-                                <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal "> ${group_dic[group_id]}</div>
-                                <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: ${this_schedule_lecture_avail_count} 번)</div>
+                                <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal "> ${lecture_dic[lecture_id]}</div>
+                                <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: ${this_schedule_member_ticket_avail_count} 번)</div>
                             </div>
                             <div class="wrapper_reserve_form_data">
-                                <div class="func_radio_wrap wrapper_group_reserve_select">
+                                <div class="func_radio_wrap wrapper_lecture_reserve_select">
                                     ${html_to_join.join('')}
                                 </div>
                             </div>
@@ -415,4 +425,4 @@ function func_group_time_dom_draw(target_html, selected_date, schedule_json, set
 
     $target_html.html(html_to_join_final.join(''));
 }
-
+*/

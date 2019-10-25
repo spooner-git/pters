@@ -1,0 +1,25 @@
+    {
+        "month_date":
+      [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "finish_schedule_count":
+      [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.finish_schedule_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "month_new_reg_member":
+      [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_new_reg_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "month_re_reg_member":
+      [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_re_reg_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "month_all_refund_member":
+      [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_all_refund_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "month_part_refund_member":
+      [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_part_refund_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "total_month_new_reg_member":
+        {{ total_month_new_reg_member }},
+        "total_month_re_reg_member":
+        {{ total_month_re_reg_member }},
+        "total_month_all_refund_member":
+        {{ total_month_all_refund_member }},
+        "total_month_part_refund_member":
+        {{ total_month_part_refund_member }},
+      "messageArray" :
+        "{{ messageArray }}"
+{#      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]#}
+    }

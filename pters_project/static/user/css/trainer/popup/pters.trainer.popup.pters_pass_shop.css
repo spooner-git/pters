@@ -1,0 +1,58 @@
+
+.popup_pters_pass_shop{
+	/* -webkit-overflow-scrolling: touch; */
+}
+
+.popup_pters_pass_shop .obj_box_full{
+	padding: 15px 20px;
+	border: 0;
+}
+
+.popup_pters_pass_shop .obj_input_box_full{
+	padding: 10px 20px;
+	/* border: 0; */
+}
+
+.popup_pters_pass_shop .popup_toolbox{
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
+	top: 0;
+	padding: 8px 16px 4px 20px;
+	/* border-bottom: 1px solid #f5f5f5; */
+	z-index: 1;
+}
+
+.popup_pters_pass_shop .popup_content{
+	/* padding-top: 20px; */
+}
+
+.popup_pters_pass_shop .pters_pass_product_wrapper{
+	border: 1px solid #cccccc;
+	border-radius: 10px;
+	padding: 0 15px;
+	margin:20px 0;
+}
+
+.popup_pters_pass_shop .pters_pass_explain_wrapper{
+	font-size:13px;
+	padding:10px 10px 20px 10px;
+	border-bottom:1px solid #f5f2f2;
+}
+
+.popup_pters_pass_shop .product_explain_row{
+	display:flex;
+	padding: 4px 0;
+}
+
+.popup_pters_pass_shop .product_explain_row_title{
+	flex:0 0 60px;
+	color: #5c5859;
+}
+
+.popup_pters_pass_shop .product_explain_row_detail{
+	flex:1 0 0;
+	font-weight: bold;
+}
+
+

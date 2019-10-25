@@ -1,0 +1,28 @@
+
+.popup_setting_worktime{
+	/* -webkit-overflow-scrolling: touch; */
+}
+
+.popup_setting_worktime .obj_box_full{
+	padding: 15px 20px;
+	border: 0;
+}
+
+.popup_setting_worktime .obj_input_box_full{
+	padding: 15px 20px;
+	/* border: 0; */
+}
+
+.popup_setting_worktime .popup_toolbox{
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
+	top: 0;
+	padding: 8px 16px 4px 20px;
+	/* border-bottom: 1px solid #f5f5f5; */
+	z-index: 1;
+}
+
+.popup_setting_worktime .popup_content{
+	/* padding-top: 20px; */
+}

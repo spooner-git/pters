@@ -1,34 +1,29 @@
 import datetime
 import json
-
-import httplib2
 import logging
 
+import httplib2
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
-from django.db import InternalError
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import render, redirect
+from django.utils import timezone
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
-from django.utils import timezone
 
-# Create your views here.
-
-from configs import settings
 from configs.const import USE, UN_USE
-
+from configs import settings
 from login.models import MemberTb
-from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb, ProductPriceTb, ProductFunctionAuthTb, \
-    IosReceiptCheckTb
 
 from .functions import func_set_billing_schedule, func_get_imp_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_cancel_period_billing_schedule, \
-    func_iamport_webhook_customer_billing_logic, func_set_billing_schedule_now, func_get_payment_info_from_imp
+    func_set_billing_schedule_now, func_get_payment_info_from_imp
+from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb, ProductPriceTb, \
+    ProductFunctionAuthTb, IosReceiptCheckTb
 
 logger = logging.getLogger(__name__)
 
@@ -38,17 +33,18 @@ class PaymentView(LoginRequiredMixin, View):
 
     def get(self, request):
         context = {}
-        today = datetime.date.today()
-        function_auth_list = []
         product_list = ProductTb.objects.filter(upper_product_id='1', use=USE).exclude(product_id='6').order_by('order')
         for product_info in product_list:
-            product_price_list = ProductPriceTb.objects.filter(product_tb_id=product_info.product_id, use=USE).order_by('order')
-            sub_product_list = ProductTb.objects.filter(upper_product_id=product_info.product_id, use=USE).order_by('order')
+            product_price_list = ProductPriceTb.objects.filter(product_tb_id=product_info.product_id,
+                                                               use=USE).order_by('order')
+            sub_product_list = ProductTb.objects.filter(upper_product_id=product_info.product_id,
+                                                        use=USE).order_by('order')
             product_info.price_list = product_price_list
             if len(sub_product_list) > 0:
                 product_info.sub_product_list = sub_product_list
                 for sub_product_info in sub_product_list:
-                    sub_product_price_list = ProductPriceTb.objects.filter(product_tb_id=sub_product_info.product_id, use=USE).order_by('order')
+                    sub_product_price_list = ProductPriceTb.objects.filter(product_tb_id=sub_product_info.product_id,
+                                                                           use=USE).order_by('order')
                     sub_product_info.sub_price_list = sub_product_price_list
         payment_count = PaymentInfoTb.objects.filter(member_id=request.user.id).count()
         context['payment_count'] = payment_count
@@ -69,9 +65,10 @@ def check_before_billing_logic(request):
     merchant_uid = request.POST.get('merchant_uid')
     customer_uid = request.POST.get('customer_uid')
     payment_name = request.POST.get('name')
-
     today = datetime.date.today()
-    next_payment_date = today
+    payment_date = today
+    start_date = today
+    end_date = today
     context = {}
     error = None
 
@@ -119,16 +116,26 @@ def check_before_billing_logic(request):
             payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
                                                         end_date__gte=today,
                                                         use=USE).latest('end_date')
-            next_payment_date = payment_info.end_date + datetime.timedelta(days=1)
+            payment_date = payment_info.end_date
+            start_date = payment_info.end_date + datetime.timedelta(days=1)
+            # '일'을 확인해서 다음달 일자를 확인
+            context['next_payment_date'] = str(payment_date)
+            context['next_start_date'] = str(start_date)
+            context['next_end_date'] = str(func_get_end_date(payment_type_cd, start_date,
+                                                             int(period_month), int(payment_date.strftime('%d'))))
+            start_date = payment_date
+            end_date = start_date
+
         except ObjectDoesNotExist:
             # 결제가된 이용권이 없는 경우 오늘부터 사용가능한 일자 설정
-            next_payment_date = today
+            context['next_start_date'] = str(start_date)
+            context['next_end_date'] = str(func_get_end_date(payment_type_cd, start_date,
+                                                             int(period_month), int(payment_date.strftime('%d'))))
+            context['next_payment_date'] = context['next_end_date']
+            start_date = context['next_start_date']
+            end_date = context['next_end_date']
 
     if error is None:
-        # '일'을 확인해서 다음달 일자를 확인
-        context['next_start_date'] = str(next_payment_date)
-        context['next_end_date'] = str(func_get_end_date(payment_type_cd, next_payment_date,
-                                                         int(period_month), int(next_payment_date.strftime('%d'))))
 
         try:
             with transaction.atomic():
@@ -137,7 +144,7 @@ def check_before_billing_logic(request):
                                              payment_type_cd=payment_type_cd,
                                              merchant_uid=merchant_uid,
                                              customer_uid=customer_uid,
-                                             start_date=context['next_start_date'], end_date=context['next_end_date'],
+                                             start_date=start_date, end_date=end_date,
                                              paid_date=today,
                                              period_month=period_month,
                                              price=int(input_price),
@@ -159,8 +166,8 @@ def check_before_billing_logic(request):
                                                  merchant_uid=merchant_uid,
                                                  customer_uid=customer_uid,
                                                  payment_reg_date=datetime.date.today(),
-                                                 next_payment_date=context['next_end_date'],
-                                                 payed_date=int(next_payment_date.strftime('%d')),
+                                                 next_payment_date=context['next_payment_date'],
+                                                 payed_date=int(payment_date.strftime('%d')),
                                                  state_cd='NP', use=UN_USE)
                     billing_info.save()
                 payment_info.save()
@@ -171,7 +178,7 @@ def check_before_billing_logic(request):
             error = '오류가 발생했습니다.[7]'
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     return render(request, 'ajax/payment_error_info.html', context)
@@ -202,6 +209,7 @@ def check_finish_billing_logic(request):
         except ObjectDoesNotExist:
             error = '결제에 실패했습니다.[1]'
 
+    # print('check_finish::'+str(product_id))
     if error is None:
         try:
             # 기존 결제 정보 update
@@ -209,6 +217,7 @@ def check_finish_billing_logic(request):
                 if pre_payment_info.status == 'ready':
                     pre_payment_info.paid_date = today
                     pre_payment_info.status = payment_info['status']
+                    pre_payment_info.price = payment_info['amount']
                     if int(payment_info['amount']) == 0:
                         pre_payment_info.status = 'pre_paid'
                     pre_payment_info.imp_uid = payment_info['imp_uid']
@@ -225,8 +234,9 @@ def check_finish_billing_logic(request):
 
                     # 정기 결제인 경우 정보 update
                     if pre_payment_info.payment_type_cd == 'PERIOD':
-                        before_billing_data = BillingInfoTb.objects.filter(member_id=pre_payment_info.member_id,
-                                                                           use=USE).exclude(customer_uid=pre_payment_info.customer_uid)
+                        before_billing_data = BillingInfoTb.objects.filter(
+                            member_id=pre_payment_info.member_id,
+                            use=USE).exclude(customer_uid=pre_payment_info.customer_uid)
                         try:
                             pre_billing_info = BillingInfoTb.objects.get(customer_uid=pre_payment_info.customer_uid)
                         except ObjectDoesNotExist:
@@ -292,6 +302,7 @@ def billing_check_logic(request):
             with transaction.atomic():
                 pre_payment_info.paid_date = today
                 pre_payment_info.status = payment_info['status']
+                pre_payment_info.price = payment_info['amount']
                 if int(payment_info['amount']) == 0:
                     pre_payment_info.status = 'pre_paid'
                 pre_payment_info.imp_uid = payment_info['imp_uid']
@@ -308,8 +319,9 @@ def billing_check_logic(request):
 
                 # 정기 결제인 경우 정보 update
                 if pre_payment_info.payment_type_cd == 'PERIOD':
-                    before_billing_data = BillingInfoTb.objects.filter(member_id=pre_payment_info.member_id,
-                                                                       use=USE).exclude(customer_uid=pre_payment_info.customer_uid)
+                    before_billing_data = BillingInfoTb.objects.filter(
+                        member_id=pre_payment_info.member_id,
+                        use=USE).exclude(customer_uid=pre_payment_info.customer_uid)
                     try:
                         pre_billing_info = BillingInfoTb.objects.get(customer_uid=pre_payment_info.customer_uid)
                     except ObjectDoesNotExist:
@@ -334,7 +346,7 @@ def billing_check_logic(request):
                         if payment_info['status'] == 'paid':
                             # 정상 결제, 정기 결제인 경우 예약
                             error = func_set_billing_schedule(pre_payment_info.customer_uid,
-                                                              pre_payment_info, int(today.strftime('%d')))
+                                                              pre_payment_info, int(pre_billing_info.payed_date))
 
                         else:
                             # 결제 오류인 경우 iamport 상의 예약 제거
@@ -406,11 +418,11 @@ def cancel_period_billing_logic(request):
             payment_data.update(status='cancelled', use=UN_USE)
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
-    return redirect(next_page)
+    return render(request, 'ajax/payment_error_info.html', context)
 
 
 # 정기 결제 재시작 기능 - 확인 필요
@@ -465,12 +477,9 @@ def restart_period_billing_logic(request):
     context['error'] = error
     if error is not None:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 재결제 신청 오류:'
-                     + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 오류:' + str(error))
     else:
-        logger.info(str(request.user.last_name)+str(request.user.first_name)
-                    + '(' + str(request.user.id) + ')님 재결제 신청 완료')
+        logger.info(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 완료')
 
     context['error'] = error
     return redirect(next_page)
@@ -529,12 +538,9 @@ def clear_pause_period_billing_logic(request):
     context['error'] = error
     if error is not None:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 재결제 신청 오류:'
-                     + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 오류:' + str(error))
     else:
-        logger.info(str(request.user.last_name)+str(request.user.first_name)
-                    + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
+        logger.info(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
 
     context['error'] = error
     return redirect(next_page)
@@ -562,28 +568,26 @@ def delete_period_billing_logic(request):
 
     if error is not None:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 정기 결제 카드 삭제 신청 :'
-                     + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 정기 결제 카드 삭제 신청 :' + str(error))
 
     return redirect(next_page)
 
 
 def update_period_billing_logic(request):
-    json_data = request.body.decode('utf-8')
-    json_loading_data = None
+    # json_data = request.body.decode('utf-8')
+    # json_loading_data = None
     error = None
-    customer_uid = None
+    # customer_uid = None
+    customer_uid = request.POST.get('customer_uid')
+    # try:
+    #     json_loading_data = json.loads(json_data)
+    # except ValueError:
+    #     error = '오류가 발생했습니다.'
+    # except TypeError:
+    #     error = '오류가 발생했습니다.'
 
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다.'
-    except TypeError:
-        error = '오류가 발생했습니다.'
-
-    if error is None:
-        customer_uid = json_loading_data['customer_uid']
+    # if error is None:
+    #     customer_uid = json_loading_data['customer_uid']
     # next_page = request.POST.get('next_page', '')
     context = {'error': None}
     payment_data = None
@@ -611,7 +615,7 @@ def update_period_billing_logic(request):
             payment_data.update(status='cancelled', use=UN_USE)
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -652,7 +656,7 @@ def update_reserve_product_info_logic(request):
         billing_info.save()
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -668,7 +672,7 @@ def check_update_period_billing_logic(request):
     customer_uid = request.POST.get('customer_uid')
     new_merchant_uid = request.POST.get('new_merchant_uid')
     new_customer_uid = request.POST.get('new_customer_uid')
-    paid_date = None
+
     if error is None:
         try:
             billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
@@ -728,7 +732,7 @@ def check_update_period_billing_logic(request):
         except ValueError:
             error = '오류가 발생했습니다.[7]'
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -743,6 +747,7 @@ class GetPaymentScheduleInfoView(LoginRequiredMixin, View):
         payment_info = None
         payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                     payment_type_cd='PERIOD',
+                                                    status='reserve',
                                                     use=UN_USE).order_by('-end_date')
         if len(payment_data) > 0:
             payment_info = payment_data[0]
@@ -757,7 +762,11 @@ class GetPaymentInfoView(LoginRequiredMixin, View):
     def get(self, request):
         context = {}
         payment_info = None
+
+        today = datetime.date.today()
         payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                    status='paid',
+                                                    start_date__lte=today, end_date__gte=today,
                                                     use=USE).order_by('-end_date')
         if len(payment_data) > 0:
             payment_info = payment_data[0]
@@ -785,7 +794,8 @@ class GetPaymentListView(LoginRequiredMixin, View):
 
     def get(self, request):
         context = {}
-        payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id, use=USE).order_by('-end_date')
+        payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                    use=USE).exclude(status='pre_paid').order_by('-end_date')
         context['payment_data'] = payment_data
 
         return render(request, self.template_name, context)
@@ -798,7 +808,6 @@ class GetProductInfoView(LoginRequiredMixin, View):
         context = {}
         product_id = request.GET.get('product_id', '')
 
-        product_info = None
         product_function_data = []
         try:
             product_info = ProductTb.objects.get(product_id=product_id, use=USE)
@@ -845,9 +854,8 @@ def payment_for_iap_logic(request):
 
     product_id = None
     payment_type_cd = None
-    paid_amount = 0
-    product_price_id = None
     start_date = None
+    end_date = None
     context = {}
     error = None
     os_info = ''
@@ -908,12 +916,11 @@ def payment_for_iap_logic(request):
         payment_info.save()
 
     if error is None:
-        logger.info(str(request.user.last_name) + str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 iap 결제 완료:' + str(product_id) + ':'+' '+str(start_date))
+        logger.info(str(request.user.first_name) + '(' + str(request.user.id) + ')님 iap 결제 완료:'
+                    + str(product_id) + ':'+' '+str(start_date))
     else:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
 
     return render(request, 'ajax/payment_error_info.html', context)
 
@@ -1035,12 +1042,9 @@ def resend_period_billing_logic(request):
     context['error'] = error
     if error is not None:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 재결제 신청 오류:'
-                     + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 오류:' + str(error))
     else:
-        logger.info(str(request.user.last_name)+str(request.user.first_name)
-                    + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
+        logger.info(str(request.user.first_name) + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
 
     context['error'] = error
     return render(request, 'ajax/payment_error_info.html', context)
@@ -1075,7 +1079,7 @@ def delete_billing_info_logic(request):
             payment_user_info.save()
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -1119,7 +1123,7 @@ def delete_billing_logic(request):
             billing_user_info.delete()
 
     if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
     context['error'] = error
@@ -1138,7 +1142,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
         cancel_period_payment_data = []
         stop_period_payment_data = []
         current_billing_info = []
-        period_info_flag = []
+        # period_info_flag = []
         today = datetime.date.today()
         period_payment_no = 1
         for product_info in product_list:
@@ -1149,14 +1153,9 @@ class PaymentHistoryView(LoginRequiredMixin, View):
             #                                                 use=USE).latest('end_date')
             # except ObjectDoesNotExist:
             #     payment_info = None
-            payment_data = PaymentInfoTb.objects.select_related('product_tb').filter(member_id=request.user.id,
-                                                                                     product_tb_id=product_info.product_id,
-                                                                                     # payment_type_cd='SINGLE',
-                                                                                     start_date__lte=today,
-                                                                                     end_date__gte=today,
-                                                                                     status='paid',
-                                                                                     # price__gt=0,
-                                                                                     use=USE)
+            payment_data = PaymentInfoTb.objects.select_related(
+                'product_tb').filter(member_id=request.user.id, product_tb_id=product_info.product_id,
+                                     start_date__lte=today, end_date__gte=today, status='paid', use=USE)
 
             period_payment_data = PaymentInfoTb.objects.select_related('product_tb'
                                                                        ).filter(Q(status='reserve')

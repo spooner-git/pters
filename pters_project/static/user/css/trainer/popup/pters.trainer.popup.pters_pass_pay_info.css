@@ -1,0 +1,58 @@
+
+.popup_pters_pass_pay_info{
+	/* -webkit-overflow-scrolling: touch; */
+}
+
+.popup_pters_pass_pay_info .obj_box_full{
+	padding: 15px 20px;
+	border: 0;
+}
+
+.popup_pters_pass_pay_info .obj_input_box_full{
+	padding: 10px 20px;
+	/* border: 0; */
+}
+
+.popup_pters_pass_pay_info .popup_toolbox{
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
+	top: 0;
+	padding: 8px 16px 4px 20px;
+	/* border-bottom: 1px solid #f5f5f5; */
+	z-index: 1;
+}
+
+.popup_pters_pass_pay_info .popup_content{
+	/* padding-top: 20px; */
+}
+
+.popup_pters_pass_pay_info .pay_history_wrapper{
+	padding: 18px 0;
+	border-bottom: 1px solid #f5f2f3;
+}
+.popup_pters_pass_pay_info .pay_history_title{
+	font-size: 13px;
+	font-weight: bold;
+	letter-spacing: -0.5px;
+	color: #5c5859;
+	margin-bottom: 12px;
+}
+.popup_pters_pass_pay_info .pass_article_detail_row{
+	display: flex;
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: -0.5px;
+	border-left: 1px solid #d6d2d2;
+	padding: 2px 8px;
+	box-sizing: border-box;
+}
+
+.popup_pters_pass_pay_info .pass_article_detail_row > div:first-child{
+	flex: 0 0 52px;
+	color: #b8b4b4;
+}
+
+.popup_pters_pass_pay_info .pass_article_detail_row > div:last-child{
+	color: #5c5859;
+}

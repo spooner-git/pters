@@ -1,0 +1,105 @@
+#home_display_panel{
+	position: sticky;
+	position: -webkit-sticky;
+	height: auto;
+	z-index: 10;
+	width: 100%;
+	top: 0;
+	/* text-align: center; */
+}
+	.home_upper_box{
+		position: relative;
+		height: 68px;
+		line-height: 28px;
+		background-color: #ffffff;
+		/* border-bottom: 1px solid #cccccc; */
+		/* background-image: linear-gradient(180deg, #ffffff, transparent); */
+		padding: 20px 16px;
+		box-sizing: border-box;
+	}
+	.home_upper_box .home_right_button{
+		float: right;
+		width: 30px;
+		height: 30px;
+		cursor: pointer;
+	}
+	.home_upper_box .home_right_button > img{
+		width: 100%;
+		border-radius: 50%;
+	}
+
+#home_content_wrap{
+	padding: 16px;
+	box-sizing: border-box;
+}
+
+#home_content_wrap .contents{
+	border-radius: 4px;
+	box-shadow: 0 0 16px 0 #e6e6e6;
+	border: solid 1px #f5f2f3;
+	background-color: #ffffff;
+	margin-bottom: 12px;
+	padding: 4px 0;
+}
+
+#home_content_wrap .program_wrapper{
+	padding: 0 0 0 20px;
+	box-sizing: border-box;
+}
+
+#home_content_wrap .today_plan_wrapper{
+	display: flex;
+	height: 48px;
+	line-height: 22px;
+	padding: 12px 20px;
+	color: #3d3b3b;
+	letter-spacing: -0.5px;
+	font-weight: 500;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+
+#home_content_wrap .today_plan_wrapper:active{
+	background-color: #e8e8e8;
+}
+
+.today_plan_lecture_color{
+	display:inline-block;
+	width: 4px;
+	height:16px;
+	border-radius:6px;
+	/* background-color:#ceeac4; */
+	margin-right:8px;
+	vertical-align:middle;
+}
+
+#home_content_wrap .today_plan_wrapper > div:nth-child(1){
+	flex: 0 0 80px;
+	font-size: 12px;	
+}
+#home_content_wrap .today_plan_wrapper > div:nth-child(2){
+	flex: 1 1 0;
+	font-size: 14px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+#home_content_wrap .today_plan_wrapper > div:nth-child(3){
+	flex: 0 0 60px;
+	font-size: 14px;
+	text-align: right;
+}
+
+#home_content_wrap .end_alert_wrapper{
+	padding: 0 20px;
+	box-sizing: border-box;
+}
+
+#home_content_wrap .end_alert_wrapper .create_row .cell_title > img, #home_content_wrap .create_input_row .cell_title > img{
+	border-radius: 50%;
+}
+
+#home_content_wrap .sales_wrapper{
+	padding: 0 0 0 20px;
+	box-sizing: border-box;
+}

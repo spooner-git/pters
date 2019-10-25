@@ -1,0 +1,3 @@
+http{% if request.is_secure %}s{% endif %}://{{ domain }} <br/>
+
+인증번호 : {{ reset_activation_number }}

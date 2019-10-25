@@ -1,0 +1,17 @@
+#menu_display_panel{
+	position: sticky;
+	position: -webkit-sticky;
+	height: auto;
+	z-index: 10;
+	width: 100%;
+	top: 0;
+	/* text-align: center; */
+}
+	.menu_upper_box{
+		position: relative;
+		height: 68px;
+		line-height: 28px;
+		background-color: #ffffff;
+		padding: 20px 16px;
+		box-sizing: border-box;
+	}

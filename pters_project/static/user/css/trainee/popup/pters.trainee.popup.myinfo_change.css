@@ -63,7 +63,7 @@
 
 		.popup_my_info_change > .obj_box_full .wrapper_auth_input{
 			-webkit-appearance:none;
-			width: 70%;
+			width: 60%;
 			border: 0;
 			border-bottom: 1px solid #f2f2f2;
 			-webkit-text-fill-color: #000000;
@@ -74,15 +74,63 @@
 		}
 
 		.popup_my_info_change > .obj_box_full .wrapper_password_change_button{
-			width: 140px;
+			width: 35%;
 			display: inline-block;
 			float: right;
 			border: 1px solid #ff3b44;
 		}
 
 		.popup_my_info_change > .obj_box_full .wrapper_auth_button{
-			width: 140px;
+			width: 35%;
 			display: inline-block;
 			float: right;
 			border: 1px solid #ff3b44;
 		}
+
+
+	.activation_button{
+		width: 70px;
+		height: 48px;
+		border-radius: 2px;
+		border: solid 1px #d6d2d2;
+		float: right;
+		font-size: 15px;
+		font-weight: 500;
+		font-style: normal;
+		font-stretch: normal;
+		line-height: 46px;
+		letter-spacing: -0.5px;
+		text-align: center;
+		color: #b8b4b4;
+		background-color: #ffffff;
+		cursor: pointer;
+	}
+
+	.pters_login_input{
+		-webkit-appearance: none;
+		-moz-appearance: none;
+
+		width: calc(100% - 2px);
+		height: 46px;
+		border-radius: 2px;
+		border: solid 1px #d6d2d2;
+		padding: 0;
+		text-indent: 12px;
+		font-size: 15px;
+		font-weight: 500;
+		font-style: normal;
+		font-stretch: normal;
+		line-height: normal;
+		letter-spacing: -0.5px;
+		color: #3d3b3b;
+	}
+
+	.pters_login_input::-webkit-input-placeholder {
+		font-size: 15px;
+		font-weight: normal;
+		font-style: normal;
+		font-stretch: normal;
+		line-height: normal;
+		letter-spacing: -0.5px;
+		color: #b8b4b4;
+	}

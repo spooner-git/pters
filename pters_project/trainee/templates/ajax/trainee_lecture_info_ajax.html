@@ -1,0 +1,27 @@
+    {
+      "lecture_id":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "member_num":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.member_num  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "name":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "note":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.note | linebreaks }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "reg_dt":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "mod_dt":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "state_cd":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "state_cd_name":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.state_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lecture_member_num":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_member_num }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+      "lecture_ing_color_cd":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.ing_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lecture_end_color_cd":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.end_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "messageArray" :
+      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }

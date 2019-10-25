@@ -1,278 +1,178 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>피터스 - 레슨 일정 및 회원 관리 서비스</title>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window, document, 'script', 'dataLayer', 'GTM-WG2KK6D');</script>
-    <!-- End Google Tag Manager -->
-    <!--Google Adsense-->
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({
-            google_ad_client: "ca-pub-4554121851965192",
-            enable_page_level_ads: true
-        });
-    </script>
-    <!--Google Adsense-->
-    {% load static_url %}
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
-    <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
-    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
-    <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="751903262384-dbtt6ho5imk5gssgn1rqpe3vs3linq15.apps.googleusercontent.com">
+{% extends "base.html" %}
+{% load static_url %}
 
-    {% block local_css %}
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
+    <style>
+        #root_content{
+            background-color: #ffffff;
+        }
+        .login_content{
+            background-image: url('/static/common/img/home_bg/bg_small.png');
+            background-size: 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .social_login_box_wrapper{
+            width: 100%;
+            display:flex;
+            margin-top: 8px;
+            flex-direction: row;
+        }
+        .social_login_box_wrapper .social_login_box{
+            /* display: flex; */
+            flex: 1 1 0;
+        }
+        @media(max-width:340px){
+            .social_login_box_wrapper{
+                display:flex;
+                flex-direction: column;
+            }
+            .social_login_box_wrapper .social_login_box{
+                flex: 1 1 0;
+            }
+        }
 
-        <meta name="login" content="trainer_login"><!-- 
-        <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.promote.css" %}> -->
-        <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.login.css" %}>
-        <link rel="icon" href="/static/common/favicon.ico">
-        <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
-        <link rel="shortcut icon" href="/static/common/favicon-152.png">
 
-        <link rel="icon" href="/static/common/favicon.ico">
-        <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
-        <link rel="shortcut icon" href="/static/common/favicon-152.png">
-        <style type="text/css">
-            .loginbox{
-                display: block;
-                left: 50%;
-                transform: translateX(-50%);
+        /* PC버전 화면 */
+        @media(min-width:800px){
+            #root_content{
+                background-color: #f4f4f4;
             }
-            #promote_1 .explain_wrap{
-                top: 0;
-                height: auto;
-                max-width: 340px;
+            #login_box{
+                display: flex;
+                max-width: 1024px;
+                padding-top: 200px;
+                box-sizing: border-box;
             }
-            #promote_1 .explain_main{
-                text-align: left;
-                padding: 10px 20px 0 20px;
-                height: 100%;
+            .login_content{
+                flex: 3 1 0;
+                height: 400px;
+                background-size: contain;
+                padding-top: 0;
+                background-image: url('/static/common/img/home_bg/bg_big.png');
             }
-            #promote_1 .gotoSignIn{
-                height: auto;
-                margin-bottom: 5px;
+            .login_foot{
+                flex: 2 1 0;
+                min-width: 415px;
+                height: 400px;
+                background-color: #ffffff;
+                padding: 40px;
+                box-sizing: border-box;
+                border-radius: 10px;
             }
-            #promote_1 .gotoSignIn a{
-                display: none;
-            }
-            #promote_1 .logo_label{
-                margin-top: 10px;
-                margin-bottom: 0px;
-            }
-            #promote_1 .loginbox{
-                margin-top: 40px;
-                margin-bottom: 40px;
-                /*top: 30%;*/
-                z-index: 1500;
-            }
-            
-            #idimg, #pwimg{
-                display: none;
-            }
-            #promote_1 .loginboxstyle{
-                display: inline-block;
-                width: 50%;
-            }
-            
-            #errorMessageBar{
-                display: block;
-                width: 100%;
-                position: sticky;
-                top: 0;
-                left: 0;
-                height: 35px;
-                text-align: center;
-                background: red;
-                color: #ffffff;
-                font-size: 15px;
-                font-weight: bold;
-                z-index: 1500;
-            }
-            #errorMessageBar span{
-                line-height: 35px;
-            }
-            #errorMessageBar span:nth-child(2){
-                position: absolute;
-                right: 0;
-                margin-right: 10px;
-                cursor: pointer;
-            }
-            @media(min-width:1024px){
-               .loginbox{
-                    display: block;
-                    left: 50%;
-                    transform: translateY(-50%);
-                }
-                #idimg, #pwimg{
-                    display: inline-block;
-                }
-                #promote_1 .explain_wrap{
-                    top: 50%;
-                    height: unset;
-                }
-                #promote_1 .explain_main{
-                    height: 305px;
-                    padding-top: 0;
-                }
-                #promote_1 .logo_label{
-                    margin-top: 25px;
-                    margin-bottom: 5px;
-                }
-                #promote_1 .loginbox{
-                    top: 50%;
-                    margin-top: unset;
-                    margin-bottom: unset;
-                }
-                .explain_main_sublabel{
-                    display: block;
-                    font-size: 16px !important;
-                    font-weight: 300 !important;
-                }
-            }
-        </style>
+        }
 
-    {% endblock %}
-</head>
+
+    </style>
+{% endblock %}
 {% block content %}
-    <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
-                      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    <div id="root_content">
 
-    <nav class="upperbar">
-        <div>
-            <a href="/"><img src="/static/user/res/PTERS_logo_pure.png?v2" alt="PTERS" class=""></a>
-            <!-- <a href="/login"><span>LOGIN</span></a> -->
-            <a href="/login/service_info/"><span>서비스 소개</span></a>
-            <!-- <a href="/login/service_price_info/"><span>가격</span></a> -->
-            <!-- <a href="/login/service_test_login/"><span>체험하기</span></a> -->
-        </div>
-    </nav>
+        <div id="login_box">
 
-    <div class="pagination">
-        <div id="page1" class="pagination_bar pagination_active"></div>
-        <div id="page2" class="pagination_bar"></div>
-        <div id="page3" class="pagination_bar"></div>
-        <div id="page4" class="pagination_bar"></div>
-        <div id="page5" class="pagination_bar"></div>
-        <div id="page6" class="pagination_bar"></div>
-    </div>
-
-    <div class="socialnetwork">
-
-    </div>
-
-    <div id="tooltip"><span style="line-height: 30px;">서비스 안내</span></div>
-
-    <div class="album_wrap" id="album_wrap">
-        <div class="album" id="promote_1" style="height: 100%;">
-            <div class="explain_wrap">
-                <div class="explain_main">
-                    <h1 style="margin:0">누구나</h1>
-                    <h3 style="margin:0;font-weight: 300;">쉽고 빠르게</h3>
-                    <h1 style="margin:0">레슨<span style="font-size:17px;font-weight: 300;">을</span> 관리<span style="font-size:17px;font-weight: 300;">하는 방법</span></h1>
-
-                    <div class="logo_label"><img src="/static/user/res/PTERS_logo_pure.png?v2" alt="PTERS" class=""><!-- <span class="pters_logo_text"> 피터스</span> --></div>
-
-                    <p class="explain_main_sublabel">1:1, 그룹 레슨 관리</p>
-                    <p class="explain_main_sublabel">더 알고 싶다면?</p>
-                    <a href="/login/service_info/">
-                        <img id="go_to_service_explain" src="/static/user/res/login/arrow.png" style="width:35px;margin-top: 15px;cursor: pointer;" title="서비스 안내">
+            <div class="login_content">
+                <div class="pters_logo">
+                    <a href="/">
+                        <img src="/static/common/icon/logo/PTERS_logo_short.png" alt="PTERS 피터스 로고" style="width:100%;">
                     </a>
                 </div>
+                <div class="pters_description">
+                    <span style="font-weight:500;">쉽고 빠르게</span> <br/>
+                    <span style="font-weight:bold;">레슨을 관리하는 방법</span> <br>
+                    <span style="font-weight:bold;color:#fe4e65;font-size:22px">피터스 PTERS</span></div>
             </div>
+            <div class="login_foot">
+                <form action="{% url 'login:login' %}" id="login-form" method="post">
+                    <input type="hidden" name="auto_login_check" value="1">
+                    <input type="hidden" name="next_page" value = '{% url 'index' %}'>
+                    {% csrf_token %}
 
-            <div class="loginbox">
-                {% for message in messages %}
-                    {% if message.tags == "error" %}
+                    <!-- PTERS 로그인 입력 영역 -->
+                    <div>
+                        <input class="pters_login_input" type="text" name="username" id="username_id" placeholder="아이디" autofocus>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <input class="pters_login_input" type="password" name="password" id="password_id" placeholder="비밀번호" onkeyup="enter_key();">
+                    </div>
+                    <!-- PTERS 로그인 버튼 노출 영역 -->
+                    <div class="social_login_box" onclick="document.getElementById('login-form').submit();" style="background-color: #fe4e65; margin-top:12px;">
+                        <div class="social_login_img" style="display:none;"></div>
+                        <span class="social_login_text" style="color:#ffffff; text-align:center;">로그인</span>
+                        <div style="display:table-cell; width:60px;display:none;"></div>
+                    </div>
 
-                        <div id="errorMessageBar">
-                            <span id="errorMessageText">{{ message }}</span><span>닫기</span>
-                        </div>
+                    <div style="width:100%;height:2px;background-color:#f5f2f3;margin-top:15px;margin-bottom:15px;">
 
-                    {% endif %}
-                {% endfor %}
-                <!-- <div class="logintext">
-                    <div><img src="/static/user/res/PTERS_logo_pure.png" id="pterstext" alt="피터스 로고"  onclick="location.href='{% url 'index' %}'"><span id="logintext">로그인</span></div>
-                </div> -->
-                <div id="loginboxbg">
-                </div>
-                <div>
-                    <form action="{% url 'login:login' %}" id="login-form" method="post">
-                        {% csrf_token %}
-                        <div id="idinput" class="pters_login_input">
-                            <img id="idimg" alt="피터스 아이디" src={% static_url "user/res/login/icon-user.png" %}>
-                            <input type="text" class="loginboxstyle form-control" name="username" id="username_id" placeholder="아이디" autofocus>
-                        </div>
-                        <div id="pwinput" style="margin-top:5%;"  class="pters_login_input">
-                            <img id="pwimg" alt="피터스 비밀번호" src={% static_url "user/res/login/icon-lock.png" %}>
-                            <input type="password" class="loginboxstyle form-control" name="password" id="password_id" placeholder="비밀번호">
-                        </div>
-                        <div class="checkbox" style="margin-top:15px;margin-left:27px;text-align: left;"  class="pters_login_input">
-                            <label><input type="checkbox" name="auto_login_check" value="1" checked>다음부터 자동 로그인</label>
-                        </div>
-                        
+                    </div>
 
-                        
-
-                        <!-- 구글아이디로그인 버튼 노출 영역 -->
-{#                         <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" style="width:179px;margin-bottom:8px;"></div>#}
-                        <!-- //구글아이디로그인 버튼 노출 영역 -->
-
-                        <!-- 페이스북아이디로그인 버튼 노출 영역 -->
-                        <!-- <fb:login-button
-                          scope="public_profile, email" onlogin="checkLoginState();" class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="text-align: center;display: block">
-                        </fb:login-button> -->
-                        <!-- //페이스북아이디로그인 버튼 노출 영역 -->
-
-
-                        <input type="hidden" name="keyword" id="keyword">
-                        <div class="innerbox" style="display: inline-block;width: 70%;">
-                            <a href="{% url 'login:registration_register' %}"><div id="registerButton">회원 가입</div></a>
-                            <div class="seperate_bar"></div>
-                            <a href="{% url 'login:auth_password_reset' %}"><div id="findIDPW">PW 초기화</div></a>
-                        </div>
-                        <div  class="pters_login_input" style="display: inline-block;width: auto;">
-                                <button type="submit" class="" id="loginButton">로그인</button>
+                    <div class="social_login_box_wrapper">
+                        <!-- 네이버 로그인 버튼 노출 영역 -->
+                        <div class="social_login_box" onclick="location.href=naverLogin.generateAuthorizeUrl();" style="background-color: #0dd25a;">
+                            <div class="social_login_img">
+                                <img src="/static/common/icon/icon_naver_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 네이버로 로그인">
                             </div>
-                        <input type="hidden" name="next_page" value = '{% url 'index' %}'>
-
-                        <div style="width:95%;height: 1px;background:#ffffff;margin-top:30px;margin-bottom: 15px;">
-                            
-                        </div>
-                        <!-- 네이버아이디로로그인 버튼 노출 영역 -->
-                            <div id="naverIdLogin" style="display:none"></div>
-                            <div id="naverLogin_img" onclick="location.href = naverLogin.generateAuthorizeUrl();" style="cursor: pointer;">
-                                <img src="/static/user/res/login/naver.svg" style="width:18px;">
-                                <span style="color:#ffffff;font-size: 16px;font-weight: 300;">네이버 아이디로 로그인</span>
+                            <span class="social_login_text">네이버 로그인</span>
+                            <div class="social_login_arrow">
+                                <img src="/static/common/icon/icon_arrow_r_small_white.png" style="width: 24px; height: 24px; vertical-align:middle;">
                             </div>
-                        <!-- //네이버아이디로로그인 버튼 노출 영역 -->
-                    </form>
-                </div>
+                        </div>
+
+                        <div style="flex-basis:8px;"></div>
+
+                        <!-- 카카오톡 로그인 버튼 노출 영역 -->
+                        <div class="social_login_box" id="custom-login-btn" onclick="loginWithKakao();" style="background-color: #ffeb00;">
+                            <div class="social_login_img">
+                                <img src="/static/common/icon/icon_kakao_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 카카오로 로그인">
+                            </div>
+                            <span class="social_login_text" style="color:#3a1c1d;">카카오 로그인</span>
+                            <div class="social_login_arrow">
+                                <img src="/static/common/icon/icon_arrow_r_small_black.png" style="width: 24px; height: 24px; vertical-align:middle;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 일반 로그인 버튼 노출 영역 -->
+                    <!-- <div class="social_login_box" id="custom-login-btn" onclick="location.href='{% url 'login:index' %}';" style="background-color: #ffffff; margin-top:8px;  border:1px solid #ebe6e6;">
+                        <div class="social_login_img">
+                            <img src="/static/common/icon/icon_pters_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 로그인">
+                        </div>
+                        <span class="social_login_text" style="color:#3a1c1d;">일반 로그인</span>
+                        <div style="display:table-cell; width:60px; vertical-align: middle; text-align:right; padding-right:8px;">
+                            <img src="/static/common/icon/icon_arrow_r_small_light_grey.png" style="width: 24px; height: 24px; vertical-align:middle;">
+                        </div>
+                    </div> -->
+
+                    <!-- 구글아이디로그인 버튼 노출 영역 -->
+                    <!--<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" style="width:179px;margin-bottom:8px;"></div>-->
+                    <!-- 페이스북아이디로그인 버튼 노출 영역 -->
+                    <!-- <fb:login-button
+                      scope="public_profile, email" onlogin="checkLoginState();" class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="text-align: center;display: block">
+                    </fb:login-button> -->
+                    <!--<div style="width:320px; height: 1px;background:#f5f2f3;margin-top: 16px; margin-bottom: 8px; opacity: 0.3"></div>-->
+                    <!-- 회원가입, 일반 로그인 버튼 노출 영역역 -->
+                    <!-- <div class="general_text" style="display:table; width:100%; height: 48px; margin-top:24px;color:#858282">
+                        계정이 필요하지 않으십니까? &nbsp;&nbsp;&nbsp;<span onclick="location.href='{% url 'login:check_registration' %}'" style="color:#fe4e65;font-weight:bold;text-decoration: underline;">회원가입</span>
+                    </div> -->
+                    <div style="width:100%;height:2px;background-color:#f5f2f3;margin-top:15px;margin-bottom:15px;">
+
+                    </div>
+                    <div style="display:table; width:100%; height: 48px;">
+                        <div class="general_text" style="color:#858282;" onclick="location.href='{% url 'login:check_registration' %}'">회원 가입</div>
+                        <div class="general_text" style="color:#858282;" onclick="location.href='{% url 'login:reset_password' %}'">비밀번호 초기화</div>
+                    </div>
+                </form>
             </div>
-            <img src="/static/user/res/btn_next.png" class="next_page" style="display: none;">
         </div>
-
     </div>
-
-
+    <!--
     <div class="album_wrap_ie" id="IE_block_explain" style="display: none;">
         <div class="album_ie" id="promote_1">
             <div class="explain_wrap_ie">
                 <div class="explain_main">
-                    <h2>세상에서 가장 쉬운</h2>
                     <h1>1:1 레슨 일정/회원 관리 시스템</h1>
 
-                    <div class="logo_label"><a href="https://www.pters.co.kr"><img src="/static/user/res/PTERS_logo_pure.png?v2" alt="PTERS" class=""></a><!-- <span class="pters_logo_text"> 피터스</span> --></div>
+                    <div class="logo_label"><a href="https://www.pters.co.kr"><img src="/static/user/res/PTERS_logo_pure.png?v2" alt="PTERS" class=""></a></div>
 
                     <p>일정 관리는 쉽고 빠르게</p>
                     <p>회원의 만족도는 업!</p>
@@ -292,328 +192,143 @@
             </div>
         </div>
     </div>
-
-    <form action="{% url 'login:login_simple_sns' %}" id="sns-form" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="username" id="id_sns_username">
-        <input type="hidden" name="email" id="id_sns_email">
-        <input type="hidden" name="last_name" id="id_sns_last_name">
-        <input type="hidden" name="first_name" id="id_sns_first_name">
-        <input type="hidden" name="sns_id" id="id_new_sns_id">
-        <input type="hidden" name="sns_type" id="id_sns_type" >
-        <input type="hidden" name="social_accessToken" id="id_social_accessToken" >
-        <input type="hidden" name="sex" id="id_sns_sex">
-    </form>
+    -->
 {% endblock %}
 
 {% block local_js_footer %}
-    <script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
-    <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
-    <script type="text/javascript" src={% static_url "user/js/login/pters.trainer.promote.js" %}></script>
-{#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
-    <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script>
-        var bodywidth = window.innerWidth;
+<script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
+<script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>
+<script type="text/javascript">
 
-        var varUA = navigator.userAgent.toLowerCase()//useAgent값 얻기
-        if(varUA.match('android') != null){
-            var devicetext = '브라우저, Android 앱으로';
-            var methodtext = 'PC, 스마트폰, 태블릿 등';
-        }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-            var devicetext = '브라우저, iOS 앱으로';
-            var methodtext = 'PC, 스마트폰, 태블릿 등';
-        }else{
-            var devicetext = '브라우저, iOS, Android 앱으로';
-            var methodtext = 'PC웹(크롬, 파이어폭스, 엣지, 사파리)과 스마트폰, 태블릿 등';
+    /*
+    var varUA = navigator.userAgent.toLowerCase();//useAgent값 얻기
+    var device_text = '브라우저, iOS, Android 앱으로';
+    var method_text = 'PC웹(크롬, 파이어폭스, 엣지, 사파리)과 스마트폰, 태블릿 등';
+    if(varUA.match('android') != null){
+        device_text = '브라우저, Android 앱으로';
+        method_text = 'PC, 스마트폰, 태블릿 등';
+    }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+        device_text = '브라우저, iOS 앱으로';
+        method_text = 'PC, 스마트폰, 태블릿 등';
+    }
+
+    $('#connectedMethod').html(method_text);
+    $('#connectedDevice').html(device_text);
+
+    if(varUA.match('MSIE') != null || varUA.match('msie') != null || varUA.match('rv:11.0')){
+        $('#album_wrap, .upperbar a, .pagination, .paginationMobile').css('display','none');
+        $('#IE_block_explain').css('display','block');
+    }
+    */
+    var kakao_login_test = true;
+
+    $('#errorMessageBar span:nth-child(2)').click(function(){
+        $('#errorMessageBar').fadeOut('fast')
+    });
+
+    window.addEventListener('load', function () {
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                alert('{{ message }}');
+            {% endif %}
+        {% endfor %}
+        kakao_login_test = true;
+        var val = location.href.substr(
+            location.href.lastIndexOf('=') + 1
+        );
+        if(val=='naver'){
+            location.href = naverLogin.generateAuthorizeUrl();
         }
-        $('#connectedMethod').html(methodtext);
-        $('#connectedDevice').html(devicetext);
+        $.ajax({
+            url:'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id={{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_ID }}&client_secret={{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_SECRET }}',
+            type:'POST',
+            dataType : 'json',
 
-        if(varUA.match('MSIE') != null || varUA.match('msie') != null || varUA.match('rv:11.0')){
-            $('#album_wrap, .upperbar a, .pagination, .paginationMobile').css('display','none');
-            $('#IE_block_explain').css('display','block');
-        }
+            beforeSend:function(){
+                //beforeSend();
+            },
 
+            //통신성공시 처리
+            success:function(data){
+                var jsondata = JSON.parse(data);
+            },
 
-        function show_tooltip(bodywidth){
-            $('#tooltip').css("display","none");
-            if(bodywidth > 1024){
-                $('#go_to_service_explain').mouseover(function(){
-                    $('#tooltip').fadeIn('fast');
-                    $('#tooltip').css({"top":$(this).offset().top,"left":$(this).offset().left+$(this).width()+20});
-                    $(this).mouseleave(function(){
-                        $('#tooltip').fadeOut('fast');
-                    });
-                });
-            }else{
-                var $go_to_service_explain = $('#go_to_service_explain');
-                $('#tooltip').css({"display":"inline-block","top":$go_to_service_explain.offset().top,"left":$go_to_service_explain.offset().left+$go_to_service_explain.width()+20});
+            //보내기후 팝업창 닫기
+            complete:function(){
+            },
+
+            //통신 실패시 처리
+            error:function(){
+
             }
-        }
-
-        // show_tooltip(bodywidth);
-        // $(window).resize(function(){
-        //     bodywidth = window.innerWidth;
-        //     show_tooltip(bodywidth);
-        // });
-        
-        
-
-
-        var page = 0;
-        var scroll = true;
-        var explain_mode;
-        // $('html,body').on('mousewheel',function(e){
-        //     var loc_1 = $('#promote_1').height()
-        //     e.preventDefault()
-        //     var direction = e.originalEvent.wheelDelta
-        //     if(direction<0 && scroll == true){
-        //         page++
-        //         /*if(page > 5){
-        //             page = 5
-        //         }*/
-        //         if(page > explain_mode){
-        //             page = explain_mode
-        //         }
-        //         $('body, html').animate({scrollTop : loc_1*page},400)
-        //         $('.pagination_active').removeClass('pagination_active')
-        //         $('#page'+(page+1)).addClass('pagination_active')
-        //         scroll = false
-        //         setTimeout(function(){scroll = true}, 500)
-        //     }else if(direction>0 && scroll == true){
-        //         page--
-        //         if(page < 0){
-        //             page = 0
-        //         }
-        //         $('body, html').animate({scrollTop : loc_1*page},400)
-        //         $('.pagination_active').removeClass('pagination_active')
-        //         $('#page'+(page+1)).addClass('pagination_active')
-        //         scroll = false
-        //         setTimeout(function(){scroll = true}, 500)
-        //     }
-        // });
-
-
-        var initX;
-        var mobile_page = 0;
-        var touch = true;
-        $(document).on('touchstart','.album_wrap',function(e){
-            initX = e.originalEvent.touches[0].clientX;
-
         });
+    });
 
-        if($('body').width()<1025){
-            $(document).on('touchend','.album_wrap',function(e){
-                if($('#promote_2').css('display') == "block"){
-                    var endX = e.originalEvent.changedTouches[0].clientX;
-                    if(endX-initX > 5 && touch == true){
-                        left_page();
-                    }else if(initX-endX > 5 && touch == true){
-                        right_page();
-                    }
-                }
-               
-            })
-        }
-        function left_page(){
-            if(mobile_page <= 0){
-                mobile_page = 1;
-            }
-            $('#promote_'+(mobile_page+1)).css('left', 100+'%');
-            $('#promote_'+(mobile_page)).css('left','0%');
-            $('.paginationMobile_active').removeClass('paginationMobile_active');
-            $('.pageMobile_'+mobile_page).addClass('paginationMobile_active');
-            mobile_page--;
-            touch = false;
-            setTimeout(function(){touch = true}, 50);
-
-        }
-
-        function right_page(){
-            mobile_page++
-            if(mobile_page >= explain_mode+1){
-                mobile_page = explain_mode;
-            }
-            $('#promote_'+(mobile_page)).css('left', -100+'%');
-            $('#promote_'+(mobile_page+1)).css('left','0%');
-            $('.paginationMobile_active').removeClass('paginationMobile_active');
-            $('.pageMobile_'+(mobile_page+1)).addClass('paginationMobile_active');
-            touch = false;
-            setTimeout(function(){touch = true}, 50);
-
-        }
-
-        function show_explain_page_to_target(target, device){
-            $('.__targetall').css('display','block');
-            
-            
-            var loc_1 = $('#promote_1').height();
-            if(device == "pc"){
-                $('.pagination').css('display','block');
-                $('body, html').animate({scrollTop : loc_1},700);
-            }else if(device ="mobile"){
-                $('.paginationMobile').css('display','table');
-                right_page();
-            }
-            if(target == "__teacher"){
-                explain_mode = 5;
-                $('.__teacher').css('display','block');
-                $('.__student').css('display','none');
-                $('.paginationMobile #page6').css('display','table-cell');
-                $('.pagination #page6').css('display','block');
-            }else if(target == "__student"){
-                explain_mode = 4;
-                $('.__teacher').css('display','none');
-                $('.__student').css('display','block');
-                $('.paginationMobile #page6, .pagination #page6').css('display','none');
-            }
-        }
-
-        function goPage(option){
-            if(option == 0){
-                location.href="/login/register/";
-            }else if(option == 1){
-                location.href="/login/password/reset/";
-            }
-        }
-
-        function goSlide(offset){
-            $('body, html').animate({scrollTop : offset},400);
-        }
-
-{#        Push.Permission.request(onGranted, onDenied);#}
-
-{#        function onDenied() {#}
-{#            console.log('알람 거절 상태')#}
-{#        }#}
-{#        function onGranted() {#}
-{#            console.log('알람 승인 상태')#}
-{#        }#}
-
-        $('#errorMessageBar span:nth-child(2)').click(function(){
-            $('#errorMessageBar').fadeOut('fast')
-        })
-
-{#        navigator.serviceWorker.getRegistrations().then(function(registrations) {#}
-{#            registrations.forEach(function(v) {#}
-{#                if(v.active){#}
-{#                    if(v.scope=="{% url 'index' %}/static/user/js/push/" || v.scope=="{% url 'index' %}/static/user/js/push/"){#}
-{#                        v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t80')#}
-{#                    }#}
-{#                }#}
-{#            });#}
-{#        });#}
-
-
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie != '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        var csrftoken = getCookie('csrftoken');
-
-
-        window.addEventListener('load', function () {
-            var val = location.href.substr(
-                location.href.lastIndexOf('=') + 1
-            );
-
-            if(val=='naver'){
-                location.href = naverLogin.generateAuthorizeUrl();
-
-            }
-
-            $.ajax({
-                url:'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=VM6zl0mLyBgjf9dgw1cC&client_secret=gGI681B6TR',
-                type:'POST',
-                dataType : 'json',
-
-                beforeSend:function(){
-                    //beforeSend();
-                },
-
-                //통신성공시 처리
-                success:function(data){
-                    var jsondata = JSON.parse(data);
-                    console.log(jsondata);
-                },
-
-                //보내기후 팝업창 닫기
-                complete:function(){
-                },
-
-                //통신 실패시 처리
-                error:function(){
-
-                }
-            });
-        });
-// <!-- 네이버아디디로로그인 초기화 Script -->
-	var naverLogin = new naver.LoginWithNaverId(
-		{
-			clientId: "h5MuvYzSFLlrFTs19g0V",
- 			callbackUrl: "https://www.pters.co.kr/login/login_simple_naver/",
-{#            clientId: "VM6zl0mLyBgjf9dgw1cC",#}
-{#			callbackUrl: "http://localhost:8000/login/login_simple_naver/",#}
-			isPopup: false, /* 팝업을 통한 연동처리 여부 */
+    // <!-- 네이버아디디로로그인 초기화 Script -->
+    var naverLogin = new naver.LoginWithNaverId(
+        {
+            clientId: "{{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_ID }}",
+            callbackUrl: "http{% if request.is_secure %}s{% endif %}://{{ request.session.domain }}/login/login_simple_naver/",
+            //callbackUrl: "https://www.pters.co.kr/login/login_simple_naver/",
+            //clientId: "VM6zl0mLyBgjf9dgw1cC",
+            //callbackUrl: "http://localhost:8000/login/login_simple_naver/",
+            isPopup: false, /* 팝업을 통한 연동처리 여부 */
             callbackHandle: false,
-			loginButton: {color: "white", type: 1, height: 39} /* 로그인 버튼의 타입을 지정 */
-		}
-	);
-
-	/* 설정정보를 초기화하고 연동을 준비 */
-	naverLogin.init();
+            loginButton: {color: "white", type: 1, height: 39} /* 로그인 버튼의 타입을 지정 */
+        }
+    );
+    /* 설정정보를 초기화하고 연동을 준비 */
+    naverLogin.init();
     // <!--  네이버아이디로로그인 초기화 Script -->
 
+
+    // <!-- 카카오 로그인  Script -->
+    function loginWithKakao() {
+        if(kakao_login_test){
+            Kakao.init('4533bb10ac61e20907cd273f0941210a');
+            kakao_login_test = false;
+        }
+        // 로그인 창을 띄웁니다.
+        Kakao.Auth.login({
+            success: function(authObj) {
+                location.href = '/login/login_simple_kakao/?access_token='+authObj.access_token;
+            },
+            fail: function(err) {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+
 // <!-- 구글 로그인  Script -->
-{#    var google_login_check = false;#}
-{#    window.addEventListener('load', function () {#}
-{#        console.log("test1");#}
-{#        google_signOut();#}
-{#        console.log("test2");#}
-{#    });#}
-{#    function onSignIn(googleUser) {#}
-{#        // Useful data for your client-side scripts:#}
-{##}
-{#        if(google_login_check == true){#}
-{#            var profile = googleUser.getBasicProfile();#}
-{#                $('#id_new_sns_id').attr('value', profile.getId());#}
-{#                $('#id_sns_username').attr('value', profile.getEmail());#}
-{#                $('#id_sns_email').attr('value', profile.getEmail());#}
-{#                $('#id_sns_last_name').attr('value', profile.getFamilyName() +profile.getGivenName());#}
-    {#            $('#id_sns_first_name').attr('value', );#}
-{#                $('#id_sns_type').attr('value', 'Google');#}
-{#                var id_token = googleUser.getAuthResponse().id_token;#}
-{##}
-{#                $('#id_social_accessToken').attr('value', id_token);#}
-{#                document.getElementById('sns-form').submit();#}
-{#                // The ID token you need to pass to your backend:#}
-{#        }#}
-{##}
-{#      }#}
-{#    function google_signOut() {#}
-{#        var auth2 = gapi.auth2.getAuthInstance();#}
-{#        auth2.signOut().then(function () {#}
-{#          console.log('User signed out.');#}
-{#        });#}
-{#        google_login_check = true;#}
-{#      }#}
-    </script>
+/*
+    var google_login_check = false;
+    window.addEventListener('load', function () {
+        google_signOut();
+    });
+    function onSignIn(googleUser) {
+        // Useful data for your client-side scripts:
+        if(google_login_check == true){
+            var profile = googleUser.getBasicProfile();
+                $('#id_new_sns_id').attr('value', profile.getId());
+                $('#id_sns_username').attr('value', profile.getEmail());
+                $('#id_sns_email').attr('value', profile.getEmail());
+                $('#id_sns_last_name').attr('value', profile.getFamilyName() +profile.getGivenName());
+                $('#id_sns_first_name').attr('value', );
+                $('#id_sns_type').attr('value', 'Google');
+                var id_token = googleUser.getAuthResponse().id_token;
+                $('#id_social_accessToken').attr('value', id_token);
+                document.getElementById('sns-form').submit();
+                // The ID token you need to pass to your backend:
+        }
+      }
+    function google_signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+          console.log('User signed out.');
+        });
+        google_login_check = true;
+      }
+*/
+</script>
 {% endblock %}
-
-</body>
-
-
-
-</html>

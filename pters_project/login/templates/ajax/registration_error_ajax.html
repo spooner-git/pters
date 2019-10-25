@@ -1,8 +1,12 @@
 {
-  "user_db_id" :
-    ["{{ user_db_id }}"],
-  "username" :
-    ["{{ username }}"],
-  "messageArray" :
-  [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+    "user_db_id" :
+        ["{{ user_db_id }}"],
+    "username" :
+        ["{{ username }}"],
+    "activation_check" :
+        ["{{ sms_activation_check }}"],
+    "social_check" :
+        ["{{ social_check }}"],
+    "messageArray" :
+        [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
 }

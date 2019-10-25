@@ -1,0 +1,129 @@
+/* 예/아니오 등 기본 팝업 CSS */
+
+/*모바일 팝업 페이지 기본 요소*/
+.popup_mobile{
+    background-color: #ffffff;
+    width: 100%;
+    height: 100%;
+    /* position: fixed; */
+    transform: translate(100%, 0%);
+    top: 0;
+    visibility: hidden;
+    position: absolute;
+    overflow: hidden;
+}
+@media(min-width:650px){
+    .popup_mobile{
+        box-shadow: 0 0 24px 0 #28282870;
+        border-radius: 10px;
+    }
+}
+    .popup_mobile .wrapper_top{
+        line-height: 20px;
+        height: 60px;
+        text-align: center;
+        /* padding: 20px 16px 20px 16px; */
+        padding: 0;
+        position: sticky;
+        position: -webkit-sticky;
+        top: 0;
+        background-color: #ffffff;
+        box-sizing: border-box;
+        border-bottom: 1px solid #f5f2f3;
+        position: fixed;
+        width: 100%;
+        z-index: 1;
+    }
+        .popup_mobile .wrapper_top .logo_pters{
+            width: 80px;
+            vertical-align: top;
+        }
+        .popup_mobile .wrapper_top .obj_icon_x{
+            /* float: right; */
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+        .popup_mobile .wrapper_top .obj_icon_prev{
+            /* float: left; */
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+        .popup_mobile .wrapper_top .icon_center{
+            font-size: 15px;
+            font-weight: 500;
+            color: #3b3b3b;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .popup_mobile .wrapper_top .icon_right{
+           float: right;
+           font-size: 14px;
+           height: 60px;
+        }
+        .popup_mobile .wrapper_top .icon_right > img{
+            padding: 18px 16px 18px 18px;
+            cursor: pointer;
+        }
+        .popup_mobile .wrapper_top .icon_right > span{
+            padding: 18px 16px 18px 18px;
+            line-height: 60px;
+            cursor: pointer;
+        }
+        .popup_mobile .wrapper_top .icon_left{
+            float: left;
+            font-size: 14px;
+            height: 60px;
+            cursor: pointer;
+         }
+         .popup_mobile .wrapper_top .icon_left > img{
+            padding: 18px 18px 18px 16px;
+         }
+         .popup_mobile .wrapper_top .icon_left > span{
+            padding: 18px 16px 18px 18px;
+            line-height: 60px;
+        }
+    
+    .popup_mobile .wrapper_middle{
+        width: 100%;
+        overflow-y:auto;
+        -webkit-overflow-scrolling: touch;
+        height: 100%;
+        padding: 60px 0;
+        box-sizing: border-box;
+    }
+
+    .popup_mobile.popup_full{
+        /* background-color: #f2f2f2; */
+        background-color: #ffffff;
+        border-top-right-radius: 8px; 
+        border-top-left-radius: 8px;
+    }
+    .popup_mobile.popup_no_border_radius{
+        border-radius: 0;
+    }
+        .popup_mobile.popup_full .wrapper_top{
+            background-color: #ffffff;
+            border-top-right-radius: 8px; 
+            border-top-left-radius: 8px;
+        }
+        .popup_mobile.popup_no_border_radius .wrapper_top{
+            border-radius: 0;
+        }
+        .popup_mobile.popup_full .wrapper_top .obj_icon_x{
+            margin-top: 4px;
+        }
+
+
+    .popup_mobile > .obj_button_big{
+        bottom: 0;
+    }
+
+   /* .popup_mobile.popup_full .obj_font_size_18_weight_900{
+        position: absolute;
+        top: 20px;
+    }
+*/

@@ -1,0 +1,20 @@
+    {
+        "date":
+      [{% for price_info in price_data %}"{{ price_info.date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "trade_type":
+      [{% for price_info in price_data %}"{{ price_info.trade_type }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "trade_info":
+      [{% for price_info in price_data %}"{{ price_info.trade_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "price":
+      [{% for price_info in price_data %}"{{ price_info.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "member_db_id":
+      [{% for price_info in price_data %}"{{ price_info.member_db_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "member_name":
+      [{% for price_info in price_data %}"{{ price_info.member_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "package_name":
+      [{% for price_info in price_data %}"{{ price_info.package_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "messageArray" :
+        "{{ messageArray }}"
+{#      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]#}
+    }

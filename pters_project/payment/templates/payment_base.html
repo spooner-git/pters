@@ -73,7 +73,7 @@
 
 
     <div id="popup_lecture_select" class="popups">
-        <form action="{% url 'trainer:select_class_processing' %}" id="lecture-check-form" method="post">
+        <form action="{% url 'trainer:select_program_processing' %}" id="lecture-check-form" method="post">
             {% csrf_token %}
             <input type="hidden" name="class_id" id="id_class_id">
             <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:index' %}">
@@ -723,6 +723,7 @@
 
             success:function(data){
                 var jsondata = JSON.parse(data);
+                check_app_version(jsondata.app_version);
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)
@@ -776,6 +777,7 @@
 
             success:function(data){
                 var jsondata = JSON.parse(data);
+                check_app_version(data.app_version);
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)

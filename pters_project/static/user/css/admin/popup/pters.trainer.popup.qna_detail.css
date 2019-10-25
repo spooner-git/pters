@@ -1,0 +1,76 @@
+/* #qna_detail_display_panel{
+	position: sticky;
+	position: -webkit-sticky;
+	height: auto;
+	z-index: 10;
+	width: 100%;
+	top: 0;
+	/* text-align: center; */
+} */
+.qna_detail_upper_box{
+	position: relative;
+	height: 28px;
+	line-height: 28px;
+	background-color: #ffffff;
+	/* border-bottom: 1px solid #cccccc; */
+	/*padding: 14px 20px;*/
+	box-sizing: border-box;
+}
+.qna_detail_tools_wrap{
+	display: table;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 100px;
+	height: 100%;
+}
+
+
+.qna_detail_wrapper{
+	display: table;
+	width: 100%;
+	height: 72px;
+	padding: 14px 20px;
+	background-color: #ffffff;
+	margin: 0 auto;
+	border-top: 1px solid #f5f2f3;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+
+.popup_qna_detail .popup_toolbox{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+	padding: 8px 16px 16px 20px;
+	z-index: 1;
+}
+
+.qna_detail_info_wrapper{
+	padding: 0 20px;
+	font-size: 14px;
+	margin-bottom: 15px;
+}
+	.popup_qna_detail .info_wrapper{
+		display: flex;
+	}
+	.popup_qna_detail .info_wrapper div:first-child{
+		font-weight: bold;
+		flex-basis: 100px;
+	}
+	.popup_qna_detail .info_wrapper div:last-child{
+		font-weight: 500;
+		flex: 1 1 0;
+	}
+
+
+
+.qna_detail_content_wrapper{
+	padding: 0 20px;
+	font-size: 14px;
+	margin-bottom: 15px;
+}
+
+.qna_detail_answer_wrapper{
+	padding: 0 20px;
+}

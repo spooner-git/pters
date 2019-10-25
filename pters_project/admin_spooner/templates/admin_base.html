@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Google Tag Manager -->
+    <script>
+
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script', 'dataLayer', 'GTM-WG2KK6D');
+
+    </script>
+    {% load static_url %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
+    <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
+    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>{% block title %}PTERS{% endblock %}</title>
+
+    <link rel="icon" href={% static_url "common/favicon.ico" %}>
+    <link rel="apple-touch-icon" href={% static_url "common/favicon-48.png" %}>
+    <link rel="shortcut icon" href={% static_url "common/favicon-48.png" %}>
+
+    <link rel="stylesheet" href={% static_url "user/css/admin/pters.admin.fundamental.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/admin/pters.admin.object.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/admin/pters.admin.base.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/admin/pters.admin.component.common.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/admin/popup/pters.admin.popup.base.css" %}>
+    <link rel="stylesheet" href={% static_url "common/css/swiper.min.css" %}>
+    <link rel="stylesheet" href={% static_url "common/css/croppie.css" %}>
+    <link rel="stylesheet" href={% static_url "common/css/summernote-lite.css" %}>
+
+    <!-- 페이지 CSS 로드 -->
+    <link rel="stylesheet" href={% static_url "user/css/admin/page/pters.admin.func.home.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/admin/page/pters.admin.func.notice.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/admin/page/pters.admin.func.qna.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/admin/page/pters.admin.func.faq.css" %}>
+    <!-- 페이지 CSS 로드 -->
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/iscroll/iscroll-probe.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/croppie.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/swiper.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/summernote/summernote-lite-pters-custom.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/summernote/summernote-ko-KR.js" %}></script>
+
+    <script type="text/javascript" src={% static_url "user/js/admin/pters.admin.const.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/admin/pters.admin.fundamental.js" %}></script>
+
+    
+    {% block local_css %}
+    {% endblock %}
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe async src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<img src={% static_url "common/loading.svg" %} alt="" class="ajax_loading_image">
+
+{% block navbar %}
+{% endblock %}
+<div id="debug_toolbar" style="position:fixed;top:0;font-size:13px;background-color:#fe4e65ba;color:#ffffff;width:100%;left:0;z-index:1500"></div>
+
+
+<div id="base">
+    <section id="section_side">
+        <div class="top_logo">
+            <img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">
+        </div>
+        <div class="side_menu">
+            <div class="side_menu_item" onclick="sideGoPage('home')" id="side_home">
+                <img src={% static_url "common/icon/tab_bar/icon_home_off.png" %} alt=""><span class="sidemenu_text">홈</span>
+            </div>
+            <div class="side_menu_item" onclick="sideGoPage('notice')" id="side_notice">
+                <img src={% static_url "common/icon/tab_bar/icon_calendar_off.png" %} alt=""><span class="sidemenu_text">공지</span>
+            </div>
+            <div class="side_menu_item" onclick="sideGoPage('qna')" id="side_qna">
+                <img src={% static_url "common/icon/tab_bar/icon_member_off.png" %} alt=""><span class="sidemenu_text">문의</span>
+            </div>
+            <div class="side_menu_item" onclick="sideGoPage('faq')" id="side_faq">
+                <img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""><span class="sidemenu_text">FAQ</span>
+            </div>
+            <div class="side_menu_item" onclick="sideGoPage('menu')" id="side_menu">
+                <img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""><span class="sidemenu_text">설정</span>
+            </div>
+        </div>
+
+    </section>
+    <section id="section_center">
+        <div id="section_up_menu">
+            <div style="display:inline-block;line-height:60px;cursor: pointer;" onclick="toggle_sidemenu(this)">
+                <img src="/static/common/icon/icon_toggle_sidemenu.png" alt="" style="width:30px;transform:rotate(90deg);vertical-align:middle;padding:15px;transition:0.3s">
+            </div>
+            <div class="up_menu_tool">
+                <div style="flex:1 0 140px"><img src="/static/common/icon/icon_account.png" alt="" class="up_menu_img"><span>사용자명</span></div>
+                <div style="flex:1 0 0"><img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img"></div>
+                <div style="flex:1 0 0"><img src="/static/common/icon/icon_help_black.png" alt="" class="up_menu_img"></div>
+            </div>
+        </div>
+        <div id="section_content">
+            <div id="shade_for_popup_basic" style="position: absolute;;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
+            onclick="layer_popup.close_layer_popup();"></div>
+            <div id="content_wrapper">
+                    
+                    {% include 'popup/admin_popup_basic.html' %}
+                    {% include 'popup/admin_popup_pages.html' %}
+                    {% include 'popup/admin_popup_user_input.html' %}
+                <div id="root_content">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+                <nav id="root_nav">
+                    <div class="obj_table_raw" style="height:100%;position:relative;">
+                        <div id="nav_indicator" style="position:absolute;left:0px;top:0px;height:3px;background-color:#fe4e65;width:20%"></div>
+                        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('home', this)" id="home">
+                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_home_off.png" %} alt=""></div>
+                            <div class="nav_text">홈</div>
+                        </div>
+                        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('notice', this)" id="notice">
+                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_calendar_off.png" %} alt=""></div>
+                            <div class="nav_text">공지</div>
+                        </div>
+                        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('qna', this)" id="qna">
+                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_member_off.png" %} alt=""></div>
+                            <div class="nav_text">문의</div>
+                        </div>
+                        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('faq', this)" id="faq">
+                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""></div>
+                            <div class="nav_text">FAQ</div>
+                        </div>
+                        <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('menu', this)" id="menu">
+                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""></div>
+                            <div class="nav_text">전체</div>
+                        </div>
+                    </div>
+                </nav>
+                <nav id="root_nav_quick">
+                    <div onclick="root_content_quick_up();"><img src={% static_url "common/icon/icon_arrow_up.png" %}></div>
+                </nav>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+
+
+
+
+<footer>
+
+</footer>
+
+
+{% block footer %}
+
+{% endblock %}
+
+{% block local_js_footer %}
+{% endblock %}
+
+
+<!-- 페이지 스크립트 로드-->
+<script type="text/javascript" src={% static_url "user/js/admin/page/pters.admin.func.home.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/admin/page/pters.admin.func.notice.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/admin/page/pters.admin.func.qna.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/admin/page/pters.admin.func.faq.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/admin/pters.admin.component.common.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/admin/popup/pters.admin.popup.base.js" %}></script>
+<!-- 페이지 스크립트 로드-->
+
+<!-- ajax 팝업 JS 로드 -->
+<script type="text/javascript" src={% static_url "user/js/admin/popup/pters.admin.popup.qna_detail.js" %}></script>
+<!-- ajax 팝업 JS 로드 -->
+<!-- 각종 셀렉터 -->
+<script type="text/javascript" src={% static_url "user/js/admin/pters.admin.selectors.js" %}></script>
+<!-- 각종 셀렉터 -->
+<!-- POPUP Behavior -->
+<script type="text/javascript" src={% static_url "user/js/admin/pters.admin.popup.behavior.js" %}></script>
+<!-- POPUP Behavior -->
+
+
+<script>
+    //기기종류 판단
+    const varUA = navigator.userAgent.toLowerCase();
+    let device = PC;
+    let os = IOS;
+    let browser = CHROME;
+    let device_info = '{{ request.session.device_info }}';
+    if (varUA.match(/android/) != null) {
+        device = MOBILE;
+        os = ANDROID;
+    }else if (varUA.match(/iphone/) != null || varUA.match(/ipad/) != null || varUA.match(/ipod/) != null) {
+        device = MOBILE;
+        os = IOS;
+    }else if (varUA.match(/macintosh/) != null){
+        device = PC;
+        os = IOS;
+    }else{
+        device = PC;
+        os = WINDOW;
+    }
+
+    if (varUA.match(/firefox/) != null) {
+        browser = FIREFOX;
+    }else if (varUA.match(/chrome/) != null || varUA.match(/chromium/) != null) {
+        browser = CHROME;
+    }else if (varUA.match(/safari/) != null) {
+        browser = SAFARI;
+    }else if (varUA.match(/edge/) != null) {
+        browser = EDGE;
+    }
+
+    var windowHeight = window.innerHeight;
+    var windowWidth = window.innerWidth;
+    var $root_content = $('#root_content');
+    var current_page = "home";
+
+
+    // input_adjust_location_for_android();
+    func_set_webkit_overflow_scrolling('#root_content');
+        
+    $root_content.css('height', `100%`);
+    $root_content.scroll(function(){
+        let scroll_loc = $(this).scrollTop();
+        let element_height = $(this).innerHeight();
+        let scroll_height = $(this).prop('scrollHeight');
+   
+        let scroll_loc_percent = 100*(scroll_loc)/(scroll_height-element_height);
+        if( scroll_loc_percent > 10 && scroll_loc_percent > 90){
+            nav_bar('off');
+        }else{
+            nav_bar('on');
+        }
+    });
+    //팝업이 떠있을때, 팝업을 스크롤하면, 뒤의 root_content 항목이 스크롤되서 위치에서 벗어난 현상 해결
+    $(document).on('touchstart', '.popup_mobile', function(){
+        $('#root_content').css({'overflow-y':'hidden'})
+    });
+
+    $(document).on('touchend', '.popup_mobile', function(){
+        $('#root_content').css({'overflow-y':'auto'})
+    });
+
+    function nav_bar(action){
+        switch(action){
+            case 'on':
+                $('#root_nav').css({'transform':'translate(-50%, 0px)'})
+                $('#root_nav_quick').css({'transform':'translateY(40px)'})
+            break;
+            case 'off':
+                $('#root_nav').css({'transform':'translate(-50%, 60px)'})
+                $('#root_nav_quick').css({'transform':'translateY(-40px)'})
+            break;
+        }
+    }
+
+
+    // 페이지 인스턴스
+    var home = new Home('#root_content', 'home');
+    var notice = new Notice('#root_content', 'notice');
+    var qna = new Qna('#root_content', 'qna');
+    var faq = new Faq('#root_content', 'faq');
+    // 페이지 인스턴스
+
+    // 팝업 인스턴스
+    var qna_detail_popup;
+    // 팝업 인스턴스
+
+    // 범용 셀렉터 인스턴스
+    var option_selector;
+    var time_selector;
+    var date_selector;
+    var spinner_selector;
+    var lecture_select;
+    var ticket_select;
+    var member_select;
+    var color_select;
+    var custom_selector;
+    var password_4d_input;
+    var board_writer;
+    var board_reader;
+    
+    var repeat_select;
+    var day_select;
+    var category_select;
+    // 범용 셀렉터 인스턴스
+
+    function root_content_quick_up(){
+        $root_content.animate({scrollTop:1}, 100);
+    }
+
+    function sideGoPage(page){
+        current_page = page;
+        $('#debug_toolbar').hide();
+
+        try{
+            let context_loc = document.getElementById(page).offsetLeft;
+            $('#nav_indicator').css({'transform':`translateX(${context_loc}px)`,'transition':'0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'});
+            
+            // $(`.nav_img > img`).each(function(e){
+            //    let this_id = $(this).parents('.nav_item').attr('id');
+            //     $(this).attr('src', `/static/common/icon/tab_bar/icon_${this_id}_off.png`) 
+            // });
+            // $(`#${page} .nav_img > img`).attr('src', `/static/common/icon/tab_bar/icon_${page}_on.png`);
+            
+        }
+        catch(error){
+
+        }
+
+        switch(page){
+            case 'home':
+                home.init();
+            break;
+            case 'notice':
+                notice.init();
+            break;
+            case 'qna':
+                qna.init();
+            break;
+            case 'faq':
+                faq.init();
+            break;
+        }
+    }
+
+    //PC사이드 메뉴 토글
+    function toggle_sidemenu(context){
+        $this = $(context);
+        $sidemenu = $('#section_side');
+        $sidemenu_button = $this.find('img');
+        $sidemenu_text = $('.sidemenu_text');
+        $toplogo = $('.top_logo');
+
+        let status = $this.hasClass('sidemenu_off');
+
+        if(status){
+            $this.removeClass('sidemenu_off');
+            $sidemenu.css('flex-basis', '200px');
+            setTimeout(()=>{ 
+                $sidemenu_text.show();
+            }, 150);
+            $toplogo.html(
+                `<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">`
+            )
+            $sidemenu_button.css('transform', 'rotate(90deg)');
+        }else{
+            $sidemenu.css('flex-basis', '70px');
+            $this.addClass('sidemenu_off');
+            $sidemenu_text.hide();
+            $toplogo.html(
+                `<img src="/static/common/icon/logo/PTERS_logo_short.png" alt="" style="width: 32px;vertical-align:middle" id="top_logo_image">`
+            )
+            $sidemenu_button.css('transform', 'rotate(-90deg)');
+        }
+    }
+
+    //페이지에 들어오면 홈화면을 띄우기
+    $('#home').trigger('click');
+
+    update_admin_side_bar();
+    function update_admin_side_bar(){
+        Qna_func.read_all((data)=>{
+            let qna_uncomplete = 0;
+            for(let item in data){
+                let complete_status = data[item].qa_status_type_cd;
+                if(complete_status != "QA_COMPLETE"){
+                    qna_uncomplete++;
+                }
+            }
+            if(qna_uncomplete > 0){
+                $('#side_qna > span').html(
+                    `문의(${qna_uncomplete}) <span class="side_unread"></span>`
+                )
+            }else{
+                $('#side_qna > span').html(
+                    `문의`
+                )
+            }
+        });
+    }
+
+    
+
+
+</script>
+
+</body>
+</html>

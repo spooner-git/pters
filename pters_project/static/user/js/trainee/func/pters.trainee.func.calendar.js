@@ -92,7 +92,7 @@ function pters_month_calendar(calendar_name, calendar_options){
 
         let month_calendar_upper_tool = `<div class="pters_month_cal_upper_tool_box">
                                             <div id="${calendar_name}_go_prev_month" class="next_prev_month" style="display:${design_options.move_buttons};">
-                                                <img src="/static/common/icon/navigate_before_black.png" class="obj_icon_basic"> 
+                                                <img src="/static/common/icon/icon_arrow_l_black.png" class="obj_icon_basic"> 
                                             </div>
                                             <div class="pters_month_cal_tool_date_text">
                                                 
@@ -101,10 +101,10 @@ function pters_month_calendar(calendar_name, calendar_options){
                                                 </div>
                                             </div>
                                             <div class="expand_button ${calendar_name}_expand_button" style="display:${design_options.expand_buttons};">
-                                                <img src="/static/common/icon/expand_less_black.png" class="obj_icon_basic">
+                                                <img src="/static/common/icon/member_icon_expand_less_black.png" class="obj_icon_basic">
                                             </div>
                                             <div id="${calendar_name}_go_next_month" class="next_prev_month" style="display:${design_options.move_buttons};">
-                                                <img src="/static/common/icon/navigate_next_black.png" class="obj_icon_basic">
+                                                <img src="/static/common/icon/icon_arrow_r_small_black.png" class="obj_icon_basic">
                                             </div>
                                             <div class="help_calendar_indicator obj_font_size_10_weight_500">
                                                 <div style="background-color:rgba(255, 59, 68, 0.07)">개인 수업 예약</div>
@@ -145,12 +145,12 @@ function pters_month_calendar(calendar_name, calendar_options){
                 }else{
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
                                                id="calendar_cell_${data_date}" onclick="show_error_message('예약이 불가능한 날짜입니다.')">
-                                               <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
+                                               <div id="calendar_lecture_plan_cell_${data_date}" class="lecture_plan_indicator"></div>
                                                <div class="calendar_date_number ${font_color}">${date_cache}</div>
                                                <div id="calendar_plan_cell_${data_date}" class="plan_cell" style="height:${design_options["height_week_row"]-6-20-1}px"></div>
                                           </div>`);
                     // dateCellsToJoin.push(`<div class="obj_table_cell_x7 month_date" data-date="${data_date}">
-                    //                            <div id="calendar_group_plan_cell_${data_date}" class="group_plan_indicator"></div>
+                    //                            <div id="calendar_lecture_plan_cell_${data_date}" class="lecture_plan_indicator"></div>
                     //                            <div class="calendar_date_number ${font_color}">${date_cache}</div>
                     //                            <div id="calendar_plan_cell_${data_date}"></div>
                     //                       </div>`);
@@ -348,24 +348,24 @@ function pters_month_calendar(calendar_name, calendar_options){
     /**
      * @param jsondata                              schedule json data object.
      * @param jsondata.classTimeArray_start_date    시작 시각.
-     * @param jsondata.group_schedule_start_datetime 그룹 스케쥴 시작 시각
+     * @param jsondata.lecture_schedule_start_datetime 그룹 스케쥴 시작 시각
      */
     function func_draw_schedule_data(jsondata){
-        $('.schedule_marking, .schedule_marking_group').remove();
-        let schedule_number_dic = {"general":{}, "group":{}};
+        $('.schedule_marking, .schedule_marking_lecture').remove();
+        let schedule_number_dic = {"general":{}, "lecture":{}};
         let date_cache = [];
-        let date_cache_group = [];
+        let date_cache_lecture = [];
         let len = jsondata.classTimeArray_start_date.length;
-        let len2 = jsondata.group_schedule_start_datetime.length;
+        let len2 = jsondata.lecture_schedule_start_datetime.length;
         for(let i=0; i<len; i++){
             let date = jsondata.classTimeArray_start_date[i].split(' ')[0];
             date_cache.push(date);
             schedule_number_dic["general"][date] = 0;
         }
         for(let j=0; j<len2; j++){
-            let date_group = jsondata.group_schedule_start_datetime[j].split(' ')[0];
-            date_cache_group.push(date_group);
-            schedule_number_dic["group"][date_group] = 0;
+            let date_lecture = jsondata.lecture_schedule_start_datetime[j].split(' ')[0];
+            date_cache_lecture.push(date_lecture);
+            schedule_number_dic["lecture"][date_lecture] = 0;
         }
 
         for(let date in schedule_number_dic["general"]){
@@ -377,13 +377,13 @@ function pters_month_calendar(calendar_name, calendar_options){
                 $(`#calendar_plan_cell_${date}`).html(`<div class="schedule_marking"></div>`);
             }
         }
-        for(let date_group in schedule_number_dic["group"]){
-            // $(`#calendar_plan_cell_${date_group}`).html(`<div class="schedule_marking_group"></div>`);
-            let compare_date = trainee_compare_date(today_yyyy_m_d, date_group);
+        for(let date_lecture in schedule_number_dic["lecture"]){
+            // $(`#calendar_plan_cell_${date_lecture}`).html(`<div class="schedule_marking_lecture"></div>`);
+            let compare_date = trainee_compare_date(today_yyyy_m_d, date_lecture);
             if(compare_date > 0){//오늘보다 과거
 
             }else{ //오늘을 포함하는 미래
-                $(`#calendar_group_plan_cell_${date_group}`).css('background-color', 'rgba(255, 59, 68, 0.38)');
+                $(`#calendar_lecture_plan_cell_${date_lecture}`).css('background-color', 'rgba(255, 59, 68, 0.38)');
             }
         }
     }
@@ -550,7 +550,7 @@ function pters_month_calendar(calendar_name, calendar_options){
      * @param jsondata.classTimeArray_start_date    시작 시각.
      * @param jsondata.classTimeArray_end_date 종료 시각
      * @param jsondata.scheduleIdArray 스케쥴 ID
-     * @param jsondata.schedule_group_name 스케쥴 그룹 명
+     * @param jsondata.schedule_lecture_name 스케쥴 그룹 명
      */
     function func_make_schedule_data_for_timeline(jsondata){
         let json = jsondata;
@@ -563,7 +563,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             let schedule_start_time = json.classTimeArray_start_date[j].split(' ')[1];
             let schedule_end_time = json.classTimeArray_end_date[j].split(' ')[1];
             let schedule_id = json.scheduleIdArray[j];
-            let schedule_name = json.schedule_group_name[j];
+            let schedule_name = json.schedule_lecture_name[j];
             let schedule_finish = json.scheduleFinishArray[j];
             let schedule_repeat_id = json.class_repeat_schedule_id[j];
             if(schedule_name.length == 0){
@@ -616,9 +616,9 @@ function pters_month_calendar(calendar_name, calendar_options){
             let data = $(`.${calendar_name}_expand_button`).attr('data-open');
             func_time_line_wide_view(data, calendar_month_height);
             if(data == SHOW){
-                $(this).css('background-image', `url("/static/common/icon/expand_less_black.png")`);
+                $(this).css('background-image', `url("/static/common/icon/member_icon_expand_less_black.png")`);
             }else if(data == HIDE || data == undefined){
-                $(this).css('background-image', `url("/static/common/icon/expand_more_black.png")`);
+                $(this).css('background-image', `url("/static/common/icon/member_icon_expand_more_black.png")`);
             }
         });
 
@@ -633,7 +633,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         switch(type){
             case SHOW:
                 $calendar_name_expand_button.attr('data-open', HIDE);
-                $calendar_name_expand_button_img.attr('src', '/static/common/icon/expand_less_black.png');
+                $calendar_name_expand_button_img.attr('src', '/static/common/icon/member_icon_expand_less_black.png');
                 // $calendar_name_wrapper_month_cal.show();
                 $calendar_name_wrapper_month_cal.animate({'height': `${calendar_month_height}px`}, 200);
                 $wrapper_cal_timeline.css('height', `${original_height}px`);
@@ -641,7 +641,7 @@ function pters_month_calendar(calendar_name, calendar_options){
 
             case HIDE:
                 $calendar_name_expand_button.attr('data-open', SHOW);
-                $calendar_name_expand_button_img.attr('src', '/static/common/icon/expand_more_black.png');
+                $calendar_name_expand_button_img.attr('src', '/static/common/icon/member_icon_expand_more_black.png');
                 // $calendar_name_wrapper_month_cal.hide();
                 $calendar_name_wrapper_month_cal.animate({height: 0}, 200);
                 $wrapper_cal_timeline.css('height', `${expand_height}px`);
@@ -652,7 +652,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                 expand_height = calendar_height - calendar_toolbox_height - calendar_timeline_toolbox_height;
 
                 $calendar_name_expand_button.attr('data-open', SHOW);
-                $calendar_name_expand_button_img.attr('src', '/static/common/icon/expand_more_black.png');
+                $calendar_name_expand_button_img.attr('src', '/static/common/icon/member_icon_expand_more_black.png');
                 // $calendar_name_wrapper_month_cal.hide();
                 $calendar_name_wrapper_month_cal.animate({height: 0}, 200);
                 $wrapper_cal_timeline.css('height', `${expand_height}px`);

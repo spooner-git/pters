@@ -1,0 +1,28 @@
+.popup_plan_view{
+	/* -webkit-overflow-scrolling: touch; */
+}
+
+.popup_plan_view .obj_input_box_full{
+	/* padding: 4px 0px 4px 18px; */
+	padding: 4px 4px 4px 18px;
+}
+
+.popup_plan_view .popup_toolbox{
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
+	top: 0;
+	padding: 4px 16px 20px 60px;
+}
+
+.popup_plan_view .popup_content{
+	padding-top: 1px;
+}
+
+
+#wrapper_box_plan_view_toolbox{
+	border: 0;
+}
+#wrapper_box_plan_view_toolbox .plan_view_upper_box{
+	margin-bottom: 8px;
+}

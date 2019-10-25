@@ -35,7 +35,7 @@
 		.popup_ticket_info .wrapper_my_ticket_tab >  div{
 			display:inline-block;
 			text-align: center;
-			width:60px;
+			width:80px;
 			line-height: 32px;
 			border-bottom: 3px solid transparent;
 			margin-right:10px;
@@ -130,24 +130,24 @@
 		text-align: center;
 	}
 
-	.popup_ticket_info .wrapper_my_history_detail_lecture_count{
+	.popup_ticket_info .wrapper_my_history_detail_member_ticket_count{
 		width: 10%;
 	}
-	.popup_ticket_info .wrapper_my_history_detail_lecture_start_date{
+	.popup_ticket_info .wrapper_my_history_detail_member_ticket_start_date{
 		width: 20%;
 	}
-	.popup_ticket_info .wrapper_my_history_detail_lecture_end_date{
+	.popup_ticket_info .wrapper_my_history_detail_member_ticket_end_date{
 		width: 20%;
 	}
-	.popup_ticket_info .wrapper_my_history_detail_lecture_reg_count{
+	.popup_ticket_info .wrapper_my_history_detail_member_ticket_reg_count{
 		width: 10%;
 	}
-	.popup_ticket_info .wrapper_my_history_detail_lecture_rem_count{
+	.popup_ticket_info .wrapper_my_history_detail_member_ticket_rem_count{
 		width: 10%;
 	}
-	.popup_ticket_info .wrapper_my_history_detail_lecture_price{
+	.popup_ticket_info .wrapper_my_history_detail_member_ticket_price{
 		width: 20%;
 	}
-	.popup_ticket_info .wrapper_my_history_detail_lecture_status{
+	.popup_ticket_info .wrapper_my_history_detail_member_ticket_status{
 		width: 10%;
 	}

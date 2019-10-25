@@ -49,8 +49,8 @@
 
             {% load background_trainee_data %}
             {% autoescape off %}
-            let get_setting = {% get_setting_info request %};
-            let auth_type_cd = {% get_function_auth_type_cd request %};
+{#            let get_setting = {% get_setting_info request %};#}
+{#            let auth_type_cd = {% get_function_auth_type_cd request %};#}
             let auth_product_type_name = '{{ request.session.product_type_name }}';
             {% endautoescape %}
 
@@ -59,7 +59,6 @@
                                 'class_type_code':'{{ request.session.class_type_code}}',
                                 'class_center_name':'{{ request.session.class_center_name }}',
                                 'setting_member_reserve_time_available':'{{ request.session.setting_member_reserve_time_available }}',
-                                'setting_member_reserve_time_prohibition':'{{ request.session.setting_member_reserve_time_prohibition }}',
                                 'setting_member_reserve_prohibition':'{{ request.session.setting_member_reserve_prohibition }}',
                                 'setting_trainer_work_time_available':['{{ request.session.setting_trainer_work_sun_time_avail }}',
                                                                        '{{ request.session.setting_trainer_work_mon_time_avail }}',
@@ -99,7 +98,7 @@
                 </div>
                 <div class="nav_trainee_menu_box_r">
 
-                    <a><div id="nav_btn_menu" onclick="layer_popup.open_layer_popup(POPUP_INNER_HTML, 'pters_mobile_side_menu', 70, POPUP_FROM_RIGHT)"><img src="/static/common/icon/menu_white.png" class="obj_icon_basic"></div></a>
+                    <a><div id="nav_btn_menu" onclick="layer_popup.open_layer_popup(POPUP_INNER_HTML, 'pters_mobile_side_menu', 70, POPUP_FROM_RIGHT)"><img src="/static/common/icon/member_icon_menu_white.png" class="obj_icon_basic"></div></a>
                 </div>
             </nav>
             <!-- 회원 mobile side menu 팝업 include -->
@@ -116,11 +115,18 @@
         {% block popup %}
         {% endblock %}
 
+        <div class="popup_mobile">
+            <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.mypage_photo_update.css" %}>
+            <div class="popup_mypage_photo_update">
+            </div>
+        </div>
+
+
         <form action="{% url "trainee:add_trainee_schedule" %}" id="form_plan_add" method="post">
             {% csrf_token %}
             <input type="hidden" name="class_id" id="form_content_class_id">
-            <input type="hidden" name="lecture_id" id="form_content_lecture_id">
-            <input type="hidden" name="group_schedule_id" id="form_content_group_schedule_id">
+            <input type="hidden" name="member_ticket_id" id="form_content_member_ticket_id">
+            <input type="hidden" name="lecture_schedule_id" id="form_content_lecture_schedule_id">
             <input type="hidden" name="time_duration" id="form_content_time_duration">
             <input type="hidden" name="training_date" id="form_content_training_date">
             <input type="hidden" name="training_time" id="form_content_training_time">

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Google Tag Manager -->
+    <script>
+
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script', 'dataLayer', 'GTM-WG2KK6D');
+
+    </script>
+    {% load static_url %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
+    <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
+    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>{% block title %}PTERS{% endblock %}</title>
+
+    <link rel="icon" href={% static_url "common/favicon.ico" %}>
+    <link rel="apple-touch-icon" href={% static_url "common/favicon-48.png" %}>
+    <link rel="shortcut icon" href={% static_url "common/favicon-48.png" %}>
+
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.fundamental.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.object.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.base.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.component.common.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.base.css" %}>
+
+
+    <script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
+
+    {% block local_css %}
+    {% endblock %}
+</head>
+<body>
+
+<img src={% static_url "common/loading.svg" %} alt="" class="ajax_loading_image">
+
+{% block navbar %}
+{% endblock %}
+<div id="debug_toolbar" style="position:fixed;top:0;font-size:13px;background-color:#fe4e65ba;color:#ffffff;width:100%;left:0;z-index:1500"></div>
+
+
+<div id="base">
+    <section id="section_center">
+        <div id="section_content">
+            <div id="content_wrapper" style="box-shadow: unset;margin:0 auto;">
+                {% include 'popup/trainer_popup_basic.html' %}
+                {% include 'popup/trainer_popup_pages.html' %}
+                {% include 'popup/trainer_popup_user_input.html' %}
+                <div id="root_content">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<footer>
+
+</footer>
+
+
+{% block footer %}
+
+{% endblock %}
+
+{% block local_js_footer %}
+{% endblock %}
+
+
+<!-- 페이지 스크립트 로드-->
+<script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.component.common.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.base.js" %}></script>
+<!-- 페이지 스크립트 로드-->
+
+<!-- ajax 팝업 JS 로드 -->
+
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_add_new_member.js" %}></script>
+<!-- ajax 팝업 JS 로드 -->
+<!-- 각종 셀렉터 -->
+<script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.selectors.js" %}></script>
+<!-- 각종 셀렉터 -->
+<!-- POPUP Behavior -->
+<script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.popup.behavior.js" %}></script>
+<!-- POPUP Behavior -->
+
+
+<script>
+    //기기종류 판단
+    const varUA = navigator.userAgent.toLowerCase();
+    let device = PC;
+    let os = IOS;
+    let browser = CHROME;
+    let device_info = '{{ request.session.device_info }}';
+    if (varUA.match(/android/) != null) {
+        device = MOBILE;
+        os = ANDROID;
+    }else if (varUA.match(/iphone/) != null || varUA.match(/ipad/) != null || varUA.match(/ipod/) != null) {
+        device = MOBILE;
+        os = IOS;
+    }else if (varUA.match(/macintosh/) != null){
+        device = PC;
+        os = IOS;
+    }else{
+        device = PC;
+        os = WINDOW;
+    }
+
+    if (varUA.match(/firefox/) != null) {
+        browser = FIREFOX;
+    }else if (varUA.match(/chrome/) != null || varUA.match(/chromium/) != null) {
+        browser = CHROME;
+    }else if (varUA.match(/safari/) != null) {
+        browser = SAFARI;
+    }else if (varUA.match(/edge/) != null) {
+        browser = EDGE;
+    }
+
+    const windowHeight = window.innerHeight;
+    const windowWidth = window.innerWidth;
+    const $root_content = $('#root_content');
+    var current_page = "home";
+
+    input_adjust_location_for_android();
+    func_set_webkit_overflow_scrolling('#root_content');
+    // $root_content.css('height', `${windowHeight}px`);
+    // $root_content.css('height', `100%`);
+    // $root_content.scroll(function(){
+    //     let scroll_loc = $(this).scrollTop();
+    //     let element_height = $(this).innerHeight();
+    //     let scroll_height = $(this).prop('scrollHeight');
+   
+    //     let scroll_loc_percent = 100*(scroll_loc)/(scroll_height-element_height);
+    //     if( scroll_loc_percent > 10 && scroll_loc_percent > 90){
+    //         nav_bar('off');
+    //     }else{
+    //         nav_bar('on');
+    //     }
+    // });
+    //팝업이 떠있을때, 팝업을 스크롤하면, 뒤의 root_content 항목이 스크롤되서 위치에서 벗어난 현상 해결
+
+
+    // 팝업 인스턴스
+    var program_add_popup;
+    // 팝업 인스턴스
+
+    // 범용 셀렉터 인스턴스
+    var option_selector;
+    var time_selector;
+    var date_selector;
+    var spinner_selector;
+    var lecture_select;
+    var ticket_select;
+    var member_select;
+    var color_select;
+    var custom_selector;
+    var password_4d_input;
+    var board_writer;
+    
+    var repeat_select;
+    var day_select;
+    var category_select;
+    // 범용 셀렉터 인스턴스
+
+    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+        program_add_popup = new Program_add_new_member('.popup_program_add')});
+
+    
+</script>
+
+</body>
+</html>
