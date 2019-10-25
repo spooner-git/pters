@@ -64,6 +64,7 @@ class Statistics_detail{
         for(let i=0; i<length; i++){
             let date = this.data.date[i].replace(/-/gi, " .");
             let type = this.data.trade_info[i];
+            let type_cd = this.data.trade_type[i];
             let member = this.data.member_name[i];
             let ticket = this.data.package_name[i];
             let price = UnitRobot.numberWithCommas(this.data.price[i]);
@@ -76,8 +77,8 @@ class Statistics_detail{
                             <div>${member}</div>
                             <div>${ticket}</div>
                         </div>
-                        <div class="sales_detail_price">
-                            ${price} 원
+                        <div class="sales_detail_price" ${type_cd == 2 || type_cd == 3 ? "style='color:#fe4e65'" : ""}>
+                            ${type_cd == 2 || type_cd == 3 ? "-" : ""} ${price} 원
                         </div>
                     </div>
                     `;
