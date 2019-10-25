@@ -317,7 +317,7 @@ class Plan_add{
                 let month = this.data.date == null ? this.dates.current_month : this.data.date.month;
                 let date = this.data.date == null ? this.dates.current_date : this.data.date.date;
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'일자', data:{year:year, month:month, date:date},
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'plan_add_datepicker', title:'일자', data:{year:year, month:month, date:date},
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     if(this.data.repeat.repeat_end.year != null){ // 반복일정의 종료일자보다 미래 일자를 시작일자로 선택하면, 반복일정 종료일자를 시작일자랑 같게 설정한다.
                                                                                                         let this_start_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);

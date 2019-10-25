@@ -2968,8 +2968,8 @@ class DatePickerSelector{
     }
 
     next(){
-        let next_year = this.data.month+1 > 12 ? this.data.year +1 :  this.data.year;
-        let next_month = this.data.month+1 > 12 ? 1 : this.data.month + 1;
+        let next_year = Number(this.data.month)+1 > 12 ? Number(this.data.year) +1 :  Number(this.data.year);
+        let next_month = Number(this.data.month)+1 > 12 ? 1 : Number(this.data.month) + 1;
 
         this.data.year = next_year;
         this.data.month = next_month;
@@ -2977,8 +2977,8 @@ class DatePickerSelector{
     }
 
     prev(){
-        let prev_year = this.data.month-1 == 0 ? this.data.year -1 :  this.data.year;
-        let prev_month = this.data.month-1 == 0 ? 12 : this.data.month - 1;
+        let prev_year = Number(this.data.month)-1 == 0 ? Number(this.data.year) -1 :  Number(this.data.year);
+        let prev_month = Number(this.data.month)-1 == 0 ? 12 : Number(this.data.month) - 1;
 
         this.data.year = prev_year;
         this.data.month = prev_month;
