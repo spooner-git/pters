@@ -22,3 +22,5 @@ def update_celery_status():
     result = app.control.broadcast('ping', reply=True, limit=1)
     CELERY_WORKING = bool(result)
     return CELERY_WORKING
+
+update_celery_status()
