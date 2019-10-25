@@ -715,6 +715,52 @@
         }
 
 
+
+
+
+        function update_push_token(token, device_id) {
+            $.ajax({
+                url:'/login/add_push_token/',
+                type:'POST',
+                data:{"token_info":token, "device_id":device_id},
+                dataType : 'html',
+
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                    //AjaxBeforeSend();
+                },
+
+                //통신성공시 처리
+                success:function(data_){
+                    let data = JSON.parse(data_);
+                    check_app_version(data.app_version);
+                    // $('a.text-payment').parent('div').css('display', 'inline-block');
+                    // if(device_id != 'pc') {
+                        // $('a.text-payment').parent('div').css('display', 'none');
+                        // $('.ads_wrap').css('display', 'none');
+                        // $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
+                        // $('#paymentSetting').css('display', 'none');
+                        // $('._company').css('display', 'none');
+                    // }else{
+                        // $('a.text-payment').parent('div').css('display', 'inline-block');
+                    // }
+                    console.log('토큰 등록 완료');
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                },
+
+                //통신 실패시 처리
+                error:function(){
+
+                }
+            });
+        }
+
         function check_app_version(app_version){
             if(app_version != undefined){
                 if(session_app_version != app_version){
