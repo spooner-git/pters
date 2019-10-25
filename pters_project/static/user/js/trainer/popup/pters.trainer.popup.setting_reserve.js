@@ -17,7 +17,7 @@ class Setting_reserve{
             start_time_for_private_reserve:
                 {value:["A-0", "A-30", "E-10", "E-15", "E-20", "E-30"], text:["매시각 정시", "매시각 30분", "10분 마다", "15분 마다", "20분 마다", "30분 마다"]},
             available_reserve_date:
-                {value:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], text:["설정 안함", "1 일전", "2 일전", "3 일전", "4 일전", "5 일전", "6 일전", "7 일전", "8 일전", "9 일전", "10 일전"]},
+                {value:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], text:["설정 안함", "1 일전", "2 일전", "3 일전", "4 일전", "5 일전", "6 일전", "7 일전", "8 일전", "9 일전", "10 일전", "11 일전", "12 일전", "13 일전", "14 일전"]},
             available_reserve_time:
                 {value:[0, 30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 1440, 2880], text:["설정 안함", "30분전", "1 시간 전", "2 시간 전", "3 시간 전", "4 시간 전", "5 시간 전", "6 시간 전", "7 시간 전", "8 시간 전", "9 시간 전", "10 시간 전", "11 시간 전", "12 시간 전", "24 시간 전", "48시간 전"]},
             available_cancel_time:
@@ -35,6 +35,7 @@ class Setting_reserve{
 
     set_initial_data (){
         Setting_reserve_func.read((data)=>{
+            console.log(data)
             this.data.stop_reserve = data.setting_member_reserve_prohibition;
             this.data.time_for_private_reserve.value[0] = data.setting_member_time_duration;
             this.data.time_for_private_reserve.text[0] = this.data_for_selector.time_for_private_reserve.text[ this.data_for_selector.time_for_private_reserve.value.indexOf(Number(data.setting_member_time_duration) ) ];
