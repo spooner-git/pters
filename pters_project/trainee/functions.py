@@ -104,12 +104,18 @@ def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, en
     # 내가 속한 그룹 일정 조회
     query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID`" \
             "AND B.STATE_CD !=\'PC\' AND B.USE=1"
+    # query_member_auth_cd \
+    #     = "select count(`LECTURE_TB_ID`) from GROUP_LECTURE_TB as B" \
+    #       " where B.USE=1 and B.GROUP_TB_ID = `SCHEDULE_TB`.`GROUP_TB_ID`" \
+    #       " and (select `STATE_CD` from LECTURE_TB as D WHERE D.ID=B.LECTURE_TB_ID)=\'IP\'" \
+    #       " and (select `MEMBER_AUTH_CD` from LECTURE_TB as C WHERE C.ID = B.LECTURE_TB_ID" \
+    #       " and C.MEMBER_ID= "+str(user_id)+")=\'VIEW\'"
+
     query_member_auth_cd \
-        = "select count(`LECTURE_TB_ID`) from GROUP_LECTURE_TB as B" \
-          " where B.USE=1 and B.GROUP_TB_ID = `SCHEDULE_TB`.`GROUP_TB_ID`" \
-          " and (select `STATE_CD` from LECTURE_TB as D WHERE D.ID=B.LECTURE_TB_ID)=\'IP\'" \
-          " and (select `MEMBER_AUTH_CD` from LECTURE_TB as C WHERE C.ID = B.LECTURE_TB_ID" \
-          " and C.MEMBER_ID= "+str(user_id)+")=\'VIEW\'"
+        = "select count(A.ID) from LECTURE_TB as A" \
+          " where A.USE=1 and (SELECT count(B.GROUP_TB_ID) FROM PACKAGE_GROUP_TB as B where B.GROUP_TB_ID = `SCHEDULE_TB`.`GROUP_TB_ID` and B.PACKAGE_TB_ID=A.PACKAGE_TB_ID and B.USE=1)>0" \
+          " and A.STATE_CD=\'IP\'" \
+          " and A.MEMBER_AUTH_CD=\'VIEW\' and A.MEMBER_ID="+str(user_id)
 
     lecture_schedule_data = ScheduleTb.objects.select_related(
         'lecture_tb').filter(class_tb_id=class_id, lecture_tb__isnull=False, member_ticket_tb__isnull=True,
@@ -737,7 +743,7 @@ def func_check_select_date_reserve_setting(class_id, trainer_id, select_date):
         reserve_avail_end_time_temp = reserve_avail_time_split[1]
         if reserve_avail_start_time_temp == '24:00' or reserve_avail_start_time_temp == '24:0':
             reserve_avail_start_time_temp = '23:59'
-        if reserve_avail_end_time_temp == '24:00' or reserve_avail_start_time_temp == '24:0':
+        if reserve_avail_end_time_temp == '24:00':
             reserve_avail_end_time_temp = '23:59'
 
         reserve_avail_start_time = datetime.datetime.strptime(reserve_avail_start_time_temp, '%H:%M')
