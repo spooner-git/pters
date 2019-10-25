@@ -7,6 +7,7 @@ from html import parser
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
 from django.utils.datastructures import MultiValueDictKeyError
@@ -28,6 +29,8 @@ def index(request):
     # login 완료시 main page 이동
     template_name = 'index.html'
     request.session['APP_VERSION'] = settings.APP_VERSION
+    current_site = get_current_site(request)
+    request.session['domain'] = current_site.domain
     if request.user.is_authenticated():
         next_page = '/check/'
     else:
