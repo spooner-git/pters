@@ -591,17 +591,17 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
 # 강사의 셋팅 정보 가져오기
 def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     today = datetime.date.today()
-    lt_res_01 = '00:00-23:59'
+    lt_res_01 = '00:00-24:00'
     lt_res_02 = 0
     lt_res_03 = '0'
-    lt_res_04 = '00:00-23:59'
-    lt_work_sun_time_avail = ''
-    lt_work_mon_time_avail = ''
-    lt_work_tue_time_avail = ''
-    lt_work_wed_time_avail = ''
-    lt_work_ths_time_avail = ''
-    lt_work_fri_time_avail = ''
-    lt_work_sat_time_avail = ''
+    lt_res_04 = '00:00-24:00'
+    lt_work_sun_time_avail = '00:00-24:00'
+    lt_work_mon_time_avail = '00:00-24:00'
+    lt_work_tue_time_avail = '00:00-24:00'
+    lt_work_wed_time_avail = '00:00-24:00'
+    lt_work_ths_time_avail = '00:00-24:00'
+    lt_work_fri_time_avail = '00:00-24:00'
+    lt_work_sat_time_avail = '00:00-24:00'
     lt_res_05 = '7'
     lt_res_cancel_time = -1
     lt_res_enable_time = -1
