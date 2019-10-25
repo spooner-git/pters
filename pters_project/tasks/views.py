@@ -32,7 +32,7 @@ def func_update_finish_member_ticket_data():
     class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__ticket_tb').filter(
         auth_cd='VIEW', member_ticket_tb__end_date__lt=datetime.date.today(),
-        member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS, member_ticket_tb__use=USE, class_tb_id='127',
+        member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS, member_ticket_tb__use=USE,
         use=USE).annotate(setting_ticket_auto_finish=RawSQL(query_setting_ticket_auto_finish,
                                                             [])).filter(setting_ticket_auto_finish=USE)
 
@@ -66,9 +66,9 @@ def func_update_finish_member_ticket_data():
 def func_update_finish_pass_data():
     today = datetime.date.today()
 
-    billing_data = BillingInfoTb.objects.filter(class_tb_id='127', next_payment_date__lt=today, use=USE)
+    billing_data = BillingInfoTb.objects.filter(next_payment_date__lt=today, use=USE)
 
-    payment_data = PaymentInfoTb.objects.filter(Q(status='paid') | Q(status='reserve'), class_tb_id='127',
+    payment_data = PaymentInfoTb.objects.filter(Q(status='paid') | Q(status='reserve'),
                                                 start_date__lte=today, end_date__gte=today,
                                                 use=USE).order_by('product_tb_id', '-end_date')
 
@@ -91,7 +91,7 @@ def send_push_alarm_logic(request):
     schedule_data = ScheduleTb.objects.select_related(
         'class_tb', 'lecture_tb',
         'member_ticket_tb__member'
-    ).filter(alarm_dt=alarm_dt, class_tb_id='127',
+    ).filter(alarm_dt=alarm_dt,
              use=USE).annotate(class_type_name=RawSQL(query_common_cd, [])).exclude(en_dis_type=OFF_SCHEDULE_TYPE)
 
     for schedule_info in schedule_data:
@@ -141,7 +141,7 @@ def update_finish_schedule_data_logic(request):
                                          " AND A.USE=1"
     not_finish_schedule_data = ScheduleTb.objects.select_related(
         'member_ticket_tb'
-    ).filter(Q(class_tb_id='127')|Q(class_tb_id='1956'), state_cd=STATE_CD_NOT_PROGRESS,
+    ).filter(state_cd=STATE_CD_NOT_PROGRESS,
              en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now, use=USE
              ).annotate(schedule_auto_finish=RawSQL(query_setting_schedule_auto_finish,
                                                     [])).exclude(schedule_auto_finish=AUTO_FINISH_OFF)
