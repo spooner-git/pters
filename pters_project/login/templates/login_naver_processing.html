@@ -63,8 +63,8 @@
 
 		var naverLogin = new naver.LoginWithNaverId(
 			{
-                clientId: "h5MuvYzSFLlrFTs19g0V",
-                callbackUrl: "https://www.pters.co.kr/login/login_simple_naver/",
+                clientId: "{{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_ID }}",
+                callbackUrl: "http{% if request.is_secure %}s{% endif %}://{{ request.session.domain }}/login/login_simple_naver/",
 {#                clientId: "VM6zl0mLyBgjf9dgw1cC",#}
 {#                callbackUrl: "http://localhost:8000/login/login_simple_naver/",#}
 				isPopup: false,

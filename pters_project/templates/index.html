@@ -241,7 +241,7 @@
             location.href = naverLogin.generateAuthorizeUrl();
         }
         $.ajax({
-            url:'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=VM6zl0mLyBgjf9dgw1cC&client_secret=gGI681B6TR',
+            url:'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id={{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_ID }}&client_secret={{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_SECRET }}',
             type:'POST',
             dataType : 'json',
 
@@ -268,8 +268,9 @@
     // <!-- 네이버아디디로로그인 초기화 Script -->
     var naverLogin = new naver.LoginWithNaverId(
         {
-            clientId: "h5MuvYzSFLlrFTs19g0V",
-            callbackUrl: "https://www.pters.co.kr/login/login_simple_naver/",
+            clientId: "{{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_ID }}",
+            callbackUrl: "http{% if request.is_secure %}s{% endif %}://{{ request.session.domain }}/login/login_simple_naver/",
+            //callbackUrl: "https://www.pters.co.kr/login/login_simple_naver/",
             //clientId: "VM6zl0mLyBgjf9dgw1cC",
             //callbackUrl: "http://localhost:8000/login/login_simple_naver/",
             isPopup: false, /* 팝업을 통한 연동처리 여부 */

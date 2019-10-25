@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.db.models.expressions import RawSQL
 
 from configs.const import USE, ON_SCHEDULE_TYPE, STATS_RE_REG, STATS_NEW_REG, STATS_PART_REFUND, STATS_ALL_REFUND, \
-    STATE_CD_FINISH, AUTH_TYPE_VIEW
+    STATE_CD_FINISH, AUTH_TYPE_VIEW, STATE_CD_REFUND
 from schedule.models import ScheduleTb
 from trainer.models import ClassMemberTicketTb
 
@@ -78,10 +78,10 @@ def get_sales_data(class_id, month_first_day, finish_date):
 
             # 환불 정보 가져오기
             refund_price_data = ClassMemberTicketTb.objects.select_related('member_ticket_tb').filter(
-                                    Q(member_ticket_tb__refund_date__gte=month_first_day)
-                                    & Q(member_ticket_tb__refund_date__lte=month_last_day),
-                                    class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
-                                    use=USE).order_by('member_ticket_tb__refund_date', 'member_ticket_tb__reg_dt')
+                Q(member_ticket_tb__refund_date__gte=month_first_day)
+                & Q(member_ticket_tb__refund_date__lte=month_last_day), class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+                member_ticket_tb__state_cd=STATE_CD_REFUND, member_ticket_tb__use=USE,
+                use=USE).order_by('member_ticket_tb__refund_date', 'member_ticket_tb__reg_dt')
 
             for refund_price_info in refund_price_data:
                 if refund_price_info.member_ticket_tb.price != refund_price_info.member_ticket_tb.refund_price:
