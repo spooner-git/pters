@@ -638,7 +638,10 @@
 
     $('#root_content').on("touchstart", function(e){
         e.stopPropagation();
-        console.log("touchstart")
+        console.log("touchstart");
+        date_selector.hour_scroll.destroy();
+        date_selector.minute_scroll.destroy();
+        date_selector = "";
         // $('#debug_toolbar').show().text("start").fadeOut().css("overflow-y", "auto");
     })
     
