@@ -1488,11 +1488,17 @@ class Calendar {
             // $(document).off("touchstart", click_body).on("touchstart", click_body, (e)=>{
                 ts = e.originalEvent.touches[0].clientX;
                 tsy = e.originalEvent.touches[0].clientY;
+                $('#debug_toolbar').text("ts, tsy",ts, tsy);
+                console.log(ts,tsy)
             });
 
             selector_body.off('touchmove').on('touchmove', (e) => {
+                
                 tm = e.originalEvent.touches[0].clientX;
                 tmy = e.originalEvent.touches[0].clientY;
+
+                $('#debug_toolbar').text("tm, tmy",tm, tmy);
+                console.log(tm, tmy);
 
                 // 일정이 잡힌채로 스와이프할때, 일정 롱터치 되지 않도록 롱터치이벤트 엔드
                 clearInterval(this.touch_sense);
