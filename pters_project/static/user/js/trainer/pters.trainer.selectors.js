@@ -1585,7 +1585,7 @@ class TimeSelector2{
             bounce: false
         });
 
-        // this.set_scroll_snap();
+        this.set_scroll_snap();
     }
 
     set_iscroll_minute(){
@@ -1594,7 +1594,7 @@ class TimeSelector2{
             deceleration:0.005,
             bounce: false
         });
-        // this.set_scroll_snap();
+        this.set_scroll_snap();
     }
 
     set_scroll_snap (){
